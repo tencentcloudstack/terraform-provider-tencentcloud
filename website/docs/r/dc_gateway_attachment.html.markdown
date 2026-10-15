@@ -36,6 +36,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AssociateDirectConnectGatewayNatGateway](https://cloud.tencent.com/document/api/215/47109) - 专线网关绑定NAT网关
+* Read: [DescribeDirectConnectGateways](https://cloud.tencent.com/document/api/215/30644) - 查询专线网关
+* Delete: [DisassociateDirectConnectGatewayNatGateway](https://cloud.tencent.com/document/api/215/47108) - 专线网关解绑NAT网关
 
 ## Import
 

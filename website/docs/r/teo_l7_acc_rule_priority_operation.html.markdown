@@ -156,4 +156,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyL7AccRulePriority](https://cloud.tencent.com/document/api/1552/117133) - 修改七层加速规则优先级
 

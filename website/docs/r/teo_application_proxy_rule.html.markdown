@@ -56,6 +56,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `rule_id` - Rule ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateApplicationProxyRule](https://cloud.tencent.com/document/api/1552/80693) - 创建应用代理规则（旧）
+* Read: [DescribeApplicationProxies](https://cloud.tencent.com/document/api/1552/80690) - 查询应用代理列表（旧）
+* Update: [ModifyApplicationProxyRule](https://cloud.tencent.com/document/api/1552/80688) - 修改应用代理规则（旧）
+* Update: [ModifyApplicationProxyRuleStatus](https://cloud.tencent.com/document/api/1552/80687) - 修改应用代理规则的状态（旧）
+* Delete: [DeleteApplicationProxyRule](https://cloud.tencent.com/document/api/1552/80691) - 删除应用代理规则（旧）
+* Delete: [ModifyApplicationProxyRuleStatus](https://cloud.tencent.com/document/api/1552/80687) - 修改应用代理规则的状态（旧）
 
 ## Import
 

@@ -120,4 +120,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ProcessLiveStream](https://cloud.tencent.com/document/api/862/39227) - 对直播流发起处理
 

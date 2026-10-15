@@ -50,4 +50,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddShareUnitMembers](https://cloud.tencent.com/document/api/850/103055) - 添加共享单元成员
+* Read: [DescribeShareUnitMembers](https://cloud.tencent.com/document/api/850/103049) - 获取共享单元成员列表
+* Delete: [DeleteShareUnitMembers](https://cloud.tencent.com/document/api/850/103052) - 删除共享单元成员
 

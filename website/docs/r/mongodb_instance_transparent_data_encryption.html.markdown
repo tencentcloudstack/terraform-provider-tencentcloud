@@ -44,6 +44,15 @@ In addition to all arguments above, the following attributes are exported:
 - close: Not opened;
 - open: It has been opened.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601) - 查询异步任务状态接口
+* Create: [DescribeTransparentDataEncryptionStatus](https://cloud.tencent.com/document/api/240/107168) - 获取实例透明加密的开启状态
+* Create: [EnableTransparentDataEncryption](https://cloud.tencent.com/document/api/240/107167) - 开启实例数据透明加密
+* Read: [DescribeTransparentDataEncryptionStatus](https://cloud.tencent.com/document/api/240/107168) - 获取实例透明加密的开启状态
+* Update: [DescribeTransparentDataEncryptionStatus](https://cloud.tencent.com/document/api/240/107168) - 获取实例透明加密的开启状态
 
 ## Import
 

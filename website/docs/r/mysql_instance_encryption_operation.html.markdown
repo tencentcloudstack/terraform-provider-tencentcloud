@@ -84,4 +84,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeDBInstanceInfo](https://cloud.tencent.com/document/api/236/44160) - 查询实例基本信息
+* Create: [OpenDBInstanceEncryption](https://cloud.tencent.com/document/api/236/86608) - 启用数据存储加密
+* Read: [DescribeDBInstanceInfo](https://cloud.tencent.com/document/api/236/44160) - 查询实例基本信息
 

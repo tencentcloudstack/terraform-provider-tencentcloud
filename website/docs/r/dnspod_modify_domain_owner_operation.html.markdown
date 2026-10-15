@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyDomainOwner](https://cloud.tencent.com/document/api/1427/56162) - 域名过户
 

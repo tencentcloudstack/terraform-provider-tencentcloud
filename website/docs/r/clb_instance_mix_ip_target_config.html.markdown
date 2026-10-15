@@ -34,6 +34,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyLoadBalancerMixIpTarget](https://cloud.tencent.com/document/api/214/70576) - 修改IPv6负载均衡7层监听器支持混绑目标特性
+* Read: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685) - 查询负载均衡实例列表
+* Update: [ModifyLoadBalancerMixIpTarget](https://cloud.tencent.com/document/api/214/70576) - 修改IPv6负载均衡7层监听器支持混绑目标特性
 
 ## Import
 

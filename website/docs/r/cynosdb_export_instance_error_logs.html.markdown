@@ -49,4 +49,9 @@ In addition to all arguments above, the following attributes are exported:
   * `level` - Log level, optional values note, warning, error.
   * `timestamp` - time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ExportInstanceErrorLogs](https://cloud.tencent.com/document/api/1003/90935) - 导出实例错误日志
 

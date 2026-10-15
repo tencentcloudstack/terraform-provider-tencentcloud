@@ -114,4 +114,21 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `engine_resource_group_id` - Standard engine resource group ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateStandardEngineResourceGroup](https://cloud.tencent.com/document/api/1342/122138) - 创建标准引擎资源组
+* Create: [DescribeStandardEngineResourceGroups](https://cloud.tencent.com/document/api/1342/122134) - 查询标准引擎资源组信息
+* Create: [PauseStandardEngineResourceGroups](https://cloud.tencent.com/document/api/1342/122132) - 批量暂停标准引擎资源组
+* Read: [DescribeStandardEngineResourceGroups](https://cloud.tencent.com/document/api/1342/122134) - 查询标准引擎资源组信息
+* Update: [DescribeStandardEngineResourceGroups](https://cloud.tencent.com/document/api/1342/122134) - 查询标准引擎资源组信息
+* Update: [LaunchStandardEngineResourceGroups](https://cloud.tencent.com/document/api/1342/122133) - 批量启动标准引擎资源组
+* Update: [PauseStandardEngineResourceGroups](https://cloud.tencent.com/document/api/1342/122132) - 批量暂停标准引擎资源组
+* Update: [UpdateEngineResourceGroupNetworkConfigInfo](https://cloud.tencent.com/document/api/1342/122131) - 更新标准引擎资源组网络配置信息
+* Update: [UpdateStandardEngineResourceGroupBaseInfo](https://cloud.tencent.com/document/api/1342/122130) - 更新标准引擎资源组基础信息
+* Update: [UpdateStandardEngineResourceGroupResourceInfo](https://cloud.tencent.com/document/api/1342/122128) - 更新标准引擎资源组资源信息
+* Delete: [DeleteStandardEngineResourceGroup](https://cloud.tencent.com/document/api/1342/122137) - 删除标准引擎资源组
+* Delete: [DescribeStandardEngineResourceGroups](https://cloud.tencent.com/document/api/1342/122134) - 查询标准引擎资源组信息
+* Delete: [PauseStandardEngineResourceGroups](https://cloud.tencent.com/document/api/1342/122132) - 批量暂停标准引擎资源组
 

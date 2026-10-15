@@ -287,6 +287,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `status` - Task status. Valid values: created(Created), checking (Checking), checkPass (Check passed), checkNotPass (Check not passed), readyRun (Ready for running), running (Running), readyComplete (Preparation completed), success (Successful), failed (Failed), stopping (Stopping), completing (Completing), pausing (Pausing), manualPaused (Paused).
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateMigrateCheckJob](https://cloud.tencent.com/document/api/571/82092) - 创建校验迁移任务
+* Create: [DescribeMigrationCheckJob](https://cloud.tencent.com/document/api/571/82086) - 查询迁移校验任务结果
+* Create: [DescribeMigrationDetail](https://cloud.tencent.com/document/api/571/82085) - 查询某个迁移任务详情
+* Create: [ModifyMigrationJob](https://cloud.tencent.com/document/api/571/82077) - 配置迁移服务
+* Read: [DescribeMigrationDetail](https://cloud.tencent.com/document/api/571/82085) - 查询某个迁移任务详情
 
 ## Import
 

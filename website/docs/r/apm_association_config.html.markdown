@@ -39,6 +39,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyApmAssociation](https://cloud.tencent.com/document/api/1463/125076) - 修改 APM 业务系统与其他产品的关联关系
+* Read: [DescribeApmAssociation](https://cloud.tencent.com/document/api/1463/125079) - 查询 APM 业务系统与其他产品的关联关系
+* Update: [ModifyApmAssociation](https://cloud.tencent.com/document/api/1463/125076) - 修改 APM 业务系统与其他产品的关联关系
 
 ## Import
 

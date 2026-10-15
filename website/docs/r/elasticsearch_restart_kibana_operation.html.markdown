@@ -32,4 +32,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/845/30631) - 查询ES集群实例
+* Create: [RestartKibana](https://cloud.tencent.com/document/api/845/50224) - 重启Kibana
 

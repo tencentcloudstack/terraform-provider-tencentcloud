@@ -85,6 +85,17 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `5m`) Used when creating the resource.
 * `update` - (Defaults to `5m`) Used when updating the resource.
 * `delete` - (Defaults to `5m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79555) - 开启多可用区部署
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
+* Read: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086) - 集群信息描述
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
+* Update: [ModifyClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79554) - 变更备可用区
+* Delete: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
+* Delete: [RemoveClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79553) - 关闭多可用区部署
 
 ## Import
 

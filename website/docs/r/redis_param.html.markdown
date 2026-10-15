@@ -54,6 +54,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeInstanceParams](https://cloud.tencent.com/document/api/239/34448) - 查询实例的参数列表
+* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
+* Create: [ModifyInstanceParams](https://cloud.tencent.com/document/api/239/34445) - 修改实例参数
+* Read: [DescribeInstanceParams](https://cloud.tencent.com/document/api/239/34448) - 查询实例的参数列表
+* Update: [DescribeInstanceParams](https://cloud.tencent.com/document/api/239/34448) - 查询实例的参数列表
+* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
+* Update: [ModifyInstanceParams](https://cloud.tencent.com/document/api/239/34445) - 修改实例参数
 
 ## Import
 

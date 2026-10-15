@@ -38,6 +38,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ActionAlterCkUser](https://cloud.tencent.com/document/api/1299/83425) - 新增、修改集群用户接口
+* Read: [DescribeCkSqlApis](https://cloud.tencent.com/document/api/1299/83428) - 查询集群用户相关信息
+* Update: [ActionAlterCkUser](https://cloud.tencent.com/document/api/1299/83425) - 新增、修改集群用户接口
+* Delete: [DescribeCkSqlApis](https://cloud.tencent.com/document/api/1299/83428) - 查询集群用户相关信息
 
 ## Import
 

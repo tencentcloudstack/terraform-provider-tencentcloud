@@ -50,6 +50,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeMesh](https://cloud.tencent.com/document/api/1261/63842) - 查询网格详情
+* Create: [LinkClusterList](https://cloud.tencent.com/document/api/1261/81603) - 关联集群
+* Read: [DescribeMesh](https://cloud.tencent.com/document/api/1261/63842) - 查询网格详情
+* Delete: [DescribeMesh](https://cloud.tencent.com/document/api/1261/63842) - 查询网格详情
+* Delete: [UnlinkCluster](https://cloud.tencent.com/document/api/1261/81602) - 解关联集群
 
 ## Import
 

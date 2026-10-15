@@ -150,6 +150,20 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateEngine](https://cloud.tencent.com/document/api/1364/75218) - 创建引擎实例
+* Create: [DescribeSREInstances](https://cloud.tencent.com/document/api/1364/54940) - 查询引擎实例列表
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Read: [DescribeSREInstances](https://cloud.tencent.com/document/api/1364/54940) - 查询引擎实例列表
+* Update: [DescribeSREInstances](https://cloud.tencent.com/document/api/1364/54940) - 查询引擎实例列表
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [UpdateEngineInternetAccess](https://cloud.tencent.com/document/api/1364/81352) - 修改引擎公网访问配置
+* Delete: [DeleteEngine](https://cloud.tencent.com/document/api/1364/75217) - 删除引擎实例
+* Delete: [DescribeSREInstances](https://cloud.tencent.com/document/api/1364/54940) - 查询引擎实例列表
 
 ## Import
 

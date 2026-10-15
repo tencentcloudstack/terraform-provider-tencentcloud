@@ -38,4 +38,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [GetTaskStatus](https://cloud.tencent.com/document/api/850/109955) - 查询异步任务的状态
+* Create: [ProvisionRoleConfiguration](https://cloud.tencent.com/document/api/850/109952) - 将权限配置部署到成员账号上
 

@@ -50,6 +50,16 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Creation time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
 * `modify_time` - Last modified time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateUsagePlan](https://cloud.tencent.com/document/api/628/45224) - 创建使用计划
+* Create: [DescribeUsagePlan](https://cloud.tencent.com/document/api/628/45221) - 查询使用计划详情
+* Read: [DescribeUsagePlan](https://cloud.tencent.com/document/api/628/45221) - 查询使用计划详情
+* Read: [DescribeUsagePlanEnvironments](https://cloud.tencent.com/document/api/628/45220) - 查询使用计划绑定环境列表
+* Update: [ModifyUsagePlan](https://cloud.tencent.com/document/api/628/45217) - 修改使用计划
+* Delete: [DeleteUsagePlan](https://cloud.tencent.com/document/api/628/45223) - 删除使用计划
 
 ## Import
 

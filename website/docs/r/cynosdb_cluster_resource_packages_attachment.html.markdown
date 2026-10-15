@@ -34,6 +34,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [BindClusterResourcePackages](https://cloud.tencent.com/document/api/1003/93014) - 为集群绑定资源包
+* Read: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086) - 集群信息描述
+* Delete: [UnbindClusterResourcePackages](https://cloud.tencent.com/document/api/1003/93006) - cynos解绑资源包
 
 ## Import
 

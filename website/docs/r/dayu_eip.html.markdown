@@ -48,4 +48,13 @@ In addition to all arguments above, the following attributes are exported:
 * `protection_status` - Protection status of the resource instance.
 * `resource_region` - Region of the resource instance.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AssociateDDoSEipAddress](https://cloud.tencent.com/document/api/297/95297) - 绑定高防弹性公网IP
+* Create: [AssociateDDoSEipLoadBalancer](https://cloud.tencent.com/document/api/297/95296) - 绑定高防弹性公网IP到Clb
+* Create: [DescribeListBGPIPInstances](https://cloud.tencent.com/document/api/297/95347) - 获取高防IP资产实例列表
+* Read: [DescribeListBGPIPInstances](https://cloud.tencent.com/document/api/297/95347) - 获取高防IP资产实例列表
+* Delete: [DisassociateDDoSEipAddress](https://cloud.tencent.com/document/api/297/95295) - 解绑高防弹性公网IP
 

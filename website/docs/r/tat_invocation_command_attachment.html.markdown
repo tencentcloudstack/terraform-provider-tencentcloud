@@ -58,4 +58,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `command_id` - Command ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [RunCommand](https://cloud.tencent.com/document/api/1340/52676) - 执行命令
+* Read: [DescribeInvocations](https://cloud.tencent.com/document/api/1340/52679) - 查询执行活动
+* Delete: [CancelInvocation](https://cloud.tencent.com/document/api/1340/65770) - 取消命令执行
 

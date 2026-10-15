@@ -174,4 +174,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateJobConfig](https://cloud.tencent.com/document/api/849/52004) - 创建作业配置
+* Read: [DescribeJobConfigs](https://cloud.tencent.com/document/api/849/52875) - 查询作业配置
+* Delete: [DeleteJobConfigs](https://cloud.tencent.com/document/api/849/100454) - 删除作业配置
 

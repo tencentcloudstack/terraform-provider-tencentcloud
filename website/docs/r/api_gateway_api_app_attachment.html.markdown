@@ -88,6 +88,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [BindApiApp](https://cloud.tencent.com/document/api/628/58639) - 绑定应用到API
+* Read: [DescribeApiAppBindApisStatus](https://cloud.tencent.com/document/api/628/58635) - 查询应用绑定的Api列表
+* Delete: [UnbindApiApp](https://cloud.tencent.com/document/api/628/58630) - 解除应用和API绑定关系
 
 ## Import
 

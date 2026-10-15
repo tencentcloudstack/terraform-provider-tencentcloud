@@ -37,6 +37,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DeployCertificateInstance](https://cloud.tencent.com/document/api/400/91667) - 证书部署到云资源实例列表
 
 ## Import
 

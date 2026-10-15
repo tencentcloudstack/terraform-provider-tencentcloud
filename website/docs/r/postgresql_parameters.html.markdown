@@ -73,6 +73,13 @@ The `param_list` object exports the following:
 * `param_description_ch` - Parameter Chinese Description.
 * `param_description_en` - Parameter English Description.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyDBInstanceParameters](https://cloud.tencent.com/document/api/409/63342) - 修改实例参数
+* Read: [DescribeDBInstanceParameters](https://cloud.tencent.com/document/api/409/63344) - 查询实例参数
+* Update: [ModifyDBInstanceParameters](https://cloud.tencent.com/document/api/409/63342) - 修改实例参数
 
 ## Import
 

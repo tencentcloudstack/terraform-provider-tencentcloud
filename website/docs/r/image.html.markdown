@@ -57,6 +57,19 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateImage](https://cloud.tencent.com/document/api/213/16726) - 创建镜像
+* Create: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - 查看镜像列表
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - 查看镜像列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyImageAttribute](https://cloud.tencent.com/document/api/213/15713) - 修改镜像属性
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteImages](https://cloud.tencent.com/document/api/213/15716) - 删除镜像
+* Delete: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - 查看镜像列表
 
 ## Import
 

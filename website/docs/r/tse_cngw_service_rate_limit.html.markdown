@@ -151,6 +151,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCloudNativeAPIGatewayServiceRateLimit](https://cloud.tencent.com/document/api/1364/94850) - 创建云原生网关限流插件(服务)
+* Read: [DescribeCloudNativeAPIGatewayServiceRateLimit](https://cloud.tencent.com/document/api/1364/94841) - 查询云原生网关的限流插件(服务)
+* Update: [ModifyCloudNativeAPIGatewayServiceRateLimit](https://cloud.tencent.com/document/api/1364/94834) - 修改云原生网关限流插件(服务)
+* Delete: [DeleteCloudNativeAPIGatewayServiceRateLimit](https://cloud.tencent.com/document/api/1364/94845) - 删除云原生网关的限流插件(服务)
 
 ## Import
 

@@ -48,6 +48,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateUser](https://cloud.tencent.com/document/api/1025/74406) - 新建用户
+* Read: [DescribeUsers](https://cloud.tencent.com/document/api/1025/74404) - 查询用户列表
+* Update: [ModifyUser](https://cloud.tencent.com/document/api/1025/74403) - 修改用户信息
+* Delete: [DeleteUsers](https://cloud.tencent.com/document/api/1025/74405) - 删除用户
 
 ## Import
 

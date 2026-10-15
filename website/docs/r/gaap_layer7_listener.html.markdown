@@ -55,6 +55,25 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Creation time of the layer7 listener.
 * `status` - Status of the layer7 listener.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateHTTPListener](https://cloud.tencent.com/document/api/608/37007) - 创建HTTP监听器
+* Create: [CreateHTTPSListener](https://cloud.tencent.com/document/api/608/37006) - 创建HTTPS监听器
+* Create: [DescribeProxyDetail](https://cloud.tencent.com/document/api/608/36960) - 查询通道详情
+* Create: [DescribeProxyGroupDetails](https://cloud.tencent.com/document/api/608/36944) - 查询通道组详情
+* Create: [SetTlsVersion](https://cloud.tencent.com/document/api/608/107933) - 设置监听器TLS配置
+* Read: [DescribeHTTPListeners](https://cloud.tencent.com/document/api/608/37002) - 查询HTTP监听器信息
+* Read: [DescribeHTTPSListeners](https://cloud.tencent.com/document/api/608/37001) - 查询HTTPS监听器信息
+* Update: [DescribeProxyDetail](https://cloud.tencent.com/document/api/608/36960) - 查询通道详情
+* Update: [DescribeProxyGroupDetails](https://cloud.tencent.com/document/api/608/36944) - 查询通道组详情
+* Update: [ModifyHTTPListenerAttribute](https://cloud.tencent.com/document/api/608/36997) - 修改HTTP监听器配置
+* Update: [ModifyHTTPSListenerAttribute](https://cloud.tencent.com/document/api/608/36996) - 修改HTTPS监听器配置
+* Update: [SetTlsVersion](https://cloud.tencent.com/document/api/608/107933) - 设置监听器TLS配置
+* Delete: [DeleteListeners](https://cloud.tencent.com/document/api/608/37003) - 删除通道监听器
+* Delete: [DescribeHTTPListeners](https://cloud.tencent.com/document/api/608/37002) - 查询HTTP监听器信息
+* Delete: [DescribeHTTPSListeners](https://cloud.tencent.com/document/api/608/37001) - 查询HTTPS监听器信息
 
 ## Import
 

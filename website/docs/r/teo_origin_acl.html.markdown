@@ -63,6 +63,18 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `30m`) Used when creating the resource.
 * `update` - (Defaults to `30m`) Used when updating the resource.
 * `delete` - (Defaults to `30m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeOriginACL](https://cloud.tencent.com/document/api/1552/120408) - 查询源站防护详情
+* Create: [EnableOriginACL](https://cloud.tencent.com/document/api/1552/120406) - 开启源站防护
+* Create: [ModifyOriginACL](https://cloud.tencent.com/document/api/1552/120405) - 变更源站防护实例
+* Read: [DescribeOriginACL](https://cloud.tencent.com/document/api/1552/120408) - 查询源站防护详情
+* Update: [DescribeOriginACL](https://cloud.tencent.com/document/api/1552/120408) - 查询源站防护详情
+* Update: [ModifyOriginACL](https://cloud.tencent.com/document/api/1552/120405) - 变更源站防护实例
+* Delete: [DescribeOriginACL](https://cloud.tencent.com/document/api/1552/120408) - 查询源站防护详情
+* Delete: [DisableOriginACL](https://cloud.tencent.com/document/api/1552/120407) - 关闭源站防护
 
 ## Import
 

@@ -63,4 +63,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [UpdateRowFilter](https://cloud.tencent.com/document/api/1342/87871) - 更新行过滤规则
 

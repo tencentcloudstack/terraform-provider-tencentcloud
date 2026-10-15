@@ -78,6 +78,22 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Creation time of subnet resource.
 * `is_default` - Indicates whether it is the default VPC for this region.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSubnet](https://cloud.tencent.com/document/api/215/15782) - 创建子网
+* Create: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - 查询路由表
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Create: [ModifySubnetAttribute](https://cloud.tencent.com/document/api/215/15781) - 修改子网属性
+* Create: [ReplaceRouteTableAssociation](https://cloud.tencent.com/document/api/215/15767) - 替换路由表绑定关系
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Read: [DescribeSubnets](https://cloud.tencent.com/document/api/215/15784) - 查询子网列表
+* Update: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - 查询路由表
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [ModifySubnetAttribute](https://cloud.tencent.com/document/api/215/15781) - 修改子网属性
+* Update: [ReplaceRouteTableAssociation](https://cloud.tencent.com/document/api/215/15767) - 替换路由表绑定关系
+* Delete: [DeleteSubnet](https://cloud.tencent.com/document/api/215/15783) - 删除子网
 
 ## Import
 

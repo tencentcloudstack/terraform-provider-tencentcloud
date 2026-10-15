@@ -39,6 +39,14 @@ In addition to all arguments above, the following attributes are exported:
 * `created_time` - Creation time, millisecond timestamp.
 * `modified_time` - Modify time, millisecond timestamp.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateUser](https://cloud.tencent.com/document/api/1778/116051) - 添加MQTT角色
+* Read: [DescribeUserList](https://cloud.tencent.com/document/api/1778/116049) - 查询MQTT用户列表
+* Update: [ModifyUser](https://cloud.tencent.com/document/api/1778/116048) - 修改MQTT角色
+* Delete: [DeleteUser](https://cloud.tencent.com/document/api/1778/116050) - 删除MQTT角色
 
 ## Import
 

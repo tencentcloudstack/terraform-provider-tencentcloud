@@ -36,6 +36,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DisableCcnRoutes](https://cloud.tencent.com/document/api/215/19197) - 禁用云联网路由
+* Create: [EnableCcnRoutes](https://cloud.tencent.com/document/api/215/19196) - 启用云联网路由
+* Read: [DescribeCcnRoutes](https://cloud.tencent.com/document/api/215/19200) - 查询云联网路由条目
+* Update: [DisableCcnRoutes](https://cloud.tencent.com/document/api/215/19197) - 禁用云联网路由
+* Update: [EnableCcnRoutes](https://cloud.tencent.com/document/api/215/19196) - 启用云联网路由
 
 ## Import
 

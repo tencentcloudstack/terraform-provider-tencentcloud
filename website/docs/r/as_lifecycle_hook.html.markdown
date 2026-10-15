@@ -141,6 +141,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLifecycleHook](https://cloud.tencent.com/document/api/377/34454) - 创建生命周期挂钩
+* Read: [DescribeLifecycleHooks](https://cloud.tencent.com/document/api/377/34452) - 查询生命周期挂钩
+* Update: [UpgradeLifecycleHook](https://cloud.tencent.com/document/api/377/34451) - 升级生命周期挂钩
+* Delete: [DeleteLifecycleHook](https://cloud.tencent.com/document/api/377/34453) - 删除生命周期挂钩
 
 ## Import
 

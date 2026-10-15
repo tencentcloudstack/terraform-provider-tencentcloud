@@ -77,6 +77,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/1003/92714) - 修改账号库表权限
+* Read: [DescribeAccountAllGrantPrivileges](https://cloud.tencent.com/document/api/1003/70114) - 查询账号所有可授予权限
+* Update: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/1003/92714) - 修改账号库表权限
 
 ## Import
 

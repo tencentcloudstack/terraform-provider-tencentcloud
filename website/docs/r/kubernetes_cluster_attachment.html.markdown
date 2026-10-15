@@ -202,4 +202,13 @@ In addition to all arguments above, the following attributes are exported:
 The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
 
 * `create` - (Defaults to `30m`) Used when creating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddExistedInstances](https://cloud.tencent.com/document/api/457/31865) - 添加已经存在的实例到集群
+* Read: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - 查询集群节点信息
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - 查询TKE集群列表
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - 查看实例列表
+* Delete: [DeleteClusterInstances](https://cloud.tencent.com/document/api/457/31864) - 删除集群中的节点
 

@@ -68,6 +68,15 @@ In addition to all arguments above, the following attributes are exported:
 * `formatted_description` - Formatted description of the command. This parameter is an empty string for user commands and contains values for public commands.
 * `updated_time` - Command update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCommand](https://cloud.tencent.com/document/api/1340/52684) - 创建命令
+* Read: [DescribeCommands](https://cloud.tencent.com/document/api/1340/52681) - 查询命令详情
+* Update: [ModifyCommand](https://cloud.tencent.com/document/api/1340/52677) - 修改命令
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteCommand](https://cloud.tencent.com/document/api/1340/52683) - 删除命令
 
 ## Import
 

@@ -67,6 +67,31 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `vport` - Intranet port.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CloseDBExtranetAccess](https://cloud.tencent.com/document/api/557/19998) - 关闭外网访问
+* Create: [CreateHourDCDBInstance](https://cloud.tencent.com/document/api/557/70249) - 创建TDSQL按量计费实例
+* Create: [DescribeDCDBInstances](https://cloud.tencent.com/document/api/557/16140) - 查询实例列表
+* Create: [DescribeDcnDetail](https://cloud.tencent.com/document/api/557/56346) - 获取实例灾备详情
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/557/56485) - 查询流程状态
+* Create: [InitDCDBInstances](https://cloud.tencent.com/document/api/557/19985) - 初始化实例
+* Create: [ModifyInstanceNetwork](https://cloud.tencent.com/document/api/557/82021) - 修改实例所属网络
+* Create: [OpenDBExtranetAccess](https://cloud.tencent.com/document/api/557/19980) - 开通外网访问
+* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/557/51781) - 查询实例安全组信息
+* Read: [DescribeDCDBInstanceDetail](https://cloud.tencent.com/document/api/557/89385) - 获取实例详情
+* Read: [DescribeDCDBInstances](https://cloud.tencent.com/document/api/557/16140) - 查询实例列表
+* Read: [DescribeDcnDetail](https://cloud.tencent.com/document/api/557/56346) - 获取实例灾备详情
+* Update: [CloseDBExtranetAccess](https://cloud.tencent.com/document/api/557/19998) - 关闭外网访问
+* Update: [DescribeDCDBInstances](https://cloud.tencent.com/document/api/557/16140) - 查询实例列表
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/557/56485) - 查询流程状态
+* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/557/73095) - 修改实例名字
+* Update: [ModifyDBInstancesProject](https://cloud.tencent.com/document/api/557/19983) - 修改实例所属项目
+* Update: [ModifyInstanceNetwork](https://cloud.tencent.com/document/api/557/82021) - 修改实例所属网络
+* Update: [OpenDBExtranetAccess](https://cloud.tencent.com/document/api/557/19980) - 开通外网访问
+* Update: [UpgradeHourDCDBInstance](https://cloud.tencent.com/document/api/557/85926) - 升级TDSQL按量计费实例
+* Delete: [DestroyHourDCDBInstance](https://cloud.tencent.com/document/api/557/56483) - 销毁TDSQL按量计费实例
 
 ## Import
 

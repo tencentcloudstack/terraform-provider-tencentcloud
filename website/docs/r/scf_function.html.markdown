@@ -241,6 +241,25 @@ The `intranet_config` object exports the following:
 
 * `ip_address` - If fixed intranet IP is enabled, this field returns the IP list used.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateFunction](https://cloud.tencent.com/document/api/583/18586) - 创建函数
+* Create: [CreateTrigger](https://cloud.tencent.com/document/api/583/18589) - 设置函数触发方式
+* Create: [GetFunction](https://cloud.tencent.com/document/api/583/18584) - 获取函数详细信息
+* Create: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522) - 获取凭据明文
+* Create: [UpdateFunctionConfiguration](https://cloud.tencent.com/document/api/583/18580) - 更新函数配置
+* Read: [GetFunction](https://cloud.tencent.com/document/api/583/18584) - 获取函数详细信息
+* Update: [CreateTrigger](https://cloud.tencent.com/document/api/583/18589) - 设置函数触发方式
+* Update: [DeleteTrigger](https://cloud.tencent.com/document/api/583/18588) - 删除触发器
+* Update: [GetFunction](https://cloud.tencent.com/document/api/583/18584) - 获取函数详细信息
+* Update: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522) - 获取凭据明文
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [UpdateFunctionCode](https://cloud.tencent.com/document/api/583/18581) - 更新函数代码
+* Update: [UpdateFunctionConfiguration](https://cloud.tencent.com/document/api/583/18580) - 更新函数配置
+* Delete: [DeleteFunction](https://cloud.tencent.com/document/api/583/18585) - 删除函数
+* Delete: [GetFunction](https://cloud.tencent.com/document/api/583/18584) - 获取函数详细信息
 
 ## Import
 

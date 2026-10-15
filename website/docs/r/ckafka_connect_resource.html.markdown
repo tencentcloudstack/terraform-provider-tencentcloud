@@ -163,6 +163,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateConnectResource](https://cloud.tencent.com/document/api/597/77737) - 创建连接器连接
+* Create: [DescribeConnectResource](https://cloud.tencent.com/document/api/597/77798) - 查询连接器连接详情
+* Read: [DescribeConnectResource](https://cloud.tencent.com/document/api/597/77798) - 查询连接器连接详情
+* Update: [DescribeConnectResource](https://cloud.tencent.com/document/api/597/77798) - 查询连接器连接详情
+* Update: [ModifyConnectResource](https://cloud.tencent.com/document/api/597/77794) - 编辑连接器连接
+* Delete: [DeleteConnectResource](https://cloud.tencent.com/document/api/597/77800) - 删除连接器连接
 
 ## Import
 

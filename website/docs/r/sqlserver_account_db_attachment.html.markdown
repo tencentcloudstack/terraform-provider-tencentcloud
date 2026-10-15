@@ -95,6 +95,24 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970) - 拉取实例账户列表
+* Create: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968) - 查询数据库列表（已废弃）
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Create: [ModifyAccountPrivilege](https://cloud.tencent.com/document/api/238/19959) - 修改实例账户权限
+* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970) - 拉取实例账户列表
+* Read: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968) - 查询数据库列表（已废弃）
+* Update: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970) - 拉取实例账户列表
+* Update: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968) - 查询数据库列表（已废弃）
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Update: [ModifyAccountPrivilege](https://cloud.tencent.com/document/api/238/19959) - 修改实例账户权限
+* Delete: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970) - 拉取实例账户列表
+* Delete: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968) - 查询数据库列表（已废弃）
+* Delete: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Delete: [ModifyAccountPrivilege](https://cloud.tencent.com/document/api/238/19959) - 修改实例账户权限
 
 ## Import
 

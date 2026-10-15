@@ -236,6 +236,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateContentReviewTemplate](https://cloud.tencent.com/document/api/862/39435) - 创建内容审核模板
+* Read: [DescribeContentReviewTemplates](https://cloud.tencent.com/document/api/862/39431) - 获取智能审核模板列表
+* Update: [ModifyContentReviewTemplate](https://cloud.tencent.com/document/api/862/39429) - 修改内容审核模板
+* Delete: [DeleteContentReviewTemplate](https://cloud.tencent.com/document/api/862/39433) - 删除内容审核模板
 
 ## Import
 

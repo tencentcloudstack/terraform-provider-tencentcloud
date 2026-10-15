@@ -49,6 +49,16 @@ In addition to all arguments above, the following attributes are exported:
 * `token` - The content of the token.
 * `user_name` - User name of the token.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateInstanceToken](https://cloud.tencent.com/document/api/1141/41571) - 创建实例访问凭证
+* Create: [ModifyInstanceToken](https://cloud.tencent.com/document/api/1141/42910) - 更新实例长期访问凭证
+* Read: [DescribeInstanceToken](https://cloud.tencent.com/document/api/1141/42911) - 查询长期访问凭证信息
+* Update: [ModifyInstanceToken](https://cloud.tencent.com/document/api/1141/42910) - 更新实例长期访问凭证
+* Delete: [DeleteInstanceToken](https://cloud.tencent.com/document/api/1141/42912) - 删除长期访问凭证
+* Delete: [DescribeInstanceToken](https://cloud.tencent.com/document/api/1141/42911) - 查询长期访问凭证信息
 
 ## Import
 

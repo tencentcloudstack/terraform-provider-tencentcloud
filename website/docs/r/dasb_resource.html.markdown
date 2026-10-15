@@ -75,6 +75,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateResource](https://cloud.tencent.com/document/api/1025/100130) - 创建堡垒机实例
+* Create: [DeployResource](https://cloud.tencent.com/document/api/1025/86961) - 开通服务
+* Create: [DescribeResources](https://cloud.tencent.com/document/api/1025/74801) - 查询堡垒机服务信息
+* Create: [ModifyResource](https://cloud.tencent.com/document/api/1025/100129) - 资源变配
+* Read: [DescribeResources](https://cloud.tencent.com/document/api/1025/74801) - 查询堡垒机服务信息
+* Update: [ModifyResource](https://cloud.tencent.com/document/api/1025/100129) - 资源变配
 
 ## Import
 

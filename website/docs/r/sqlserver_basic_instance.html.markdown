@@ -133,6 +133,32 @@ In addition to all arguments above, the following attributes are exported:
 * `vip` - IP for private access.
 * `vport` - Port for private access.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateBasicDBInstances](https://cloud.tencent.com/document/api/238/46808) - 创建基础版实例 (云盘)
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Create: [DescribeOrders](https://cloud.tencent.com/document/api/238/19937) - 查询订单信息
+* Create: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958) - 修改实例名字
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
+* Read: [DescribeDBInstancesAttribute](https://cloud.tencent.com/document/api/238/90299) - 查询实例附属属性
+* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/238/46812) - 查询实例安全组信息
+* Read: [DescribeMaintenanceSpan](https://cloud.tencent.com/document/api/238/46283) - 查询该实例的可维护时间窗
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [AssociateSecurityGroups](https://cloud.tencent.com/document/api/238/46813) - 安全组批量绑定云资源
+* Update: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
+* Update: [DisassociateSecurityGroups](https://cloud.tencent.com/document/api/238/46810) - 安全组批量解绑云资源
+* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958) - 修改实例名字
+* Update: [ModifyDBInstanceProject](https://cloud.tencent.com/document/api/238/19957) - 修改数据库实例所属项目
+* Update: [ModifyDBInstanceRenewFlag](https://cloud.tencent.com/document/api/238/19956) - 修改实例续费标记
+* Update: [ModifyMaintenanceSpan](https://cloud.tencent.com/document/api/238/46281) - 修改可维护时间窗
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [UpgradeDBInstance](https://cloud.tencent.com/document/api/238/19948) - 升级实例
+* Delete: [DeleteDBInstance](https://cloud.tencent.com/document/api/238/46806) - 立即下线实例
+* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
+* Delete: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210) - 主动隔离实例
 
 ## Import
 

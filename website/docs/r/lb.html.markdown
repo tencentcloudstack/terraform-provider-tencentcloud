@@ -41,4 +41,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `status` - The status of the LB.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLoadBalancer](https://cloud.tencent.com/document/api/214/30692) - 购买负载均衡实例
+* Read: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685) - 查询负载均衡实例列表
+* Update: [ModifyLoadBalancerAttributes](https://cloud.tencent.com/document/api/214/30680) - 修改负载均衡实例的属性
+* Delete: [DeleteLoadBalancer](https://cloud.tencent.com/document/api/214/30689) - 删除负载均衡实例
 

@@ -104,6 +104,25 @@ In addition to all arguments above, the following attributes are exported:
 * `dns_pod_domain` - Internet address domain name.
 * `tgw_wan_vport` - External port number.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCloudDBInstances](https://cloud.tencent.com/document/api/238/91710) - 创建高可用实例 (云盘)
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Create: [DescribeOrders](https://cloud.tencent.com/document/api/238/19937) - 查询订单信息
+* Create: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958) - 修改实例名字
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
+* Read: [DescribeDBInstancesAttribute](https://cloud.tencent.com/document/api/238/90299) - 查询实例附属属性
+* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/238/46812) - 查询实例安全组信息
+* Read: [DescribeMaintenanceSpan](https://cloud.tencent.com/document/api/238/46283) - 查询该实例的可维护时间窗
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Update: [DescribeOrders](https://cloud.tencent.com/document/api/238/19937) - 查询订单信息
+* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958) - 修改实例名字
+* Update: [UpgradeDBInstance](https://cloud.tencent.com/document/api/238/19948) - 升级实例
+* Delete: [DeleteDBInstance](https://cloud.tencent.com/document/api/238/46806) - 立即下线实例
+* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
+* Delete: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210) - 主动隔离实例
 
 ## Import
 

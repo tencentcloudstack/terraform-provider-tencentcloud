@@ -46,6 +46,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateUserRoleProject](https://cloud.tencent.com/document/api/590/98847) - 项目内-创建用户角色
+* Read: [DescribeUserRoleProjectList](https://cloud.tencent.com/document/api/590/100532) - 项目内-用户角色列表
+* Update: [ModifyUserRoleProject](https://cloud.tencent.com/document/api/590/98842) - 项目-修改用户角色信息
+* Delete: [DeleteUserRoleProject](https://cloud.tencent.com/document/api/590/98845) - 项目内-删除用户角色
 
 ## Import
 

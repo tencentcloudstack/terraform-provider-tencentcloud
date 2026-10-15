@@ -46,6 +46,14 @@ The `api_services` object exports the following:
 
 * `id` - API service ID, e.g. `apisrv-xxxxxxxx`.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSecurityAPIService](https://cloud.tencent.com/document/api/1552/122124) - 创建 API 服务
+* Read: [DescribeSecurityAPIService](https://cloud.tencent.com/document/api/1552/122120) - 查询 API 服务
+* Update: [ModifySecurityAPIService](https://cloud.tencent.com/document/api/1552/122118) - 修改 API 服务
+* Delete: [DeleteSecurityAPIService](https://cloud.tencent.com/document/api/1552/122122) - 删除 API 服务
 
 ## Import
 

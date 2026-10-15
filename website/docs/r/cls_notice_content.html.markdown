@@ -72,6 +72,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateNoticeContent](https://cloud.tencent.com/document/api/614/111716) - 创建通知内容模板
+* Read: [DescribeNoticeContents](https://cloud.tencent.com/document/api/614/111714) - 获取通知内容模板
+* Update: [ModifyNoticeContent](https://cloud.tencent.com/document/api/614/111713) - 修改通知内容模板
+* Delete: [DeleteNoticeContent](https://cloud.tencent.com/document/api/614/111715) - 删除通知内容模板
 
 ## Import
 

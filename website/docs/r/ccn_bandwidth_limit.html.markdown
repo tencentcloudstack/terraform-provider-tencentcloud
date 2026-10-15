@@ -75,4 +75,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199) - 查询CCN列表
+* Create: [SetCcnRegionBandwidthLimits](https://cloud.tencent.com/document/api/215/19194) - 设置云联网各地域出带宽上限或地域间上限
+* Read: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199) - 查询CCN列表
+* Read: [GetCcnRegionBandwidthLimits](https://cloud.tencent.com/document/api/215/45482) - 查询云联网相关地域带宽信息
+* Update: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199) - 查询CCN列表
+* Update: [SetCcnRegionBandwidthLimits](https://cloud.tencent.com/document/api/215/19194) - 设置云联网各地域出带宽上限或地域间上限
+* Delete: [SetCcnRegionBandwidthLimits](https://cloud.tencent.com/document/api/215/19194) - 设置云联网各地域出带宽上限或地域间上限
 

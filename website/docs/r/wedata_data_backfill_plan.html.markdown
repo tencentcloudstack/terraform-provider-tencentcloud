@@ -91,6 +91,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `data_backfill_plan_id` - Data backfill plan ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDataBackfillPlan](https://cloud.tencent.com/document/api/1267/123592) - 创建数据补录计划
+* Read: [GetDataBackfillPlan](https://cloud.tencent.com/document/api/1267/124032) - 查看补录计划配置详情
+* Delete: [DeleteDataBackfillPlanAsync](https://cloud.tencent.com/document/api/1267/127220) - 异步删除补录计划
+* Delete: [GetOpsAsyncJob](https://cloud.tencent.com/document/api/1267/123587) - 查询运维中心异步操作详情
 
 ## Import
 

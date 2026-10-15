@@ -34,6 +34,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyLaunchTemplateDefaultVersion](https://cloud.tencent.com/document/api/213/66321) - 修改实例启动模板默认版本
+* Read: [DescribeLaunchTemplateVersions](https://cloud.tencent.com/document/api/213/66323) - 查询实例模板版本信息
+* Update: [ModifyLaunchTemplateDefaultVersion](https://cloud.tencent.com/document/api/213/66321) - 修改实例启动模板默认版本
 
 ## Import
 

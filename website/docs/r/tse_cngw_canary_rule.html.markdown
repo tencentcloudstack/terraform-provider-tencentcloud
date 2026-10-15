@@ -115,6 +115,17 @@ The `balanced_service_list` object of `canary_rule` exports the following:
 
 * `upstream_name` - upstream name, meaningless when used as an input parameter.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCloudNativeAPIGatewayCanaryRule](https://cloud.tencent.com/document/api/1364/94854) - 创建云原生网关的灰度规则
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeCloudNativeAPIGatewayCanaryRules](https://cloud.tencent.com/document/api/1364/94844) - 查询云原生网关灰度规则列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyCloudNativeAPIGatewayCanaryRule](https://cloud.tencent.com/document/api/1364/94838) - 修改云原生网关的灰度规则
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteCloudNativeAPIGatewayCanaryRule](https://cloud.tencent.com/document/api/1364/94849) - 删除云原生网关的灰度规则
 
 ## Import
 

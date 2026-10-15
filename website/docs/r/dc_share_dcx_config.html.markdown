@@ -34,6 +34,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AcceptDirectConnectTunnel](https://cloud.tencent.com/document/api/216/19822) - 接受专用通道申请
+* Create: [RejectDirectConnectTunnel](https://cloud.tencent.com/document/api/216/19817) - 拒绝专用通道申请
+* Read: [DescribeDirectConnectTunnels](https://cloud.tencent.com/document/api/216/19819) - 查询专用通道列表
+* Update: [AcceptDirectConnectTunnel](https://cloud.tencent.com/document/api/216/19822) - 接受专用通道申请
+* Update: [RejectDirectConnectTunnel](https://cloud.tencent.com/document/api/216/19817) - 拒绝专用通道申请
 
 ## Import
 

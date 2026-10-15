@@ -54,6 +54,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127266) - 配置工作流文件夹权限
+* Read: [ListWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127247) - 获取工作流文件夹权限列表
+* Update: [CreateWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127266) - 配置工作流文件夹权限
+* Update: [DeleteWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127262) - 删除工作流文件夹权限
+* Delete: [DeleteWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127262) - 删除工作流文件夹权限
+* Delete: [ListWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127247) - 获取工作流文件夹权限列表
 
 ## Import
 

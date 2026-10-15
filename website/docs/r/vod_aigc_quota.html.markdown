@@ -86,6 +86,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `usage` - Current usage amount. Unit: when `quota_type` is `Image`, count by images; when `quota_type` is `Video`, count by seconds; when `quota_type` is `Text`, count by tokens.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAigcQuota](https://cloud.tencent.com/document/api/266/133474) - 创建 AIGC 配额
+* Read: [DescribeAigcQuotas](https://cloud.tencent.com/document/api/266/133472) - 查询 AIGC 配额
+* Update: [ModifyAigcQuota](https://cloud.tencent.com/document/api/266/133471) - 修改 AIGC 配额
+* Delete: [DeleteAigcQuota](https://cloud.tencent.com/document/api/266/133473) - 删除 AIGC 配额
 
 ## Import
 

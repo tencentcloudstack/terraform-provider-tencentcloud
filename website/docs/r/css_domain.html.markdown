@@ -43,6 +43,19 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddLiveDomain](https://cloud.tencent.com/document/api/267/33862) - 添加域名
+* Create: [AuthenticateDomainOwner](https://cloud.tencent.com/document/api/267/80524) - 验证直播域名所有权
+* Create: [EnableLiveDomain](https://cloud.tencent.com/document/api/267/33855) - 启用域名
+* Create: [ForbidLiveDomain](https://cloud.tencent.com/document/api/267/33854) - 禁用域名
+* Read: [DescribeLiveDomain](https://cloud.tencent.com/document/api/267/33858) - 查询域名信息
+* Update: [EnableLiveDomain](https://cloud.tencent.com/document/api/267/33855) - 启用域名
+* Update: [ForbidLiveDomain](https://cloud.tencent.com/document/api/267/33854) - 禁用域名
+* Update: [ModifyLivePlayDomain](https://cloud.tencent.com/document/api/267/33853) - 修改播放域名信息
+* Delete: [DeleteLiveDomain](https://cloud.tencent.com/document/api/267/33860) - 删除域名
 
 ## Import
 

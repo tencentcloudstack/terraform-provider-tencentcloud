@@ -88,6 +88,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyRemoteBackupConfig](https://cloud.tencent.com/document/api/236/84374) - 修改云数据库异地备份配置信息
+* Read: [DescribeRemoteBackupConfig](https://cloud.tencent.com/document/api/236/84375) - 查询云数据库异地备份配置信息
+* Update: [ModifyRemoteBackupConfig](https://cloud.tencent.com/document/api/236/84374) - 修改云数据库异地备份配置信息
 
 ## Import
 

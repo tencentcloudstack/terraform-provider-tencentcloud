@@ -110,6 +110,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyReadOnlyGroupDetails](https://cloud.tencent.com/document/api/238/46774) - 修改只读组详情
+* Read: [DescribeReadOnlyGroupDetails](https://cloud.tencent.com/document/api/238/46772) - 查询只读组详情
+* Update: [ModifyReadOnlyGroupDetails](https://cloud.tencent.com/document/api/238/46774) - 修改只读组详情
 
 ## Import
 

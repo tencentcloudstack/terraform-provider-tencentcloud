@@ -34,6 +34,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DisableInvoker](https://cloud.tencent.com/document/api/1340/61758) - 停用执行器
+* Create: [EnableInvoker](https://cloud.tencent.com/document/api/1340/61757) - 启用执行器
+* Read: [DescribeInvokers](https://cloud.tencent.com/document/api/1340/61759) - 查询执行器
+* Update: [DisableInvoker](https://cloud.tencent.com/document/api/1340/61758) - 停用执行器
+* Update: [EnableInvoker](https://cloud.tencent.com/document/api/1340/61757) - 启用执行器
 
 ## Import
 

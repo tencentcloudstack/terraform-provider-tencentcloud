@@ -105,6 +105,21 @@ In addition to all arguments above, the following attributes are exported:
 * `old_password_expire_time` - Expiration time of the old password. If `password_status` is `unmodifiable`, it means the old password has not yet expired.
 * `password_status` - Password status of the TcaplusDB cluster. Valid values: `unmodifiable`, `modifiable`. `unmodifiable`. which means the password can not be changed in this moment; `modifiable`, which means the password can be changed in this moment.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCluster](https://cloud.tencent.com/document/api/596/41491) - 创建集群
+* Create: [DescribeClusters](https://cloud.tencent.com/document/api/596/41489) - 查询集群信息列表
+* Read: [DescribeClusterTags](https://cloud.tencent.com/document/api/596/45082) - 获取集群关联的标签列表
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/596/41489) - 查询集群信息列表
+* Update: [DescribeClusters](https://cloud.tencent.com/document/api/596/41489) - 查询集群信息列表
+* Update: [ModifyClusterMachine](https://cloud.tencent.com/document/api/596/50731) - 修改独占集群机器
+* Update: [ModifyClusterName](https://cloud.tencent.com/document/api/596/41488) - 修改集群名称
+* Update: [ModifyClusterPassword](https://cloud.tencent.com/document/api/596/41487) - 修改集群密码
+* Update: [ModifyClusterTags](https://cloud.tencent.com/document/api/596/45081) - 修改集群标签
+* Delete: [DeleteCluster](https://cloud.tencent.com/document/api/596/41490) - 删除集群
+* Delete: [DescribeClusters](https://cloud.tencent.com/document/api/596/41489) - 查询集群信息列表
 
 ## Import
 

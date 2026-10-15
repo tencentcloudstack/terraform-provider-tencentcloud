@@ -74,6 +74,18 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `5m`) Used when creating the resource.
 * `delete` - (Defaults to `5m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeAuditConfig](https://cloud.tencent.com/document/api/240/128358) - 查询审计服务配置
+* Create: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/240/125361) - 查询审计实例
+* Create: [OpenAuditService](https://cloud.tencent.com/document/api/240/125359) - 开通审计
+* Read: [DescribeAuditConfig](https://cloud.tencent.com/document/api/240/128358) - 查询审计服务配置
+* Update: [DescribeAuditConfig](https://cloud.tencent.com/document/api/240/128358) - 查询审计服务配置
+* Update: [ModifyAuditService](https://cloud.tencent.com/document/api/240/125360) - 修改审计配置
+* Delete: [CloseAuditService](https://cloud.tencent.com/document/api/240/128359) - 关闭审计
+* Delete: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/240/125361) - 查询审计实例
 
 ## Import
 

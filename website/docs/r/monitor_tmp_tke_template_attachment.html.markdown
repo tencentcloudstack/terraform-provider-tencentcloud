@@ -290,4 +290,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [SyncPrometheusTemp](https://cloud.tencent.com/document/api/248/85709) - 同步模板
+* Read: [DescribePrometheusTempSync](https://cloud.tencent.com/document/api/248/85712) - 获取模板关联实例信息
+* Delete: [DeletePrometheusTempSync](https://cloud.tencent.com/document/api/248/85720) - 解除模板同步
 

@@ -32,6 +32,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyIpsModeSwitch](https://cloud.tencent.com/document/api/1132/127532) - 修改IPS的防护模式
+* Read: [DescribeIpsModeSwitch](https://cloud.tencent.com/document/api/1132/127533) - 获取入侵防御防护模式
+* Update: [ModifyIpsModeSwitch](https://cloud.tencent.com/document/api/1132/127532) - 修改IPS的防护模式
 
 ## Import
 

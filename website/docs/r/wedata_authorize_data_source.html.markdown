@@ -53,6 +53,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AuthorizeDataSource](https://cloud.tencent.com/document/api/1267/127235) - 授权数据源
+* Read: [DescribeDataSourceAuthority](https://cloud.tencent.com/document/api/1267/127234) - 数据源管理-查看数据源权限
+* Update: [AuthorizeDataSource](https://cloud.tencent.com/document/api/1267/127235) - 授权数据源
+* Update: [RevokeDataSourceAuthorization](https://cloud.tencent.com/document/api/1267/127233) - 回收数据源权限
+* Delete: [RevokeDataSourceAuthorization](https://cloud.tencent.com/document/api/1267/127233) - 回收数据源权限
 
 ## Import
 

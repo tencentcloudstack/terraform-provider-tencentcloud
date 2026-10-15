@@ -75,6 +75,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210) - 主动隔离实例
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
+* Update: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210) - 主动隔离实例
 
 ## Import
 

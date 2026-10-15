@@ -38,6 +38,14 @@ In addition to all arguments above, the following attributes are exported:
 * `created_time` - Creation time. Expressed according to the ISO8601 standard, and using UTC time. Format: YYYY-MM-DDThh:mm:ssZ.
 * `private_key` - Key to private key.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateKeyPair](https://cloud.tencent.com/document/api/1207/55543) - 创建密钥对
+* Create: [ImportKeyPair](https://cloud.tencent.com/document/api/1207/55538) - 导入密钥对
+* Read: [DescribeKeyPairs](https://cloud.tencent.com/document/api/1207/55540) - 查询用户密钥对列表
+* Delete: [DeleteKeyPairs](https://cloud.tencent.com/document/api/1207/55542) - 删除密钥对
 
 ## Import
 

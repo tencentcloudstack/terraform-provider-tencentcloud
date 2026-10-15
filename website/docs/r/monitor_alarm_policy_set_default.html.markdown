@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [SetDefaultAlarmPolicy](https://cloud.tencent.com/document/api/248/51271) - 设为默认告警策略
 

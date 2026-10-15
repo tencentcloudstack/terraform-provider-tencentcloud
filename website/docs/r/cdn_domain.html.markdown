@@ -715,6 +715,22 @@ The `server_certificate_config` object of `https_config` exports the following:
 * `deploy_time` - Deploy time of server certificate.
 * `expire_time` - Expire time of server certificate.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddCdnDomain](https://cloud.tencent.com/document/api/228/41123) - 新增加速域名
+* Create: [DescribeDomainsConfig](https://cloud.tencent.com/document/api/228/41117) - 查询域名详细配置
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeDomainsConfig](https://cloud.tencent.com/document/api/228/41117) - 查询域名详细配置
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [DescribeDomainsConfig](https://cloud.tencent.com/document/api/228/41117) - 查询域名详细配置
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [UpdateDomainConfig](https://cloud.tencent.com/document/api/228/41116) - 更新加速域名配置
+* Delete: [DeleteCdnDomain](https://cloud.tencent.com/document/api/228/41122) - 删除加速域名
+* Delete: [DescribeDomainsConfig](https://cloud.tencent.com/document/api/228/41117) - 查询域名详细配置
+* Delete: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [StopCdnDomain](https://cloud.tencent.com/document/api/228/41120) - 停用加速域名
 
 ## Import
 

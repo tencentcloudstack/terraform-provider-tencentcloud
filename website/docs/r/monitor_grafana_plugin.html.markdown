@@ -64,6 +64,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeInstalledPlugins](https://cloud.tencent.com/document/api/248/79204) - 列出实例已安装的插件
+* Create: [InstallPlugins](https://cloud.tencent.com/document/api/248/79198) - 安装 Grafana Plugin
+* Read: [DescribeInstalledPlugins](https://cloud.tencent.com/document/api/248/79204) - 列出实例已安装的插件
+* Update: [DescribeInstalledPlugins](https://cloud.tencent.com/document/api/248/79204) - 列出实例已安装的插件
+* Update: [InstallPlugins](https://cloud.tencent.com/document/api/248/79198) - 安装 Grafana Plugin
+* Delete: [UninstallGrafanaPlugins](https://cloud.tencent.com/document/api/248/79195) - 删除已安装的插件
 
 ## Import
 

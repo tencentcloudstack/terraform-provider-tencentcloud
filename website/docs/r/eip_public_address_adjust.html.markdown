@@ -82,4 +82,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AdjustPublicAddress](https://cloud.tencent.com/document/api/215/75874) - 更换公网IP
+* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271) - 查询异步任务执行结果
 

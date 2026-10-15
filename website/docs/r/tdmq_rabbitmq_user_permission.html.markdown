@@ -74,6 +74,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyRabbitMQPermission](https://cloud.tencent.com/document/api/1179/115237) - 修改RabbitMQ的权限
+* Read: [DescribeRabbitMQPermission](https://cloud.tencent.com/document/api/1179/115238) - 查询RabbitMQ权限列表
+* Update: [ModifyRabbitMQPermission](https://cloud.tencent.com/document/api/1179/115237) - 修改RabbitMQ的权限
+* Delete: [DeleteRabbitMQPermission](https://cloud.tencent.com/document/api/1179/115239) - 删除RabbitMQ的权限
 
 ## Import
 

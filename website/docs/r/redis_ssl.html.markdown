@@ -85,6 +85,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CloseSSL](https://cloud.tencent.com/document/api/239/81240) - 关闭SSL
+* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
+* Create: [OpenSSL](https://cloud.tencent.com/document/api/239/81239) - 开启SSL
+* Read: [DescribeSSLStatus](https://cloud.tencent.com/document/api/239/88703) - 查询SSL状态
+* Update: [CloseSSL](https://cloud.tencent.com/document/api/239/81240) - 关闭SSL
+* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
+* Update: [OpenSSL](https://cloud.tencent.com/document/api/239/81239) - 开启SSL
 
 ## Import
 

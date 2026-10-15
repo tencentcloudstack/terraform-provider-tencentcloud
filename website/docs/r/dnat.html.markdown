@@ -111,6 +111,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateNatGatewayDestinationIpPortTranslationNatRule](https://cloud.tencent.com/document/api/215/36720) - 创建NAT网关端口转发规则
+* Create: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://cloud.tencent.com/document/api/215/36717) - 查询NAT网关端口转发规则
+* Read: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://cloud.tencent.com/document/api/215/36717) - 查询NAT网关端口转发规则
+* Update: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://cloud.tencent.com/document/api/215/36717) - 查询NAT网关端口转发规则
+* Update: [ModifyNatGatewayDestinationIpPortTranslationNatRule](https://cloud.tencent.com/document/api/215/36714) - 修改NAT网关端口转发规则
+* Delete: [DeleteNatGatewayDestinationIpPortTranslationNatRule](https://cloud.tencent.com/document/api/215/36718) - 删除NAT网关端口转发规则
+* Delete: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://cloud.tencent.com/document/api/215/36717) - 查询NAT网关端口转发规则
 
 ## Import
 

@@ -66,6 +66,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSignature](https://cloud.tencent.com/document/api/1141/79571) - 创建镜像签名
 
 ## Import
 

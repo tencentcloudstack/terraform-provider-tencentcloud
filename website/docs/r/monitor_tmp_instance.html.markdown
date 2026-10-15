@@ -65,6 +65,20 @@ In addition to all arguments above, the following attributes are exported:
 * `proxy_address` - Proxy address.
 * `remote_write` - Prometheus remote write address.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePrometheusMultiTenantInstancePostPayMode](https://cloud.tencent.com/document/api/248/76097) - 创建按量 Prometheus 实例
+* Create: [DescribePrometheusInstances](https://cloud.tencent.com/document/api/248/66097) - 查看 Prometheus 实例列表
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribePrometheusInstances](https://cloud.tencent.com/document/api/248/66097) - 查看 Prometheus 实例列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyPrometheusInstanceAttributes](https://cloud.tencent.com/document/api/248/76009) - 修改 Prometheus 实例相关属性
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DescribePrometheusInstances](https://cloud.tencent.com/document/api/248/66097) - 查看 Prometheus 实例列表
+* Delete: [DestroyPrometheusInstance](https://cloud.tencent.com/document/api/248/76011) - 强制释放 Prometheus 实例
+* Delete: [TerminatePrometheusInstances](https://cloud.tencent.com/document/api/248/76008) - 销毁按量 Prometheus 实例
 
 ## Import
 

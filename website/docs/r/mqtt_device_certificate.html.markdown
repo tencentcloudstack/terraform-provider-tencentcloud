@@ -70,6 +70,17 @@ In addition to all arguments above, the following attributes are exported:
 * `not_before_time` - Certificate effective start date.
 * `update_time` - Certificate update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [RegisterDeviceCertificate](https://cloud.tencent.com/document/api/1778/111071) - 注册设备证书
+* Read: [DescribeDeviceCertificate](https://cloud.tencent.com/document/api/1778/113748) - 查询设备证书详情
+* Update: [ActivateDeviceCertificate](https://cloud.tencent.com/document/api/1778/113648) - 生效设备证书
+* Update: [DeactivateDeviceCertificate](https://cloud.tencent.com/document/api/1778/113750) - 失效设备证书
+* Delete: [DeactivateDeviceCertificate](https://cloud.tencent.com/document/api/1778/113750) - 失效设备证书
+* Delete: [DeleteDeviceCertificate](https://cloud.tencent.com/document/api/1778/113749) - 删除设备证书
+* Delete: [DescribeDeviceCertificate](https://cloud.tencent.com/document/api/1778/113748) - 查询设备证书详情
 
 ## Import
 

@@ -63,6 +63,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyObject](https://cloud.tencent.com/document/api/627/100164) - 修改防护对象
+* Read: [DescribeObjects](https://cloud.tencent.com/document/api/627/100165) - 查看防护对象列表
+* Read: [GetOrganizationRole](https://cloud.tencent.com/document/api/627/127691) - 获取用户角色
+* Update: [ModifyObject](https://cloud.tencent.com/document/api/627/100164) - 修改防护对象
+* Delete: [ModifyObject](https://cloud.tencent.com/document/api/627/100164) - 修改防护对象
 
 ## Import
 

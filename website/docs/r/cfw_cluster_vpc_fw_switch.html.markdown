@@ -167,4 +167,19 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeClusterVpcFwSwitchs](https://cloud.tencent.com/document/api/1132/127064) - 查询集群模式Vpc间防火墙开关
+* Create: [DescribeSwitchError](https://cloud.tencent.com/document/api/1132/127053) - 互联网边界和VPC防火墙开关横幅错误信息
+* Create: [ModifyClusterVpcFwSwitch](https://cloud.tencent.com/document/api/1132/127061) - 修改集群模式VPC防火墙开关
+* Read: [DescribeCcnVpcFwSwitch](https://cloud.tencent.com/document/api/1132/127058) - 查询CCN VPC防火墙开关配置
+* Read: [DescribeClusterVpcFwSwitchs](https://cloud.tencent.com/document/api/1132/127064) - 查询集群模式Vpc间防火墙开关
+* Update: [DescribeClusterVpcFwSwitchs](https://cloud.tencent.com/document/api/1132/127064) - 查询集群模式Vpc间防火墙开关
+* Update: [DescribeSwitchError](https://cloud.tencent.com/document/api/1132/127053) - 互联网边界和VPC防火墙开关横幅错误信息
+* Update: [UpdateClusterVpcFw](https://cloud.tencent.com/document/api/1132/127055) - 修改更新CCN中VPC防火墙策略配置
+* Delete: [DescribeClusterVpcFwSwitchs](https://cloud.tencent.com/document/api/1132/127064) - 查询集群模式Vpc间防火墙开关
+* Delete: [DescribeSwitchError](https://cloud.tencent.com/document/api/1132/127053) - 互联网边界和VPC防火墙开关横幅错误信息
+* Delete: [ModifyClusterVpcFwSwitch](https://cloud.tencent.com/document/api/1132/127061) - 修改集群模式VPC防火墙开关
 

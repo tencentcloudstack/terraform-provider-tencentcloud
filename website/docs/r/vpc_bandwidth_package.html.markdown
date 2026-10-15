@@ -74,6 +74,19 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateBandwidthPackage](https://cloud.tencent.com/document/api/215/19212) - 创建共享带宽包
+* Create: [DescribeBandwidthPackages](https://cloud.tencent.com/document/api/215/19209) - 查询带宽包资源
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeBandwidthPackages](https://cloud.tencent.com/document/api/215/19209) - 查询带宽包资源
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyBandwidthPackageAttribute](https://cloud.tencent.com/document/api/215/19208) - 修改带宽包属性
+* Update: [ModifyBandwidthPackageBandwidth](https://cloud.tencent.com/document/api/215/112463) - 调整共享带宽包带宽
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteBandwidthPackage](https://cloud.tencent.com/document/api/215/19211) - 删除共享带宽包
 
 ## Import
 

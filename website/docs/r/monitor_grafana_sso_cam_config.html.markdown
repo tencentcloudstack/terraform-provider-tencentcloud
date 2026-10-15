@@ -34,6 +34,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [EnableSSOCamCheck](https://cloud.tencent.com/document/api/248/79199) - 设置SSO登录是否鉴权
+* Read: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208) - 列出用户所有的 Grafana 服务
+* Update: [EnableSSOCamCheck](https://cloud.tencent.com/document/api/248/79199) - 设置SSO登录是否鉴权
 
 ## Import
 

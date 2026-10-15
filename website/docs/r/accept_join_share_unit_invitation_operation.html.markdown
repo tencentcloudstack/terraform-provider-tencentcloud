@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AcceptJoinShareUnitInvitation](https://cloud.tencent.com/document/api/850/107559) - 接受加入共享单元邀请
 

@@ -99,6 +99,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [RegisterTargetGroupInstances](https://cloud.tencent.com/document/api/214/40549) - 注册服务器到目标组
+* Read: [DescribeTargetGroupInstances](https://cloud.tencent.com/document/api/214/40556) - 获取目标组绑定的服务器
+* Update: [ModifyTargetGroupInstancesWeight](https://cloud.tencent.com/document/api/214/40550) - 批量修改目标组的服务器权重
+* Delete: [DeregisterTargetGroupInstances](https://cloud.tencent.com/document/api/214/40557) - 解绑目标组服务器
 
 ## Import
 

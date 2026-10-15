@@ -34,6 +34,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateStreamLinkEvent](https://cloud.tencent.com/document/api/862/93422) - 创建媒体传输事件
+* Read: [DescribeStreamLinkEvent](https://cloud.tencent.com/document/api/862/93420) - 查询媒体传输事件
+* Update: [ModifyStreamLinkEvent](https://cloud.tencent.com/document/api/862/93418) - 修改媒体传输事件
+* Delete: [DeleteStreamLinkEvent](https://cloud.tencent.com/document/api/862/93421) - 删除媒体传输事件
 
 ## Import
 

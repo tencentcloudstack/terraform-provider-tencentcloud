@@ -376,6 +376,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `zone_name` - Zone name.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyL7AccSetting](https://cloud.tencent.com/document/api/1552/115817) - 修改七层加速全局配置
+* Read: [DescribeL7AccSetting](https://cloud.tencent.com/document/api/1552/115819) - 查询七层加速全局配置
+* Update: [ModifyL7AccSetting](https://cloud.tencent.com/document/api/1552/115817) - 修改七层加速全局配置
 
 ## Import
 

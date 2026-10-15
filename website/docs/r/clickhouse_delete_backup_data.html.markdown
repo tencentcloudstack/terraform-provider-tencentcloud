@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DeleteBackUpData](https://cloud.tencent.com/document/api/1299/97603) - 删除备份数据
 

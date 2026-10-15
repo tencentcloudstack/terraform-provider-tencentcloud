@@ -30,4 +30,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `status` - Account service status. `0`: service opened, `1`: service not opened.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [GetClsService](https://cloud.tencent.com/document/api/614/132612) - 查询日志服务是否开通
+* Create: [OpenClsService](https://cloud.tencent.com/document/api/614/132611) - 开通日志服务
+* Read: [GetClsService](https://cloud.tencent.com/document/api/614/132612) - 查询日志服务是否开通
 

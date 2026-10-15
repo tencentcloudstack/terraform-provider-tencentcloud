@@ -91,6 +91,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AdjustCdbProxyAddress](https://cloud.tencent.com/document/api/236/90589) - 调整数据库代理地址
+* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
+* Create: [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) - 查询数据库代理详情
+* Read: [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) - 查询数据库代理详情
+* Update: [AdjustCdbProxyAddress](https://cloud.tencent.com/document/api/236/90589) - 调整数据库代理地址
+* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
+* Update: [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) - 查询数据库代理详情
 
 ## Import
 

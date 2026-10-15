@@ -93,6 +93,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCosRecharge](https://cloud.tencent.com/document/api/614/88100) - 创建cos导入任务
+* Read: [DescribeCosRecharges](https://cloud.tencent.com/document/api/614/88099) - 获取cos导入配置
+* Update: [ModifyCosRecharge](https://cloud.tencent.com/document/api/614/88098) - 修改cos导入任务
 
 ## Import
 

@@ -52,6 +52,18 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Creation time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
 * `modify_time` - Last modified time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateApiKey](https://cloud.tencent.com/document/api/628/45213) - 创建密钥
+* Create: [DisableApiKey](https://cloud.tencent.com/document/api/628/45209) - 禁用密钥
+* Read: [DescribeApiKeysStatus](https://cloud.tencent.com/document/api/628/45210) - 查询密钥列表
+* Update: [DisableApiKey](https://cloud.tencent.com/document/api/628/45209) - 禁用密钥
+* Update: [EnableApiKey](https://cloud.tencent.com/document/api/628/45208) - 启用密钥
+* Update: [UpdateApiKey](https://cloud.tencent.com/document/api/628/45207) - 更换密钥
+* Delete: [DeleteApiKey](https://cloud.tencent.com/document/api/628/45212) - 删除密钥
+* Delete: [DisableApiKey](https://cloud.tencent.com/document/api/628/45209) - 禁用密钥
 
 ## Import
 

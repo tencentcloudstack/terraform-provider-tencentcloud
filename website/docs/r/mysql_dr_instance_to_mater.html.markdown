@@ -80,6 +80,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
+* Create: [SwitchDrInstanceToMaster](https://cloud.tencent.com/document/api/236/52562) - 云数据库灾备实例切换为主实例
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) - 查询实例列表
+* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
+* Update: [SwitchDrInstanceToMaster](https://cloud.tencent.com/document/api/236/52562) - 云数据库灾备实例切换为主实例
 
 ## Import
 

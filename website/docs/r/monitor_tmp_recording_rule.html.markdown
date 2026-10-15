@@ -72,6 +72,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRecordingRule](https://cloud.tencent.com/document/api/248/76041) - 创建预聚合规则
+* Read: [DescribeRecordingRules](https://cloud.tencent.com/document/api/248/76039) - 查询预聚合规则
+* Update: [UpdateRecordingRule](https://cloud.tencent.com/document/api/248/76038) - 更新预聚合规则
+* Delete: [DeleteRecordingRules](https://cloud.tencent.com/document/api/248/76040) - 删除预聚合规则
 
 ## Import
 

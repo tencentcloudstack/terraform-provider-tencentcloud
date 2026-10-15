@@ -155,6 +155,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateConnection](https://cloud.tencent.com/document/api/1359/67691) - 创建事件连接器
+* Read: [ListConnections](https://cloud.tencent.com/document/api/1359/67689) - 获取事件连接器列表
+* Update: [UpdateConnection](https://cloud.tencent.com/document/api/1359/67688) - 更新事件连接器
+* Delete: [DeleteConnection](https://cloud.tencent.com/document/api/1359/67690) - 删除事件连接器
 
 ## Import
 

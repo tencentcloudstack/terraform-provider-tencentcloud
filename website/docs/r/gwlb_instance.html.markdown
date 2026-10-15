@@ -72,6 +72,16 @@ In addition to all arguments above, the following attributes are exported:
 * `target_group_id` - Unique ID of the associated target group.
 * `vips` - Gateway Load Balancer provides virtual IP services.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateGatewayLoadBalancer](https://cloud.tencent.com/document/api/1782/111685) - 购买网关负载均衡实例
+* Create: [DescribeTaskStatus](https://cloud.tencent.com/document/api/1782/111700) - 查询异步任务状态
+* Read: [DescribeGatewayLoadBalancers](https://cloud.tencent.com/document/api/1782/111683) - 查询网关负载均衡实例列表
+* Update: [ModifyGatewayLoadBalancerAttribute](https://cloud.tencent.com/document/api/1782/111681) - 修改网关负载均衡实例的属性
+* Delete: [DeleteGatewayLoadBalancer](https://cloud.tencent.com/document/api/1782/111684) - 删除网关负载均衡实例
+* Delete: [DescribeTaskStatus](https://cloud.tencent.com/document/api/1782/111700) - 查询异步任务状态
 
 ## Import
 

@@ -32,4 +32,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - 查询实例详情
+* Create: [IsolateDBInstances](https://cloud.tencent.com/document/api/409/54790) - 隔离实例
 

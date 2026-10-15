@@ -61,4 +61,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDisks](https://cloud.tencent.com/document/api/1207/90853) - 创建云硬盘
+* Create: [DescribeDisks](https://cloud.tencent.com/document/api/1207/66093) - 查询云硬盘
+* Read: [DescribeDisks](https://cloud.tencent.com/document/api/1207/66093) - 查询云硬盘
+* Update: [ModifyDisksAttribute](https://cloud.tencent.com/document/api/1207/66087) - 修改云硬盘属性
+* Update: [ModifyDisksRenewFlag](https://cloud.tencent.com/document/api/1207/66086) - 修改云硬盘续费标识
+* Delete: [DescribeDisks](https://cloud.tencent.com/document/api/1207/66093) - 查询云硬盘
+* Delete: [IsolateDisks](https://cloud.tencent.com/document/api/1207/90904) - 隔离云硬盘
+* Delete: [TerminateDisks](https://cloud.tencent.com/document/api/1207/66085) - 销毁云硬盘
 

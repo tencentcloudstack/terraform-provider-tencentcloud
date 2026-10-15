@@ -62,6 +62,22 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDomain](https://cloud.tencent.com/document/api/608/36991) - 创建HTTPS监听器的访问域名
+* Create: [DescribeHTTPListeners](https://cloud.tencent.com/document/api/608/37002) - 查询HTTP监听器信息
+* Create: [DescribeHTTPSListeners](https://cloud.tencent.com/document/api/608/37001) - 查询HTTPS监听器信息
+* Create: [DescribeRules](https://cloud.tencent.com/document/api/608/36986) - 查询转发规则信息
+* Create: [SetAuthentication](https://cloud.tencent.com/document/api/608/36982) - 认证高级配置
+* Read: [DescribeRules](https://cloud.tencent.com/document/api/608/36986) - 查询转发规则信息
+* Update: [DescribeHTTPSListeners](https://cloud.tencent.com/document/api/608/37001) - 查询HTTPS监听器信息
+* Update: [ModifyCertificate](https://cloud.tencent.com/document/api/608/36985) - 修改域名对应的证书
+* Update: [ModifyDomain](https://cloud.tencent.com/document/api/608/36984) - 更新监听器转发规则域名
+* Update: [SetAuthentication](https://cloud.tencent.com/document/api/608/36982) - 认证高级配置
+* Delete: [DeleteDomain](https://cloud.tencent.com/document/api/608/36989) - 根据域名删除转发规则
+* Delete: [DescribeRules](https://cloud.tencent.com/document/api/608/36986) - 查询转发规则信息
 
 ## Import
 

@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [TerminateAsyncEvent](https://cloud.tencent.com/document/api/583/52500) - 终止函数异步事件
 

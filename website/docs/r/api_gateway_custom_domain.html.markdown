@@ -46,4 +46,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `status` - Domain name resolution status. `1` means normal analysis, `0` means parsing failed.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [BindSubDomain](https://cloud.tencent.com/document/api/628/45188) - 服务绑定自定义域名
+* Read: [DescribeServiceSubDomainMappings](https://cloud.tencent.com/document/api/628/45186) - 查询自定义域名的路径映射
+* Read: [DescribeServiceSubDomains](https://cloud.tencent.com/document/api/628/45185) - 查询自定义域名列表
+* Update: [ModifySubDomain](https://cloud.tencent.com/document/api/628/45184) - 服务修改自定义域名
+* Delete: [UnBindSubDomain](https://cloud.tencent.com/document/api/628/45183) - 服务解绑自定义域名
 

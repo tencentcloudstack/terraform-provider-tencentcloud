@@ -61,6 +61,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AutoRewrite](https://cloud.tencent.com/document/api/214/34901) - 自动生成负载均衡转发规则的重定向关系
+* Create: [DescribeListeners](https://cloud.tencent.com/document/api/214/30686) - 查询负载均衡的监听器列表
+* Create: [ManualRewrite](https://cloud.tencent.com/document/api/214/34897) - 手动添加负载均衡转发规则的重定向关系
+* Read: [DescribeRewrite](https://cloud.tencent.com/document/api/214/34899) - 查询负载均衡转发规则的重定向关系
+* Delete: [DeleteRewrite](https://cloud.tencent.com/document/api/214/34900) - 删除负载均衡转发规则之间的重定向关系
+* Delete: [DescribeRewrite](https://cloud.tencent.com/document/api/214/34899) - 查询负载均衡转发规则的重定向关系
 
 ## Import
 

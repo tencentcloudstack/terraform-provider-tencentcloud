@@ -38,6 +38,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLiveTimeShiftRule](https://cloud.tencent.com/document/api/267/86170) - 创建直播时移规则
+* Read: [DescribeLiveTimeShiftRules](https://cloud.tencent.com/document/api/267/86166) - 获取直播时移规则列表
+* Delete: [DeleteLiveTimeShiftRule](https://cloud.tencent.com/document/api/267/86168) - 删除直播时移规则
+* Delete: [DescribeLiveTimeShiftRules](https://cloud.tencent.com/document/api/267/86166) - 获取直播时移规则列表
 
 ## Import
 

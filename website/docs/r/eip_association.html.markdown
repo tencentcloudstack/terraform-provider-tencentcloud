@@ -143,6 +143,18 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `cdc_id` - ID of the dedicated cluster.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AssociateAddress](https://cloud.tencent.com/document/api/215/16700) - 绑定弹性公网IP
+* Create: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702) - 查询弹性公网IP列表
+* Read: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702) - 查询弹性公网IP列表
+* Delete: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702) - 查询弹性公网IP列表
+* Delete: [DescribeNatGateways](https://cloud.tencent.com/document/api/215/36034) - 查询NAT网关
+* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271) - 查询异步任务执行结果
+* Delete: [DisassociateAddress](https://cloud.tencent.com/document/api/215/16703) - 解绑弹性公网IP
+* Delete: [DisassociateNatGatewayAddress](https://cloud.tencent.com/document/api/215/36716) - NAT网关解绑弹性IP
 
 ## Import
 

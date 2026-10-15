@@ -75,4 +75,18 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `10m`) Used when creating the resource.
 * `update` - (Defaults to `10m`) Used when updating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAliasDomain](https://cloud.tencent.com/document/api/1552/81247) - 创建别称域名
+* Create: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245) - 查询别称域名信息列表
+* Create: [ModifyAliasDomainStatus](https://cloud.tencent.com/document/api/1552/81243) - 修改别称域名状态
+* Read: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245) - 查询别称域名信息列表
+* Update: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245) - 查询别称域名信息列表
+* Update: [ModifyAliasDomain](https://cloud.tencent.com/document/api/1552/81244) - 修改别称域名
+* Update: [ModifyAliasDomainStatus](https://cloud.tencent.com/document/api/1552/81243) - 修改别称域名状态
+* Delete: [DeleteAliasDomain](https://cloud.tencent.com/document/api/1552/81246) - 删除别称域名
+* Delete: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245) - 查询别称域名信息列表
+* Delete: [ModifyAliasDomainStatus](https://cloud.tencent.com/document/api/1552/81243) - 修改别称域名状态
 

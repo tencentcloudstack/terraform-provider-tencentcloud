@@ -60,4 +60,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRoutes](https://cloud.tencent.com/document/api/215/16724) - 创建路由策略
+* Create: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - 查询路由表
+* Read: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - 查询路由表
+* Delete: [DeleteRoutes](https://cloud.tencent.com/document/api/215/16725) - 删除路由策略
+* Delete: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - 查询路由表
 

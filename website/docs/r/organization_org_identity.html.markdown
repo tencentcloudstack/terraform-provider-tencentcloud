@@ -47,6 +47,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateOrganizationIdentity](https://cloud.tencent.com/document/api/850/100458) - 添加组织身份
+* Read: [ListOrganizationIdentity](https://cloud.tencent.com/document/api/850/82934) - 获取组织成员访问身份列表
+* Update: [UpdateOrganizationIdentity](https://cloud.tencent.com/document/api/850/100455) - 更新组织身份
+* Delete: [DeleteOrganizationIdentity](https://cloud.tencent.com/document/api/850/100456) - 删除组织身份
 
 ## Import
 

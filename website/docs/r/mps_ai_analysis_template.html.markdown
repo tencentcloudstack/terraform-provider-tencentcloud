@@ -69,6 +69,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAIAnalysisTemplate](https://cloud.tencent.com/document/api/862/40249) - 创建内容分析模板
+* Read: [DescribeAIAnalysisTemplates](https://cloud.tencent.com/document/api/862/40247) - 获取内容分析模板列表
+* Update: [ModifyAIAnalysisTemplate](https://cloud.tencent.com/document/api/862/40246) - 修改内容分析模板
+* Delete: [DeleteAIAnalysisTemplate](https://cloud.tencent.com/document/api/862/40248) - 删除内容分析模板
 
 ## Import
 

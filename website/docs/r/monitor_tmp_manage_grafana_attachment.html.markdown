@@ -74,6 +74,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [BindPrometheusManagedGrafana](https://cloud.tencent.com/document/api/248/76020) - 绑定 Grafana 服务实例
+* Read: [DescribePrometheusInstances](https://cloud.tencent.com/document/api/248/66097) - 查看 Prometheus 实例列表
+* Delete: [DescribePrometheusInstances](https://cloud.tencent.com/document/api/248/66097) - 查看 Prometheus 实例列表
+* Delete: [UnbindPrometheusManagedGrafana](https://cloud.tencent.com/document/api/248/76007) - 解除实例绑定的 Grafana 服务实例
 
 ## Import
 

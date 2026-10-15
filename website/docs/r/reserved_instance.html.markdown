@@ -41,6 +41,9 @@ In addition to all arguments above, the following attributes are exported:
 * `start_time` - Start time of the RI.
 * `status` - Status of the RI at the time of purchase.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
 
 ## Import
 

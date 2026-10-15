@@ -42,6 +42,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `status` - status. 0: not used, 1: used.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddLiveWatermark](https://cloud.tencent.com/document/api/267/30154) - 添加水印
+* Read: [DescribeLiveWatermark](https://cloud.tencent.com/document/api/267/32627) - 获取单个水印
+* Update: [UpdateLiveWatermark](https://cloud.tencent.com/document/api/267/30150) - 更新水印
+* Delete: [DeleteLiveWatermark](https://cloud.tencent.com/document/api/267/30153) - 删除水印
 
 ## Import
 

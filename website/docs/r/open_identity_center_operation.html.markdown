@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `zone_id` - Space ID. z-Prefix starts with 12 random numbers/lowercase letters followed by.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [OpenIdentityCenter](https://cloud.tencent.com/document/api/850/109941) - 开通集团账号身份中心服务
 

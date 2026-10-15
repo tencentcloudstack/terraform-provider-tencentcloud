@@ -80,6 +80,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateConsumerGroup](https://cloud.tencent.com/document/api/1493/97943) - 创建消费组
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeConsumerGroup](https://cloud.tencent.com/document/api/1493/97941) - 查询消费组详情
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyConsumerGroup](https://cloud.tencent.com/document/api/1493/97940) - 修改消费组属性
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteConsumerGroup](https://cloud.tencent.com/document/api/1493/97942) - 删除消费组
 
 ## Import
 

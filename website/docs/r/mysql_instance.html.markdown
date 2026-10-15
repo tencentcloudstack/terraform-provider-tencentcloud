@@ -353,6 +353,21 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `20m`) Used when creating the resource.
 * `update` - (Defaults to `6h0m`) Used when updating the resource.
 * `delete` - (Defaults to `20m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDBInstance](https://cloud.tencent.com/document/api/236/15871) - 创建云数据库实例（包年包月）
+* Create: [CreateDBInstanceHour](https://cloud.tencent.com/document/api/236/15865) - 创建云数据库实例（按量计费）
+* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
+* Create: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) - 查询实例列表
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Create: [OpenWanService](https://cloud.tencent.com/document/api/236/15875) - 开通实例外网访问
+* Read: [DescribeDBInstanceConfig](https://cloud.tencent.com/document/api/236/17491) - 查询云数据库实例的配置信息
+* Read: [DescribeInstanceParams](https://cloud.tencent.com/document/api/236/20411) - 查询实例的可设置参数列表
+* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) - 查询实例列表
+* Delete: [IsolateDBInstance](https://cloud.tencent.com/document/api/236/15869) - 隔离云数据库实例
+* Delete: [OfflineIsolatedInstances](https://cloud.tencent.com/document/api/236/36197) - 下线隔离状态的云数据库实例
 
 ## Import
 

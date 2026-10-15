@@ -46,6 +46,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `group_resource_type` - Deployment Group Resource Type.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateGroup](https://cloud.tencent.com/document/api/649/36074) - 创建部署组
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeGroup](https://cloud.tencent.com/document/api/649/36067) - 查询虚拟机部署组详情
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyGroup](https://cloud.tencent.com/document/api/649/85852) - 更新分组信息
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteGroup](https://cloud.tencent.com/document/api/649/36072) - 删除虚拟机部署组
 
 ## Import
 

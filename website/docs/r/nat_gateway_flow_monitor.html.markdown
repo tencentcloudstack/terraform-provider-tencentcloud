@@ -34,6 +34,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `bandwidth` - Bandwidth of flow monitor.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CheckGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/116856) - 查询网关是否启用流量监控
+* Create: [DisableGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/43270) - 关闭网关流量监控
+* Create: [EnableGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/43269) - 开启网关流量监控
+* Read: [CheckGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/116856) - 查询网关是否启用流量监控
+* Update: [CheckGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/116856) - 查询网关是否启用流量监控
+* Update: [DisableGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/43270) - 关闭网关流量监控
+* Update: [EnableGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/43269) - 开启网关流量监控
 
 ## Import
 

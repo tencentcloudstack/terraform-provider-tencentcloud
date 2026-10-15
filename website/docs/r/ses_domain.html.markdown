@@ -47,6 +47,13 @@ In addition to all arguments above, the following attributes are exported:
   * `send_domain` - Domain name.
   * `type` - Record Type CNAME | A | TXT | MX.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateEmailIdentity](https://cloud.tencent.com/document/api/1288/51048) - 新建发信域名
+* Read: [GetEmailIdentity](https://cloud.tencent.com/document/api/1288/51046) - 获取域名配置详情
+* Delete: [DeleteEmailIdentity](https://cloud.tencent.com/document/api/1288/51047) - 删除发信域名
 
 ## Import
 

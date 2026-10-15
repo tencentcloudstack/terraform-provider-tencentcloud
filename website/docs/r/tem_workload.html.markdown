@@ -151,6 +151,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DeployApplication](https://cloud.tencent.com/document/api/1371/60158) - 应用部署
+* Read: [DescribeApplicationInfo](https://cloud.tencent.com/document/api/1371/78239) - 服务基本信息查看
+* Update: [DeployApplication](https://cloud.tencent.com/document/api/1371/60158) - 应用部署
+* Delete: [DeleteApplication](https://cloud.tencent.com/document/api/1371/66645) - 服务删除
 
 ## Import
 

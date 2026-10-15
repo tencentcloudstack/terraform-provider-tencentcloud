@@ -48,6 +48,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLiveCallbackTemplate](https://cloud.tencent.com/document/api/267/32637) - 创建回调模板
+* Read: [DescribeLiveCallbackTemplate](https://cloud.tencent.com/document/api/267/32633) - 获取直播单个回调模板
+* Update: [ModifyLiveCallbackTemplate](https://cloud.tencent.com/document/api/267/32631) - 修改回调模板
+* Delete: [DeleteLiveCallbackTemplate](https://cloud.tencent.com/document/api/267/32635) - 删除回调模板
 
 ## Import
 

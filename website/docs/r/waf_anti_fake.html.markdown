@@ -41,6 +41,16 @@ In addition to all arguments above, the following attributes are exported:
 * `protocol` - Protocol.
 * `rule_id` - Rule ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddAntiFakeUrl](https://cloud.tencent.com/document/api/627/97644) - 添加防篡改url
+* Create: [ModifyAntiFakeUrlStatus](https://cloud.tencent.com/document/api/627/97647) - 切换防篡改开关
+* Read: [DescribeAntiFakeRules](https://cloud.tencent.com/document/api/627/97641) - 获取防篡改信息
+* Update: [ModifyAntiFakeUrl](https://cloud.tencent.com/document/api/627/97634) - 编辑防篡改url
+* Update: [ModifyAntiFakeUrlStatus](https://cloud.tencent.com/document/api/627/97647) - 切换防篡改开关
+* Delete: [DeleteAntiFakeUrl](https://cloud.tencent.com/document/api/627/97642) - 删除防篡改url
 
 ## Import
 

@@ -75,6 +75,17 @@ In addition to all arguments above, the following attributes are exported:
 * `route_entry_id` - ID of route entry.
 * `route_item_id` - ID of route table entry.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRoutes](https://cloud.tencent.com/document/api/215/16724) - 创建路由策略
+* Create: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - 查询路由表
+* Create: [DisableRoutes](https://cloud.tencent.com/document/api/215/19216) - 禁用子网路由
+* Read: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - 查询路由表
+* Update: [DisableRoutes](https://cloud.tencent.com/document/api/215/19216) - 禁用子网路由
+* Update: [EnableRoutes](https://cloud.tencent.com/document/api/215/19215) - 启用子网路由
+* Delete: [DeleteRoutes](https://cloud.tencent.com/document/api/215/16725) - 删除路由策略
 
 ## Import
 

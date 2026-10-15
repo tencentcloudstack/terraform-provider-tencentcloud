@@ -34,6 +34,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `create_time` - Create time of the access group.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCfsPGroup](https://cloud.tencent.com/document/api/582/38161) - 创建权限组
+* Read: [DescribeCfsPGroups](https://cloud.tencent.com/document/api/582/38157) - 查询权限组列表
+* Update: [UpdateCfsPGroup](https://cloud.tencent.com/document/api/582/38155) - 更新权限组信息
+* Delete: [DeleteCfsPGroup](https://cloud.tencent.com/document/api/582/38159) - 删除权限组
 
 ## Import
 

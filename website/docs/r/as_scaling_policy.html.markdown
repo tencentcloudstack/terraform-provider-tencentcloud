@@ -150,6 +150,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateScalingPolicy](https://cloud.tencent.com/document/api/377/33180) - 创建告警触发策略
+* Read: [DescribeScalingPolicies](https://cloud.tencent.com/document/api/377/33178) - 查询告警触发策略
+* Update: [ModifyScalingPolicy](https://cloud.tencent.com/document/api/377/33177) - 修改告警触发策略
+* Delete: [DeleteScalingPolicy](https://cloud.tencent.com/document/api/377/33179) - 删除告警触发策略
 
 ## Import
 

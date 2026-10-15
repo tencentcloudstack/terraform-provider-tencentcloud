@@ -68,6 +68,14 @@ The `api_name_method` object of `api_name_op` exports the following:
 * `count` - API request count in the last 30 days.
 * `label` - API label.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyApiSecSensitiveRule](https://cloud.tencent.com/document/api/627/125861) - 修改api安全配置规则
+* Read: [DescribeApiSecSensitiveRuleList](https://cloud.tencent.com/document/api/627/129030) - 获取api安全配置规则列表
+* Update: [ModifyApiSecSensitiveRule](https://cloud.tencent.com/document/api/627/125861) - 修改api安全配置规则
+* Delete: [ModifyApiSecSensitiveRule](https://cloud.tencent.com/document/api/627/125861) - 修改api安全配置规则
 
 ## Import
 

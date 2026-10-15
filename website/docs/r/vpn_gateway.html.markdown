@@ -138,6 +138,23 @@ In addition to all arguments above, the following attributes are exported:
 * `restrict_state` - Restrict state of gateway. Valid value: `PRETECIVELY_ISOLATED`, `NORMAL`.
 * `state` - State of the VPN gateway. Valid value: `PENDING`, `DELETING`, `AVAILABLE`.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateVpnGateway](https://cloud.tencent.com/document/api/215/17521) - 创建VPN网关
+* Create: [DescribeVpnGateways](https://cloud.tencent.com/document/api/215/17514) - 查询VPN网关
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Read: [DescribeVpnGateways](https://cloud.tencent.com/document/api/215/17514) - 查询VPN网关
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [ModifyVpnGatewayAttribute](https://cloud.tencent.com/document/api/215/17507) - 修改VPN网关属性
+* Update: [RenewVpnGateway](https://cloud.tencent.com/document/api/215/17506) - 续费VPN网关
+* Update: [ResetVpnGatewayInternetMaxBandwidth](https://cloud.tencent.com/document/api/215/17504) - 调整VPN网关带宽上限
+* Update: [SetVpnGatewaysRenewFlag](https://cloud.tencent.com/document/api/215/81120) - 设置VPNGW续费标记
+* Delete: [DeleteVpnGateway](https://cloud.tencent.com/document/api/215/17518) - 删除VPN网关
+* Delete: [DescribeVpnConnections](https://cloud.tencent.com/document/api/215/17515) - 查询VPN通道列表
+* Delete: [DescribeVpnGateways](https://cloud.tencent.com/document/api/215/17514) - 查询VPN网关
 
 ## Import
 

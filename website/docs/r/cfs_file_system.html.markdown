@@ -129,6 +129,22 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `20m`) Used when creating the resource.
 * `update` - (Defaults to `20m`) Used when updating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCfsFileSystem](https://cloud.tencent.com/document/api/582/38174) - 创建文件系统
+* Create: [DescribeCfsFileSystems](https://cloud.tencent.com/document/api/582/38170) - 查询文件系统
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeCfsFileSystems](https://cloud.tencent.com/document/api/582/38170) - 查询文件系统
+* Read: [DescribeMountTargets](https://cloud.tencent.com/document/api/582/38169) - 查询文件系统挂载点
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [DescribeCfsFileSystems](https://cloud.tencent.com/document/api/582/38170) - 查询文件系统
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [ScaleUpFileSystem](https://cloud.tencent.com/document/api/582/90456) - 文件系统存储量扩容
+* Update: [UpdateCfsFileSystemName](https://cloud.tencent.com/document/api/582/38168) - 更新文件系统名
+* Update: [UpdateCfsFileSystemPGroup](https://cloud.tencent.com/document/api/582/38167) - 更新文件系统的权限组
+* Delete: [DeleteCfsFileSystem](https://cloud.tencent.com/document/api/582/38173) - 删除文件系统
 
 ## Import
 

@@ -39,6 +39,14 @@ In addition to all arguments above, the following attributes are exported:
 * `crt` - Pem format of certificate.
 * `key` - Private key of certificate.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCloudNativeAPIGatewayCertificate](https://cloud.tencent.com/document/api/1364/98591) - 创建云原生网关证书
+* Read: [DescribeCloudNativeAPIGatewayCertificateDetails](https://cloud.tencent.com/document/api/1364/98589) - 查询云原生网关单个证书详情
+* Update: [UpdateCloudNativeAPIGatewayCertificateInfo](https://cloud.tencent.com/document/api/1364/98587) - 修改云原生网关证书信息
+* Delete: [DeleteCloudNativeAPIGatewayCertificate](https://cloud.tencent.com/document/api/1364/98590) - 删除云原生网关证书
 
 ## Import
 

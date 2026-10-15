@@ -41,6 +41,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `nat_gateway_id` - Private network NAT gateway instance ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePrivateNatGateway](https://cloud.tencent.com/document/api/215/107904) - 创建私网NAT网关
+* Create: [DescribePrivateNatGateways](https://cloud.tencent.com/document/api/215/107891) - 查询私网NAT网关
+* Read: [DescribePrivateNatGateways](https://cloud.tencent.com/document/api/215/107891) - 查询私网NAT网关
+* Update: [DescribePrivateNatGateways](https://cloud.tencent.com/document/api/215/107891) - 查询私网NAT网关
+* Update: [ModifyPrivateNatGatewayAttribute](https://cloud.tencent.com/document/api/215/107890) - 修改私网NAT网关属性
+* Delete: [DeletePrivateNatGateway](https://cloud.tencent.com/document/api/215/107900) - 删除私网NAT网关
+* Delete: [DescribePrivateNatGateways](https://cloud.tencent.com/document/api/215/107891) - 查询私网NAT网关
 
 ## Import
 

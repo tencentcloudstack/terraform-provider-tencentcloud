@@ -38,6 +38,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `resource_id` - Resource ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePackageAndPay](https://cloud.tencent.com/document/api/1551/126465) - 购买套餐并支付
+* Read: [DescribeInstancePackageList](https://cloud.tencent.com/document/api/1551/121137) - 获取实例套餐列表
+* Update: [CreatePackageAndPay](https://cloud.tencent.com/document/api/1551/126465) - 购买套餐并支付
+* Update: [ModifyPackageAutoRenew](https://cloud.tencent.com/document/api/1551/126464) - 设置自动续费
 
 ## Import
 

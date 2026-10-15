@@ -144,6 +144,22 @@ In addition to all arguments above, the following attributes are exported:
 * `private_addresses` - Private addresses.
 * `public_addresses` - Public addresses.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateInstances](https://cloud.tencent.com/document/api/1207/69573) - 创建实例
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573) - 查看实例列表
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573) - 查看实例列表
+* Update: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573) - 查看实例列表
+* Update: [ModifyInstancesAttribute](https://cloud.tencent.com/document/api/1207/55548) - 修改实例的属性
+* Update: [ModifyInstancesBundle](https://cloud.tencent.com/document/api/1207/82998) - 变更实例套餐
+* Update: [ModifyInstancesRenewFlag](https://cloud.tencent.com/document/api/1207/55547) - 修改实例续费标识
+* Update: [ResetInstance](https://cloud.tencent.com/document/api/1207/47571) - 重装系统
+* Update: [ResetInstancesPassword](https://cloud.tencent.com/document/api/1207/55546) - 重置实例密码
+* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573) - 查看实例列表
+* Delete: [IsolateInstances](https://cloud.tencent.com/document/api/1207/73214) - 隔离实例
+* Delete: [TerminateInstances](https://cloud.tencent.com/document/api/1207/55545) - 销毁实例
 
 ## Import
 

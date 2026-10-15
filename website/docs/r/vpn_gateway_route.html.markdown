@@ -45,6 +45,14 @@ In addition to all arguments above, the following attributes are exported:
 * `type` - Route type. Default value: Static.
 * `update_time` - Update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateVpnGatewayRoutes](https://cloud.tencent.com/document/api/215/57678) - 创建VPN网关路由
+* Read: [DescribeVpnGatewayRoutes](https://cloud.tencent.com/document/api/215/57676) - 查询VPN网关路由
+* Update: [ModifyVpnGatewayRoutes](https://cloud.tencent.com/document/api/215/57675) - 修改VPN路由状态
+* Delete: [DeleteVpnGatewayRoutes](https://cloud.tencent.com/document/api/215/57677) - 删除VPN网关路由
 
 ## Import
 

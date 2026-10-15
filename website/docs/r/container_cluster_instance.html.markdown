@@ -77,4 +77,16 @@ In addition to all arguments above, the following attributes are exported:
 * `lan_ip` - Describe the lan ip of the node.
 * `wan_ip` - Describe the wan ip of the node.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateClusterInstances](https://cloud.tencent.com/document/api/457/36707) - 扩展集群节点
+* Create: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - 查询集群节点信息
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - 查看实例列表
+* Create: [DescribeZones](https://cloud.tencent.com/document/api/213/15707) - 查询可用区列表
+* Read: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - 查询集群节点信息
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - 查看实例列表
+* Delete: [DeleteClusterInstances](https://cloud.tencent.com/document/api/457/31864) - 删除集群中的节点
+* Delete: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - 查询集群节点信息
 

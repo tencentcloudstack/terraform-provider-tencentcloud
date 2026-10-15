@@ -34,6 +34,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [PutUserPermissionsBoundary](https://cloud.tencent.com/document/api/598/46594) - 设置用户权限边界
+* Read: [GetUserPermissionBoundary](https://cloud.tencent.com/document/api/598/66680) - 获取用户权限边界
+* Delete: [DeleteUserPermissionsBoundary](https://cloud.tencent.com/document/api/598/46595) - 删除用户权限边界
 
 ## Import
 

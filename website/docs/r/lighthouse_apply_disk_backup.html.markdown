@@ -34,4 +34,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ApplyDiskBackup](https://cloud.tencent.com/document/api/1207/84382) - 回滚云硬盘备份点
+* Create: [DescribeDiskBackups](https://cloud.tencent.com/document/api/1207/84379) - 查看云硬盘备份点列表
 

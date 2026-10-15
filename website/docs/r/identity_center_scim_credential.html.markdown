@@ -37,6 +37,13 @@ In addition to all arguments above, the following attributes are exported:
 * `expire_time` - SCIM expire time.
 * `status` - SCIM key status, Enabled-On, Disabled-Closed.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSCIMCredential](https://cloud.tencent.com/document/api/850/112052) - 创建SCIM密钥
+* Read: [ListSCIMCredentials](https://cloud.tencent.com/document/api/850/112049) - 查询SCIM密钥列表
+* Delete: [DeleteSCIMCredential](https://cloud.tencent.com/document/api/850/112051) - 删除SCIM密钥
 
 ## Import
 

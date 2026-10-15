@@ -51,6 +51,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateWebCallback](https://cloud.tencent.com/document/api/614/115231) - 创建告警渠道回调配置
+* Read: [DescribeWebCallbacks](https://cloud.tencent.com/document/api/614/115229) - 获取告警渠道回调配置列表
+* Update: [ModifyWebCallback](https://cloud.tencent.com/document/api/614/115228) - 修改告警渠道回调配置
+* Delete: [DeleteWebCallback](https://cloud.tencent.com/document/api/614/115230) - 删除告警渠道回调配置
 
 ## Import
 

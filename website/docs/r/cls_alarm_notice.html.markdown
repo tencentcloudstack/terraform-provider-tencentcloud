@@ -260,6 +260,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAlarmNotice](https://cloud.tencent.com/document/api/614/56465) - 创建通知渠道组
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeAlarmNotices](https://cloud.tencent.com/document/api/614/56462) - 获取通知渠道组列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyAlarmNotice](https://cloud.tencent.com/document/api/614/56458) - 修改通知渠道组
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteAlarmNotice](https://cloud.tencent.com/document/api/614/56463) - 删除通知渠道组
 
 ## Import
 

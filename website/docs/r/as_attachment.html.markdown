@@ -101,4 +101,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AttachInstances](https://cloud.tencent.com/document/api/377/20441) - 添加 CVM 实例到伸缩组
+* Create: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735) - 查询伸缩活动
+* Read: [DescribeAutoScalingInstances](https://cloud.tencent.com/document/api/377/20437) - 查询实例
+* Update: [AttachInstances](https://cloud.tencent.com/document/api/377/20441) - 添加 CVM 实例到伸缩组
+* Update: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735) - 查询伸缩活动
+* Update: [DetachInstances](https://cloud.tencent.com/document/api/377/20436) - 从伸缩组移出 CVM 实例
+* Delete: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735) - 查询伸缩活动
+* Delete: [DescribeAutoScalingInstances](https://cloud.tencent.com/document/api/377/20437) - 查询实例
+* Delete: [DetachInstances](https://cloud.tencent.com/document/api/377/20436) - 从伸缩组移出 CVM 实例
 

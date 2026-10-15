@@ -296,6 +296,14 @@ In addition to all arguments above, the following attributes are exported:
 - Custom: user-defined templates.
 * `update_time` - Last modified time of template in ISO date format.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateProcedureTemplate](https://cloud.tencent.com/document/api/266/33897) - 创建任务流模板
+* Read: [DescribeProcedureTemplates](https://cloud.tencent.com/document/api/266/33895) - 获取任务流模板列表
+* Update: [ResetProcedureTemplate](https://cloud.tencent.com/document/api/266/33894) - 重设任务流模板
+* Delete: [DeleteProcedureTemplate](https://cloud.tencent.com/document/api/266/33896) - 删除任务流模板
 
 ## Import
 

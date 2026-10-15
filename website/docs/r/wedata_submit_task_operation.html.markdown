@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Status.
 * `version_id` - Version id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [SubmitTask](https://cloud.tencent.com/document/api/1267/123619) - 提交任务
 

@@ -62,4 +62,12 @@ In addition to all arguments above, the following attributes are exported:
 * `file_name` - Audit log file name.
 * `file_size` - File size, The unit is KB.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAuditLogFile](https://cloud.tencent.com/document/api/1003/81440) - 创建审计日志文件
+* Create: [DescribeAuditLogFiles](https://cloud.tencent.com/document/api/1003/81438) - 查询审计日志文件
+* Read: [DescribeAuditLogFiles](https://cloud.tencent.com/document/api/1003/81438) - 查询审计日志文件
+* Delete: [DeleteAuditLogFile](https://cloud.tencent.com/document/api/1003/81439) - 删除审计日志文件
 

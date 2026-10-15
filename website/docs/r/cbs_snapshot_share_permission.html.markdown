@@ -34,6 +34,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifySnapshotsSharePermission](https://cloud.tencent.com/document/api/362/38073) - 修改快照分享信息
+* Read: [DescribeSnapshotSharePermission](https://cloud.tencent.com/document/api/362/38074) - 查看快照分享信息
+* Update: [ModifySnapshotsSharePermission](https://cloud.tencent.com/document/api/362/38073) - 修改快照分享信息
+* Delete: [DescribeSnapshotSharePermission](https://cloud.tencent.com/document/api/362/38074) - 查看快照分享信息
+* Delete: [ModifySnapshotsSharePermission](https://cloud.tencent.com/document/api/362/38073) - 修改快照分享信息
 
 ## Import
 

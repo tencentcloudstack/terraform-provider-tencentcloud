@@ -42,6 +42,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `shared_cname` - The full shared CNAME returned by the API.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSharedCNAME](https://cloud.tencent.com/document/api/1552/97762) - 创建共享 CNAME
+* Create: [DescribeSharedCNAME](https://cloud.tencent.com/document/api/1552/130048) - 查询共享CNAME列表
+* Create: [ModifySharedCNAME](https://cloud.tencent.com/document/api/1552/130047) - 修改共享 CNAME
+* Read: [DescribeSharedCNAME](https://cloud.tencent.com/document/api/1552/130048) - 查询共享CNAME列表
+* Update: [DescribeSharedCNAME](https://cloud.tencent.com/document/api/1552/130048) - 查询共享CNAME列表
+* Update: [ModifySharedCNAME](https://cloud.tencent.com/document/api/1552/130047) - 修改共享 CNAME
+* Delete: [DeleteSharedCNAME](https://cloud.tencent.com/document/api/1552/101362) - 删除共享 CNAME
 
 ## Import
 

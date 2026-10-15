@@ -123,6 +123,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ReplaceCcnRouteTableBroadcastPolicys](https://cloud.tencent.com/document/api/215/108740) - 替换云联网路由传播策略
+* Read: [DescribeCcnRouteTableBroadcastPolicys](https://cloud.tencent.com/document/api/215/108747) - 查询云联网路由传播策略
+* Update: [ReplaceCcnRouteTableBroadcastPolicys](https://cloud.tencent.com/document/api/215/108740) - 替换云联网路由传播策略
 
 ## Import
 

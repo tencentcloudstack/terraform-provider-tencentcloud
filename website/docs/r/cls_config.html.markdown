@@ -116,6 +116,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateConfig](https://cloud.tencent.com/document/api/614/58620) - 创建采集规则配置
+* Read: [DescribeConfigs](https://cloud.tencent.com/document/api/614/58616) - 获取采集规则配置
+* Update: [ModifyConfig](https://cloud.tencent.com/document/api/614/58614) - 修改采集规则配置
+* Delete: [DeleteConfig](https://cloud.tencent.com/document/api/614/58619) - 删除采集规则配置
 
 ## Import
 

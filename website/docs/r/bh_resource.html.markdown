@@ -66,6 +66,20 @@ In addition to all arguments above, the following attributes are exported:
 * `public_ip_set` - Public IP address list of the bastion host instance.
 * `resource_id` - Resource instance ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateResource](https://cloud.tencent.com/document/api/1025/100130) - 创建堡垒机实例
+* Create: [DeployResource](https://cloud.tencent.com/document/api/1025/86961) - 开通服务
+* Create: [DescribeResources](https://cloud.tencent.com/document/api/1025/74801) - 查询堡垒机服务信息
+* Read: [DescribeResources](https://cloud.tencent.com/document/api/1025/74801) - 查询堡垒机服务信息
+* Update: [DescribeResources](https://cloud.tencent.com/document/api/1025/74801) - 查询堡垒机服务信息
+* Update: [DisableExternalAccess](https://cloud.tencent.com/document/api/1025/125055) - 关闭公网访问堡垒机
+* Update: [DisableIntranetAccess](https://cloud.tencent.com/document/api/1025/125054) - 关闭内网访问
+* Update: [EnableExternalAccess](https://cloud.tencent.com/document/api/1025/125053) - 开启公网访问堡垒机
+* Update: [EnableIntranetAccess](https://cloud.tencent.com/document/api/1025/125052) - 开通内网访问
+* Update: [ModifyResource](https://cloud.tencent.com/document/api/1025/100129) - 资源变配
 
 ## Import
 

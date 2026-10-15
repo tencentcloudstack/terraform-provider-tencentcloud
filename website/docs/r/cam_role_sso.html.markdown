@@ -42,6 +42,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateOIDCConfig](https://cloud.tencent.com/document/api/598/73473) - 创建角色OIDC配置
+* Create: [DescribeOIDCConfig](https://cloud.tencent.com/document/api/598/73471) - 查询角色OIDC配置
+* Read: [DescribeOIDCConfig](https://cloud.tencent.com/document/api/598/73471) - 查询角色OIDC配置
+* Update: [DescribeOIDCConfig](https://cloud.tencent.com/document/api/598/73471) - 查询角色OIDC配置
+* Update: [UpdateOIDCConfig](https://cloud.tencent.com/document/api/598/73470) - 修改角色OIDC配置
+* Delete: [DeleteOIDCConfig](https://cloud.tencent.com/document/api/598/73472) - 删除OIDC身份提供商
 
 ## Import
 

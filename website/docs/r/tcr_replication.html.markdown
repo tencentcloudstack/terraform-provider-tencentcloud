@@ -115,4 +115,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ManageReplication](https://cloud.tencent.com/document/api/1141/54138) - 管理实例同步
+* Read: [DescribeReplicationPolicies](https://cloud.tencent.com/document/api/1141/126602) - 查询实例同步策略列表
+* Update: [ModifyReplication](https://cloud.tencent.com/document/api/1141/135882) - 更新实例同步规则
+* Delete: [DeleteReplicationRule](https://cloud.tencent.com/document/api/1141/126603) - 删除实例同步规则
 

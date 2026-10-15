@@ -51,6 +51,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateImageSpriteTemplate](https://cloud.tencent.com/document/api/862/37608) - 创建雪碧图模板
+* Read: [DescribeImageSpriteTemplates](https://cloud.tencent.com/document/api/862/37596) - 获取雪碧图模板列表
+* Update: [ModifyImageSpriteTemplate](https://cloud.tencent.com/document/api/862/37590) - 修改雪碧图模板
+* Delete: [DeleteImageSpriteTemplate](https://cloud.tencent.com/document/api/862/37602) - 删除雪碧图模板
 
 ## Import
 

@@ -306,6 +306,13 @@ In addition to all arguments above, the following attributes are exported:
 * `area` - Acceleration area of the zone. Valid values: `mainland`, `overseas`.
 * `zone_name` - Zone name.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyZoneSetting](https://cloud.tencent.com/document/api/1552/80614) - 修改站点配置（旧）
+* Read: [DescribeZoneSetting](https://cloud.tencent.com/document/api/1552/80617) - 查询站点配置（旧）
+* Update: [ModifyZoneSetting](https://cloud.tencent.com/document/api/1552/80614) - 修改站点配置（旧）
 
 ## Import
 

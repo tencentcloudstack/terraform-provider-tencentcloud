@@ -36,6 +36,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateConsumer](https://cloud.tencent.com/document/api/597/70173) - 创建消费者组
+* Read: [DescribeConsumerGroup](https://cloud.tencent.com/document/api/597/40841) - 查询消费分组信息
+* Delete: [DeleteGroup](https://cloud.tencent.com/document/api/597/69059) - 删除消费组
 
 ## Import
 

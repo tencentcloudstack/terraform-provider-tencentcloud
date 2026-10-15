@@ -50,6 +50,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [UpdateFunctionEventInvokeConfig](https://cloud.tencent.com/document/api/583/53639) - 更新函数异步重试配置
+* Read: [GetFunctionEventInvokeConfig](https://cloud.tencent.com/document/api/583/53640) - 获取函数异步重试配置
+* Update: [UpdateFunctionEventInvokeConfig](https://cloud.tencent.com/document/api/583/53639) - 更新函数异步重试配置
 
 ## Import
 

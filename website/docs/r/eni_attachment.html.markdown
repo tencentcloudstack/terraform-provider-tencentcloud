@@ -84,6 +84,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AttachNetworkInterface](https://cloud.tencent.com/document/api/215/15819) - 弹性网卡绑定云服务器
+* Create: [DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817) - 查询弹性网卡列表
+* Read: [DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817) - 查询弹性网卡列表
+* Delete: [DetachNetworkInterface](https://cloud.tencent.com/document/api/215/15816) - 弹性网卡解绑云服务器
 
 ## Import
 

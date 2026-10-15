@@ -67,6 +67,18 @@ In addition to all arguments above, the following attributes are exported:
 * `access_ip` - IP address of the internal access.
 * `status` - Status of the internal access.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - 查询实例信息
+* Create: [DescribeInternalEndpoints](https://cloud.tencent.com/document/api/1141/50734) - 查询实例内网访问VPC链接
+* Create: [ManageInternalEndpoint](https://cloud.tencent.com/document/api/1141/50733) - 管理实例内网访问VPC链接
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - 查询实例信息
+* Read: [DescribeInternalEndpoints](https://cloud.tencent.com/document/api/1141/50734) - 查询实例内网访问VPC链接
+* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - 查询实例信息
+* Delete: [DescribeInternalEndpoints](https://cloud.tencent.com/document/api/1141/50734) - 查询实例内网访问VPC链接
+* Delete: [ManageInternalEndpoint](https://cloud.tencent.com/document/api/1141/50733) - 管理实例内网访问VPC链接
 
 ## Import
 

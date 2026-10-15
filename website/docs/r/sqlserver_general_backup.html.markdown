@@ -87,6 +87,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `flow_id` - flow id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateBackup](https://cloud.tencent.com/document/api/238/19946) - 创建备份
+* Create: [DescribeBackupByFlowId](https://cloud.tencent.com/document/api/238/47203) - 根据流程ID查询备份信息
+* Read: [DescribeBackups](https://cloud.tencent.com/document/api/238/19943) - 查询备份列表
+* Update: [ModifyBackupName](https://cloud.tencent.com/document/api/238/47202) - 修改备份名称
+* Delete: [RemoveBackups](https://cloud.tencent.com/document/api/238/46287) - 删除手动备份
 
 ## Import
 

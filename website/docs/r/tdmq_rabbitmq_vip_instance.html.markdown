@@ -130,6 +130,16 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_endpoint` - VPC Endpoint.
   * `vpc_id` - VPC ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRabbitMQVipInstance](https://cloud.tencent.com/document/api/1179/88134) - 创建 RabbitMQ 托管版实例
+* Create: [DescribeRabbitMQVipInstances](https://cloud.tencent.com/document/api/1179/82205) - 查询 RabbitMQ 托管版实例列表
+* Read: [DescribeRabbitMQVipInstance](https://cloud.tencent.com/document/api/1179/88648) - 获取单个 RabbitMQ 托管版实例信息
+* Read: [DescribeRabbitMQVipInstances](https://cloud.tencent.com/document/api/1179/82205) - 查询 RabbitMQ 托管版实例列表
+* Update: [ModifyRabbitMQVipInstance](https://cloud.tencent.com/document/api/1179/88450) - 修改RabbitMQ专享版实例
+* Delete: [DeleteRabbitMQVipInstance](https://cloud.tencent.com/document/api/1179/94833) - 删除 RabbitMQ 托管版实例
 
 ## Import
 

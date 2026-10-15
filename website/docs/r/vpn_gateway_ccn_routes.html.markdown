@@ -38,6 +38,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyVpnGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/43497) - 修改VPN网关云联网路由
+* Read: [DescribeVpnGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/43514) - 查询VPN网关云联网路由
+* Update: [ModifyVpnGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/43497) - 修改VPN网关云联网路由
 
 ## Import
 

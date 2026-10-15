@@ -56,6 +56,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeNatFwSwitch](https://cloud.tencent.com/document/api/1132/125881) - 查询NAT防火墙开关列表
+* Create: [ModifyNatFwSwitch](https://cloud.tencent.com/document/api/1132/60242) - 修改NAT防火墙开关
+* Read: [DescribeNatFwSwitch](https://cloud.tencent.com/document/api/1132/125881) - 查询NAT防火墙开关列表
+* Update: [DescribeNatFwSwitch](https://cloud.tencent.com/document/api/1132/125881) - 查询NAT防火墙开关列表
+* Update: [ModifyNatFwSwitch](https://cloud.tencent.com/document/api/1132/60242) - 修改NAT防火墙开关
 
 ## Import
 

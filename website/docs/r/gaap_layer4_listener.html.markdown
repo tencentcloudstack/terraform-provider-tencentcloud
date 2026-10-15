@@ -92,6 +92,21 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Creation time of the layer4 listener.
 * `status` - Status of the layer4 listener.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [BindListenerRealServers](https://cloud.tencent.com/document/api/608/37008) - 监听器绑定源站
+* Create: [CreateTCPListeners](https://cloud.tencent.com/document/api/608/37005) - 创建TCP监听器
+* Create: [CreateUDPListeners](https://cloud.tencent.com/document/api/608/37004) - 创建UDP监听器
+* Read: [DescribeTCPListeners](https://cloud.tencent.com/document/api/608/36999) - 查询TCP监听器列表
+* Read: [DescribeUDPListeners](https://cloud.tencent.com/document/api/608/36998) - 查询UDP监听器列表
+* Update: [BindListenerRealServers](https://cloud.tencent.com/document/api/608/37008) - 监听器绑定源站
+* Update: [ModifyTCPListenerAttribute](https://cloud.tencent.com/document/api/608/36995) - 修改TCP监听器配置
+* Update: [ModifyUDPListenerAttribute](https://cloud.tencent.com/document/api/608/36994) - 修改UDP监听器配置
+* Delete: [DeleteListeners](https://cloud.tencent.com/document/api/608/37003) - 删除通道监听器
+* Delete: [DescribeTCPListeners](https://cloud.tencent.com/document/api/608/36999) - 查询TCP监听器列表
+* Delete: [DescribeUDPListeners](https://cloud.tencent.com/document/api/608/36998) - 查询UDP监听器列表
 
 ## Import
 

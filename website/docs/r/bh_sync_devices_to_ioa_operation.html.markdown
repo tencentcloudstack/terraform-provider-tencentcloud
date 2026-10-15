@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [SyncDevicesToIOA](https://cloud.tencent.com/document/api/1025/125467) - 同步资产到IOA
 

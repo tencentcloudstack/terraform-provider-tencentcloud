@@ -69,6 +69,21 @@ In addition to all arguments above, the following attributes are exported:
 * `internet_url` - Grafana intranet address.
 * `root_url` - Grafana external url which could be accessed by user.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateGrafanaInstance](https://cloud.tencent.com/document/api/248/79219) - 创建 Grafana 实例
+* Create: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208) - 列出用户所有的 Grafana 服务
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208) - 列出用户所有的 Grafana 服务
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [EnableGrafanaInternet](https://cloud.tencent.com/document/api/248/79201) - 设置 Grafana 公网访问
+* Update: [ModifyGrafanaInstance](https://cloud.tencent.com/document/api/248/79197) - 修改 Grafana 实例属性
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [CleanGrafanaInstance](https://cloud.tencent.com/document/api/248/79220) - 强制销毁 Grafana 实例
+* Delete: [DeleteGrafanaInstance](https://cloud.tencent.com/document/api/248/79215) - 删除 Grafana 实例
+* Delete: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208) - 列出用户所有的 Grafana 服务
 
 ## Import
 

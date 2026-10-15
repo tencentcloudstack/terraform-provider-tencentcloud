@@ -135,6 +135,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `task_id` - Delivery task ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDlcDeliver](https://cloud.tencent.com/document/api/614/125886) - 创建DLC投递任务
+* Read: [DescribeDlcDelivers](https://cloud.tencent.com/document/api/614/125884) - 获取DLC投递任务列表
+* Update: [ModifyDlcDeliver](https://cloud.tencent.com/document/api/614/125883) - 修改DLC投递任务
+* Delete: [DeleteDlcDeliver](https://cloud.tencent.com/document/api/614/125885) - 删除DLC投递任务
 
 ## Import
 

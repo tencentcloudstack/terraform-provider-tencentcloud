@@ -102,6 +102,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [BindRuleRealServers](https://cloud.tencent.com/document/api/608/36992) - 转发规则绑定源站
+* Create: [CreateRule](https://cloud.tencent.com/document/api/608/36990) - 创建监听器转发规则
+* Read: [DescribeRulesByRuleIds](https://cloud.tencent.com/document/api/608/39750) - 根据规则ID拉取规则信息列表
+* Update: [BindRuleRealServers](https://cloud.tencent.com/document/api/608/36992) - 转发规则绑定源站
+* Update: [ModifyRuleAttribute](https://cloud.tencent.com/document/api/608/36983) - 修改转发规则信息
+* Delete: [DeleteRule](https://cloud.tencent.com/document/api/608/36988) - 删除7层监听器转发规则
+* Delete: [DescribeRules](https://cloud.tencent.com/document/api/608/36986) - 查询转发规则信息
 
 ## Import
 

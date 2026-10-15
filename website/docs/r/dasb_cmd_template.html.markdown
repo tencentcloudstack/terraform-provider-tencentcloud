@@ -34,6 +34,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCmdTemplate](https://cloud.tencent.com/document/api/1025/86964) - 新建高危命令模板
+* Read: [DescribeCmdTemplates](https://cloud.tencent.com/document/api/1025/86962) - 查询命令模板列表
+* Update: [ModifyCmdTemplate](https://cloud.tencent.com/document/api/1025/98702) - 修改高危命令模板
+* Delete: [DeleteCmdTemplates](https://cloud.tencent.com/document/api/1025/86963) - 删除高危命令模板
 
 ## Import
 

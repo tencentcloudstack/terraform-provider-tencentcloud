@@ -103,6 +103,25 @@ In addition to all arguments above, the following attributes are exported:
   * `usage_plan_id` - ID of the usage plan.
   * `usage_plan_name` - Name of the usage plan.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateService](https://cloud.tencent.com/document/api/628/45201) - 创建服务
+* Create: [DescribeService](https://cloud.tencent.com/document/api/628/45199) - 查询服务详情
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Create: [ModifyServiceEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45178) - 修改服务限流策略
+* Read: [DescribeApiUsagePlan](https://cloud.tencent.com/document/api/628/45240) - 查询 API 使用计划详情
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Read: [DescribeService](https://cloud.tencent.com/document/api/628/45199) - 查询服务详情
+* Read: [DescribeServiceEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45180) - 展示服务限流策略
+* Read: [DescribeServiceUsagePlan](https://cloud.tencent.com/document/api/628/45195) - 查询服务使用计划详情
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [ModifyService](https://cloud.tencent.com/document/api/628/45193) - 修改服务
+* Update: [ModifyServiceEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45178) - 修改服务限流策略
+* Delete: [DeleteService](https://cloud.tencent.com/document/api/628/45200) - 删除服务
+* Delete: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [UnReleaseService](https://cloud.tencent.com/document/api/628/45191) - 下线服务
 
 ## Import
 

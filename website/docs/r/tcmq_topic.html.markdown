@@ -36,6 +36,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCmqTopic](https://cloud.tencent.com/document/api/1179/55915) - 创建cmq主题
+* Read: [DescribeCmqTopicDetail](https://cloud.tencent.com/document/api/1179/55907) - 查询cmq主题详情
+* Update: [ModifyCmqTopicAttribute](https://cloud.tencent.com/document/api/1179/55903) - 修改cmq主题属性
+* Delete: [DeleteCmqTopic](https://cloud.tencent.com/document/api/1179/55912) - 删除cmq主题
 
 ## Import
 

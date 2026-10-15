@@ -45,6 +45,18 @@ In addition to all arguments above, the following attributes are exported:
 * `license_id` - license id.
 * `resource_id` - resource id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLicenseOrder](https://cloud.tencent.com/document/api/296/80402) - 创建授权订单
+* Create: [ModifyLicenseOrder](https://cloud.tencent.com/document/api/296/98700) - 编辑授权订单
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeLicenseList](https://cloud.tencent.com/document/api/296/80397) - 获取授权订单列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyLicenseOrder](https://cloud.tencent.com/document/api/296/98700) - 编辑授权订单
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DestroyOrder](https://cloud.tencent.com/document/api/296/80396) - 销毁订单
 
 ## Import
 

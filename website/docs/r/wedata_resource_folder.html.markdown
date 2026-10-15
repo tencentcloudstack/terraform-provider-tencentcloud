@@ -36,4 +36,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateResourceFolder](https://cloud.tencent.com/document/api/1267/123641) - 创建资源文件夹
+* Read: [ListResourceFolders](https://cloud.tencent.com/document/api/1267/123625) - 查看资源文件夹列表
+* Update: [UpdateResourceFolder](https://cloud.tencent.com/document/api/1267/123617) - 更新资源文件夹
+* Delete: [DeleteResourceFolder](https://cloud.tencent.com/document/api/1267/123636) - 删除资源文件夹
 

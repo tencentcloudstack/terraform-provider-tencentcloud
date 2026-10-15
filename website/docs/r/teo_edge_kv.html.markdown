@@ -38,6 +38,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [EdgeKVGet](https://cloud.tencent.com/document/api/1552/130185) - 查询 KV 数据
+* Create: [EdgeKVPut](https://cloud.tencent.com/document/api/1552/130183) - 写入 KV 数据
+* Read: [EdgeKVGet](https://cloud.tencent.com/document/api/1552/130185) - 查询 KV 数据
+* Update: [EdgeKVGet](https://cloud.tencent.com/document/api/1552/130185) - 查询 KV 数据
+* Update: [EdgeKVPut](https://cloud.tencent.com/document/api/1552/130183) - 写入 KV 数据
+* Delete: [EdgeKVDelete](https://cloud.tencent.com/document/api/1552/130186) - 删除 KV 数据
 
 ## Import
 

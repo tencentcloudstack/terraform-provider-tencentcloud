@@ -43,6 +43,13 @@ In addition to all arguments above, the following attributes are exported:
 * `license_key` - License key.
 * `license_url` - License url.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateApplicationAndWebPlayerLicense](https://cloud.tencent.com/document/api/1449/113536) - 创建播放器web基础版
+* Read: [DescribeVcubeApplicationAndPlayList](https://cloud.tencent.com/document/api/1449/113527) - 查询视立方应用及播放类license
+* Delete: [DeleteApplicationAndWebPlayerLicense](https://cloud.tencent.com/document/api/1449/125853) - 删除web播放器license和应用
 
 ## Import
 

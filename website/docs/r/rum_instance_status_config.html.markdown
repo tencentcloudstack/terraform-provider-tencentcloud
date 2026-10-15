@@ -34,6 +34,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `instance_status` - Instance status (`1`=creating, `2`=running, `3`=abnormal, `4`=restarting, `5`=stopping, `6`=stopped, `7`=deleted).
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ResumeInstance](https://cloud.tencent.com/document/api/1464/69207) - 恢复 RUM 业务系统
+* Create: [StopInstance](https://cloud.tencent.com/document/api/1464/69206) - 停止RUM业务系统
+* Read: [DescribeTawInstances](https://cloud.tencent.com/document/api/1464/69213) - 查询 RUM 业务系统信息
+* Update: [ResumeInstance](https://cloud.tencent.com/document/api/1464/69207) - 恢复 RUM 业务系统
+* Update: [StopInstance](https://cloud.tencent.com/document/api/1464/69206) - 停止RUM业务系统
 
 ## Import
 

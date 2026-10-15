@@ -34,4 +34,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `is_rollback_completed` - Whether the rollback is completed. `true` meaing rollback completed, `false` meaning still rollbacking.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ApplyDiskBackup](https://cloud.tencent.com/document/api/362/80280) - 回滚备份点
+* Create: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - 查询云硬盘列表
+* Read: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - 查询云硬盘列表
 

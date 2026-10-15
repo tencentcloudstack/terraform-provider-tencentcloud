@@ -62,6 +62,16 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - Last updated time.
 * `url` - URL of the repository.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRepository](https://cloud.tencent.com/document/api/1141/42725) - 创建镜像仓库
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - 查询实例信息
+* Read: [DescribeRepositories](https://cloud.tencent.com/document/api/1141/42722) - 查询镜像仓库信息
+* Update: [ModifyRepository](https://cloud.tencent.com/document/api/1141/42721) - 更新镜像仓库信息
+* Delete: [DeleteRepository](https://cloud.tencent.com/document/api/1141/42724) - 删除镜像仓库
+* Delete: [DescribeRepositories](https://cloud.tencent.com/document/api/1141/42722) - 查询镜像仓库信息
 
 ## Import
 

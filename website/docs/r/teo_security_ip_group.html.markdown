@@ -49,6 +49,14 @@ The `ip_group` object exports the following:
 
 * `group_id` - Group ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSecurityIPGroup](https://cloud.tencent.com/document/api/1552/90651) - 创建安全 IP 组
+* Read: [DescribeSecurityIPGroup](https://cloud.tencent.com/document/api/1552/105866) - 查询安全 IP 组
+* Update: [ModifySecurityIPGroup](https://cloud.tencent.com/document/api/1552/90649) - 修改安全 IP 组
+* Delete: [DeleteSecurityIPGroup](https://cloud.tencent.com/document/api/1552/90650) - 删除安全 IP 组
 
 ## Import
 

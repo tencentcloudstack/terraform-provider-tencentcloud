@@ -32,4 +32,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCheckSyncJob](https://cloud.tencent.com/document/api/571/82106) - 校验同步任务
+* Create: [DescribeCheckSyncJobResult](https://cloud.tencent.com/document/api/571/82104) - 查询同步校验任务结果
 

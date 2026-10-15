@@ -40,6 +40,18 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateMicroservice](https://cloud.tencent.com/document/api/649/36087) - 新增微服务
+* Create: [DescribeMicroservices](https://cloud.tencent.com/document/api/649/36084) - 获取微服务列表
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeMicroservices](https://cloud.tencent.com/document/api/649/36084) - 获取微服务列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyMicroservice](https://cloud.tencent.com/document/api/649/36083) - 修改微服务详情
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteMicroservice](https://cloud.tencent.com/document/api/649/36086) - 删除微服务
 
 ## Import
 

@@ -106,6 +106,20 @@ In addition to all arguments above, the following attributes are exported:
   * `ip` - Ip address of the net info.
   * `port` - Port of the net info.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateReadOnlyGroup](https://cloud.tencent.com/document/api/409/52601) - 创建只读组
+* Create: [DescribeReadOnlyGroups](https://cloud.tencent.com/document/api/409/52599) - 查询只读组列表
+* Read: [DescribeDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84064) - 查询实例安全组
+* Read: [DescribeReadOnlyGroups](https://cloud.tencent.com/document/api/409/52599) - 查询只读组列表
+* Update: [CreateReadOnlyGroupNetworkAccess](https://cloud.tencent.com/document/api/409/70580) - 创建RO组网络
+* Update: [DeleteReadOnlyGroupNetworkAccess](https://cloud.tencent.com/document/api/409/70578) - 删除RO组网络
+* Update: [DescribeReadOnlyGroups](https://cloud.tencent.com/document/api/409/52599) - 查询只读组列表
+* Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84063) - 修改实例的安全组
+* Update: [ModifyReadOnlyGroupConfig](https://cloud.tencent.com/document/api/409/52597) - 修改只读组配置
+* Delete: [DeleteReadOnlyGroup](https://cloud.tencent.com/document/api/409/52600) - 删除只读组
 
 ## Import
 

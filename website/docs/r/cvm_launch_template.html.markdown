@@ -226,4 +226,12 @@ The `system_disk` object exports the following:
 
 * `disk_id` - System disk ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLaunchTemplate](https://cloud.tencent.com/document/api/213/66327) - 创建实例启动模板
+* Read: [DescribeLaunchTemplateVersions](https://cloud.tencent.com/document/api/213/66323) - 查询实例模板版本信息
+* Read: [DescribeLaunchTemplates](https://cloud.tencent.com/document/api/213/66322) - 查询实例启动模板
+* Delete: [DeleteLaunchTemplate](https://cloud.tencent.com/document/api/213/66325) - 删除实例启动模板
 

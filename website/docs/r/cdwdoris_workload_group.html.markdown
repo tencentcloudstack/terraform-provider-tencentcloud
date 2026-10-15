@@ -106,6 +106,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateWorkloadGroup](https://cloud.tencent.com/document/api/1387/109440) - 创建资源组
+* Read: [DescribeWorkloadGroup](https://cloud.tencent.com/document/api/1387/109437) - 获取资源组信息
+* Update: [ModifyWorkloadGroup](https://cloud.tencent.com/document/api/1387/109431) - 修改资源组信息
+* Delete: [DeleteWorkloadGroup](https://cloud.tencent.com/document/api/1387/109439) - 删除资源组
 
 ## Import
 

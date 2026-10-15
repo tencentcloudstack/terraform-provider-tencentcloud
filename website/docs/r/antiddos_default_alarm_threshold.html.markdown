@@ -42,6 +42,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDefaultAlarmThreshold](https://cloud.tencent.com/document/api/297/95375) - 设置单IP默认告警阈值配置
+* Read: [DescribeDefaultAlarmThreshold](https://cloud.tencent.com/document/api/297/95373) - 获取单IP默认告警阈值配置
+* Update: [CreateDefaultAlarmThreshold](https://cloud.tencent.com/document/api/297/95375) - 设置单IP默认告警阈值配置
 
 ## Import
 

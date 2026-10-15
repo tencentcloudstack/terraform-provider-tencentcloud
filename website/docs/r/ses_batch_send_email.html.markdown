@@ -81,4 +81,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [BatchSendEmail](https://cloud.tencent.com/document/api/1288/63481) - 批量发送邮件
 

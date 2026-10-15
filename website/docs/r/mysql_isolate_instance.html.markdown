@@ -82,4 +82,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `status` - Instance status.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) - 查询实例列表
+* Create: [IsolateDBInstance](https://cloud.tencent.com/document/api/236/15869) - 隔离云数据库实例
+* Create: [ReleaseIsolatedDBInstances](https://cloud.tencent.com/document/api/236/40937) - 解隔离按量计费云数据库实例
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) - 查询实例列表
+* Update: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) - 查询实例列表
+* Update: [IsolateDBInstance](https://cloud.tencent.com/document/api/236/15869) - 隔离云数据库实例
+* Update: [ReleaseIsolatedDBInstances](https://cloud.tencent.com/document/api/236/40937) - 解隔离按量计费云数据库实例
 

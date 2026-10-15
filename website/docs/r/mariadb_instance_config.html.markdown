@@ -39,6 +39,19 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CloseDBExtranetAccess](https://cloud.tencent.com/document/api/237/16179) - 关闭外网访问
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177) - 查询流程状态
+* Create: [ModifyRealServerAccessStrategy](https://cloud.tencent.com/document/api/237/60076) - 修改RS的访问策略
+* Create: [OpenDBExtranetAccess](https://cloud.tencent.com/document/api/237/16174) - 开通外网访问
+* Read: [DescribeDBInstanceDetail](https://cloud.tencent.com/document/api/237/89390) - 查询实例详细信息
+* Update: [CloseDBExtranetAccess](https://cloud.tencent.com/document/api/237/16179) - 关闭外网访问
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177) - 查询流程状态
+* Update: [ModifyRealServerAccessStrategy](https://cloud.tencent.com/document/api/237/60076) - 修改RS的访问策略
+* Update: [OpenDBExtranetAccess](https://cloud.tencent.com/document/api/237/16174) - 开通外网访问
 
 ## Import
 

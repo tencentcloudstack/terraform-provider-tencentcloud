@@ -67,6 +67,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateHttpAuthenticator](https://cloud.tencent.com/document/api/1778/116787) - 创建一个MQTTHTTP认证器
+* Read: [DescribeAuthenticator](https://cloud.tencent.com/document/api/1778/111075) - 查询MQTT认证器
+* Update: [ModifyHttpAuthenticator](https://cloud.tencent.com/document/api/1778/116786) - 修改MQTTHTTP认证器
+* Delete: [DeleteAuthenticator](https://cloud.tencent.com/document/api/1778/111088) - 删除一个MQTT认证器
 
 ## Import
 

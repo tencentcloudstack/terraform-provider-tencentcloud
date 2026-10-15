@@ -71,6 +71,15 @@ The `items` object exports the following:
 * `source` - Source.
 * `valid_status` - Valid status.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [UpsertIpAccessControl](https://cloud.tencent.com/document/api/627/72636) - Waf IP黑白名单Upsert接口
+* Read: [DescribeIpAccessControl](https://cloud.tencent.com/document/api/627/72645) - IP黑白名单查询
+* Update: [DeleteIpAccessControl](https://cloud.tencent.com/document/api/627/72648) - Waf IP黑白名单Delete接口
+* Update: [UpsertIpAccessControl](https://cloud.tencent.com/document/api/627/72636) - Waf IP黑白名单Upsert接口
+* Delete: [DeleteIpAccessControl](https://cloud.tencent.com/document/api/627/72648) - Waf IP黑白名单Delete接口
 
 ## Import
 

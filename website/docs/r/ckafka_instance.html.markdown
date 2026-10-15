@@ -190,6 +190,30 @@ In addition to all arguments above, the following attributes are exported:
 * `vip` - Vip of instance.
 * `vport` - Type of instance.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateInstancePre](https://cloud.tencent.com/document/api/597/45847) - 创建实例(预付费包年包月)
+* Create: [CreatePostPaidInstance](https://cloud.tencent.com/document/api/597/94259) - 创建按量计费实例（新）
+* Create: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - 获取实例属性
+* Create: [DescribeInstancesDetail](https://cloud.tencent.com/document/api/597/40834) - 获取实例集群列表详情
+* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Create: [ModifyInstanceAttributes](https://cloud.tencent.com/document/api/597/40832) - 设置实例属性
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - 获取实例属性
+* Read: [DescribeInstancesDetail](https://cloud.tencent.com/document/api/597/40834) - 获取实例集群列表详情
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - 获取实例属性
+* Update: [DescribeInstancesDetail](https://cloud.tencent.com/document/api/597/40834) - 获取实例集群列表详情
+* Update: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [InstanceScalingDown](https://cloud.tencent.com/document/api/597/95460) - 按量实例扩缩容
+* Update: [ModifyInstanceAttributes](https://cloud.tencent.com/document/api/597/40832) - 设置实例属性
+* Update: [ModifyInstancePre](https://cloud.tencent.com/document/api/597/73693) - 预付费实例变配接口
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteInstancePost](https://cloud.tencent.com/document/api/597/98200) - 删除后付费实例
+* Delete: [DeleteInstancePre](https://cloud.tencent.com/document/api/597/65806) - 删除预付费实例
+* Delete: [DescribeInstancesDetail](https://cloud.tencent.com/document/api/597/40834) - 获取实例集群列表详情
 
 ## Import
 

@@ -36,6 +36,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `function_version` - Version of the released function.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [PublishVersion](https://cloud.tencent.com/document/api/583/37161) - 发布新版本
+* Read: [GetFunction](https://cloud.tencent.com/document/api/583/18584) - 获取函数详细信息
+* Delete: [DeleteFunction](https://cloud.tencent.com/document/api/583/18585) - 删除函数
 
 ## Import
 

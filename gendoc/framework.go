@@ -224,6 +224,22 @@ func genFrameworkDoc(servicesRoot string, dtype fwDocType, name, product string,
 		desc = strings.TrimSpace(desc[:i])
 	}
 
+	// Optional manual API section (resource only); overrides the
+	// auto-extracted mapping. The section sits before "Example Usage", so
+	// cut the span [apiPos, examplePos) and join the rest back together.
+	manualAPI := ""
+	if dtype == fwResource {
+		if apiPos := strings.Index(desc, "\nAPI\n"); apiPos != -1 {
+			examplePos := strings.Index(desc, "\nExample Usage\n")
+			apiEnd := len(desc)
+			if examplePos != -1 && examplePos > apiPos {
+				apiEnd = examplePos
+			}
+			manualAPI = strings.TrimSpace(desc[apiPos+5 : apiEnd])
+			desc = strings.TrimSpace(desc[:apiPos] + desc[apiEnd:])
+		}
+	}
+
 	// Required Example Usage section.
 	example := ""
 	if i := strings.Index(desc, "\nExample Usage\n"); i != -1 {
@@ -260,6 +276,32 @@ func genFrameworkDoc(servicesRoot string, dtype fwDocType, name, product string,
 		"attributes":        attributes,
 		"timeouts":          "",
 		"import":            importBlock,
+		"api":               "",
+	}
+
+	// API Reference section for framework resources.
+	if dtype == fwResource {
+		analyzer := getSharedAPIAnalyzer()
+		repoRoot, _ := filepath.Abs("..")
+		resFile := findResourceFile(repoRoot, name)
+		if manualAPI != "" {
+			out["api"] = manualAPI
+		} else if analyzer != nil && resFile != "" {
+			refsByVerb := map[string][]apiRef{}
+			// Framework resources keep their CRUD in Create/Read/Update/
+			// Delete methods on the resource struct; resolve the receiver
+			// type from the declaring file.
+			recv := frameworkResourceRecvType(analyzer, resFile, name)
+			if recv != "" {
+				for _, verb := range []string{"Create", "Read", "Update", "Delete"} {
+					fd := analyzer.lookupMethodByReceiver(recv, verb)
+					if fd != nil {
+						refsByVerb[verb] = analyzer.analyzeLifecycle(fd)
+					}
+				}
+			}
+			out["api"] = renderAPIRefs(dedupVerbRefs(refsByVerb))
+		}
 	}
 
 	outPath := filepath.Join(docRoot, dtype.outputDir(), fmt.Sprintf("%s.html.markdown", resName))

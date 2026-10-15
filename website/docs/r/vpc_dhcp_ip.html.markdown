@@ -51,6 +51,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDhcpIp](https://cloud.tencent.com/document/api/215/45092) - 创建DhcpIp
+* Read: [DescribeDhcpIps](https://cloud.tencent.com/document/api/215/45090) - 查询DhcpIp列表
+* Update: [ModifyDhcpIpAttribute](https://cloud.tencent.com/document/api/215/45088) - 修改DhcpIp属性
+* Delete: [DeleteDhcpIp](https://cloud.tencent.com/document/api/215/45091) - 删除DhcpIp
 
 ## Import
 

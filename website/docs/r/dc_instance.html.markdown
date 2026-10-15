@@ -68,6 +68,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDirectConnect](https://cloud.tencent.com/document/api/216/34829) - 申请物理专线
+* Read: [DescribeDirectConnects](https://cloud.tencent.com/document/api/216/34826) - 查询物理专线列表
+* Update: [ModifyDirectConnectAttribute](https://cloud.tencent.com/document/api/216/34825) - 修改物理专线属性
+* Delete: [DeleteDirectConnect](https://cloud.tencent.com/document/api/216/34828) - 删除物理专线
 
 ## Import
 

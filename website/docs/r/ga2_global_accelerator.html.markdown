@@ -73,6 +73,18 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `5m`) Used when creating the resource.
 * `update` - (Defaults to `5m`) Used when updating the resource.
 * `delete` - (Defaults to `5m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateGlobalAccelerator](https://cloud.tencent.com/document/api/1817/130044) - 创建全球加速实例
+* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - 查询异步任务结果
+* Read: [DescribeGlobalAccelerators](https://cloud.tencent.com/document/api/1817/130161) - 查询全球加速实例
+* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - 查询异步任务结果
+* Update: [ModifyGlobalAccelerator](https://cloud.tencent.com/document/api/1817/130156) - 修改全球加速实例
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteGlobalAccelerator](https://cloud.tencent.com/document/api/1817/130167) - 删除全球加速实例
+* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - 查询异步任务结果
 
 ## Import
 

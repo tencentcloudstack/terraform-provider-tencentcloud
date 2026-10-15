@@ -53,4 +53,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyDBInstanceHAConfig](https://cloud.tencent.com/document/api/409/95969) - 修改实例HA配置信息
+* Read: [DescribeDBInstanceHAConfig](https://cloud.tencent.com/document/api/409/95970) - 查询实例HA配置
+* Update: [ModifyDBInstanceHAConfig](https://cloud.tencent.com/document/api/409/95969) - 修改实例HA配置信息
 

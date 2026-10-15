@@ -36,6 +36,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateWordSamples](https://cloud.tencent.com/document/api/862/39444) - 创建关键词样本
+* Read: [DescribeWordSamples](https://cloud.tencent.com/document/api/862/39440) - 获取关键词样本列表
+* Update: [ModifyWordSample](https://cloud.tencent.com/document/api/862/39438) - 修改关键词样本
+* Delete: [DeleteWordSamples](https://cloud.tencent.com/document/api/862/39442) - 删除关键词样本
 
 ## Import
 

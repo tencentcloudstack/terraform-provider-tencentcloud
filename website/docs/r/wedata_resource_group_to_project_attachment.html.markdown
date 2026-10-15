@@ -34,6 +34,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AssociateResourceGroupToProject](https://cloud.tencent.com/document/api/1267/123985) - 关联资源组到某个项目
+* Read: [ListResourceGroups](https://cloud.tencent.com/document/api/1267/123980) - 查看资源组列表
+* Delete: [DissociateResourceGroupFromProject](https://cloud.tencent.com/document/api/1267/123982) - 解绑项目关联的资源组
 
 ## Import
 

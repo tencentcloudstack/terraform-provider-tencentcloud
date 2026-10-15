@@ -97,6 +97,19 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSLInstance](https://cloud.tencent.com/document/api/589/110872) - Serverless HBase创建实例
+* Create: [DescribeSLInstance](https://cloud.tencent.com/document/api/589/110871) - Serverless HBase查询实例信息
+* Create: [DescribeSLInstanceList](https://cloud.tencent.com/document/api/589/110870) - Serverless HBase查询实例列表
+* Read: [DescribeSLInstance](https://cloud.tencent.com/document/api/589/110871) - Serverless HBase查询实例信息
+* Update: [DescribeSLInstance](https://cloud.tencent.com/document/api/589/110871) - Serverless HBase查询实例信息
+* Update: [DescribeSLInstanceList](https://cloud.tencent.com/document/api/589/110870) - Serverless HBase查询实例列表
+* Update: [ModifySLInstance](https://cloud.tencent.com/document/api/589/110869) - Serverless HBase变配实例
+* Delete: [DescribeSLInstanceList](https://cloud.tencent.com/document/api/589/110870) - Serverless HBase查询实例列表
+* Delete: [TerminateSLInstance](https://cloud.tencent.com/document/api/589/110868) - Serverless HBase销毁实例
 
 ## Import
 

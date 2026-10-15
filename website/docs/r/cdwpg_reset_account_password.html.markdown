@@ -36,6 +36,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ResetAccountPassword](https://cloud.tencent.com/document/api/878/116659) - 重置密码
+* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/878/116666) - 账号管理
+* Update: [ResetAccountPassword](https://cloud.tencent.com/document/api/878/116659) - 重置密码
 
 ## Import
 

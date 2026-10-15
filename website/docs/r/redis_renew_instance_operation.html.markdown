@@ -87,4 +87,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/239/20018) - 查询Redis实例列表
+* Create: [RenewInstance](https://cloud.tencent.com/document/api/239/20015) - 续费实例
 

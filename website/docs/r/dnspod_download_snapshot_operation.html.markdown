@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `cos_url` - Snapshot download url.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DownloadSnapshot](https://cloud.tencent.com/document/api/1427/83177) - 下载快照
 

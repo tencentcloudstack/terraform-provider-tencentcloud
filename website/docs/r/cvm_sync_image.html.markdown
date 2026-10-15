@@ -48,4 +48,10 @@ In addition to all arguments above, the following attributes are exported:
   * `image_id` - Image ID.
   * `region` - Region of the image.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - 查看镜像列表
+* Create: [SyncImages](https://cloud.tencent.com/document/api/213/15711) - 同步镜像
 

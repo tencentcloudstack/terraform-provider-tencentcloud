@@ -53,6 +53,14 @@ In addition to all arguments above, the following attributes are exported:
 * `dashboard_id` - Dashboard ID (globally unique identifier).
 * `update_time` - Last update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDashboard](https://cloud.tencent.com/document/api/614/127511) - 创建仪表盘
+* Read: [DescribeDashboards](https://cloud.tencent.com/document/api/614/95636) - 获取仪表盘
+* Update: [ModifyDashboard](https://cloud.tencent.com/document/api/614/127509) - 修改仪表盘
+* Delete: [DeleteDashboard](https://cloud.tencent.com/document/api/614/127510) - 删除仪表盘
 
 ## Import
 

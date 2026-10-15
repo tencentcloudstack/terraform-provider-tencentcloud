@@ -1537,6 +1537,15 @@ The `rules` object of `rate_limiting_rules` exports the following:
 
 * `id` - The ID of precise rate limiting. rule ID supports different rule configuration operations: - add a new rule: leave the ID empty or do not specify the ID parameter. - modify an existing rule: specify the rule ID that needs to be updated/modified. - delete an existing rule: existing Rules not included in the Rules list under the RateLimitingRules parameter will be deleted.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateWebSecurityTemplate](https://cloud.tencent.com/document/api/1552/121063) - 创建安全策略配置模板
+* Read: [DescribeWebSecurityTemplate](https://cloud.tencent.com/document/api/1552/121062) - 查询安全策略配置模板详情
+* Read: [DescribeWebSecurityTemplates](https://cloud.tencent.com/document/api/1552/121061) - 查询安全策略配置模板列表
+* Update: [ModifyWebSecurityTemplate](https://cloud.tencent.com/document/api/1552/121060) - 修改安全策略配置模板
+* Delete: [DeleteWebSecurityTemplate](https://cloud.tencent.com/document/api/1552/121064) - 删除安全策略配置模板
 
 ## Import
 

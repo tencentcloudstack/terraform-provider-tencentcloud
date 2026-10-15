@@ -46,6 +46,17 @@ In addition to all arguments above, the following attributes are exported:
   * `db_name` - Database name.
   * `status` - encryption, `enable` encrypted, `disable` unencrypted.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Create: [RestoreInstance](https://cloud.tencent.com/document/api/238/19950) - 按照备份集回档数据库
+* Read: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968) - 查询数据库列表（已废弃）
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Update: [RestoreInstance](https://cloud.tencent.com/document/api/238/19950) - 按照备份集回档数据库
+* Delete: [DeleteDB](https://cloud.tencent.com/document/api/238/19971) - 删除数据库
+* Delete: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
 
 ## Import
 

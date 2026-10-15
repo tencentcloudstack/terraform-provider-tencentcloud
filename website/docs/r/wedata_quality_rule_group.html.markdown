@@ -126,4 +126,12 @@ The `rule_group_exec_strategy_bo_list` object exports the following:
 
 * `rule_group_id` - Monitor task ID, required when editing monitor tasks.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateQualityRuleGroup](https://cloud.tencent.com/document/api/1267/127231) - 质量创建监控任务
+* Read: [ListQualityRuleGroups](https://cloud.tencent.com/document/api/1267/127351) - 质量分页查询监控任务
+* Update: [ModifyQualityRuleGroup](https://cloud.tencent.com/document/api/1267/127224) - 质量编辑监控任务
+* Delete: [DeleteQualityRuleGroup](https://cloud.tencent.com/document/api/1267/127229) - 质量删除监控任务
 

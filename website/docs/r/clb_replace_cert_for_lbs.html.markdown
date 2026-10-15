@@ -96,4 +96,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ReplaceCertForLoadBalancers](https://cloud.tencent.com/document/api/214/36907) - 替换负载均衡实例所关联的证书
 

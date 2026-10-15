@@ -40,6 +40,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyLiveDomainReferer](https://cloud.tencent.com/document/api/267/56105) - 设置直播域名 Referer 黑白名单
+* Read: [DescribeLiveDomainReferer](https://cloud.tencent.com/document/api/267/56106) - 查询直播域名 Referer 黑白名单配置
+* Update: [ModifyLiveDomainReferer](https://cloud.tencent.com/document/api/267/56105) - 设置直播域名 Referer 黑白名单
 
 ## Import
 

@@ -56,6 +56,19 @@ In addition to all arguments above, the following attributes are exported:
 The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
 
 * `create` - (Defaults to `15m`) Used when creating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateBaseBackup](https://cloud.tencent.com/document/api/409/89028) - 创建实例数据备份
+* Create: [DescribeBaseBackups](https://cloud.tencent.com/document/api/409/89022) - 查询数据备份列表
+* Create: [ModifyBaseBackupExpireTime](https://cloud.tencent.com/document/api/409/89020) - 修改数据备份过期时间
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeBaseBackups](https://cloud.tencent.com/document/api/409/89022) - 查询数据备份列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyBaseBackupExpireTime](https://cloud.tencent.com/document/api/409/89020) - 修改数据备份过期时间
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteBaseBackup](https://cloud.tencent.com/document/api/409/89027) - 删除实例数据备份
 
 ## Import
 

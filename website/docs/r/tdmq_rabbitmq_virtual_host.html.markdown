@@ -72,6 +72,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRabbitMQVirtualHost](https://cloud.tencent.com/document/api/1179/90854) - 创建RabbitMQ的vhost
+* Read: [DescribeRabbitMQVirtualHost](https://cloud.tencent.com/document/api/1179/93455) - 查询RabbitMQ vhost列表
+* Update: [ModifyRabbitMQVirtualHost](https://cloud.tencent.com/document/api/1179/93453) - 修改RabbitMQ的vhost
+* Delete: [DeleteRabbitMQVirtualHost](https://cloud.tencent.com/document/api/1179/93457) - 删除RabbitMQ的vhost
 
 ## Import
 

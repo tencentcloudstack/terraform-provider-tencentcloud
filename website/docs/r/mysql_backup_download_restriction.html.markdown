@@ -48,6 +48,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyBackupDownloadRestriction](https://cloud.tencent.com/document/api/236/63890) - 修改备份文件的限制下载来源
+* Read: [DescribeBackupDownloadRestriction](https://cloud.tencent.com/document/api/236/63891) - 查询备份文件下载源限制
+* Update: [ModifyBackupDownloadRestriction](https://cloud.tencent.com/document/api/236/63890) - 修改备份文件的限制下载来源
 
 ## Import
 

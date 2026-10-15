@@ -49,6 +49,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160) - 获取集群实例状态
+* Create: [ModifyUserHba](https://cloud.tencent.com/document/api/878/116660) - 修改用户Hba
+* Read: [DescribeUserHbaConfig](https://cloud.tencent.com/document/api/878/116661) - 查询用户Hba
+* Update: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160) - 获取集群实例状态
+* Update: [ModifyUserHba](https://cloud.tencent.com/document/api/878/116660) - 修改用户Hba
 
 ## Import
 

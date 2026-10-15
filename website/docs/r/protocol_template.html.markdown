@@ -34,6 +34,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateServiceTemplate](https://cloud.tencent.com/document/api/215/16710) - 创建协议端口模板
+* Read: [DescribeServiceTemplates](https://cloud.tencent.com/document/api/215/16719) - 查询协议端口模板
+* Update: [ModifyServiceTemplateAttribute](https://cloud.tencent.com/document/api/215/16722) - 修改协议端口模板
+* Delete: [DeleteServiceTemplate](https://cloud.tencent.com/document/api/215/16714) - 删除协议端口模板
+* Delete: [DescribeServiceTemplates](https://cloud.tencent.com/document/api/215/16719) - 查询协议端口模板
 
 ## Import
 

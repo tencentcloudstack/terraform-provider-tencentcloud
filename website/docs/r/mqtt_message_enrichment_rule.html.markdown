@@ -77,6 +77,14 @@ In addition to all arguments above, the following attributes are exported:
 * `rule_id` - Rule ID.
 * `update_time` - Update time, millisecond timestamp.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateMessageEnrichmentRule](https://cloud.tencent.com/document/api/1778/126116) - 创建消息属性增强规则
+* Read: [DescribeMessageEnrichmentRules](https://cloud.tencent.com/document/api/1778/126114) - 查询消息属性增强规则
+* Update: [ModifyMessageEnrichmentRule](https://cloud.tencent.com/document/api/1778/126113) - 修改消息属性增强规则
+* Delete: [DeleteMessageEnrichmentRule](https://cloud.tencent.com/document/api/1778/126115) - 删除消息属性增强规则
 
 ## Import
 

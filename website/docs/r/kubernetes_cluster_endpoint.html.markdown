@@ -77,4 +77,15 @@ In addition to all arguments above, the following attributes are exported:
 * `pgw_endpoint` - The Intranet address used for access.
 * `user_name` - User name of account.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - 查询集群节点信息
+* Create: [DescribeClusterVirtualNode](https://cloud.tencent.com/document/api/457/85351) - 查看超级节点列表
+* Read: [DescribeClusterKubeconfig](https://cloud.tencent.com/document/api/457/48149) - 获取集群kubeconfig文件
+* Read: [DescribeClusterSecurity](https://cloud.tencent.com/document/api/457/36703) - 集群的密钥信息
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - 查询TKE集群列表
+* Update: [ModifyClusterEndpointSP](https://cloud.tencent.com/document/api/457/39408) - 修改托管集群外网端口的安全策略
+* Delete: [DescribeClusterSecurity](https://cloud.tencent.com/document/api/457/36703) - 集群的密钥信息
 

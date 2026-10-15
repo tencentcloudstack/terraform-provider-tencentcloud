@@ -38,6 +38,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `rule_id` - ID of this CLB listener rule.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyDomainAttributes](https://cloud.tencent.com/document/api/214/38092) - 修改负载均衡七层监听器转发规则的域名级别属性
+* Read: [DescribeListeners](https://cloud.tencent.com/document/api/214/30686) - 查询负载均衡的监听器列表
+* Update: [ModifyDomainAttributes](https://cloud.tencent.com/document/api/214/38092) - 修改负载均衡七层监听器转发规则的域名级别属性
 
 ## Import
 

@@ -64,6 +64,13 @@ The `baseline_config_items` object exports the following:
 
 * `apply_count` - Specifies the number of accounts for baseline applications.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [UpdateAccountFactoryBaseline](https://cloud.tencent.com/document/api/1708/116706) - 更新用户基线项配置
+* Read: [GetAccountFactoryBaseline](https://cloud.tencent.com/document/api/1708/116709) - 获取用户基线配置数据
+* Update: [UpdateAccountFactoryBaseline](https://cloud.tencent.com/document/api/1708/116706) - 更新用户基线项配置
 
 ## Import
 

@@ -223,4 +223,14 @@ The `agents` object exports the following:
 * `cluster_name` - the name of the cluster.
 * `status` - agent state, `normal`, `abnormal`.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePrometheusClusterAgent](https://cloud.tencent.com/document/api/248/86044) - 2.0实例关联集群
+* Create: [DescribePrometheusClusterAgents](https://cloud.tencent.com/document/api/248/86040) - 获取TMP实例关联集群列表
+* Read: [DescribePrometheusClusterAgents](https://cloud.tencent.com/document/api/248/86040) - 获取TMP实例关联集群列表
+* Update: [ModifyPrometheusAgentExternalLabels](https://cloud.tencent.com/document/api/248/86036) - 修改被关联集群的external labels
+* Delete: [DeletePrometheusClusterAgent](https://cloud.tencent.com/document/api/248/86041) - 解除TMP实例的集群关联
+* Delete: [DescribePrometheusClusterAgents](https://cloud.tencent.com/document/api/248/86040) - 获取TMP实例关联集群列表
 

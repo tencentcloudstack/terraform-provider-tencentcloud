@@ -39,6 +39,23 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `create_time` - Create time of the customer gateway.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCustomerGateway](https://cloud.tencent.com/document/api/215/17523) - 创建对端网关
+* Create: [DescribeCustomerGateways](https://cloud.tencent.com/document/api/215/17516) - 查询对端网关
+* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeCustomerGateways](https://cloud.tencent.com/document/api/215/17516) - 查询对端网关
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [DescribeCustomerGateways](https://cloud.tencent.com/document/api/215/17516) - 查询对端网关
+* Update: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyCustomerGatewayAttribute](https://cloud.tencent.com/document/api/215/17509) - 修改对端网关
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteCustomerGateway](https://cloud.tencent.com/document/api/215/17520) - 删除对端网关
+* Delete: [DescribeCustomerGateways](https://cloud.tencent.com/document/api/215/17516) - 查询对端网关
+* Delete: [DescribeVpnConnections](https://cloud.tencent.com/document/api/215/17515) - 查询VPN通道列表
 
 ## Import
 

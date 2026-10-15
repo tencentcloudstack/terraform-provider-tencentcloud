@@ -49,6 +49,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `proxy_id` - L4 proxy instance ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateL4Proxy](https://cloud.tencent.com/document/api/1552/103417) - 创建四层代理实例
+* Read: [DescribeL4Proxy](https://cloud.tencent.com/document/api/1552/103413) - 查询四层代理实例列表
+* Update: [ModifyL4Proxy](https://cloud.tencent.com/document/api/1552/103411) - 修改四层代理实例
+* Delete: [DeleteL4Proxy](https://cloud.tencent.com/document/api/1552/103415) - 删除四层代理实例
+* Delete: [DescribeL4Proxy](https://cloud.tencent.com/document/api/1552/103413) - 查询四层代理实例列表
+* Delete: [ModifyL4ProxyStatus](https://cloud.tencent.com/document/api/1552/103408) - 修改四层代理实例状态
 
 ## Import
 

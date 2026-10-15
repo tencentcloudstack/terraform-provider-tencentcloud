@@ -75,6 +75,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePrometheusScrapeJob](https://cloud.tencent.com/document/api/248/76017) - 创建 Prometheus 抓取任务
+* Read: [DescribePrometheusScrapeJobs](https://cloud.tencent.com/document/api/248/76012) - 列出 Prometheus 抓取任务
+* Update: [UpdatePrometheusScrapeJob](https://cloud.tencent.com/document/api/248/76003) - 更新 Prometheus Agent 抓取任务
+* Delete: [DeletePrometheusScrapeJobs](https://cloud.tencent.com/document/api/248/76015) - 删除 Prometheus 抓取任务
 
 ## Import
 

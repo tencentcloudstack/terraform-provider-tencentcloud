@@ -49,6 +49,16 @@ In addition to all arguments above, the following attributes are exported:
 * `instance_status` - Instance status (`1` = creating, `2` = running, `3` = exception, `4` = restarting, `5` = stopping, `6` = stopped, `7` = deleted).
 * `updated_at` - Update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Read: [DescribeTawInstances](https://cloud.tencent.com/document/api/1464/69213) - 查询 RUM 业务系统信息
+* Update: [ModifyInstance](https://cloud.tencent.com/document/api/1464/69210) - 修改 RUM 业务系统
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteInstance](https://cloud.tencent.com/document/api/1464/69242) - 删除 RUM 业务系统
 
 ## Import
 

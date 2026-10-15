@@ -44,6 +44,14 @@ In addition to all arguments above, the following attributes are exported:
 * `public_endpoint` - Public network access point address.
 * `vpc_endpoint` - VPC access point address.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRocketMQNamespace](https://cloud.tencent.com/document/api/1179/63427) - 创建 RocketMQ 命名空间
+* Read: [DescribeRocketMQNamespaces](https://cloud.tencent.com/document/api/1179/63419) - 查询 RocketMQ 命名空间列表
+* Update: [ModifyRocketMQNamespace](https://cloud.tencent.com/document/api/1179/63415) - 修改 RocketMQ 命名空间
+* Delete: [DeleteRocketMQNamespace](https://cloud.tencent.com/document/api/1179/63412) - 删除 RocketMQ 命名空间
 
 ## Import
 

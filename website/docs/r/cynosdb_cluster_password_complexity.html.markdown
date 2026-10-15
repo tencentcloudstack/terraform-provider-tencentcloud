@@ -47,6 +47,19 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CopyClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92723) - 复制集群密码复杂度
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
+* Create: [OpenClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92720) - 开启自定义密码复杂度功能
+* Read: [DescribeClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92722) - 查看集群密码复杂度详情
+* Update: [CopyClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92723) - 复制集群密码复杂度
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
+* Update: [ModifyClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92721) - 修改集群密码复杂度
+* Delete: [CloseClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92724) - 关闭集群密码复杂度
+* Delete: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
 
 ## Import
 

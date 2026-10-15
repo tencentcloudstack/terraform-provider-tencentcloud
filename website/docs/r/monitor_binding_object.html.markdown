@@ -64,4 +64,16 @@ The `dimensions` object exports the following:
 
 * `unique_id` - Object unique ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [BindingPolicyObject](https://cloud.tencent.com/document/api/248/40421) - 绑定策略对象
+* Create: [DescribeBindingPolicyObjectList](https://cloud.tencent.com/document/api/248/40570) - 获取已绑定对象列表
+* Create: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945) - 获取基础策略告警组列表
+* Read: [DescribeBindingPolicyObjectList](https://cloud.tencent.com/document/api/248/40570) - 获取已绑定对象列表
+* Read: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945) - 获取基础策略告警组列表
+* Delete: [DescribeBindingPolicyObjectList](https://cloud.tencent.com/document/api/248/40570) - 获取已绑定对象列表
+* Delete: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945) - 获取基础策略告警组列表
+* Delete: [UnBindingPolicyObject](https://cloud.tencent.com/document/api/248/40567) - 删除策略的关联对象
 

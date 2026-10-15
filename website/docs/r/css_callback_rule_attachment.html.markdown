@@ -36,6 +36,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLiveCallbackRule](https://cloud.tencent.com/document/api/267/32638) - 创建回调规则
+* Read: [DescribeLiveCallbackRules](https://cloud.tencent.com/document/api/267/32634) - 获取回调规则列表
+* Delete: [DeleteLiveCallbackRule](https://cloud.tencent.com/document/api/267/32636) - 删除回调规则
+* Delete: [DescribeLiveCallbackRules](https://cloud.tencent.com/document/api/267/32634) - 获取回调规则列表
 
 ## Import
 

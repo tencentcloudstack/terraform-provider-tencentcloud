@@ -57,6 +57,15 @@ In addition to all arguments above, the following attributes are exported:
 * `cluster_type` - Cluster type, returned by API.
 * `status` - Agent status.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateExternalCluster](https://cloud.tencent.com/document/api/248/118983) - 注册外部 k8s 集群
+* Create: [DescribePrometheusClusterAgents](https://cloud.tencent.com/document/api/248/86040) - 获取TMP实例关联集群列表
+* Read: [DescribePrometheusClusterAgents](https://cloud.tencent.com/document/api/248/86040) - 获取TMP实例关联集群列表
+* Delete: [DeletePrometheusClusterAgent](https://cloud.tencent.com/document/api/248/86041) - 解除TMP实例的集群关联
+* Delete: [DescribePrometheusClusterAgents](https://cloud.tencent.com/document/api/248/86040) - 获取TMP实例关联集群列表
 
 ## Import
 

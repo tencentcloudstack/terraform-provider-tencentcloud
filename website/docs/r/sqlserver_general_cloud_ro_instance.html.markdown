@@ -176,4 +176,21 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `read` - (Defaults to `2h0m`) Used when reading the resource.
 * `update` - (Defaults to `2h0m`) Used when updating the resource.
 * `delete` - (Defaults to `2h0m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCloudReadOnlyDBInstances](https://cloud.tencent.com/document/api/238/91709) - 创建只读实例 (云盘)
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Create: [DescribeOrders](https://cloud.tencent.com/document/api/238/19937) - 查询订单信息
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
+* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/238/46812) - 查询实例安全组信息
+* Read: [DescribeReadOnlyGroupList](https://cloud.tencent.com/document/api/238/46771) - 查询只读组列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Update: [DescribeOrders](https://cloud.tencent.com/document/api/238/19937) - 查询订单信息
+* Update: [UpgradeDBInstance](https://cloud.tencent.com/document/api/238/19948) - 升级实例
+* Delete: [DeleteDBInstance](https://cloud.tencent.com/document/api/238/46806) - 立即下线实例
+* Delete: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210) - 主动隔离实例
 

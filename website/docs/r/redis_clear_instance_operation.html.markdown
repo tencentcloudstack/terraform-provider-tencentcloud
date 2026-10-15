@@ -69,4 +69,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ClearInstance](https://cloud.tencent.com/document/api/239/20021) - 清空Redis实例
+* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
 

@@ -47,4 +47,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
+* Create: [ModifyInstanceParam](https://cloud.tencent.com/document/api/1003/92727) - 修改实例参数
+* Read: [DescribeInstanceParams](https://cloud.tencent.com/document/api/1003/92729) - 查询实例参数列表
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
+* Update: [ModifyInstanceParam](https://cloud.tencent.com/document/api/1003/92727) - 修改实例参数
 

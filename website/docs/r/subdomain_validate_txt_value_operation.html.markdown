@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
 * `subdomain` - Host records that need to be added to TXT records.
 * `value` - The record value of the TXT record needs to be added.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSubdomainValidateTXTValue](https://cloud.tencent.com/document/api/1427/113012) - 创建添加子域名 Zone 域解析时所需要的 TXT 记录值
 

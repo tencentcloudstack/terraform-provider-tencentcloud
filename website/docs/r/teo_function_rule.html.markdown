@@ -95,6 +95,14 @@ In addition to all arguments above, the following attributes are exported:
 * `priority` - The priority of the function trigger rule. A higher numerical value indicates a higher priority.
 * `rule_id` - ID of the Function Rule.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateFunctionRule](https://cloud.tencent.com/document/api/1552/111388) - 创建边缘函数触发规则
+* Read: [DescribeFunctionRules](https://cloud.tencent.com/document/api/1552/111385) - 查询边缘函数触发规则
+* Update: [ModifyFunctionRule](https://cloud.tencent.com/document/api/1552/111380) - 修改边缘函数触发规则
+* Delete: [DeleteFunctionRules](https://cloud.tencent.com/document/api/1552/111386) - 删除边缘函数触发规则
 
 ## Import
 

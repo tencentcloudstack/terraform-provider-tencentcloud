@@ -40,6 +40,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddUsersToWorkGroup](https://cloud.tencent.com/document/api/1342/58469) - 添加用户到工作组
+* Read: [DescribeWorkGroups](https://cloud.tencent.com/document/api/1342/58459) - 获取工作组列表
+* Delete: [DeleteUsersFromWorkGroup](https://cloud.tencent.com/document/api/1342/58462) - 从工作组中删除用户
 
 ## Import
 

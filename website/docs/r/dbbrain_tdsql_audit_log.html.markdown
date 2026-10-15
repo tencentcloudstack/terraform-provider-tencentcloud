@@ -54,4 +54,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAuditLogFile](https://cloud.tencent.com/document/api/1130/90373) - 创建审计日志文件
+* Read: [DescribeAuditLogFiles](https://cloud.tencent.com/document/api/1130/90371) - 查询审计日志文件
+* Delete: [DeleteAuditLogFile](https://cloud.tencent.com/document/api/1130/90372) - 删除审计日志文件
 

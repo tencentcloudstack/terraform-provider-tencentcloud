@@ -67,6 +67,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeMesh](https://cloud.tencent.com/document/api/1261/63842) - 查询网格详情
+* Create: [LinkPrometheus](https://cloud.tencent.com/document/api/1261/82203) - 关联Prometheus
+* Read: [DescribeMesh](https://cloud.tencent.com/document/api/1261/63842) - 查询网格详情
+* Delete: [UnlinkPrometheus](https://cloud.tencent.com/document/api/1261/82202) - 解除关联Prometheus
 
 ## Import
 

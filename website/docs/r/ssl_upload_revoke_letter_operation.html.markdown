@@ -34,6 +34,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [UploadRevokeLetter](https://cloud.tencent.com/document/api/400/49424) - 上传证书吊销确认函
 
 ## Import
 

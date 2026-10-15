@@ -144,4 +144,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeMigrationCheckJob](https://cloud.tencent.com/document/api/571/82086) - 查询迁移校验任务结果
+* Create: [DescribeMigrationDetail](https://cloud.tencent.com/document/api/571/82085) - 查询某个迁移任务详情
+* Create: [StartMigrateJob](https://cloud.tencent.com/document/api/571/82073) - 启动数据迁移任务
 

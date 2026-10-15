@@ -98,6 +98,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Create: [ModifyDBEncryptAttributes](https://cloud.tencent.com/document/api/238/94327) - 开启、关闭数据库的TDE加密功能
+* Read: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968) - 查询数据库列表（已废弃）
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Update: [ModifyDBEncryptAttributes](https://cloud.tencent.com/document/api/238/94327) - 开启、关闭数据库的TDE加密功能
 
 ## Import
 

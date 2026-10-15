@@ -38,6 +38,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLiveSnapshotRule](https://cloud.tencent.com/document/api/267/32625) - 创建截图规则
+* Read: [DescribeLiveSnapshotRules](https://cloud.tencent.com/document/api/267/32621) - 获取截图规则列表
+* Delete: [DeleteLiveSnapshotRule](https://cloud.tencent.com/document/api/267/32623) - 删除截图规则
+* Delete: [DescribeLiveSnapshotRules](https://cloud.tencent.com/document/api/267/32621) - 获取截图规则列表
 
 ## Import
 

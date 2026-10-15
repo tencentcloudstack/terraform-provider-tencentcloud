@@ -64,4 +64,11 @@ In addition to all arguments above, the following attributes are exported:
 * `resource_id` - Resource ID.
 * `version` - Resource Version.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateResource](https://cloud.tencent.com/document/api/849/52000) - 创建资源接口
+* Read: [DescribeResourceConfigs](https://cloud.tencent.com/document/api/849/54666) - 描述资源配置接口
+* Delete: [DeleteResources](https://cloud.tencent.com/document/api/849/54670) - 删除资源接口
 

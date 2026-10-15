@@ -74,6 +74,18 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeStandardEngineResourceGroups](https://cloud.tencent.com/document/api/1342/122134) - 查询标准引擎资源组信息
+* Create: [UpdateStandardEngineResourceGroupConfigInfo](https://cloud.tencent.com/document/api/1342/122129) - 更新标准引擎资源组参数配置信息
+* Read: [DescribeStandardEngineResourceGroupConfigInfo](https://cloud.tencent.com/document/api/1342/122135) - 查询标准引擎资源组的配置信息
+* Update: [DescribeStandardEngineResourceGroups](https://cloud.tencent.com/document/api/1342/122134) - 查询标准引擎资源组信息
+* Update: [UpdateStandardEngineResourceGroupConfigInfo](https://cloud.tencent.com/document/api/1342/122129) - 更新标准引擎资源组参数配置信息
+* Delete: [DescribeStandardEngineResourceGroupConfigInfo](https://cloud.tencent.com/document/api/1342/122135) - 查询标准引擎资源组的配置信息
+* Delete: [DescribeStandardEngineResourceGroups](https://cloud.tencent.com/document/api/1342/122134) - 查询标准引擎资源组信息
+* Delete: [UpdateStandardEngineResourceGroupConfigInfo](https://cloud.tencent.com/document/api/1342/122129) - 更新标准引擎资源组参数配置信息
 
 ## Import
 

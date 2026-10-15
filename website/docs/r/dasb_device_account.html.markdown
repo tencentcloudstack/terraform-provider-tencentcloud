@@ -41,6 +41,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDeviceAccount](https://cloud.tencent.com/document/api/1025/86956) - 新建主机账号
+* Read: [DescribeDeviceAccounts](https://cloud.tencent.com/document/api/1025/86952) - 查询主机账号列表
+* Delete: [DeleteDeviceAccounts](https://cloud.tencent.com/document/api/1025/86955) - 删除主机账号
 
 ## Import
 

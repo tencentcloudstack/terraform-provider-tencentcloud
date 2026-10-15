@@ -110,6 +110,22 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePrivateZone](https://cloud.tencent.com/document/api/1338/55946) - 创建私有域
+* Create: [DescribePrivateZone](https://cloud.tencent.com/document/api/1338/55940) - 获取私有域信息
+* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribePrivateZone](https://cloud.tencent.com/document/api/1338/55940) - 获取私有域信息
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [DescribePrivateZone](https://cloud.tencent.com/document/api/1338/55940) - 获取私有域信息
+* Update: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyPrivateZone](https://cloud.tencent.com/document/api/1338/55935) - 修改私有域
+* Update: [ModifyPrivateZoneVpc](https://cloud.tencent.com/document/api/1338/55933) - 修改私有域关联的VPC
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeletePrivateZone](https://cloud.tencent.com/document/api/1338/55944) - 删除私有域
 
 ## Import
 

@@ -214,6 +214,35 @@ In addition to all arguments above, the following attributes are exported:
 * `vip` - IP of the Mongodb instance.
 * `vport` - IP port of the Mongodb instance.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDBInstance](https://cloud.tencent.com/document/api/240/38571) - 创建云数据库实例（包年包月）
+* Create: [CreateDBInstanceHour](https://cloud.tencent.com/document/api/240/38570) - 创建云数据库实例（按量计费）
+* Create: [DescribeDBInstances](https://cloud.tencent.com/document/api/240/38568) - 查询云数据库实例列表
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Create: [RenameInstance](https://cloud.tencent.com/document/api/240/38563) - 修改实例名称
+* Read: [DescribeDBInstanceNodeProperty](https://cloud.tencent.com/document/api/240/82022) - 查询节点属性
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/240/38568) - 查询云数据库实例列表
+* Read: [DescribeSecurityGroup](https://cloud.tencent.com/document/api/240/55675) - 查询实例绑定的安全组
+* Read: [DescribeTransparentDataEncryptionStatus](https://cloud.tencent.com/document/api/240/107168) - 获取实例透明加密的开启状态
+* Update: [AssignProject](https://cloud.tencent.com/document/api/240/38572) - 指定云数据库实例的所属项目
+* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601) - 查询异步任务状态接口
+* Update: [DescribeDBInstanceDeal](https://cloud.tencent.com/document/api/240/43667) - 获取数据库实例订单详情
+* Update: [DescribeDBInstances](https://cloud.tencent.com/document/api/240/38568) - 查询云数据库实例列表
+* Update: [ModifyDBInstanceSecurityGroup](https://cloud.tencent.com/document/api/240/70577) - 修改实例安全组
+* Update: [ModifyDBInstanceSpec](https://cloud.tencent.com/document/api/240/38565) - 调整云数据库实例配置
+* Update: [ModifyInstanceAz](https://cloud.tencent.com/document/api/240/129794) - 调整云数据库实例节点的可用区
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [RenameInstance](https://cloud.tencent.com/document/api/240/38563) - 修改实例名称
+* Update: [RenewDBInstances](https://cloud.tencent.com/document/api/240/43595) - 续费云数据库实例
+* Update: [ResetDBInstancePassword](https://cloud.tencent.com/document/api/240/46598) - 修改实例用户的密码
+* Update: [UpgradeDbInstanceVersion](https://cloud.tencent.com/document/api/240/124617) - 升级数据库版本
+* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/240/38568) - 查询云数据库实例列表
+* Delete: [IsolateDBInstance](https://cloud.tencent.com/document/api/240/38566) - 隔离云数据库实例
+* Delete: [OfflineIsolatedDBInstance](https://cloud.tencent.com/document/api/240/38564) - 下线隔离状态的云数据库实例
+* Delete: [TerminateDBInstances](https://cloud.tencent.com/document/api/240/79047) - 包年包月退货退费
 
 ## Import
 

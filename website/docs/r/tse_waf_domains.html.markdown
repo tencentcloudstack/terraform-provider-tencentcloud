@@ -34,6 +34,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateWafDomains](https://cloud.tencent.com/document/api/1364/101821) - 新建 WAF 防护域名
+* Read: [DescribeWafDomains](https://cloud.tencent.com/document/api/1364/101827) - 获取 WAF 防护域名
+* Delete: [DeleteWafDomains](https://cloud.tencent.com/document/api/1364/101828) - 删除 WAF 防护域名
 
 ## Import
 

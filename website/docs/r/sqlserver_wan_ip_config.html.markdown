@@ -66,4 +66,16 @@ In addition to all arguments above, the following attributes are exported:
   * `tgw_wan_vport` - External port number.
 * `tgw_wan_vport` - External port number.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Create: [ModifyCloseWanIp](https://cloud.tencent.com/document/api/238/101718) - 关闭实例外网
+* Create: [ModifyOpenWanIp](https://cloud.tencent.com/document/api/238/101717) - 开通实例外网
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
+* Read: [DescribeReadOnlyGroupList](https://cloud.tencent.com/document/api/238/46771) - 查询只读组列表
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Update: [ModifyCloseWanIp](https://cloud.tencent.com/document/api/238/101718) - 关闭实例外网
+* Update: [ModifyOpenWanIp](https://cloud.tencent.com/document/api/238/101717) - 开通实例外网
 

@@ -70,4 +70,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945) - 获取基础策略告警组列表
+* Create: [ModifyAlarmReceivers](https://cloud.tencent.com/document/api/248/40417) - 修改告警接收人
+* Read: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945) - 获取基础策略告警组列表
+* Update: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945) - 获取基础策略告警组列表
+* Update: [ModifyAlarmReceivers](https://cloud.tencent.com/document/api/248/40417) - 修改告警接收人
+* Delete: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945) - 获取基础策略告警组列表
+* Delete: [ModifyAlarmReceivers](https://cloud.tencent.com/document/api/248/40417) - 修改告警接收人
 

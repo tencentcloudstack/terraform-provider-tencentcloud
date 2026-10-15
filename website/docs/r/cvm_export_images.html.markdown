@@ -40,4 +40,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - 查看镜像列表
+* Create: [ExportImages](https://cloud.tencent.com/document/api/213/73474) - 导出自定义镜像
 

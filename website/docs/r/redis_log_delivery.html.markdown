@@ -75,6 +75,18 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyInstanceLogDelivery](https://cloud.tencent.com/document/api/239/110877) - 修改实例日志投递配置
+* Read: [DescribeInstanceLogDelivery](https://cloud.tencent.com/document/api/239/110878) - 查询实例日志投递配置
+* Read: [DescribeLogsets](https://cloud.tencent.com/document/api/614/58624) - 获取日志集列表
+* Read: [DescribeTopics](https://cloud.tencent.com/document/api/614/56454) - 获取主题列表
+* Update: [ModifyInstanceLogDelivery](https://cloud.tencent.com/document/api/239/110877) - 修改实例日志投递配置
+* Delete: [DeleteLogset](https://cloud.tencent.com/document/api/614/58625) - 删除日志集
+* Delete: [DeleteTopic](https://cloud.tencent.com/document/api/614/56455) - 删除主题
+* Delete: [ModifyInstanceLogDelivery](https://cloud.tencent.com/document/api/239/110877) - 修改实例日志投递配置
 
 ## Import
 

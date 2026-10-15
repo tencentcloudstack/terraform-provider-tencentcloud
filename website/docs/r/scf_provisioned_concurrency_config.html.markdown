@@ -60,4 +60,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [PutProvisionedConcurrencyConfig](https://cloud.tencent.com/document/api/583/51246) - 设置预置并发
+* Read: [GetProvisionedConcurrencyConfig](https://cloud.tencent.com/document/api/583/51248) - 获取函数预置并发详情
+* Delete: [DeleteProvisionedConcurrencyConfig](https://cloud.tencent.com/document/api/583/51250) - 删除预置并发
 

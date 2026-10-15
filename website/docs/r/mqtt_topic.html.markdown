@@ -72,6 +72,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateTopic](https://cloud.tencent.com/document/api/1778/111084) - 创建MQTT主题
+* Read: [DescribeTopic](https://cloud.tencent.com/document/api/1778/111073) - 查询MQTT主题详情
+* Update: [ModifyTopic](https://cloud.tencent.com/document/api/1778/111081) - 修改MQTT主题属性
+* Delete: [DeleteTopic](https://cloud.tencent.com/document/api/1778/111083) - 删除MQTT主题
 
 ## Import
 

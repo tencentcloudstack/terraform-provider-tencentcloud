@@ -39,4 +39,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ActivateInstance](https://cloud.tencent.com/document/api/1003/70116) - 恢复实例访问
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
+* Create: [IsolateInstance](https://cloud.tencent.com/document/api/1003/48081) - 隔离实例
+* Update: [ActivateInstance](https://cloud.tencent.com/document/api/1003/70116) - 恢复实例访问
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
+* Update: [IsolateInstance](https://cloud.tencent.com/document/api/1003/48081) - 隔离实例
 

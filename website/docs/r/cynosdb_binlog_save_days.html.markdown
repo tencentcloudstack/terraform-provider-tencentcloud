@@ -34,6 +34,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyBinlogSaveDays](https://cloud.tencent.com/document/api/1003/92725) - 修改Binlog保留天数
+* Read: [DescribeBinlogSaveDays](https://cloud.tencent.com/document/api/1003/76372) - 查询Binlog保留天数
+* Update: [ModifyBinlogSaveDays](https://cloud.tencent.com/document/api/1003/92725) - 修改Binlog保留天数
 
 ## Import
 

@@ -50,6 +50,20 @@ In addition to all arguments above, the following attributes are exported:
 * `created_time` - Creation time, which follows the `ISO8601` standard and uses `UTC` time in the format of `YYYY-MM-DDThh:mm:ssZ`.
 * `private_key` - Content of private key in a key pair. Tencent Cloud do not keep private keys. Please keep it properly.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateKeyPair](https://cloud.tencent.com/document/api/213/15702) - 创建密钥对
+* Create: [ImportKeyPair](https://cloud.tencent.com/document/api/213/15703) - 导入密钥对
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeKeyPairs](https://cloud.tencent.com/document/api/213/15699) - 查询密钥对列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyKeyPairAttribute](https://cloud.tencent.com/document/api/213/15701) - 修改密钥对属性
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteKeyPairs](https://cloud.tencent.com/document/api/213/15700) - 删除密钥对
+* Delete: [DescribeKeyPairs](https://cloud.tencent.com/document/api/213/15699) - 查询密钥对列表
+* Delete: [DisassociateInstancesKeyPairs](https://cloud.tencent.com/document/api/213/15697) - 解绑密钥对
 
 ## Import
 

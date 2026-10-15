@@ -77,4 +77,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `compare_task_id` - compare task id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCompareTask](https://cloud.tencent.com/document/api/571/82093) - 创建一致性校验任务
+* Create: [DescribeCompareTasks](https://cloud.tencent.com/document/api/571/82088) - 查询一致性校验任务列表
+* Create: [StartCompare](https://cloud.tencent.com/document/api/571/82074) - 启动一致性校验任务
+* Read: [DescribeCompareTasks](https://cloud.tencent.com/document/api/571/82088) - 查询一致性校验任务列表
+* Update: [ModifyCompareTask](https://cloud.tencent.com/document/api/571/82081) - 修改一致性校验任务
+* Delete: [DeleteCompareTask](https://cloud.tencent.com/document/api/571/82090) - 删除一致性校验任务
+* Delete: [DescribeCompareTasks](https://cloud.tencent.com/document/api/571/82088) - 查询一致性校验任务列表
 

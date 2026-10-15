@@ -59,6 +59,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [TagRole](https://cloud.tencent.com/document/api/598/74379) - 角色绑定标签
+* Read: [GetRole](https://cloud.tencent.com/document/api/598/36221) - 获取角色详情
+* Delete: [UntagRole](https://cloud.tencent.com/document/api/598/74378) - 角色解绑标签
 
 ## Import
 

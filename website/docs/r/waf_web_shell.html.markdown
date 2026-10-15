@@ -34,6 +34,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyWebshellStatus](https://cloud.tencent.com/document/api/627/99702) - 设置webshell状态
+* Read: [DescribeWebshellStatus](https://cloud.tencent.com/document/api/627/100464) - 获取域名webshell状态
+* Update: [ModifyWebshellStatus](https://cloud.tencent.com/document/api/627/99702) - 设置webshell状态
 
 ## Import
 

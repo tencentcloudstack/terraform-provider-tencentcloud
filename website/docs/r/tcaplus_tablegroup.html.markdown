@@ -81,6 +81,18 @@ In addition to all arguments above, the following attributes are exported:
 * `table_count` - Number of tables.
 * `total_size` - Total storage size (MB).
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateTableGroup](https://cloud.tencent.com/document/api/596/41495) - 新建表格组
+* Read: [DescribeTableGroupTags](https://cloud.tencent.com/document/api/596/45084) - 获取表格组关联的标签列表
+* Read: [DescribeTableGroups](https://cloud.tencent.com/document/api/596/41493) - 查询表格组列表
+* Update: [DescribeTasks](https://cloud.tencent.com/document/api/596/39677) - 查询任务列表
+* Update: [ModifyTableGroupName](https://cloud.tencent.com/document/api/596/41492) - 修改表格组名称
+* Update: [ModifyTableGroupTags](https://cloud.tencent.com/document/api/596/45083) - 修改表格组标签
+* Delete: [DeleteTableGroup](https://cloud.tencent.com/document/api/596/41494) - 删除表格组
+* Delete: [DescribeTableGroups](https://cloud.tencent.com/document/api/596/41493) - 查询表格组列表
 
 ## Import
 

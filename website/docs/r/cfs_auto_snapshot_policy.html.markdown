@@ -64,6 +64,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAutoSnapshotPolicy](https://cloud.tencent.com/document/api/582/80210) - 创建定期快照策略
+* Read: [DescribeAutoSnapshotPolicies](https://cloud.tencent.com/document/api/582/80208) - 查询文件系统快照策略列表信息
+* Update: [UpdateAutoSnapshotPolicy](https://cloud.tencent.com/document/api/582/80203) - 更新定期快照策略
+* Delete: [DeleteAutoSnapshotPolicy](https://cloud.tencent.com/document/api/582/80209) - 删除快照策略
 
 ## Import
 

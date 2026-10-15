@@ -34,6 +34,29 @@ var (
 )
 
 func main() {
+	flags := parseModeFlags(os.Args[1:])
+
+	// Snapshot refresh mode: download the latest public API catalog and
+	// rewrite gendoc/data/*.json, then exit.
+	if flags.refreshData {
+		if err := refreshData(); err != nil {
+			fmt.Fprintf(os.Stderr, "[FAIL!]refresh catalog data: %v\n", err)
+			os.Exit(1)
+		}
+		return
+	}
+
+	// Probe mode: print the API call chain of one resource and exit.
+	if res := flags.probe; res != "" {
+		repoRoot, _ := filepath.Abs("..")
+		if res == "all" {
+			probeAllResource(repoRoot)
+		} else {
+			probeResource(repoRoot, res)
+		}
+		return
+	}
+
 	provider := cloud.Provider()
 	vProvider := runtime.FuncForPC(reflect.ValueOf(cloud.Provider).Pointer())
 
@@ -161,6 +184,7 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 		"description_short": "",
 		"timeouts":          "",
 		"import":            "",
+		"api":               "",
 	}
 
 	productDir := strings.ToLower(product)
@@ -188,10 +212,28 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 		os.Exit(1)
 	}
 
+	// Optional Import section. Import sits at the tail of the file; when
+	// present the optional manual "API" section lives inside the
+	// pre-Import body (between the prose and Example Usage).
 	importPos := strings.Index(description, "\nImport\n")
 	if importPos != -1 {
 		data["import"] = strings.TrimSpace(description[importPos+8:])
 		description = strings.TrimSpace(description[:importPos])
+	}
+
+	// Optional manual "API" section overrides the auto-extracted mapping.
+	// It must be cut last and kept separate: the section sits before
+	// "Example Usage", so extract the span [apiPos, examplePos) and join
+	// the surrounding text back together.
+	manualAPI := ""
+	if apiPos := strings.Index(description, "\nAPI\n"); apiPos != -1 {
+		examplePos := strings.Index(description, "\nExample Usage\n")
+		apiEnd := len(description)
+		if examplePos != -1 && examplePos > apiPos {
+			apiEnd = examplePos
+		}
+		manualAPI = strings.TrimSpace(description[apiPos+5 : apiEnd])
+		description = strings.TrimSpace(description[:apiPos] + description[apiEnd:])
 	}
 
 	if resource.Timeouts != nil {
@@ -385,6 +427,13 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 	}
 
 	filename = filepath.Join(docRoot, dtype[:1], fmt.Sprintf("%s.html.markdown", data["resource"]))
+
+	// API Reference section: manual override wins, else auto-extract
+	// (resources only; data sources have no lifecycle functions).
+	if dtype == "resource" {
+		repoRoot := filepath.Dir(fpath) // fpath is <repo>/tencentcloud
+		data["api"] = renderResourceAPISection(getSharedAPIAnalyzer(), repoRoot, name, resource, manualAPI)
+	}
 
 	fd, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {

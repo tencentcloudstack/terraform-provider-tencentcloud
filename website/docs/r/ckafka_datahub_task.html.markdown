@@ -958,6 +958,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDatahubTask](https://cloud.tencent.com/document/api/597/77736) - 创建连接器任务
+* Create: [DescribeDatahubTask](https://cloud.tencent.com/document/api/597/77796) - 查询连接器任务详情
+* Read: [DescribeDatahubTask](https://cloud.tencent.com/document/api/597/77796) - 查询连接器任务详情
+* Update: [DescribeDatahubTask](https://cloud.tencent.com/document/api/597/77796) - 查询连接器任务详情
+* Update: [ModifyDatahubTask](https://cloud.tencent.com/document/api/597/77793) - 修改连接器任务
+* Delete: [DeleteDatahubTask](https://cloud.tencent.com/document/api/597/77799) - 删除连接器任务
+* Delete: [DescribeDatahubTask](https://cloud.tencent.com/document/api/597/77796) - 查询连接器任务详情
 
 ## Import
 

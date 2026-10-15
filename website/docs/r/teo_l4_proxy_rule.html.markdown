@@ -97,6 +97,16 @@ The `l4_proxy_rules` object exports the following:
 
 * `rule_id` - Forwarding rule ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateL4ProxyRules](https://cloud.tencent.com/document/api/1552/103416) - 创建四层代理转发规则
+* Read: [DescribeL4ProxyRules](https://cloud.tencent.com/document/api/1552/103412) - 查询四层代理转发规则列表
+* Update: [ModifyL4ProxyRules](https://cloud.tencent.com/document/api/1552/103410) - 修改四层代理转发规则
+* Delete: [DeleteL4ProxyRules](https://cloud.tencent.com/document/api/1552/103414) - 删除四层代理转发规则
+* Delete: [DescribeL4ProxyRules](https://cloud.tencent.com/document/api/1552/103412) - 查询四层代理转发规则列表
+* Delete: [ModifyL4ProxyRulesStatus](https://cloud.tencent.com/document/api/1552/103409) - 修改四层代理转发规则状态
 
 ## Import
 

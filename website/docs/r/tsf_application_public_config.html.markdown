@@ -44,4 +44,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePublicConfigWithDetailResp](https://cloud.tencent.com/document/api/649/89207) - 创建公共配置项返回详细信息
+* Read: [DescribePublicConfig](https://cloud.tencent.com/document/api/649/38339) - 查询公共配置（单条）
+* Delete: [DeletePublicConfig](https://cloud.tencent.com/document/api/649/38345) - 删除公共配置项
 

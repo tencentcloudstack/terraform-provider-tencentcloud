@@ -53,6 +53,14 @@ In addition to all arguments above, the following attributes are exported:
 * `policy_name` - Name of the policy.
 * `policy_type` - Type of the policy strategy. 'Group' means customer strategy and 'QCS' means preset strategy.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AttachGroupPolicy](https://cloud.tencent.com/document/api/598/34580) - 绑定策略到用户组
+* Create: [ListAttachedGroupPolicies](https://cloud.tencent.com/document/api/598/34573) - 查询用户组关联的策略列表
+* Read: [ListAttachedGroupPolicies](https://cloud.tencent.com/document/api/598/34573) - 查询用户组关联的策略列表
+* Delete: [DetachGroupPolicy](https://cloud.tencent.com/document/api/598/34576) - 解除绑定到用户组的策略
 
 ## Import
 

@@ -91,4 +91,17 @@ In addition to all arguments above, the following attributes are exported:
 * `total_cpu` - The total cpu of the cluster.
 * `total_mem` - The total memory of the cluster.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCluster](https://cloud.tencent.com/document/api/457/34527) - 创建集群
+* Create: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - 查询集群节点信息
+* Create: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - 查询TKE集群列表
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - 查看实例列表
+* Create: [DescribeZones](https://cloud.tencent.com/document/api/213/15707) - 查询可用区列表
+* Read: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - 查询集群节点信息
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - 查询TKE集群列表
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - 查看实例列表
+* Delete: [DeleteCluster](https://cloud.tencent.com/document/api/457/36704) - 删除集群
 

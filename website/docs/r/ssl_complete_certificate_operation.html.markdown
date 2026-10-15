@@ -32,6 +32,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CompleteCertificate](https://cloud.tencent.com/document/api/400/49322) - 主动触发证书验证
 
 ## Import
 

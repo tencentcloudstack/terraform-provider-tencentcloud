@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [EnableVpcEndPointConnect](https://cloud.tencent.com/document/api/215/54675) - 是否接受终端节点连接请求
 

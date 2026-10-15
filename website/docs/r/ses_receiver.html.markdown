@@ -67,6 +67,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateReceiver](https://cloud.tencent.com/document/api/1288/68360) - 创建收件人列表
+* Create: [CreateReceiverDetail](https://cloud.tencent.com/document/api/1288/68359) - 添加收件人地址
+* Create: [CreateReceiverDetailWithData](https://cloud.tencent.com/document/api/1288/70776) - 添加收件人地址附带模板参数
+* Read: [ListReceiverDetails](https://cloud.tencent.com/document/api/1288/97935) - 查询某个收件人列表详情
+* Read: [ListReceivers](https://cloud.tencent.com/document/api/1288/68358) - 查询收件人列表
+* Delete: [DeleteReceiver](https://cloud.tencent.com/document/api/1288/71169) - 删除收件人列表
 
 ## Import
 

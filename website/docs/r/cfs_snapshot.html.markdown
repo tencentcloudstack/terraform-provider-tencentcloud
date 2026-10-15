@@ -38,6 +38,19 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCfsSnapshot](https://cloud.tencent.com/document/api/582/80200) - 创建文件系统快照
+* Create: [DescribeCfsSnapshots](https://cloud.tencent.com/document/api/582/80206) - 查询快照列表
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeCfsSnapshots](https://cloud.tencent.com/document/api/582/80206) - 查询快照列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [UpdateCfsSnapshotAttribute](https://cloud.tencent.com/document/api/582/80202) - 更新文件系统快照信息
+* Delete: [DeleteCfsSnapshot](https://cloud.tencent.com/document/api/582/80199) - 删除文件系统快照
+* Delete: [DescribeCfsSnapshots](https://cloud.tencent.com/document/api/582/80206) - 查询快照列表
 
 ## Import
 

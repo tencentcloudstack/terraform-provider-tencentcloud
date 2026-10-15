@@ -53,6 +53,17 @@ In addition to all arguments above, the following attributes are exported:
 * `type` - Type of the policy strategy. Valid values: `1`, `2`.  `1` means customer strategy and `2` means preset strategy.
 * `update_time` - The last update time of the CAM policy.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePolicy](https://cloud.tencent.com/document/api/598/34578) - 创建策略
+* Create: [ListPolicies](https://cloud.tencent.com/document/api/598/34570) - 查询策略列表
+* Read: [GetPolicy](https://cloud.tencent.com/document/api/598/34574) - 查看策略详情
+* Read: [ListPolicies](https://cloud.tencent.com/document/api/598/34570) - 查询策略列表
+* Update: [UpdatePolicy](https://cloud.tencent.com/document/api/598/34569) - 更新策略信息
+* Delete: [DeletePolicy](https://cloud.tencent.com/document/api/598/34577) - 删除策略
+* Delete: [ListPolicies](https://cloud.tencent.com/document/api/598/34570) - 查询策略列表
 
 ## Import
 

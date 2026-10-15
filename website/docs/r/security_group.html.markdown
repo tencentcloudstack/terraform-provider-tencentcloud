@@ -57,6 +57,18 @@ In addition to all arguments above, the following attributes are exported:
 The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
 
 * `delete` - (Defaults to `3m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSecurityGroup](https://cloud.tencent.com/document/api/215/15806) - 创建安全组
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Read: [DescribeSecurityGroups](https://cloud.tencent.com/document/api/215/15808) - 查看安全组
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [ModifySecurityGroupAttribute](https://cloud.tencent.com/document/api/215/15805) - 修改安全组属性
+* Delete: [DeleteSecurityGroup](https://cloud.tencent.com/document/api/215/15803) - 删除安全组
+* Delete: [DescribeSecurityGroupAssociationStatistics](https://cloud.tencent.com/document/api/215/17799) - 查询安全组关联实例统计
 
 ## Import
 

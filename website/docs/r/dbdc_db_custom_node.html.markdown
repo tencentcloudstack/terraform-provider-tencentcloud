@@ -174,6 +174,23 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `1h0m`) Used when creating the resource.
 * `update` - (Defaults to `1h0m`) Used when updating the resource.
 * `delete` - (Defaults to `1h0m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDBCustomNodes](https://cloud.tencent.com/document/api/1322/132929) - 创建节点
+* Create: [DescribeDBCustomNodeSecurityGroups](https://cloud.tencent.com/document/api/1322/135270) - 查询节点安全组信息
+* Create: [DescribeDBCustomNodes](https://cloud.tencent.com/document/api/1322/132923) - 查询节点列表
+* Read: [DescribeDBCustomNodeSecurityGroups](https://cloud.tencent.com/document/api/1322/135270) - 查询节点安全组信息
+* Read: [DescribeDBCustomNodes](https://cloud.tencent.com/document/api/1322/132923) - 查询节点列表
+* Update: [DescribeDBCustomNodeSecurityGroups](https://cloud.tencent.com/document/api/1322/135270) - 查询节点安全组信息
+* Update: [DescribeDBCustomNodes](https://cloud.tencent.com/document/api/1322/132923) - 查询节点列表
+* Update: [ModifyDBCustomNodeSecurityGroups](https://cloud.tencent.com/document/api/1322/135269) - 修改节点安全组
+* Update: [ModifyDBCustomNodeTags](https://cloud.tencent.com/document/api/1322/132917) - 修改节点绑定的标签
+* Update: [ModifyDBCustomNodesDisasterRecoverGroup](https://cloud.tencent.com/document/api/1322/137562) - 修改节点的置放群组
+* Update: [RenewDBCustomNode](https://cloud.tencent.com/document/api/1322/132915) - 续费或解隔离节点
+* Delete: [DestroyDBCustomNode](https://cloud.tencent.com/document/api/1322/132920) - 销毁节点
+* Delete: [IsolateDBCustomNode](https://cloud.tencent.com/document/api/1322/132919) - 隔离节点
 
 ## Import
 

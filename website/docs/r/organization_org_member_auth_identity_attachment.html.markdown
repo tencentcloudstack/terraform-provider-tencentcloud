@@ -34,6 +34,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateOrganizationMemberAuthIdentity](https://cloud.tencent.com/document/api/850/96106) - 添加组织成员访问授权
+* Read: [DescribeOrganizationMemberAuthIdentities](https://cloud.tencent.com/document/api/850/82936) - 获取组织成员访问授权列表
+* Delete: [DeleteOrganizationMemberAuthIdentity](https://cloud.tencent.com/document/api/850/96120) - 删除组织成员访问授权
 
 ## Import
 

@@ -181,6 +181,20 @@ In addition to all arguments above, the following attributes are exported:
 * `instance_count` - Instance number of a scaling group.
 * `status` - Current status of a scaling group.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAutoScalingGroup](https://cloud.tencent.com/document/api/377/20440) - 创建伸缩组
+* Create: [DescribeAutoScalingGroups](https://cloud.tencent.com/document/api/377/20438) - 查询伸缩组
+* Read: [DescribeAutoScalingGroups](https://cloud.tencent.com/document/api/377/20438) - 查询伸缩组
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyAutoScalingGroup](https://cloud.tencent.com/document/api/377/20433) - 修改伸缩组
+* Update: [ModifyLoadBalancers](https://cloud.tencent.com/document/api/377/32868) - 修改伸缩组的负载均衡器
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteAutoScalingGroup](https://cloud.tencent.com/document/api/377/20439) - 删除伸缩组
+* Delete: [DescribeAutoScalingGroups](https://cloud.tencent.com/document/api/377/20438) - 查询伸缩组
+* Delete: [ModifyAutoScalingGroup](https://cloud.tencent.com/document/api/377/20433) - 修改伸缩组
 
 ## Import
 

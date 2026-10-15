@@ -79,6 +79,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateBackUpSchedule](https://cloud.tencent.com/document/api/1299/83424) - 创建或者修改备份策略
+* Create: [DescribeBackUpSchedule](https://cloud.tencent.com/document/api/1299/86155) - 查询备份策略信息
+* Read: [DescribeBackUpSchedule](https://cloud.tencent.com/document/api/1299/86155) - 查询备份策略信息
+* Update: [CreateBackUpSchedule](https://cloud.tencent.com/document/api/1299/83424) - 创建或者修改备份策略
+* Update: [DescribeBackUpSchedule](https://cloud.tencent.com/document/api/1299/86155) - 查询备份策略信息
 
 ## Import
 

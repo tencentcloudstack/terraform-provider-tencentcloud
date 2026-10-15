@@ -197,6 +197,12 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `20m`) Used when creating the resource.
 * `update` - (Defaults to `20m`) Used when updating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Read: [DescribeAccelerationDomains](https://cloud.tencent.com/document/api/1552/86336) - 查询加速域名列表
+* Update: [ModifyHostsCertificate](https://cloud.tencent.com/document/api/1552/80764) - 配置域名证书
 
 ## Import
 

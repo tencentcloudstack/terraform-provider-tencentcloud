@@ -63,6 +63,25 @@ In addition to all arguments above, the following attributes are exported:
 * `secret_type` - `0`: user-defined secret. `1`: Tencent Cloud services secret. `2`: SSH key secret. `3`: Tencent Cloud API key secret. Note: this field may return `null`, indicating that no valid values can be obtained.
 * `ssh_key_id` - The key pair ID is the unique identifier of the key pair in the cloud server.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSSHKeyPairSecret](https://cloud.tencent.com/document/api/1140/60331) - 创建SSH密钥对凭据
+* Create: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526) - 获取凭据详细信息
+* Create: [DisableSecret](https://cloud.tencent.com/document/api/1140/40525) - 停用凭据
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Read: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526) - 获取凭据详细信息
+* Read: [GetSSHKeyPairValue](https://cloud.tencent.com/document/api/1140/60330) - 获取SSH密钥对凭据明文
+* Read: [ListSecrets](https://cloud.tencent.com/document/api/1140/40519) - 获取凭据的详细信息列表
+* Update: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526) - 获取凭据详细信息
+* Update: [DisableSecret](https://cloud.tencent.com/document/api/1140/40525) - 停用凭据
+* Update: [EnableSecret](https://cloud.tencent.com/document/api/1140/40524) - 启用凭据
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [UpdateDescription](https://cloud.tencent.com/document/api/1140/40516) - 更新凭据描述信息
+* Delete: [DeleteSecret](https://cloud.tencent.com/document/api/1140/40528) - 删除凭据信息
+* Delete: [DisableSecret](https://cloud.tencent.com/document/api/1140/40525) - 停用凭据
 
 ## Import
 

@@ -86,4 +86,10 @@ In addition to all arguments above, the following attributes are exported:
 The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
 
 * `create` - (Defaults to `10m`) Used when creating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePurgeTask](https://cloud.tencent.com/document/api/1552/80703) - 创建清除缓存任务
+* Create: [DescribePurgeTasks](https://cloud.tencent.com/document/api/1552/80699) - 查询清除缓存历史记录
 

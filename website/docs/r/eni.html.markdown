@@ -99,6 +99,21 @@ In addition to all arguments above, the following attributes are exported:
 * `primary` - Indicates whether the IP is primary.
 * `state` - State of the ENI.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AssignPrivateIpAddresses](https://cloud.tencent.com/document/api/215/15813) - 弹性网卡申请内网 IP
+* Create: [CreateNetworkInterface](https://cloud.tencent.com/document/api/215/15818) - 创建弹性网卡
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817) - 查询弹性网卡列表
+* Update: [AssignPrivateIpAddresses](https://cloud.tencent.com/document/api/215/15813) - 弹性网卡申请内网 IP
+* Update: [ModifyNetworkInterfaceAttribute](https://cloud.tencent.com/document/api/215/15815) - 修改弹性网卡
+* Update: [ModifyPrivateIpAddressesAttribute](https://cloud.tencent.com/document/api/215/15823) - 修改弹性网卡内网IP信息
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [UnassignPrivateIpAddresses](https://cloud.tencent.com/document/api/215/15814) - 弹性网卡退还内网 IP
+* Delete: [DeleteNetworkInterface](https://cloud.tencent.com/document/api/215/15822) - 删除弹性网卡
+* Delete: [DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817) - 查询弹性网卡列表
 
 ## Import
 

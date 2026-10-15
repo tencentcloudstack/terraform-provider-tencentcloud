@@ -131,6 +131,18 @@ The `rule` object exports the following:
 * `id` - rule id.
 * `ns_name` - namespace name.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateImmutableTagRules](https://cloud.tencent.com/document/api/1141/58197) - 创建镜像不可变规则
+* Create: [DescribeImmutableTagRules](https://cloud.tencent.com/document/api/1141/58195) - 列出镜像不可变规则
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeImmutableTagRules](https://cloud.tencent.com/document/api/1141/58195) - 列出镜像不可变规则
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyImmutableTagRules](https://cloud.tencent.com/document/api/1141/58194) - 更新镜像不可变规则
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteImmutableTagRules](https://cloud.tencent.com/document/api/1141/58196) - 删除镜像不可变规则
 
 ## Import
 

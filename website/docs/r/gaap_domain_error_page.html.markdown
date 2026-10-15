@@ -61,4 +61,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDomainErrorPageInfo](https://cloud.tencent.com/document/api/608/39347) - 定制域名指定错误码的错误响应
+* Create: [DescribeDomainErrorPageInfoByIds](https://cloud.tencent.com/document/api/608/40489) - 根据定制错误ID查询错误响应
+* Read: [DescribeDomainErrorPageInfo](https://cloud.tencent.com/document/api/608/39345) - 查询目前定制域名的错误响应
+* Delete: [DeleteDomainErrorPageInfo](https://cloud.tencent.com/document/api/608/39346) - 删除域名的定制错误
+* Delete: [DescribeDomainErrorPageInfoByIds](https://cloud.tencent.com/document/api/608/40489) - 根据定制错误ID查询错误响应
 

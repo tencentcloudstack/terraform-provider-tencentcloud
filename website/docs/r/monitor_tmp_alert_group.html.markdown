@@ -108,6 +108,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `group_id` - Alarm group id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePrometheusAlertGroup](https://cloud.tencent.com/document/api/248/102990) - 创建Prometheus告警规则分组
+* Read: [DescribePrometheusAlertGroups](https://cloud.tencent.com/document/api/248/102988) - 列出Prometheus告警分组
+* Update: [UpdatePrometheusAlertGroup](https://cloud.tencent.com/document/api/248/102987) - 更新Prometheus告警规则分组
+* Delete: [DeletePrometheusAlertGroups](https://cloud.tencent.com/document/api/248/102989) - 删除Prometheus告警规则分组
 
 ## Import
 

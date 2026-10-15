@@ -93,6 +93,16 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `10m`) Used when creating the resource.
 * `update` - (Defaults to `10m`) Used when updating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLoadBalancer](https://cloud.tencent.com/document/api/1552/111970) - 创建负载均衡实例
+* Create: [DescribeLoadBalancerList](https://cloud.tencent.com/document/api/1552/111972) - 查询负载均衡实例列表
+* Read: [DescribeLoadBalancerList](https://cloud.tencent.com/document/api/1552/111972) - 查询负载均衡实例列表
+* Update: [DescribeLoadBalancerList](https://cloud.tencent.com/document/api/1552/111972) - 查询负载均衡实例列表
+* Update: [ModifyLoadBalancer](https://cloud.tencent.com/document/api/1552/111969) - 修改负载均衡实例
+* Delete: [DeleteLoadBalancer](https://cloud.tencent.com/document/api/1552/111973) - 删除负载均衡实例
 
 ## Import
 

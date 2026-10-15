@@ -30,4 +30,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `service_status` - Private domain resolution service activation status.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [SubscribePrivateZoneService](https://cloud.tencent.com/document/api/1338/55932) - 开通私有域解析
 

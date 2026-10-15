@@ -87,6 +87,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `create_time` - Track create time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAuditTrack](https://cloud.tencent.com/document/api/629/70383) - 创建指定事件跟踪集
+* Read: [DescribeAuditTrack](https://cloud.tencent.com/document/api/629/83247) - 查询操作审计跟踪集详情
+* Update: [ModifyAuditTrack](https://cloud.tencent.com/document/api/629/70381) - 修改操作审计跟踪集
+* Delete: [DeleteAuditTrack](https://cloud.tencent.com/document/api/629/70382) - 删除操作审计跟踪集
 
 ## Import
 

@@ -34,6 +34,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `domain_alias_id` - Domain alias ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDomainAlias](https://cloud.tencent.com/document/api/1427/56183) - 创建域名别名
+* Read: [DescribeDomainAliasList](https://cloud.tencent.com/document/api/1427/65766) - 获取域名别名列表
+* Delete: [DeleteDomainAlias](https://cloud.tencent.com/document/api/1427/56177) - 删除域名别名
 
 ## Import
 

@@ -63,6 +63,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `monitor_id` - Monitor ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateMonitor](https://cloud.tencent.com/document/api/1551/120449) - 新增监控器
+* Read: [DescribeMonitorDetail](https://cloud.tencent.com/document/api/1551/120447) - 查询监控器详情
+* Update: [ModifyMonitor](https://cloud.tencent.com/document/api/1551/120445) - 修改监控器
+* Delete: [DeleteMonitor](https://cloud.tencent.com/document/api/1551/120448) - 删除监控器
 
 ## Import
 

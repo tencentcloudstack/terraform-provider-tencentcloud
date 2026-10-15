@@ -44,6 +44,14 @@ In addition to all arguments above, the following attributes are exported:
 * `service_owner` - APPID.
 * `service_vip` - VIP of backend service.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateVpcEndPointService](https://cloud.tencent.com/document/api/215/54684) - 创建终端节点服务
+* Read: [DescribeVpcEndPointService](https://cloud.tencent.com/document/api/215/54678) - 查询终端节点服务列表
+* Update: [ModifyVpcEndPointServiceAttribute](https://cloud.tencent.com/document/api/215/54673) - 修改终端节点服务属性
+* Delete: [DeleteVpcEndPointService](https://cloud.tencent.com/document/api/215/54681) - 删除终端节点服务
 
 ## Import
 

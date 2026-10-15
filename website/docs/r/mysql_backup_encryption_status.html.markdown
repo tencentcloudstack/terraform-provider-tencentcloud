@@ -93,6 +93,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyBackupEncryptionStatus](https://cloud.tencent.com/document/api/236/86507) - 设置实例备份文件是否加密
+* Read: [DescribeBackupEncryptionStatus](https://cloud.tencent.com/document/api/236/86508) - 查询实例默认备份加密状态
+* Update: [ModifyBackupEncryptionStatus](https://cloud.tencent.com/document/api/236/86507) - 设置实例备份文件是否加密
 
 ## Import
 

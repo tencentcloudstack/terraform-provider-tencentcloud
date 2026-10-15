@@ -49,6 +49,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDedicatedCluster](https://cloud.tencent.com/document/api/1346/73710) - 创建专用集群
+* Read: [DescribeDedicatedClusters](https://cloud.tencent.com/document/api/1346/73758) - 查询专用集群列表
+* Update: [ModifyDedicatedClusterInfo](https://cloud.tencent.com/document/api/1346/73754) - 修改本地专用集群信息
+* Delete: [DeleteDedicatedClusters](https://cloud.tencent.com/document/api/1346/73767) - 删除专用集群
 
 ## Import
 

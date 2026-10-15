@@ -41,6 +41,22 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateGlobalDomain](https://cloud.tencent.com/document/api/608/79567) - 创建域名
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeGlobalDomains](https://cloud.tencent.com/document/api/608/79562) - 查询域名列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [DescribeGlobalDomains](https://cloud.tencent.com/document/api/608/79562) - 查询域名列表
+* Update: [DisableGlobalDomain](https://cloud.tencent.com/document/api/608/79561) - 暂停域名解析
+* Update: [EnableGlobalDomain](https://cloud.tencent.com/document/api/608/79560) - 开启域名解析
+* Update: [ModifyGlobalDomainAttribute](https://cloud.tencent.com/document/api/608/79559) - 修改域名属性
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteGlobalDomain](https://cloud.tencent.com/document/api/608/79565) - 删除域名
+* Delete: [DescribeGlobalDomains](https://cloud.tencent.com/document/api/608/79562) - 查询域名列表
+* Delete: [DisableGlobalDomain](https://cloud.tencent.com/document/api/608/79561) - 暂停域名解析
 
 ## Import
 

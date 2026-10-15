@@ -132,6 +132,24 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePublishSubscribe](https://cloud.tencent.com/document/api/238/46285) - 创建发布订阅
+* Create: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Create: [DescribePublishSubscribe](https://cloud.tencent.com/document/api/238/46282) - 查询订阅发布
+* Read: [DescribePublishSubscribe](https://cloud.tencent.com/document/api/238/46282) - 查询订阅发布
+* Update: [DeleteDB](https://cloud.tencent.com/document/api/238/19971) - 删除数据库
+* Update: [DeletePublishSubscribe](https://cloud.tencent.com/document/api/238/46284) - 删除发布订阅
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Update: [DescribePublishSubscribe](https://cloud.tencent.com/document/api/238/46282) - 查询订阅发布
+* Update: [ModifyPublishSubscribeName](https://cloud.tencent.com/document/api/238/46280) - 修改发布订阅的名称
+* Delete: [DeleteDB](https://cloud.tencent.com/document/api/238/19971) - 删除数据库
+* Delete: [DeletePublishSubscribe](https://cloud.tencent.com/document/api/238/46284) - 删除发布订阅
+* Delete: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Delete: [DescribePublishSubscribe](https://cloud.tencent.com/document/api/238/46282) - 查询订阅发布
 
 ## Import
 

@@ -53,6 +53,14 @@ The `strategy` object exports the following:
 
 * `strategy_id` - The ID of the data masking strategy.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDataMaskStrategy](https://cloud.tencent.com/document/api/1342/122619) - 创建数据脱敏策略
+* Read: [DescribeDataMaskStrategies](https://cloud.tencent.com/document/api/1342/122617) - 查询数据脱敏策略列表
+* Update: [UpdateDataMaskStrategy](https://cloud.tencent.com/document/api/1342/122616) - 更新数据脱敏策略
+* Delete: [DeleteDataMaskStrategy](https://cloud.tencent.com/document/api/1342/122618) - 删除数据脱敏策略
 
 ## Import
 

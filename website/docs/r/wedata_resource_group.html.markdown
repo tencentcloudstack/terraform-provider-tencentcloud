@@ -110,4 +110,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `resource_group_id` - Resource group ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateResourceGroup](https://cloud.tencent.com/document/api/1267/123984) - 创建资源组
+* Read: [ListResourceGroups](https://cloud.tencent.com/document/api/1267/123980) - 查看资源组列表
+* Update: [UpdateResourceGroup](https://cloud.tencent.com/document/api/1267/123979) - 更新资源组
+* Delete: [DeleteResourceGroup](https://cloud.tencent.com/document/api/1267/123983) - 销毁资源组
 

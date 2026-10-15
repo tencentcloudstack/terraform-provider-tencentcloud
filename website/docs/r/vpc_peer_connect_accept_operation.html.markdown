@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AcceptVpcPeeringConnection](https://cloud.tencent.com/document/api/215/96026) - 接受对等连接
 

@@ -37,6 +37,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [EnablePolicyType](https://cloud.tencent.com/document/api/850/105312) - 启用策略类型
+* Read: [DescribePolicyConfig](https://cloud.tencent.com/document/api/850/105315) - 查看企业组织策略配置
+* Delete: [DisablePolicyType](https://cloud.tencent.com/document/api/850/105313) - 禁用策略类型
 
 ## Import
 

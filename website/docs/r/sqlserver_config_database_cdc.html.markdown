@@ -98,6 +98,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Create: [ModifyDatabaseCDC](https://cloud.tencent.com/document/api/238/59033) - 开启&关闭数据库CDC
+* Read: [DescribeDBsNormal](https://cloud.tencent.com/document/api/238/59034) - 查询数据库配置信息（已废弃）
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Update: [ModifyDatabaseCDC](https://cloud.tencent.com/document/api/238/59033) - 开启&关闭数据库CDC
 
 ## Import
 

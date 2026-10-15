@@ -187,6 +187,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateTopic](https://cloud.tencent.com/document/api/614/56456) - 创建主题
+* Read: [DescribeTopics](https://cloud.tencent.com/document/api/614/56454) - 获取主题列表
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [ModifyTopic](https://cloud.tencent.com/document/api/614/56453) - 修改主题
+* Delete: [DeleteTopic](https://cloud.tencent.com/document/api/614/56455) - 删除主题
 
 ## Import
 

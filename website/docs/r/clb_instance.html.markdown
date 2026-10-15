@@ -670,6 +670,30 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `10m`) Used when creating the resource.
 * `update` - (Defaults to `10m`) Used when updating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLoadBalancer](https://cloud.tencent.com/document/api/214/30692) - 购买负载均衡实例
+* Create: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702) - 查询弹性公网IP列表
+* Create: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685) - 查询负载均衡实例列表
+* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Create: [ModifyLoadBalancerAttributes](https://cloud.tencent.com/document/api/214/30680) - 修改负载均衡实例的属性
+* Create: [SetLoadBalancerClsLog](https://cloud.tencent.com/document/api/214/43266) - 设置负载均衡的日志服务主题
+* Create: [SetLoadBalancerSecurityGroups](https://cloud.tencent.com/document/api/214/34903) - 设置负载均衡实例的安全组
+* Read: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702) - 查询弹性公网IP列表
+* Read: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685) - 查询负载均衡实例列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [AssociateAddress](https://cloud.tencent.com/document/api/215/16700) - 绑定弹性公网IP
+* Update: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702) - 查询弹性公网IP列表
+* Update: [DisassociateAddress](https://cloud.tencent.com/document/api/215/16703) - 解绑弹性公网IP
+* Update: [ModifyLoadBalancerAttributes](https://cloud.tencent.com/document/api/214/30680) - 修改负载均衡实例的属性
+* Update: [ModifyLoadBalancerSla](https://cloud.tencent.com/document/api/214/63892) - 调整实例的性能容量型规格
+* Update: [ModifyLoadBalancersProject](https://cloud.tencent.com/document/api/214/96177) - 修改负载均衡所属项目
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [SetLoadBalancerClsLog](https://cloud.tencent.com/document/api/214/43266) - 设置负载均衡的日志服务主题
+* Update: [SetLoadBalancerSecurityGroups](https://cloud.tencent.com/document/api/214/34903) - 设置负载均衡实例的安全组
+* Delete: [DeleteLoadBalancer](https://cloud.tencent.com/document/api/214/30689) - 删除负载均衡实例
 
 ## Import
 

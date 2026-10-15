@@ -46,4 +46,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateBoundIP](https://cloud.tencent.com/document/api/297/95349) - 绑定IP到高防包实例
+* Create: [DescribeListBGPInstances](https://cloud.tencent.com/document/api/297/95346) - 获取高防包资产实例列表
+* Read: [DescribeListBGPInstances](https://cloud.tencent.com/document/api/297/95346) - 获取高防包资产实例列表
+* Delete: [CreateBoundIP](https://cloud.tencent.com/document/api/297/95349) - 绑定IP到高防包实例
+* Delete: [DescribeListBGPInstances](https://cloud.tencent.com/document/api/297/95346) - 获取高防包资产实例列表
 

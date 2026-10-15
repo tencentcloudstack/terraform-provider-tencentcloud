@@ -209,4 +209,12 @@ In addition to all arguments above, the following attributes are exported:
 * `template_id` - Used for the argument, if the configuration comes to the template, the template id.
 * `update_time` - Last modified time of record rule.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePrometheusRecordRuleYaml](https://cloud.tencent.com/document/api/248/85707) - 以Yaml的方式创建聚合规则
+* Read: [DescribePrometheusRecordRules](https://cloud.tencent.com/document/api/248/85714) - 获取聚合规则列表，包含关联集群内的资源
+* Update: [ModifyPrometheusRecordRuleYaml](https://cloud.tencent.com/document/api/248/85703) - 通过yaml的方式修改Prometheus聚合实例
+* Delete: [DeletePrometheusRecordRuleYaml](https://cloud.tencent.com/document/api/248/85706) - 删除聚合实例
 

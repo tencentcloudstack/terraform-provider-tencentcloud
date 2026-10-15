@@ -141,4 +141,11 @@ In addition to all arguments above, the following attributes are exported:
   * `session_stick_timeout` - Session hold timeout.Note: This field may return null, indicating that a valid value cannot be obtained.
 * `update_time` - Last modified time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ImportOpenApi](https://cloud.tencent.com/document/api/628/79383) - 导入OpenAPI
+* Read: [DescribeApi](https://cloud.tencent.com/document/api/628/45241) - 查询API详情
+* Delete: [DeleteApi](https://cloud.tencent.com/document/api/628/45242) - 删除API
 

@@ -41,6 +41,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLocalGateway](https://cloud.tencent.com/document/api/215/54630) - 创建本地网关
+* Read: [DescribeLocalGateway](https://cloud.tencent.com/document/api/215/54628) - 查询本地网关
+* Update: [ModifyLocalGateway](https://cloud.tencent.com/document/api/215/54627) - 修改本地网关
+* Delete: [DeleteLocalGateway](https://cloud.tencent.com/document/api/215/54629) - 删除本地网关
 
 ## Import
 

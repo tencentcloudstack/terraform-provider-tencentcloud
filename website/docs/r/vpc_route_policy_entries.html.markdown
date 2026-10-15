@@ -103,6 +103,16 @@ Note: This field may return null, indicating that no valid value was found.
 * `route_policy_entry_id` - Specifies the unique ID of the IPv4 routing strategy entry.
 Note: This field may return null, indicating that no valid value was found.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRoutePolicyEntries](https://cloud.tencent.com/document/api/215/124428) - 创建路由接收策略条目
+* Read: [DescribeRoutePolicyEntries](https://cloud.tencent.com/document/api/215/124424) - 查看路由接收策略条目
+* Update: [DescribeRoutePolicies](https://cloud.tencent.com/document/api/215/126466) - 用户查询路由策略列表
+* Update: [ResetRoutePolicyEntries](https://cloud.tencent.com/document/api/215/124419) - 重置路由接收策略条目
+* Delete: [DeleteRoutePolicyEntries](https://cloud.tencent.com/document/api/215/124425) - 删除路由接收策略条目
+* Delete: [DescribeRoutePolicyEntries](https://cloud.tencent.com/document/api/215/124424) - 查看路由接收策略条目
 
 ## Import
 

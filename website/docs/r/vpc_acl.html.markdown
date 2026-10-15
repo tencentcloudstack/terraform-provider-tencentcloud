@@ -50,6 +50,21 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `create_time` - Creation time of ACL.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateNetworkAcl](https://cloud.tencent.com/document/api/215/42162) - 创建网络ACL
+* Create: [ModifyNetworkAclEntries](https://cloud.tencent.com/document/api/215/42107) - 修改网络ACL规则
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeNetworkAcls](https://cloud.tencent.com/document/api/215/42160) - 查询网络ACL列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyNetworkAclAttribute](https://cloud.tencent.com/document/api/215/42158) - 修改网络ACL属性
+* Update: [ModifyNetworkAclEntries](https://cloud.tencent.com/document/api/215/42107) - 修改网络ACL规则
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteNetworkAcl](https://cloud.tencent.com/document/api/215/42161) - 删除网络ACL
+* Delete: [DescribeNetworkAcls](https://cloud.tencent.com/document/api/215/42160) - 查询网络ACL列表
+* Delete: [DisassociateNetworkAclSubnets](https://cloud.tencent.com/document/api/215/42159) - 网络ACL解关联子网
 
 ## Import
 

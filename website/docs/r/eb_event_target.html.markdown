@@ -156,6 +156,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateTarget](https://cloud.tencent.com/document/api/1359/67703) - 创建事件目标
+* Read: [ListTargets](https://cloud.tencent.com/document/api/1359/67701) - 获取事件目标列表
+* Update: [UpdateTarget](https://cloud.tencent.com/document/api/1359/67700) - 更新事件目标
+* Delete: [DeleteTarget](https://cloud.tencent.com/document/api/1359/67702) - 删除事件目标
 
 ## Import
 

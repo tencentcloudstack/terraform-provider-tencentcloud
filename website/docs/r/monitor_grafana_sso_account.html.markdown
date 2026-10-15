@@ -74,6 +74,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSSOAccount](https://cloud.tencent.com/document/api/248/79216) - 授权腾讯云用户
+* Read: [DescribeSSOAccount](https://cloud.tencent.com/document/api/248/79202) - 列出授权账号
+* Update: [UpdateSSOAccount](https://cloud.tencent.com/document/api/248/79188) - 更新账号信息
+* Delete: [DeleteSSOAccount](https://cloud.tencent.com/document/api/248/79212) - 删除授权用户
 
 ## Import
 

@@ -132,6 +132,25 @@ In addition to all arguments above, the following attributes are exported:
 * `state` - State of the connection. Valid value: `PENDING`, `AVAILABLE`, `DELETING`.
 * `vpn_proto` - Vpn proto of the VPN connection.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateVpnConnection](https://cloud.tencent.com/document/api/215/17522) - 创建VPN通道
+* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Create: [DescribeVpnConnections](https://cloud.tencent.com/document/api/215/17515) - 查询VPN通道列表
+* Create: [DescribeVpnGateways](https://cloud.tencent.com/document/api/215/17514) - 查询VPN网关
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Read: [DescribeVpnConnections](https://cloud.tencent.com/document/api/215/17515) - 查询VPN通道列表
+* Read: [DescribeVpnGateways](https://cloud.tencent.com/document/api/215/17514) - 查询VPN网关
+* Update: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [DescribeVpnConnections](https://cloud.tencent.com/document/api/215/17515) - 查询VPN通道列表
+* Update: [DescribeVpnGateways](https://cloud.tencent.com/document/api/215/17514) - 查询VPN网关
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [ModifyVpnConnectionAttribute](https://cloud.tencent.com/document/api/215/17508) - 修改VPN通道
+* Delete: [DeleteVpnConnection](https://cloud.tencent.com/document/api/215/17519) - 删除VPN通道
+* Delete: [DescribeVpnConnections](https://cloud.tencent.com/document/api/215/17515) - 查询VPN通道列表
 
 ## Import
 

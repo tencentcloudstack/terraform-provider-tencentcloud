@@ -57,6 +57,19 @@ In addition to all arguments above, the following attributes are exported:
 * `uid` - ID of the CAM user.
 * `uin` - Uin of the CAM User.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddUser](https://cloud.tencent.com/document/api/598/34595) - 创建子用户
+* Create: [GetUser](https://cloud.tencent.com/document/api/598/34590) - 查询子用户
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Read: [GetUser](https://cloud.tencent.com/document/api/598/34590) - 查询子用户
+* Update: [GetUser](https://cloud.tencent.com/document/api/598/34590) - 查询子用户
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [UpdateUser](https://cloud.tencent.com/document/api/598/34583) - 更新子用户
+* Delete: [DeleteUser](https://cloud.tencent.com/document/api/598/34592) - 删除子用户
 
 ## Import
 

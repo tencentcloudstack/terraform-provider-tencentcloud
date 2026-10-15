@@ -158,4 +158,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `rule_id` - Rule ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [UpsertCCRule](https://cloud.tencent.com/document/api/627/97646) - Waf  CC V2 Upsert接口
+* Read: [DescribeCCRuleList](https://cloud.tencent.com/document/api/627/97636) - 查询CC规则
+* Update: [UpsertCCRule](https://cloud.tencent.com/document/api/627/97646) - Waf  CC V2 Upsert接口
+* Delete: [DeleteCCRule](https://cloud.tencent.com/document/api/627/97648) - Waf  CC V2 Delete接口
 

@@ -61,6 +61,16 @@ The `service` object exports the following:
 
 * `ip` - ip address of application service.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateApplicationService](https://cloud.tencent.com/document/api/1371/81051) - 新增访问方式
+* Create: [DescribeApplicationServiceList](https://cloud.tencent.com/document/api/1371/81049) - 查询应用访问方式列表
+* Read: [DescribeApplicationServiceList](https://cloud.tencent.com/document/api/1371/81049) - 查询应用访问方式列表
+* Update: [DescribeApplicationServiceList](https://cloud.tencent.com/document/api/1371/81049) - 查询应用访问方式列表
+* Update: [ModifyApplicationService](https://cloud.tencent.com/document/api/1371/81048) - 修改服务访问方式列表
+* Delete: [DeleteApplicationService](https://cloud.tencent.com/document/api/1371/81050) - 删除一条访问方式
 
 ## Import
 

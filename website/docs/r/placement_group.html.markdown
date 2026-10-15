@@ -55,6 +55,15 @@ In addition to all arguments above, the following attributes are exported:
 * `current_num` - Number of hosts in the placement group.
 * `cvm_quota_total` - Maximum number of hosts in the placement group.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDisasterRecoverGroup](https://cloud.tencent.com/document/api/213/17813) - 创建分散置放群组
+* Read: [DescribeDisasterRecoverGroups](https://cloud.tencent.com/document/api/213/17810) - 查询分散置放群组信息
+* Update: [ModifyDisasterRecoverGroupAttribute](https://cloud.tencent.com/document/api/213/17809) - 修改分散置放群组属性
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteDisasterRecoverGroups](https://cloud.tencent.com/document/api/213/17812) - 删除分散置放群组
 
 ## Import
 

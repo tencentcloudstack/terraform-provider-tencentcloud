@@ -37,6 +37,15 @@ In addition to all arguments above, the following attributes are exported:
 * `wan_port` - Internet port.
 * `wan_status` - Internet status.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
+* Create: [OpenWan](https://cloud.tencent.com/document/api/1003/92732) - 开通外网
+* Read: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303) - 查询实例组（废弃）
+* Delete: [CloseWan](https://cloud.tencent.com/document/api/1003/92737) - 关闭外网
+* Delete: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
 
 ## Import
 

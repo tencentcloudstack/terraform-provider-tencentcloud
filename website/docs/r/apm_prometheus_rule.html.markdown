@@ -42,6 +42,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `rule_id` - ID of the indicator matching rule.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateApmPrometheusRule](https://cloud.tencent.com/document/api/1463/125082) - 创建 APM 业务系统与 Prometheus 实例的指标匹配规则
+* Create: [ModifyApmPrometheusRule](https://cloud.tencent.com/document/api/1463/125075) - 修改 APM 业务系统与 Prometheus 实例的指标匹配规则
+* Read: [DescribeApmPrometheusRule](https://cloud.tencent.com/document/api/1463/125078) - 查询 APM 业务系统与 Prometheus 实例的指标匹配规则
+* Update: [ModifyApmPrometheusRule](https://cloud.tencent.com/document/api/1463/125075) - 修改 APM 业务系统与 Prometheus 实例的指标匹配规则
+* Delete: [ModifyApmPrometheusRule](https://cloud.tencent.com/document/api/1463/125075) - 修改 APM 业务系统与 Prometheus 实例的指标匹配规则
 
 ## Import
 

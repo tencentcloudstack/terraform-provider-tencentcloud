@@ -34,4 +34,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeLogstashInstances](https://cloud.tencent.com/document/api/845/77239) - 获取Logstash实例列表
+* Create: [RestartLogstashInstance](https://cloud.tencent.com/document/api/845/77237) - 重启Logstash实例
 

@@ -57,6 +57,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [GrantUserPermissions](https://cloud.tencent.com/document/api/457/127539) - 全量授予用户权限
+* Read: [DescribeUserPermissions](https://cloud.tencent.com/document/api/457/127540) - 查询用户权限
+* Update: [DeleteUserPermissions](https://cloud.tencent.com/document/api/457/127541) - 删除用户权限
+* Update: [GrantUserPermissions](https://cloud.tencent.com/document/api/457/127539) - 全量授予用户权限
+* Delete: [DeleteUserPermissions](https://cloud.tencent.com/document/api/457/127541) - 删除用户权限
+* Delete: [DescribeUserPermissions](https://cloud.tencent.com/document/api/457/127540) - 查询用户权限
 
 ## Import
 

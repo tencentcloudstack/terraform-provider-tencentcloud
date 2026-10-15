@@ -50,6 +50,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLoadBalancerSnatIps](https://cloud.tencent.com/document/api/214/41505) - 添加SnatIp
+* Read: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685) - 查询负载均衡实例列表
+* Update: [CreateLoadBalancerSnatIps](https://cloud.tencent.com/document/api/214/41505) - 添加SnatIp
+* Update: [DeleteLoadBalancerSnatIps](https://cloud.tencent.com/document/api/214/41503) - 删除SnatIp
+* Delete: [DeleteLoadBalancerSnatIps](https://cloud.tencent.com/document/api/214/41503) - 删除SnatIp
+* Delete: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685) - 查询负载均衡实例列表
 
 ## Import
 

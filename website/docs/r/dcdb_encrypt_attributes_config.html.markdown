@@ -101,6 +101,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyDBEncryptAttributes](https://cloud.tencent.com/document/api/557/86907) - 修改实例数据加密属性
+* Read: [DescribeDBEncryptAttributes](https://cloud.tencent.com/document/api/557/92617) - 查询实例数据加密状态
+* Update: [ModifyDBEncryptAttributes](https://cloud.tencent.com/document/api/557/86907) - 修改实例数据加密属性
 
 ## Import
 

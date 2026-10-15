@@ -56,6 +56,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSampleSnapshotTemplate](https://cloud.tencent.com/document/api/266/37787) - 创建采样截图模板
+* Read: [DescribeSampleSnapshotTemplates](https://cloud.tencent.com/document/api/266/37779) - 获取采样截图模板列表
+* Update: [ModifySampleSnapshotTemplate](https://cloud.tencent.com/document/api/266/37775) - 修改采样截图模板
+* Delete: [DeleteSampleSnapshotTemplate](https://cloud.tencent.com/document/api/266/37783) - 删除采样截图模板
 
 ## Import
 

@@ -66,6 +66,14 @@ In addition to all arguments above, the following attributes are exported:
 * `test_scripts` - Test script information.
 * `type` - Scene Type.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [StartJob](https://cloud.tencent.com/document/api/1484/78062) - 创建并启动任务
+* Read: [DescribeJobs](https://cloud.tencent.com/document/api/1484/78078) - 查询任务列表
+* Update: [UpdateJob](https://cloud.tencent.com/document/api/1484/78059) - 更新任务
+* Delete: [DeleteJobs](https://cloud.tencent.com/document/api/1484/78087) - 删除任务
 
 ## Import
 

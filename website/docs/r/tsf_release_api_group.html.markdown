@@ -32,4 +32,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ReleaseApiGroup](https://cloud.tencent.com/document/api/649/50627) - 发布Api分组
+* Read: [DescribeApiGroup](https://cloud.tencent.com/document/api/649/50637) - 查询API分组
 

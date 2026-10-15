@@ -61,6 +61,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AssignIpv6SubnetCidrBlock](https://cloud.tencent.com/document/api/215/34471) - 分配IPv6子网段
+* Read: [DescribeSubnets](https://cloud.tencent.com/document/api/215/15784) - 查询子网列表
+* Delete: [UnassignIpv6SubnetCidrBlock](https://cloud.tencent.com/document/api/215/34470) - 释放IPv6子网段
 
 ## Import
 

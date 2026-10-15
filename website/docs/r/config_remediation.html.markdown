@@ -42,6 +42,14 @@ In addition to all arguments above, the following attributes are exported:
 * `remediation_id` - Remediation setting ID.
 * `remediation_source_type` - Remediation source type returned from API.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRemediation](https://cloud.tencent.com/document/api/1579/129723) - 新建修正设置
+* Read: [ListRemediations](https://cloud.tencent.com/document/api/1579/129715) - 修正设置列表
+* Update: [UpdateRemediation](https://cloud.tencent.com/document/api/1579/129706) - 编辑修正设置
+* Delete: [DeleteRemediations](https://cloud.tencent.com/document/api/1579/129720) - 删除修正设置
 
 ## Import
 

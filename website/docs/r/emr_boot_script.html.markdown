@@ -57,6 +57,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyBootScript](https://cloud.tencent.com/document/api/589/130556) - 修改引导脚本
+* Read: [DescribeBootScript](https://cloud.tencent.com/document/api/589/130557) - 获取引导脚本
+* Update: [ModifyBootScript](https://cloud.tencent.com/document/api/589/130556) - 修改引导脚本
+* Delete: [ModifyBootScript](https://cloud.tencent.com/document/api/589/130556) - 修改引导脚本
 
 ## Import
 

@@ -38,6 +38,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDDoSBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95338) - 添加DDoS防护的IP网段黑白名单
+* Read: [DescribeDDoSBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95316) - 获取DDoS防护的IP网段黑白名单
+* Update: [ModifyDDoSBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95304) - 修改DDoS黑白名单列表
+* Delete: [DeleteDDoSBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95326) - 删除DDoS防护的IP网段黑白名单
 
 ## Import
 

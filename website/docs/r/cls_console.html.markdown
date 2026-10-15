@@ -221,6 +221,14 @@ In addition to all arguments above, the following attributes are exported:
 * `domain` - Public network access domain.
 * `intranet_domain` - Intranet access domain.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateConsole](https://cloud.tencent.com/document/api/614/129856) - 创建DataSight控制台
+* Read: [DescribeConsoles](https://cloud.tencent.com/document/api/614/129854) - 查询DataSight控制台实例列表
+* Update: [ModifyConsole](https://cloud.tencent.com/document/api/614/129853) - 编辑DataSight控制台
+* Delete: [DeleteConsole](https://cloud.tencent.com/document/api/614/129855) - 删除DataSight控制台
 
 ## Import
 

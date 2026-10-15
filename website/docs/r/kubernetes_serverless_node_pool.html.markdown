@@ -140,6 +140,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `life_state` - life state of serverless node pool.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateClusterVirtualNodePool](https://cloud.tencent.com/document/api/457/85354) - 创建超级节点池
+* Create: [DescribeClusterVirtualNodePools](https://cloud.tencent.com/document/api/457/85350) - 查看超级节点池列表
+* Read: [DescribeClusterVirtualNodePools](https://cloud.tencent.com/document/api/457/85350) - 查看超级节点池列表
+* Update: [ModifyClusterVirtualNodePool](https://cloud.tencent.com/document/api/457/85348) - 修改超级节点池
+* Delete: [DeleteClusterVirtualNodePool](https://cloud.tencent.com/document/api/457/85352) - 删除超级节点池
+* Delete: [DescribeClusterVirtualNodePools](https://cloud.tencent.com/document/api/457/85350) - 查看超级节点池列表
 
 ## Import
 

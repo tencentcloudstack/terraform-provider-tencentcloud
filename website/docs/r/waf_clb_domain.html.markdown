@@ -160,6 +160,28 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `domain_id` - Domain id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateHost](https://cloud.tencent.com/document/api/627/89906) - 添加负载均衡型WAF防护域名
+* Create: [DescribeDomains](https://cloud.tencent.com/document/api/627/72840) - 获取域名列表
+* Create: [DescribeHostLimit](https://cloud.tencent.com/document/api/627/96943) - 验证添加的域名是否已经存在
+* Create: [ModifyApiAnalyzeStatus](https://cloud.tencent.com/document/api/627/97282) - api分析页面开关
+* Create: [ModifyBotStatus](https://cloud.tencent.com/document/api/627/97281) - Bot_V2 bot总开关更新
+* Create: [ModifyDomainsCLSStatus](https://cloud.tencent.com/document/api/627/96937) - 修改域名列表的访问日志开关
+* Create: [ModifyHostMode](https://cloud.tencent.com/document/api/627/96934) - 设置防护域名防护状态
+* Create: [ModifyHostStatus](https://cloud.tencent.com/document/api/627/96933) - 设置防护域名WAF开关
+* Read: [DescribeDomainDetailsClb](https://cloud.tencent.com/document/api/627/96946) - 获取负载均衡型WAF域名详情
+* Read: [DescribeDomains](https://cloud.tencent.com/document/api/627/72840) - 获取域名列表
+* Update: [ModifyApiAnalyzeStatus](https://cloud.tencent.com/document/api/627/97282) - api分析页面开关
+* Update: [ModifyBotStatus](https://cloud.tencent.com/document/api/627/97281) - Bot_V2 bot总开关更新
+* Update: [ModifyDomainsCLSStatus](https://cloud.tencent.com/document/api/627/96937) - 修改域名列表的访问日志开关
+* Update: [ModifyHost](https://cloud.tencent.com/document/api/627/96936) - 编辑负载均衡型WAF防护域名
+* Update: [ModifyHostFlowMode](https://cloud.tencent.com/document/api/627/96935) - 编辑负载均衡型WAF防护域名的流量模式
+* Update: [ModifyHostMode](https://cloud.tencent.com/document/api/627/96934) - 设置防护域名防护状态
+* Update: [ModifyHostStatus](https://cloud.tencent.com/document/api/627/96933) - 设置防护域名WAF开关
+* Delete: [DeleteHost](https://cloud.tencent.com/document/api/627/96950) - 删除负载均衡型WAF域名
 
 ## Import
 

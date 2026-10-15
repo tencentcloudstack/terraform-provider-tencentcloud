@@ -55,6 +55,14 @@ In addition to all arguments above, the following attributes are exported:
 * `order_index` - Execution order.
 * `uuid` - The unique id corresponding to the rule, no need to fill in when creating the rule.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddNatAcRule](https://cloud.tencent.com/document/api/1132/86861) - 新增NAT边界访问控制规则
+* Read: [DescribeNatAcRule](https://cloud.tencent.com/document/api/1132/86860) - 查询NAT访问控制列表
+* Update: [ModifyNatAcRule](https://cloud.tencent.com/document/api/1132/86859) - 修改NAT边界访问控制规则
+* Delete: [RemoveNatAcRule](https://cloud.tencent.com/document/api/1132/86858) - 删除NAT边界访问控制规则
 
 ## Import
 

@@ -101,6 +101,20 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddReplicationInstance](https://cloud.tencent.com/document/api/239/68401) - 添加复制组成员
+* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
+* Read: [DescribeReplicationGroup](https://cloud.tencent.com/document/api/239/71554) - 查询复制组
+* Update: [AddReplicationInstance](https://cloud.tencent.com/document/api/239/68401) - 添加复制组成员
+* Update: [ChangeMasterInstance](https://cloud.tencent.com/document/api/239/77862) - 复制组实例切主
+* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
+* Update: [RemoveReplicationInstance](https://cloud.tencent.com/document/api/239/90099) - 移除复制组成员
+* Delete: [DescribeReplicationGroup](https://cloud.tencent.com/document/api/239/71554) - 查询复制组
+* Delete: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
+* Delete: [RemoveReplicationInstance](https://cloud.tencent.com/document/api/239/90099) - 移除复制组成员
 
 ## Import
 
