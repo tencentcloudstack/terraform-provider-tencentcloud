@@ -62,10 +62,10 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindSecurityTemplateToEntity](https://www.tencentcloud.com/search/?wd=BindSecurityTemplateToEntity&type=document&lang=en)
-* Read: [DescribeWebSecurityTemplates](https://www.tencentcloud.com/search/?wd=DescribeWebSecurityTemplates&type=document&lang=en)
-* Read: [DescribeZones](https://www.tencentcloud.com/search/?wd=DescribeZones&type=document&lang=en)
-* Delete: [BindSecurityTemplateToEntity](https://www.tencentcloud.com/search/?wd=BindSecurityTemplateToEntity&type=document&lang=en)
+* Create: [BindSecurityTemplateToEntity](https://www.tencentcloud.com/document/api/1145/57572)
+* Read: [DescribeWebSecurityTemplates](https://www.tencentcloud.com/document/api/1145/71945)
+* Read: [DescribeZones](https://www.tencentcloud.com/document/api/1145/50481)
+* Delete: [BindSecurityTemplateToEntity](https://www.tencentcloud.com/document/api/1145/57572)
 
 ## Import
 

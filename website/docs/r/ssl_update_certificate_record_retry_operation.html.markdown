@@ -37,7 +37,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateCertificateRecordRetry](https://www.tencentcloud.com/search/?wd=UpdateCertificateRecordRetry&type=document&lang=en)
+* Create: [UpdateCertificateRecordRetry](https://www.tencentcloud.com/document/api/1007/57980)
 
 ## Import
 

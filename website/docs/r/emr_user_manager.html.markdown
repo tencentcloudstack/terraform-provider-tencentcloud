@@ -49,9 +49,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddUsersForUserManager](https://www.tencentcloud.com/search/?wd=AddUsersForUserManager&type=document&lang=en)
-* Read: [DescribeUsersForUserManager](https://www.tencentcloud.com/search/?wd=DescribeUsersForUserManager&type=document&lang=en)
-* Update: [ModifyUserManagerPwd](https://www.tencentcloud.com/search/?wd=ModifyUserManagerPwd&type=document&lang=en)
+* Create: [AddUsersForUserManager](https://www.tencentcloud.com/document/api/1026/47537)
+* Read: [DescribeUsersForUserManager](https://www.tencentcloud.com/document/api/1026/47536)
+* Update: [ModifyUserManagerPwd](https://www.tencentcloud.com/document/api/1026/58391)
 * Delete: [DeleteUserManagerUserList](https://www.tencentcloud.com/search/?wd=DeleteUserManagerUserList&type=document&lang=en)
 
 ## Import

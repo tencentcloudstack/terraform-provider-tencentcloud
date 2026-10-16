@@ -36,6 +36,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DeployYarnConf](https://www.tencentcloud.com/search/?wd=DeployYarnConf&type=document&lang=en)
-* Create: [DescribeClusterFlowStatusDetail](https://www.tencentcloud.com/search/?wd=DescribeClusterFlowStatusDetail&type=document&lang=en)
+* Create: [DeployYarnConf](https://www.tencentcloud.com/document/api/1026/73207)
+* Create: [DescribeClusterFlowStatusDetail](https://www.tencentcloud.com/document/api/1026/73259)
 

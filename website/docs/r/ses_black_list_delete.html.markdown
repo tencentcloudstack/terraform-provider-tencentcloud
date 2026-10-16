@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DeleteBlackList](https://www.tencentcloud.com/search/?wd=DeleteBlackList&type=document&lang=en)
+* Create: [DeleteBlackList](https://www.tencentcloud.com/document/api/1084/39417)
 

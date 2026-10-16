@@ -65,4 +65,19 @@ In addition to all arguments above, the following attributes are exported:
 * `rule_id` - ID of the layer 7 rule.
 * `status` - Status of the rule. `0` for create/modify success, `2` for create/modify fail, `3` for delete success, `5` for delete failed, `6` for waiting to be created/modified, `7` for waiting to be deleted and 8 for waiting to get SSL ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateL7HealthConfig](https://www.tencentcloud.com/search/?wd=CreateL7HealthConfig&type=document&lang=en)
+* Create: [CreateL7Rules](https://www.tencentcloud.com/search/?wd=CreateL7Rules&type=document&lang=en)
+* Create: [DescribleL7Rules](https://www.tencentcloud.com/search/?wd=DescribleL7Rules&type=document&lang=en)
+* Create: [ModifyCCHostProtection](https://www.tencentcloud.com/search/?wd=ModifyCCHostProtection&type=document&lang=en)
+* Create: [ModifyCCThreshold](https://www.tencentcloud.com/search/?wd=ModifyCCThreshold&type=document&lang=en)
+* Read: [DescribleL7Rules](https://www.tencentcloud.com/search/?wd=DescribleL7Rules&type=document&lang=en)
+* Update: [CreateL7HealthConfig](https://www.tencentcloud.com/search/?wd=CreateL7HealthConfig&type=document&lang=en)
+* Update: [ModifyCCHostProtection](https://www.tencentcloud.com/search/?wd=ModifyCCHostProtection&type=document&lang=en)
+* Update: [ModifyCCThreshold](https://www.tencentcloud.com/search/?wd=ModifyCCThreshold&type=document&lang=en)
+* Update: [ModifyL7Rules](https://www.tencentcloud.com/search/?wd=ModifyL7Rules&type=document&lang=en)
+* Delete: [DeleteL7Rules](https://www.tencentcloud.com/search/?wd=DeleteL7Rules&type=document&lang=en)
 

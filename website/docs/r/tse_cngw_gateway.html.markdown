@@ -114,16 +114,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCloudNativeAPIGateway](https://www.tencentcloud.com/search/?wd=CreateCloudNativeAPIGateway&type=document&lang=en)
-* Create: [DescribeCloudNativeAPIGateway](https://www.tencentcloud.com/search/?wd=DescribeCloudNativeAPIGateway&type=document&lang=en)
+* Create: [CreateCloudNativeAPIGateway](https://www.tencentcloud.com/document/api/1290/79296)
+* Create: [DescribeCloudNativeAPIGateway](https://www.tencentcloud.com/document/api/1290/79269)
 * Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeCloudNativeAPIGateway](https://www.tencentcloud.com/search/?wd=DescribeCloudNativeAPIGateway&type=document&lang=en)
+* Read: [DescribeCloudNativeAPIGateway](https://www.tencentcloud.com/document/api/1290/79269)
 * Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [DescribeCloudNativeAPIGateway](https://www.tencentcloud.com/search/?wd=DescribeCloudNativeAPIGateway&type=document&lang=en)
-* Update: [DescribeNativeGatewayServerGroups](https://www.tencentcloud.com/search/?wd=DescribeNativeGatewayServerGroups&type=document&lang=en)
-* Update: [ModifyCloudNativeAPIGateway](https://www.tencentcloud.com/search/?wd=ModifyCloudNativeAPIGateway&type=document&lang=en)
+* Update: [DescribeCloudNativeAPIGateway](https://www.tencentcloud.com/document/api/1290/79269)
+* Update: [DescribeNativeGatewayServerGroups](https://www.tencentcloud.com/document/api/1290/79253)
+* Update: [ModifyCloudNativeAPIGateway](https://www.tencentcloud.com/document/api/1290/79244)
 * Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [UpdateCloudNativeAPIGatewaySpec](https://www.tencentcloud.com/search/?wd=UpdateCloudNativeAPIGatewaySpec&type=document&lang=en)
-* Delete: [DeleteCloudNativeAPIGateway](https://www.tencentcloud.com/search/?wd=DeleteCloudNativeAPIGateway&type=document&lang=en)
-* Delete: [DescribeCloudNativeAPIGateway](https://www.tencentcloud.com/search/?wd=DescribeCloudNativeAPIGateway&type=document&lang=en)
+* Update: [UpdateCloudNativeAPIGatewaySpec](https://www.tencentcloud.com/document/api/1290/79228)
+* Delete: [DeleteCloudNativeAPIGateway](https://www.tencentcloud.com/document/api/1290/79283)
+* Delete: [DescribeCloudNativeAPIGateway](https://www.tencentcloud.com/document/api/1290/79269)
 

@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ExecuteFunction](https://www.tencentcloud.com/search/?wd=ExecuteFunction&type=document&lang=en)
+* Create: [ExecuteFunction](https://www.tencentcloud.com/document/api/1041/38515)
 

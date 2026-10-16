@@ -45,9 +45,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWhitelist](https://www.tencentcloud.com/search/?wd=CreateWhitelist&type=document&lang=en)
-* Read: [DescribeWhitelists](https://www.tencentcloud.com/search/?wd=DescribeWhitelists&type=document&lang=en)
-* Delete: [DeleteWhitelist](https://www.tencentcloud.com/search/?wd=DeleteWhitelist&type=document&lang=en)
+* Create: [CreateWhitelist](https://www.tencentcloud.com/document/api/1131/45342)
+* Read: [DescribeWhitelists](https://www.tencentcloud.com/document/api/1131/45300)
+* Delete: [DeleteWhitelist](https://www.tencentcloud.com/document/api/1131/45334)
 
 ## Import
 

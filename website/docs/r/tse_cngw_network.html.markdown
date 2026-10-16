@@ -55,11 +55,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCloudNativeAPIGatewayPublicNetwork](https://www.tencentcloud.com/search/?wd=CreateCloudNativeAPIGatewayPublicNetwork&type=document&lang=en)
-* Create: [DescribePublicNetwork](https://www.tencentcloud.com/search/?wd=DescribePublicNetwork&type=document&lang=en)
-* Read: [DescribePublicNetwork](https://www.tencentcloud.com/search/?wd=DescribePublicNetwork&type=document&lang=en)
-* Update: [DescribePublicNetwork](https://www.tencentcloud.com/search/?wd=DescribePublicNetwork&type=document&lang=en)
-* Update: [ModifyNetworkBasicInfo](https://www.tencentcloud.com/search/?wd=ModifyNetworkBasicInfo&type=document&lang=en)
-* Delete: [DeleteCloudNativeAPIGatewayPublicNetwork](https://www.tencentcloud.com/search/?wd=DeleteCloudNativeAPIGatewayPublicNetwork&type=document&lang=en)
-* Delete: [DescribePublicNetwork](https://www.tencentcloud.com/search/?wd=DescribePublicNetwork&type=document&lang=en)
+* Create: [CreateCloudNativeAPIGatewayPublicNetwork](https://www.tencentcloud.com/document/api/1290/79293)
+* Create: [DescribePublicNetwork](https://www.tencentcloud.com/document/api/1290/79249)
+* Read: [DescribePublicNetwork](https://www.tencentcloud.com/document/api/1290/79249)
+* Update: [DescribePublicNetwork](https://www.tencentcloud.com/document/api/1290/79249)
+* Update: [ModifyNetworkBasicInfo](https://www.tencentcloud.com/document/api/1290/79233)
+* Delete: [DeleteCloudNativeAPIGatewayPublicNetwork](https://www.tencentcloud.com/document/api/1290/79279)
+* Delete: [DescribePublicNetwork](https://www.tencentcloud.com/document/api/1290/79249)
 

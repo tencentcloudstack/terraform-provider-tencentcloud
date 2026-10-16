@@ -51,9 +51,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEmailIdentity](https://www.tencentcloud.com/search/?wd=CreateEmailIdentity&type=document&lang=en)
-* Read: [GetEmailIdentity](https://www.tencentcloud.com/search/?wd=GetEmailIdentity&type=document&lang=en)
-* Delete: [DeleteEmailIdentity](https://www.tencentcloud.com/search/?wd=DeleteEmailIdentity&type=document&lang=en)
+* Create: [CreateEmailIdentity](https://www.tencentcloud.com/document/api/1084/39414)
+* Read: [GetEmailIdentity](https://www.tencentcloud.com/document/api/1084/39412)
+* Delete: [DeleteEmailIdentity](https://www.tencentcloud.com/document/api/1084/39413)
 
 ## Import
 

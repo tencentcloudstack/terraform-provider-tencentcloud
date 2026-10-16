@@ -130,6 +130,7 @@ This resource interacts with the following TencentCloud APIs:
 * Create: [ReplaceCcnRouteTableBroadcastPolicys](https://www.tencentcloud.com/search/?wd=ReplaceCcnRouteTableBroadcastPolicys&type=document&lang=en)
 * Read: [DescribeCcnRouteTableBroadcastPolicys](https://www.tencentcloud.com/search/?wd=DescribeCcnRouteTableBroadcastPolicys&type=document&lang=en)
 * Update: [ReplaceCcnRouteTableBroadcastPolicys](https://www.tencentcloud.com/search/?wd=ReplaceCcnRouteTableBroadcastPolicys&type=document&lang=en)
+* Delete: [Send](https://www.tencentcloud.com/search/?wd=Send&type=document&lang=en)
 
 ## Import
 

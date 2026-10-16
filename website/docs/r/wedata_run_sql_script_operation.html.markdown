@@ -50,5 +50,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RunSQLScript](https://www.tencentcloud.com/search/?wd=RunSQLScript&type=document&lang=en)
+* Create: [RunSQLScript](https://www.tencentcloud.com/document/api/1174/73844)
 

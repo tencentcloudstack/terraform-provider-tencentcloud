@@ -67,5 +67,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListPermissionPoliciesInRoleConfiguration](https://www.tencentcloud.com/search/?wd=ListPermissionPoliciesInRoleConfiguration&type=document&lang=en)
+* Read: [ListPermissionPoliciesInRoleConfiguration](https://www.tencentcloud.com/document/api/1031/63599)
 

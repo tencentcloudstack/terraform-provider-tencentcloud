@@ -65,5 +65,5 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CheckCertificateDomainVerification](https://www.tencentcloud.com/search/?wd=CheckCertificateDomainVerification&type=document&lang=en)
+* Create: [CheckCertificateDomainVerification](https://www.tencentcloud.com/document/api/1007/79938)
 

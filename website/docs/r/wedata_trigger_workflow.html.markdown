@@ -105,10 +105,10 @@ The `trigger_workflow_scheduler_configurations` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTriggerWorkflow](https://www.tencentcloud.com/search/?wd=CreateTriggerWorkflow&type=document&lang=en)
-* Read: [GetTriggerWorkflow](https://www.tencentcloud.com/search/?wd=GetTriggerWorkflow&type=document&lang=en)
-* Update: [UpdateTriggerWorkflow](https://www.tencentcloud.com/search/?wd=UpdateTriggerWorkflow&type=document&lang=en)
-* Delete: [DeleteTriggerWorkflow](https://www.tencentcloud.com/search/?wd=DeleteTriggerWorkflow&type=document&lang=en)
+* Create: [CreateTriggerWorkflow](https://www.tencentcloud.com/document/api/1174/77936)
+* Read: [GetTriggerWorkflow](https://www.tencentcloud.com/document/api/1174/77924)
+* Update: [UpdateTriggerWorkflow](https://www.tencentcloud.com/document/api/1174/77910)
+* Delete: [DeleteTriggerWorkflow](https://www.tencentcloud.com/document/api/1174/77932)
 
 ## Import
 

@@ -142,5 +142,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeUserInfo](https://www.tencentcloud.com/search/?wd=DescribeUserInfo&type=document&lang=en)
+* Read: [DescribeUserInfo](https://www.tencentcloud.com/document/api/1155/62670)
 

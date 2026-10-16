@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAutomationAgentStatus](https://www.tencentcloud.com/search/?wd=DescribeAutomationAgentStatus&type=document&lang=en)
+* Read: [DescribeAutomationAgentStatus](https://www.tencentcloud.com/document/api/1147/46698)
 

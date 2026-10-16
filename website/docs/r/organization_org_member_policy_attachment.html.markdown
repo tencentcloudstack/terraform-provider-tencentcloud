@@ -41,8 +41,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateOrganizationMembersPolicy](https://www.tencentcloud.com/search/?wd=CreateOrganizationMembersPolicy&type=document&lang=en)
-* Delete: [DeleteOrganizationMembersPolicy](https://www.tencentcloud.com/search/?wd=DeleteOrganizationMembersPolicy&type=document&lang=en)
+* Create: [CreateOrganizationMembersPolicy](https://www.tencentcloud.com/document/api/1031/66410)
+* Delete: [DeleteOrganizationMembersPolicy](https://www.tencentcloud.com/document/api/1031/66407)
 
 ## Import
 

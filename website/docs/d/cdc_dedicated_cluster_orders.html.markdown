@@ -90,5 +90,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDedicatedClusterOrders](https://www.tencentcloud.com/search/?wd=DescribeDedicatedClusterOrders&type=document&lang=en)
+* Read: [DescribeDedicatedClusterOrders](https://www.tencentcloud.com/document/api/1226/66391)
 

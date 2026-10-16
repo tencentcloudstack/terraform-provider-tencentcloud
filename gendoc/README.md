@@ -165,11 +165,11 @@ resource、data source、action 与 ephemeral resource 的文档均包含一个�
 数据由两部分合成：
 
 1. **静态分析**（`apiref.go`）：用 `go/ast` 从生命周期函数出发，追踪 service 方法调用链（含递归展开、goroutine 委托、包级辅助函数、局部 client 变量），收集 `UseXxxClient().Action(...)` 调用；client accessor 名通过 `connectivity/client.go` 的 SDK import 路径映射为目录产品名。
-2. **API 目录**：腾讯云公开 API 目录（`api-all-actions.json`），提供 `(product, action) -> 文档 URL` 的查表。SDK 直接使用 vendor 目录下的 `github.com/tencentcloud/tencentcloud-sdk-go`，不依赖任何外部仓库。
+2. **国际站 API 目录**（`apiref_intl.go`）：`make doc` 每次运行实时抓取国际站（www.tencentcloud.com）——文档首页 `__NEXT_DATA__` 内嵌的全量目录树（129 产品 / 10000+ 接口页）与 `getCategoryByLang` 的产品 slug 表，提供 `(产品, action) -> 国际站文档 URL`。SDK 直接使用 vendor 目录下的 `github.com/tencentcloud/tencentcloud-sdk-go`，不依赖任何外部仓库。
 
-**每次在线拉取**：`make doc` 每次运行都会从腾讯云公开端点下载最新的 API 目录（约 6 MB）并原子重写 `gendoc/data/api-actions.json` 快照，生成的文档链接始终与云端文档保持同步。下载失败时（如离线环境）自动回退到仓库内置快照，构建不会中断。
+**完全以国际站为准**：产品的名称与 ID 均取自国际站（slug 如 `cvm`/`teo`/`csip`），不使用国内站的任何信息。SDK 侧的产品名与国际站 slug 直接匹配；命名不一致的产品（如 SDK `redis` vs slug `crs`）通过动作集合的 Jaccard 相似度自动对齐。
 
-**仅使用国际站链接**：目录提供 `(product, action) -> 文档 URL` 查表，但渲染时只输出国际站（www.tencentcloud.com）链接——目录的中国站 URL 仅用于提取产品 categoryId（两站共用同一套产品 ID），再从国际站文档首页 `__NEXT_DATA__` 内嵌的全量目录树（`apiref_intl.go`，129 产品 / 8800+ 接口页）按 `(categoryId, Action)` 查找国际站页面 URL。国际站未收录的接口回退到国际站搜索页：
+**仅使用国际站链接**：渲染时只输出国际站（www.tencentcloud.com）链接。国际站未收录的接口回退到国际站搜索页：
 
 **渲染格式**：API Reference 只列出接口名称与对应的文档链接，不含接口描述，例如：
 
@@ -183,7 +183,7 @@ resource、data source、action 与 ephemeral resource 的文档均包含一个�
 https://www.tencentcloud.com/search/?wd=<ActionName>&type=document&lang=en
 ```
 
-生成的 API Reference 中不会出现任何 `cloud.tencent.com`（中国站）链接。国际站目录抓取依赖 curl（EdgeOne 反爬指纹 TLS，拒绝 Go HTTP 栈），且使用硬编码的挑战 cookie（`apiref_intl.go` 中的 `edgeOneCookie`，官方常量变更时需更新）；抓取失败不影响构建，全部条目降级为搜索链接。
+生成的 API Reference 中不会出现任何 `cloud.tencent.com`（中国站）链接。抓取失败不影响构建，全部条目降级为搜索链接。
 
 覆盖率：resource 95.7%（1302/1360）、data source 97.3%（923/949）、action 与 ephemeral 全覆盖；未覆盖项均为 S3 兼容 REST 接口（cos/ci）、已下线产品（dayu）、目录未收录的新版本 API，或**同名方法跨服务歧义**（分析器宁缺毋滥，跳过不确定的映射），可用下述人工段兜底。
 

@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetOpsWorkflow](https://www.tencentcloud.com/search/?wd=GetOpsWorkflow&type=document&lang=en)
+* Read: [GetOpsWorkflow](https://www.tencentcloud.com/document/api/1174/73829)
 

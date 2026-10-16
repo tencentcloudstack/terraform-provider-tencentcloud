@@ -77,14 +77,14 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGlobalAccelerator](https://www.tencentcloud.com/search/?wd=CreateGlobalAccelerator&type=document&lang=en)
-* Create: [DescribeTaskResult](https://www.tencentcloud.com/search/?wd=DescribeTaskResult&type=document&lang=en)
-* Read: [DescribeGlobalAccelerators](https://www.tencentcloud.com/search/?wd=DescribeGlobalAccelerators&type=document&lang=en)
-* Update: [DescribeTaskResult](https://www.tencentcloud.com/search/?wd=DescribeTaskResult&type=document&lang=en)
-* Update: [ModifyGlobalAccelerator](https://www.tencentcloud.com/search/?wd=ModifyGlobalAccelerator&type=document&lang=en)
+* Create: [CreateGlobalAccelerator](https://www.tencentcloud.com/document/api/1299/83741)
+* Create: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+* Read: [DescribeGlobalAccelerators](https://www.tencentcloud.com/document/api/1299/83812)
+* Update: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+* Update: [ModifyGlobalAccelerator](https://www.tencentcloud.com/document/api/1299/83744)
 * Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Delete: [DeleteGlobalAccelerator](https://www.tencentcloud.com/search/?wd=DeleteGlobalAccelerator&type=document&lang=en)
-* Delete: [DescribeTaskResult](https://www.tencentcloud.com/search/?wd=DescribeTaskResult&type=document&lang=en)
+* Delete: [DeleteGlobalAccelerator](https://www.tencentcloud.com/document/api/1299/83827)
+* Delete: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
 
 ## Import
 

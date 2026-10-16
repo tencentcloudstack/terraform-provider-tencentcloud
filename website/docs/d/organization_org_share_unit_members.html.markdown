@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeShareUnitMembers](https://www.tencentcloud.com/search/?wd=DescribeShareUnitMembers&type=document&lang=en)
+* Read: [DescribeShareUnitMembers](https://www.tencentcloud.com/document/api/1031/68230)
 

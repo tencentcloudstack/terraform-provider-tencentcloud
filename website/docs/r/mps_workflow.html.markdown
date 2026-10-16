@@ -492,10 +492,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWorkflow](https://www.tencentcloud.com/search/?wd=CreateWorkflow&type=document&lang=en)
-* Read: [DescribeWorkflows](https://www.tencentcloud.com/search/?wd=DescribeWorkflows&type=document&lang=en)
-* Update: [ResetWorkflow](https://www.tencentcloud.com/search/?wd=ResetWorkflow&type=document&lang=en)
-* Delete: [DeleteWorkflow](https://www.tencentcloud.com/search/?wd=DeleteWorkflow&type=document&lang=en)
+* Create: [CreateWorkflow](https://www.tencentcloud.com/document/api/1041/33638)
+* Read: [DescribeWorkflows](https://www.tencentcloud.com/document/api/1041/33636)
+* Update: [ResetWorkflow](https://www.tencentcloud.com/document/api/1041/33633)
+* Delete: [DeleteWorkflow](https://www.tencentcloud.com/document/api/1041/33637)
 
 ## Import
 

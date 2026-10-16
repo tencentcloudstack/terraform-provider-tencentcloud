@@ -35,14 +35,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// apiAction is one entry of gendoc/data/api-actions.json.
-type apiAction struct {
-	Product string `json:"product"`
-	Action  string `json:"action"`
-	Name    string `json:"name"`
-	URL     string `json:"url"`
-}
-
 // apiRef describes a single cloud API used by a resource lifecycle phase.
 // The rendered section lists only the action name and its doc URL — no
 // descriptions.
@@ -53,11 +45,11 @@ type apiRef struct {
 }
 
 // manualProductAlias overrides the automatic product resolution for the few
-// clients whose SDK package name differs from the catalog product key.
+// clients whose SDK product name differs from the international docs slug.
 var manualProductAlias = map[string]string{
-	"dasb":  "bh",         // 堡垒机: SDK 目录 dasb, 目录产品名 bh
-	"css":   "live",       // 直播: SDK 包名 css, 目录产品名 live
-	"audit": "cloudaudit", // 操作审计: SDK 包名 audit, 目录产品名 cloudaudit
+	"dasb":  "dasb",  // placeholder; real aliases are resolved by action-set matching
+	"css":   "css",
+	"audit": "audit",
 }
 
 // serviceMethod describes one method declared on a service struct in the
@@ -75,10 +67,12 @@ type apiAnalyzer struct {
 
 	// clientProd maps lowercase UseXxxClient accessor name -> catalog product.
 	clientProd map[string]string
-	// actionIdx maps "<product>.<action>" -> catalog entry; only the doc
-	// URL (and the entry's existence, as a whitelist against false
-	// positives) is used.
-	actionIdx map[string]apiAction
+	// catalog resolves (product, action) -> international doc URL.
+	catalog *catalog
+	// clientActions records every (product -> set of actions) call found
+	// in the services tree, used to align SDK product names with
+	// international docs product slugs.
+	clientActions map[string]map[string]bool
 	// knownClients is the set of lowercase accessor names with a product.
 	knownClients map[string]bool
 
@@ -114,7 +108,7 @@ func newAPIAnalyzer(repoRoot string, cat *catalog) (*apiAnalyzer, error) {
 		repoRoot:     repoRoot,
 		servicesRoot: filepath.Join(repoRoot, "tencentcloud", "services"),
 		clientProd:   clientProd,
-		actionIdx:    cat.actionIdx,
+		catalog:      cat,
 		knownClients: known,
 		methodIndex:  map[string][]serviceMethod{},
 		serviceCtors: map[string]string{},
@@ -123,7 +117,71 @@ func newAPIAnalyzer(repoRoot string, cat *catalog) (*apiAnalyzer, error) {
 	if err := a.indexServiceMethods(); err != nil {
 		return nil, err
 	}
+	// Collect every (client product, action) call in the services tree so
+	// the catalog can align SDK product names with international docs
+	// products whose slugs differ (e.g. SDK "redis" vs docs slug "crs").
+	a.collectClientActions()
+	cat.alignCatalogWithSDKProducts(a.clientActions)
 	return a, nil
+}
+
+// collectClientActions walks every indexed service method body and
+// records every UseXxxClient().Action(...) invocation per product. The
+// method index does not keep function names on its entries, so index
+// them here first.
+func (a *apiAnalyzer) collectClientActions() {
+	a.clientActions = map[string]map[string]bool{}
+	// Group entries by file so each parsed file is scanned once.
+	byFile := map[string][]*ast.FuncDecl{}
+	for name, matches := range a.methodIndex {
+		for _, m := range matches {
+			fd := a.lookupFuncDecl(m.File, name)
+			if fd != nil {
+				byFile[m.File] = append(byFile[m.File], fd)
+			}
+		}
+	}
+	for _, fds := range byFile {
+		for _, fd := range fds {
+			a.scanFuncForClientActions(fd)
+		}
+	}
+}
+
+// scanFuncForClientActions records client action calls in one function
+// body (direct UseXxxClient().Action chains and locally held clients).
+func (a *apiAnalyzer) scanFuncForClientActions(fd *ast.FuncDecl) {
+	if fd.Body == nil {
+		return
+	}
+	clientVars := map[string]string{}
+	ast.Inspect(fd.Body, func(n ast.Node) bool {
+		inferClientVars(n, clientVars)
+		return true
+	})
+	ast.Inspect(fd.Body, func(n ast.Node) bool {
+		call, ok := n.(*ast.CallExpr)
+		if !ok {
+			return true
+		}
+		sel, ok := call.Fun.(*ast.SelectorExpr)
+		if !ok {
+			return true
+		}
+		useName := a.findClientUse(sel.X, clientVars)
+		if useName == "" || !a.knownClients[useName] || !isAPIActionName(sel.Sel.Name) {
+			return true
+		}
+		prod := a.clientProd[useName]
+		if prod == "" {
+			return true
+		}
+		if a.clientActions[prod] == nil {
+			a.clientActions[prod] = map[string]bool{}
+		}
+		a.clientActions[prod][stripContextSuffix(sel.Sel.Name)] = true
+		return true
+	})
 }
 
 // indexServiceMethods walks the services tree once and records every method
@@ -423,35 +481,32 @@ type apiCallKey struct {
 	action string // SDK method == cloud API action (e.g. "CreateVpc")
 }
 
-// intlSearchURL is the fallback for actions without a catalog doc URL:
+// intlSearchURL is the fallback for actions without a catalogue doc URL:
 // the international documentation site's search page for the action name.
 const intlSearchURL = "https://www.tencentcloud.com/search/?wd=%s&type=document&lang=en"
 
-// resolveAPI turns a call key into a catalog-backed apiRef. The doc URL
-// comes from the live catalog (or the embedded snapshot when offline);
-// entries without a URL fall back to the international site's search page
-// for the action name. Generated docs never contain Chinese text, so the
-// catalog's Chinese display name is ignored. Returns nil when the
-// (client, action) pair has no catalog entry — the catalog doubles as a
-// whitelist that filters out false-positive action names.
+// resolveAPI turns a call key into an international-catalogue-backed
+// apiRef. The doc URL comes from the international docs catalogue keyed
+// by (product, action); entries without a page fall back to the
+// international site's search page. Every rendered link is
+// international — no Chinese-site URLs are involved. Returns nil when
+// the (client, action) pair has no catalogue page and the action name
+// does not look like a real API action (the catalogue doubles as a
+// whitelist against false positives when available).
 func (a *apiAnalyzer) resolveAPI(k apiCallKey) *apiRef {
 	prod := a.clientProd[k.client]
 	if prod == "" {
 		return nil
 	}
-	key := strings.ToLower(prod) + "." + k.action
-	act, ok := a.actionIdx[key]
-	if !ok {
-		return nil
+	if url := a.catalog.indexForClient(prod, k.action); url != "" {
+		return &apiRef{Product: prod, Action: k.action, URL: url}
 	}
-	url := act.URL
-	if url == "" {
-		url = fmt.Sprintf(intlSearchURL, k.action)
-	}
+	// No international page: degrade to the site's search URL for the
+	// action name.
 	return &apiRef{
 		Product: prod,
-		Action:  act.Action,
-		URL:     url,
+		Action:  k.action,
+		URL:     fmt.Sprintf(intlSearchURL, k.action),
 	}
 }
 

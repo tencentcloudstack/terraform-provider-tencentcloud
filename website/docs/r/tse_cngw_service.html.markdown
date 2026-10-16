@@ -135,14 +135,14 @@ The `targets` object of `upstream_info` exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCloudNativeAPIGatewayService](https://www.tencentcloud.com/search/?wd=CreateCloudNativeAPIGatewayService&type=document&lang=en)
+* Create: [CreateCloudNativeAPIGatewayService](https://www.tencentcloud.com/document/api/1290/79290)
 * Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeOneCloudNativeAPIGatewayService](https://www.tencentcloud.com/search/?wd=DescribeOneCloudNativeAPIGatewayService&type=document&lang=en)
+* Read: [DescribeOneCloudNativeAPIGatewayService](https://www.tencentcloud.com/document/api/1290/79251)
 * Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [DescribeOneCloudNativeAPIGatewayService](https://www.tencentcloud.com/search/?wd=DescribeOneCloudNativeAPIGatewayService&type=document&lang=en)
-* Update: [ModifyCloudNativeAPIGatewayService](https://www.tencentcloud.com/search/?wd=ModifyCloudNativeAPIGatewayService&type=document&lang=en)
+* Update: [DescribeOneCloudNativeAPIGatewayService](https://www.tencentcloud.com/document/api/1290/79251)
+* Update: [ModifyCloudNativeAPIGatewayService](https://www.tencentcloud.com/document/api/1290/79239)
 * Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Delete: [DeleteCloudNativeAPIGatewayService](https://www.tencentcloud.com/search/?wd=DeleteCloudNativeAPIGatewayService&type=document&lang=en)
+* Delete: [DeleteCloudNativeAPIGatewayService](https://www.tencentcloud.com/document/api/1290/79276)
 
 ## Import
 

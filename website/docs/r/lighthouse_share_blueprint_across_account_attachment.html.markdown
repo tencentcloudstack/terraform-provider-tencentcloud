@@ -39,12 +39,12 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [DescribeBlueprintsShareAcrossAccountInfos](https://www.tencentcloud.com/search/?wd=DescribeBlueprintsShareAcrossAccountInfos&type=document&lang=en)
-* Create: [ShareBlueprintAcrossAccounts](https://www.tencentcloud.com/search/?wd=ShareBlueprintAcrossAccounts&type=document&lang=en)
+* Create: [ShareBlueprintAcrossAccounts](https://www.tencentcloud.com/document/api/1103/75693)
 * Read: [DescribeBlueprintsShareAcrossAccountInfos](https://www.tencentcloud.com/search/?wd=DescribeBlueprintsShareAcrossAccountInfos&type=document&lang=en)
-* Update: [CancelShareBlueprintAcrossAccounts](https://www.tencentcloud.com/search/?wd=CancelShareBlueprintAcrossAccounts&type=document&lang=en)
+* Update: [CancelShareBlueprintAcrossAccounts](https://www.tencentcloud.com/document/api/1103/75613)
 * Update: [DescribeBlueprintsShareAcrossAccountInfos](https://www.tencentcloud.com/search/?wd=DescribeBlueprintsShareAcrossAccountInfos&type=document&lang=en)
-* Update: [ShareBlueprintAcrossAccounts](https://www.tencentcloud.com/search/?wd=ShareBlueprintAcrossAccounts&type=document&lang=en)
-* Delete: [CancelShareBlueprintAcrossAccounts](https://www.tencentcloud.com/search/?wd=CancelShareBlueprintAcrossAccounts&type=document&lang=en)
+* Update: [ShareBlueprintAcrossAccounts](https://www.tencentcloud.com/document/api/1103/75693)
+* Delete: [CancelShareBlueprintAcrossAccounts](https://www.tencentcloud.com/document/api/1103/75613)
 
 ## Import
 

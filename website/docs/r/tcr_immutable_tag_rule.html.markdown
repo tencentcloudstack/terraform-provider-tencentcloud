@@ -135,14 +135,14 @@ The `rule` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateImmutableTagRules](https://www.tencentcloud.com/search/?wd=CreateImmutableTagRules&type=document&lang=en)
-* Create: [DescribeImmutableTagRules](https://www.tencentcloud.com/search/?wd=DescribeImmutableTagRules&type=document&lang=en)
+* Create: [CreateImmutableTagRules](https://www.tencentcloud.com/document/api/1051/41439)
+* Create: [DescribeImmutableTagRules](https://www.tencentcloud.com/document/api/1051/41437)
 * Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeImmutableTagRules](https://www.tencentcloud.com/search/?wd=DescribeImmutableTagRules&type=document&lang=en)
+* Read: [DescribeImmutableTagRules](https://www.tencentcloud.com/document/api/1051/41437)
 * Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [ModifyImmutableTagRules](https://www.tencentcloud.com/search/?wd=ModifyImmutableTagRules&type=document&lang=en)
+* Update: [ModifyImmutableTagRules](https://www.tencentcloud.com/document/api/1051/41436)
 * Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Delete: [DeleteImmutableTagRules](https://www.tencentcloud.com/search/?wd=DeleteImmutableTagRules&type=document&lang=en)
+* Delete: [DeleteImmutableTagRules](https://www.tencentcloud.com/document/api/1051/41438)
 
 ## Import
 

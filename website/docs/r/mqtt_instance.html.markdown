@@ -137,14 +137,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstance](https://www.tencentcloud.com/search/?wd=CreateInstance&type=document&lang=en)
-* Create: [DescribeInstance](https://www.tencentcloud.com/search/?wd=DescribeInstance&type=document&lang=en)
-* Create: [ModifyInstance](https://www.tencentcloud.com/search/?wd=ModifyInstance&type=document&lang=en)
+* Create: [CreateInstance](https://www.tencentcloud.com/document/api/1294/76527)
+* Create: [DescribeInstance](https://www.tencentcloud.com/document/api/1294/76523)
+* Create: [ModifyInstance](https://www.tencentcloud.com/document/api/1294/76521)
 * Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeInstance](https://www.tencentcloud.com/search/?wd=DescribeInstance&type=document&lang=en)
+* Read: [DescribeInstance](https://www.tencentcloud.com/document/api/1294/76523)
 * Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [ModifyInstance](https://www.tencentcloud.com/search/?wd=ModifyInstance&type=document&lang=en)
+* Update: [ModifyInstance](https://www.tencentcloud.com/document/api/1294/76521)
 * Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Delete: [DeleteInstance](https://www.tencentcloud.com/search/?wd=DeleteInstance&type=document&lang=en)
-* Delete: [DescribeInstance](https://www.tencentcloud.com/search/?wd=DescribeInstance&type=document&lang=en)
+* Delete: [DeleteInstance](https://www.tencentcloud.com/document/api/1294/76525)
+* Delete: [DescribeInstance](https://www.tencentcloud.com/document/api/1294/76523)
 

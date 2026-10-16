@@ -114,13 +114,13 @@ The `trigger` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWebhookTrigger](https://www.tencentcloud.com/search/?wd=CreateWebhookTrigger&type=document&lang=en)
+* Create: [CreateWebhookTrigger](https://www.tencentcloud.com/document/api/1051/50683)
 * Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
 * Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Read: [DescribeWebhookTrigger](https://www.tencentcloud.com/search/?wd=DescribeWebhookTrigger&type=document&lang=en)
+* Read: [DescribeWebhookTrigger](https://www.tencentcloud.com/document/api/1051/50681)
 * Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [ModifyWebhookTrigger](https://www.tencentcloud.com/search/?wd=ModifyWebhookTrigger&type=document&lang=en)
-* Delete: [DeleteWebhookTrigger](https://www.tencentcloud.com/search/?wd=DeleteWebhookTrigger&type=document&lang=en)
+* Update: [ModifyWebhookTrigger](https://www.tencentcloud.com/document/api/1051/50679)
+* Delete: [DeleteWebhookTrigger](https://www.tencentcloud.com/document/api/1051/50682)
 
 ## Import
 

@@ -146,10 +146,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRealtimeLogDeliveryTask](https://www.tencentcloud.com/search/?wd=CreateRealtimeLogDeliveryTask&type=document&lang=en)
-* Read: [DescribeRealtimeLogDeliveryTasks](https://www.tencentcloud.com/search/?wd=DescribeRealtimeLogDeliveryTasks&type=document&lang=en)
-* Update: [ModifyRealtimeLogDeliveryTask](https://www.tencentcloud.com/search/?wd=ModifyRealtimeLogDeliveryTask&type=document&lang=en)
-* Delete: [DeleteRealtimeLogDeliveryTask](https://www.tencentcloud.com/search/?wd=DeleteRealtimeLogDeliveryTask&type=document&lang=en)
+* Create: [CreateRealtimeLogDeliveryTask](https://www.tencentcloud.com/document/api/1145/59507)
+* Read: [DescribeRealtimeLogDeliveryTasks](https://www.tencentcloud.com/document/api/1145/59503)
+* Update: [ModifyRealtimeLogDeliveryTask](https://www.tencentcloud.com/document/api/1145/59501)
+* Delete: [DeleteRealtimeLogDeliveryTask](https://www.tencentcloud.com/document/api/1145/59505)
 
 ## Import
 

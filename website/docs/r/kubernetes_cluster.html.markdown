@@ -1082,6 +1082,7 @@ This resource interacts with the following TencentCloud APIs:
 * Create: [CreateCluster](https://www.tencentcloud.com/document/api/457/32027)
 * Read: [DescribeClusterExtraArgs](https://www.tencentcloud.com/search/?wd=DescribeClusterExtraArgs&type=document&lang=en)
 * Read: [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
+* Read: [DescribeClusterSecurity](https://www.tencentcloud.com/search/?wd=DescribeClusterSecurity&type=document&lang=en)
 * Read: [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
 * Update: [AddVpcCniSubnets](https://www.tencentcloud.com/document/api/457/40679)
 * Update: [DescribeBatchModifyTagsStatus](https://www.tencentcloud.com/search/?wd=DescribeBatchModifyTagsStatus&type=document&lang=en)
@@ -1099,6 +1100,7 @@ This resource interacts with the following TencentCloud APIs:
 * Update: [ModifyClusterImage](https://www.tencentcloud.com/search/?wd=ModifyClusterImage&type=document&lang=en)
 * Update: [ScaleInClusterMaster](https://www.tencentcloud.com/search/?wd=ScaleInClusterMaster&type=document&lang=en)
 * Update: [ScaleOutClusterMaster](https://www.tencentcloud.com/search/?wd=ScaleOutClusterMaster&type=document&lang=en)
+* Update: [Send](https://www.tencentcloud.com/search/?wd=Send&type=document&lang=en)
 * Update: [UpdateClusterVersion](https://www.tencentcloud.com/document/api/457/39567)
 * Delete: [DeleteCluster](https://www.tencentcloud.com/document/api/457/33870)
 

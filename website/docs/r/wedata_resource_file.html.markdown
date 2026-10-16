@@ -56,8 +56,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateResourceFile](https://www.tencentcloud.com/search/?wd=CreateResourceFile&type=document&lang=en)
-* Read: [GetResourceFile](https://www.tencentcloud.com/search/?wd=GetResourceFile&type=document&lang=en)
-* Update: [UpdateResourceFile](https://www.tencentcloud.com/search/?wd=UpdateResourceFile&type=document&lang=en)
-* Delete: [DeleteResourceFile](https://www.tencentcloud.com/search/?wd=DeleteResourceFile&type=document&lang=en)
+* Create: [CreateResourceFile](https://www.tencentcloud.com/document/api/1174/73887)
+* Read: [GetResourceFile](https://www.tencentcloud.com/document/api/1174/73877)
+* Update: [UpdateResourceFile](https://www.tencentcloud.com/document/api/1174/73863)
+* Delete: [DeleteResourceFile](https://www.tencentcloud.com/document/api/1174/61162)
 

@@ -84,6 +84,8 @@ This resource interacts with the following TencentCloud APIs:
 * Create: [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
 * Create: [DescribeClusterVirtualNode](https://www.tencentcloud.com/document/api/457/53272)
 * Read: [DescribeClusterKubeconfig](https://www.tencentcloud.com/document/api/457/38510)
+* Read: [DescribeClusterSecurity](https://www.tencentcloud.com/search/?wd=DescribeClusterSecurity&type=document&lang=en)
 * Read: [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
 * Update: [ModifyClusterEndpointSP](https://www.tencentcloud.com/document/api/457/33864)
+* Delete: [DescribeClusterSecurity](https://www.tencentcloud.com/search/?wd=DescribeClusterSecurity&type=document&lang=en)
 

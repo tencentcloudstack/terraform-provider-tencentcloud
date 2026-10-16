@@ -36,8 +36,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
-* Create: [RestartInstance](https://www.tencentcloud.com/search/?wd=RestartInstance&type=document&lang=en)
-* Read: [DescribeInstanceDetail](https://www.tencentcloud.com/search/?wd=DescribeInstanceDetail&type=document&lang=en)
-* Read: [DescribeInstances](https://www.tencentcloud.com/search/?wd=DescribeInstances&type=document&lang=en)
+* Create: [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+* Create: [RestartInstance](https://www.tencentcloud.com/document/api/1098/53464)
+* Read: [DescribeInstanceDetail](https://www.tencentcloud.com/document/api/1098/40749)
+* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/1098/40747)
 

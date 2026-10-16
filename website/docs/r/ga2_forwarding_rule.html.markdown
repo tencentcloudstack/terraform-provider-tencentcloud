@@ -211,13 +211,13 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateForwardingRule](https://www.tencentcloud.com/search/?wd=CreateForwardingRule&type=document&lang=en)
-* Create: [DescribeTaskResult](https://www.tencentcloud.com/search/?wd=DescribeTaskResult&type=document&lang=en)
-* Read: [DescribeForwardingRule](https://www.tencentcloud.com/search/?wd=DescribeForwardingRule&type=document&lang=en)
-* Update: [DescribeTaskResult](https://www.tencentcloud.com/search/?wd=DescribeTaskResult&type=document&lang=en)
-* Update: [ModifyForwardingRule](https://www.tencentcloud.com/search/?wd=ModifyForwardingRule&type=document&lang=en)
-* Delete: [DeleteForwardingRule](https://www.tencentcloud.com/search/?wd=DeleteForwardingRule&type=document&lang=en)
-* Delete: [DescribeTaskResult](https://www.tencentcloud.com/search/?wd=DescribeTaskResult&type=document&lang=en)
+* Create: [CreateForwardingRule](https://www.tencentcloud.com/document/api/1299/83836)
+* Create: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+* Read: [DescribeForwardingRule](https://www.tencentcloud.com/document/api/1299/83816)
+* Update: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+* Update: [ModifyForwardingRule](https://www.tencentcloud.com/document/api/1299/83807)
+* Delete: [DeleteForwardingRule](https://www.tencentcloud.com/document/api/1299/83828)
+* Delete: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
 
 ## Import
 

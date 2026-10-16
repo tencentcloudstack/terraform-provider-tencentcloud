@@ -100,18 +100,18 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstanceByApi](https://www.tencentcloud.com/search/?wd=CreateInstanceByApi&type=document&lang=en)
-* Create: [DescribeInstanceState](https://www.tencentcloud.com/search/?wd=DescribeInstanceState&type=document&lang=en)
+* Create: [CreateInstanceByApi](https://www.tencentcloud.com/document/api/1138/68298)
+* Create: [DescribeInstanceState](https://www.tencentcloud.com/document/api/1138/68302)
 * Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeInstanceInfo](https://www.tencentcloud.com/search/?wd=DescribeInstanceInfo&type=document&lang=en)
+* Read: [DescribeInstanceInfo](https://www.tencentcloud.com/document/api/1138/68303)
 * Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [DescribeInstanceState](https://www.tencentcloud.com/search/?wd=DescribeInstanceState&type=document&lang=en)
-* Update: [ModifyInstance](https://www.tencentcloud.com/search/?wd=ModifyInstance&type=document&lang=en)
+* Update: [DescribeInstanceState](https://www.tencentcloud.com/document/api/1138/68302)
+* Update: [ModifyInstance](https://www.tencentcloud.com/document/api/1138/68296)
 * Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [ScaleOutInstance](https://www.tencentcloud.com/search/?wd=ScaleOutInstance&type=document&lang=en)
-* Update: [UpgradeInstance](https://www.tencentcloud.com/search/?wd=UpgradeInstance&type=document&lang=en)
-* Delete: [DescribeInstanceState](https://www.tencentcloud.com/search/?wd=DescribeInstanceState&type=document&lang=en)
-* Delete: [DestroyInstanceByApi](https://www.tencentcloud.com/search/?wd=DestroyInstanceByApi&type=document&lang=en)
+* Update: [ScaleOutInstance](https://www.tencentcloud.com/document/api/1138/69332)
+* Update: [UpgradeInstance](https://www.tencentcloud.com/document/api/1138/69327)
+* Delete: [DescribeInstanceState](https://www.tencentcloud.com/document/api/1138/68302)
+* Delete: [DestroyInstanceByApi](https://www.tencentcloud.com/document/api/1138/68297)
 
 ## Import
 

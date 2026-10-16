@@ -56,10 +56,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [HandleFunctionRuntimeEnvironment](https://www.tencentcloud.com/search/?wd=HandleFunctionRuntimeEnvironment&type=document&lang=en)
-* Read: [DescribeFunctionRuntimeEnvironment](https://www.tencentcloud.com/search/?wd=DescribeFunctionRuntimeEnvironment&type=document&lang=en)
-* Update: [HandleFunctionRuntimeEnvironment](https://www.tencentcloud.com/search/?wd=HandleFunctionRuntimeEnvironment&type=document&lang=en)
-* Delete: [HandleFunctionRuntimeEnvironment](https://www.tencentcloud.com/search/?wd=HandleFunctionRuntimeEnvironment&type=document&lang=en)
+* Create: [HandleFunctionRuntimeEnvironment](https://www.tencentcloud.com/document/api/1145/64808)
+* Read: [DescribeFunctionRuntimeEnvironment](https://www.tencentcloud.com/document/api/1145/64810)
+* Update: [HandleFunctionRuntimeEnvironment](https://www.tencentcloud.com/document/api/1145/64808)
+* Delete: [HandleFunctionRuntimeEnvironment](https://www.tencentcloud.com/document/api/1145/64808)
 
 ## Import
 

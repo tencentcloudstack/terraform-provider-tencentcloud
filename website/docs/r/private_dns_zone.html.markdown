@@ -110,18 +110,18 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrivateZone](https://www.tencentcloud.com/search/?wd=CreatePrivateZone&type=document&lang=en)
-* Create: [DescribePrivateZone](https://www.tencentcloud.com/search/?wd=DescribePrivateZone&type=document&lang=en)
+* Create: [CreatePrivateZone](https://www.tencentcloud.com/document/api/1097/42123)
+* Create: [DescribePrivateZone](https://www.tencentcloud.com/document/api/1097/42117)
 * Create: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
 * Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribePrivateZone](https://www.tencentcloud.com/search/?wd=DescribePrivateZone&type=document&lang=en)
+* Read: [DescribePrivateZone](https://www.tencentcloud.com/document/api/1097/42117)
 * Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [DescribePrivateZone](https://www.tencentcloud.com/search/?wd=DescribePrivateZone&type=document&lang=en)
+* Update: [DescribePrivateZone](https://www.tencentcloud.com/document/api/1097/42117)
 * Update: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [ModifyPrivateZone](https://www.tencentcloud.com/search/?wd=ModifyPrivateZone&type=document&lang=en)
-* Update: [ModifyPrivateZoneVpc](https://www.tencentcloud.com/search/?wd=ModifyPrivateZoneVpc&type=document&lang=en)
+* Update: [ModifyPrivateZone](https://www.tencentcloud.com/document/api/1097/42112)
+* Update: [ModifyPrivateZoneVpc](https://www.tencentcloud.com/document/api/1097/42110)
 * Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Delete: [DeletePrivateZone](https://www.tencentcloud.com/search/?wd=DeletePrivateZone&type=document&lang=en)
+* Delete: [DeletePrivateZone](https://www.tencentcloud.com/document/api/1097/42121)
 
 ## Import
 

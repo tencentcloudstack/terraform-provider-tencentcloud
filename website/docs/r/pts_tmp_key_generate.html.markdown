@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [GenerateTmpKey](https://www.tencentcloud.com/search/?wd=GenerateTmpKey&type=document&lang=en)
+* Create: [GenerateTmpKey](https://www.tencentcloud.com/document/api/1249/68501)
 

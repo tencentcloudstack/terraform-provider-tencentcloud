@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListRoleConfigurationProvisionings](https://www.tencentcloud.com/search/?wd=ListRoleConfigurationProvisionings&type=document&lang=en)
+* Read: [ListRoleConfigurationProvisionings](https://www.tencentcloud.com/document/api/1031/63598)
 

@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AcceptJoinShareUnitInvitation](https://www.tencentcloud.com/search/?wd=AcceptJoinShareUnitInvitation&type=document&lang=en)
+* Create: [AcceptJoinShareUnitInvitation](https://www.tencentcloud.com/document/api/1031/68238)
 

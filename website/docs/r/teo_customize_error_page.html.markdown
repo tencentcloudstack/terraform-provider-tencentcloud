@@ -102,10 +102,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCustomizeErrorPage](https://www.tencentcloud.com/search/?wd=CreateCustomizeErrorPage&type=document&lang=en)
-* Read: [DescribeCustomErrorPages](https://www.tencentcloud.com/search/?wd=DescribeCustomErrorPages&type=document&lang=en)
-* Update: [ModifyCustomErrorPage](https://www.tencentcloud.com/search/?wd=ModifyCustomErrorPage&type=document&lang=en)
-* Delete: [DeleteCustomErrorPage](https://www.tencentcloud.com/search/?wd=DeleteCustomErrorPage&type=document&lang=en)
+* Create: [CreateCustomizeErrorPage](https://www.tencentcloud.com/document/api/1145/60769)
+* Read: [DescribeCustomErrorPages](https://www.tencentcloud.com/document/api/1145/60767)
+* Update: [ModifyCustomErrorPage](https://www.tencentcloud.com/document/api/1145/60766)
+* Delete: [DeleteCustomErrorPage](https://www.tencentcloud.com/document/api/1145/60768)
 
 ## Import
 

@@ -43,9 +43,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyApmAssociation](https://www.tencentcloud.com/search/?wd=ModifyApmAssociation&type=document&lang=en)
-* Read: [DescribeApmAssociation](https://www.tencentcloud.com/search/?wd=DescribeApmAssociation&type=document&lang=en)
-* Update: [ModifyApmAssociation](https://www.tencentcloud.com/search/?wd=ModifyApmAssociation&type=document&lang=en)
+* Create: [ModifyApmAssociation](https://www.tencentcloud.com/document/api/1166/74309)
+* Read: [DescribeApmAssociation](https://www.tencentcloud.com/document/api/1166/74312)
+* Update: [ModifyApmAssociation](https://www.tencentcloud.com/document/api/1166/74309)
 
 ## Import
 

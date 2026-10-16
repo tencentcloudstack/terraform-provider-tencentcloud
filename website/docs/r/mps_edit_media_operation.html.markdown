@@ -145,5 +145,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [EditMedia](https://www.tencentcloud.com/search/?wd=EditMedia&type=document&lang=en)
+* Create: [EditMedia](https://www.tencentcloud.com/document/api/1041/37460)
 

@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SubmitTask](https://www.tencentcloud.com/search/?wd=SubmitTask&type=document&lang=en)
+* Create: [SubmitTask](https://www.tencentcloud.com/document/api/1174/60939)
 

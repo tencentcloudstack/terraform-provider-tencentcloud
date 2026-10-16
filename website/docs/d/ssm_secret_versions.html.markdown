@@ -56,7 +56,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSecret](https://www.tencentcloud.com/search/?wd=DescribeSecret&type=document&lang=en)
-* Read: [GetSecretValue](https://www.tencentcloud.com/search/?wd=GetSecretValue&type=document&lang=en)
-* Read: [ListSecretVersionIds](https://www.tencentcloud.com/search/?wd=ListSecretVersionIds&type=document&lang=en)
+* Read: [DescribeSecret](https://www.tencentcloud.com/document/api/1078/38653)
+* Read: [GetSecretValue](https://www.tencentcloud.com/document/api/1078/38649)
+* Read: [ListSecretVersionIds](https://www.tencentcloud.com/document/api/1078/38647)
 

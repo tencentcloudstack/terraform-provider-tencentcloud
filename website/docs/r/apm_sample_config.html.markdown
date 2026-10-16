@@ -65,10 +65,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateApmSampleConfig](https://www.tencentcloud.com/search/?wd=CreateApmSampleConfig&type=document&lang=en)
-* Read: [DescribeApmSampleConfig](https://www.tencentcloud.com/search/?wd=DescribeApmSampleConfig&type=document&lang=en)
-* Update: [ModifyApmSampleConfig](https://www.tencentcloud.com/search/?wd=ModifyApmSampleConfig&type=document&lang=en)
-* Delete: [DeleteApmSampleConfig](https://www.tencentcloud.com/search/?wd=DeleteApmSampleConfig&type=document&lang=en)
+* Create: [CreateApmSampleConfig](https://www.tencentcloud.com/document/api/1166/74314)
+* Read: [DescribeApmSampleConfig](https://www.tencentcloud.com/document/api/1166/74310)
+* Update: [ModifyApmSampleConfig](https://www.tencentcloud.com/document/api/1166/74307)
+* Delete: [DeleteApmSampleConfig](https://www.tencentcloud.com/document/api/1166/74313)
 
 ## Import
 

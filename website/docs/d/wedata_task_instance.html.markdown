@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetTaskInstance](https://www.tencentcloud.com/search/?wd=GetTaskInstance&type=document&lang=en)
+* Read: [GetTaskInstance](https://www.tencentcloud.com/document/api/1174/69228)
 

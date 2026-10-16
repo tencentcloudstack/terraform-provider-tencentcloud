@@ -50,9 +50,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBoundIP](https://www.tencentcloud.com/search/?wd=CreateBoundIP&type=document&lang=en)
-* Create: [DescribeListBGPInstances](https://www.tencentcloud.com/search/?wd=DescribeListBGPInstances&type=document&lang=en)
-* Read: [DescribeListBGPInstances](https://www.tencentcloud.com/search/?wd=DescribeListBGPInstances&type=document&lang=en)
-* Delete: [CreateBoundIP](https://www.tencentcloud.com/search/?wd=CreateBoundIP&type=document&lang=en)
-* Delete: [DescribeListBGPInstances](https://www.tencentcloud.com/search/?wd=DescribeListBGPInstances&type=document&lang=en)
+* Create: [CreateBoundIP](https://www.tencentcloud.com/document/api/1213/61350)
+* Create: [DescribeListBGPInstances](https://www.tencentcloud.com/document/api/1213/61347)
+* Read: [DescribeListBGPInstances](https://www.tencentcloud.com/document/api/1213/61347)
+* Delete: [CreateBoundIP](https://www.tencentcloud.com/document/api/1213/61350)
+* Delete: [DescribeListBGPInstances](https://www.tencentcloud.com/document/api/1213/61347)
 

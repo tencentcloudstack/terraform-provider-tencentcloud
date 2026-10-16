@@ -53,5 +53,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeConfigGroupVersions](https://www.tencentcloud.com/search/?wd=DescribeConfigGroupVersions&type=document&lang=en)
+* Read: [DescribeConfigGroupVersions](https://www.tencentcloud.com/document/api/1145/57974)
 

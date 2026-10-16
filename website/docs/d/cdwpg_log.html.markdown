@@ -45,6 +45,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeErrorLog](https://www.tencentcloud.com/search/?wd=DescribeErrorLog&type=document&lang=en)
-* Read: [DescribeSlowLog](https://www.tencentcloud.com/search/?wd=DescribeSlowLog&type=document&lang=en)
+* Read: [DescribeErrorLog](https://www.tencentcloud.com/document/api/1138/69324)
+* Read: [DescribeSlowLog](https://www.tencentcloud.com/document/api/1138/69322)
 

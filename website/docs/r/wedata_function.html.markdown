@@ -71,4 +71,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `function_id` - Function ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCustomFunction](https://www.tencentcloud.com/document/api/1174/61172)
+* Create: [SaveCustomFunction](https://www.tencentcloud.com/document/api/1174/61148)
+* Create: [SubmitCustomFunction](https://www.tencentcloud.com/document/api/1174/61147)
+* Read: [DescribeOrganizationalFunctions](https://www.tencentcloud.com/document/api/1174/61154)
+* Update: [SaveCustomFunction](https://www.tencentcloud.com/document/api/1174/61148)
+* Update: [SubmitCustomFunction](https://www.tencentcloud.com/document/api/1174/61147)
+* Delete: [DeleteCustomFunction](https://www.tencentcloud.com/document/api/1174/61168)
 

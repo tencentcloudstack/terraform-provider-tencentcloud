@@ -81,6 +81,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateTargetGroups](https://www.tencentcloud.com/search/?wd=AssociateTargetGroups&type=document&lang=en)
-* Delete: [DisassociateTargetGroups](https://www.tencentcloud.com/search/?wd=DisassociateTargetGroups&type=document&lang=en)
+* Create: [AssociateTargetGroups](https://www.tencentcloud.com/document/api/1245/66067)
+* Delete: [DisassociateTargetGroups](https://www.tencentcloud.com/document/api/1245/66059)
 

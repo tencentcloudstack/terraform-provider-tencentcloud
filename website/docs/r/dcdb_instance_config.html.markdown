@@ -38,7 +38,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Read: [DescribeDCDBInstanceDetail](https://www.tencentcloud.com/search/?wd=DescribeDCDBInstanceDetail&type=document&lang=en)
+* Read: [DescribeDCDBInstanceDetail](https://www.tencentcloud.com/document/api/1042/54586)
 * Update: [ModifyRealServerAccessStrategy](https://www.tencentcloud.com/search/?wd=ModifyRealServerAccessStrategy&type=document&lang=en)
 
 ## Import

@@ -55,10 +55,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddExternalSAMLIdPCertificate](https://www.tencentcloud.com/search/?wd=AddExternalSAMLIdPCertificate&type=document&lang=en)
-* Create: [SetExternalSAMLIdentityProvider](https://www.tencentcloud.com/search/?wd=SetExternalSAMLIdentityProvider&type=document&lang=en)
-* Read: [GetExternalSAMLIdentityProvider](https://www.tencentcloud.com/search/?wd=GetExternalSAMLIdentityProvider&type=document&lang=en)
-* Update: [AddExternalSAMLIdPCertificate](https://www.tencentcloud.com/search/?wd=AddExternalSAMLIdPCertificate&type=document&lang=en)
-* Update: [RemoveExternalSAMLIdPCertificate](https://www.tencentcloud.com/search/?wd=RemoveExternalSAMLIdPCertificate&type=document&lang=en)
-* Delete: [ClearExternalSAMLIdentityProvider](https://www.tencentcloud.com/search/?wd=ClearExternalSAMLIdentityProvider&type=document&lang=en)
+* Create: [AddExternalSAMLIdPCertificate](https://www.tencentcloud.com/document/api/1031/63588)
+* Create: [SetExternalSAMLIdentityProvider](https://www.tencentcloud.com/document/api/1031/63582)
+* Read: [GetExternalSAMLIdentityProvider](https://www.tencentcloud.com/document/api/1031/63586)
+* Update: [AddExternalSAMLIdPCertificate](https://www.tencentcloud.com/document/api/1031/63588)
+* Update: [RemoveExternalSAMLIdPCertificate](https://www.tencentcloud.com/document/api/1031/63583)
+* Delete: [ClearExternalSAMLIdentityProvider](https://www.tencentcloud.com/document/api/1031/63587)
 

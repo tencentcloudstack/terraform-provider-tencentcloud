@@ -73,5 +73,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeClusterFlowStatusDetail](https://www.tencentcloud.com/search/?wd=DescribeClusterFlowStatusDetail&type=document&lang=en)
+* Read: [DescribeClusterFlowStatusDetail](https://www.tencentcloud.com/document/api/1026/73259)
 

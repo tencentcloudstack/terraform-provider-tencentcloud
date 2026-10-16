@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeListBGPIPInstances](https://www.tencentcloud.com/search/?wd=DescribeListBGPIPInstances&type=document&lang=en)
+* Read: [DescribeListBGPIPInstances](https://www.tencentcloud.com/document/api/1213/61348)
 

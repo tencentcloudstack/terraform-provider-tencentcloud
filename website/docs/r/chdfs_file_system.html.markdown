@@ -54,11 +54,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateFileSystem](https://www.tencentcloud.com/search/?wd=CreateFileSystem&type=document&lang=en)
-* Create: [DescribeFileSystem](https://www.tencentcloud.com/search/?wd=DescribeFileSystem&type=document&lang=en)
-* Read: [DescribeFileSystem](https://www.tencentcloud.com/search/?wd=DescribeFileSystem&type=document&lang=en)
-* Update: [ModifyFileSystem](https://www.tencentcloud.com/search/?wd=ModifyFileSystem&type=document&lang=en)
-* Delete: [DeleteFileSystem](https://www.tencentcloud.com/search/?wd=DeleteFileSystem&type=document&lang=en)
+* Create: [CreateFileSystem](https://www.tencentcloud.com/document/api/1106/42446)
+* Create: [DescribeFileSystem](https://www.tencentcloud.com/document/api/1106/42444)
+* Read: [DescribeFileSystem](https://www.tencentcloud.com/document/api/1106/42444)
+* Update: [ModifyFileSystem](https://www.tencentcloud.com/document/api/1106/42442)
+* Delete: [DeleteFileSystem](https://www.tencentcloud.com/document/api/1106/42445)
 
 ## Import
 

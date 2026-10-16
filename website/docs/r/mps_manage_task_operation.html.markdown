@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ManageTask](https://www.tencentcloud.com/search/?wd=ManageTask&type=document&lang=en)
+* Create: [ManageTask](https://www.tencentcloud.com/document/api/1041/37462)
 

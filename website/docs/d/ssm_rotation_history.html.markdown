@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRotationHistory](https://www.tencentcloud.com/search/?wd=DescribeRotationHistory&type=document&lang=en)
+* Read: [DescribeRotationHistory](https://www.tencentcloud.com/document/api/1078/41516)
 

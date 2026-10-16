@@ -41,11 +41,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
-* Create: [OpenWan](https://www.tencentcloud.com/search/?wd=OpenWan&type=document&lang=en)
-* Read: [DescribeClusterInstanceGrps](https://www.tencentcloud.com/search/?wd=DescribeClusterInstanceGrps&type=document&lang=en)
-* Delete: [CloseWan](https://www.tencentcloud.com/search/?wd=CloseWan&type=document&lang=en)
-* Delete: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
+* Create: [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+* Create: [OpenWan](https://www.tencentcloud.com/document/api/1098/55909)
+* Read: [DescribeClusterInstanceGrps](https://www.tencentcloud.com/document/api/1098/40751)
+* Delete: [CloseWan](https://www.tencentcloud.com/document/api/1098/55915)
+* Delete: [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
 
 ## Import
 

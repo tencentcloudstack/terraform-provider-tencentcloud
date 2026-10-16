@@ -231,6 +231,17 @@ In addition to all arguments above, the following attributes are exported:
 * `created_at` - Creation time.
 * `life_state` - Node pool status.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateNodePool](https://www.tencentcloud.com/document/api/457/66318)
+* Create: [DescribeNodePools](https://www.tencentcloud.com/document/api/457/66311)
+* Read: [DescribeNodePools](https://www.tencentcloud.com/document/api/457/66311)
+* Update: [ModifyNodePool](https://www.tencentcloud.com/document/api/457/66309)
+* Delete: [DeleteNodePool](https://www.tencentcloud.com/document/api/457/66316)
+* Delete: [DescribeClusterMachines](https://www.tencentcloud.com/search/?wd=DescribeClusterMachines&type=document&lang=en)
+* Delete: [DescribeNodePools](https://www.tencentcloud.com/document/api/457/66311)
 
 ## Import
 

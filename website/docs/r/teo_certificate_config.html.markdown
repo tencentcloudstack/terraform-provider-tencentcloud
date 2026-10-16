@@ -201,8 +201,8 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Read: [DescribeAccelerationDomains](https://www.tencentcloud.com/search/?wd=DescribeAccelerationDomains&type=document&lang=en)
-* Update: [ModifyHostsCertificate](https://www.tencentcloud.com/search/?wd=ModifyHostsCertificate&type=document&lang=en)
+* Read: [DescribeAccelerationDomains](https://www.tencentcloud.com/document/api/1145/54132)
+* Update: [ModifyHostsCertificate](https://www.tencentcloud.com/document/api/1145/50539)
 
 ## Import
 

@@ -97,12 +97,12 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLoadBalancer](https://www.tencentcloud.com/search/?wd=CreateLoadBalancer&type=document&lang=en)
-* Create: [DescribeLoadBalancerList](https://www.tencentcloud.com/search/?wd=DescribeLoadBalancerList&type=document&lang=en)
-* Read: [DescribeLoadBalancerList](https://www.tencentcloud.com/search/?wd=DescribeLoadBalancerList&type=document&lang=en)
-* Update: [DescribeLoadBalancerList](https://www.tencentcloud.com/search/?wd=DescribeLoadBalancerList&type=document&lang=en)
-* Update: [ModifyLoadBalancer](https://www.tencentcloud.com/search/?wd=ModifyLoadBalancer&type=document&lang=en)
-* Delete: [DeleteLoadBalancer](https://www.tencentcloud.com/search/?wd=DeleteLoadBalancer&type=document&lang=en)
+* Create: [CreateLoadBalancer](https://www.tencentcloud.com/document/api/1145/66031)
+* Create: [DescribeLoadBalancerList](https://www.tencentcloud.com/document/api/1145/66029)
+* Read: [DescribeLoadBalancerList](https://www.tencentcloud.com/document/api/1145/66029)
+* Update: [DescribeLoadBalancerList](https://www.tencentcloud.com/document/api/1145/66029)
+* Update: [ModifyLoadBalancer](https://www.tencentcloud.com/document/api/1145/66027)
+* Delete: [DeleteLoadBalancer](https://www.tencentcloud.com/document/api/1145/66030)
 
 ## Import
 

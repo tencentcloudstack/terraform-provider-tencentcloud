@@ -44,6 +44,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstances](https://www.tencentcloud.com/search/?wd=DescribeInstances&type=document&lang=en)
-* Read: [DescribeInternalEndpoints](https://www.tencentcloud.com/search/?wd=DescribeInternalEndpoints&type=document&lang=en)
+* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/1051/50703)
+* Read: [DescribeInternalEndpoints](https://www.tencentcloud.com/document/api/1051/50735)
 

@@ -111,7 +111,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [VerifyIdlFiles](https://www.tencentcloud.com/search/?wd=VerifyIdlFiles&type=document&lang=en)
-* Read: [VerifyIdlFiles](https://www.tencentcloud.com/search/?wd=VerifyIdlFiles&type=document&lang=en)
-* Delete: [DeleteIdlFiles](https://www.tencentcloud.com/search/?wd=DeleteIdlFiles&type=document&lang=en)
+* Create: [VerifyIdlFiles](https://www.tencentcloud.com/document/api/1016/35029)
+* Read: [VerifyIdlFiles](https://www.tencentcloud.com/document/api/1016/35029)
+* Delete: [DeleteIdlFiles](https://www.tencentcloud.com/document/api/1016/35051)
 

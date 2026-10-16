@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [StopSQLScriptRun](https://www.tencentcloud.com/search/?wd=StopSQLScriptRun&type=document&lang=en)
+* Create: [StopSQLScriptRun](https://www.tencentcloud.com/document/api/1174/73843)
 

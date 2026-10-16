@@ -40,9 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateSCIMCredentialStatus](https://www.tencentcloud.com/search/?wd=UpdateSCIMCredentialStatus&type=document&lang=en)
-* Read: [ListSCIMCredentials](https://www.tencentcloud.com/search/?wd=ListSCIMCredentials&type=document&lang=en)
-* Update: [UpdateSCIMCredentialStatus](https://www.tencentcloud.com/search/?wd=UpdateSCIMCredentialStatus&type=document&lang=en)
+* Create: [UpdateSCIMCredentialStatus](https://www.tencentcloud.com/document/api/1031/66419)
+* Read: [ListSCIMCredentials](https://www.tencentcloud.com/document/api/1031/66420)
+* Update: [UpdateSCIMCredentialStatus](https://www.tencentcloud.com/document/api/1031/66419)
 
 ## Import
 

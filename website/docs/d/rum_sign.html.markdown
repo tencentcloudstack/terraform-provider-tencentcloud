@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeReleaseFileSign](https://www.tencentcloud.com/search/?wd=DescribeReleaseFileSign&type=document&lang=en)
+* Read: [DescribeReleaseFileSign](https://www.tencentcloud.com/document/api/1131/45306)
 

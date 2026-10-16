@@ -105,19 +105,19 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSecret](https://www.tencentcloud.com/search/?wd=CreateSecret&type=document&lang=en)
-* Create: [DeleteSecretVersion](https://www.tencentcloud.com/search/?wd=DeleteSecretVersion&type=document&lang=en)
-* Create: [DescribeSecret](https://www.tencentcloud.com/search/?wd=DescribeSecret&type=document&lang=en)
-* Create: [DisableSecret](https://www.tencentcloud.com/search/?wd=DisableSecret&type=document&lang=en)
+* Create: [CreateSecret](https://www.tencentcloud.com/document/api/1078/38656)
+* Create: [DeleteSecretVersion](https://www.tencentcloud.com/document/api/1078/38654)
+* Create: [DescribeSecret](https://www.tencentcloud.com/document/api/1078/38653)
+* Create: [DisableSecret](https://www.tencentcloud.com/document/api/1078/38652)
 * Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
 * Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Read: [DescribeSecret](https://www.tencentcloud.com/search/?wd=DescribeSecret&type=document&lang=en)
-* Update: [DescribeSecret](https://www.tencentcloud.com/search/?wd=DescribeSecret&type=document&lang=en)
+* Read: [DescribeSecret](https://www.tencentcloud.com/document/api/1078/38653)
+* Update: [DescribeSecret](https://www.tencentcloud.com/document/api/1078/38653)
 * Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [UpdateDescription](https://www.tencentcloud.com/search/?wd=UpdateDescription&type=document&lang=en)
-* Delete: [DeleteSecret](https://www.tencentcloud.com/search/?wd=DeleteSecret&type=document&lang=en)
-* Delete: [DescribeSecret](https://www.tencentcloud.com/search/?wd=DescribeSecret&type=document&lang=en)
-* Delete: [DisableSecret](https://www.tencentcloud.com/search/?wd=DisableSecret&type=document&lang=en)
+* Update: [UpdateDescription](https://www.tencentcloud.com/document/api/1078/38643)
+* Delete: [DeleteSecret](https://www.tencentcloud.com/document/api/1078/38655)
+* Delete: [DescribeSecret](https://www.tencentcloud.com/document/api/1078/38653)
+* Delete: [DisableSecret](https://www.tencentcloud.com/document/api/1078/38652)
 
 ## Import
 

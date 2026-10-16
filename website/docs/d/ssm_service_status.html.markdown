@@ -35,5 +35,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetServiceStatus](https://www.tencentcloud.com/search/?wd=GetServiceStatus&type=document&lang=en)
+* Read: [GetServiceStatus](https://www.tencentcloud.com/document/api/1078/38648)
 

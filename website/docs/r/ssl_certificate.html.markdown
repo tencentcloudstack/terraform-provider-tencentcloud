@@ -82,15 +82,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeCertificateDetail](https://www.tencentcloud.com/search/?wd=DescribeCertificateDetail&type=document&lang=en)
+* Create: [DescribeCertificateDetail](https://www.tencentcloud.com/document/api/1007/36587)
 * Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Create: [UploadCertificate](https://www.tencentcloud.com/search/?wd=UploadCertificate&type=document&lang=en)
-* Read: [DescribeCertificateDetail](https://www.tencentcloud.com/search/?wd=DescribeCertificateDetail&type=document&lang=en)
+* Create: [UploadCertificate](https://www.tencentcloud.com/document/api/1007/36579)
+* Read: [DescribeCertificateDetail](https://www.tencentcloud.com/document/api/1007/36587)
 * Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [ModifyCertificateAlias](https://www.tencentcloud.com/search/?wd=ModifyCertificateAlias&type=document&lang=en)
-* Update: [ModifyCertificateProject](https://www.tencentcloud.com/search/?wd=ModifyCertificateProject&type=document&lang=en)
+* Update: [ModifyCertificateAlias](https://www.tencentcloud.com/document/api/1007/36583)
+* Update: [ModifyCertificateProject](https://www.tencentcloud.com/document/api/1007/36582)
 * Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Delete: [DeleteCertificate](https://www.tencentcloud.com/search/?wd=DeleteCertificate&type=document&lang=en)
+* Delete: [DeleteCertificate](https://www.tencentcloud.com/document/api/1007/36589)
 
 ## Import
 

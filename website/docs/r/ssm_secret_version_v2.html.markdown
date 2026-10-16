@@ -74,13 +74,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [PutSecretValue](https://www.tencentcloud.com/search/?wd=PutSecretValue&type=document&lang=en)
-* Read: [DescribeSecret](https://www.tencentcloud.com/search/?wd=DescribeSecret&type=document&lang=en)
-* Read: [GetSecretValue](https://www.tencentcloud.com/search/?wd=GetSecretValue&type=document&lang=en)
-* Read: [ListSecretVersionIds](https://www.tencentcloud.com/search/?wd=ListSecretVersionIds&type=document&lang=en)
-* Update: [DescribeSecret](https://www.tencentcloud.com/search/?wd=DescribeSecret&type=document&lang=en)
-* Update: [UpdateSecret](https://www.tencentcloud.com/search/?wd=UpdateSecret&type=document&lang=en)
-* Delete: [DeleteSecretVersion](https://www.tencentcloud.com/search/?wd=DeleteSecretVersion&type=document&lang=en)
+* Create: [PutSecretValue](https://www.tencentcloud.com/document/api/1078/38645)
+* Read: [DescribeSecret](https://www.tencentcloud.com/document/api/1078/38653)
+* Read: [GetSecretValue](https://www.tencentcloud.com/document/api/1078/38649)
+* Read: [ListSecretVersionIds](https://www.tencentcloud.com/document/api/1078/38647)
+* Update: [DescribeSecret](https://www.tencentcloud.com/document/api/1078/38653)
+* Update: [UpdateSecret](https://www.tencentcloud.com/document/api/1078/38642)
+* Delete: [DeleteSecretVersion](https://www.tencentcloud.com/document/api/1078/38654)
 
 ## Import
 

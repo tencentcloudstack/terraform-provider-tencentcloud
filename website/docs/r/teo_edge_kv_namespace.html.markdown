@@ -43,12 +43,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEdgeKVNamespace](https://www.tencentcloud.com/search/?wd=CreateEdgeKVNamespace&type=document&lang=en)
-* Create: [DescribeEdgeKVNamespaces](https://www.tencentcloud.com/search/?wd=DescribeEdgeKVNamespaces&type=document&lang=en)
-* Read: [DescribeEdgeKVNamespaces](https://www.tencentcloud.com/search/?wd=DescribeEdgeKVNamespaces&type=document&lang=en)
-* Update: [DescribeEdgeKVNamespaces](https://www.tencentcloud.com/search/?wd=DescribeEdgeKVNamespaces&type=document&lang=en)
-* Update: [ModifyEdgeKVNamespace](https://www.tencentcloud.com/search/?wd=ModifyEdgeKVNamespace&type=document&lang=en)
-* Delete: [DeleteEdgeKVNamespace](https://www.tencentcloud.com/search/?wd=DeleteEdgeKVNamespace&type=document&lang=en)
+* Create: [CreateEdgeKVNamespace](https://www.tencentcloud.com/document/api/1145/78830)
+* Create: [DescribeEdgeKVNamespaces](https://www.tencentcloud.com/document/api/1145/78828)
+* Read: [DescribeEdgeKVNamespaces](https://www.tencentcloud.com/document/api/1145/78828)
+* Update: [DescribeEdgeKVNamespaces](https://www.tencentcloud.com/document/api/1145/78828)
+* Update: [ModifyEdgeKVNamespace](https://www.tencentcloud.com/document/api/1145/78823)
+* Delete: [DeleteEdgeKVNamespace](https://www.tencentcloud.com/document/api/1145/78829)
 
 ## Import
 

@@ -183,11 +183,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DisableSchedule](https://www.tencentcloud.com/search/?wd=DisableSchedule&type=document&lang=en)
-* Create: [EnableSchedule](https://www.tencentcloud.com/search/?wd=EnableSchedule&type=document&lang=en)
-* Read: [DescribeSchedules](https://www.tencentcloud.com/search/?wd=DescribeSchedules&type=document&lang=en)
-* Update: [DisableSchedule](https://www.tencentcloud.com/search/?wd=DisableSchedule&type=document&lang=en)
-* Update: [EnableSchedule](https://www.tencentcloud.com/search/?wd=EnableSchedule&type=document&lang=en)
+* Create: [DisableSchedule](https://www.tencentcloud.com/document/api/1041/54032)
+* Create: [EnableSchedule](https://www.tencentcloud.com/document/api/1041/54031)
+* Read: [DescribeSchedules](https://www.tencentcloud.com/document/api/1041/54033)
+* Update: [DisableSchedule](https://www.tencentcloud.com/document/api/1041/54032)
+* Update: [EnableSchedule](https://www.tencentcloud.com/document/api/1041/54031)
 
 ## Import
 

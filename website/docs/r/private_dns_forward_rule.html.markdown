@@ -54,9 +54,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateForwardRule](https://www.tencentcloud.com/search/?wd=CreateForwardRule&type=document&lang=en)
-* Update: [ModifyForwardRule](https://www.tencentcloud.com/search/?wd=ModifyForwardRule&type=document&lang=en)
-* Delete: [DeleteForwardRule](https://www.tencentcloud.com/search/?wd=DeleteForwardRule&type=document&lang=en)
+* Create: [CreateForwardRule](https://www.tencentcloud.com/document/api/1097/65937)
+* Read: [DescribeForwardRule](https://www.tencentcloud.com/document/api/1097/67594)
+* Update: [ModifyForwardRule](https://www.tencentcloud.com/document/api/1097/67593)
+* Delete: [DeleteForwardRule](https://www.tencentcloud.com/document/api/1097/67597)
 
 ## Import
 

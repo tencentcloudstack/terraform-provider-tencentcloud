@@ -147,10 +147,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTransformation](https://www.tencentcloud.com/search/?wd=CreateTransformation&type=document&lang=en)
-* Read: [GetTransformation](https://www.tencentcloud.com/search/?wd=GetTransformation&type=document&lang=en)
-* Update: [UpdateTransformation](https://www.tencentcloud.com/search/?wd=UpdateTransformation&type=document&lang=en)
-* Delete: [DeleteTransformation](https://www.tencentcloud.com/search/?wd=DeleteTransformation&type=document&lang=en)
+* Create: [CreateTransformation](https://www.tencentcloud.com/document/api/1108/45839)
+* Read: [GetTransformation](https://www.tencentcloud.com/document/api/1108/45837)
+* Update: [UpdateTransformation](https://www.tencentcloud.com/document/api/1108/45836)
+* Delete: [DeleteTransformation](https://www.tencentcloud.com/document/api/1108/45838)
 
 ## Import
 

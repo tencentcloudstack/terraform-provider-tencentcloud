@@ -50,10 +50,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateUserRoleProject](https://www.tencentcloud.com/search/?wd=CreateUserRoleProject&type=document&lang=en)
-* Read: [DescribeUserRoleProjectList](https://www.tencentcloud.com/search/?wd=DescribeUserRoleProjectList&type=document&lang=en)
-* Update: [ModifyUserRoleProject](https://www.tencentcloud.com/search/?wd=ModifyUserRoleProject&type=document&lang=en)
-* Delete: [DeleteUserRoleProject](https://www.tencentcloud.com/search/?wd=DeleteUserRoleProject&type=document&lang=en)
+* Create: [CreateUserRoleProject](https://www.tencentcloud.com/document/api/1270/72619)
+* Read: [DescribeUserRoleProjectList](https://www.tencentcloud.com/document/api/1270/72614)
+* Update: [ModifyUserRoleProject](https://www.tencentcloud.com/document/api/1270/72612)
+* Delete: [DeleteUserRoleProject](https://www.tencentcloud.com/document/api/1270/72617)
 
 ## Import
 

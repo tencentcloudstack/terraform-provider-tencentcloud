@@ -100,14 +100,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateApmInstance](https://www.tencentcloud.com/search/?wd=CreateApmInstance&type=document&lang=en)
-* Create: [ModifyApmInstance](https://www.tencentcloud.com/search/?wd=ModifyApmInstance&type=document&lang=en)
+* Create: [CreateApmInstance](https://www.tencentcloud.com/document/api/1166/68215)
+* Create: [ModifyApmInstance](https://www.tencentcloud.com/document/api/1166/68212)
 * Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeApmAgent](https://www.tencentcloud.com/search/?wd=DescribeApmAgent&type=document&lang=en)
-* Read: [DescribeApmInstances](https://www.tencentcloud.com/search/?wd=DescribeApmInstances&type=document&lang=en)
+* Read: [DescribeApmAgent](https://www.tencentcloud.com/document/api/1166/68214)
+* Read: [DescribeApmInstances](https://www.tencentcloud.com/document/api/1166/68213)
 * Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [ModifyApmInstance](https://www.tencentcloud.com/search/?wd=ModifyApmInstance&type=document&lang=en)
-* Delete: [TerminateApmInstance](https://www.tencentcloud.com/search/?wd=TerminateApmInstance&type=document&lang=en)
+* Update: [ModifyApmInstance](https://www.tencentcloud.com/document/api/1166/68212)
+* Delete: [TerminateApmInstance](https://www.tencentcloud.com/document/api/1166/68211)
 
 ## Import
 

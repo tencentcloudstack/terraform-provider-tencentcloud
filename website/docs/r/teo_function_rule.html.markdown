@@ -99,10 +99,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateFunctionRule](https://www.tencentcloud.com/search/?wd=CreateFunctionRule&type=document&lang=en)
-* Read: [DescribeFunctionRules](https://www.tencentcloud.com/search/?wd=DescribeFunctionRules&type=document&lang=en)
-* Update: [ModifyFunctionRule](https://www.tencentcloud.com/search/?wd=ModifyFunctionRule&type=document&lang=en)
-* Delete: [DeleteFunctionRules](https://www.tencentcloud.com/search/?wd=DeleteFunctionRules&type=document&lang=en)
+* Create: [CreateFunctionRule](https://www.tencentcloud.com/document/api/1145/64814)
+* Read: [DescribeFunctionRules](https://www.tencentcloud.com/document/api/1145/64811)
+* Update: [ModifyFunctionRule](https://www.tencentcloud.com/document/api/1145/64806)
+* Delete: [DeleteFunctionRules](https://www.tencentcloud.com/document/api/1145/64812)
 
 ## Import
 

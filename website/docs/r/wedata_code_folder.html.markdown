@@ -43,10 +43,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCodeFolder](https://www.tencentcloud.com/search/?wd=CreateCodeFolder&type=document&lang=en)
-* Read: [GetCodeFolder](https://www.tencentcloud.com/search/?wd=GetCodeFolder&type=document&lang=en)
-* Update: [UpdateCodeFolder](https://www.tencentcloud.com/search/?wd=UpdateCodeFolder&type=document&lang=en)
-* Delete: [DeleteCodeFolder](https://www.tencentcloud.com/search/?wd=DeleteCodeFolder&type=document&lang=en)
+* Create: [CreateCodeFolder](https://www.tencentcloud.com/document/api/1174/73856)
+* Read: [GetCodeFolder](https://www.tencentcloud.com/document/api/1174/77905)
+* Update: [UpdateCodeFolder](https://www.tencentcloud.com/document/api/1174/73841)
+* Delete: [DeleteCodeFolder](https://www.tencentcloud.com/document/api/1174/73852)
 
 ## Import
 

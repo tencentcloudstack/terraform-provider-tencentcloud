@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CheckCnameStatus](https://www.tencentcloud.com/search/?wd=CheckCnameStatus&type=document&lang=en)
+* Create: [CheckCnameStatus](https://www.tencentcloud.com/document/api/1145/56175)
 

@@ -43,10 +43,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCloudNativeAPIGatewayCertificate](https://www.tencentcloud.com/search/?wd=CreateCloudNativeAPIGatewayCertificate&type=document&lang=en)
-* Read: [DescribeCloudNativeAPIGatewayCertificateDetails](https://www.tencentcloud.com/search/?wd=DescribeCloudNativeAPIGatewayCertificateDetails&type=document&lang=en)
-* Update: [UpdateCloudNativeAPIGatewayCertificateInfo](https://www.tencentcloud.com/search/?wd=UpdateCloudNativeAPIGatewayCertificateInfo&type=document&lang=en)
-* Delete: [DeleteCloudNativeAPIGatewayCertificate](https://www.tencentcloud.com/search/?wd=DeleteCloudNativeAPIGatewayCertificate&type=document&lang=en)
+* Create: [CreateCloudNativeAPIGatewayCertificate](https://www.tencentcloud.com/document/api/1290/79294)
+* Read: [DescribeCloudNativeAPIGatewayCertificateDetails](https://www.tencentcloud.com/document/api/1290/79266)
+* Update: [UpdateCloudNativeAPIGatewayCertificateInfo](https://www.tencentcloud.com/document/api/1290/79229)
+* Delete: [DeleteCloudNativeAPIGatewayCertificate](https://www.tencentcloud.com/document/api/1290/79280)
 
 ## Import
 

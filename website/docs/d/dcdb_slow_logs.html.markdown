@@ -72,5 +72,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBSlowLogs](https://www.tencentcloud.com/search/?wd=DescribeDBSlowLogs&type=document&lang=en)
+* Read: [DescribeDBSlowLogs](https://www.tencentcloud.com/document/api/1042/45491)
 

@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetMyWorkflowMaxPermission](https://www.tencentcloud.com/search/?wd=GetMyWorkflowMaxPermission&type=document&lang=en)
+* Read: [GetMyWorkflowMaxPermission](https://www.tencentcloud.com/document/api/1174/77930)
 

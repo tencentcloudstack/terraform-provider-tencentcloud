@@ -54,9 +54,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateOrgServiceAssign](https://www.tencentcloud.com/search/?wd=CreateOrgServiceAssign&type=document&lang=en)
-* Read: [ListOrgServiceAssignMember](https://www.tencentcloud.com/search/?wd=ListOrgServiceAssignMember&type=document&lang=en)
-* Delete: [DeleteOrgServiceAssign](https://www.tencentcloud.com/search/?wd=DeleteOrgServiceAssign&type=document&lang=en)
+* Create: [CreateOrgServiceAssign](https://www.tencentcloud.com/document/api/1031/63262)
+* Read: [ListOrgServiceAssignMember](https://www.tencentcloud.com/document/api/1031/63260)
+* Delete: [DeleteOrgServiceAssign](https://www.tencentcloud.com/document/api/1031/63261)
 
 ## Import
 

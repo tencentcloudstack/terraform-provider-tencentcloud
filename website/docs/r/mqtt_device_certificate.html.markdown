@@ -75,12 +75,12 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [RegisterDeviceCertificate](https://www.tencentcloud.com/search/?wd=RegisterDeviceCertificate&type=document&lang=en)
-* Read: [DescribeDeviceCertificate](https://www.tencentcloud.com/search/?wd=DescribeDeviceCertificate&type=document&lang=en)
+* Read: [DescribeDeviceCertificate](https://www.tencentcloud.com/document/api/1294/79802)
 * Update: [ActivateDeviceCertificate](https://www.tencentcloud.com/search/?wd=ActivateDeviceCertificate&type=document&lang=en)
 * Update: [DeactivateDeviceCertificate](https://www.tencentcloud.com/search/?wd=DeactivateDeviceCertificate&type=document&lang=en)
 * Delete: [DeactivateDeviceCertificate](https://www.tencentcloud.com/search/?wd=DeactivateDeviceCertificate&type=document&lang=en)
 * Delete: [DeleteDeviceCertificate](https://www.tencentcloud.com/search/?wd=DeleteDeviceCertificate&type=document&lang=en)
-* Delete: [DescribeDeviceCertificate](https://www.tencentcloud.com/search/?wd=DescribeDeviceCertificate&type=document&lang=en)
+* Delete: [DescribeDeviceCertificate](https://www.tencentcloud.com/document/api/1294/79802)
 
 ## Import
 

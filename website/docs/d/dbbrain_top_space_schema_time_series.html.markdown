@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTopSpaceSchemaTimeSeries](https://www.tencentcloud.com/search/?wd=DescribeTopSpaceSchemaTimeSeries&type=document&lang=en)
+* Read: [DescribeTopSpaceSchemaTimeSeries](https://www.tencentcloud.com/document/api/1035/41190)
 

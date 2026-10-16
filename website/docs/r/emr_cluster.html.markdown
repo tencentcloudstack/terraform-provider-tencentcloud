@@ -328,18 +328,18 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstance](https://www.tencentcloud.com/search/?wd=CreateInstance&type=document&lang=en)
-* Create: [DescribeInstances](https://www.tencentcloud.com/search/?wd=DescribeInstances&type=document&lang=en)
-* Read: [DescribeClusterNodes](https://www.tencentcloud.com/search/?wd=DescribeClusterNodes&type=document&lang=en)
-* Read: [DescribeInstances](https://www.tencentcloud.com/search/?wd=DescribeInstances&type=document&lang=en)
+* Create: [CreateInstance](https://www.tencentcloud.com/document/api/1026/31045)
+* Create: [DescribeInstances](https://www.tencentcloud.com/document/api/1026/31052)
+* Read: [DescribeClusterNodes](https://www.tencentcloud.com/document/api/1026/35198)
+* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/1026/31052)
 * Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [DescribeClusterFlowStatusDetail](https://www.tencentcloud.com/search/?wd=DescribeClusterFlowStatusDetail&type=document&lang=en)
+* Update: [DescribeClusterFlowStatusDetail](https://www.tencentcloud.com/document/api/1026/73259)
 * Update: [DescribeZones](https://www.tencentcloud.com/document/api/213/35071)
 * Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [ModifyResourcesTags](https://www.tencentcloud.com/search/?wd=ModifyResourcesTags&type=document&lang=en)
-* Update: [ScaleOutInstance](https://www.tencentcloud.com/search/?wd=ScaleOutInstance&type=document&lang=en)
-* Update: [TerminateClusterNodes](https://www.tencentcloud.com/search/?wd=TerminateClusterNodes&type=document&lang=en)
-* Delete: [DescribeInstances](https://www.tencentcloud.com/search/?wd=DescribeInstances&type=document&lang=en)
+* Update: [ModifyResourcesTags](https://www.tencentcloud.com/document/api/1026/58392)
+* Update: [ScaleOutInstance](https://www.tencentcloud.com/document/api/1026/31048)
+* Update: [TerminateClusterNodes](https://www.tencentcloud.com/document/api/1026/54558)
+* Delete: [DescribeInstances](https://www.tencentcloud.com/document/api/1026/31052)
 * Delete: [OfflineIsolatedInstances](https://www.tencentcloud.com/document/api/236/34475)
-* Delete: [TerminateInstance](https://www.tencentcloud.com/search/?wd=TerminateInstance&type=document&lang=en)
+* Delete: [TerminateInstance](https://www.tencentcloud.com/document/api/1026/31044)
 

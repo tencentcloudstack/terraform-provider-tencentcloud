@@ -58,9 +58,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddPermissionPolicyToRoleConfiguration](https://www.tencentcloud.com/search/?wd=AddPermissionPolicyToRoleConfiguration&type=document&lang=en)
-* Read: [ListPermissionPoliciesInRoleConfiguration](https://www.tencentcloud.com/search/?wd=ListPermissionPoliciesInRoleConfiguration&type=document&lang=en)
-* Delete: [RemovePermissionPolicyFromRoleConfiguration](https://www.tencentcloud.com/search/?wd=RemovePermissionPolicyFromRoleConfiguration&type=document&lang=en)
+* Create: [AddPermissionPolicyToRoleConfiguration](https://www.tencentcloud.com/document/api/1031/63603)
+* Read: [ListPermissionPoliciesInRoleConfiguration](https://www.tencentcloud.com/document/api/1031/63599)
+* Delete: [RemovePermissionPolicyFromRoleConfiguration](https://www.tencentcloud.com/document/api/1031/63596)
 
 ## Import
 

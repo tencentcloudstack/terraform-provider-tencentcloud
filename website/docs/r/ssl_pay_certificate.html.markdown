@@ -112,15 +112,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCertificate](https://www.tencentcloud.com/search/?wd=CreateCertificate&type=document&lang=en)
-* Read: [DescribeCertificateDetail](https://www.tencentcloud.com/search/?wd=DescribeCertificateDetail&type=document&lang=en)
-* Update: [CertificateOrderSubmit](https://www.tencentcloud.com/search/?wd=CertificateOrderSubmit&type=document&lang=en)
-* Update: [DescribeCertificateDetail](https://www.tencentcloud.com/search/?wd=DescribeCertificateDetail&type=document&lang=en)
-* Update: [ModifyCertificateAlias](https://www.tencentcloud.com/search/?wd=ModifyCertificateAlias&type=document&lang=en)
-* Update: [ModifyCertificateProject](https://www.tencentcloud.com/search/?wd=ModifyCertificateProject&type=document&lang=en)
-* Update: [SubmitCertificateInformation](https://www.tencentcloud.com/search/?wd=SubmitCertificateInformation&type=document&lang=en)
-* Update: [UploadConfirmLetter](https://www.tencentcloud.com/search/?wd=UploadConfirmLetter&type=document&lang=en)
-* Delete: [CancelCertificateOrder](https://www.tencentcloud.com/search/?wd=CancelCertificateOrder&type=document&lang=en)
+* Create: [CreateCertificate](https://www.tencentcloud.com/document/api/1007/55888)
+* Read: [DescribeCertificateDetail](https://www.tencentcloud.com/document/api/1007/36587)
+* Update: [CertificateOrderSubmit](https://www.tencentcloud.com/document/api/1007/79656)
+* Update: [DescribeCertificateDetail](https://www.tencentcloud.com/document/api/1007/36587)
+* Update: [ModifyCertificateAlias](https://www.tencentcloud.com/document/api/1007/36583)
+* Update: [ModifyCertificateProject](https://www.tencentcloud.com/document/api/1007/36582)
+* Update: [SubmitCertificateInformation](https://www.tencentcloud.com/document/api/1007/36580)
+* Update: [UploadConfirmLetter](https://www.tencentcloud.com/document/api/1007/55887)
+* Delete: [CancelCertificateOrder](https://www.tencentcloud.com/document/api/1007/36591)
 
 ## Import
 

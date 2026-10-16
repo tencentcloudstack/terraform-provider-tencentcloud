@@ -65,12 +65,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDisks](https://www.tencentcloud.com/search/?wd=CreateDisks&type=document&lang=en)
-* Create: [DescribeDisks](https://www.tencentcloud.com/search/?wd=DescribeDisks&type=document&lang=en)
-* Read: [DescribeDisks](https://www.tencentcloud.com/search/?wd=DescribeDisks&type=document&lang=en)
-* Update: [ModifyDisksAttribute](https://www.tencentcloud.com/search/?wd=ModifyDisksAttribute&type=document&lang=en)
-* Update: [ModifyDisksRenewFlag](https://www.tencentcloud.com/search/?wd=ModifyDisksRenewFlag&type=document&lang=en)
-* Delete: [DescribeDisks](https://www.tencentcloud.com/search/?wd=DescribeDisks&type=document&lang=en)
-* Delete: [IsolateDisks](https://www.tencentcloud.com/search/?wd=IsolateDisks&type=document&lang=en)
-* Delete: [TerminateDisks](https://www.tencentcloud.com/search/?wd=TerminateDisks&type=document&lang=en)
+* Create: [CreateDisks](https://www.tencentcloud.com/document/api/1103/57994)
+* Create: [DescribeDisks](https://www.tencentcloud.com/document/api/1103/44573)
+* Read: [DescribeDisks](https://www.tencentcloud.com/document/api/1103/44573)
+* Update: [ModifyDisksAttribute](https://www.tencentcloud.com/document/api/1103/44567)
+* Update: [ModifyDisksRenewFlag](https://www.tencentcloud.com/document/api/1103/44566)
+* Delete: [DescribeDisks](https://www.tencentcloud.com/document/api/1103/44573)
+* Delete: [IsolateDisks](https://www.tencentcloud.com/document/api/1103/57993)
+* Delete: [TerminateDisks](https://www.tencentcloud.com/document/api/1103/44565)
 

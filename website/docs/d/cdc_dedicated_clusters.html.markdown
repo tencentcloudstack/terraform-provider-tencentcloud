@@ -76,5 +76,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDedicatedClusters](https://www.tencentcloud.com/search/?wd=DescribeDedicatedClusters&type=document&lang=en)
+* Read: [DescribeDedicatedClusters](https://www.tencentcloud.com/document/api/1226/66388)
 

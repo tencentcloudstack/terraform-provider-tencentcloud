@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBinlogDownloadUrl](https://www.tencentcloud.com/search/?wd=DescribeBinlogDownloadUrl&type=document&lang=en)
+* Read: [DescribeBinlogDownloadUrl](https://www.tencentcloud.com/document/api/1098/48596)
 

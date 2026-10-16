@@ -283,5 +283,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeScenarioWithJobs](https://www.tencentcloud.com/search/?wd=DescribeScenarioWithJobs&type=document&lang=en)
+* Read: [DescribeScenarioWithJobs](https://www.tencentcloud.com/document/api/1249/68503)
 

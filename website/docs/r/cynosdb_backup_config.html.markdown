@@ -157,9 +157,9 @@ The `snapshot_secondary_backup_config` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyBackupConfig](https://www.tencentcloud.com/search/?wd=ModifyBackupConfig&type=document&lang=en)
-* Read: [DescribeBackupConfig](https://www.tencentcloud.com/search/?wd=DescribeBackupConfig&type=document&lang=en)
-* Update: [ModifyBackupConfig](https://www.tencentcloud.com/search/?wd=ModifyBackupConfig&type=document&lang=en)
+* Create: [ModifyBackupConfig](https://www.tencentcloud.com/document/api/1098/40756)
+* Read: [DescribeBackupConfig](https://www.tencentcloud.com/document/api/1098/40760)
+* Update: [ModifyBackupConfig](https://www.tencentcloud.com/document/api/1098/40756)
 
 ## Import
 

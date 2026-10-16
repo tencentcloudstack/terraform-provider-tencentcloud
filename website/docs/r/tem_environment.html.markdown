@@ -46,14 +46,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEnvironment](https://www.tencentcloud.com/search/?wd=CreateEnvironment&type=document&lang=en)
-* Create: [DescribeEnvironmentStatus](https://www.tencentcloud.com/search/?wd=DescribeEnvironmentStatus&type=document&lang=en)
+* Create: [CreateEnvironment](https://www.tencentcloud.com/document/api/1094/42028)
+* Create: [DescribeEnvironmentStatus](https://www.tencentcloud.com/document/api/1094/52762)
 * Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeEnvironment](https://www.tencentcloud.com/search/?wd=DescribeEnvironment&type=document&lang=en)
+* Read: [DescribeEnvironment](https://www.tencentcloud.com/document/api/1094/52763)
 * Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [ModifyEnvironment](https://www.tencentcloud.com/search/?wd=ModifyEnvironment&type=document&lang=en)
+* Update: [ModifyEnvironment](https://www.tencentcloud.com/document/api/1094/42026)
 * Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Delete: [DestroyEnvironment](https://www.tencentcloud.com/search/?wd=DestroyEnvironment&type=document&lang=en)
+* Delete: [DestroyEnvironment](https://www.tencentcloud.com/document/api/1094/50347)
 
 ## Import
 

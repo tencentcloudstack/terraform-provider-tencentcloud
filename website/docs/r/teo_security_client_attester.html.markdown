@@ -75,10 +75,10 @@ The `client_attesters` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSecurityClientAttester](https://www.tencentcloud.com/search/?wd=CreateSecurityClientAttester&type=document&lang=en)
-* Read: [DescribeSecurityClientAttester](https://www.tencentcloud.com/search/?wd=DescribeSecurityClientAttester&type=document&lang=en)
-* Update: [ModifySecurityClientAttester](https://www.tencentcloud.com/search/?wd=ModifySecurityClientAttester&type=document&lang=en)
-* Delete: [DeleteSecurityClientAttester](https://www.tencentcloud.com/search/?wd=DeleteSecurityClientAttester&type=document&lang=en)
+* Create: [CreateSecurityClientAttester](https://www.tencentcloud.com/document/api/1145/72289)
+* Read: [DescribeSecurityClientAttester](https://www.tencentcloud.com/document/api/1145/72284)
+* Update: [ModifySecurityClientAttester](https://www.tencentcloud.com/document/api/1145/72280)
+* Delete: [DeleteSecurityClientAttester](https://www.tencentcloud.com/document/api/1145/72287)
 
 ## Import
 

@@ -68,12 +68,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDDoSSpeedLimitConfig](https://www.tencentcloud.com/search/?wd=CreateDDoSSpeedLimitConfig&type=document&lang=en)
-* Create: [DescribeListDDoSSpeedLimitConfig](https://www.tencentcloud.com/search/?wd=DescribeListDDoSSpeedLimitConfig&type=document&lang=en)
-* Read: [DescribeListDDoSSpeedLimitConfig](https://www.tencentcloud.com/search/?wd=DescribeListDDoSSpeedLimitConfig&type=document&lang=en)
-* Update: [ModifyDDoSSpeedLimitConfig](https://www.tencentcloud.com/search/?wd=ModifyDDoSSpeedLimitConfig&type=document&lang=en)
-* Delete: [DeleteDDoSSpeedLimitConfig](https://www.tencentcloud.com/search/?wd=DeleteDDoSSpeedLimitConfig&type=document&lang=en)
-* Delete: [DescribeListDDoSSpeedLimitConfig](https://www.tencentcloud.com/search/?wd=DescribeListDDoSSpeedLimitConfig&type=document&lang=en)
+* Create: [CreateDDoSSpeedLimitConfig](https://www.tencentcloud.com/document/api/1213/61379)
+* Create: [DescribeListDDoSSpeedLimitConfig](https://www.tencentcloud.com/document/api/1213/61361)
+* Read: [DescribeListDDoSSpeedLimitConfig](https://www.tencentcloud.com/document/api/1213/61361)
+* Update: [ModifyDDoSSpeedLimitConfig](https://www.tencentcloud.com/document/api/1213/61354)
+* Delete: [DeleteDDoSSpeedLimitConfig](https://www.tencentcloud.com/document/api/1213/61371)
+* Delete: [DescribeListDDoSSpeedLimitConfig](https://www.tencentcloud.com/document/api/1213/61361)
 
 ## Import
 

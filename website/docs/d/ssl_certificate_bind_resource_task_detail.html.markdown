@@ -258,5 +258,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCertificateBindResourceTaskDetail](https://www.tencentcloud.com/search/?wd=DescribeCertificateBindResourceTaskDetail&type=document&lang=en)
+* Read: [DescribeCertificateBindResourceTaskDetail](https://www.tencentcloud.com/document/api/1007/56822)
 

@@ -109,11 +109,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNativeGatewayServerGroup](https://www.tencentcloud.com/search/?wd=CreateNativeGatewayServerGroup&type=document&lang=en)
-* Create: [DescribeNativeGatewayServerGroups](https://www.tencentcloud.com/search/?wd=DescribeNativeGatewayServerGroups&type=document&lang=en)
-* Read: [DescribeNativeGatewayServerGroups](https://www.tencentcloud.com/search/?wd=DescribeNativeGatewayServerGroups&type=document&lang=en)
-* Update: [DescribeNativeGatewayServerGroups](https://www.tencentcloud.com/search/?wd=DescribeNativeGatewayServerGroups&type=document&lang=en)
-* Update: [ModifyNativeGatewayServerGroup](https://www.tencentcloud.com/search/?wd=ModifyNativeGatewayServerGroup&type=document&lang=en)
-* Delete: [DeleteNativeGatewayServerGroup](https://www.tencentcloud.com/search/?wd=DeleteNativeGatewayServerGroup&type=document&lang=en)
-* Delete: [DescribeNativeGatewayServerGroups](https://www.tencentcloud.com/search/?wd=DescribeNativeGatewayServerGroups&type=document&lang=en)
+* Create: [CreateNativeGatewayServerGroup](https://www.tencentcloud.com/document/api/1290/79288)
+* Create: [DescribeNativeGatewayServerGroups](https://www.tencentcloud.com/document/api/1290/79253)
+* Read: [DescribeNativeGatewayServerGroups](https://www.tencentcloud.com/document/api/1290/79253)
+* Update: [DescribeNativeGatewayServerGroups](https://www.tencentcloud.com/document/api/1290/79253)
+* Update: [ModifyNativeGatewayServerGroup](https://www.tencentcloud.com/document/api/1290/79236)
+* Delete: [DeleteNativeGatewayServerGroup](https://www.tencentcloud.com/document/api/1290/79274)
+* Delete: [DescribeNativeGatewayServerGroups](https://www.tencentcloud.com/document/api/1290/79253)
 

@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeMountPoints](https://www.tencentcloud.com/search/?wd=DescribeMountPoints&type=document&lang=en)
+* Read: [DescribeMountPoints](https://www.tencentcloud.com/document/api/1106/42431)
 

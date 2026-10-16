@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBDiagHistory](https://www.tencentcloud.com/search/?wd=DescribeDBDiagHistory&type=document&lang=en)
+* Read: [DescribeDBDiagHistory](https://www.tencentcloud.com/document/api/1035/41210)
 

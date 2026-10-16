@@ -62,7 +62,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
+* Create: [AddCustomizedConfig](https://www.tencentcloud.com/document/api/214/74450)
 * Read: [DescribeCustomizedConfigList](https://www.tencentcloud.com/document/api/214/42307)
+* Update: [ModifyCustomizedConfig](https://www.tencentcloud.com/document/api/214/74445)
+* Delete: [DeleteCustomizedConfig](https://www.tencentcloud.com/document/api/214/74448)
 
 ## Import
 

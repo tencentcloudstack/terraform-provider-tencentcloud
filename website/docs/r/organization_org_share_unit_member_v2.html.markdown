@@ -62,12 +62,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddShareUnitMembers](https://www.tencentcloud.com/search/?wd=AddShareUnitMembers&type=document&lang=en)
-* Read: [DescribeShareUnitMembers](https://www.tencentcloud.com/search/?wd=DescribeShareUnitMembers&type=document&lang=en)
-* Update: [AddShareUnitMembers](https://www.tencentcloud.com/search/?wd=AddShareUnitMembers&type=document&lang=en)
-* Update: [DeleteShareUnitMembers](https://www.tencentcloud.com/search/?wd=DeleteShareUnitMembers&type=document&lang=en)
-* Delete: [DeleteShareUnitMembers](https://www.tencentcloud.com/search/?wd=DeleteShareUnitMembers&type=document&lang=en)
-* Delete: [DescribeShareUnitMembers](https://www.tencentcloud.com/search/?wd=DescribeShareUnitMembers&type=document&lang=en)
+* Create: [AddShareUnitMembers](https://www.tencentcloud.com/document/api/1031/68236)
+* Read: [DescribeShareUnitMembers](https://www.tencentcloud.com/document/api/1031/68230)
+* Update: [AddShareUnitMembers](https://www.tencentcloud.com/document/api/1031/68236)
+* Update: [DeleteShareUnitMembers](https://www.tencentcloud.com/document/api/1031/68233)
+* Delete: [DeleteShareUnitMembers](https://www.tencentcloud.com/document/api/1031/68233)
+* Delete: [DescribeShareUnitMembers](https://www.tencentcloud.com/document/api/1031/68230)
 
 ## Import
 

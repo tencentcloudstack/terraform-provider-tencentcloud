@@ -42,7 +42,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Delete: [DeleteEndPoint](https://www.tencentcloud.com/search/?wd=DeleteEndPoint&type=document&lang=en)
+* Create: [CreateEndPoint](https://www.tencentcloud.com/document/api/1097/65936)
+* Read: [DescribeEndPointList](https://www.tencentcloud.com/document/api/1097/65934)
+* Delete: [DeleteEndPoint](https://www.tencentcloud.com/document/api/1097/67598)
 
 ## Import
 

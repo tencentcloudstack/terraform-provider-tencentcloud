@@ -62,5 +62,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDisks](https://www.tencentcloud.com/search/?wd=DescribeDisks&type=document&lang=en)
+* Read: [DescribeDisks](https://www.tencentcloud.com/document/api/1103/44573)
 

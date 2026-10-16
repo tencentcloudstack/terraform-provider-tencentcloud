@@ -188,16 +188,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateProxyEndPoint](https://www.tencentcloud.com/search/?wd=CreateProxyEndPoint&type=document&lang=en)
-* Create: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
-* Create: [DescribeProxies](https://www.tencentcloud.com/search/?wd=DescribeProxies&type=document&lang=en)
-* Create: [ModifyVipVport](https://www.tencentcloud.com/search/?wd=ModifyVipVport&type=document&lang=en)
-* Read: [DescribeProxies](https://www.tencentcloud.com/search/?wd=DescribeProxies&type=document&lang=en)
-* Update: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
-* Update: [ModifyProxyDesc](https://www.tencentcloud.com/search/?wd=ModifyProxyDesc&type=document&lang=en)
-* Update: [ModifyProxyRwSplit](https://www.tencentcloud.com/search/?wd=ModifyProxyRwSplit&type=document&lang=en)
-* Update: [ModifyVipVport](https://www.tencentcloud.com/search/?wd=ModifyVipVport&type=document&lang=en)
-* Update: [SwitchProxyVpc](https://www.tencentcloud.com/search/?wd=SwitchProxyVpc&type=document&lang=en)
-* Delete: [CloseProxy](https://www.tencentcloud.com/search/?wd=CloseProxy&type=document&lang=en)
-* Delete: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
+* Create: [CreateProxyEndPoint](https://www.tencentcloud.com/document/api/1098/56559)
+* Create: [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+* Create: [DescribeProxies](https://www.tencentcloud.com/document/api/1098/56558)
+* Create: [ModifyVipVport](https://www.tencentcloud.com/document/api/1098/53955)
+* Read: [DescribeProxies](https://www.tencentcloud.com/document/api/1098/56558)
+* Update: [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+* Update: [ModifyProxyDesc](https://www.tencentcloud.com/document/api/1098/56554)
+* Update: [ModifyProxyRwSplit](https://www.tencentcloud.com/document/api/1098/56553)
+* Update: [ModifyVipVport](https://www.tencentcloud.com/document/api/1098/53955)
+* Update: [SwitchProxyVpc](https://www.tencentcloud.com/document/api/1098/52493)
+* Delete: [CloseProxy](https://www.tencentcloud.com/document/api/1098/56561)
+* Delete: [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
 

@@ -53,12 +53,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateL4Proxy](https://www.tencentcloud.com/search/?wd=CreateL4Proxy&type=document&lang=en)
-* Read: [DescribeL4Proxy](https://www.tencentcloud.com/search/?wd=DescribeL4Proxy&type=document&lang=en)
-* Update: [ModifyL4Proxy](https://www.tencentcloud.com/search/?wd=ModifyL4Proxy&type=document&lang=en)
-* Delete: [DeleteL4Proxy](https://www.tencentcloud.com/search/?wd=DeleteL4Proxy&type=document&lang=en)
-* Delete: [DescribeL4Proxy](https://www.tencentcloud.com/search/?wd=DescribeL4Proxy&type=document&lang=en)
-* Delete: [ModifyL4ProxyStatus](https://www.tencentcloud.com/search/?wd=ModifyL4ProxyStatus&type=document&lang=en)
+* Create: [CreateL4Proxy](https://www.tencentcloud.com/document/api/1145/59028)
+* Read: [DescribeL4Proxy](https://www.tencentcloud.com/document/api/1145/59024)
+* Update: [ModifyL4Proxy](https://www.tencentcloud.com/document/api/1145/59022)
+* Delete: [DeleteL4Proxy](https://www.tencentcloud.com/document/api/1145/59026)
+* Delete: [DescribeL4Proxy](https://www.tencentcloud.com/document/api/1145/59024)
+* Delete: [ModifyL4ProxyStatus](https://www.tencentcloud.com/document/api/1145/59019)
 
 ## Import
 

@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachDisks](https://www.tencentcloud.com/search/?wd=AttachDisks&type=document&lang=en)
-* Create: [DescribeDisks](https://www.tencentcloud.com/search/?wd=DescribeDisks&type=document&lang=en)
-* Read: [DescribeDisks](https://www.tencentcloud.com/search/?wd=DescribeDisks&type=document&lang=en)
-* Delete: [DescribeDisks](https://www.tencentcloud.com/search/?wd=DescribeDisks&type=document&lang=en)
-* Delete: [DetachDisks](https://www.tencentcloud.com/search/?wd=DetachDisks&type=document&lang=en)
+* Create: [AttachDisks](https://www.tencentcloud.com/document/api/1103/44576)
+* Create: [DescribeDisks](https://www.tencentcloud.com/document/api/1103/44573)
+* Read: [DescribeDisks](https://www.tencentcloud.com/document/api/1103/44573)
+* Delete: [DescribeDisks](https://www.tencentcloud.com/document/api/1103/44573)
+* Delete: [DetachDisks](https://www.tencentcloud.com/document/api/1103/44570)
 
 ## Import
 

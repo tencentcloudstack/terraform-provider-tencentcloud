@@ -46,13 +46,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSharedCNAME](https://www.tencentcloud.com/search/?wd=CreateSharedCNAME&type=document&lang=en)
-* Create: [DescribeSharedCNAME](https://www.tencentcloud.com/search/?wd=DescribeSharedCNAME&type=document&lang=en)
-* Create: [ModifySharedCNAME](https://www.tencentcloud.com/search/?wd=ModifySharedCNAME&type=document&lang=en)
-* Read: [DescribeSharedCNAME](https://www.tencentcloud.com/search/?wd=DescribeSharedCNAME&type=document&lang=en)
-* Update: [DescribeSharedCNAME](https://www.tencentcloud.com/search/?wd=DescribeSharedCNAME&type=document&lang=en)
-* Update: [ModifySharedCNAME](https://www.tencentcloud.com/search/?wd=ModifySharedCNAME&type=document&lang=en)
-* Delete: [DeleteSharedCNAME](https://www.tencentcloud.com/search/?wd=DeleteSharedCNAME&type=document&lang=en)
+* Create: [CreateSharedCNAME](https://www.tencentcloud.com/document/api/1145/57422)
+* Create: [DescribeSharedCNAME](https://www.tencentcloud.com/document/api/1145/78836)
+* Create: [ModifySharedCNAME](https://www.tencentcloud.com/document/api/1145/78835)
+* Read: [DescribeSharedCNAME](https://www.tencentcloud.com/document/api/1145/78836)
+* Update: [DescribeSharedCNAME](https://www.tencentcloud.com/document/api/1145/78836)
+* Update: [ModifySharedCNAME](https://www.tencentcloud.com/document/api/1145/78835)
+* Delete: [DeleteSharedCNAME](https://www.tencentcloud.com/document/api/1145/57468)
 
 ## Import
 

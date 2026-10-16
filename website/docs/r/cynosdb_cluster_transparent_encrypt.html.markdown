@@ -48,13 +48,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
-* Create: [ModifyClusterGlobalEncryption](https://www.tencentcloud.com/search/?wd=ModifyClusterGlobalEncryption&type=document&lang=en)
-* Create: [OpenClusterTransparentEncrypt](https://www.tencentcloud.com/search/?wd=OpenClusterTransparentEncrypt&type=document&lang=en)
-* Read: [DescribeClusterTransparentEncryptInfo](https://www.tencentcloud.com/search/?wd=DescribeClusterTransparentEncryptInfo&type=document&lang=en)
-* Update: [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
-* Update: [ModifyClusterGlobalEncryption](https://www.tencentcloud.com/search/?wd=ModifyClusterGlobalEncryption&type=document&lang=en)
-* Update: [OpenClusterTransparentEncrypt](https://www.tencentcloud.com/search/?wd=OpenClusterTransparentEncrypt&type=document&lang=en)
+* Create: [DescribeTasks](https://www.tencentcloud.com/document/api/1098/74199)
+* Create: [ModifyClusterGlobalEncryption](https://www.tencentcloud.com/document/api/1098/80148)
+* Create: [OpenClusterTransparentEncrypt](https://www.tencentcloud.com/document/api/1098/69803)
+* Read: [DescribeClusterTransparentEncryptInfo](https://www.tencentcloud.com/document/api/1098/69806)
+* Update: [DescribeTasks](https://www.tencentcloud.com/document/api/1098/74199)
+* Update: [ModifyClusterGlobalEncryption](https://www.tencentcloud.com/document/api/1098/80148)
+* Update: [OpenClusterTransparentEncrypt](https://www.tencentcloud.com/document/api/1098/69803)
 
 ## Import
 

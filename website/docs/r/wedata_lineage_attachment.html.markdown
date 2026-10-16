@@ -140,7 +140,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RegisterLineage](https://www.tencentcloud.com/search/?wd=RegisterLineage&type=document&lang=en)
-* Read: [ListLineage](https://www.tencentcloud.com/search/?wd=ListLineage&type=document&lang=en)
-* Delete: [DeleteLineage](https://www.tencentcloud.com/search/?wd=DeleteLineage&type=document&lang=en)
+* Create: [RegisterLineage](https://www.tencentcloud.com/document/api/1174/77943)
+* Read: [ListLineage](https://www.tencentcloud.com/document/api/1174/77947)
+* Delete: [DeleteLineage](https://www.tencentcloud.com/document/api/1174/77953)
 

@@ -67,21 +67,21 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSSHKeyPairSecret](https://www.tencentcloud.com/search/?wd=CreateSSHKeyPairSecret&type=document&lang=en)
-* Create: [DescribeSecret](https://www.tencentcloud.com/search/?wd=DescribeSecret&type=document&lang=en)
-* Create: [DisableSecret](https://www.tencentcloud.com/search/?wd=DisableSecret&type=document&lang=en)
+* Create: [CreateSSHKeyPairSecret](https://www.tencentcloud.com/document/api/1078/42262)
+* Create: [DescribeSecret](https://www.tencentcloud.com/document/api/1078/38653)
+* Create: [DisableSecret](https://www.tencentcloud.com/document/api/1078/38652)
 * Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
 * Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Read: [DescribeSecret](https://www.tencentcloud.com/search/?wd=DescribeSecret&type=document&lang=en)
-* Read: [GetSSHKeyPairValue](https://www.tencentcloud.com/search/?wd=GetSSHKeyPairValue&type=document&lang=en)
-* Read: [ListSecrets](https://www.tencentcloud.com/search/?wd=ListSecrets&type=document&lang=en)
-* Update: [DescribeSecret](https://www.tencentcloud.com/search/?wd=DescribeSecret&type=document&lang=en)
-* Update: [DisableSecret](https://www.tencentcloud.com/search/?wd=DisableSecret&type=document&lang=en)
-* Update: [EnableSecret](https://www.tencentcloud.com/search/?wd=EnableSecret&type=document&lang=en)
+* Read: [DescribeSecret](https://www.tencentcloud.com/document/api/1078/38653)
+* Read: [GetSSHKeyPairValue](https://www.tencentcloud.com/document/api/1078/42261)
+* Read: [ListSecrets](https://www.tencentcloud.com/document/api/1078/38646)
+* Update: [DescribeSecret](https://www.tencentcloud.com/document/api/1078/38653)
+* Update: [DisableSecret](https://www.tencentcloud.com/document/api/1078/38652)
+* Update: [EnableSecret](https://www.tencentcloud.com/document/api/1078/38651)
 * Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [UpdateDescription](https://www.tencentcloud.com/search/?wd=UpdateDescription&type=document&lang=en)
-* Delete: [DeleteSecret](https://www.tencentcloud.com/search/?wd=DeleteSecret&type=document&lang=en)
-* Delete: [DisableSecret](https://www.tencentcloud.com/search/?wd=DisableSecret&type=document&lang=en)
+* Update: [UpdateDescription](https://www.tencentcloud.com/document/api/1078/38643)
+* Delete: [DeleteSecret](https://www.tencentcloud.com/document/api/1078/38655)
+* Delete: [DisableSecret](https://www.tencentcloud.com/document/api/1078/38652)
 
 ## Import
 

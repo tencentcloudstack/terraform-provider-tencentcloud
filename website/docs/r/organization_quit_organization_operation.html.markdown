@@ -36,7 +36,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [QuitOrganization](https://www.tencentcloud.com/search/?wd=QuitOrganization&type=document&lang=en)
+* Create: [QuitOrganization](https://www.tencentcloud.com/document/api/1031/66413)
 
 ## Import
 

@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListProjectRoles](https://www.tencentcloud.com/search/?wd=ListProjectRoles&type=document&lang=en)
+* Read: [ListProjectRoles](https://www.tencentcloud.com/document/api/1174/77864)
 

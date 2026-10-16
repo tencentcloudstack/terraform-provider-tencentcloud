@@ -103,6 +103,7 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [AssociateInstancesToCcnRouteTable](https://www.tencentcloud.com/search/?wd=AssociateInstancesToCcnRouteTable&type=document&lang=en)
+* Read: [Send](https://www.tencentcloud.com/search/?wd=Send&type=document&lang=en)
 * Update: [AssociateInstancesToCcnRouteTable](https://www.tencentcloud.com/search/?wd=AssociateInstancesToCcnRouteTable&type=document&lang=en)
 
 ## Import

@@ -1,117 +1,178 @@
 package main
 
-// catalog.go — API catalog loading.
+// catalog.go — the international-site API catalog.
 //
-// 'make doc' fetches TencentCloud's public API catalog live on every run
-// and rewrites the bundled snapshot, so the generated doc links always
-// track the current cloud docs. When a fetch fails (e.g. offline), the
-// embedded snapshot (gendoc/data/api-actions.json) is used as a fallback.
+// All data comes from the international site (www.tencentcloud.com);
+// no Chinese-site catalog or ids are involved:
 //
-// Doc URLs are international-site only: the action catalog provides the
-// (product, action) whitelist, and the rendered URL comes from the
-// international docs catalogue (apiref_intl.go) keyed by the catalog
-// entry's Chinese-site URL (its path carries the shared categoryId).
+//   - The doc catalogue tree (apiref_intl.go) provides
+//     (product categoryId, action) -> doc URL.
+//   - getCategoryByLang maps product categoryId -> slug (cvm, teo, ...).
+//   - Static analysis supplies the client product names (the SDK's
+//     directory names, e.g. "vpc", "csip"), which are matched against
+//     slugs directly and, failing that, by Jaccard similarity of their
+//     action-name sets (the SDK product name and the docs slug differ
+//     for some products, e.g. SDK "redis" vs slug "crs").
+//
 // Actions without an international page fall back to the international
-// site's search URL — Chinese-site URLs are never rendered.
+// site's search URL — every rendered link is international.
 
 import (
-	"embed"
-	"encoding/json"
 	"fmt"
-	"regexp"
+	"sort"
 	"strings"
 )
 
-//go:embed data/api-actions.json
-var apiActionsFS embed.FS
+// minJaccard is the minimum action-set similarity for an SDK product to
+// be aligned with an international docs product via set matching.
+const minJaccard = 0.3
 
-// cnDocCatRe extracts the catalog id from a Chinese-site doc URL. The
-// international site shares the same product category ids, so the id
-// keys the international URL lookup.
-var cnDocCatRe = regexp.MustCompile(`cloud\.tencent\.com/document/api/(\d+)/`)
-
-// catalog holds the resolved action index shared by all doc renders.
+// catalog resolves (clientProduct, action) -> international doc URL.
 type catalog struct {
-	actionIdx map[string]apiAction
+	// urlIdx maps "<slug-or-sdk-product>.<Action>" -> doc URL. Keys exist
+	// under both the docs slug and the SDK product name so either
+	// resolution path hits.
+	urlIdx map[string]string
 }
 
-// loadCatalog returns the API catalog: live data when the public endpoint
-// is reachable (the snapshot is refreshed in the same pass), otherwise the
-// embedded snapshot. International doc URLs are resolved in the same pass
-// and stored on the catalog entries.
+// loadCatalog fetches the international catalogue and product slugs and
+// builds the URL index. On failure the index stays empty and the
+// renderer falls back to the international site's search URL per action
+// — generation never fails on this.
 func loadCatalog() *catalog {
-	actions, err := refreshCatalog()
-	if err != nil {
-		message("[WARN]live API catalog unavailable (%v); falling back to the embedded snapshot\n", err)
-		actions, err = loadSnapshotCatalog()
-		if err != nil {
-			message("[WARN]bundled snapshot unavailable (%v); API Reference sections will be empty\n", err)
-			return &catalog{actionIdx: map[string]apiAction{}}
-		}
-		return newCatalog(actions)
-	}
-	message("[SUCC.]live API catalog: %d actions (snapshot refreshed)\n", len(actions))
-	return newCatalog(actions)
-}
-
-// newCatalog builds the action index and attaches international doc URLs.
-// When the international catalogue cannot be fetched, every entry's URL
-// stays empty and the renderer falls back to the international site's
-// search URL per action — generation never fails on this.
-func newCatalog(actions []apiAction) *catalog {
-	intlURLs, err := fetchIntlActionURLs()
+	c := &catalog{urlIdx: map[string]string{}}
+	urls, productPages, err := fetchIntlActionURLs()
 	if err != nil {
 		message("[WARN]international doc catalogue unavailable (%v); actions will link to the search page\n", err)
-	} else {
-		matched := 0
-		for i := range actions {
-			a := &actions[i]
-			if a.URL == "" {
-				continue
-			}
-			m := cnDocCatRe.FindStringSubmatch(a.URL)
-			if m == nil {
-				continue
-			}
-			if u, ok := intlURLs[m[1]+"."+a.Action]; ok {
-				a.URL = u
-				matched++
-			} else {
-				a.URL = "" // no international page: fall back to search
+		return c
+	}
+	slugs, err := fetchIntlProductSlugs()
+	if err != nil {
+		message("[WARN]international product slugs unavailable (%v); product alignment by action sets only\n", err)
+	}
+	c.build(urls, productPages, slugs)
+	return c
+}
+
+// build indexes the catalogue URLs under product slugs (and, for
+// resilience, under the raw SDK-style product names derived from the
+// action sets' best slug match).
+func (c *catalog) build(urls map[string]string, productPages map[int64]map[string]bool, slugs map[int64]string) {
+	// Align slug-less / differently-named products: for products whose
+	// slug does not correspond to any SDK product name, we cannot know
+	// the SDK-side name from the docs site alone. Instead index every
+	// product's actions under its slug, and additionally compute a
+	// slug -> slug alias table from cross-product action-set similarity
+	// is impossible without the SDK-side names here — those are supplied
+	// by the analyzer (see indexForClient).
+	for catID, pages := range productPages {
+		slug := slugs[catID]
+		if slug == "" {
+			// No slug known: fall back to a normalized page title.
+			slug = strings.ToLower(strings.ReplaceAll(productRootTitle(catID, urls), " ", "-"))
+		}
+		for action := range pages {
+			key := slug + "." + action
+			if _, dup := c.urlIdx[key]; !dup {
+				c.urlIdx[key] = urls[fmt.Sprintf("%d.%s", catID, action)]
 			}
 		}
-		message("[SUCC.]international doc URLs resolved for %d/%d catalog actions\n", matched, len(actions))
 	}
-	return &catalog{actionIdx: buildActionIndex(actions)}
+	message("[SUCC.]international catalog: %d actions across %d products\n", len(c.urlIdx), len(productPages))
 }
 
-// loadSnapshotCatalogOnly returns a snapshot-backed catalog, never touching
-// the network. Used by the offline probe mode.
+// productRootTitle is a best-effort label for products without a slug.
+func productRootTitle(catID int64, urls map[string]string) string {
+	prefix := fmt.Sprintf("%d.", catID)
+	for k := range urls {
+		if strings.HasPrefix(k, prefix) {
+			return "product-" + fmt.Sprintf("%d", catID)
+		}
+	}
+	return fmt.Sprintf("product-%d", catID)
+}
+
+// indexForClient returns the URL for one client action, trying the
+// client product name as slug first. The analyzer calls this with the
+// SDK product name (lowercase, e.g. "vpc").
+func (c *catalog) indexForClient(prod, action string) string {
+	return c.urlIdx[strings.ToLower(prod)+"."+action]
+}
+
+// alignCatalogWithSDKProducts extends the index with alias keys: for each
+// SDK product name (from the analyzer) that is not itself a slug, find
+// the docs product whose action set best matches the SDK product's known
+// actions and register the SDK product name as an alias for that slug.
+// knownActions maps SDK product name -> set of action names observed by
+// static analysis across the whole provider.
+func (c *catalog) alignCatalogWithSDKProducts(knownActions map[string]map[string]bool) {
+	if len(knownActions) == 0 {
+		return
+	}
+	// Group index keys by product and collect each docs product's actions.
+	docsActions := map[string]map[string]bool{}
+	for key := range c.urlIdx {
+		i := strings.IndexByte(key, '.')
+		if i <= 0 {
+			continue
+		}
+		prod, action := key[:i], key[i+1:]
+		if docsActions[prod] == nil {
+			docsActions[prod] = map[string]bool{}
+		}
+		docsActions[prod][action] = true
+	}
+	// Alias unknown SDK products to the most similar docs product.
+	prods := make([]string, 0, len(knownActions))
+	for p := range knownActions {
+		prods = append(prods, p)
+	}
+	sort.Strings(prods)
+	aliased := 0
+	for _, p := range prods {
+		if _, ok := docsActions[p]; ok {
+			continue // SDK name is itself a slug — nothing to do
+		}
+		acts := knownActions[p]
+		bestSlug, bestJ := "", 0.0
+		for slug, dacts := range docsActions {
+			if j := jaccard(acts, dacts); j > bestJ {
+				bestSlug, bestJ = slug, j
+			}
+		}
+		if bestSlug == "" || bestJ < minJaccard {
+			continue
+		}
+		for action := range docsActions[bestSlug] {
+			key := p + "." + action
+			if _, dup := c.urlIdx[key]; !dup {
+				c.urlIdx[key] = c.urlIdx[bestSlug+"."+action]
+			}
+		}
+		aliased++
+	}
+	if aliased > 0 {
+		message("[SUCC.]aliased %d SDK product names to international docs products by action sets\n", aliased)
+	}
+}
+
+// jaccard is the Jaccard similarity of two string sets.
+func jaccard(a, b map[string]bool) float64 {
+	if len(a) == 0 || len(b) == 0 {
+		return 0
+	}
+	inter := 0
+	for k := range a {
+		if b[k] {
+			inter++
+		}
+	}
+	return float64(inter) / float64(len(a)+len(b)-inter)
+}
+
+// loadSnapshotCatalogOnly kept for the offline probe mode: it now returns
+// an empty catalog (the probe never touches the network; rendered probe
+// output shows bare action names).
 func loadSnapshotCatalogOnly() *catalog {
-	actions, err := loadSnapshotCatalog()
-	if err != nil {
-		return &catalog{actionIdx: map[string]apiAction{}}
-	}
-	return newCatalog(actions)
-}
-
-// loadSnapshotCatalog builds the lookup index from the embedded snapshot.
-func loadSnapshotCatalog() ([]apiAction, error) {
-	raw, err := apiActionsFS.ReadFile("data/api-actions.json")
-	if err != nil {
-		return nil, fmt.Errorf("read embedded api-actions.json: %w", err)
-	}
-	var actions []apiAction
-	if err := json.Unmarshal(raw, &actions); err != nil {
-		return nil, fmt.Errorf("parse api-actions.json: %w", err)
-	}
-	return actions, nil
-}
-
-func buildActionIndex(actions []apiAction) map[string]apiAction {
-	idx := make(map[string]apiAction, len(actions))
-	for _, a := range actions {
-		idx[strings.ToLower(a.Product)+"."+a.Action] = a
-	}
-	return idx
+	return &catalog{urlIdx: map[string]string{}}
 }

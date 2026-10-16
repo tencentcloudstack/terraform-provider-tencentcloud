@@ -47,10 +47,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSnapshotByTimeOffsetTemplate](https://www.tencentcloud.com/search/?wd=CreateSnapshotByTimeOffsetTemplate&type=document&lang=en)
-* Read: [DescribeSnapshotByTimeOffsetTemplates](https://www.tencentcloud.com/search/?wd=DescribeSnapshotByTimeOffsetTemplates&type=document&lang=en)
-* Update: [ModifySnapshotByTimeOffsetTemplate](https://www.tencentcloud.com/search/?wd=ModifySnapshotByTimeOffsetTemplate&type=document&lang=en)
-* Delete: [DeleteSnapshotByTimeOffsetTemplate](https://www.tencentcloud.com/search/?wd=DeleteSnapshotByTimeOffsetTemplate&type=document&lang=en)
+* Create: [CreateSnapshotByTimeOffsetTemplate](https://www.tencentcloud.com/document/api/1041/33672)
+* Read: [DescribeSnapshotByTimeOffsetTemplates](https://www.tencentcloud.com/document/api/1041/33656)
+* Update: [ModifySnapshotByTimeOffsetTemplate](https://www.tencentcloud.com/document/api/1041/33648)
+* Delete: [DeleteSnapshotByTimeOffsetTemplate](https://www.tencentcloud.com/document/api/1041/33664)
 
 ## Import
 

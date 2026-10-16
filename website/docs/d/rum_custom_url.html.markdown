@@ -61,5 +61,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDataCustomUrl](https://www.tencentcloud.com/search/?wd=DescribeDataCustomUrl&type=document&lang=en)
+* Read: [DescribeDataCustomUrl](https://www.tencentcloud.com/document/api/1131/45332)
 

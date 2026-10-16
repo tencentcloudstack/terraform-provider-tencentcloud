@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeWebSecurityTemplates](https://www.tencentcloud.com/search/?wd=DescribeWebSecurityTemplates&type=document&lang=en)
+* Read: [DescribeWebSecurityTemplates](https://www.tencentcloud.com/document/api/1145/71945)
 

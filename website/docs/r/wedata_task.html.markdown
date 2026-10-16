@@ -289,10 +289,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTask](https://www.tencentcloud.com/search/?wd=CreateTask&type=document&lang=en)
-* Read: [GetTask](https://www.tencentcloud.com/search/?wd=GetTask&type=document&lang=en)
-* Update: [UpdateTask](https://www.tencentcloud.com/search/?wd=UpdateTask&type=document&lang=en)
-* Delete: [DeleteTask](https://www.tencentcloud.com/search/?wd=DeleteTask&type=document&lang=en)
+* Create: [CreateTask](https://www.tencentcloud.com/document/api/1174/60982)
+* Read: [GetTask](https://www.tencentcloud.com/document/api/1174/73876)
+* Update: [UpdateTask](https://www.tencentcloud.com/document/api/1174/73861)
+* Delete: [DeleteTask](https://www.tencentcloud.com/document/api/1174/73880)
 
 ## Import
 

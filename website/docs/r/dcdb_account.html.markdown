@@ -48,12 +48,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccount](https://www.tencentcloud.com/search/?wd=CreateAccount&type=document&lang=en)
-* Read: [DescribeAccounts](https://www.tencentcloud.com/search/?wd=DescribeAccounts&type=document&lang=en)
-* Update: [ModifyAccountDescription](https://www.tencentcloud.com/search/?wd=ModifyAccountDescription&type=document&lang=en)
-* Update: [ResetAccountPassword](https://www.tencentcloud.com/search/?wd=ResetAccountPassword&type=document&lang=en)
-* Delete: [DeleteAccount](https://www.tencentcloud.com/search/?wd=DeleteAccount&type=document&lang=en)
-* Delete: [DescribeAccounts](https://www.tencentcloud.com/search/?wd=DescribeAccounts&type=document&lang=en)
+* Create: [CreateAccount](https://www.tencentcloud.com/document/api/1042/34449)
+* Read: [DescribeAccounts](https://www.tencentcloud.com/document/api/1042/34446)
+* Update: [ModifyAccountDescription](https://www.tencentcloud.com/document/api/1042/34435)
+* Update: [ResetAccountPassword](https://www.tencentcloud.com/document/api/1042/34430)
+* Delete: [DeleteAccount](https://www.tencentcloud.com/document/api/1042/34448)
+* Delete: [DescribeAccounts](https://www.tencentcloud.com/document/api/1042/34446)
 
 ## Import
 

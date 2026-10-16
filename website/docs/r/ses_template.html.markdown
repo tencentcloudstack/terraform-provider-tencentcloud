@@ -77,10 +77,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEmailTemplate](https://www.tencentcloud.com/search/?wd=CreateEmailTemplate&type=document&lang=en)
-* Read: [GetEmailTemplate](https://www.tencentcloud.com/search/?wd=GetEmailTemplate&type=document&lang=en)
-* Update: [UpdateEmailTemplate](https://www.tencentcloud.com/search/?wd=UpdateEmailTemplate&type=document&lang=en)
-* Delete: [DeleteEmailTemplate](https://www.tencentcloud.com/search/?wd=DeleteEmailTemplate&type=document&lang=en)
+* Create: [CreateEmailTemplate](https://www.tencentcloud.com/document/api/1084/39400)
+* Read: [GetEmailTemplate](https://www.tencentcloud.com/document/api/1084/39398)
+* Update: [UpdateEmailTemplate](https://www.tencentcloud.com/document/api/1084/39396)
+* Delete: [DeleteEmailTemplate](https://www.tencentcloud.com/document/api/1084/39399)
 
 ## Import
 

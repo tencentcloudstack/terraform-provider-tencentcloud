@@ -60,5 +60,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetSSHKeyPairValue](https://www.tencentcloud.com/search/?wd=GetSSHKeyPairValue&type=document&lang=en)
+* Read: [GetSSHKeyPairValue](https://www.tencentcloud.com/document/api/1078/42261)
 

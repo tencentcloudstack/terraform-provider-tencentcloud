@@ -62,7 +62,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RunCommand](https://www.tencentcloud.com/search/?wd=RunCommand&type=document&lang=en)
-* Read: [DescribeInvocations](https://www.tencentcloud.com/search/?wd=DescribeInvocations&type=document&lang=en)
-* Delete: [CancelInvocation](https://www.tencentcloud.com/search/?wd=CancelInvocation&type=document&lang=en)
+* Create: [RunCommand](https://www.tencentcloud.com/document/api/1147/46686)
+* Read: [DescribeInvocations](https://www.tencentcloud.com/document/api/1147/46695)
+* Delete: [CancelInvocation](https://www.tencentcloud.com/document/api/1147/46703)
 

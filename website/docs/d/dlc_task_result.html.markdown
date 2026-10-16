@@ -40,5 +40,5 @@ Note: This field may return null, indicating that no valid values can be obtaine
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTaskResult](https://www.tencentcloud.com/search/?wd=DescribeTaskResult&type=document&lang=en)
+* Read: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1155/49003)
 

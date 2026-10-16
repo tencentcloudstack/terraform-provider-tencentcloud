@@ -77,17 +77,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSLInstance](https://www.tencentcloud.com/search/?wd=CreateSLInstance&type=document&lang=en)
-* Create: [DescribeSLInstance](https://www.tencentcloud.com/search/?wd=DescribeSLInstance&type=document&lang=en)
-* Create: [DescribeSLInstanceList](https://www.tencentcloud.com/search/?wd=DescribeSLInstanceList&type=document&lang=en)
-* Read: [DescribeSLInstance](https://www.tencentcloud.com/search/?wd=DescribeSLInstance&type=document&lang=en)
-* Update: [DescribeSLInstance](https://www.tencentcloud.com/search/?wd=DescribeSLInstance&type=document&lang=en)
-* Update: [DescribeSLInstanceList](https://www.tencentcloud.com/search/?wd=DescribeSLInstanceList&type=document&lang=en)
+* Create: [CreateSLInstance](https://www.tencentcloud.com/document/api/1026/71619)
+* Create: [DescribeSLInstance](https://www.tencentcloud.com/document/api/1026/71618)
+* Create: [DescribeSLInstanceList](https://www.tencentcloud.com/document/api/1026/71617)
+* Read: [DescribeSLInstance](https://www.tencentcloud.com/document/api/1026/71618)
+* Update: [DescribeSLInstance](https://www.tencentcloud.com/document/api/1026/71618)
+* Update: [DescribeSLInstanceList](https://www.tencentcloud.com/document/api/1026/71617)
 * Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [ModifySLInstance](https://www.tencentcloud.com/search/?wd=ModifySLInstance&type=document&lang=en)
-* Update: [ModifySLInstanceBasic](https://www.tencentcloud.com/search/?wd=ModifySLInstanceBasic&type=document&lang=en)
-* Delete: [DescribeSLInstanceList](https://www.tencentcloud.com/search/?wd=DescribeSLInstanceList&type=document&lang=en)
-* Delete: [TerminateSLInstance](https://www.tencentcloud.com/search/?wd=TerminateSLInstance&type=document&lang=en)
+* Update: [ModifySLInstance](https://www.tencentcloud.com/document/api/1026/71616)
+* Update: [ModifySLInstanceBasic](https://www.tencentcloud.com/document/api/1026/71615)
+* Delete: [DescribeSLInstanceList](https://www.tencentcloud.com/document/api/1026/71617)
+* Delete: [TerminateSLInstance](https://www.tencentcloud.com/document/api/1026/71614)
 
 ## Import
 

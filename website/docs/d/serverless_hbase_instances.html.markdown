@@ -72,5 +72,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSLInstanceList](https://www.tencentcloud.com/search/?wd=DescribeSLInstanceList&type=document&lang=en)
+* Read: [DescribeSLInstanceList](https://www.tencentcloud.com/document/api/1026/71617)
 

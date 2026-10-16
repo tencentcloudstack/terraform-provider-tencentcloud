@@ -180,10 +180,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCloudNativeAPIGatewayRouteRateLimit](https://www.tencentcloud.com/search/?wd=CreateCloudNativeAPIGatewayRouteRateLimit&type=document&lang=en)
-* Read: [DescribeCloudNativeAPIGatewayRouteRateLimit](https://www.tencentcloud.com/search/?wd=DescribeCloudNativeAPIGatewayRouteRateLimit&type=document&lang=en)
-* Update: [ModifyCloudNativeAPIGatewayRouteRateLimit](https://www.tencentcloud.com/search/?wd=ModifyCloudNativeAPIGatewayRouteRateLimit&type=document&lang=en)
-* Delete: [DeleteCloudNativeAPIGatewayRouteRateLimit](https://www.tencentcloud.com/search/?wd=DeleteCloudNativeAPIGatewayRouteRateLimit&type=document&lang=en)
+* Create: [CreateCloudNativeAPIGatewayRouteRateLimit](https://www.tencentcloud.com/document/api/1290/79291)
+* Read: [DescribeCloudNativeAPIGatewayRouteRateLimit](https://www.tencentcloud.com/document/api/1290/79260)
+* Update: [ModifyCloudNativeAPIGatewayRouteRateLimit](https://www.tencentcloud.com/document/api/1290/79240)
+* Delete: [DeleteCloudNativeAPIGatewayRouteRateLimit](https://www.tencentcloud.com/document/api/1290/79277)
 
 ## Import
 

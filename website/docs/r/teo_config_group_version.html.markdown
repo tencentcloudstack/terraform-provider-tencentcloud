@@ -376,8 +376,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateConfigGroupVersion](https://www.tencentcloud.com/search/?wd=CreateConfigGroupVersion&type=document&lang=en)
-* Read: [DescribeConfigGroupVersionDetail](https://www.tencentcloud.com/search/?wd=DescribeConfigGroupVersionDetail&type=document&lang=en)
+* Create: [CreateConfigGroupVersion](https://www.tencentcloud.com/document/api/1145/57977)
+* Read: [DescribeConfigGroupVersionDetail](https://www.tencentcloud.com/document/api/1145/57975)
 
 ## Import
 

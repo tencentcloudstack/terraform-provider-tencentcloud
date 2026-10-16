@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RestartCronJobs](https://www.tencentcloud.com/search/?wd=RestartCronJobs&type=document&lang=en)
+* Create: [RestartCronJobs](https://www.tencentcloud.com/document/api/1249/68500)
 

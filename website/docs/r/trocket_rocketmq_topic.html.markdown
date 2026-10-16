@@ -85,10 +85,10 @@ This resource interacts with the following TencentCloud APIs:
 * Create: [CreateTopic](https://www.tencentcloud.com/search/?wd=CreateTopic&type=document&lang=en)
 * Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
 * Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Read: [DescribeTopicList](https://www.tencentcloud.com/search/?wd=DescribeTopicList&type=document&lang=en)
+* Read: [DescribeTopicList](https://www.tencentcloud.com/document/api/1113/74624)
 * Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [ModifyTopic](https://www.tencentcloud.com/search/?wd=ModifyTopic&type=document&lang=en)
-* Delete: [DeleteTopic](https://www.tencentcloud.com/search/?wd=DeleteTopic&type=document&lang=en)
+* Update: [ModifyTopic](https://www.tencentcloud.com/document/api/1113/74622)
+* Delete: [DeleteTopic](https://www.tencentcloud.com/document/api/1113/74627)
 
 ## Import
 

@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRumLogExports](https://www.tencentcloud.com/search/?wd=DescribeRumLogExports&type=document&lang=en)
+* Read: [DescribeRumLogExports](https://www.tencentcloud.com/document/api/1131/53809)
 

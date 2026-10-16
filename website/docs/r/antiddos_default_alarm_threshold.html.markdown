@@ -46,9 +46,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDefaultAlarmThreshold](https://www.tencentcloud.com/search/?wd=CreateDefaultAlarmThreshold&type=document&lang=en)
-* Read: [DescribeDefaultAlarmThreshold](https://www.tencentcloud.com/search/?wd=DescribeDefaultAlarmThreshold&type=document&lang=en)
-* Update: [CreateDefaultAlarmThreshold](https://www.tencentcloud.com/search/?wd=CreateDefaultAlarmThreshold&type=document&lang=en)
+* Create: [CreateDefaultAlarmThreshold](https://www.tencentcloud.com/document/api/1213/61414)
+* Read: [DescribeDefaultAlarmThreshold](https://www.tencentcloud.com/document/api/1213/61412)
+* Update: [CreateDefaultAlarmThreshold](https://www.tencentcloud.com/document/api/1213/61414)
 
 ## Import
 

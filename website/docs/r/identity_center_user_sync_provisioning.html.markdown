@@ -62,12 +62,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateUserSyncProvisioning](https://www.tencentcloud.com/search/?wd=CreateUserSyncProvisioning&type=document&lang=en)
-* Create: [GetProvisioningTaskStatus](https://www.tencentcloud.com/search/?wd=GetProvisioningTaskStatus&type=document&lang=en)
-* Read: [GetUserSyncProvisioning](https://www.tencentcloud.com/search/?wd=GetUserSyncProvisioning&type=document&lang=en)
-* Update: [UpdateUserSyncProvisioning](https://www.tencentcloud.com/search/?wd=UpdateUserSyncProvisioning&type=document&lang=en)
-* Delete: [DeleteUserSyncProvisioning](https://www.tencentcloud.com/search/?wd=DeleteUserSyncProvisioning&type=document&lang=en)
-* Delete: [GetProvisioningTaskStatus](https://www.tencentcloud.com/search/?wd=GetProvisioningTaskStatus&type=document&lang=en)
+* Create: [CreateUserSyncProvisioning](https://www.tencentcloud.com/document/api/1031/63580)
+* Create: [GetProvisioningTaskStatus](https://www.tencentcloud.com/document/api/1031/63578)
+* Read: [GetUserSyncProvisioning](https://www.tencentcloud.com/document/api/1031/63577)
+* Update: [UpdateUserSyncProvisioning](https://www.tencentcloud.com/document/api/1031/63575)
+* Delete: [DeleteUserSyncProvisioning](https://www.tencentcloud.com/document/api/1031/63579)
+* Delete: [GetProvisioningTaskStatus](https://www.tencentcloud.com/document/api/1031/63578)
 
 ## Import
 

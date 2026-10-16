@@ -88,5 +88,5 @@ TABLE|METRIC|MODEL|SERVICE|COLUMN.
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListColumnLineage](https://www.tencentcloud.com/search/?wd=ListColumnLineage&type=document&lang=en)
+* Read: [ListColumnLineage](https://www.tencentcloud.com/document/api/1174/77949)
 

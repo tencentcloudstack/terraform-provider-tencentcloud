@@ -135,13 +135,13 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddLibraDBInstances](https://www.tencentcloud.com/search/?wd=AddLibraDBInstances&type=document&lang=en)
-* Create: [DescribeLibraDBInstanceDetail](https://www.tencentcloud.com/search/?wd=DescribeLibraDBInstanceDetail&type=document&lang=en)
-* Read: [DescribeLibraDBInstanceDetail](https://www.tencentcloud.com/search/?wd=DescribeLibraDBInstanceDetail&type=document&lang=en)
-* Update: [DescribeLibraDBInstanceDetail](https://www.tencentcloud.com/search/?wd=DescribeLibraDBInstanceDetail&type=document&lang=en)
-* Delete: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
-* Delete: [IsolateLibraDBInstance](https://www.tencentcloud.com/search/?wd=IsolateLibraDBInstance&type=document&lang=en)
-* Delete: [OfflineLibraDBInstance](https://www.tencentcloud.com/search/?wd=OfflineLibraDBInstance&type=document&lang=en)
+* Create: [AddLibraDBInstances](https://www.tencentcloud.com/document/api/1098/80035)
+* Create: [DescribeLibraDBInstanceDetail](https://www.tencentcloud.com/document/api/1098/80143)
+* Read: [DescribeLibraDBInstanceDetail](https://www.tencentcloud.com/document/api/1098/80143)
+* Update: [DescribeLibraDBInstanceDetail](https://www.tencentcloud.com/document/api/1098/80143)
+* Delete: [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+* Delete: [IsolateLibraDBInstance](https://www.tencentcloud.com/document/api/1098/80139)
+* Delete: [OfflineLibraDBInstance](https://www.tencentcloud.com/document/api/1098/80137)
 
 ## Import
 

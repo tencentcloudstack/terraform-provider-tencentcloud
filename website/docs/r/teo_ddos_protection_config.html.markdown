@@ -95,9 +95,9 @@ The `ddos_protection` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyDDoSProtection](https://www.tencentcloud.com/search/?wd=ModifyDDoSProtection&type=document&lang=en)
-* Read: [DescribeDDoSProtection](https://www.tencentcloud.com/search/?wd=DescribeDDoSProtection&type=document&lang=en)
-* Update: [ModifyDDoSProtection](https://www.tencentcloud.com/search/?wd=ModifyDDoSProtection&type=document&lang=en)
+* Create: [ModifyDDoSProtection](https://www.tencentcloud.com/document/api/1145/72281)
+* Read: [DescribeDDoSProtection](https://www.tencentcloud.com/document/api/1145/72285)
+* Update: [ModifyDDoSProtection](https://www.tencentcloud.com/document/api/1145/72281)
 
 ## Import
 

@@ -51,15 +51,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CopyClusterPasswordComplexity](https://www.tencentcloud.com/search/?wd=CopyClusterPasswordComplexity&type=document&lang=en)
-* Create: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
-* Create: [OpenClusterPasswordComplexity](https://www.tencentcloud.com/search/?wd=OpenClusterPasswordComplexity&type=document&lang=en)
-* Read: [DescribeClusterPasswordComplexity](https://www.tencentcloud.com/search/?wd=DescribeClusterPasswordComplexity&type=document&lang=en)
-* Update: [CopyClusterPasswordComplexity](https://www.tencentcloud.com/search/?wd=CopyClusterPasswordComplexity&type=document&lang=en)
-* Update: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
-* Update: [ModifyClusterPasswordComplexity](https://www.tencentcloud.com/search/?wd=ModifyClusterPasswordComplexity&type=document&lang=en)
-* Delete: [CloseClusterPasswordComplexity](https://www.tencentcloud.com/search/?wd=CloseClusterPasswordComplexity&type=document&lang=en)
-* Delete: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
+* Create: [CopyClusterPasswordComplexity](https://www.tencentcloud.com/document/api/1098/55920)
+* Create: [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+* Create: [OpenClusterPasswordComplexity](https://www.tencentcloud.com/document/api/1098/55917)
+* Read: [DescribeClusterPasswordComplexity](https://www.tencentcloud.com/document/api/1098/55919)
+* Update: [CopyClusterPasswordComplexity](https://www.tencentcloud.com/document/api/1098/55920)
+* Update: [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+* Update: [ModifyClusterPasswordComplexity](https://www.tencentcloud.com/document/api/1098/55918)
+* Delete: [CloseClusterPasswordComplexity](https://www.tencentcloud.com/document/api/1098/55921)
+* Delete: [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
 
 ## Import
 

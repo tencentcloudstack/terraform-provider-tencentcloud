@@ -49,10 +49,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAnimatedGraphicsTemplate](https://www.tencentcloud.com/search/?wd=CreateAnimatedGraphicsTemplate&type=document&lang=en)
-* Read: [DescribeAnimatedGraphicsTemplates](https://www.tencentcloud.com/search/?wd=DescribeAnimatedGraphicsTemplates&type=document&lang=en)
-* Update: [ModifyAnimatedGraphicsTemplate](https://www.tencentcloud.com/search/?wd=ModifyAnimatedGraphicsTemplate&type=document&lang=en)
-* Delete: [DeleteAnimatedGraphicsTemplate](https://www.tencentcloud.com/search/?wd=DeleteAnimatedGraphicsTemplate&type=document&lang=en)
+* Create: [CreateAnimatedGraphicsTemplate](https://www.tencentcloud.com/document/api/1041/33676)
+* Read: [DescribeAnimatedGraphicsTemplates](https://www.tencentcloud.com/document/api/1041/33660)
+* Update: [ModifyAnimatedGraphicsTemplate](https://www.tencentcloud.com/document/api/1041/33652)
+* Delete: [DeleteAnimatedGraphicsTemplate](https://www.tencentcloud.com/document/api/1041/33668)
 
 ## Import
 

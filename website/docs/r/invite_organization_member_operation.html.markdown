@@ -66,5 +66,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [InviteOrganizationMember](https://www.tencentcloud.com/search/?wd=InviteOrganizationMember&type=document&lang=en)
+* Create: [InviteOrganizationMember](https://www.tencentcloud.com/document/api/1031/64469)
 

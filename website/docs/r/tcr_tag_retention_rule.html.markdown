@@ -103,13 +103,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTagRetentionRule](https://www.tencentcloud.com/search/?wd=CreateTagRetentionRule&type=document&lang=en)
-* Create: [DescribeNamespaces](https://www.tencentcloud.com/search/?wd=DescribeNamespaces&type=document&lang=en)
-* Create: [DescribeTagRetentionRules](https://www.tencentcloud.com/search/?wd=DescribeTagRetentionRules&type=document&lang=en)
-* Read: [DescribeTagRetentionRules](https://www.tencentcloud.com/search/?wd=DescribeTagRetentionRules&type=document&lang=en)
-* Update: [DescribeNamespaces](https://www.tencentcloud.com/search/?wd=DescribeNamespaces&type=document&lang=en)
-* Update: [ModifyTagRetentionRule](https://www.tencentcloud.com/search/?wd=ModifyTagRetentionRule&type=document&lang=en)
-* Delete: [DeleteTagRetentionRule](https://www.tencentcloud.com/search/?wd=DeleteTagRetentionRule&type=document&lang=en)
+* Create: [CreateTagRetentionRule](https://www.tencentcloud.com/document/api/1051/50690)
+* Create: [DescribeNamespaces](https://www.tencentcloud.com/document/api/1051/50693)
+* Create: [DescribeTagRetentionRules](https://www.tencentcloud.com/document/api/1051/50686)
+* Read: [DescribeTagRetentionRules](https://www.tencentcloud.com/document/api/1051/50686)
+* Update: [DescribeNamespaces](https://www.tencentcloud.com/document/api/1051/50693)
+* Update: [ModifyTagRetentionRule](https://www.tencentcloud.com/document/api/1051/50685)
+* Delete: [DeleteTagRetentionRule](https://www.tencentcloud.com/document/api/1051/50689)
 
 ## Import
 

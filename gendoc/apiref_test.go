@@ -102,13 +102,11 @@ func TestRenderAPIRefsNamelessAndLinkless(t *testing.T) {
 }
 
 func TestResolveAPISearchURLFallback(t *testing.T) {
-	// An action without a catalog doc URL falls back to the international
+	// An action without a catalogue page falls back to the international
 	// site's search page for the action name.
 	a := &apiAnalyzer{
 		clientProd: map[string]string{"accesskey": "cam"},
-		actionIdx: map[string]apiAction{
-			"cam.CreateAccessKey": {Product: "cam", Action: "CreateAccessKey"},
-		},
+		catalog:    &catalog{urlIdx: map[string]string{}},
 	}
 	ref := a.resolveAPI(apiCallKey{client: "accesskey", action: "CreateAccessKey"})
 	if ref == nil {
@@ -117,6 +115,21 @@ func TestResolveAPISearchURLFallback(t *testing.T) {
 	want := "https://www.tencentcloud.com/search/?wd=CreateAccessKey&type=document&lang=en"
 	if ref.URL != want {
 		t.Errorf("fallback URL = %q, want %q", ref.URL, want)
+	}
+}
+
+func TestResolveAPICatalogHit(t *testing.T) {
+	// An action present in the international catalogue resolves to its
+	// docs page URL.
+	a := &apiAnalyzer{
+		clientProd: map[string]string{"accesskey": "cam"},
+		catalog: &catalog{urlIdx: map[string]string{
+			"cam.CreateAccessKey": "https://www.tencentcloud.com/document/api/1302/47414",
+		}},
+	}
+	ref := a.resolveAPI(apiCallKey{client: "accesskey", action: "CreateAccessKey"})
+	if ref == nil || ref.URL != "https://www.tencentcloud.com/document/api/1302/47414" {
+		t.Fatalf("catalog hit failed: %+v", ref)
 	}
 }
 

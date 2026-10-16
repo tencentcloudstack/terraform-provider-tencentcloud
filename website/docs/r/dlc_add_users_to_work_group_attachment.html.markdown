@@ -44,9 +44,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddUsersToWorkGroup](https://www.tencentcloud.com/search/?wd=AddUsersToWorkGroup&type=document&lang=en)
-* Read: [DescribeWorkGroups](https://www.tencentcloud.com/search/?wd=DescribeWorkGroups&type=document&lang=en)
-* Delete: [DeleteUsersFromWorkGroup](https://www.tencentcloud.com/search/?wd=DeleteUsersFromWorkGroup&type=document&lang=en)
+* Create: [AddUsersToWorkGroup](https://www.tencentcloud.com/document/api/1155/62679)
+* Read: [DescribeWorkGroups](https://www.tencentcloud.com/document/api/1155/62666)
+* Delete: [DeleteUsersFromWorkGroup](https://www.tencentcloud.com/document/api/1155/62672)
 
 ## Import
 

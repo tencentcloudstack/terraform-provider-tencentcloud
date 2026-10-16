@@ -481,10 +481,12 @@ This resource interacts with the following TencentCloud APIs:
 * Update: [DescribeClusterNodePoolDetail](https://www.tencentcloud.com/document/api/457/38778)
 * Update: [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
 * Update: [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
-* Update: [InvokeCommand](https://www.tencentcloud.com/search/?wd=InvokeCommand&type=document&lang=en)
+* Update: [InvokeCommand](https://www.tencentcloud.com/document/api/1147/46690)
 * Update: [ModifyClusterNodePool](https://www.tencentcloud.com/document/api/457/38776)
 * Update: [ModifyLaunchConfigurationAttributes](https://www.tencentcloud.com/document/api/377/30998)
 * Update: [ModifyNodePoolDesiredCapacityAboutAsg](https://www.tencentcloud.com/search/?wd=ModifyNodePoolDesiredCapacityAboutAsg&type=document&lang=en)
+* Update: [Send](https://www.tencentcloud.com/search/?wd=Send&type=document&lang=en)
+* Update: [UseAsClient](https://www.tencentcloud.com/search/?wd=UseAsClient&type=document&lang=en)
 * Delete: [DeleteClusterNodePool](https://www.tencentcloud.com/document/api/457/38779)
 
 ## Import

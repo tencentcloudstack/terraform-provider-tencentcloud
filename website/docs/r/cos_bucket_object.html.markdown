@@ -66,6 +66,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [GetSecretValue](https://www.tencentcloud.com/search/?wd=GetSecretValue&type=document&lang=en)
-* Update: [GetSecretValue](https://www.tencentcloud.com/search/?wd=GetSecretValue&type=document&lang=en)
+* Create: [GetSecretValue](https://www.tencentcloud.com/document/api/1078/38649)
+* Update: [GetSecretValue](https://www.tencentcloud.com/document/api/1078/38649)
 

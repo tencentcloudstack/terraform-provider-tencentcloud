@@ -76,7 +76,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddAclRule](https://www.tencentcloud.com/search/?wd=AddAclRule&type=document&lang=en)
+* Create: [AddAclRule](https://www.tencentcloud.com/document/api/1160/81981)
 * Read: [DescribeAclRule](https://www.tencentcloud.com/search/?wd=DescribeAclRule&type=document&lang=en)
 * Update: [ModifyAclRule](https://www.tencentcloud.com/search/?wd=ModifyAclRule&type=document&lang=en)
 * Delete: [RemoveAclRule](https://www.tencentcloud.com/search/?wd=RemoveAclRule&type=document&lang=en)

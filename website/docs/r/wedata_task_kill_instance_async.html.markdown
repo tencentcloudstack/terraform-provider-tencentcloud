@@ -38,6 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [GetOpsAsyncJob](https://www.tencentcloud.com/search/?wd=GetOpsAsyncJob&type=document&lang=en)
-* Create: [KillTaskInstancesAsync](https://www.tencentcloud.com/search/?wd=KillTaskInstancesAsync&type=document&lang=en)
+* Create: [GetOpsAsyncJob](https://www.tencentcloud.com/document/api/1174/73832)
+* Create: [KillTaskInstancesAsync](https://www.tencentcloud.com/document/api/1174/73826)
 

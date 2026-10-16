@@ -98,10 +98,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAIRecognitionTemplate](https://www.tencentcloud.com/search/?wd=CreateAIRecognitionTemplate&type=document&lang=en)
-* Read: [DescribeAIRecognitionTemplates](https://www.tencentcloud.com/search/?wd=DescribeAIRecognitionTemplates&type=document&lang=en)
-* Update: [ModifyAIRecognitionTemplate](https://www.tencentcloud.com/search/?wd=ModifyAIRecognitionTemplate&type=document&lang=en)
-* Delete: [DeleteAIRecognitionTemplate](https://www.tencentcloud.com/search/?wd=DeleteAIRecognitionTemplate&type=document&lang=en)
+* Create: [CreateAIRecognitionTemplate](https://www.tencentcloud.com/document/api/1041/33677)
+* Read: [DescribeAIRecognitionTemplates](https://www.tencentcloud.com/document/api/1041/33661)
+* Update: [ModifyAIRecognitionTemplate](https://www.tencentcloud.com/document/api/1041/33653)
+* Delete: [DeleteAIRecognitionTemplate](https://www.tencentcloud.com/document/api/1041/33669)
 
 ## Import
 

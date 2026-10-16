@@ -57,5 +57,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssumeRole](https://www.tencentcloud.com/search/?wd=AssumeRole&type=document&lang=en)
+* Create: [AssumeRole](https://www.tencentcloud.com/document/api/1150/49456)
 

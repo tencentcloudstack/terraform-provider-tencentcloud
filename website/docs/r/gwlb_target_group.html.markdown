@@ -76,11 +76,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTargetGroup](https://www.tencentcloud.com/search/?wd=CreateTargetGroup&type=document&lang=en)
-* Read: [DescribeTargetGroupInstances](https://www.tencentcloud.com/search/?wd=DescribeTargetGroupInstances&type=document&lang=en)
-* Read: [DescribeTargetGroupList](https://www.tencentcloud.com/search/?wd=DescribeTargetGroupList&type=document&lang=en)
-* Update: [ModifyTargetGroupAttribute](https://www.tencentcloud.com/search/?wd=ModifyTargetGroupAttribute&type=document&lang=en)
-* Delete: [DeleteTargetGroups](https://www.tencentcloud.com/search/?wd=DeleteTargetGroups&type=document&lang=en)
+* Create: [CreateTargetGroup](https://www.tencentcloud.com/document/api/1245/66066)
+* Read: [DescribeTargetGroupInstances](https://www.tencentcloud.com/document/api/1245/66062)
+* Read: [DescribeTargetGroupList](https://www.tencentcloud.com/document/api/1245/66061)
+* Update: [ModifyTargetGroupAttribute](https://www.tencentcloud.com/document/api/1245/66058)
+* Delete: [DeleteTargetGroups](https://www.tencentcloud.com/document/api/1245/66065)
 
 ## Import
 

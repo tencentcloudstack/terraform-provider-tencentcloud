@@ -59,5 +59,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetStatisticsReport](https://www.tencentcloud.com/search/?wd=GetStatisticsReport&type=document&lang=en)
+* Read: [GetStatisticsReport](https://www.tencentcloud.com/document/api/1084/39402)
 

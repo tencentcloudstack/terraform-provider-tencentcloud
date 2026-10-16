@@ -65,13 +65,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRule](https://www.tencentcloud.com/search/?wd=CreateRule&type=document&lang=en)
+* Create: [CreateRule](https://www.tencentcloud.com/document/api/1108/45817)
 * Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
 * Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Read: [GetRule](https://www.tencentcloud.com/search/?wd=GetRule&type=document&lang=en)
+* Read: [GetRule](https://www.tencentcloud.com/document/api/1108/45815)
 * Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [UpdateRule](https://www.tencentcloud.com/search/?wd=UpdateRule&type=document&lang=en)
-* Delete: [DeleteRule](https://www.tencentcloud.com/search/?wd=DeleteRule&type=document&lang=en)
+* Update: [UpdateRule](https://www.tencentcloud.com/document/api/1108/45813)
+* Delete: [DeleteRule](https://www.tencentcloud.com/document/api/1108/45816)
 
 ## Import
 

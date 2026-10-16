@@ -134,13 +134,13 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccelerationDomain](https://www.tencentcloud.com/search/?wd=CreateAccelerationDomain&type=document&lang=en)
-* Create: [ModifyAccelerationDomainStatuses](https://www.tencentcloud.com/search/?wd=ModifyAccelerationDomainStatuses&type=document&lang=en)
-* Read: [DescribeAccelerationDomains](https://www.tencentcloud.com/search/?wd=DescribeAccelerationDomains&type=document&lang=en)
-* Update: [ModifyAccelerationDomain](https://www.tencentcloud.com/search/?wd=ModifyAccelerationDomain&type=document&lang=en)
-* Update: [ModifyAccelerationDomainStatuses](https://www.tencentcloud.com/search/?wd=ModifyAccelerationDomainStatuses&type=document&lang=en)
-* Delete: [DeleteAccelerationDomains](https://www.tencentcloud.com/search/?wd=DeleteAccelerationDomains&type=document&lang=en)
-* Delete: [ModifyAccelerationDomainStatuses](https://www.tencentcloud.com/search/?wd=ModifyAccelerationDomainStatuses&type=document&lang=en)
+* Create: [CreateAccelerationDomain](https://www.tencentcloud.com/document/api/1145/54134)
+* Create: [ModifyAccelerationDomainStatuses](https://www.tencentcloud.com/document/api/1145/54130)
+* Read: [DescribeAccelerationDomains](https://www.tencentcloud.com/document/api/1145/54132)
+* Update: [ModifyAccelerationDomain](https://www.tencentcloud.com/document/api/1145/54131)
+* Update: [ModifyAccelerationDomainStatuses](https://www.tencentcloud.com/document/api/1145/54130)
+* Delete: [DeleteAccelerationDomains](https://www.tencentcloud.com/document/api/1145/54133)
+* Delete: [ModifyAccelerationDomainStatuses](https://www.tencentcloud.com/document/api/1145/54130)
 
 ## Import
 

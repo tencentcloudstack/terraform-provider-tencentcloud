@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateInstancesKeyPairs](https://www.tencentcloud.com/search/?wd=AssociateInstancesKeyPairs&type=document&lang=en)
-* Create: [DescribeInstances](https://www.tencentcloud.com/search/?wd=DescribeInstances&type=document&lang=en)
-* Read: [DescribeKeyPairs](https://www.tencentcloud.com/search/?wd=DescribeKeyPairs&type=document&lang=en)
-* Delete: [DescribeInstances](https://www.tencentcloud.com/search/?wd=DescribeInstances&type=document&lang=en)
-* Delete: [DisassociateInstancesKeyPairs](https://www.tencentcloud.com/search/?wd=DisassociateInstancesKeyPairs&type=document&lang=en)
+* Create: [AssociateInstancesKeyPairs](https://www.tencentcloud.com/document/api/1103/42484)
+* Create: [DescribeInstances](https://www.tencentcloud.com/document/api/1103/42498)
+* Read: [DescribeKeyPairs](https://www.tencentcloud.com/document/api/1103/42480)
+* Delete: [DescribeInstances](https://www.tencentcloud.com/document/api/1103/42498)
+* Delete: [DisassociateInstancesKeyPairs](https://www.tencentcloud.com/document/api/1103/42479)
 
 ## Import
 

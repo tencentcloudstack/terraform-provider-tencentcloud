@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDomainLogList](https://www.tencentcloud.com/search/?wd=DescribeDomainLogList&type=document&lang=en)
+* Read: [DescribeDomainLogList](https://www.tencentcloud.com/document/api/1157/53853)
 

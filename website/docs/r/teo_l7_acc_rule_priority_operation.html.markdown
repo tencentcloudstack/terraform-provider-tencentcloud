@@ -160,5 +160,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyL7AccRulePriority](https://www.tencentcloud.com/search/?wd=ModifyL7AccRulePriority&type=document&lang=en)
+* Create: [ModifyL7AccRulePriority](https://www.tencentcloud.com/document/api/1145/68767)
 

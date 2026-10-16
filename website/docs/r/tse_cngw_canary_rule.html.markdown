@@ -119,13 +119,13 @@ The `balanced_service_list` object of `canary_rule` exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCloudNativeAPIGatewayCanaryRule](https://www.tencentcloud.com/search/?wd=CreateCloudNativeAPIGatewayCanaryRule&type=document&lang=en)
+* Create: [CreateCloudNativeAPIGatewayCanaryRule](https://www.tencentcloud.com/document/api/1290/79295)
 * Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeCloudNativeAPIGatewayCanaryRules](https://www.tencentcloud.com/search/?wd=DescribeCloudNativeAPIGatewayCanaryRules&type=document&lang=en)
+* Read: [DescribeCloudNativeAPIGatewayCanaryRules](https://www.tencentcloud.com/document/api/1290/79267)
 * Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [ModifyCloudNativeAPIGatewayCanaryRule](https://www.tencentcloud.com/search/?wd=ModifyCloudNativeAPIGatewayCanaryRule&type=document&lang=en)
+* Update: [ModifyCloudNativeAPIGatewayCanaryRule](https://www.tencentcloud.com/document/api/1290/79243)
 * Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Delete: [DeleteCloudNativeAPIGatewayCanaryRule](https://www.tencentcloud.com/search/?wd=DeleteCloudNativeAPIGatewayCanaryRule&type=document&lang=en)
+* Delete: [DeleteCloudNativeAPIGatewayCanaryRule](https://www.tencentcloud.com/document/api/1290/79281)
 
 ## Import
 

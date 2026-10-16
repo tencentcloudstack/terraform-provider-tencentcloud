@@ -119,7 +119,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ManageReplication](https://www.tencentcloud.com/search/?wd=ManageReplication&type=document&lang=en)
+* Create: [ManageReplication](https://www.tencentcloud.com/document/api/1051/42669)
 * Read: [DescribeReplicationPolicies](https://www.tencentcloud.com/search/?wd=DescribeReplicationPolicies&type=document&lang=en)
 * Update: [ModifyReplication](https://www.tencentcloud.com/search/?wd=ModifyReplication&type=document&lang=en)
 * Delete: [DeleteReplicationRule](https://www.tencentcloud.com/search/?wd=DeleteReplicationRule&type=document&lang=en)

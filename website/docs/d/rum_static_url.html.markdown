@@ -61,5 +61,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDataStaticUrl](https://www.tencentcloud.com/search/?wd=DescribeDataStaticUrl&type=document&lang=en)
+* Read: [DescribeDataStaticUrl](https://www.tencentcloud.com/document/api/1131/45317)
 

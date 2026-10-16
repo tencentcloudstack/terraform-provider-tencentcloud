@@ -44,9 +44,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindWorkGroupsToUser](https://www.tencentcloud.com/search/?wd=BindWorkGroupsToUser&type=document&lang=en)
-* Read: [DescribeUserInfo](https://www.tencentcloud.com/search/?wd=DescribeUserInfo&type=document&lang=en)
-* Delete: [UnbindWorkGroupsFromUser](https://www.tencentcloud.com/search/?wd=UnbindWorkGroupsFromUser&type=document&lang=en)
+* Create: [BindWorkGroupsToUser](https://www.tencentcloud.com/document/api/1155/62676)
+* Read: [DescribeUserInfo](https://www.tencentcloud.com/document/api/1155/62670)
+* Delete: [UnbindWorkGroupsFromUser](https://www.tencentcloud.com/document/api/1155/62660)
 
 ## Import
 

@@ -124,13 +124,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTables](https://www.tencentcloud.com/search/?wd=CreateTables&type=document&lang=en)
-* Create: [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
-* Read: [DescribeTables](https://www.tencentcloud.com/search/?wd=DescribeTables&type=document&lang=en)
-* Update: [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
-* Update: [ModifyTableMemos](https://www.tencentcloud.com/search/?wd=ModifyTableMemos&type=document&lang=en)
-* Update: [ModifyTables](https://www.tencentcloud.com/search/?wd=ModifyTables&type=document&lang=en)
-* Delete: [DeleteTables](https://www.tencentcloud.com/search/?wd=DeleteTables&type=document&lang=en)
-* Delete: [DescribeTables](https://www.tencentcloud.com/search/?wd=DescribeTables&type=document&lang=en)
-* Delete: [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
+* Create: [CreateTables](https://www.tencentcloud.com/document/api/1016/35039)
+* Create: [DescribeTasks](https://www.tencentcloud.com/document/api/1016/35045)
+* Read: [DescribeTables](https://www.tencentcloud.com/document/api/1016/35036)
+* Update: [DescribeTasks](https://www.tencentcloud.com/document/api/1016/35045)
+* Update: [ModifyTableMemos](https://www.tencentcloud.com/document/api/1016/35034)
+* Update: [ModifyTables](https://www.tencentcloud.com/document/api/1016/35032)
+* Delete: [DeleteTables](https://www.tencentcloud.com/document/api/1016/35038)
+* Delete: [DescribeTables](https://www.tencentcloud.com/document/api/1016/35036)
+* Delete: [DescribeTasks](https://www.tencentcloud.com/document/api/1016/35045)
 

@@ -75,18 +75,18 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCLSDelivery](https://www.tencentcloud.com/search/?wd=CreateCLSDelivery&type=document&lang=en)
-* Create: [DescribeInstanceCLSLogDelivery](https://www.tencentcloud.com/search/?wd=DescribeInstanceCLSLogDelivery&type=document&lang=en)
-* Create: [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
-* Create: [StopCLSDelivery](https://www.tencentcloud.com/search/?wd=StopCLSDelivery&type=document&lang=en)
-* Read: [DescribeInstanceCLSLogDelivery](https://www.tencentcloud.com/search/?wd=DescribeInstanceCLSLogDelivery&type=document&lang=en)
-* Update: [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
-* Update: [StartCLSDelivery](https://www.tencentcloud.com/search/?wd=StartCLSDelivery&type=document&lang=en)
-* Update: [StopCLSDelivery](https://www.tencentcloud.com/search/?wd=StopCLSDelivery&type=document&lang=en)
-* Delete: [DeleteCLSDelivery](https://www.tencentcloud.com/search/?wd=DeleteCLSDelivery&type=document&lang=en)
-* Delete: [DescribeInstanceCLSLogDelivery](https://www.tencentcloud.com/search/?wd=DescribeInstanceCLSLogDelivery&type=document&lang=en)
-* Delete: [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
-* Delete: [StopCLSDelivery](https://www.tencentcloud.com/search/?wd=StopCLSDelivery&type=document&lang=en)
+* Create: [CreateCLSDelivery](https://www.tencentcloud.com/document/api/1098/74207)
+* Create: [DescribeInstanceCLSLogDelivery](https://www.tencentcloud.com/document/api/1098/74204)
+* Create: [DescribeTasks](https://www.tencentcloud.com/document/api/1098/74199)
+* Create: [StopCLSDelivery](https://www.tencentcloud.com/document/api/1098/74200)
+* Read: [DescribeInstanceCLSLogDelivery](https://www.tencentcloud.com/document/api/1098/74204)
+* Update: [DescribeTasks](https://www.tencentcloud.com/document/api/1098/74199)
+* Update: [StartCLSDelivery](https://www.tencentcloud.com/document/api/1098/74201)
+* Update: [StopCLSDelivery](https://www.tencentcloud.com/document/api/1098/74200)
+* Delete: [DeleteCLSDelivery](https://www.tencentcloud.com/document/api/1098/74206)
+* Delete: [DescribeInstanceCLSLogDelivery](https://www.tencentcloud.com/document/api/1098/74204)
+* Delete: [DescribeTasks](https://www.tencentcloud.com/document/api/1098/74199)
+* Delete: [StopCLSDelivery](https://www.tencentcloud.com/document/api/1098/74200)
 
 ## Import
 

@@ -49,5 +49,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEmbedToken](https://www.tencentcloud.com/search/?wd=CreateEmbedToken&type=document&lang=en)
+* Create: [CreateEmbedToken](https://www.tencentcloud.com/document/api/1270/72621)
 

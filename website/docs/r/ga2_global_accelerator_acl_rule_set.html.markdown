@@ -93,15 +93,15 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGlobalAcceleratorAclRule](https://www.tencentcloud.com/search/?wd=CreateGlobalAcceleratorAclRule&type=document&lang=en)
-* Create: [DescribeTaskResult](https://www.tencentcloud.com/search/?wd=DescribeTaskResult&type=document&lang=en)
-* Read: [DescribeGlobalAcceleratorAclRules](https://www.tencentcloud.com/search/?wd=DescribeGlobalAcceleratorAclRules&type=document&lang=en)
-* Update: [CreateGlobalAcceleratorAclRule](https://www.tencentcloud.com/search/?wd=CreateGlobalAcceleratorAclRule&type=document&lang=en)
-* Update: [DeleteGlobalAcceleratorAclRule](https://www.tencentcloud.com/search/?wd=DeleteGlobalAcceleratorAclRule&type=document&lang=en)
-* Update: [DescribeTaskResult](https://www.tencentcloud.com/search/?wd=DescribeTaskResult&type=document&lang=en)
-* Update: [ModifyGlobalAcceleratorAclRule](https://www.tencentcloud.com/search/?wd=ModifyGlobalAcceleratorAclRule&type=document&lang=en)
-* Delete: [DeleteGlobalAcceleratorAclRule](https://www.tencentcloud.com/search/?wd=DeleteGlobalAcceleratorAclRule&type=document&lang=en)
-* Delete: [DescribeTaskResult](https://www.tencentcloud.com/search/?wd=DescribeTaskResult&type=document&lang=en)
+* Create: [CreateGlobalAcceleratorAclRule](https://www.tencentcloud.com/document/api/1299/83833)
+* Create: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+* Read: [DescribeGlobalAcceleratorAclRules](https://www.tencentcloud.com/document/api/1299/83813)
+* Update: [CreateGlobalAcceleratorAclRule](https://www.tencentcloud.com/document/api/1299/83833)
+* Update: [DeleteGlobalAcceleratorAclRule](https://www.tencentcloud.com/document/api/1299/83824)
+* Update: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+* Update: [ModifyGlobalAcceleratorAclRule](https://www.tencentcloud.com/document/api/1299/83805)
+* Delete: [DeleteGlobalAcceleratorAclRule](https://www.tencentcloud.com/document/api/1299/83824)
+* Delete: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
 
 ## Import
 

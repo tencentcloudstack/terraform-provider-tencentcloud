@@ -45,7 +45,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ReplaceCertificate](https://www.tencentcloud.com/search/?wd=ReplaceCertificate&type=document&lang=en)
+* Create: [ReplaceCertificate](https://www.tencentcloud.com/document/api/1007/36581)
 
 ## Import
 

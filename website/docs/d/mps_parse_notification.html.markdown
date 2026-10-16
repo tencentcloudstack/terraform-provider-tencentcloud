@@ -30,5 +30,5 @@ The following arguments are supported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ParseNotification](https://www.tencentcloud.com/search/?wd=ParseNotification&type=document&lang=en)
+* Read: [ParseNotification](https://www.tencentcloud.com/document/api/1041/33679)
 

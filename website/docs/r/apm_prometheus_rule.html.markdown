@@ -46,11 +46,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateApmPrometheusRule](https://www.tencentcloud.com/search/?wd=CreateApmPrometheusRule&type=document&lang=en)
-* Create: [ModifyApmPrometheusRule](https://www.tencentcloud.com/search/?wd=ModifyApmPrometheusRule&type=document&lang=en)
-* Read: [DescribeApmPrometheusRule](https://www.tencentcloud.com/search/?wd=DescribeApmPrometheusRule&type=document&lang=en)
-* Update: [ModifyApmPrometheusRule](https://www.tencentcloud.com/search/?wd=ModifyApmPrometheusRule&type=document&lang=en)
-* Delete: [ModifyApmPrometheusRule](https://www.tencentcloud.com/search/?wd=ModifyApmPrometheusRule&type=document&lang=en)
+* Create: [CreateApmPrometheusRule](https://www.tencentcloud.com/document/api/1166/74315)
+* Create: [ModifyApmPrometheusRule](https://www.tencentcloud.com/document/api/1166/74308)
+* Read: [DescribeApmPrometheusRule](https://www.tencentcloud.com/document/api/1166/74311)
+* Update: [ModifyApmPrometheusRule](https://www.tencentcloud.com/document/api/1166/74308)
+* Delete: [ModifyApmPrometheusRule](https://www.tencentcloud.com/document/api/1166/74308)
 
 ## Import
 

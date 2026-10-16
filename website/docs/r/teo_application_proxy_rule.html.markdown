@@ -60,12 +60,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateApplicationProxyRule](https://www.tencentcloud.com/search/?wd=CreateApplicationProxyRule&type=document&lang=en)
-* Read: [DescribeApplicationProxies](https://www.tencentcloud.com/search/?wd=DescribeApplicationProxies&type=document&lang=en)
-* Update: [ModifyApplicationProxyRule](https://www.tencentcloud.com/search/?wd=ModifyApplicationProxyRule&type=document&lang=en)
-* Update: [ModifyApplicationProxyRuleStatus](https://www.tencentcloud.com/search/?wd=ModifyApplicationProxyRuleStatus&type=document&lang=en)
-* Delete: [DeleteApplicationProxyRule](https://www.tencentcloud.com/search/?wd=DeleteApplicationProxyRule&type=document&lang=en)
-* Delete: [ModifyApplicationProxyRuleStatus](https://www.tencentcloud.com/search/?wd=ModifyApplicationProxyRuleStatus&type=document&lang=en)
+* Create: [CreateApplicationProxyRule](https://www.tencentcloud.com/document/api/1145/50984)
+* Read: [DescribeApplicationProxies](https://www.tencentcloud.com/document/api/1145/50981)
+* Update: [ModifyApplicationProxyRule](https://www.tencentcloud.com/document/api/1145/50979)
+* Update: [ModifyApplicationProxyRuleStatus](https://www.tencentcloud.com/document/api/1145/50978)
+* Delete: [DeleteApplicationProxyRule](https://www.tencentcloud.com/document/api/1145/50982)
+* Delete: [ModifyApplicationProxyRuleStatus](https://www.tencentcloud.com/document/api/1145/50978)
 
 ## Import
 

@@ -99,5 +99,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeMediaMetaData](https://www.tencentcloud.com/search/?wd=DescribeMediaMetaData&type=document&lang=en)
+* Read: [DescribeMediaMetaData](https://www.tencentcloud.com/document/api/1041/37461)
 

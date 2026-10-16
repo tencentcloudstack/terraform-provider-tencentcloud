@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeResourcePackageSaleSpec](https://www.tencentcloud.com/search/?wd=DescribeResourcePackageSaleSpec&type=document&lang=en)
+* Read: [DescribeResourcePackageSaleSpec](https://www.tencentcloud.com/document/api/1098/55896)
 

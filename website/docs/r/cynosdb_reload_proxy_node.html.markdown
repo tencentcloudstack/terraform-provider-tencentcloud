@@ -38,8 +38,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
-* Create: [ReloadBalanceProxyNode](https://www.tencentcloud.com/search/?wd=ReloadBalanceProxyNode&type=document&lang=en)
+* Create: [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+* Create: [ReloadBalanceProxyNode](https://www.tencentcloud.com/document/api/1098/56552)
 
 ## Import
 

@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetTriggerTaskRun](https://www.tencentcloud.com/search/?wd=GetTriggerTaskRun&type=document&lang=en)
+* Read: [GetTriggerTaskRun](https://www.tencentcloud.com/document/api/1174/77889)
 

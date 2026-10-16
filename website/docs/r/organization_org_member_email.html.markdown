@@ -47,9 +47,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddOrganizationMemberEmail](https://www.tencentcloud.com/search/?wd=AddOrganizationMemberEmail&type=document&lang=en)
-* Read: [DescribeOrganizationMemberEmailBind](https://www.tencentcloud.com/search/?wd=DescribeOrganizationMemberEmailBind&type=document&lang=en)
-* Update: [UpdateOrganizationMemberEmailBind](https://www.tencentcloud.com/search/?wd=UpdateOrganizationMemberEmailBind&type=document&lang=en)
+* Create: [AddOrganizationMemberEmail](https://www.tencentcloud.com/document/api/1031/68344)
+* Read: [DescribeOrganizationMemberEmailBind](https://www.tencentcloud.com/document/api/1031/68343)
+* Update: [UpdateOrganizationMemberEmailBind](https://www.tencentcloud.com/document/api/1031/68341)
 
 ## Import
 

@@ -31,4 +31,9 @@ The following arguments are supported:
 
 * `resources` - (Required, List) List of public IPs to unblock. The list length is limited to 10.
 
+## API Reference
+
+This action invokes the following TencentCloud APIs:
+
+* Invoke: [UnblockResources](https://www.tencentcloud.com/document/api/1213/81311)
 

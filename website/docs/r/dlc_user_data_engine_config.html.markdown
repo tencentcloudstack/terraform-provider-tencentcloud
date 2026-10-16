@@ -60,13 +60,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDataEngine](https://www.tencentcloud.com/search/?wd=DescribeDataEngine&type=document&lang=en)
+* Create: [DescribeDataEngine](https://www.tencentcloud.com/document/api/1155/62693)
 * Create: [DescribeDataEngines](https://www.tencentcloud.com/search/?wd=DescribeDataEngines&type=document&lang=en)
-* Create: [UpdateUserDataEngineConfig](https://www.tencentcloud.com/search/?wd=UpdateUserDataEngineConfig&type=document&lang=en)
-* Read: [DescribeUserDataEngineConfig](https://www.tencentcloud.com/search/?wd=DescribeUserDataEngineConfig&type=document&lang=en)
-* Update: [DescribeDataEngine](https://www.tencentcloud.com/search/?wd=DescribeDataEngine&type=document&lang=en)
+* Create: [UpdateUserDataEngineConfig](https://www.tencentcloud.com/document/api/1155/62644)
+* Read: [DescribeUserDataEngineConfig](https://www.tencentcloud.com/document/api/1155/62685)
+* Update: [DescribeDataEngine](https://www.tencentcloud.com/document/api/1155/62693)
 * Update: [DescribeDataEngines](https://www.tencentcloud.com/search/?wd=DescribeDataEngines&type=document&lang=en)
-* Update: [UpdateUserDataEngineConfig](https://www.tencentcloud.com/search/?wd=UpdateUserDataEngineConfig&type=document&lang=en)
+* Update: [UpdateUserDataEngineConfig](https://www.tencentcloud.com/document/api/1155/62644)
 
 ## Import
 

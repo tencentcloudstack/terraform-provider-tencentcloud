@@ -58,5 +58,5 @@ Note: This field may return null, indicating that no valid values can be obtaine
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListOrganizationService](https://www.tencentcloud.com/search/?wd=ListOrganizationService&type=document&lang=en)
+* Read: [ListOrganizationService](https://www.tencentcloud.com/document/api/1031/63259)
 

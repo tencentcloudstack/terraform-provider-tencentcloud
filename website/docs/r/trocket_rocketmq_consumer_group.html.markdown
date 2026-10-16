@@ -84,13 +84,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateConsumerGroup](https://www.tencentcloud.com/search/?wd=CreateConsumerGroup&type=document&lang=en)
+* Create: [CreateConsumerGroup](https://www.tencentcloud.com/document/api/1113/74657)
 * Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeConsumerGroup](https://www.tencentcloud.com/search/?wd=DescribeConsumerGroup&type=document&lang=en)
+* Read: [DescribeConsumerGroup](https://www.tencentcloud.com/document/api/1113/74653)
 * Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [ModifyConsumerGroup](https://www.tencentcloud.com/search/?wd=ModifyConsumerGroup&type=document&lang=en)
+* Update: [ModifyConsumerGroup](https://www.tencentcloud.com/document/api/1113/74651)
 * Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Delete: [DeleteConsumerGroup](https://www.tencentcloud.com/search/?wd=DeleteConsumerGroup&type=document&lang=en)
+* Delete: [DeleteConsumerGroup](https://www.tencentcloud.com/document/api/1113/74656)
 
 ## Import
 

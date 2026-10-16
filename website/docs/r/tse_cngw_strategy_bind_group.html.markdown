@@ -42,11 +42,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindAutoScalerResourceStrategyToGroups](https://www.tencentcloud.com/search/?wd=BindAutoScalerResourceStrategyToGroups&type=document&lang=en)
-* Create: [UnbindAutoScalerResourceStrategyFromGroups](https://www.tencentcloud.com/search/?wd=UnbindAutoScalerResourceStrategyFromGroups&type=document&lang=en)
-* Read: [DescribeAutoScalerResourceStrategyBindingGroups](https://www.tencentcloud.com/search/?wd=DescribeAutoScalerResourceStrategyBindingGroups&type=document&lang=en)
-* Update: [BindAutoScalerResourceStrategyToGroups](https://www.tencentcloud.com/search/?wd=BindAutoScalerResourceStrategyToGroups&type=document&lang=en)
-* Update: [UnbindAutoScalerResourceStrategyFromGroups](https://www.tencentcloud.com/search/?wd=UnbindAutoScalerResourceStrategyFromGroups&type=document&lang=en)
+* Create: [BindAutoScalerResourceStrategyToGroups](https://www.tencentcloud.com/document/api/1290/79299)
+* Create: [UnbindAutoScalerResourceStrategyFromGroups](https://www.tencentcloud.com/document/api/1290/79230)
+* Read: [DescribeAutoScalerResourceStrategyBindingGroups](https://www.tencentcloud.com/document/api/1290/79270)
+* Update: [BindAutoScalerResourceStrategyToGroups](https://www.tencentcloud.com/document/api/1290/79299)
+* Update: [UnbindAutoScalerResourceStrategyFromGroups](https://www.tencentcloud.com/document/api/1290/79230)
 
 ## Import
 

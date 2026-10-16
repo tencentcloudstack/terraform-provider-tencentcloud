@@ -90,6 +90,6 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePurgeTask](https://www.tencentcloud.com/search/?wd=CreatePurgeTask&type=document&lang=en)
-* Create: [DescribePurgeTasks](https://www.tencentcloud.com/search/?wd=DescribePurgeTasks&type=document&lang=en)
+* Create: [CreatePurgeTask](https://www.tencentcloud.com/document/api/1145/50536)
+* Create: [DescribePurgeTasks](https://www.tencentcloud.com/document/api/1145/50532)
 

@@ -110,9 +110,9 @@ The `policy_set` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachWorkGroupPolicy](https://www.tencentcloud.com/search/?wd=AttachWorkGroupPolicy&type=document&lang=en)
-* Read: [DescribeWorkGroupInfo](https://www.tencentcloud.com/search/?wd=DescribeWorkGroupInfo&type=document&lang=en)
-* Delete: [DetachWorkGroupPolicy](https://www.tencentcloud.com/search/?wd=DetachWorkGroupPolicy&type=document&lang=en)
+* Create: [AttachWorkGroupPolicy](https://www.tencentcloud.com/document/api/1155/62677)
+* Read: [DescribeWorkGroupInfo](https://www.tencentcloud.com/document/api/1155/62667)
+* Delete: [DetachWorkGroupPolicy](https://www.tencentcloud.com/document/api/1155/62664)
 
 ## Import
 

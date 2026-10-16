@@ -113,10 +113,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBudget](https://www.tencentcloud.com/document/api/555/81422)
-* Read: [DescribeBudget](https://www.tencentcloud.com/document/api/555/81420)
-* Update: [ModifyBudget](https://www.tencentcloud.com/document/api/555/81417)
-* Delete: [DeleteBudget](https://www.tencentcloud.com/document/api/555/81421)
+* Create: [CreateBudget](https://www.tencentcloud.com/search/?wd=CreateBudget&type=document&lang=en)
+* Read: [DescribeBudget](https://www.tencentcloud.com/search/?wd=DescribeBudget&type=document&lang=en)
+* Update: [ModifyBudget](https://www.tencentcloud.com/search/?wd=ModifyBudget&type=document&lang=en)
+* Delete: [DeleteBudget](https://www.tencentcloud.com/search/?wd=DeleteBudget&type=document&lang=en)
 
 ## Import
 

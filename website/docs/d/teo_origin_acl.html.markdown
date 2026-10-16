@@ -85,5 +85,5 @@ Note: This field may return null, which indicates a failure to obtain a valid va
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeOriginACL](https://www.tencentcloud.com/search/?wd=DescribeOriginACL&type=document&lang=en)
+* Read: [DescribeOriginACL](https://www.tencentcloud.com/document/api/1145/71118)
 

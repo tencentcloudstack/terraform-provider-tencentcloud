@@ -68,9 +68,9 @@ The `default_settings` object of `capacity_global_config` exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyGlobalConfig](https://www.tencentcloud.com/search/?wd=ModifyGlobalConfig&type=document&lang=en)
-* Read: [DescribeGlobalConfig](https://www.tencentcloud.com/search/?wd=DescribeGlobalConfig&type=document&lang=en)
-* Update: [ModifyGlobalConfig](https://www.tencentcloud.com/search/?wd=ModifyGlobalConfig&type=document&lang=en)
+* Create: [ModifyGlobalConfig](https://www.tencentcloud.com/document/api/1026/73264)
+* Read: [DescribeGlobalConfig](https://www.tencentcloud.com/document/api/1026/73265)
+* Update: [ModifyGlobalConfig](https://www.tencentcloud.com/document/api/1026/73264)
 
 ## Import
 

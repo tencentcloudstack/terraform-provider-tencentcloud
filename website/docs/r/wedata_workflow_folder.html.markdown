@@ -40,8 +40,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWorkflowFolder](https://www.tencentcloud.com/search/?wd=CreateWorkflowFolder&type=document&lang=en)
-* Read: [ListWorkflowFolders](https://www.tencentcloud.com/search/?wd=ListWorkflowFolders&type=document&lang=en)
-* Update: [UpdateWorkflowFolder](https://www.tencentcloud.com/search/?wd=UpdateWorkflowFolder&type=document&lang=en)
-* Delete: [DeleteWorkflowFolder](https://www.tencentcloud.com/search/?wd=DeleteWorkflowFolder&type=document&lang=en)
+* Create: [CreateWorkflowFolder](https://www.tencentcloud.com/document/api/1174/73883)
+* Read: [ListWorkflowFolders](https://www.tencentcloud.com/document/api/1174/73866)
+* Update: [UpdateWorkflowFolder](https://www.tencentcloud.com/document/api/1174/73859)
+* Delete: [DeleteWorkflowFolder](https://www.tencentcloud.com/document/api/1174/73878)
 

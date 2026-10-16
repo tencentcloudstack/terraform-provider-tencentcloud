@@ -40,14 +40,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CloseSSL](https://www.tencentcloud.com/search/?wd=CloseSSL&type=document&lang=en)
+* Create: [CloseSSL](https://www.tencentcloud.com/document/api/1098/69801)
 * Create: [DescribeSSLStatus](https://www.tencentcloud.com/search/?wd=DescribeSSLStatus&type=document&lang=en)
-* Create: [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
+* Create: [DescribeTasks](https://www.tencentcloud.com/document/api/1098/74199)
 * Create: [OpenSSL](https://www.tencentcloud.com/search/?wd=OpenSSL&type=document&lang=en)
 * Read: [DescribeSSLStatus](https://www.tencentcloud.com/search/?wd=DescribeSSLStatus&type=document&lang=en)
-* Update: [CloseSSL](https://www.tencentcloud.com/search/?wd=CloseSSL&type=document&lang=en)
+* Update: [CloseSSL](https://www.tencentcloud.com/document/api/1098/69801)
 * Update: [DescribeSSLStatus](https://www.tencentcloud.com/search/?wd=DescribeSSLStatus&type=document&lang=en)
-* Update: [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
+* Update: [DescribeTasks](https://www.tencentcloud.com/document/api/1098/74199)
 * Update: [OpenSSL](https://www.tencentcloud.com/search/?wd=OpenSSL&type=document&lang=en)
 
 ## Import

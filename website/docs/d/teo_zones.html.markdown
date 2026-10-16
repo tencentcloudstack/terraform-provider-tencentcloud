@@ -118,5 +118,5 @@ Note: This field may return null, indicating that no valid values can be obtaine
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeZones](https://www.tencentcloud.com/search/?wd=DescribeZones&type=document&lang=en)
+* Read: [DescribeZones](https://www.tencentcloud.com/document/api/1145/50481)
 

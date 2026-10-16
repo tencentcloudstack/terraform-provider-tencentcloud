@@ -49,7 +49,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyAdvancedStoreLocation](https://www.tencentcloud.com/search/?wd=ModifyAdvancedStoreLocation&type=document&lang=en)
-* Read: [DescribeAdvancedStoreLocation](https://www.tencentcloud.com/search/?wd=DescribeAdvancedStoreLocation&type=document&lang=en)
-* Update: [ModifyAdvancedStoreLocation](https://www.tencentcloud.com/search/?wd=ModifyAdvancedStoreLocation&type=document&lang=en)
+* Create: [ModifyAdvancedStoreLocation](https://www.tencentcloud.com/document/api/1155/62684)
+* Read: [DescribeAdvancedStoreLocation](https://www.tencentcloud.com/document/api/1155/62686)
+* Update: [ModifyAdvancedStoreLocation](https://www.tencentcloud.com/document/api/1155/62684)
 

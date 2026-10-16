@@ -1541,11 +1541,11 @@ The `rules` object of `rate_limiting_rules` exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWebSecurityTemplate](https://www.tencentcloud.com/search/?wd=CreateWebSecurityTemplate&type=document&lang=en)
-* Read: [DescribeWebSecurityTemplate](https://www.tencentcloud.com/search/?wd=DescribeWebSecurityTemplate&type=document&lang=en)
-* Read: [DescribeWebSecurityTemplates](https://www.tencentcloud.com/search/?wd=DescribeWebSecurityTemplates&type=document&lang=en)
-* Update: [ModifyWebSecurityTemplate](https://www.tencentcloud.com/search/?wd=ModifyWebSecurityTemplate&type=document&lang=en)
-* Delete: [DeleteWebSecurityTemplate](https://www.tencentcloud.com/search/?wd=DeleteWebSecurityTemplate&type=document&lang=en)
+* Create: [CreateWebSecurityTemplate](https://www.tencentcloud.com/document/api/1145/71948)
+* Read: [DescribeWebSecurityTemplate](https://www.tencentcloud.com/document/api/1145/71946)
+* Read: [DescribeWebSecurityTemplates](https://www.tencentcloud.com/document/api/1145/71945)
+* Update: [ModifyWebSecurityTemplate](https://www.tencentcloud.com/document/api/1145/71944)
+* Delete: [DeleteWebSecurityTemplate](https://www.tencentcloud.com/document/api/1145/71947)
 
 ## Import
 

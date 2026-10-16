@@ -38,7 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Read: [DescribeDomain](https://www.tencentcloud.com/search/?wd=DescribeDomain&type=document&lang=en)
+* Create: [CreatePackageOrder](https://www.tencentcloud.com/document/api/1157/72479)
+* Read: [DescribeDomain](https://www.tencentcloud.com/document/api/1157/49038)
+* Delete: [DeletePackageOrder](https://www.tencentcloud.com/document/api/1157/73506)
 
 ## Import
 
