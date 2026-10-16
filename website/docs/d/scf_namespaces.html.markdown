@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
   * `namespace` - Name of the SCF namespace.
   * `type` - Type of the SCF namespace.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListNamespaces](https://www.tencentcloud.com/document/api/583/34411)
 

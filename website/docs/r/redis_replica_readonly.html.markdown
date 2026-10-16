@@ -86,4 +86,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+  - [DisableReplicaReadonly](https://www.tencentcloud.com/document/api/239/32061)
+  - [EnableReplicaReadonly](https://www.tencentcloud.com/document/api/239/32060)
+* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/239/32065)
+* Update:
+  - [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+  - [DisableReplicaReadonly](https://www.tencentcloud.com/document/api/239/32061)
+  - [EnableReplicaReadonly](https://www.tencentcloud.com/document/api/239/32060)
 

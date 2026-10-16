@@ -64,6 +64,13 @@ The `default_settings` object of `capacity_global_config` exports the following:
 * `key` - Key, used for display. This configuration corresponds to the configuration item in the configuration file.
 * `prompt` - Prompt.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyGlobalConfig](https://www.tencentcloud.com/document/api/1026/73264)
+* Read: [DescribeGlobalConfig](https://www.tencentcloud.com/document/api/1026/73265)
+* Update: [ModifyGlobalConfig](https://www.tencentcloud.com/document/api/1026/73264)
 
 ## Import
 

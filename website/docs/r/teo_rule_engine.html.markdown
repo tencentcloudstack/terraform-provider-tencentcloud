@@ -316,6 +316,14 @@ In addition to all arguments above, the following attributes are exported:
 * `rule_id` - Rule ID.
 * `rule_priority` - Rule priority, the larger the value, the higher the priority, the minimum is 1.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRule](https://www.tencentcloud.com/document/api/1145/50471)
+* Read: [DescribeRules](https://www.tencentcloud.com/document/api/1145/50468)
+* Update: [ModifyRule](https://www.tencentcloud.com/document/api/1145/50465)
+* Delete: [DeleteRules](https://www.tencentcloud.com/document/api/1145/50470)
 
 ## Import
 

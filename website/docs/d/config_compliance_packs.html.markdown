@@ -65,4 +65,9 @@ In addition to all arguments above, the following attributes are exported:
   * `rule_count` - Number of rules in the compliance pack.
   * `status` - Compliance pack status. Valid values: ACTIVE, NO_ACTIVE.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListCompliancePacks](https://www.tencentcloud.com/search/?wd=ListCompliancePacks&type=document&lang=en)
 

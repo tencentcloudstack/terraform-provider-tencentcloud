@@ -569,6 +569,53 @@ In addition to all arguments above, the following attributes are exported:
 The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
 
 * `create` - (Defaults to `15m`) Used when creating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeDisks](https://www.tencentcloud.com/document/api/362/16315)
+  - [DescribeImages](https://www.tencentcloud.com/document/api/213/33272)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+  - [DescribeInstancesAttributes](https://www.tencentcloud.com/document/api/213/68775)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [ModifyInstancesDisasterRecoverGroup](https://www.tencentcloud.com/document/api/213/73189)
+  - [RunInstances](https://www.tencentcloud.com/document/api/213/33237)
+  - [StopInstances](https://www.tencentcloud.com/document/api/213/33235)
+* Read:
+  - [DescribeDisks](https://www.tencentcloud.com/document/api/362/16315)
+  - [DescribeImages](https://www.tencentcloud.com/document/api/213/33272)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+  - [DescribeInstancesAttributes](https://www.tencentcloud.com/document/api/213/68775)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [AssociateInstancesKeyPairs](https://www.tencentcloud.com/document/api/213/33232)
+  - [DescribeDisks](https://www.tencentcloud.com/document/api/362/16315)
+  - [DescribeImages](https://www.tencentcloud.com/document/api/213/33272)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+  - [DescribeInstancesAttributes](https://www.tencentcloud.com/document/api/213/68775)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [DisassociateInstancesKeyPairs](https://www.tencentcloud.com/document/api/213/33228)
+  - [ModifyDiskAttributes](https://www.tencentcloud.com/document/api/362/15659)
+  - [ModifyInstancesAttribute](https://www.tencentcloud.com/document/api/213/33246)
+  - [ModifyInstancesChargeType](https://www.tencentcloud.com/document/api/213/73503)
+  - [ModifyInstancesDisasterRecoverGroup](https://www.tencentcloud.com/document/api/213/73189)
+  - [ModifyInstancesProject](https://www.tencentcloud.com/document/api/213/33245)
+  - [ModifyInstancesRenewFlag](https://www.tencentcloud.com/document/api/213/68324)
+  - [ModifyInstancesVpcAttribute](https://www.tencentcloud.com/document/api/213/33244)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [ResetInstance](https://www.tencentcloud.com/document/api/213/33242)
+  - [ResetInstancesInternetMaxBandwidth](https://www.tencentcloud.com/document/api/213/33241)
+  - [ResetInstancesPassword](https://www.tencentcloud.com/document/api/213/33240)
+  - [ResetInstancesType](https://www.tencentcloud.com/document/api/213/33239)
+  - [ResizeDisk](https://www.tencentcloud.com/document/api/362/16310)
+  - [ResizeInstanceDisks](https://www.tencentcloud.com/document/api/213/33238)
+* Delete:
+  - [DescribeDisks](https://www.tencentcloud.com/document/api/362/16315)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+  - [DetachDisks](https://www.tencentcloud.com/document/api/362/16316)
+  - [TerminateDisks](https://www.tencentcloud.com/document/api/362/16321)
+  - [TerminateInstances](https://www.tencentcloud.com/document/api/213/33234)
 
 ## Import
 

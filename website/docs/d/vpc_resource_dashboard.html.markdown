@@ -74,4 +74,9 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - VPC instance ID, such as `vpc-bq4bzxpj`.
   * `vpngw` - VPN gateway.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeVpcResourceDashboard](https://www.tencentcloud.com/document/api/215/36076)
 

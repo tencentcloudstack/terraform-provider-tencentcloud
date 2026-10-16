@@ -54,4 +54,9 @@ In addition to all arguments above, the following attributes are exported:
   * `time` - The timestamp in milliseconds.
 * `log_list` - Log list, deprecated.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeJobSubmissionLog](https://www.tencentcloud.com/search/?wd=DescribeJobSubmissionLog&type=document&lang=en)
 

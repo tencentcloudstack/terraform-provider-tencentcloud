@@ -53,4 +53,9 @@ In addition to all arguments above, the following attributes are exported:
 * `name` - The name for the Subnet.
 * `route_table_id` - The Route Table ID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSubnets](https://www.tencentcloud.com/document/api/215/15784)
 

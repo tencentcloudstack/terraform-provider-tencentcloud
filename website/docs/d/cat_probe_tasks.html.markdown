@@ -94,4 +94,9 @@ In addition to all arguments above, the following attributes are exported:
   * `task_type` - Task type.
 * `total` - Total number of probe tasks.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeProbeTasks](https://www.tencentcloud.com/search/?wd=DescribeProbeTasks&type=document&lang=en)
 

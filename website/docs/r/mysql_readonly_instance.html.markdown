@@ -148,6 +148,35 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Instance status. Valid values: `0`, `1`, `4`, `5`. `0` - Creating; `1` - Running; `4` - Isolating; `5` - Isolated.
 * `task_status` - Indicates which kind of operations is being executed.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateDBInstance](https://www.tencentcloud.com/document/api/236/15871)
+  - [CreateDBInstanceHour](https://www.tencentcloud.com/document/api/236/15865)
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
+  - [DescribeDBSecurityGroups](https://www.tencentcloud.com/document/api/236/15854)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
+  - [DisassociateSecurityGroups](https://www.tencentcloud.com/document/api/236/15851)
+  - [ModifyAutoRenewFlag](https://www.tencentcloud.com/document/api/236/34479)
+  - [ModifyDBInstanceName](https://www.tencentcloud.com/document/api/236/15877)
+  - [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/document/api/236/15853)
+  - [ModifyDBInstanceVipVport](https://www.tencentcloud.com/document/api/236/15867)
+  - [ModifyInstanceDestroyProtect](https://www.tencentcloud.com/search/?wd=ModifyInstanceDestroyProtect&type=document&lang=en)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [UpgradeDBInstance](https://www.tencentcloud.com/document/api/236/15876)
+  - [UpgradeDBInstanceEngineVersion](https://www.tencentcloud.com/document/api/236/15870)
+* Delete:
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
+  - [IsolateDBInstance](https://www.tencentcloud.com/document/api/236/15869)
+  - [OfflineIsolatedInstances](https://www.tencentcloud.com/document/api/236/34475)
 
 ## Import
 

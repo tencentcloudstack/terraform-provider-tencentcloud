@@ -441,6 +441,23 @@ In addition to all arguments above, the following attributes are exported:
 * `kibana_private_url` - Kibana private URL.
 * `kibana_url` - Kibana access URL.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateInstance](https://www.tencentcloud.com/document/api/845/32218)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/845/32214)
+  - [UpdateInstance](https://www.tencentcloud.com/document/api/845/32212)
+* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/845/32214)
+* Update:
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [UpdateInstance](https://www.tencentcloud.com/document/api/845/32212)
+  - [UpgradeInstance](https://www.tencentcloud.com/document/api/845/34396)
+  - [UpgradeLicense](https://www.tencentcloud.com/document/api/845/34395)
+* Delete:
+  - [DeleteInstance](https://www.tencentcloud.com/document/api/845/32217)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/845/32214)
 
 ## Import
 

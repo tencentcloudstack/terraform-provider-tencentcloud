@@ -35,6 +35,14 @@ In addition to all arguments above, the following attributes are exported:
 * `user_ids` - Collection of IDs of users to be bound to working groups.
 * `work_group_id` - Working group ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateWorkGroup](https://www.tencentcloud.com/document/api/1155/62674)
+* Read: [DescribeWorkGroups](https://www.tencentcloud.com/document/api/1155/62666)
+* Update: [ModifyWorkGroup](https://www.tencentcloud.com/document/api/1155/62661)
+* Delete: [DeleteWorkGroup](https://www.tencentcloud.com/document/api/1155/62671)
 
 ## Import
 

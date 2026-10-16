@@ -54,6 +54,15 @@ In addition to all arguments above, the following attributes are exported:
   * `vip` - Virtual IP.
   * `vport` - Virtual port.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateRoute](https://www.tencentcloud.com/document/api/597/74258)
+  - [DescribeTaskStatus](https://www.tencentcloud.com/document/api/597/55881)
+* Read: [DescribeRoute](https://www.tencentcloud.com/document/api/597/37090)
+* Delete: [DeleteRoute](https://www.tencentcloud.com/document/api/597/47140)
 
 ## Import
 

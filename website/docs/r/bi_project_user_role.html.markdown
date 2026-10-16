@@ -46,6 +46,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateUserRoleProject](https://www.tencentcloud.com/document/api/1270/72619)
+* Read: [DescribeUserRoleProjectList](https://www.tencentcloud.com/document/api/1270/72614)
+* Update: [ModifyUserRoleProject](https://www.tencentcloud.com/document/api/1270/72612)
+* Delete: [DeleteUserRoleProject](https://www.tencentcloud.com/document/api/1270/72617)
 
 ## Import
 

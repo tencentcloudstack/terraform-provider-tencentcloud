@@ -52,4 +52,9 @@ In addition to all arguments above, the following attributes are exported:
   * `smode` - Match mode.
   * `switch` - Indicate the CC self-define http policy takes effect or not.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCCSelfDefinePolicy](https://www.tencentcloud.com/search/?wd=DescribeCCSelfDefinePolicy&type=document&lang=en)
 

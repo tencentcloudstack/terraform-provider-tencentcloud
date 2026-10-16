@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Deployment state.
   * `update_time` - Last update time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeHostUpdateRecord](https://www.tencentcloud.com/document/api/1007/57983)
 

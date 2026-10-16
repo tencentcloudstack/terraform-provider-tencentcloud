@@ -104,4 +104,11 @@ In addition to all arguments above, the following attributes are exported:
   * `service_config_vpc_id` - Unique VPC ID.
   * `service_id` - Which service this API belongs. Refer to resource `tencentcloud_api_gateway_service`.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read:
+  - [DescribeApi](https://www.tencentcloud.com/search/?wd=DescribeApi&type=document&lang=en)
+  - [DescribeApisStatus](https://www.tencentcloud.com/search/?wd=DescribeApisStatus&type=document&lang=en)
 

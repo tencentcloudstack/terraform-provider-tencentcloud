@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `engine_networks_infos` - Engine network information list.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeEngineNetworks](https://www.tencentcloud.com/search/?wd=DescribeEngineNetworks&type=document&lang=en)
 

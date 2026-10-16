@@ -385,6 +385,60 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `1h0m`) Used when creating the resource.
 * `update` - (Defaults to `1h0m`) Used when updating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CloseDBExtranetAccess](https://www.tencentcloud.com/document/api/409/18105)
+  - [CreateBackupPlan](https://www.tencentcloud.com/document/api/409/78805)
+  - [CreateInstances](https://www.tencentcloud.com/document/api/409/40583)
+  - [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
+  - [DescribeOrders](https://www.tencentcloud.com/document/api/409/18104)
+  - [DescribeProductConfig](https://www.tencentcloud.com/document/api/409/16776)
+  - [ModifyBackupPlan](https://www.tencentcloud.com/document/api/409/45149)
+  - [ModifyDBInstanceName](https://www.tencentcloud.com/document/api/409/18101)
+  - [ModifyDBInstanceParameters](https://www.tencentcloud.com/document/api/409/43282)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [OpenDBExtranetAccess](https://www.tencentcloud.com/document/api/409/18099)
+* Read:
+  - [DescribeAccounts](https://www.tencentcloud.com/document/api/409/18109)
+  - [DescribeBackupPlans](https://www.tencentcloud.com/document/api/409/45151)
+  - [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
+  - [DescribeDBInstanceParameters](https://www.tencentcloud.com/document/api/409/43284)
+  - [DescribeDBInstanceSecurityGroups](https://www.tencentcloud.com/document/api/409/52648)
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/409/16773)
+  - [DescribeEncryptionKeys](https://www.tencentcloud.com/document/api/409/46989)
+  - [DescribeParamsEvent](https://www.tencentcloud.com/document/api/409/43283)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [CloseDBExtranetAccess](https://www.tencentcloud.com/document/api/409/18105)
+  - [CreateBackupPlan](https://www.tencentcloud.com/document/api/409/78805)
+  - [CreateDBInstanceNetworkAccess](https://www.tencentcloud.com/document/api/409/45951)
+  - [DeleteBackupPlan](https://www.tencentcloud.com/document/api/409/78814)
+  - [DeleteDBInstanceNetworkAccess](https://www.tencentcloud.com/document/api/409/45949)
+  - [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
+  - [DescribeDBVersions](https://www.tencentcloud.com/document/api/409/54337)
+  - [ModifyBackupPlan](https://www.tencentcloud.com/document/api/409/45149)
+  - [ModifyDBInstanceChargeType](https://www.tencentcloud.com/document/api/409/55665)
+  - [ModifyDBInstanceDeletionProtection](https://www.tencentcloud.com/document/api/409/79011)
+  - [ModifyDBInstanceDeployment](https://www.tencentcloud.com/document/api/409/45148)
+  - [ModifyDBInstanceName](https://www.tencentcloud.com/document/api/409/18101)
+  - [ModifyDBInstanceParameters](https://www.tencentcloud.com/document/api/409/43282)
+  - [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/document/api/409/52647)
+  - [ModifyDBInstanceSpec](https://www.tencentcloud.com/document/api/409/43296)
+  - [ModifyDBInstancesProject](https://www.tencentcloud.com/document/api/409/18100)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [OpenDBExtranetAccess](https://www.tencentcloud.com/document/api/409/18099)
+  - [RenewInstance](https://www.tencentcloud.com/document/api/409/18098)
+  - [ResetAccountPassword](https://www.tencentcloud.com/document/api/409/18107)
+  - [SetAutoRenewFlag](https://www.tencentcloud.com/document/api/409/18096)
+  - [UpgradeDBInstanceKernelVersion](https://www.tencentcloud.com/document/api/409/54340)
+  - [UpgradeDBInstanceMajorVersion](https://www.tencentcloud.com/document/api/409/60784)
+* Delete:
+  - [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
+  - [DestroyDBInstance](https://www.tencentcloud.com/document/api/409/37117)
+  - [IsolateDBInstances](https://www.tencentcloud.com/document/api/409/40109)
 
 ## Import
 

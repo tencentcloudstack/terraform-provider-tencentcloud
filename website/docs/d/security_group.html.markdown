@@ -37,4 +37,11 @@ In addition to all arguments above, the following attributes are exported:
 * `description` - Description of the security group.
 * `project_id` - Project ID of the security group.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read:
+  - [DescribeSecurityGroupPolicies](https://www.tencentcloud.com/document/api/215/15804)
+  - [DescribeSecurityGroups](https://www.tencentcloud.com/document/api/215/15808)
 

@@ -55,4 +55,9 @@ In addition to all arguments above, the following attributes are exported:
     * `topic_name` - topicName.
     * `topic_traffic` - TopicTraffic.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTopicFlowRanking](https://www.tencentcloud.com/search/?wd=DescribeTopicFlowRanking&type=document&lang=en)
 

@@ -71,6 +71,14 @@ The `client_attesters` object exports the following:
 * `id` - Client attester ID, e.g. `attest-xxxxxxxx`.
 * `type` - Attester rule type (read-only). Valid values: `PRESET` (system preset), `CUSTOM` (user defined).
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSecurityClientAttester](https://www.tencentcloud.com/document/api/1145/72289)
+* Read: [DescribeSecurityClientAttester](https://www.tencentcloud.com/document/api/1145/72284)
+* Update: [ModifySecurityClientAttester](https://www.tencentcloud.com/document/api/1145/72280)
+* Delete: [DeleteSecurityClientAttester](https://www.tencentcloud.com/document/api/1145/72287)
 
 ## Import
 

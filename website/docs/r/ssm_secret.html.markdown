@@ -118,6 +118,27 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `status` - Status of secret.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateSecret](https://www.tencentcloud.com/document/api/1078/38656)
+  - [DeleteSecretVersion](https://www.tencentcloud.com/document/api/1078/38654)
+  - [DescribeSecret](https://www.tencentcloud.com/document/api/1078/38653)
+  - [DisableSecret](https://www.tencentcloud.com/document/api/1078/38652)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [DescribeSecret](https://www.tencentcloud.com/document/api/1078/38653)
+* Update:
+  - [DescribeSecret](https://www.tencentcloud.com/document/api/1078/38653)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [UpdateDescription](https://www.tencentcloud.com/document/api/1078/38643)
+* Delete:
+  - [DeleteSecret](https://www.tencentcloud.com/document/api/1078/38655)
+  - [DescribeSecret](https://www.tencentcloud.com/document/api/1078/38653)
+  - [DisableSecret](https://www.tencentcloud.com/document/api/1078/38652)
 
 ## Import
 

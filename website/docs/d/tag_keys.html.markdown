@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `tags` - Tag list.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTagKeys](https://www.tencentcloud.com/document/api/651/33020)
 

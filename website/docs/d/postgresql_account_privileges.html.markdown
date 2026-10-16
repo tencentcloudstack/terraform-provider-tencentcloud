@@ -54,4 +54,9 @@ In addition to all arguments above, the following attributes are exported:
     * `table_name` - Table name to which the database object belongs. This parameter is mandatory when ObjectType is column. Note: This field may return null, indicating that no valid value can be obtained.
   * `privilege_set` - Privileges the specific account has on database object. Note: This field may return null, indicating that no valid value can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAccountPrivileges](https://www.tencentcloud.com/document/api/409/78818)
 

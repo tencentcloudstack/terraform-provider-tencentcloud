@@ -188,6 +188,7 @@ test-build-x86:
 	rm -f terraform-provider-tencentcloud-386
 
 doc:
+	@echo "==> Generating doc (live API catalog fetch) ..."
 	cd gendoc && go run ./... && cd ..
 
 doc-faster:

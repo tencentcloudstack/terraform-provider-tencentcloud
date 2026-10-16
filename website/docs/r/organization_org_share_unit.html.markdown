@@ -36,6 +36,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `unit_id` - Shared unit region. The regions that support sharing can be obtained through the DescribeShareAreas interface.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddShareUnit](https://www.tencentcloud.com/document/api/1031/68237)
+* Read: [DescribeShareUnits](https://www.tencentcloud.com/document/api/1031/68228)
+* Update: [UpdateShareUnit](https://www.tencentcloud.com/document/api/1031/68226)
+* Delete: [DeleteShareUnit](https://www.tencentcloud.com/document/api/1031/68234)
 
 ## Import
 

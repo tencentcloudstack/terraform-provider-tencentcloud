@@ -49,6 +49,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `ca_url` - Cloud root certificate download link.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeTasks](https://www.tencentcloud.com/document/api/409/78807)
+  - [ModifyDBInstanceSSLConfig](https://www.tencentcloud.com/document/api/409/78802)
+* Read: [DescribeDBInstanceSSLConfig](https://www.tencentcloud.com/document/api/409/78804)
+* Update:
+  - [DescribeTasks](https://www.tencentcloud.com/document/api/409/78807)
+  - [ModifyDBInstanceSSLConfig](https://www.tencentcloud.com/document/api/409/78802)
 
 ## Import
 

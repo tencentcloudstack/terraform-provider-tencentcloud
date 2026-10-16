@@ -58,4 +58,9 @@ In addition to all arguments above, the following attributes are exported:
   * `sql_type` - sql type, optional value is SELECT, UPDATE, DELETE, INSERT, REPLACE.
   * `status` - task status, optional value is RUNNING, FINISHED, TERMINATED.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSqlFilters](https://www.tencentcloud.com/search/?wd=DescribeSqlFilters&type=document&lang=en)
 

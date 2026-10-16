@@ -237,6 +237,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateNetDetect](https://www.tencentcloud.com/document/api/215/34745)
+* Read: [DescribeNetDetects](https://www.tencentcloud.com/document/api/215/34742)
+* Update: [ModifyNetDetect](https://www.tencentcloud.com/document/api/215/34741)
+* Delete: [DeleteNetDetect](https://www.tencentcloud.com/document/api/215/34744)
 
 ## Import
 

@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - Retrieve the resource file list.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListResourceFiles](https://www.tencentcloud.com/document/api/1174/73871)
 

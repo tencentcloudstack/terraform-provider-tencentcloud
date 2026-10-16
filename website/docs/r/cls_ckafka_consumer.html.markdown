@@ -80,6 +80,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateConsumer](https://www.tencentcloud.com/document/api/614/44253)
+* Read: [DescribeConsumer](https://www.tencentcloud.com/document/api/614/44251)
+* Update: [ModifyConsumer](https://www.tencentcloud.com/document/api/614/44250)
+* Delete: [DeleteConsumer](https://www.tencentcloud.com/document/api/614/44252)
 
 ## Import
 

@@ -50,4 +50,11 @@ In addition to all arguments above, the following attributes are exported:
   * `user_id` - (**Deprecated**) It has been deprecated from version 1.59.6. Use `user_name` instead. ID of CAM user.
   * `user_name` - Name of CAM user as unique key.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read:
+  - [GetUser](https://www.tencentcloud.com/document/api/598/32259)
+  - [ListAttachedUserPolicies](https://www.tencentcloud.com/document/api/598/32242)
 

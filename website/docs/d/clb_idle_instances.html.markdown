@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - CLB instance status, including:0: Creating; 1: Running.
   * `vip` - CLB instance VIP.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeIdleLoadBalancers](https://www.tencentcloud.com/document/api/214/50740)
 

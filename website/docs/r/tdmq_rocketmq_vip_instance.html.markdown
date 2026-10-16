@@ -91,4 +91,21 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateRocketMQVipInstance](https://www.tencentcloud.com/search/?wd=CreateRocketMQVipInstance&type=document&lang=en)
+  - [DescribeRocketMQVipInstances](https://www.tencentcloud.com/search/?wd=DescribeRocketMQVipInstances&type=document&lang=en)
+* Read:
+  - [DescribeRocketMQVipInstanceDetail](https://www.tencentcloud.com/search/?wd=DescribeRocketMQVipInstanceDetail&type=document&lang=en)
+  - [DescribeRocketMQVipInstances](https://www.tencentcloud.com/search/?wd=DescribeRocketMQVipInstances&type=document&lang=en)
+* Update:
+  - [DescribeRocketMQVipInstances](https://www.tencentcloud.com/search/?wd=DescribeRocketMQVipInstances&type=document&lang=en)
+  - [ModifyRocketMQCluster](https://www.tencentcloud.com/search/?wd=ModifyRocketMQCluster&type=document&lang=en)
+  - [ModifyRocketMQInstanceSpec](https://www.tencentcloud.com/search/?wd=ModifyRocketMQInstanceSpec&type=document&lang=en)
+* Delete:
+  - [DeleteRocketMQVipInstance](https://www.tencentcloud.com/search/?wd=DeleteRocketMQVipInstance&type=document&lang=en)
+  - [DescribeRocketMQVipInstanceDetail](https://www.tencentcloud.com/search/?wd=DescribeRocketMQVipInstanceDetail&type=document&lang=en)
 

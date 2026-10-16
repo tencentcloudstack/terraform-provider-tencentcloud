@@ -91,6 +91,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateScheduledAction](https://www.tencentcloud.com/document/api/377/30996)
+* Read: [DescribeScheduledActions](https://www.tencentcloud.com/document/api/377/30994)
+* Update: [ModifyScheduledAction](https://www.tencentcloud.com/document/api/377/30993)
+* Delete: [DeleteScheduledAction](https://www.tencentcloud.com/document/api/377/30995)
 
 ## Import
 

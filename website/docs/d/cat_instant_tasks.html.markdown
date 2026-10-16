@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
   * `task_type` - Task type.
 * `total` - Total number of instant tasks.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstantTasks](https://www.tencentcloud.com/search/?wd=DescribeInstantTasks&type=document&lang=en)
 

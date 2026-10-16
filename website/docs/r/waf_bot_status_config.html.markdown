@@ -43,6 +43,13 @@ In addition to all arguments above, the following attributes are exported:
 * `scene_count` - Scene total count.
 * `valid_scene_count` - Number of effective scenarios.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyBotStatus](https://www.tencentcloud.com/document/api/627/64540)
+* Read: [DescribeBotSceneOverview](https://www.tencentcloud.com/search/?wd=DescribeBotSceneOverview&type=document&lang=en)
+* Update: [ModifyBotStatus](https://www.tencentcloud.com/document/api/627/64540)
 
 ## Import
 

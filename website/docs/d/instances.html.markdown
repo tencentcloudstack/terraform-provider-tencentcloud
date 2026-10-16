@@ -104,4 +104,9 @@ In addition to all arguments above, the following attributes are exported:
   * `uuid` - Globally unique ID of the instance.
   * `vpc_id` - ID of the vpc.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
 

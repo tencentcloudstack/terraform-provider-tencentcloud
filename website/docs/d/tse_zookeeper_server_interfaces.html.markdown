@@ -33,4 +33,9 @@ In addition to all arguments above, the following attributes are exported:
 * `content` - interface list.
   * `interface` - interface nameNote: This field may return null, indicating that a valid value is not available.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeZookeeperServerInterfaces](https://www.tencentcloud.com/search/?wd=DescribeZookeeperServerInterfaces&type=document&lang=en)
 

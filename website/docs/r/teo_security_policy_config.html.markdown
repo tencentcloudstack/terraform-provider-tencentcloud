@@ -2377,6 +2377,13 @@ The `slow_post_config` object of `security_config` exports the following:
 
 * `rule_id` - Rule ID. Output-only.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifySecurityPolicy](https://www.tencentcloud.com/document/api/1145/50950)
+* Read: [DescribeSecurityPolicy](https://www.tencentcloud.com/document/api/1145/50958)
+* Update: [ModifySecurityPolicy](https://www.tencentcloud.com/document/api/1145/50950)
 
 ## Import
 

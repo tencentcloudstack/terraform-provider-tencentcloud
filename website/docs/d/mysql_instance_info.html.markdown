@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
 * `key_id` - The key ID used for encryption.
 * `key_region` - The region where the key is located.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBInstanceInfo](https://www.tencentcloud.com/document/api/236/36100)
 

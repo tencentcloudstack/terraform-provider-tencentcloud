@@ -226,4 +226,14 @@ In addition to all arguments above, the following attributes are exported:
 * `target_vpc` - Target VPC.
 * `target_zone` - Target zone.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateInstanceCopyPair](https://www.tencentcloud.com/search/?wd=CreateInstanceCopyPair&type=document&lang=en)
+  - [DescribeCopyPairs](https://www.tencentcloud.com/search/?wd=DescribeCopyPairs&type=document&lang=en)
+* Read: [DescribeCopyPairs](https://www.tencentcloud.com/search/?wd=DescribeCopyPairs&type=document&lang=en)
+* Update: [ModifyCopyPairAttribute](https://www.tencentcloud.com/search/?wd=ModifyCopyPairAttribute&type=document&lang=en)
+* Delete: [DeleteCopyPairs](https://www.tencentcloud.com/search/?wd=DeleteCopyPairs&type=document&lang=en)
 

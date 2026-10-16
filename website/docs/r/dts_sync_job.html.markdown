@@ -59,6 +59,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `job_id` - Sync job ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSyncJob](https://www.tencentcloud.com/document/api/571/51795)
+* Read: [DescribeSyncJobs](https://www.tencentcloud.com/document/api/571/51793)
+* Update: [ResizeSyncJob](https://www.tencentcloud.com/document/api/571/51789)
+* Delete:
+  - [DescribeSyncJobs](https://www.tencentcloud.com/document/api/571/51793)
+  - [DestroySyncJob](https://www.tencentcloud.com/document/api/571/51792)
+  - [IsolateSyncJob](https://www.tencentcloud.com/document/api/571/51791)
 
 ## Import
 

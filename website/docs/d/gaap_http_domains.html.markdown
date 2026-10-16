@@ -67,4 +67,9 @@ In addition to all arguments above, the following attributes are exported:
   * `realserver_certificate_id` - (**Deprecated**) It has been deprecated from version 1.28.0. Use `realserver_certificate_ids` instead. CA certificate ID of the realserver.
   * `realserver_certificate_ids` - CA certificate ID list of the realserver.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRules](https://www.tencentcloud.com/document/api/608/33041)
 

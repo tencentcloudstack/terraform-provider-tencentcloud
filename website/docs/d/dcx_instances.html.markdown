@@ -54,4 +54,9 @@ In addition to all arguments above, the following attributes are exported:
   * `vlan` - Vlan of the dedicated tunnels.  Valid value ranges: [0-3000]. `0` means that only one tunnel can be created for the physical connect.
   * `vpc_id` - ID of the VPC or BMVPC.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDirectConnectTunnels](https://www.tencentcloud.com/document/api/216/19819)
 

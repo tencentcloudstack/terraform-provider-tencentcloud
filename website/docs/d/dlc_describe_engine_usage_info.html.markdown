@@ -33,4 +33,9 @@ In addition to all arguments above, the following attributes are exported:
 * `available` - The available cluster spec.
 * `used` - The used cluster spec.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeEngineUsageInfo](https://www.tencentcloud.com/document/api/1155/54453)
 

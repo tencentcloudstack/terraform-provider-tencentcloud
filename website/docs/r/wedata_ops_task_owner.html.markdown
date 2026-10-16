@@ -36,6 +36,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [UpdateOpsTasksOwner](https://www.tencentcloud.com/document/api/1174/73809)
+* Read: [GetOpsTask](https://www.tencentcloud.com/document/api/1174/73831)
+* Update: [UpdateOpsTasksOwner](https://www.tencentcloud.com/document/api/1174/73809)
 
 ## Import
 

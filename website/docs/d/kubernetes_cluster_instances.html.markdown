@@ -93,4 +93,9 @@ In addition to all arguments above, the following attributes are exported:
   * `lan_ip` - Node intranet IP.
   * `node_pool_id` - Resource pool ID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
 

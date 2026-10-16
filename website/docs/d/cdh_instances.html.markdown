@@ -60,4 +60,9 @@ In addition to all arguments above, the following attributes are exported:
   * `prepaid_renew_flag` - Auto renewal flag.
   * `project_id` - The project CDH belongs to.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeHosts](https://www.tencentcloud.com/search/?wd=DescribeHosts&type=document&lang=en)
 

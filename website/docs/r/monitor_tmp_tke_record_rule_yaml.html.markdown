@@ -209,4 +209,12 @@ In addition to all arguments above, the following attributes are exported:
 * `template_id` - Used for the argument, if the configuration comes to the template, the template id.
 * `update_time` - Last modified time of record rule.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePrometheusRecordRuleYaml](https://www.tencentcloud.com/document/api/248/53334)
+* Read: [DescribePrometheusRecordRules](https://www.tencentcloud.com/document/api/248/53319)
+* Update: [ModifyPrometheusRecordRuleYaml](https://www.tencentcloud.com/document/api/248/53330)
+* Delete: [DeletePrometheusRecordRuleYaml](https://www.tencentcloud.com/document/api/248/53333)
 

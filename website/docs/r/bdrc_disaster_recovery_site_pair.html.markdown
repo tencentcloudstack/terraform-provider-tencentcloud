@@ -76,6 +76,14 @@ In addition to all arguments above, the following attributes are exported:
 * `site_pair_state` - Site pair state.
 * `sub_account_uin` - Sub account Uin of the account that created the site pair.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDisasterRecoverySitePair](https://www.tencentcloud.com/search/?wd=CreateDisasterRecoverySitePair&type=document&lang=en)
+* Read: [DescribeDisasterRecoverySitePairs](https://www.tencentcloud.com/search/?wd=DescribeDisasterRecoverySitePairs&type=document&lang=en)
+* Update: [ModifySitePairAttribute](https://www.tencentcloud.com/search/?wd=ModifySitePairAttribute&type=document&lang=en)
+* Delete: [DeleteDisasterRecoverySitePairs](https://www.tencentcloud.com/search/?wd=DeleteDisasterRecoverySitePairs&type=document&lang=en)
 
 ## Import
 

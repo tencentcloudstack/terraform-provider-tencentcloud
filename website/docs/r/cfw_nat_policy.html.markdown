@@ -55,6 +55,14 @@ In addition to all arguments above, the following attributes are exported:
 * `order_index` - Execution order.
 * `uuid` - The unique id corresponding to the rule, no need to fill in when creating the rule.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddNatAcRule](https://www.tencentcloud.com/document/api/1160/54832)
+* Read: [DescribeNatAcRule](https://www.tencentcloud.com/document/api/1160/54831)
+* Update: [ModifyNatAcRule](https://www.tencentcloud.com/document/api/1160/54829)
+* Delete: [RemoveNatAcRule](https://www.tencentcloud.com/document/api/1160/54827)
 
 ## Import
 

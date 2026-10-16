@@ -42,6 +42,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `create_time` - Creation time of the delivery configuration.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [UpdateConfigDeliver](https://www.tencentcloud.com/search/?wd=UpdateConfigDeliver&type=document&lang=en)
+* Read: [DescribeConfigDeliver](https://www.tencentcloud.com/search/?wd=DescribeConfigDeliver&type=document&lang=en)
+* Update: [UpdateConfigDeliver](https://www.tencentcloud.com/search/?wd=UpdateConfigDeliver&type=document&lang=en)
 
 ## Import
 

@@ -29,4 +29,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `status` - TCLake activation status. Enumerated value: `Running` means activated successfully.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTCLakeMetaInstance](https://www.tencentcloud.com/search/?wd=DescribeTCLakeMetaInstance&type=document&lang=en)
 

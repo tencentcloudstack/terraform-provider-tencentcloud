@@ -117,4 +117,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DeployGroup](https://www.tencentcloud.com/search/?wd=DeployGroup&type=document&lang=en)
+  - [DescribeGroupAttribute](https://www.tencentcloud.com/search/?wd=DescribeGroupAttribute&type=document&lang=en)
+* Read: [DescribeGroup](https://www.tencentcloud.com/search/?wd=DescribeGroup&type=document&lang=en)
 
