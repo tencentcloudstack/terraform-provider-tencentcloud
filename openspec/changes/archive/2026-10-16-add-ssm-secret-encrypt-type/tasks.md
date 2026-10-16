@@ -4,7 +4,7 @@
   - Type: `schema.TypeInt`
   - Optional: true
   - Computed: true
-  - ForceNew: true
+  - 不设置 ForceNew（加密类型不可变，通过 update 方法的 immutableArgs 校验返回 error）
   - Description: "Encryption type of secret. `0`: KMS key encryption. `1`: soft key encryption. Default is `0`. Once created, it cannot be modified."
 
 ## 2. Service 层
@@ -22,7 +22,7 @@
 
 ## 5. Update 操作
 
-- [x] 5.1 在 `resourceTencentCloudSsmSecretUpdate` 的 `immutableArgs` 数组中新增 `"encrypt_type"`（防御性措施，因 schema 已 ForceNew）
+- [x] 5.1 在 `resourceTencentCloudSsmSecretUpdate` 的 `immutableArgs` 数组中新增 `"encrypt_type"`（加密类型不可变，修改时返回 error，不触发 force-new）
 
 ## 6. 单元测试
 

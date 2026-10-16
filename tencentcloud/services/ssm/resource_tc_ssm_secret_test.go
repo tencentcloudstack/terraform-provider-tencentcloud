@@ -3,6 +3,7 @@ package ssm_test
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"strconv"
 	"testing"
 	"time"
@@ -140,6 +141,17 @@ func TestAccTencentCloudSsmSecret_encryptType(t *testing.T) {
 				),
 			},
 			{
+				Config:      TestAccTencentCloudSsmSecretEncryptTypeUpdate,
+				ExpectError: regexp.MustCompile("argument `encrypt_type` cannot be changed"),
+			},
+			{
+				Config: TestAccTencentCloudSsmSecretEncryptType,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSsmSecretExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "encrypt_type", "1"),
+				),
+			},
+			{
 				ResourceName:            resourceName,
 				ImportState:             true,
 				ImportStateVerify:       true,
@@ -228,6 +240,15 @@ resource "tencentcloud_ssm_secret" "encrypt_example" {
   secret_name  = "tf-encrypt-example"
   description  = "encrypt type test."
   encrypt_type = 1
+  is_enabled   = false
+}
+`
+
+const TestAccTencentCloudSsmSecretEncryptTypeUpdate = `
+resource "tencentcloud_ssm_secret" "encrypt_example" {
+  secret_name  = "tf-encrypt-example"
+  description  = "encrypt type test."
+  encrypt_type = 0
   is_enabled   = false
 }
 `

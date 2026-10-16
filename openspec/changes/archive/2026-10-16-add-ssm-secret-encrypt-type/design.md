@@ -95,7 +95,7 @@ type SecretInfo struct {
 **Goals:**
 - Expose `encrypt_type` on `tencentcloud_ssm_secret` so users can set KMS (`0`) or soft-key (`1`) encryption at creation time.
 - Read back the effective `EncryptType` from `DescribeSecret` so state reflects reality.
-- Treat `encrypt_type` as immutable (force re-creation when changed), matching the SDK contract that `EncryptType` is not part of `UpdateSecret`.
+- Treat `encrypt_type` as immutable (reject changes with an error via `immutableArgs`, no force-new), matching the SDK contract that `EncryptType` is not part of `UpdateSecret`.
 - Preserve backward compatibility: existing configs without `encrypt_type` keep working (API default `0` applies and is read back via Computed).
 
 **Non-Goals:**
@@ -105,14 +105,15 @@ type SecretInfo struct {
 
 ## Decisions
 
-### Decision 1: `encrypt_type` schema type = `schema.TypeInt`, Optional + Computed + ForceNew
+### Decision 1: `encrypt_type` schema type = `schema.TypeInt`, Optional + Computed (no ForceNew)
 - The SDK field is `*uint64`. The provider conventionally represents such numeric enums with `schema.TypeInt` (e.g., the existing `secret_type` is `schema.TypeInt` while the API uses `*int64`/`*uint64`). Using `TypeInt` keeps consistency with the resource's existing style.
 - Optional + Computed so that when the user omits it, the API default is applied and the value is read back into state.
-- ForceNew because `EncryptType` is only on `CreateSecret`, never on `UpdateSecret`. Terraform's `ForceNew: true` cleanly handles this by destroying+recreating rather than erroring. We additionally list it in `immutableArgs` for defense-in-depth, but `ForceNew` is the primary mechanism.
+- No `ForceNew`. Because `EncryptType` is only on `CreateSecret`, never on `UpdateSecret`, the field is immutable after creation. Immutability is enforced by listing `encrypt_type` in the `immutableArgs` array of the update method, so that changing it returns an explicit error (`argument \`encrypt_type\` cannot be changed`) instead of silently destroying and re-creating the secret. This avoids accidental destruction of secrets that may hold sensitive data.
 
 **Alternatives considered:**
 - `schema.TypeString` ("0"/"1"): rejected; the resource already uses `TypeInt` for `secret_type`, so `TypeInt` is more consistent.
 - Plain `Optional` without `Computed`: rejected — then `d.Set("encrypt_type", ...)` on read would warn/err for unset computed values; Computed is required to round-trip the API default.
+- `ForceNew: true`: rejected in favor of `immutableArgs` error. ForceNew would silently destroy+recreate a secret on a config change, risking loss of sensitive data; an explicit error is safer and clearer for users.
 - Making it updatable: rejected — the SDK has no update path for `EncryptType`.
 
 ### Decision 2: Carry `EncryptType` through `SecretInfo`
@@ -130,7 +131,7 @@ type SecretInfo struct {
 
 ## Risks / Trade-offs
 
-- **[Risk] ForceNew on `encrypt_type` change destroys the secret** → Mitigation: This matches the API contract (encryption type is immutable). Document clearly that changing `encrypt_type` triggers re-creation. Since secrets may hold sensitive data, users must use `recovery_window_in_days` or re-seed versions after recreation; this is inherent to the API limitation, not a provider bug.
+- **[Risk] Changing `encrypt_type` on an existing secret** → Mitigation: `encrypt_type` is in `immutableArgs`, so a change returns an explicit error (`argument \`encrypt_type\` cannot be changed`) rather than silently destroying the secret. This is safer than ForceNew for sensitive data. Users who need a different encryption type must recreate the secret explicitly with `terraform destroy`/`terraform apply`.
 - **[Risk] SDK response `EncryptType` could be nil for very old secrets** → Mitigation: nil-guard in `DescribeSecretByName` (only populate when non-nil); in read, `d.Set` with the zero value (`uint64(0)`) is acceptable since `0` (KMS) is the API default. Alternatively skip `d.Set` when nil — but Computed fields should be set; we set `0`.
 - **[Trade-off] `TypeInt` vs `TypeBool`** → `EncryptType` is an enum (`0`/`1`), but future values are possible, so `TypeInt` is more future-proof than a boolean.
 - **[Risk] `DescribeSecretByName` dereferences pointers without nil-guards today** → Mitigation: This pre-existing pattern assumes all fields are populated. We add a nil-guard specifically for `EncryptType` to be safe, while not refactoring the existing fields (out of scope).

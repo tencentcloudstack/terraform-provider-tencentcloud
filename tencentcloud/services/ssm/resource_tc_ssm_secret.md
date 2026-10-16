@@ -102,7 +102,7 @@ The following arguments are supported:
 * `kms_key_id` - (Optional, ForceNew, Computed) KMS keyId used to encrypt secret. If it is empty, it means that the CMK created by SSM for you by default is used for encryption. You can also specify the KMS CMK created by yourself in the same region for encryption.
 * `secret_type` - (Optional, Computed) Type of secret. `0`: user-defined secret. `4`: redis secret. Default is `0`.
 * `additional_config` - (Optional) Additional config for specific secret types in JSON string format.
-* `encrypt_type` - (Optional, ForceNew, Computed) Encryption type of secret. `0`: KMS key encryption. `1`: soft key encryption. Default is `0`. Once created, it cannot be modified.
+* `encrypt_type` - (Optional, Computed) Encryption type of secret. `0`: KMS key encryption. `1`: soft key encryption. Default is `0`. Once created, it cannot be modified.
 * `is_enabled` - (Optional) Specify whether to enable secret. Default value is `true`.
 * `recovery_window_in_days` - (Optional) Specify the scheduled deletion date. Default value is `0` that means to delete immediately. 1-30 means the number of days reserved, completely deleted after this date.
 * `tags` - (Optional) Tags of secret.

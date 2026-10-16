@@ -7,11 +7,11 @@ The TencentCloud SSM (Secrets Manager) `CreateSecret` API supports specifying th
 - Add a new optional computed field `encrypt_type` to the `tencentcloud_ssm_secret` resource schema.
   - Type: `schema.TypeInt`.
   - Optional and Computed (so the API default is read back when unset).
-  - Set as `ForceNew` because `EncryptType` is only accepted by `CreateSecret` and is **not** present in `UpdateSecretRequest`/`UpdateSecretDescription`; the secret's encryption type is immutable after creation.
+  - Not `ForceNew`. Since `EncryptType` is only accepted by `CreateSecret` and is **not** present in `UpdateSecretRequest`/`UpdateSecretDescription`, the secret's encryption type is immutable after creation; immutability is enforced via the `immutableArgs` array in the update method (changing `encrypt_type` returns an error instead of forcing re-creation).
   - Accepted values: `0` (KMS key encryption), `1` (soft key encryption).
 - In `resourceTencentCloudSsmSecretCreate`, pass `request.EncryptType` when the user configures the field.
 - In `resourceTencentCloudSsmSecretRead`, set `encrypt_type` from the `DescribeSecret` response.
-- Add `encrypt_type` to the `immutableArgs` array in `resourceTencentCloudSsmSecretUpdate` so changing it triggers a force-new (re-creation) rather than an error-prone in-place update.
+- Add `encrypt_type` to the `immutableArgs` array in `resourceTencentCloudSsmSecretUpdate` so changing it returns an explicit error rather than an error-prone in-place update (no force-new).
 - Extend the `SecretInfo` struct and `DescribeSecretByName` service method to carry the `EncryptType` field through to the read operation.
 - Add/update the `encrypt_type` argument in the resource documentation (`.md`) and register the field for documentation generation.
 - Add unit tests covering the new `encrypt_type` parameter.

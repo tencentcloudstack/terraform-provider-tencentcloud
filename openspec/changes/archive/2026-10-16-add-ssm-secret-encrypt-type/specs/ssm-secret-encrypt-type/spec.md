@@ -29,12 +29,12 @@ The provider SHALL read the `EncryptType` field from the `DescribeSecret` respon
 - **AND** when the API returns `nil` for `EncryptType`, the field SHALL fall back to `0`
 
 ### Requirement: SSM secret encryption type is immutable
-Because the SSM `UpdateSecret` API does not accept an `EncryptType` parameter, the `encrypt_type` argument SHALL be `ForceNew`. Changing `encrypt_type` on an existing resource SHALL trigger destruction and re-creation of the secret rather than an in-place update.
+Because the SSM `UpdateSecret` API does not accept an `EncryptType` parameter, the `encrypt_type` argument SHALL be treated as immutable after creation. The `encrypt_type` argument SHALL NOT be `ForceNew`; instead the provider SHALL list `encrypt_type` in the `immutableArgs` array of the update method so that changing `encrypt_type` on an existing resource returns an explicit error rather than triggering re-creation.
 
-#### Scenario: Changing encrypt_type forces re-creation
+#### Scenario: Changing encrypt_type is rejected with an error
 - **WHEN** a user changes `encrypt_type` on an existing `tencentcloud_ssm_secret`
-- **THEN** the provider SHALL treat the change as a force-new (destroy then create)
-- **AND** the new secret SHALL be created with the updated `EncryptType`
+- **THEN** the provider SHALL return an error indicating that `encrypt_type` cannot be changed
+- **AND** the resource SHALL NOT be destroyed or re-created
 
 #### Scenario: Update without changing encrypt_type
 - **WHEN** a user updates other attributes (e.g. `description`, `is_enabled`, `tags`) without touching `encrypt_type`
