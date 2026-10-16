@@ -69,14 +69,33 @@ func loadCatalog() *catalog {
 	c.build(urls, productPages, slugs)
 	// Refresh the bundled snapshot only from a fully-resolved live catalog
 	// (catalogue + slugs); a slug-less build would index products under
-	// meaningless "product-<id>" keys.
+	// meaningless "product-<id>" keys. Skip the write when the entries
+	// are unchanged, so a plain 'make doc' run does not dirty the file
+	// with a fresh timestamp.
 	if err != nil {
+		return c
+	}
+	existing := &catalog{urlIdx: map[string]string{}}
+	if existing.loadSnapshot(catalogSnapshotPath) == nil && sameKeys(existing.urlIdx, c.urlIdx) {
 		return c
 	}
 	if saveErr := c.saveSnapshot(catalogSnapshotPath); saveErr != nil {
 		message("[WARN]could not refresh catalog snapshot %s: %v\n", catalogSnapshotPath, saveErr)
 	}
 	return c
+}
+
+// sameKeys reports whether two URL indexes hold identical entries.
+func sameKeys(a, b map[string]string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for k, v := range a {
+		if b[k] != v {
+			return false
+		}
+	}
+	return true
 }
 
 // catalogSnapshot is the on-disk representation of the international
