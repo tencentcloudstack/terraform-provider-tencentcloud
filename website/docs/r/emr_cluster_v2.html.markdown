@@ -1281,25 +1281,25 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCluster](https://cloud.tencent.com/document/api/589/83953) - This API is used to create an EMR cluster.
-* Create: [DescribeClusterFlowStatusDetail](https://cloud.tencent.com/document/api/589/107224) - This API is used to query the running status details of an EMR cluster task.
-* Create: [DescribeInstances](https://cloud.tencent.com/document/api/589/34266) - This API is used to query cluster information.
-* Create: [ScaleOutCluster](https://cloud.tencent.com/document/api/589/83952) - This API is used to scale out cluster nodes.
-* Read: [DescribeClusterNodes](https://cloud.tencent.com/document/api/589/41707) - This API is used to query information of a cluster node.
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/589/34266) - This API is used to query cluster information.
-* Read: [DescribeMetaDBInfo](https://cloud.tencent.com/document/api/589/137077) - This API is used to obtain cluster MetaDB data.
-* Read: [DescribeNodeDataDisks](https://cloud.tencent.com/document/api/589/115191) - This API is used to query data disk information of a node.
-* Update: [AttachDisks](https://cloud.tencent.com/document/api/589/115188) - This API is used to mount a cloud disk.
-* Update: [DescribeClusterFlowStatusDetail](https://cloud.tencent.com/document/api/589/107224) - This API is used to query the running status details of an EMR cluster task.
-* Update: [InstallSoftware](https://cloud.tencent.com/document/api/589/130892) - This API is used to install a component. For components dependent on the MetaDB, a CDB order may be required. The components that can be installed on the current cluster and the components that might require a CDB order can be viewed via I
-* Update: [ModifyInstanceBasic](https://cloud.tencent.com/document/api/589/115192) - This API is used to modify the cluster name.
-* Update: [ModifyResource](https://cloud.tencent.com/document/api/589/115187) - This API is used to change the instance configuration.
-* Update: [ModifyResourcesTags](https://cloud.tencent.com/document/api/589/96242) - This API is used to forcibly modify a tag.
-* Update: [ResizeDataDisks](https://cloud.tencent.com/document/api/589/115186) - This API is used to scale out cloud data disks.
-* Update: [ScaleOutCluster](https://cloud.tencent.com/document/api/589/83952) - This API is used to scale out cluster nodes.
-* Update: [TerminateClusterNodes](https://cloud.tencent.com/document/api/589/90010) - This API is used to terminate a cluster node.
-* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/589/34266) - This API is used to query cluster information.
-* Delete: [TerminateInstance](https://cloud.tencent.com/document/api/589/34260) - This API is used to terminate an EMR instance. It is supported only for the officially billed version of EMR.
+* Create: [CreateCluster](https://cloud.tencent.com/document/api/589/83953)
+* Create: [DescribeClusterFlowStatusDetail](https://cloud.tencent.com/document/api/589/107224)
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/589/34266)
+* Create: [ScaleOutCluster](https://cloud.tencent.com/document/api/589/83952)
+* Read: [DescribeClusterNodes](https://cloud.tencent.com/document/api/589/41707)
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/589/34266)
+* Read: [DescribeMetaDBInfo](https://cloud.tencent.com/document/api/589/137077)
+* Read: [DescribeNodeDataDisks](https://cloud.tencent.com/document/api/589/115191)
+* Update: [AttachDisks](https://cloud.tencent.com/document/api/589/115188)
+* Update: [DescribeClusterFlowStatusDetail](https://cloud.tencent.com/document/api/589/107224)
+* Update: [InstallSoftware](https://cloud.tencent.com/document/api/589/130892)
+* Update: [ModifyInstanceBasic](https://cloud.tencent.com/document/api/589/115192)
+* Update: [ModifyResource](https://cloud.tencent.com/document/api/589/115187)
+* Update: [ModifyResourcesTags](https://cloud.tencent.com/document/api/589/96242)
+* Update: [ResizeDataDisks](https://cloud.tencent.com/document/api/589/115186)
+* Update: [ScaleOutCluster](https://cloud.tencent.com/document/api/589/83952)
+* Update: [TerminateClusterNodes](https://cloud.tencent.com/document/api/589/90010)
+* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/589/34266)
+* Delete: [TerminateInstance](https://cloud.tencent.com/document/api/589/34260)
 
 ## Import
 

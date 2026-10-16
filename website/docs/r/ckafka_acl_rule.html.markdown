@@ -61,10 +61,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAclRule](https://www.tencentcloud.com/document/product/597/54585) - This API shows you how to create an ACL rule.
-* Read: [DescribeAclRule](https://www.tencentcloud.com/document/product/597/54584) - This API is used to query the ACL rule list.
-* Update: [ModifyAclRule](https://www.tencentcloud.com/document/product/597/54583) - This API is used to modify ACL policy, currently only support whether to apply preset rules to newly-added topics.
-* Delete: [DeleteAclRule](https://www.tencentcloud.com/document/product/597/74428) - This API is used to delete an ACL rule.
+* Create: [CreateAclRule](https://cloud.tencent.com/document/api/597/89218)
+* Read: [DescribeAclRule](https://cloud.tencent.com/document/api/597/89217)
+* Update: [ModifyAclRule](https://cloud.tencent.com/document/api/597/89216)
+* Delete: [DeleteAclRule](https://cloud.tencent.com/document/api/597/54394)
 
 ## Import
 

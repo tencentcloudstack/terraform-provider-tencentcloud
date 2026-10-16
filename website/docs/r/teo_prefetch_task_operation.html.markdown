@@ -80,6 +80,6 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrefetchTask](https://cloud.tencent.com/document/api/1552/80704) - This API is used to create a pre-warming task.
-* Create: [DescribePrefetchTasks](https://cloud.tencent.com/document/api/1552/80700) - DescribePrefetchTasks is used to query the submission history and execution progress of preheating tasks. This interface can be used to query the tasks submitted by the CreatePrefetchTasks interface.
+* Create: [CreatePrefetchTask](https://cloud.tencent.com/document/api/1552/80704)
+* Create: [DescribePrefetchTasks](https://cloud.tencent.com/document/api/1552/80700)
 

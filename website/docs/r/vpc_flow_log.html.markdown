@@ -145,13 +145,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateFlowLog](https://www.tencentcloud.com/document/product/215/36911) - This API is used to create a flow log.
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeFlowLogs](https://www.tencentcloud.com/document/product/215/36908) - This API is used to query all the flow logs of the current account.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [ModifyFlowLogAttribute](https://www.tencentcloud.com/document/product/215/36907) - This API is used to modify the attributes of a flow log.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Delete: [DeleteFlowLog](https://www.tencentcloud.com/document/product/215/36910) - This API is used to delete a flow log.
+* Create: [CreateFlowLog](https://cloud.tencent.com/document/api/215/35015)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeFlowLogs](https://cloud.tencent.com/document/api/215/35012)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [ModifyFlowLogAttribute](https://cloud.tencent.com/document/api/215/35011)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Delete: [DeleteFlowLog](https://cloud.tencent.com/document/api/215/35014)
 
 ## Import
 

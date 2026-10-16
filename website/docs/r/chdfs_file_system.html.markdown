@@ -54,11 +54,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateFileSystem](https://cloud.tencent.com/document/api/1105/51148) - This API is used to create a file system (asynchronously).
-* Create: [DescribeFileSystem](https://cloud.tencent.com/document/api/1105/51147) - This API is used to view the details of a file system.
-* Read: [DescribeFileSystem](https://cloud.tencent.com/document/api/1105/51147) - This API is used to view the details of a file system.
-* Update: [ModifyFileSystem](https://cloud.tencent.com/document/api/1105/51145) - This API is used to modify the attributes of a successfully created file system.
-* Delete: [DeleteFileSystem](https://cloud.tencent.com/document/api/1105/52341) - This API is used to delete a file system. Non-empty file systems cannot be deleted.
+* Create: [CreateFileSystem](https://cloud.tencent.com/document/api/1105/51148)
+* Create: [DescribeFileSystem](https://cloud.tencent.com/document/api/1105/51147)
+* Read: [DescribeFileSystem](https://cloud.tencent.com/document/api/1105/51147)
+* Update: [ModifyFileSystem](https://cloud.tencent.com/document/api/1105/51145)
+* Delete: [DeleteFileSystem](https://cloud.tencent.com/document/api/1105/52341)
 
 ## Import
 

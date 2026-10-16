@@ -291,10 +291,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateListener](https://www.tencentcloud.com/document/product/214/33842) - This API is used to create a listener for a CLB instance.
-* Read: [DescribeListeners](https://www.tencentcloud.com/document/product/214/33831) - This API is used to get the list of listeners by CLB ID, listener protocol, or listener port. If no filter is specified, all listeners for the CLB instance will be returned.
-* Update: [ModifyListener](https://www.tencentcloud.com/document/product/214/33818) - This API is used to modify the attributes of a CLB instance listener, including the listener name, health check parameters, certificate information, and forwarding policy. This API does not support classic CLB instances.
-* Delete: [DeleteListener](https://www.tencentcloud.com/document/product/214/33838) - This API is used to delete listeners (layer-4 and layer-7) under a Cloud Load Balancer instance.
+* Create: [CreateListener](https://cloud.tencent.com/document/api/214/30693)
+* Read: [DescribeListeners](https://cloud.tencent.com/document/api/214/30686)
+* Update: [ModifyListener](https://cloud.tencent.com/document/api/214/30681)
+* Delete: [DeleteListener](https://cloud.tencent.com/document/api/214/30690)
 
 ## Import
 

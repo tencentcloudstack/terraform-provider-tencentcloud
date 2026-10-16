@@ -160,5 +160,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyL7AccRulePriority](https://cloud.tencent.com/document/api/1552/117133) - This interface is used to modify the priority of the rule list in the [Rule Engine](https://intl.cloud.tencent.com/document/product/1552/70901?from_cn_redirect=1).
+* Create: [ModifyL7AccRulePriority](https://cloud.tencent.com/document/api/1552/117133)
 

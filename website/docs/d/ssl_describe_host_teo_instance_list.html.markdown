@@ -50,5 +50,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeHostTeoInstanceList](https://cloud.tencent.com/document/api/400/91655) - This API is used to query the list of EdgeOne instances to which a certificate can be deployed.
+* Read: [DescribeHostTeoInstanceList](https://cloud.tencent.com/document/api/400/91655)
 

@@ -40,10 +40,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRoutePolicyAssociations](https://www.tencentcloud.com/document/product/215/74069) - This API is used to create route reception policy bindings (the binding relationship between policy instances and route table instances as well as set priorities).
+* Create: [CreateRoutePolicyAssociations](https://cloud.tencent.com/document/api/215/124429)
 * Read: [DescribeRoutePolicies](https://cloud.tencent.com/document/api/215/126466)
-* Update: [ResetRoutePolicyAssociations](https://www.tencentcloud.com/document/product/215/74060) - This API is used to unbind the routing policy instance already bound to a specific route table instance, set up alarms for the new binding routing policy and priority.
-* Delete: [DeleteRoutePolicyAssociations](https://www.tencentcloud.com/document/product/215/74066) - This API is used to delete route reception policy bindings (the binding relationship between route reception policy objects and route tables).
+* Update: [ResetRoutePolicyAssociations](https://cloud.tencent.com/document/api/215/124420)
+* Delete: [DeleteRoutePolicyAssociations](https://cloud.tencent.com/document/api/215/124426)
 
 ## Import
 

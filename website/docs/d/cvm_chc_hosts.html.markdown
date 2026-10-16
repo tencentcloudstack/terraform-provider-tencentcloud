@@ -87,5 +87,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeChcHosts](https://www.tencentcloud.com/document/product/213/48899) - This API is used to query the details of one or more CHC host.
+* Read: [DescribeChcHosts](https://cloud.tencent.com/document/api/213/76366)
 

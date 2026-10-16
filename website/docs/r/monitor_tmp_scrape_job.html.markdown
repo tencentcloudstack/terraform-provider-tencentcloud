@@ -79,10 +79,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrometheusScrapeJob](https://www.tencentcloud.com/document/product/248/48763) - This API is used to create a Prometheus scrape task.
-* Read: [DescribePrometheusScrapeJobs](https://www.tencentcloud.com/document/product/248/48752) - This API is used to list Prometheus scrape tasks.
-* Update: [UpdatePrometheusScrapeJob](https://www.tencentcloud.com/document/product/248/48739) - This API is used to update a Prometheus scrape task.
-* Delete: [DeletePrometheusScrapeJobs](https://www.tencentcloud.com/document/product/248/48758) - This API is used to delete a Prometheus scrape task.
+* Create: [CreatePrometheusScrapeJob](https://cloud.tencent.com/document/api/248/76017)
+* Read: [DescribePrometheusScrapeJobs](https://cloud.tencent.com/document/api/248/76012)
+* Update: [UpdatePrometheusScrapeJob](https://cloud.tencent.com/document/api/248/76003)
+* Delete: [DeletePrometheusScrapeJobs](https://cloud.tencent.com/document/api/248/76015)
 
 ## Import
 

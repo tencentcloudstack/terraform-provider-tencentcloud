@@ -84,23 +84,23 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AllocateAddresses](https://www.tencentcloud.com/document/product/215/16699) - This API is used to apply for one or more [Elastic IP Addresses](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1) (EIPs for short).
-* Create: [DescribeAddresses](https://www.tencentcloud.com/document/product/215/16702) - This API (DescribeAddresses) is used to query the information of one or multiple [Elastic IPs](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1).
-* Create: [DescribeTaskResult](https://www.tencentcloud.com/document/product/215/34772) - This API is used to query the EIP async job execution results.
-* Read: [DescribeAddresses](https://www.tencentcloud.com/document/product/215/16702) - This API (DescribeAddresses) is used to query the information of one or multiple [Elastic IPs](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1).
-* Read: [DescribeBandwidthPackages](https://www.tencentcloud.com/document/product/215/36919) - This API is used to query bandwidth package information, including the unique ID of the bandwidth package, the type, the billing mode, the name, and the resource information.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [ModifyAddressAttribute](https://www.tencentcloud.com/document/product/215/16704) - This API (ModifyAddressAttribute) is used to modify the name of an [Elastic IP](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1).
-* Update: [ModifyAddressInternetChargeType](https://www.tencentcloud.com/document/product/215/36091) - This API is used to adjust the network billing mode of an EIP. Please note that it's available to users whose network fees are billed on IPs but not CVMs.
-* Update: [ModifyAddressesBandwidth](https://www.tencentcloud.com/document/product/215/34771) - This API is used to adjust the bandwidth of [Elastic IP](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1), including EIP billed on a pay-as-you-go, monthly subscription, and bandwidth package basis.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Create: [AllocateAddresses](https://cloud.tencent.com/document/api/215/16699)
+* Create: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702)
+* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271)
+* Read: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702)
+* Read: [DescribeBandwidthPackages](https://cloud.tencent.com/document/api/215/19209)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [ModifyAddressAttribute](https://cloud.tencent.com/document/api/215/16704)
+* Update: [ModifyAddressInternetChargeType](https://cloud.tencent.com/document/api/215/43849)
+* Update: [ModifyAddressesBandwidth](https://cloud.tencent.com/document/api/215/19214)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
 * Update: [RenewAddresses](https://cloud.tencent.com/document/api/215/49015)
-* Delete: [DescribeAddresses](https://www.tencentcloud.com/document/product/215/16702) - This API (DescribeAddresses) is used to query the information of one or multiple [Elastic IPs](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1).
-* Delete: [DescribeNatGateways](https://www.tencentcloud.com/document/product/215/34752) - This API is used to query NAT gateways.
-* Delete: [DescribeTaskResult](https://www.tencentcloud.com/document/product/215/34772) - This API is used to query the EIP async job execution results.
-* Delete: [DisassociateAddress](https://www.tencentcloud.com/document/product/215/16703) - This API is used to unbind an [Elastic IP](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1) (EIP for short).
-* Delete: [DisassociateNatGatewayAddress](https://www.tencentcloud.com/document/product/215/34751) - This API is used to unbind an EIP from a NAT gateway.
-* Delete: [ReleaseAddresses](https://www.tencentcloud.com/document/product/215/16705) - This API (ReleaseAddresses) is used to release one or multiple [Elastic IPs](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1).
+* Delete: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702)
+* Delete: [DescribeNatGateways](https://cloud.tencent.com/document/api/215/36034)
+* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271)
+* Delete: [DisassociateAddress](https://cloud.tencent.com/document/api/215/16703)
+* Delete: [DisassociateNatGatewayAddress](https://cloud.tencent.com/document/api/215/36716)
+* Delete: [ReleaseAddresses](https://cloud.tencent.com/document/api/215/16705)
 
 ## Import
 

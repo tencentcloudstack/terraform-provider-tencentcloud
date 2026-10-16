@@ -70,10 +70,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [StartJob](https://cloud.tencent.com/document/api/1484/78062) - This API is used to create and start test job.
-* Read: [DescribeJobs](https://cloud.tencent.com/document/api/1484/78078) - This API is used to query job list.
-* Update: [UpdateJob](https://cloud.tencent.com/document/api/1484/78059) - This API is used to update a job.
-* Delete: [DeleteJobs](https://cloud.tencent.com/document/api/1484/78087) - This API is used to delete jobs.
+* Create: [StartJob](https://cloud.tencent.com/document/api/1484/78062)
+* Read: [DescribeJobs](https://cloud.tencent.com/document/api/1484/78078)
+* Update: [UpdateJob](https://cloud.tencent.com/document/api/1484/78059)
+* Delete: [DeleteJobs](https://cloud.tencent.com/document/api/1484/78087)
 
 ## Import
 

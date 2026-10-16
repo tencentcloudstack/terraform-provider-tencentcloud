@@ -90,11 +90,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlow](https://www.tencentcloud.com/document/product/237/16177)
-* Create: [ModifyAccountPrivileges](https://www.tencentcloud.com/document/product/237/40959) - This API is used to modify the permissions of a TencentDB instance account. \n\n**Note**\n-Only the SELECT permission (that is, set the permission parameter to `["SELECT"]`) of the system database `mysql` can be granted.
-* Read: [DescribeAccountPrivileges](https://www.tencentcloud.com/document/product/237/16164) - This API is used to query the permissions of a TencentDB account.
-* Update: [DescribeFlow](https://www.tencentcloud.com/document/product/237/16177)
-* Update: [ModifyAccountPrivileges](https://www.tencentcloud.com/document/product/237/40959) - This API is used to modify the permissions of a TencentDB instance account. \n\n**Note**\n-Only the SELECT permission (that is, set the permission parameter to `["SELECT"]`) of the system database `mysql` can be granted.
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177)
+* Create: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/237/56486)
+* Read: [DescribeAccountPrivileges](https://cloud.tencent.com/document/api/237/16164)
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177)
+* Update: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/237/56486)
 
 ## Import
 

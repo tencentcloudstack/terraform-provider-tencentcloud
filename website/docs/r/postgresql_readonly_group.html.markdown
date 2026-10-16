@@ -110,16 +110,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateReadOnlyGroup](https://www.tencentcloud.com/document/product/409/39727) - This API is used to create an RO group.
-* Create: [DescribeReadOnlyGroups](https://www.tencentcloud.com/document/product/409/39725) - This API is used to query the list of RO groups.
-* Read: [DescribeDBInstanceSecurityGroups](https://www.tencentcloud.com/document/product/409/52648) - This API is used to query the security group of an instance.
-* Read: [DescribeReadOnlyGroups](https://www.tencentcloud.com/document/product/409/39725) - This API is used to query the list of RO groups.
-* Update: [CreateReadOnlyGroupNetworkAccess](https://www.tencentcloud.com/document/product/409/45950) - This API is used to create network for RO groups. The largest quantity of networks to create is 2.
-* Update: [DeleteReadOnlyGroupNetworkAccess](https://www.tencentcloud.com/document/product/409/45948) - This API is used to delete a network from an RO group (at least 1 network must remain).
-* Update: [DescribeReadOnlyGroups](https://www.tencentcloud.com/document/product/409/39725) - This API is used to query the list of RO groups.
-* Update: [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/document/product/409/52647) - This API is used to modify the security group of an instance.
-* Update: [ModifyReadOnlyGroupConfig](https://www.tencentcloud.com/document/product/409/39723) - This API is used to modify RO group configuration.
-* Delete: [DeleteReadOnlyGroup](https://www.tencentcloud.com/document/product/409/39726) - This API is used to delete an RO group.
+* Create: [CreateReadOnlyGroup](https://cloud.tencent.com/document/api/409/52601)
+* Create: [DescribeReadOnlyGroups](https://cloud.tencent.com/document/api/409/52599)
+* Read: [DescribeDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84064)
+* Read: [DescribeReadOnlyGroups](https://cloud.tencent.com/document/api/409/52599)
+* Update: [CreateReadOnlyGroupNetworkAccess](https://cloud.tencent.com/document/api/409/70580)
+* Update: [DeleteReadOnlyGroupNetworkAccess](https://cloud.tencent.com/document/api/409/70578)
+* Update: [DescribeReadOnlyGroups](https://cloud.tencent.com/document/api/409/52599)
+* Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84063)
+* Update: [ModifyReadOnlyGroupConfig](https://cloud.tencent.com/document/api/409/52597)
+* Delete: [DeleteReadOnlyGroup](https://cloud.tencent.com/document/api/409/52600)
 
 ## Import
 

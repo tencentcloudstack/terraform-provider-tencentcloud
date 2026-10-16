@@ -56,10 +56,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [HandleFunctionRuntimeEnvironment](https://cloud.tencent.com/document/api/1552/111382) - This API is used to operate the runtime environment of an edge function. It supports related settings for environment variables.
-* Read: [DescribeFunctionRuntimeEnvironment](https://cloud.tencent.com/document/api/1552/111384) - This API is used to query the runtime environment of an edge function, including environment variables.
-* Update: [HandleFunctionRuntimeEnvironment](https://cloud.tencent.com/document/api/1552/111382) - This API is used to operate the runtime environment of an edge function. It supports related settings for environment variables.
-* Delete: [HandleFunctionRuntimeEnvironment](https://cloud.tencent.com/document/api/1552/111382) - This API is used to operate the runtime environment of an edge function. It supports related settings for environment variables.
+* Create: [HandleFunctionRuntimeEnvironment](https://cloud.tencent.com/document/api/1552/111382)
+* Read: [DescribeFunctionRuntimeEnvironment](https://cloud.tencent.com/document/api/1552/111384)
+* Update: [HandleFunctionRuntimeEnvironment](https://cloud.tencent.com/document/api/1552/111382)
+* Delete: [HandleFunctionRuntimeEnvironment](https://cloud.tencent.com/document/api/1552/111382)
 
 ## Import
 

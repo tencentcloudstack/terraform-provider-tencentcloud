@@ -50,13 +50,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/product/238/32113) - This API is used to query flow status.
-* Create: [RollbackInstance](https://www.tencentcloud.com/document/product/238/32095) - This API is used to roll back the instance by time point.
-* Read: [DescribeDBs](https://www.tencentcloud.com/document/product/238/32114) - This API is used to query the list of databases
-* Update: [DescribeFlowStatus](https://www.tencentcloud.com/document/product/238/32113) - This API is used to query flow status.
-* Update: [RollbackInstance](https://www.tencentcloud.com/document/product/238/32095) - This API is used to roll back the instance by time point.
-* Delete: [DeleteDB](https://www.tencentcloud.com/document/product/238/32117) - This API is used to drop a database.
-* Delete: [DescribeFlowStatus](https://www.tencentcloud.com/document/product/238/32113) - This API is used to query flow status.
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
+* Create: [RollbackInstance](https://cloud.tencent.com/document/api/238/19949)
+* Read: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968)
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
+* Update: [RollbackInstance](https://cloud.tencent.com/document/api/238/19949)
+* Delete: [DeleteDB](https://cloud.tencent.com/document/api/238/19971)
+* Delete: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
 
 ## Import
 

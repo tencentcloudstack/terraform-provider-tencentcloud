@@ -38,6 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [GetOpsAsyncJob](https://cloud.tencent.com/document/api/1267/123587) - This API is used to query async operation details in Ops center.
-* Create: [SetSuccessTaskInstancesAsync](https://cloud.tencent.com/document/api/1267/123567) - This API is used to batch configure instances asynchronously.
+* Create: [GetOpsAsyncJob](https://cloud.tencent.com/document/api/1267/123587)
+* Create: [SetSuccessTaskInstancesAsync](https://cloud.tencent.com/document/api/1267/123567)
 

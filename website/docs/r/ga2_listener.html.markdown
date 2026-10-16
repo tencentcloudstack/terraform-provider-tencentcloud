@@ -166,13 +166,13 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateListener](https://cloud.tencent.com/document/api/1817/130171) - This API is used to create a listener.
-* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
-* Read: [DescribeListeners](https://cloud.tencent.com/document/api/1817/130160) - This API is used to query listeners.
-* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
+* Create: [CreateListener](https://cloud.tencent.com/document/api/1817/130171)
+* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942)
+* Read: [DescribeListeners](https://cloud.tencent.com/document/api/1817/130160)
+* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942)
 * Update: [ModifyListener](https://cloud.tencent.com/document/api/1817/130155)
-* Delete: [DeleteListener](https://cloud.tencent.com/document/api/1817/130166) - This API is used to delete a listener.
-* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
+* Delete: [DeleteListener](https://cloud.tencent.com/document/api/1817/130166)
+* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942)
 
 ## Import
 

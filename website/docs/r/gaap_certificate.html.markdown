@@ -45,10 +45,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCertificate](https://www.tencentcloud.com/document/product/608/33118) - This API (CreateCertificate) is used to create the GAAP certificates and configuration files, including basic authentication configuration files, client CA certificates, server SSL certificates, GAAP SSL certificates, and origin server CA
-* Read: [DescribeCertificateDetail](https://www.tencentcloud.com/document/product/608/33116) - This API (DescribeCertificateDetail) is used to query certificate details, including the certificate ID, name, type, content, key, and other information.
-* Update: [ModifyCertificateAttributes](https://www.tencentcloud.com/document/product/608/33114) - This API is used to modify certificate name and content.
-* Delete: [DeleteCertificate](https://www.tencentcloud.com/document/product/608/33117) - This API is used to delete a certificate.
+* Create: [CreateCertificate](https://cloud.tencent.com/document/api/608/36980)
+* Read: [DescribeCertificateDetail](https://cloud.tencent.com/document/api/608/36978)
+* Update: [ModifyCertificateAttributes](https://cloud.tencent.com/document/api/608/36976)
+* Delete: [DeleteCertificate](https://cloud.tencent.com/document/api/608/36979)
 
 ## Import
 

@@ -58,5 +58,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeOwaspRuleTypes](https://www.tencentcloud.com/document/product/627/73183) - This API is used to query the rule types of the rule engine.
+* Read: [DescribeOwaspRuleTypes](https://cloud.tencent.com/document/api/627/122546)
 

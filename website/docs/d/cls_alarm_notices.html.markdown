@@ -108,5 +108,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAlarmNotices](https://www.tencentcloud.com/document/product/614/42826) - This API is used to get the notification group list.
+* Read: [DescribeAlarmNotices](https://cloud.tencent.com/document/api/614/56462)
 

@@ -36,6 +36,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573) - This API is used to query the details of one or multiple instances.
-* Create: [StartInstances](https://cloud.tencent.com/document/api/1207/47570) - This API is used to start one or more instances.
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573)
+* Create: [StartInstances](https://cloud.tencent.com/document/api/1207/47570)
 

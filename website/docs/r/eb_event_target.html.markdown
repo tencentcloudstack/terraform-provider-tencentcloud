@@ -160,10 +160,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTarget](https://cloud.tencent.com/document/api/1359/67703) - This API is used to create a delivery target.
-* Read: [ListTargets](https://cloud.tencent.com/document/api/1359/67701) - This API is used to get the list delivery targets.
-* Update: [UpdateTarget](https://cloud.tencent.com/document/api/1359/67700) - This API is used to update a delivery target.
-* Delete: [DeleteTarget](https://cloud.tencent.com/document/api/1359/67702) - This API is used to delete a delivery target.
+* Create: [CreateTarget](https://cloud.tencent.com/document/api/1359/67703)
+* Read: [ListTargets](https://cloud.tencent.com/document/api/1359/67701)
+* Update: [UpdateTarget](https://cloud.tencent.com/document/api/1359/67700)
+* Delete: [DeleteTarget](https://cloud.tencent.com/document/api/1359/67702)
 
 ## Import
 

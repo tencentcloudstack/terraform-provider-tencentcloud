@@ -100,18 +100,18 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstanceByApi](https://cloud.tencent.com/document/api/878/98894) - This API is used to create  instance
-* Create: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160) - This API is used to display instance status, process progress, etc., in the instance details page.
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeInstanceInfo](https://cloud.tencent.com/document/api/878/100615) - This API is used to get instance information.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160) - This API is used to display instance status, process progress, etc., in the instance details page.
-* Update: [ModifyInstance](https://cloud.tencent.com/document/api/878/100159) - This API is used to modify instance information. Only the name of an instance can be modified currently.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Update: [ScaleOutInstance](https://cloud.tencent.com/document/api/878/116649) - This API is used to scale out instance.
-* Update: [UpgradeInstance](https://cloud.tencent.com/document/api/878/116652) - This API is used to upgrade Instance.
-* Delete: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160) - This API is used to display instance status, process progress, etc., in the instance details page.
-* Delete: [DestroyInstanceByApi](https://cloud.tencent.com/document/api/878/98893) - This API is used to destroy instance.
+* Create: [CreateInstanceByApi](https://cloud.tencent.com/document/api/878/98894)
+* Create: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeInstanceInfo](https://cloud.tencent.com/document/api/878/100615)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160)
+* Update: [ModifyInstance](https://cloud.tencent.com/document/api/878/100159)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Update: [ScaleOutInstance](https://cloud.tencent.com/document/api/878/116649)
+* Update: [UpgradeInstance](https://cloud.tencent.com/document/api/878/116652)
+* Delete: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160)
+* Delete: [DestroyInstanceByApi](https://cloud.tencent.com/document/api/878/98893)
 
 ## Import
 

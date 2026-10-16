@@ -62,7 +62,7 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [DescribeTasks](https://cloud.tencent.com/document/api/457/125020)
 * Create: [ModifyClusterExtraArgs](https://cloud.tencent.com/document/api/457/125019)
-* Read: [DescribeClusterExtraArgs](https://cloud.tencent.com/document/api/457/101764) - This API is used to query custom parameters of a cluster.
+* Read: [DescribeClusterExtraArgs](https://cloud.tencent.com/document/api/457/101764)
 * Update: [DescribeTasks](https://cloud.tencent.com/document/api/457/125020)
 * Update: [ModifyClusterExtraArgs](https://cloud.tencent.com/document/api/457/125019)
 

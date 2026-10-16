@@ -40,9 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateSCIMCredentialStatus](https://cloud.tencent.com/document/api/850/112048) - This API is used to enable or disable a SCIM key.
-* Read: [ListSCIMCredentials](https://cloud.tencent.com/document/api/850/112049) - This API is used to query the user SCIM key list.
-* Update: [UpdateSCIMCredentialStatus](https://cloud.tencent.com/document/api/850/112048) - This API is used to enable or disable a SCIM key.
+* Create: [UpdateSCIMCredentialStatus](https://cloud.tencent.com/document/api/850/112048)
+* Read: [ListSCIMCredentials](https://cloud.tencent.com/document/api/850/112049)
+* Update: [UpdateSCIMCredentialStatus](https://cloud.tencent.com/document/api/850/112048)
 
 ## Import
 

@@ -136,25 +136,25 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNatGateway](https://www.tencentcloud.com/document/product/215/34757) - This API is used to create a NAT Gateway.
-* Create: [DescribeAddresses](https://www.tencentcloud.com/document/product/215/16702) - This API (DescribeAddresses) is used to query the information of one or multiple [Elastic IPs](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1).
-* Create: [DescribeNatGateways](https://www.tencentcloud.com/document/product/215/34752) - This API is used to query NAT gateways.
-* Create: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeAddresses](https://www.tencentcloud.com/document/product/215/16702) - This API (DescribeAddresses) is used to query the information of one or multiple [Elastic IPs](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1).
-* Read: [DescribeNatGateways](https://www.tencentcloud.com/document/product/215/34752) - This API is used to query NAT gateways.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [AssociateNatGatewayAddress](https://www.tencentcloud.com/document/product/215/36905) - This API is used to bind an EIP to a NAT gateway.
-* Update: [DescribeAddresses](https://www.tencentcloud.com/document/product/215/16702) - This API (DescribeAddresses) is used to query the information of one or multiple [Elastic IPs](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1).
-* Update: [DescribeNatGateways](https://www.tencentcloud.com/document/product/215/34752) - This API is used to query NAT gateways.
-* Update: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [DescribeVpcTaskResult](https://www.tencentcloud.com/document/product/215/41567) - This API is used to query the execution result of a VPC task.
-* Update: [DisassociateNatGatewayAddress](https://www.tencentcloud.com/document/product/215/34751) - This API is used to unbind an EIP from a NAT gateway.
-* Update: [ModifyNatGatewayAttribute](https://www.tencentcloud.com/document/product/215/34750) - This API is used to modify the attributes of a NAT gateway.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Update: [ResetNatGatewayConnection](https://www.tencentcloud.com/document/product/215/34748) - This API is used to adjust concurrent connection cap for the NAT gateway.
-* Delete: [DeleteNatGateway](https://www.tencentcloud.com/document/product/215/34755) - This API is used to delete a NAT gateway.
-* Delete: [DescribeNatGateways](https://www.tencentcloud.com/document/product/215/34752) - This API is used to query NAT gateways.
+* Create: [CreateNatGateway](https://cloud.tencent.com/document/api/215/36721)
+* Create: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702)
+* Create: [DescribeNatGateways](https://cloud.tencent.com/document/api/215/36034)
+* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702)
+* Read: [DescribeNatGateways](https://cloud.tencent.com/document/api/215/36034)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [AssociateNatGatewayAddress](https://cloud.tencent.com/document/api/215/36722)
+* Update: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702)
+* Update: [DescribeNatGateways](https://cloud.tencent.com/document/api/215/36034)
+* Update: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037)
+* Update: [DisassociateNatGatewayAddress](https://cloud.tencent.com/document/api/215/36716)
+* Update: [ModifyNatGatewayAttribute](https://cloud.tencent.com/document/api/215/36715)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Update: [ResetNatGatewayConnection](https://cloud.tencent.com/document/api/215/36713)
+* Delete: [DeleteNatGateway](https://cloud.tencent.com/document/api/215/36719)
+* Delete: [DescribeNatGateways](https://cloud.tencent.com/document/api/215/36034)
 
 ## Import
 

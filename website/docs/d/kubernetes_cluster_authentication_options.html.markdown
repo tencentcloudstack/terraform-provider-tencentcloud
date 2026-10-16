@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeClusterAuthenticationOptions](https://www.tencentcloud.com/document/product/457/42699) - This API is used to query cluster authentication configuration.
+* Read: [DescribeClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62278)
 

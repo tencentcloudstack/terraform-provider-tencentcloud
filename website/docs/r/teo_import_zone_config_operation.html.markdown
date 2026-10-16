@@ -47,6 +47,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeZoneConfigImportResult](https://cloud.tencent.com/document/api/1552/113231) - This API is used to query the results of site configuration import via API (ImportZoneConfig). This feature only supports the sites in the plans of the Standard Edition and the Enterprise Edition.
-* Create: [ImportZoneConfig](https://cloud.tencent.com/document/api/1552/113229) - This API is used to quickly import site configuration files. After the import is initiated, the API will return the corresponding task ID.
+* Create: [DescribeZoneConfigImportResult](https://cloud.tencent.com/document/api/1552/113231)
+* Create: [ImportZoneConfig](https://cloud.tencent.com/document/api/1552/113229)
 

@@ -78,5 +78,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAllNamespaces](https://www.tencentcloud.com/document/product/248/39319) - This API is used to query all namespaces.
+* Read: [DescribeAllNamespaces](https://cloud.tencent.com/document/api/248/48683)
 

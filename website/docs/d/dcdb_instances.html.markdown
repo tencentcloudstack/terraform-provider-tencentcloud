@@ -108,5 +108,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDCDBInstances](https://cloud.tencent.com/document/api/557/16140) - This API is used to query the list of TencentDB instances. It supports filtering instances by project ID, instance ID, private network address, and instance name.
+* Read: [DescribeDCDBInstances](https://cloud.tencent.com/document/api/557/16140)
 

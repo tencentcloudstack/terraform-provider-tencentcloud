@@ -78,5 +78,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetMonitorData](https://www.tencentcloud.com/document/product/248/33881) - This API is used to get the monitoring data of Tencent Cloud services except TKE. To pull TKE’s monitoring data, use the [DescribeStatisticData](https://www.tencentcloud.com/document/product/248/39481) API.
+* Read: [GetMonitorData](https://cloud.tencent.com/document/api/248/31014)
 

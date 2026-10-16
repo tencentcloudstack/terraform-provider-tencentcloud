@@ -68,9 +68,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Read: [DescribeProjects](https://cloud.tencent.com/document/api/1464/61475) - This API is used to get the list of projects (under teams created by an instance).
-* Update: [ModifyProject](https://cloud.tencent.com/document/api/1464/69209) - This API is used to modify the RUM application information.
-* Delete: [DeleteProject](https://cloud.tencent.com/document/api/1464/69238) - This API is used to delete the specified RUM project.
+* Read: [DescribeProjects](https://cloud.tencent.com/document/api/1464/61475)
+* Update: [ModifyProject](https://cloud.tencent.com/document/api/1464/69209)
+* Delete: [DeleteProject](https://cloud.tencent.com/document/api/1464/69238)
 
 ## Import
 

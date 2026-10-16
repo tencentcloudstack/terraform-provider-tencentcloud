@@ -71,27 +71,27 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CloseDBExtranetAccess](https://cloud.tencent.com/document/api/557/19998) - This API is used to disable public network access for a TencentDB instance, which will make the public IP address inaccessible.
-* Create: [CreateHourDCDBInstance](https://cloud.tencent.com/document/api/557/70249) - This API is used to create a pay-as-you-go TDSQL instance.
-* Create: [DescribeDCDBInstances](https://cloud.tencent.com/document/api/557/16140) - This API is used to query the list of TencentDB instances. It supports filtering instances by project ID, instance ID, private network address, and instance name.
-* Create: [DescribeDcnDetail](https://cloud.tencent.com/document/api/557/56346) - This API is used to query the disaster recovery details of an instance.
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/557/56485) - This API is used to query task status.
-* Create: [InitDCDBInstances](https://cloud.tencent.com/document/api/557/19985) - This API is used to initialize instances, including setting the default character set and table name case sensitivity.
-* Create: [ModifyInstanceNetwork](https://cloud.tencent.com/document/api/557/82021) - This API is used to modify instance network.
+* Create: [CloseDBExtranetAccess](https://cloud.tencent.com/document/api/557/19998)
+* Create: [CreateHourDCDBInstance](https://cloud.tencent.com/document/api/557/70249)
+* Create: [DescribeDCDBInstances](https://cloud.tencent.com/document/api/557/16140)
+* Create: [DescribeDcnDetail](https://cloud.tencent.com/document/api/557/56346)
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/557/56485)
+* Create: [InitDCDBInstances](https://cloud.tencent.com/document/api/557/19985)
+* Create: [ModifyInstanceNetwork](https://cloud.tencent.com/document/api/557/82021)
 * Create: [OpenDBExtranetAccess](https://cloud.tencent.com/document/api/557/19980)
-* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/557/51781) - This API is used to query the security group information of an instance.
-* Read: [DescribeDCDBInstanceDetail](https://cloud.tencent.com/document/api/557/89385) - This API is used to get the details of a TDSQL instance.
-* Read: [DescribeDCDBInstances](https://cloud.tencent.com/document/api/557/16140) - This API is used to query the list of TencentDB instances. It supports filtering instances by project ID, instance ID, private network address, and instance name.
-* Read: [DescribeDcnDetail](https://cloud.tencent.com/document/api/557/56346) - This API is used to query the disaster recovery details of an instance.
-* Update: [CloseDBExtranetAccess](https://cloud.tencent.com/document/api/557/19998) - This API is used to disable public network access for a TencentDB instance, which will make the public IP address inaccessible.
-* Update: [DescribeDCDBInstances](https://cloud.tencent.com/document/api/557/16140) - This API is used to query the list of TencentDB instances. It supports filtering instances by project ID, instance ID, private network address, and instance name.
-* Update: [DescribeFlow](https://cloud.tencent.com/document/api/557/56485) - This API is used to query task status.
-* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/557/73095) - This API is used to modify instance name.
-* Update: [ModifyDBInstancesProject](https://cloud.tencent.com/document/api/557/19983) - This API is used to modify the project to which TencentDB instances belong.
-* Update: [ModifyInstanceNetwork](https://cloud.tencent.com/document/api/557/82021) - This API is used to modify instance network.
+* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/557/51781)
+* Read: [DescribeDCDBInstanceDetail](https://cloud.tencent.com/document/api/557/89385)
+* Read: [DescribeDCDBInstances](https://cloud.tencent.com/document/api/557/16140)
+* Read: [DescribeDcnDetail](https://cloud.tencent.com/document/api/557/56346)
+* Update: [CloseDBExtranetAccess](https://cloud.tencent.com/document/api/557/19998)
+* Update: [DescribeDCDBInstances](https://cloud.tencent.com/document/api/557/16140)
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/557/56485)
+* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/557/73095)
+* Update: [ModifyDBInstancesProject](https://cloud.tencent.com/document/api/557/19983)
+* Update: [ModifyInstanceNetwork](https://cloud.tencent.com/document/api/557/82021)
 * Update: [OpenDBExtranetAccess](https://cloud.tencent.com/document/api/557/19980)
-* Update: [UpgradeHourDCDBInstance](https://cloud.tencent.com/document/api/557/85926) - This API is used to upgrade a pay-as-you-go TDSQL instance.
-* Delete: [DestroyHourDCDBInstance](https://cloud.tencent.com/document/api/557/56483) - This API is used to terminate a pay-as-you-go TDSQL instance.
+* Update: [UpgradeHourDCDBInstance](https://cloud.tencent.com/document/api/557/85926)
+* Delete: [DestroyHourDCDBInstance](https://cloud.tencent.com/document/api/557/56483)
 
 ## Import
 

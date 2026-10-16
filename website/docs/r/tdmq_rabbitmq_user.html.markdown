@@ -82,10 +82,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRabbitMQUser](https://cloud.tencent.com/document/api/1179/90855) - This API is used to create a TDMQ for RabbitMQ user.
-* Read: [DescribeRabbitMQUser](https://cloud.tencent.com/document/api/1179/93456) - This API is used to query the list of TDMQ for RabbitMQ users.
-* Update: [ModifyRabbitMQUser](https://cloud.tencent.com/document/api/1179/93454) - This API is used to modify a TDMQ for RabbitMQ user.
-* Delete: [DeleteRabbitMQUser](https://cloud.tencent.com/document/api/1179/93458) - This API is used to delete a TDMQ for RabbitMQ user.
+* Create: [CreateRabbitMQUser](https://cloud.tencent.com/document/api/1179/90855)
+* Read: [DescribeRabbitMQUser](https://cloud.tencent.com/document/api/1179/93456)
+* Update: [ModifyRabbitMQUser](https://cloud.tencent.com/document/api/1179/93454)
+* Delete: [DeleteRabbitMQUser](https://cloud.tencent.com/document/api/1179/93458)
 
 ## Import
 

@@ -43,10 +43,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateUser](https://cloud.tencent.com/document/api/1778/116051) - This API is used to add an MQTT role.
-* Read: [DescribeUserList](https://cloud.tencent.com/document/api/1778/116049) - This API is used to query the user list. Filter parameter usage instructions are as follows:.
-* Update: [ModifyUser](https://cloud.tencent.com/document/api/1778/116048) - This API is used to modify an MQTT role.
-* Delete: [DeleteUser](https://cloud.tencent.com/document/api/1778/116050) - This API is used to delete an MQTT user.
+* Create: [CreateUser](https://cloud.tencent.com/document/api/1778/116051)
+* Read: [DescribeUserList](https://cloud.tencent.com/document/api/1778/116049)
+* Update: [ModifyUser](https://cloud.tencent.com/document/api/1778/116048)
+* Delete: [DeleteUser](https://cloud.tencent.com/document/api/1778/116050)
 
 ## Import
 

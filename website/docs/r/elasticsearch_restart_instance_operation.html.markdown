@@ -41,6 +41,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInstances](https://www.tencentcloud.com/document/product/845/32214) - Query all instances meeting conditions for the user in that region
-* Create: [RestartInstance](https://www.tencentcloud.com/document/product/845/32213) - Restart ES cluster instances for system version update.
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/845/30631)
+* Create: [RestartInstance](https://cloud.tencent.com/document/api/845/30630)
 

@@ -110,17 +110,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrivateZone](https://cloud.tencent.com/document/api/1338/55946) - This API is used to create a private domain.
+* Create: [CreatePrivateZone](https://cloud.tencent.com/document/api/1338/55946)
 * Create: [DescribePrivateZone](https://cloud.tencent.com/document/api/1338/55940)
-* Create: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
 * Read: [DescribePrivateZone](https://cloud.tencent.com/document/api/1338/55940)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
 * Update: [DescribePrivateZone](https://cloud.tencent.com/document/api/1338/55940)
-* Update: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [ModifyPrivateZone](https://cloud.tencent.com/document/api/1338/55935) - This API is used to modify a private domain.
-* Update: [ModifyPrivateZoneVpc](https://cloud.tencent.com/document/api/1338/55933) - This API is used to modify the VPC associated with a private domain.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Update: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [ModifyPrivateZone](https://cloud.tencent.com/document/api/1338/55935)
+* Update: [ModifyPrivateZoneVpc](https://cloud.tencent.com/document/api/1338/55933)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
 * Delete: [DeletePrivateZone](https://cloud.tencent.com/document/api/1338/55944)
 
 ## Import

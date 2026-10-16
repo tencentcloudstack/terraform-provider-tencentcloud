@@ -44,9 +44,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyLivePlayAuthKey](https://www.tencentcloud.com/document/product/267/30770) - This API is used to modify the playback authentication key.
-* Read: [DescribeLivePlayAuthKey](https://www.tencentcloud.com/document/product/267/30772) - This API is used to query the playback authentication key.
-* Update: [ModifyLivePlayAuthKey](https://www.tencentcloud.com/document/product/267/30770) - This API is used to modify the playback authentication key.
+* Create: [ModifyLivePlayAuthKey](https://cloud.tencent.com/document/api/267/30424)
+* Read: [DescribeLivePlayAuthKey](https://cloud.tencent.com/document/api/267/30426)
+* Update: [ModifyLivePlayAuthKey](https://cloud.tencent.com/document/api/267/30424)
 
 ## Import
 

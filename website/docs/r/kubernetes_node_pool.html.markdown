@@ -472,20 +472,20 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateClusterNodePool](https://www.tencentcloud.com/document/product/457/38781) - This API is used to create a node pool.
-* Read: [DescribeClusterNodePoolDetail](https://www.tencentcloud.com/document/product/457/38778) - This API is used to query detailed information of a node pool.
-* Read: [DescribeClusters](https://www.tencentcloud.com/document/product/457/32025) - This API is used to query clusters list.
-* Update: [DeleteMachine](https://www.tencentcloud.com/document/product/296/30907) - This API is used to uninstall the CWPP client.
-* Update: [DescribeAutoScalingActivities](https://www.tencentcloud.com/document/product/377/31014) - This API is used to query the scaling activities of the scaling group. Currently, only scaling operations from the past two years are saved.
-* Update: [DescribeClusterInstances](https://www.tencentcloud.com/document/product/457/66315) - This API is used to query the information of node instances in a cluster.
-* Update: [DescribeClusterNodePoolDetail](https://www.tencentcloud.com/document/product/457/38778) - This API is used to query detailed information of a node pool.
-* Update: [DescribeClusters](https://www.tencentcloud.com/document/product/457/32025) - This API is used to query clusters list.
-* Update: [DescribeInstances](https://www.tencentcloud.com/document/product/213/33258) - This API is used to query the details of instances.
-* Update: [InvokeCommand](https://cloud.tencent.com/document/api/1340/52678) - This API is used to trigger a command on the specified instance and returns the execution activity ID (inv-xxxxxxxx) on success.
-* Update: [ModifyClusterNodePool](https://www.tencentcloud.com/document/product/457/38776) - This API is used to edit a node pool.
-* Update: [ModifyLaunchConfigurationAttributes](https://www.tencentcloud.com/document/product/377/30998) - This API (ModifyLaunchConfigurationAttributes) is used to modify part of a launch configuration's attributes.
+* Create: [CreateClusterNodePool](https://cloud.tencent.com/document/api/457/49436)
+* Read: [DescribeClusterNodePoolDetail](https://cloud.tencent.com/document/api/457/49433)
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862)
+* Update: [DeleteMachine](https://cloud.tencent.com/document/api/296/19844)
+* Update: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735)
+* Update: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863)
+* Update: [DescribeClusterNodePoolDetail](https://cloud.tencent.com/document/api/457/49433)
+* Update: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862)
+* Update: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728)
+* Update: [InvokeCommand](https://cloud.tencent.com/document/api/1340/52678)
+* Update: [ModifyClusterNodePool](https://cloud.tencent.com/document/api/457/49431)
+* Update: [ModifyLaunchConfigurationAttributes](https://cloud.tencent.com/document/api/377/31298)
 * Update: [ModifyNodePoolDesiredCapacityAboutAsg](https://cloud.tencent.com/document/api/457/51013)
-* Delete: [DeleteClusterNodePool](https://www.tencentcloud.com/document/product/457/38779) - This API is used to delete a node pool.
+* Delete: [DeleteClusterNodePool](https://cloud.tencent.com/document/api/457/49434)
 
 ## Import
 

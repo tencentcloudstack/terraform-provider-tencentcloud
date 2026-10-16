@@ -75,12 +75,12 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [RegisterDeviceCertificate](https://cloud.tencent.com/document/api/1778/111071)
-* Read: [DescribeDeviceCertificate](https://cloud.tencent.com/document/api/1778/113748) - This API is used to query device certificate details.
+* Read: [DescribeDeviceCertificate](https://cloud.tencent.com/document/api/1778/113748)
 * Update: [ActivateDeviceCertificate](https://cloud.tencent.com/document/api/1778/113648)
 * Update: [DeactivateDeviceCertificate](https://cloud.tencent.com/document/api/1778/113750)
 * Delete: [DeactivateDeviceCertificate](https://cloud.tencent.com/document/api/1778/113750)
 * Delete: [DeleteDeviceCertificate](https://cloud.tencent.com/document/api/1778/113749)
-* Delete: [DescribeDeviceCertificate](https://cloud.tencent.com/document/api/1778/113748) - This API is used to query device certificate details.
+* Delete: [DescribeDeviceCertificate](https://cloud.tencent.com/document/api/1778/113748)
 
 ## Import
 

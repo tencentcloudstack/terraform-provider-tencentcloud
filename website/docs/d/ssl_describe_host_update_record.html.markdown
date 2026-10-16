@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeHostUpdateRecord](https://cloud.tencent.com/document/api/400/91653) - Query certificate cloud resource update record list
+* Read: [DescribeHostUpdateRecord](https://cloud.tencent.com/document/api/400/91653)
 

@@ -37,5 +37,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [VerifyOwnership](https://cloud.tencent.com/document/api/1552/98879) - This API is used to verify your ownership of a site or domain name. It's required in the CNAME access mode. After a site is verified, you don't need to verify the ownership again for domain names added to it in the future.
+* Create: [VerifyOwnership](https://cloud.tencent.com/document/api/1552/98879)
 

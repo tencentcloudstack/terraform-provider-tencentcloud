@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeShareAreas](https://cloud.tencent.com/document/api/850/103050) - This API is used to obtain a list of shareable regions.
+* Read: [DescribeShareAreas](https://cloud.tencent.com/document/api/850/103050)
 

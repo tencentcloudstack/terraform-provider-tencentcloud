@@ -50,5 +50,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetTriggerWorkflowRun](https://cloud.tencent.com/document/api/1267/127217) - Query workflow task details.
+* Read: [GetTriggerWorkflowRun](https://cloud.tencent.com/document/api/1267/127217)
 

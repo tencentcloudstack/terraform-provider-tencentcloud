@@ -38,7 +38,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ApplyDiskBackup](https://www.tencentcloud.com/document/product/362/50790) - This API is used to roll back a backup to the original cloud disk.
-* Create: [DescribeDisks](https://www.tencentcloud.com/document/product/362/16315) - This API (DescribeDisks) is used to query the list of cloud disks.
-* Read: [DescribeDisks](https://www.tencentcloud.com/document/product/362/16315) - This API (DescribeDisks) is used to query the list of cloud disks.
+* Create: [ApplyDiskBackup](https://cloud.tencent.com/document/api/362/80280)
+* Create: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315)
+* Read: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315)
 

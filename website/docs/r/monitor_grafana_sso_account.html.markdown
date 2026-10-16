@@ -78,10 +78,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSSOAccount](https://www.tencentcloud.com/document/product/248/49767) - This API is used to authorize a Grafana instance to another Tencent Cloud user.
-* Read: [DescribeSSOAccount](https://www.tencentcloud.com/document/product/248/49754) - This API is used to list all authorized accounts of the current Grafana instance.
-* Update: [UpdateSSOAccount](https://www.tencentcloud.com/document/product/248/49740) - This API is used to update the remarks and permission information of an authorized account in an overwriting manner.
-* Delete: [DeleteSSOAccount](https://www.tencentcloud.com/document/product/248/49763) - This API is used to delete an authorized TCMG user.
+* Create: [CreateSSOAccount](https://cloud.tencent.com/document/api/248/79216)
+* Read: [DescribeSSOAccount](https://cloud.tencent.com/document/api/248/79202)
+* Update: [UpdateSSOAccount](https://cloud.tencent.com/document/api/248/79188)
+* Delete: [DeleteSSOAccount](https://cloud.tencent.com/document/api/248/79212)
 
 ## Import
 

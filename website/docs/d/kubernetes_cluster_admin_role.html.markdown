@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [AcquireClusterAdminRole](https://www.tencentcloud.com/document/product/457/38530) - This API can be called to acquire the ClusterRole tke:admin. By setting a CAM policy, you can grant permission of this API to a sub-account that has higher permission in CAM.
+* Read: [AcquireClusterAdminRole](https://cloud.tencent.com/document/api/457/49014)
 

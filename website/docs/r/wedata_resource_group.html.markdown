@@ -114,8 +114,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateResourceGroup](https://cloud.tencent.com/document/api/1267/123984) - This API is used to purchase resources.
-* Read: [ListResourceGroups](https://cloud.tencent.com/document/api/1267/123980) - This API is used to query the execution resource group list.
-* Update: [UpdateResourceGroup](https://cloud.tencent.com/document/api/1267/123979) - This API is used to modify configurations or renew resources.
-* Delete: [DeleteResourceGroup](https://cloud.tencent.com/document/api/1267/123983) - This API is used to destroy resources.
+* Create: [CreateResourceGroup](https://cloud.tencent.com/document/api/1267/123984)
+* Read: [ListResourceGroups](https://cloud.tencent.com/document/api/1267/123980)
+* Update: [UpdateResourceGroup](https://cloud.tencent.com/document/api/1267/123979)
+* Delete: [DeleteResourceGroup](https://cloud.tencent.com/document/api/1267/123983)
 

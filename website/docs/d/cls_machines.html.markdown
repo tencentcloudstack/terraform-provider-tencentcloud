@@ -60,5 +60,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeMachines](https://www.tencentcloud.com/document/product/614/42817) - This API is used to get the status of a machine under the specified machine group.
+* Read: [DescribeMachines](https://cloud.tencent.com/document/api/614/56437)
 

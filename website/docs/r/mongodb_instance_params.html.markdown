@@ -50,9 +50,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInstanceParams](https://www.tencentcloud.com/document/product/240/44226) - This API is used to query the list of parameters that can be modified for the current instance.
-* Create: [ModifyInstanceParams](https://www.tencentcloud.com/document/product/240/74799) - This API is used to modify the parameter configuration of a TencentDB for MongoDB instance.
-* Read: [DescribeInstanceParams](https://www.tencentcloud.com/document/product/240/44226) - This API is used to query the list of parameters that can be modified for the current instance.
-* Update: [DescribeInstanceParams](https://www.tencentcloud.com/document/product/240/44226) - This API is used to query the list of parameters that can be modified for the current instance.
-* Update: [ModifyInstanceParams](https://www.tencentcloud.com/document/product/240/74799) - This API is used to modify the parameter configuration of a TencentDB for MongoDB instance.
+* Create: [DescribeInstanceParams](https://cloud.tencent.com/document/api/240/65903)
+* Create: [ModifyInstanceParams](https://cloud.tencent.com/document/api/240/107557)
+* Read: [DescribeInstanceParams](https://cloud.tencent.com/document/api/240/65903)
+* Update: [DescribeInstanceParams](https://cloud.tencent.com/document/api/240/65903)
+* Update: [ModifyInstanceParams](https://cloud.tencent.com/document/api/240/107557)
 

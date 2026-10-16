@@ -88,5 +88,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceList](https://cloud.tencent.com/document/api/1778/111029) - Get instance list. Description of the Filters parameter use is as follows:
+* Read: [DescribeInstanceList](https://cloud.tencent.com/document/api/1778/111029)
 

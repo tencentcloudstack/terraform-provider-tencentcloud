@@ -66,12 +66,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRepository](https://cloud.tencent.com/document/api/1141/42725) - This API is used to create an image repository in an Enterprise Edition instance.
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - This API is used to query the instance information.
-* Read: [DescribeRepositories](https://cloud.tencent.com/document/api/1141/42722) - This API is used to query the image repository list or the information of the specified image repository.
-* Update: [ModifyRepository](https://cloud.tencent.com/document/api/1141/42721) - This API is used to update the information of an image repository. The repository description can be modified.
-* Delete: [DeleteRepository](https://cloud.tencent.com/document/api/1141/42724) - This API is used to delete an image repository.
-* Delete: [DescribeRepositories](https://cloud.tencent.com/document/api/1141/42722) - This API is used to query the image repository list or the information of the specified image repository.
+* Create: [CreateRepository](https://cloud.tencent.com/document/api/1141/42725)
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569)
+* Read: [DescribeRepositories](https://cloud.tencent.com/document/api/1141/42722)
+* Update: [ModifyRepository](https://cloud.tencent.com/document/api/1141/42721)
+* Delete: [DeleteRepository](https://cloud.tencent.com/document/api/1141/42724)
+* Delete: [DescribeRepositories](https://cloud.tencent.com/document/api/1141/42722)
 
 ## Import
 

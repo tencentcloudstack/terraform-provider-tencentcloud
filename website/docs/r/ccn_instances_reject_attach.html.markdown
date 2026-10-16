@@ -50,5 +50,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RejectAttachCcnInstances](https://www.tencentcloud.com/document/product/215/34781) - This API (RejectAttachCcnInstances) is used to reject association operations when instances are associated across accounts for the CCN owner.
+* Create: [RejectAttachCcnInstances](https://cloud.tencent.com/document/api/215/20250)
 

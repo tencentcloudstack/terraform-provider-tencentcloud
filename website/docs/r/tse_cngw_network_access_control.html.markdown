@@ -51,11 +51,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723) - Query the public network details of a cloud native API gateway instance
-* Create: [ModifyNetworkAccessStrategy](https://cloud.tencent.com/document/api/1364/102775) - Modify the access policy of the Kong cloud native API gateway instance to support allowlist or blocklist.
-* Read: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723) - Query the public network details of a cloud native API gateway instance
-* Update: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723) - Query the public network details of a cloud native API gateway instance
-* Update: [ModifyNetworkAccessStrategy](https://cloud.tencent.com/document/api/1364/102775) - Modify the access policy of the Kong cloud native API gateway instance to support allowlist or blocklist.
+* Create: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723)
+* Create: [ModifyNetworkAccessStrategy](https://cloud.tencent.com/document/api/1364/102775)
+* Read: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723)
+* Update: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723)
+* Update: [ModifyNetworkAccessStrategy](https://cloud.tencent.com/document/api/1364/102775)
 
 ## Import
 

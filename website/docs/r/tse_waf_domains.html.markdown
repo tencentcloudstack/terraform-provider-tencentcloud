@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWafDomains](https://cloud.tencent.com/document/api/1364/101821) - Create a WAF-protected domain name
-* Read: [DescribeWafDomains](https://cloud.tencent.com/document/api/1364/101827) - Query a WAF-protected domain name
-* Delete: [DeleteWafDomains](https://cloud.tencent.com/document/api/1364/101828) - Delete a WAF-protected domain name
+* Create: [CreateWafDomains](https://cloud.tencent.com/document/api/1364/101821)
+* Read: [DescribeWafDomains](https://cloud.tencent.com/document/api/1364/101827)
+* Delete: [DeleteWafDomains](https://cloud.tencent.com/document/api/1364/101828)
 
 ## Import
 

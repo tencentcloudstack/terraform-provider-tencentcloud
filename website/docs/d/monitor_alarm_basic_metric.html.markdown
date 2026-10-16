@@ -55,5 +55,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBaseMetrics](https://www.tencentcloud.com/document/product/248/33882) - This API is used to get the attributes of basic metrics.
+* Read: [DescribeBaseMetrics](https://cloud.tencent.com/document/api/248/30351)
 

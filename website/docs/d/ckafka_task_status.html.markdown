@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTaskStatus](https://www.tencentcloud.com/document/product/597/55881) - This API is used to query the task status.
+* Read: [DescribeTaskStatus](https://cloud.tencent.com/document/api/597/90934)
 

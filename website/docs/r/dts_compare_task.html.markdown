@@ -81,11 +81,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCompareTask](https://www.tencentcloud.com/document/product/571/51821) - This API is used to create a data consistency check task. After the task is successfully created, its ID will be returned in the format of `dts-8yv4w2i1-cmp-37skmii9`, and you can call `StartCompare` to start it.
-* Create: [DescribeCompareTasks](https://www.tencentcloud.com/document/product/571/51816) - This API is used to query the list of data consistency check tasks under the current task.
-* Create: [StartCompare](https://www.tencentcloud.com/document/product/571/51802) - This API is used to start a data consistency check task after creating it by calling the `CreateCompareTask` API. After calling this API, you can call the `DescribeCompareTasks` API to query the latest task status.
-* Read: [DescribeCompareTasks](https://www.tencentcloud.com/document/product/571/51816) - This API is used to query the list of data consistency check tasks under the current task.
-* Update: [ModifyCompareTask](https://www.tencentcloud.com/document/product/571/51809) - This API is used to modify the parameters of a data consistency check task after it is created and before it starts.
-* Delete: [DeleteCompareTask](https://www.tencentcloud.com/document/product/571/51818) - This API is used to delete a data consistency check task, which can be called when the task status is `success`, `failed`, or `canceled`.
-* Delete: [DescribeCompareTasks](https://www.tencentcloud.com/document/product/571/51816) - This API is used to query the list of data consistency check tasks under the current task.
+* Create: [CreateCompareTask](https://cloud.tencent.com/document/api/571/82093)
+* Create: [DescribeCompareTasks](https://cloud.tencent.com/document/api/571/82088)
+* Create: [StartCompare](https://cloud.tencent.com/document/api/571/82074)
+* Read: [DescribeCompareTasks](https://cloud.tencent.com/document/api/571/82088)
+* Update: [ModifyCompareTask](https://cloud.tencent.com/document/api/571/82081)
+* Delete: [DeleteCompareTask](https://cloud.tencent.com/document/api/571/82090)
+* Delete: [DescribeCompareTasks](https://cloud.tencent.com/document/api/571/82088)
 

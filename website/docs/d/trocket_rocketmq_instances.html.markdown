@@ -68,5 +68,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceList](https://cloud.tencent.com/document/api/1493/96028) - This API is used to describe clusters. It only supports 5.x clusters. Description of the Filters parameter use is as follows:.
+* Read: [DescribeInstanceList](https://cloud.tencent.com/document/api/1493/96028)
 

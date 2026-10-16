@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateOrganizationMemberAuthIdentity](https://cloud.tencent.com/document/api/850/96106) - This API is used to add organization member access authorization.
-* Read: [DescribeOrganizationMemberAuthIdentities](https://cloud.tencent.com/document/api/850/82936) - This API is used to obtain the list of organization member access authorization.
-* Delete: [DeleteOrganizationMemberAuthIdentity](https://cloud.tencent.com/document/api/850/96120) - This API is used to delete organization member access authorization.
+* Create: [CreateOrganizationMemberAuthIdentity](https://cloud.tencent.com/document/api/850/96106)
+* Read: [DescribeOrganizationMemberAuthIdentities](https://cloud.tencent.com/document/api/850/82936)
+* Delete: [DeleteOrganizationMemberAuthIdentity](https://cloud.tencent.com/document/api/850/96120)
 
 ## Import
 

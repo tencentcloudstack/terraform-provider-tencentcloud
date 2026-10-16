@@ -105,13 +105,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachInstances](https://www.tencentcloud.com/document/product/377/31017) - This interface (AttachInstances) is used to add CVM instances to a scaling group.
-* Create: [DescribeAutoScalingActivities](https://www.tencentcloud.com/document/product/377/31014) - This API is used to query the scaling activities of the scaling group. Currently, only scaling operations from the past two years are saved.
-* Read: [DescribeAutoScalingInstances](https://www.tencentcloud.com/document/product/377/31012) - This API (DescribeAutoScalingInstances) is used to query the information of instances associated with AS.
-* Update: [AttachInstances](https://www.tencentcloud.com/document/product/377/31017) - This interface (AttachInstances) is used to add CVM instances to a scaling group.
-* Update: [DescribeAutoScalingActivities](https://www.tencentcloud.com/document/product/377/31014) - This API is used to query the scaling activities of the scaling group. Currently, only scaling operations from the past two years are saved.
-* Update: [DetachInstances](https://www.tencentcloud.com/document/product/377/31011) - This API is used to remove CVM instances from a scaling group. Instances removed via this API will not be terminated.
-* Delete: [DescribeAutoScalingActivities](https://www.tencentcloud.com/document/product/377/31014) - This API is used to query the scaling activities of the scaling group. Currently, only scaling operations from the past two years are saved.
-* Delete: [DescribeAutoScalingInstances](https://www.tencentcloud.com/document/product/377/31012) - This API (DescribeAutoScalingInstances) is used to query the information of instances associated with AS.
-* Delete: [DetachInstances](https://www.tencentcloud.com/document/product/377/31011) - This API is used to remove CVM instances from a scaling group. Instances removed via this API will not be terminated.
+* Create: [AttachInstances](https://cloud.tencent.com/document/api/377/20441)
+* Create: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735)
+* Read: [DescribeAutoScalingInstances](https://cloud.tencent.com/document/api/377/20437)
+* Update: [AttachInstances](https://cloud.tencent.com/document/api/377/20441)
+* Update: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735)
+* Update: [DetachInstances](https://cloud.tencent.com/document/api/377/20436)
+* Delete: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735)
+* Delete: [DescribeAutoScalingInstances](https://cloud.tencent.com/document/api/377/20437)
+* Delete: [DetachInstances](https://cloud.tencent.com/document/api/377/20436)
 

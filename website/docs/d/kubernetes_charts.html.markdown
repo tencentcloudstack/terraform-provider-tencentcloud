@@ -57,5 +57,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetTkeAppChartList](https://www.tencentcloud.com/document/product/457/69893) - This API is used to retrieve the App List supported by TKE.
+* Read: [GetTkeAppChartList](https://cloud.tencent.com/document/api/457/64977)
 

@@ -67,14 +67,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateProxy](https://cloud.tencent.com/document/api/1003/94134) - This API is used to enable the database proxy of a cluster.
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
-* Create: [DescribeProxies](https://cloud.tencent.com/document/api/1003/94132) - This API is used to query agent list.
-* Read: [DescribeProxies](https://cloud.tencent.com/document/api/1003/94132) - This API is used to query agent list.
-* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
-* Update: [ModifyProxyDesc](https://cloud.tencent.com/document/api/1003/94130) - This API is used to modify the description of a database proxy.
-* Update: [SwitchProxyVpc](https://cloud.tencent.com/document/api/1003/83595) - This API is used to replace the vpc of the database proxy.
-* Update: [UpgradeProxy](https://cloud.tencent.com/document/api/1003/94127) - This API is used to upgrade database proxy configuration.
-* Delete: [CloseProxy](https://cloud.tencent.com/document/api/1003/94135) - This API is used to close the database proxy service of a cluster.
-* Delete: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
+* Create: [CreateProxy](https://cloud.tencent.com/document/api/1003/94134)
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
+* Create: [DescribeProxies](https://cloud.tencent.com/document/api/1003/94132)
+* Read: [DescribeProxies](https://cloud.tencent.com/document/api/1003/94132)
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
+* Update: [ModifyProxyDesc](https://cloud.tencent.com/document/api/1003/94130)
+* Update: [SwitchProxyVpc](https://cloud.tencent.com/document/api/1003/83595)
+* Update: [UpgradeProxy](https://cloud.tencent.com/document/api/1003/94127)
+* Delete: [CloseProxy](https://cloud.tencent.com/document/api/1003/94135)
+* Delete: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
 

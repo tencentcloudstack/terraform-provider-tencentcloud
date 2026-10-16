@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyRecordToGroup](https://cloud.tencent.com/document/api/1427/83223) - This API is used to add a record to a group.
+* Create: [ModifyRecordToGroup](https://cloud.tencent.com/document/api/1427/83223)
 

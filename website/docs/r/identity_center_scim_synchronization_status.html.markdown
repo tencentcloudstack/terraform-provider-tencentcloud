@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateSCIMSynchronizationStatus](https://cloud.tencent.com/document/api/850/112047) - This API is used to enable or disable user SCIM synchronization.
-* Read: [GetSCIMSynchronizationStatus](https://cloud.tencent.com/document/api/850/112050) - This API is used to query SCIM synchronization status.
-* Update: [UpdateSCIMSynchronizationStatus](https://cloud.tencent.com/document/api/850/112047) - This API is used to enable or disable user SCIM synchronization.
+* Create: [UpdateSCIMSynchronizationStatus](https://cloud.tencent.com/document/api/850/112047)
+* Read: [GetSCIMSynchronizationStatus](https://cloud.tencent.com/document/api/850/112050)
+* Update: [UpdateSCIMSynchronizationStatus](https://cloud.tencent.com/document/api/850/112047)
 
 ## Import
 

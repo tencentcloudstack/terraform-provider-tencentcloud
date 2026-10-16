@@ -38,6 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyDomainLock](https://cloud.tencent.com/document/api/1427/56163) - This API is used to lock a domain.
-* Delete: [ModifyDomainUnlock](https://cloud.tencent.com/document/api/1427/56159) - This API is used to unlock a domain.
+* Create: [ModifyDomainLock](https://cloud.tencent.com/document/api/1427/56163)
+* Delete: [ModifyDomainUnlock](https://cloud.tencent.com/document/api/1427/56159)
 

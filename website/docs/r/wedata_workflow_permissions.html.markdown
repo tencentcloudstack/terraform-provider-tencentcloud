@@ -58,12 +58,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127266) - This API is used to configure data development permissions.
-* Read: [ListWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127247) - Query workflow authorization permissions.
-* Update: [CreateWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127266) - This API is used to configure data development permissions.
-* Update: [DeleteWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127262) - This API is used to delete workflow folder permissions.
-* Delete: [DeleteWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127262) - This API is used to delete workflow folder permissions.
-* Delete: [ListWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127247) - Query workflow authorization permissions.
+* Create: [CreateWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127266)
+* Read: [ListWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127247)
+* Update: [CreateWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127266)
+* Update: [DeleteWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127262)
+* Delete: [DeleteWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127262)
+* Delete: [ListWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127247)
 
 ## Import
 

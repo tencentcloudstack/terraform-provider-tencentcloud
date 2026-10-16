@@ -91,5 +91,5 @@ Note: When lineage is for table columns, the unique ID should be TableResourceUn
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListProcessLineage](https://cloud.tencent.com/document/api/1267/123990) - This API is used to obtain asset lineage information.
+* Read: [ListProcessLineage](https://cloud.tencent.com/document/api/1267/123990)
 

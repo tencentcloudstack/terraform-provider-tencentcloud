@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstanceSnapshot](https://cloud.tencent.com/document/api/1207/54390) - This API is used to create a system disk snapshot of the specified instance.
-* Create: [DescribeSnapshots](https://cloud.tencent.com/document/api/1207/54388) - This API is used to query the list of snapshots.
-* Read: [DescribeSnapshots](https://cloud.tencent.com/document/api/1207/54388) - This API is used to query the list of snapshots.
-* Update: [ModifySnapshotAttribute](https://cloud.tencent.com/document/api/1207/54387) - This API is used to modify the attributes of a snapshot.
-* Delete: [DeleteSnapshots](https://cloud.tencent.com/document/api/1207/54389) - This API is used to delete a snapshot.
+* Create: [CreateInstanceSnapshot](https://cloud.tencent.com/document/api/1207/54390)
+* Create: [DescribeSnapshots](https://cloud.tencent.com/document/api/1207/54388)
+* Read: [DescribeSnapshots](https://cloud.tencent.com/document/api/1207/54388)
+* Update: [ModifySnapshotAttribute](https://cloud.tencent.com/document/api/1207/54387)
+* Delete: [DeleteSnapshots](https://cloud.tencent.com/document/api/1207/54389)
 

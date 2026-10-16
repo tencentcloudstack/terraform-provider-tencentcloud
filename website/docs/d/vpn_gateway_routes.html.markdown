@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeVpnGatewayRoutes](https://www.tencentcloud.com/document/product/215/41055) - This API is used to query VPN gateway routes.
+* Read: [DescribeVpnGatewayRoutes](https://cloud.tencent.com/document/api/215/57676)
 

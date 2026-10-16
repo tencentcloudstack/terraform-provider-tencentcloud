@@ -143,10 +143,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAdaptiveDynamicStreamingTemplate](https://cloud.tencent.com/document/api/862/45749) - This API is used to create an adaptive bitrate streaming template. Up up to 100 such templates can be created.
-* Read: [DescribeAdaptiveDynamicStreamingTemplates](https://cloud.tencent.com/document/api/862/45747) - This API is used to query the list of adaptive bitrate streaming templates and supports paginated queries by filters.
-* Update: [ModifyAdaptiveDynamicStreamingTemplate](https://cloud.tencent.com/document/api/862/45746) - This API is used to modify an adaptive bitrate streaming template.
-* Delete: [DeleteAdaptiveDynamicStreamingTemplate](https://cloud.tencent.com/document/api/862/45748) - This API is used to delete an adaptive bitrate streaming template.
+* Create: [CreateAdaptiveDynamicStreamingTemplate](https://cloud.tencent.com/document/api/862/45749)
+* Read: [DescribeAdaptiveDynamicStreamingTemplates](https://cloud.tencent.com/document/api/862/45747)
+* Update: [ModifyAdaptiveDynamicStreamingTemplate](https://cloud.tencent.com/document/api/862/45746)
+* Delete: [DeleteAdaptiveDynamicStreamingTemplate](https://cloud.tencent.com/document/api/862/45748)
 
 ## Import
 

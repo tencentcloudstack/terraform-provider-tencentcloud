@@ -380,9 +380,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyL7AccSetting](https://cloud.tencent.com/document/api/1552/115817) - This API is used to modify the global configuration of [Site Acceleration](https://intl.cloud.tencent.com/document/product/1552/96193?from_cn_redirect=1).
-* Read: [DescribeL7AccSetting](https://cloud.tencent.com/document/api/1552/115819) - This API is used to query the global configuration of [Site Acceleration](https://intl.cloud.tencent.com/document/product/1552/96193?from_cn_redirect=1).
-* Update: [ModifyL7AccSetting](https://cloud.tencent.com/document/api/1552/115817) - This API is used to modify the global configuration of [Site Acceleration](https://intl.cloud.tencent.com/document/product/1552/96193?from_cn_redirect=1).
+* Create: [ModifyL7AccSetting](https://cloud.tencent.com/document/api/1552/115817)
+* Read: [DescribeL7AccSetting](https://cloud.tencent.com/document/api/1552/115819)
+* Update: [ModifyL7AccSetting](https://cloud.tencent.com/document/api/1552/115817)
 
 ## Import
 

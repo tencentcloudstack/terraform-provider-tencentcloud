@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RejectJoinShareUnitInvitation](https://cloud.tencent.com/document/api/850/107558) - This API is used to reject an invitation to join a shared unit.
+* Create: [RejectJoinShareUnitInvitation](https://cloud.tencent.com/document/api/850/107558)
 

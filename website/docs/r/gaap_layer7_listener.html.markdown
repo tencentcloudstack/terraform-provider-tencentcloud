@@ -59,21 +59,21 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateHTTPListener](https://www.tencentcloud.com/document/product/608/33076) - This API (CreateHTTPListener) is used to create an HTTP listener in the connection instance.
-* Create: [CreateHTTPSListener](https://www.tencentcloud.com/document/product/608/33075) - This API (CreateHTTPListener) is used to create an HTTPS listener in the connection instance.
-* Create: [DescribeProxyDetail](https://www.tencentcloud.com/document/product/608/33098) - This API (DescribeProxyDetail) is used to query connection details.
-* Create: [DescribeProxyGroupDetails](https://www.tencentcloud.com/document/product/608/33082) - This API (DescribeProxyGroupDetails) is used to query connection group details.
+* Create: [CreateHTTPListener](https://cloud.tencent.com/document/api/608/37007)
+* Create: [CreateHTTPSListener](https://cloud.tencent.com/document/api/608/37006)
+* Create: [DescribeProxyDetail](https://cloud.tencent.com/document/api/608/36960)
+* Create: [DescribeProxyGroupDetails](https://cloud.tencent.com/document/api/608/36944)
 * Create: [SetTlsVersion](https://cloud.tencent.com/document/api/608/107933)
-* Read: [DescribeHTTPListeners](https://www.tencentcloud.com/document/product/608/33071) - This API (DescribeHTTPListeners) is used to query HTTP listener information.
-* Read: [DescribeHTTPSListeners](https://www.tencentcloud.com/document/product/608/33070) - This API (DescribeHTTPSListeners) is used to query HTTPS listener information.
-* Update: [DescribeProxyDetail](https://www.tencentcloud.com/document/product/608/33098) - This API (DescribeProxyDetail) is used to query connection details.
-* Update: [DescribeProxyGroupDetails](https://www.tencentcloud.com/document/product/608/33082) - This API (DescribeProxyGroupDetails) is used to query connection group details.
-* Update: [ModifyHTTPListenerAttribute](https://www.tencentcloud.com/document/product/608/33066) - This API (ModifyHTTPListenerAttribute) is used to modify the HTTP listener configuration information of a connection. Currently only supports modifying listener name.
-* Update: [ModifyHTTPSListenerAttribute](https://www.tencentcloud.com/document/product/608/33065) - This API (ModifyHTTPSListenerAttribute) is used to modify HTTPS listener configurations. It currently do not support connection groups and connections of version 1.0.
+* Read: [DescribeHTTPListeners](https://cloud.tencent.com/document/api/608/37002)
+* Read: [DescribeHTTPSListeners](https://cloud.tencent.com/document/api/608/37001)
+* Update: [DescribeProxyDetail](https://cloud.tencent.com/document/api/608/36960)
+* Update: [DescribeProxyGroupDetails](https://cloud.tencent.com/document/api/608/36944)
+* Update: [ModifyHTTPListenerAttribute](https://cloud.tencent.com/document/api/608/36997)
+* Update: [ModifyHTTPSListenerAttribute](https://cloud.tencent.com/document/api/608/36996)
 * Update: [SetTlsVersion](https://cloud.tencent.com/document/api/608/107933)
-* Delete: [DeleteListeners](https://www.tencentcloud.com/document/product/608/33072) - This API (DeleteListeners) is used to batch delete the listeners of a connection or connection group, including layer-4/7 listeners.
-* Delete: [DescribeHTTPListeners](https://www.tencentcloud.com/document/product/608/33071) - This API (DescribeHTTPListeners) is used to query HTTP listener information.
-* Delete: [DescribeHTTPSListeners](https://www.tencentcloud.com/document/product/608/33070) - This API (DescribeHTTPSListeners) is used to query HTTPS listener information.
+* Delete: [DeleteListeners](https://cloud.tencent.com/document/api/608/37003)
+* Delete: [DescribeHTTPListeners](https://cloud.tencent.com/document/api/608/37002)
+* Delete: [DescribeHTTPSListeners](https://cloud.tencent.com/document/api/608/37001)
 
 ## Import
 

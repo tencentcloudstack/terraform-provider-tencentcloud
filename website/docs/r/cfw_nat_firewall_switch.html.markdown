@@ -61,10 +61,10 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [DescribeNatFwSwitch](https://cloud.tencent.com/document/api/1132/125881)
-* Create: [ModifyNatFwSwitch](https://cloud.tencent.com/document/api/1132/60242) - This API is used to enable or disable a NAT firewall.
+* Create: [ModifyNatFwSwitch](https://cloud.tencent.com/document/api/1132/60242)
 * Read: [DescribeNatFwSwitch](https://cloud.tencent.com/document/api/1132/125881)
 * Update: [DescribeNatFwSwitch](https://cloud.tencent.com/document/api/1132/125881)
-* Update: [ModifyNatFwSwitch](https://cloud.tencent.com/document/api/1132/60242) - This API is used to enable or disable a NAT firewall.
+* Update: [ModifyNatFwSwitch](https://cloud.tencent.com/document/api/1132/60242)
 
 ## Import
 

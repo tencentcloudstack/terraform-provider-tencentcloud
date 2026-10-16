@@ -112,13 +112,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDirectConnectGateway](https://www.tencentcloud.com/document/product/215/36915) - This API is used to create a direct connect gateway.
-* Create: [ModifyDirectConnectGatewayAttribute](https://www.tencentcloud.com/document/product/215/36912) - This API is used to modify the attributes of a direct connect gateway.
-* Read: [DescribeDirectConnectGateways](https://www.tencentcloud.com/document/product/215/36913) - This API is used to query direct connect gateways.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [ModifyDirectConnectGatewayAttribute](https://www.tencentcloud.com/document/product/215/36912) - This API is used to modify the attributes of a direct connect gateway.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Delete: [DeleteDirectConnectGateway](https://www.tencentcloud.com/document/product/215/36914) - This API is used to delete a direct connect gateway.
+* Create: [CreateDirectConnectGateway](https://cloud.tencent.com/document/api/215/19192)
+* Create: [ModifyDirectConnectGatewayAttribute](https://cloud.tencent.com/document/api/215/30643)
+* Read: [DescribeDirectConnectGateways](https://cloud.tencent.com/document/api/215/30644)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [ModifyDirectConnectGatewayAttribute](https://cloud.tencent.com/document/api/215/30643)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Delete: [DeleteDirectConnectGateway](https://cloud.tencent.com/document/api/215/30645)
 
 ## Import
 

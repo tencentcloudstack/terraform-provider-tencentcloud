@@ -34,5 +34,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SubscribePrivateZoneService](https://cloud.tencent.com/document/api/1338/55932) - This API is used to activate the Private DNS service.
+* Create: [SubscribePrivateZoneService](https://cloud.tencent.com/document/api/1338/55932)
 

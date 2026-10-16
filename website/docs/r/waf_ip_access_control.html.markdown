@@ -76,7 +76,7 @@ The `items` object exports the following:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [UpsertIpAccessControl](https://cloud.tencent.com/document/api/627/72636)
-* Read: [DescribeIpAccessControl](https://www.tencentcloud.com/document/product/627/64773) - WAF IP blocklist/allowlist query
+* Read: [DescribeIpAccessControl](https://cloud.tencent.com/document/api/627/72645)
 * Update: [DeleteIpAccessControl](https://cloud.tencent.com/document/api/627/72648)
 * Update: [UpsertIpAccessControl](https://cloud.tencent.com/document/api/627/72636)
 * Delete: [DeleteIpAccessControl](https://cloud.tencent.com/document/api/627/72648)

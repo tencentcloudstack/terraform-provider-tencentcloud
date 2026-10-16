@@ -44,10 +44,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateProxyGroup](https://www.tencentcloud.com/document/product/608/33087) - This API (CreateProxyGroup) is used to create a connection group.
-* Read: [DescribeProxyGroupDetails](https://www.tencentcloud.com/document/product/608/33082) - This API (DescribeProxyGroupDetails) is used to query connection group details.
-* Update: [ModifyProxyGroupAttribute](https://www.tencentcloud.com/document/product/608/33079) - This API (ModifyProxyGroupAttribute) is used to modify connection group attributes. It currently only supports modifying connection group name.
-* Delete: [DeleteProxyGroup](https://www.tencentcloud.com/document/product/608/33085) - This API (DeleteProxyGroup) is used to delete a connection group.
+* Create: [CreateProxyGroup](https://cloud.tencent.com/document/api/608/36949)
+* Read: [DescribeProxyGroupDetails](https://cloud.tencent.com/document/api/608/36944)
+* Update: [ModifyProxyGroupAttribute](https://cloud.tencent.com/document/api/608/36941)
+* Delete: [DeleteProxyGroup](https://cloud.tencent.com/document/api/608/36947)
 
 ## Import
 

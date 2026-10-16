@@ -40,11 +40,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAddressTemplate](https://www.tencentcloud.com/document/product/215/16708) - This API is used to create an IP address template.
-* Read: [DescribeAddressTemplates](https://www.tencentcloud.com/document/product/215/16717) - This API (DescribeAddressTemplates) is used to query an IP address template.
-* Update: [ModifyAddressTemplateAttribute](https://www.tencentcloud.com/document/product/215/16720) - This API (ModifyAddressTemplateAttribute) is used to modify an IP address template.
-* Delete: [DeleteAddressTemplate](https://www.tencentcloud.com/document/product/215/16712) - This API (DeleteAddressTemplate) is used to delete an IP address template.
-* Delete: [DescribeAddressTemplates](https://www.tencentcloud.com/document/product/215/16717) - This API (DescribeAddressTemplates) is used to query an IP address template.
+* Create: [CreateAddressTemplate](https://cloud.tencent.com/document/api/215/16708)
+* Read: [DescribeAddressTemplates](https://cloud.tencent.com/document/api/215/16717)
+* Update: [ModifyAddressTemplateAttribute](https://cloud.tencent.com/document/api/215/16720)
+* Delete: [DeleteAddressTemplate](https://cloud.tencent.com/document/api/215/16712)
+* Delete: [DescribeAddressTemplates](https://cloud.tencent.com/document/api/215/16717)
 
 ## Import
 

@@ -43,10 +43,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCodeFolder](https://cloud.tencent.com/document/api/1267/123611) - This API is used to create a code folder.
-* Read: [GetCodeFolder](https://cloud.tencent.com/document/api/1267/124010) - Retrieve sql folder details.
-* Update: [UpdateCodeFolder](https://cloud.tencent.com/document/api/1267/123596) - This API is used to rename a code folder.
-* Delete: [DeleteCodeFolder](https://cloud.tencent.com/document/api/1267/123607) - This API is used to delete folders in data exploration.
+* Create: [CreateCodeFolder](https://cloud.tencent.com/document/api/1267/123611)
+* Read: [GetCodeFolder](https://cloud.tencent.com/document/api/1267/124010)
+* Update: [UpdateCodeFolder](https://cloud.tencent.com/document/api/1267/123596)
+* Delete: [DeleteCodeFolder](https://cloud.tencent.com/document/api/1267/123607)
 
 ## Import
 

@@ -41,9 +41,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateIPv6Address](https://www.tencentcloud.com/document/product/215/68130) - This API is used to bind an EIPv6 instance to the private IPv6 address configured on the CVM or ENI.
-* Read: [DescribeIPv6Addresses](https://www.tencentcloud.com/document/product/215/68129) - This API is used to query detailed information of one or more EIPv6 instances.
-* Delete: [DisassociateIPv6Address](https://www.tencentcloud.com/document/product/215/68127) - This API is used to unbind an EIPv6 instance.
+* Create: [AssociateIPv6Address](https://cloud.tencent.com/document/api/215/113678)
+* Read: [DescribeIPv6Addresses](https://cloud.tencent.com/document/api/215/113677)
+* Delete: [DisassociateIPv6Address](https://cloud.tencent.com/document/api/215/113676)
 
 ## Import
 

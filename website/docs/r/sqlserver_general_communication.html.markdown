@@ -79,11 +79,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/product/238/32113) - This API is used to query flow status.
-* Create: [OpenInterCommunication](https://www.tencentcloud.com/document/product/238/50605) - This API is used to enable instance interconnection, which can interconnect business intelligence services.
-* Read: [DescribeDBInstanceInter](https://www.tencentcloud.com/document/product/238/50606) - This API is used to query the information of the interconnected instances.
-* Delete: [CloseInterCommunication](https://www.tencentcloud.com/document/product/238/50611) - This API is used to disable instance interconnection.
-* Delete: [DescribeFlowStatus](https://www.tencentcloud.com/document/product/238/32113) - This API is used to query flow status.
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
+* Create: [OpenInterCommunication](https://cloud.tencent.com/document/api/238/80327)
+* Read: [DescribeDBInstanceInter](https://cloud.tencent.com/document/api/238/80328)
+* Delete: [CloseInterCommunication](https://cloud.tencent.com/document/api/238/80333)
+* Delete: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
 
 ## Import
 

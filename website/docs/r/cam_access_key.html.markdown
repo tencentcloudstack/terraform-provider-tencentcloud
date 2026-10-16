@@ -67,10 +67,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccessKey](https://www.tencentcloud.com/document/product/598/52594) - This API is used to create an access key for a CAM user.
-* Read: [ListAccessKeys](https://www.tencentcloud.com/document/product/598/37088) - This API is used to list the access keys associated with a specified CAM user.
-* Update: [UpdateAccessKey](https://www.tencentcloud.com/document/product/598/52592) - This API is used to update an access key for a CAM user.
-* Delete: [DeleteAccessKey](https://www.tencentcloud.com/document/product/598/52593) - This API is used to delete an access key for a CAM user.
+* Create: [CreateAccessKey](https://cloud.tencent.com/document/api/598/82370)
+* Read: [ListAccessKeys](https://cloud.tencent.com/document/api/598/45156)
+* Update: [UpdateAccessKey](https://cloud.tencent.com/document/api/598/82368)
+* Delete: [DeleteAccessKey](https://cloud.tencent.com/document/api/598/82369)
 
 ## Import
 

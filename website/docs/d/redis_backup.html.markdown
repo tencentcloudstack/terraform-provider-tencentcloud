@@ -59,5 +59,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceBackups](https://www.tencentcloud.com/document/product/239/32074) - This API is used to query the backup list of an instance.
+* Read: [DescribeInstanceBackups](https://cloud.tencent.com/document/api/239/20011)
 

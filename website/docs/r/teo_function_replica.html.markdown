@@ -44,12 +44,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateFunctionReplica](https://cloud.tencent.com/document/api/1552/132393) - This API is used to create copies of specified edge functions. After creating copies, when client requests match configured trigger rules or the default domain name, you can access specific function copies by adding EO-Function-Replica-Nam
-* Create: [DescribeFunctionReplicas](https://cloud.tencent.com/document/api/1552/132391) - This API is used to query the replica list of edge functions.
-* Read: [DescribeFunctionReplicas](https://cloud.tencent.com/document/api/1552/132391) - This API is used to query the replica list of edge functions.
-* Update: [DescribeFunctionReplicas](https://cloud.tencent.com/document/api/1552/132391) - This API is used to query the replica list of edge functions.
-* Update: [ModifyFunctionReplica](https://cloud.tencent.com/document/api/1552/132390) - This API is used to modify the content and description of a specified edge function replica.
-* Delete: [DeleteFunctionReplica](https://cloud.tencent.com/document/api/1552/132392) - This API is used to delete specified edge function replicas.
+* Create: [CreateFunctionReplica](https://cloud.tencent.com/document/api/1552/132393)
+* Create: [DescribeFunctionReplicas](https://cloud.tencent.com/document/api/1552/132391)
+* Read: [DescribeFunctionReplicas](https://cloud.tencent.com/document/api/1552/132391)
+* Update: [DescribeFunctionReplicas](https://cloud.tencent.com/document/api/1552/132391)
+* Update: [ModifyFunctionReplica](https://cloud.tencent.com/document/api/1552/132390)
+* Delete: [DeleteFunctionReplica](https://cloud.tencent.com/document/api/1552/132392)
 
 ## Import
 

@@ -152,27 +152,27 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDBInstance](https://www.tencentcloud.com/document/product/236/15871) - This API is used to create a cloud database instance with an annual/monthly subscription, including primary instance, disaster recovery instance, and read-only instance.
-* Create: [CreateDBInstanceHour](https://www.tencentcloud.com/document/product/236/15865) - This API is used to create pay-as-you-go instances. You can create a cloud database instance by inputting the instance specification, MySQL version number, quantity, etc.
-* Create: [DescribeDBInstances](https://www.tencentcloud.com/document/product/236/15872) - This API is used to query the list of TencentDB for MySQL instances. It supports filtering instances by conditions such as project ID, instance ID, access address, and instance status.
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/product/236/15872) - This API is used to query the list of TencentDB for MySQL instances. It supports filtering instances by conditions such as project ID, instance ID, access address, and instance status.
-* Read: [DescribeDBSecurityGroups](https://www.tencentcloud.com/document/product/236/15854) - This API (DescribeDBSecurityGroups) is used to query the security group details of an instance.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/product/236/34462) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
-* Update: [DescribeDBInstances](https://www.tencentcloud.com/document/product/236/15872) - This API is used to query the list of TencentDB for MySQL instances. It supports filtering instances by conditions such as project ID, instance ID, access address, and instance status.
-* Update: [DisassociateSecurityGroups](https://www.tencentcloud.com/document/product/236/15851) - This API (DisassociateSecurityGroups) is used to unbind security groups from instances in batches.
-* Update: [ModifyAutoRenewFlag](https://www.tencentcloud.com/document/product/236/34479) - This API is used to modify the auto-renewal flag of a TencentDB instance.
-* Update: [ModifyDBInstanceName](https://www.tencentcloud.com/document/product/236/15877) - This API (ModifyDBInstanceName) is used to rename a TencentDB instance.
-* Update: [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/document/product/236/15853) - This API (ModifyDBInstanceSecurityGroups) is used to modify the security groups bound to a TencentDB instance.
-* Update: [ModifyDBInstanceVipVport](https://www.tencentcloud.com/document/product/236/15867) - This API is used to modify the IP and port number of a cloud database instance. It can also perform basic network to VPC network and subnet change under VPC network.
+* Create: [CreateDBInstance](https://cloud.tencent.com/document/api/236/15871)
+* Create: [CreateDBInstanceHour](https://cloud.tencent.com/document/api/236/15865)
+* Create: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872)
+* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/236/15854)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410)
+* Update: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872)
+* Update: [DisassociateSecurityGroups](https://cloud.tencent.com/document/api/236/15851)
+* Update: [ModifyAutoRenewFlag](https://cloud.tencent.com/document/api/236/19652)
+* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/236/15877)
+* Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/236/15853)
+* Update: [ModifyDBInstanceVipVport](https://cloud.tencent.com/document/api/236/15867)
 * Update: [ModifyInstanceDestroyProtect](https://cloud.tencent.com/document/api/236/135817)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Update: [UpgradeDBInstance](https://www.tencentcloud.com/document/product/236/15876) - This API is used to upgrade or downgrade the configuration of a cloud database instance. Supported instance types include primary instance, disaster recovery instance and read-only instance.
-* Update: [UpgradeDBInstanceEngineVersion](https://www.tencentcloud.com/document/product/236/15870) - This API is used to upgrade the version of a cloud database instance. Supported instance types include primary instance, disaster recovery instance, and read-only instance.
-* Delete: [DescribeDBInstances](https://www.tencentcloud.com/document/product/236/15872) - This API is used to query the list of TencentDB for MySQL instances. It supports filtering instances by conditions such as project ID, instance ID, access address, and instance status.
-* Delete: [IsolateDBInstance](https://www.tencentcloud.com/document/product/236/15869) - This API is used to isolate a cloud database instance. After an instance is isolated, you cannot access the database via IP and port. The isolated instance can be started in the recycle bin.
-* Delete: [OfflineIsolatedInstances](https://www.tencentcloud.com/document/product/236/34475) - This api is used to deactivate cloud database instances in quarantined state now. The instance Status for row operations must be quarantined state, such as instances with Status value 5 queried through the query instance list api.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Update: [UpgradeDBInstance](https://cloud.tencent.com/document/api/236/15876)
+* Update: [UpgradeDBInstanceEngineVersion](https://cloud.tencent.com/document/api/236/15870)
+* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872)
+* Delete: [IsolateDBInstance](https://cloud.tencent.com/document/api/236/15869)
+* Delete: [OfflineIsolatedInstances](https://cloud.tencent.com/document/api/236/36197)
 
 ## Import
 

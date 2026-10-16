@@ -48,5 +48,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ExportInstanceSlowQueries](https://cloud.tencent.com/document/api/1003/76368) - This API is used to export instance slow logs.
+* Create: [ExportInstanceSlowQueries](https://cloud.tencent.com/document/api/1003/76368)
 

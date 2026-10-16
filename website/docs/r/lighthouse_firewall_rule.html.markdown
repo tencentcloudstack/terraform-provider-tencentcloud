@@ -61,11 +61,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateFirewallRules](https://cloud.tencent.com/document/api/1207/48254) - This API is used to add a firewall rule on an instance.
-* Read: [DescribeFirewallRules](https://cloud.tencent.com/document/api/1207/48252) - This API is used to query the firewall rules of an instance.
-* Update: [ModifyFirewallRules](https://cloud.tencent.com/document/api/1207/55528) - This API is used to reset the firewall rules of an instance.
-* Delete: [DeleteFirewallRules](https://cloud.tencent.com/document/api/1207/48253) - This API is used to delete a firewall rule of an instance.
-* Delete: [DescribeFirewallRules](https://cloud.tencent.com/document/api/1207/48252) - This API is used to query the firewall rules of an instance.
+* Create: [CreateFirewallRules](https://cloud.tencent.com/document/api/1207/48254)
+* Read: [DescribeFirewallRules](https://cloud.tencent.com/document/api/1207/48252)
+* Update: [ModifyFirewallRules](https://cloud.tencent.com/document/api/1207/55528)
+* Delete: [DeleteFirewallRules](https://cloud.tencent.com/document/api/1207/48253)
+* Delete: [DescribeFirewallRules](https://cloud.tencent.com/document/api/1207/48252)
 
 ## Import
 

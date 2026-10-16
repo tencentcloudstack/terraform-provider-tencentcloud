@@ -82,8 +82,8 @@ The `forward_ip` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateExtendEndpoint](https://cloud.tencent.com/document/api/1338/124336) - This API is used to create an endpoint.
-* Read: [DescribeExtendEndpointList](https://cloud.tencent.com/document/api/1338/124330) - This API is used to obtain the endpoint list.
+* Create: [CreateExtendEndpoint](https://cloud.tencent.com/document/api/1338/124336)
+* Read: [DescribeExtendEndpointList](https://cloud.tencent.com/document/api/1338/124330)
 * Delete: [DeleteEndPoint](https://cloud.tencent.com/document/api/1338/124333)
 
 ## Import

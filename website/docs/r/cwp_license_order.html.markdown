@@ -49,14 +49,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLicenseOrder](https://www.tencentcloud.com/document/product/296/63791) - This API is used to create Professional/Flagship edition orders
-* Create: [ModifyLicenseOrder](https://www.tencentcloud.com/document/product/296/63774) - This API is used to edit CWPP - pay-as-you-go authorization orders.
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeLicenseList](https://www.tencentcloud.com/document/product/296/63781) - This API is used to obtain all authorization orders of a user.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [ModifyLicenseOrder](https://www.tencentcloud.com/document/product/296/63774) - This API is used to edit CWPP - pay-as-you-go authorization orders.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Delete: [DestroyOrder](https://www.tencentcloud.com/document/product/296/63777) - This API is used to terminate resources.
+* Create: [CreateLicenseOrder](https://cloud.tencent.com/document/api/296/80402)
+* Create: [ModifyLicenseOrder](https://cloud.tencent.com/document/api/296/98700)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeLicenseList](https://cloud.tencent.com/document/api/296/80397)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [ModifyLicenseOrder](https://cloud.tencent.com/document/api/296/98700)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Delete: [DestroyOrder](https://cloud.tencent.com/document/api/296/80396)
 
 ## Import
 

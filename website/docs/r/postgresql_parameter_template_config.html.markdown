@@ -65,9 +65,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyParameterTemplate](https://www.tencentcloud.com/document/product/409/52650) - This API is used to modify the configurations, such as parameter template name and description. It can also be used to manage the parameter list in the parameter template.
-* Read: [DescribeParameterTemplateAttributes](https://www.tencentcloud.com/document/product/409/52652) - This API is used to query the details of a parameter template, including basic information and parameter information.
-* Update: [ModifyParameterTemplate](https://www.tencentcloud.com/document/product/409/52650) - This API is used to modify the configurations, such as parameter template name and description. It can also be used to manage the parameter list in the parameter template.
+* Create: [ModifyParameterTemplate](https://cloud.tencent.com/document/api/409/84066)
+* Read: [DescribeParameterTemplateAttributes](https://cloud.tencent.com/document/api/409/84068)
+* Update: [ModifyParameterTemplate](https://cloud.tencent.com/document/api/409/84066)
 
 ## Import
 

@@ -105,6 +105,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CompleteExpansion](https://www.tencentcloud.com/document/product/238/72761) - This API is used to complete the instance upgrade and switch immediately without waiting for the maintenance window when the instance status is "upgrade pending switch" after scale-out is initiated.
-* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/product/238/32113) - This API is used to query flow status.
+* Create: [CompleteExpansion](https://cloud.tencent.com/document/api/238/46286)
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
 

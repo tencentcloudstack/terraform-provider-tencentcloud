@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeOverviewDDoSEventList](https://cloud.tencent.com/document/api/297/95354) - This API is used to obtain the list of DDoS attacks.
+* Read: [DescribeOverviewDDoSEventList](https://cloud.tencent.com/document/api/297/95354)
 

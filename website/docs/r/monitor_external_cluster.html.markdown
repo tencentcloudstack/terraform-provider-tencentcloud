@@ -62,10 +62,10 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateExternalCluster](https://cloud.tencent.com/document/api/248/118983)
-* Create: [DescribePrometheusClusterAgents](https://www.tencentcloud.com/document/product/248/53770) - This API is used to get the list of clusters associated with the TMP instance.
-* Read: [DescribePrometheusClusterAgents](https://www.tencentcloud.com/document/product/248/53770) - This API is used to get the list of clusters associated with the TMP instance.
-* Delete: [DeletePrometheusClusterAgent](https://www.tencentcloud.com/document/product/248/53771) - This API is used to disassociate a TMP instance from a cluster.
-* Delete: [DescribePrometheusClusterAgents](https://www.tencentcloud.com/document/product/248/53770) - This API is used to get the list of clusters associated with the TMP instance.
+* Create: [DescribePrometheusClusterAgents](https://cloud.tencent.com/document/api/248/86040)
+* Read: [DescribePrometheusClusterAgents](https://cloud.tencent.com/document/api/248/86040)
+* Delete: [DeletePrometheusClusterAgent](https://cloud.tencent.com/document/api/248/86041)
+* Delete: [DescribePrometheusClusterAgents](https://cloud.tencent.com/document/api/248/86040)
 
 ## Import
 

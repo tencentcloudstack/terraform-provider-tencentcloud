@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindClusterResourcePackages](https://cloud.tencent.com/document/api/1003/93014) - This API is used to bind resource packages to a cluster.
-* Read: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086) - This API is used to display cluster details.
-* Delete: [UnbindClusterResourcePackages](https://cloud.tencent.com/document/api/1003/93006) - This API is used to unbind resource packages from clusters.
+* Create: [BindClusterResourcePackages](https://cloud.tencent.com/document/api/1003/93014)
+* Read: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086)
+* Delete: [UnbindClusterResourcePackages](https://cloud.tencent.com/document/api/1003/93006)
 
 ## Import
 

@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SubmitTriggerTask](https://cloud.tencent.com/document/api/1267/127246) - Submit a workflow scheduling task.
+* Create: [SubmitTriggerTask](https://cloud.tencent.com/document/api/1267/127246)
 

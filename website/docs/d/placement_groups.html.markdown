@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDisasterRecoverGroups](https://www.tencentcloud.com/document/product/213/33261) - This API is used to query the information on [spread placement groups](https://intl.cloud.tencent.com/document/product/213/15486?from_cn_redirect=1).
+* Read: [DescribeDisasterRecoverGroups](https://cloud.tencent.com/document/api/213/17810)
 

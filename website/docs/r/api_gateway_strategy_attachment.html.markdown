@@ -97,10 +97,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindIPStrategy](https://cloud.tencent.com/document/api/628/45235) - This API is used to bind an IP policy to an API.
-* Create: [DescribeIPStrategy](https://cloud.tencent.com/document/api/628/45232) - This API is used to query IP policy details.
-* Read: [DescribeIPStrategy](https://cloud.tencent.com/document/api/628/45232) - This API is used to query IP policy details.
-* Delete: [UnBindIPStrategy](https://cloud.tencent.com/document/api/628/45228) - This API is used to unbind an IP policy from a service.
+* Create: [BindIPStrategy](https://cloud.tencent.com/document/api/628/45235)
+* Create: [DescribeIPStrategy](https://cloud.tencent.com/document/api/628/45232)
+* Read: [DescribeIPStrategy](https://cloud.tencent.com/document/api/628/45232)
+* Delete: [UnBindIPStrategy](https://cloud.tencent.com/document/api/628/45228)
 
 ## Import
 

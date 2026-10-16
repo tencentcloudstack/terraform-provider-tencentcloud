@@ -87,21 +87,21 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDBInstances](https://www.tencentcloud.com/document/product/238/32119) - This API is used to create high-availability instances (local disk).
-* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/product/238/32113) - This API is used to query flow status.
-* Create: [DescribeOrders](https://www.tencentcloud.com/document/product/238/32134) - This API is used to query order information.
-* Create: [ModifyDBInstanceName](https://www.tencentcloud.com/document/product/238/32104) - This API is used to rename an instance.
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeMaintenanceSpan](https://www.tencentcloud.com/document/product/238/69303) - This API is used to query the maintenance time window of an instance based on its instance ID.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [DescribeFlowStatus](https://www.tencentcloud.com/document/product/238/32113) - This API is used to query flow status.
-* Update: [ModifyDBInstanceNetwork](https://www.tencentcloud.com/document/product/238/39571) - This API is used to switch a running instance from a VPC to another.
-* Update: [ModifyDBInstanceProject](https://www.tencentcloud.com/document/product/238/32103) - This API is used to modify the project to which a database instance belongs.
-* Update: [ModifyMaintenanceSpan](https://www.tencentcloud.com/document/product/238/72749) - This API is used to modify the maintenance window of the instance.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Delete: [DeleteDBInstance](https://www.tencentcloud.com/document/product/238/72759) - This API is used to release SQL server instances (eliminated immediately) in the recycle bin. The released instances will be physically terminated after being retained for a period of time.
-* Delete: [DescribeDBInstances](https://www.tencentcloud.com/document/product/238/32115) - This API is used to query the list of instances.
-* Delete: [TerminateDBInstance](https://www.tencentcloud.com/document/product/238/34685) - This API is used to isolate an instance to move it into a recycle bin.
+* Create: [CreateDBInstances](https://cloud.tencent.com/document/api/238/19973)
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
+* Create: [DescribeOrders](https://cloud.tencent.com/document/api/238/19937)
+* Create: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeMaintenanceSpan](https://cloud.tencent.com/document/api/238/46283)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
+* Update: [ModifyDBInstanceNetwork](https://cloud.tencent.com/document/api/238/52347)
+* Update: [ModifyDBInstanceProject](https://cloud.tencent.com/document/api/238/19957)
+* Update: [ModifyMaintenanceSpan](https://cloud.tencent.com/document/api/238/46281)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Delete: [DeleteDBInstance](https://cloud.tencent.com/document/api/238/46806)
+* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969)
+* Delete: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210)
 
 ## Import
 

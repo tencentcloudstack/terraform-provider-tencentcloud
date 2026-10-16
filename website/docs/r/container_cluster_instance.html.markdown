@@ -81,12 +81,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateClusterInstances](https://www.tencentcloud.com/document/product/457/33862) - This API is used to create one or more nodes in a cluster.
-* Create: [DescribeClusterInstances](https://www.tencentcloud.com/document/product/457/66315) - This API is used to query the information of node instances in a cluster.
-* Create: [DescribeInstances](https://www.tencentcloud.com/document/product/213/33258) - This API is used to query the details of instances.
-* Create: [DescribeZones](https://www.tencentcloud.com/document/product/213/35071) - This API is used to query availability zones.
-* Read: [DescribeClusterInstances](https://www.tencentcloud.com/document/product/457/66315) - This API is used to query the information of node instances in a cluster.
-* Read: [DescribeInstances](https://www.tencentcloud.com/document/product/213/33258) - This API is used to query the details of instances.
-* Delete: [DeleteClusterInstances](https://www.tencentcloud.com/document/product/457/32038) - This API is used to delete one or more nodes from a cluster.
-* Delete: [DescribeClusterInstances](https://www.tencentcloud.com/document/product/457/66315) - This API is used to query the information of node instances in a cluster.
+* Create: [CreateClusterInstances](https://cloud.tencent.com/document/api/457/36707)
+* Create: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863)
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728)
+* Create: [DescribeZones](https://cloud.tencent.com/document/api/213/15707)
+* Read: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863)
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728)
+* Delete: [DeleteClusterInstances](https://cloud.tencent.com/document/api/457/31864)
+* Delete: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863)
 

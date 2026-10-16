@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Read: [DescribeProjects](https://cloud.tencent.com/document/api/1464/61475) - This API is used to get the list of projects (under teams created by an instance).
-* Update: [ResumeProject](https://cloud.tencent.com/document/api/1464/86367) - This API is used to recover an application and resume data reporting.
-* Update: [StopProject](https://cloud.tencent.com/document/api/1464/84458) - This API is used to stop a project from reporting data.
+* Read: [DescribeProjects](https://cloud.tencent.com/document/api/1464/61475)
+* Update: [ResumeProject](https://cloud.tencent.com/document/api/1464/86367)
+* Update: [StopProject](https://cloud.tencent.com/document/api/1464/84458)
 
 ## Import
 

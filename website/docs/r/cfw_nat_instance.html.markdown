@@ -83,11 +83,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNatFwInstanceWithDomain](https://cloud.tencent.com/document/api/1132/61923) - This API is used to create a firewall instance with domain name (The Region parameter is required).
-* Create: [DescribeNatFwInstancesInfo](https://cloud.tencent.com/document/api/1132/60237) - This API is used to get all NAT instances and instance card information of a tenant.
+* Create: [CreateNatFwInstanceWithDomain](https://cloud.tencent.com/document/api/1132/61923)
+* Create: [DescribeNatFwInstancesInfo](https://cloud.tencent.com/document/api/1132/60237)
 * Read: [DescribeCfwEips](https://cloud.tencent.com/document/api/1132/54259)
-* Read: [DescribeNatFwInstancesInfo](https://cloud.tencent.com/document/api/1132/60237) - This API is used to get all NAT instances and instance card information of a tenant.
-* Read: [DescribeNatFwVpcDnsLst](https://cloud.tencent.com/document/api/1132/60236) - This API is used to get the VPC DNS status of NAT firewall instances.
+* Read: [DescribeNatFwInstancesInfo](https://cloud.tencent.com/document/api/1132/60237)
+* Read: [DescribeNatFwVpcDnsLst](https://cloud.tencent.com/document/api/1132/60236)
 * Update: [ModifyNatInstance](https://cloud.tencent.com/document/api/1132/97914)
 * Delete: [DeleteNatFwInstance](https://cloud.tencent.com/document/api/1132/60235)
 

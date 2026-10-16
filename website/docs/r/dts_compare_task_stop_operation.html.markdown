@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [StopCompare](https://www.tencentcloud.com/document/product/571/51800) - This API is used to stop a data consistency check task.
+* Create: [StopCompare](https://cloud.tencent.com/document/api/571/82072)
 

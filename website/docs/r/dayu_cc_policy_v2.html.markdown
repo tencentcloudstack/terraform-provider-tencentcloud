@@ -150,46 +150,46 @@ The `cc_precision_req_limits` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCCPrecisionPolicy](https://cloud.tencent.com/document/api/297/95392) - This API is used to create a CC precise protection policy.
-* Create: [CreateCCReqLimitPolicy](https://cloud.tencent.com/document/api/297/95391) - This API is used to create a CC frequency limit policy.
-* Create: [CreateCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95341) - This API is used to create a layer 4 access control list to prevent CC attacks.
-* Create: [CreateCcGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95340) - This API is used to create a regional blocking configuration.
+* Create: [CreateCCPrecisionPolicy](https://cloud.tencent.com/document/api/297/95392)
+* Create: [CreateCCReqLimitPolicy](https://cloud.tencent.com/document/api/297/95391)
+* Create: [CreateCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95341)
+* Create: [CreateCcGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95340)
 * Create: [DescribeListProtectThresholdConfigNew](https://cloud.tencent.com/document/api/297/126578)
 * Create: [ModifyCCLevelPolicy](https://cloud.tencent.com/document/api/297/95380)
 * Create: [ModifyCCThresholdPolicy](https://cloud.tencent.com/document/api/297/95377)
-* Read: [DescribeCCLevelList](https://cloud.tencent.com/document/api/297/95385) - Gets the list of CC protection levels
-* Read: [DescribeCCPrecisionPlyList](https://cloud.tencent.com/document/api/297/95383) - This API is used to obtain the list of CC precise protection policies.
+* Read: [DescribeCCLevelList](https://cloud.tencent.com/document/api/297/95385)
+* Read: [DescribeCCPrecisionPlyList](https://cloud.tencent.com/document/api/297/95383)
 * Read: [DescribeCCReqLimitPolicyList](https://cloud.tencent.com/document/api/297/95382)
-* Read: [DescribeCCThresholdList](https://cloud.tencent.com/document/api/297/95381) - This API is used to query the list of CC cleansing thresholds.
-* Read: [DescribeCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95318) - This API is used to obtain the layer-4 access control list.
-* Read: [DescribeCcGeoIPBlockConfigList](https://cloud.tencent.com/document/api/297/95317) - This API is used to obtain a list of regional blocking configurations.
-* Update: [CreateCCPrecisionPolicy](https://cloud.tencent.com/document/api/297/95392) - This API is used to create a CC precise protection policy.
-* Update: [CreateCCReqLimitPolicy](https://cloud.tencent.com/document/api/297/95391) - This API is used to create a CC frequency limit policy.
-* Update: [CreateCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95341) - This API is used to create a layer 4 access control list to prevent CC attacks.
-* Update: [CreateCcGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95340) - This API is used to create a regional blocking configuration.
-* Update: [DeleteCCLevelPolicy](https://cloud.tencent.com/document/api/297/95390) - This API is used to delete a level-defining policy of CC attacks.
-* Update: [DeleteCCPrecisionPolicy](https://cloud.tencent.com/document/api/297/95389) - This API is used to delete a CC precise protection policy.
+* Read: [DescribeCCThresholdList](https://cloud.tencent.com/document/api/297/95381)
+* Read: [DescribeCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95318)
+* Read: [DescribeCcGeoIPBlockConfigList](https://cloud.tencent.com/document/api/297/95317)
+* Update: [CreateCCPrecisionPolicy](https://cloud.tencent.com/document/api/297/95392)
+* Update: [CreateCCReqLimitPolicy](https://cloud.tencent.com/document/api/297/95391)
+* Update: [CreateCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95341)
+* Update: [CreateCcGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95340)
+* Update: [DeleteCCLevelPolicy](https://cloud.tencent.com/document/api/297/95390)
+* Update: [DeleteCCPrecisionPolicy](https://cloud.tencent.com/document/api/297/95389)
 * Update: [DeleteCCRequestLimitPolicy](https://cloud.tencent.com/document/api/297/95388)
-* Update: [DeleteCCThresholdPolicy](https://cloud.tencent.com/document/api/297/95387) - This API is used to delete a CC cleansing threshold policy.
-* Update: [DeleteCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95328) - This API is used to delete a layer-4 access control list.
-* Update: [DeleteCcGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95327) - This API is used to delete a regional blocking configuration.
-* Update: [DescribeCCPrecisionPlyList](https://cloud.tencent.com/document/api/297/95383) - This API is used to obtain the list of CC precise protection policies.
+* Update: [DeleteCCThresholdPolicy](https://cloud.tencent.com/document/api/297/95387)
+* Update: [DeleteCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95328)
+* Update: [DeleteCcGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95327)
+* Update: [DescribeCCPrecisionPlyList](https://cloud.tencent.com/document/api/297/95383)
 * Update: [DescribeCCReqLimitPolicyList](https://cloud.tencent.com/document/api/297/95382)
-* Update: [DescribeCCThresholdList](https://cloud.tencent.com/document/api/297/95381) - This API is used to query the list of CC cleansing thresholds.
-* Update: [DescribeCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95318) - This API is used to obtain the layer-4 access control list.
-* Update: [DescribeCcGeoIPBlockConfigList](https://cloud.tencent.com/document/api/297/95317) - This API is used to obtain a list of regional blocking configurations.
+* Update: [DescribeCCThresholdList](https://cloud.tencent.com/document/api/297/95381)
+* Update: [DescribeCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95318)
+* Update: [DescribeCcGeoIPBlockConfigList](https://cloud.tencent.com/document/api/297/95317)
 * Update: [DescribeListProtectThresholdConfigNew](https://cloud.tencent.com/document/api/297/126578)
 * Update: [ModifyCCLevelPolicy](https://cloud.tencent.com/document/api/297/95380)
 * Update: [ModifyCCThresholdPolicy](https://cloud.tencent.com/document/api/297/95377)
-* Delete: [DeleteCCLevelPolicy](https://cloud.tencent.com/document/api/297/95390) - This API is used to delete a level-defining policy of CC attacks.
-* Delete: [DeleteCCPrecisionPolicy](https://cloud.tencent.com/document/api/297/95389) - This API is used to delete a CC precise protection policy.
-* Delete: [DeleteCCThresholdPolicy](https://cloud.tencent.com/document/api/297/95387) - This API is used to delete a CC cleansing threshold policy.
-* Delete: [DeleteCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95328) - This API is used to delete a layer-4 access control list.
-* Delete: [DeleteCcGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95327) - This API is used to delete a regional blocking configuration.
-* Delete: [DescribeCCLevelList](https://cloud.tencent.com/document/api/297/95385) - Gets the list of CC protection levels
-* Delete: [DescribeCCPrecisionPlyList](https://cloud.tencent.com/document/api/297/95383) - This API is used to obtain the list of CC precise protection policies.
+* Delete: [DeleteCCLevelPolicy](https://cloud.tencent.com/document/api/297/95390)
+* Delete: [DeleteCCPrecisionPolicy](https://cloud.tencent.com/document/api/297/95389)
+* Delete: [DeleteCCThresholdPolicy](https://cloud.tencent.com/document/api/297/95387)
+* Delete: [DeleteCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95328)
+* Delete: [DeleteCcGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95327)
+* Delete: [DescribeCCLevelList](https://cloud.tencent.com/document/api/297/95385)
+* Delete: [DescribeCCPrecisionPlyList](https://cloud.tencent.com/document/api/297/95383)
 * Delete: [DescribeCCReqLimitPolicyList](https://cloud.tencent.com/document/api/297/95382)
-* Delete: [DescribeCCThresholdList](https://cloud.tencent.com/document/api/297/95381) - This API is used to query the list of CC cleansing thresholds.
-* Delete: [DescribeCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95318) - This API is used to obtain the layer-4 access control list.
-* Delete: [DescribeCcGeoIPBlockConfigList](https://cloud.tencent.com/document/api/297/95317) - This API is used to obtain a list of regional blocking configurations.
+* Delete: [DescribeCCThresholdList](https://cloud.tencent.com/document/api/297/95381)
+* Delete: [DescribeCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95318)
+* Delete: [DescribeCcGeoIPBlockConfigList](https://cloud.tencent.com/document/api/297/95317)
 

@@ -66,10 +66,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTopic](https://cloud.tencent.com/document/api/1179/46088) - This API is used to add a message topic in the specified partition and type.
-* Read: [DescribeTopics](https://cloud.tencent.com/document/api/1179/46086) - This API is used to get the list of topics under an environment.
-* Update: [ModifyTopic](https://cloud.tencent.com/document/api/1179/46085) - This API is used to modify the topic remarks and number of partitions.
-* Delete: [DeleteTopics](https://cloud.tencent.com/document/api/1179/46087) - This API is used to batch delete topics.
+* Create: [CreateTopic](https://cloud.tencent.com/document/api/1179/46088)
+* Read: [DescribeTopics](https://cloud.tencent.com/document/api/1179/46086)
+* Update: [ModifyTopic](https://cloud.tencent.com/document/api/1179/46085)
+* Delete: [DeleteTopics](https://cloud.tencent.com/document/api/1179/46087)
 
 ## Import
 

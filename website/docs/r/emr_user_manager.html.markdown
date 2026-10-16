@@ -49,9 +49,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddUsersForUserManager](https://cloud.tencent.com/document/api/589/74069) - This API is used for clusters with the OpenLDAP component installed.
-* Read: [DescribeUsersForUserManager](https://cloud.tencent.com/document/api/589/74225) - This API is used for clusters with the OpenLDAP component installed.
-* Update: [ModifyUserManagerPwd](https://cloud.tencent.com/document/api/589/99696) - This API is used to modify a user password (user management).
+* Create: [AddUsersForUserManager](https://cloud.tencent.com/document/api/589/74069)
+* Read: [DescribeUsersForUserManager](https://cloud.tencent.com/document/api/589/74225)
+* Update: [ModifyUserManagerPwd](https://cloud.tencent.com/document/api/589/99696)
 * Delete: [DeleteUserManagerUserList](https://cloud.tencent.com/document/api/589/83729)
 
 ## Import

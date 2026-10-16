@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListDownstreamOpsTasks](https://cloud.tencent.com/document/api/1267/123578) - This API is used to retrieve task direct downstream details.
+* Read: [ListDownstreamOpsTasks](https://cloud.tencent.com/document/api/1267/123578)
 

@@ -65,8 +65,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrometheusAgent](https://www.tencentcloud.com/document/product/248/48765) - This API is used to create a Prometheus CVM agent.
-* Read: [DescribePrometheusAgents](https://www.tencentcloud.com/document/product/248/48754) - This API is used to list Prometheus CVM agents.
+* Create: [CreatePrometheusAgent](https://cloud.tencent.com/document/api/248/76018)
+* Read: [DescribePrometheusAgents](https://cloud.tencent.com/document/api/248/76013)
 
 ## Import
 

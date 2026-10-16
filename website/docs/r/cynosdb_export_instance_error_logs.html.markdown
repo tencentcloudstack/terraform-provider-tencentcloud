@@ -53,5 +53,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ExportInstanceErrorLogs](https://cloud.tencent.com/document/api/1003/90935) - This API is used to export the error logs of an instance.
+* Create: [ExportInstanceErrorLogs](https://cloud.tencent.com/document/api/1003/90935)
 

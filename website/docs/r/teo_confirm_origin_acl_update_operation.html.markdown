@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ConfirmOriginACLUpdate](https://cloud.tencent.com/document/api/1552/120409) - This API is used to confirm that the latest origin ACLs have been updated to the origin server firewall when the origin ACLs change. After confirming the update to the latest version, related change notifications will stop pushing.
+* Create: [ConfirmOriginACLUpdate](https://cloud.tencent.com/document/api/1552/120409)
 

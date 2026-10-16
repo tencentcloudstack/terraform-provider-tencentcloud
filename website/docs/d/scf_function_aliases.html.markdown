@@ -53,5 +53,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListAliases](https://www.tencentcloud.com/document/product/583/36322) - This API is used to return the list of all aliases under a function. You can filter them by the specific function version.
+* Read: [ListAliases](https://cloud.tencent.com/document/api/583/44162)
 

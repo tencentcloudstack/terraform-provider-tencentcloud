@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SuspendResumeDataEngine](https://cloud.tencent.com/document/api/1342/85563) - This API is used to suspend or start a data engine.
+* Create: [SuspendResumeDataEngine](https://cloud.tencent.com/document/api/1342/85563)
 

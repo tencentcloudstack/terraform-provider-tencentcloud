@@ -65,10 +65,10 @@ The `api_resources` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSecurityAPIResource](https://cloud.tencent.com/document/api/1552/122125) - This API is used to create an API resource.
-* Read: [DescribeSecurityAPIResource](https://cloud.tencent.com/document/api/1552/122121) - This API is used to query API resources under a site.
-* Update: [ModifySecurityAPIResource](https://cloud.tencent.com/document/api/1552/122119) - This API is used to modify an API resource.
-* Delete: [DeleteSecurityAPIResource](https://cloud.tencent.com/document/api/1552/122123) - This API is used to delete API resources.
+* Create: [CreateSecurityAPIResource](https://cloud.tencent.com/document/api/1552/122125)
+* Read: [DescribeSecurityAPIResource](https://cloud.tencent.com/document/api/1552/122121)
+* Update: [ModifySecurityAPIResource](https://cloud.tencent.com/document/api/1552/122119)
+* Delete: [DeleteSecurityAPIResource](https://cloud.tencent.com/document/api/1552/122123)
 
 ## Import
 

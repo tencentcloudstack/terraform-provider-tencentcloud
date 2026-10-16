@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeWhitelists](https://cloud.tencent.com/document/api/1464/69211) - This API is used to get the list of allowlists.
+* Read: [DescribeWhitelists](https://cloud.tencent.com/document/api/1464/69211)
 

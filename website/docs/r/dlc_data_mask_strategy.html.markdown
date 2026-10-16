@@ -57,10 +57,10 @@ The `strategy` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDataMaskStrategy](https://cloud.tencent.com/document/api/1342/122619) - This API is used to create a DMask policy.
-* Read: [DescribeDataMaskStrategies](https://cloud.tencent.com/document/api/1342/122617) - This API is used to query the DMask list.
-* Update: [UpdateDataMaskStrategy](https://cloud.tencent.com/document/api/1342/122616) - This API is used to update the DMask policy.
-* Delete: [DeleteDataMaskStrategy](https://cloud.tencent.com/document/api/1342/122618) - This API is used to delete a data masking policy.
+* Create: [CreateDataMaskStrategy](https://cloud.tencent.com/document/api/1342/122619)
+* Read: [DescribeDataMaskStrategies](https://cloud.tencent.com/document/api/1342/122617)
+* Update: [UpdateDataMaskStrategy](https://cloud.tencent.com/document/api/1342/122616)
+* Delete: [DeleteDataMaskStrategy](https://cloud.tencent.com/document/api/1342/122618)
 
 ## Import
 

@@ -54,9 +54,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateForwardRule](https://cloud.tencent.com/document/api/1338/124335) - This API is used to create a custom forwarding rule.
-* Update: [ModifyForwardRule](https://cloud.tencent.com/document/api/1338/124327) - This API is used to modify a forwarding rule.
-* Delete: [DeleteForwardRule](https://cloud.tencent.com/document/api/1338/124332) - This API is used to delete a forwarding rule and stop forwarding.
+* Create: [CreateForwardRule](https://cloud.tencent.com/document/api/1338/124335)
+* Update: [ModifyForwardRule](https://cloud.tencent.com/document/api/1338/124327)
+* Delete: [DeleteForwardRule](https://cloud.tencent.com/document/api/1338/124332)
 
 ## Import
 

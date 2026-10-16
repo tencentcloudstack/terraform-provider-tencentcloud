@@ -67,11 +67,11 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInvocations](https://cloud.tencent.com/document/api/1340/52679) - This API is used to query execution activity details.
-* Create: [InvokeCommand](https://cloud.tencent.com/document/api/1340/52678) - This API is used to trigger a command on the specified instance and returns the execution activity ID (inv-xxxxxxxx) on success.
-* Read: [DescribeInvocations](https://cloud.tencent.com/document/api/1340/52679) - This API is used to query execution activity details.
-* Delete: [CancelInvocation](https://cloud.tencent.com/document/api/1340/65770) - Cancel the executed command on one or multiple instances.
-* Delete: [DescribeInvocations](https://cloud.tencent.com/document/api/1340/52679) - This API is used to query execution activity details.
+* Create: [DescribeInvocations](https://cloud.tencent.com/document/api/1340/52679)
+* Create: [InvokeCommand](https://cloud.tencent.com/document/api/1340/52678)
+* Read: [DescribeInvocations](https://cloud.tencent.com/document/api/1340/52679)
+* Delete: [CancelInvocation](https://cloud.tencent.com/document/api/1340/65770)
+* Delete: [DescribeInvocations](https://cloud.tencent.com/document/api/1340/52679)
 
 ## Import
 

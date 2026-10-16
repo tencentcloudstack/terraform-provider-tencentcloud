@@ -174,7 +174,7 @@ Note: This field may return null, indicating that a valid value is not available
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateAutoScalerResourceStrategy](https://cloud.tencent.com/document/api/1364/103727)
-* Read: [DescribeAutoScalerResourceStrategies](https://cloud.tencent.com/document/api/1364/103725) - View AS policy list
+* Read: [DescribeAutoScalerResourceStrategies](https://cloud.tencent.com/document/api/1364/103725)
 * Update: [ModifyAutoScalerResourceStrategy](https://cloud.tencent.com/document/api/1364/103722)
 * Delete: [DeleteAutoScalerResourceStrategy](https://cloud.tencent.com/document/api/1364/103726)
 

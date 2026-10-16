@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCmqSubscriptionDetail](https://cloud.tencent.com/document/api/1179/55908) - This API is used to query the CMQ subscription details.
+* Read: [DescribeCmqSubscriptionDetail](https://cloud.tencent.com/document/api/1179/55908)
 

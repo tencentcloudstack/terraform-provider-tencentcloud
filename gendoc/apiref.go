@@ -12,9 +12,10 @@ package main
 //     The SDK client method name is identical to the cloud API action name;
 //     the client accessor (UseXxxClient) is resolved to a catalog product.
 //
-//  2. A JSON snapshot of TencentCloud's public API catalog
-//     (gendoc/data/api-actions.json), which resolves
-//     (product, action) -> {actionName, actionCNDocUrl}.
+//  2. TencentCloud's public API catalog (fetched live by 'make doc', with
+//     an embedded snapshot as offline fallback), which resolves
+//     (product, action) -> doc URL. Entries without a catalog URL fall
+//     back to the international site's search URL for the action name.
 //
 // SDK import aliases do not always match the catalog product key, so an
 // alias table built from the SDK import paths (plus a tiny manual override
@@ -43,10 +44,11 @@ type apiAction struct {
 }
 
 // apiRef describes a single cloud API used by a resource lifecycle phase.
+// The rendered section lists only the action name and its doc URL — no
+// descriptions.
 type apiRef struct {
 	Product string `json:"product"`
 	Action  string `json:"action"`
-	Name    string `json:"name"`
 	URL     string `json:"url"`
 }
 
@@ -73,13 +75,10 @@ type apiAnalyzer struct {
 
 	// clientProd maps lowercase UseXxxClient accessor name -> catalog product.
 	clientProd map[string]string
-	// actionIdx maps "<product>.<action>" -> catalog entry; only its
-	// existence is used to decide whether the action is catalog-listed.
+	// actionIdx maps "<product>.<action>" -> catalog entry; only the doc
+	// URL (and the entry's existence, as a whitelist against false
+	// positives) is used.
 	actionIdx map[string]apiAction
-	// enIndex maps "<lowercase product>.<action>" -> English description.
-	enIndex map[string]string
-	// enURLIndex maps "<lowercase product>.<action>" -> doc URL.
-	enURLIndex map[string]string
 	// knownClients is the set of lowercase accessor names with a product.
 	knownClients map[string]bool
 
@@ -106,8 +105,6 @@ func newAPIAnalyzer(repoRoot string, cat *catalog) (*apiAnalyzer, error) {
 	if cat == nil {
 		cat = loadCatalog()
 	}
-	enIndex := loadENIndex()
-	enURLIndex := loadENURLIndex()
 	known := map[string]bool{}
 	for c := range clientProd {
 		known[c] = true
@@ -118,8 +115,6 @@ func newAPIAnalyzer(repoRoot string, cat *catalog) (*apiAnalyzer, error) {
 		servicesRoot: filepath.Join(repoRoot, "tencentcloud", "services"),
 		clientProd:   clientProd,
 		actionIdx:    cat.actionIdx,
-		enIndex:      enIndex,
-		enURLIndex:   enURLIndex,
 		knownClients: known,
 		methodIndex:  map[string][]serviceMethod{},
 		serviceCtors: map[string]string{},
@@ -428,11 +423,17 @@ type apiCallKey struct {
 	action string // SDK method == cloud API action (e.g. "CreateVpc")
 }
 
-// resolveAPI turns a call key into a snapshot-backed apiRef. Both the
-// English description and the doc URL come from the bundled en snapshot;
-// the catalog entry's presence (not its Chinese name) decides whether the
-// action is rendered. Generated docs never contain Chinese text. Returns
-// nil when the (client, action) pair has no catalog entry.
+// intlSearchURL is the fallback for actions without a catalog doc URL:
+// the international documentation site's search page for the action name.
+const intlSearchURL = "https://www.tencentcloud.com/search/?wd=%s&type=document&lang=en"
+
+// resolveAPI turns a call key into a catalog-backed apiRef. The doc URL
+// comes from the live catalog (or the embedded snapshot when offline);
+// entries without a URL fall back to the international site's search page
+// for the action name. Generated docs never contain Chinese text, so the
+// catalog's Chinese display name is ignored. Returns nil when the
+// (client, action) pair has no catalog entry — the catalog doubles as a
+// whitelist that filters out false-positive action names.
 func (a *apiAnalyzer) resolveAPI(k apiCallKey) *apiRef {
 	prod := a.clientProd[k.client]
 	if prod == "" {
@@ -443,11 +444,14 @@ func (a *apiAnalyzer) resolveAPI(k apiCallKey) *apiRef {
 	if !ok {
 		return nil
 	}
+	url := act.URL
+	if url == "" {
+		url = fmt.Sprintf(intlSearchURL, k.action)
+	}
 	return &apiRef{
 		Product: prod,
 		Action:  act.Action,
-		Name:    a.enIndex[key],
-		URL:     a.enURLIndex[key],
+		URL:     url,
 	}
 }
 
@@ -488,6 +492,9 @@ func buildClientProductIndex(repoRoot string) (map[string]string, error) {
 	importDirs := map[string]string{}
 	for _, imp := range f.Imports {
 		path := strings.Trim(imp.Path.Value, `"`)
+		// Also match the vendored intl SDK (tencentcloud-sdk-go-intl-en):
+		// a few resources call the international-site clients through it.
+		// Both SDKs are vendored in-repo; no external download is involved.
 		if !strings.Contains(path, "tencentcloud-sdk-go/tencentcloud/") &&
 			!strings.Contains(path, "tencentcloud-sdk-go-intl-en/tencentcloud/") {
 			continue
@@ -604,12 +611,9 @@ func renderAPIRefsLead(lead string, dtype string, refs map[string][]apiRef) stri
 		}
 		sort.Slice(list, func(i, j int) bool { return list[i].Action < list[j].Action })
 		for _, r := range list {
-			switch {
-			case r.URL != "" && r.Name != "":
-				fmt.Fprintf(&b, "* %s: [%s](%s) - %s\n", v, r.Action, r.URL, r.Name)
-			case r.URL != "":
+			if r.URL != "" {
 				fmt.Fprintf(&b, "* %s: [%s](%s)\n", v, r.Action, r.URL)
-			default:
+			} else {
 				fmt.Fprintf(&b, "* %s: `%s`\n", v, r.Action)
 			}
 		}

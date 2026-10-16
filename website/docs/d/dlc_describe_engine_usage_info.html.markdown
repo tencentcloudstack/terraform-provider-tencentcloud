@@ -37,5 +37,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeEngineUsageInfo](https://cloud.tencent.com/document/api/1342/87876) - This API is used to query the resource usage of a data engine based on its ID.
+* Read: [DescribeEngineUsageInfo](https://cloud.tencent.com/document/api/1342/87876)
 

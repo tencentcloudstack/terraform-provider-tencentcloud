@@ -49,10 +49,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAnimatedGraphicsTemplate](https://cloud.tencent.com/document/api/862/37609) - This API is used to create a custom animated image generating template. Up to 16 templates can be created.
-* Read: [DescribeAnimatedGraphicsTemplates](https://cloud.tencent.com/document/api/862/37597) - This API is used to query the list of animated image generating templates and supports paged queries by filters.
-* Update: [ModifyAnimatedGraphicsTemplate](https://cloud.tencent.com/document/api/862/37591) - This API is used to modify a custom animated image generating template.
-* Delete: [DeleteAnimatedGraphicsTemplate](https://cloud.tencent.com/document/api/862/37603) - This API is used to delete custom animated image generating templates.
+* Create: [CreateAnimatedGraphicsTemplate](https://cloud.tencent.com/document/api/862/37609)
+* Read: [DescribeAnimatedGraphicsTemplates](https://cloud.tencent.com/document/api/862/37597)
+* Update: [ModifyAnimatedGraphicsTemplate](https://cloud.tencent.com/document/api/862/37591)
+* Delete: [DeleteAnimatedGraphicsTemplate](https://cloud.tencent.com/document/api/862/37603)
 
 ## Import
 

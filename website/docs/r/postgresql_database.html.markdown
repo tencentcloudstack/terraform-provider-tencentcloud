@@ -100,9 +100,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDatabase](https://www.tencentcloud.com/document/product/409/78813) - This API is used to create a database, requiring the specified database name and owner.
-* Read: [DescribeDatabases](https://www.tencentcloud.com/document/product/409/37118) - This API is used to query the database list of an instance.
-* Update: [ModifyDatabaseOwner](https://www.tencentcloud.com/document/product/409/78811) - This API is used to change database owner.
+* Create: [CreateDatabase](https://cloud.tencent.com/document/api/409/111207)
+* Read: [DescribeDatabases](https://cloud.tencent.com/document/api/409/43353)
+* Update: [ModifyDatabaseOwner](https://cloud.tencent.com/document/api/409/111206)
 * Delete: [DeleteDatabase](https://cloud.tencent.com/document/api/409/135858)
 
 ## Import

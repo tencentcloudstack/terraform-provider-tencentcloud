@@ -68,5 +68,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeListListener](https://cloud.tencent.com/document/api/297/95345) - This API is used to get a list of forwarding listeners.
+* Read: [DescribeListListener](https://cloud.tencent.com/document/api/297/95345)
 

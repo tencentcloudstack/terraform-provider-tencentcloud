@@ -103,9 +103,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachPlugin](https://cloud.tencent.com/document/api/628/58276) - This API is used to bind a plugin to an API.
-* Read: [DescribePluginApis](https://cloud.tencent.com/document/api/628/58272) - This API is used to query APIs bound with a specified plugin.
-* Delete: [DetachPlugin](https://cloud.tencent.com/document/api/628/58271) - This API is used to unbind an API from the plugin.
+* Create: [AttachPlugin](https://cloud.tencent.com/document/api/628/58276)
+* Read: [DescribePluginApis](https://cloud.tencent.com/document/api/628/58272)
+* Delete: [DetachPlugin](https://cloud.tencent.com/document/api/628/58271)
 
 ## Import
 

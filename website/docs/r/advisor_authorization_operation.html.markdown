@@ -34,5 +34,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAdvisorAuthorization](https://cloud.tencent.com/document/api/1264/127787) - Enable Tencent Cloud Smart Advisor authorization. This will synchronously enable report interpretation and cloud architecture collaboration permissions.
+* Create: [CreateAdvisorAuthorization](https://cloud.tencent.com/document/api/1264/127787)
 

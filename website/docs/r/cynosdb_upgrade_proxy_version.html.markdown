@@ -38,10 +38,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
-* Create: [DescribeProxies](https://cloud.tencent.com/document/api/1003/94132) - This API is used to query agent list.
-* Create: [UpgradeProxyVersion](https://cloud.tencent.com/document/api/1003/94126) - This API is used to upgrade the database proxy version.
-* Read: [DescribeProxies](https://cloud.tencent.com/document/api/1003/94132) - This API is used to query agent list.
-* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
-* Update: [UpgradeProxyVersion](https://cloud.tencent.com/document/api/1003/94126) - This API is used to upgrade the database proxy version.
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
+* Create: [DescribeProxies](https://cloud.tencent.com/document/api/1003/94132)
+* Create: [UpgradeProxyVersion](https://cloud.tencent.com/document/api/1003/94126)
+* Read: [DescribeProxies](https://cloud.tencent.com/document/api/1003/94132)
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
+* Update: [UpgradeProxyVersion](https://cloud.tencent.com/document/api/1003/94126)
 

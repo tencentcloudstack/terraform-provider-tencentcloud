@@ -57,12 +57,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeKafkaConsumer](https://www.tencentcloud.com/document/product/614/59908) - This API is used to access Kafka protocol consumption information.
-* Create: [OpenKafkaConsumer](https://www.tencentcloud.com/document/product/614/46784) - This API is used to enable the Kafka consumption feature.
-* Read: [DescribeKafkaConsumer](https://www.tencentcloud.com/document/product/614/59908) - This API is used to access Kafka protocol consumption information.
-* Update: [DescribeKafkaConsumer](https://www.tencentcloud.com/document/product/614/59908) - This API is used to access Kafka protocol consumption information.
-* Update: [ModifyKafkaConsumer](https://www.tencentcloud.com/document/product/614/59907) - This API is used to modify Kafka protocol consumption information.
-* Delete: [CloseKafkaConsumer](https://www.tencentcloud.com/document/product/614/46785) - This API is used to disable Kafka consumption.
+* Create: [DescribeKafkaConsumer](https://cloud.tencent.com/document/api/614/95719)
+* Create: [OpenKafkaConsumer](https://cloud.tencent.com/document/api/614/72339)
+* Read: [DescribeKafkaConsumer](https://cloud.tencent.com/document/api/614/95719)
+* Update: [DescribeKafkaConsumer](https://cloud.tencent.com/document/api/614/95719)
+* Update: [ModifyKafkaConsumer](https://cloud.tencent.com/document/api/614/95720)
+* Delete: [CloseKafkaConsumer](https://cloud.tencent.com/document/api/614/72340)
 
 ## Import
 

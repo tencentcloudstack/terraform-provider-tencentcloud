@@ -46,10 +46,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePersonSample](https://cloud.tencent.com/document/api/862/39445) - This API is used to create image samples for video processing operations such as content recognition and inappropriate information detection with the help of technologies such as facial feature positioning.
-* Read: [DescribePersonSamples](https://cloud.tencent.com/document/api/862/39441) - This API is used to query the information of image samples. It supports paginated queries by image ID, name, and tag.
-* Update: [ModifyPersonSample](https://cloud.tencent.com/document/api/862/39439) - This API is used to modify image samples by image ID. You can use it to modify the name and description of an image sample and add/delete/reset facial features or tags.
-* Delete: [DeletePersonSample](https://cloud.tencent.com/document/api/862/39443) - This API is used to delete image samples by image ID.
+* Create: [CreatePersonSample](https://cloud.tencent.com/document/api/862/39445)
+* Read: [DescribePersonSamples](https://cloud.tencent.com/document/api/862/39441)
+* Update: [ModifyPersonSample](https://cloud.tencent.com/document/api/862/39439)
+* Delete: [DeletePersonSample](https://cloud.tencent.com/document/api/862/39443)
 
 ## Import
 

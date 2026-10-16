@@ -41,7 +41,7 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [ModifyInstanceAttackLogPost](https://cloud.tencent.com/document/api/627/118381)
-* Read: [DescribeInstances](https://www.tencentcloud.com/document/product/627/64766) - Query detailed information of all user instances
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/627/75922)
 * Update: [ModifyInstanceAttackLogPost](https://cloud.tencent.com/document/api/627/118381)
 
 ## Import

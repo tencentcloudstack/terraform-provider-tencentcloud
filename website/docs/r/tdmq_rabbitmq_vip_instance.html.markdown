@@ -134,12 +134,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRabbitMQVipInstance](https://cloud.tencent.com/document/api/1179/88134) - This API is used to create a RabbitMQ managed instance.
-* Create: [DescribeRabbitMQVipInstances](https://cloud.tencent.com/document/api/1179/82205) - This API is used to query the RabbitMQ managed instance list of user purchases.
-* Read: [DescribeRabbitMQVipInstance](https://cloud.tencent.com/document/api/1179/88648) - This API is used to obtain information about one RabbitMQ managed instance.
-* Read: [DescribeRabbitMQVipInstances](https://cloud.tencent.com/document/api/1179/82205) - This API is used to query the RabbitMQ managed instance list of user purchases.
+* Create: [CreateRabbitMQVipInstance](https://cloud.tencent.com/document/api/1179/88134)
+* Create: [DescribeRabbitMQVipInstances](https://cloud.tencent.com/document/api/1179/82205)
+* Read: [DescribeRabbitMQVipInstance](https://cloud.tencent.com/document/api/1179/88648)
+* Read: [DescribeRabbitMQVipInstances](https://cloud.tencent.com/document/api/1179/82205)
 * Update: [ModifyRabbitMQVipInstance](https://cloud.tencent.com/document/api/1179/88450)
-* Delete: [DeleteRabbitMQVipInstance](https://cloud.tencent.com/document/api/1179/94833) - This API is used to delete a RabbitMQ managed instance.
+* Delete: [DeleteRabbitMQVipInstance](https://cloud.tencent.com/document/api/1179/94833)
 
 ## Import
 

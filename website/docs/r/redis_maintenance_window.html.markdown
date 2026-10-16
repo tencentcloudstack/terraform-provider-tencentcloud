@@ -69,9 +69,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyMaintenanceWindow](https://www.tencentcloud.com/document/product/239/37832) - This API is used to modify the time of instance maintenance window. Instances that require the version or architecture upgrade will undergo time switching during the maintenance window.
-* Read: [DescribeMaintenanceWindow](https://www.tencentcloud.com/document/product/239/37833) - This API is used to query the instance maintenance window. Instances that require the version or architecture upgrade will undergo time switching during the maintenance window.
-* Update: [ModifyMaintenanceWindow](https://www.tencentcloud.com/document/product/239/37832) - This API is used to modify the time of instance maintenance window. Instances that require the version or architecture upgrade will undergo time switching during the maintenance window.
+* Create: [ModifyMaintenanceWindow](https://cloud.tencent.com/document/api/239/46335)
+* Read: [DescribeMaintenanceWindow](https://cloud.tencent.com/document/api/239/46336)
+* Update: [ModifyMaintenanceWindow](https://cloud.tencent.com/document/api/239/46335)
 
 ## Import
 

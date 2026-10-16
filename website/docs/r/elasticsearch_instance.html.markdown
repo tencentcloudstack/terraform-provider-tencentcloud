@@ -445,16 +445,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstance](https://www.tencentcloud.com/document/product/845/32218) - Create an ES cluster instance with the specified specification.
-* Create: [DescribeInstances](https://www.tencentcloud.com/document/product/845/32214) - Query all instances meeting conditions for the user in that region
-* Create: [UpdateInstance](https://www.tencentcloud.com/document/product/845/32212) - Perform operations on the cluster, such as node specification change, instance name modification, configuration modification, password resetting, and Kibana blocklist/allowlist addition.
-* Read: [DescribeInstances](https://www.tencentcloud.com/document/product/845/32214) - Query all instances meeting conditions for the user in that region
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Update: [UpdateInstance](https://www.tencentcloud.com/document/product/845/32212) - Perform operations on the cluster, such as node specification change, instance name modification, configuration modification, password resetting, and Kibana blocklist/allowlist addition.
-* Update: [UpgradeInstance](https://www.tencentcloud.com/document/product/845/34396) - Upgrades the edition of an ES cluster
-* Update: [UpgradeLicense](https://www.tencentcloud.com/document/product/845/34395) - Upgrade ES commercial features
-* Delete: [DeleteInstance](https://www.tencentcloud.com/document/product/845/32217)
-* Delete: [DescribeInstances](https://www.tencentcloud.com/document/product/845/32214) - Query all instances meeting conditions for the user in that region
+* Create: [CreateInstance](https://cloud.tencent.com/document/api/845/30633)
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/845/30631)
+* Create: [UpdateInstance](https://cloud.tencent.com/document/api/845/30629)
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/845/30631)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Update: [UpdateInstance](https://cloud.tencent.com/document/api/845/30629)
+* Update: [UpgradeInstance](https://cloud.tencent.com/document/api/845/36270)
+* Update: [UpgradeLicense](https://cloud.tencent.com/document/api/845/36269)
+* Delete: [DeleteInstance](https://cloud.tencent.com/document/api/845/30632)
+* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/845/30631)
 
 ## Import
 

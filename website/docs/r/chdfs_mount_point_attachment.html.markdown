@@ -41,10 +41,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateAccessGroups](https://cloud.tencent.com/document/api/1105/51155) - This API is used to bind multiple permission groups to a mount point.
-* Read: [DescribeMountPoint](https://cloud.tencent.com/document/api/1105/51153) - This API is used to view the details of a mount point.
-* Delete: [DescribeMountPoint](https://cloud.tencent.com/document/api/1105/51153) - This API is used to view the details of a mount point.
-* Delete: [DisassociateAccessGroups](https://cloud.tencent.com/document/api/1105/51151) - This API is used to unbind multiple permission groups from a mount point.
+* Create: [AssociateAccessGroups](https://cloud.tencent.com/document/api/1105/51155)
+* Read: [DescribeMountPoint](https://cloud.tencent.com/document/api/1105/51153)
+* Delete: [DescribeMountPoint](https://cloud.tencent.com/document/api/1105/51153)
+* Delete: [DisassociateAccessGroups](https://cloud.tencent.com/document/api/1105/51151)
 
 ## Import
 

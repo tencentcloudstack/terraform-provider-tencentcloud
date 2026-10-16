@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetTaskVersion](https://cloud.tencent.com/document/api/1267/123629) - This API is used to list task versions.
+* Read: [GetTaskVersion](https://cloud.tencent.com/document/api/1267/123629)
 

@@ -62,5 +62,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyDiagDBInstanceConf](https://cloud.tencent.com/document/api/1130/57790) - This API is used to enable/disable instance inspection.
+* Create: [ModifyDiagDBInstanceConf](https://cloud.tencent.com/document/api/1130/57790)
 

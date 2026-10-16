@@ -155,11 +155,11 @@ The `ingress` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifySecurityGroupPolicies](https://www.tencentcloud.com/document/product/215/15810) - This API is used to reset the `Egress` and `Ingress` rules (SecurityGroupPolicy) of a security group.
-* Read: [DescribeSecurityGroupPolicies](https://www.tencentcloud.com/document/product/215/15804) - This API (DescribeSecurityGroupPolicies) is used to query security group policies.
-* Update: [DeleteSecurityGroupPolicies](https://www.tencentcloud.com/document/product/215/15809) - This API (DeleteSecurityGroupPolicies) is used to delete security group policies (SecurityGroupPolicy).
-* Update: [ModifySecurityGroupPolicies](https://www.tencentcloud.com/document/product/215/15810) - This API is used to reset the `Egress` and `Ingress` rules (SecurityGroupPolicy) of a security group.
-* Delete: [ModifySecurityGroupPolicies](https://www.tencentcloud.com/document/product/215/15810) - This API is used to reset the `Egress` and `Ingress` rules (SecurityGroupPolicy) of a security group.
+* Create: [ModifySecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15810)
+* Read: [DescribeSecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15804)
+* Update: [DeleteSecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15809)
+* Update: [ModifySecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15810)
+* Delete: [ModifySecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15810)
 
 ## Import
 

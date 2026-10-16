@@ -68,9 +68,9 @@ The `default_settings` object of `capacity_global_config` exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyGlobalConfig](https://cloud.tencent.com/document/api/589/111204) - This API is used to modify the global configuration of YARN resource scheduling.
-* Read: [DescribeGlobalConfig](https://cloud.tencent.com/document/api/589/111205) - This API is used to query the global configuration of YARN resource scheduling.
-* Update: [ModifyGlobalConfig](https://cloud.tencent.com/document/api/589/111204) - This API is used to modify the global configuration of YARN resource scheduling.
+* Create: [ModifyGlobalConfig](https://cloud.tencent.com/document/api/589/111204)
+* Read: [DescribeGlobalConfig](https://cloud.tencent.com/document/api/589/111205)
+* Update: [ModifyGlobalConfig](https://cloud.tencent.com/document/api/589/111204)
 
 ## Import
 

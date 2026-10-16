@@ -310,9 +310,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyZoneSetting](https://cloud.tencent.com/document/api/1552/80614) - This API is an older version. EdgeOne has fully upgraded the APIs related to the rule engine. For details, please refer to [ModifyL7AccSetting](https://intl.cloud.tencent.com/document/product/1552/115817?from_cn_redirect=1).
-* Read: [DescribeZoneSetting](https://cloud.tencent.com/document/api/1552/80617) - This API is an old version. EdgeOne has fully upgraded the APIs related to the rule engine. For details, please refer to [DescribeL7AccSetting](https://intl.cloud.tencent.com/document/product/1552/115819?from_cn_redirect=1).
-* Update: [ModifyZoneSetting](https://cloud.tencent.com/document/api/1552/80614) - This API is an older version. EdgeOne has fully upgraded the APIs related to the rule engine. For details, please refer to [ModifyL7AccSetting](https://intl.cloud.tencent.com/document/product/1552/115817?from_cn_redirect=1).
+* Create: [ModifyZoneSetting](https://cloud.tencent.com/document/api/1552/80614)
+* Read: [DescribeZoneSetting](https://cloud.tencent.com/document/api/1552/80617)
+* Update: [ModifyZoneSetting](https://cloud.tencent.com/document/api/1552/80614)
 
 ## Import
 

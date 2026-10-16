@@ -36,6 +36,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeSyncJobs](https://www.tencentcloud.com/document/product/571/51793) - This API is used to query the information of a sync task.
-* Create: [PauseSyncJob](https://www.tencentcloud.com/document/product/571/53979) - This API is used to pause a data sync task.
+* Create: [DescribeSyncJobs](https://cloud.tencent.com/document/api/571/82103)
+* Create: [PauseSyncJob](https://cloud.tencent.com/document/api/571/84960)
 

@@ -60,11 +60,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AllocateHosts](https://cloud.tencent.com/document/api/213/16473) - This API is used to create CDH instances with specified configuration.
-* Create: [DescribeHosts](https://cloud.tencent.com/document/api/213/16474) - This API is used to query the details of CDH instances.
-* Create: [ModifyHostsAttribute](https://cloud.tencent.com/document/api/213/16475) - This API is used to modify the attributes of a CDH instance, such as instance name and renewal flag. One of the two parameters, HostName and RenewFlag, must be set, but you cannot set both of them at the same time.
-* Read: [DescribeHosts](https://cloud.tencent.com/document/api/213/16474) - This API is used to query the details of CDH instances.
-* Update: [ModifyHostsAttribute](https://cloud.tencent.com/document/api/213/16475) - This API is used to modify the attributes of a CDH instance, such as instance name and renewal flag. One of the two parameters, HostName and RenewFlag, must be set, but you cannot set both of them at the same time.
+* Create: [AllocateHosts](https://cloud.tencent.com/document/api/213/16473)
+* Create: [DescribeHosts](https://cloud.tencent.com/document/api/213/16474)
+* Create: [ModifyHostsAttribute](https://cloud.tencent.com/document/api/213/16475)
+* Read: [DescribeHosts](https://cloud.tencent.com/document/api/213/16474)
+* Update: [ModifyHostsAttribute](https://cloud.tencent.com/document/api/213/16475)
 
 ## Import
 

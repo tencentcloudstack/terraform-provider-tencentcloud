@@ -414,40 +414,40 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AllocateWanAddress](https://www.tencentcloud.com/document/product/239/46976) - This API is used to enable public network access for instances.
-* Create: [CreateInstances](https://www.tencentcloud.com/document/product/239/32069) - This API is used to create an TencentDB or Redis instance.
-* Create: [DescribeInstances](https://www.tencentcloud.com/document/product/239/32065) - This API is used to query the list of Redis instances.
-* Create: [DescribeProductInfo](https://www.tencentcloud.com/document/product/239/32077) - This API is used to query purchasable TencentDB for Redis specifications in all regions.
-* Create: [DescribeZones](https://cloud.tencent.com/document/api/1596/77929) - This interface (DescribeZones) is used for querying product availability zone information.
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Create: [ReleaseWanAddress](https://www.tencentcloud.com/document/product/239/46975) - This API is used to disable public network access.
-* Read: [DescribeInstanceSecurityGroup](https://www.tencentcloud.com/document/product/239/32081) - This API is used to query the security group information of an instance.
-* Read: [DescribeInstances](https://www.tencentcloud.com/document/product/239/32065) - This API is used to query the list of Redis instances.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Read: [DescribeZones](https://cloud.tencent.com/document/api/1596/77929) - This interface (DescribeZones) is used for querying product availability zone information.
-* Update: [AllocateWanAddress](https://www.tencentcloud.com/document/product/239/46976) - This API is used to enable public network access for instances.
-* Update: [ApplyParamsTemplate](https://www.tencentcloud.com/document/product/239/41922) - This API is used to apply parameter templates to instances.
-* Update: [DescribeInstances](https://www.tencentcloud.com/document/product/239/32065) - This API is used to query the list of Redis instances.
-* Update: [DescribeTaskInfo](https://www.tencentcloud.com/document/product/239/32064) - This API is used to get the execution of a specified task.
-* Update: [DescribeTaskList](https://www.tencentcloud.com/document/product/239/33293) - This API is used to query the task list data for the last 30 days.
-* Update: [DisableReplicaReadonly](https://www.tencentcloud.com/document/product/239/32061) - This API is used to disable read/write separation.
-* Update: [EnableReplicaReadonly](https://www.tencentcloud.com/document/product/239/32060) - This API is used to enable read/write separation.
-* Update: [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/document/product/239/37320) - This API is used to modify the original security group list of an instance.
-* Update: [ModifyInstance](https://www.tencentcloud.com/document/product/239/32057) - This API is used to modify instance information.
-* Update: [ModifyInstanceAvailabilityZones](https://www.tencentcloud.com/document/product/239/59383) - This API is used to change the availability zone of the instance.
-* Update: [ModifyInstanceChargeType](https://www.tencentcloud.com/document/product/239/78762) - This API is used to change the billing type of an instance.
-* Update: [ModifyNetworkConfig](https://www.tencentcloud.com/document/product/239/32056) - This API is used to modify the network configuration of an instance.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Update: [ReleaseWanAddress](https://www.tencentcloud.com/document/product/239/46975) - This API is used to disable public network access.
-* Update: [ResetPassword](https://www.tencentcloud.com/document/product/239/32054) - This API is used to reset the instance access password.
-* Update: [UpgradeInstance](https://www.tencentcloud.com/document/product/239/32052) - This API is used to change the configuration specifications of an instance.
-* Update: [UpgradeInstanceVersion](https://www.tencentcloud.com/document/product/239/37831) - This API is used to upgrade the current instance to a later version or upgrade the current standard architecture to a cluster architecture.
-* Delete: [CleanUpInstance](https://www.tencentcloud.com/document/product/239/32071) - This API is used to immediately terminate instances in the recycle bin.
-* Delete: [DescribeInstanceDealDetail](https://www.tencentcloud.com/document/product/239/32067) - This API is used to query the order information.
-* Delete: [DescribeInstances](https://www.tencentcloud.com/document/product/239/32065) - This API is used to query the list of Redis instances.
-* Delete: [DescribeTaskInfo](https://www.tencentcloud.com/document/product/239/32064) - This API is used to get the execution of a specified task.
-* Delete: [DestroyPostpaidInstance](https://www.tencentcloud.com/document/product/239/32063) - This API is used to terminate pay-as-you-go instances.
-* Delete: [DestroyPrepaidInstance](https://www.tencentcloud.com/document/product/239/32062) - This API is used to return Redis instances with monthly subscription.
+* Create: [AllocateWanAddress](https://cloud.tencent.com/document/api/239/72839)
+* Create: [CreateInstances](https://cloud.tencent.com/document/api/239/20026)
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/239/20018)
+* Create: [DescribeProductInfo](https://cloud.tencent.com/document/api/239/30600)
+* Create: [DescribeZones](https://cloud.tencent.com/document/api/1596/77929)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Create: [ReleaseWanAddress](https://cloud.tencent.com/document/api/239/72838)
+* Read: [DescribeInstanceSecurityGroup](https://cloud.tencent.com/document/api/239/34447)
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/239/20018)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Read: [DescribeZones](https://cloud.tencent.com/document/api/1596/77929)
+* Update: [AllocateWanAddress](https://cloud.tencent.com/document/api/239/72839)
+* Update: [ApplyParamsTemplate](https://cloud.tencent.com/document/api/239/58753)
+* Update: [DescribeInstances](https://cloud.tencent.com/document/api/239/20018)
+* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601)
+* Update: [DescribeTaskList](https://cloud.tencent.com/document/api/239/39374)
+* Update: [DisableReplicaReadonly](https://cloud.tencent.com/document/api/239/34438)
+* Update: [EnableReplicaReadonly](https://cloud.tencent.com/document/api/239/34437)
+* Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/239/41256)
+* Update: [ModifyInstance](https://cloud.tencent.com/document/api/239/31785)
+* Update: [ModifyInstanceAvailabilityZones](https://cloud.tencent.com/document/api/239/102363)
+* Update: [ModifyInstanceChargeType](https://cloud.tencent.com/document/api/239/130332)
+* Update: [ModifyNetworkConfig](https://cloud.tencent.com/document/api/239/34436)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Update: [ReleaseWanAddress](https://cloud.tencent.com/document/api/239/72838)
+* Update: [ResetPassword](https://cloud.tencent.com/document/api/239/20014)
+* Update: [UpgradeInstance](https://cloud.tencent.com/document/api/239/20013)
+* Update: [UpgradeInstanceVersion](https://cloud.tencent.com/document/api/239/46334)
+* Delete: [CleanUpInstance](https://cloud.tencent.com/document/api/239/34442)
+* Delete: [DescribeInstanceDealDetail](https://cloud.tencent.com/document/api/239/30602)
+* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/239/20018)
+* Delete: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601)
+* Delete: [DestroyPostpaidInstance](https://cloud.tencent.com/document/api/239/34440)
+* Delete: [DestroyPrepaidInstance](https://cloud.tencent.com/document/api/239/34439)
 
 ## Import
 

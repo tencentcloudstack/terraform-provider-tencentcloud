@@ -43,10 +43,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCloudNativeAPIGatewayCertificate](https://cloud.tencent.com/document/api/1364/98591) - This API is used to create a cloud-native gateway certificate
-* Read: [DescribeCloudNativeAPIGatewayCertificateDetails](https://cloud.tencent.com/document/api/1364/98589) - Query the certificate detail of one cloud-native gateway
-* Update: [UpdateCloudNativeAPIGatewayCertificateInfo](https://cloud.tencent.com/document/api/1364/98587) - Modify the certificate information of a cloud-native gateway
-* Delete: [DeleteCloudNativeAPIGatewayCertificate](https://cloud.tencent.com/document/api/1364/98590) - This API is used to delete a cloud-native gateway cert.
+* Create: [CreateCloudNativeAPIGatewayCertificate](https://cloud.tencent.com/document/api/1364/98591)
+* Read: [DescribeCloudNativeAPIGatewayCertificateDetails](https://cloud.tencent.com/document/api/1364/98589)
+* Update: [UpdateCloudNativeAPIGatewayCertificateInfo](https://cloud.tencent.com/document/api/1364/98587)
+* Delete: [DeleteCloudNativeAPIGatewayCertificate](https://cloud.tencent.com/document/api/1364/98590)
 
 ## Import
 

@@ -68,12 +68,12 @@ The `dimensions` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindingPolicyObject](https://www.tencentcloud.com/document/product/248/35985) - This API is used to bind an alarm policy to a specific object.
-* Create: [DescribeBindingPolicyObjectList](https://www.tencentcloud.com/document/product/248/35980) - This API is used to get the bound object list.
-* Create: [DescribePolicyGroupList](https://www.tencentcloud.com/document/product/248/35977) - This API is used to get the list of basic policy alarm groups.
-* Read: [DescribeBindingPolicyObjectList](https://www.tencentcloud.com/document/product/248/35980) - This API is used to get the bound object list.
-* Read: [DescribePolicyGroupList](https://www.tencentcloud.com/document/product/248/35977) - This API is used to get the list of basic policy alarm groups.
-* Delete: [DescribeBindingPolicyObjectList](https://www.tencentcloud.com/document/product/248/35980) - This API is used to get the bound object list.
-* Delete: [DescribePolicyGroupList](https://www.tencentcloud.com/document/product/248/35977) - This API is used to get the list of basic policy alarm groups.
-* Delete: [UnBindingPolicyObject](https://www.tencentcloud.com/document/product/248/35971) - This API is used to delete an object that is bound to a policy.
+* Create: [BindingPolicyObject](https://cloud.tencent.com/document/api/248/40421)
+* Create: [DescribeBindingPolicyObjectList](https://cloud.tencent.com/document/api/248/40570)
+* Create: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945)
+* Read: [DescribeBindingPolicyObjectList](https://cloud.tencent.com/document/api/248/40570)
+* Read: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945)
+* Delete: [DescribeBindingPolicyObjectList](https://cloud.tencent.com/document/api/248/40570)
+* Delete: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945)
+* Delete: [UnBindingPolicyObject](https://cloud.tencent.com/document/api/248/40567)
 

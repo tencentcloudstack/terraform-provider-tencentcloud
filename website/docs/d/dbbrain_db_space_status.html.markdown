@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBSpaceStatus](https://cloud.tencent.com/document/api/1130/57799) - This API is used to query the overview of instance space usage during a specified time period, including disk usage growth (MB), available disk space (MB), total disk space (MB), and estimated number of available days.
+* Read: [DescribeDBSpaceStatus](https://cloud.tencent.com/document/api/1130/57799)
 

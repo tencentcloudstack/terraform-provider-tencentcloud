@@ -48,5 +48,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBgpBizTrend](https://cloud.tencent.com/document/api/297/95361) - This API is used to obtain Anti-DDoS Pro traffic data.
+* Read: [DescribeBgpBizTrend](https://cloud.tencent.com/document/api/297/95361)
 

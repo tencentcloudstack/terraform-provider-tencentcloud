@@ -50,11 +50,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateFunction](https://cloud.tencent.com/document/api/1552/111389) - This API is used to create and deploy an edge function to EdgeOne edge nodes.
-* Create: [DescribeFunctions](https://cloud.tencent.com/document/api/1552/111383) - This API is used to query the list of edge functions. It supports filtering by function ID, name, description, and so on.
-* Read: [DescribeFunctions](https://cloud.tencent.com/document/api/1552/111383) - This API is used to query the list of edge functions. It supports filtering by function ID, name, description, and so on.
-* Update: [ModifyFunction](https://cloud.tencent.com/document/api/1552/111381) - This API is used to modify an edge function. It supports modifying the function content and description. The function will take effect immediately after modification and redeployment.
-* Delete: [DeleteFunction](https://cloud.tencent.com/document/api/1552/111387) - This API is used to delete an edge function. Once deleted, the function cannot be recovered, and associated trigger rules are also deleted.
+* Create: [CreateFunction](https://cloud.tencent.com/document/api/1552/111389)
+* Create: [DescribeFunctions](https://cloud.tencent.com/document/api/1552/111383)
+* Read: [DescribeFunctions](https://cloud.tencent.com/document/api/1552/111383)
+* Update: [ModifyFunction](https://cloud.tencent.com/document/api/1552/111381)
+* Delete: [DeleteFunction](https://cloud.tencent.com/document/api/1552/111387)
 
 ## Import
 

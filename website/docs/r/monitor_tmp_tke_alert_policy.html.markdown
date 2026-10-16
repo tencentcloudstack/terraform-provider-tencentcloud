@@ -272,8 +272,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrometheusAlertPolicy](https://www.tencentcloud.com/document/product/248/53775) - This API is used to create an alerting rule.
-* Read: [DescribePrometheusAlertPolicy](https://www.tencentcloud.com/document/product/248/53323) - This API is used to get the list of v2.0 instance alerting rules.
-* Update: [ModifyPrometheusAlertPolicy](https://www.tencentcloud.com/document/product/248/53765) - This API is used to modify a TMP 2.0 instance alerting rule.
-* Delete: [DeletePrometheusAlertPolicy](https://www.tencentcloud.com/document/product/248/53772) - This API is used to delete a TMP 2.0 instance alerting rule.
+* Create: [CreatePrometheusAlertPolicy](https://cloud.tencent.com/document/api/248/86045)
+* Read: [DescribePrometheusAlertPolicy](https://cloud.tencent.com/document/api/248/85718)
+* Update: [ModifyPrometheusAlertPolicy](https://cloud.tencent.com/document/api/248/86035)
+* Delete: [DeletePrometheusAlertPolicy](https://cloud.tencent.com/document/api/248/86042)
 

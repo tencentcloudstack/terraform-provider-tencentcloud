@@ -44,8 +44,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSecurityAuditLogExportTask](https://cloud.tencent.com/document/api/1130/57801) - This API is used to create a security audit log export task.
-* Create: [DescribeSecurityAuditLogExportTasks](https://cloud.tencent.com/document/api/1130/57795) - This API is used to query the list of security audit log export tasks.
-* Read: [DescribeSecurityAuditLogExportTasks](https://cloud.tencent.com/document/api/1130/57795) - This API is used to query the list of security audit log export tasks.
-* Delete: [DeleteSecurityAuditLogExportTasks](https://cloud.tencent.com/document/api/1130/57800) - This API is used to delete a security audit log export task.
+* Create: [CreateSecurityAuditLogExportTask](https://cloud.tencent.com/document/api/1130/57801)
+* Create: [DescribeSecurityAuditLogExportTasks](https://cloud.tencent.com/document/api/1130/57795)
+* Read: [DescribeSecurityAuditLogExportTasks](https://cloud.tencent.com/document/api/1130/57795)
+* Delete: [DeleteSecurityAuditLogExportTasks](https://cloud.tencent.com/document/api/1130/57800)
 

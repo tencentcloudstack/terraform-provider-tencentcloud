@@ -86,15 +86,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDB](https://www.tencentcloud.com/document/product/238/32120) - This API is used to create a database.
-* Create: [DescribeDBInstances](https://www.tencentcloud.com/document/product/238/32115) - This API is used to query the list of instances.
-* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/product/238/32113) - This API is used to query flow status.
-* Read: [DescribeDBs](https://www.tencentcloud.com/document/product/238/32114) - This API is used to query the list of databases
-* Update: [ModifyDBRemark](https://www.tencentcloud.com/document/product/238/32100) - This API is used to modify database remarks.
-* Delete: [DeleteDB](https://www.tencentcloud.com/document/product/238/32117) - This API is used to drop a database.
-* Delete: [DescribeDBInstances](https://www.tencentcloud.com/document/product/238/32115) - This API is used to query the list of instances.
-* Delete: [DescribeDBs](https://www.tencentcloud.com/document/product/238/32114) - This API is used to query the list of databases
-* Delete: [DescribeFlowStatus](https://www.tencentcloud.com/document/product/238/32113) - This API is used to query flow status.
+* Create: [CreateDB](https://cloud.tencent.com/document/api/238/19974)
+* Create: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969)
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
+* Read: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968)
+* Update: [ModifyDBRemark](https://cloud.tencent.com/document/api/238/19954)
+* Delete: [DeleteDB](https://cloud.tencent.com/document/api/238/19971)
+* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969)
+* Delete: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968)
+* Delete: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
 
 ## Import
 

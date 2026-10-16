@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDomainAlias](https://cloud.tencent.com/document/api/1427/56183) - This API is used to create a domain alias.
-* Read: [DescribeDomainAliasList](https://cloud.tencent.com/document/api/1427/65766) - This API is used to get the list of domain aliases.
-* Delete: [DeleteDomainAlias](https://cloud.tencent.com/document/api/1427/56177) - This API is used to delete a domain alias.
+* Create: [CreateDomainAlias](https://cloud.tencent.com/document/api/1427/56183)
+* Read: [DescribeDomainAliasList](https://cloud.tencent.com/document/api/1427/65766)
+* Delete: [DeleteDomainAlias](https://cloud.tencent.com/document/api/1427/56177)
 
 ## Import
 

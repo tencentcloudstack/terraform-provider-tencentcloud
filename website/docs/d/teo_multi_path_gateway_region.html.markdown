@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeMultiPathGatewayRegions](https://cloud.tencent.com/document/api/1552/121336) - This API is used to query the list of available regions for user-created multi-channel security acceleration gateways (Cloud Gateway).
+* Read: [DescribeMultiPathGatewayRegions](https://cloud.tencent.com/document/api/1552/121336)
 

@@ -145,7 +145,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ImportOpenApi](https://cloud.tencent.com/document/api/628/79383) - This API is used to import an OpenAPI to API gateway.
-* Read: [DescribeApi](https://cloud.tencent.com/document/api/628/45241) - This API (`DescribeApi`) is used to query the details of the APIs users manage via Tencent Cloud API Gateway.
-* Delete: [DeleteApi](https://cloud.tencent.com/document/api/628/45242) - This API is used to delete a created API.
+* Create: [ImportOpenApi](https://cloud.tencent.com/document/api/628/79383)
+* Read: [DescribeApi](https://cloud.tencent.com/document/api/628/45241)
+* Delete: [DeleteApi](https://cloud.tencent.com/document/api/628/45242)
 

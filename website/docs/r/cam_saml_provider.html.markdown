@@ -42,11 +42,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSAMLProvider](https://www.tencentcloud.com/document/product/598/32237) - This API is used to create a SAML identity provider.
-* Create: [GetSAMLProvider](https://www.tencentcloud.com/document/product/598/32235) - This API is used to query SAML identity provider details.
-* Read: [GetSAMLProvider](https://www.tencentcloud.com/document/product/598/32235) - This API is used to query SAML identity provider details.
-* Update: [UpdateSAMLProvider](https://www.tencentcloud.com/document/product/598/32233) - This API is used to update SAML identity provider information.
-* Delete: [DeleteSAMLProvider](https://www.tencentcloud.com/document/product/598/32236) - This API is used to delete a SAML identity provider.
+* Create: [CreateSAMLProvider](https://cloud.tencent.com/document/api/598/34567)
+* Create: [GetSAMLProvider](https://cloud.tencent.com/document/api/598/34565)
+* Read: [GetSAMLProvider](https://cloud.tencent.com/document/api/598/34565)
+* Update: [UpdateSAMLProvider](https://cloud.tencent.com/document/api/598/34563)
+* Delete: [DeleteSAMLProvider](https://cloud.tencent.com/document/api/598/34566)
 
 ## Import
 

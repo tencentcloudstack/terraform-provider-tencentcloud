@@ -95,13 +95,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCluster](https://www.tencentcloud.com/document/product/457/32027) - This API is used to create a cluster.
-* Create: [DescribeClusterInstances](https://www.tencentcloud.com/document/product/457/66315) - This API is used to query the information of node instances in a cluster.
-* Create: [DescribeClusters](https://www.tencentcloud.com/document/product/457/32025) - This API is used to query clusters list.
-* Create: [DescribeInstances](https://www.tencentcloud.com/document/product/213/33258) - This API is used to query the details of instances.
-* Create: [DescribeZones](https://www.tencentcloud.com/document/product/213/35071) - This API is used to query availability zones.
-* Read: [DescribeClusterInstances](https://www.tencentcloud.com/document/product/457/66315) - This API is used to query the information of node instances in a cluster.
-* Read: [DescribeClusters](https://www.tencentcloud.com/document/product/457/32025) - This API is used to query clusters list.
-* Read: [DescribeInstances](https://www.tencentcloud.com/document/product/213/33258) - This API is used to query the details of instances.
-* Delete: [DeleteCluster](https://www.tencentcloud.com/document/product/457/33870) - This API is used to delete a cluster. (Cloud API v3).
+* Create: [CreateCluster](https://cloud.tencent.com/document/api/457/34527)
+* Create: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863)
+* Create: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862)
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728)
+* Create: [DescribeZones](https://cloud.tencent.com/document/api/213/15707)
+* Read: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863)
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862)
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728)
+* Delete: [DeleteCluster](https://cloud.tencent.com/document/api/457/36704)
 

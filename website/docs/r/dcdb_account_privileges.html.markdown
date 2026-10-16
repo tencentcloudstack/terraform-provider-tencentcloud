@@ -86,14 +86,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/557/56485) - This API is used to query task status.
-* Create: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/557/83475) - This API is used to modify the permissions of a TencentDB instance account. \n\n**Note**\n-Only the SELECT permission (that is, set the permission parameter to `["SELECT"]`) of the system database `mysql` can be granted.
-* Read: [DescribeAccountPrivileges](https://cloud.tencent.com/document/api/557/19994) - This API is used to query the permissions of a TencentDB account.
-* Read: [DescribeDatabaseObjects](https://cloud.tencent.com/document/api/557/19989) - This API is used to query the list of database objects in a TencentDB instance, including tables, stored procedures, views, and functions.
-* Read: [DescribeDatabaseTable](https://cloud.tencent.com/document/api/557/19988) - This API is used to query the table information of a TencentDB instance.
-* Read: [DescribeDatabases](https://cloud.tencent.com/document/api/557/19987) - This API is used to query the database list of a TencentDB instance.
-* Update: [DescribeFlow](https://cloud.tencent.com/document/api/557/56485) - This API is used to query task status.
-* Update: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/557/83475) - This API is used to modify the permissions of a TencentDB instance account. \n\n**Note**\n-Only the SELECT permission (that is, set the permission parameter to `["SELECT"]`) of the system database `mysql` can be granted.
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/557/56485)
+* Create: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/557/83475)
+* Read: [DescribeAccountPrivileges](https://cloud.tencent.com/document/api/557/19994)
+* Read: [DescribeDatabaseObjects](https://cloud.tencent.com/document/api/557/19989)
+* Read: [DescribeDatabaseTable](https://cloud.tencent.com/document/api/557/19988)
+* Read: [DescribeDatabases](https://cloud.tencent.com/document/api/557/19987)
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/557/56485)
+* Update: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/557/83475)
 
 ## Import
 

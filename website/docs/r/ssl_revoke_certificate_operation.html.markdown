@@ -37,7 +37,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RevokeCertificate](https://cloud.tencent.com/document/api/400/49426) - This API is used to revoke certificate.
+* Create: [RevokeCertificate](https://cloud.tencent.com/document/api/400/49426)
 
 ## Import
 

@@ -145,5 +145,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [EditMedia](https://cloud.tencent.com/document/api/862/43010) - This API is used to edit a video to generate a new one. Editing features include:
+* Create: [EditMedia](https://cloud.tencent.com/document/api/862/43010)
 

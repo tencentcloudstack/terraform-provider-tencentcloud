@@ -60,5 +60,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDataEventUrl](https://cloud.tencent.com/document/api/1464/65769) - This API is used to get the DescribeDataEventUrl information.
+* Read: [DescribeDataEventUrl](https://cloud.tencent.com/document/api/1464/65769)
 

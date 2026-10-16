@@ -30,5 +30,5 @@ The following arguments are supported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ParseNotification](https://cloud.tencent.com/document/api/862/39228) - After a message is received from CMQ, parse out the content of the MPS event notification from the msgBody field.
+* Read: [ParseNotification](https://cloud.tencent.com/document/api/862/39228)
 

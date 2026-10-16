@@ -44,6 +44,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - This API is used to query the instance information.
-* Read: [DescribeInternalEndpoints](https://cloud.tencent.com/document/api/1141/50734) - This API is used to query the VPC URLs for private network access to an instance.
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569)
+* Read: [DescribeInternalEndpoints](https://cloud.tencent.com/document/api/1141/50734)
 

@@ -37,5 +37,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GenerateVpnConnectionDefaultHealthCheckIp](https://www.tencentcloud.com/document/product/215/56575) - This API is used to get a pair of VPN tunnel health check addresses.
+* Read: [GenerateVpnConnectionDefaultHealthCheckIp](https://cloud.tencent.com/document/api/215/90654)
 

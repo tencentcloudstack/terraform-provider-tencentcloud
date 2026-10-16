@@ -48,5 +48,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTagRetentionExecutionTask](https://cloud.tencent.com/document/api/1141/54800) - This API is used to query tag retention execution tasks.
+* Read: [DescribeTagRetentionExecutionTask](https://cloud.tencent.com/document/api/1141/54800)
 

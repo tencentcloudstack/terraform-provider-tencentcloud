@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRefreshTask](https://cloud.tencent.com/document/api/1285/65453) - This API is used to distribute a task to refresh the asset information.
+* Create: [CreateRefreshTask](https://cloud.tencent.com/document/api/1285/65453)
 

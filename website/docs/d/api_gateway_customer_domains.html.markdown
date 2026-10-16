@@ -55,6 +55,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeServiceSubDomainMappings](https://cloud.tencent.com/document/api/628/45186) - This API is used to query the path mappings of a custom domain name.
-* Read: [DescribeServiceSubDomains](https://cloud.tencent.com/document/api/628/45185) - This API is used to query the list of custom domain names.
+* Read: [DescribeServiceSubDomainMappings](https://cloud.tencent.com/document/api/628/45186)
+* Read: [DescribeServiceSubDomains](https://cloud.tencent.com/document/api/628/45185)
 

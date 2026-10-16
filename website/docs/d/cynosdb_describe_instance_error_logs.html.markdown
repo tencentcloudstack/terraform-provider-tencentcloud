@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceErrorLogs](https://cloud.tencent.com/document/api/1003/90936) - This API is used to query the list of instance error logs.
+* Read: [DescribeInstanceErrorLogs](https://cloud.tencent.com/document/api/1003/90936)
 

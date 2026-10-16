@@ -103,10 +103,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RegisterTargetGroupInstances](https://www.tencentcloud.com/document/product/214/33810) - This API is used to register servers to a target group.
-* Read: [DescribeTargetGroupInstances](https://www.tencentcloud.com/document/product/214/33828) - This API is used to get the information of servers bound to a target group.
-* Update: [ModifyTargetGroupInstancesWeight](https://www.tencentcloud.com/document/product/214/33813) - This API is used to modify server weights of a target group in batches.
-* Delete: [DeregisterTargetGroupInstances](https://www.tencentcloud.com/document/product/214/33833) - This API is used to unbind a server from a target group.
+* Create: [RegisterTargetGroupInstances](https://cloud.tencent.com/document/api/214/40549)
+* Read: [DescribeTargetGroupInstances](https://cloud.tencent.com/document/api/214/40556)
+* Update: [ModifyTargetGroupInstancesWeight](https://cloud.tencent.com/document/api/214/40550)
+* Delete: [DeregisterTargetGroupInstances](https://cloud.tencent.com/document/api/214/40557)
 
 ## Import
 

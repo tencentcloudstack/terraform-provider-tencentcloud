@@ -1,12 +1,10 @@
 package main
 
-// apiref_refresh.go — refreshes the bundled API catalog snapshots from
-// TencentCloud's public endpoints. Run with:
-//
-//	go run ./gendoc -refresh
-//
-// or via `make doc-refresh`. Only a few fields (product/action/name/url)
-// are kept so the snapshots stay small.
+// apiref_refresh.go — live refresh of the API catalog used by the doc
+// generation pipeline. 'make doc' fetches TencentCloud's public API catalog
+// on every run so the generated links always match the current state of the
+// cloud docs; the embedded snapshot (gendoc/data/api-actions.json) is a
+// fallback for offline runs and is rewritten whenever a fetch succeeds.
 
 import (
 	"compress/gzip"
@@ -20,11 +18,10 @@ import (
 	"time"
 )
 
-// Public catalog endpoints. The raw JSON is large (~6 MB) and carries many
-// extra fields; the refresh keeps only what the doc renderer needs.
-const (
-	actionsURL = "https://main.qcloudimg.com/qcloud/main/scripts/release/common/api-all-actions.json"
-)
+// Public catalog endpoint. The raw JSON is large (~6 MB) and carries many
+// extra fields; only a few fields (product/action/name/url) are kept so
+// the snapshot stays small.
+const actionsURL = "https://main.qcloudimg.com/qcloud/main/scripts/release/common/api-all-actions.json"
 
 // rawAction mirrors one entry of api-all-actions.json.
 type rawAction struct {
@@ -34,37 +31,23 @@ type rawAction struct {
 	ActionCNDocUr string `json:"actionCNDocUrl"`
 }
 
-// refreshData downloads both catalogs and rewrites the slim snapshots under
-// gendoc/data/.
-// refreshData downloads and rewrites the slim catalog snapshots. The raw
-// action catalog is also returned so the English refresh can merge doc
-// URLs without a second download.
-func refreshData() ([]rawAction, error) {
-	actions, err := fetchAndSlimActions()
+// refreshCatalog fetches the live API catalog and rewrites the embedded
+// snapshot. Returns the slim catalog for the current run. On failure the
+// error is returned and callers fall back to the bundled snapshot.
+func refreshCatalog() ([]apiAction, error) {
+	actions, err := fetchAndSlimActions(http.DefaultClient)
 	if err != nil {
-		return nil, fmt.Errorf("actions: %w", err)
+		return nil, err
 	}
 	if err := writeJSON("data/api-actions.json", actions); err != nil {
 		return nil, err
 	}
-	message("[SUCC.]refreshed data/api-actions.json (%d actions)\n", len(actions))
-
-	var raw []rawAction
-	if err := fetchJSON(nil, actionsURL, &raw); err != nil {
-		// Non-fatal: the English refresh tolerates a missing catalog.
-		message("[WARN]raw catalog re-fetch for URL merge failed: %v\n", err)
-		return nil, nil
-	}
-	return raw, nil
+	return actions, nil
 }
 
-func fetchAndSlimActions() ([]apiAction, error) {
-	return fetchAndSlimActionsWith(http.DefaultClient)
-}
-
-// fetchAndSlimActionsWith downloads and slims the action catalog using the
+// fetchAndSlimActions downloads and slims the action catalog using the
 // given HTTP client.
-func fetchAndSlimActionsWith(httpClient *http.Client) ([]apiAction, error) {
+func fetchAndSlimActions(httpClient *http.Client) ([]apiAction, error) {
 	var raw []rawAction
 	if err := fetchJSON(httpClient, actionsURL, &raw); err != nil {
 		return nil, err

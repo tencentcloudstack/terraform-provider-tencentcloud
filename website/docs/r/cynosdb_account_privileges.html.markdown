@@ -81,9 +81,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/1003/92714) - This API is used to modify account database and table permissions.
+* Create: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/1003/92714)
 * Read: [DescribeAccountAllGrantPrivileges](https://cloud.tencent.com/document/api/1003/70114)
-* Update: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/1003/92714) - This API is used to modify account database and table permissions.
+* Update: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/1003/92714)
 
 ## Import
 

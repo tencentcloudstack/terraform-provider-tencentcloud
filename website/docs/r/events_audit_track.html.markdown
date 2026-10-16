@@ -88,9 +88,9 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateEventsAuditTrack](https://cloud.tencent.com/document/api/629/111894)
-* Read: [DescribeAuditTrack](https://cloud.tencent.com/document/api/629/83247) - This API is used to query the CloudAudit tracking set details.
+* Read: [DescribeAuditTrack](https://cloud.tencent.com/document/api/629/83247)
 * Update: [ModifyEventsAuditTrack](https://cloud.tencent.com/document/api/629/111900)
-* Delete: [DeleteAuditTrack](https://cloud.tencent.com/document/api/629/70382) - This API is used to delete a CloudAudit tracking set.
+* Delete: [DeleteAuditTrack](https://cloud.tencent.com/document/api/629/70382)
 
 ## Import
 

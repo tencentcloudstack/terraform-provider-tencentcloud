@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRealServers](https://www.tencentcloud.com/document/product/608/33060) - This API is used to query origin server information. It can query all origin servers under the specified project name, and supports fuzzy query by specified IPs or domain names.
+* Read: [DescribeRealServers](https://cloud.tencent.com/document/api/608/37013)
 

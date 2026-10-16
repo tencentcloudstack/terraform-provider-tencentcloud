@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListCosEnableRegion](https://cloud.tencent.com/document/api/629/35345) - This API is used to query CloudAudit-enabled COS AZs.
+* Read: [ListCosEnableRegion](https://cloud.tencent.com/document/api/629/35345)
 

@@ -54,16 +54,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateKeyPair](https://www.tencentcloud.com/document/product/213/33231) - This API is used to create an `OpenSSH RSA` key pair, which you can use to log in to a `Linux` instance.
-* Create: [ImportKeyPair](https://www.tencentcloud.com/document/product/213/33227) - This API is used to import key pairs.
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeKeyPairs](https://www.tencentcloud.com/document/product/213/33229) - This API is used to query key pairs.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [ModifyKeyPairAttribute](https://www.tencentcloud.com/document/product/213/33226) - This API is used to modify attributes of a key pair.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Delete: [DeleteKeyPairs](https://www.tencentcloud.com/document/product/213/33230) - This API is used to delete the key pairs hosted in Tencent Cloud.
-* Delete: [DescribeKeyPairs](https://www.tencentcloud.com/document/product/213/33229) - This API is used to query key pairs.
-* Delete: [DisassociateInstancesKeyPairs](https://www.tencentcloud.com/document/product/213/33228) - This API is used to unbind one or more key pairs from one or more instances.
+* Create: [CreateKeyPair](https://cloud.tencent.com/document/api/213/15702)
+* Create: [ImportKeyPair](https://cloud.tencent.com/document/api/213/15703)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeKeyPairs](https://cloud.tencent.com/document/api/213/15699)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [ModifyKeyPairAttribute](https://cloud.tencent.com/document/api/213/15701)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Delete: [DeleteKeyPairs](https://cloud.tencent.com/document/api/213/15700)
+* Delete: [DescribeKeyPairs](https://cloud.tencent.com/document/api/213/15699)
+* Delete: [DisassociateInstancesKeyPairs](https://cloud.tencent.com/document/api/213/15697)
 
 ## Import
 

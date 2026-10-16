@@ -38,6 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/product/236/34462) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
-* Create: [StopRollback](https://www.tencentcloud.com/document/product/236/38951) - This api is used to revoke an ongoing rollback task of an instance. The api response returns an Asynchronous Task ID. The revocation result can be queried through [DescribeAsyncRequestInfo]
+* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410)
+* Create: [StopRollback](https://cloud.tencent.com/document/api/236/50422)
 

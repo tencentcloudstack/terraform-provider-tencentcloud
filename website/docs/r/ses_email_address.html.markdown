@@ -51,11 +51,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEmailAddress](https://cloud.tencent.com/document/api/1288/51052) - After the sender domain is verified, you need a sender address to send emails. For example, if your sender domain is mail.qcloud.com, your sender address can be service@mail.qcloud.com.
-* Create: [UpdateEmailSmtpPassWord](https://cloud.tencent.com/document/api/1288/84274) - This API is used to set the SMTP password. Initially, no SMTP password is set for your email address, so emails cannot be sent over SMTP. To send emails over SMTP, you must set the SMTP password.
-* Read: [ListEmailAddress](https://cloud.tencent.com/document/api/1288/51050) - This API is used to get the list of sender addresses.
-* Update: [UpdateEmailSmtpPassWord](https://cloud.tencent.com/document/api/1288/84274) - This API is used to set the SMTP password. Initially, no SMTP password is set for your email address, so emails cannot be sent over SMTP. To send emails over SMTP, you must set the SMTP password.
-* Delete: [DeleteEmailAddress](https://cloud.tencent.com/document/api/1288/51051) - This API is used to delete a sender address.
+* Create: [CreateEmailAddress](https://cloud.tencent.com/document/api/1288/51052)
+* Create: [UpdateEmailSmtpPassWord](https://cloud.tencent.com/document/api/1288/84274)
+* Read: [ListEmailAddress](https://cloud.tencent.com/document/api/1288/51050)
+* Update: [UpdateEmailSmtpPassWord](https://cloud.tencent.com/document/api/1288/84274)
+* Delete: [DeleteEmailAddress](https://cloud.tencent.com/document/api/1288/51051)
 
 ## Import
 

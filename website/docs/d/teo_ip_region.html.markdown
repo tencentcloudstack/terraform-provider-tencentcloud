@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeIPRegion](https://cloud.tencent.com/document/api/1552/102227) - This API is used to check if the IP is an EdgeOne IP.
+* Read: [DescribeIPRegion](https://cloud.tencent.com/document/api/1552/102227)
 

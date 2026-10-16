@@ -51,10 +51,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSampleSnapshotTemplate](https://cloud.tencent.com/document/api/862/37607) - This API is used to create a custom sampled screencapturing template. Up to 16 templates can be created.
-* Read: [DescribeSampleSnapshotTemplates](https://cloud.tencent.com/document/api/862/37595) - This API is used to query the list of sampled screencapturing templates and supports paged queries by filters.
-* Update: [ModifySampleSnapshotTemplate](https://cloud.tencent.com/document/api/862/37589) - This API is used to modify a custom sampled screencapturing template.
-* Delete: [DeleteSampleSnapshotTemplate](https://cloud.tencent.com/document/api/862/37601) - This API is used to delete a user-customized sampled screenshot template.
+* Create: [CreateSampleSnapshotTemplate](https://cloud.tencent.com/document/api/862/37607)
+* Read: [DescribeSampleSnapshotTemplates](https://cloud.tencent.com/document/api/862/37595)
+* Update: [ModifySampleSnapshotTemplate](https://cloud.tencent.com/document/api/862/37589)
+* Delete: [DeleteSampleSnapshotTemplate](https://cloud.tencent.com/document/api/862/37601)
 
 ## Import
 

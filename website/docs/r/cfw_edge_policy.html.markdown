@@ -76,7 +76,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddAclRule](https://cloud.tencent.com/document/api/1132/97847) - Add one or more Internet Boundary Access Control Rules.
+* Create: [AddAclRule](https://cloud.tencent.com/document/api/1132/97847)
 * Read: [DescribeAclRule](https://cloud.tencent.com/document/api/1132/97845)
 * Update: [ModifyAclRule](https://cloud.tencent.com/document/api/1132/97843)
 * Delete: [RemoveAclRule](https://cloud.tencent.com/document/api/1132/97838)

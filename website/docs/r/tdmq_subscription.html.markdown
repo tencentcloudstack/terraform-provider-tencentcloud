@@ -76,11 +76,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSubscription](https://cloud.tencent.com/document/api/1179/46075) - This API is used to create a subscription to a topic.
-* Read: [DescribeSubscriptions](https://cloud.tencent.com/document/api/1179/46072) - This API is used to query the list of subscribers under the specified environment and topic.
-* Read: [DescribeTopics](https://cloud.tencent.com/document/api/1179/46086) - This API is used to get the list of topics under an environment.
-* Delete: [DeleteSubscriptions](https://cloud.tencent.com/document/api/1179/46074) - This API is used to delete a subscription.
-* Delete: [DeleteTopics](https://cloud.tencent.com/document/api/1179/46087) - This API is used to batch delete topics.
+* Create: [CreateSubscription](https://cloud.tencent.com/document/api/1179/46075)
+* Read: [DescribeSubscriptions](https://cloud.tencent.com/document/api/1179/46072)
+* Read: [DescribeTopics](https://cloud.tencent.com/document/api/1179/46086)
+* Delete: [DeleteSubscriptions](https://cloud.tencent.com/document/api/1179/46074)
+* Delete: [DeleteTopics](https://cloud.tencent.com/document/api/1179/46087)
 
 ## Import
 

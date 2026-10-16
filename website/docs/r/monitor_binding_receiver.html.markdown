@@ -74,11 +74,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribePolicyGroupList](https://www.tencentcloud.com/document/product/248/35977) - This API is used to get the list of basic policy alarm groups.
-* Create: [ModifyAlarmReceivers](https://www.tencentcloud.com/document/product/248/35975) - This API is used to modify alarm recipients.
-* Read: [DescribePolicyGroupList](https://www.tencentcloud.com/document/product/248/35977) - This API is used to get the list of basic policy alarm groups.
-* Update: [DescribePolicyGroupList](https://www.tencentcloud.com/document/product/248/35977) - This API is used to get the list of basic policy alarm groups.
-* Update: [ModifyAlarmReceivers](https://www.tencentcloud.com/document/product/248/35975) - This API is used to modify alarm recipients.
-* Delete: [DescribePolicyGroupList](https://www.tencentcloud.com/document/product/248/35977) - This API is used to get the list of basic policy alarm groups.
-* Delete: [ModifyAlarmReceivers](https://www.tencentcloud.com/document/product/248/35975) - This API is used to modify alarm recipients.
+* Create: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945)
+* Create: [ModifyAlarmReceivers](https://cloud.tencent.com/document/api/248/40417)
+* Read: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945)
+* Update: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945)
+* Update: [ModifyAlarmReceivers](https://cloud.tencent.com/document/api/248/40417)
+* Delete: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945)
+* Delete: [ModifyAlarmReceivers](https://cloud.tencent.com/document/api/248/40417)
 

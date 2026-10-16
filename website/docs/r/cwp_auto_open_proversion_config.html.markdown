@@ -52,9 +52,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyAutoOpenProVersionConfig](https://www.tencentcloud.com/document/product/296/30875) - This API is used to enable the configuration of automatically enabling the professional protection configuration for newly added hosts.
-* Read: [DescribeLicenseGeneral](https://www.tencentcloud.com/document/product/296/63782) - This API is used to obtain the authorization overview information.
-* Update: [ModifyAutoOpenProVersionConfig](https://www.tencentcloud.com/document/product/296/30875) - This API is used to enable the configuration of automatically enabling the professional protection configuration for newly added hosts.
+* Create: [ModifyAutoOpenProVersionConfig](https://cloud.tencent.com/document/api/296/19863)
+* Read: [DescribeLicenseGeneral](https://cloud.tencent.com/document/api/296/80398)
+* Update: [ModifyAutoOpenProVersionConfig](https://cloud.tencent.com/document/api/296/19863)
 
 ## Import
 

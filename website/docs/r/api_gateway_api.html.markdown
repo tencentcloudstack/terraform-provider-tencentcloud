@@ -223,13 +223,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateApi](https://cloud.tencent.com/document/api/628/45243) - This API is used to create an API. Before creating an API, you need to create a service, as each API belongs to a certain service.
-* Create: [DescribeService](https://cloud.tencent.com/document/api/628/45199) - This API is used to query the details of a service, such as its description, domain name, protocol, creation time, and releases.
-* Create: [ModifyApiEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45179) - This API is used to modify an API throttling policy.
-* Read: [DescribeApi](https://cloud.tencent.com/document/api/628/45241) - This API (`DescribeApi`) is used to query the details of the APIs users manage via Tencent Cloud API Gateway.
-* Read: [DescribeApiEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45181) - This API is used to display the throttling policies bound to an API.
-* Update: [ModifyApi](https://cloud.tencent.com/document/api/628/45238) - This API is used to modify an API. You can call this API to edit/modify a configured API. The modified API takes effect only after its service is published to the corresponding environment again.
-* Update: [ModifyApiEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45179) - This API is used to modify an API throttling policy.
-* Delete: [DeleteApi](https://cloud.tencent.com/document/api/628/45242) - This API is used to delete a created API.
-* Delete: [ModifyApiEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45179) - This API is used to modify an API throttling policy.
+* Create: [CreateApi](https://cloud.tencent.com/document/api/628/45243)
+* Create: [DescribeService](https://cloud.tencent.com/document/api/628/45199)
+* Create: [ModifyApiEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45179)
+* Read: [DescribeApi](https://cloud.tencent.com/document/api/628/45241)
+* Read: [DescribeApiEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45181)
+* Update: [ModifyApi](https://cloud.tencent.com/document/api/628/45238)
+* Update: [ModifyApiEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45179)
+* Delete: [DeleteApi](https://cloud.tencent.com/document/api/628/45242)
+* Delete: [ModifyApiEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45179)
 

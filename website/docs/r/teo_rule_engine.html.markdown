@@ -320,10 +320,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRule](https://cloud.tencent.com/document/api/1552/80622) - This interface is the old version of the rule engine creation interface. EdgeOne has fully upgraded the rule engine related interfaces on January 21, 2025.
-* Read: [DescribeRules](https://cloud.tencent.com/document/api/1552/80619) - This API is on an earlier version to query engine rules. EdgeOne has comprehensively upgraded relevant APIs of the rule engine on January 21, 2025.
-* Update: [ModifyRule](https://cloud.tencent.com/document/api/1552/80616) - This API is on an earlier version. EdgeOne has comprehensively upgraded the relevant APIs of the rule engine on January 21, 2025.
-* Delete: [DeleteRules](https://cloud.tencent.com/document/api/1552/80621) - This interface is the old version of the rule engine deletion interface. EdgeOne has fully upgraded the rule engine related interfaces on January 21, 2025.
+* Create: [CreateRule](https://cloud.tencent.com/document/api/1552/80622)
+* Read: [DescribeRules](https://cloud.tencent.com/document/api/1552/80619)
+* Update: [ModifyRule](https://cloud.tencent.com/document/api/1552/80616)
+* Delete: [DeleteRules](https://cloud.tencent.com/document/api/1552/80621)
 
 ## Import
 

@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSlowLogs](https://www.tencentcloud.com/document/product/236/15845) - This API is used to obtain the slow query log of a cloud database instance.
+* Read: [DescribeSlowLogs](https://cloud.tencent.com/document/api/236/15845)
 

@@ -81,9 +81,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeClusterInstances](https://www.tencentcloud.com/document/product/457/66315) - This API is used to query the information of node instances in a cluster.
-* Create: [DescribeClusterVirtualNode](https://www.tencentcloud.com/document/product/457/53272) - This API is used to view the Super Node list.
-* Read: [DescribeClusterKubeconfig](https://www.tencentcloud.com/document/product/457/38510) - This API is used to obtain the cluster kubeconfig file. Different sub-accounts have their own kubeconfig files. The kubeconfig file contains the kube-apiserver client certificate of the corresponding sub-account.
-* Read: [DescribeClusters](https://www.tencentcloud.com/document/product/457/32025) - This API is used to query clusters list.
-* Update: [ModifyClusterEndpointSP](https://www.tencentcloud.com/document/product/457/33864) - Modify the security policy of the external port of the managed cluster (the old way, only the external port of the managed cluster is supported)
+* Create: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863)
+* Create: [DescribeClusterVirtualNode](https://cloud.tencent.com/document/api/457/85351)
+* Read: [DescribeClusterKubeconfig](https://cloud.tencent.com/document/api/457/48149)
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862)
+* Update: [ModifyClusterEndpointSP](https://cloud.tencent.com/document/api/457/39408)
 

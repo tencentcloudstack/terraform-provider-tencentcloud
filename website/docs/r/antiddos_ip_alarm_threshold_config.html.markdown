@@ -42,9 +42,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateIPAlarmThresholdConfig](https://cloud.tencent.com/document/api/297/95374) - This API is used to set the default alarm threshold of an IP.
-* Read: [DescribeListIPAlarmConfig](https://cloud.tencent.com/document/api/297/95372) - This API is used to get a list of IP alarm threshold configurations.
-* Update: [CreateIPAlarmThresholdConfig](https://cloud.tencent.com/document/api/297/95374) - This API is used to set the default alarm threshold of an IP.
+* Create: [CreateIPAlarmThresholdConfig](https://cloud.tencent.com/document/api/297/95374)
+* Read: [DescribeListIPAlarmConfig](https://cloud.tencent.com/document/api/297/95372)
+* Update: [CreateIPAlarmThresholdConfig](https://cloud.tencent.com/document/api/297/95374)
 
 ## Import
 

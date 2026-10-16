@@ -64,7 +64,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [PutProvisionedConcurrencyConfig](https://www.tencentcloud.com/document/product/583/39225) - This API is used to set the provisioned concurrency of a non-$LATEST version of a function.
-* Read: [GetProvisionedConcurrencyConfig](https://www.tencentcloud.com/document/product/583/39227) - This API is used to get the provisioned concurrency details of a function or its specified version.
-* Delete: [DeleteProvisionedConcurrencyConfig](https://www.tencentcloud.com/document/product/583/39229) - This API is used to delete the provisioned concurrency configuration of a function version.
+* Create: [PutProvisionedConcurrencyConfig](https://cloud.tencent.com/document/api/583/51246)
+* Read: [GetProvisionedConcurrencyConfig](https://cloud.tencent.com/document/api/583/51248)
+* Delete: [DeleteProvisionedConcurrencyConfig](https://cloud.tencent.com/document/api/583/51250)
 

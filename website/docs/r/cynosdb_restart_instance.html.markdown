@@ -36,8 +36,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
-* Create: [RestartInstance](https://cloud.tencent.com/document/api/1003/86028) - This API is used to reboot an instance.
-* Read: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250) - This API is used to query instance details.
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334) - This API is used to query the list of instances.
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
+* Create: [RestartInstance](https://cloud.tencent.com/document/api/1003/86028)
+* Read: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250)
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334)
 

@@ -39,12 +39,12 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [DescribeBlueprintsShareAcrossAccountInfos](https://cloud.tencent.com/document/api/1207/132389)
-* Create: [ShareBlueprintAcrossAccounts](https://cloud.tencent.com/document/api/1207/101338) - This API is used to share an image across accounts.
+* Create: [ShareBlueprintAcrossAccounts](https://cloud.tencent.com/document/api/1207/101338)
 * Read: [DescribeBlueprintsShareAcrossAccountInfos](https://cloud.tencent.com/document/api/1207/132389)
-* Update: [CancelShareBlueprintAcrossAccounts](https://cloud.tencent.com/document/api/1207/101339) - This API is used to cancel image sharing across accounts.
+* Update: [CancelShareBlueprintAcrossAccounts](https://cloud.tencent.com/document/api/1207/101339)
 * Update: [DescribeBlueprintsShareAcrossAccountInfos](https://cloud.tencent.com/document/api/1207/132389)
-* Update: [ShareBlueprintAcrossAccounts](https://cloud.tencent.com/document/api/1207/101338) - This API is used to share an image across accounts.
-* Delete: [CancelShareBlueprintAcrossAccounts](https://cloud.tencent.com/document/api/1207/101339) - This API is used to cancel image sharing across accounts.
+* Update: [ShareBlueprintAcrossAccounts](https://cloud.tencent.com/document/api/1207/101338)
+* Delete: [CancelShareBlueprintAcrossAccounts](https://cloud.tencent.com/document/api/1207/101339)
 
 ## Import
 

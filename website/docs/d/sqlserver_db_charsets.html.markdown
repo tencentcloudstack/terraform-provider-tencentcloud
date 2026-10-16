@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBCharsets](https://www.tencentcloud.com/document/product/238/39830) - This API is used to query the database character sets supported by an instance.
+* Read: [DescribeDBCharsets](https://cloud.tencent.com/document/api/238/53357)
 

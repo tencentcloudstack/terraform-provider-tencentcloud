@@ -114,17 +114,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateReadOnlyDBInstances](https://www.tencentcloud.com/document/product/238/66348) - This API is used to create read-only instances (local disk).
-* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/product/238/32113) - This API is used to query flow status.
-* Create: [DescribeOrders](https://www.tencentcloud.com/document/product/238/32134) - This API is used to query order information.
-* Create: [ModifyDBInstanceName](https://www.tencentcloud.com/document/product/238/32104) - This API is used to rename an instance.
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeReadOnlyGroupByReadOnlyInstance](https://www.tencentcloud.com/document/product/238/72740) - This API is used to query the read-only group where the read-only instance is located by its ID.
-* Read: [DescribeReadOnlyGroupList](https://www.tencentcloud.com/document/product/238/72738) - This API is used to query the read-only group list.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Delete: [DeleteDBInstance](https://www.tencentcloud.com/document/product/238/72759) - This API is used to release SQL server instances (eliminated immediately) in the recycle bin. The released instances will be physically terminated after being retained for a period of time.
-* Delete: [DescribeDBInstances](https://www.tencentcloud.com/document/product/238/32115) - This API is used to query the list of instances.
-* Delete: [TerminateDBInstance](https://www.tencentcloud.com/document/product/238/34685) - This API is used to isolate an instance to move it into a recycle bin.
+* Create: [CreateReadOnlyDBInstances](https://cloud.tencent.com/document/api/238/46807)
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
+* Create: [DescribeOrders](https://cloud.tencent.com/document/api/238/19937)
+* Create: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeReadOnlyGroupByReadOnlyInstance](https://cloud.tencent.com/document/api/238/46773)
+* Read: [DescribeReadOnlyGroupList](https://cloud.tencent.com/document/api/238/46771)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Delete: [DeleteDBInstance](https://cloud.tencent.com/document/api/238/46806)
+* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969)
+* Delete: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210)
 
 ## Import
 

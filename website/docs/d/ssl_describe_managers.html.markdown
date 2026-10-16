@@ -54,5 +54,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeManagers](https://cloud.tencent.com/document/api/400/52672) - Query the list of people in charge
+* Read: [DescribeManagers](https://cloud.tencent.com/document/api/400/52672)
 

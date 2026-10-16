@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeServiceTemplateGroups](https://www.tencentcloud.com/document/product/215/16718) - This API (DescribeServiceTemplateGroups) is used to query a protocol port template group.
+* Read: [DescribeServiceTemplateGroups](https://cloud.tencent.com/document/api/215/16718)
 

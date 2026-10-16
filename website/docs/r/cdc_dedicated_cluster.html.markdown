@@ -53,10 +53,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDedicatedCluster](https://cloud.tencent.com/document/api/1346/73710) - This API is used to create a CDC.
-* Read: [DescribeDedicatedClusters](https://cloud.tencent.com/document/api/1346/73758) - This API is used to query the CDC list.
-* Update: [ModifyDedicatedClusterInfo](https://cloud.tencent.com/document/api/1346/73754) - This API is used to modify the CDC information.
-* Delete: [DeleteDedicatedClusters](https://cloud.tencent.com/document/api/1346/73767) - This API is used to delete a CDC.
+* Create: [CreateDedicatedCluster](https://cloud.tencent.com/document/api/1346/73710)
+* Read: [DescribeDedicatedClusters](https://cloud.tencent.com/document/api/1346/73758)
+* Update: [ModifyDedicatedClusterInfo](https://cloud.tencent.com/document/api/1346/73754)
+* Delete: [DeleteDedicatedClusters](https://cloud.tencent.com/document/api/1346/73767)
 
 ## Import
 

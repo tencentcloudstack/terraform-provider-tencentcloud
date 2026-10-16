@@ -56,5 +56,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeHealthScore](https://cloud.tencent.com/document/api/1130/57797) - This API is used to get the health score and deduction for exceptions in the specified time period (30 minutes) based on the instance ID.
+* Read: [DescribeHealthScore](https://cloud.tencent.com/document/api/1130/57797)
 

@@ -86,5 +86,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ResumeSnapshotInstance](https://www.tencentcloud.com/document/product/215/55049) - This API is used to restore security group policies with a backup.
+* Create: [ResumeSnapshotInstance](https://cloud.tencent.com/document/api/215/85148)
 

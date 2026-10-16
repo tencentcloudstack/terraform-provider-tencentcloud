@@ -63,5 +63,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListProjects](https://cloud.tencent.com/document/api/1267/123962) - The project list in the tenant's global scope is irrelevant to the user's viewing range.
+* Read: [ListProjects](https://cloud.tencent.com/document/api/1267/123962)
 

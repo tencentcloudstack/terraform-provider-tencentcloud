@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeImageManifests](https://cloud.tencent.com/document/api/1141/43525) - This API is used to query the manifest information of a container image.
+* Read: [DescribeImageManifests](https://cloud.tencent.com/document/api/1141/43525)
 

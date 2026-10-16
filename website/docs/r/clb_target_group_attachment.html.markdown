@@ -95,12 +95,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateTargetGroups](https://www.tencentcloud.com/document/product/214/33847) - This API is used to bind target groups to Cloud Load Balancer listeners (Layer-4 protocol) or forwarding rules (L7 protocol).
-* Create: [DescribeLoadBalancers](https://www.tencentcloud.com/document/product/214/33830) - This API is used to query the list of CLB instances in a region.
-* Create: [DescribeTargetGroups](https://www.tencentcloud.com/document/product/214/33826) - This API is used to query the target group information.
-* Read: [DescribeTargetGroups](https://www.tencentcloud.com/document/product/214/33826) - This API is used to query the target group information.
-* Delete: [DescribeTargetGroups](https://www.tencentcloud.com/document/product/214/33826) - This API is used to query the target group information.
-* Delete: [DisassociateTargetGroups](https://www.tencentcloud.com/document/product/214/33822) - This API is used to disassociate a target group from a rule.
+* Create: [AssociateTargetGroups](https://cloud.tencent.com/document/api/214/40560)
+* Create: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685)
+* Create: [DescribeTargetGroups](https://cloud.tencent.com/document/api/214/40554)
+* Read: [DescribeTargetGroups](https://cloud.tencent.com/document/api/214/40554)
+* Delete: [DescribeTargetGroups](https://cloud.tencent.com/document/api/214/40554)
+* Delete: [DisassociateTargetGroups](https://cloud.tencent.com/document/api/214/40553)
 
 ## Import
 

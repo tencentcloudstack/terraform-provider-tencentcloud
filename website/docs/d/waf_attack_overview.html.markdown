@@ -63,5 +63,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAttackOverview](https://www.tencentcloud.com/document/product/627/66357) - This API is used to describe the attack overview.
+* Read: [DescribeAttackOverview](https://cloud.tencent.com/document/api/627/87744)
 

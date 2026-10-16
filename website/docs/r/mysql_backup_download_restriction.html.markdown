@@ -52,9 +52,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyBackupDownloadRestriction](https://www.tencentcloud.com/document/product/236/43327) - This API is used to modify the restrictions of downloading backups in a region. You can specify which types of networks (private, or both private and public), VPCs, and IPs to download backups.
-* Read: [DescribeBackupDownloadRestriction](https://www.tencentcloud.com/document/product/236/43328) - This API is used to query the restrictions of downloading backups in a region.
-* Update: [ModifyBackupDownloadRestriction](https://www.tencentcloud.com/document/product/236/43327) - This API is used to modify the restrictions of downloading backups in a region. You can specify which types of networks (private, or both private and public), VPCs, and IPs to download backups.
+* Create: [ModifyBackupDownloadRestriction](https://cloud.tencent.com/document/api/236/63890)
+* Read: [DescribeBackupDownloadRestriction](https://cloud.tencent.com/document/api/236/63891)
+* Update: [ModifyBackupDownloadRestriction](https://cloud.tencent.com/document/api/236/63890)
 
 ## Import
 

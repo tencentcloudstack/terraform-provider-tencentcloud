@@ -63,9 +63,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [TagRole](https://www.tencentcloud.com/document/product/598/47612) - This API is used to bind tags to a role.
-* Read: [GetRole](https://www.tencentcloud.com/document/product/598/33557) - This API (GetRole) is used to get the details of a specified role.
-* Delete: [UntagRole](https://www.tencentcloud.com/document/product/598/47611) - This API is used to unbind tags from a role.
+* Create: [TagRole](https://cloud.tencent.com/document/api/598/74379)
+* Read: [GetRole](https://cloud.tencent.com/document/api/598/36221)
+* Delete: [UntagRole](https://cloud.tencent.com/document/api/598/74378)
 
 ## Import
 

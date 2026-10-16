@@ -190,5 +190,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeMigrationJobs](https://www.tencentcloud.com/document/product/571/51812) - This API is used to query the list of data migration tasks.
+* Read: [DescribeMigrationJobs](https://cloud.tencent.com/document/api/571/82084)
 

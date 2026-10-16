@@ -81,6 +81,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateTargetGroups](https://cloud.tencent.com/document/api/1782/111698) - This API is used to bind target groups to a CLB.This is an async API. After the API return succeeds, you can call the DescribeTaskStatus API with the returned RequestID as an input parameter to check whether this task is successful.
-* Delete: [DisassociateTargetGroups](https://cloud.tencent.com/document/api/1782/111690) - This API is used to disassociate a CLB from a target group.This is an async API. After the API return succeeds, you can call the DescribeTaskStatus API with the returned RequestID as an input parameter to check whether this task is success
+* Create: [AssociateTargetGroups](https://cloud.tencent.com/document/api/1782/111698)
+* Delete: [DisassociateTargetGroups](https://cloud.tencent.com/document/api/1782/111690)
 

@@ -42,11 +42,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Read: [DescribeInstanceSSL](https://www.tencentcloud.com/document/product/240/74531) - This API is used to view the enabling status of Secure Sockets Layer (SSL) for an instance.
-* Update: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/product/240/37921) - This API is used to query the asynchronous task status.
-* Update: [InstanceEnableSSL](https://www.tencentcloud.com/document/product/240/74528) - This API is used to set the SSL status for an instance.
-* Delete: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/product/240/37921) - This API is used to query the asynchronous task status.
-* Delete: [InstanceEnableSSL](https://www.tencentcloud.com/document/product/240/74528) - This API is used to set the SSL status for an instance.
+* Read: [DescribeInstanceSSL](https://cloud.tencent.com/document/api/240/125487)
+* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601)
+* Update: [InstanceEnableSSL](https://cloud.tencent.com/document/api/240/125486)
+* Delete: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601)
+* Delete: [InstanceEnableSSL](https://cloud.tencent.com/document/api/240/125486)
 
 ## Import
 

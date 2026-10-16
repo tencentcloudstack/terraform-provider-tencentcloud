@@ -121,11 +121,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeNatAcRule](https://cloud.tencent.com/document/api/1132/86860) - This API is used to get the NAT access control list.
-* Create: [ModifyNatAcRule](https://cloud.tencent.com/document/api/1132/86859) - This API is used to modify NAT access control rules.
-* Read: [DescribeNatAcRule](https://cloud.tencent.com/document/api/1132/86860) - This API is used to get the NAT access control list.
-* Update: [DescribeNatAcRule](https://cloud.tencent.com/document/api/1132/86860) - This API is used to get the NAT access control list.
-* Update: [ModifyNatAcRule](https://cloud.tencent.com/document/api/1132/86859) - This API is used to modify NAT access control rules.
+* Create: [DescribeNatAcRule](https://cloud.tencent.com/document/api/1132/86860)
+* Create: [ModifyNatAcRule](https://cloud.tencent.com/document/api/1132/86859)
+* Read: [DescribeNatAcRule](https://cloud.tencent.com/document/api/1132/86860)
+* Update: [DescribeNatAcRule](https://cloud.tencent.com/document/api/1132/86860)
+* Update: [ModifyNatAcRule](https://cloud.tencent.com/document/api/1132/86859)
 
 ## Import
 

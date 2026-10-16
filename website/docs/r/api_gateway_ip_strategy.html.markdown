@@ -51,11 +51,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateIPStrategy](https://cloud.tencent.com/document/api/628/45234) - This API is used to create a service IP policy.
-* Create: [DescribeIPStrategy](https://cloud.tencent.com/document/api/628/45232) - This API is used to query IP policy details.
-* Read: [DescribeIPStrategy](https://cloud.tencent.com/document/api/628/45232) - This API is used to query IP policy details.
-* Update: [ModifyIPStrategy](https://cloud.tencent.com/document/api/628/45229) - This API is used to modify a service IP policy.
-* Delete: [DeleteIPStrategy](https://cloud.tencent.com/document/api/628/45233) - This API is used to delete a service IP policy.
+* Create: [CreateIPStrategy](https://cloud.tencent.com/document/api/628/45234)
+* Create: [DescribeIPStrategy](https://cloud.tencent.com/document/api/628/45232)
+* Read: [DescribeIPStrategy](https://cloud.tencent.com/document/api/628/45232)
+* Update: [ModifyIPStrategy](https://cloud.tencent.com/document/api/628/45229)
+* Delete: [DeleteIPStrategy](https://cloud.tencent.com/document/api/628/45233)
 
 ## Import
 

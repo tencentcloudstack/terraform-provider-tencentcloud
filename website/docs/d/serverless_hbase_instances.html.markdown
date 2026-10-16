@@ -72,5 +72,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSLInstanceList](https://cloud.tencent.com/document/api/589/110870) - This API is used to query detailed information of the Serverless HBase instance list.
+* Read: [DescribeSLInstanceList](https://cloud.tencent.com/document/api/589/110870)
 

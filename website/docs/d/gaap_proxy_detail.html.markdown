@@ -94,5 +94,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeProxyDetail](https://www.tencentcloud.com/document/product/608/33098) - This API (DescribeProxyDetail) is used to query connection details.
+* Read: [DescribeProxyDetail](https://cloud.tencent.com/document/api/608/36960)
 

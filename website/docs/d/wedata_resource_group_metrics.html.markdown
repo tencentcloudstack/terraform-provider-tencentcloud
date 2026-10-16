@@ -82,5 +82,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetResourceGroupMetrics](https://cloud.tencent.com/document/api/1267/123981) - This API is used to view specified execution resource group monitoring metrics.
+* Read: [GetResourceGroupMetrics](https://cloud.tencent.com/document/api/1267/123981)
 

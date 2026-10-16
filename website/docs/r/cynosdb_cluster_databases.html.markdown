@@ -56,10 +56,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateClusterDatabase](https://cloud.tencent.com/document/api/1003/92736) - This API is used to create a database.
-* Read: [DescribeClusterDetailDatabases](https://cloud.tencent.com/document/api/1003/92734) - This API is used to query database list.
-* Update: [ModifyClusterDatabase](https://cloud.tencent.com/document/api/1003/92733) - This API is used to modify account authorization of a database.
-* Delete: [DeleteClusterDatabase](https://cloud.tencent.com/document/api/1003/92735) - This interface is used to delete a database.
+* Create: [CreateClusterDatabase](https://cloud.tencent.com/document/api/1003/92736)
+* Read: [DescribeClusterDetailDatabases](https://cloud.tencent.com/document/api/1003/92734)
+* Update: [ModifyClusterDatabase](https://cloud.tencent.com/document/api/1003/92733)
+* Delete: [DeleteClusterDatabase](https://cloud.tencent.com/document/api/1003/92735)
 
 ## Import
 

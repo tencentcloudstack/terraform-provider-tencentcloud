@@ -66,13 +66,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SetExternalSAMLIdentityProvider](https://cloud.tencent.com/document/api/850/109960) - This API is used to configure the SAML identity provider information.
-* Read: [GetExternalSAMLIdentityProvider](https://cloud.tencent.com/document/api/850/109964) - This API is used to query the SAML identity provider configuration information.
-* Read: [GetZoneSAMLServiceProviderInfo](https://cloud.tencent.com/document/api/850/109963) - This API is used to query the SAML service provider configuration information.
-* Update: [SetExternalSAMLIdentityProvider](https://cloud.tencent.com/document/api/850/109960) - This API is used to configure the SAML identity provider information.
-* Delete: [ClearExternalSAMLIdentityProvider](https://cloud.tencent.com/document/api/850/109965) - This API is used to clear the SAML identity provider configuration information.
-* Delete: [GetExternalSAMLIdentityProvider](https://cloud.tencent.com/document/api/850/109964) - This API is used to query the SAML identity provider configuration information.
-* Delete: [SetExternalSAMLIdentityProvider](https://cloud.tencent.com/document/api/850/109960) - This API is used to configure the SAML identity provider information.
+* Create: [SetExternalSAMLIdentityProvider](https://cloud.tencent.com/document/api/850/109960)
+* Read: [GetExternalSAMLIdentityProvider](https://cloud.tencent.com/document/api/850/109964)
+* Read: [GetZoneSAMLServiceProviderInfo](https://cloud.tencent.com/document/api/850/109963)
+* Update: [SetExternalSAMLIdentityProvider](https://cloud.tencent.com/document/api/850/109960)
+* Delete: [ClearExternalSAMLIdentityProvider](https://cloud.tencent.com/document/api/850/109965)
+* Delete: [GetExternalSAMLIdentityProvider](https://cloud.tencent.com/document/api/850/109964)
+* Delete: [SetExternalSAMLIdentityProvider](https://cloud.tencent.com/document/api/850/109960)
 
 ## Import
 

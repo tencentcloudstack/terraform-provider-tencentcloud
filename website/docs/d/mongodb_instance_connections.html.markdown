@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeClientConnections](https://www.tencentcloud.com/document/product/240/34703) - This API is used to query the client connection information on an instance, including the IP address for connection and the number of connections.
+* Read: [DescribeClientConnections](https://cloud.tencent.com/document/api/240/38569)
 

@@ -89,12 +89,12 @@ The `dimensions` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindingPolicyObject](https://www.tencentcloud.com/document/product/248/35985) - This API is used to bind an alarm policy to a specific object.
-* Create: [DescribeAlarmPolicy](https://www.tencentcloud.com/document/product/248/39320) - This API is used to get the details of a single alarm policy.
-* Read: [DescribeAlarmPolicy](https://www.tencentcloud.com/document/product/248/39320) - This API is used to get the details of a single alarm policy.
-* Read: [DescribeBindingPolicyObjectList](https://www.tencentcloud.com/document/product/248/35980) - This API is used to get the bound object list.
+* Create: [BindingPolicyObject](https://cloud.tencent.com/document/api/248/40421)
+* Create: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278)
+* Read: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278)
+* Read: [DescribeBindingPolicyObjectList](https://cloud.tencent.com/document/api/248/40570)
 * Read: [DescribePolicyObjectCount](https://cloud.tencent.com/document/api/248/118054)
-* Delete: [DescribeAlarmPolicy](https://www.tencentcloud.com/document/product/248/39320) - This API is used to get the details of a single alarm policy.
+* Delete: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278)
 * Delete: [DescribePolicyObjectCount](https://cloud.tencent.com/document/api/248/118054)
 
 ## Import

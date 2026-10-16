@@ -100,14 +100,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateApmInstance](https://cloud.tencent.com/document/api/1463/65347) - This API is used to create a business purchase in the APM business system.
-* Create: [ModifyApmInstance](https://cloud.tencent.com/document/api/1463/89002) - This API is used to modify the APM business system.
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeApmAgent](https://cloud.tencent.com/document/api/1463/64926) - Obtaining APM Access Point.
-* Read: [DescribeApmInstances](https://cloud.tencent.com/document/api/1463/65103) - This API is used to obtain the list of APM business systems.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [ModifyApmInstance](https://cloud.tencent.com/document/api/1463/89002) - This API is used to modify the APM business system.
-* Delete: [TerminateApmInstance](https://cloud.tencent.com/document/api/1463/89001) - Termination of APM business system.
+* Create: [CreateApmInstance](https://cloud.tencent.com/document/api/1463/65347)
+* Create: [ModifyApmInstance](https://cloud.tencent.com/document/api/1463/89002)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeApmAgent](https://cloud.tencent.com/document/api/1463/64926)
+* Read: [DescribeApmInstances](https://cloud.tencent.com/document/api/1463/65103)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [ModifyApmInstance](https://cloud.tencent.com/document/api/1463/89002)
+* Delete: [TerminateApmInstance](https://cloud.tencent.com/document/api/1463/89001)
 
 ## Import
 

@@ -91,11 +91,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBackup](https://www.tencentcloud.com/document/product/238/32130) - This API is used to create a backup.
-* Create: [DescribeBackupByFlowId](https://www.tencentcloud.com/document/product/238/72780) - This API is used to query the created backup details through the backup creation process ID. The process ID can be obtained through the CreateBackup API.
-* Read: [DescribeBackups](https://www.tencentcloud.com/document/product/238/32127) - This API is used to query the list of backups.
-* Update: [ModifyBackupName](https://www.tencentcloud.com/document/product/238/72774) - This API is used to modify the name of a backup task.
-* Delete: [RemoveBackups](https://www.tencentcloud.com/document/product/238/72776) - This API is used to delete backup files created by users manually. The backup policy to be deleted can be instance backup or multi-database backup.
+* Create: [CreateBackup](https://cloud.tencent.com/document/api/238/19946)
+* Create: [DescribeBackupByFlowId](https://cloud.tencent.com/document/api/238/47203)
+* Read: [DescribeBackups](https://cloud.tencent.com/document/api/238/19943)
+* Update: [ModifyBackupName](https://cloud.tencent.com/document/api/238/47202)
+* Delete: [RemoveBackups](https://cloud.tencent.com/document/api/238/46287)
 
 ## Import
 

@@ -41,9 +41,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAllocationTag](https://www.tencentcloud.com/document/product/555/57415) - This API is used to batch set cost allocation tags.
-* Read: [DescribeTagList](https://www.tencentcloud.com/document/product/555/57412) - This API is used to get cost allocation tags.
-* Delete: [DeleteAllocationTag](https://www.tencentcloud.com/document/product/555/57414)
+* Create: [CreateAllocationTag](https://cloud.tencent.com/document/api/555/97569)
+* Read: [DescribeTagList](https://cloud.tencent.com/document/api/555/97567)
+* Delete: [DeleteAllocationTag](https://cloud.tencent.com/document/api/555/97568)
 
 ## Import
 

@@ -212,66 +212,66 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDDoSAI](https://cloud.tencent.com/document/api/297/95339) - This API is used to set Anti-DDoS AI protection switches.
+* Create: [CreateDDoSAI](https://cloud.tencent.com/document/api/297/95339)
 * Create: [CreateDDoSBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95338)
 * Create: [CreateDDoSConnectLimit](https://cloud.tencent.com/document/api/297/95337)
-* Create: [CreateDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95336) - This API is used to add an Anti-DDoS region blocking configuration.
-* Create: [CreateDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95335) - This API is used to add Anti-DDoS access rate limit configurations.
-* Create: [CreatePacketFilterConfig](https://cloud.tencent.com/document/api/297/95334) - This API is used to add Anti-DDoS feature filtering rules.
+* Create: [CreateDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95336)
+* Create: [CreateDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95335)
+* Create: [CreatePacketFilterConfig](https://cloud.tencent.com/document/api/297/95334)
 * Create: [CreatePortAclConfig](https://cloud.tencent.com/document/api/297/95333)
-* Create: [CreateProtocolBlockConfig](https://cloud.tencent.com/document/api/297/95331) - This API is used to set Anti-DDoS protocol blocking configurations.
-* Create: [CreateWaterPrintConfig](https://cloud.tencent.com/document/api/297/95330) - This API is used to add Anti-DDoS watermark configurations.
+* Create: [CreateProtocolBlockConfig](https://cloud.tencent.com/document/api/297/95331)
+* Create: [CreateWaterPrintConfig](https://cloud.tencent.com/document/api/297/95330)
 * Create: [ModifyDDoSLevel](https://cloud.tencent.com/document/api/297/95395)
 * Create: [ModifyDDoSThreshold](https://cloud.tencent.com/document/api/297/95394)
 * Read: [DescribeDDoSConnectLimitList](https://cloud.tencent.com/document/api/297/95315)
-* Read: [DescribeListBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95314) - This API is used to get a list of Anti-DDoS IP blocklists/allowlists.
-* Read: [DescribeListDDoSAI](https://cloud.tencent.com/document/api/297/95313) - This API is used to get a list of Anti-DDoS AI protection switches.
-* Read: [DescribeListDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95312) - This API is used to get a list of Anti-DDoS region blocking configurations.
-* Read: [DescribeListDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95311) - This API is used to get a list of Anti-DDoS access rate limit configurations.
-* Read: [DescribeListPacketFilterConfig](https://cloud.tencent.com/document/api/297/95310) - This API is used to get a list of Anti-DDoS feature filtering rules.
+* Read: [DescribeListBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95314)
+* Read: [DescribeListDDoSAI](https://cloud.tencent.com/document/api/297/95313)
+* Read: [DescribeListDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95312)
+* Read: [DescribeListDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95311)
+* Read: [DescribeListPacketFilterConfig](https://cloud.tencent.com/document/api/297/95310)
 * Read: [DescribeListPortAclList](https://cloud.tencent.com/document/api/297/95309)
 * Read: [DescribeListProtectThresholdConfigNew](https://cloud.tencent.com/document/api/297/126578)
-* Read: [DescribeListProtocolBlockConfig](https://cloud.tencent.com/document/api/297/95307) - This API is used to get a list of Anti-DDoS protocol blocking configurations.
-* Read: [DescribeListWaterPrintConfig](https://cloud.tencent.com/document/api/297/95306) - This API is used to get a list of Anti-DDoS watermark configurations.
-* Update: [CreateDDoSAI](https://cloud.tencent.com/document/api/297/95339) - This API is used to set Anti-DDoS AI protection switches.
+* Read: [DescribeListProtocolBlockConfig](https://cloud.tencent.com/document/api/297/95307)
+* Read: [DescribeListWaterPrintConfig](https://cloud.tencent.com/document/api/297/95306)
+* Update: [CreateDDoSAI](https://cloud.tencent.com/document/api/297/95339)
 * Update: [CreateDDoSBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95338)
 * Update: [CreateDDoSConnectLimit](https://cloud.tencent.com/document/api/297/95337)
-* Update: [CreateDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95336) - This API is used to add an Anti-DDoS region blocking configuration.
-* Update: [CreateDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95335) - This API is used to add Anti-DDoS access rate limit configurations.
-* Update: [CreatePacketFilterConfig](https://cloud.tencent.com/document/api/297/95334) - This API is used to add Anti-DDoS feature filtering rules.
+* Update: [CreateDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95336)
+* Update: [CreateDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95335)
+* Update: [CreatePacketFilterConfig](https://cloud.tencent.com/document/api/297/95334)
 * Update: [CreatePortAclConfig](https://cloud.tencent.com/document/api/297/95333)
-* Update: [CreateProtocolBlockConfig](https://cloud.tencent.com/document/api/297/95331) - This API is used to set Anti-DDoS protocol blocking configurations.
-* Update: [CreateWaterPrintConfig](https://cloud.tencent.com/document/api/297/95330) - This API is used to add Anti-DDoS watermark configurations.
+* Update: [CreateProtocolBlockConfig](https://cloud.tencent.com/document/api/297/95331)
+* Update: [CreateWaterPrintConfig](https://cloud.tencent.com/document/api/297/95330)
 * Update: [DeleteDDoSBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95326)
-* Update: [DeleteDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95325) - This API is used to delete Anti-DDoS region blocking configurations.
-* Update: [DeleteDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95324) - This API is used to delete Anti-DDoS access rate limit configurations.
-* Update: [DeletePacketFilterConfig](https://cloud.tencent.com/document/api/297/95323) - This API is used to delete Anti-DDoS feature filtering rules.
+* Update: [DeleteDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95325)
+* Update: [DeleteDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95324)
+* Update: [DeletePacketFilterConfig](https://cloud.tencent.com/document/api/297/95323)
 * Update: [DeletePortAclConfig](https://cloud.tencent.com/document/api/297/95322)
-* Update: [DeleteWaterPrintConfig](https://cloud.tencent.com/document/api/297/95321) - This API is used to delete Anti-DDoS watermark configurations.
-* Update: [DescribeListBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95314) - This API is used to get a list of Anti-DDoS IP blocklists/allowlists.
-* Update: [DescribeListDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95312) - This API is used to get a list of Anti-DDoS region blocking configurations.
-* Update: [DescribeListDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95311) - This API is used to get a list of Anti-DDoS access rate limit configurations.
-* Update: [DescribeListPacketFilterConfig](https://cloud.tencent.com/document/api/297/95310) - This API is used to get a list of Anti-DDoS feature filtering rules.
+* Update: [DeleteWaterPrintConfig](https://cloud.tencent.com/document/api/297/95321)
+* Update: [DescribeListBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95314)
+* Update: [DescribeListDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95312)
+* Update: [DescribeListDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95311)
+* Update: [DescribeListPacketFilterConfig](https://cloud.tencent.com/document/api/297/95310)
 * Update: [DescribeListPortAclList](https://cloud.tencent.com/document/api/297/95309)
-* Update: [DescribeListWaterPrintConfig](https://cloud.tencent.com/document/api/297/95306) - This API is used to get a list of Anti-DDoS watermark configurations.
+* Update: [DescribeListWaterPrintConfig](https://cloud.tencent.com/document/api/297/95306)
 * Update: [ModifyDDoSLevel](https://cloud.tencent.com/document/api/297/95395)
 * Update: [ModifyDDoSThreshold](https://cloud.tencent.com/document/api/297/95394)
-* Update: [SwitchWaterPrintConfig](https://cloud.tencent.com/document/api/297/95299) - This API is used to enable or disable Anti-DDoS watermark configurations.
-* Delete: [CreateDDoSAI](https://cloud.tencent.com/document/api/297/95339) - This API is used to set Anti-DDoS AI protection switches.
+* Update: [SwitchWaterPrintConfig](https://cloud.tencent.com/document/api/297/95299)
+* Delete: [CreateDDoSAI](https://cloud.tencent.com/document/api/297/95339)
 * Delete: [CreateDDoSConnectLimit](https://cloud.tencent.com/document/api/297/95337)
-* Delete: [CreateProtocolBlockConfig](https://cloud.tencent.com/document/api/297/95331) - This API is used to set Anti-DDoS protocol blocking configurations.
+* Delete: [CreateProtocolBlockConfig](https://cloud.tencent.com/document/api/297/95331)
 * Delete: [DeleteDDoSBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95326)
-* Delete: [DeleteDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95325) - This API is used to delete Anti-DDoS region blocking configurations.
-* Delete: [DeleteDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95324) - This API is used to delete Anti-DDoS access rate limit configurations.
-* Delete: [DeletePacketFilterConfig](https://cloud.tencent.com/document/api/297/95323) - This API is used to delete Anti-DDoS feature filtering rules.
+* Delete: [DeleteDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95325)
+* Delete: [DeleteDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95324)
+* Delete: [DeletePacketFilterConfig](https://cloud.tencent.com/document/api/297/95323)
 * Delete: [DeletePortAclConfig](https://cloud.tencent.com/document/api/297/95322)
-* Delete: [DeleteWaterPrintConfig](https://cloud.tencent.com/document/api/297/95321) - This API is used to delete Anti-DDoS watermark configurations.
-* Delete: [DescribeListBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95314) - This API is used to get a list of Anti-DDoS IP blocklists/allowlists.
-* Delete: [DescribeListDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95312) - This API is used to get a list of Anti-DDoS region blocking configurations.
-* Delete: [DescribeListDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95311) - This API is used to get a list of Anti-DDoS access rate limit configurations.
-* Delete: [DescribeListPacketFilterConfig](https://cloud.tencent.com/document/api/297/95310) - This API is used to get a list of Anti-DDoS feature filtering rules.
+* Delete: [DeleteWaterPrintConfig](https://cloud.tencent.com/document/api/297/95321)
+* Delete: [DescribeListBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95314)
+* Delete: [DescribeListDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95312)
+* Delete: [DescribeListDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95311)
+* Delete: [DescribeListPacketFilterConfig](https://cloud.tencent.com/document/api/297/95310)
 * Delete: [DescribeListPortAclList](https://cloud.tencent.com/document/api/297/95309)
-* Delete: [DescribeListWaterPrintConfig](https://cloud.tencent.com/document/api/297/95306) - This API is used to get a list of Anti-DDoS watermark configurations.
+* Delete: [DescribeListWaterPrintConfig](https://cloud.tencent.com/document/api/297/95306)
 * Delete: [ModifyDDoSLevel](https://cloud.tencent.com/document/api/297/95395)
 * Delete: [ModifyDDoSThreshold](https://cloud.tencent.com/document/api/297/95394)
 

@@ -53,11 +53,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160) - This API is used to display instance status, process progress, etc., in the instance details page.
-* Create: [ModifyUserHba](https://cloud.tencent.com/document/api/878/116660) - This API is used to modify user Hba configurations.
+* Create: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160)
+* Create: [ModifyUserHba](https://cloud.tencent.com/document/api/878/116660)
 * Read: [DescribeUserHbaConfig](https://cloud.tencent.com/document/api/878/116661)
-* Update: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160) - This API is used to display instance status, process progress, etc., in the instance details page.
-* Update: [ModifyUserHba](https://cloud.tencent.com/document/api/878/116660) - This API is used to modify user Hba configurations.
+* Update: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160)
+* Update: [ModifyUserHba](https://cloud.tencent.com/document/api/878/116660)
 
 ## Import
 

@@ -49,5 +49,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEmbedToken](https://cloud.tencent.com/document/api/590/73724) - This API is used to create an embedded report with strong authentication.
+* Create: [CreateEmbedToken](https://cloud.tencent.com/document/api/590/73724)
 

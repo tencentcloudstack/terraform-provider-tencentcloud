@@ -43,9 +43,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyApmAssociation](https://cloud.tencent.com/document/api/1463/125076) - This API is used to modify the relationship between the apm Business System and other products, including deletion.
-* Read: [DescribeApmAssociation](https://cloud.tencent.com/document/api/1463/125079) - This API is used to query the relationship between apm Business System and other product.
-* Update: [ModifyApmAssociation](https://cloud.tencent.com/document/api/1463/125076) - This API is used to modify the relationship between the apm Business System and other products, including deletion.
+* Create: [ModifyApmAssociation](https://cloud.tencent.com/document/api/1463/125076)
+* Read: [DescribeApmAssociation](https://cloud.tencent.com/document/api/1463/125079)
+* Update: [ModifyApmAssociation](https://cloud.tencent.com/document/api/1463/125076)
 
 ## Import
 

@@ -67,9 +67,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyBackupDownloadRestriction](https://www.tencentcloud.com/document/product/409/55666) - This API is used to modify the backup download restrictions.
-* Read: [DescribeBackupDownloadRestriction](https://www.tencentcloud.com/document/product/409/55667) - This API is used to query the backup download restrictions.
-* Update: [ModifyBackupDownloadRestriction](https://www.tencentcloud.com/document/product/409/55666) - This API is used to modify the backup download restrictions.
+* Create: [ModifyBackupDownloadRestriction](https://cloud.tencent.com/document/api/409/90459)
+* Read: [DescribeBackupDownloadRestriction](https://cloud.tencent.com/document/api/409/90460)
+* Update: [ModifyBackupDownloadRestriction](https://cloud.tencent.com/document/api/409/90459)
 
 ## Import
 

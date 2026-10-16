@@ -48,9 +48,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateExport](https://www.tencentcloud.com/document/product/614/42798) - This API only creates download tasks. The download address returned by the task can be obtained by user invocation of [DescribeExports](https://www.tencentcloud.com/document/product/614/56449?from_cn_redirect=1) to view task list, which in
-* Read: [DescribeExports](https://www.tencentcloud.com/document/product/614/42790) - This API is used to get the list of log download tasks.
-* Delete: [DeleteExport](https://www.tencentcloud.com/document/product/614/42795) - This API is used to delete a log download task.
+* Create: [CreateExport](https://cloud.tencent.com/document/api/614/56451)
+* Read: [DescribeExports](https://cloud.tencent.com/document/api/614/56449)
+* Delete: [DeleteExport](https://cloud.tencent.com/document/api/614/56450)
 
 ## Import
 

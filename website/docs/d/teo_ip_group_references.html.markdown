@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeIPGroupReferences](https://cloud.tencent.com/document/api/1552/135282) - This API is used to query policy configurations that reference a specified IP group.
+* Read: [DescribeIPGroupReferences](https://cloud.tencent.com/document/api/1552/135282)
 

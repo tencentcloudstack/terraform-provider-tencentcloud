@@ -118,19 +118,19 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCdbProxy](https://www.tencentcloud.com/document/product/236/55489) - This API is used to create a database proxy for the primary instance.
-* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/product/236/34462) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
-* Create: [DescribeCdbProxyInfo](https://www.tencentcloud.com/document/product/236/55487) - This API is used to query database proxy detailed information.
-* Create: [ModifyCdbProxyAddressVipAndVPort](https://www.tencentcloud.com/document/product/236/55484) - This API is used to modify the database proxy address VPC information.
-* Read: [DescribeCdbProxyInfo](https://www.tencentcloud.com/document/product/236/55487) - This API is used to query database proxy detailed information.
-* Read: [DescribeDBSecurityGroups](https://www.tencentcloud.com/document/product/236/15854) - This API (DescribeDBSecurityGroups) is used to query the security group details of an instance.
-* Update: [AdjustCdbProxy](https://www.tencentcloud.com/document/product/236/55492) - This API is used to adjust database proxy configuration.
-* Update: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/product/236/34462) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
-* Update: [DescribeCdbProxyInfo](https://www.tencentcloud.com/document/product/236/55487) - This API is used to query database proxy detailed information.
-* Update: [ModifyCdbProxyAddressDesc](https://www.tencentcloud.com/document/product/236/55485) - This API is used to modify the proxy address description.
-* Update: [ModifyCdbProxyAddressVipAndVPort](https://www.tencentcloud.com/document/product/236/55484) - This API is used to modify the database proxy address VPC information.
-* Update: [ModifyCdbProxyParam](https://www.tencentcloud.com/document/product/236/55483) - This API is used to configure database proxy parameters.
-* Update: [UpgradeCDBProxyVersion](https://www.tencentcloud.com/document/product/236/45186) - This API is used to upgrade the database proxy version.
-* Delete: [CloseCDBProxy](https://www.tencentcloud.com/document/product/236/45198) - This API is used to disable the database proxy.
-* Delete: [DescribeCdbProxyInfo](https://www.tencentcloud.com/document/product/236/55487) - This API is used to query database proxy detailed information.
+* Create: [CreateCdbProxy](https://cloud.tencent.com/document/api/236/90587)
+* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410)
+* Create: [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585)
+* Create: [ModifyCdbProxyAddressVipAndVPort](https://cloud.tencent.com/document/api/236/90582)
+* Read: [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585)
+* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/236/15854)
+* Update: [AdjustCdbProxy](https://cloud.tencent.com/document/api/236/90590)
+* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410)
+* Update: [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585)
+* Update: [ModifyCdbProxyAddressDesc](https://cloud.tencent.com/document/api/236/90583)
+* Update: [ModifyCdbProxyAddressVipAndVPort](https://cloud.tencent.com/document/api/236/90582)
+* Update: [ModifyCdbProxyParam](https://cloud.tencent.com/document/api/236/90581)
+* Update: [UpgradeCDBProxyVersion](https://cloud.tencent.com/document/api/236/68160)
+* Delete: [CloseCDBProxy](https://cloud.tencent.com/document/api/236/68171)
+* Delete: [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585)
 

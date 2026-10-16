@@ -70,13 +70,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachUserPolicy](https://www.tencentcloud.com/document/product/598/32249) - This API (AttachUserPolicy) is used to associates a policy with a user.
-* Create: [GetUser](https://www.tencentcloud.com/document/product/598/32259) - This API is used to query sub-users.
-* Create: [ListAttachedUserPolicies](https://www.tencentcloud.com/document/product/598/32242) - This API (ListAttachedUserPolicies) is used to query the list of policies associated with a sub-account.
-* Read: [GetUser](https://www.tencentcloud.com/document/product/598/32259) - This API is used to query sub-users.
-* Read: [ListAttachedUserPolicies](https://www.tencentcloud.com/document/product/598/32242) - This API (ListAttachedUserPolicies) is used to query the list of policies associated with a sub-account.
-* Delete: [DetachUserPolicy](https://www.tencentcloud.com/document/product/598/32245) - This API (DetachUserPolicy) is used to unassociate a policy and a user.
-* Delete: [GetUser](https://www.tencentcloud.com/document/product/598/32259) - This API is used to query sub-users.
+* Create: [AttachUserPolicy](https://cloud.tencent.com/document/api/598/34579)
+* Create: [GetUser](https://cloud.tencent.com/document/api/598/34590)
+* Create: [ListAttachedUserPolicies](https://cloud.tencent.com/document/api/598/34572)
+* Read: [GetUser](https://cloud.tencent.com/document/api/598/34590)
+* Read: [ListAttachedUserPolicies](https://cloud.tencent.com/document/api/598/34572)
+* Delete: [DetachUserPolicy](https://cloud.tencent.com/document/api/598/34575)
+* Delete: [GetUser](https://cloud.tencent.com/document/api/598/34590)
 
 ## Import
 

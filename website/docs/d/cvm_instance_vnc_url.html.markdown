@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceVncUrl](https://www.tencentcloud.com/document/product/213/33259)
+* Read: [DescribeInstanceVncUrl](https://cloud.tencent.com/document/api/213/18150)
 

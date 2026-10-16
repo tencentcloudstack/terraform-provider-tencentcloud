@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This ephemeral resource reads the following TencentCloud APIs:
 
-* Open: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522) - For user-defined credentials, this API is used to get the plaintext information of a credential by specifying the credential name and version.
+* Open: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522)
 

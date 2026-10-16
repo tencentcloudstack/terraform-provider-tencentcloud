@@ -65,7 +65,7 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateBlockIgnoreRuleList](https://cloud.tencent.com/document/api/1132/97724)
-* Read: [DescribeBlockIgnoreList](https://cloud.tencent.com/document/api/1132/86691) - This API is used to get allowlists or blocklists for intrusion prevention.
+* Read: [DescribeBlockIgnoreList](https://cloud.tencent.com/document/api/1132/86691)
 * Update: [ModifyBlockIgnoreRule](https://cloud.tencent.com/document/api/1132/97852)
 * Delete: [DeleteBlockIgnoreRuleList](https://cloud.tencent.com/document/api/1132/97856)
 

@@ -147,14 +147,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateAddress](https://www.tencentcloud.com/document/product/215/16700) - This API is used to bind an [Elastic IP](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1) (EIP for short) to the specified private IP of an instance or ENI.
-* Create: [DescribeAddresses](https://www.tencentcloud.com/document/product/215/16702) - This API (DescribeAddresses) is used to query the information of one or multiple [Elastic IPs](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1).
-* Read: [DescribeAddresses](https://www.tencentcloud.com/document/product/215/16702) - This API (DescribeAddresses) is used to query the information of one or multiple [Elastic IPs](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1).
-* Delete: [DescribeAddresses](https://www.tencentcloud.com/document/product/215/16702) - This API (DescribeAddresses) is used to query the information of one or multiple [Elastic IPs](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1).
-* Delete: [DescribeNatGateways](https://www.tencentcloud.com/document/product/215/34752) - This API is used to query NAT gateways.
-* Delete: [DescribeTaskResult](https://www.tencentcloud.com/document/product/215/34772) - This API is used to query the EIP async job execution results.
-* Delete: [DisassociateAddress](https://www.tencentcloud.com/document/product/215/16703) - This API is used to unbind an [Elastic IP](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1) (EIP for short).
-* Delete: [DisassociateNatGatewayAddress](https://www.tencentcloud.com/document/product/215/34751) - This API is used to unbind an EIP from a NAT gateway.
+* Create: [AssociateAddress](https://cloud.tencent.com/document/api/215/16700)
+* Create: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702)
+* Read: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702)
+* Delete: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702)
+* Delete: [DescribeNatGateways](https://cloud.tencent.com/document/api/215/36034)
+* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271)
+* Delete: [DisassociateAddress](https://cloud.tencent.com/document/api/215/16703)
+* Delete: [DisassociateNatGatewayAddress](https://cloud.tencent.com/document/api/215/36716)
 
 ## Import
 

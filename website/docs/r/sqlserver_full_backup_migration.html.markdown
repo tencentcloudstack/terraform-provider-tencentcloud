@@ -107,10 +107,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBackupMigration](https://www.tencentcloud.com/document/product/238/39843) - This API is used to create a backup import task.
-* Read: [DescribeBackupMigration](https://www.tencentcloud.com/document/product/238/39838) - This API is used to create an incremental backup import task.
-* Update: [ModifyBackupMigration](https://www.tencentcloud.com/document/product/238/39834) - This API is used to modify a backup import task.
-* Delete: [DeleteBackupMigration](https://www.tencentcloud.com/document/product/238/39841) - This API is used to delete a backup import task.
+* Create: [CreateBackupMigration](https://cloud.tencent.com/document/api/238/53193)
+* Read: [DescribeBackupMigration](https://cloud.tencent.com/document/api/238/53188)
+* Update: [ModifyBackupMigration](https://cloud.tencent.com/document/api/238/53183)
+* Delete: [DeleteBackupMigration](https://cloud.tencent.com/document/api/238/53191)
 
 ## Import
 

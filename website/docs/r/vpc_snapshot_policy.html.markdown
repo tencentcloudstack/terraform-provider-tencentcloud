@@ -72,10 +72,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSnapshotPolicies](https://www.tencentcloud.com/document/product/215/55059) - This API is used to create snapshot policies.
-* Read: [DescribeSnapshotPolicies](https://www.tencentcloud.com/document/product/215/55054) - This API is used to query snapshot policies.
-* Update: [ModifySnapshotPolicies](https://www.tencentcloud.com/document/product/215/55050) - This API is used to modify specified snapshot policies.
-* Delete: [DeleteSnapshotPolicies](https://www.tencentcloud.com/document/product/215/55058) - This API is used to delete snapshot policies.
+* Create: [CreateSnapshotPolicies](https://cloud.tencent.com/document/api/215/85158)
+* Read: [DescribeSnapshotPolicies](https://cloud.tencent.com/document/api/215/85153)
+* Update: [ModifySnapshotPolicies](https://cloud.tencent.com/document/api/215/85149)
+* Delete: [DeleteSnapshotPolicies](https://cloud.tencent.com/document/api/215/85157)
 
 ## Import
 

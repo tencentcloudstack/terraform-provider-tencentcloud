@@ -1079,28 +1079,28 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCluster](https://www.tencentcloud.com/document/product/457/32027) - This API is used to create a cluster.
-* Read: [DescribeClusterExtraArgs](https://cloud.tencent.com/document/api/457/101764) - This API is used to query custom parameters of a cluster.
-* Read: [DescribeClusterInstances](https://www.tencentcloud.com/document/product/457/66315) - This API is used to query the information of node instances in a cluster.
-* Read: [DescribeClusters](https://www.tencentcloud.com/document/product/457/32025) - This API is used to query clusters list.
-* Update: [AddVpcCniSubnets](https://www.tencentcloud.com/document/product/457/40679) - This API is used to add subnets in the container network for a VPC-CNI cluster.
-* Update: [DescribeBatchModifyTagsStatus](https://cloud.tencent.com/document/api/457/111753) - This API is used to query batch modification Tag status.
-* Update: [DescribeClusterInstances](https://www.tencentcloud.com/document/product/457/66315) - This API is used to query the information of node instances in a cluster.
-* Update: [DescribeClusters](https://www.tencentcloud.com/document/product/457/32025) - This API is used to query clusters list.
-* Update: [DescribeIPAMD](https://www.tencentcloud.com/document/product/457/66011) - This API is used to obtain eniipamd component information.
-* Update: [DescribeInstances](https://www.tencentcloud.com/document/product/213/33258) - This API is used to query the details of instances.
+* Create: [CreateCluster](https://cloud.tencent.com/document/api/457/34527)
+* Read: [DescribeClusterExtraArgs](https://cloud.tencent.com/document/api/457/101764)
+* Read: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863)
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862)
+* Update: [AddVpcCniSubnets](https://cloud.tencent.com/document/api/457/56371)
+* Update: [DescribeBatchModifyTagsStatus](https://cloud.tencent.com/document/api/457/111753)
+* Update: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863)
+* Update: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862)
+* Update: [DescribeIPAMD](https://cloud.tencent.com/document/api/457/101765)
+* Update: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728)
 * Update: [DescribeTasks](https://cloud.tencent.com/document/api/457/125020)
 * Update: [DisableVpcCniNetworkType](https://cloud.tencent.com/document/api/457/59035)
-* Update: [EnableVpcCniNetworkType](https://www.tencentcloud.com/document/product/457/41569) - This API is used to enable the VPC-CNI network mode for GR clusters.
-* Update: [ModifyClusterAsGroupOptionAttribute](https://www.tencentcloud.com/document/product/457/39252) - This API is used to modify cluster auto scaling attributes.
-* Update: [ModifyClusterAttribute](https://www.tencentcloud.com/document/product/457/35615) - This API is used to modify cluster attributes.
-* Update: [ModifyClusterEndpointSP](https://www.tencentcloud.com/document/product/457/33864) - Modify the security policy of the external port of the managed cluster (the old way, only the external port of the managed cluster is supported)
+* Update: [EnableVpcCniNetworkType](https://cloud.tencent.com/document/api/457/55757)
+* Update: [ModifyClusterAsGroupOptionAttribute](https://cloud.tencent.com/document/api/457/51289)
+* Update: [ModifyClusterAttribute](https://cloud.tencent.com/document/api/457/42938)
+* Update: [ModifyClusterEndpointSP](https://cloud.tencent.com/document/api/457/39408)
 * Update: [ModifyClusterExtraArgs](https://cloud.tencent.com/document/api/457/125019)
-* Update: [ModifyClusterImage](https://cloud.tencent.com/document/api/457/111984) - This API is used to modify the cluster image.
+* Update: [ModifyClusterImage](https://cloud.tencent.com/document/api/457/111984)
 * Update: [ScaleInClusterMaster](https://cloud.tencent.com/document/api/457/64792)
 * Update: [ScaleOutClusterMaster](https://cloud.tencent.com/document/api/457/64791)
-* Update: [UpdateClusterVersion](https://www.tencentcloud.com/document/product/457/39567) - This API is used to upgrade the master component of the cluster to the specified version.
-* Delete: [DeleteCluster](https://www.tencentcloud.com/document/product/457/33870) - This API is used to delete a cluster. (Cloud API v3).
+* Update: [UpdateClusterVersion](https://cloud.tencent.com/document/api/457/52133)
+* Delete: [DeleteCluster](https://cloud.tencent.com/document/api/457/36704)
 
 ## Import
 

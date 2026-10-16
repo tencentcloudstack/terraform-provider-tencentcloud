@@ -149,11 +149,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNatGatewaySourceIpTranslationNatRule](https://www.tencentcloud.com/document/product/215/39646) - This API is used to create SNAT rules for a NAT gateway.
-* Create: [DescribeNatGatewaySourceIpTranslationNatRules](https://www.tencentcloud.com/document/product/215/39644) - This API is used to query the NAT gateway's SNAT forwarding rules.
-* Read: [DescribeNatGatewaySourceIpTranslationNatRules](https://www.tencentcloud.com/document/product/215/39644) - This API is used to query the NAT gateway's SNAT forwarding rules.
-* Update: [ModifyNatGatewaySourceIpTranslationNatRule](https://www.tencentcloud.com/document/product/215/39643) - This API is used to modify a NAT gateway's SNAT forwarding rules.
-* Delete: [DeleteNatGatewaySourceIpTranslationNatRule](https://www.tencentcloud.com/document/product/215/39645) - This API is used to delete a SNAT forwarding rule of a NAT gateway.
+* Create: [CreateNatGatewaySourceIpTranslationNatRule](https://cloud.tencent.com/document/api/215/52622)
+* Create: [DescribeNatGatewaySourceIpTranslationNatRules](https://cloud.tencent.com/document/api/215/52620)
+* Read: [DescribeNatGatewaySourceIpTranslationNatRules](https://cloud.tencent.com/document/api/215/52620)
+* Update: [ModifyNatGatewaySourceIpTranslationNatRule](https://cloud.tencent.com/document/api/215/52619)
+* Delete: [DeleteNatGatewaySourceIpTranslationNatRule](https://cloud.tencent.com/document/api/215/52621)
 
 ## Import
 

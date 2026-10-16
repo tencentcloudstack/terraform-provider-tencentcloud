@@ -77,9 +77,9 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateTopic](https://cloud.tencent.com/document/api/1778/111084)
-* Read: [DescribeTopic](https://cloud.tencent.com/document/api/1778/111073) - This API is used to query the MQTT topic details.
+* Read: [DescribeTopic](https://cloud.tencent.com/document/api/1778/111073)
 * Update: [ModifyTopic](https://cloud.tencent.com/document/api/1778/111081)
-* Delete: [DeleteTopic](https://cloud.tencent.com/document/api/1778/111083) - This API is used to delete an MQTT topic.
+* Delete: [DeleteTopic](https://cloud.tencent.com/document/api/1778/111083)
 
 ## Import
 

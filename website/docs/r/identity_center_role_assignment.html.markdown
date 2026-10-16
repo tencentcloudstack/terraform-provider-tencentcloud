@@ -56,12 +56,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRoleAssignment](https://cloud.tencent.com/document/api/850/109958) - This API is used to grant authorizations on member accounts.
-* Create: [GetTaskStatus](https://cloud.tencent.com/document/api/850/109955) - This API is used to query the status of async tasks.
-* Read: [ListRoleAssignments](https://cloud.tencent.com/document/api/850/109954) - This API is used to query the authorization list.
-* Delete: [DeleteRoleAssignment](https://cloud.tencent.com/document/api/850/109957) - This API is used to remove authorizations on member accounts.
-* Delete: [DismantleRoleConfiguration](https://cloud.tencent.com/document/api/850/109956) - This API is used to undeploy permission configurations on member accounts.
-* Delete: [GetTaskStatus](https://cloud.tencent.com/document/api/850/109955) - This API is used to query the status of async tasks.
+* Create: [CreateRoleAssignment](https://cloud.tencent.com/document/api/850/109958)
+* Create: [GetTaskStatus](https://cloud.tencent.com/document/api/850/109955)
+* Read: [ListRoleAssignments](https://cloud.tencent.com/document/api/850/109954)
+* Delete: [DeleteRoleAssignment](https://cloud.tencent.com/document/api/850/109957)
+* Delete: [DismantleRoleConfiguration](https://cloud.tencent.com/document/api/850/109956)
+* Delete: [GetTaskStatus](https://cloud.tencent.com/document/api/850/109955)
 
 ## Import
 

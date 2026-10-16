@@ -36,7 +36,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDataEngine](https://cloud.tencent.com/document/api/1342/99274) - This API is used to obtain detailed data engine information based on names.
+* Create: [DescribeDataEngine](https://cloud.tencent.com/document/api/1342/99274)
 * Create: [DescribeDataEngines](https://cloud.tencent.com/document/api/1342/86308)
-* Create: [UpgradeDataEngineImage](https://cloud.tencent.com/document/api/1342/99263) - This API is used to upgrade the engine image.
+* Create: [UpgradeDataEngineImage](https://cloud.tencent.com/document/api/1342/99263)
 

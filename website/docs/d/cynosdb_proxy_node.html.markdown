@@ -63,5 +63,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeProxyNodes](https://cloud.tencent.com/document/api/1003/94131) - This API is used to query the list of proxy nodes.
+* Read: [DescribeProxyNodes](https://cloud.tencent.com/document/api/1003/94131)
 

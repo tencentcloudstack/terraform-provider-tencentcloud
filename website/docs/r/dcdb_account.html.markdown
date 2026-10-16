@@ -48,12 +48,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccount](https://cloud.tencent.com/document/api/557/19996) - This API is used to create a TencentDB account. Multiple accounts can be created for one instance. Accounts with the same username but different hosts are different accounts.
-* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/557/19993) - This API is used to query the list of accounts of a specified TencentDB instance.
-* Update: [ModifyAccountDescription](https://cloud.tencent.com/document/api/557/19984) - This API is used to modify the remarks of a TencentDB account.
-* Update: [ResetAccountPassword](https://cloud.tencent.com/document/api/557/19979) - This API is used to reset the password of a TencentDB account.
-* Delete: [DeleteAccount](https://cloud.tencent.com/document/api/557/19995) - This API is used to delete a TencentDB account, which is uniquely identified by username and host.
-* Delete: [DescribeAccounts](https://cloud.tencent.com/document/api/557/19993) - This API is used to query the list of accounts of a specified TencentDB instance.
+* Create: [CreateAccount](https://cloud.tencent.com/document/api/557/19996)
+* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/557/19993)
+* Update: [ModifyAccountDescription](https://cloud.tencent.com/document/api/557/19984)
+* Update: [ResetAccountPassword](https://cloud.tencent.com/document/api/557/19979)
+* Delete: [DeleteAccount](https://cloud.tencent.com/document/api/557/19995)
+* Delete: [DescribeAccounts](https://cloud.tencent.com/document/api/557/19993)
 
 ## Import
 

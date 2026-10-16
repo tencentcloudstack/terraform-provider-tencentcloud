@@ -218,12 +218,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddCustomWhiteRule](https://www.tencentcloud.com/document/product/627/64768) - Add precision allowlist rules
-* Create: [ModifyCustomWhiteRuleStatus](https://www.tencentcloud.com/document/product/627/64511) - Enable or disable a precision allowlist
-* Read: [DescribeCustomWhiteRule](https://www.tencentcloud.com/document/product/627/64759) - Obtain the precision allowlist policy list in the protection configuration
-* Update: [ModifyCustomWhiteRule](https://www.tencentcloud.com/document/product/627/64757) - This API is used to edit a precise allowlist.
-* Update: [ModifyCustomWhiteRuleStatus](https://www.tencentcloud.com/document/product/627/64511) - Enable or disable a precision allowlist
-* Delete: [DeleteCustomWhiteRule](https://www.tencentcloud.com/document/product/627/64767) - Delete precision allowlist rules
+* Create: [AddCustomWhiteRule](https://cloud.tencent.com/document/api/627/90325)
+* Create: [ModifyCustomWhiteRuleStatus](https://cloud.tencent.com/document/api/627/97631)
+* Read: [DescribeCustomWhiteRule](https://cloud.tencent.com/document/api/627/88453)
+* Update: [ModifyCustomWhiteRule](https://cloud.tencent.com/document/api/627/90323)
+* Update: [ModifyCustomWhiteRuleStatus](https://cloud.tencent.com/document/api/627/97631)
+* Delete: [DeleteCustomWhiteRule](https://cloud.tencent.com/document/api/627/90324)
 
 ## Import
 

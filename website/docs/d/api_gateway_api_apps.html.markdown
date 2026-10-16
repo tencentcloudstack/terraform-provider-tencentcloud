@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeApiAppsStatus](https://cloud.tencent.com/document/api/628/58634) - This API is used to query the application list.
+* Read: [DescribeApiAppsStatus](https://cloud.tencent.com/document/api/628/58634)
 

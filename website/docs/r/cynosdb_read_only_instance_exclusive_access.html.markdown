@@ -67,6 +67,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
-* Create: [OpenReadOnlyInstanceExclusiveAccess](https://cloud.tencent.com/document/api/1003/90902) - This interface (OpenReadOnlyInstanceExclusiveAccess) is used to enable the dedicated access access group for a read-only instance.
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
+* Create: [OpenReadOnlyInstanceExclusiveAccess](https://cloud.tencent.com/document/api/1003/90902)
 

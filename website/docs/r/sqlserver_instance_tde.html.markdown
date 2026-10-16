@@ -82,11 +82,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/product/238/32113) - This API is used to query flow status.
-* Create: [ModifyInstanceEncryptAttributes](https://www.tencentcloud.com/document/product/238/56943) - This API is used to enable TDE of an instance.
-* Read: [DescribeDBInstancesAttribute](https://www.tencentcloud.com/document/product/238/54811) - This API is used to query the attributes of an instance.
-* Update: [DescribeFlowStatus](https://www.tencentcloud.com/document/product/238/32113) - This API is used to query flow status.
-* Update: [ModifyInstanceEncryptAttributes](https://www.tencentcloud.com/document/product/238/56943) - This API is used to enable TDE of an instance.
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
+* Create: [ModifyInstanceEncryptAttributes](https://cloud.tencent.com/document/api/238/94328)
+* Read: [DescribeDBInstancesAttribute](https://cloud.tencent.com/document/api/238/90299)
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
+* Update: [ModifyInstanceEncryptAttributes](https://cloud.tencent.com/document/api/238/94328)
 
 ## Import
 

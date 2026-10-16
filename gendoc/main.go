@@ -36,21 +36,6 @@ var (
 func main() {
 	flags := parseModeFlags(os.Args[1:])
 
-	// Snapshot refresh mode: refresh all bundled snapshots (catalog,
-	// products, English descriptions) and exit.
-	if flags.refresh {
-		rawActions, err := refreshData()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "[FAIL!]refresh catalog data: %v\n", err)
-			os.Exit(1)
-		}
-		if err := refreshENData(rawActions); err != nil {
-			fmt.Fprintf(os.Stderr, "[FAIL!]refresh English descriptions: %v\n", err)
-			os.Exit(1)
-		}
-		return
-	}
-
 	// Probe mode: print the API call chain of one resource and exit.
 	if res := flags.probe; res != "" {
 		repoRoot, _ := filepath.Abs("..")

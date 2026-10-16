@@ -68,9 +68,9 @@ The `baseline_config_items` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateAccountFactoryBaseline](https://cloud.tencent.com/document/api/1708/116706) - This API is used to update the current baseline item configuration of a user. The baseline configuration will be overwritten with the current configuration.
-* Read: [GetAccountFactoryBaseline](https://cloud.tencent.com/document/api/1708/116709) - This API is used to retrieve user baseline configuration data.
-* Update: [UpdateAccountFactoryBaseline](https://cloud.tencent.com/document/api/1708/116706) - This API is used to update the current baseline item configuration of a user. The baseline configuration will be overwritten with the current configuration.
+* Create: [UpdateAccountFactoryBaseline](https://cloud.tencent.com/document/api/1708/116706)
+* Read: [GetAccountFactoryBaseline](https://cloud.tencent.com/document/api/1708/116709)
+* Update: [UpdateAccountFactoryBaseline](https://cloud.tencent.com/document/api/1708/116706)
 
 ## Import
 

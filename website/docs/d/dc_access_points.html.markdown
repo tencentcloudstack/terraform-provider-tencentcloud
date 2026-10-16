@@ -49,5 +49,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAccessPoints](https://www.tencentcloud.com/document/product/216/37476) - This API is used to query connection access points.
+* Read: [DescribeAccessPoints](https://cloud.tencent.com/document/api/216/34827)
 

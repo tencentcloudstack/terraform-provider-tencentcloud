@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SetDefaultPolicyVersion](https://www.tencentcloud.com/document/product/598/36309) - This API is used to set the operative policy version.
-* Read: [ListPolicyVersions](https://www.tencentcloud.com/document/product/598/36310) - This API is used to get the list of policy versions.
-* Update: [SetDefaultPolicyVersion](https://www.tencentcloud.com/document/product/598/36309) - This API is used to set the operative policy version.
+* Create: [SetDefaultPolicyVersion](https://cloud.tencent.com/document/api/598/43838)
+* Read: [ListPolicyVersions](https://cloud.tencent.com/document/api/598/43839)
+* Update: [SetDefaultPolicyVersion](https://cloud.tencent.com/document/api/598/43838)
 
 ## Import
 

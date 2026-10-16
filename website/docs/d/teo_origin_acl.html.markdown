@@ -85,5 +85,5 @@ Note: This field may return null, which indicates a failure to obtain a valid va
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeOriginACL](https://cloud.tencent.com/document/api/1552/120408) - This API is used to query the binding relationship between L7 acceleration domains/L4 proxy instances and origin ACLs under a site, as well as IP range details.
+* Read: [DescribeOriginACL](https://cloud.tencent.com/document/api/1552/120408)
 

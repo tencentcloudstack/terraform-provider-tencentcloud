@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifySwitchTimePeriod](https://www.tencentcloud.com/document/product/409/41612) - This API is used to perform a primary-standby switch for an instance waiting for the switch after it is upgraded.
+* Create: [ModifySwitchTimePeriod](https://cloud.tencent.com/document/api/409/59030)
 

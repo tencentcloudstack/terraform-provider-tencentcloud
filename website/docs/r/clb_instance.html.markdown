@@ -674,26 +674,26 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLoadBalancer](https://www.tencentcloud.com/document/product/214/33841) - This API is used to create a Cloud Load Balancer instance (this interface supports only pay-as-you-go CLB instances. For annual/monthly subscription, proceed to purchase through the console).
-* Create: [DescribeAddresses](https://www.tencentcloud.com/document/product/215/16702) - This API (DescribeAddresses) is used to query the information of one or multiple [Elastic IPs](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1).
-* Create: [DescribeLoadBalancers](https://www.tencentcloud.com/document/product/214/33830) - This API is used to query the list of CLB instances in a region.
-* Create: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Create: [ModifyLoadBalancerAttributes](https://www.tencentcloud.com/document/product/214/33817) - This API is used to modify the attributes of a CLB instance, such as name and cross-region attributes.
-* Create: [SetLoadBalancerClsLog](https://www.tencentcloud.com/document/product/214/35734) - This API is used to add, delete, and update the CLS topic of a CLB instance.
-* Create: [SetLoadBalancerSecurityGroups](https://www.tencentcloud.com/document/product/214/33798) - This API is used to bind or unbind security groups for a public network load balancing instance. To query currently bound security groups of a load balancing instance, use the [DescribeLoadBalancers]
-* Read: [DescribeAddresses](https://www.tencentcloud.com/document/product/215/16702) - This API (DescribeAddresses) is used to query the information of one or multiple [Elastic IPs](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1).
-* Read: [DescribeLoadBalancers](https://www.tencentcloud.com/document/product/214/33830) - This API is used to query the list of CLB instances in a region.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [AssociateAddress](https://www.tencentcloud.com/document/product/215/16700) - This API is used to bind an [Elastic IP](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1) (EIP for short) to the specified private IP of an instance or ENI.
-* Update: [DescribeAddresses](https://www.tencentcloud.com/document/product/215/16702) - This API (DescribeAddresses) is used to query the information of one or multiple [Elastic IPs](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1).
-* Update: [DisassociateAddress](https://www.tencentcloud.com/document/product/215/16703) - This API is used to unbind an [Elastic IP](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1) (EIP for short).
-* Update: [ModifyLoadBalancerAttributes](https://www.tencentcloud.com/document/product/214/33817) - This API is used to modify the attributes of a CLB instance, such as name and cross-region attributes.
-* Update: [ModifyLoadBalancerSla](https://www.tencentcloud.com/document/product/214/43786) - This API is used to adjust the performance capacity specification of usage-based billing mode instances, for example, upgrading from shared type to performance capacity type, or adjusting the specification of performance and capacity insta
-* Update: [ModifyLoadBalancersProject](https://www.tencentcloud.com/document/product/214/57286) - This API is used to modify the projects of CLB instances.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Update: [SetLoadBalancerClsLog](https://www.tencentcloud.com/document/product/214/35734) - This API is used to add, delete, and update the CLS topic of a CLB instance.
-* Update: [SetLoadBalancerSecurityGroups](https://www.tencentcloud.com/document/product/214/33798) - This API is used to bind or unbind security groups for a public network load balancing instance. To query currently bound security groups of a load balancing instance, use the [DescribeLoadBalancers]
-* Delete: [DeleteLoadBalancer](https://www.tencentcloud.com/document/product/214/33837) - This API is used to delete one or more specified CLB instances. After successful deletion, the listeners and forwarding rules under the CLB instance will be deleted together, and the backend service will be unbound.
+* Create: [CreateLoadBalancer](https://cloud.tencent.com/document/api/214/30692)
+* Create: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702)
+* Create: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685)
+* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Create: [ModifyLoadBalancerAttributes](https://cloud.tencent.com/document/api/214/30680)
+* Create: [SetLoadBalancerClsLog](https://cloud.tencent.com/document/api/214/43266)
+* Create: [SetLoadBalancerSecurityGroups](https://cloud.tencent.com/document/api/214/34903)
+* Read: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702)
+* Read: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [AssociateAddress](https://cloud.tencent.com/document/api/215/16700)
+* Update: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702)
+* Update: [DisassociateAddress](https://cloud.tencent.com/document/api/215/16703)
+* Update: [ModifyLoadBalancerAttributes](https://cloud.tencent.com/document/api/214/30680)
+* Update: [ModifyLoadBalancerSla](https://cloud.tencent.com/document/api/214/63892)
+* Update: [ModifyLoadBalancersProject](https://cloud.tencent.com/document/api/214/96177)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Update: [SetLoadBalancerClsLog](https://cloud.tencent.com/document/api/214/43266)
+* Update: [SetLoadBalancerSecurityGroups](https://cloud.tencent.com/document/api/214/34903)
+* Delete: [DeleteLoadBalancer](https://cloud.tencent.com/document/api/214/30689)
 
 ## Import
 

@@ -105,9 +105,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyDBEncryptAttributes](https://cloud.tencent.com/document/api/557/86907) - This API is used to modify the instance data encryption.
-* Read: [DescribeDBEncryptAttributes](https://cloud.tencent.com/document/api/557/92617) - This API is used to query the encryption status of the instance data.
-* Update: [ModifyDBEncryptAttributes](https://cloud.tencent.com/document/api/557/86907) - This API is used to modify the instance data encryption.
+* Create: [ModifyDBEncryptAttributes](https://cloud.tencent.com/document/api/557/86907)
+* Read: [DescribeDBEncryptAttributes](https://cloud.tencent.com/document/api/557/92617)
+* Update: [ModifyDBEncryptAttributes](https://cloud.tencent.com/document/api/557/86907)
 
 ## Import
 

@@ -112,26 +112,26 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateReadOnlyDBInstance](https://www.tencentcloud.com/document/product/409/39728) - This API is used to create read-only replicas.
-* Create: [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/product/409/16772) - This API is used to query the details of one instance.
-* Create: [DescribeOrders](https://www.tencentcloud.com/document/product/409/18104) - This API is used to query the order information.
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/product/409/16772) - This API is used to query the details of one instance.
-* Read: [DescribeDBInstanceSecurityGroups](https://www.tencentcloud.com/document/product/409/52648) - This API is used to query the security group of an instance.
-* Read: [DescribeReadOnlyGroups](https://www.tencentcloud.com/document/product/409/39725) - This API is used to query the list of RO groups.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/product/409/16772) - This API is used to query the details of one instance.
-* Update: [DescribeReadOnlyGroups](https://www.tencentcloud.com/document/product/409/39725) - This API is used to query the list of RO groups.
-* Update: [ModifyDBInstanceDeletionProtection](https://www.tencentcloud.com/document/product/409/79011) - This interface (DeletionProtection) is used to enable or disable instance destruction protection.
-* Update: [ModifyDBInstanceName](https://www.tencentcloud.com/document/product/409/18101) - This API is used to rename a TencentDB for PostgreSQL instance.
-* Update: [ModifyDBInstanceReadOnlyGroup](https://www.tencentcloud.com/document/product/409/39724) - This API is used to modify the RO group of an instance.
-* Update: [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/document/product/409/52647) - This API is used to modify the security group of an instance.
-* Update: [ModifyDBInstanceSpec](https://www.tencentcloud.com/document/product/409/43296) - This API is used to modify instance specifications, including memory, Disk and Cpu.
-* Update: [ModifyDBInstancesProject](https://www.tencentcloud.com/document/product/409/18100) - This API is used to modify the project of an instance.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Delete: [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/product/409/16772) - This API is used to query the details of one instance.
-* Delete: [DestroyDBInstance](https://www.tencentcloud.com/document/product/409/37117) - This API is used to terminate an isolated instance by specifying the `DBInstanceId` parameter. The data of a terminated instance will be deleted and cannot be recovered. Be cautious with this API calling.
-* Delete: [IsolateDBInstances](https://www.tencentcloud.com/document/product/409/40109) - This API is used to isolate an instance.
+* Create: [CreateReadOnlyDBInstance](https://cloud.tencent.com/document/api/409/52602)
+* Create: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772)
+* Create: [DescribeOrders](https://cloud.tencent.com/document/api/409/18104)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772)
+* Read: [DescribeDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84064)
+* Read: [DescribeReadOnlyGroups](https://cloud.tencent.com/document/api/409/52599)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772)
+* Update: [DescribeReadOnlyGroups](https://cloud.tencent.com/document/api/409/52599)
+* Update: [ModifyDBInstanceDeletionProtection](https://cloud.tencent.com/document/api/409/125336)
+* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/409/18101)
+* Update: [ModifyDBInstanceReadOnlyGroup](https://cloud.tencent.com/document/api/409/52598)
+* Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84063)
+* Update: [ModifyDBInstanceSpec](https://cloud.tencent.com/document/api/409/63689)
+* Update: [ModifyDBInstancesProject](https://cloud.tencent.com/document/api/409/18100)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Delete: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772)
+* Delete: [DestroyDBInstance](https://cloud.tencent.com/document/api/409/43352)
+* Delete: [IsolateDBInstances](https://cloud.tencent.com/document/api/409/54790)
 
 ## Import
 

@@ -86,9 +86,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAlertChannel](https://cloud.tencent.com/document/api/1484/78095) - This API is used to create an alert recipient group.
-* Read: [DescribeAlertChannels](https://cloud.tencent.com/document/api/1484/78084) - This API is used to query alert recipient groups.
-* Delete: [DeleteAlertChannel](https://cloud.tencent.com/document/api/1484/78090) - This API is used to delete an alert recipient group.
+* Create: [CreateAlertChannel](https://cloud.tencent.com/document/api/1484/78095)
+* Read: [DescribeAlertChannels](https://cloud.tencent.com/document/api/1484/78084)
+* Delete: [DeleteAlertChannel](https://cloud.tencent.com/document/api/1484/78090)
 
 ## Import
 

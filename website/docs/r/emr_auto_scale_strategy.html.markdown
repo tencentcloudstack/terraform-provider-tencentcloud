@@ -174,12 +174,12 @@ The `time_auto_scale_strategy` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddMetricScaleStrategy](https://cloud.tencent.com/document/api/589/103997) - This API is used to add an automatic scaling rule by load and time.
-* Read: [DescribeAutoScaleStrategies](https://cloud.tencent.com/document/api/589/103998) - This API is used to obtain an automatic scaling rule.
-* Update: [DescribeAutoScaleStrategies](https://cloud.tencent.com/document/api/589/103998) - This API is used to obtain an automatic scaling rule.
-* Update: [ModifyAutoScaleStrategy](https://cloud.tencent.com/document/api/589/103995) - This API is used to modify an automatic scaling rule.
-* Delete: [DeleteAutoScaleStrategy](https://cloud.tencent.com/document/api/589/103996) - This API is used to delete an automatic scaling rule. Nodes scaled based on this rule are terminated in the backend.
-* Delete: [DescribeAutoScaleStrategies](https://cloud.tencent.com/document/api/589/103998) - This API is used to obtain an automatic scaling rule.
+* Create: [AddMetricScaleStrategy](https://cloud.tencent.com/document/api/589/103997)
+* Read: [DescribeAutoScaleStrategies](https://cloud.tencent.com/document/api/589/103998)
+* Update: [DescribeAutoScaleStrategies](https://cloud.tencent.com/document/api/589/103998)
+* Update: [ModifyAutoScaleStrategy](https://cloud.tencent.com/document/api/589/103995)
+* Delete: [DeleteAutoScaleStrategy](https://cloud.tencent.com/document/api/589/103996)
+* Delete: [DescribeAutoScaleStrategies](https://cloud.tencent.com/document/api/589/103998)
 
 ## Import
 

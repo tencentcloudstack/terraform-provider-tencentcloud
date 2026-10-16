@@ -112,15 +112,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCertificate](https://cloud.tencent.com/document/api/400/49427) - This API is used to purchase a certificate.
-* Read: [DescribeCertificateDetail](https://cloud.tencent.com/document/api/400/41673) - This API is used to get certificate details.
-* Update: [CertificateOrderSubmit](https://cloud.tencent.com/document/api/400/116032) - Submit a certificate order
-* Update: [DescribeCertificateDetail](https://cloud.tencent.com/document/api/400/41673) - This API is used to get certificate details.
-* Update: [ModifyCertificateAlias](https://cloud.tencent.com/document/api/400/41669) - This API is used to modify a certificate alias by passing in the certificate ID and new alias.
-* Update: [ModifyCertificateProject](https://cloud.tencent.com/document/api/400/41668) - This API is used to modify the projects of multiple certificates.
-* Update: [SubmitCertificateInformation](https://cloud.tencent.com/document/api/400/41666) - Submit documentation for paid certificates; This API does not maintain new features, and you can use the new API to submit documentation. [CertificateInfoSubmit]
-* Update: [UploadConfirmLetter](https://cloud.tencent.com/document/api/400/49425) - This API is used to upload the confirmation letter for a certificate.
-* Delete: [CancelCertificateOrder](https://cloud.tencent.com/document/api/400/41677) - This API is used to cancel a certificate order.
+* Create: [CreateCertificate](https://cloud.tencent.com/document/api/400/49427)
+* Read: [DescribeCertificateDetail](https://cloud.tencent.com/document/api/400/41673)
+* Update: [CertificateOrderSubmit](https://cloud.tencent.com/document/api/400/116032)
+* Update: [DescribeCertificateDetail](https://cloud.tencent.com/document/api/400/41673)
+* Update: [ModifyCertificateAlias](https://cloud.tencent.com/document/api/400/41669)
+* Update: [ModifyCertificateProject](https://cloud.tencent.com/document/api/400/41668)
+* Update: [SubmitCertificateInformation](https://cloud.tencent.com/document/api/400/41666)
+* Update: [UploadConfirmLetter](https://cloud.tencent.com/document/api/400/49425)
+* Delete: [CancelCertificateOrder](https://cloud.tencent.com/document/api/400/41677)
 
 ## Import
 

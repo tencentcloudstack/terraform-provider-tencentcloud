@@ -232,12 +232,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateIndex](https://www.tencentcloud.com/document/product/614/42805) - This API is used to create an index.
-* Create: [DescribeIndex](https://www.tencentcloud.com/document/product/614/42803) - This API is used to get the index configuration information.
-* Read: [DescribeIndex](https://www.tencentcloud.com/document/product/614/42803) - This API is used to get the index configuration information.
-* Update: [DescribeIndex](https://www.tencentcloud.com/document/product/614/42803) - This API is used to get the index configuration information.
-* Update: [ModifyIndex](https://www.tencentcloud.com/document/product/614/42802) - This API is used to modify the index configuration. It is subject to the default request frequency limit, and the number of concurrent requests to the same log topic cannot exceed 1, i.e.
-* Delete: [DeleteIndex](https://www.tencentcloud.com/document/product/614/42804) - This API is used to delete the index configuration of a log topic. After deleting, you cannot retrieve or query the collected logs.
+* Create: [CreateIndex](https://cloud.tencent.com/document/api/614/56445)
+* Create: [DescribeIndex](https://cloud.tencent.com/document/api/614/56443)
+* Read: [DescribeIndex](https://cloud.tencent.com/document/api/614/56443)
+* Update: [DescribeIndex](https://cloud.tencent.com/document/api/614/56443)
+* Update: [ModifyIndex](https://cloud.tencent.com/document/api/614/56442)
+* Delete: [DeleteIndex](https://cloud.tencent.com/document/api/614/56444)
 
 ## Import
 

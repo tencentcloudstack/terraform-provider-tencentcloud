@@ -83,12 +83,12 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateTopic](https://cloud.tencent.com/document/api/1493/97947)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Read: [DescribeTopicList](https://cloud.tencent.com/document/api/1493/96030) - This API is used to search the topic list. Filter parameter usage instructions are as follows:.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Read: [DescribeTopicList](https://cloud.tencent.com/document/api/1493/96030)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
 * Update: [ModifyTopic](https://cloud.tencent.com/document/api/1493/97944)
-* Delete: [DeleteTopic](https://cloud.tencent.com/document/api/1493/97946) - This API is used to delete a topic. After deletion, all configurations and related data of the topic will be cleared and cannot be restored.
+* Delete: [DeleteTopic](https://cloud.tencent.com/document/api/1493/97946)
 
 ## Import
 

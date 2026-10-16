@@ -40,10 +40,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddShareUnit](https://cloud.tencent.com/document/api/850/103056) - This API is used to create a shared unit.
-* Read: [DescribeShareUnits](https://cloud.tencent.com/document/api/850/103047) - This API is used to obtain a list of shared units.
-* Update: [UpdateShareUnit](https://cloud.tencent.com/document/api/850/103046) - This API is used to update a shared unit.
-* Delete: [DeleteShareUnit](https://cloud.tencent.com/document/api/850/103053) - This API is used to delete a shared unit.
+* Create: [AddShareUnit](https://cloud.tencent.com/document/api/850/103056)
+* Read: [DescribeShareUnits](https://cloud.tencent.com/document/api/850/103047)
+* Update: [UpdateShareUnit](https://cloud.tencent.com/document/api/850/103046)
+* Delete: [DeleteShareUnit](https://cloud.tencent.com/document/api/850/103053)
 
 ## Import
 

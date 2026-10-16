@@ -77,14 +77,14 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGlobalAccelerator](https://cloud.tencent.com/document/api/1817/130044) - This API is used to create a global acceleration instance.
-* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
-* Read: [DescribeGlobalAccelerators](https://cloud.tencent.com/document/api/1817/130161) - Modify a global acceleration instance
-* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
-* Update: [ModifyGlobalAccelerator](https://cloud.tencent.com/document/api/1817/130156) - Modify a global acceleration instance
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Delete: [DeleteGlobalAccelerator](https://cloud.tencent.com/document/api/1817/130167) - Deletes a global acceleration instance
-* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
+* Create: [CreateGlobalAccelerator](https://cloud.tencent.com/document/api/1817/130044)
+* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942)
+* Read: [DescribeGlobalAccelerators](https://cloud.tencent.com/document/api/1817/130161)
+* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942)
+* Update: [ModifyGlobalAccelerator](https://cloud.tencent.com/document/api/1817/130156)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Delete: [DeleteGlobalAccelerator](https://cloud.tencent.com/document/api/1817/130167)
+* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942)
 
 ## Import
 

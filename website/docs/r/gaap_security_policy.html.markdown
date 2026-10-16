@@ -47,16 +47,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSecurityPolicy](https://www.tencentcloud.com/document/product/608/33108) - This API is used to create security policies.
-* Create: [DescribeSecurityPolicyDetail](https://www.tencentcloud.com/document/product/608/33097) - This API is used to obtain security policy details.
-* Create: [OpenSecurityPolicy](https://www.tencentcloud.com/document/product/608/33089) - This API is used to enable a security policy.
-* Read: [DescribeSecurityPolicyDetail](https://www.tencentcloud.com/document/product/608/33097) - This API is used to obtain security policy details.
-* Update: [CloseSecurityPolicy](https://www.tencentcloud.com/document/product/608/33110) - This API is used to disable a security policy.
-* Update: [DescribeSecurityPolicyDetail](https://www.tencentcloud.com/document/product/608/33097) - This API is used to obtain security policy details.
-* Update: [OpenSecurityPolicy](https://www.tencentcloud.com/document/product/608/33089) - This API is used to enable a security policy.
-* Delete: [CloseSecurityPolicy](https://www.tencentcloud.com/document/product/608/33110) - This API is used to disable a security policy.
-* Delete: [DeleteSecurityPolicy](https://www.tencentcloud.com/document/product/608/33106) - This API is used to delete a security policy.
-* Delete: [DescribeSecurityPolicyDetail](https://www.tencentcloud.com/document/product/608/33097) - This API is used to obtain security policy details.
+* Create: [CreateSecurityPolicy](https://cloud.tencent.com/document/api/608/36970)
+* Create: [DescribeSecurityPolicyDetail](https://cloud.tencent.com/document/api/608/36959)
+* Create: [OpenSecurityPolicy](https://cloud.tencent.com/document/api/608/36951)
+* Read: [DescribeSecurityPolicyDetail](https://cloud.tencent.com/document/api/608/36959)
+* Update: [CloseSecurityPolicy](https://cloud.tencent.com/document/api/608/36972)
+* Update: [DescribeSecurityPolicyDetail](https://cloud.tencent.com/document/api/608/36959)
+* Update: [OpenSecurityPolicy](https://cloud.tencent.com/document/api/608/36951)
+* Delete: [CloseSecurityPolicy](https://cloud.tencent.com/document/api/608/36972)
+* Delete: [DeleteSecurityPolicy](https://cloud.tencent.com/document/api/608/36968)
+* Delete: [DescribeSecurityPolicyDetail](https://cloud.tencent.com/document/api/608/36959)
 
 ## Import
 

@@ -54,7 +54,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddShareUnitMembers](https://cloud.tencent.com/document/api/850/103055) - This API is used to add a shared unit member.
-* Read: [DescribeShareUnitMembers](https://cloud.tencent.com/document/api/850/103049) - This API is used to obtain the member list of a shared unit.
-* Delete: [DeleteShareUnitMembers](https://cloud.tencent.com/document/api/850/103052) - This API is used to delete a shared unit member.
+* Create: [AddShareUnitMembers](https://cloud.tencent.com/document/api/850/103055)
+* Read: [DescribeShareUnitMembers](https://cloud.tencent.com/document/api/850/103049)
+* Delete: [DeleteShareUnitMembers](https://cloud.tencent.com/document/api/850/103052)
 

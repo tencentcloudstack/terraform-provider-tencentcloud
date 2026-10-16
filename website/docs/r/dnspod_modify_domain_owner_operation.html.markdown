@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyDomainOwner](https://cloud.tencent.com/document/api/1427/56162) - This API is used to transfer ownership of a domain.
+* Create: [ModifyDomainOwner](https://cloud.tencent.com/document/api/1427/56162)
 

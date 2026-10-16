@@ -194,26 +194,26 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstancePre](https://www.tencentcloud.com/document/product/597/74261) - This API is used to create prepaid yearly/monthly subscribed instances. It only supports creating Pro Edition instances.
-* Create: [CreatePostPaidInstance](https://www.tencentcloud.com/document/product/597/55882) - This API is used to replace `CreateInstancePost`  to create a pay-as-you-go instance.  You can call this API via SDK or the TencentCloud API console to create a pay-as-you-go CKafka instance,  which is an alternate option for making a purc
-* Create: [DescribeInstanceAttributes](https://www.tencentcloud.com/document/product/597/35358) - This API is used to obtain instance attributes.
-* Create: [DescribeInstancesDetail](https://www.tencentcloud.com/document/product/597/35356) - This API is used to get instance list details under a user account.
-* Create: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Create: [ModifyInstanceAttributes](https://www.tencentcloud.com/document/product/597/35354) - This API is used to set instance attributes.
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeInstanceAttributes](https://www.tencentcloud.com/document/product/597/35358) - This API is used to obtain instance attributes.
-* Read: [DescribeInstancesDetail](https://www.tencentcloud.com/document/product/597/35356) - This API is used to get instance list details under a user account.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [DescribeInstanceAttributes](https://www.tencentcloud.com/document/product/597/35358) - This API is used to obtain instance attributes.
-* Update: [DescribeInstancesDetail](https://www.tencentcloud.com/document/product/597/35356) - This API is used to get instance list details under a user account.
-* Update: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [InstanceScalingDown](https://www.tencentcloud.com/document/product/597/74426) - This API is used to perform downsizing on a pay-as-you-go instance.
-* Update: [ModifyInstanceAttributes](https://www.tencentcloud.com/document/product/597/35354) - This API is used to set instance attributes.
-* Update: [ModifyInstancePre](https://www.tencentcloud.com/document/product/597/47533) - This API is used to change the configuration of prepaid instances, adjust disks, modify bandwidth, and manage partitions.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Delete: [DeleteInstancePost](https://www.tencentcloud.com/document/product/597/74260) - This API is used to delete post-payment instances. It directly performs instance termination by calling API deletion without associating connectors and tasks in pre-check.
-* Delete: [DeleteInstancePre](https://www.tencentcloud.com/document/product/597/51451) - This API is used to delete prepaid instances. It performs isolation and deletion actions on the instance. After successful execution, the instance will be directly deleted and terminated.
-* Delete: [DescribeInstancesDetail](https://www.tencentcloud.com/document/product/597/35356) - This API is used to get instance list details under a user account.
+* Create: [CreateInstancePre](https://cloud.tencent.com/document/api/597/45847)
+* Create: [CreatePostPaidInstance](https://cloud.tencent.com/document/api/597/94259)
+* Create: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836)
+* Create: [DescribeInstancesDetail](https://cloud.tencent.com/document/api/597/40834)
+* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Create: [ModifyInstanceAttributes](https://cloud.tencent.com/document/api/597/40832)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836)
+* Read: [DescribeInstancesDetail](https://cloud.tencent.com/document/api/597/40834)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836)
+* Update: [DescribeInstancesDetail](https://cloud.tencent.com/document/api/597/40834)
+* Update: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [InstanceScalingDown](https://cloud.tencent.com/document/api/597/95460)
+* Update: [ModifyInstanceAttributes](https://cloud.tencent.com/document/api/597/40832)
+* Update: [ModifyInstancePre](https://cloud.tencent.com/document/api/597/73693)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Delete: [DeleteInstancePost](https://cloud.tencent.com/document/api/597/98200)
+* Delete: [DeleteInstancePre](https://cloud.tencent.com/document/api/597/65806)
+* Delete: [DescribeInstancesDetail](https://cloud.tencent.com/document/api/597/40834)
 
 ## Import
 

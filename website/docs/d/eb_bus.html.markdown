@@ -67,5 +67,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListEventBuses](https://cloud.tencent.com/document/api/1359/67683) - This API is used to get the list of event buses.
+* Read: [ListEventBuses](https://cloud.tencent.com/document/api/1359/67683)
 

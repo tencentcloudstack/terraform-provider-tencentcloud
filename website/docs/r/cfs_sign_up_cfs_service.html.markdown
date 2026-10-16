@@ -34,7 +34,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeCfsServiceStatus](https://www.tencentcloud.com/document/product/582/34499) - This API is used to query the status of the CFS service.
-* Create: [SignUpCfsService](https://www.tencentcloud.com/document/product/582/34498) - This API is used to activate the CFS service.
-* Read: [DescribeCfsServiceStatus](https://www.tencentcloud.com/document/product/582/34499) - This API is used to query the status of the CFS service.
+* Create: [DescribeCfsServiceStatus](https://cloud.tencent.com/document/api/582/38164)
+* Create: [SignUpCfsService](https://cloud.tencent.com/document/api/582/38163)
+* Read: [DescribeCfsServiceStatus](https://cloud.tencent.com/document/api/582/38164)
 

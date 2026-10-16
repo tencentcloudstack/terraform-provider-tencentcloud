@@ -91,6 +91,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInstances](https://www.tencentcloud.com/document/product/239/32065) - This API is used to query the list of Redis instances.
-* Create: [RenewInstance](https://www.tencentcloud.com/document/product/239/32055) - This API is used to renew an instance.
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/239/20018)
+* Create: [RenewInstance](https://cloud.tencent.com/document/api/239/20015)
 

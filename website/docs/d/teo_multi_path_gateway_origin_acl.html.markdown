@@ -60,5 +60,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeMultiPathGatewayOriginACL](https://cloud.tencent.com/document/api/1552/123859) - This API is used to query the binding relationship between a multi-channel security acceleration gateway instance and the origin server IP range, as well as the IP range details.
+* Read: [DescribeMultiPathGatewayOriginACL](https://cloud.tencent.com/document/api/1552/123859)
 

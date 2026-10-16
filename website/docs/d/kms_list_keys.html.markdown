@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListKeys](https://cloud.tencent.com/document/api/573/34415) - This API is used to list the KeyIds of CMKs in `Enabled`, `Disabled`, and `PendingImport` status under the account.
+* Read: [ListKeys](https://cloud.tencent.com/document/api/573/34415)
 

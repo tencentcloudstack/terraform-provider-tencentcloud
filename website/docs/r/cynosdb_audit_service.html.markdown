@@ -57,12 +57,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/1003/103372) - This API is used to obtain the instance list of database audit.
-* Create: [OpenAuditService](https://cloud.tencent.com/document/api/1003/84696) - This API is used to enable database audit service for an instance.
-* Read: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/1003/103372) - This API is used to obtain the instance list of database audit.
-* Update: [ModifyAuditService](https://cloud.tencent.com/document/api/1003/84697) - This API is used to modify the audit configurations of an instance, such as audit log retention period and audit rule.
-* Delete: [CloseAuditService](https://cloud.tencent.com/document/api/1003/84703) - This API is used to close the database audit service for TDSQL-C MySQL instances.
-* Delete: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/1003/103372) - This API is used to obtain the instance list of database audit.
+* Create: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/1003/103372)
+* Create: [OpenAuditService](https://cloud.tencent.com/document/api/1003/84696)
+* Read: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/1003/103372)
+* Update: [ModifyAuditService](https://cloud.tencent.com/document/api/1003/84697)
+* Delete: [CloseAuditService](https://cloud.tencent.com/document/api/1003/84703)
+* Delete: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/1003/103372)
 
 ## Import
 

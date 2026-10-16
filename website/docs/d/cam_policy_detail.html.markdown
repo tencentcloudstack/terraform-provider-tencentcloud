@@ -47,5 +47,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetPolicy](https://www.tencentcloud.com/document/product/598/32244) - This API (GetPolicy) is used to query and view policy details.
+* Read: [GetPolicy](https://cloud.tencent.com/document/api/598/34574)
 

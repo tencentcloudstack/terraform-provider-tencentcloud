@@ -33,5 +33,5 @@ The following arguments are supported:
 
 This action invokes the following TencentCloud APIs:
 
-* Invoke: [ConfirmOriginACLUpdate](https://cloud.tencent.com/document/api/1552/120409) - This API is used to confirm that the latest origin ACLs have been updated to the origin server firewall when the origin ACLs change. After confirming the update to the latest version, related change notifications will stop pushing.
+* Invoke: [ConfirmOriginACLUpdate](https://cloud.tencent.com/document/api/1552/120409)
 

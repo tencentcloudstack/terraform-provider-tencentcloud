@@ -40,14 +40,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CloseSSL](https://cloud.tencent.com/document/api/1003/118379) - This API is used to disable SSL encryption.
+* Create: [CloseSSL](https://cloud.tencent.com/document/api/1003/118379)
 * Create: [DescribeSSLStatus](https://cloud.tencent.com/document/api/1003/118100)
-* Create: [DescribeTasks](https://cloud.tencent.com/document/api/1003/103866) - This API is used to query task lists.
+* Create: [DescribeTasks](https://cloud.tencent.com/document/api/1003/103866)
 * Create: [OpenSSL](https://cloud.tencent.com/document/api/1003/118099)
 * Read: [DescribeSSLStatus](https://cloud.tencent.com/document/api/1003/118100)
-* Update: [CloseSSL](https://cloud.tencent.com/document/api/1003/118379) - This API is used to disable SSL encryption.
+* Update: [CloseSSL](https://cloud.tencent.com/document/api/1003/118379)
 * Update: [DescribeSSLStatus](https://cloud.tencent.com/document/api/1003/118100)
-* Update: [DescribeTasks](https://cloud.tencent.com/document/api/1003/103866) - This API is used to query task lists.
+* Update: [DescribeTasks](https://cloud.tencent.com/document/api/1003/103866)
 * Update: [OpenSSL](https://cloud.tencent.com/document/api/1003/118099)
 
 ## Import

@@ -76,11 +76,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTargetGroup](https://cloud.tencent.com/document/api/1782/111697) - This API is used to create a target group. This feature is in beta testing. If you need to use it, please [submit a ticket]
-* Read: [DescribeTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111693) - This API is used to obtain information on servers bound to a target group.
-* Read: [DescribeTargetGroupList](https://cloud.tencent.com/document/api/1782/111692) - This API is used to obtain a target group list.
-* Update: [ModifyTargetGroupAttribute](https://cloud.tencent.com/document/api/1782/111689) - This API is used to modify the name, health check, and other attributes of the target group.
-* Delete: [DeleteTargetGroups](https://cloud.tencent.com/document/api/1782/111696) - This API is used to delete a target group.
+* Create: [CreateTargetGroup](https://cloud.tencent.com/document/api/1782/111697)
+* Read: [DescribeTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111693)
+* Read: [DescribeTargetGroupList](https://cloud.tencent.com/document/api/1782/111692)
+* Update: [ModifyTargetGroupAttribute](https://cloud.tencent.com/document/api/1782/111689)
+* Delete: [DeleteTargetGroups](https://cloud.tencent.com/document/api/1782/111696)
 
 ## Import
 

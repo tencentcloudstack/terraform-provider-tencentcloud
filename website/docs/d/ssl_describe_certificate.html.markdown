@@ -120,5 +120,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCertificate](https://cloud.tencent.com/document/api/400/41674) - This API is used to get certificate information.
+* Read: [DescribeCertificate](https://cloud.tencent.com/document/api/400/41674)
 

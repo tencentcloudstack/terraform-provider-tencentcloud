@@ -56,14 +56,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateApiKey](https://cloud.tencent.com/document/api/628/45213) - This API is used to create an API key pair.
-* Create: [DisableApiKey](https://cloud.tencent.com/document/api/628/45209) - This API is used to disable an API key.
-* Read: [DescribeApiKeysStatus](https://cloud.tencent.com/document/api/628/45210) - This API is used to query the information of one or more API keys.
-* Update: [DisableApiKey](https://cloud.tencent.com/document/api/628/45209) - This API is used to disable an API key.
-* Update: [EnableApiKey](https://cloud.tencent.com/document/api/628/45208) - This API is used to enable a disabled API key.
-* Update: [UpdateApiKey](https://cloud.tencent.com/document/api/628/45207) - This API is used to update a created API key pair.
-* Delete: [DeleteApiKey](https://cloud.tencent.com/document/api/628/45212) - This API is used to delete an API key pair.
-* Delete: [DisableApiKey](https://cloud.tencent.com/document/api/628/45209) - This API is used to disable an API key.
+* Create: [CreateApiKey](https://cloud.tencent.com/document/api/628/45213)
+* Create: [DisableApiKey](https://cloud.tencent.com/document/api/628/45209)
+* Read: [DescribeApiKeysStatus](https://cloud.tencent.com/document/api/628/45210)
+* Update: [DisableApiKey](https://cloud.tencent.com/document/api/628/45209)
+* Update: [EnableApiKey](https://cloud.tencent.com/document/api/628/45208)
+* Update: [UpdateApiKey](https://cloud.tencent.com/document/api/628/45207)
+* Delete: [DeleteApiKey](https://cloud.tencent.com/document/api/628/45212)
+* Delete: [DisableApiKey](https://cloud.tencent.com/document/api/628/45209)
 
 ## Import
 

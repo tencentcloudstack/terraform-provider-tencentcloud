@@ -56,7 +56,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526) - This API is used to obtain the detailed attribute information of a Secret.
-* Read: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522) - For user-defined credentials, this API is used to get the plaintext information of a credential by specifying the credential name and version.
-* Read: [ListSecretVersionIds](https://cloud.tencent.com/document/api/1140/40520) - This API is used to obtain list of versions of a Secret.
+* Read: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526)
+* Read: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522)
+* Read: [ListSecretVersionIds](https://cloud.tencent.com/document/api/1140/40520)
 

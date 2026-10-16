@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetTableColumns](https://cloud.tencent.com/document/api/1267/123995) - This API is used to obtain the list of all fields in a table.
+* Read: [GetTableColumns](https://cloud.tencent.com/document/api/1267/123995)
 

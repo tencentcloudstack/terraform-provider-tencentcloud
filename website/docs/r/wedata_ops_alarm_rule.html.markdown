@@ -154,8 +154,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateOpsAlarmRule](https://cloud.tencent.com/document/api/1267/123591) - This API is used to set alarm rules.
-* Read: [GetOpsAlarmRule](https://cloud.tencent.com/document/api/1267/123588) - This API is used to query alert rule information based on alarm rule id or name.
+* Create: [CreateOpsAlarmRule](https://cloud.tencent.com/document/api/1267/123591)
+* Read: [GetOpsAlarmRule](https://cloud.tencent.com/document/api/1267/123588)
 * Update: [UpdateOpsAlarmRule](https://cloud.tencent.com/document/api/1267/123565)
 * Delete: [DeleteOpsAlarmRule](https://cloud.tencent.com/document/api/1267/123590)
 

@@ -54,9 +54,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateOrgServiceAssign](https://cloud.tencent.com/document/api/850/109802) - This API is used to add a delegated admin of the organization service.
-* Read: [ListOrgServiceAssignMember](https://cloud.tencent.com/document/api/850/109803) - This API is used to obtain the list of delegated admins of the organization service.
-* Delete: [DeleteOrgServiceAssign](https://cloud.tencent.com/document/api/850/109801) - This API is used to delete a delegated admin of the organization service.
+* Create: [CreateOrgServiceAssign](https://cloud.tencent.com/document/api/850/109802)
+* Read: [ListOrgServiceAssignMember](https://cloud.tencent.com/document/api/850/109803)
+* Delete: [DeleteOrgServiceAssign](https://cloud.tencent.com/document/api/850/109801)
 
 ## Import
 

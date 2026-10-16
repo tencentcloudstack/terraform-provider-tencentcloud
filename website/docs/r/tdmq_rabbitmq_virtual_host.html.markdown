@@ -76,10 +76,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRabbitMQVirtualHost](https://cloud.tencent.com/document/api/1179/90854) - This API is used to create a TDMQ for RabbitMQ vhost.
-* Read: [DescribeRabbitMQVirtualHost](https://cloud.tencent.com/document/api/1179/93455) - This API is used to query the list of TDMQ for RabbitMQ vhosts.
-* Update: [ModifyRabbitMQVirtualHost](https://cloud.tencent.com/document/api/1179/93453) - This API is used to modify a TDMQ for RabbitMQ vhost.
-* Delete: [DeleteRabbitMQVirtualHost](https://cloud.tencent.com/document/api/1179/93457) - This API is used to delete a TDMQ for RabbitMQ vhost.
+* Create: [CreateRabbitMQVirtualHost](https://cloud.tencent.com/document/api/1179/90854)
+* Read: [DescribeRabbitMQVirtualHost](https://cloud.tencent.com/document/api/1179/93455)
+* Update: [ModifyRabbitMQVirtualHost](https://cloud.tencent.com/document/api/1179/93453)
+* Delete: [DeleteRabbitMQVirtualHost](https://cloud.tencent.com/document/api/1179/93457)
 
 ## Import
 

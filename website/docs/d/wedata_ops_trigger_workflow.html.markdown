@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetOpsTriggerWorkflow](https://cloud.tencent.com/document/api/1267/127219) - Query workflow task details.
+* Read: [GetOpsTriggerWorkflow](https://cloud.tencent.com/document/api/1267/127219)
 

@@ -72,10 +72,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDirectConnect](https://www.tencentcloud.com/document/product/216/37478) - This API is used to apply for a connection.
-* Read: [DescribeDirectConnects](https://www.tencentcloud.com/document/product/216/35330) - This API is used to query the list of connections.
-* Update: [ModifyDirectConnectAttribute](https://www.tencentcloud.com/document/product/216/37475) - This API is used to modify connection attributes.
-* Delete: [DeleteDirectConnect](https://www.tencentcloud.com/document/product/216/37477) - This API is used to delete a connection.
+* Create: [CreateDirectConnect](https://cloud.tencent.com/document/api/216/34829)
+* Read: [DescribeDirectConnects](https://cloud.tencent.com/document/api/216/34826)
+* Update: [ModifyDirectConnectAttribute](https://cloud.tencent.com/document/api/216/34825)
+* Delete: [DeleteDirectConnect](https://cloud.tencent.com/document/api/216/34828)
 
 ## Import
 

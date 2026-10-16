@@ -38,10 +38,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRecordGroup](https://cloud.tencent.com/document/api/1427/83227) - This API is used to add a record group.
-* Read: [DescribeRecordGroupList](https://cloud.tencent.com/document/api/1427/83225) - This API is used to query the list of DNS record groups.
-* Update: [ModifyRecordGroup](https://cloud.tencent.com/document/api/1427/83224) - This API is used to modify a record group.
-* Delete: [DeleteRecordGroup](https://cloud.tencent.com/document/api/1427/83226) - This API is used to delete a record group.
+* Create: [CreateRecordGroup](https://cloud.tencent.com/document/api/1427/83227)
+* Read: [DescribeRecordGroupList](https://cloud.tencent.com/document/api/1427/83225)
+* Update: [ModifyRecordGroup](https://cloud.tencent.com/document/api/1427/83224)
+* Delete: [DeleteRecordGroup](https://cloud.tencent.com/document/api/1427/83226)
 
 ## Import
 

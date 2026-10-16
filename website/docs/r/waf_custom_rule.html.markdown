@@ -212,12 +212,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddCustomRule](https://www.tencentcloud.com/document/product/627/64553) - Add access control (from custom policy)
-* Create: [ModifyCustomRuleStatus](https://www.tencentcloud.com/document/product/627/64512) - Enable or disable access control (from custom policy)
-* Read: [DescribeCustomRuleList](https://www.tencentcloud.com/document/product/627/64523) - Obtain the access control policy list in the protection configuration
-* Update: [ModifyCustomRule](https://www.tencentcloud.com/document/product/627/64513) - This API is used to edit a custom rule.
-* Update: [ModifyCustomRuleStatus](https://www.tencentcloud.com/document/product/627/64512) - Enable or disable access control (from custom policy)
-* Delete: [DeleteCustomRule](https://www.tencentcloud.com/document/product/627/64550)
+* Create: [AddCustomRule](https://cloud.tencent.com/document/api/627/53608)
+* Create: [ModifyCustomRuleStatus](https://cloud.tencent.com/document/api/627/53599)
+* Read: [DescribeCustomRuleList](https://cloud.tencent.com/document/api/627/97443)
+* Update: [ModifyCustomRule](https://cloud.tencent.com/document/api/627/97442)
+* Update: [ModifyCustomRuleStatus](https://cloud.tencent.com/document/api/627/53599)
+* Delete: [DeleteCustomRule](https://cloud.tencent.com/document/api/627/97444)
 
 ## Import
 

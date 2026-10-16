@@ -46,10 +46,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddLiveWatermark](https://www.tencentcloud.com/document/product/267/30826) - After a watermark is added and a watermark ID is successfully returned, you need to call the [CreateLiveWatermarkRule](https://intl.cloud.tencent.com/document/product/267/32629?from_cn_redirect=1) API to bind the watermark ID to a stream.
-* Read: [DescribeLiveWatermark](https://www.tencentcloud.com/document/product/267/30822) - This API is used to get the information of a single watermark.
-* Update: [UpdateLiveWatermark](https://www.tencentcloud.com/document/product/267/30818) - This API is used to update a watermark.
-* Delete: [DeleteLiveWatermark](https://www.tencentcloud.com/document/product/267/30824) - This API is used to delete a watermark.
+* Create: [AddLiveWatermark](https://cloud.tencent.com/document/api/267/30154)
+* Read: [DescribeLiveWatermark](https://cloud.tencent.com/document/api/267/32627)
+* Update: [UpdateLiveWatermark](https://cloud.tencent.com/document/api/267/30150)
+* Delete: [DeleteLiveWatermark](https://cloud.tencent.com/document/api/267/30153)
 
 ## Import
 

@@ -105,5 +105,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAdaptiveDynamicStreamingTemplates](https://www.tencentcloud.com/document/product/266/34152) - This API is used to query adaptive bitrate streaming templates, and the pagination query is supported based on conditions.
+* Read: [DescribeAdaptiveDynamicStreamingTemplates](https://cloud.tencent.com/document/api/266/38084)
 

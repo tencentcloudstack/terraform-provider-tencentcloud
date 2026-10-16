@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetOpsTaskCode](https://cloud.tencent.com/document/api/1267/123585) - This API is used to retrieve task code.
+* Read: [GetOpsTaskCode](https://cloud.tencent.com/document/api/1267/123585)
 

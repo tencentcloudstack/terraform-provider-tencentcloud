@@ -46,12 +46,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateOIDCConfig](https://www.tencentcloud.com/document/product/598/47115) - This API is used to create role OIDC configurations.
-* Create: [DescribeOIDCConfig](https://www.tencentcloud.com/document/product/598/47113) - This API is used to query role OIDC configurations.
-* Read: [DescribeOIDCConfig](https://www.tencentcloud.com/document/product/598/47113) - This API is used to query role OIDC configurations.
-* Update: [DescribeOIDCConfig](https://www.tencentcloud.com/document/product/598/47113) - This API is used to query role OIDC configurations.
-* Update: [UpdateOIDCConfig](https://www.tencentcloud.com/document/product/598/47112) - This API is used to modify role OIDC configurations.
-* Delete: [DeleteOIDCConfig](https://www.tencentcloud.com/document/product/598/47114) - This API is used to delete OIDC IdPs.
+* Create: [CreateOIDCConfig](https://cloud.tencent.com/document/api/598/73473)
+* Create: [DescribeOIDCConfig](https://cloud.tencent.com/document/api/598/73471)
+* Read: [DescribeOIDCConfig](https://cloud.tencent.com/document/api/598/73471)
+* Update: [DescribeOIDCConfig](https://cloud.tencent.com/document/api/598/73471)
+* Update: [UpdateOIDCConfig](https://cloud.tencent.com/document/api/598/73470)
+* Delete: [DeleteOIDCConfig](https://cloud.tencent.com/document/api/598/73472)
 
 ## Import
 

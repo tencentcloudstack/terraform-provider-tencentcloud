@@ -79,13 +79,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRoutes](https://www.tencentcloud.com/document/product/215/16724) - This API is used to create routes.
-* Create: [DescribeRouteTables](https://www.tencentcloud.com/document/product/215/15763) - This API is used to query route tables.
-* Create: [DisableRoutes](https://www.tencentcloud.com/document/product/215/68967) - This API is used to disable enabled subnet routes.
-* Read: [DescribeRouteTables](https://www.tencentcloud.com/document/product/215/15763) - This API is used to query route tables.
-* Update: [DisableRoutes](https://www.tencentcloud.com/document/product/215/68967) - This API is used to disable enabled subnet routes.
-* Update: [EnableRoutes](https://www.tencentcloud.com/document/product/215/68966) - This API is used to enable disabled subnet routes.
-* Delete: [DeleteRoutes](https://www.tencentcloud.com/document/product/215/16725) - This API (DeleteRoutes) is used to delete routing policies in batches from a route table.
+* Create: [CreateRoutes](https://cloud.tencent.com/document/api/215/16724)
+* Create: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763)
+* Create: [DisableRoutes](https://cloud.tencent.com/document/api/215/19216)
+* Read: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763)
+* Update: [DisableRoutes](https://cloud.tencent.com/document/api/215/19216)
+* Update: [EnableRoutes](https://cloud.tencent.com/document/api/215/19215)
+* Delete: [DeleteRoutes](https://cloud.tencent.com/document/api/215/16725)
 
 ## Import
 

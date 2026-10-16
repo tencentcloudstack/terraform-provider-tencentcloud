@@ -64,13 +64,13 @@ The `data` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddEnterpriseSecurityGroupRules](https://cloud.tencent.com/document/api/1132/64234) - This API is used to create enterprise security group rules (new).
+* Create: [AddEnterpriseSecurityGroupRules](https://cloud.tencent.com/document/api/1132/64234)
 * Create: [DescribeEnterpriseSGRuleProgress](https://cloud.tencent.com/document/api/1132/93416)
 * Read: [DescribeEnterpriseSecurityGroupRuleList](https://cloud.tencent.com/document/api/1132/110987)
 * Update: [DescribeEnterpriseSGRuleProgress](https://cloud.tencent.com/document/api/1132/93416)
-* Update: [ModifyEnterpriseSecurityGroupRule](https://cloud.tencent.com/document/api/1132/86971) - This API is used to modify a new enterprise security group rule.
+* Update: [ModifyEnterpriseSecurityGroupRule](https://cloud.tencent.com/document/api/1132/86971)
 * Delete: [DescribeEnterpriseSGRuleProgress](https://cloud.tencent.com/document/api/1132/93416)
-* Delete: [RemoveEnterpriseSecurityGroupRule](https://cloud.tencent.com/document/api/1132/64232) - This API is used to delete enterprise security group rules (new).
+* Delete: [RemoveEnterpriseSecurityGroupRule](https://cloud.tencent.com/document/api/1132/64232)
 
 ## Import
 

@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeFlow](https://www.tencentcloud.com/document/product/237/16177)
+* Read: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177)
 

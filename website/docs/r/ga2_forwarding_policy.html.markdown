@@ -85,13 +85,13 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateForwardingPolicy](https://cloud.tencent.com/document/api/1817/132229) - Create a layer-7 forwarding policy.
-* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
-* Read: [DescribeForwardingPolicy](https://cloud.tencent.com/document/api/1817/132227) - View a layer-7 forwarding policy
-* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
-* Update: [ModifyForwardingPolicy](https://cloud.tencent.com/document/api/1817/132226) - Modify a layer-7 forwarding policy
-* Delete: [DeleteForwardingPolicy](https://cloud.tencent.com/document/api/1817/132228) - Delete a layer-7 forwarding policy.
-* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
+* Create: [CreateForwardingPolicy](https://cloud.tencent.com/document/api/1817/132229)
+* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942)
+* Read: [DescribeForwardingPolicy](https://cloud.tencent.com/document/api/1817/132227)
+* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942)
+* Update: [ModifyForwardingPolicy](https://cloud.tencent.com/document/api/1817/132226)
+* Delete: [DeleteForwardingPolicy](https://cloud.tencent.com/document/api/1817/132228)
+* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942)
 
 ## Import
 

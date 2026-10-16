@@ -111,11 +111,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RegisterTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111687) - This API is used to register servers to a target group.This is an async API. After the API return succeeds, you can call the DescribeTaskStatus API with the returned RequestID as an input parameter to check whether this task is successful.
-* Read: [DescribeTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111693) - This API is used to obtain information on servers bound to a target group.
-* Update: [DeregisterTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111695) - This API is used to unbind a server from a target group.
-* Update: [RegisterTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111687) - This API is used to register servers to a target group.This is an async API. After the API return succeeds, you can call the DescribeTaskStatus API with the returned RequestID as an input parameter to check whether this task is successful.
-* Delete: [DeregisterTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111695) - This API is used to unbind a server from a target group.
+* Create: [RegisterTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111687)
+* Read: [DescribeTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111693)
+* Update: [DeregisterTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111695)
+* Update: [RegisterTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111687)
+* Delete: [DeregisterTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111695)
 
 ## Import
 

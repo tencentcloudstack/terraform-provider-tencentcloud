@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRotationHistory](https://cloud.tencent.com/document/api/1140/58263) - This API is used to query the historical versions of a rotated credential.
+* Read: [DescribeRotationHistory](https://cloud.tencent.com/document/api/1140/58263)
 

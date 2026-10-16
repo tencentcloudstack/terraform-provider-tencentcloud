@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListSchema](https://cloud.tencent.com/document/api/1267/123989) - This API is used to obtain the asset database Schema information.
+* Read: [ListSchema](https://cloud.tencent.com/document/api/1267/123989)
 

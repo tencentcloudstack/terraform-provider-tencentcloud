@@ -76,10 +76,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNoticeContent](https://www.tencentcloud.com/document/product/614/80579) - This API is used to create notification content.
-* Read: [DescribeNoticeContents](https://www.tencentcloud.com/document/product/614/80575) - This API is used to obtain the notification content list.
-* Update: [ModifyNoticeContent](https://www.tencentcloud.com/document/product/614/80573) - This API is used to modify notification content configuration.
-* Delete: [DeleteNoticeContent](https://www.tencentcloud.com/document/product/614/80577) - This API is used to delete notification content configuration.
+* Create: [CreateNoticeContent](https://cloud.tencent.com/document/api/614/111716)
+* Read: [DescribeNoticeContents](https://cloud.tencent.com/document/api/614/111714)
+* Update: [ModifyNoticeContent](https://cloud.tencent.com/document/api/614/111713)
+* Delete: [DeleteNoticeContent](https://cloud.tencent.com/document/api/614/111715)
 
 ## Import
 

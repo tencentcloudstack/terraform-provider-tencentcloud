@@ -55,11 +55,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribePrefetchOriginLimit](https://cloud.tencent.com/document/api/1552/126842) - This API is used to query the origin speed limit. This feature is in closed beta testing.
-* Create: [ModifyPrefetchOriginLimit](https://cloud.tencent.com/document/api/1552/126841) - This API is used to configure the origin speed limit. This feature is in beta test.
-* Read: [DescribePrefetchOriginLimit](https://cloud.tencent.com/document/api/1552/126842) - This API is used to query the origin speed limit. This feature is in closed beta testing.
-* Update: [ModifyPrefetchOriginLimit](https://cloud.tencent.com/document/api/1552/126841) - This API is used to configure the origin speed limit. This feature is in beta test.
-* Delete: [ModifyPrefetchOriginLimit](https://cloud.tencent.com/document/api/1552/126841) - This API is used to configure the origin speed limit. This feature is in beta test.
+* Create: [DescribePrefetchOriginLimit](https://cloud.tencent.com/document/api/1552/126842)
+* Create: [ModifyPrefetchOriginLimit](https://cloud.tencent.com/document/api/1552/126841)
+* Read: [DescribePrefetchOriginLimit](https://cloud.tencent.com/document/api/1552/126842)
+* Update: [ModifyPrefetchOriginLimit](https://cloud.tencent.com/document/api/1552/126841)
+* Delete: [ModifyPrefetchOriginLimit](https://cloud.tencent.com/document/api/1552/126841)
 
 ## Import
 

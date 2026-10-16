@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBSwitchRecords](https://www.tencentcloud.com/document/product/236/17490) - This API (DescribeDBSwitchRecords) is used to query the instance switch records.
+* Read: [DescribeDBSwitchRecords](https://cloud.tencent.com/document/api/236/17490)
 

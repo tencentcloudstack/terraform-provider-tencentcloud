@@ -49,5 +49,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRegionAndPrice](https://www.tencentcloud.com/document/product/608/33050) - This API (DescribeRegionAndPrice) is used to obtain the origin server regions and the bandwidth price gradient.
+* Read: [DescribeRegionAndPrice](https://cloud.tencent.com/document/api/608/37017)
 

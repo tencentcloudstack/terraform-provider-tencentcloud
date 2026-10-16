@@ -165,17 +165,24 @@ resource、data source、action 与 ephemeral resource 的文档均包含一个�
 数据由两部分合成：
 
 1. **静态分析**（`apiref.go`）：用 `go/ast` 从生命周期函数出发，追踪 service 方法调用链（含递归展开、goroutine 委托、包级辅助函数、局部 client 变量），收集 `UseXxxClient().Action(...)` 调用；client accessor 名通过 `connectivity/client.go` 的 SDK import 路径映射为目录产品名。
-2. **API 目录**（`data/api-actions.json` 快照）：腾讯云公开 API 目录的精简快照，提供 `(product, action) -> 中文名 + 文档 URL` 的查表。
+2. **API 目录**：腾讯云公开 API 目录（`api-all-actions.json`），提供 `(product, action) -> 文档 URL` 的查表。SDK 直接使用 vendor 目录下的 `github.com/tencentcloud/tencentcloud-sdk-go`，不依赖任何外部仓库。
 
-**完全离线**：`make doc` 只读取仓库内的两个快照（`data/api-actions.json` 目录、`data/api-actions-en.json` 英文描述与文档链接），不发起任何网络请求，构建结果可复现。快照通过以下命令手动刷新：
+**每次在线拉取**：`make doc` 每次运行都会从腾讯云公开端点下载最新的 API 目录（约 6 MB）并原子重写 `gendoc/data/api-actions.json` 快照，生成的文档链接始终与云端文档保持同步。下载失败时（如离线环境）自动回退到仓库内置快照，构建不会中断。
+
+**渲染格式**：API Reference 只列出接口名称与对应的文档链接，不含接口描述，例如：
 
 ```
-make doc-refresh        # 一次性刷新全部快照（API 目录 + 英文描述，~11MB 下载）
+* Create: [CreateVpc](https://cloud.tencent.com/document/api/215/15800)
+```
+
+目录中未提供文档链接的接口回退到国际站搜索页：
+
+```
+https://www.tencentcloud.com/search/?wd=<ActionName>&type=document&lang=en
 ```
 
 覆盖率：resource 95.7%（1302/1360）、data source 97.3%（923/949）、action 与 ephemeral 全覆盖；未覆盖项均为 S3 兼容 REST 接口（cos/ci）、已下线产品（dayu）、目录未收录的新版本 API，或**同名方法跨服务歧义**（分析器宁缺毋滥，跳过不确定的映射），可用下述人工段兜底。
 
-**英文描述与文档链接**：API Reference 中的描述为英文（取自官方国际版 SDK [tencentcloud-sdk-go-intl-en](https://github.com/TencentCloud/tencentcloud-sdk-go-intl-en) 的方法注释），生成的文档不会包含中文。intl SDK 未覆盖的条目（约 20%）降级为仅显示 Action 名与文档链接。刷新方式见下文 `make doc-refresh`。
 
 人工兑底：当静态分析无法覆盖（如 COS/CI 的 S3 兼容 REST API、目录未收录的老版本产品）或需要修正时，可在资源描述文件 `services/<product>/resource_tc_<name>.md` 中编写 "API" 段（位于正文与 "Example Usage" 之间），生成器会优先使用人工内容：
 
@@ -191,14 +198,7 @@ Example Usage
 ...
 ```
 
-快照刷新（暂未接入 CI，需手动）：
-
-```
-make doc-refresh        # 下载最新数据并重写 gendoc/data/*.json
-make doc                # 用新数据重新生成文档
-```
-
-`-refresh` 会从腾讯云公开端点下载 API 目录（约 6 MB）并从 GitHub 下载国际版 SDK tarball（约 6 MB），提取英文描述后原子重写 `data/` 下的三个快照。任一步骤失败时对应旧快照保持不变。刷新后建议检查 `git diff gendoc/data/` 确认变更合理，再随代码一并提交。
+快照随 `make doc` 自动更新（在线拉取成功时），无需手动刷新；离线运行时自动回退到仓库内置快照。
 
 ## 文档索引更新
 

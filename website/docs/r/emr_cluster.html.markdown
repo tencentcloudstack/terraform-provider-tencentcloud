@@ -328,18 +328,18 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstance](https://cloud.tencent.com/document/api/589/34261) - This API is used to create an EMR cluster.
-* Create: [DescribeInstances](https://cloud.tencent.com/document/api/589/34266) - This API is used to query cluster information.
-* Read: [DescribeClusterNodes](https://cloud.tencent.com/document/api/589/41707) - This API is used to query information of a cluster node.
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/589/34266) - This API is used to query cluster information.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [DescribeClusterFlowStatusDetail](https://cloud.tencent.com/document/api/589/107224) - This API is used to query the running status details of an EMR cluster task.
-* Update: [DescribeZones](https://www.tencentcloud.com/document/product/213/35071) - This API is used to query availability zones.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Update: [ModifyResourcesTags](https://cloud.tencent.com/document/api/589/96242) - This API is used to forcibly modify a tag.
-* Update: [ScaleOutInstance](https://cloud.tencent.com/document/api/589/34264) - This API is used to scale out nodes.
-* Update: [TerminateClusterNodes](https://cloud.tencent.com/document/api/589/90010) - This API is used to terminate a cluster node.
-* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/589/34266) - This API is used to query cluster information.
-* Delete: [OfflineIsolatedInstances](https://www.tencentcloud.com/document/product/236/34475) - This api is used to deactivate cloud database instances in quarantined state now. The instance Status for row operations must be quarantined state, such as instances with Status value 5 queried through the query instance list api.
-* Delete: [TerminateInstance](https://cloud.tencent.com/document/api/589/34260) - This API is used to terminate an EMR instance. It is supported only for the officially billed version of EMR.
+* Create: [CreateInstance](https://cloud.tencent.com/document/api/589/34261)
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/589/34266)
+* Read: [DescribeClusterNodes](https://cloud.tencent.com/document/api/589/41707)
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/589/34266)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [DescribeClusterFlowStatusDetail](https://cloud.tencent.com/document/api/589/107224)
+* Update: [DescribeZones](https://cloud.tencent.com/document/api/213/15707)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Update: [ModifyResourcesTags](https://cloud.tencent.com/document/api/589/96242)
+* Update: [ScaleOutInstance](https://cloud.tencent.com/document/api/589/34264)
+* Update: [TerminateClusterNodes](https://cloud.tencent.com/document/api/589/90010)
+* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/589/34266)
+* Delete: [OfflineIsolatedInstances](https://cloud.tencent.com/document/api/236/36197)
+* Delete: [TerminateInstance](https://cloud.tencent.com/document/api/589/34260)
 

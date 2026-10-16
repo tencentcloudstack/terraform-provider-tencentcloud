@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRumGroupLog](https://cloud.tencent.com/document/api/1464/85145) - This API is used to get the log aggregation information under a project.
+* Read: [DescribeRumGroupLog](https://cloud.tencent.com/document/api/1464/85145)
 

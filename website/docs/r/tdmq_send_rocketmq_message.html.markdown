@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SendRocketMQMessage](https://cloud.tencent.com/document/api/1179/94179) - This API is used to send messages through RocketMQ. It is only used for sending a small number of test messages from the console and does not provide SLA. Cloud API is subject to traffic throttling.
+* Create: [SendRocketMQMessage](https://cloud.tencent.com/document/api/1179/94179)
 

@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDedicatedClusterInstanceTypes](https://cloud.tencent.com/document/api/1346/73762) - This API is used to query instance types supported by the CDC.
+* Read: [DescribeDedicatedClusterInstanceTypes](https://cloud.tencent.com/document/api/1346/73762)
 

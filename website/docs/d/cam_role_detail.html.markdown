@@ -47,5 +47,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetRole](https://www.tencentcloud.com/document/product/598/33557) - This API (GetRole) is used to get the details of a specified role.
+* Read: [GetRole](https://cloud.tencent.com/document/api/598/36221)
 

@@ -68,12 +68,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95335) - This API is used to add Anti-DDoS access rate limit configurations.
-* Create: [DescribeListDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95311) - This API is used to get a list of Anti-DDoS access rate limit configurations.
-* Read: [DescribeListDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95311) - This API is used to get a list of Anti-DDoS access rate limit configurations.
-* Update: [ModifyDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95302) - This API is used to modify Anti-DDoS access rate limit configurations.
-* Delete: [DeleteDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95324) - This API is used to delete Anti-DDoS access rate limit configurations.
-* Delete: [DescribeListDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95311) - This API is used to get a list of Anti-DDoS access rate limit configurations.
+* Create: [CreateDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95335)
+* Create: [DescribeListDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95311)
+* Read: [DescribeListDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95311)
+* Update: [ModifyDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95302)
+* Delete: [DeleteDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95324)
+* Delete: [DescribeListDDoSSpeedLimitConfig](https://cloud.tencent.com/document/api/297/95311)
 
 ## Import
 

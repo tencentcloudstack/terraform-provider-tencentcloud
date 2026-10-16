@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBDiagHistory](https://cloud.tencent.com/document/api/1130/57787) - This API is used to get the list of instance diagnosis events.
+* Read: [DescribeDBDiagHistory](https://cloud.tencent.com/document/api/1130/57787)
 

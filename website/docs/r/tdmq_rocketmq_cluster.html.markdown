@@ -48,11 +48,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRocketMQCluster](https://cloud.tencent.com/document/api/1179/63429) - Create a RocketMQ cluster.
-* Create: [DescribeRocketMQCluster](https://cloud.tencent.com/document/api/1179/63422) - Query RocketMQ virtual cluster information.
-* Read: [DescribeRocketMQCluster](https://cloud.tencent.com/document/api/1179/63422) - Query RocketMQ virtual cluster information.
-* Update: [ModifyRocketMQCluster](https://cloud.tencent.com/document/api/1179/63417) - This API is used to modify the attributes of a RocketMQ cluster.
-* Delete: [DeleteRocketMQCluster](https://cloud.tencent.com/document/api/1179/63425) - This API is used to delete a RocketMQ cluster.
+* Create: [CreateRocketMQCluster](https://cloud.tencent.com/document/api/1179/63429)
+* Create: [DescribeRocketMQCluster](https://cloud.tencent.com/document/api/1179/63422)
+* Read: [DescribeRocketMQCluster](https://cloud.tencent.com/document/api/1179/63422)
+* Update: [ModifyRocketMQCluster](https://cloud.tencent.com/document/api/1179/63417)
+* Delete: [DeleteRocketMQCluster](https://cloud.tencent.com/document/api/1179/63425)
 
 ## Import
 

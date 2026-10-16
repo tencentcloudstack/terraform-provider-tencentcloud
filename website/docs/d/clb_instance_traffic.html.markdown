@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeLoadBalancerTraffic](https://www.tencentcloud.com/document/product/214/39109) - This API is used to query CLB instances with high traffic under the current account, and return the top 10 results. For queries using a sub-account, only the CLB instances authorized to the sub-account will be returned.
+* Read: [DescribeLoadBalancerTraffic](https://cloud.tencent.com/document/api/214/50774)
 

@@ -170,17 +170,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstance](https://cloud.tencent.com/document/api/1493/97868) - This API is used to create a RocketMQ 5.x cluster.
-* Create: [DescribeInstance](https://cloud.tencent.com/document/api/1493/97866) - This API is used to query RocketMQ 5.x cluster information.
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeInstance](https://cloud.tencent.com/document/api/1493/97866) - This API is used to query RocketMQ 5.x cluster information.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [DescribeInstance](https://cloud.tencent.com/document/api/1493/97866) - This API is used to query RocketMQ 5.x cluster information.
-* Update: [ModifyInstance](https://cloud.tencent.com/document/api/1493/97865) - This API is used to modify attributes of a TDMQ RocketMQ 5.x cluster. Only running clusters support this operation.
-* Update: [ModifyInstanceEndpoint](https://cloud.tencent.com/document/api/1493/115981) - This API is used to modify access points of a TDMQ RocketMQ 5.x cluster. Make sure that the access points exist before the operation.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Delete: [DeleteInstance](https://cloud.tencent.com/document/api/1493/97867) - This API is used to delete a TDMQ RocketMQ 5.x cluster. Topics, consumer groups, and roles in use should be deleted first.
-* Delete: [DescribeInstance](https://cloud.tencent.com/document/api/1493/97866) - This API is used to query RocketMQ 5.x cluster information.
+* Create: [CreateInstance](https://cloud.tencent.com/document/api/1493/97868)
+* Create: [DescribeInstance](https://cloud.tencent.com/document/api/1493/97866)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeInstance](https://cloud.tencent.com/document/api/1493/97866)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [DescribeInstance](https://cloud.tencent.com/document/api/1493/97866)
+* Update: [ModifyInstance](https://cloud.tencent.com/document/api/1493/97865)
+* Update: [ModifyInstanceEndpoint](https://cloud.tencent.com/document/api/1493/115981)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Delete: [DeleteInstance](https://cloud.tencent.com/document/api/1493/97867)
+* Delete: [DescribeInstance](https://cloud.tencent.com/document/api/1493/97866)
 
 ## Import
 

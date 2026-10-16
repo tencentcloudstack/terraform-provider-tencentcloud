@@ -46,9 +46,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePolicy](https://cloud.tencent.com/document/api/850/105318) - This API is used to create a special type of policy that can be attached to the enterprise organization Root node, enterprise department nodes, or enterprise member accounts.
-* Read: [DescribePolicy](https://cloud.tencent.com/document/api/850/105316) - This API is used to query policy details.
-* Read: [ListPolicies](https://cloud.tencent.com/document/api/850/105311) - This API is used to query and view the policy list data.
+* Create: [CreatePolicy](https://cloud.tencent.com/document/api/850/105318)
+* Read: [DescribePolicy](https://cloud.tencent.com/document/api/850/105316)
+* Read: [ListPolicies](https://cloud.tencent.com/document/api/850/105311)
 * Update: [UpdatePolicy](https://cloud.tencent.com/document/api/850/105305)
 * Delete: [DeletePolicy](https://cloud.tencent.com/document/api/850/105317)
 

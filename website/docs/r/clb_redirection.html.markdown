@@ -65,12 +65,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AutoRewrite](https://www.tencentcloud.com/document/product/214/33846) - An HTTPS:443 listener needs to be created first, along with a forwarding rule. When this API is called, an HTTP:80 listener will be created automatically if it did not exist and a forwarding rule corresponding to `Domains`
-* Create: [DescribeListeners](https://www.tencentcloud.com/document/product/214/33831) - This API is used to get the list of listeners by CLB ID, listener protocol, or listener port. If no filter is specified, all listeners for the CLB instance will be returned.
-* Create: [ManualRewrite](https://www.tencentcloud.com/document/product/214/33821) - After the original access address and the address to be redirected are configured manually, the system will automatically redirect requests made to the original access address to the target address of the corresponding path.
-* Read: [DescribeRewrite](https://www.tencentcloud.com/document/product/214/33829) - This API (DescribeRewrite) is used to query the redirection relationship between the forwarding rules of a CLB instance by instance ID.
-* Delete: [DeleteRewrite](https://www.tencentcloud.com/document/product/214/33836) - This API (DeleteRewrite) is used to delete the redirection relationship between the specified forwarding rules.
-* Delete: [DescribeRewrite](https://www.tencentcloud.com/document/product/214/33829) - This API (DescribeRewrite) is used to query the redirection relationship between the forwarding rules of a CLB instance by instance ID.
+* Create: [AutoRewrite](https://cloud.tencent.com/document/api/214/34901)
+* Create: [DescribeListeners](https://cloud.tencent.com/document/api/214/30686)
+* Create: [ManualRewrite](https://cloud.tencent.com/document/api/214/34897)
+* Read: [DescribeRewrite](https://cloud.tencent.com/document/api/214/34899)
+* Delete: [DeleteRewrite](https://cloud.tencent.com/document/api/214/34900)
+* Delete: [DescribeRewrite](https://cloud.tencent.com/document/api/214/34899)
 
 ## Import
 

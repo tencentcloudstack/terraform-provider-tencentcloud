@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListBlackEmailAddress](https://cloud.tencent.com/document/api/1288/51031) - The API is used to get blocklisted addresses. In the case of a hard bounce, Tencent Cloud will blocklist the recipient address and do not allow any user to send emails to this address.
+* Read: [ListBlackEmailAddress](https://cloud.tencent.com/document/api/1288/51031)
 

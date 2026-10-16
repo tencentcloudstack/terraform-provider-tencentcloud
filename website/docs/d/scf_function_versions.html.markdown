@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListVersionByFunction](https://www.tencentcloud.com/document/product/583/34416) - This API is used to query the function version based on the input parameters.
+* Read: [ListVersionByFunction](https://cloud.tencent.com/document/api/583/37162)
 

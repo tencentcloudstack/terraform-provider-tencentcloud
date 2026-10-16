@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyLaunchTemplateDefaultVersion](https://www.tencentcloud.com/document/product/213/45356) - This API is used to modify the default version of the instance launch template.
-* Read: [DescribeLaunchTemplateVersions](https://www.tencentcloud.com/document/product/213/45358) - This API is used to query the information of instance launch template versions.
-* Update: [ModifyLaunchTemplateDefaultVersion](https://www.tencentcloud.com/document/product/213/45356) - This API is used to modify the default version of the instance launch template.
+* Create: [ModifyLaunchTemplateDefaultVersion](https://cloud.tencent.com/document/api/213/66321)
+* Read: [DescribeLaunchTemplateVersions](https://cloud.tencent.com/document/api/213/66323)
+* Update: [ModifyLaunchTemplateDefaultVersion](https://cloud.tencent.com/document/api/213/66321)
 
 ## Import
 

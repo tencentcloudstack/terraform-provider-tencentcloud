@@ -98,10 +98,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAIRecognitionTemplate](https://cloud.tencent.com/document/api/862/39436) - This API is used to create a user-defined Content Recognition template. Up to 50 templates can be created.
-* Read: [DescribeAIRecognitionTemplates](https://cloud.tencent.com/document/api/862/39432) - This API is used to get the list of content recognition templates based on unique template ID. The return result includes all eligible custom and preset content recognition templates.
-* Update: [ModifyAIRecognitionTemplate](https://cloud.tencent.com/document/api/862/39430) - This API is used to modify a user-defined Content Recognition template.
-* Delete: [DeleteAIRecognitionTemplate](https://cloud.tencent.com/document/api/862/39434) - This API is used to delete a user-defined Content Recognition template.
+* Create: [CreateAIRecognitionTemplate](https://cloud.tencent.com/document/api/862/39436)
+* Read: [DescribeAIRecognitionTemplates](https://cloud.tencent.com/document/api/862/39432)
+* Update: [ModifyAIRecognitionTemplate](https://cloud.tencent.com/document/api/862/39430)
+* Delete: [DeleteAIRecognitionTemplate](https://cloud.tencent.com/document/api/862/39434)
 
 ## Import
 

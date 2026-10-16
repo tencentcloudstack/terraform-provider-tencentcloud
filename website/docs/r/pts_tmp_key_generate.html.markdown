@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [GenerateTmpKey](https://cloud.tencent.com/document/api/1484/78064) - This API is used to generate temporary COS credentials.
+* Create: [GenerateTmpKey](https://cloud.tencent.com/document/api/1484/78064)
 

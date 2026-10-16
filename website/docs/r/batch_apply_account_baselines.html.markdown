@@ -50,5 +50,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BatchApplyAccountBaselines](https://cloud.tencent.com/document/api/1708/110434) - This API is used to apply baselines to existing accounts in batches.
+* Create: [BatchApplyAccountBaselines](https://cloud.tencent.com/document/api/1708/110434)
 

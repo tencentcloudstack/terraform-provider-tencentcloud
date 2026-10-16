@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListEmailIdentities](https://cloud.tencent.com/document/api/1288/51045) - This API is used to get the list of sender domains, including verified and unverified domains.
+* Read: [ListEmailIdentities](https://cloud.tencent.com/document/api/1288/51045)
 

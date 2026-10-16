@@ -100,5 +100,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RenewInstances](https://www.tencentcloud.com/document/product/213/72769) - This API is used to renew annual and monthly subscription instances.
+* Create: [RenewInstances](https://cloud.tencent.com/document/api/213/15740)
 

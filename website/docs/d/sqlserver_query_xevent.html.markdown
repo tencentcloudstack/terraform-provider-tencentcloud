@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeXEvents](https://www.tencentcloud.com/document/product/238/54814) - This API is used to query the list of extended events.
+* Read: [DescribeXEvents](https://cloud.tencent.com/document/api/238/90298)
 

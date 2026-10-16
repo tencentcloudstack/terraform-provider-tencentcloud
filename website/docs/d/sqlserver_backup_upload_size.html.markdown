@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBackupUploadSize](https://www.tencentcloud.com/document/product/238/39837) - This API is used to query the size of uploaded backup files. It is valid if the backup file type is `COS_UPLOAD` (the file is stored in COS).
+* Read: [DescribeBackupUploadSize](https://cloud.tencent.com/document/api/238/53187)
 

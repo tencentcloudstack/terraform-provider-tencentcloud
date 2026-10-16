@@ -61,5 +61,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribePulsarProInstanceDetail](https://cloud.tencent.com/document/api/1179/90377) - This API is used to obtain the information of a TDMQ for Pulsar pro cluster instance.
+* Read: [DescribePulsarProInstanceDetail](https://cloud.tencent.com/document/api/1179/90377)
 

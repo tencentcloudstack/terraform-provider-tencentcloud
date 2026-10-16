@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListLayerVersions](https://www.tencentcloud.com/document/product/583/36318) - This API is used to get the information of all versions of a specified layer.
+* Read: [ListLayerVersions](https://cloud.tencent.com/document/api/583/41385)
 

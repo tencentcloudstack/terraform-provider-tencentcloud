@@ -134,9 +134,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCloudNativeAPIGatewayRoute](https://cloud.tencent.com/document/api/1364/94853) - This API is used to create a cloud-native gateway route.
-* Read: [DescribeCloudNativeAPIGatewayRoutes](https://cloud.tencent.com/document/api/1364/94842) - Query the routing list of the cloud-native gateway
-* Update: [DescribeCloudNativeAPIGatewayRoutes](https://cloud.tencent.com/document/api/1364/94842) - Query the routing list of the cloud-native gateway
-* Update: [ModifyCloudNativeAPIGatewayRoute](https://cloud.tencent.com/document/api/1364/94837) - This API is used to modify a cloud-native gateway route.
-* Delete: [DeleteCloudNativeAPIGatewayRoute](https://cloud.tencent.com/document/api/1364/94848) - Delete a cloud-native gateway route
+* Create: [CreateCloudNativeAPIGatewayRoute](https://cloud.tencent.com/document/api/1364/94853)
+* Read: [DescribeCloudNativeAPIGatewayRoutes](https://cloud.tencent.com/document/api/1364/94842)
+* Update: [DescribeCloudNativeAPIGatewayRoutes](https://cloud.tencent.com/document/api/1364/94842)
+* Update: [ModifyCloudNativeAPIGatewayRoute](https://cloud.tencent.com/document/api/1364/94837)
+* Delete: [DeleteCloudNativeAPIGatewayRoute](https://cloud.tencent.com/document/api/1364/94848)
 

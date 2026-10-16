@@ -36,6 +36,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeSyncJobs](https://www.tencentcloud.com/document/product/571/51793) - This API is used to query the information of a sync task.
-* Create: [IsolateSyncJob](https://www.tencentcloud.com/document/product/571/51791) - This API is used to isolate a sync task. After the task is isolated, you can call the `DescribeSyncJobs` API to query its status, call `RecoverSyncJob` to recover it, or directly delete it.
+* Create: [DescribeSyncJobs](https://cloud.tencent.com/document/api/571/82103)
+* Create: [IsolateSyncJob](https://cloud.tencent.com/document/api/571/82101)
 

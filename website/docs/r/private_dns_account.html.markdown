@@ -59,7 +59,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrivateDNSAccount](https://cloud.tencent.com/document/api/1338/64976) - This API is used to create a Private DNS account.
-* Read: [DescribePrivateDNSAccountList](https://cloud.tencent.com/document/api/1338/61417) - This API is used to get the list of Private DNS accounts.
+* Create: [CreatePrivateDNSAccount](https://cloud.tencent.com/document/api/1338/64976)
+* Read: [DescribePrivateDNSAccountList](https://cloud.tencent.com/document/api/1338/61417)
 * Delete: [DeletePrivateDNSAccount](https://cloud.tencent.com/document/api/1338/64975)
 

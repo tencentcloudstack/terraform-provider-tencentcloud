@@ -1,10 +1,11 @@
 package main
 
-// catalog.go — API catalog loading from the bundled snapshots.
+// catalog.go — API catalog loading.
 //
-// Doc generation is fully offline: 'make doc' reads only the embedded
-// snapshots. Snapshot freshness is maintained explicitly via
-// 'make doc-refresh', which re-downloads the upstream catalogs.
+// 'make doc' fetches TencentCloud's public API catalog live on every run
+// and rewrites the bundled snapshot, so the generated doc links always
+// track the current cloud docs. When the fetch fails (e.g. offline), the
+// embedded snapshot (gendoc/data/api-actions.json) is used as a fallback.
 
 import (
 	"embed"
@@ -21,30 +22,36 @@ type catalog struct {
 	actionIdx map[string]apiAction
 }
 
-// loadCatalog returns the embedded snapshot catalog. Doc generation is
-// fully offline: action URLs and English descriptions both come from the
-// bundled snapshots, which are refreshed explicitly via 'make doc-refresh'.
+// loadCatalog returns the API catalog: live data when the public endpoint
+// is reachable (the snapshot is refreshed in the same pass), otherwise the
+// embedded snapshot.
 func loadCatalog() *catalog {
-	idx, err := loadSnapshotCatalog()
+	actions, err := refreshCatalog()
 	if err != nil {
-		message("[WARN]bundled snapshot unavailable (%v); API Reference sections will be empty\n", err)
-		return &catalog{actionIdx: map[string]apiAction{}}
+		message("[WARN]live API catalog unavailable (%v); falling back to the embedded snapshot\n", err)
+		actions, err = loadSnapshotCatalog()
+		if err != nil {
+			message("[WARN]bundled snapshot unavailable (%v); API Reference sections will be empty\n", err)
+			return &catalog{actionIdx: map[string]apiAction{}}
+		}
+		return &catalog{actionIdx: buildActionIndex(actions)}
 	}
-	return &catalog{actionIdx: idx}
+	message("[SUCC.]live API catalog: %d actions (snapshot refreshed)\n", len(actions))
+	return &catalog{actionIdx: buildActionIndex(actions)}
 }
 
 // loadSnapshotCatalogOnly returns a snapshot-backed catalog, never touching
 // the network. Used by the offline probe mode.
 func loadSnapshotCatalogOnly() *catalog {
-	idx, err := loadSnapshotCatalog()
+	actions, err := loadSnapshotCatalog()
 	if err != nil {
 		return &catalog{actionIdx: map[string]apiAction{}}
 	}
-	return &catalog{actionIdx: idx}
+	return &catalog{actionIdx: buildActionIndex(actions)}
 }
 
 // loadSnapshotCatalog builds the lookup index from the embedded snapshot.
-func loadSnapshotCatalog() (map[string]apiAction, error) {
+func loadSnapshotCatalog() ([]apiAction, error) {
 	raw, err := apiActionsFS.ReadFile("data/api-actions.json")
 	if err != nil {
 		return nil, fmt.Errorf("read embedded api-actions.json: %w", err)
@@ -53,7 +60,7 @@ func loadSnapshotCatalog() (map[string]apiAction, error) {
 	if err := json.Unmarshal(raw, &actions); err != nil {
 		return nil, fmt.Errorf("parse api-actions.json: %w", err)
 	}
-	return buildActionIndex(actions), nil
+	return actions, nil
 }
 
 func buildActionIndex(actions []apiAction) map[string]apiAction {

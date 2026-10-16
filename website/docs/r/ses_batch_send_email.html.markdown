@@ -85,5 +85,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BatchSendEmail](https://cloud.tencent.com/document/api/1288/63481) - This API is used to send a TEXT or HTML email to multiple recipients at a time for marketing or notification purposes. By default, you can send emails using a template only.
+* Create: [BatchSendEmail](https://cloud.tencent.com/document/api/1288/63481)
 

@@ -48,5 +48,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeProxiesStatus](https://www.tencentcloud.com/document/product/608/33100) - This API (DescribeProxiesStatus) is used to query the connection status list.
+* Read: [DescribeProxiesStatus](https://cloud.tencent.com/document/api/608/36962)
 

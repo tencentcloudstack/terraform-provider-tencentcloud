@@ -160,22 +160,22 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDisks](https://www.tencentcloud.com/document/product/362/16312) - This API is used to create cloud disks.
-* Create: [DescribeDisks](https://www.tencentcloud.com/document/product/362/16315) - This API (DescribeDisks) is used to query the list of cloud disks.
-* Create: [ModifyDiskBackupQuota](https://www.tencentcloud.com/document/product/362/50786) - This API is used to modify the cloud disk backup point quota.
-* Read: [DescribeDisks](https://www.tencentcloud.com/document/product/362/16315) - This API (DescribeDisks) is used to query the list of cloud disks.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [ApplySnapshot](https://www.tencentcloud.com/document/product/362/15643) - This API (ApplySnapshot) is used to roll back a snapshot to the original cloud disk.
-* Update: [DescribeDisks](https://www.tencentcloud.com/document/product/362/16315) - This API (DescribeDisks) is used to query the list of cloud disks.
-* Update: [ModifyDiskAttributes](https://www.tencentcloud.com/document/product/362/15659) - This API is used to modify only the Project ID of elastic cloud disks. The Project ID of a cloud disk created with a host is linked to the host. Whether a cloud disk is elastic can be checked through the [DescribeDisks]
-* Update: [ModifyDiskBackupQuota](https://www.tencentcloud.com/document/product/362/50786) - This API is used to modify the cloud disk backup point quota.
-* Update: [ModifyDiskExtraPerformance](https://www.tencentcloud.com/document/product/362/40191) - This API is used to adjust extra performance for Enhanced SSD (CLOUD_HSSD) and ulTra SSD.
+* Create: [CreateDisks](https://cloud.tencent.com/document/api/362/16312)
+* Create: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315)
+* Create: [ModifyDiskBackupQuota](https://cloud.tencent.com/document/api/362/80276)
+* Read: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [ApplySnapshot](https://cloud.tencent.com/document/api/362/15643)
+* Update: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315)
+* Update: [ModifyDiskAttributes](https://cloud.tencent.com/document/api/362/15659)
+* Update: [ModifyDiskBackupQuota](https://cloud.tencent.com/document/api/362/80276)
+* Update: [ModifyDiskExtraPerformance](https://cloud.tencent.com/document/api/362/51483)
 * Update: [ModifyDisksChargeType](https://cloud.tencent.com/document/api/362/38075)
 * Update: [ModifyDisksRenewFlag](https://cloud.tencent.com/document/api/362/15668)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Update: [ResizeDisk](https://www.tencentcloud.com/document/product/362/16310) - This API is used to expand cloud disks.
-* Delete: [DescribeDisks](https://www.tencentcloud.com/document/product/362/16315) - This API (DescribeDisks) is used to query the list of cloud disks.
-* Delete: [TerminateDisks](https://www.tencentcloud.com/document/product/362/16321) - This API is used to return cloud disks.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Update: [ResizeDisk](https://cloud.tencent.com/document/api/362/16310)
+* Delete: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315)
+* Delete: [TerminateDisks](https://cloud.tencent.com/document/api/362/16321)
 
 ## Import
 

@@ -46,6 +46,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - This API is used to query the instance information.
-* Read: [DescribeRepositories](https://cloud.tencent.com/document/api/1141/42722) - This API is used to query the image repository list or the information of the specified image repository.
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569)
+* Read: [DescribeRepositories](https://cloud.tencent.com/document/api/1141/42722)
 

@@ -36,6 +36,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573) - This API is used to query the details of one or multiple instances.
-* Create: [StopInstances](https://cloud.tencent.com/document/api/1207/47569) - This API is used to shut down one or more instances.
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573)
+* Create: [StopInstances](https://cloud.tencent.com/document/api/1207/47569)
 

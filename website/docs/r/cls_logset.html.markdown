@@ -49,13 +49,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLogset](https://www.tencentcloud.com/document/product/614/42780) - This API is used to create a logset. The ID of the created logset is returned.
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeLogsets](https://www.tencentcloud.com/document/product/614/42778) - This API is used to get the list of logsets.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [ModifyLogset](https://www.tencentcloud.com/document/product/614/42777) - This API is used to modify a logset.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Delete: [DeleteLogset](https://www.tencentcloud.com/document/product/614/42779) - This API is used to delete a logset.
+* Create: [CreateLogset](https://cloud.tencent.com/document/api/614/58626)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeLogsets](https://cloud.tencent.com/document/api/614/58624)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [ModifyLogset](https://cloud.tencent.com/document/api/614/58623)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Delete: [DeleteLogset](https://cloud.tencent.com/document/api/614/58625)
 
 ## Import
 

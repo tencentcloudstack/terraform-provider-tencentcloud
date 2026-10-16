@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetMyCodeMaxPermission](https://cloud.tencent.com/document/api/1267/127237) - View the current user's maximum permission scope for the CodeStudio entity.
+* Read: [GetMyCodeMaxPermission](https://cloud.tencent.com/document/api/1267/127237)
 

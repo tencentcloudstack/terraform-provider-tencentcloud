@@ -49,5 +49,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRuleRealServers](https://www.tencentcloud.com/document/product/608/33042) - This API (DescribeRuleRealServers) is used to query forwarding rules-related origin server information, including information of origin servers that can be bound and have been bound.
+* Read: [DescribeRuleRealServers](https://cloud.tencent.com/document/api/608/36987)
 

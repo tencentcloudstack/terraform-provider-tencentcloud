@@ -118,7 +118,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyDBInstanceLogToCLS](https://www.tencentcloud.com/document/product/236/57988) - This API is used to enable or disable the feature of sending CDB slow and error logs to CLS.
-* Read: [DescribeDBInstanceLogToCLS](https://www.tencentcloud.com/document/product/236/57978) - This API is used to query the configuration of slow log and error log delivery to CLS for an instance. It filters out the present instance log delivery configuration to CLS by AppId, Region, and instance ID.
-* Delete: [ModifyDBInstanceLogToCLS](https://www.tencentcloud.com/document/product/236/57988) - This API is used to enable or disable the feature of sending CDB slow and error logs to CLS.
+* Create: [ModifyDBInstanceLogToCLS](https://cloud.tencent.com/document/api/236/100575)
+* Read: [DescribeDBInstanceLogToCLS](https://cloud.tencent.com/document/api/236/100576)
+* Delete: [ModifyDBInstanceLogToCLS](https://cloud.tencent.com/document/api/236/100575)
 

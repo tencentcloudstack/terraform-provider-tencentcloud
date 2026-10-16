@@ -44,9 +44,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindCloudResource](https://cloud.tencent.com/document/api/573/46918) - This API is used to bind a key with a Tencent Cloud resource. If the key has been set to be expired automatically, the setting will be canceled to ensure that the key will not be invalid automatically.
-* Read: [DescribeKey](https://cloud.tencent.com/document/api/573/34428) - This API is used to get the attribute details of the CMK with a specified `KeyId`.
-* Delete: [UnbindCloudResource](https://cloud.tencent.com/document/api/573/46917) - This API is used to unbind a key with a Tencent Cloud resource, indicating that the Tencent Cloud resource will not use the key any longer.
+* Create: [BindCloudResource](https://cloud.tencent.com/document/api/573/46918)
+* Read: [DescribeKey](https://cloud.tencent.com/document/api/573/34428)
+* Delete: [UnbindCloudResource](https://cloud.tencent.com/document/api/573/46917)
 
 ## Import
 

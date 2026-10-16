@@ -67,10 +67,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RegisterFunctionTargets](https://www.tencentcloud.com/document/product/214/54047) - This API is used to bind a cloud function to the forwarding rule of a Cloud Load Balancer. Before that, you need to create a related HTTP or HTTPS listener and forwarding rule.
-* Read: [DescribeTargets](https://www.tencentcloud.com/document/product/214/33824) - This API (DescribeTargets) is used to query the list of real servers bound to some listeners of a CLB instance.
-* Update: [ModifyFunctionTargets](https://www.tencentcloud.com/document/product/214/54135) - This API is used to modify the SCF bound to a Cloud Load Balancer forwarding rule.
-* Delete: [DeregisterFunctionTargets](https://www.tencentcloud.com/document/product/214/54048) - This API is used to unbind a cloud function from the forwarding rule of a Cloud Load Balancer. For a layer-7 (HTTP/HTTPS) listener, the forwarding rule must be specified by LocationId or Domain+Url.
+* Create: [RegisterFunctionTargets](https://cloud.tencent.com/document/api/214/84625)
+* Read: [DescribeTargets](https://cloud.tencent.com/document/api/214/30684)
+* Update: [ModifyFunctionTargets](https://cloud.tencent.com/document/api/214/86609)
+* Delete: [DeregisterFunctionTargets](https://cloud.tencent.com/document/api/214/84626)
 
 ## Import
 

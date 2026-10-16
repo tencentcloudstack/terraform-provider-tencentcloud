@@ -54,5 +54,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListOpsTasks](https://cloud.tencent.com/document/api/1267/123575) - This API is used to obtain the task list based on the project id.
+* Read: [ListOpsTasks](https://cloud.tencent.com/document/api/1267/123575)
 

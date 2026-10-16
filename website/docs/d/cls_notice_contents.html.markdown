@@ -81,5 +81,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeNoticeContents](https://www.tencentcloud.com/document/product/614/80575) - This API is used to obtain the notification content list.
+* Read: [DescribeNoticeContents](https://cloud.tencent.com/document/api/614/111714)
 

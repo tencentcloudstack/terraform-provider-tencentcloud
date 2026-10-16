@@ -54,6 +54,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeServiceEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45180) - This API is used to display a service throttling policy.
-* Read: [DescribeServicesStatus](https://cloud.tencent.com/document/api/628/45194) - This API is used to query the list of one or more services and return relevant domain name, time, and other information.
+* Read: [DescribeServiceEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45180)
+* Read: [DescribeServicesStatus](https://cloud.tencent.com/document/api/628/45194)
 

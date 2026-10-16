@@ -78,5 +78,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBasicAlarmList](https://www.tencentcloud.com/document/product/248/35981) - This API is used to get the basic alarm list.
+* Read: [DescribeBasicAlarmList](https://cloud.tencent.com/document/api/248/41199)
 

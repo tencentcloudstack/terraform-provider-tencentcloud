@@ -62,7 +62,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RunCommand](https://cloud.tencent.com/document/api/1340/52676) - This API is used to execute a command and returns the execution activity ID (inv-xxxxxxxx) on success. Each execution has one or more execution tasks (invt-xxxxxxxx) and each execution task indicates an execution record on a CVM or Lightho
-* Read: [DescribeInvocations](https://cloud.tencent.com/document/api/1340/52679) - This API is used to query execution activity details.
-* Delete: [CancelInvocation](https://cloud.tencent.com/document/api/1340/65770) - Cancel the executed command on one or multiple instances.
+* Create: [RunCommand](https://cloud.tencent.com/document/api/1340/52676)
+* Read: [DescribeInvocations](https://cloud.tencent.com/document/api/1340/52679)
+* Delete: [CancelInvocation](https://cloud.tencent.com/document/api/1340/65770)
 

@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDatabaseObjects](https://cloud.tencent.com/document/api/557/19989) - This API is used to query the list of database objects in a TencentDB instance, including tables, stored procedures, views, and functions.
+* Read: [DescribeDatabaseObjects](https://cloud.tencent.com/document/api/557/19989)
 

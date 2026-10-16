@@ -64,5 +64,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCmqTopics](https://cloud.tencent.com/document/api/1179/55906) - This API is used to enumerate all CMQ topics.
+* Read: [DescribeCmqTopics](https://cloud.tencent.com/document/api/1179/55906)
 

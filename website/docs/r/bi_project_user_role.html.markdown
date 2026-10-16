@@ -50,10 +50,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateUserRoleProject](https://cloud.tencent.com/document/api/590/98847) - This API is used to create a user role in the project.
-* Read: [DescribeUserRoleProjectList](https://cloud.tencent.com/document/api/590/100532) - This API is used to obtain the user role list in the project.
-* Update: [ModifyUserRoleProject](https://cloud.tencent.com/document/api/590/98842) - This API is used to modify the user role info in the project.
-* Delete: [DeleteUserRoleProject](https://cloud.tencent.com/document/api/590/98845) - This API is used to delete a user role in the project.
+* Create: [CreateUserRoleProject](https://cloud.tencent.com/document/api/590/98847)
+* Read: [DescribeUserRoleProjectList](https://cloud.tencent.com/document/api/590/100532)
+* Update: [ModifyUserRoleProject](https://cloud.tencent.com/document/api/590/98842)
+* Delete: [DeleteUserRoleProject](https://cloud.tencent.com/document/api/590/98845)
 
 ## Import
 

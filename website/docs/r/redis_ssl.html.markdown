@@ -89,13 +89,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CloseSSL](https://www.tencentcloud.com/document/product/239/51197) - This API is used to disable SSL encryption and authentication.
-* Create: [DescribeTaskInfo](https://www.tencentcloud.com/document/product/239/32064) - This API is used to get the execution of a specified task.
-* Create: [OpenSSL](https://www.tencentcloud.com/document/product/239/51196) - This API is used to enable SSL encryption and authentication.
-* Read: [DescribeSSLStatus](https://www.tencentcloud.com/document/product/239/54350) - This API is used to query the SSL authentication information of an instance, such as enablement status, configuration status, and certificate address.
-* Update: [CloseSSL](https://www.tencentcloud.com/document/product/239/51197) - This API is used to disable SSL encryption and authentication.
-* Update: [DescribeTaskInfo](https://www.tencentcloud.com/document/product/239/32064) - This API is used to get the execution of a specified task.
-* Update: [OpenSSL](https://www.tencentcloud.com/document/product/239/51196) - This API is used to enable SSL encryption and authentication.
+* Create: [CloseSSL](https://cloud.tencent.com/document/api/239/81240)
+* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601)
+* Create: [OpenSSL](https://cloud.tencent.com/document/api/239/81239)
+* Read: [DescribeSSLStatus](https://cloud.tencent.com/document/api/239/88703)
+* Update: [CloseSSL](https://cloud.tencent.com/document/api/239/81240)
+* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601)
+* Update: [OpenSSL](https://cloud.tencent.com/document/api/239/81239)
 
 ## Import
 

@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDestRegions](https://www.tencentcloud.com/document/product/608/33102) - This API (DescribeDestRegions) is used to query an origin server region (i.e., the region in which the origin server locates).
+* Read: [DescribeDestRegions](https://cloud.tencent.com/document/api/608/36964)
 

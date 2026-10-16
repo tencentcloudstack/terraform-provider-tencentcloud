@@ -70,8 +70,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Read: [DescribeSecurityGroupAssociationStatistics](https://www.tencentcloud.com/document/product/215/17799) - This API (DescribeSecurityGroupAssociationStatistics) is used to query statistics on the instances associated with a security group.
-* Read: [DescribeSecurityGroupPolicies](https://www.tencentcloud.com/document/product/215/15804) - This API (DescribeSecurityGroupPolicies) is used to query security group policies.
-* Read: [DescribeSecurityGroups](https://www.tencentcloud.com/document/product/215/15808) - This API (DescribeSecurityGroups) is used to query security groups.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Read: [DescribeSecurityGroupAssociationStatistics](https://cloud.tencent.com/document/api/215/17799)
+* Read: [DescribeSecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15804)
+* Read: [DescribeSecurityGroups](https://cloud.tencent.com/document/api/215/15808)
 

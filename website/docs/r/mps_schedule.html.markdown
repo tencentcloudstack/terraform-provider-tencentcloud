@@ -682,9 +682,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSchedule](https://cloud.tencent.com/document/api/862/88061) - This API is used to set processing rules for uploaded media files under the directory of a specified Bucket in COS, including:
-* Read: [DescribeSchedules](https://cloud.tencent.com/document/api/862/88059) - This API is used to query a scheme.
-* Update: [ModifySchedule](https://cloud.tencent.com/document/api/862/88056) - This API is used to modify a scheme.
+* Create: [CreateSchedule](https://cloud.tencent.com/document/api/862/88061)
+* Read: [DescribeSchedules](https://cloud.tencent.com/document/api/862/88059)
+* Update: [ModifySchedule](https://cloud.tencent.com/document/api/862/88056)
 * Delete: [DeleteSchedule](https://cloud.tencent.com/document/api/862/88060)
 
 ## Import

@@ -61,6 +61,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSubnets](https://www.tencentcloud.com/document/product/215/15784) - This API (DescribeSubnets) is used to query the list of subnets.
-* Read: [DescribeVpcs](https://www.tencentcloud.com/document/product/215/15778) - This API (DescribeVpcs) is used to query the VPC list.
+* Read: [DescribeSubnets](https://cloud.tencent.com/document/api/215/15784)
+* Read: [DescribeVpcs](https://cloud.tencent.com/document/api/215/15778)
 

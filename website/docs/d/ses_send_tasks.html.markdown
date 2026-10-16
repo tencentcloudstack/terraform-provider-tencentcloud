@@ -62,5 +62,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListSendTasks](https://cloud.tencent.com/document/api/1288/68357) - This API is used to query batch email sending tasks (including immediate, scheduled, and recurring tasks) by page. You can query task data including the number of emails requested to be sent, the number of sent emails, the number of cached
+* Read: [ListSendTasks](https://cloud.tencent.com/document/api/1288/68357)
 

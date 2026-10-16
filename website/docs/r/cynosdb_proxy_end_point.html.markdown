@@ -188,16 +188,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateProxyEndPoint](https://cloud.tencent.com/document/api/1003/94133) - This API is used to create a database proxy connection point.
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
-* Create: [DescribeProxies](https://cloud.tencent.com/document/api/1003/94132) - This API is used to query agent list.
-* Create: [ModifyVipVport](https://cloud.tencent.com/document/api/1003/86720) - This API is used to modify the ip and port of an instance group.
-* Read: [DescribeProxies](https://cloud.tencent.com/document/api/1003/94132) - This API is used to query agent list.
-* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
-* Update: [ModifyProxyDesc](https://cloud.tencent.com/document/api/1003/94130) - This API is used to modify the description of a database proxy.
-* Update: [ModifyProxyRwSplit](https://cloud.tencent.com/document/api/1003/94129) - This API is used to configure read-write separation for database proxy.
-* Update: [ModifyVipVport](https://cloud.tencent.com/document/api/1003/86720) - This API is used to modify the ip and port of an instance group.
-* Update: [SwitchProxyVpc](https://cloud.tencent.com/document/api/1003/83595) - This API is used to replace the vpc of the database proxy.
-* Delete: [CloseProxy](https://cloud.tencent.com/document/api/1003/94135) - This API is used to close the database proxy service of a cluster.
-* Delete: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
+* Create: [CreateProxyEndPoint](https://cloud.tencent.com/document/api/1003/94133)
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
+* Create: [DescribeProxies](https://cloud.tencent.com/document/api/1003/94132)
+* Create: [ModifyVipVport](https://cloud.tencent.com/document/api/1003/86720)
+* Read: [DescribeProxies](https://cloud.tencent.com/document/api/1003/94132)
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
+* Update: [ModifyProxyDesc](https://cloud.tencent.com/document/api/1003/94130)
+* Update: [ModifyProxyRwSplit](https://cloud.tencent.com/document/api/1003/94129)
+* Update: [ModifyVipVport](https://cloud.tencent.com/document/api/1003/86720)
+* Update: [SwitchProxyVpc](https://cloud.tencent.com/document/api/1003/83595)
+* Delete: [CloseProxy](https://cloud.tencent.com/document/api/1003/94135)
+* Delete: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
 

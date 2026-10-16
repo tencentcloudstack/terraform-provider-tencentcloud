@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetMyWorkflowMaxPermission](https://cloud.tencent.com/document/api/1267/127261) - Check the current user's maximum permission scope for the workflow folder recursively.
+* Read: [GetMyWorkflowMaxPermission](https://cloud.tencent.com/document/api/1267/127261)
 

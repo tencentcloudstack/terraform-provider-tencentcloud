@@ -304,54 +304,54 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateClusters](https://cloud.tencent.com/document/api/1003/48087) - This API is used to purchase new clusters.
-* Create: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086) - This API is used to display cluster details.
-* Create: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303) - This API is used to query instance groups.
-* Create: [DescribeClusters](https://cloud.tencent.com/document/api/1003/48085) - This API is used to describe clusters.
-* Create: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250) - This API is used to query instance details.
-* Create: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334) - This API is used to query the list of instances.
-* Create: [DescribeResourcesByDealName](https://cloud.tencent.com/document/api/1003/52131) - This interface (DescribeResourcesByDealName) is used to query order-associated instances.
-* Create: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/1003/48096) - This API is used to modify the security group bound to the instance.
-* Create: [ModifyMaintainPeriodConfig](https://cloud.tencent.com/document/api/1003/48080) - This API is used to modify maintenance time configuration.
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Create: [PauseServerless](https://cloud.tencent.com/document/api/1003/70122) - This API is used to suspend a serverless cluster.
-* Create: [ResumeServerless](https://cloud.tencent.com/document/api/1003/70121) - This API is used to restore a serverless cluster.
-* Read: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086) - This API is used to display cluster details.
-* Read: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303) - This API is used to query instance groups.
-* Read: [DescribeClusterParams](https://cloud.tencent.com/document/api/1003/79556) - This API is used to query cluster parameters.
-* Read: [DescribeClusters](https://cloud.tencent.com/document/api/1003/48085) - This API is used to describe clusters.
-* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/1003/48305) - This API is used to query instance security group information.
-* Read: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250) - This API is used to query instance details.
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334) - This API is used to query the list of instances.
-* Read: [DescribeMaintainPeriod](https://cloud.tencent.com/document/api/1003/48083) - This interface (DescribeMaintainPeriod) is used to query the instance maintenance window.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [AddClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79555) - This interface (AddClusterSlaveZone) is used to enable multi-az deployment for a cluster.
-* Update: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086) - This API is used to display cluster details.
-* Update: [DescribeClusterParams](https://cloud.tencent.com/document/api/1003/79556) - This API is used to query cluster parameters.
-* Update: [DescribeClusters](https://cloud.tencent.com/document/api/1003/48085) - This API is used to describe clusters.
-* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
-* Update: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250) - This API is used to query instance details.
-* Update: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334) - This API is used to query the list of instances.
-* Update: [ModifyClusterName](https://cloud.tencent.com/document/api/1003/71729) - This API is used to modify cluster names.
-* Update: [ModifyClusterParam](https://cloud.tencent.com/document/api/1003/63365) - This API is used to modify cluster parameters.
-* Update: [ModifyClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79554) - This API is used to modify the slave availability zone of a cluster.
+* Create: [CreateClusters](https://cloud.tencent.com/document/api/1003/48087)
+* Create: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086)
+* Create: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303)
+* Create: [DescribeClusters](https://cloud.tencent.com/document/api/1003/48085)
+* Create: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250)
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334)
+* Create: [DescribeResourcesByDealName](https://cloud.tencent.com/document/api/1003/52131)
+* Create: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/1003/48096)
+* Create: [ModifyMaintainPeriodConfig](https://cloud.tencent.com/document/api/1003/48080)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Create: [PauseServerless](https://cloud.tencent.com/document/api/1003/70122)
+* Create: [ResumeServerless](https://cloud.tencent.com/document/api/1003/70121)
+* Read: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086)
+* Read: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303)
+* Read: [DescribeClusterParams](https://cloud.tencent.com/document/api/1003/79556)
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/1003/48085)
+* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/1003/48305)
+* Read: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250)
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334)
+* Read: [DescribeMaintainPeriod](https://cloud.tencent.com/document/api/1003/48083)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [AddClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79555)
+* Update: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086)
+* Update: [DescribeClusterParams](https://cloud.tencent.com/document/api/1003/79556)
+* Update: [DescribeClusters](https://cloud.tencent.com/document/api/1003/48085)
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
+* Update: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250)
+* Update: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334)
+* Update: [ModifyClusterName](https://cloud.tencent.com/document/api/1003/71729)
+* Update: [ModifyClusterParam](https://cloud.tencent.com/document/api/1003/63365)
+* Update: [ModifyClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79554)
 * Update: [ModifyClusterStorage](https://cloud.tencent.com/document/api/1003/80282)
-* Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/1003/48096) - This API is used to modify the security group bound to the instance.
-* Update: [ModifyInstanceName](https://cloud.tencent.com/document/api/1003/71728) - This API is used to modify instance name.
-* Update: [ModifyMaintainPeriodConfig](https://cloud.tencent.com/document/api/1003/48080) - This API is used to modify maintenance time configuration.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Update: [PauseServerless](https://cloud.tencent.com/document/api/1003/70122) - This API is used to suspend a serverless cluster.
-* Update: [RemoveClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79553) - This API is used to disable multi-AZ deployment for a cluster.
-* Update: [ResetAccountPassword](https://cloud.tencent.com/document/api/1003/83592) - This API is used to modify the database account password.
-* Update: [ResumeServerless](https://cloud.tencent.com/document/api/1003/70121) - This API is used to restore a serverless cluster.
-* Update: [SetRenewFlag](https://cloud.tencent.com/document/api/1003/48078) - This API is used to set the auto-renewal feature of an instance.
-* Update: [SwitchClusterVpc](https://cloud.tencent.com/document/api/1003/86634) - This API is used to replace the cluster vpc.
-* Update: [UpgradeClusterVersion](https://cloud.tencent.com/document/api/1003/92719) - This interface (UpgradeClusterVersion) is used to update the kernel minor version.
-* Update: [UpgradeInstance](https://cloud.tencent.com/document/api/1003/48077) - This interface (UpgradeInstance) is used to upgrade instances.
-* Delete: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086) - This API is used to display cluster details.
-* Delete: [DescribeClusters](https://cloud.tencent.com/document/api/1003/48085) - This API is used to describe clusters.
-* Delete: [IsolateCluster](https://cloud.tencent.com/document/api/1003/48082) - This interface (IsolateCluster) is used to isolate a cluster.
-* Delete: [OfflineCluster](https://cloud.tencent.com/document/api/1003/48079) - This interface (OfflineCluster) is used to terminate clusters.
+* Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/1003/48096)
+* Update: [ModifyInstanceName](https://cloud.tencent.com/document/api/1003/71728)
+* Update: [ModifyMaintainPeriodConfig](https://cloud.tencent.com/document/api/1003/48080)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Update: [PauseServerless](https://cloud.tencent.com/document/api/1003/70122)
+* Update: [RemoveClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79553)
+* Update: [ResetAccountPassword](https://cloud.tencent.com/document/api/1003/83592)
+* Update: [ResumeServerless](https://cloud.tencent.com/document/api/1003/70121)
+* Update: [SetRenewFlag](https://cloud.tencent.com/document/api/1003/48078)
+* Update: [SwitchClusterVpc](https://cloud.tencent.com/document/api/1003/86634)
+* Update: [UpgradeClusterVersion](https://cloud.tencent.com/document/api/1003/92719)
+* Update: [UpgradeInstance](https://cloud.tencent.com/document/api/1003/48077)
+* Delete: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086)
+* Delete: [DescribeClusters](https://cloud.tencent.com/document/api/1003/48085)
+* Delete: [IsolateCluster](https://cloud.tencent.com/document/api/1003/48082)
+* Delete: [OfflineCluster](https://cloud.tencent.com/document/api/1003/48079)
 
 ## Import
 

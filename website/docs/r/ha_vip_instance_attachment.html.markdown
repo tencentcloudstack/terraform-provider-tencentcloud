@@ -41,7 +41,7 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [AssociateHaVipInstance](https://cloud.tencent.com/document/api/215/118882)
-* Read: [DescribeHaVips](https://www.tencentcloud.com/document/product/215/34762) - This API (DescribeHaVips) is used to query the list of highly available virtual IPs (HAVIP).
+* Read: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650)
 * Delete: [DisassociateHaVipInstance](https://cloud.tencent.com/document/api/215/118881)
 
 ## Import

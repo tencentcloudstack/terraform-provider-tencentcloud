@@ -48,5 +48,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSecurityAuditLogDownloadUrls](https://cloud.tencent.com/document/api/1130/57796) - This API is used to query the download link of a security audit log export file. Currently, log file download only provides a Tencent Cloud private network address. Download it by using a CVM instance in the Guangzhou region.
+* Read: [DescribeSecurityAuditLogDownloadUrls](https://cloud.tencent.com/document/api/1130/57796)
 

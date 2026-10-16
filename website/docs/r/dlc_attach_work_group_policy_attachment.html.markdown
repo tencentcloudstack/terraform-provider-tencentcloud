@@ -110,9 +110,9 @@ The `policy_set` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachWorkGroupPolicy](https://cloud.tencent.com/document/api/1342/58467) - This API is used to bind an authentication policy to a working group.
-* Read: [DescribeWorkGroupInfo](https://cloud.tencent.com/document/api/1342/99260) - This API is used to get detailed information about working groups.
-* Delete: [DetachWorkGroupPolicy](https://cloud.tencent.com/document/api/1342/58457) - This API is used to unbind the authentication policy from the working group.
+* Create: [AttachWorkGroupPolicy](https://cloud.tencent.com/document/api/1342/58467)
+* Read: [DescribeWorkGroupInfo](https://cloud.tencent.com/document/api/1342/99260)
+* Delete: [DetachWorkGroupPolicy](https://cloud.tencent.com/document/api/1342/58457)
 
 ## Import
 

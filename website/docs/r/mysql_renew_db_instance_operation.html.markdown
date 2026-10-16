@@ -94,6 +94,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RenewDBInstance](https://www.tencentcloud.com/document/product/236/53308) - This API is used to renew cloud database instances. It supports yearly/monthly subscription instances. Pay-as-you-go instances can be renewed as yearly/monthly subscription instances through this API.
-* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/product/236/15872) - This API is used to query the list of TencentDB for MySQL instances. It supports filtering instances by conditions such as project ID, instance ID, access address, and instance status.
+* Create: [RenewDBInstance](https://cloud.tencent.com/document/api/236/30160)
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872)
 

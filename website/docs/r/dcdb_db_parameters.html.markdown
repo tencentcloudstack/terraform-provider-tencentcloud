@@ -46,11 +46,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDBParameters](https://cloud.tencent.com/document/api/557/19992) - This API is used to get the current parameter settings of a database.
-* Create: [ModifyDBParameters](https://cloud.tencent.com/document/api/557/19982) - This API is used to modify database parameters.
-* Read: [DescribeDBParameters](https://cloud.tencent.com/document/api/557/19992) - This API is used to get the current parameter settings of a database.
-* Update: [DescribeDBParameters](https://cloud.tencent.com/document/api/557/19992) - This API is used to get the current parameter settings of a database.
-* Update: [ModifyDBParameters](https://cloud.tencent.com/document/api/557/19982) - This API is used to modify database parameters.
+* Create: [DescribeDBParameters](https://cloud.tencent.com/document/api/557/19992)
+* Create: [ModifyDBParameters](https://cloud.tencent.com/document/api/557/19982)
+* Read: [DescribeDBParameters](https://cloud.tencent.com/document/api/557/19992)
+* Update: [DescribeDBParameters](https://cloud.tencent.com/document/api/557/19992)
+* Update: [ModifyDBParameters](https://cloud.tencent.com/document/api/557/19982)
 
 ## Import
 

@@ -87,5 +87,5 @@ Note: This field may return null, indicating that no valid values can be obtaine
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRecordList](https://cloud.tencent.com/document/api/1427/56166) - This API is used to get the DNS records of a domain.
+* Read: [DescribeRecordList](https://cloud.tencent.com/document/api/1427/56166)
 

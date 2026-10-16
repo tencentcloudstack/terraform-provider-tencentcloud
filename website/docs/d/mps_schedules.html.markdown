@@ -470,5 +470,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSchedules](https://cloud.tencent.com/document/api/862/88059) - This API is used to query a scheme.
+* Read: [DescribeSchedules](https://cloud.tencent.com/document/api/862/88059)
 

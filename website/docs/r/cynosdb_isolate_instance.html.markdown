@@ -43,10 +43,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ActivateInstance](https://cloud.tencent.com/document/api/1003/70116) - This interface (ActivateInstance) restores access to isolated instances.
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
-* Create: [IsolateInstance](https://cloud.tencent.com/document/api/1003/48081) - This API is used to isolate an instance.
-* Update: [ActivateInstance](https://cloud.tencent.com/document/api/1003/70116) - This interface (ActivateInstance) restores access to isolated instances.
-* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
-* Update: [IsolateInstance](https://cloud.tencent.com/document/api/1003/48081) - This API is used to isolate an instance.
+* Create: [ActivateInstance](https://cloud.tencent.com/document/api/1003/70116)
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
+* Create: [IsolateInstance](https://cloud.tencent.com/document/api/1003/48081)
+* Update: [ActivateInstance](https://cloud.tencent.com/document/api/1003/70116)
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
+* Update: [IsolateInstance](https://cloud.tencent.com/document/api/1003/48081)
 

@@ -63,12 +63,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSyncJob](https://www.tencentcloud.com/document/product/571/51795) - This API is used to create a sync task.
-* Read: [DescribeSyncJobs](https://www.tencentcloud.com/document/product/571/51793) - This API is used to query the information of a sync task.
-* Update: [ResizeSyncJob](https://www.tencentcloud.com/document/product/571/51789) - This API is used to adjust the specification of a pay-as-you-go sync task. After this API is called, the backend needs to take about 3-5 minutes to implement the adjustment.
-* Delete: [DescribeSyncJobs](https://www.tencentcloud.com/document/product/571/51793) - This API is used to query the information of a sync task.
-* Delete: [DestroySyncJob](https://www.tencentcloud.com/document/product/571/51792) - This API is used to delete a sync task. Only tasks in **Isolated** status can be completely deleted. After deletion, you can call the `DescribeSyncJobs` API to get the task list.
-* Delete: [IsolateSyncJob](https://www.tencentcloud.com/document/product/571/51791) - This API is used to isolate a sync task. After the task is isolated, you can call the `DescribeSyncJobs` API to query its status, call `RecoverSyncJob` to recover it, or directly delete it.
+* Create: [CreateSyncJob](https://cloud.tencent.com/document/api/571/82105)
+* Read: [DescribeSyncJobs](https://cloud.tencent.com/document/api/571/82103)
+* Update: [ResizeSyncJob](https://cloud.tencent.com/document/api/571/82099)
+* Delete: [DescribeSyncJobs](https://cloud.tencent.com/document/api/571/82103)
+* Delete: [DestroySyncJob](https://cloud.tencent.com/document/api/571/82102)
+* Delete: [IsolateSyncJob](https://cloud.tencent.com/document/api/571/82101)
 
 ## Import
 

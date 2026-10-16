@@ -89,12 +89,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddSpecifyPrivateZoneVpc](https://cloud.tencent.com/document/api/1338/98675) - This API is used to add the VPC associated with the private domain.
-* Create: [QueryAsyncBindVpcStatus](https://cloud.tencent.com/document/api/1338/102361) - This API is used to query the asynchronous VPC binding status.
+* Create: [AddSpecifyPrivateZoneVpc](https://cloud.tencent.com/document/api/1338/98675)
+* Create: [QueryAsyncBindVpcStatus](https://cloud.tencent.com/document/api/1338/102361)
 * Read: [DescribePrivateZone](https://cloud.tencent.com/document/api/1338/55940)
-* Delete: [DeleteSpecifyPrivateZoneVpc](https://cloud.tencent.com/document/api/1338/98674) - This API is used to delete the VPC associated with the private domain.
+* Delete: [DeleteSpecifyPrivateZoneVpc](https://cloud.tencent.com/document/api/1338/98674)
 * Delete: [DescribePrivateZone](https://cloud.tencent.com/document/api/1338/55940)
-* Delete: [QueryAsyncBindVpcStatus](https://cloud.tencent.com/document/api/1338/102361) - This API is used to query the asynchronous VPC binding status.
+* Delete: [QueryAsyncBindVpcStatus](https://cloud.tencent.com/document/api/1338/102361)
 
 ## Import
 

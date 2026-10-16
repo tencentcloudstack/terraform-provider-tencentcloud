@@ -61,14 +61,14 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSecurityGroup](https://www.tencentcloud.com/document/product/215/15806) - This API is used to create a security group (SecurityGroup).
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Read: [DescribeSecurityGroups](https://www.tencentcloud.com/document/product/215/15808) - This API (DescribeSecurityGroups) is used to query security groups.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Update: [ModifySecurityGroupAttribute](https://www.tencentcloud.com/document/product/215/15805) - This API (ModifySecurityGroupAttribute) is used to modify the attributes of a security group (SecurityGroupPolicy).
-* Delete: [DeleteSecurityGroup](https://www.tencentcloud.com/document/product/215/15803) - This API (DeleteSecurityGroup) is used to delete security groups (SecurityGroup).
-* Delete: [DescribeSecurityGroupAssociationStatistics](https://www.tencentcloud.com/document/product/215/17799) - This API (DescribeSecurityGroupAssociationStatistics) is used to query statistics on the instances associated with a security group.
+* Create: [CreateSecurityGroup](https://cloud.tencent.com/document/api/215/15806)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Read: [DescribeSecurityGroups](https://cloud.tencent.com/document/api/215/15808)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Update: [ModifySecurityGroupAttribute](https://cloud.tencent.com/document/api/215/15805)
+* Delete: [DeleteSecurityGroup](https://cloud.tencent.com/document/api/215/15803)
+* Delete: [DescribeSecurityGroupAssociationStatistics](https://cloud.tencent.com/document/api/215/17799)
 
 ## Import
 

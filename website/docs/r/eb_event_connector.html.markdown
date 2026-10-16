@@ -159,10 +159,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateConnection](https://cloud.tencent.com/document/api/1359/67691) - This API is used to create an event connector.
-* Read: [ListConnections](https://cloud.tencent.com/document/api/1359/67689) - This API is used to get the list of event connectors.
-* Update: [UpdateConnection](https://cloud.tencent.com/document/api/1359/67688) - This API is used to update an event connector.
-* Delete: [DeleteConnection](https://cloud.tencent.com/document/api/1359/67690) - This API is used to delete an event connector.
+* Create: [CreateConnection](https://cloud.tencent.com/document/api/1359/67691)
+* Read: [ListConnections](https://cloud.tencent.com/document/api/1359/67689)
+* Update: [UpdateConnection](https://cloud.tencent.com/document/api/1359/67688)
+* Delete: [DeleteConnection](https://cloud.tencent.com/document/api/1359/67690)
 
 ## Import
 

@@ -206,20 +206,20 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateProductSecret](https://cloud.tencent.com/document/api/1140/58266) - This API is used to create a Tencent Cloud service credential.
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/1140/58265) - This API is used to query the execution result of an async task.
-* Create: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526) - This API is used to obtain the detailed attribute information of a Secret.
-* Create: [DisableSecret](https://cloud.tencent.com/document/api/1140/40525) - This API is used to disable a Secret and will change its status to `Disabled`. The plaintext of a disabled Secret cannot be obtained through APIs.
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Read: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526) - This API is used to obtain the detailed attribute information of a Secret.
-* Read: [ListSecrets](https://cloud.tencent.com/document/api/1140/40519) - This API is used to obtain the detailed information list of all Secrets. You can specify the filter fields and sorting order as needed.
-* Update: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526) - This API is used to obtain the detailed attribute information of a Secret.
-* Update: [DisableSecret](https://cloud.tencent.com/document/api/1140/40525) - This API is used to disable a Secret and will change its status to `Disabled`. The plaintext of a disabled Secret cannot be obtained through APIs.
-* Update: [EnableSecret](https://cloud.tencent.com/document/api/1140/40524) - This API is used to enable a Secret and will change its status to `Enabled`. You can call the `GetSecretValue` API to obtain the plaintext of this Secret.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Update: [UpdateDescription](https://cloud.tencent.com/document/api/1140/40516) - This API is used to update the description of a Secret. This API can only update Secrets in `Enabled` or `Disabled` status.
-* Update: [UpdateRotationStatus](https://cloud.tencent.com/document/api/1140/58261) - This API is used to set a Tencent Cloud service credential rotation policy, including the following parameters:
-* Delete: [DeleteSecret](https://cloud.tencent.com/document/api/1140/40528) - This API is used to delete a Secret. You can set whether to delete the Secret immediately or on schedule using the `RecoveryWindowInDays` parameter.
-* Delete: [DisableSecret](https://cloud.tencent.com/document/api/1140/40525) - This API is used to disable a Secret and will change its status to `Disabled`. The plaintext of a disabled Secret cannot be obtained through APIs.
+* Create: [CreateProductSecret](https://cloud.tencent.com/document/api/1140/58266)
+* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/1140/58265)
+* Create: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526)
+* Create: [DisableSecret](https://cloud.tencent.com/document/api/1140/40525)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Read: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526)
+* Read: [ListSecrets](https://cloud.tencent.com/document/api/1140/40519)
+* Update: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526)
+* Update: [DisableSecret](https://cloud.tencent.com/document/api/1140/40525)
+* Update: [EnableSecret](https://cloud.tencent.com/document/api/1140/40524)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Update: [UpdateDescription](https://cloud.tencent.com/document/api/1140/40516)
+* Update: [UpdateRotationStatus](https://cloud.tencent.com/document/api/1140/58261)
+* Delete: [DeleteSecret](https://cloud.tencent.com/document/api/1140/40528)
+* Delete: [DisableSecret](https://cloud.tencent.com/document/api/1140/40525)
 

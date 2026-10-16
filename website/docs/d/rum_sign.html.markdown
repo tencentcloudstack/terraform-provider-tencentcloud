@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeReleaseFileSign](https://cloud.tencent.com/document/api/1464/69216) - This API is used to get the temporary key for uploaded file storage.
+* Read: [DescribeReleaseFileSign](https://cloud.tencent.com/document/api/1464/69216)
 

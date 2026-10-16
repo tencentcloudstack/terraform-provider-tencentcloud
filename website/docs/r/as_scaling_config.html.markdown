@@ -308,11 +308,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLaunchConfiguration](https://www.tencentcloud.com/document/product/377/31001) - This API is used to create a new launch configuration.
-* Read: [DescribeLaunchConfigurations](https://www.tencentcloud.com/document/product/377/30999) - This API is used to query the information of launch configurations.
-* Update: [ModifyLaunchConfigurationAttributes](https://www.tencentcloud.com/document/product/377/30998) - This API (ModifyLaunchConfigurationAttributes) is used to modify part of a launch configuration's attributes.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Delete: [DeleteLaunchConfiguration](https://www.tencentcloud.com/document/product/377/31000) - This API (DeleteLaunchConfiguration) is used to delete a launch configuration.
+* Create: [CreateLaunchConfiguration](https://cloud.tencent.com/document/api/377/20447)
+* Read: [DescribeLaunchConfigurations](https://cloud.tencent.com/document/api/377/20445)
+* Update: [ModifyLaunchConfigurationAttributes](https://cloud.tencent.com/document/api/377/31298)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Delete: [DeleteLaunchConfiguration](https://cloud.tencent.com/document/api/377/20446)
 
 ## Import
 

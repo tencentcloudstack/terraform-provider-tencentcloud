@@ -96,10 +96,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateOriginGroup](https://cloud.tencent.com/document/api/1552/80598) - This API is used to create an origin group for easy management. The created origin server group can be used for **adding acceleration domain names** and **layer-4 proxy configuration**.
-* Read: [DescribeOriginGroup](https://cloud.tencent.com/document/api/1552/80594) - This API is used to obtain a list of origin groups.
-* Update: [ModifyOriginGroup](https://cloud.tencent.com/document/api/1552/80592) - This API is used to modify the configuration of an origin group. The original configuration will be overwritten.
-* Delete: [DeleteOriginGroup](https://cloud.tencent.com/document/api/1552/80596) - This API is used to delete an origin group. Note that an origin group can not be deleted if it is referenced by services (e.g. L4 Proxy, domain name service, load balancing, rule engines).
+* Create: [CreateOriginGroup](https://cloud.tencent.com/document/api/1552/80598)
+* Read: [DescribeOriginGroup](https://cloud.tencent.com/document/api/1552/80594)
+* Update: [ModifyOriginGroup](https://cloud.tencent.com/document/api/1552/80592)
+* Delete: [DeleteOriginGroup](https://cloud.tencent.com/document/api/1552/80596)
 
 ## Import
 

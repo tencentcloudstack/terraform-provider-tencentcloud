@@ -38,7 +38,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddDBInstanceToReadOnlyGroup](https://www.tencentcloud.com/document/product/409/39729) - This API is used to add a read-only replica to an RO group.
-* Read: [DescribeReadOnlyGroups](https://www.tencentcloud.com/document/product/409/39725) - This API is used to query the list of RO groups.
-* Delete: [RemoveDBInstanceFromReadOnlyGroup](https://www.tencentcloud.com/document/product/409/39721) - This API is used to remove a read-only replica from an RO group.
+* Create: [AddDBInstanceToReadOnlyGroup](https://cloud.tencent.com/document/api/409/52603)
+* Read: [DescribeReadOnlyGroups](https://cloud.tencent.com/document/api/409/52599)
+* Delete: [RemoveDBInstanceFromReadOnlyGroup](https://cloud.tencent.com/document/api/409/52595)
 

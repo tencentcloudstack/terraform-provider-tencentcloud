@@ -53,12 +53,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateL4Proxy](https://cloud.tencent.com/document/api/1552/103417) - This API is used to create Layer 4 proxy instances.
-* Read: [DescribeL4Proxy](https://cloud.tencent.com/document/api/1552/103413) - This API is used to query a Layer 4 proxy instance list.
-* Update: [ModifyL4Proxy](https://cloud.tencent.com/document/api/1552/103411) - This API is used to modify the configuration of a Layer 4 proxy instance.
-* Delete: [DeleteL4Proxy](https://cloud.tencent.com/document/api/1552/103415) - This API is used to delete a Layer 4 proxy instance.
-* Delete: [DescribeL4Proxy](https://cloud.tencent.com/document/api/1552/103413) - This API is used to query a Layer 4 proxy instance list.
-* Delete: [ModifyL4ProxyStatus](https://cloud.tencent.com/document/api/1552/103408) - This API is used to enable or disable a Layer 4 proxy instance.
+* Create: [CreateL4Proxy](https://cloud.tencent.com/document/api/1552/103417)
+* Read: [DescribeL4Proxy](https://cloud.tencent.com/document/api/1552/103413)
+* Update: [ModifyL4Proxy](https://cloud.tencent.com/document/api/1552/103411)
+* Delete: [DeleteL4Proxy](https://cloud.tencent.com/document/api/1552/103415)
+* Delete: [DescribeL4Proxy](https://cloud.tencent.com/document/api/1552/103413)
+* Delete: [ModifyL4ProxyStatus](https://cloud.tencent.com/document/api/1552/103408)
 
 ## Import
 

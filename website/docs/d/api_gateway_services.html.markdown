@@ -67,8 +67,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeApiUsagePlan](https://cloud.tencent.com/document/api/628/45240) - This API is used to query the details of API usage plans in a service.
-* Read: [DescribeService](https://cloud.tencent.com/document/api/628/45199) - This API is used to query the details of a service, such as its description, domain name, protocol, creation time, and releases.
-* Read: [DescribeServiceUsagePlan](https://cloud.tencent.com/document/api/628/45195) - This API is used to query the details of usage plans in a service.
-* Read: [DescribeServicesStatus](https://cloud.tencent.com/document/api/628/45194) - This API is used to query the list of one or more services and return relevant domain name, time, and other information.
+* Read: [DescribeApiUsagePlan](https://cloud.tencent.com/document/api/628/45240)
+* Read: [DescribeService](https://cloud.tencent.com/document/api/628/45199)
+* Read: [DescribeServiceUsagePlan](https://cloud.tencent.com/document/api/628/45195)
+* Read: [DescribeServicesStatus](https://cloud.tencent.com/document/api/628/45194)
 

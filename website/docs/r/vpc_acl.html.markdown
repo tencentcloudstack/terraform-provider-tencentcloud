@@ -54,17 +54,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNetworkAcl](https://www.tencentcloud.com/document/product/215/35622) - This API is used to create a network ACL.
-* Create: [ModifyNetworkAclEntries](https://www.tencentcloud.com/document/product/215/35617) - This API is used to modify (add or delete) the inbound and outbound rules of a network ACL. In `NetworkAclEntrySet` parameters,
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeNetworkAcls](https://www.tencentcloud.com/document/product/215/35620) - This API is used to query a list of network ACLs.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [ModifyNetworkAclAttribute](https://www.tencentcloud.com/document/product/215/35618) - This API is used to modify the attributes of a network ACL.
-* Update: [ModifyNetworkAclEntries](https://www.tencentcloud.com/document/product/215/35617) - This API is used to modify (add or delete) the inbound and outbound rules of a network ACL. In `NetworkAclEntrySet` parameters,
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Delete: [DeleteNetworkAcl](https://www.tencentcloud.com/document/product/215/35621) - This API is used to delete a network ACL.
-* Delete: [DescribeNetworkAcls](https://www.tencentcloud.com/document/product/215/35620) - This API is used to query a list of network ACLs.
-* Delete: [DisassociateNetworkAclSubnets](https://www.tencentcloud.com/document/product/215/35619) - This API is used to disassociate a network ACL from subnets in a VPC instance.
+* Create: [CreateNetworkAcl](https://cloud.tencent.com/document/api/215/42162)
+* Create: [ModifyNetworkAclEntries](https://cloud.tencent.com/document/api/215/42107)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeNetworkAcls](https://cloud.tencent.com/document/api/215/42160)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [ModifyNetworkAclAttribute](https://cloud.tencent.com/document/api/215/42158)
+* Update: [ModifyNetworkAclEntries](https://cloud.tencent.com/document/api/215/42107)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Delete: [DeleteNetworkAcl](https://cloud.tencent.com/document/api/215/42161)
+* Delete: [DescribeNetworkAcls](https://cloud.tencent.com/document/api/215/42160)
+* Delete: [DisassociateNetworkAclSubnets](https://cloud.tencent.com/document/api/215/42159)
 
 ## Import
 

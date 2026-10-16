@@ -71,11 +71,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeControlPlaneLogs](https://www.tencentcloud.com/document/product/457/75764) - This API is used to query plug-in log collection settings.
-* Create: [EnableControlPlaneLogs](https://www.tencentcloud.com/document/product/457/75760) - This API is used to create log collection settings for plugins.
-* Read: [DescribeControlPlaneLogs](https://www.tencentcloud.com/document/product/457/75764) - This API is used to query plug-in log collection settings.
-* Delete: [DescribeControlPlaneLogs](https://www.tencentcloud.com/document/product/457/75764) - This API is used to query plug-in log collection settings.
-* Delete: [DisableControlPlaneLogs](https://www.tencentcloud.com/document/product/457/75762) - This API is used to delete the log collection configuration of a plugin.
+* Create: [DescribeControlPlaneLogs](https://cloud.tencent.com/document/api/457/126445)
+* Create: [EnableControlPlaneLogs](https://cloud.tencent.com/document/api/457/126443)
+* Read: [DescribeControlPlaneLogs](https://cloud.tencent.com/document/api/457/126445)
+* Delete: [DescribeControlPlaneLogs](https://cloud.tencent.com/document/api/457/126445)
+* Delete: [DisableControlPlaneLogs](https://cloud.tencent.com/document/api/457/126444)
 
 ## Import
 

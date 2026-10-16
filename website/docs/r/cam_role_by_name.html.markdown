@@ -86,16 +86,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRole](https://www.tencentcloud.com/document/product/598/33561) - This API (CreateRole) is used to create a role.
-* Create: [DescribeRoleList](https://www.tencentcloud.com/document/product/598/33559) - This API (DescribeRoleList) is used to get the role list under the account.
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Read: [DescribeRoleList](https://www.tencentcloud.com/document/product/598/33559) - This API (DescribeRoleList) is used to get the role list under the account.
-* Update: [DescribeRoleList](https://www.tencentcloud.com/document/product/598/33559) - This API (DescribeRoleList) is used to get the role list under the account.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Update: [UpdateAssumeRolePolicy](https://www.tencentcloud.com/document/product/598/33555) - This API (UpdateAssumeRolePolicy) is used to modify the trust policy of a role.
-* Update: [UpdateRoleDescription](https://www.tencentcloud.com/document/product/598/33554) - This API (UpdateRoleDescription) is used to modify the description of a role.
-* Delete: [DeleteRole](https://www.tencentcloud.com/document/product/598/33560) - This API (DeleteRole) is used to delete a specified role.
+* Create: [CreateRole](https://cloud.tencent.com/document/api/598/36225)
+* Create: [DescribeRoleList](https://cloud.tencent.com/document/api/598/36223)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Read: [DescribeRoleList](https://cloud.tencent.com/document/api/598/36223)
+* Update: [DescribeRoleList](https://cloud.tencent.com/document/api/598/36223)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Update: [UpdateAssumeRolePolicy](https://cloud.tencent.com/document/api/598/36219)
+* Update: [UpdateRoleDescription](https://cloud.tencent.com/document/api/598/36218)
+* Delete: [DeleteRole](https://cloud.tencent.com/document/api/598/36224)
 
 ## Import
 

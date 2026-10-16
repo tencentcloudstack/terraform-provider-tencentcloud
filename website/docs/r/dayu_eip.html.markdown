@@ -52,9 +52,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateDDoSEipAddress](https://cloud.tencent.com/document/api/297/95297) - This API is used to bind an EIP to an Anti-DDoS Advanced instance or a specified private IP of an ENI.
-* Create: [AssociateDDoSEipLoadBalancer](https://cloud.tencent.com/document/api/297/95296) - This API is used to bind an Anti-DDoS EIP to the specified private IP of a CLB instance.
-* Create: [DescribeListBGPIPInstances](https://cloud.tencent.com/document/api/297/95347) - This API is used to get a list of Anti-DDoS Advanced instances.
-* Read: [DescribeListBGPIPInstances](https://cloud.tencent.com/document/api/297/95347) - This API is used to get a list of Anti-DDoS Advanced instances.
-* Delete: [DisassociateDDoSEipAddress](https://cloud.tencent.com/document/api/297/95295) - This API is used to unbind an Anti-DDoS EIP.
+* Create: [AssociateDDoSEipAddress](https://cloud.tencent.com/document/api/297/95297)
+* Create: [AssociateDDoSEipLoadBalancer](https://cloud.tencent.com/document/api/297/95296)
+* Create: [DescribeListBGPIPInstances](https://cloud.tencent.com/document/api/297/95347)
+* Read: [DescribeListBGPIPInstances](https://cloud.tencent.com/document/api/297/95347)
+* Delete: [DisassociateDDoSEipAddress](https://cloud.tencent.com/document/api/297/95295)
 

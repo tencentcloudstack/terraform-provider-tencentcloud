@@ -79,14 +79,14 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAliasDomain](https://cloud.tencent.com/document/api/1552/81247) - This API is used to create an alias domain name.
-* Create: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245) - This API is used to query the alias domain name information list.
-* Create: [ModifyAliasDomainStatus](https://cloud.tencent.com/document/api/1552/81243) - This API is used to modify the status of an alias domain name.
-* Read: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245) - This API is used to query the alias domain name information list.
-* Update: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245) - This API is used to query the alias domain name information list.
-* Update: [ModifyAliasDomain](https://cloud.tencent.com/document/api/1552/81244) - This API is used to modify an alias domain name.
-* Update: [ModifyAliasDomainStatus](https://cloud.tencent.com/document/api/1552/81243) - This API is used to modify the status of an alias domain name.
-* Delete: [DeleteAliasDomain](https://cloud.tencent.com/document/api/1552/81246) - This API is used to delete an alias domain name.
-* Delete: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245) - This API is used to query the alias domain name information list.
-* Delete: [ModifyAliasDomainStatus](https://cloud.tencent.com/document/api/1552/81243) - This API is used to modify the status of an alias domain name.
+* Create: [CreateAliasDomain](https://cloud.tencent.com/document/api/1552/81247)
+* Create: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245)
+* Create: [ModifyAliasDomainStatus](https://cloud.tencent.com/document/api/1552/81243)
+* Read: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245)
+* Update: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245)
+* Update: [ModifyAliasDomain](https://cloud.tencent.com/document/api/1552/81244)
+* Update: [ModifyAliasDomainStatus](https://cloud.tencent.com/document/api/1552/81243)
+* Delete: [DeleteAliasDomain](https://cloud.tencent.com/document/api/1552/81246)
+* Delete: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245)
+* Delete: [ModifyAliasDomainStatus](https://cloud.tencent.com/document/api/1552/81243)
 

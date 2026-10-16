@@ -51,10 +51,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateOrganizationIdentity](https://cloud.tencent.com/document/api/850/100458) - This API is used to add an organization identity.
-* Read: [ListOrganizationIdentity](https://cloud.tencent.com/document/api/850/82934) - This API is used to get the list of access identities of an organization member.
-* Update: [UpdateOrganizationIdentity](https://cloud.tencent.com/document/api/850/100455) - This API is used to update an organization identity.
-* Delete: [DeleteOrganizationIdentity](https://cloud.tencent.com/document/api/850/100456) - This API is used to delete an organization identity.
+* Create: [CreateOrganizationIdentity](https://cloud.tencent.com/document/api/850/100458)
+* Read: [ListOrganizationIdentity](https://cloud.tencent.com/document/api/850/82934)
+* Update: [UpdateOrganizationIdentity](https://cloud.tencent.com/document/api/850/100455)
+* Delete: [DeleteOrganizationIdentity](https://cloud.tencent.com/document/api/850/100456)
 
 ## Import
 

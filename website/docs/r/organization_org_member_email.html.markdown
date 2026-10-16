@@ -47,9 +47,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddOrganizationMemberEmail](https://cloud.tencent.com/document/api/850/93333) - This API is used to add an organization member's mailbox.
-* Read: [DescribeOrganizationMemberEmailBind](https://cloud.tencent.com/document/api/850/93332) - This API is used to query detailed information about member mailbox binding.
-* Update: [UpdateOrganizationMemberEmailBind](https://cloud.tencent.com/document/api/850/93331) - This API is used to modify the mailbox of a bound member.
+* Create: [AddOrganizationMemberEmail](https://cloud.tencent.com/document/api/850/93333)
+* Read: [DescribeOrganizationMemberEmailBind](https://cloud.tencent.com/document/api/850/93332)
+* Update: [UpdateOrganizationMemberEmailBind](https://cloud.tencent.com/document/api/850/93331)
 
 ## Import
 

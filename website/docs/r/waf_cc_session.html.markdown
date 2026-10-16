@@ -54,10 +54,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpsertSession](https://www.tencentcloud.com/document/product/627/64534) - WAF session definition upsert API
-* Read: [DescribeSession](https://www.tencentcloud.com/document/product/627/64519) - WAF session definition query API
-* Update: [UpsertSession](https://www.tencentcloud.com/document/product/627/64534) - WAF session definition upsert API
-* Delete: [DeleteSession](https://www.tencentcloud.com/document/product/627/64760) - Delete CC attack session settings
+* Create: [UpsertSession](https://cloud.tencent.com/document/api/627/97645)
+* Read: [DescribeSession](https://cloud.tencent.com/document/api/627/97635)
+* Update: [UpsertSession](https://cloud.tencent.com/document/api/627/97645)
+* Delete: [DeleteSession](https://cloud.tencent.com/document/api/627/53602)
 
 ## Import
 

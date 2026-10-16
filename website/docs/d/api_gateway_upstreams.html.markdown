@@ -60,5 +60,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeUpstreamBindApis](https://cloud.tencent.com/document/api/628/70412) - This API is used to query APIs bound with an upstream.
+* Read: [DescribeUpstreamBindApis](https://cloud.tencent.com/document/api/628/70412)
 

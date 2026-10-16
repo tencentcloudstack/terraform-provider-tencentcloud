@@ -54,5 +54,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribePorts](https://www.tencentcloud.com/document/product/627/64770) - Obtain the SaaS-type WAF protection port list
+* Read: [DescribePorts](https://cloud.tencent.com/document/api/627/98033)
 

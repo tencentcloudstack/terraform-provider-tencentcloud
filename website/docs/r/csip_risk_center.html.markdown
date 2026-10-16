@@ -153,9 +153,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRiskCenterScanTask](https://cloud.tencent.com/document/api/664/94177) - Create Risk Center Scan Task
-* Read: [DescribeScanTaskList](https://cloud.tencent.com/document/api/664/97683) - Obtain Scan Task List
-* Update: [ModifyRiskCenterScanTask](https://cloud.tencent.com/document/api/664/103117) - Modify Risk Center Scan Task
-* Delete: [DeleteRiskScanTask](https://cloud.tencent.com/document/api/664/98745) - Delete Risk Center Scan Task
-* Delete: [StopRiskCenterTask](https://cloud.tencent.com/document/api/664/98744) - Stop Scanning Tasks of Risk Center
+* Create: [CreateRiskCenterScanTask](https://cloud.tencent.com/document/api/664/94177)
+* Read: [DescribeScanTaskList](https://cloud.tencent.com/document/api/664/97683)
+* Update: [ModifyRiskCenterScanTask](https://cloud.tencent.com/document/api/664/103117)
+* Delete: [DeleteRiskScanTask](https://cloud.tencent.com/document/api/664/98745)
+* Delete: [StopRiskCenterTask](https://cloud.tencent.com/document/api/664/98744)
 

@@ -44,9 +44,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyLivePushAuthKey](https://www.tencentcloud.com/document/product/267/30769) - This API is used to modify the LVB push authentication key.
-* Read: [DescribeLivePushAuthKey](https://www.tencentcloud.com/document/product/267/30771) - This API is used to query the LVB push authentication key.
-* Update: [ModifyLivePushAuthKey](https://www.tencentcloud.com/document/product/267/30769) - This API is used to modify the LVB push authentication key.
+* Create: [ModifyLivePushAuthKey](https://cloud.tencent.com/document/api/267/30423)
+* Read: [DescribeLivePushAuthKey](https://cloud.tencent.com/document/api/267/30425)
+* Update: [ModifyLivePushAuthKey](https://cloud.tencent.com/document/api/267/30423)
 
 ## Import
 

@@ -41,8 +41,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateOrganizationMembersPolicy](https://cloud.tencent.com/document/api/850/100457) - This API is used to create an organization member access policy.
-* Delete: [DeleteOrganizationMembersPolicy](https://cloud.tencent.com/document/api/850/96105) - This API is used to delete an organization member access policy.
+* Create: [CreateOrganizationMembersPolicy](https://cloud.tencent.com/document/api/850/100457)
+* Delete: [DeleteOrganizationMembersPolicy](https://cloud.tencent.com/document/api/850/96105)
 
 ## Import
 

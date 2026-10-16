@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAlarmNoticeCallbacks](https://www.tencentcloud.com/document/product/248/39301) - This API is used to obtain all the callback URLs of an alarm notification template.
+* Read: [DescribeAlarmNoticeCallbacks](https://cloud.tencent.com/document/api/248/51281)
 

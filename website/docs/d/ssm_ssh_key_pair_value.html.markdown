@@ -60,5 +60,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetSSHKeyPairValue](https://cloud.tencent.com/document/api/1140/60330) - This API is used to obtain the plaintext value of the SSH key secret.
+* Read: [GetSSHKeyPairValue](https://cloud.tencent.com/document/api/1140/60330)
 

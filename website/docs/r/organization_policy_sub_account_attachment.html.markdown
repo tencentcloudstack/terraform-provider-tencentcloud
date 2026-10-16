@@ -46,9 +46,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindOrganizationMemberAuthAccount](https://cloud.tencent.com/document/api/850/63308) - This API is used to bind an organization member to a sub-account of the organization admin.
-* Read: [DescribeOrganizationMemberAuthAccounts](https://cloud.tencent.com/document/api/850/82999) - This API is used to get the list of sub-accounts bound to an organization member.
-* Delete: [CancelOrganizationMemberAuthAccount](https://cloud.tencent.com/document/api/850/83000) - This API is used to unbind an organization member from a sub-account of the organization admin.
+* Create: [BindOrganizationMemberAuthAccount](https://cloud.tencent.com/document/api/850/63308)
+* Read: [DescribeOrganizationMemberAuthAccounts](https://cloud.tencent.com/document/api/850/82999)
+* Delete: [CancelOrganizationMemberAuthAccount](https://cloud.tencent.com/document/api/850/83000)
 
 ## Import
 

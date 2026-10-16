@@ -111,5 +111,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribePlans](https://cloud.tencent.com/document/api/1552/118485) - This API is used to query package information list with pagination support.
+* Read: [DescribePlans](https://cloud.tencent.com/document/api/1552/118485)
 

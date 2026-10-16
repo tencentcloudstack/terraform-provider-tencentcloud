@@ -156,11 +156,11 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateEngine](https://cloud.tencent.com/document/api/1364/75218)
 * Create: [DescribeSREInstances](https://cloud.tencent.com/document/api/1364/54940)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
 * Read: [DescribeSREInstances](https://cloud.tencent.com/document/api/1364/54940)
 * Update: [DescribeSREInstances](https://cloud.tencent.com/document/api/1364/54940)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
 * Update: [UpdateEngineInternetAccess](https://cloud.tencent.com/document/api/1364/81352)
 * Delete: [DeleteEngine](https://cloud.tencent.com/document/api/1364/75217)
 * Delete: [DescribeSREInstances](https://cloud.tencent.com/document/api/1364/54940)

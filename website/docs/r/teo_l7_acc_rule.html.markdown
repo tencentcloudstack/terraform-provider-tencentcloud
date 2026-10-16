@@ -844,13 +844,13 @@ The `rules` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeZoneConfigImportResult](https://cloud.tencent.com/document/api/1552/113231) - This API is used to query the results of site configuration import via API (ImportZoneConfig). This feature only supports the sites in the plans of the Standard Edition and the Enterprise Edition.
-* Create: [ImportZoneConfig](https://cloud.tencent.com/document/api/1552/113229) - This API is used to quickly import site configuration files. After the import is initiated, the API will return the corresponding task ID.
-* Read: [DescribeL7AccRules](https://cloud.tencent.com/document/api/1552/115820) - This API is used to query the rule list of the rule engine (https://intl.cloud.tencent.com/document/product/1552/70901?from_cn_redirect=1).
-* Update: [DescribeZoneConfigImportResult](https://cloud.tencent.com/document/api/1552/113231) - This API is used to query the results of site configuration import via API (ImportZoneConfig). This feature only supports the sites in the plans of the Standard Edition and the Enterprise Edition.
-* Update: [ImportZoneConfig](https://cloud.tencent.com/document/api/1552/113229) - This API is used to quickly import site configuration files. After the import is initiated, the API will return the corresponding task ID.
-* Delete: [DescribeZoneConfigImportResult](https://cloud.tencent.com/document/api/1552/113231) - This API is used to query the results of site configuration import via API (ImportZoneConfig). This feature only supports the sites in the plans of the Standard Edition and the Enterprise Edition.
-* Delete: [ImportZoneConfig](https://cloud.tencent.com/document/api/1552/113229) - This API is used to quickly import site configuration files. After the import is initiated, the API will return the corresponding task ID.
+* Create: [DescribeZoneConfigImportResult](https://cloud.tencent.com/document/api/1552/113231)
+* Create: [ImportZoneConfig](https://cloud.tencent.com/document/api/1552/113229)
+* Read: [DescribeL7AccRules](https://cloud.tencent.com/document/api/1552/115820)
+* Update: [DescribeZoneConfigImportResult](https://cloud.tencent.com/document/api/1552/113231)
+* Update: [ImportZoneConfig](https://cloud.tencent.com/document/api/1552/113229)
+* Delete: [DescribeZoneConfigImportResult](https://cloud.tencent.com/document/api/1552/113231)
+* Delete: [ImportZoneConfig](https://cloud.tencent.com/document/api/1552/113229)
 
 ## Import
 

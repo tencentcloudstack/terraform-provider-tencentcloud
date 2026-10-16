@@ -129,5 +129,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeLoadBalancerListByCertId](https://www.tencentcloud.com/document/product/214/33800) - This API is used to query the list of CLB instances associated with a certificate in a region by certificate ID.
+* Read: [DescribeLoadBalancerListByCertId](https://cloud.tencent.com/document/api/214/40953)
 

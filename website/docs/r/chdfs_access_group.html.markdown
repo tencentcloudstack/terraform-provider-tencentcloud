@@ -42,10 +42,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccessGroup](https://cloud.tencent.com/document/api/1105/51143) - This API is used to create a permission group.
-* Read: [DescribeAccessGroup](https://cloud.tencent.com/document/api/1105/51142) - This API is used to view the details of a permission group.
-* Update: [ModifyAccessGroup](https://cloud.tencent.com/document/api/1105/51140) - This API is used to modify the attributes of a permission group.
-* Delete: [DeleteAccessGroup](https://cloud.tencent.com/document/api/1105/52340) - This API is used to delete a permission group.
+* Create: [CreateAccessGroup](https://cloud.tencent.com/document/api/1105/51143)
+* Read: [DescribeAccessGroup](https://cloud.tencent.com/document/api/1105/51142)
+* Update: [ModifyAccessGroup](https://cloud.tencent.com/document/api/1105/51140)
+* Delete: [DeleteAccessGroup](https://cloud.tencent.com/document/api/1105/52340)
 
 ## Import
 

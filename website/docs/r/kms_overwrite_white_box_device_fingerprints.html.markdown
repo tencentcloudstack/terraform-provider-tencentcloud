@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [OverwriteWhiteBoxDeviceFingerprints](https://cloud.tencent.com/document/api/573/45805) - This API is used to overwrite the device fingerprint information of a specified key.
+* Create: [OverwriteWhiteBoxDeviceFingerprints](https://cloud.tencent.com/document/api/573/45805)
 

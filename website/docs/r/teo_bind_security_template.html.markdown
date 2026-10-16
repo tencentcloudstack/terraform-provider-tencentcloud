@@ -62,10 +62,10 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindSecurityTemplateToEntity](https://cloud.tencent.com/document/api/1552/100814) - This API is used to bind/unbind a domain name to/from a specific policy template.
-* Read: [DescribeWebSecurityTemplates](https://cloud.tencent.com/document/api/1552/121061) - This API is used to query the security policy configuration template list.
-* Read: [DescribeZones](https://cloud.tencent.com/document/api/1552/80713) - This API is used to query the information of sites that you have access to. You can filter sites based on different query criteria.
-* Delete: [BindSecurityTemplateToEntity](https://cloud.tencent.com/document/api/1552/100814) - This API is used to bind/unbind a domain name to/from a specific policy template.
+* Create: [BindSecurityTemplateToEntity](https://cloud.tencent.com/document/api/1552/100814)
+* Read: [DescribeWebSecurityTemplates](https://cloud.tencent.com/document/api/1552/121061)
+* Read: [DescribeZones](https://cloud.tencent.com/document/api/1552/80713)
+* Delete: [BindSecurityTemplateToEntity](https://cloud.tencent.com/document/api/1552/100814)
 
 ## Import
 

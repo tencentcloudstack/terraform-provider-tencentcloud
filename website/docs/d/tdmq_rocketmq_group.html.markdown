@@ -75,5 +75,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRocketMQGroups](https://cloud.tencent.com/document/api/1179/63420) - Query the RocketMQ consumer group list.
+* Read: [DescribeRocketMQGroups](https://cloud.tencent.com/document/api/1179/63420)
 

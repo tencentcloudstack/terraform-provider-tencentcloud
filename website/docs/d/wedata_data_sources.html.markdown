@@ -117,5 +117,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListDataSources](https://cloud.tencent.com/document/api/1267/123965) - This API is used to query the data source list in the designated project.
+* Read: [ListDataSources](https://cloud.tencent.com/document/api/1267/123965)
 

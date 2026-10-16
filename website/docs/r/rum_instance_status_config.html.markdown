@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ResumeInstance](https://cloud.tencent.com/document/api/1464/69207) - This API is used to recover a RUM business system so that you can use the application to report data normally.
-* Create: [StopInstance](https://cloud.tencent.com/document/api/1464/69206) - This API is used to stop an instance.
+* Create: [ResumeInstance](https://cloud.tencent.com/document/api/1464/69207)
+* Create: [StopInstance](https://cloud.tencent.com/document/api/1464/69206)
 * Read: [DescribeTawInstances](https://cloud.tencent.com/document/api/1464/69213)
-* Update: [ResumeInstance](https://cloud.tencent.com/document/api/1464/69207) - This API is used to recover a RUM business system so that you can use the application to report data normally.
-* Update: [StopInstance](https://cloud.tencent.com/document/api/1464/69206) - This API is used to stop an instance.
+* Update: [ResumeInstance](https://cloud.tencent.com/document/api/1464/69207)
+* Update: [StopInstance](https://cloud.tencent.com/document/api/1464/69206)
 
 ## Import
 

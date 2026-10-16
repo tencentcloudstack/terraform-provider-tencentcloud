@@ -72,5 +72,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDefaultParameters](https://www.tencentcloud.com/document/product/409/52653) - This API is used to query all parameters supported by a database version and engine.
+* Read: [DescribeDefaultParameters](https://cloud.tencent.com/document/api/409/84069)
 

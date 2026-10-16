@@ -149,5 +149,5 @@ Note: This field may return null, indicating that no valid values can be obtaine
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeMachines](https://www.tencentcloud.com/document/product/296/30889) - This API is used to obtain the list of hosts in a specific region.
+* Read: [DescribeMachines](https://cloud.tencent.com/document/api/296/19850)
 

@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeVpcTaskResult](https://www.tencentcloud.com/document/product/215/41567) - This API is used to query the execution result of a VPC task.
+* Create: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037)
 * Create: [DisableVpnGatewaySslClientCert](https://cloud.tencent.com/document/api/215/70284)
 * Create: [EnableVpnGatewaySslClientCert](https://cloud.tencent.com/document/api/215/70282)
 * Read: [DescribeVpnGatewaySslClients](https://cloud.tencent.com/document/api/215/70286)
-* Update: [DescribeVpcTaskResult](https://www.tencentcloud.com/document/product/215/41567) - This API is used to query the execution result of a VPC task.
+* Update: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037)
 * Update: [DisableVpnGatewaySslClientCert](https://cloud.tencent.com/document/api/215/70284)
 * Update: [EnableVpnGatewaySslClientCert](https://cloud.tencent.com/document/api/215/70282)
 

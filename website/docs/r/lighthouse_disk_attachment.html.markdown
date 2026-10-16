@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachDisks](https://cloud.tencent.com/document/api/1207/66096) - This API is used to attach one or more cloud disks.
-* Create: [DescribeDisks](https://cloud.tencent.com/document/api/1207/66093) - This API is used to query the information of one or more cloud disks.
-* Read: [DescribeDisks](https://cloud.tencent.com/document/api/1207/66093) - This API is used to query the information of one or more cloud disks.
-* Delete: [DescribeDisks](https://cloud.tencent.com/document/api/1207/66093) - This API is used to query the information of one or more cloud disks.
-* Delete: [DetachDisks](https://cloud.tencent.com/document/api/1207/66090) - This API is used to detach one or more cloud disks.
+* Create: [AttachDisks](https://cloud.tencent.com/document/api/1207/66096)
+* Create: [DescribeDisks](https://cloud.tencent.com/document/api/1207/66093)
+* Read: [DescribeDisks](https://cloud.tencent.com/document/api/1207/66093)
+* Delete: [DescribeDisks](https://cloud.tencent.com/document/api/1207/66093)
+* Delete: [DetachDisks](https://cloud.tencent.com/document/api/1207/66090)
 
 ## Import
 

@@ -44,8 +44,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCfsRule](https://www.tencentcloud.com/document/product/582/34508) - This API is used to create a permission group rule.
-* Read: [DescribeCfsRules](https://www.tencentcloud.com/document/product/582/34504) - This API is used to query the list of permission group rules.
-* Update: [UpdateCfsRule](https://www.tencentcloud.com/document/product/582/34502) - This API is used to update a permission rule.
-* Delete: [DeleteCfsRule](https://www.tencentcloud.com/document/product/582/34506) - This API is used to delete a permission group rule.
+* Create: [CreateCfsRule](https://cloud.tencent.com/document/api/582/38160)
+* Read: [DescribeCfsRules](https://cloud.tencent.com/document/api/582/38156)
+* Update: [UpdateCfsRule](https://cloud.tencent.com/document/api/582/38154)
+* Delete: [DeleteCfsRule](https://cloud.tencent.com/document/api/582/38158)
 

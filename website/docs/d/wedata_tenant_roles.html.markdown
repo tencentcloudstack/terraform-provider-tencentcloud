@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListTenantRoles](https://cloud.tencent.com/document/api/1267/123961) - Get the role list of all root accounts.
+* Read: [ListTenantRoles](https://cloud.tencent.com/document/api/1267/123961)
 

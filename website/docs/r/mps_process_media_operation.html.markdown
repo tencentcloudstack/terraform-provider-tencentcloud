@@ -586,5 +586,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ProcessMedia](https://cloud.tencent.com/document/api/862/37578) - This API is used to initiate a processing task for URL video links or media files in COS. Features include:
+* Create: [ProcessMedia](https://cloud.tencent.com/document/api/862/37578)
 

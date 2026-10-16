@@ -61,10 +61,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCronJob](https://cloud.tencent.com/document/api/1484/78094) - This API is used to create a cron job.
-* Read: [DescribeCronJobs](https://cloud.tencent.com/document/api/1484/78080) - This API is used to list cron jobs, selecting all by default if a non-mandatory array parameter is empty.
-* Update: [UpdateCronJob](https://cloud.tencent.com/document/api/1484/78061) - This API is used to update a cron job.
-* Delete: [DeleteCronJobs](https://cloud.tencent.com/document/api/1484/78089) - This API is used to delete cron jobs.
+* Create: [CreateCronJob](https://cloud.tencent.com/document/api/1484/78094)
+* Read: [DescribeCronJobs](https://cloud.tencent.com/document/api/1484/78080)
+* Update: [UpdateCronJob](https://cloud.tencent.com/document/api/1484/78061)
+* Delete: [DeleteCronJobs](https://cloud.tencent.com/document/api/1484/78089)
 
 ## Import
 

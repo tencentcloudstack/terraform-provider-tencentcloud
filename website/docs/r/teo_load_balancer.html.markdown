@@ -97,12 +97,12 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLoadBalancer](https://cloud.tencent.com/document/api/1552/111970) - This API is used to create a LoadBalancer. For details, see [Quickly Create Load Balancers](https://intl.cloud.tencent.com/document/product/1552/104223?from_cn_redirect=1). The load balancing feature is in beta test.
-* Create: [DescribeLoadBalancerList](https://cloud.tencent.com/document/api/1552/111972) - This API is used to query the LoadBalancer list. The load balancing feature is in beta test. If you need to use it, [contact us](https://www.tencentcloud.com/contact-us).
-* Read: [DescribeLoadBalancerList](https://cloud.tencent.com/document/api/1552/111972) - This API is used to query the LoadBalancer list. The load balancing feature is in beta test. If you need to use it, [contact us](https://www.tencentcloud.com/contact-us).
-* Update: [DescribeLoadBalancerList](https://cloud.tencent.com/document/api/1552/111972) - This API is used to query the LoadBalancer list. The load balancing feature is in beta test. If you need to use it, [contact us](https://www.tencentcloud.com/contact-us).
-* Update: [ModifyLoadBalancer](https://cloud.tencent.com/document/api/1552/111969) - This API is used to modify LoadBalancer configuration. The load balancing feature is in beta test. If you need to use it, [contact us](https://www.tencentcloud.com/contact-us).
-* Delete: [DeleteLoadBalancer](https://cloud.tencent.com/document/api/1552/111973) - This API is used to delete a LoadBalancer. If the LoadBalancer is referenced by other services (for example, Layer-4 proxy), the LoadBalancer cannot be deleted until the reference relationship is removed.
+* Create: [CreateLoadBalancer](https://cloud.tencent.com/document/api/1552/111970)
+* Create: [DescribeLoadBalancerList](https://cloud.tencent.com/document/api/1552/111972)
+* Read: [DescribeLoadBalancerList](https://cloud.tencent.com/document/api/1552/111972)
+* Update: [DescribeLoadBalancerList](https://cloud.tencent.com/document/api/1552/111972)
+* Update: [ModifyLoadBalancer](https://cloud.tencent.com/document/api/1552/111969)
+* Delete: [DeleteLoadBalancer](https://cloud.tencent.com/document/api/1552/111973)
 
 ## Import
 

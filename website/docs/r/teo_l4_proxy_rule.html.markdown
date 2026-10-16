@@ -101,12 +101,12 @@ The `l4_proxy_rules` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateL4ProxyRules](https://cloud.tencent.com/document/api/1552/103416) - This API is used to create Layer 4 proxy instance rules, supporting both individual and batch creation.
-* Read: [DescribeL4ProxyRules](https://cloud.tencent.com/document/api/1552/103412) - This API is used to query the forwarding rule list under a Layer 4 proxy instance.
-* Update: [ModifyL4ProxyRules](https://cloud.tencent.com/document/api/1552/103410) - This API is used to modify Layer 4 proxy forwarding rules, supporting both individual and batch modification.
-* Delete: [DeleteL4ProxyRules](https://cloud.tencent.com/document/api/1552/103414) - This API is used to delete Layer 4 proxy forwarding rules, supporting both individual and batch operation.
-* Delete: [DescribeL4ProxyRules](https://cloud.tencent.com/document/api/1552/103412) - This API is used to query the forwarding rule list under a Layer 4 proxy instance.
-* Delete: [ModifyL4ProxyRulesStatus](https://cloud.tencent.com/document/api/1552/103409) - This API is used to start or stop Layer 4 proxy forwarding rules, supporting both individual and batch operation.
+* Create: [CreateL4ProxyRules](https://cloud.tencent.com/document/api/1552/103416)
+* Read: [DescribeL4ProxyRules](https://cloud.tencent.com/document/api/1552/103412)
+* Update: [ModifyL4ProxyRules](https://cloud.tencent.com/document/api/1552/103410)
+* Delete: [DeleteL4ProxyRules](https://cloud.tencent.com/document/api/1552/103414)
+* Delete: [DescribeL4ProxyRules](https://cloud.tencent.com/document/api/1552/103412)
+* Delete: [ModifyL4ProxyRulesStatus](https://cloud.tencent.com/document/api/1552/103409)
 
 ## Import
 

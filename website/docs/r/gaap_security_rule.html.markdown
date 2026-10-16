@@ -57,10 +57,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSecurityRules](https://www.tencentcloud.com/document/product/608/33107) - This API is used to add security policy rules.
-* Read: [DescribeSecurityRules](https://www.tencentcloud.com/document/product/608/33138) - This API is used to query the list of security rules based on security rule ID. It supports querying 1 to 20 security rules at a time.
-* Update: [ModifySecurityRule](https://www.tencentcloud.com/document/product/608/33091) - This API is used to modify security policy rule names.
-* Delete: [DeleteSecurityRules](https://www.tencentcloud.com/document/product/608/33105) - This API is used to delete security policy rules.
+* Create: [CreateSecurityRules](https://cloud.tencent.com/document/api/608/36969)
+* Read: [DescribeSecurityRules](https://cloud.tencent.com/document/api/608/39749)
+* Update: [ModifySecurityRule](https://cloud.tencent.com/document/api/608/36953)
+* Delete: [DeleteSecurityRules](https://cloud.tencent.com/document/api/608/36967)
 
 ## Import
 

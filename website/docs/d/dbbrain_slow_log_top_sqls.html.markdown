@@ -76,5 +76,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSlowLogTopSqls](https://cloud.tencent.com/document/api/1130/57784) - This API is used to get and sort the top slow SQL statements in a specified time period by the aggregation mode of SQL template plus schema.
+* Read: [DescribeSlowLogTopSqls](https://cloud.tencent.com/document/api/1130/57784)
 

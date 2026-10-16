@@ -46,14 +46,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEventBus](https://cloud.tencent.com/document/api/1359/67686) - This API is used to create an event bus.
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Read: [GetEventBus](https://cloud.tencent.com/document/api/1359/67684) - This API is used to get the details of an event bus.
-* Update: [GetEventBus](https://cloud.tencent.com/document/api/1359/67684) - This API is used to get the details of an event bus.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Update: [UpdateEventBus](https://cloud.tencent.com/document/api/1359/67681) - This API is used to update an event bus.
-* Delete: [DeleteEventBus](https://cloud.tencent.com/document/api/1359/67685) - This API is used to delete an event bus.
+* Create: [CreateEventBus](https://cloud.tencent.com/document/api/1359/67686)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Read: [GetEventBus](https://cloud.tencent.com/document/api/1359/67684)
+* Update: [GetEventBus](https://cloud.tencent.com/document/api/1359/67684)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Update: [UpdateEventBus](https://cloud.tencent.com/document/api/1359/67681)
+* Delete: [DeleteEventBus](https://cloud.tencent.com/document/api/1359/67685)
 
 ## Import
 

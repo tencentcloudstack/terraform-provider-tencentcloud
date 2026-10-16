@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTopicProduceConnection](https://www.tencentcloud.com/document/product/597/53303) - This API is used to query the connection information of the topic producer.
+* Read: [DescribeTopicProduceConnection](https://cloud.tencent.com/document/api/597/85306)
 

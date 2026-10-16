@@ -84,6 +84,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTCPListeners](https://www.tencentcloud.com/document/product/608/33068) - This API (DescribeTCPListeners) is used to query the TCP listener information of a single connection or connection group.
-* Read: [DescribeUDPListeners](https://www.tencentcloud.com/document/product/608/33067) - This API (DescribeUDPListeners) is used to query the UDP listener information of a single connection or connection group.
+* Read: [DescribeTCPListeners](https://cloud.tencent.com/document/api/608/36999)
+* Read: [DescribeUDPListeners](https://cloud.tencent.com/document/api/608/36998)
 

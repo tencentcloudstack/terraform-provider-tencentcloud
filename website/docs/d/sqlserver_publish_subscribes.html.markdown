@@ -150,5 +150,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribePublishSubscribe](https://www.tencentcloud.com/document/product/238/72746) - This API is used to query the publish/subscribe relationship list.
+* Read: [DescribePublishSubscribe](https://cloud.tencent.com/document/api/238/46282)
 

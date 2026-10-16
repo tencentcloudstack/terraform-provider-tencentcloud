@@ -57,6 +57,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573) - This API is used to query the details of one or multiple instances.
-* Create: [RenewInstances](https://cloud.tencent.com/document/api/1207/73099) - This API is used to renew one or more Lighthouse instances.
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573)
+* Create: [RenewInstances](https://cloud.tencent.com/document/api/1207/73099)
 

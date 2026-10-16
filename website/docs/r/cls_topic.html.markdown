@@ -191,11 +191,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTopic](https://www.tencentcloud.com/document/product/614/42785) - This API is used to create logs or metric topics.
-* Read: [DescribeTopics](https://www.tencentcloud.com/document/product/614/42783) - This API is used to obtain logs or metric topic lists and supports pagination.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Update: [ModifyTopic](https://www.tencentcloud.com/document/product/614/42782) - This API is used to modify logs or metric topics.
-* Delete: [DeleteTopic](https://www.tencentcloud.com/document/product/614/42784) - This API is used to delete logs or metric topics.
+* Create: [CreateTopic](https://cloud.tencent.com/document/api/614/56456)
+* Read: [DescribeTopics](https://cloud.tencent.com/document/api/614/56454)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Update: [ModifyTopic](https://cloud.tencent.com/document/api/614/56453)
+* Delete: [DeleteTopic](https://cloud.tencent.com/document/api/614/56455)
 
 ## Import
 

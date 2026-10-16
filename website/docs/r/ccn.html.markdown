@@ -90,16 +90,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCcn](https://www.tencentcloud.com/document/product/215/34791) - This API is used to create a CCN instance.
-* Create: [ModifyCcnAttribute](https://www.tencentcloud.com/document/product/215/34783) - This API (ModifyCcnAttribute) is used to modify CCN attributes.
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeCcns](https://www.tencentcloud.com/document/product/215/34787) - This API (DescribeCcns) is used to query the CCN list.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [ModifyCcnAttribute](https://www.tencentcloud.com/document/product/215/34783) - This API (ModifyCcnAttribute) is used to modify CCN attributes.
-* Update: [ModifyCcnRegionBandwidthLimitsType](https://www.tencentcloud.com/document/product/215/34782) - This API is used to modify the bandwidth limit policy of a postpaid CCN instance.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Delete: [DeleteCcn](https://www.tencentcloud.com/document/product/215/34790) - This API (DeleteCcn) is used to delete CCNs.
-* Delete: [DescribeCcns](https://www.tencentcloud.com/document/product/215/34787) - This API (DescribeCcns) is used to query the CCN list.
+* Create: [CreateCcn](https://cloud.tencent.com/document/api/215/19204)
+* Create: [ModifyCcnAttribute](https://cloud.tencent.com/document/api/215/19195)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [ModifyCcnAttribute](https://cloud.tencent.com/document/api/215/19195)
+* Update: [ModifyCcnRegionBandwidthLimitsType](https://cloud.tencent.com/document/api/215/40485)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Delete: [DeleteCcn](https://cloud.tencent.com/document/api/215/19203)
+* Delete: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199)
 
 ## Import
 

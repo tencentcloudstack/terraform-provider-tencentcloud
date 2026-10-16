@@ -107,7 +107,7 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateTriggerWorkflow](https://cloud.tencent.com/document/api/1267/127267)
 * Read: [GetTriggerWorkflow](https://cloud.tencent.com/document/api/1267/127255)
-* Update: [UpdateTriggerWorkflow](https://cloud.tencent.com/document/api/1267/127241) - This API is used to update workflow, including basic information and workflow parameters.
+* Update: [UpdateTriggerWorkflow](https://cloud.tencent.com/document/api/1267/127241)
 * Delete: [DeleteTriggerWorkflow](https://cloud.tencent.com/document/api/1267/127263)
 
 ## Import

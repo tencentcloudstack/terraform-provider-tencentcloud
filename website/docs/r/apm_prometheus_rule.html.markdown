@@ -46,11 +46,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateApmPrometheusRule](https://cloud.tencent.com/document/api/1463/125082) - This API is used to create metric match rules between apm Business System and Prometheus Instance.
-* Create: [ModifyApmPrometheusRule](https://cloud.tencent.com/document/api/1463/125075) - This API is used to modify metric match rules between apm Business System and Prometheus Instance.
-* Read: [DescribeApmPrometheusRule](https://cloud.tencent.com/document/api/1463/125078) - This API is used to query the match rule for metrics between apm Business System and Prometheus Instance.
-* Update: [ModifyApmPrometheusRule](https://cloud.tencent.com/document/api/1463/125075) - This API is used to modify metric match rules between apm Business System and Prometheus Instance.
-* Delete: [ModifyApmPrometheusRule](https://cloud.tencent.com/document/api/1463/125075) - This API is used to modify metric match rules between apm Business System and Prometheus Instance.
+* Create: [CreateApmPrometheusRule](https://cloud.tencent.com/document/api/1463/125082)
+* Create: [ModifyApmPrometheusRule](https://cloud.tencent.com/document/api/1463/125075)
+* Read: [DescribeApmPrometheusRule](https://cloud.tencent.com/document/api/1463/125078)
+* Update: [ModifyApmPrometheusRule](https://cloud.tencent.com/document/api/1463/125075)
+* Delete: [ModifyApmPrometheusRule](https://cloud.tencent.com/document/api/1463/125075)
 
 ## Import
 

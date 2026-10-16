@@ -48,5 +48,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeProxyGroupStatistics](https://www.tencentcloud.com/document/product/608/33053) - This API is used to query listener statistics, including inbound/outbound bandwidth, inbound/outbound packets, and concurrence data. It supports granularities of 300, 3,600, and 86,400.
+* Read: [DescribeProxyGroupStatistics](https://cloud.tencent.com/document/api/608/37020)
 

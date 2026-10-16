@@ -121,7 +121,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/product/236/34462) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
-* Create: [StartBatchRollback](https://www.tencentcloud.com/document/product/236/18725) - This API (StartBatchRollback) is used to roll back the tables of a TencentDB instance in batches.
-* Read: [DescribeRollbackTaskDetail](https://www.tencentcloud.com/document/product/236/36099) - This API is used to query the rollback task detail of a cloud database instance.
+* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410)
+* Create: [StartBatchRollback](https://cloud.tencent.com/document/api/236/18725)
+* Read: [DescribeRollbackTaskDetail](https://cloud.tencent.com/document/api/236/44047)
 

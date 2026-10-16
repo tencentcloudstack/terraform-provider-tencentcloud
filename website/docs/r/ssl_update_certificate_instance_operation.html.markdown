@@ -64,5 +64,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateCertificateInstance](https://cloud.tencent.com/document/api/400/91649) - This API is used to one-click update old certificate resources. This API is asynchronous. After calling it, if DeployRecordId is 0, it means the task is in progress. Repeat the request to this API.
+* Create: [UpdateCertificateInstance](https://cloud.tencent.com/document/api/400/91649)
 

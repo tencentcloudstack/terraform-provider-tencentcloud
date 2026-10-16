@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDBSyncMode](https://cloud.tencent.com/document/api/557/19991) - This API is used to query the sync mode of a TencentDB instance.
-* Create: [ModifyDBSyncMode](https://cloud.tencent.com/document/api/557/19981) - This API is used to modify the sync mode of a TencentDB instance.
-* Read: [DescribeDBSyncMode](https://cloud.tencent.com/document/api/557/19991) - This API is used to query the sync mode of a TencentDB instance.
-* Update: [DescribeDBSyncMode](https://cloud.tencent.com/document/api/557/19991) - This API is used to query the sync mode of a TencentDB instance.
-* Update: [ModifyDBSyncMode](https://cloud.tencent.com/document/api/557/19981) - This API is used to modify the sync mode of a TencentDB instance.
+* Create: [DescribeDBSyncMode](https://cloud.tencent.com/document/api/557/19991)
+* Create: [ModifyDBSyncMode](https://cloud.tencent.com/document/api/557/19981)
+* Read: [DescribeDBSyncMode](https://cloud.tencent.com/document/api/557/19991)
+* Update: [DescribeDBSyncMode](https://cloud.tencent.com/document/api/557/19991)
+* Update: [ModifyDBSyncMode](https://cloud.tencent.com/document/api/557/19981)
 
 ## Import
 

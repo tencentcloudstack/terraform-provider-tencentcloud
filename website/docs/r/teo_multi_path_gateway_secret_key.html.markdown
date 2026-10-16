@@ -38,13 +38,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121341) - This API creates an access key for the multi-channel security acceleration gateway. Customers use the access key to sign requests for accessing the gateway.
-* Create: [DescribeMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121335) - This API is used to query keys for integrating multi-channel security acceleration gateways. Customers access multi-channel security acceleration gateways based on key signature.
-* Create: [ModifyMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121331) - This API is used to modify the access key for the multi-channel security acceleration gateway.The access key is used by customers to sign requests for gateway access. The original key becomes invalid after modification.
-* Read: [DescribeMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121335) - This API is used to query keys for integrating multi-channel security acceleration gateways. Customers access multi-channel security acceleration gateways based on key signature.
-* Update: [CreateMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121341) - This API creates an access key for the multi-channel security acceleration gateway. Customers use the access key to sign requests for accessing the gateway.
-* Update: [DescribeMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121335) - This API is used to query keys for integrating multi-channel security acceleration gateways. Customers access multi-channel security acceleration gateways based on key signature.
-* Update: [ModifyMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121331) - This API is used to modify the access key for the multi-channel security acceleration gateway.The access key is used by customers to sign requests for gateway access. The original key becomes invalid after modification.
+* Create: [CreateMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121341)
+* Create: [DescribeMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121335)
+* Create: [ModifyMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121331)
+* Read: [DescribeMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121335)
+* Update: [CreateMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121341)
+* Update: [DescribeMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121335)
+* Update: [ModifyMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121331)
 
 ## Import
 

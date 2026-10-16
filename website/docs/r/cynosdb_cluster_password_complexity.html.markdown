@@ -51,15 +51,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CopyClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92723) - This API is used to copy the password complexity of a replication cluster.
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
-* Create: [OpenClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92720) - This API is used to enable the custom password complexity feature.
-* Read: [DescribeClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92722) - This API is used to view the cluster password complexity details.
-* Update: [CopyClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92723) - This API is used to copy the password complexity of a replication cluster.
-* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
-* Update: [ModifyClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92721) - This API is used to modify or enable cluster password complexity.
-* Delete: [CloseClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92724) - This API is used to close cluster password complexity.
-* Delete: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
+* Create: [CopyClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92723)
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
+* Create: [OpenClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92720)
+* Read: [DescribeClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92722)
+* Update: [CopyClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92723)
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
+* Update: [ModifyClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92721)
+* Delete: [CloseClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92724)
+* Delete: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
 
 ## Import
 

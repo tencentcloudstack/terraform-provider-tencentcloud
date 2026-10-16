@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetAccountSummary](https://www.tencentcloud.com/document/product/598/41292) - This API is used to query account summary.
+* Read: [GetAccountSummary](https://cloud.tencent.com/document/api/598/58534)
 

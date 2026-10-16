@@ -180,17 +180,17 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCloudReadOnlyDBInstances](https://www.tencentcloud.com/document/product/238/55673) - This API is used to create read-only instances (cloud disk).
-* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/product/238/32113) - This API is used to query flow status.
-* Create: [DescribeOrders](https://www.tencentcloud.com/document/product/238/32134) - This API is used to query order information.
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/product/238/32115) - This API is used to query the list of instances.
-* Read: [DescribeDBSecurityGroups](https://www.tencentcloud.com/document/product/238/72730) - This API is used to query the security group details of instances.
-* Read: [DescribeReadOnlyGroupList](https://www.tencentcloud.com/document/product/238/72738) - This API is used to query the read-only group list.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [DescribeFlowStatus](https://www.tencentcloud.com/document/product/238/32113) - This API is used to query flow status.
-* Update: [DescribeOrders](https://www.tencentcloud.com/document/product/238/32134) - This API is used to query order information.
-* Update: [UpgradeDBInstance](https://www.tencentcloud.com/document/product/238/32094) - This API is used to upgrade an instance.
-* Delete: [DeleteDBInstance](https://www.tencentcloud.com/document/product/238/72759) - This API is used to release SQL server instances (eliminated immediately) in the recycle bin. The released instances will be physically terminated after being retained for a period of time.
-* Delete: [TerminateDBInstance](https://www.tencentcloud.com/document/product/238/34685) - This API is used to isolate an instance to move it into a recycle bin.
+* Create: [CreateCloudReadOnlyDBInstances](https://cloud.tencent.com/document/api/238/91709)
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
+* Create: [DescribeOrders](https://cloud.tencent.com/document/api/238/19937)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969)
+* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/238/46812)
+* Read: [DescribeReadOnlyGroupList](https://cloud.tencent.com/document/api/238/46771)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
+* Update: [DescribeOrders](https://cloud.tencent.com/document/api/238/19937)
+* Update: [UpgradeDBInstance](https://cloud.tencent.com/document/api/238/19948)
+* Delete: [DeleteDBInstance](https://cloud.tencent.com/document/api/238/46806)
+* Delete: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210)
 

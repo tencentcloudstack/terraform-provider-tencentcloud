@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeGatewayFlowQos](https://www.tencentcloud.com/document/product/215/36088) - This API is used to query the inbound IP bandwidth limit of a gateway.
+* Read: [DescribeGatewayFlowQos](https://cloud.tencent.com/document/api/215/43271)
 

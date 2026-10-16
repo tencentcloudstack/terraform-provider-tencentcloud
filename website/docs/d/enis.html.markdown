@@ -67,5 +67,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeNetworkInterfaces](https://www.tencentcloud.com/document/product/215/15817) - This API (DescribeNetworkInterfaces) is used to query the ENI list.
+* Read: [DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817)
 

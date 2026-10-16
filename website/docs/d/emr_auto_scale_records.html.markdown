@@ -57,5 +57,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAutoScaleRecords](https://cloud.tencent.com/document/api/589/100248) - This API is used to obtain the detailed automatic scaling records of a cluster.
+* Read: [DescribeAutoScaleRecords](https://cloud.tencent.com/document/api/589/100248)
 

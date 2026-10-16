@@ -54,11 +54,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDnsRecords](https://cloud.tencent.com/document/api/1552/80716) - This API is used to view DNS record information under a site, including DNS record name, record type, and record content. It supports querying specific DNS record information by specifying filter conditions.
-* Create: [ModifyDnsRecordsStatus](https://cloud.tencent.com/document/api/1552/114251) - You can batch modify the status of DNS records through this API, enabling and disabling records in bulk.
-* Read: [DescribeDnsRecords](https://cloud.tencent.com/document/api/1552/80716) - This API is used to view DNS record information under a site, including DNS record name, record type, and record content. It supports querying specific DNS record information by specifying filter conditions.
-* Update: [DescribeDnsRecords](https://cloud.tencent.com/document/api/1552/80716) - This API is used to view DNS record information under a site, including DNS record name, record type, and record content. It supports querying specific DNS record information by specifying filter conditions.
-* Update: [ModifyDnsRecordsStatus](https://cloud.tencent.com/document/api/1552/114251) - You can batch modify the status of DNS records through this API, enabling and disabling records in bulk.
+* Create: [DescribeDnsRecords](https://cloud.tencent.com/document/api/1552/80716)
+* Create: [ModifyDnsRecordsStatus](https://cloud.tencent.com/document/api/1552/114251)
+* Read: [DescribeDnsRecords](https://cloud.tencent.com/document/api/1552/80716)
+* Update: [DescribeDnsRecords](https://cloud.tencent.com/document/api/1552/80716)
+* Update: [ModifyDnsRecordsStatus](https://cloud.tencent.com/document/api/1552/114251)
 
 ## Import
 

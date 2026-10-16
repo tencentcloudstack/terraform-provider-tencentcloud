@@ -60,13 +60,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDataEngine](https://cloud.tencent.com/document/api/1342/99274) - This API is used to obtain detailed data engine information based on names.
+* Create: [DescribeDataEngine](https://cloud.tencent.com/document/api/1342/99274)
 * Create: [DescribeDataEngines](https://cloud.tencent.com/document/api/1342/86308)
-* Create: [UpdateUserDataEngineConfig](https://cloud.tencent.com/document/api/1342/99264) - This API is used to modify the custom configuration of the user's engine.
-* Read: [DescribeUserDataEngineConfig](https://cloud.tencent.com/document/api/1342/99278) - This API is used to query user-defined engine parameters.
-* Update: [DescribeDataEngine](https://cloud.tencent.com/document/api/1342/99274) - This API is used to obtain detailed data engine information based on names.
+* Create: [UpdateUserDataEngineConfig](https://cloud.tencent.com/document/api/1342/99264)
+* Read: [DescribeUserDataEngineConfig](https://cloud.tencent.com/document/api/1342/99278)
+* Update: [DescribeDataEngine](https://cloud.tencent.com/document/api/1342/99274)
 * Update: [DescribeDataEngines](https://cloud.tencent.com/document/api/1342/86308)
-* Update: [UpdateUserDataEngineConfig](https://cloud.tencent.com/document/api/1342/99264) - This API is used to modify the custom configuration of the user's engine.
+* Update: [UpdateUserDataEngineConfig](https://cloud.tencent.com/document/api/1342/99264)
 
 ## Import
 

@@ -59,15 +59,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDomain](https://cloud.tencent.com/document/api/1427/56184) - This API is used to add a domain.
-* Create: [DescribeDomain](https://cloud.tencent.com/document/api/1427/56173) - This API is used to get the information of a domain.
-* Create: [ModifyDomainRemark](https://cloud.tencent.com/document/api/1427/56161) - This API is used to set the remarks of a domain.
-* Create: [ModifyDomainStatus](https://cloud.tencent.com/document/api/1427/56160) - This API is used to modify the status of a domain.
-* Read: [DescribeDomain](https://cloud.tencent.com/document/api/1427/56173) - This API is used to get the information of a domain.
-* Update: [DescribeDomain](https://cloud.tencent.com/document/api/1427/56173) - This API is used to get the information of a domain.
-* Update: [ModifyDomainRemark](https://cloud.tencent.com/document/api/1427/56161) - This API is used to set the remarks of a domain.
-* Update: [ModifyDomainStatus](https://cloud.tencent.com/document/api/1427/56160) - This API is used to modify the status of a domain.
-* Delete: [DeleteDomain](https://cloud.tencent.com/document/api/1427/56178) - This API is used to delete a domain.
+* Create: [CreateDomain](https://cloud.tencent.com/document/api/1427/56184)
+* Create: [DescribeDomain](https://cloud.tencent.com/document/api/1427/56173)
+* Create: [ModifyDomainRemark](https://cloud.tencent.com/document/api/1427/56161)
+* Create: [ModifyDomainStatus](https://cloud.tencent.com/document/api/1427/56160)
+* Read: [DescribeDomain](https://cloud.tencent.com/document/api/1427/56173)
+* Update: [DescribeDomain](https://cloud.tencent.com/document/api/1427/56173)
+* Update: [ModifyDomainRemark](https://cloud.tencent.com/document/api/1427/56161)
+* Update: [ModifyDomainStatus](https://cloud.tencent.com/document/api/1427/56160)
+* Delete: [DeleteDomain](https://cloud.tencent.com/document/api/1427/56178)
 
 ## Import
 

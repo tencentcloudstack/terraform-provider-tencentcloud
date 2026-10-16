@@ -42,10 +42,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AllocateIp6AddressesBandwidth](https://www.tencentcloud.com/document/product/215/68131) - This API is used to allocate IPv6 public network bandwidth for classic elastic public IPv6 addresses.
-* Create: [DescribeTaskResult](https://www.tencentcloud.com/document/product/215/34772) - This API is used to query the EIP async job execution results.
-* Read: [DescribeIp6Addresses](https://www.tencentcloud.com/document/product/215/68128) - This API is used to query the detailed information on one or multiple classic elastic public IPv6 instances.
-* Update: [DescribeTaskResult](https://www.tencentcloud.com/document/product/215/34772) - This API is used to query the EIP async job execution results.
-* Update: [ModifyIp6AddressesBandwidth](https://www.tencentcloud.com/document/product/215/68124) - This API is used to adjust the bandwidth limit of a classic elastic public IPv6 instance.
-* Delete: [ReleaseIp6AddressesBandwidth](https://www.tencentcloud.com/document/product/215/68122) - This API is used to release the IPv6 public network bandwidth of classic elastic public IPv6 instances.
+* Create: [AllocateIp6AddressesBandwidth](https://cloud.tencent.com/document/api/215/40090)
+* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271)
+* Read: [DescribeIp6Addresses](https://cloud.tencent.com/document/api/215/40089)
+* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271)
+* Update: [ModifyIp6AddressesBandwidth](https://cloud.tencent.com/document/api/215/40088)
+* Delete: [ReleaseIp6AddressesBandwidth](https://cloud.tencent.com/document/api/215/40087)
 

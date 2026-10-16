@@ -95,13 +95,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRocketMQVipInstance](https://cloud.tencent.com/document/api/1179/95721) - This API is used to create a RocketMQ 4.x cluster.
-* Create: [DescribeRocketMQVipInstances](https://cloud.tencent.com/document/api/1179/80903) - Query the RocketMQ 4.x cluster list.
-* Read: [DescribeRocketMQVipInstanceDetail](https://cloud.tencent.com/document/api/1179/86725) - Query RocketMQ cluster info.
-* Read: [DescribeRocketMQVipInstances](https://cloud.tencent.com/document/api/1179/80903) - Query the RocketMQ 4.x cluster list.
-* Update: [DescribeRocketMQVipInstances](https://cloud.tencent.com/document/api/1179/80903) - Query the RocketMQ 4.x cluster list.
-* Update: [ModifyRocketMQCluster](https://cloud.tencent.com/document/api/1179/63417) - This API is used to modify the attributes of a RocketMQ cluster.
-* Update: [ModifyRocketMQInstanceSpec](https://cloud.tencent.com/document/api/1179/90461) - This API is used to modify the RocketMQ dedicated cluster configuration, supporting upgrades of instance specification, number of nodes and storage, as well as downgrades of instance specification.
-* Delete: [DeleteRocketMQVipInstance](https://cloud.tencent.com/document/api/1179/95802) - This API is used to delete a RocketMQ dedicated or generic cluster.
-* Delete: [DescribeRocketMQVipInstanceDetail](https://cloud.tencent.com/document/api/1179/86725) - Query RocketMQ cluster info.
+* Create: [CreateRocketMQVipInstance](https://cloud.tencent.com/document/api/1179/95721)
+* Create: [DescribeRocketMQVipInstances](https://cloud.tencent.com/document/api/1179/80903)
+* Read: [DescribeRocketMQVipInstanceDetail](https://cloud.tencent.com/document/api/1179/86725)
+* Read: [DescribeRocketMQVipInstances](https://cloud.tencent.com/document/api/1179/80903)
+* Update: [DescribeRocketMQVipInstances](https://cloud.tencent.com/document/api/1179/80903)
+* Update: [ModifyRocketMQCluster](https://cloud.tencent.com/document/api/1179/63417)
+* Update: [ModifyRocketMQInstanceSpec](https://cloud.tencent.com/document/api/1179/90461)
+* Delete: [DeleteRocketMQVipInstance](https://cloud.tencent.com/document/api/1179/95802)
+* Delete: [DescribeRocketMQVipInstanceDetail](https://cloud.tencent.com/document/api/1179/86725)
 

@@ -93,5 +93,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBInstanceNodeProperty](https://www.tencentcloud.com/document/product/240/74083) - This API is used to query node attributes, such as the AZ, node name, address, role, status, delay between primary and secondary nodes, priority, voting right, and tags.
+* Read: [DescribeDBInstanceNodeProperty](https://cloud.tencent.com/document/api/240/82022)
 

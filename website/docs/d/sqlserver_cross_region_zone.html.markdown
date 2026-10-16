@@ -37,5 +37,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCrossRegionZone](https://www.tencentcloud.com/document/product/238/72758) - This API is used to query the disaster recovery region and AZ of the secondary node based on the primary instance.
+* Read: [DescribeCrossRegionZone](https://cloud.tencent.com/document/api/238/47201)
 

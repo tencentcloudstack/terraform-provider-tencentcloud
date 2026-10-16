@@ -47,5 +47,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDedicatedClusterHosts](https://cloud.tencent.com/document/api/1346/73763) - This API is used to query host information of the CDC
+* Read: [DescribeDedicatedClusterHosts](https://cloud.tencent.com/document/api/1346/73763)
 

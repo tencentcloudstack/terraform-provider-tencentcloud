@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyAccountRemark](https://www.tencentcloud.com/document/product/409/18108) - This API is used to modify account remarks.
+* Create: [ModifyAccountRemark](https://cloud.tencent.com/document/api/409/18108)
 

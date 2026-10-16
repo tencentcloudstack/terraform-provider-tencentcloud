@@ -55,13 +55,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeCustomizedConfigAssociateList](https://www.tencentcloud.com/document/product/214/42308) - This API is used to query the locations, servers, or CLB instances bound to a configuration. If there are domains, the result will be filtered by domain.
-* Create: [DescribeCustomizedConfigList](https://www.tencentcloud.com/document/product/214/42307) - Pull the list of custom configurations. The configurations of the specified type under the user's AppId will be returned.
-* Create: [SetCustomizedConfigForLoadBalancer](https://www.tencentcloud.com/document/product/214/51215) - This API is used to create, delete, modify, bind, and unbind custom CLB configurations.
-* Read: [DescribeCustomizedConfigAssociateList](https://www.tencentcloud.com/document/product/214/42308) - This API is used to query the locations, servers, or CLB instances bound to a configuration. If there are domains, the result will be filtered by domain.
-* Read: [DescribeCustomizedConfigList](https://www.tencentcloud.com/document/product/214/42307) - Pull the list of custom configurations. The configurations of the specified type under the user's AppId will be returned.
-* Update: [SetCustomizedConfigForLoadBalancer](https://www.tencentcloud.com/document/product/214/51215) - This API is used to create, delete, modify, bind, and unbind custom CLB configurations.
-* Delete: [SetCustomizedConfigForLoadBalancer](https://www.tencentcloud.com/document/product/214/51215) - This API is used to create, delete, modify, bind, and unbind custom CLB configurations.
+* Create: [DescribeCustomizedConfigAssociateList](https://cloud.tencent.com/document/api/214/60010)
+* Create: [DescribeCustomizedConfigList](https://cloud.tencent.com/document/api/214/60009)
+* Create: [SetCustomizedConfigForLoadBalancer](https://cloud.tencent.com/document/api/214/60008)
+* Read: [DescribeCustomizedConfigAssociateList](https://cloud.tencent.com/document/api/214/60010)
+* Read: [DescribeCustomizedConfigList](https://cloud.tencent.com/document/api/214/60009)
+* Update: [SetCustomizedConfigForLoadBalancer](https://cloud.tencent.com/document/api/214/60008)
+* Delete: [SetCustomizedConfigForLoadBalancer](https://cloud.tencent.com/document/api/214/60008)
 
 ## Import
 

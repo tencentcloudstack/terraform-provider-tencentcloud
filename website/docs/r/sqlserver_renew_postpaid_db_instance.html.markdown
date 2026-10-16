@@ -83,9 +83,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RenewPostpaidDBInstance](https://www.tencentcloud.com/document/product/238/72754) - This API is used to recover the pay-as-you-go instance that is manually isolated through the API TerminateDBInstance from the recycle bin.
-* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/product/238/32115) - This API is used to query the list of instances.
-* Update: [RenewPostpaidDBInstance](https://www.tencentcloud.com/document/product/238/72754) - This API is used to recover the pay-as-you-go instance that is manually isolated through the API TerminateDBInstance from the recycle bin.
+* Create: [RenewPostpaidDBInstance](https://cloud.tencent.com/document/api/238/46805)
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969)
+* Update: [RenewPostpaidDBInstance](https://cloud.tencent.com/document/api/238/46805)
 
 ## Import
 

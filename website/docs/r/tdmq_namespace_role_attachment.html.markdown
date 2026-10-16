@@ -67,8 +67,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEnvironmentRole](https://cloud.tencent.com/document/api/1179/62402) - This API is used to create an environment role.
-* Read: [DescribeEnvironmentRoles](https://cloud.tencent.com/document/api/1179/49051) - This API is used to get the list of namespace roles.
-* Update: [ModifyEnvironmentRole](https://cloud.tencent.com/document/api/1179/62398) - This API is used to modify an environment role.
-* Delete: [DeleteEnvironmentRoles](https://cloud.tencent.com/document/api/1179/62400) - This API is used to delete an environment role.
+* Create: [CreateEnvironmentRole](https://cloud.tencent.com/document/api/1179/62402)
+* Read: [DescribeEnvironmentRoles](https://cloud.tencent.com/document/api/1179/49051)
+* Update: [ModifyEnvironmentRole](https://cloud.tencent.com/document/api/1179/62398)
+* Delete: [DeleteEnvironmentRoles](https://cloud.tencent.com/document/api/1179/62400)
 

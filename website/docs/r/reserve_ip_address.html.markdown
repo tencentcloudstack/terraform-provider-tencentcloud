@@ -52,13 +52,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateReserveIpAddresses](https://www.tencentcloud.com/document/product/215/66342) - This API is used to create a reserved private IP address.
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeReserveIpAddresses](https://www.tencentcloud.com/document/product/215/66340) - This API is used to query reserved private IP addresses.
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [ModifyReserveIpAddress](https://www.tencentcloud.com/document/product/215/66339) - This API is used to modify a reserved private IP address.
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
-* Delete: [DeleteReserveIpAddresses](https://www.tencentcloud.com/document/product/215/66341) - This API is used to delete a reserved private IP address.
+* Create: [CreateReserveIpAddresses](https://cloud.tencent.com/document/api/215/112867)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Read: [DescribeReserveIpAddresses](https://cloud.tencent.com/document/api/215/112865)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Update: [ModifyReserveIpAddress](https://cloud.tencent.com/document/api/215/112864)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
+* Delete: [DeleteReserveIpAddresses](https://cloud.tencent.com/document/api/215/112866)
 
 ## Import
 

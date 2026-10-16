@@ -71,5 +71,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDataSource](https://cloud.tencent.com/document/api/1267/123976) - This API is used to create a data source in the designated project.
+* Create: [CreateDataSource](https://cloud.tencent.com/document/api/1267/123976)
 

@@ -390,13 +390,13 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEndpointGroup](https://cloud.tencent.com/document/api/1817/130173) - This API is used to create a terminal node group.
-* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
-* Read: [DescribeEndpointGroups](https://cloud.tencent.com/document/api/1817/130163) - Query a terminal node group.
-* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
-* Update: [ModifyEndpointGroup](https://cloud.tencent.com/document/api/1817/130158) - This API is used to modify a terminal node group.
-* Delete: [DeleteEndpointGroups](https://cloud.tencent.com/document/api/1817/130169) - Delete a terminal node group.
-* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
+* Create: [CreateEndpointGroup](https://cloud.tencent.com/document/api/1817/130173)
+* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942)
+* Read: [DescribeEndpointGroups](https://cloud.tencent.com/document/api/1817/130163)
+* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942)
+* Update: [ModifyEndpointGroup](https://cloud.tencent.com/document/api/1817/130158)
+* Delete: [DeleteEndpointGroups](https://cloud.tencent.com/document/api/1817/130169)
+* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942)
 
 ## Import
 

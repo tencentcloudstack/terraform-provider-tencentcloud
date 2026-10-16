@@ -47,10 +47,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCmqSubscribe](https://cloud.tencent.com/document/api/1179/55916) - This API is used to create a CMQ subscription.
-* Read: [DescribeCmqSubscriptionDetail](https://cloud.tencent.com/document/api/1179/55908) - This API is used to query the CMQ subscription details.
-* Update: [ModifyCmqSubscriptionAttribute](https://cloud.tencent.com/document/api/1179/55904) - This API is used to modify the attributes of a CMQ subscription.
-* Delete: [DeleteCmqSubscribe](https://cloud.tencent.com/document/api/1179/55913) - This API is used to delete a CMQ subscription.
+* Create: [CreateCmqSubscribe](https://cloud.tencent.com/document/api/1179/55916)
+* Read: [DescribeCmqSubscriptionDetail](https://cloud.tencent.com/document/api/1179/55908)
+* Update: [ModifyCmqSubscriptionAttribute](https://cloud.tencent.com/document/api/1179/55904)
+* Delete: [DeleteCmqSubscribe](https://cloud.tencent.com/document/api/1179/55913)
 
 ## Import
 

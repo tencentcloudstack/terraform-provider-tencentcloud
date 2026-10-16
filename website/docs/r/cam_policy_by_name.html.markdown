@@ -57,13 +57,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePolicy](https://www.tencentcloud.com/document/product/598/32248) - This API (CreatePolicy) is used to create a policy.
-* Create: [ListPolicies](https://www.tencentcloud.com/document/product/598/32240) - This API is used to query the policy list.
-* Read: [GetPolicy](https://www.tencentcloud.com/document/product/598/32244) - This API (GetPolicy) is used to query and view policy details.
-* Read: [ListPolicies](https://www.tencentcloud.com/document/product/598/32240) - This API is used to query the policy list.
-* Update: [UpdatePolicy](https://www.tencentcloud.com/document/product/598/45874) - This API is used to update a policy.
-* Delete: [DeletePolicy](https://www.tencentcloud.com/document/product/598/32247) - This API (DeletePolicy) is used to delete a policy.
-* Delete: [ListPolicies](https://www.tencentcloud.com/document/product/598/32240) - This API is used to query the policy list.
+* Create: [CreatePolicy](https://cloud.tencent.com/document/api/598/34578)
+* Create: [ListPolicies](https://cloud.tencent.com/document/api/598/34570)
+* Read: [GetPolicy](https://cloud.tencent.com/document/api/598/34574)
+* Read: [ListPolicies](https://cloud.tencent.com/document/api/598/34570)
+* Update: [UpdatePolicy](https://cloud.tencent.com/document/api/598/34569)
+* Delete: [DeletePolicy](https://cloud.tencent.com/document/api/598/34577)
+* Delete: [ListPolicies](https://cloud.tencent.com/document/api/598/34570)
 
 ## Import
 

@@ -143,11 +143,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DisableFlowLogs](https://www.tencentcloud.com/document/product/215/47421) - This API is used to disable flow log.
-* Create: [EnableFlowLogs](https://www.tencentcloud.com/document/product/215/47420) - This API is used to enable flow log.
-* Read: [DescribeFlowLogs](https://www.tencentcloud.com/document/product/215/36908) - This API is used to query all the flow logs of the current account.
-* Update: [DisableFlowLogs](https://www.tencentcloud.com/document/product/215/47421) - This API is used to disable flow log.
-* Update: [EnableFlowLogs](https://www.tencentcloud.com/document/product/215/47420) - This API is used to enable flow log.
+* Create: [DisableFlowLogs](https://cloud.tencent.com/document/api/215/73922)
+* Create: [EnableFlowLogs](https://cloud.tencent.com/document/api/215/73921)
+* Read: [DescribeFlowLogs](https://cloud.tencent.com/document/api/215/35012)
+* Update: [DisableFlowLogs](https://cloud.tencent.com/document/api/215/73922)
+* Update: [EnableFlowLogs](https://cloud.tencent.com/document/api/215/73921)
 
 ## Import
 

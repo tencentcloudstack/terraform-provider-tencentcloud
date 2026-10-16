@@ -50,9 +50,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyMaintainTimeWindow](https://www.tencentcloud.com/document/product/409/78801) - This API is used to modify the instance maintenance window.
-* Read: [DescribeMaintainTimeWindow](https://www.tencentcloud.com/document/product/409/78803) - This API is used to query instance maintenance window.
-* Update: [ModifyMaintainTimeWindow](https://www.tencentcloud.com/document/product/409/78801) - This API is used to modify the instance maintenance window.
+* Create: [ModifyMaintainTimeWindow](https://cloud.tencent.com/document/api/409/115530)
+* Read: [DescribeMaintainTimeWindow](https://cloud.tencent.com/document/api/409/115531)
+* Update: [ModifyMaintainTimeWindow](https://cloud.tencent.com/document/api/409/115530)
 
 ## Import
 

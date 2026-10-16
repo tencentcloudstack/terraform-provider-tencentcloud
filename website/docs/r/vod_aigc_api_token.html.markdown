@@ -55,11 +55,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAigcApiToken](https://www.tencentcloud.com/document/product/266/78287) - This API is used to create a Token for AIGC API calls. Data sync has a delay once created. It can be queried or deleted after about 30 seconds.
-* Create: [DescribeAigcApiTokens](https://www.tencentcloud.com/document/product/266/78285) - This API is used to query the list of AIGC API Tokens. Data sync has a delay after creation or deletion. The latest data can be queried after about 30 seconds.
-* Read: [DescribeAigcApiTokens](https://www.tencentcloud.com/document/product/266/78285) - This API is used to query the list of AIGC API Tokens. Data sync has a delay after creation or deletion. The latest data can be queried after about 30 seconds.
-* Delete: [DeleteAigcApiToken](https://www.tencentcloud.com/document/product/266/78286) - Deletes an AIGC API Token. The AIGC quota associated with the Token will also be deleted.
-* Delete: [DescribeAigcApiTokens](https://www.tencentcloud.com/document/product/266/78285) - This API is used to query the list of AIGC API Tokens. Data sync has a delay after creation or deletion. The latest data can be queried after about 30 seconds.
+* Create: [CreateAigcApiToken](https://cloud.tencent.com/document/api/266/128054)
+* Create: [DescribeAigcApiTokens](https://cloud.tencent.com/document/api/266/128052)
+* Read: [DescribeAigcApiTokens](https://cloud.tencent.com/document/api/266/128052)
+* Delete: [DeleteAigcApiToken](https://cloud.tencent.com/document/api/266/128053)
+* Delete: [DescribeAigcApiTokens](https://cloud.tencent.com/document/api/266/128052)
 
 ## Import
 

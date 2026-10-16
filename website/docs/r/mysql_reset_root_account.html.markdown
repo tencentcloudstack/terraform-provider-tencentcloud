@@ -85,5 +85,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ResetRootAccount](https://www.tencentcloud.com/document/product/236/46757) - This API is used to reset the root account and initialize the account permissions.
+* Create: [ResetRootAccount](https://cloud.tencent.com/document/api/236/72551)
 

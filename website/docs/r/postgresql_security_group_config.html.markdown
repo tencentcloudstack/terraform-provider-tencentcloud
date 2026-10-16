@@ -63,7 +63,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/document/product/409/52647) - This API is used to modify the security group of an instance.
-* Read: [DescribeDBInstanceSecurityGroups](https://www.tencentcloud.com/document/product/409/52648) - This API is used to query the security group of an instance.
-* Update: [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/document/product/409/52647) - This API is used to modify the security group of an instance.
+* Create: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84063)
+* Read: [DescribeDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84064)
+* Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84063)
 

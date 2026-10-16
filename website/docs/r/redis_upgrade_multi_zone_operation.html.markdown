@@ -38,6 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeTaskInfo](https://www.tencentcloud.com/document/product/239/32064) - This API is used to get the execution of a specified task.
-* Create: [UpgradeVersionToMultiAvailabilityZones](https://www.tencentcloud.com/document/product/239/40162) - This API is deprecated.
+* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601)
+* Create: [UpgradeVersionToMultiAvailabilityZones](https://cloud.tencent.com/document/api/239/54759)
 

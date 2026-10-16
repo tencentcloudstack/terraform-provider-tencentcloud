@@ -39,10 +39,10 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateDedicatedClusterImageCache](https://cloud.tencent.com/document/api/1346/118244)
-* Create: [DescribeImages](https://www.tencentcloud.com/document/product/213/33272) - This API is used to view the list of images.
-* Read: [DescribeImages](https://www.tencentcloud.com/document/product/213/33272) - This API is used to view the list of images.
+* Create: [DescribeImages](https://cloud.tencent.com/document/api/213/15715)
+* Read: [DescribeImages](https://cloud.tencent.com/document/api/213/15715)
 * Delete: [DeleteDedicatedClusterImageCache](https://cloud.tencent.com/document/api/1346/118243)
-* Delete: [DescribeImages](https://www.tencentcloud.com/document/product/213/33272) - This API is used to view the list of images.
+* Delete: [DescribeImages](https://cloud.tencent.com/document/api/213/15715)
 
 ## Import
 

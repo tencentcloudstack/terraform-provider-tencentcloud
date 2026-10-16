@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeMountPoints](https://cloud.tencent.com/document/api/1105/51152) - This API is used to view the list of mount points.
+* Read: [DescribeMountPoints](https://cloud.tencent.com/document/api/1105/51152)
 

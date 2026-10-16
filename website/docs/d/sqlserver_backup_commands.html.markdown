@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBackupCommand](https://www.tencentcloud.com/document/product/238/39839) - This API is used to query the commands of creating backups canonically.
+* Read: [DescribeBackupCommand](https://cloud.tencent.com/document/api/238/53189)
 

@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeGrafanaInstances](https://www.tencentcloud.com/document/product/248/49759) - This API is used to list all Grafana instances under a user account.
-* Create: [UpdateDNSConfig](https://www.tencentcloud.com/document/product/248/49746) - This API is used to update the Grafana DNS configuration.
-* Read: [DescribeDNSConfig](https://www.tencentcloud.com/document/product/248/49762) - This API is used to list Grafana DNS configurations.
-* Update: [DescribeGrafanaInstances](https://www.tencentcloud.com/document/product/248/49759) - This API is used to list all Grafana instances under a user account.
-* Update: [UpdateDNSConfig](https://www.tencentcloud.com/document/product/248/49746) - This API is used to update the Grafana DNS configuration.
+* Create: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208)
+* Create: [UpdateDNSConfig](https://cloud.tencent.com/document/api/248/79194)
+* Read: [DescribeDNSConfig](https://cloud.tencent.com/document/api/248/79211)
+* Update: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208)
+* Update: [UpdateDNSConfig](https://cloud.tencent.com/document/api/248/79194)
 
 ## Import
 

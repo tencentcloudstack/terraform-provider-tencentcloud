@@ -119,7 +119,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ManageReplication](https://cloud.tencent.com/document/api/1141/54138) - This API is used to manage the instance synchronization rule.
+* Create: [ManageReplication](https://cloud.tencent.com/document/api/1141/54138)
 * Read: [DescribeReplicationPolicies](https://cloud.tencent.com/document/api/1141/126602)
 * Update: [ModifyReplication](https://cloud.tencent.com/document/api/1141/135882)
 * Delete: [DeleteReplicationRule](https://cloud.tencent.com/document/api/1141/126603)

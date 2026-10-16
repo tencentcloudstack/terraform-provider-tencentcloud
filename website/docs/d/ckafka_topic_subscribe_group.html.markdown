@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTopicSubscribeGroup](https://www.tencentcloud.com/document/product/597/42130) - This API is used to search and subscribe the message group information of a topic.
+* Read: [DescribeTopicSubscribeGroup](https://cloud.tencent.com/document/api/597/60227)
 

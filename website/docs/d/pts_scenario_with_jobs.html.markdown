@@ -283,5 +283,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeScenarioWithJobs](https://cloud.tencent.com/document/api/1484/78066) - This API is used to query scenarios with executed jobs.
+* Read: [DescribeScenarioWithJobs](https://cloud.tencent.com/document/api/1484/78066)
 

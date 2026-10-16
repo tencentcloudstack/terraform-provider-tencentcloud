@@ -90,11 +90,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeTaskInfo](https://www.tencentcloud.com/document/product/239/32064) - This API is used to get the execution of a specified task.
-* Create: [DisableReplicaReadonly](https://www.tencentcloud.com/document/product/239/32061) - This API is used to disable read/write separation.
-* Create: [EnableReplicaReadonly](https://www.tencentcloud.com/document/product/239/32060) - This API is used to enable read/write separation.
-* Read: [DescribeInstances](https://www.tencentcloud.com/document/product/239/32065) - This API is used to query the list of Redis instances.
-* Update: [DescribeTaskInfo](https://www.tencentcloud.com/document/product/239/32064) - This API is used to get the execution of a specified task.
-* Update: [DisableReplicaReadonly](https://www.tencentcloud.com/document/product/239/32061) - This API is used to disable read/write separation.
-* Update: [EnableReplicaReadonly](https://www.tencentcloud.com/document/product/239/32060) - This API is used to enable read/write separation.
+* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601)
+* Create: [DisableReplicaReadonly](https://cloud.tencent.com/document/api/239/34438)
+* Create: [EnableReplicaReadonly](https://cloud.tencent.com/document/api/239/34437)
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/239/20018)
+* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601)
+* Update: [DisableReplicaReadonly](https://cloud.tencent.com/document/api/239/34438)
+* Update: [EnableReplicaReadonly](https://cloud.tencent.com/document/api/239/34437)
 

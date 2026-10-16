@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeGrafanaInstances](https://www.tencentcloud.com/document/product/248/49759) - This API is used to list all Grafana instances under a user account.
-* Create: [EnableGrafanaSSO](https://www.tencentcloud.com/document/product/248/49752) - This API is used to set the Grafana SSO through a Tencent Cloud account.
-* Read: [DescribeGrafanaInstances](https://www.tencentcloud.com/document/product/248/49759) - This API is used to list all Grafana instances under a user account.
-* Update: [DescribeGrafanaInstances](https://www.tencentcloud.com/document/product/248/49759) - This API is used to list all Grafana instances under a user account.
-* Update: [EnableGrafanaSSO](https://www.tencentcloud.com/document/product/248/49752) - This API is used to set the Grafana SSO through a Tencent Cloud account.
+* Create: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208)
+* Create: [EnableGrafanaSSO](https://cloud.tencent.com/document/api/248/79200)
+* Read: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208)
+* Update: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208)
+* Update: [EnableGrafanaSSO](https://cloud.tencent.com/document/api/248/79200)
 
 ## Import
 
