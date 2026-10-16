@@ -125,7 +125,7 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 		request.AdditionalConfig = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("encrypt_type"); ok {
+	if v, ok := d.GetOkExists("encrypt_type"); ok {
 		request.EncryptType = helper.IntUint64(v.(int))
 	}
 
