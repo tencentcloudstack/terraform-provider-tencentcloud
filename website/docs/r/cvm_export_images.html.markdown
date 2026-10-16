@@ -44,6 +44,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeImages](https://www.tencentcloud.com/document/api/213/33272)
-* Create: [ExportImages](https://www.tencentcloud.com/document/api/213/47833)
+* Create:
+  - [DescribeImages](https://www.tencentcloud.com/document/api/213/33272)
+  - [ExportImages](https://www.tencentcloud.com/document/api/213/47833)
 

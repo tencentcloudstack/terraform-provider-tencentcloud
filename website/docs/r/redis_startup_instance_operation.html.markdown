@@ -38,6 +38,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInstances](https://www.tencentcloud.com/document/api/239/32065)
-* Create: [StartupInstance](https://www.tencentcloud.com/document/api/239/33291)
+* Create:
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/239/32065)
+  - [StartupInstance](https://www.tencentcloud.com/document/api/239/33291)
 

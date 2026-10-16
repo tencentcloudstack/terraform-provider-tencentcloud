@@ -77,14 +77,17 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGlobalAccelerator](https://www.tencentcloud.com/document/api/1299/83741)
-* Create: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+* Create:
+  - [CreateGlobalAccelerator](https://www.tencentcloud.com/document/api/1299/83741)
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
 * Read: [DescribeGlobalAccelerators](https://www.tencentcloud.com/document/api/1299/83812)
-* Update: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
-* Update: [ModifyGlobalAccelerator](https://www.tencentcloud.com/document/api/1299/83744)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Delete: [DeleteGlobalAccelerator](https://www.tencentcloud.com/document/api/1299/83827)
-* Delete: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+* Update:
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+  - [ModifyGlobalAccelerator](https://www.tencentcloud.com/document/api/1299/83744)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete:
+  - [DeleteGlobalAccelerator](https://www.tencentcloud.com/document/api/1299/83827)
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
 
 ## Import
 

@@ -117,28 +117,32 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDBInstance](https://www.tencentcloud.com/document/api/236/15871)
-* Create: [CreateDBInstanceHour](https://www.tencentcloud.com/document/api/236/15865)
-* Create: [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
-* Read: [DescribeDBSecurityGroups](https://www.tencentcloud.com/document/api/236/15854)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
-* Update: [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
-* Update: [DisassociateSecurityGroups](https://www.tencentcloud.com/document/api/236/15851)
-* Update: [ModifyAutoRenewFlag](https://www.tencentcloud.com/document/api/236/34479)
-* Update: [ModifyDBInstanceName](https://www.tencentcloud.com/document/api/236/15877)
-* Update: [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/document/api/236/15853)
-* Update: [ModifyDBInstanceVipVport](https://www.tencentcloud.com/document/api/236/15867)
-* Update: [ModifyInstanceDestroyProtect](https://www.tencentcloud.com/search/?wd=ModifyInstanceDestroyProtect&type=document&lang=en)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [RenewDBInstance](https://www.tencentcloud.com/document/api/236/53308)
-* Update: [UpgradeDBInstance](https://www.tencentcloud.com/document/api/236/15876)
-* Update: [UpgradeDBInstanceEngineVersion](https://www.tencentcloud.com/document/api/236/15870)
-* Delete: [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
-* Delete: [IsolateDBInstance](https://www.tencentcloud.com/document/api/236/15869)
-* Delete: [OfflineIsolatedInstances](https://www.tencentcloud.com/document/api/236/34475)
+* Create:
+  - [CreateDBInstance](https://www.tencentcloud.com/document/api/236/15871)
+  - [CreateDBInstanceHour](https://www.tencentcloud.com/document/api/236/15865)
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
+  - [DescribeDBSecurityGroups](https://www.tencentcloud.com/document/api/236/15854)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
+  - [DisassociateSecurityGroups](https://www.tencentcloud.com/document/api/236/15851)
+  - [ModifyAutoRenewFlag](https://www.tencentcloud.com/document/api/236/34479)
+  - [ModifyDBInstanceName](https://www.tencentcloud.com/document/api/236/15877)
+  - [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/document/api/236/15853)
+  - [ModifyDBInstanceVipVport](https://www.tencentcloud.com/document/api/236/15867)
+  - [ModifyInstanceDestroyProtect](https://www.tencentcloud.com/search/?wd=ModifyInstanceDestroyProtect&type=document&lang=en)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [RenewDBInstance](https://www.tencentcloud.com/document/api/236/53308)
+  - [UpgradeDBInstance](https://www.tencentcloud.com/document/api/236/15876)
+  - [UpgradeDBInstanceEngineVersion](https://www.tencentcloud.com/document/api/236/15870)
+* Delete:
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
+  - [IsolateDBInstance](https://www.tencentcloud.com/document/api/236/15869)
+  - [OfflineIsolatedInstances](https://www.tencentcloud.com/document/api/236/34475)
 
 ## Import
 

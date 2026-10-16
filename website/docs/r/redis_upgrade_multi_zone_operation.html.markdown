@@ -38,6 +38,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
-* Create: [UpgradeVersionToMultiAvailabilityZones](https://www.tencentcloud.com/document/api/239/40162)
+* Create:
+  - [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+  - [UpgradeVersionToMultiAvailabilityZones](https://www.tencentcloud.com/document/api/239/40162)
 

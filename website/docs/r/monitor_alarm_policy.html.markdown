@@ -428,16 +428,18 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindingPolicyTag](https://www.tencentcloud.com/search/?wd=BindingPolicyTag&type=document&lang=en)
-* Create: [CreateAlarmPolicy](https://www.tencentcloud.com/document/api/248/39326)
-* Create: [DescribeAlarmPolicy](https://www.tencentcloud.com/document/api/248/39320)
+* Create:
+  - [BindingPolicyTag](https://www.tencentcloud.com/search/?wd=BindingPolicyTag&type=document&lang=en)
+  - [CreateAlarmPolicy](https://www.tencentcloud.com/document/api/248/39326)
+  - [DescribeAlarmPolicy](https://www.tencentcloud.com/document/api/248/39320)
 * Read: [DescribeAlarmPolicy](https://www.tencentcloud.com/document/api/248/39320)
-* Update: [DescribeAlarmPolicy](https://www.tencentcloud.com/document/api/248/39320)
-* Update: [ModifyAlarmPolicyCondition](https://www.tencentcloud.com/document/api/248/39317)
-* Update: [ModifyAlarmPolicyInfo](https://www.tencentcloud.com/document/api/248/39316)
-* Update: [ModifyAlarmPolicyNotice](https://www.tencentcloud.com/document/api/248/39315)
-* Update: [ModifyAlarmPolicyStatus](https://www.tencentcloud.com/document/api/248/39314)
-* Update: [ModifyAlarmPolicyTasks](https://www.tencentcloud.com/document/api/248/39313)
+* Update:
+  - [DescribeAlarmPolicy](https://www.tencentcloud.com/document/api/248/39320)
+  - [ModifyAlarmPolicyCondition](https://www.tencentcloud.com/document/api/248/39317)
+  - [ModifyAlarmPolicyInfo](https://www.tencentcloud.com/document/api/248/39316)
+  - [ModifyAlarmPolicyNotice](https://www.tencentcloud.com/document/api/248/39315)
+  - [ModifyAlarmPolicyStatus](https://www.tencentcloud.com/document/api/248/39314)
+  - [ModifyAlarmPolicyTasks](https://www.tencentcloud.com/document/api/248/39313)
 * Delete: [DeleteAlarmPolicy](https://www.tencentcloud.com/document/api/248/39325)
 
 ## Import

@@ -223,13 +223,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateApi](https://www.tencentcloud.com/search/?wd=CreateApi&type=document&lang=en)
-* Create: [DescribeService](https://www.tencentcloud.com/search/?wd=DescribeService&type=document&lang=en)
-* Create: [ModifyApiEnvironmentStrategy](https://www.tencentcloud.com/search/?wd=ModifyApiEnvironmentStrategy&type=document&lang=en)
-* Read: [DescribeApi](https://www.tencentcloud.com/search/?wd=DescribeApi&type=document&lang=en)
-* Read: [DescribeApiEnvironmentStrategy](https://www.tencentcloud.com/search/?wd=DescribeApiEnvironmentStrategy&type=document&lang=en)
-* Update: [ModifyApi](https://www.tencentcloud.com/search/?wd=ModifyApi&type=document&lang=en)
-* Update: [ModifyApiEnvironmentStrategy](https://www.tencentcloud.com/search/?wd=ModifyApiEnvironmentStrategy&type=document&lang=en)
-* Delete: [DeleteApi](https://www.tencentcloud.com/search/?wd=DeleteApi&type=document&lang=en)
-* Delete: [ModifyApiEnvironmentStrategy](https://www.tencentcloud.com/search/?wd=ModifyApiEnvironmentStrategy&type=document&lang=en)
+* Create:
+  - [CreateApi](https://www.tencentcloud.com/search/?wd=CreateApi&type=document&lang=en)
+  - [DescribeService](https://www.tencentcloud.com/search/?wd=DescribeService&type=document&lang=en)
+  - [ModifyApiEnvironmentStrategy](https://www.tencentcloud.com/search/?wd=ModifyApiEnvironmentStrategy&type=document&lang=en)
+* Read:
+  - [DescribeApi](https://www.tencentcloud.com/search/?wd=DescribeApi&type=document&lang=en)
+  - [DescribeApiEnvironmentStrategy](https://www.tencentcloud.com/search/?wd=DescribeApiEnvironmentStrategy&type=document&lang=en)
+* Update:
+  - [ModifyApi](https://www.tencentcloud.com/search/?wd=ModifyApi&type=document&lang=en)
+  - [ModifyApiEnvironmentStrategy](https://www.tencentcloud.com/search/?wd=ModifyApiEnvironmentStrategy&type=document&lang=en)
+* Delete:
+  - [DeleteApi](https://www.tencentcloud.com/search/?wd=DeleteApi&type=document&lang=en)
+  - [ModifyApiEnvironmentStrategy](https://www.tencentcloud.com/search/?wd=ModifyApiEnvironmentStrategy&type=document&lang=en)
 

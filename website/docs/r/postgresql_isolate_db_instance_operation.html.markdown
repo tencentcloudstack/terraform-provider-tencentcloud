@@ -36,6 +36,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
-* Create: [IsolateDBInstances](https://www.tencentcloud.com/document/api/409/40109)
+* Create:
+  - [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
+  - [IsolateDBInstances](https://www.tencentcloud.com/document/api/409/40109)
 

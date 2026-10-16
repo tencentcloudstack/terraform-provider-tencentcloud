@@ -152,30 +152,34 @@ The `security_policy` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstance](https://www.tencentcloud.com/document/api/1051/50715)
-* Create: [CreateMultipleSecurityPolicy](https://www.tencentcloud.com/document/api/1051/41108)
-* Create: [DescribeExternalEndpointStatus](https://www.tencentcloud.com/document/api/1051/50736)
-* Create: [DescribeInstances](https://www.tencentcloud.com/document/api/1051/50703)
-* Create: [ManageExternalEndpoint](https://www.tencentcloud.com/document/api/1051/50733)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeExternalEndpointStatus](https://www.tencentcloud.com/document/api/1051/50736)
-* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/1051/50703)
-* Read: [DescribeReplicationInstances](https://www.tencentcloud.com/document/api/1051/42670)
-* Read: [DescribeSecurityPolicies](https://www.tencentcloud.com/document/api/1051/50734)
-* Update: [CreateMultipleSecurityPolicy](https://www.tencentcloud.com/document/api/1051/41108)
-* Update: [DeleteMultipleSecurityPolicy](https://www.tencentcloud.com/document/api/1051/41107)
-* Update: [DescribeExternalEndpointStatus](https://www.tencentcloud.com/document/api/1051/50736)
-* Update: [DescribeInstances](https://www.tencentcloud.com/document/api/1051/50703)
-* Update: [ManageExternalEndpoint](https://www.tencentcloud.com/document/api/1051/50733)
-* Update: [ModifyInstance](https://www.tencentcloud.com/document/api/1051/42536)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [RenewInstance](https://www.tencentcloud.com/document/api/1051/50700)
-* Delete: [DeleteInstance](https://www.tencentcloud.com/document/api/1051/50711)
-* Delete: [DeleteNamespace](https://www.tencentcloud.com/document/api/1051/50696)
-* Delete: [DeleteReplicationInstance](https://www.tencentcloud.com/document/api/1051/50699)
-* Delete: [DescribeInstances](https://www.tencentcloud.com/document/api/1051/50703)
-* Delete: [DescribeNamespaces](https://www.tencentcloud.com/document/api/1051/50693)
-* Delete: [DescribeReplicationInstances](https://www.tencentcloud.com/document/api/1051/42670)
+* Create:
+  - [CreateInstance](https://www.tencentcloud.com/document/api/1051/50715)
+  - [CreateMultipleSecurityPolicy](https://www.tencentcloud.com/document/api/1051/41108)
+  - [DescribeExternalEndpointStatus](https://www.tencentcloud.com/document/api/1051/50736)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1051/50703)
+  - [ManageExternalEndpoint](https://www.tencentcloud.com/document/api/1051/50733)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeExternalEndpointStatus](https://www.tencentcloud.com/document/api/1051/50736)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1051/50703)
+  - [DescribeReplicationInstances](https://www.tencentcloud.com/document/api/1051/42670)
+  - [DescribeSecurityPolicies](https://www.tencentcloud.com/document/api/1051/50734)
+* Update:
+  - [CreateMultipleSecurityPolicy](https://www.tencentcloud.com/document/api/1051/41108)
+  - [DeleteMultipleSecurityPolicy](https://www.tencentcloud.com/document/api/1051/41107)
+  - [DescribeExternalEndpointStatus](https://www.tencentcloud.com/document/api/1051/50736)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1051/50703)
+  - [ManageExternalEndpoint](https://www.tencentcloud.com/document/api/1051/50733)
+  - [ModifyInstance](https://www.tencentcloud.com/document/api/1051/42536)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [RenewInstance](https://www.tencentcloud.com/document/api/1051/50700)
+* Delete:
+  - [DeleteInstance](https://www.tencentcloud.com/document/api/1051/50711)
+  - [DeleteNamespace](https://www.tencentcloud.com/document/api/1051/50696)
+  - [DeleteReplicationInstance](https://www.tencentcloud.com/document/api/1051/50699)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1051/50703)
+  - [DescribeNamespaces](https://www.tencentcloud.com/document/api/1051/50693)
+  - [DescribeReplicationInstances](https://www.tencentcloud.com/document/api/1051/42670)
 
 ## Import
 

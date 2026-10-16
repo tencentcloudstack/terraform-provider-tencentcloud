@@ -38,8 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateClsLogSet](https://www.tencentcloud.com/document/api/214/37821)
-* Create: [DescribeClsLogSet](https://www.tencentcloud.com/document/api/214/37819)
+* Create:
+  - [CreateClsLogSet](https://www.tencentcloud.com/document/api/214/37821)
+  - [DescribeClsLogSet](https://www.tencentcloud.com/document/api/214/37819)
 * Read: [DescribeLogsets](https://www.tencentcloud.com/document/api/614/42778)
 * Delete: [DeleteLogset](https://www.tencentcloud.com/document/api/614/42779)
 

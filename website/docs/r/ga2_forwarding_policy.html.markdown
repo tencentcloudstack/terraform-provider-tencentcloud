@@ -85,13 +85,16 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateForwardingPolicy](https://www.tencentcloud.com/document/api/1299/83837)
-* Create: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+* Create:
+  - [CreateForwardingPolicy](https://www.tencentcloud.com/document/api/1299/83837)
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
 * Read: [DescribeForwardingPolicy](https://www.tencentcloud.com/document/api/1299/83746)
-* Update: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
-* Update: [ModifyForwardingPolicy](https://www.tencentcloud.com/document/api/1299/83809)
-* Delete: [DeleteForwardingPolicy](https://www.tencentcloud.com/document/api/1299/83829)
-* Delete: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+* Update:
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+  - [ModifyForwardingPolicy](https://www.tencentcloud.com/document/api/1299/83809)
+* Delete:
+  - [DeleteForwardingPolicy](https://www.tencentcloud.com/document/api/1299/83829)
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
 
 ## Import
 

@@ -47,13 +47,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateHaVip](https://www.tencentcloud.com/document/api/215/34764)
-* Create: [DescribeHaVips](https://www.tencentcloud.com/document/api/215/34762)
+* Create:
+  - [CreateHaVip](https://www.tencentcloud.com/document/api/215/34764)
+  - [DescribeHaVips](https://www.tencentcloud.com/document/api/215/34762)
 * Read: [DescribeHaVips](https://www.tencentcloud.com/document/api/215/34762)
-* Update: [DescribeHaVips](https://www.tencentcloud.com/document/api/215/34762)
-* Update: [ModifyHaVipAttribute](https://www.tencentcloud.com/document/api/215/34759)
-* Delete: [DeleteHaVip](https://www.tencentcloud.com/document/api/215/34763)
-* Delete: [DescribeHaVips](https://www.tencentcloud.com/document/api/215/34762)
+* Update:
+  - [DescribeHaVips](https://www.tencentcloud.com/document/api/215/34762)
+  - [ModifyHaVipAttribute](https://www.tencentcloud.com/document/api/215/34759)
+* Delete:
+  - [DeleteHaVip](https://www.tencentcloud.com/document/api/215/34763)
+  - [DescribeHaVips](https://www.tencentcloud.com/document/api/215/34762)
 
 ## Import
 

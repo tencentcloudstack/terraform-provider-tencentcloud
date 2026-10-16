@@ -79,14 +79,17 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAliasDomain](https://www.tencentcloud.com/document/api/1145/51740)
-* Create: [DescribeAliasDomains](https://www.tencentcloud.com/document/api/1145/51738)
-* Create: [ModifyAliasDomainStatus](https://www.tencentcloud.com/document/api/1145/51736)
+* Create:
+  - [CreateAliasDomain](https://www.tencentcloud.com/document/api/1145/51740)
+  - [DescribeAliasDomains](https://www.tencentcloud.com/document/api/1145/51738)
+  - [ModifyAliasDomainStatus](https://www.tencentcloud.com/document/api/1145/51736)
 * Read: [DescribeAliasDomains](https://www.tencentcloud.com/document/api/1145/51738)
-* Update: [DescribeAliasDomains](https://www.tencentcloud.com/document/api/1145/51738)
-* Update: [ModifyAliasDomain](https://www.tencentcloud.com/document/api/1145/51737)
-* Update: [ModifyAliasDomainStatus](https://www.tencentcloud.com/document/api/1145/51736)
-* Delete: [DeleteAliasDomain](https://www.tencentcloud.com/document/api/1145/51739)
-* Delete: [DescribeAliasDomains](https://www.tencentcloud.com/document/api/1145/51738)
-* Delete: [ModifyAliasDomainStatus](https://www.tencentcloud.com/document/api/1145/51736)
+* Update:
+  - [DescribeAliasDomains](https://www.tencentcloud.com/document/api/1145/51738)
+  - [ModifyAliasDomain](https://www.tencentcloud.com/document/api/1145/51737)
+  - [ModifyAliasDomainStatus](https://www.tencentcloud.com/document/api/1145/51736)
+* Delete:
+  - [DeleteAliasDomain](https://www.tencentcloud.com/document/api/1145/51739)
+  - [DescribeAliasDomains](https://www.tencentcloud.com/document/api/1145/51738)
+  - [ModifyAliasDomainStatus](https://www.tencentcloud.com/document/api/1145/51736)
 

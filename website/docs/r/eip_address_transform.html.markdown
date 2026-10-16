@@ -77,6 +77,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeTaskResult](https://www.tencentcloud.com/document/api/215/34772)
-* Create: [TransformAddress](https://www.tencentcloud.com/document/api/215/16706)
+* Create:
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/215/34772)
+  - [TransformAddress](https://www.tencentcloud.com/document/api/215/16706)
 

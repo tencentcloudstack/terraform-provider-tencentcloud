@@ -75,15 +75,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ConfigureChcAssistVpc](https://www.tencentcloud.com/document/api/213/48901)
-* Create: [ConfigureChcDeployVpc](https://www.tencentcloud.com/document/api/213/48900)
-* Create: [DescribeChcHosts](https://www.tencentcloud.com/document/api/213/48899)
-* Create: [ModifyChcAttribute](https://www.tencentcloud.com/document/api/213/48898)
+* Create:
+  - [ConfigureChcAssistVpc](https://www.tencentcloud.com/document/api/213/48901)
+  - [ConfigureChcDeployVpc](https://www.tencentcloud.com/document/api/213/48900)
+  - [DescribeChcHosts](https://www.tencentcloud.com/document/api/213/48899)
+  - [ModifyChcAttribute](https://www.tencentcloud.com/document/api/213/48898)
 * Read: [DescribeChcHosts](https://www.tencentcloud.com/document/api/213/48899)
 * Update: [ModifyChcAttribute](https://www.tencentcloud.com/document/api/213/48898)
-* Delete: [DescribeChcHosts](https://www.tencentcloud.com/document/api/213/48899)
-* Delete: [RemoveChcAssistVpc](https://www.tencentcloud.com/document/api/213/48897)
-* Delete: [RemoveChcDeployVpc](https://www.tencentcloud.com/document/api/213/48896)
+* Delete:
+  - [DescribeChcHosts](https://www.tencentcloud.com/document/api/213/48899)
+  - [RemoveChcAssistVpc](https://www.tencentcloud.com/document/api/213/48897)
+  - [RemoveChcDeployVpc](https://www.tencentcloud.com/document/api/213/48896)
 
 ## Import
 

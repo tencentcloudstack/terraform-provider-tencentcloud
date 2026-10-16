@@ -660,18 +660,31 @@ func renderAPIRefsLead(lead string, dtype string, refs map[string][]apiRef) stri
 		verbs = append(verbs, v)
 	}
 	sort.Slice(verbs, func(i, j int) bool { return verbOrder[verbs[i]] < verbOrder[verbs[j]] })
+	// A phase with a single API stays on one line; multiple APIs are
+	// grouped under the phase label as sub-bullets.
+	refLine := func(r apiRef, indent string) string {
+		if r.URL != "" {
+			return fmt.Sprintf("%s- [%s](%s)\n", indent, r.Action, r.URL)
+		}
+		return fmt.Sprintf("%s- `%s`\n", indent, r.Action)
+	}
 	for _, v := range verbs {
 		list := refs[v]
 		if len(list) == 0 {
 			continue
 		}
 		sort.Slice(list, func(i, j int) bool { return list[i].Action < list[j].Action })
-		for _, r := range list {
-			if r.URL != "" {
-				fmt.Fprintf(&b, "* %s: [%s](%s)\n", v, r.Action, r.URL)
+		if len(list) == 1 {
+			if list[0].URL != "" {
+				fmt.Fprintf(&b, "* %s: [%s](%s)\n", v, list[0].Action, list[0].URL)
 			} else {
-				fmt.Fprintf(&b, "* %s: `%s`\n", v, r.Action)
+				fmt.Fprintf(&b, "* %s: `%s`\n", v, list[0].Action)
 			}
+			continue
+		}
+		fmt.Fprintf(&b, "* %s:\n", v)
+		for _, r := range list {
+			b.WriteString(refLine(r, "  "))
 		}
 	}
 	return strings.TrimRight(b.String(), "\n")

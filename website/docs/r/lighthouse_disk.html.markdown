@@ -65,12 +65,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDisks](https://www.tencentcloud.com/document/api/1103/57994)
-* Create: [DescribeDisks](https://www.tencentcloud.com/document/api/1103/44573)
+* Create:
+  - [CreateDisks](https://www.tencentcloud.com/document/api/1103/57994)
+  - [DescribeDisks](https://www.tencentcloud.com/document/api/1103/44573)
 * Read: [DescribeDisks](https://www.tencentcloud.com/document/api/1103/44573)
-* Update: [ModifyDisksAttribute](https://www.tencentcloud.com/document/api/1103/44567)
-* Update: [ModifyDisksRenewFlag](https://www.tencentcloud.com/document/api/1103/44566)
-* Delete: [DescribeDisks](https://www.tencentcloud.com/document/api/1103/44573)
-* Delete: [IsolateDisks](https://www.tencentcloud.com/document/api/1103/57993)
-* Delete: [TerminateDisks](https://www.tencentcloud.com/document/api/1103/44565)
+* Update:
+  - [ModifyDisksAttribute](https://www.tencentcloud.com/document/api/1103/44567)
+  - [ModifyDisksRenewFlag](https://www.tencentcloud.com/document/api/1103/44566)
+* Delete:
+  - [DescribeDisks](https://www.tencentcloud.com/document/api/1103/44573)
+  - [IsolateDisks](https://www.tencentcloud.com/document/api/1103/57993)
+  - [TerminateDisks](https://www.tencentcloud.com/document/api/1103/44565)
 

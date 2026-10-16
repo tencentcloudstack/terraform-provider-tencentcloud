@@ -81,11 +81,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCompareTask](https://www.tencentcloud.com/document/api/571/51821)
-* Create: [DescribeCompareTasks](https://www.tencentcloud.com/document/api/571/51816)
-* Create: [StartCompare](https://www.tencentcloud.com/document/api/571/51802)
+* Create:
+  - [CreateCompareTask](https://www.tencentcloud.com/document/api/571/51821)
+  - [DescribeCompareTasks](https://www.tencentcloud.com/document/api/571/51816)
+  - [StartCompare](https://www.tencentcloud.com/document/api/571/51802)
 * Read: [DescribeCompareTasks](https://www.tencentcloud.com/document/api/571/51816)
 * Update: [ModifyCompareTask](https://www.tencentcloud.com/document/api/571/51809)
-* Delete: [DeleteCompareTask](https://www.tencentcloud.com/document/api/571/51818)
-* Delete: [DescribeCompareTasks](https://www.tencentcloud.com/document/api/571/51816)
+* Delete:
+  - [DeleteCompareTask](https://www.tencentcloud.com/document/api/571/51818)
+  - [DescribeCompareTasks](https://www.tencentcloud.com/document/api/571/51816)
 

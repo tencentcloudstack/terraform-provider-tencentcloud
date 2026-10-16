@@ -67,6 +67,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
-* Create: [OpenReadOnlyInstanceExclusiveAccess](https://www.tencentcloud.com/document/api/1098/55910)
+* Create:
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+  - [OpenReadOnlyInstanceExclusiveAccess](https://www.tencentcloud.com/document/api/1098/55910)
 

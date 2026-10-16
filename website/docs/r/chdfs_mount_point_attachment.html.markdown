@@ -43,8 +43,9 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [AssociateAccessGroups](https://www.tencentcloud.com/document/api/1106/42435)
 * Read: [DescribeMountPoint](https://www.tencentcloud.com/document/api/1106/42432)
-* Delete: [DescribeMountPoint](https://www.tencentcloud.com/document/api/1106/42432)
-* Delete: [DisassociateAccessGroups](https://www.tencentcloud.com/document/api/1106/42430)
+* Delete:
+  - [DescribeMountPoint](https://www.tencentcloud.com/document/api/1106/42432)
+  - [DisassociateAccessGroups](https://www.tencentcloud.com/document/api/1106/42430)
 
 ## Import
 

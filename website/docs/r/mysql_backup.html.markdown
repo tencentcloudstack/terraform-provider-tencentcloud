@@ -146,9 +146,11 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBackup](https://www.tencentcloud.com/document/api/236/15844)
-* Create: [DescribeBackups](https://www.tencentcloud.com/document/api/236/15842)
+* Create:
+  - [CreateBackup](https://www.tencentcloud.com/document/api/236/15844)
+  - [DescribeBackups](https://www.tencentcloud.com/document/api/236/15842)
 * Read: [DescribeBackups](https://www.tencentcloud.com/document/api/236/15842)
-* Delete: [DeleteBackup](https://www.tencentcloud.com/document/api/236/15841)
-* Delete: [DescribeBackups](https://www.tencentcloud.com/document/api/236/15842)
+* Delete:
+  - [DeleteBackup](https://www.tencentcloud.com/document/api/236/15841)
+  - [DescribeBackups](https://www.tencentcloud.com/document/api/236/15842)
 

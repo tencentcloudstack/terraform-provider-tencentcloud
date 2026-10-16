@@ -60,11 +60,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeNatFwSwitch](https://www.tencentcloud.com/search/?wd=DescribeNatFwSwitch&type=document&lang=en)
-* Create: [ModifyNatFwSwitch](https://www.tencentcloud.com/document/api/1160/51332)
+* Create:
+  - [DescribeNatFwSwitch](https://www.tencentcloud.com/search/?wd=DescribeNatFwSwitch&type=document&lang=en)
+  - [ModifyNatFwSwitch](https://www.tencentcloud.com/document/api/1160/51332)
 * Read: [DescribeNatFwSwitch](https://www.tencentcloud.com/search/?wd=DescribeNatFwSwitch&type=document&lang=en)
-* Update: [DescribeNatFwSwitch](https://www.tencentcloud.com/search/?wd=DescribeNatFwSwitch&type=document&lang=en)
-* Update: [ModifyNatFwSwitch](https://www.tencentcloud.com/document/api/1160/51332)
+* Update:
+  - [DescribeNatFwSwitch](https://www.tencentcloud.com/search/?wd=DescribeNatFwSwitch&type=document&lang=en)
+  - [ModifyNatFwSwitch](https://www.tencentcloud.com/document/api/1160/51332)
 
 ## Import
 

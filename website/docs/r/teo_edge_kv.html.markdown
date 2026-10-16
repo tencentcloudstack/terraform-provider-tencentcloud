@@ -42,11 +42,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [EdgeKVGet](https://www.tencentcloud.com/document/api/1145/78826)
-* Create: [EdgeKVPut](https://www.tencentcloud.com/document/api/1145/78824)
+* Create:
+  - [EdgeKVGet](https://www.tencentcloud.com/document/api/1145/78826)
+  - [EdgeKVPut](https://www.tencentcloud.com/document/api/1145/78824)
 * Read: [EdgeKVGet](https://www.tencentcloud.com/document/api/1145/78826)
-* Update: [EdgeKVGet](https://www.tencentcloud.com/document/api/1145/78826)
-* Update: [EdgeKVPut](https://www.tencentcloud.com/document/api/1145/78824)
+* Update:
+  - [EdgeKVGet](https://www.tencentcloud.com/document/api/1145/78826)
+  - [EdgeKVPut](https://www.tencentcloud.com/document/api/1145/78824)
 * Delete: [EdgeKVDelete](https://www.tencentcloud.com/document/api/1145/78827)
 
 ## Import

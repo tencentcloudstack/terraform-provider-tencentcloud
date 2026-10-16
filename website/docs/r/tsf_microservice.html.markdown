@@ -44,13 +44,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateMicroservice](https://www.tencentcloud.com/search/?wd=CreateMicroservice&type=document&lang=en)
-* Create: [DescribeMicroservices](https://www.tencentcloud.com/search/?wd=DescribeMicroservices&type=document&lang=en)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeMicroservices](https://www.tencentcloud.com/search/?wd=DescribeMicroservices&type=document&lang=en)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [ModifyMicroservice](https://www.tencentcloud.com/search/?wd=ModifyMicroservice&type=document&lang=en)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Create:
+  - [CreateMicroservice](https://www.tencentcloud.com/search/?wd=CreateMicroservice&type=document&lang=en)
+  - [DescribeMicroservices](https://www.tencentcloud.com/search/?wd=DescribeMicroservices&type=document&lang=en)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeMicroservices](https://www.tencentcloud.com/search/?wd=DescribeMicroservices&type=document&lang=en)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [ModifyMicroservice](https://www.tencentcloud.com/search/?wd=ModifyMicroservice&type=document&lang=en)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
 * Delete: [DeleteMicroservice](https://www.tencentcloud.com/search/?wd=DeleteMicroservice&type=document&lang=en)
 
 ## Import

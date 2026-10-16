@@ -38,6 +38,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeOrders](https://www.tencentcloud.com/document/api/237/47829)
-* Create: [RenewDBInstance](https://www.tencentcloud.com/search/?wd=RenewDBInstance&type=document&lang=en)
+* Create:
+  - [DescribeOrders](https://www.tencentcloud.com/document/api/237/47829)
+  - [RenewDBInstance](https://www.tencentcloud.com/search/?wd=RenewDBInstance&type=document&lang=en)
 

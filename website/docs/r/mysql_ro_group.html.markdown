@@ -68,9 +68,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
-* Create: [ModifyRoGroupInfo](https://www.tencentcloud.com/document/api/236/35191)
+* Create:
+  - [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+  - [ModifyRoGroupInfo](https://www.tencentcloud.com/document/api/236/35191)
 * Read: [DescribeRoGroups](https://www.tencentcloud.com/document/api/236/35704)
-* Update: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
-* Update: [ModifyRoGroupInfo](https://www.tencentcloud.com/document/api/236/35191)
+* Update:
+  - [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+  - [ModifyRoGroupInfo](https://www.tencentcloud.com/document/api/236/35191)
 

@@ -73,6 +73,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ClearInstance](https://www.tencentcloud.com/document/api/239/32070)
-* Create: [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+* Create:
+  - [ClearInstance](https://www.tencentcloud.com/document/api/239/32070)
+  - [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
 

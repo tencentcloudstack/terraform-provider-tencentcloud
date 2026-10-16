@@ -233,10 +233,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCLSLogConfig](https://www.tencentcloud.com/search/?wd=CreateCLSLogConfig&type=document&lang=en)
-* Create: [DescribeLogConfigs](https://www.tencentcloud.com/search/?wd=DescribeLogConfigs&type=document&lang=en)
+* Create:
+  - [CreateCLSLogConfig](https://www.tencentcloud.com/search/?wd=CreateCLSLogConfig&type=document&lang=en)
+  - [DescribeLogConfigs](https://www.tencentcloud.com/search/?wd=DescribeLogConfigs&type=document&lang=en)
 * Read: [DescribeLogConfigs](https://www.tencentcloud.com/search/?wd=DescribeLogConfigs&type=document&lang=en)
 * Update: [ModifyLogConfig](https://www.tencentcloud.com/search/?wd=ModifyLogConfig&type=document&lang=en)
-* Delete: [DeleteLogConfigs](https://www.tencentcloud.com/search/?wd=DeleteLogConfigs&type=document&lang=en)
-* Delete: [DescribeLogConfigs](https://www.tencentcloud.com/search/?wd=DescribeLogConfigs&type=document&lang=en)
+* Delete:
+  - [DeleteLogConfigs](https://www.tencentcloud.com/search/?wd=DeleteLogConfigs&type=document&lang=en)
+  - [DescribeLogConfigs](https://www.tencentcloud.com/search/?wd=DescribeLogConfigs&type=document&lang=en)
 

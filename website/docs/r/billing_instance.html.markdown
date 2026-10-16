@@ -91,11 +91,14 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstance](https://www.tencentcloud.com/search/?wd=CreateInstance&type=document&lang=en)
-* Create: [DescribeDealsByCond](https://www.tencentcloud.com/search/?wd=DescribeDealsByCond&type=document&lang=en)
+* Create:
+  - [CreateInstance](https://www.tencentcloud.com/search/?wd=CreateInstance&type=document&lang=en)
+  - [DescribeDealsByCond](https://www.tencentcloud.com/search/?wd=DescribeDealsByCond&type=document&lang=en)
 * Read: [DescribeRenewInstances](https://www.tencentcloud.com/search/?wd=DescribeRenewInstances&type=document&lang=en)
-* Update: [DescribeDealsByCond](https://www.tencentcloud.com/search/?wd=DescribeDealsByCond&type=document&lang=en)
-* Update: [RenewInstance](https://www.tencentcloud.com/search/?wd=RenewInstance&type=document&lang=en)
-* Delete: [DescribeDealsByCond](https://www.tencentcloud.com/search/?wd=DescribeDealsByCond&type=document&lang=en)
-* Delete: [RefundInstance](https://www.tencentcloud.com/search/?wd=RefundInstance&type=document&lang=en)
+* Update:
+  - [DescribeDealsByCond](https://www.tencentcloud.com/search/?wd=DescribeDealsByCond&type=document&lang=en)
+  - [RenewInstance](https://www.tencentcloud.com/search/?wd=RenewInstance&type=document&lang=en)
+* Delete:
+  - [DescribeDealsByCond](https://www.tencentcloud.com/search/?wd=DescribeDealsByCond&type=document&lang=en)
+  - [RefundInstance](https://www.tencentcloud.com/search/?wd=RefundInstance&type=document&lang=en)
 

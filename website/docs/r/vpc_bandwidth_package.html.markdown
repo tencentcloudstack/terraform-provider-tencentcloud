@@ -78,14 +78,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBandwidthPackage](https://www.tencentcloud.com/document/api/215/36922)
-* Create: [DescribeBandwidthPackages](https://www.tencentcloud.com/document/api/215/36919)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeBandwidthPackages](https://www.tencentcloud.com/document/api/215/36919)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [ModifyBandwidthPackageAttribute](https://www.tencentcloud.com/document/api/215/36918)
-* Update: [ModifyBandwidthPackageBandwidth](https://www.tencentcloud.com/document/api/215/65948)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Create:
+  - [CreateBandwidthPackage](https://www.tencentcloud.com/document/api/215/36922)
+  - [DescribeBandwidthPackages](https://www.tencentcloud.com/document/api/215/36919)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeBandwidthPackages](https://www.tencentcloud.com/document/api/215/36919)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [ModifyBandwidthPackageAttribute](https://www.tencentcloud.com/document/api/215/36918)
+  - [ModifyBandwidthPackageBandwidth](https://www.tencentcloud.com/document/api/215/65948)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
 * Delete: [DeleteBandwidthPackage](https://www.tencentcloud.com/document/api/215/36921)
 
 ## Import

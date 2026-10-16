@@ -84,23 +84,27 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AllocateAddresses](https://www.tencentcloud.com/document/api/215/16699)
-* Create: [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
-* Create: [DescribeTaskResult](https://www.tencentcloud.com/document/api/215/34772)
-* Read: [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
-* Read: [DescribeBandwidthPackages](https://www.tencentcloud.com/document/api/215/36919)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [ModifyAddressAttribute](https://www.tencentcloud.com/document/api/215/16704)
-* Update: [ModifyAddressInternetChargeType](https://www.tencentcloud.com/document/api/215/36091)
-* Update: [ModifyAddressesBandwidth](https://www.tencentcloud.com/document/api/215/34771)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [RenewAddresses](https://www.tencentcloud.com/search/?wd=RenewAddresses&type=document&lang=en)
-* Delete: [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
-* Delete: [DescribeNatGateways](https://www.tencentcloud.com/document/api/215/34752)
-* Delete: [DescribeTaskResult](https://www.tencentcloud.com/document/api/215/34772)
-* Delete: [DisassociateAddress](https://www.tencentcloud.com/document/api/215/16703)
-* Delete: [DisassociateNatGatewayAddress](https://www.tencentcloud.com/document/api/215/34751)
-* Delete: [ReleaseAddresses](https://www.tencentcloud.com/document/api/215/16705)
+* Create:
+  - [AllocateAddresses](https://www.tencentcloud.com/document/api/215/16699)
+  - [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/215/34772)
+* Read:
+  - [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
+  - [DescribeBandwidthPackages](https://www.tencentcloud.com/document/api/215/36919)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [ModifyAddressAttribute](https://www.tencentcloud.com/document/api/215/16704)
+  - [ModifyAddressInternetChargeType](https://www.tencentcloud.com/document/api/215/36091)
+  - [ModifyAddressesBandwidth](https://www.tencentcloud.com/document/api/215/34771)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [RenewAddresses](https://www.tencentcloud.com/search/?wd=RenewAddresses&type=document&lang=en)
+* Delete:
+  - [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
+  - [DescribeNatGateways](https://www.tencentcloud.com/document/api/215/34752)
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/215/34772)
+  - [DisassociateAddress](https://www.tencentcloud.com/document/api/215/16703)
+  - [DisassociateNatGatewayAddress](https://www.tencentcloud.com/document/api/215/34751)
+  - [ReleaseAddresses](https://www.tencentcloud.com/document/api/215/16705)
 
 ## Import
 

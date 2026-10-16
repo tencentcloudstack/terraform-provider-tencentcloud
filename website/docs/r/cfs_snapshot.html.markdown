@@ -42,15 +42,19 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCfsSnapshot](https://www.tencentcloud.com/document/api/582/50843)
-* Create: [DescribeCfsSnapshots](https://www.tencentcloud.com/document/api/582/50836)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeCfsSnapshots](https://www.tencentcloud.com/document/api/582/50836)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [UpdateCfsSnapshotAttribute](https://www.tencentcloud.com/document/api/582/50832)
-* Delete: [DeleteCfsSnapshot](https://www.tencentcloud.com/document/api/582/50842)
-* Delete: [DescribeCfsSnapshots](https://www.tencentcloud.com/document/api/582/50836)
+* Create:
+  - [CreateCfsSnapshot](https://www.tencentcloud.com/document/api/582/50843)
+  - [DescribeCfsSnapshots](https://www.tencentcloud.com/document/api/582/50836)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeCfsSnapshots](https://www.tencentcloud.com/document/api/582/50836)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [UpdateCfsSnapshotAttribute](https://www.tencentcloud.com/document/api/582/50832)
+* Delete:
+  - [DeleteCfsSnapshot](https://www.tencentcloud.com/document/api/582/50842)
+  - [DescribeCfsSnapshots](https://www.tencentcloud.com/document/api/582/50836)
 
 ## Import
 

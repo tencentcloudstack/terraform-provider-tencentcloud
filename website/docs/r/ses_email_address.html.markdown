@@ -51,8 +51,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEmailAddress](https://www.tencentcloud.com/document/api/1084/39406)
-* Create: [UpdateEmailSmtpPassWord](https://www.tencentcloud.com/document/api/1084/52677)
+* Create:
+  - [CreateEmailAddress](https://www.tencentcloud.com/document/api/1084/39406)
+  - [UpdateEmailSmtpPassWord](https://www.tencentcloud.com/document/api/1084/52677)
 * Read: [ListEmailAddress](https://www.tencentcloud.com/document/api/1084/39404)
 * Update: [UpdateEmailSmtpPassWord](https://www.tencentcloud.com/document/api/1084/52677)
 * Delete: [DeleteEmailAddress](https://www.tencentcloud.com/document/api/1084/39405)

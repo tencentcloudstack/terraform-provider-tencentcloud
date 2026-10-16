@@ -38,8 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDiskBackup](https://www.tencentcloud.com/search/?wd=CreateDiskBackup&type=document&lang=en)
-* Create: [DescribeDiskBackups](https://www.tencentcloud.com/search/?wd=DescribeDiskBackups&type=document&lang=en)
+* Create:
+  - [CreateDiskBackup](https://www.tencentcloud.com/search/?wd=CreateDiskBackup&type=document&lang=en)
+  - [DescribeDiskBackups](https://www.tencentcloud.com/search/?wd=DescribeDiskBackups&type=document&lang=en)
 * Read: [DescribeDiskBackups](https://www.tencentcloud.com/search/?wd=DescribeDiskBackups&type=document&lang=en)
 * Update: [ModifyDiskBackupsAttribute](https://www.tencentcloud.com/search/?wd=ModifyDiskBackupsAttribute&type=document&lang=en)
 * Delete: [DeleteDiskBackups](https://www.tencentcloud.com/search/?wd=DeleteDiskBackups&type=document&lang=en)

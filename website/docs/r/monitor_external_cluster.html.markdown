@@ -61,11 +61,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateExternalCluster](https://www.tencentcloud.com/search/?wd=CreateExternalCluster&type=document&lang=en)
-* Create: [DescribePrometheusClusterAgents](https://www.tencentcloud.com/document/api/248/53770)
+* Create:
+  - [CreateExternalCluster](https://www.tencentcloud.com/search/?wd=CreateExternalCluster&type=document&lang=en)
+  - [DescribePrometheusClusterAgents](https://www.tencentcloud.com/document/api/248/53770)
 * Read: [DescribePrometheusClusterAgents](https://www.tencentcloud.com/document/api/248/53770)
-* Delete: [DeletePrometheusClusterAgent](https://www.tencentcloud.com/document/api/248/53771)
-* Delete: [DescribePrometheusClusterAgents](https://www.tencentcloud.com/document/api/248/53770)
+* Delete:
+  - [DeletePrometheusClusterAgent](https://www.tencentcloud.com/document/api/248/53771)
+  - [DescribePrometheusClusterAgents](https://www.tencentcloud.com/document/api/248/53770)
 
 ## Import
 

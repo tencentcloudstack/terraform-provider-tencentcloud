@@ -99,20 +99,24 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAccounts](https://www.tencentcloud.com/document/api/238/32116)
-* Create: [DescribeDBs](https://www.tencentcloud.com/document/api/238/32114)
-* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
-* Create: [ModifyAccountPrivilege](https://www.tencentcloud.com/document/api/238/32105)
-* Read: [DescribeAccounts](https://www.tencentcloud.com/document/api/238/32116)
-* Read: [DescribeDBs](https://www.tencentcloud.com/document/api/238/32114)
-* Update: [DescribeAccounts](https://www.tencentcloud.com/document/api/238/32116)
-* Update: [DescribeDBs](https://www.tencentcloud.com/document/api/238/32114)
-* Update: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
-* Update: [ModifyAccountPrivilege](https://www.tencentcloud.com/document/api/238/32105)
-* Delete: [DescribeAccounts](https://www.tencentcloud.com/document/api/238/32116)
-* Delete: [DescribeDBs](https://www.tencentcloud.com/document/api/238/32114)
-* Delete: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
-* Delete: [ModifyAccountPrivilege](https://www.tencentcloud.com/document/api/238/32105)
+* Create:
+  - [DescribeAccounts](https://www.tencentcloud.com/document/api/238/32116)
+  - [DescribeDBs](https://www.tencentcloud.com/document/api/238/32114)
+  - [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+  - [ModifyAccountPrivilege](https://www.tencentcloud.com/document/api/238/32105)
+* Read:
+  - [DescribeAccounts](https://www.tencentcloud.com/document/api/238/32116)
+  - [DescribeDBs](https://www.tencentcloud.com/document/api/238/32114)
+* Update:
+  - [DescribeAccounts](https://www.tencentcloud.com/document/api/238/32116)
+  - [DescribeDBs](https://www.tencentcloud.com/document/api/238/32114)
+  - [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+  - [ModifyAccountPrivilege](https://www.tencentcloud.com/document/api/238/32105)
+* Delete:
+  - [DescribeAccounts](https://www.tencentcloud.com/document/api/238/32116)
+  - [DescribeDBs](https://www.tencentcloud.com/document/api/238/32114)
+  - [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+  - [ModifyAccountPrivilege](https://www.tencentcloud.com/document/api/238/32105)
 
 ## Import
 

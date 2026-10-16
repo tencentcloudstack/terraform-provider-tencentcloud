@@ -41,9 +41,10 @@ This resource interacts with the following TencentCloud APIs:
 * Create: [ReplaceRouteTableAssociation](https://www.tencentcloud.com/document/api/215/15767)
 * Read: [DescribeSubnets](https://www.tencentcloud.com/document/api/215/15784)
 * Update: [ReplaceRouteTableAssociation](https://www.tencentcloud.com/document/api/215/15767)
-* Delete: [DescribeRouteTables](https://www.tencentcloud.com/document/api/215/15763)
-* Delete: [DescribeSubnets](https://www.tencentcloud.com/document/api/215/15784)
-* Delete: [ReplaceRouteTableAssociation](https://www.tencentcloud.com/document/api/215/15767)
+* Delete:
+  - [DescribeRouteTables](https://www.tencentcloud.com/document/api/215/15763)
+  - [DescribeSubnets](https://www.tencentcloud.com/document/api/215/15784)
+  - [ReplaceRouteTableAssociation](https://www.tencentcloud.com/document/api/215/15767)
 
 ## Import
 

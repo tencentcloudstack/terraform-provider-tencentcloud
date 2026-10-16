@@ -82,13 +82,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42699)
-* Create: [ModifyClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42698)
+* Create:
+  - [DescribeClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42699)
+  - [ModifyClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42698)
 * Read: [DescribeClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42699)
-* Update: [DescribeClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42699)
-* Update: [ModifyClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42698)
-* Delete: [DescribeClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42699)
-* Delete: [ModifyClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42698)
+* Update:
+  - [DescribeClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42699)
+  - [ModifyClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42698)
+* Delete:
+  - [DescribeClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42699)
+  - [ModifyClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42698)
 
 ## Import
 

@@ -75,12 +75,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrivateZoneRecord](https://www.tencentcloud.com/document/api/1097/42122)
-* Create: [DescribeRecord](https://www.tencentcloud.com/document/api/1097/70303)
-* Create: [ModifyRecordsStatus](https://www.tencentcloud.com/document/api/1097/51230)
+* Create:
+  - [CreatePrivateZoneRecord](https://www.tencentcloud.com/document/api/1097/42122)
+  - [DescribeRecord](https://www.tencentcloud.com/document/api/1097/70303)
+  - [ModifyRecordsStatus](https://www.tencentcloud.com/document/api/1097/51230)
 * Read: [DescribeRecord](https://www.tencentcloud.com/document/api/1097/70303)
-* Update: [ModifyPrivateZoneRecord](https://www.tencentcloud.com/document/api/1097/42111)
-* Update: [ModifyRecordsStatus](https://www.tencentcloud.com/document/api/1097/51230)
+* Update:
+  - [ModifyPrivateZoneRecord](https://www.tencentcloud.com/document/api/1097/42111)
+  - [ModifyRecordsStatus](https://www.tencentcloud.com/document/api/1097/51230)
 * Delete: [DeletePrivateZoneRecord](https://www.tencentcloud.com/document/api/1097/42120)
 
 ## Import

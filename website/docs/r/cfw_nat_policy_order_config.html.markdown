@@ -121,11 +121,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeNatAcRule](https://www.tencentcloud.com/document/api/1160/54831)
-* Create: [ModifyNatAcRule](https://www.tencentcloud.com/document/api/1160/54829)
+* Create:
+  - [DescribeNatAcRule](https://www.tencentcloud.com/document/api/1160/54831)
+  - [ModifyNatAcRule](https://www.tencentcloud.com/document/api/1160/54829)
 * Read: [DescribeNatAcRule](https://www.tencentcloud.com/document/api/1160/54831)
-* Update: [DescribeNatAcRule](https://www.tencentcloud.com/document/api/1160/54831)
-* Update: [ModifyNatAcRule](https://www.tencentcloud.com/document/api/1160/54829)
+* Update:
+  - [DescribeNatAcRule](https://www.tencentcloud.com/document/api/1160/54831)
+  - [ModifyNatAcRule](https://www.tencentcloud.com/document/api/1160/54829)
 
 ## Import
 

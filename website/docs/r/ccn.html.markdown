@@ -90,16 +90,20 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCcn](https://www.tencentcloud.com/document/api/215/34791)
-* Create: [ModifyCcnAttribute](https://www.tencentcloud.com/document/api/215/34783)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeCcns](https://www.tencentcloud.com/document/api/215/34787)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [ModifyCcnAttribute](https://www.tencentcloud.com/document/api/215/34783)
-* Update: [ModifyCcnRegionBandwidthLimitsType](https://www.tencentcloud.com/document/api/215/34782)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Delete: [DeleteCcn](https://www.tencentcloud.com/document/api/215/34790)
-* Delete: [DescribeCcns](https://www.tencentcloud.com/document/api/215/34787)
+* Create:
+  - [CreateCcn](https://www.tencentcloud.com/document/api/215/34791)
+  - [ModifyCcnAttribute](https://www.tencentcloud.com/document/api/215/34783)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeCcns](https://www.tencentcloud.com/document/api/215/34787)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [ModifyCcnAttribute](https://www.tencentcloud.com/document/api/215/34783)
+  - [ModifyCcnRegionBandwidthLimitsType](https://www.tencentcloud.com/document/api/215/34782)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete:
+  - [DeleteCcn](https://www.tencentcloud.com/document/api/215/34790)
+  - [DescribeCcns](https://www.tencentcloud.com/document/api/215/34787)
 
 ## Import
 

@@ -62,12 +62,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateUserSyncProvisioning](https://www.tencentcloud.com/document/api/1031/63580)
-* Create: [GetProvisioningTaskStatus](https://www.tencentcloud.com/document/api/1031/63578)
+* Create:
+  - [CreateUserSyncProvisioning](https://www.tencentcloud.com/document/api/1031/63580)
+  - [GetProvisioningTaskStatus](https://www.tencentcloud.com/document/api/1031/63578)
 * Read: [GetUserSyncProvisioning](https://www.tencentcloud.com/document/api/1031/63577)
 * Update: [UpdateUserSyncProvisioning](https://www.tencentcloud.com/document/api/1031/63575)
-* Delete: [DeleteUserSyncProvisioning](https://www.tencentcloud.com/document/api/1031/63579)
-* Delete: [GetProvisioningTaskStatus](https://www.tencentcloud.com/document/api/1031/63578)
+* Delete:
+  - [DeleteUserSyncProvisioning](https://www.tencentcloud.com/document/api/1031/63579)
+  - [GetProvisioningTaskStatus](https://www.tencentcloud.com/document/api/1031/63578)
 
 ## Import
 

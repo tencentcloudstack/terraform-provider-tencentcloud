@@ -130,16 +130,20 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLogstashInstance](https://www.tencentcloud.com/search/?wd=CreateLogstashInstance&type=document&lang=en)
-* Create: [DescribeLogstashInstances](https://www.tencentcloud.com/search/?wd=DescribeLogstashInstances&type=document&lang=en)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeLogstashInstances](https://www.tencentcloud.com/search/?wd=DescribeLogstashInstances&type=document&lang=en)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [DescribeLogstashInstances](https://www.tencentcloud.com/search/?wd=DescribeLogstashInstances&type=document&lang=en)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [UpdateLogstashInstance](https://www.tencentcloud.com/search/?wd=UpdateLogstashInstance&type=document&lang=en)
-* Delete: [DeleteLogstashInstance](https://www.tencentcloud.com/search/?wd=DeleteLogstashInstance&type=document&lang=en)
-* Delete: [DescribeLogstashInstances](https://www.tencentcloud.com/search/?wd=DescribeLogstashInstances&type=document&lang=en)
+* Create:
+  - [CreateLogstashInstance](https://www.tencentcloud.com/search/?wd=CreateLogstashInstance&type=document&lang=en)
+  - [DescribeLogstashInstances](https://www.tencentcloud.com/search/?wd=DescribeLogstashInstances&type=document&lang=en)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeLogstashInstances](https://www.tencentcloud.com/search/?wd=DescribeLogstashInstances&type=document&lang=en)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [DescribeLogstashInstances](https://www.tencentcloud.com/search/?wd=DescribeLogstashInstances&type=document&lang=en)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [UpdateLogstashInstance](https://www.tencentcloud.com/search/?wd=UpdateLogstashInstance&type=document&lang=en)
+* Delete:
+  - [DeleteLogstashInstance](https://www.tencentcloud.com/search/?wd=DeleteLogstashInstance&type=document&lang=en)
+  - [DescribeLogstashInstances](https://www.tencentcloud.com/search/?wd=DescribeLogstashInstances&type=document&lang=en)
 
 ## Import
 

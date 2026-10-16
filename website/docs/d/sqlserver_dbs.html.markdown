@@ -92,6 +92,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
-* Read: [DescribeDBs](https://www.tencentcloud.com/document/api/238/32114)
+* Read:
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
+  - [DescribeDBs](https://www.tencentcloud.com/document/api/238/32114)
 

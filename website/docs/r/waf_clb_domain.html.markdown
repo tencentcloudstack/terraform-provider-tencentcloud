@@ -164,23 +164,26 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateHost](https://www.tencentcloud.com/document/api/627/64570)
-* Create: [DescribeDomains](https://www.tencentcloud.com/document/api/627/64580)
-* Create: [DescribeHostLimit](https://www.tencentcloud.com/document/api/627/64546)
-* Create: [ModifyApiAnalyzeStatus](https://www.tencentcloud.com/document/api/627/64575)
-* Create: [ModifyBotStatus](https://www.tencentcloud.com/document/api/627/64540)
-* Create: [ModifyDomainsCLSStatus](https://www.tencentcloud.com/document/api/627/64539)
-* Create: [ModifyHostMode](https://www.tencentcloud.com/document/api/627/64538)
-* Create: [ModifyHostStatus](https://www.tencentcloud.com/document/api/627/64537)
-* Read: [DescribeDomainDetailsClb](https://www.tencentcloud.com/document/api/627/64565)
-* Read: [DescribeDomains](https://www.tencentcloud.com/document/api/627/64580)
-* Update: [ModifyApiAnalyzeStatus](https://www.tencentcloud.com/document/api/627/64575)
-* Update: [ModifyBotStatus](https://www.tencentcloud.com/document/api/627/64540)
-* Update: [ModifyDomainsCLSStatus](https://www.tencentcloud.com/document/api/627/64539)
-* Update: [ModifyHost](https://www.tencentcloud.com/document/api/627/64560)
-* Update: [ModifyHostFlowMode](https://www.tencentcloud.com/document/api/627/64559)
-* Update: [ModifyHostMode](https://www.tencentcloud.com/document/api/627/64538)
-* Update: [ModifyHostStatus](https://www.tencentcloud.com/document/api/627/64537)
+* Create:
+  - [CreateHost](https://www.tencentcloud.com/document/api/627/64570)
+  - [DescribeDomains](https://www.tencentcloud.com/document/api/627/64580)
+  - [DescribeHostLimit](https://www.tencentcloud.com/document/api/627/64546)
+  - [ModifyApiAnalyzeStatus](https://www.tencentcloud.com/document/api/627/64575)
+  - [ModifyBotStatus](https://www.tencentcloud.com/document/api/627/64540)
+  - [ModifyDomainsCLSStatus](https://www.tencentcloud.com/document/api/627/64539)
+  - [ModifyHostMode](https://www.tencentcloud.com/document/api/627/64538)
+  - [ModifyHostStatus](https://www.tencentcloud.com/document/api/627/64537)
+* Read:
+  - [DescribeDomainDetailsClb](https://www.tencentcloud.com/document/api/627/64565)
+  - [DescribeDomains](https://www.tencentcloud.com/document/api/627/64580)
+* Update:
+  - [ModifyApiAnalyzeStatus](https://www.tencentcloud.com/document/api/627/64575)
+  - [ModifyBotStatus](https://www.tencentcloud.com/document/api/627/64540)
+  - [ModifyDomainsCLSStatus](https://www.tencentcloud.com/document/api/627/64539)
+  - [ModifyHost](https://www.tencentcloud.com/document/api/627/64560)
+  - [ModifyHostFlowMode](https://www.tencentcloud.com/document/api/627/64559)
+  - [ModifyHostMode](https://www.tencentcloud.com/document/api/627/64538)
+  - [ModifyHostStatus](https://www.tencentcloud.com/document/api/627/64537)
 * Delete: [DeleteHost](https://www.tencentcloud.com/document/api/627/64569)
 
 ## Import

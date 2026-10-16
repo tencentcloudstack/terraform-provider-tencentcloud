@@ -148,7 +148,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeMigrationCheckJob](https://www.tencentcloud.com/document/api/571/51814)
-* Create: [DescribeMigrationDetail](https://www.tencentcloud.com/document/api/571/51813)
-* Create: [StartMigrateJob](https://www.tencentcloud.com/document/api/571/51801)
+* Create:
+  - [DescribeMigrationCheckJob](https://www.tencentcloud.com/document/api/571/51814)
+  - [DescribeMigrationDetail](https://www.tencentcloud.com/document/api/571/51813)
+  - [StartMigrateJob](https://www.tencentcloud.com/document/api/571/51801)
 

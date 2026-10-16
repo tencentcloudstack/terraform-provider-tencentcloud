@@ -64,6 +64,7 @@ The `collections` object of `databases` supports the following:
 
 This action invokes the following TencentCloud APIs:
 
-* Invoke: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/240/37921)
-* Invoke: [RestoreDBInstance](https://www.tencentcloud.com/document/api/240/79891)
+* Invoke:
+  - [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/240/37921)
+  - [RestoreDBInstance](https://www.tencentcloud.com/document/api/240/79891)
 

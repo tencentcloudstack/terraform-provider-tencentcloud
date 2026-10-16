@@ -54,11 +54,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstanceCustomizedDomain](https://www.tencentcloud.com/document/api/1051/50714)
-* Create: [DescribeInstanceCustomizedDomain](https://www.tencentcloud.com/document/api/1051/50706)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeInstanceCustomizedDomain](https://www.tencentcloud.com/document/api/1051/50706)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Create:
+  - [CreateInstanceCustomizedDomain](https://www.tencentcloud.com/document/api/1051/50714)
+  - [DescribeInstanceCustomizedDomain](https://www.tencentcloud.com/document/api/1051/50706)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeInstanceCustomizedDomain](https://www.tencentcloud.com/document/api/1051/50706)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
 * Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
 * Delete: [DeleteInstanceCustomizedDomain](https://www.tencentcloud.com/document/api/1051/50710)
 

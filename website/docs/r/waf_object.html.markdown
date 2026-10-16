@@ -68,8 +68,9 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [ModifyObject](https://www.tencentcloud.com/document/api/627/64509)
-* Read: [DescribeObjects](https://www.tencentcloud.com/document/api/627/64521)
-* Read: [GetOrganizationRole](https://www.tencentcloud.com/search/?wd=GetOrganizationRole&type=document&lang=en)
+* Read:
+  - [DescribeObjects](https://www.tencentcloud.com/document/api/627/64521)
+  - [GetOrganizationRole](https://www.tencentcloud.com/search/?wd=GetOrganizationRole&type=document&lang=en)
 * Update: [ModifyObject](https://www.tencentcloud.com/document/api/627/64509)
 * Delete: [ModifyObject](https://www.tencentcloud.com/document/api/627/64509)
 

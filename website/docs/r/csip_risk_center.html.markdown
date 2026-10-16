@@ -156,6 +156,7 @@ This resource interacts with the following TencentCloud APIs:
 * Create: [CreateRiskCenterScanTask](https://www.tencentcloud.com/search/?wd=CreateRiskCenterScanTask&type=document&lang=en)
 * Read: [DescribeScanTaskList](https://www.tencentcloud.com/search/?wd=DescribeScanTaskList&type=document&lang=en)
 * Update: [ModifyRiskCenterScanTask](https://www.tencentcloud.com/search/?wd=ModifyRiskCenterScanTask&type=document&lang=en)
-* Delete: [DeleteRiskScanTask](https://www.tencentcloud.com/search/?wd=DeleteRiskScanTask&type=document&lang=en)
-* Delete: [StopRiskCenterTask](https://www.tencentcloud.com/search/?wd=StopRiskCenterTask&type=document&lang=en)
+* Delete:
+  - [DeleteRiskScanTask](https://www.tencentcloud.com/search/?wd=DeleteRiskScanTask&type=document&lang=en)
+  - [StopRiskCenterTask](https://www.tencentcloud.com/search/?wd=StopRiskCenterTask&type=document&lang=en)
 

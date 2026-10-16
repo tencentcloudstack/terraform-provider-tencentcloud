@@ -350,11 +350,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ConfigureSyncJob](https://www.tencentcloud.com/document/api/571/51797)
-* Create: [DescribeSyncJobs](https://www.tencentcloud.com/document/api/571/51793)
+* Create:
+  - [ConfigureSyncJob](https://www.tencentcloud.com/document/api/571/51797)
+  - [DescribeSyncJobs](https://www.tencentcloud.com/document/api/571/51793)
 * Read: [DescribeSyncJobs](https://www.tencentcloud.com/document/api/571/51793)
-* Update: [ConfigureSyncJob](https://www.tencentcloud.com/document/api/571/51797)
-* Update: [DescribeSyncJobs](https://www.tencentcloud.com/document/api/571/51793)
+* Update:
+  - [ConfigureSyncJob](https://www.tencentcloud.com/document/api/571/51797)
+  - [DescribeSyncJobs](https://www.tencentcloud.com/document/api/571/51793)
 
 ## Import
 

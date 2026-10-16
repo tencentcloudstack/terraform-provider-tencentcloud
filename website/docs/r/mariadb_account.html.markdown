@@ -48,8 +48,9 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateAccount](https://www.tencentcloud.com/document/api/237/16165)
 * Read: [DescribeAccounts](https://www.tencentcloud.com/document/api/237/16167)
-* Update: [ModifyAccountDescription](https://www.tencentcloud.com/document/api/237/16170)
-* Update: [ResetAccountPassword](https://www.tencentcloud.com/document/api/237/16168)
+* Update:
+  - [ModifyAccountDescription](https://www.tencentcloud.com/document/api/237/16170)
+  - [ResetAccountPassword](https://www.tencentcloud.com/document/api/237/16168)
 * Delete: [DeleteAccount](https://www.tencentcloud.com/document/api/237/16171)
 
 ## Import

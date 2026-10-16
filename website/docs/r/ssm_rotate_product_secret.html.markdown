@@ -36,6 +36,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/1078/41518)
-* Create: [RotateProductSecret](https://www.tencentcloud.com/document/api/1078/41515)
+* Create:
+  - [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/1078/41518)
+  - [RotateProductSecret](https://www.tencentcloud.com/document/api/1078/41515)
 

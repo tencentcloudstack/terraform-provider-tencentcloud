@@ -88,18 +88,22 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateProbeTasks](https://www.tencentcloud.com/search/?wd=CreateProbeTasks&type=document&lang=en)
-* Create: [DescribeProbeTasks](https://www.tencentcloud.com/search/?wd=DescribeProbeTasks&type=document&lang=en)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeProbeTasks](https://www.tencentcloud.com/search/?wd=DescribeProbeTasks&type=document&lang=en)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [ResumeProbeTask](https://www.tencentcloud.com/search/?wd=ResumeProbeTask&type=document&lang=en)
-* Update: [SuspendProbeTask](https://www.tencentcloud.com/search/?wd=SuspendProbeTask&type=document&lang=en)
-* Update: [UpdateProbeTaskAttributes](https://www.tencentcloud.com/search/?wd=UpdateProbeTaskAttributes&type=document&lang=en)
-* Update: [UpdateProbeTaskConfigurationList](https://www.tencentcloud.com/search/?wd=UpdateProbeTaskConfigurationList&type=document&lang=en)
-* Delete: [DeleteProbeTask](https://www.tencentcloud.com/search/?wd=DeleteProbeTask&type=document&lang=en)
-* Delete: [DescribeProbeTasks](https://www.tencentcloud.com/search/?wd=DescribeProbeTasks&type=document&lang=en)
+* Create:
+  - [CreateProbeTasks](https://www.tencentcloud.com/search/?wd=CreateProbeTasks&type=document&lang=en)
+  - [DescribeProbeTasks](https://www.tencentcloud.com/search/?wd=DescribeProbeTasks&type=document&lang=en)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeProbeTasks](https://www.tencentcloud.com/search/?wd=DescribeProbeTasks&type=document&lang=en)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [ResumeProbeTask](https://www.tencentcloud.com/search/?wd=ResumeProbeTask&type=document&lang=en)
+  - [SuspendProbeTask](https://www.tencentcloud.com/search/?wd=SuspendProbeTask&type=document&lang=en)
+  - [UpdateProbeTaskAttributes](https://www.tencentcloud.com/search/?wd=UpdateProbeTaskAttributes&type=document&lang=en)
+  - [UpdateProbeTaskConfigurationList](https://www.tencentcloud.com/search/?wd=UpdateProbeTaskConfigurationList&type=document&lang=en)
+* Delete:
+  - [DeleteProbeTask](https://www.tencentcloud.com/search/?wd=DeleteProbeTask&type=document&lang=en)
+  - [DescribeProbeTasks](https://www.tencentcloud.com/search/?wd=DescribeProbeTasks&type=document&lang=en)
 
 ## Import
 

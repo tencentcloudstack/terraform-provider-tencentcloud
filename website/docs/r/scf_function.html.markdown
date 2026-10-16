@@ -245,21 +245,24 @@ The `intranet_config` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateFunction](https://www.tencentcloud.com/search/?wd=CreateFunction&type=document&lang=en)
-* Create: [CreateTrigger](https://www.tencentcloud.com/document/api/583/18589)
-* Create: [GetFunction](https://www.tencentcloud.com/search/?wd=GetFunction&type=document&lang=en)
-* Create: [GetSecretValue](https://www.tencentcloud.com/document/api/1078/38649)
-* Create: [UpdateFunctionConfiguration](https://www.tencentcloud.com/search/?wd=UpdateFunctionConfiguration&type=document&lang=en)
+* Create:
+  - [CreateFunction](https://www.tencentcloud.com/search/?wd=CreateFunction&type=document&lang=en)
+  - [CreateTrigger](https://www.tencentcloud.com/document/api/583/18589)
+  - [GetFunction](https://www.tencentcloud.com/search/?wd=GetFunction&type=document&lang=en)
+  - [GetSecretValue](https://www.tencentcloud.com/document/api/1078/38649)
+  - [UpdateFunctionConfiguration](https://www.tencentcloud.com/search/?wd=UpdateFunctionConfiguration&type=document&lang=en)
 * Read: [GetFunction](https://www.tencentcloud.com/search/?wd=GetFunction&type=document&lang=en)
-* Update: [CreateTrigger](https://www.tencentcloud.com/document/api/583/18589)
-* Update: [DeleteTrigger](https://www.tencentcloud.com/document/api/583/18588)
-* Update: [GetFunction](https://www.tencentcloud.com/search/?wd=GetFunction&type=document&lang=en)
-* Update: [GetSecretValue](https://www.tencentcloud.com/document/api/1078/38649)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [UpdateFunctionCode](https://www.tencentcloud.com/document/api/583/18581)
-* Update: [UpdateFunctionConfiguration](https://www.tencentcloud.com/search/?wd=UpdateFunctionConfiguration&type=document&lang=en)
-* Delete: [DeleteFunction](https://www.tencentcloud.com/document/api/583/18585)
-* Delete: [GetFunction](https://www.tencentcloud.com/search/?wd=GetFunction&type=document&lang=en)
+* Update:
+  - [CreateTrigger](https://www.tencentcloud.com/document/api/583/18589)
+  - [DeleteTrigger](https://www.tencentcloud.com/document/api/583/18588)
+  - [GetFunction](https://www.tencentcloud.com/search/?wd=GetFunction&type=document&lang=en)
+  - [GetSecretValue](https://www.tencentcloud.com/document/api/1078/38649)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [UpdateFunctionCode](https://www.tencentcloud.com/document/api/583/18581)
+  - [UpdateFunctionConfiguration](https://www.tencentcloud.com/search/?wd=UpdateFunctionConfiguration&type=document&lang=en)
+* Delete:
+  - [DeleteFunction](https://www.tencentcloud.com/document/api/583/18585)
+  - [GetFunction](https://www.tencentcloud.com/search/?wd=GetFunction&type=document&lang=en)
 
 ## Import
 

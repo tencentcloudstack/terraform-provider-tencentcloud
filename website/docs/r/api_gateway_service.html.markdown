@@ -107,21 +107,25 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateService](https://www.tencentcloud.com/search/?wd=CreateService&type=document&lang=en)
-* Create: [DescribeService](https://www.tencentcloud.com/search/?wd=DescribeService&type=document&lang=en)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Create: [ModifyServiceEnvironmentStrategy](https://www.tencentcloud.com/search/?wd=ModifyServiceEnvironmentStrategy&type=document&lang=en)
-* Read: [DescribeApiUsagePlan](https://www.tencentcloud.com/search/?wd=DescribeApiUsagePlan&type=document&lang=en)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Read: [DescribeService](https://www.tencentcloud.com/search/?wd=DescribeService&type=document&lang=en)
-* Read: [DescribeServiceEnvironmentStrategy](https://www.tencentcloud.com/search/?wd=DescribeServiceEnvironmentStrategy&type=document&lang=en)
-* Read: [DescribeServiceUsagePlan](https://www.tencentcloud.com/search/?wd=DescribeServiceUsagePlan&type=document&lang=en)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [ModifyService](https://www.tencentcloud.com/search/?wd=ModifyService&type=document&lang=en)
-* Update: [ModifyServiceEnvironmentStrategy](https://www.tencentcloud.com/search/?wd=ModifyServiceEnvironmentStrategy&type=document&lang=en)
-* Delete: [DeleteService](https://www.tencentcloud.com/search/?wd=DeleteService&type=document&lang=en)
-* Delete: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Delete: [UnReleaseService](https://www.tencentcloud.com/search/?wd=UnReleaseService&type=document&lang=en)
+* Create:
+  - [CreateService](https://www.tencentcloud.com/search/?wd=CreateService&type=document&lang=en)
+  - [DescribeService](https://www.tencentcloud.com/search/?wd=DescribeService&type=document&lang=en)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [ModifyServiceEnvironmentStrategy](https://www.tencentcloud.com/search/?wd=ModifyServiceEnvironmentStrategy&type=document&lang=en)
+* Read:
+  - [DescribeApiUsagePlan](https://www.tencentcloud.com/search/?wd=DescribeApiUsagePlan&type=document&lang=en)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [DescribeService](https://www.tencentcloud.com/search/?wd=DescribeService&type=document&lang=en)
+  - [DescribeServiceEnvironmentStrategy](https://www.tencentcloud.com/search/?wd=DescribeServiceEnvironmentStrategy&type=document&lang=en)
+  - [DescribeServiceUsagePlan](https://www.tencentcloud.com/search/?wd=DescribeServiceUsagePlan&type=document&lang=en)
+* Update:
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [ModifyService](https://www.tencentcloud.com/search/?wd=ModifyService&type=document&lang=en)
+  - [ModifyServiceEnvironmentStrategy](https://www.tencentcloud.com/search/?wd=ModifyServiceEnvironmentStrategy&type=document&lang=en)
+* Delete:
+  - [DeleteService](https://www.tencentcloud.com/search/?wd=DeleteService&type=document&lang=en)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [UnReleaseService](https://www.tencentcloud.com/search/?wd=UnReleaseService&type=document&lang=en)
 
 ## Import
 

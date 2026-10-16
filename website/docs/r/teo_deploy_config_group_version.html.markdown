@@ -71,7 +71,8 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DeployConfigGroupVersion](https://www.tencentcloud.com/document/api/1145/57976)
-* Create: [DescribeEnvironments](https://www.tencentcloud.com/document/api/1145/57972)
+* Create:
+  - [DeployConfigGroupVersion](https://www.tencentcloud.com/document/api/1145/57976)
+  - [DescribeEnvironments](https://www.tencentcloud.com/document/api/1145/57972)
 * Read: [DescribeDeployHistory](https://www.tencentcloud.com/document/api/1145/57973)
 

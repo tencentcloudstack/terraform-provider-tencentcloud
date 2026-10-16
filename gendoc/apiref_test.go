@@ -81,7 +81,8 @@ func TestRenderResourceAPISectionManualOverride(t *testing.T) {
 
 func TestRenderAPIRefsNamelessAndLinkless(t *testing.T) {
 	// Actions render as "Verb: [Action](url)" only — no descriptions. An
-	// empty URL degrades to a bare code-quoted action name.
+	// empty URL degrades to a bare code-quoted action name. Multiple
+	// actions in one phase group under the phase label.
 	refs := map[string][]apiRef{
 		"Create": {
 			{Product: "vpc", Action: "CreateVpc", URL: "https://example.com/create"},
@@ -90,13 +91,16 @@ func TestRenderAPIRefsNamelessAndLinkless(t *testing.T) {
 	}
 	got := renderAPIRefsFor("resource", refs)
 	want := "This resource interacts with the following TencentCloud APIs:\n\n" +
-		"* Create: [CreateVpc](https://example.com/create)\n" +
-		"* Create: `NoUrl`"
+		"* Create:\n" +
+		"  - [CreateVpc](https://example.com/create)\n" +
+		"  - `NoUrl`"
 	if got != want {
 		t.Errorf("render mismatch:\ngot:\n%s\nwant:\n%s", got, want)
 	}
 	// Descriptions were removed from the section; none may leak back in.
-	if strings.Contains(got, " - ") {
+	// (A bare " - " now legitimately appears in sub-bullets, so match the
+	// description pattern: an action link/backtick followed by text.)
+	if strings.Contains(got, "] - ") || strings.Contains(got, "` - ") {
 		t.Error("description text leaked into the rendered section")
 	}
 }
@@ -231,5 +235,28 @@ func TestAlignCatalogDeterministicOnTies(t *testing.T) {
 		if got := c.urlIdx["sdk.Act1"]; got != "u1" {
 			t.Fatalf("iteration %d: sdk.Act1 = %q, want u1 (aaa alias)", i, got)
 		}
+	}
+}
+
+func TestRenderAPIRefsGroupsMultiItemPhases(t *testing.T) {
+	// Phases with multiple APIs render as sub-bullets under the phase
+	// label; single-API phases stay on one line.
+	refs := map[string][]apiRef{
+		"Delete": {
+			{Product: "cam", Action: "DeleteServiceLinkedRole", URL: "https://example.com/delete"},
+			{Product: "cam", Action: "GetRole", URL: "https://example.com/getrole"},
+			{Product: "cam", Action: "GetServiceLinkedRoleDeletionStatus", URL: ""},
+		},
+		"Read": {{Product: "cam", Action: "GetRole", URL: "https://example.com/getrole"}},
+	}
+	got := renderAPIRefs(refs)
+	want := "This resource interacts with the following TencentCloud APIs:\n\n" +
+		"* Read: [GetRole](https://example.com/getrole)\n" +
+		"* Delete:\n" +
+		"  - [DeleteServiceLinkedRole](https://example.com/delete)\n" +
+		"  - [GetRole](https://example.com/getrole)\n" +
+		"  - `GetServiceLinkedRoleDeletionStatus`"
+	if got != want {
+		t.Errorf("renderAPIRefs mismatch:\ngot:\n%s\nwant:\n%s", got, want)
 	}
 }

@@ -119,16 +119,19 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCloudProductLogCollection](https://www.tencentcloud.com/document/api/614/80568)
-* Create: [DescribeCloudProductLogTasks](https://www.tencentcloud.com/document/api/614/80566)
-* Read: [DescribeCloudProductLogTasks](https://www.tencentcloud.com/document/api/614/80566)
-* Read: [DescribeLogsets](https://www.tencentcloud.com/document/api/614/42778)
-* Read: [DescribeTopics](https://www.tencentcloud.com/document/api/614/42783)
+* Create:
+  - [CreateCloudProductLogCollection](https://www.tencentcloud.com/document/api/614/80568)
+  - [DescribeCloudProductLogTasks](https://www.tencentcloud.com/document/api/614/80566)
+* Read:
+  - [DescribeCloudProductLogTasks](https://www.tencentcloud.com/document/api/614/80566)
+  - [DescribeLogsets](https://www.tencentcloud.com/document/api/614/42778)
+  - [DescribeTopics](https://www.tencentcloud.com/document/api/614/42783)
 * Update: [ModifyCloudProductLogCollection](https://www.tencentcloud.com/document/api/614/80565)
-* Delete: [DeleteCloudProductLogCollection](https://www.tencentcloud.com/document/api/614/80567)
-* Delete: [DeleteLogset](https://www.tencentcloud.com/document/api/614/42779)
-* Delete: [DeleteTopic](https://www.tencentcloud.com/document/api/614/42784)
-* Delete: [DescribeCloudProductLogTasks](https://www.tencentcloud.com/document/api/614/80566)
+* Delete:
+  - [DeleteCloudProductLogCollection](https://www.tencentcloud.com/document/api/614/80567)
+  - [DeleteLogset](https://www.tencentcloud.com/document/api/614/42779)
+  - [DeleteTopic](https://www.tencentcloud.com/document/api/614/42784)
+  - [DescribeCloudProductLogTasks](https://www.tencentcloud.com/document/api/614/80566)
 
 ## Import
 

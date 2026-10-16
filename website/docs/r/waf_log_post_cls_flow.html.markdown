@@ -58,8 +58,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePostCLSFlow](https://www.tencentcloud.com/search/?wd=CreatePostCLSFlow&type=document&lang=en)
-* Create: [DescribePostCLSFlows](https://www.tencentcloud.com/search/?wd=DescribePostCLSFlows&type=document&lang=en)
+* Create:
+  - [CreatePostCLSFlow](https://www.tencentcloud.com/search/?wd=CreatePostCLSFlow&type=document&lang=en)
+  - [DescribePostCLSFlows](https://www.tencentcloud.com/search/?wd=DescribePostCLSFlows&type=document&lang=en)
 * Read: [DescribePostCLSFlows](https://www.tencentcloud.com/search/?wd=DescribePostCLSFlows&type=document&lang=en)
 * Update: [CreatePostCLSFlow](https://www.tencentcloud.com/search/?wd=CreatePostCLSFlow&type=document&lang=en)
 * Delete: [DestroyPostCLSFlow](https://www.tencentcloud.com/search/?wd=DestroyPostCLSFlow&type=document&lang=en)

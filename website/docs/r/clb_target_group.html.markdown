@@ -222,8 +222,9 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateTargetGroup](https://www.tencentcloud.com/document/api/214/33839)
 * Read: [DescribeTargetGroupList](https://www.tencentcloud.com/document/api/214/33827)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [ModifyTargetGroupAttribute](https://www.tencentcloud.com/document/api/214/33815)
+* Update:
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [ModifyTargetGroupAttribute](https://www.tencentcloud.com/document/api/214/33815)
 * Delete: [DeleteTargetGroups](https://www.tencentcloud.com/document/api/214/33834)
 
 ## Import

@@ -38,11 +38,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDBSyncMode](https://www.tencentcloud.com/document/api/1042/34443)
-* Create: [ModifyDBSyncMode](https://www.tencentcloud.com/document/api/1042/34432)
+* Create:
+  - [DescribeDBSyncMode](https://www.tencentcloud.com/document/api/1042/34443)
+  - [ModifyDBSyncMode](https://www.tencentcloud.com/document/api/1042/34432)
 * Read: [DescribeDBSyncMode](https://www.tencentcloud.com/document/api/1042/34443)
-* Update: [DescribeDBSyncMode](https://www.tencentcloud.com/document/api/1042/34443)
-* Update: [ModifyDBSyncMode](https://www.tencentcloud.com/document/api/1042/34432)
+* Update:
+  - [DescribeDBSyncMode](https://www.tencentcloud.com/document/api/1042/34443)
+  - [ModifyDBSyncMode](https://www.tencentcloud.com/document/api/1042/34432)
 
 ## Import
 

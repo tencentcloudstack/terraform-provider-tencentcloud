@@ -207,8 +207,9 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [AddExistedInstances](https://www.tencentcloud.com/document/api/457/32039)
-* Read: [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
-* Read: [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
-* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+* Read:
+  - [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
 * Delete: [DeleteClusterInstances](https://www.tencentcloud.com/document/api/457/32038)
 

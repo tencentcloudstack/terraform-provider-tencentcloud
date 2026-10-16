@@ -95,12 +95,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateTargetGroups](https://www.tencentcloud.com/document/api/214/33847)
-* Create: [DescribeLoadBalancers](https://www.tencentcloud.com/document/api/214/33830)
-* Create: [DescribeTargetGroups](https://www.tencentcloud.com/document/api/214/33826)
+* Create:
+  - [AssociateTargetGroups](https://www.tencentcloud.com/document/api/214/33847)
+  - [DescribeLoadBalancers](https://www.tencentcloud.com/document/api/214/33830)
+  - [DescribeTargetGroups](https://www.tencentcloud.com/document/api/214/33826)
 * Read: [DescribeTargetGroups](https://www.tencentcloud.com/document/api/214/33826)
-* Delete: [DescribeTargetGroups](https://www.tencentcloud.com/document/api/214/33826)
-* Delete: [DisassociateTargetGroups](https://www.tencentcloud.com/document/api/214/33822)
+* Delete:
+  - [DescribeTargetGroups](https://www.tencentcloud.com/document/api/214/33826)
+  - [DisassociateTargetGroups](https://www.tencentcloud.com/document/api/214/33822)
 
 ## Import
 

@@ -101,11 +101,13 @@ The `config_rules` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddCompliancePack](https://www.tencentcloud.com/search/?wd=AddCompliancePack&type=document&lang=en)
-* Create: [UpdateCompliancePackStatus](https://www.tencentcloud.com/search/?wd=UpdateCompliancePackStatus&type=document&lang=en)
+* Create:
+  - [AddCompliancePack](https://www.tencentcloud.com/search/?wd=AddCompliancePack&type=document&lang=en)
+  - [UpdateCompliancePackStatus](https://www.tencentcloud.com/search/?wd=UpdateCompliancePackStatus&type=document&lang=en)
 * Read: [DescribeCompliancePack](https://www.tencentcloud.com/search/?wd=DescribeCompliancePack&type=document&lang=en)
-* Update: [UpdateCompliancePack](https://www.tencentcloud.com/search/?wd=UpdateCompliancePack&type=document&lang=en)
-* Update: [UpdateCompliancePackStatus](https://www.tencentcloud.com/search/?wd=UpdateCompliancePackStatus&type=document&lang=en)
+* Update:
+  - [UpdateCompliancePack](https://www.tencentcloud.com/search/?wd=UpdateCompliancePack&type=document&lang=en)
+  - [UpdateCompliancePackStatus](https://www.tencentcloud.com/search/?wd=UpdateCompliancePackStatus&type=document&lang=en)
 
 ## Import
 

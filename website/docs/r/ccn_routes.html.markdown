@@ -40,11 +40,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DisableCcnRoutes](https://www.tencentcloud.com/document/api/215/34785)
-* Create: [EnableCcnRoutes](https://www.tencentcloud.com/document/api/215/34784)
+* Create:
+  - [DisableCcnRoutes](https://www.tencentcloud.com/document/api/215/34785)
+  - [EnableCcnRoutes](https://www.tencentcloud.com/document/api/215/34784)
 * Read: [DescribeCcnRoutes](https://www.tencentcloud.com/document/api/215/34788)
-* Update: [DisableCcnRoutes](https://www.tencentcloud.com/document/api/215/34785)
-* Update: [EnableCcnRoutes](https://www.tencentcloud.com/document/api/215/34784)
+* Update:
+  - [DisableCcnRoutes](https://www.tencentcloud.com/document/api/215/34785)
+  - [EnableCcnRoutes](https://www.tencentcloud.com/document/api/215/34784)
 
 ## Import
 

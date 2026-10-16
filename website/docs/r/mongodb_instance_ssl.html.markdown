@@ -43,10 +43,12 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Read: [DescribeInstanceSSL](https://www.tencentcloud.com/document/api/240/74531)
-* Update: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/240/37921)
-* Update: [InstanceEnableSSL](https://www.tencentcloud.com/document/api/240/74528)
-* Delete: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/240/37921)
-* Delete: [InstanceEnableSSL](https://www.tencentcloud.com/document/api/240/74528)
+* Update:
+  - [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/240/37921)
+  - [InstanceEnableSSL](https://www.tencentcloud.com/document/api/240/74528)
+* Delete:
+  - [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/240/37921)
+  - [InstanceEnableSSL](https://www.tencentcloud.com/document/api/240/74528)
 
 ## Import
 

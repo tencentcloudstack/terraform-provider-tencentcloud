@@ -131,6 +131,7 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [RunInstances](https://www.tencentcloud.com/document/api/213/33237)
-* Update: [RunInstances](https://www.tencentcloud.com/document/api/213/33237)
-* Update: [TerminateInstances](https://www.tencentcloud.com/document/api/213/33234)
+* Update:
+  - [RunInstances](https://www.tencentcloud.com/document/api/213/33237)
+  - [TerminateInstances](https://www.tencentcloud.com/document/api/213/33234)
 

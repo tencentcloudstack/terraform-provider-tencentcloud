@@ -204,12 +204,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateUpstream](https://www.tencentcloud.com/search/?wd=CreateUpstream&type=document&lang=en)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Read: [DescribeUpstreams](https://www.tencentcloud.com/search/?wd=DescribeUpstreams&type=document&lang=en)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [ModifyUpstream](https://www.tencentcloud.com/search/?wd=ModifyUpstream&type=document&lang=en)
+* Create:
+  - [CreateUpstream](https://www.tencentcloud.com/search/?wd=CreateUpstream&type=document&lang=en)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [DescribeUpstreams](https://www.tencentcloud.com/search/?wd=DescribeUpstreams&type=document&lang=en)
+* Update:
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [ModifyUpstream](https://www.tencentcloud.com/search/?wd=ModifyUpstream&type=document&lang=en)
 * Delete: [DeleteUpstream](https://www.tencentcloud.com/search/?wd=DeleteUpstream&type=document&lang=en)
 
 ## Import

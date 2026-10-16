@@ -163,8 +163,10 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateDDoSPolicy](https://www.tencentcloud.com/search/?wd=CreateDDoSPolicy&type=document&lang=en)
 * Read: [DescribeDDoSPolicy](https://www.tencentcloud.com/search/?wd=DescribeDDoSPolicy&type=document&lang=en)
-* Update: [ModifyDDoSPolicy](https://www.tencentcloud.com/search/?wd=ModifyDDoSPolicy&type=document&lang=en)
-* Update: [ModifyDDoSPolicyName](https://www.tencentcloud.com/search/?wd=ModifyDDoSPolicyName&type=document&lang=en)
-* Delete: [DeleteDDoSPolicy](https://www.tencentcloud.com/search/?wd=DeleteDDoSPolicy&type=document&lang=en)
-* Delete: [DescribeDDoSPolicy](https://www.tencentcloud.com/search/?wd=DescribeDDoSPolicy&type=document&lang=en)
+* Update:
+  - [ModifyDDoSPolicy](https://www.tencentcloud.com/search/?wd=ModifyDDoSPolicy&type=document&lang=en)
+  - [ModifyDDoSPolicyName](https://www.tencentcloud.com/search/?wd=ModifyDDoSPolicyName&type=document&lang=en)
+* Delete:
+  - [DeleteDDoSPolicy](https://www.tencentcloud.com/search/?wd=DeleteDDoSPolicy&type=document&lang=en)
+  - [DescribeDDoSPolicy](https://www.tencentcloud.com/search/?wd=DescribeDDoSPolicy&type=document&lang=en)
 

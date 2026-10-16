@@ -56,14 +56,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateApiKey](https://www.tencentcloud.com/search/?wd=CreateApiKey&type=document&lang=en)
-* Create: [DisableApiKey](https://www.tencentcloud.com/search/?wd=DisableApiKey&type=document&lang=en)
+* Create:
+  - [CreateApiKey](https://www.tencentcloud.com/search/?wd=CreateApiKey&type=document&lang=en)
+  - [DisableApiKey](https://www.tencentcloud.com/search/?wd=DisableApiKey&type=document&lang=en)
 * Read: [DescribeApiKeysStatus](https://www.tencentcloud.com/search/?wd=DescribeApiKeysStatus&type=document&lang=en)
-* Update: [DisableApiKey](https://www.tencentcloud.com/search/?wd=DisableApiKey&type=document&lang=en)
-* Update: [EnableApiKey](https://www.tencentcloud.com/search/?wd=EnableApiKey&type=document&lang=en)
-* Update: [UpdateApiKey](https://www.tencentcloud.com/search/?wd=UpdateApiKey&type=document&lang=en)
-* Delete: [DeleteApiKey](https://www.tencentcloud.com/search/?wd=DeleteApiKey&type=document&lang=en)
-* Delete: [DisableApiKey](https://www.tencentcloud.com/search/?wd=DisableApiKey&type=document&lang=en)
+* Update:
+  - [DisableApiKey](https://www.tencentcloud.com/search/?wd=DisableApiKey&type=document&lang=en)
+  - [EnableApiKey](https://www.tencentcloud.com/search/?wd=EnableApiKey&type=document&lang=en)
+  - [UpdateApiKey](https://www.tencentcloud.com/search/?wd=UpdateApiKey&type=document&lang=en)
+* Delete:
+  - [DeleteApiKey](https://www.tencentcloud.com/search/?wd=DeleteApiKey&type=document&lang=en)
+  - [DisableApiKey](https://www.tencentcloud.com/search/?wd=DisableApiKey&type=document&lang=en)
 
 ## Import
 

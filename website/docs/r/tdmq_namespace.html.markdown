@@ -72,8 +72,9 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateEnvironment](https://www.tencentcloud.com/search/?wd=CreateEnvironment&type=document&lang=en)
 * Read: [DescribeEnvironments](https://www.tencentcloud.com/search/?wd=DescribeEnvironments&type=document&lang=en)
-* Update: [ModifyEnvironmentAttributes](https://www.tencentcloud.com/search/?wd=ModifyEnvironmentAttributes&type=document&lang=en)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Update:
+  - [ModifyEnvironmentAttributes](https://www.tencentcloud.com/search/?wd=ModifyEnvironmentAttributes&type=document&lang=en)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
 * Delete: [DeleteEnvironments](https://www.tencentcloud.com/search/?wd=DeleteEnvironments&type=document&lang=en)
 
 ## Import

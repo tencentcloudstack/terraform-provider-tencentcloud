@@ -65,11 +65,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
-* Create: [ModifyDBInstanceSSL](https://www.tencentcloud.com/document/api/238/72764)
+* Create:
+  - [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+  - [ModifyDBInstanceSSL](https://www.tencentcloud.com/document/api/238/72764)
 * Read: [DescribeDBInstancesAttribute](https://www.tencentcloud.com/document/api/238/54811)
-* Update: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
-* Update: [ModifyDBInstanceSSL](https://www.tencentcloud.com/document/api/238/72764)
+* Update:
+  - [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+  - [ModifyDBInstanceSSL](https://www.tencentcloud.com/document/api/238/72764)
 
 ## Import
 

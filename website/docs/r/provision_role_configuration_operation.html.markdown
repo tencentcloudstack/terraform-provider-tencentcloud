@@ -42,6 +42,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [GetTaskStatus](https://www.tencentcloud.com/document/api/1031/63608)
-* Create: [ProvisionRoleConfiguration](https://www.tencentcloud.com/document/api/1031/63605)
+* Create:
+  - [GetTaskStatus](https://www.tencentcloud.com/document/api/1031/63608)
+  - [ProvisionRoleConfiguration](https://www.tencentcloud.com/document/api/1031/63605)
 

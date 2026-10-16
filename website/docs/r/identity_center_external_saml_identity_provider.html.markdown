@@ -67,12 +67,14 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [SetExternalSAMLIdentityProvider](https://www.tencentcloud.com/document/api/1031/63582)
-* Read: [GetExternalSAMLIdentityProvider](https://www.tencentcloud.com/document/api/1031/63586)
-* Read: [GetZoneSAMLServiceProviderInfo](https://www.tencentcloud.com/document/api/1031/63585)
+* Read:
+  - [GetExternalSAMLIdentityProvider](https://www.tencentcloud.com/document/api/1031/63586)
+  - [GetZoneSAMLServiceProviderInfo](https://www.tencentcloud.com/document/api/1031/63585)
 * Update: [SetExternalSAMLIdentityProvider](https://www.tencentcloud.com/document/api/1031/63582)
-* Delete: [ClearExternalSAMLIdentityProvider](https://www.tencentcloud.com/document/api/1031/63587)
-* Delete: [GetExternalSAMLIdentityProvider](https://www.tencentcloud.com/document/api/1031/63586)
-* Delete: [SetExternalSAMLIdentityProvider](https://www.tencentcloud.com/document/api/1031/63582)
+* Delete:
+  - [ClearExternalSAMLIdentityProvider](https://www.tencentcloud.com/document/api/1031/63587)
+  - [GetExternalSAMLIdentityProvider](https://www.tencentcloud.com/document/api/1031/63586)
+  - [SetExternalSAMLIdentityProvider](https://www.tencentcloud.com/document/api/1031/63582)
 
 ## Import
 

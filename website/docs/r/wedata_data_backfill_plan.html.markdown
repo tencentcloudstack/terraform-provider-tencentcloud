@@ -97,8 +97,9 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateDataBackfillPlan](https://www.tencentcloud.com/document/api/1174/73837)
 * Read: [GetDataBackfillPlan](https://www.tencentcloud.com/document/api/1174/77891)
-* Delete: [DeleteDataBackfillPlanAsync](https://www.tencentcloud.com/document/api/1174/77892)
-* Delete: [GetOpsAsyncJob](https://www.tencentcloud.com/document/api/1174/73832)
+* Delete:
+  - [DeleteDataBackfillPlanAsync](https://www.tencentcloud.com/document/api/1174/77892)
+  - [GetOpsAsyncJob](https://www.tencentcloud.com/document/api/1174/73832)
 
 ## Import
 

@@ -95,13 +95,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRocketMQVipInstance](https://www.tencentcloud.com/search/?wd=CreateRocketMQVipInstance&type=document&lang=en)
-* Create: [DescribeRocketMQVipInstances](https://www.tencentcloud.com/search/?wd=DescribeRocketMQVipInstances&type=document&lang=en)
-* Read: [DescribeRocketMQVipInstanceDetail](https://www.tencentcloud.com/search/?wd=DescribeRocketMQVipInstanceDetail&type=document&lang=en)
-* Read: [DescribeRocketMQVipInstances](https://www.tencentcloud.com/search/?wd=DescribeRocketMQVipInstances&type=document&lang=en)
-* Update: [DescribeRocketMQVipInstances](https://www.tencentcloud.com/search/?wd=DescribeRocketMQVipInstances&type=document&lang=en)
-* Update: [ModifyRocketMQCluster](https://www.tencentcloud.com/search/?wd=ModifyRocketMQCluster&type=document&lang=en)
-* Update: [ModifyRocketMQInstanceSpec](https://www.tencentcloud.com/search/?wd=ModifyRocketMQInstanceSpec&type=document&lang=en)
-* Delete: [DeleteRocketMQVipInstance](https://www.tencentcloud.com/search/?wd=DeleteRocketMQVipInstance&type=document&lang=en)
-* Delete: [DescribeRocketMQVipInstanceDetail](https://www.tencentcloud.com/search/?wd=DescribeRocketMQVipInstanceDetail&type=document&lang=en)
+* Create:
+  - [CreateRocketMQVipInstance](https://www.tencentcloud.com/search/?wd=CreateRocketMQVipInstance&type=document&lang=en)
+  - [DescribeRocketMQVipInstances](https://www.tencentcloud.com/search/?wd=DescribeRocketMQVipInstances&type=document&lang=en)
+* Read:
+  - [DescribeRocketMQVipInstanceDetail](https://www.tencentcloud.com/search/?wd=DescribeRocketMQVipInstanceDetail&type=document&lang=en)
+  - [DescribeRocketMQVipInstances](https://www.tencentcloud.com/search/?wd=DescribeRocketMQVipInstances&type=document&lang=en)
+* Update:
+  - [DescribeRocketMQVipInstances](https://www.tencentcloud.com/search/?wd=DescribeRocketMQVipInstances&type=document&lang=en)
+  - [ModifyRocketMQCluster](https://www.tencentcloud.com/search/?wd=ModifyRocketMQCluster&type=document&lang=en)
+  - [ModifyRocketMQInstanceSpec](https://www.tencentcloud.com/search/?wd=ModifyRocketMQInstanceSpec&type=document&lang=en)
+* Delete:
+  - [DeleteRocketMQVipInstance](https://www.tencentcloud.com/search/?wd=DeleteRocketMQVipInstance&type=document&lang=en)
+  - [DescribeRocketMQVipInstanceDetail](https://www.tencentcloud.com/search/?wd=DescribeRocketMQVipInstanceDetail&type=document&lang=en)
 

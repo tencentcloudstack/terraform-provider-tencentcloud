@@ -674,25 +674,28 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLoadBalancer](https://www.tencentcloud.com/document/api/214/33841)
-* Create: [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
-* Create: [DescribeLoadBalancers](https://www.tencentcloud.com/document/api/214/33830)
-* Create: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Create: [ModifyLoadBalancerAttributes](https://www.tencentcloud.com/document/api/214/33817)
-* Create: [SetLoadBalancerClsLog](https://www.tencentcloud.com/document/api/214/35734)
-* Create: [SetLoadBalancerSecurityGroups](https://www.tencentcloud.com/document/api/214/33798)
-* Read: [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
-* Read: [DescribeLoadBalancers](https://www.tencentcloud.com/document/api/214/33830)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [AssociateAddress](https://www.tencentcloud.com/document/api/215/16700)
-* Update: [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
-* Update: [DisassociateAddress](https://www.tencentcloud.com/document/api/215/16703)
-* Update: [ModifyLoadBalancerAttributes](https://www.tencentcloud.com/document/api/214/33817)
-* Update: [ModifyLoadBalancerSla](https://www.tencentcloud.com/document/api/214/43786)
-* Update: [ModifyLoadBalancersProject](https://www.tencentcloud.com/document/api/214/57286)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [SetLoadBalancerClsLog](https://www.tencentcloud.com/document/api/214/35734)
-* Update: [SetLoadBalancerSecurityGroups](https://www.tencentcloud.com/document/api/214/33798)
+* Create:
+  - [CreateLoadBalancer](https://www.tencentcloud.com/document/api/214/33841)
+  - [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
+  - [DescribeLoadBalancers](https://www.tencentcloud.com/document/api/214/33830)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [ModifyLoadBalancerAttributes](https://www.tencentcloud.com/document/api/214/33817)
+  - [SetLoadBalancerClsLog](https://www.tencentcloud.com/document/api/214/35734)
+  - [SetLoadBalancerSecurityGroups](https://www.tencentcloud.com/document/api/214/33798)
+* Read:
+  - [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
+  - [DescribeLoadBalancers](https://www.tencentcloud.com/document/api/214/33830)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [AssociateAddress](https://www.tencentcloud.com/document/api/215/16700)
+  - [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
+  - [DisassociateAddress](https://www.tencentcloud.com/document/api/215/16703)
+  - [ModifyLoadBalancerAttributes](https://www.tencentcloud.com/document/api/214/33817)
+  - [ModifyLoadBalancerSla](https://www.tencentcloud.com/document/api/214/43786)
+  - [ModifyLoadBalancersProject](https://www.tencentcloud.com/document/api/214/57286)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [SetLoadBalancerClsLog](https://www.tencentcloud.com/document/api/214/35734)
+  - [SetLoadBalancerSecurityGroups](https://www.tencentcloud.com/document/api/214/33798)
 * Delete: [DeleteLoadBalancer](https://www.tencentcloud.com/document/api/214/33837)
 
 ## Import

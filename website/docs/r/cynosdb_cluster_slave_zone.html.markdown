@@ -89,13 +89,16 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddClusterSlaveZone](https://www.tencentcloud.com/document/api/1098/50016)
-* Create: [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+* Create:
+  - [AddClusterSlaveZone](https://www.tencentcloud.com/document/api/1098/50016)
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
 * Read: [DescribeClusterDetail](https://www.tencentcloud.com/document/api/1098/40752)
-* Update: [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
-* Update: [ModifyClusterSlaveZone](https://www.tencentcloud.com/document/api/1098/50015)
-* Delete: [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
-* Delete: [RemoveClusterSlaveZone](https://www.tencentcloud.com/document/api/1098/50014)
+* Update:
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+  - [ModifyClusterSlaveZone](https://www.tencentcloud.com/document/api/1098/50015)
+* Delete:
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+  - [RemoveClusterSlaveZone](https://www.tencentcloud.com/document/api/1098/50014)
 
 ## Import
 

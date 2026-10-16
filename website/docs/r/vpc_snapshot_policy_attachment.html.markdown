@@ -88,8 +88,9 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [AttachSnapshotInstances](https://www.tencentcloud.com/document/api/215/55060)
 * Read: [DescribeSnapshotAttachedInstances](https://www.tencentcloud.com/document/api/215/55056)
-* Delete: [DescribeSnapshotAttachedInstances](https://www.tencentcloud.com/document/api/215/55056)
-* Delete: [DetachSnapshotInstances](https://www.tencentcloud.com/document/api/215/55053)
+* Delete:
+  - [DescribeSnapshotAttachedInstances](https://www.tencentcloud.com/document/api/215/55056)
+  - [DetachSnapshotInstances](https://www.tencentcloud.com/document/api/215/55053)
 
 ## Import
 

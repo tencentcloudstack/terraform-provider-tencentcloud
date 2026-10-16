@@ -94,8 +94,9 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [AssociateCustomizedConfig](https://www.tencentcloud.com/document/api/214/74449)
 * Read: [DescribeCustomizedConfigAssociateList](https://www.tencentcloud.com/document/api/214/42308)
-* Update: [AssociateCustomizedConfig](https://www.tencentcloud.com/document/api/214/74449)
-* Update: [DisassociateCustomizedConfig](https://www.tencentcloud.com/document/api/214/74446)
+* Update:
+  - [AssociateCustomizedConfig](https://www.tencentcloud.com/document/api/214/74449)
+  - [DisassociateCustomizedConfig](https://www.tencentcloud.com/document/api/214/74446)
 * Delete: [DisassociateCustomizedConfig](https://www.tencentcloud.com/document/api/214/74446)
 
 ## Import

@@ -81,11 +81,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeVpcAcRule](https://www.tencentcloud.com/document/api/1160/68133)
-* Create: [ModifyVpcAcRule](https://www.tencentcloud.com/search/?wd=ModifyVpcAcRule&type=document&lang=en)
+* Create:
+  - [DescribeVpcAcRule](https://www.tencentcloud.com/document/api/1160/68133)
+  - [ModifyVpcAcRule](https://www.tencentcloud.com/search/?wd=ModifyVpcAcRule&type=document&lang=en)
 * Read: [DescribeVpcAcRule](https://www.tencentcloud.com/document/api/1160/68133)
-* Update: [DescribeVpcAcRule](https://www.tencentcloud.com/document/api/1160/68133)
-* Update: [ModifyVpcAcRule](https://www.tencentcloud.com/search/?wd=ModifyVpcAcRule&type=document&lang=en)
+* Update:
+  - [DescribeVpcAcRule](https://www.tencentcloud.com/document/api/1160/68133)
+  - [ModifyVpcAcRule](https://www.tencentcloud.com/search/?wd=ModifyVpcAcRule&type=document&lang=en)
 
 ## Import
 

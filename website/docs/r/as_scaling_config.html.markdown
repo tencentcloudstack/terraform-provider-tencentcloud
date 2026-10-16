@@ -310,8 +310,9 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateLaunchConfiguration](https://www.tencentcloud.com/document/api/377/31001)
 * Read: [DescribeLaunchConfigurations](https://www.tencentcloud.com/document/api/377/30999)
-* Update: [ModifyLaunchConfigurationAttributes](https://www.tencentcloud.com/document/api/377/30998)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Update:
+  - [ModifyLaunchConfigurationAttributes](https://www.tencentcloud.com/document/api/377/30998)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
 * Delete: [DeleteLaunchConfiguration](https://www.tencentcloud.com/document/api/377/31000)
 
 ## Import

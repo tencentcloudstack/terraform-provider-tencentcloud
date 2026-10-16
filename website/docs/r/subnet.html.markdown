@@ -82,17 +82,20 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSubnet](https://www.tencentcloud.com/document/api/215/15782)
-* Create: [DescribeRouteTables](https://www.tencentcloud.com/document/api/215/15763)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Create: [ModifySubnetAttribute](https://www.tencentcloud.com/document/api/215/15781)
-* Create: [ReplaceRouteTableAssociation](https://www.tencentcloud.com/document/api/215/15767)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Read: [DescribeSubnets](https://www.tencentcloud.com/document/api/215/15784)
-* Update: [DescribeRouteTables](https://www.tencentcloud.com/document/api/215/15763)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [ModifySubnetAttribute](https://www.tencentcloud.com/document/api/215/15781)
-* Update: [ReplaceRouteTableAssociation](https://www.tencentcloud.com/document/api/215/15767)
+* Create:
+  - [CreateSubnet](https://www.tencentcloud.com/document/api/215/15782)
+  - [DescribeRouteTables](https://www.tencentcloud.com/document/api/215/15763)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [ModifySubnetAttribute](https://www.tencentcloud.com/document/api/215/15781)
+  - [ReplaceRouteTableAssociation](https://www.tencentcloud.com/document/api/215/15767)
+* Read:
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [DescribeSubnets](https://www.tencentcloud.com/document/api/215/15784)
+* Update:
+  - [DescribeRouteTables](https://www.tencentcloud.com/document/api/215/15763)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [ModifySubnetAttribute](https://www.tencentcloud.com/document/api/215/15781)
+  - [ReplaceRouteTableAssociation](https://www.tencentcloud.com/document/api/215/15767)
 * Delete: [DeleteSubnet](https://www.tencentcloud.com/document/api/215/15783)
 
 ## Import

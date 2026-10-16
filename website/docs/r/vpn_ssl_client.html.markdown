@@ -56,13 +56,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateVpnGatewaySslClient](https://www.tencentcloud.com/search/?wd=CreateVpnGatewaySslClient&type=document&lang=en)
-* Create: [DescribeVpcTaskResult](https://www.tencentcloud.com/document/api/215/41567)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Read: [DescribeVpnGatewaySslClients](https://www.tencentcloud.com/search/?wd=DescribeVpnGatewaySslClients&type=document&lang=en)
+* Create:
+  - [CreateVpnGatewaySslClient](https://www.tencentcloud.com/search/?wd=CreateVpnGatewaySslClient&type=document&lang=en)
+  - [DescribeVpcTaskResult](https://www.tencentcloud.com/document/api/215/41567)
+* Read:
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [DescribeVpnGatewaySslClients](https://www.tencentcloud.com/search/?wd=DescribeVpnGatewaySslClients&type=document&lang=en)
 * Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Delete: [DeleteVpnGatewaySslClient](https://www.tencentcloud.com/search/?wd=DeleteVpnGatewaySslClient&type=document&lang=en)
-* Delete: [DescribeVpcTaskResult](https://www.tencentcloud.com/document/api/215/41567)
+* Delete:
+  - [DeleteVpnGatewaySslClient](https://www.tencentcloud.com/search/?wd=DeleteVpnGatewaySslClient&type=document&lang=en)
+  - [DescribeVpcTaskResult](https://www.tencentcloud.com/document/api/215/41567)
 
 ## Import
 

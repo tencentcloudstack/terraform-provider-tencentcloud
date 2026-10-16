@@ -36,6 +36,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAssetSyncJob](https://www.tencentcloud.com/search/?wd=CreateAssetSyncJob&type=document&lang=en)
-* Create: [DescribeAssetSyncStatus](https://www.tencentcloud.com/search/?wd=DescribeAssetSyncStatus&type=document&lang=en)
+* Create:
+  - [CreateAssetSyncJob](https://www.tencentcloud.com/search/?wd=CreateAssetSyncJob&type=document&lang=en)
+  - [DescribeAssetSyncStatus](https://www.tencentcloud.com/search/?wd=DescribeAssetSyncStatus&type=document&lang=en)
 

@@ -133,14 +133,17 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddNodesToDBCustomCluster](https://www.tencentcloud.com/search/?wd=AddNodesToDBCustomCluster&type=document&lang=en)
-* Create: [DescribeDBCustomClusterNodeConfig](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterNodeConfig&type=document&lang=en)
-* Create: [DescribeDBCustomClusterNodes](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterNodes&type=document&lang=en)
-* Read: [DescribeDBCustomClusterNodeConfig](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterNodeConfig&type=document&lang=en)
-* Read: [DescribeDBCustomClusterNodes](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterNodes&type=document&lang=en)
-* Update: [DescribeDBCustomClusterNodeConfig](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterNodeConfig&type=document&lang=en)
-* Update: [DescribeDBCustomClusterNodes](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterNodes&type=document&lang=en)
-* Update: [ModifyDBCustomClusterNodeConfig](https://www.tencentcloud.com/search/?wd=ModifyDBCustomClusterNodeConfig&type=document&lang=en)
+* Create:
+  - [AddNodesToDBCustomCluster](https://www.tencentcloud.com/search/?wd=AddNodesToDBCustomCluster&type=document&lang=en)
+  - [DescribeDBCustomClusterNodeConfig](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterNodeConfig&type=document&lang=en)
+  - [DescribeDBCustomClusterNodes](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterNodes&type=document&lang=en)
+* Read:
+  - [DescribeDBCustomClusterNodeConfig](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterNodeConfig&type=document&lang=en)
+  - [DescribeDBCustomClusterNodes](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterNodes&type=document&lang=en)
+* Update:
+  - [DescribeDBCustomClusterNodeConfig](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterNodeConfig&type=document&lang=en)
+  - [DescribeDBCustomClusterNodes](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterNodes&type=document&lang=en)
+  - [ModifyDBCustomClusterNodeConfig](https://www.tencentcloud.com/search/?wd=ModifyDBCustomClusterNodeConfig&type=document&lang=en)
 * Delete: [RemoveNodesFromDBCustomCluster](https://www.tencentcloud.com/search/?wd=RemoveNodesFromDBCustomCluster&type=document&lang=en)
 
 ## Import

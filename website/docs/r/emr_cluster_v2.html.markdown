@@ -1281,25 +1281,29 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCluster](https://www.tencentcloud.com/document/api/1026/52522)
-* Create: [DescribeClusterFlowStatusDetail](https://www.tencentcloud.com/document/api/1026/73259)
-* Create: [DescribeInstances](https://www.tencentcloud.com/document/api/1026/31052)
-* Create: [ScaleOutCluster](https://www.tencentcloud.com/document/api/1026/52521)
-* Read: [DescribeClusterNodes](https://www.tencentcloud.com/document/api/1026/35198)
-* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/1026/31052)
-* Read: [DescribeMetaDBInfo](https://www.tencentcloud.com/document/api/1026/84709)
-* Read: [DescribeNodeDataDisks](https://www.tencentcloud.com/document/api/1026/73216)
-* Update: [AttachDisks](https://www.tencentcloud.com/document/api/1026/73274)
-* Update: [DescribeClusterFlowStatusDetail](https://www.tencentcloud.com/document/api/1026/73259)
-* Update: [InstallSoftware](https://www.tencentcloud.com/document/api/1026/84708)
-* Update: [ModifyInstanceBasic](https://www.tencentcloud.com/document/api/1026/73226)
-* Update: [ModifyResource](https://www.tencentcloud.com/document/api/1026/73270)
-* Update: [ModifyResourcesTags](https://www.tencentcloud.com/document/api/1026/58392)
-* Update: [ResizeDataDisks](https://www.tencentcloud.com/document/api/1026/73268)
-* Update: [ScaleOutCluster](https://www.tencentcloud.com/document/api/1026/52521)
-* Update: [TerminateClusterNodes](https://www.tencentcloud.com/document/api/1026/54558)
-* Delete: [DescribeInstances](https://www.tencentcloud.com/document/api/1026/31052)
-* Delete: [TerminateInstance](https://www.tencentcloud.com/document/api/1026/31044)
+* Create:
+  - [CreateCluster](https://www.tencentcloud.com/document/api/1026/52522)
+  - [DescribeClusterFlowStatusDetail](https://www.tencentcloud.com/document/api/1026/73259)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1026/31052)
+  - [ScaleOutCluster](https://www.tencentcloud.com/document/api/1026/52521)
+* Read:
+  - [DescribeClusterNodes](https://www.tencentcloud.com/document/api/1026/35198)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1026/31052)
+  - [DescribeMetaDBInfo](https://www.tencentcloud.com/document/api/1026/84709)
+  - [DescribeNodeDataDisks](https://www.tencentcloud.com/document/api/1026/73216)
+* Update:
+  - [AttachDisks](https://www.tencentcloud.com/document/api/1026/73274)
+  - [DescribeClusterFlowStatusDetail](https://www.tencentcloud.com/document/api/1026/73259)
+  - [InstallSoftware](https://www.tencentcloud.com/document/api/1026/84708)
+  - [ModifyInstanceBasic](https://www.tencentcloud.com/document/api/1026/73226)
+  - [ModifyResource](https://www.tencentcloud.com/document/api/1026/73270)
+  - [ModifyResourcesTags](https://www.tencentcloud.com/document/api/1026/58392)
+  - [ResizeDataDisks](https://www.tencentcloud.com/document/api/1026/73268)
+  - [ScaleOutCluster](https://www.tencentcloud.com/document/api/1026/52521)
+  - [TerminateClusterNodes](https://www.tencentcloud.com/document/api/1026/54558)
+* Delete:
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1026/31052)
+  - [TerminateInstance](https://www.tencentcloud.com/document/api/1026/31044)
 
 ## Import
 

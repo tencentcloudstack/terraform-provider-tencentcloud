@@ -44,8 +44,9 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateLiveTimeShiftRule](https://www.tencentcloud.com/document/api/267/53726)
 * Read: [DescribeLiveTimeShiftRules](https://www.tencentcloud.com/document/api/267/53722)
-* Delete: [DeleteLiveTimeShiftRule](https://www.tencentcloud.com/document/api/267/53724)
-* Delete: [DescribeLiveTimeShiftRules](https://www.tencentcloud.com/document/api/267/53722)
+* Delete:
+  - [DeleteLiveTimeShiftRule](https://www.tencentcloud.com/document/api/267/53724)
+  - [DescribeLiveTimeShiftRules](https://www.tencentcloud.com/document/api/267/53722)
 
 ## Import
 

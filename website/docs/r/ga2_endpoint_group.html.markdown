@@ -390,13 +390,16 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEndpointGroup](https://www.tencentcloud.com/document/api/1299/83838)
-* Create: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+* Create:
+  - [CreateEndpointGroup](https://www.tencentcloud.com/document/api/1299/83838)
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
 * Read: [DescribeEndpointGroups](https://www.tencentcloud.com/document/api/1299/83817)
-* Update: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
-* Update: [ModifyEndpointGroup](https://www.tencentcloud.com/document/api/1299/83810)
-* Delete: [DeleteEndpointGroups](https://www.tencentcloud.com/document/api/1299/83747)
-* Delete: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+* Update:
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+  - [ModifyEndpointGroup](https://www.tencentcloud.com/document/api/1299/83810)
+* Delete:
+  - [DeleteEndpointGroups](https://www.tencentcloud.com/document/api/1299/83747)
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
 
 ## Import
 

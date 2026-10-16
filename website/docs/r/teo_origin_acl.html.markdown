@@ -67,14 +67,17 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeOriginACL](https://www.tencentcloud.com/document/api/1145/71118)
-* Create: [EnableOriginACL](https://www.tencentcloud.com/document/api/1145/71116)
-* Create: [ModifyOriginACL](https://www.tencentcloud.com/document/api/1145/71115)
+* Create:
+  - [DescribeOriginACL](https://www.tencentcloud.com/document/api/1145/71118)
+  - [EnableOriginACL](https://www.tencentcloud.com/document/api/1145/71116)
+  - [ModifyOriginACL](https://www.tencentcloud.com/document/api/1145/71115)
 * Read: [DescribeOriginACL](https://www.tencentcloud.com/document/api/1145/71118)
-* Update: [DescribeOriginACL](https://www.tencentcloud.com/document/api/1145/71118)
-* Update: [ModifyOriginACL](https://www.tencentcloud.com/document/api/1145/71115)
-* Delete: [DescribeOriginACL](https://www.tencentcloud.com/document/api/1145/71118)
-* Delete: [DisableOriginACL](https://www.tencentcloud.com/document/api/1145/71117)
+* Update:
+  - [DescribeOriginACL](https://www.tencentcloud.com/document/api/1145/71118)
+  - [ModifyOriginACL](https://www.tencentcloud.com/document/api/1145/71115)
+* Delete:
+  - [DescribeOriginACL](https://www.tencentcloud.com/document/api/1145/71118)
+  - [DisableOriginACL](https://www.tencentcloud.com/document/api/1145/71117)
 
 ## Import
 

@@ -46,12 +46,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSharedCNAME](https://www.tencentcloud.com/document/api/1145/57422)
-* Create: [DescribeSharedCNAME](https://www.tencentcloud.com/document/api/1145/78836)
-* Create: [ModifySharedCNAME](https://www.tencentcloud.com/document/api/1145/78835)
+* Create:
+  - [CreateSharedCNAME](https://www.tencentcloud.com/document/api/1145/57422)
+  - [DescribeSharedCNAME](https://www.tencentcloud.com/document/api/1145/78836)
+  - [ModifySharedCNAME](https://www.tencentcloud.com/document/api/1145/78835)
 * Read: [DescribeSharedCNAME](https://www.tencentcloud.com/document/api/1145/78836)
-* Update: [DescribeSharedCNAME](https://www.tencentcloud.com/document/api/1145/78836)
-* Update: [ModifySharedCNAME](https://www.tencentcloud.com/document/api/1145/78835)
+* Update:
+  - [DescribeSharedCNAME](https://www.tencentcloud.com/document/api/1145/78836)
+  - [ModifySharedCNAME](https://www.tencentcloud.com/document/api/1145/78835)
 * Delete: [DeleteSharedCNAME](https://www.tencentcloud.com/document/api/1145/57468)
 
 ## Import

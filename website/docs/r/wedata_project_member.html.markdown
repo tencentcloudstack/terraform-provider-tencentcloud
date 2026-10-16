@@ -70,8 +70,9 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateProjectMember](https://www.tencentcloud.com/document/api/1174/77875)
 * Read: [ListProjectMembers](https://www.tencentcloud.com/document/api/1174/77865)
-* Update: [GrantMemberProjectRole](https://www.tencentcloud.com/document/api/1174/77867)
-* Update: [RemoveMemberProjectRole](https://www.tencentcloud.com/document/api/1174/77861)
+* Update:
+  - [GrantMemberProjectRole](https://www.tencentcloud.com/document/api/1174/77867)
+  - [RemoveMemberProjectRole](https://www.tencentcloud.com/document/api/1174/77861)
 * Delete: [DeleteProjectMember](https://www.tencentcloud.com/document/api/1174/77873)
 
 ## Import

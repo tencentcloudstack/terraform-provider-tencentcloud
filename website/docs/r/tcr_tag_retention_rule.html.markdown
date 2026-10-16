@@ -103,12 +103,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTagRetentionRule](https://www.tencentcloud.com/document/api/1051/50690)
-* Create: [DescribeNamespaces](https://www.tencentcloud.com/document/api/1051/50693)
-* Create: [DescribeTagRetentionRules](https://www.tencentcloud.com/document/api/1051/50686)
+* Create:
+  - [CreateTagRetentionRule](https://www.tencentcloud.com/document/api/1051/50690)
+  - [DescribeNamespaces](https://www.tencentcloud.com/document/api/1051/50693)
+  - [DescribeTagRetentionRules](https://www.tencentcloud.com/document/api/1051/50686)
 * Read: [DescribeTagRetentionRules](https://www.tencentcloud.com/document/api/1051/50686)
-* Update: [DescribeNamespaces](https://www.tencentcloud.com/document/api/1051/50693)
-* Update: [ModifyTagRetentionRule](https://www.tencentcloud.com/document/api/1051/50685)
+* Update:
+  - [DescribeNamespaces](https://www.tencentcloud.com/document/api/1051/50693)
+  - [ModifyTagRetentionRule](https://www.tencentcloud.com/document/api/1051/50685)
 * Delete: [DeleteTagRetentionRule](https://www.tencentcloud.com/document/api/1051/50689)
 
 ## Import

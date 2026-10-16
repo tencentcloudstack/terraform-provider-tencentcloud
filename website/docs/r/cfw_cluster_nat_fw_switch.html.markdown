@@ -77,13 +77,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeClusterNatCcnFwSwitchList](https://www.tencentcloud.com/search/?wd=DescribeClusterNatCcnFwSwitchList&type=document&lang=en)
-* Create: [OpenClusterNatFwSwitch](https://www.tencentcloud.com/search/?wd=OpenClusterNatFwSwitch&type=document&lang=en)
+* Create:
+  - [DescribeClusterNatCcnFwSwitchList](https://www.tencentcloud.com/search/?wd=DescribeClusterNatCcnFwSwitchList&type=document&lang=en)
+  - [OpenClusterNatFwSwitch](https://www.tencentcloud.com/search/?wd=OpenClusterNatFwSwitch&type=document&lang=en)
 * Read: [DescribeNatCcnFwSwitch](https://www.tencentcloud.com/search/?wd=DescribeNatCcnFwSwitch&type=document&lang=en)
-* Update: [DescribeClusterNatCcnFwSwitchList](https://www.tencentcloud.com/search/?wd=DescribeClusterNatCcnFwSwitchList&type=document&lang=en)
-* Update: [ModifyClusterNatFwSwitch](https://www.tencentcloud.com/search/?wd=ModifyClusterNatFwSwitch&type=document&lang=en)
-* Delete: [CloseClusterNatFwSwitch](https://www.tencentcloud.com/search/?wd=CloseClusterNatFwSwitch&type=document&lang=en)
-* Delete: [DescribeClusterNatCcnFwSwitchList](https://www.tencentcloud.com/search/?wd=DescribeClusterNatCcnFwSwitchList&type=document&lang=en)
+* Update:
+  - [DescribeClusterNatCcnFwSwitchList](https://www.tencentcloud.com/search/?wd=DescribeClusterNatCcnFwSwitchList&type=document&lang=en)
+  - [ModifyClusterNatFwSwitch](https://www.tencentcloud.com/search/?wd=ModifyClusterNatFwSwitch&type=document&lang=en)
+* Delete:
+  - [CloseClusterNatFwSwitch](https://www.tencentcloud.com/search/?wd=CloseClusterNatFwSwitch&type=document&lang=en)
+  - [DescribeClusterNatCcnFwSwitchList](https://www.tencentcloud.com/search/?wd=DescribeClusterNatCcnFwSwitchList&type=document&lang=en)
 
 ## Import
 

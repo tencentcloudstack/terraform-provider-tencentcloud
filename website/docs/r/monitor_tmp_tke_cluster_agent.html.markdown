@@ -227,10 +227,12 @@ The `agents` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrometheusClusterAgent](https://www.tencentcloud.com/document/api/248/53774)
-* Create: [DescribePrometheusClusterAgents](https://www.tencentcloud.com/document/api/248/53770)
+* Create:
+  - [CreatePrometheusClusterAgent](https://www.tencentcloud.com/document/api/248/53774)
+  - [DescribePrometheusClusterAgents](https://www.tencentcloud.com/document/api/248/53770)
 * Read: [DescribePrometheusClusterAgents](https://www.tencentcloud.com/document/api/248/53770)
 * Update: [ModifyPrometheusAgentExternalLabels](https://www.tencentcloud.com/document/api/248/53766)
-* Delete: [DeletePrometheusClusterAgent](https://www.tencentcloud.com/document/api/248/53771)
-* Delete: [DescribePrometheusClusterAgents](https://www.tencentcloud.com/document/api/248/53770)
+* Delete:
+  - [DeletePrometheusClusterAgent](https://www.tencentcloud.com/document/api/248/53771)
+  - [DescribePrometheusClusterAgents](https://www.tencentcloud.com/document/api/248/53770)
 

@@ -52,14 +52,17 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateClusterAccess](https://www.tencentcloud.com/document/api/1163/80608)
-* Create: [DescribeUserCluster](https://www.tencentcloud.com/document/api/1163/53195)
-* Create: [ModifyDefendStatus](https://www.tencentcloud.com/document/api/1163/80609)
+* Create:
+  - [CreateClusterAccess](https://www.tencentcloud.com/document/api/1163/80608)
+  - [DescribeUserCluster](https://www.tencentcloud.com/document/api/1163/53195)
+  - [ModifyDefendStatus](https://www.tencentcloud.com/document/api/1163/80609)
 * Read: [DescribeUserCluster](https://www.tencentcloud.com/document/api/1163/53195)
-* Update: [DescribeUserCluster](https://www.tencentcloud.com/document/api/1163/53195)
-* Update: [ModifyDefendStatus](https://www.tencentcloud.com/document/api/1163/80609)
-* Delete: [DescribeUserCluster](https://www.tencentcloud.com/document/api/1163/53195)
-* Delete: [UninstallClusterContainerSecurity](https://www.tencentcloud.com/document/api/1163/80607)
+* Update:
+  - [DescribeUserCluster](https://www.tencentcloud.com/document/api/1163/53195)
+  - [ModifyDefendStatus](https://www.tencentcloud.com/document/api/1163/80609)
+* Delete:
+  - [DescribeUserCluster](https://www.tencentcloud.com/document/api/1163/53195)
+  - [UninstallClusterContainerSecurity](https://www.tencentcloud.com/document/api/1163/80607)
 
 ## Import
 

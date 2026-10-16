@@ -70,13 +70,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachUserPolicy](https://www.tencentcloud.com/document/api/598/32249)
-* Create: [GetUser](https://www.tencentcloud.com/document/api/598/32259)
-* Create: [ListAttachedUserPolicies](https://www.tencentcloud.com/document/api/598/32242)
-* Read: [GetUser](https://www.tencentcloud.com/document/api/598/32259)
-* Read: [ListAttachedUserPolicies](https://www.tencentcloud.com/document/api/598/32242)
-* Delete: [DetachUserPolicy](https://www.tencentcloud.com/document/api/598/32245)
-* Delete: [GetUser](https://www.tencentcloud.com/document/api/598/32259)
+* Create:
+  - [AttachUserPolicy](https://www.tencentcloud.com/document/api/598/32249)
+  - [GetUser](https://www.tencentcloud.com/document/api/598/32259)
+  - [ListAttachedUserPolicies](https://www.tencentcloud.com/document/api/598/32242)
+* Read:
+  - [GetUser](https://www.tencentcloud.com/document/api/598/32259)
+  - [ListAttachedUserPolicies](https://www.tencentcloud.com/document/api/598/32242)
+* Delete:
+  - [DetachUserPolicy](https://www.tencentcloud.com/document/api/598/32245)
+  - [GetUser](https://www.tencentcloud.com/document/api/598/32259)
 
 ## Import
 

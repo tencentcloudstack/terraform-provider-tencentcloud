@@ -44,11 +44,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DisableInternetAddress](https://www.tencentcloud.com/document/api/216/39495)
-* Create: [EnableInternetAddress](https://www.tencentcloud.com/document/api/216/39494)
+* Create:
+  - [DisableInternetAddress](https://www.tencentcloud.com/document/api/216/39495)
+  - [EnableInternetAddress](https://www.tencentcloud.com/document/api/216/39494)
 * Read: [DescribeInternetAddress](https://www.tencentcloud.com/document/api/216/39498)
-* Update: [DisableInternetAddress](https://www.tencentcloud.com/document/api/216/39495)
-* Update: [EnableInternetAddress](https://www.tencentcloud.com/document/api/216/39494)
+* Update:
+  - [DisableInternetAddress](https://www.tencentcloud.com/document/api/216/39495)
+  - [EnableInternetAddress](https://www.tencentcloud.com/document/api/216/39494)
 
 ## Import
 

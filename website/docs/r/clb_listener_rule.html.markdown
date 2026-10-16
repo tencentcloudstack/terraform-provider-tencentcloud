@@ -123,14 +123,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRule](https://www.tencentcloud.com/document/api/214/33840)
-* Create: [DescribeListeners](https://www.tencentcloud.com/document/api/214/33831)
-* Create: [ModifyDomainAttributes](https://www.tencentcloud.com/document/api/214/33819)
-* Create: [ModifyRule](https://www.tencentcloud.com/document/api/214/33816)
+* Create:
+  - [CreateRule](https://www.tencentcloud.com/document/api/214/33840)
+  - [DescribeListeners](https://www.tencentcloud.com/document/api/214/33831)
+  - [ModifyDomainAttributes](https://www.tencentcloud.com/document/api/214/33819)
+  - [ModifyRule](https://www.tencentcloud.com/document/api/214/33816)
 * Read: [DescribeListeners](https://www.tencentcloud.com/document/api/214/33831)
-* Update: [DescribeListeners](https://www.tencentcloud.com/document/api/214/33831)
-* Update: [ModifyDomainAttributes](https://www.tencentcloud.com/document/api/214/33819)
-* Update: [ModifyRule](https://www.tencentcloud.com/document/api/214/33816)
+* Update:
+  - [DescribeListeners](https://www.tencentcloud.com/document/api/214/33831)
+  - [ModifyDomainAttributes](https://www.tencentcloud.com/document/api/214/33819)
+  - [ModifyRule](https://www.tencentcloud.com/document/api/214/33816)
 * Delete: [DeleteRule](https://www.tencentcloud.com/document/api/214/33835)
 
 ## Import

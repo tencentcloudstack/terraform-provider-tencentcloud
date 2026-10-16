@@ -91,6 +91,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
-* Create: [SwitchDBInstanceMasterSlave](https://www.tencentcloud.com/document/api/236/39628)
+* Create:
+  - [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+  - [SwitchDBInstanceMasterSlave](https://www.tencentcloud.com/document/api/236/39628)
 

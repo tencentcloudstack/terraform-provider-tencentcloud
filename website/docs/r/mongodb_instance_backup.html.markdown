@@ -45,6 +45,7 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBackupDBInstance](https://www.tencentcloud.com/document/api/240/37922)
-* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/240/37921)
+* Create:
+  - [CreateBackupDBInstance](https://www.tencentcloud.com/document/api/240/37922)
+  - [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/240/37921)
 

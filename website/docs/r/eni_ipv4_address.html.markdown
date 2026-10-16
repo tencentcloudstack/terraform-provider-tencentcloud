@@ -107,9 +107,10 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [AssignPrivateIpAddresses](https://www.tencentcloud.com/document/api/215/15813)
 * Read: [DescribeNetworkInterfaces](https://www.tencentcloud.com/document/api/215/15817)
-* Delete: [DescribeNetworkInterfaces](https://www.tencentcloud.com/document/api/215/15817)
-* Delete: [DescribeVpcTaskResult](https://www.tencentcloud.com/document/api/215/41567)
-* Delete: [UnassignPrivateIpAddresses](https://www.tencentcloud.com/document/api/215/15814)
+* Delete:
+  - [DescribeNetworkInterfaces](https://www.tencentcloud.com/document/api/215/15817)
+  - [DescribeVpcTaskResult](https://www.tencentcloud.com/document/api/215/41567)
+  - [UnassignPrivateIpAddresses](https://www.tencentcloud.com/document/api/215/15814)
 
 ## Import
 

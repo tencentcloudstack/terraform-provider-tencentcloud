@@ -41,11 +41,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeGrafanaInstances](https://www.tencentcloud.com/document/api/248/49759)
-* Create: [UpdateGrafanaEnvironments](https://www.tencentcloud.com/document/api/248/49744)
+* Create:
+  - [DescribeGrafanaInstances](https://www.tencentcloud.com/document/api/248/49759)
+  - [UpdateGrafanaEnvironments](https://www.tencentcloud.com/document/api/248/49744)
 * Read: [DescribeGrafanaEnvironments](https://www.tencentcloud.com/document/api/248/49760)
-* Update: [DescribeGrafanaInstances](https://www.tencentcloud.com/document/api/248/49759)
-* Update: [UpdateGrafanaEnvironments](https://www.tencentcloud.com/document/api/248/49744)
+* Update:
+  - [DescribeGrafanaInstances](https://www.tencentcloud.com/document/api/248/49759)
+  - [UpdateGrafanaEnvironments](https://www.tencentcloud.com/document/api/248/49744)
 
 ## Import
 

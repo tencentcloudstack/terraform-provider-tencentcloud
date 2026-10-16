@@ -81,12 +81,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateClusterInstances](https://www.tencentcloud.com/document/api/457/33862)
-* Create: [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
-* Create: [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
-* Create: [DescribeZones](https://www.tencentcloud.com/document/api/213/35071)
-* Read: [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
-* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
-* Delete: [DeleteClusterInstances](https://www.tencentcloud.com/document/api/457/32038)
-* Delete: [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
+* Create:
+  - [CreateClusterInstances](https://www.tencentcloud.com/document/api/457/33862)
+  - [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+  - [DescribeZones](https://www.tencentcloud.com/document/api/213/35071)
+* Read:
+  - [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+* Delete:
+  - [DeleteClusterInstances](https://www.tencentcloud.com/document/api/457/32038)
+  - [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
 

@@ -40,8 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBlueprint](https://www.tencentcloud.com/document/api/1103/42506)
-* Create: [DescribeBlueprints](https://www.tencentcloud.com/document/api/1103/42503)
+* Create:
+  - [CreateBlueprint](https://www.tencentcloud.com/document/api/1103/42506)
+  - [DescribeBlueprints](https://www.tencentcloud.com/document/api/1103/42503)
 * Read: [DescribeBlueprints](https://www.tencentcloud.com/document/api/1103/42503)
 * Update: [ModifyBlueprintAttribute](https://www.tencentcloud.com/document/api/1103/42501)
 * Delete: [DeleteBlueprints](https://www.tencentcloud.com/document/api/1103/42505)

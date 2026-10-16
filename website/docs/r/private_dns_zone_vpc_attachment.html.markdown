@@ -89,12 +89,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddSpecifyPrivateZoneVpc](https://www.tencentcloud.com/document/api/1097/81390)
-* Create: [QueryAsyncBindVpcStatus](https://www.tencentcloud.com/document/api/1097/81388)
+* Create:
+  - [AddSpecifyPrivateZoneVpc](https://www.tencentcloud.com/document/api/1097/81390)
+  - [QueryAsyncBindVpcStatus](https://www.tencentcloud.com/document/api/1097/81388)
 * Read: [DescribePrivateZone](https://www.tencentcloud.com/document/api/1097/42117)
-* Delete: [DeleteSpecifyPrivateZoneVpc](https://www.tencentcloud.com/document/api/1097/81389)
-* Delete: [DescribePrivateZone](https://www.tencentcloud.com/document/api/1097/42117)
-* Delete: [QueryAsyncBindVpcStatus](https://www.tencentcloud.com/document/api/1097/81388)
+* Delete:
+  - [DeleteSpecifyPrivateZoneVpc](https://www.tencentcloud.com/document/api/1097/81389)
+  - [DescribePrivateZone](https://www.tencentcloud.com/document/api/1097/42117)
+  - [QueryAsyncBindVpcStatus](https://www.tencentcloud.com/document/api/1097/81388)
 
 ## Import
 

@@ -144,12 +144,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateClusterVirtualNodePool](https://www.tencentcloud.com/document/api/457/53275)
-* Create: [DescribeClusterVirtualNodePools](https://www.tencentcloud.com/document/api/457/53271)
+* Create:
+  - [CreateClusterVirtualNodePool](https://www.tencentcloud.com/document/api/457/53275)
+  - [DescribeClusterVirtualNodePools](https://www.tencentcloud.com/document/api/457/53271)
 * Read: [DescribeClusterVirtualNodePools](https://www.tencentcloud.com/document/api/457/53271)
 * Update: [ModifyClusterVirtualNodePool](https://www.tencentcloud.com/document/api/457/53269)
-* Delete: [DeleteClusterVirtualNodePool](https://www.tencentcloud.com/document/api/457/53273)
-* Delete: [DescribeClusterVirtualNodePools](https://www.tencentcloud.com/document/api/457/53271)
+* Delete:
+  - [DeleteClusterVirtualNodePool](https://www.tencentcloud.com/document/api/457/53273)
+  - [DescribeClusterVirtualNodePools](https://www.tencentcloud.com/document/api/457/53271)
 
 ## Import
 

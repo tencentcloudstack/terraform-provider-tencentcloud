@@ -42,8 +42,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSAMLProvider](https://www.tencentcloud.com/document/api/598/32237)
-* Create: [GetSAMLProvider](https://www.tencentcloud.com/document/api/598/32235)
+* Create:
+  - [CreateSAMLProvider](https://www.tencentcloud.com/document/api/598/32237)
+  - [GetSAMLProvider](https://www.tencentcloud.com/document/api/598/32235)
 * Read: [GetSAMLProvider](https://www.tencentcloud.com/document/api/598/32235)
 * Update: [UpdateSAMLProvider](https://www.tencentcloud.com/document/api/598/32233)
 * Delete: [DeleteSAMLProvider](https://www.tencentcloud.com/document/api/598/32236)

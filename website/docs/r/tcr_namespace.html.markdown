@@ -72,10 +72,12 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateNamespace](https://www.tencentcloud.com/document/api/1051/50698)
 * Read: [DescribeNamespaces](https://www.tencentcloud.com/document/api/1051/50693)
-* Update: [ModifyNamespace](https://www.tencentcloud.com/document/api/1051/50692)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Delete: [DeleteNamespace](https://www.tencentcloud.com/document/api/1051/50696)
-* Delete: [DescribeNamespaces](https://www.tencentcloud.com/document/api/1051/50693)
+* Update:
+  - [ModifyNamespace](https://www.tencentcloud.com/document/api/1051/50692)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete:
+  - [DeleteNamespace](https://www.tencentcloud.com/document/api/1051/50696)
+  - [DescribeNamespaces](https://www.tencentcloud.com/document/api/1051/50693)
 
 ## Import
 

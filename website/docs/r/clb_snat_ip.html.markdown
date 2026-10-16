@@ -56,10 +56,12 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateLoadBalancerSnatIps](https://www.tencentcloud.com/document/api/214/37096)
 * Read: [DescribeLoadBalancers](https://www.tencentcloud.com/document/api/214/33830)
-* Update: [CreateLoadBalancerSnatIps](https://www.tencentcloud.com/document/api/214/37096)
-* Update: [DeleteLoadBalancerSnatIps](https://www.tencentcloud.com/document/api/214/37094)
-* Delete: [DeleteLoadBalancerSnatIps](https://www.tencentcloud.com/document/api/214/37094)
-* Delete: [DescribeLoadBalancers](https://www.tencentcloud.com/document/api/214/33830)
+* Update:
+  - [CreateLoadBalancerSnatIps](https://www.tencentcloud.com/document/api/214/37096)
+  - [DeleteLoadBalancerSnatIps](https://www.tencentcloud.com/document/api/214/37094)
+* Delete:
+  - [DeleteLoadBalancerSnatIps](https://www.tencentcloud.com/document/api/214/37094)
+  - [DescribeLoadBalancers](https://www.tencentcloud.com/document/api/214/33830)
 
 ## Import
 

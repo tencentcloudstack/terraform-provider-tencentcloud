@@ -109,17 +109,21 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCluster](https://www.tencentcloud.com/document/api/1016/35053)
-* Create: [DescribeClusters](https://www.tencentcloud.com/document/api/1016/35050)
-* Read: [DescribeClusterTags](https://www.tencentcloud.com/document/api/1016/36904)
-* Read: [DescribeClusters](https://www.tencentcloud.com/document/api/1016/35050)
-* Update: [DescribeClusters](https://www.tencentcloud.com/document/api/1016/35050)
-* Update: [ModifyClusterMachine](https://www.tencentcloud.com/document/api/1016/39272)
-* Update: [ModifyClusterName](https://www.tencentcloud.com/document/api/1016/35049)
-* Update: [ModifyClusterPassword](https://www.tencentcloud.com/document/api/1016/35048)
-* Update: [ModifyClusterTags](https://www.tencentcloud.com/document/api/1016/36903)
-* Delete: [DeleteCluster](https://www.tencentcloud.com/document/api/1016/35052)
-* Delete: [DescribeClusters](https://www.tencentcloud.com/document/api/1016/35050)
+* Create:
+  - [CreateCluster](https://www.tencentcloud.com/document/api/1016/35053)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/1016/35050)
+* Read:
+  - [DescribeClusterTags](https://www.tencentcloud.com/document/api/1016/36904)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/1016/35050)
+* Update:
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/1016/35050)
+  - [ModifyClusterMachine](https://www.tencentcloud.com/document/api/1016/39272)
+  - [ModifyClusterName](https://www.tencentcloud.com/document/api/1016/35049)
+  - [ModifyClusterPassword](https://www.tencentcloud.com/document/api/1016/35048)
+  - [ModifyClusterTags](https://www.tencentcloud.com/document/api/1016/36903)
+* Delete:
+  - [DeleteCluster](https://www.tencentcloud.com/document/api/1016/35052)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/1016/35050)
 
 ## Import
 

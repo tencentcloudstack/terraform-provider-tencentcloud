@@ -57,15 +57,18 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGlobalAcceleratorAclPolicy](https://www.tencentcloud.com/document/api/1299/83834)
-* Create: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
-* Create: [ModifyGlobalAcceleratorAclPolicy](https://www.tencentcloud.com/document/api/1299/83743)
+* Create:
+  - [CreateGlobalAcceleratorAclPolicy](https://www.tencentcloud.com/document/api/1299/83834)
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+  - [ModifyGlobalAcceleratorAclPolicy](https://www.tencentcloud.com/document/api/1299/83743)
 * Read: [DescribeGlobalAcceleratorAclPolicies](https://www.tencentcloud.com/document/api/1299/83814)
-* Update: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
-* Update: [ModifyGlobalAcceleratorAclPolicy](https://www.tencentcloud.com/document/api/1299/83743)
-* Delete: [DeleteGlobalAcceleratorAclPolicy](https://www.tencentcloud.com/document/api/1299/83825)
-* Delete: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
-* Delete: [ModifyGlobalAcceleratorAclPolicy](https://www.tencentcloud.com/document/api/1299/83743)
+* Update:
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+  - [ModifyGlobalAcceleratorAclPolicy](https://www.tencentcloud.com/document/api/1299/83743)
+* Delete:
+  - [DeleteGlobalAcceleratorAclPolicy](https://www.tencentcloud.com/document/api/1299/83825)
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+  - [ModifyGlobalAcceleratorAclPolicy](https://www.tencentcloud.com/document/api/1299/83743)
 
 ## Import
 

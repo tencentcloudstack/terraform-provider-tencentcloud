@@ -63,10 +63,12 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [GrantUserPermissions](https://www.tencentcloud.com/search/?wd=GrantUserPermissions&type=document&lang=en)
 * Read: [DescribeUserPermissions](https://www.tencentcloud.com/search/?wd=DescribeUserPermissions&type=document&lang=en)
-* Update: [DeleteUserPermissions](https://www.tencentcloud.com/search/?wd=DeleteUserPermissions&type=document&lang=en)
-* Update: [GrantUserPermissions](https://www.tencentcloud.com/search/?wd=GrantUserPermissions&type=document&lang=en)
-* Delete: [DeleteUserPermissions](https://www.tencentcloud.com/search/?wd=DeleteUserPermissions&type=document&lang=en)
-* Delete: [DescribeUserPermissions](https://www.tencentcloud.com/search/?wd=DescribeUserPermissions&type=document&lang=en)
+* Update:
+  - [DeleteUserPermissions](https://www.tencentcloud.com/search/?wd=DeleteUserPermissions&type=document&lang=en)
+  - [GrantUserPermissions](https://www.tencentcloud.com/search/?wd=GrantUserPermissions&type=document&lang=en)
+* Delete:
+  - [DeleteUserPermissions](https://www.tencentcloud.com/search/?wd=DeleteUserPermissions&type=document&lang=en)
+  - [DescribeUserPermissions](https://www.tencentcloud.com/search/?wd=DescribeUserPermissions&type=document&lang=en)
 
 ## Import
 

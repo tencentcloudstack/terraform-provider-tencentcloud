@@ -43,15 +43,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CloseDBExtranetAccess](https://www.tencentcloud.com/document/api/237/16179)
-* Create: [DescribeFlow](https://www.tencentcloud.com/document/api/237/16177)
-* Create: [ModifyRealServerAccessStrategy](https://www.tencentcloud.com/search/?wd=ModifyRealServerAccessStrategy&type=document&lang=en)
-* Create: [OpenDBExtranetAccess](https://www.tencentcloud.com/document/api/237/16174)
+* Create:
+  - [CloseDBExtranetAccess](https://www.tencentcloud.com/document/api/237/16179)
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/237/16177)
+  - [ModifyRealServerAccessStrategy](https://www.tencentcloud.com/search/?wd=ModifyRealServerAccessStrategy&type=document&lang=en)
+  - [OpenDBExtranetAccess](https://www.tencentcloud.com/document/api/237/16174)
 * Read: [DescribeDBInstanceDetail](https://www.tencentcloud.com/document/api/237/54563)
-* Update: [CloseDBExtranetAccess](https://www.tencentcloud.com/document/api/237/16179)
-* Update: [DescribeFlow](https://www.tencentcloud.com/document/api/237/16177)
-* Update: [ModifyRealServerAccessStrategy](https://www.tencentcloud.com/search/?wd=ModifyRealServerAccessStrategy&type=document&lang=en)
-* Update: [OpenDBExtranetAccess](https://www.tencentcloud.com/document/api/237/16174)
+* Update:
+  - [CloseDBExtranetAccess](https://www.tencentcloud.com/document/api/237/16179)
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/237/16177)
+  - [ModifyRealServerAccessStrategy](https://www.tencentcloud.com/search/?wd=ModifyRealServerAccessStrategy&type=document&lang=en)
+  - [OpenDBExtranetAccess](https://www.tencentcloud.com/document/api/237/16174)
 
 ## Import
 

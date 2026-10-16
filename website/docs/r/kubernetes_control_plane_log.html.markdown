@@ -71,11 +71,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeControlPlaneLogs](https://www.tencentcloud.com/document/api/457/75764)
-* Create: [EnableControlPlaneLogs](https://www.tencentcloud.com/document/api/457/75760)
+* Create:
+  - [DescribeControlPlaneLogs](https://www.tencentcloud.com/document/api/457/75764)
+  - [EnableControlPlaneLogs](https://www.tencentcloud.com/document/api/457/75760)
 * Read: [DescribeControlPlaneLogs](https://www.tencentcloud.com/document/api/457/75764)
-* Delete: [DescribeControlPlaneLogs](https://www.tencentcloud.com/document/api/457/75764)
-* Delete: [DisableControlPlaneLogs](https://www.tencentcloud.com/document/api/457/75762)
+* Delete:
+  - [DescribeControlPlaneLogs](https://www.tencentcloud.com/document/api/457/75764)
+  - [DisableControlPlaneLogs](https://www.tencentcloud.com/document/api/457/75762)
 
 ## Import
 

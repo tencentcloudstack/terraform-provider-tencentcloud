@@ -44,13 +44,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeLogInstanceList](https://www.tencentcloud.com/document/api/239/82338)
-* Create: [OpenLog](https://www.tencentcloud.com/document/api/239/82335)
+* Create:
+  - [DescribeLogInstanceList](https://www.tencentcloud.com/document/api/239/82338)
+  - [OpenLog](https://www.tencentcloud.com/document/api/239/82335)
 * Read: [DescribeLogInstanceList](https://www.tencentcloud.com/document/api/239/82338)
-* Update: [DescribeLogInstanceList](https://www.tencentcloud.com/document/api/239/82338)
-* Update: [ModifyLog](https://www.tencentcloud.com/document/api/239/82336)
-* Delete: [CloseLog](https://www.tencentcloud.com/document/api/239/82342)
-* Delete: [DescribeLogInstanceList](https://www.tencentcloud.com/document/api/239/82338)
+* Update:
+  - [DescribeLogInstanceList](https://www.tencentcloud.com/document/api/239/82338)
+  - [ModifyLog](https://www.tencentcloud.com/document/api/239/82336)
+* Delete:
+  - [CloseLog](https://www.tencentcloud.com/document/api/239/82342)
+  - [DescribeLogInstanceList](https://www.tencentcloud.com/document/api/239/82338)
 
 ## Import
 

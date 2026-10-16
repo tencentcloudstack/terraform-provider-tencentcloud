@@ -38,7 +38,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDataEngine](https://www.tencentcloud.com/document/api/1155/62693)
-* Create: [DescribeDataEngines](https://www.tencentcloud.com/search/?wd=DescribeDataEngines&type=document&lang=en)
-* Create: [SwitchDataEngineImage](https://www.tencentcloud.com/document/api/1155/62646)
+* Create:
+  - [DescribeDataEngine](https://www.tencentcloud.com/document/api/1155/62693)
+  - [DescribeDataEngines](https://www.tencentcloud.com/search/?wd=DescribeDataEngines&type=document&lang=en)
+  - [SwitchDataEngineImage](https://www.tencentcloud.com/document/api/1155/62646)
 

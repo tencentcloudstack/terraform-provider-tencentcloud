@@ -38,11 +38,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeContainerGroupAttribute](https://www.tencentcloud.com/search/?wd=DescribeContainerGroupAttribute&type=document&lang=en)
-* Create: [StartContainerGroup](https://www.tencentcloud.com/search/?wd=StartContainerGroup&type=document&lang=en)
-* Create: [StopContainerGroup](https://www.tencentcloud.com/search/?wd=StopContainerGroup&type=document&lang=en)
+* Create:
+  - [DescribeContainerGroupAttribute](https://www.tencentcloud.com/search/?wd=DescribeContainerGroupAttribute&type=document&lang=en)
+  - [StartContainerGroup](https://www.tencentcloud.com/search/?wd=StartContainerGroup&type=document&lang=en)
+  - [StopContainerGroup](https://www.tencentcloud.com/search/?wd=StopContainerGroup&type=document&lang=en)
 * Read: [DescribeContainerGroupAttribute](https://www.tencentcloud.com/search/?wd=DescribeContainerGroupAttribute&type=document&lang=en)
-* Update: [DescribeContainerGroupAttribute](https://www.tencentcloud.com/search/?wd=DescribeContainerGroupAttribute&type=document&lang=en)
-* Update: [StartContainerGroup](https://www.tencentcloud.com/search/?wd=StartContainerGroup&type=document&lang=en)
-* Update: [StopContainerGroup](https://www.tencentcloud.com/search/?wd=StopContainerGroup&type=document&lang=en)
+* Update:
+  - [DescribeContainerGroupAttribute](https://www.tencentcloud.com/search/?wd=DescribeContainerGroupAttribute&type=document&lang=en)
+  - [StartContainerGroup](https://www.tencentcloud.com/search/?wd=StartContainerGroup&type=document&lang=en)
+  - [StopContainerGroup](https://www.tencentcloud.com/search/?wd=StopContainerGroup&type=document&lang=en)
 

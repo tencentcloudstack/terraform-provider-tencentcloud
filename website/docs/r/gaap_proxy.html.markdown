@@ -58,19 +58,22 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CloseProxies](https://www.tencentcloud.com/document/api/608/33111)
-* Create: [CreateProxy](https://www.tencentcloud.com/document/api/608/33109)
-* Create: [DescribeProxies](https://www.tencentcloud.com/document/api/608/33101)
+* Create:
+  - [CloseProxies](https://www.tencentcloud.com/document/api/608/33111)
+  - [CreateProxy](https://www.tencentcloud.com/document/api/608/33109)
+  - [DescribeProxies](https://www.tencentcloud.com/document/api/608/33101)
 * Read: [DescribeProxies](https://www.tencentcloud.com/document/api/608/33101)
-* Update: [CloseProxies](https://www.tencentcloud.com/document/api/608/33111)
-* Update: [DescribeProxies](https://www.tencentcloud.com/document/api/608/33101)
-* Update: [ModifyProxiesAttribute](https://www.tencentcloud.com/document/api/608/33094)
-* Update: [ModifyProxiesProject](https://www.tencentcloud.com/document/api/608/33093)
-* Update: [ModifyProxyConfiguration](https://www.tencentcloud.com/document/api/608/33092)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [OpenProxies](https://www.tencentcloud.com/document/api/608/33090)
-* Delete: [DescribeProxies](https://www.tencentcloud.com/document/api/608/33101)
-* Delete: [DestroyProxies](https://www.tencentcloud.com/document/api/608/33096)
+* Update:
+  - [CloseProxies](https://www.tencentcloud.com/document/api/608/33111)
+  - [DescribeProxies](https://www.tencentcloud.com/document/api/608/33101)
+  - [ModifyProxiesAttribute](https://www.tencentcloud.com/document/api/608/33094)
+  - [ModifyProxiesProject](https://www.tencentcloud.com/document/api/608/33093)
+  - [ModifyProxyConfiguration](https://www.tencentcloud.com/document/api/608/33092)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [OpenProxies](https://www.tencentcloud.com/document/api/608/33090)
+* Delete:
+  - [DescribeProxies](https://www.tencentcloud.com/document/api/608/33101)
+  - [DestroyProxies](https://www.tencentcloud.com/document/api/608/33096)
 
 ## Import
 

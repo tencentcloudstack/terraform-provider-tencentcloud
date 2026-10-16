@@ -112,26 +112,30 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateReadOnlyDBInstance](https://www.tencentcloud.com/document/api/409/39728)
-* Create: [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
-* Create: [DescribeOrders](https://www.tencentcloud.com/document/api/409/18104)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
-* Read: [DescribeDBInstanceSecurityGroups](https://www.tencentcloud.com/document/api/409/52648)
-* Read: [DescribeReadOnlyGroups](https://www.tencentcloud.com/document/api/409/39725)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
-* Update: [DescribeReadOnlyGroups](https://www.tencentcloud.com/document/api/409/39725)
-* Update: [ModifyDBInstanceDeletionProtection](https://www.tencentcloud.com/document/api/409/79011)
-* Update: [ModifyDBInstanceName](https://www.tencentcloud.com/document/api/409/18101)
-* Update: [ModifyDBInstanceReadOnlyGroup](https://www.tencentcloud.com/document/api/409/39724)
-* Update: [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/document/api/409/52647)
-* Update: [ModifyDBInstanceSpec](https://www.tencentcloud.com/document/api/409/43296)
-* Update: [ModifyDBInstancesProject](https://www.tencentcloud.com/document/api/409/18100)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Delete: [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
-* Delete: [DestroyDBInstance](https://www.tencentcloud.com/document/api/409/37117)
-* Delete: [IsolateDBInstances](https://www.tencentcloud.com/document/api/409/40109)
+* Create:
+  - [CreateReadOnlyDBInstance](https://www.tencentcloud.com/document/api/409/39728)
+  - [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
+  - [DescribeOrders](https://www.tencentcloud.com/document/api/409/18104)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
+  - [DescribeDBInstanceSecurityGroups](https://www.tencentcloud.com/document/api/409/52648)
+  - [DescribeReadOnlyGroups](https://www.tencentcloud.com/document/api/409/39725)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
+  - [DescribeReadOnlyGroups](https://www.tencentcloud.com/document/api/409/39725)
+  - [ModifyDBInstanceDeletionProtection](https://www.tencentcloud.com/document/api/409/79011)
+  - [ModifyDBInstanceName](https://www.tencentcloud.com/document/api/409/18101)
+  - [ModifyDBInstanceReadOnlyGroup](https://www.tencentcloud.com/document/api/409/39724)
+  - [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/document/api/409/52647)
+  - [ModifyDBInstanceSpec](https://www.tencentcloud.com/document/api/409/43296)
+  - [ModifyDBInstancesProject](https://www.tencentcloud.com/document/api/409/18100)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete:
+  - [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
+  - [DestroyDBInstance](https://www.tencentcloud.com/document/api/409/37117)
+  - [IsolateDBInstances](https://www.tencentcloud.com/document/api/409/40109)
 
 ## Import
 

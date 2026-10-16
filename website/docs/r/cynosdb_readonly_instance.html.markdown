@@ -62,21 +62,25 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddInstances](https://www.tencentcloud.com/document/api/1098/40754)
-* Create: [DescribeResourcesByDealName](https://www.tencentcloud.com/document/api/1098/40735)
-* Create: [ModifyMaintainPeriodConfig](https://www.tencentcloud.com/document/api/1098/40743)
-* Read: [DescribeInstanceDetail](https://www.tencentcloud.com/document/api/1098/40749)
-* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/1098/40747)
-* Read: [DescribeMaintainPeriod](https://www.tencentcloud.com/document/api/1098/40746)
-* Update: [DescribeInstanceDetail](https://www.tencentcloud.com/document/api/1098/40749)
-* Update: [DescribeInstances](https://www.tencentcloud.com/document/api/1098/40747)
-* Update: [ModifyInstanceName](https://www.tencentcloud.com/document/api/1098/46317)
-* Update: [ModifyMaintainPeriodConfig](https://www.tencentcloud.com/document/api/1098/40743)
-* Update: [UpgradeInstance](https://www.tencentcloud.com/document/api/1098/40739)
-* Delete: [DescribeInstanceDetail](https://www.tencentcloud.com/document/api/1098/40749)
-* Delete: [DescribeInstances](https://www.tencentcloud.com/document/api/1098/40747)
-* Delete: [IsolateInstance](https://www.tencentcloud.com/document/api/1098/40744)
-* Delete: [OfflineInstance](https://www.tencentcloud.com/document/api/1098/40741)
+* Create:
+  - [AddInstances](https://www.tencentcloud.com/document/api/1098/40754)
+  - [DescribeResourcesByDealName](https://www.tencentcloud.com/document/api/1098/40735)
+  - [ModifyMaintainPeriodConfig](https://www.tencentcloud.com/document/api/1098/40743)
+* Read:
+  - [DescribeInstanceDetail](https://www.tencentcloud.com/document/api/1098/40749)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1098/40747)
+  - [DescribeMaintainPeriod](https://www.tencentcloud.com/document/api/1098/40746)
+* Update:
+  - [DescribeInstanceDetail](https://www.tencentcloud.com/document/api/1098/40749)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1098/40747)
+  - [ModifyInstanceName](https://www.tencentcloud.com/document/api/1098/46317)
+  - [ModifyMaintainPeriodConfig](https://www.tencentcloud.com/document/api/1098/40743)
+  - [UpgradeInstance](https://www.tencentcloud.com/document/api/1098/40739)
+* Delete:
+  - [DescribeInstanceDetail](https://www.tencentcloud.com/document/api/1098/40749)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1098/40747)
+  - [IsolateInstance](https://www.tencentcloud.com/document/api/1098/40744)
+  - [OfflineInstance](https://www.tencentcloud.com/document/api/1098/40741)
 
 ## Import
 

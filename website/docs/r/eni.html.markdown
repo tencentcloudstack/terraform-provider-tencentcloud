@@ -103,17 +103,20 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssignPrivateIpAddresses](https://www.tencentcloud.com/document/api/215/15813)
-* Create: [CreateNetworkInterface](https://www.tencentcloud.com/document/api/215/15818)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Create:
+  - [AssignPrivateIpAddresses](https://www.tencentcloud.com/document/api/215/15813)
+  - [CreateNetworkInterface](https://www.tencentcloud.com/document/api/215/15818)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
 * Read: [DescribeNetworkInterfaces](https://www.tencentcloud.com/document/api/215/15817)
-* Update: [AssignPrivateIpAddresses](https://www.tencentcloud.com/document/api/215/15813)
-* Update: [ModifyNetworkInterfaceAttribute](https://www.tencentcloud.com/document/api/215/15815)
-* Update: [ModifyPrivateIpAddressesAttribute](https://www.tencentcloud.com/document/api/215/15823)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [UnassignPrivateIpAddresses](https://www.tencentcloud.com/document/api/215/15814)
-* Delete: [DeleteNetworkInterface](https://www.tencentcloud.com/document/api/215/15822)
-* Delete: [DescribeNetworkInterfaces](https://www.tencentcloud.com/document/api/215/15817)
+* Update:
+  - [AssignPrivateIpAddresses](https://www.tencentcloud.com/document/api/215/15813)
+  - [ModifyNetworkInterfaceAttribute](https://www.tencentcloud.com/document/api/215/15815)
+  - [ModifyPrivateIpAddressesAttribute](https://www.tencentcloud.com/document/api/215/15823)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [UnassignPrivateIpAddresses](https://www.tencentcloud.com/document/api/215/15814)
+* Delete:
+  - [DeleteNetworkInterface](https://www.tencentcloud.com/document/api/215/15822)
+  - [DescribeNetworkInterfaces](https://www.tencentcloud.com/document/api/215/15817)
 
 ## Import
 

@@ -63,20 +63,24 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTopic](https://www.tencentcloud.com/document/api/597/35347)
-* Create: [CreateTopicIpWhiteList](https://www.tencentcloud.com/document/api/597/35346)
-* Create: [DescribeInstanceAttributes](https://www.tencentcloud.com/document/api/597/35358)
-* Create: [DescribeTopicDetail](https://www.tencentcloud.com/document/api/597/35341)
-* Read: [DescribeInstanceAttributes](https://www.tencentcloud.com/document/api/597/35358)
-* Read: [DescribeTopicAttributes](https://www.tencentcloud.com/document/api/597/35342)
-* Read: [DescribeTopicDetail](https://www.tencentcloud.com/document/api/597/35341)
-* Update: [CreatePartition](https://www.tencentcloud.com/document/api/597/35348)
-* Update: [DescribeInstanceAttributes](https://www.tencentcloud.com/document/api/597/35358)
-* Update: [DescribeTopicDetail](https://www.tencentcloud.com/document/api/597/35341)
-* Update: [ModifyTopicAttributes](https://www.tencentcloud.com/document/api/597/35340)
-* Delete: [DeleteTopic](https://www.tencentcloud.com/document/api/597/35345)
-* Delete: [DescribeInstanceAttributes](https://www.tencentcloud.com/document/api/597/35358)
-* Delete: [DescribeTopicDetail](https://www.tencentcloud.com/document/api/597/35341)
+* Create:
+  - [CreateTopic](https://www.tencentcloud.com/document/api/597/35347)
+  - [CreateTopicIpWhiteList](https://www.tencentcloud.com/document/api/597/35346)
+  - [DescribeInstanceAttributes](https://www.tencentcloud.com/document/api/597/35358)
+  - [DescribeTopicDetail](https://www.tencentcloud.com/document/api/597/35341)
+* Read:
+  - [DescribeInstanceAttributes](https://www.tencentcloud.com/document/api/597/35358)
+  - [DescribeTopicAttributes](https://www.tencentcloud.com/document/api/597/35342)
+  - [DescribeTopicDetail](https://www.tencentcloud.com/document/api/597/35341)
+* Update:
+  - [CreatePartition](https://www.tencentcloud.com/document/api/597/35348)
+  - [DescribeInstanceAttributes](https://www.tencentcloud.com/document/api/597/35358)
+  - [DescribeTopicDetail](https://www.tencentcloud.com/document/api/597/35341)
+  - [ModifyTopicAttributes](https://www.tencentcloud.com/document/api/597/35340)
+* Delete:
+  - [DeleteTopic](https://www.tencentcloud.com/document/api/597/35345)
+  - [DescribeInstanceAttributes](https://www.tencentcloud.com/document/api/597/35358)
+  - [DescribeTopicDetail](https://www.tencentcloud.com/document/api/597/35341)
 
 ## Import
 

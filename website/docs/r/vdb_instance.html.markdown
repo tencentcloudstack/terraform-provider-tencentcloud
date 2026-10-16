@@ -140,11 +140,13 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateInstance](https://www.tencentcloud.com/search/?wd=CreateInstance&type=document&lang=en)
-* Update: [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/search/?wd=ModifyDBInstanceSecurityGroups&type=document&lang=en)
-* Update: [ScaleOutInstance](https://www.tencentcloud.com/search/?wd=ScaleOutInstance&type=document&lang=en)
-* Update: [ScaleUpInstance](https://www.tencentcloud.com/search/?wd=ScaleUpInstance&type=document&lang=en)
-* Delete: [DestroyInstances](https://www.tencentcloud.com/search/?wd=DestroyInstances&type=document&lang=en)
-* Delete: [IsolateInstance](https://www.tencentcloud.com/search/?wd=IsolateInstance&type=document&lang=en)
+* Update:
+  - [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/search/?wd=ModifyDBInstanceSecurityGroups&type=document&lang=en)
+  - [ScaleOutInstance](https://www.tencentcloud.com/search/?wd=ScaleOutInstance&type=document&lang=en)
+  - [ScaleUpInstance](https://www.tencentcloud.com/search/?wd=ScaleUpInstance&type=document&lang=en)
+* Delete:
+  - [DestroyInstances](https://www.tencentcloud.com/search/?wd=DestroyInstances&type=document&lang=en)
+  - [IsolateInstance](https://www.tencentcloud.com/search/?wd=IsolateInstance&type=document&lang=en)
 
 ## Import
 

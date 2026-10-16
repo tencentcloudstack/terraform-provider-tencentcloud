@@ -106,8 +106,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDirectConnectTunnel](https://www.tencentcloud.com/document/api/216/19821)
-* Create: [DescribeDirectConnectTunnels](https://www.tencentcloud.com/document/api/216/19819)
+* Create:
+  - [CreateDirectConnectTunnel](https://www.tencentcloud.com/document/api/216/19821)
+  - [DescribeDirectConnectTunnels](https://www.tencentcloud.com/document/api/216/19819)
 * Read: [DescribeDirectConnectTunnels](https://www.tencentcloud.com/document/api/216/19819)
 * Update: [ModifyDirectConnectTunnelAttribute](https://www.tencentcloud.com/document/api/216/19818)
 * Delete: [DeleteDirectConnectTunnel](https://www.tencentcloud.com/document/api/216/19820)

@@ -54,6 +54,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetUser](https://www.tencentcloud.com/document/api/598/32259)
-* Read: [ListAttachedUserPolicies](https://www.tencentcloud.com/document/api/598/32242)
+* Read:
+  - [GetUser](https://www.tencentcloud.com/document/api/598/32259)
+  - [ListAttachedUserPolicies](https://www.tencentcloud.com/document/api/598/32242)
 

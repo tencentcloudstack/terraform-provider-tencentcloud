@@ -58,13 +58,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInstanceParams](https://www.tencentcloud.com/document/api/239/32082)
-* Create: [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
-* Create: [ModifyInstanceParams](https://www.tencentcloud.com/document/api/239/32079)
+* Create:
+  - [DescribeInstanceParams](https://www.tencentcloud.com/document/api/239/32082)
+  - [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+  - [ModifyInstanceParams](https://www.tencentcloud.com/document/api/239/32079)
 * Read: [DescribeInstanceParams](https://www.tencentcloud.com/document/api/239/32082)
-* Update: [DescribeInstanceParams](https://www.tencentcloud.com/document/api/239/32082)
-* Update: [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
-* Update: [ModifyInstanceParams](https://www.tencentcloud.com/document/api/239/32079)
+* Update:
+  - [DescribeInstanceParams](https://www.tencentcloud.com/document/api/239/32082)
+  - [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+  - [ModifyInstanceParams](https://www.tencentcloud.com/document/api/239/32079)
 
 ## Import
 

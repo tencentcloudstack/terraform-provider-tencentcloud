@@ -95,13 +95,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AdjustCdbProxyAddress](https://www.tencentcloud.com/document/api/236/55491)
-* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
-* Create: [DescribeCdbProxyInfo](https://www.tencentcloud.com/document/api/236/55487)
+* Create:
+  - [AdjustCdbProxyAddress](https://www.tencentcloud.com/document/api/236/55491)
+  - [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+  - [DescribeCdbProxyInfo](https://www.tencentcloud.com/document/api/236/55487)
 * Read: [DescribeCdbProxyInfo](https://www.tencentcloud.com/document/api/236/55487)
-* Update: [AdjustCdbProxyAddress](https://www.tencentcloud.com/document/api/236/55491)
-* Update: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
-* Update: [DescribeCdbProxyInfo](https://www.tencentcloud.com/document/api/236/55487)
+* Update:
+  - [AdjustCdbProxyAddress](https://www.tencentcloud.com/document/api/236/55491)
+  - [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+  - [DescribeCdbProxyInfo](https://www.tencentcloud.com/document/api/236/55487)
 
 ## Import
 

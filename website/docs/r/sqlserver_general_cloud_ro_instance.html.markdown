@@ -180,17 +180,21 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCloudReadOnlyDBInstances](https://www.tencentcloud.com/document/api/238/55673)
-* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
-* Create: [DescribeOrders](https://www.tencentcloud.com/document/api/238/32134)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
-* Read: [DescribeDBSecurityGroups](https://www.tencentcloud.com/document/api/238/72730)
-* Read: [DescribeReadOnlyGroupList](https://www.tencentcloud.com/document/api/238/72738)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
-* Update: [DescribeOrders](https://www.tencentcloud.com/document/api/238/32134)
-* Update: [UpgradeDBInstance](https://www.tencentcloud.com/document/api/238/32094)
-* Delete: [DeleteDBInstance](https://www.tencentcloud.com/document/api/238/72759)
-* Delete: [TerminateDBInstance](https://www.tencentcloud.com/document/api/238/34685)
+* Create:
+  - [CreateCloudReadOnlyDBInstances](https://www.tencentcloud.com/document/api/238/55673)
+  - [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+  - [DescribeOrders](https://www.tencentcloud.com/document/api/238/32134)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
+  - [DescribeDBSecurityGroups](https://www.tencentcloud.com/document/api/238/72730)
+  - [DescribeReadOnlyGroupList](https://www.tencentcloud.com/document/api/238/72738)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+  - [DescribeOrders](https://www.tencentcloud.com/document/api/238/32134)
+  - [UpgradeDBInstance](https://www.tencentcloud.com/document/api/238/32094)
+* Delete:
+  - [DeleteDBInstance](https://www.tencentcloud.com/document/api/238/72759)
+  - [TerminateDBInstance](https://www.tencentcloud.com/document/api/238/34685)
 

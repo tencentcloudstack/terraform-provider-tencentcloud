@@ -65,8 +65,9 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateUser](https://www.tencentcloud.com/document/api/1031/63563)
 * Read: [GetUser](https://www.tencentcloud.com/document/api/1031/63561)
-* Update: [UpdateUser](https://www.tencentcloud.com/document/api/1031/63559)
-* Update: [UpdateUserStatus](https://www.tencentcloud.com/document/api/1031/63558)
+* Update:
+  - [UpdateUser](https://www.tencentcloud.com/document/api/1031/63559)
+  - [UpdateUserStatus](https://www.tencentcloud.com/document/api/1031/63558)
 * Delete: [DeleteUser](https://www.tencentcloud.com/document/api/1031/63562)
 
 ## Import

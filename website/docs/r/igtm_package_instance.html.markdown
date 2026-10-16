@@ -44,8 +44,9 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreatePackageAndPay](https://www.tencentcloud.com/search/?wd=CreatePackageAndPay&type=document&lang=en)
 * Read: [DescribeInstancePackageList](https://www.tencentcloud.com/search/?wd=DescribeInstancePackageList&type=document&lang=en)
-* Update: [CreatePackageAndPay](https://www.tencentcloud.com/search/?wd=CreatePackageAndPay&type=document&lang=en)
-* Update: [ModifyPackageAutoRenew](https://www.tencentcloud.com/search/?wd=ModifyPackageAutoRenew&type=document&lang=en)
+* Update:
+  - [CreatePackageAndPay](https://www.tencentcloud.com/search/?wd=CreatePackageAndPay&type=document&lang=en)
+  - [ModifyPackageAutoRenew](https://www.tencentcloud.com/search/?wd=ModifyPackageAutoRenew&type=document&lang=en)
 
 ## Import
 

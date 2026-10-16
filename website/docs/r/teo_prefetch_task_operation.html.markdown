@@ -80,6 +80,7 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrefetchTask](https://www.tencentcloud.com/document/api/1145/50537)
-* Create: [DescribePrefetchTasks](https://www.tencentcloud.com/document/api/1145/50533)
+* Create:
+  - [CreatePrefetchTask](https://www.tencentcloud.com/document/api/1145/50537)
+  - [DescribePrefetchTasks](https://www.tencentcloud.com/document/api/1145/50533)
 

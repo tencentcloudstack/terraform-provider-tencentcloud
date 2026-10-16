@@ -48,13 +48,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSnapshot](https://www.tencentcloud.com/document/api/362/15648)
-* Create: [DescribeSnapshots](https://www.tencentcloud.com/document/api/362/15647)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Read: [DescribeSnapshots](https://www.tencentcloud.com/document/api/362/15647)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [ModifySnapshotAttribute](https://www.tencentcloud.com/document/api/362/15650)
+* Create:
+  - [CreateSnapshot](https://www.tencentcloud.com/document/api/362/15648)
+  - [DescribeSnapshots](https://www.tencentcloud.com/document/api/362/15647)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [DescribeSnapshots](https://www.tencentcloud.com/document/api/362/15647)
+* Update:
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [ModifySnapshotAttribute](https://www.tencentcloud.com/document/api/362/15650)
 * Delete: [DeleteSnapshots](https://www.tencentcloud.com/document/api/362/15645)
 
 ## Import

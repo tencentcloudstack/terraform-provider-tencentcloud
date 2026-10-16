@@ -67,11 +67,13 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateRepository](https://www.tencentcloud.com/document/api/1051/50728)
-* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/1051/50703)
-* Read: [DescribeRepositories](https://www.tencentcloud.com/document/api/1051/50720)
+* Read:
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1051/50703)
+  - [DescribeRepositories](https://www.tencentcloud.com/document/api/1051/50720)
 * Update: [ModifyRepository](https://www.tencentcloud.com/document/api/1051/50719)
-* Delete: [DeleteRepository](https://www.tencentcloud.com/document/api/1051/50725)
-* Delete: [DescribeRepositories](https://www.tencentcloud.com/document/api/1051/50720)
+* Delete:
+  - [DeleteRepository](https://www.tencentcloud.com/document/api/1051/50725)
+  - [DescribeRepositories](https://www.tencentcloud.com/document/api/1051/50720)
 
 ## Import
 

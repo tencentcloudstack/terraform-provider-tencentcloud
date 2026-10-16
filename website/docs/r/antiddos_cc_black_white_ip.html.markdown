@@ -55,8 +55,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCcBlackWhiteIpList](https://www.tencentcloud.com/document/api/1213/61383)
-* Create: [DescribeCcBlackWhiteIpList](https://www.tencentcloud.com/document/api/1213/61366)
+* Create:
+  - [CreateCcBlackWhiteIpList](https://www.tencentcloud.com/document/api/1213/61383)
+  - [DescribeCcBlackWhiteIpList](https://www.tencentcloud.com/document/api/1213/61366)
 * Read: [DescribeCcBlackWhiteIpList](https://www.tencentcloud.com/document/api/1213/61366)
 * Delete: [DeleteCcBlackWhiteIpList](https://www.tencentcloud.com/document/api/1213/61374)
 

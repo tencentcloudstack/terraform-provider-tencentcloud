@@ -77,17 +77,20 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSLInstance](https://www.tencentcloud.com/document/api/1026/71619)
-* Create: [DescribeSLInstance](https://www.tencentcloud.com/document/api/1026/71618)
-* Create: [DescribeSLInstanceList](https://www.tencentcloud.com/document/api/1026/71617)
+* Create:
+  - [CreateSLInstance](https://www.tencentcloud.com/document/api/1026/71619)
+  - [DescribeSLInstance](https://www.tencentcloud.com/document/api/1026/71618)
+  - [DescribeSLInstanceList](https://www.tencentcloud.com/document/api/1026/71617)
 * Read: [DescribeSLInstance](https://www.tencentcloud.com/document/api/1026/71618)
-* Update: [DescribeSLInstance](https://www.tencentcloud.com/document/api/1026/71618)
-* Update: [DescribeSLInstanceList](https://www.tencentcloud.com/document/api/1026/71617)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [ModifySLInstance](https://www.tencentcloud.com/document/api/1026/71616)
-* Update: [ModifySLInstanceBasic](https://www.tencentcloud.com/document/api/1026/71615)
-* Delete: [DescribeSLInstanceList](https://www.tencentcloud.com/document/api/1026/71617)
-* Delete: [TerminateSLInstance](https://www.tencentcloud.com/document/api/1026/71614)
+* Update:
+  - [DescribeSLInstance](https://www.tencentcloud.com/document/api/1026/71618)
+  - [DescribeSLInstanceList](https://www.tencentcloud.com/document/api/1026/71617)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [ModifySLInstance](https://www.tencentcloud.com/document/api/1026/71616)
+  - [ModifySLInstanceBasic](https://www.tencentcloud.com/document/api/1026/71615)
+* Delete:
+  - [DescribeSLInstanceList](https://www.tencentcloud.com/document/api/1026/71617)
+  - [TerminateSLInstance](https://www.tencentcloud.com/document/api/1026/71614)
 
 ## Import
 

@@ -60,10 +60,12 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateWorkflowPermissions](https://www.tencentcloud.com/document/api/1174/77935)
 * Read: [ListWorkflowPermissions](https://www.tencentcloud.com/document/api/1174/77916)
-* Update: [CreateWorkflowPermissions](https://www.tencentcloud.com/document/api/1174/77935)
-* Update: [DeleteWorkflowPermissions](https://www.tencentcloud.com/document/api/1174/77931)
-* Delete: [DeleteWorkflowPermissions](https://www.tencentcloud.com/document/api/1174/77931)
-* Delete: [ListWorkflowPermissions](https://www.tencentcloud.com/document/api/1174/77916)
+* Update:
+  - [CreateWorkflowPermissions](https://www.tencentcloud.com/document/api/1174/77935)
+  - [DeleteWorkflowPermissions](https://www.tencentcloud.com/document/api/1174/77931)
+* Delete:
+  - [DeleteWorkflowPermissions](https://www.tencentcloud.com/document/api/1174/77931)
+  - [ListWorkflowPermissions](https://www.tencentcloud.com/document/api/1174/77916)
 
 ## Import
 

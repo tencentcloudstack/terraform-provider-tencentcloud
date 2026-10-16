@@ -44,8 +44,9 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateLiveRecordRule](https://www.tencentcloud.com/document/api/267/30846)
 * Read: [DescribeLiveRecordRules](https://www.tencentcloud.com/document/api/267/30841)
-* Delete: [DeleteLiveRecordRule](https://www.tencentcloud.com/document/api/267/30843)
-* Delete: [DescribeLiveRecordRules](https://www.tencentcloud.com/document/api/267/30841)
+* Delete:
+  - [DeleteLiveRecordRule](https://www.tencentcloud.com/document/api/267/30843)
+  - [DescribeLiveRecordRules](https://www.tencentcloud.com/document/api/267/30841)
 
 ## Import
 

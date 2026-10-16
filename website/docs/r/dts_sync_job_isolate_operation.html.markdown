@@ -36,6 +36,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeSyncJobs](https://www.tencentcloud.com/document/api/571/51793)
-* Create: [IsolateSyncJob](https://www.tencentcloud.com/document/api/571/51791)
+* Create:
+  - [DescribeSyncJobs](https://www.tencentcloud.com/document/api/571/51793)
+  - [IsolateSyncJob](https://www.tencentcloud.com/document/api/571/51791)
 

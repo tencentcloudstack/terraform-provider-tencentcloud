@@ -357,17 +357,20 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDBInstance](https://www.tencentcloud.com/document/api/236/15871)
-* Create: [CreateDBInstanceHour](https://www.tencentcloud.com/document/api/236/15865)
-* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
-* Create: [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Create: [OpenWanService](https://www.tencentcloud.com/document/api/236/15875)
-* Read: [DescribeDBInstanceConfig](https://www.tencentcloud.com/document/api/236/17491)
-* Read: [DescribeInstanceParams](https://www.tencentcloud.com/document/api/236/34467)
-* Delete: [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
-* Delete: [IsolateDBInstance](https://www.tencentcloud.com/document/api/236/15869)
-* Delete: [OfflineIsolatedInstances](https://www.tencentcloud.com/document/api/236/34475)
+* Create:
+  - [CreateDBInstance](https://www.tencentcloud.com/document/api/236/15871)
+  - [CreateDBInstanceHour](https://www.tencentcloud.com/document/api/236/15865)
+  - [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [OpenWanService](https://www.tencentcloud.com/document/api/236/15875)
+* Read:
+  - [DescribeDBInstanceConfig](https://www.tencentcloud.com/document/api/236/17491)
+  - [DescribeInstanceParams](https://www.tencentcloud.com/document/api/236/34467)
+* Delete:
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
+  - [IsolateDBInstance](https://www.tencentcloud.com/document/api/236/15869)
+  - [OfflineIsolatedInstances](https://www.tencentcloud.com/document/api/236/34475)
 
 ## Import
 

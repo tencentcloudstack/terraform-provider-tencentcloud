@@ -57,6 +57,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInstances](https://www.tencentcloud.com/document/api/1103/42498)
-* Create: [RenewInstances](https://www.tencentcloud.com/document/api/1103/57991)
+* Create:
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1103/42498)
+  - [RenewInstances](https://www.tencentcloud.com/document/api/1103/57991)
 

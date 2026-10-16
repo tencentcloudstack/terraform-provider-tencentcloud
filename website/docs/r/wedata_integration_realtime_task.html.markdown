@@ -249,8 +249,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateIntegrationTask](https://www.tencentcloud.com/document/api/1174/61068)
-* Create: [ModifyIntegrationTask](https://www.tencentcloud.com/document/api/1174/61021)
+* Create:
+  - [CreateIntegrationTask](https://www.tencentcloud.com/document/api/1174/61068)
+  - [ModifyIntegrationTask](https://www.tencentcloud.com/document/api/1174/61021)
 * Read: [DescribeIntegrationTask](https://www.tencentcloud.com/document/api/1174/61039)
 * Update: [ModifyIntegrationTask](https://www.tencentcloud.com/document/api/1174/61021)
 * Delete: [DeleteIntegrationTask](https://www.tencentcloud.com/document/api/1174/61064)

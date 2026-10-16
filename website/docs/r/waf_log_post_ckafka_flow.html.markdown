@@ -93,8 +93,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePostCKafkaFlow](https://www.tencentcloud.com/search/?wd=CreatePostCKafkaFlow&type=document&lang=en)
-* Create: [DescribePostCKafkaFlows](https://www.tencentcloud.com/search/?wd=DescribePostCKafkaFlows&type=document&lang=en)
+* Create:
+  - [CreatePostCKafkaFlow](https://www.tencentcloud.com/search/?wd=CreatePostCKafkaFlow&type=document&lang=en)
+  - [DescribePostCKafkaFlows](https://www.tencentcloud.com/search/?wd=DescribePostCKafkaFlows&type=document&lang=en)
 * Read: [DescribePostCKafkaFlows](https://www.tencentcloud.com/search/?wd=DescribePostCKafkaFlows&type=document&lang=en)
 * Update: [CreatePostCKafkaFlow](https://www.tencentcloud.com/search/?wd=CreatePostCKafkaFlow&type=document&lang=en)
 * Delete: [DestroyPostCKafkaFlow](https://www.tencentcloud.com/search/?wd=DestroyPostCKafkaFlow&type=document&lang=en)

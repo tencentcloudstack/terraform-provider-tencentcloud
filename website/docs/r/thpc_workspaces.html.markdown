@@ -329,20 +329,24 @@ The `system_disk` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWorkspaces](https://www.tencentcloud.com/search/?wd=CreateWorkspaces&type=document&lang=en)
-* Create: [DescribeWorkspaces](https://www.tencentcloud.com/search/?wd=DescribeWorkspaces&type=document&lang=en)
-* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
-* Read: [DescribeWorkspaces](https://www.tencentcloud.com/search/?wd=DescribeWorkspaces&type=document&lang=en)
-* Update: [AssociateInstancesKeyPairs](https://www.tencentcloud.com/document/api/213/33232)
-* Update: [DescribeDisks](https://www.tencentcloud.com/document/api/362/16315)
-* Update: [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
-* Update: [DisassociateInstancesKeyPairs](https://www.tencentcloud.com/document/api/213/33228)
-* Update: [ModifyWorkspacesAttribute](https://www.tencentcloud.com/search/?wd=ModifyWorkspacesAttribute&type=document&lang=en)
-* Update: [ResetInstancesPassword](https://www.tencentcloud.com/document/api/213/33240)
-* Update: [ResizeDisk](https://www.tencentcloud.com/document/api/362/16310)
-* Update: [ResizeInstanceDisks](https://www.tencentcloud.com/document/api/213/33238)
-* Delete: [DescribeWorkspaces](https://www.tencentcloud.com/search/?wd=DescribeWorkspaces&type=document&lang=en)
-* Delete: [TerminateWorkspaces](https://www.tencentcloud.com/search/?wd=TerminateWorkspaces&type=document&lang=en)
+* Create:
+  - [CreateWorkspaces](https://www.tencentcloud.com/search/?wd=CreateWorkspaces&type=document&lang=en)
+  - [DescribeWorkspaces](https://www.tencentcloud.com/search/?wd=DescribeWorkspaces&type=document&lang=en)
+* Read:
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+  - [DescribeWorkspaces](https://www.tencentcloud.com/search/?wd=DescribeWorkspaces&type=document&lang=en)
+* Update:
+  - [AssociateInstancesKeyPairs](https://www.tencentcloud.com/document/api/213/33232)
+  - [DescribeDisks](https://www.tencentcloud.com/document/api/362/16315)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+  - [DisassociateInstancesKeyPairs](https://www.tencentcloud.com/document/api/213/33228)
+  - [ModifyWorkspacesAttribute](https://www.tencentcloud.com/search/?wd=ModifyWorkspacesAttribute&type=document&lang=en)
+  - [ResetInstancesPassword](https://www.tencentcloud.com/document/api/213/33240)
+  - [ResizeDisk](https://www.tencentcloud.com/document/api/362/16310)
+  - [ResizeInstanceDisks](https://www.tencentcloud.com/document/api/213/33238)
+* Delete:
+  - [DescribeWorkspaces](https://www.tencentcloud.com/search/?wd=DescribeWorkspaces&type=document&lang=en)
+  - [TerminateWorkspaces](https://www.tencentcloud.com/search/?wd=TerminateWorkspaces&type=document&lang=en)
 
 ## Import
 

@@ -147,14 +147,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateAddress](https://www.tencentcloud.com/document/api/215/16700)
-* Create: [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
+* Create:
+  - [AssociateAddress](https://www.tencentcloud.com/document/api/215/16700)
+  - [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
 * Read: [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
-* Delete: [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
-* Delete: [DescribeNatGateways](https://www.tencentcloud.com/document/api/215/34752)
-* Delete: [DescribeTaskResult](https://www.tencentcloud.com/document/api/215/34772)
-* Delete: [DisassociateAddress](https://www.tencentcloud.com/document/api/215/16703)
-* Delete: [DisassociateNatGatewayAddress](https://www.tencentcloud.com/document/api/215/34751)
+* Delete:
+  - [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
+  - [DescribeNatGateways](https://www.tencentcloud.com/document/api/215/34752)
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/215/34772)
+  - [DisassociateAddress](https://www.tencentcloud.com/document/api/215/16703)
+  - [DisassociateNatGatewayAddress](https://www.tencentcloud.com/document/api/215/34751)
 
 ## Import
 

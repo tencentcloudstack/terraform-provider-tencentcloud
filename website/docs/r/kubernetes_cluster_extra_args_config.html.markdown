@@ -60,11 +60,13 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
-* Create: [ModifyClusterExtraArgs](https://www.tencentcloud.com/search/?wd=ModifyClusterExtraArgs&type=document&lang=en)
+* Create:
+  - [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
+  - [ModifyClusterExtraArgs](https://www.tencentcloud.com/search/?wd=ModifyClusterExtraArgs&type=document&lang=en)
 * Read: [DescribeClusterExtraArgs](https://www.tencentcloud.com/search/?wd=DescribeClusterExtraArgs&type=document&lang=en)
-* Update: [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
-* Update: [ModifyClusterExtraArgs](https://www.tencentcloud.com/search/?wd=ModifyClusterExtraArgs&type=document&lang=en)
+* Update:
+  - [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
+  - [ModifyClusterExtraArgs](https://www.tencentcloud.com/search/?wd=ModifyClusterExtraArgs&type=document&lang=en)
 
 ## Import
 

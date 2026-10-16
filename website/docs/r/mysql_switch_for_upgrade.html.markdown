@@ -84,7 +84,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
-* Create: [SwitchForUpgrade](https://www.tencentcloud.com/document/api/236/15864)
+* Create:
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
+  - [SwitchForUpgrade](https://www.tencentcloud.com/document/api/236/15864)
 * Read: [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
 

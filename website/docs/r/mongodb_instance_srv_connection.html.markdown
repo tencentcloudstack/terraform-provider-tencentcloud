@@ -52,14 +52,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/240/37921)
-* Create: [EnableSRVConnectionUrl](https://www.tencentcloud.com/document/api/240/79883)
-* Create: [ModifySRVConnectionUrl](https://www.tencentcloud.com/document/api/240/79880)
+* Create:
+  - [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/240/37921)
+  - [EnableSRVConnectionUrl](https://www.tencentcloud.com/document/api/240/79883)
+  - [ModifySRVConnectionUrl](https://www.tencentcloud.com/document/api/240/79880)
 * Read: [DescribeSRVConnectionDomain](https://www.tencentcloud.com/document/api/240/79885)
-* Update: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/240/37921)
-* Update: [ModifySRVConnectionUrl](https://www.tencentcloud.com/document/api/240/79880)
-* Delete: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/240/37921)
-* Delete: [DisableSRVConnectionUrl](https://www.tencentcloud.com/document/api/240/79884)
+* Update:
+  - [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/240/37921)
+  - [ModifySRVConnectionUrl](https://www.tencentcloud.com/document/api/240/79880)
+* Delete:
+  - [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/240/37921)
+  - [DisableSRVConnectionUrl](https://www.tencentcloud.com/document/api/240/79884)
 
 ## Import
 

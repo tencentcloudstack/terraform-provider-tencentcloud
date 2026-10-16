@@ -160,18 +160,22 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachCcnInstances](https://www.tencentcloud.com/document/api/215/34792)
-* Create: [DescribeCcnAttachedInstances](https://www.tencentcloud.com/document/api/215/34789)
-* Create: [DescribeCcnRoutes](https://www.tencentcloud.com/document/api/215/34788)
-* Create: [DescribeCcns](https://www.tencentcloud.com/document/api/215/34787)
-* Read: [DescribeCcnAttachedInstances](https://www.tencentcloud.com/document/api/215/34789)
-* Read: [DescribeCcnRoutes](https://www.tencentcloud.com/document/api/215/34788)
-* Read: [DescribeCcns](https://www.tencentcloud.com/document/api/215/34787)
-* Update: [DescribeCcnAttachedInstances](https://www.tencentcloud.com/document/api/215/34789)
-* Update: [DescribeCcnRoutes](https://www.tencentcloud.com/document/api/215/34788)
-* Update: [DescribeCcns](https://www.tencentcloud.com/document/api/215/34787)
-* Update: [ModifyCcnAttachedInstancesAttribute](https://www.tencentcloud.com/document/api/215/40101)
-* Delete: [DescribeCcnAttachedInstances](https://www.tencentcloud.com/document/api/215/34789)
-* Delete: [DescribeCcns](https://www.tencentcloud.com/document/api/215/34787)
-* Delete: [DetachCcnInstances](https://www.tencentcloud.com/document/api/215/34786)
+* Create:
+  - [AttachCcnInstances](https://www.tencentcloud.com/document/api/215/34792)
+  - [DescribeCcnAttachedInstances](https://www.tencentcloud.com/document/api/215/34789)
+  - [DescribeCcnRoutes](https://www.tencentcloud.com/document/api/215/34788)
+  - [DescribeCcns](https://www.tencentcloud.com/document/api/215/34787)
+* Read:
+  - [DescribeCcnAttachedInstances](https://www.tencentcloud.com/document/api/215/34789)
+  - [DescribeCcnRoutes](https://www.tencentcloud.com/document/api/215/34788)
+  - [DescribeCcns](https://www.tencentcloud.com/document/api/215/34787)
+* Update:
+  - [DescribeCcnAttachedInstances](https://www.tencentcloud.com/document/api/215/34789)
+  - [DescribeCcnRoutes](https://www.tencentcloud.com/document/api/215/34788)
+  - [DescribeCcns](https://www.tencentcloud.com/document/api/215/34787)
+  - [ModifyCcnAttachedInstancesAttribute](https://www.tencentcloud.com/document/api/215/40101)
+* Delete:
+  - [DescribeCcnAttachedInstances](https://www.tencentcloud.com/document/api/215/34789)
+  - [DescribeCcns](https://www.tencentcloud.com/document/api/215/34787)
+  - [DetachCcnInstances](https://www.tencentcloud.com/document/api/215/34786)
 

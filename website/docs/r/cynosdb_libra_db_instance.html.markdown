@@ -135,13 +135,15 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddLibraDBInstances](https://www.tencentcloud.com/document/api/1098/80035)
-* Create: [DescribeLibraDBInstanceDetail](https://www.tencentcloud.com/document/api/1098/80143)
+* Create:
+  - [AddLibraDBInstances](https://www.tencentcloud.com/document/api/1098/80035)
+  - [DescribeLibraDBInstanceDetail](https://www.tencentcloud.com/document/api/1098/80143)
 * Read: [DescribeLibraDBInstanceDetail](https://www.tencentcloud.com/document/api/1098/80143)
 * Update: [DescribeLibraDBInstanceDetail](https://www.tencentcloud.com/document/api/1098/80143)
-* Delete: [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
-* Delete: [IsolateLibraDBInstance](https://www.tencentcloud.com/document/api/1098/80139)
-* Delete: [OfflineLibraDBInstance](https://www.tencentcloud.com/document/api/1098/80137)
+* Delete:
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+  - [IsolateLibraDBInstance](https://www.tencentcloud.com/document/api/1098/80139)
+  - [OfflineLibraDBInstance](https://www.tencentcloud.com/document/api/1098/80137)
 
 ## Import
 

@@ -142,19 +142,23 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateVpnGateway](https://www.tencentcloud.com/document/api/215/17521)
-* Create: [DescribeVpnGateways](https://www.tencentcloud.com/document/api/215/17514)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Read: [DescribeVpnGateways](https://www.tencentcloud.com/document/api/215/17514)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [ModifyVpnGatewayAttribute](https://www.tencentcloud.com/document/api/215/17507)
-* Update: [RenewVpnGateway](https://www.tencentcloud.com/document/api/215/17506)
-* Update: [ResetVpnGatewayInternetMaxBandwidth](https://www.tencentcloud.com/document/api/215/17504)
-* Update: [SetVpnGatewaysRenewFlag](https://www.tencentcloud.com/document/api/215/52739)
-* Delete: [DeleteVpnGateway](https://www.tencentcloud.com/document/api/215/17518)
-* Delete: [DescribeVpnConnections](https://www.tencentcloud.com/document/api/215/17515)
-* Delete: [DescribeVpnGateways](https://www.tencentcloud.com/document/api/215/17514)
+* Create:
+  - [CreateVpnGateway](https://www.tencentcloud.com/document/api/215/17521)
+  - [DescribeVpnGateways](https://www.tencentcloud.com/document/api/215/17514)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [DescribeVpnGateways](https://www.tencentcloud.com/document/api/215/17514)
+* Update:
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [ModifyVpnGatewayAttribute](https://www.tencentcloud.com/document/api/215/17507)
+  - [RenewVpnGateway](https://www.tencentcloud.com/document/api/215/17506)
+  - [ResetVpnGatewayInternetMaxBandwidth](https://www.tencentcloud.com/document/api/215/17504)
+  - [SetVpnGatewaysRenewFlag](https://www.tencentcloud.com/document/api/215/52739)
+* Delete:
+  - [DeleteVpnGateway](https://www.tencentcloud.com/document/api/215/17518)
+  - [DescribeVpnConnections](https://www.tencentcloud.com/document/api/215/17515)
+  - [DescribeVpnGateways](https://www.tencentcloud.com/document/api/215/17514)
 
 ## Import
 

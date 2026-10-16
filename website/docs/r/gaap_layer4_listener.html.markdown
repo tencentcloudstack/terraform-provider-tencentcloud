@@ -96,17 +96,21 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindListenerRealServers](https://www.tencentcloud.com/document/api/608/33077)
-* Create: [CreateTCPListeners](https://www.tencentcloud.com/document/api/608/33074)
-* Create: [CreateUDPListeners](https://www.tencentcloud.com/document/api/608/33073)
-* Read: [DescribeTCPListeners](https://www.tencentcloud.com/document/api/608/33068)
-* Read: [DescribeUDPListeners](https://www.tencentcloud.com/document/api/608/33067)
-* Update: [BindListenerRealServers](https://www.tencentcloud.com/document/api/608/33077)
-* Update: [ModifyTCPListenerAttribute](https://www.tencentcloud.com/document/api/608/33064)
-* Update: [ModifyUDPListenerAttribute](https://www.tencentcloud.com/document/api/608/33063)
-* Delete: [DeleteListeners](https://www.tencentcloud.com/document/api/608/33072)
-* Delete: [DescribeTCPListeners](https://www.tencentcloud.com/document/api/608/33068)
-* Delete: [DescribeUDPListeners](https://www.tencentcloud.com/document/api/608/33067)
+* Create:
+  - [BindListenerRealServers](https://www.tencentcloud.com/document/api/608/33077)
+  - [CreateTCPListeners](https://www.tencentcloud.com/document/api/608/33074)
+  - [CreateUDPListeners](https://www.tencentcloud.com/document/api/608/33073)
+* Read:
+  - [DescribeTCPListeners](https://www.tencentcloud.com/document/api/608/33068)
+  - [DescribeUDPListeners](https://www.tencentcloud.com/document/api/608/33067)
+* Update:
+  - [BindListenerRealServers](https://www.tencentcloud.com/document/api/608/33077)
+  - [ModifyTCPListenerAttribute](https://www.tencentcloud.com/document/api/608/33064)
+  - [ModifyUDPListenerAttribute](https://www.tencentcloud.com/document/api/608/33063)
+* Delete:
+  - [DeleteListeners](https://www.tencentcloud.com/document/api/608/33072)
+  - [DescribeTCPListeners](https://www.tencentcloud.com/document/api/608/33068)
+  - [DescribeUDPListeners](https://www.tencentcloud.com/document/api/608/33067)
 
 ## Import
 

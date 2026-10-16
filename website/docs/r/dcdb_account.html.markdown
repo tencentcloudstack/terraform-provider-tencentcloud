@@ -50,10 +50,12 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateAccount](https://www.tencentcloud.com/document/api/1042/34449)
 * Read: [DescribeAccounts](https://www.tencentcloud.com/document/api/1042/34446)
-* Update: [ModifyAccountDescription](https://www.tencentcloud.com/document/api/1042/34435)
-* Update: [ResetAccountPassword](https://www.tencentcloud.com/document/api/1042/34430)
-* Delete: [DeleteAccount](https://www.tencentcloud.com/document/api/1042/34448)
-* Delete: [DescribeAccounts](https://www.tencentcloud.com/document/api/1042/34446)
+* Update:
+  - [ModifyAccountDescription](https://www.tencentcloud.com/document/api/1042/34435)
+  - [ResetAccountPassword](https://www.tencentcloud.com/document/api/1042/34430)
+* Delete:
+  - [DeleteAccount](https://www.tencentcloud.com/document/api/1042/34448)
+  - [DescribeAccounts](https://www.tencentcloud.com/document/api/1042/34446)
 
 ## Import
 

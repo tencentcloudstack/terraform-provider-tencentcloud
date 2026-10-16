@@ -68,12 +68,15 @@ The `dimensions` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindingPolicyObject](https://www.tencentcloud.com/document/api/248/35985)
-* Create: [DescribeBindingPolicyObjectList](https://www.tencentcloud.com/document/api/248/35980)
-* Create: [DescribePolicyGroupList](https://www.tencentcloud.com/document/api/248/35977)
-* Read: [DescribeBindingPolicyObjectList](https://www.tencentcloud.com/document/api/248/35980)
-* Read: [DescribePolicyGroupList](https://www.tencentcloud.com/document/api/248/35977)
-* Delete: [DescribeBindingPolicyObjectList](https://www.tencentcloud.com/document/api/248/35980)
-* Delete: [DescribePolicyGroupList](https://www.tencentcloud.com/document/api/248/35977)
-* Delete: [UnBindingPolicyObject](https://www.tencentcloud.com/document/api/248/35971)
+* Create:
+  - [BindingPolicyObject](https://www.tencentcloud.com/document/api/248/35985)
+  - [DescribeBindingPolicyObjectList](https://www.tencentcloud.com/document/api/248/35980)
+  - [DescribePolicyGroupList](https://www.tencentcloud.com/document/api/248/35977)
+* Read:
+  - [DescribeBindingPolicyObjectList](https://www.tencentcloud.com/document/api/248/35980)
+  - [DescribePolicyGroupList](https://www.tencentcloud.com/document/api/248/35977)
+* Delete:
+  - [DescribeBindingPolicyObjectList](https://www.tencentcloud.com/document/api/248/35980)
+  - [DescribePolicyGroupList](https://www.tencentcloud.com/document/api/248/35977)
+  - [UnBindingPolicyObject](https://www.tencentcloud.com/document/api/248/35971)
 

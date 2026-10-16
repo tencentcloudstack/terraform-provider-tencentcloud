@@ -47,16 +47,19 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSecurityPolicy](https://www.tencentcloud.com/document/api/608/33108)
-* Create: [DescribeSecurityPolicyDetail](https://www.tencentcloud.com/document/api/608/33097)
-* Create: [OpenSecurityPolicy](https://www.tencentcloud.com/document/api/608/33089)
+* Create:
+  - [CreateSecurityPolicy](https://www.tencentcloud.com/document/api/608/33108)
+  - [DescribeSecurityPolicyDetail](https://www.tencentcloud.com/document/api/608/33097)
+  - [OpenSecurityPolicy](https://www.tencentcloud.com/document/api/608/33089)
 * Read: [DescribeSecurityPolicyDetail](https://www.tencentcloud.com/document/api/608/33097)
-* Update: [CloseSecurityPolicy](https://www.tencentcloud.com/document/api/608/33110)
-* Update: [DescribeSecurityPolicyDetail](https://www.tencentcloud.com/document/api/608/33097)
-* Update: [OpenSecurityPolicy](https://www.tencentcloud.com/document/api/608/33089)
-* Delete: [CloseSecurityPolicy](https://www.tencentcloud.com/document/api/608/33110)
-* Delete: [DeleteSecurityPolicy](https://www.tencentcloud.com/document/api/608/33106)
-* Delete: [DescribeSecurityPolicyDetail](https://www.tencentcloud.com/document/api/608/33097)
+* Update:
+  - [CloseSecurityPolicy](https://www.tencentcloud.com/document/api/608/33110)
+  - [DescribeSecurityPolicyDetail](https://www.tencentcloud.com/document/api/608/33097)
+  - [OpenSecurityPolicy](https://www.tencentcloud.com/document/api/608/33089)
+* Delete:
+  - [CloseSecurityPolicy](https://www.tencentcloud.com/document/api/608/33110)
+  - [DeleteSecurityPolicy](https://www.tencentcloud.com/document/api/608/33106)
+  - [DescribeSecurityPolicyDetail](https://www.tencentcloud.com/document/api/608/33097)
 
 ## Import
 

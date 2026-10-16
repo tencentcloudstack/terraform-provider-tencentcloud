@@ -137,14 +137,18 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstance](https://www.tencentcloud.com/document/api/1294/76527)
-* Create: [DescribeInstance](https://www.tencentcloud.com/document/api/1294/76523)
-* Create: [ModifyInstance](https://www.tencentcloud.com/document/api/1294/76521)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeInstance](https://www.tencentcloud.com/document/api/1294/76523)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [ModifyInstance](https://www.tencentcloud.com/document/api/1294/76521)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Delete: [DeleteInstance](https://www.tencentcloud.com/document/api/1294/76525)
-* Delete: [DescribeInstance](https://www.tencentcloud.com/document/api/1294/76523)
+* Create:
+  - [CreateInstance](https://www.tencentcloud.com/document/api/1294/76527)
+  - [DescribeInstance](https://www.tencentcloud.com/document/api/1294/76523)
+  - [ModifyInstance](https://www.tencentcloud.com/document/api/1294/76521)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeInstance](https://www.tencentcloud.com/document/api/1294/76523)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [ModifyInstance](https://www.tencentcloud.com/document/api/1294/76521)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete:
+  - [DeleteInstance](https://www.tencentcloud.com/document/api/1294/76525)
+  - [DescribeInstance](https://www.tencentcloud.com/document/api/1294/76523)
 

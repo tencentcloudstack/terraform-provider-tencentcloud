@@ -121,7 +121,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DeployGroup](https://www.tencentcloud.com/search/?wd=DeployGroup&type=document&lang=en)
-* Create: [DescribeGroupAttribute](https://www.tencentcloud.com/search/?wd=DescribeGroupAttribute&type=document&lang=en)
+* Create:
+  - [DeployGroup](https://www.tencentcloud.com/search/?wd=DeployGroup&type=document&lang=en)
+  - [DescribeGroupAttribute](https://www.tencentcloud.com/search/?wd=DescribeGroupAttribute&type=document&lang=en)
 * Read: [DescribeGroup](https://www.tencentcloud.com/search/?wd=DescribeGroup&type=document&lang=en)
 

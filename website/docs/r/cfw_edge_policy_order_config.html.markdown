@@ -120,11 +120,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAclRule](https://www.tencentcloud.com/search/?wd=DescribeAclRule&type=document&lang=en)
-* Create: [ModifyAclRule](https://www.tencentcloud.com/search/?wd=ModifyAclRule&type=document&lang=en)
+* Create:
+  - [DescribeAclRule](https://www.tencentcloud.com/search/?wd=DescribeAclRule&type=document&lang=en)
+  - [ModifyAclRule](https://www.tencentcloud.com/search/?wd=ModifyAclRule&type=document&lang=en)
 * Read: [DescribeAclRule](https://www.tencentcloud.com/search/?wd=DescribeAclRule&type=document&lang=en)
-* Update: [DescribeAclRule](https://www.tencentcloud.com/search/?wd=DescribeAclRule&type=document&lang=en)
-* Update: [ModifyAclRule](https://www.tencentcloud.com/search/?wd=ModifyAclRule&type=document&lang=en)
+* Update:
+  - [DescribeAclRule](https://www.tencentcloud.com/search/?wd=DescribeAclRule&type=document&lang=en)
+  - [ModifyAclRule](https://www.tencentcloud.com/search/?wd=ModifyAclRule&type=document&lang=en)
 
 ## Import
 

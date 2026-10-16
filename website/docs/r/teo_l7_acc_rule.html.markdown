@@ -844,13 +844,16 @@ The `rules` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeZoneConfigImportResult](https://www.tencentcloud.com/document/api/1145/67243)
-* Create: [ImportZoneConfig](https://www.tencentcloud.com/document/api/1145/67241)
+* Create:
+  - [DescribeZoneConfigImportResult](https://www.tencentcloud.com/document/api/1145/67243)
+  - [ImportZoneConfig](https://www.tencentcloud.com/document/api/1145/67241)
 * Read: [DescribeL7AccRules](https://www.tencentcloud.com/document/api/1145/68150)
-* Update: [DescribeZoneConfigImportResult](https://www.tencentcloud.com/document/api/1145/67243)
-* Update: [ImportZoneConfig](https://www.tencentcloud.com/document/api/1145/67241)
-* Delete: [DescribeZoneConfigImportResult](https://www.tencentcloud.com/document/api/1145/67243)
-* Delete: [ImportZoneConfig](https://www.tencentcloud.com/document/api/1145/67241)
+* Update:
+  - [DescribeZoneConfigImportResult](https://www.tencentcloud.com/document/api/1145/67243)
+  - [ImportZoneConfig](https://www.tencentcloud.com/document/api/1145/67241)
+* Delete:
+  - [DescribeZoneConfigImportResult](https://www.tencentcloud.com/document/api/1145/67243)
+  - [ImportZoneConfig](https://www.tencentcloud.com/document/api/1145/67241)
 
 ## Import
 

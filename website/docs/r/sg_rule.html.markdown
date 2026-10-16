@@ -64,13 +64,16 @@ The `data` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddEnterpriseSecurityGroupRules](https://www.tencentcloud.com/document/api/1160/51373)
-* Create: [DescribeEnterpriseSGRuleProgress](https://www.tencentcloud.com/search/?wd=DescribeEnterpriseSGRuleProgress&type=document&lang=en)
+* Create:
+  - [AddEnterpriseSecurityGroupRules](https://www.tencentcloud.com/document/api/1160/51373)
+  - [DescribeEnterpriseSGRuleProgress](https://www.tencentcloud.com/search/?wd=DescribeEnterpriseSGRuleProgress&type=document&lang=en)
 * Read: [DescribeEnterpriseSecurityGroupRuleList](https://www.tencentcloud.com/search/?wd=DescribeEnterpriseSecurityGroupRuleList&type=document&lang=en)
-* Update: [DescribeEnterpriseSGRuleProgress](https://www.tencentcloud.com/search/?wd=DescribeEnterpriseSGRuleProgress&type=document&lang=en)
-* Update: [ModifyEnterpriseSecurityGroupRule](https://www.tencentcloud.com/document/api/1160/54828)
-* Delete: [DescribeEnterpriseSGRuleProgress](https://www.tencentcloud.com/search/?wd=DescribeEnterpriseSGRuleProgress&type=document&lang=en)
-* Delete: [RemoveEnterpriseSecurityGroupRule](https://www.tencentcloud.com/document/api/1160/51365)
+* Update:
+  - [DescribeEnterpriseSGRuleProgress](https://www.tencentcloud.com/search/?wd=DescribeEnterpriseSGRuleProgress&type=document&lang=en)
+  - [ModifyEnterpriseSecurityGroupRule](https://www.tencentcloud.com/document/api/1160/54828)
+* Delete:
+  - [DescribeEnterpriseSGRuleProgress](https://www.tencentcloud.com/search/?wd=DescribeEnterpriseSGRuleProgress&type=document&lang=en)
+  - [RemoveEnterpriseSecurityGroupRule](https://www.tencentcloud.com/document/api/1160/51365)
 
 ## Import
 

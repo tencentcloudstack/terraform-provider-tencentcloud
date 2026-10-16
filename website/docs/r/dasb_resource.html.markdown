@@ -79,10 +79,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateResource](https://www.tencentcloud.com/search/?wd=CreateResource&type=document&lang=en)
-* Create: [DeployResource](https://www.tencentcloud.com/search/?wd=DeployResource&type=document&lang=en)
-* Create: [DescribeResources](https://www.tencentcloud.com/search/?wd=DescribeResources&type=document&lang=en)
-* Create: [ModifyResource](https://www.tencentcloud.com/search/?wd=ModifyResource&type=document&lang=en)
+* Create:
+  - [CreateResource](https://www.tencentcloud.com/search/?wd=CreateResource&type=document&lang=en)
+  - [DeployResource](https://www.tencentcloud.com/search/?wd=DeployResource&type=document&lang=en)
+  - [DescribeResources](https://www.tencentcloud.com/search/?wd=DescribeResources&type=document&lang=en)
+  - [ModifyResource](https://www.tencentcloud.com/search/?wd=ModifyResource&type=document&lang=en)
 * Read: [DescribeResources](https://www.tencentcloud.com/search/?wd=DescribeResources&type=document&lang=en)
 * Update: [ModifyResource](https://www.tencentcloud.com/search/?wd=ModifyResource&type=document&lang=en)
 

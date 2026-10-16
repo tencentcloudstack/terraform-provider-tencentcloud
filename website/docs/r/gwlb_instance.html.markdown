@@ -76,12 +76,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGatewayLoadBalancer](https://www.tencentcloud.com/document/api/1245/66075)
-* Create: [DescribeTaskStatus](https://www.tencentcloud.com/document/api/1245/66069)
+* Create:
+  - [CreateGatewayLoadBalancer](https://www.tencentcloud.com/document/api/1245/66075)
+  - [DescribeTaskStatus](https://www.tencentcloud.com/document/api/1245/66069)
 * Read: [DescribeGatewayLoadBalancers](https://www.tencentcloud.com/document/api/1245/66073)
 * Update: [ModifyGatewayLoadBalancerAttribute](https://www.tencentcloud.com/document/api/1245/66071)
-* Delete: [DeleteGatewayLoadBalancer](https://www.tencentcloud.com/document/api/1245/66074)
-* Delete: [DescribeTaskStatus](https://www.tencentcloud.com/document/api/1245/66069)
+* Delete:
+  - [DeleteGatewayLoadBalancer](https://www.tencentcloud.com/document/api/1245/66074)
+  - [DescribeTaskStatus](https://www.tencentcloud.com/document/api/1245/66069)
 
 ## Import
 

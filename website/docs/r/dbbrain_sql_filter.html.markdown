@@ -71,11 +71,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSqlFilter](https://www.tencentcloud.com/search/?wd=CreateSqlFilter&type=document&lang=en)
-* Create: [VerifyUserAccount](https://www.tencentcloud.com/search/?wd=VerifyUserAccount&type=document&lang=en)
+* Create:
+  - [CreateSqlFilter](https://www.tencentcloud.com/search/?wd=CreateSqlFilter&type=document&lang=en)
+  - [VerifyUserAccount](https://www.tencentcloud.com/search/?wd=VerifyUserAccount&type=document&lang=en)
 * Read: [DescribeSqlFilters](https://www.tencentcloud.com/search/?wd=DescribeSqlFilters&type=document&lang=en)
-* Update: [ModifySqlFilters](https://www.tencentcloud.com/search/?wd=ModifySqlFilters&type=document&lang=en)
-* Update: [VerifyUserAccount](https://www.tencentcloud.com/search/?wd=VerifyUserAccount&type=document&lang=en)
-* Delete: [DeleteSqlFilters](https://www.tencentcloud.com/search/?wd=DeleteSqlFilters&type=document&lang=en)
-* Delete: [VerifyUserAccount](https://www.tencentcloud.com/search/?wd=VerifyUserAccount&type=document&lang=en)
+* Update:
+  - [ModifySqlFilters](https://www.tencentcloud.com/search/?wd=ModifySqlFilters&type=document&lang=en)
+  - [VerifyUserAccount](https://www.tencentcloud.com/search/?wd=VerifyUserAccount&type=document&lang=en)
+* Delete:
+  - [DeleteSqlFilters](https://www.tencentcloud.com/search/?wd=DeleteSqlFilters&type=document&lang=en)
+  - [VerifyUserAccount](https://www.tencentcloud.com/search/?wd=VerifyUserAccount&type=document&lang=en)
 

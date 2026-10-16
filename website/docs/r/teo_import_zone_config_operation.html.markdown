@@ -47,6 +47,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeZoneConfigImportResult](https://www.tencentcloud.com/document/api/1145/67243)
-* Create: [ImportZoneConfig](https://www.tencentcloud.com/document/api/1145/67241)
+* Create:
+  - [DescribeZoneConfigImportResult](https://www.tencentcloud.com/document/api/1145/67243)
+  - [ImportZoneConfig](https://www.tencentcloud.com/document/api/1145/67241)
 

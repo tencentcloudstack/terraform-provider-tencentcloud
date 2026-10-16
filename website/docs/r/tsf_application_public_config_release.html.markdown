@@ -42,8 +42,9 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [ReleasePublicConfig](https://www.tencentcloud.com/search/?wd=ReleasePublicConfig&type=document&lang=en)
 * Read: [DescribePublicConfigReleases](https://www.tencentcloud.com/search/?wd=DescribePublicConfigReleases&type=document&lang=en)
-* Delete: [DescribePublicConfigReleases](https://www.tencentcloud.com/search/?wd=DescribePublicConfigReleases&type=document&lang=en)
-* Delete: [RevocationPublicConfig](https://www.tencentcloud.com/search/?wd=RevocationPublicConfig&type=document&lang=en)
+* Delete:
+  - [DescribePublicConfigReleases](https://www.tencentcloud.com/search/?wd=DescribePublicConfigReleases&type=document&lang=en)
+  - [RevocationPublicConfig](https://www.tencentcloud.com/search/?wd=RevocationPublicConfig&type=document&lang=en)
 
 ## Import
 

@@ -38,13 +38,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeVpcTaskResult](https://www.tencentcloud.com/document/api/215/41567)
-* Create: [DisableVpnGatewaySslClientCert](https://www.tencentcloud.com/search/?wd=DisableVpnGatewaySslClientCert&type=document&lang=en)
-* Create: [EnableVpnGatewaySslClientCert](https://www.tencentcloud.com/search/?wd=EnableVpnGatewaySslClientCert&type=document&lang=en)
+* Create:
+  - [DescribeVpcTaskResult](https://www.tencentcloud.com/document/api/215/41567)
+  - [DisableVpnGatewaySslClientCert](https://www.tencentcloud.com/search/?wd=DisableVpnGatewaySslClientCert&type=document&lang=en)
+  - [EnableVpnGatewaySslClientCert](https://www.tencentcloud.com/search/?wd=EnableVpnGatewaySslClientCert&type=document&lang=en)
 * Read: [DescribeVpnGatewaySslClients](https://www.tencentcloud.com/search/?wd=DescribeVpnGatewaySslClients&type=document&lang=en)
-* Update: [DescribeVpcTaskResult](https://www.tencentcloud.com/document/api/215/41567)
-* Update: [DisableVpnGatewaySslClientCert](https://www.tencentcloud.com/search/?wd=DisableVpnGatewaySslClientCert&type=document&lang=en)
-* Update: [EnableVpnGatewaySslClientCert](https://www.tencentcloud.com/search/?wd=EnableVpnGatewaySslClientCert&type=document&lang=en)
+* Update:
+  - [DescribeVpcTaskResult](https://www.tencentcloud.com/document/api/215/41567)
+  - [DisableVpnGatewaySslClientCert](https://www.tencentcloud.com/search/?wd=DisableVpnGatewaySslClientCert&type=document&lang=en)
+  - [EnableVpnGatewaySslClientCert](https://www.tencentcloud.com/search/?wd=EnableVpnGatewaySslClientCert&type=document&lang=en)
 
 ## Import
 

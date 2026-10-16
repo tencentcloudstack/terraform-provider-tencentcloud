@@ -38,11 +38,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DisableInvoker](https://www.tencentcloud.com/document/api/1147/46692)
-* Create: [EnableInvoker](https://www.tencentcloud.com/document/api/1147/46691)
+* Create:
+  - [DisableInvoker](https://www.tencentcloud.com/document/api/1147/46692)
+  - [EnableInvoker](https://www.tencentcloud.com/document/api/1147/46691)
 * Read: [DescribeInvokers](https://www.tencentcloud.com/document/api/1147/46693)
-* Update: [DisableInvoker](https://www.tencentcloud.com/document/api/1147/46692)
-* Update: [EnableInvoker](https://www.tencentcloud.com/document/api/1147/46691)
+* Update:
+  - [DisableInvoker](https://www.tencentcloud.com/document/api/1147/46692)
+  - [EnableInvoker](https://www.tencentcloud.com/document/api/1147/46691)
 
 ## Import
 

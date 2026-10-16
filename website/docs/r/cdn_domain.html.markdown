@@ -719,18 +719,22 @@ The `server_certificate_config` object of `https_config` exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddCdnDomain](https://www.tencentcloud.com/document/api/228/34015)
-* Create: [DescribeDomainsConfig](https://www.tencentcloud.com/document/api/228/34019)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeDomainsConfig](https://www.tencentcloud.com/document/api/228/34019)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [DescribeDomainsConfig](https://www.tencentcloud.com/document/api/228/34019)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [UpdateDomainConfig](https://www.tencentcloud.com/document/api/228/34018)
-* Delete: [DeleteCdnDomain](https://www.tencentcloud.com/document/api/228/34014)
-* Delete: [DescribeDomainsConfig](https://www.tencentcloud.com/document/api/228/34019)
-* Delete: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Delete: [StopCdnDomain](https://www.tencentcloud.com/document/api/228/34012)
+* Create:
+  - [AddCdnDomain](https://www.tencentcloud.com/document/api/228/34015)
+  - [DescribeDomainsConfig](https://www.tencentcloud.com/document/api/228/34019)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeDomainsConfig](https://www.tencentcloud.com/document/api/228/34019)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [DescribeDomainsConfig](https://www.tencentcloud.com/document/api/228/34019)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [UpdateDomainConfig](https://www.tencentcloud.com/document/api/228/34018)
+* Delete:
+  - [DeleteCdnDomain](https://www.tencentcloud.com/document/api/228/34014)
+  - [DescribeDomainsConfig](https://www.tencentcloud.com/document/api/228/34019)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [StopCdnDomain](https://www.tencentcloud.com/document/api/228/34012)
 
 ## Import
 

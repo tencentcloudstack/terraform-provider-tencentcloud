@@ -38,11 +38,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyAccessWhiteListAutoStatus](https://www.tencentcloud.com/search/?wd=ModifyAccessWhiteListAutoStatus&type=document&lang=en)
-* Create: [ModifyAccessWhiteListStatus](https://www.tencentcloud.com/search/?wd=ModifyAccessWhiteListStatus&type=document&lang=en)
+* Create:
+  - [ModifyAccessWhiteListAutoStatus](https://www.tencentcloud.com/search/?wd=ModifyAccessWhiteListAutoStatus&type=document&lang=en)
+  - [ModifyAccessWhiteListStatus](https://www.tencentcloud.com/search/?wd=ModifyAccessWhiteListStatus&type=document&lang=en)
 * Read: [DescribeAccessWhiteListRules](https://www.tencentcloud.com/search/?wd=DescribeAccessWhiteListRules&type=document&lang=en)
-* Update: [ModifyAccessWhiteListAutoStatus](https://www.tencentcloud.com/search/?wd=ModifyAccessWhiteListAutoStatus&type=document&lang=en)
-* Update: [ModifyAccessWhiteListStatus](https://www.tencentcloud.com/search/?wd=ModifyAccessWhiteListStatus&type=document&lang=en)
+* Update:
+  - [ModifyAccessWhiteListAutoStatus](https://www.tencentcloud.com/search/?wd=ModifyAccessWhiteListAutoStatus&type=document&lang=en)
+  - [ModifyAccessWhiteListStatus](https://www.tencentcloud.com/search/?wd=ModifyAccessWhiteListStatus&type=document&lang=en)
 
 ## Import
 

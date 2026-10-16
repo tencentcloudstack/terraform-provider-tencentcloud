@@ -72,11 +72,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRemoteWriteTask](https://www.tencentcloud.com/document/api/614/81463)
-* Create: [DescribeRemoteWriteTasks](https://www.tencentcloud.com/document/api/614/81461)
+* Create:
+  - [CreateRemoteWriteTask](https://www.tencentcloud.com/document/api/614/81463)
+  - [DescribeRemoteWriteTasks](https://www.tencentcloud.com/document/api/614/81461)
 * Read: [DescribeRemoteWriteTasks](https://www.tencentcloud.com/document/api/614/81461)
-* Update: [DescribeRemoteWriteTasks](https://www.tencentcloud.com/document/api/614/81461)
-* Update: [ModifyRemoteWriteTask](https://www.tencentcloud.com/document/api/614/81460)
+* Update:
+  - [DescribeRemoteWriteTasks](https://www.tencentcloud.com/document/api/614/81461)
+  - [ModifyRemoteWriteTask](https://www.tencentcloud.com/document/api/614/81460)
 * Delete: [DeleteRemoteWriteTask](https://www.tencentcloud.com/document/api/614/81462)
 
 ## Import

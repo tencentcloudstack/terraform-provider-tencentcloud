@@ -203,9 +203,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribePrometheusConfig](https://www.tencentcloud.com/document/api/248/53332)
-* Create: [ModifyPrometheusConfig](https://www.tencentcloud.com/document/api/248/53761)
+* Create:
+  - [DescribePrometheusConfig](https://www.tencentcloud.com/document/api/248/53332)
+  - [ModifyPrometheusConfig](https://www.tencentcloud.com/document/api/248/53761)
 * Read: [DescribePrometheusConfig](https://www.tencentcloud.com/document/api/248/53332)
-* Update: [DescribePrometheusConfig](https://www.tencentcloud.com/document/api/248/53332)
-* Update: [ModifyPrometheusConfig](https://www.tencentcloud.com/document/api/248/53761)
+* Update:
+  - [DescribePrometheusConfig](https://www.tencentcloud.com/document/api/248/53332)
+  - [ModifyPrometheusConfig](https://www.tencentcloud.com/document/api/248/53761)
 

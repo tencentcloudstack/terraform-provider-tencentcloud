@@ -110,15 +110,18 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateReadOnlyGroup](https://www.tencentcloud.com/document/api/409/39727)
-* Create: [DescribeReadOnlyGroups](https://www.tencentcloud.com/document/api/409/39725)
-* Read: [DescribeDBInstanceSecurityGroups](https://www.tencentcloud.com/document/api/409/52648)
-* Read: [DescribeReadOnlyGroups](https://www.tencentcloud.com/document/api/409/39725)
-* Update: [CreateReadOnlyGroupNetworkAccess](https://www.tencentcloud.com/document/api/409/45950)
-* Update: [DeleteReadOnlyGroupNetworkAccess](https://www.tencentcloud.com/document/api/409/45948)
-* Update: [DescribeReadOnlyGroups](https://www.tencentcloud.com/document/api/409/39725)
-* Update: [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/document/api/409/52647)
-* Update: [ModifyReadOnlyGroupConfig](https://www.tencentcloud.com/document/api/409/39723)
+* Create:
+  - [CreateReadOnlyGroup](https://www.tencentcloud.com/document/api/409/39727)
+  - [DescribeReadOnlyGroups](https://www.tencentcloud.com/document/api/409/39725)
+* Read:
+  - [DescribeDBInstanceSecurityGroups](https://www.tencentcloud.com/document/api/409/52648)
+  - [DescribeReadOnlyGroups](https://www.tencentcloud.com/document/api/409/39725)
+* Update:
+  - [CreateReadOnlyGroupNetworkAccess](https://www.tencentcloud.com/document/api/409/45950)
+  - [DeleteReadOnlyGroupNetworkAccess](https://www.tencentcloud.com/document/api/409/45948)
+  - [DescribeReadOnlyGroups](https://www.tencentcloud.com/document/api/409/39725)
+  - [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/document/api/409/52647)
+  - [ModifyReadOnlyGroupConfig](https://www.tencentcloud.com/document/api/409/39723)
 * Delete: [DeleteReadOnlyGroup](https://www.tencentcloud.com/document/api/409/39726)
 
 ## Import

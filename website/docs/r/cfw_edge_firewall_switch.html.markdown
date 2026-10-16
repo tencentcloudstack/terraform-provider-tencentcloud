@@ -58,9 +58,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFwEdgeIps](https://www.tencentcloud.com/search/?wd=DescribeFwEdgeIps&type=document&lang=en)
-* Create: [ModifyEdgeIpSwitch](https://www.tencentcloud.com/search/?wd=ModifyEdgeIpSwitch&type=document&lang=en)
+* Create:
+  - [DescribeFwEdgeIps](https://www.tencentcloud.com/search/?wd=DescribeFwEdgeIps&type=document&lang=en)
+  - [ModifyEdgeIpSwitch](https://www.tencentcloud.com/search/?wd=ModifyEdgeIpSwitch&type=document&lang=en)
 * Read: [DescribeFwEdgeIps](https://www.tencentcloud.com/search/?wd=DescribeFwEdgeIps&type=document&lang=en)
-* Update: [DescribeFwEdgeIps](https://www.tencentcloud.com/search/?wd=DescribeFwEdgeIps&type=document&lang=en)
-* Update: [ModifyEdgeIpSwitch](https://www.tencentcloud.com/search/?wd=ModifyEdgeIpSwitch&type=document&lang=en)
+* Update:
+  - [DescribeFwEdgeIps](https://www.tencentcloud.com/search/?wd=DescribeFwEdgeIps&type=document&lang=en)
+  - [ModifyEdgeIpSwitch](https://www.tencentcloud.com/search/?wd=ModifyEdgeIpSwitch&type=document&lang=en)
 

@@ -84,12 +84,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [GenerateDealsAndPayNew](https://www.tencentcloud.com/document/api/627/64577)
-* Create: [ModifyInstanceQpsLimit](https://www.tencentcloud.com/document/api/627/64762)
-* Create: [SwitchElasticMode](https://www.tencentcloud.com/document/api/627/64756)
+* Create:
+  - [GenerateDealsAndPayNew](https://www.tencentcloud.com/document/api/627/64577)
+  - [ModifyInstanceQpsLimit](https://www.tencentcloud.com/document/api/627/64762)
+  - [SwitchElasticMode](https://www.tencentcloud.com/document/api/627/64756)
 * Read: [DescribeInstances](https://www.tencentcloud.com/document/api/627/64766)
-* Update: [ModifyInstanceName](https://www.tencentcloud.com/document/api/627/64763)
-* Update: [ModifyInstanceQpsLimit](https://www.tencentcloud.com/document/api/627/64762)
-* Update: [ModifyInstanceRenewFlag](https://www.tencentcloud.com/document/api/627/64761)
-* Update: [SwitchElasticMode](https://www.tencentcloud.com/document/api/627/64756)
+* Update:
+  - [ModifyInstanceName](https://www.tencentcloud.com/document/api/627/64763)
+  - [ModifyInstanceQpsLimit](https://www.tencentcloud.com/document/api/627/64762)
+  - [ModifyInstanceRenewFlag](https://www.tencentcloud.com/document/api/627/64761)
+  - [SwitchElasticMode](https://www.tencentcloud.com/document/api/627/64756)
 

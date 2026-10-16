@@ -54,17 +54,21 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNetworkAcl](https://www.tencentcloud.com/document/api/215/35622)
-* Create: [ModifyNetworkAclEntries](https://www.tencentcloud.com/document/api/215/35617)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeNetworkAcls](https://www.tencentcloud.com/document/api/215/35620)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [ModifyNetworkAclAttribute](https://www.tencentcloud.com/document/api/215/35618)
-* Update: [ModifyNetworkAclEntries](https://www.tencentcloud.com/document/api/215/35617)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Delete: [DeleteNetworkAcl](https://www.tencentcloud.com/document/api/215/35621)
-* Delete: [DescribeNetworkAcls](https://www.tencentcloud.com/document/api/215/35620)
-* Delete: [DisassociateNetworkAclSubnets](https://www.tencentcloud.com/document/api/215/35619)
+* Create:
+  - [CreateNetworkAcl](https://www.tencentcloud.com/document/api/215/35622)
+  - [ModifyNetworkAclEntries](https://www.tencentcloud.com/document/api/215/35617)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeNetworkAcls](https://www.tencentcloud.com/document/api/215/35620)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [ModifyNetworkAclAttribute](https://www.tencentcloud.com/document/api/215/35618)
+  - [ModifyNetworkAclEntries](https://www.tencentcloud.com/document/api/215/35617)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete:
+  - [DeleteNetworkAcl](https://www.tencentcloud.com/document/api/215/35621)
+  - [DescribeNetworkAcls](https://www.tencentcloud.com/document/api/215/35620)
+  - [DisassociateNetworkAclSubnets](https://www.tencentcloud.com/document/api/215/35619)
 
 ## Import
 

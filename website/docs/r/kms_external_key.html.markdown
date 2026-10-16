@@ -98,22 +98,26 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ArchiveKey](https://www.tencentcloud.com/document/api/1030/38198)
-* Create: [CreateKey](https://www.tencentcloud.com/document/api/1030/32199)
-* Create: [DescribeKey](https://www.tencentcloud.com/document/api/1030/32197)
-* Create: [DisableKey](https://www.tencentcloud.com/document/api/1030/32195)
-* Create: [GetParametersForImport](https://www.tencentcloud.com/document/api/1030/33536)
-* Create: [ImportKeyMaterial](https://www.tencentcloud.com/document/api/1030/33535)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeKey](https://www.tencentcloud.com/document/api/1030/32197)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Update: [DescribeKey](https://www.tencentcloud.com/document/api/1030/32197)
-* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Update: [UpdateAlias](https://www.tencentcloud.com/document/api/1030/32182)
-* Update: [UpdateKeyDescription](https://www.tencentcloud.com/document/api/1030/32181)
-* Delete: [DescribeKey](https://www.tencentcloud.com/document/api/1030/32197)
-* Delete: [DisableKey](https://www.tencentcloud.com/document/api/1030/32195)
-* Delete: [ScheduleKeyDeletion](https://www.tencentcloud.com/document/api/1030/33534)
+* Create:
+  - [ArchiveKey](https://www.tencentcloud.com/document/api/1030/38198)
+  - [CreateKey](https://www.tencentcloud.com/document/api/1030/32199)
+  - [DescribeKey](https://www.tencentcloud.com/document/api/1030/32197)
+  - [DisableKey](https://www.tencentcloud.com/document/api/1030/32195)
+  - [GetParametersForImport](https://www.tencentcloud.com/document/api/1030/33536)
+  - [ImportKeyMaterial](https://www.tencentcloud.com/document/api/1030/33535)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeKey](https://www.tencentcloud.com/document/api/1030/32197)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [DescribeKey](https://www.tencentcloud.com/document/api/1030/32197)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [UpdateAlias](https://www.tencentcloud.com/document/api/1030/32182)
+  - [UpdateKeyDescription](https://www.tencentcloud.com/document/api/1030/32181)
+* Delete:
+  - [DescribeKey](https://www.tencentcloud.com/document/api/1030/32197)
+  - [DisableKey](https://www.tencentcloud.com/document/api/1030/32195)
+  - [ScheduleKeyDeletion](https://www.tencentcloud.com/document/api/1030/33534)
 
 ## Import
 

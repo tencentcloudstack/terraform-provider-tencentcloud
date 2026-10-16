@@ -50,13 +50,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
-* Create: [RestoreInstance](https://www.tencentcloud.com/document/api/238/32096)
+* Create:
+  - [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+  - [RestoreInstance](https://www.tencentcloud.com/document/api/238/32096)
 * Read: [DescribeDBs](https://www.tencentcloud.com/document/api/238/32114)
-* Update: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
-* Update: [RestoreInstance](https://www.tencentcloud.com/document/api/238/32096)
-* Delete: [DeleteDB](https://www.tencentcloud.com/document/api/238/32117)
-* Delete: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+* Update:
+  - [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+  - [RestoreInstance](https://www.tencentcloud.com/document/api/238/32096)
+* Delete:
+  - [DeleteDB](https://www.tencentcloud.com/document/api/238/32117)
+  - [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
 
 ## Import
 

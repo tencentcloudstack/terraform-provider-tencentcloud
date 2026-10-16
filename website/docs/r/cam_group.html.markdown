@@ -38,8 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGroup](https://www.tencentcloud.com/document/api/598/32263)
-* Create: [GetGroup](https://www.tencentcloud.com/document/api/598/32260)
+* Create:
+  - [CreateGroup](https://www.tencentcloud.com/document/api/598/32263)
+  - [GetGroup](https://www.tencentcloud.com/document/api/598/32260)
 * Read: [GetGroup](https://www.tencentcloud.com/document/api/598/32260)
 * Update: [UpdateGroup](https://www.tencentcloud.com/document/api/598/32253)
 * Delete: [DeleteGroup](https://www.tencentcloud.com/document/api/598/32262)

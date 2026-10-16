@@ -58,13 +58,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CloseConfigRecorder](https://www.tencentcloud.com/search/?wd=CloseConfigRecorder&type=document&lang=en)
-* Create: [OpenConfigRecorder](https://www.tencentcloud.com/search/?wd=OpenConfigRecorder&type=document&lang=en)
-* Create: [UpdateConfigRecorder](https://www.tencentcloud.com/search/?wd=UpdateConfigRecorder&type=document&lang=en)
+* Create:
+  - [CloseConfigRecorder](https://www.tencentcloud.com/search/?wd=CloseConfigRecorder&type=document&lang=en)
+  - [OpenConfigRecorder](https://www.tencentcloud.com/search/?wd=OpenConfigRecorder&type=document&lang=en)
+  - [UpdateConfigRecorder](https://www.tencentcloud.com/search/?wd=UpdateConfigRecorder&type=document&lang=en)
 * Read: [DescribeConfigRecorder](https://www.tencentcloud.com/search/?wd=DescribeConfigRecorder&type=document&lang=en)
-* Update: [CloseConfigRecorder](https://www.tencentcloud.com/search/?wd=CloseConfigRecorder&type=document&lang=en)
-* Update: [OpenConfigRecorder](https://www.tencentcloud.com/search/?wd=OpenConfigRecorder&type=document&lang=en)
-* Update: [UpdateConfigRecorder](https://www.tencentcloud.com/search/?wd=UpdateConfigRecorder&type=document&lang=en)
+* Update:
+  - [CloseConfigRecorder](https://www.tencentcloud.com/search/?wd=CloseConfigRecorder&type=document&lang=en)
+  - [OpenConfigRecorder](https://www.tencentcloud.com/search/?wd=OpenConfigRecorder&type=document&lang=en)
+  - [UpdateConfigRecorder](https://www.tencentcloud.com/search/?wd=UpdateConfigRecorder&type=document&lang=en)
 
 ## Import
 

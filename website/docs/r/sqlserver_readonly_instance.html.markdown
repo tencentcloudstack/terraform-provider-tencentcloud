@@ -114,17 +114,20 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateReadOnlyDBInstances](https://www.tencentcloud.com/document/api/238/66348)
-* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
-* Create: [DescribeOrders](https://www.tencentcloud.com/document/api/238/32134)
-* Create: [ModifyDBInstanceName](https://www.tencentcloud.com/document/api/238/32104)
-* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
-* Read: [DescribeReadOnlyGroupByReadOnlyInstance](https://www.tencentcloud.com/document/api/238/72740)
-* Read: [DescribeReadOnlyGroupList](https://www.tencentcloud.com/document/api/238/72738)
-* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
-* Delete: [DeleteDBInstance](https://www.tencentcloud.com/document/api/238/72759)
-* Delete: [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
-* Delete: [TerminateDBInstance](https://www.tencentcloud.com/document/api/238/34685)
+* Create:
+  - [CreateReadOnlyDBInstances](https://www.tencentcloud.com/document/api/238/66348)
+  - [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+  - [DescribeOrders](https://www.tencentcloud.com/document/api/238/32134)
+  - [ModifyDBInstanceName](https://www.tencentcloud.com/document/api/238/32104)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeReadOnlyGroupByReadOnlyInstance](https://www.tencentcloud.com/document/api/238/72740)
+  - [DescribeReadOnlyGroupList](https://www.tencentcloud.com/document/api/238/72738)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Delete:
+  - [DeleteDBInstance](https://www.tencentcloud.com/document/api/238/72759)
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
+  - [TerminateDBInstance](https://www.tencentcloud.com/document/api/238/34685)
 
 ## Import
 

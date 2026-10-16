@@ -41,8 +41,9 @@ This resource interacts with the following TencentCloud APIs:
 * Create: [CreateServiceTemplate](https://www.tencentcloud.com/document/api/215/16710)
 * Read: [DescribeServiceTemplates](https://www.tencentcloud.com/document/api/215/16719)
 * Update: [ModifyServiceTemplateAttribute](https://www.tencentcloud.com/document/api/215/16722)
-* Delete: [DeleteServiceTemplate](https://www.tencentcloud.com/document/api/215/16714)
-* Delete: [DescribeServiceTemplates](https://www.tencentcloud.com/document/api/215/16719)
+* Delete:
+  - [DeleteServiceTemplate](https://www.tencentcloud.com/document/api/215/16714)
+  - [DescribeServiceTemplates](https://www.tencentcloud.com/document/api/215/16719)
 
 ## Import
 

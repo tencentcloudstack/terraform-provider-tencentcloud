@@ -83,14 +83,17 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccelerateAreas](https://www.tencentcloud.com/document/api/1299/83839)
-* Create: [DescribeAccelerateAreas](https://www.tencentcloud.com/document/api/1299/83821)
-* Create: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+* Create:
+  - [CreateAccelerateAreas](https://www.tencentcloud.com/document/api/1299/83839)
+  - [DescribeAccelerateAreas](https://www.tencentcloud.com/document/api/1299/83821)
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
 * Read: [DescribeAccelerateAreas](https://www.tencentcloud.com/document/api/1299/83821)
-* Update: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
-* Update: [ModifyAccelerateAreas](https://www.tencentcloud.com/document/api/1299/83745)
-* Delete: [DeleteAccelerateAreas](https://www.tencentcloud.com/document/api/1299/83830)
-* Delete: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+* Update:
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+  - [ModifyAccelerateAreas](https://www.tencentcloud.com/document/api/1299/83745)
+* Delete:
+  - [DeleteAccelerateAreas](https://www.tencentcloud.com/document/api/1299/83830)
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
 
 ## Import
 

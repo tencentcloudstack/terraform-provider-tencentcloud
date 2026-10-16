@@ -87,8 +87,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateParameterTemplate](https://www.tencentcloud.com/document/api/409/52655)
-* Create: [ModifyParameterTemplate](https://www.tencentcloud.com/document/api/409/52650)
+* Create:
+  - [CreateParameterTemplate](https://www.tencentcloud.com/document/api/409/52655)
+  - [ModifyParameterTemplate](https://www.tencentcloud.com/document/api/409/52650)
 * Read: [DescribeParameterTemplateAttributes](https://www.tencentcloud.com/document/api/409/52652)
 * Update: [ModifyParameterTemplate](https://www.tencentcloud.com/document/api/409/52650)
 * Delete: [DeleteParameterTemplate](https://www.tencentcloud.com/document/api/409/52654)

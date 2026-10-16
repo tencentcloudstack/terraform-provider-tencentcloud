@@ -59,9 +59,10 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateAcl](https://www.tencentcloud.com/document/api/597/35368)
-* Read: [DescribeACL](https://www.tencentcloud.com/document/api/597/35364)
-* Read: [DescribeInstanceAttributes](https://www.tencentcloud.com/document/api/597/35358)
-* Read: [DescribeTopicAttributes](https://www.tencentcloud.com/document/api/597/35342)
+* Read:
+  - [DescribeACL](https://www.tencentcloud.com/document/api/597/35364)
+  - [DescribeInstanceAttributes](https://www.tencentcloud.com/document/api/597/35358)
+  - [DescribeTopicAttributes](https://www.tencentcloud.com/document/api/597/35342)
 * Delete: [DeleteAcl](https://www.tencentcloud.com/document/api/597/35366)
 
 ## Import
