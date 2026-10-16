@@ -95,7 +95,33 @@ The `resource_tags` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `api_version` - API version.
+* `created_at` - Creation time.
+* `engine_name` - Engine name.
+* `engine_version` - Engine version.
+* `expired_at` - Expiration time.
+* `extend` - Extended information in JSON format.
 * `instance_id` - Instance ID.
+* `is_no_expired` - Whether the instance never expires.
+* `isolate_at` - Isolation time.
+* `networks` - Network information.
+  * `expire_time` - Old IP expiration time.
+  * `is_ssl` - Whether it is an SSL network.
+  * `port` - Internal port.
+  * `preserve_duration` - Old IP preservation duration in days.
+  * `subnet_id` - Subnet ID.
+  * `vip` - Internal IP.
+  * `vpc_id` - VPC ID.
+* `nodes` - Instance node list.
+  * `name` - Pod name.
+  * `status` - Pod status.
+* `product` - Product.
+* `region` - Region.
+* `shard_num` - Shard number.
+* `status` - Instance status.
+* `task_status` - Task status. 0: no task, 1: pending, 2-11: various operations in progress.
+* `wan_address` - Public network address.
+* `zone` - Availability zone.
 
 ## Timeouts
 

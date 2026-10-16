@@ -152,6 +152,144 @@ func ResourceTencentCloudVdbInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Instance ID.",
 			},
+			"status": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Instance status.",
+			},
+			"region": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Region.",
+			},
+			"zone": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Availability zone.",
+			},
+			"product": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Product.",
+			},
+			"shard_num": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Shard number.",
+			},
+			"api_version": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "API version.",
+			},
+			"extend": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Extended information in JSON format.",
+			},
+			"expired_at": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Expiration time.",
+			},
+			"is_no_expired": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Whether the instance never expires.",
+			},
+			"wan_address": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Public network address.",
+			},
+			"isolate_at": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Isolation time.",
+			},
+			"task_status": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Task status. 0: no task, 1: pending, 2-11: various operations in progress.",
+			},
+			"networks": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Network information.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"vpc_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "VPC ID.",
+						},
+						"subnet_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Subnet ID.",
+						},
+						"vip": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Internal IP.",
+						},
+						"port": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Internal port.",
+						},
+						"preserve_duration": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Old IP preservation duration in days.",
+						},
+						"expire_time": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Old IP expiration time.",
+						},
+						"is_ssl": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Whether it is an SSL network.",
+						},
+					},
+				},
+			},
+			"nodes": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Instance node list.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Pod name.",
+						},
+						"status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Pod status.",
+						},
+					},
+				},
+			},
+			"created_at": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Creation time.",
+			},
+			"engine_name": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Engine name.",
+			},
+			"engine_version": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Engine version.",
+			},
 		},
 	}
 }
@@ -317,6 +455,10 @@ func resourceTencentCloudVdbInstanceRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("instance_name", instance.Name)
 	}
 
+	if instance.Status != nil {
+		_ = d.Set("status", instance.Status)
+	}
+
 	if instance.PayMode != nil {
 		_ = d.Set("pay_mode", instance.PayMode)
 	}
@@ -349,12 +491,98 @@ func resourceTencentCloudVdbInstanceRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("auto_renew", instance.AutoRenew)
 	}
 
-	if len(instance.Networks) > 0 {
-		if instance.Networks[0].VpcId != nil {
-			_ = d.Set("vpc_id", instance.Networks[0].VpcId)
+	if instance.CreatedAt != nil {
+		_ = d.Set("created_at", instance.CreatedAt)
+	}
+
+	if instance.EngineName != nil {
+		_ = d.Set("engine_name", instance.EngineName)
+	}
+
+	if instance.EngineVersion != nil {
+		_ = d.Set("engine_version", instance.EngineVersion)
+	}
+
+	if instance.Region != nil {
+		_ = d.Set("region", instance.Region)
+	}
+
+	if instance.Zone != nil {
+		_ = d.Set("zone", instance.Zone)
+	}
+
+	if instance.Product != nil {
+		_ = d.Set("product", instance.Product)
+	}
+
+	if instance.ShardNum != nil {
+		_ = d.Set("shard_num", instance.ShardNum)
+	}
+
+	if instance.ApiVersion != nil {
+		_ = d.Set("api_version", instance.ApiVersion)
+	}
+
+	if instance.Extend != nil {
+		_ = d.Set("extend", instance.Extend)
+	}
+
+	if instance.ExpiredAt != nil {
+		_ = d.Set("expired_at", instance.ExpiredAt)
+	}
+
+	if instance.IsNoExpired != nil {
+		_ = d.Set("is_no_expired", instance.IsNoExpired)
+	}
+
+	if instance.WanAddress != nil {
+		_ = d.Set("wan_address", instance.WanAddress)
+	}
+
+	if instance.IsolateAt != nil {
+		_ = d.Set("isolate_at", instance.IsolateAt)
+	}
+
+	if instance.TaskStatus != nil {
+		_ = d.Set("task_status", instance.TaskStatus)
+	}
+
+	if instance.Networks != nil {
+		networksList := make([]map[string]interface{}, 0, len(instance.Networks))
+		for _, n := range instance.Networks {
+			networkMap := map[string]interface{}{}
+			if n.VpcId != nil {
+				networkMap["vpc_id"] = n.VpcId
+			}
+			if n.SubnetId != nil {
+				networkMap["subnet_id"] = n.SubnetId
+			}
+			if n.Vip != nil {
+				networkMap["vip"] = n.Vip
+			}
+			if n.Port != nil {
+				networkMap["port"] = n.Port
+			}
+			if n.PreserveDuration != nil {
+				networkMap["preserve_duration"] = n.PreserveDuration
+			}
+			if n.ExpireTime != nil {
+				networkMap["expire_time"] = n.ExpireTime
+			}
+			if n.IsSSL != nil {
+				networkMap["is_ssl"] = n.IsSSL
+			}
+			networksList = append(networksList, networkMap)
 		}
-		if instance.Networks[0].SubnetId != nil {
-			_ = d.Set("subnet_id", instance.Networks[0].SubnetId)
+		_ = d.Set("networks", networksList)
+
+		if len(instance.Networks) > 0 {
+			if instance.Networks[0].VpcId != nil {
+				_ = d.Set("vpc_id", instance.Networks[0].VpcId)
+			}
+			if instance.Networks[0].SubnetId != nil {
+				_ = d.Set("subnet_id", instance.Networks[0].SubnetId)
+			}
 		}
 	}
 
@@ -379,6 +607,25 @@ func resourceTencentCloudVdbInstanceRead(d *schema.ResourceData, meta interface{
 
 	if instance.ReplicaNum != nil {
 		_ = d.Set("worker_node_num", instance.ReplicaNum)
+	}
+
+	// Read instance nodes
+	nodes, err := service.DescribeVdbInstanceNodesById(ctx, instanceId)
+	if err != nil {
+		log.Printf("[WARN]%s read vdb instance nodes failed, reason:%+v", logId, err)
+	} else if nodes != nil {
+		nodesList := make([]map[string]interface{}, 0, len(nodes))
+		for _, node := range nodes {
+			nodeMap := map[string]interface{}{}
+			if node.Name != nil {
+				nodeMap["name"] = node.Name
+			}
+			if node.Status != nil {
+				nodeMap["status"] = node.Status
+			}
+			nodesList = append(nodesList, nodeMap)
+		}
+		_ = d.Set("nodes", nodesList)
 	}
 
 	return nil
