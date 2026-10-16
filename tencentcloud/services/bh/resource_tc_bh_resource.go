@@ -125,7 +125,6 @@ func ResourceTencentCloudBhResource() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Description: "0 - Disable web access bastion host; 1 - Enable web access bastion host.",
 			},
 
@@ -133,7 +132,6 @@ func ResourceTencentCloudBhResource() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Description: "0 - Disable client access to the bastion host; 1 - Enable client access to the bastion host.",
 			},
 
@@ -772,6 +770,218 @@ func resourceTencentCloudBhResourceUpdate(d *schema.ResourceData, meta interface
 
 				if reqErr != nil {
 					log.Printf("[CRITAL]%s disable external access bh resource failed, reason:%+v", logId, reqErr)
+					return reqErr
+				}
+			}
+		}
+	}
+
+	if d.HasChange("web_access") {
+		if v, ok := d.GetOkExists("web_access"); ok {
+			if v.(int) == 1 {
+				request := bhv20230418.NewEnableWebAccessRequest()
+				request.ResourceId = helper.String(resourceId)
+				reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBhV20230418Client().EnableWebAccessWithContext(ctx, request)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+
+					return nil
+				})
+
+				if reqErr != nil {
+					log.Printf("[CRITAL]%s enable web access bh resource failed, reason:%+v", logId, reqErr)
+					return reqErr
+				}
+
+				// wait
+				waitReq := bhv20230418.NewDescribeResourcesRequest()
+				waitReq.ResourceIds = []*string{&resourceId}
+				reqErr = resource.Retry(tccommon.ReadRetryTimeout*7, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBhV20230418Client().DescribeResourcesWithContext(ctx, waitReq)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
+					}
+
+					if result == nil || result.Response == nil || result.Response.ResourceSet == nil || len(result.Response.ResourceSet) == 0 {
+						return resource.NonRetryableError(fmt.Errorf("Describe bh resource failed, Response is nil."))
+					}
+
+					webAccess := result.Response.ResourceSet[0].WebAccess
+					if webAccess == nil {
+						return resource.NonRetryableError(fmt.Errorf("WebAccess is nil."))
+					}
+
+					if *webAccess == 1 {
+						return nil
+					}
+
+					return resource.RetryableError(fmt.Errorf("Enable web access is still running...Web access is %d", *webAccess))
+				})
+
+				if reqErr != nil {
+					log.Printf("[CRITAL]%s enable web access bh resource failed, reason:%+v", logId, reqErr)
+					return reqErr
+				}
+			} else {
+				request := bhv20230418.NewDisableWebAccessRequest()
+				request.ResourceId = helper.String(resourceId)
+				reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBhV20230418Client().DisableWebAccessWithContext(ctx, request)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+
+					return nil
+				})
+
+				if reqErr != nil {
+					log.Printf("[CRITAL]%s disable web access bh resource failed, reason:%+v", logId, reqErr)
+					return reqErr
+				}
+
+				// wait
+				waitReq := bhv20230418.NewDescribeResourcesRequest()
+				waitReq.ResourceIds = []*string{&resourceId}
+				reqErr = resource.Retry(tccommon.ReadRetryTimeout*7, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBhV20230418Client().DescribeResourcesWithContext(ctx, waitReq)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
+					}
+
+					if result == nil || result.Response == nil || result.Response.ResourceSet == nil || len(result.Response.ResourceSet) == 0 {
+						return resource.NonRetryableError(fmt.Errorf("Describe bh resource failed, Response is nil."))
+					}
+
+					webAccess := result.Response.ResourceSet[0].WebAccess
+					if webAccess == nil {
+						return resource.NonRetryableError(fmt.Errorf("WebAccess is nil."))
+					}
+
+					if *webAccess == 0 {
+						return nil
+					}
+
+					return resource.RetryableError(fmt.Errorf("Disable web access is still running...Web access is %d", *webAccess))
+				})
+
+				if reqErr != nil {
+					log.Printf("[CRITAL]%s disable web access bh resource failed, reason:%+v", logId, reqErr)
+					return reqErr
+				}
+			}
+		}
+	}
+
+	if d.HasChange("client_access") {
+		if v, ok := d.GetOkExists("client_access"); ok {
+			if v.(int) == 1 {
+				request := bhv20230418.NewEnableClientTcpAccessRequest()
+				request.ResourceId = helper.String(resourceId)
+				reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBhV20230418Client().EnableClientTcpAccessWithContext(ctx, request)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+
+					return nil
+				})
+
+				if reqErr != nil {
+					log.Printf("[CRITAL]%s enable client access bh resource failed, reason:%+v", logId, reqErr)
+					return reqErr
+				}
+
+				// wait
+				waitReq := bhv20230418.NewDescribeResourcesRequest()
+				waitReq.ResourceIds = []*string{&resourceId}
+				reqErr = resource.Retry(tccommon.ReadRetryTimeout*7, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBhV20230418Client().DescribeResourcesWithContext(ctx, waitReq)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
+					}
+
+					if result == nil || result.Response == nil || result.Response.ResourceSet == nil || len(result.Response.ResourceSet) == 0 {
+						return resource.NonRetryableError(fmt.Errorf("Describe bh resource failed, Response is nil."))
+					}
+
+					clientAccess := result.Response.ResourceSet[0].ClientAccess
+					if clientAccess == nil {
+						return resource.NonRetryableError(fmt.Errorf("ClientAccess is nil."))
+					}
+
+					if *clientAccess == 1 {
+						return nil
+					}
+
+					return resource.RetryableError(fmt.Errorf("Enable client access is still running...Client access is %d", *clientAccess))
+				})
+
+				if reqErr != nil {
+					log.Printf("[CRITAL]%s enable client access bh resource failed, reason:%+v", logId, reqErr)
+					return reqErr
+				}
+			} else {
+				request := bhv20230418.NewDisableClientTcpAccessRequest()
+				request.ResourceId = helper.String(resourceId)
+				reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBhV20230418Client().DisableClientTcpAccessWithContext(ctx, request)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+
+					return nil
+				})
+
+				if reqErr != nil {
+					log.Printf("[CRITAL]%s disable client access bh resource failed, reason:%+v", logId, reqErr)
+					return reqErr
+				}
+
+				// wait
+				waitReq := bhv20230418.NewDescribeResourcesRequest()
+				waitReq.ResourceIds = []*string{&resourceId}
+				reqErr = resource.Retry(tccommon.ReadRetryTimeout*7, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBhV20230418Client().DescribeResourcesWithContext(ctx, waitReq)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
+					}
+
+					if result == nil || result.Response == nil || result.Response.ResourceSet == nil || len(result.Response.ResourceSet) == 0 {
+						return resource.NonRetryableError(fmt.Errorf("Describe bh resource failed, Response is nil."))
+					}
+
+					clientAccess := result.Response.ResourceSet[0].ClientAccess
+					if clientAccess == nil {
+						return resource.NonRetryableError(fmt.Errorf("ClientAccess is nil."))
+					}
+
+					if *clientAccess == 0 {
+						return nil
+					}
+
+					return resource.RetryableError(fmt.Errorf("Disable client access is still running...Client access is %d", *clientAccess))
+				})
+
+				if reqErr != nil {
+					log.Printf("[CRITAL]%s disable client access bh resource failed, reason:%+v", logId, reqErr)
 					return reqErr
 				}
 			}
