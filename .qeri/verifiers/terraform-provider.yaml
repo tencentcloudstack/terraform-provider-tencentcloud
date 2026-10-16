@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=https://mirrors.tencent.com/repository/generic/qeri/qeri-schema/stable/schema/verifier-schema.json
+# terraform-provider-tencentcloud 的 Qeri 验证器组合
+# 参考接入文档：apps/woa/qeri/docs/guide/onboard-terraform-provider-tencentcloud.md
+version: 1
+verifiers:
+  # Go 静态检查：覆盖 stages 并放宽 timeout（仓库大，首次冷启动安装 + 编译缓存耗时）
+  - name: qeri-builtin.golangci-lint
+    stages:
+      - post-generate
+      - pre-commit
+    timeout: '300s'
+    watch:
+      includeFiles: '**/*.go'
+      excludeFiles:
+        - '**/vendor/**'
+    suggestion: '根据 golangci-lint 输出的具体告警逐项修复（govet / staticcheck / errcheck）'
+
+  # 资源命名规范：轻量 grep 规则
+  # 本仓库资源实现文件位于 tencentcloud/services/<service>/resource_tc_*.go，
+  # 并以 "tencentcloud_<service>_<resource>" 形式注册到 provider（resource.tencentcloud_xxx）
+  - name: tencentcloud-resource-naming
+    description: '资源实现文件与注册名必须以 tencentcloud_ 前缀命名'
+    stages: pre-commit
+    timeout: '10s'
+    watch:
+      includeFiles: 'tencentcloud/services/**/resource_*.go'
+    runner:
+      outputFormat: grep
+      command:
+        # 注意：grep -L 的退出码语义是「存在不含模式的文件 → 1」，恰好对齐 lint 语义，
+        # 因此这里不加 `!` 取反（与 grep -q/-l 形式相反），违规文件名会被列出并上报
+        run: grep -Ln "tencentcloud_" {{ files }}
+    suggestion: 'Resource 命名须符合 tencentcloud_<service>_<resource> 规范'
