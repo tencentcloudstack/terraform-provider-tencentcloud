@@ -82,6 +82,7 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create:
+  - [DescribeAddon](https://www.tencentcloud.com/document/api/457/56953)
   - [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
   - [DescribeClusterVirtualNode](https://www.tencentcloud.com/document/api/457/53272)
 * Read:

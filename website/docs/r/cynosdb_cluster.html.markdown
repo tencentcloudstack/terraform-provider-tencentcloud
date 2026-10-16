@@ -335,6 +335,7 @@ This resource interacts with the following TencentCloud APIs:
   - [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
   - [DescribeInstanceDetail](https://www.tencentcloud.com/document/api/1098/40749)
   - [DescribeInstances](https://www.tencentcloud.com/document/api/1098/40747)
+  - [DescribeResourcesByDealName](https://www.tencentcloud.com/document/api/1098/40735)
   - [ModifyClusterName](https://www.tencentcloud.com/document/api/1098/46318)
   - [ModifyClusterParam](https://www.tencentcloud.com/document/api/1098/42961)
   - [ModifyClusterSlaveZone](https://www.tencentcloud.com/document/api/1098/50015)
@@ -349,6 +350,7 @@ This resource interacts with the following TencentCloud APIs:
   - [ResumeServerless](https://www.tencentcloud.com/document/api/1098/45566)
   - [SetRenewFlag](https://www.tencentcloud.com/document/api/1098/40740)
   - [SwitchClusterVpc](https://www.tencentcloud.com/document/api/1098/53647)
+  - [TransferStoragePrepayToPostpay](https://www.tencentcloud.com/document/api/1098/81950)
   - [UpgradeClusterVersion](https://www.tencentcloud.com/document/api/1098/55916)
   - [UpgradeInstance](https://www.tencentcloud.com/document/api/1098/40739)
 * Delete:

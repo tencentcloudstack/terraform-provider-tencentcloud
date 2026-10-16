@@ -100,10 +100,14 @@ This resource interacts with the following TencentCloud APIs:
 * Read: [DescribeResources](https://www.tencentcloud.com/search/?wd=DescribeResources&type=document&lang=en)
 * Update:
   - [DescribeResources](https://www.tencentcloud.com/search/?wd=DescribeResources&type=document&lang=en)
+  - [DisableClientTcpAccess](https://www.tencentcloud.com/search/?wd=DisableClientTcpAccess&type=document&lang=en)
   - [DisableExternalAccess](https://www.tencentcloud.com/search/?wd=DisableExternalAccess&type=document&lang=en)
   - [DisableIntranetAccess](https://www.tencentcloud.com/search/?wd=DisableIntranetAccess&type=document&lang=en)
+  - [DisableWebAccess](https://www.tencentcloud.com/search/?wd=DisableWebAccess&type=document&lang=en)
+  - [EnableClientTcpAccess](https://www.tencentcloud.com/search/?wd=EnableClientTcpAccess&type=document&lang=en)
   - [EnableExternalAccess](https://www.tencentcloud.com/search/?wd=EnableExternalAccess&type=document&lang=en)
   - [EnableIntranetAccess](https://www.tencentcloud.com/search/?wd=EnableIntranetAccess&type=document&lang=en)
+  - [EnableWebAccess](https://www.tencentcloud.com/search/?wd=EnableWebAccess&type=document&lang=en)
   - [ModifyResource](https://www.tencentcloud.com/search/?wd=ModifyResource&type=document&lang=en)
 
 ## Import
