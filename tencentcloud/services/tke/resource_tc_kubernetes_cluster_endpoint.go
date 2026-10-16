@@ -268,8 +268,15 @@ func resourceTencentCloudTkeClusterEndpointCreate(d *schema.ResourceData, meta i
 		return fmt.Errorf("`cluster_intranet_subnet_id` can only set when `cluster_intranet` is true")
 	}
 
-	if err := service.CheckOneOfClusterNodeReady(ctx, id, true); err != nil {
+	addonResp, err := service.DescribeKubernetesAddonById(ctx, id, "karpenter")
+	if err != nil {
 		return err
+	}
+
+	if addonResp == nil {
+		if err := service.CheckOneOfClusterNodeReady(ctx, id, true); err != nil {
+			return err
+		}
 	}
 
 	// Create Intranet(Private) Network
