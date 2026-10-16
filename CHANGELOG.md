@@ -1,3 +1,18 @@
+## 1.83.36(October 16, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_vdb_instance` ([#4562](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4562))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_bh_resource: support modifying web_access and client_access fields in-place without recreating the resource ([#4569](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4569))
+* resource/tencentcloud_dcdb_account: update document ([#4568](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4568))
+* resource/tencentcloud_kubernetes_cluster_endpoint: update create code logic- #4568 ([#4568](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4568))
+* resource/tencentcloud_ssm_secret: support `encrypt_type` parameter to declare secret encryption type (0 = KMS key encryption, 1 = soft key encryption) ([#4564](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4564))
+* resource/tencentcloud_dts_sync_job: change tags from list to set to fix unordered tags response ([#4559](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4559))
+* resource/tencentcloud_ssm_secret: treat `encrypt_type` as immutable and reject changes with an error instead of force-new to avoid accidental secret destruction ([#4564](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4564))
+
 ## 1.83.35(October 14, 2026)
 
 FEATURES:
