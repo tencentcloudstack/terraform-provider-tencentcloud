@@ -105,11 +105,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateMetricSubscribe](https://cloud.tencent.com/document/api/614/126723)
-* Create: [ModifyMetricSubscribe](https://cloud.tencent.com/document/api/614/126718)
-* Read: [DescribeMetricSubscribes](https://cloud.tencent.com/document/api/614/126719)
-* Update: [ModifyMetricSubscribe](https://cloud.tencent.com/document/api/614/126718)
-* Delete: [DeleteMetricSubscribe](https://cloud.tencent.com/document/api/614/126722)
+* Create: [CreateMetricSubscribe](https://www.tencentcloud.com/document/api/614/80562)
+* Create: [ModifyMetricSubscribe](https://www.tencentcloud.com/document/api/614/80554)
+* Read: [DescribeMetricSubscribes](https://www.tencentcloud.com/document/api/614/80556)
+* Update: [ModifyMetricSubscribe](https://www.tencentcloud.com/document/api/614/80554)
+* Delete: [DeleteMetricSubscribe](https://www.tencentcloud.com/document/api/614/80560)
 
 ## Import
 

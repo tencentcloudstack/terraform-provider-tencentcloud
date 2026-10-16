@@ -49,5 +49,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeProxyStatistics](https://cloud.tencent.com/document/api/608/37019)
+* Read: [DescribeProxyStatistics](https://www.tencentcloud.com/document/api/608/33052)
 

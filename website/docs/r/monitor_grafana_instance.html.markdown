@@ -73,17 +73,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGrafanaInstance](https://cloud.tencent.com/document/api/248/79219)
-* Create: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [EnableGrafanaInternet](https://cloud.tencent.com/document/api/248/79201)
-* Update: [ModifyGrafanaInstance](https://cloud.tencent.com/document/api/248/79197)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [CleanGrafanaInstance](https://cloud.tencent.com/document/api/248/79220)
-* Delete: [DeleteGrafanaInstance](https://cloud.tencent.com/document/api/248/79215)
-* Delete: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208)
+* Create: [CreateGrafanaInstance](https://www.tencentcloud.com/document/api/248/49770)
+* Create: [DescribeGrafanaInstances](https://www.tencentcloud.com/document/api/248/49759)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeGrafanaInstances](https://www.tencentcloud.com/document/api/248/49759)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [EnableGrafanaInternet](https://www.tencentcloud.com/document/api/248/49753)
+* Update: [ModifyGrafanaInstance](https://www.tencentcloud.com/document/api/248/49749)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [CleanGrafanaInstance](https://www.tencentcloud.com/document/api/248/49771)
+* Delete: [DeleteGrafanaInstance](https://www.tencentcloud.com/document/api/248/49766)
+* Delete: [DescribeGrafanaInstances](https://www.tencentcloud.com/document/api/248/49759)
 
 ## Import
 

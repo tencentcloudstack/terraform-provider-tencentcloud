@@ -71,10 +71,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeMesh](https://cloud.tencent.com/document/api/1261/63842)
-* Create: [LinkPrometheus](https://cloud.tencent.com/document/api/1261/82203)
-* Read: [DescribeMesh](https://cloud.tencent.com/document/api/1261/63842)
-* Delete: [UnlinkPrometheus](https://cloud.tencent.com/document/api/1261/82202)
+* Create: [DescribeMesh](https://www.tencentcloud.com/search/?wd=DescribeMesh&type=document&lang=en)
+* Create: [LinkPrometheus](https://www.tencentcloud.com/search/?wd=LinkPrometheus&type=document&lang=en)
+* Read: [DescribeMesh](https://www.tencentcloud.com/search/?wd=DescribeMesh&type=document&lang=en)
+* Delete: [UnlinkPrometheus](https://www.tencentcloud.com/search/?wd=UnlinkPrometheus&type=document&lang=en)
 
 ## Import
 

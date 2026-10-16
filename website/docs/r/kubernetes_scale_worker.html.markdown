@@ -262,13 +262,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateClusterInstances](https://cloud.tencent.com/document/api/457/36707)
-* Create: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863)
-* Create: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862)
-* Read: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862)
-* Update: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728)
-* Update: [ModifyInstancesChargeType](https://cloud.tencent.com/document/api/213/17964)
-* Delete: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862)
+* Create: [CreateClusterInstances](https://www.tencentcloud.com/document/api/457/33862)
+* Create: [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
+* Create: [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
+* Read: [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
+* Update: [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+* Update: [ModifyInstancesChargeType](https://www.tencentcloud.com/document/api/213/73503)
+* Delete: [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
 
 ## Import
 

@@ -106,13 +106,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindRuleRealServers](https://cloud.tencent.com/document/api/608/36992)
-* Create: [CreateRule](https://cloud.tencent.com/document/api/608/36990)
-* Read: [DescribeRulesByRuleIds](https://cloud.tencent.com/document/api/608/39750)
-* Update: [BindRuleRealServers](https://cloud.tencent.com/document/api/608/36992)
-* Update: [ModifyRuleAttribute](https://cloud.tencent.com/document/api/608/36983)
-* Delete: [DeleteRule](https://cloud.tencent.com/document/api/608/36988)
-* Delete: [DescribeRules](https://cloud.tencent.com/document/api/608/36986)
+* Create: [BindRuleRealServers](https://www.tencentcloud.com/document/api/608/33047)
+* Create: [CreateRule](https://www.tencentcloud.com/document/api/608/33045)
+* Read: [DescribeRulesByRuleIds](https://www.tencentcloud.com/document/api/608/33134)
+* Update: [BindRuleRealServers](https://www.tencentcloud.com/document/api/608/33047)
+* Update: [ModifyRuleAttribute](https://www.tencentcloud.com/document/api/608/33038)
+* Delete: [DeleteRule](https://www.tencentcloud.com/document/api/608/33043)
+* Delete: [DescribeRules](https://www.tencentcloud.com/document/api/608/33041)
 
 ## Import
 

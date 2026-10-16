@@ -68,5 +68,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeLBListeners](https://cloud.tencent.com/document/api/214/61478)
+* Read: [DescribeLBListeners](https://www.tencentcloud.com/document/api/214/43272)
 

@@ -134,12 +134,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRabbitMQVipInstance](https://cloud.tencent.com/document/api/1179/88134)
-* Create: [DescribeRabbitMQVipInstances](https://cloud.tencent.com/document/api/1179/82205)
-* Read: [DescribeRabbitMQVipInstance](https://cloud.tencent.com/document/api/1179/88648)
-* Read: [DescribeRabbitMQVipInstances](https://cloud.tencent.com/document/api/1179/82205)
-* Update: [ModifyRabbitMQVipInstance](https://cloud.tencent.com/document/api/1179/88450)
-* Delete: [DeleteRabbitMQVipInstance](https://cloud.tencent.com/document/api/1179/94833)
+* Create: [CreateRabbitMQVipInstance](https://www.tencentcloud.com/search/?wd=CreateRabbitMQVipInstance&type=document&lang=en)
+* Create: [DescribeRabbitMQVipInstances](https://www.tencentcloud.com/search/?wd=DescribeRabbitMQVipInstances&type=document&lang=en)
+* Read: [DescribeRabbitMQVipInstance](https://www.tencentcloud.com/search/?wd=DescribeRabbitMQVipInstance&type=document&lang=en)
+* Read: [DescribeRabbitMQVipInstances](https://www.tencentcloud.com/search/?wd=DescribeRabbitMQVipInstances&type=document&lang=en)
+* Update: [ModifyRabbitMQVipInstance](https://www.tencentcloud.com/search/?wd=ModifyRabbitMQVipInstance&type=document&lang=en)
+* Delete: [DeleteRabbitMQVipInstance](https://www.tencentcloud.com/search/?wd=DeleteRabbitMQVipInstance&type=document&lang=en)
 
 ## Import
 

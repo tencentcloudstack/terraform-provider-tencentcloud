@@ -136,20 +136,20 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePublishSubscribe](https://cloud.tencent.com/document/api/238/46285)
-* Create: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969)
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
-* Create: [DescribePublishSubscribe](https://cloud.tencent.com/document/api/238/46282)
-* Read: [DescribePublishSubscribe](https://cloud.tencent.com/document/api/238/46282)
-* Update: [DeleteDB](https://cloud.tencent.com/document/api/238/19971)
-* Update: [DeletePublishSubscribe](https://cloud.tencent.com/document/api/238/46284)
-* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
-* Update: [DescribePublishSubscribe](https://cloud.tencent.com/document/api/238/46282)
-* Update: [ModifyPublishSubscribeName](https://cloud.tencent.com/document/api/238/46280)
-* Delete: [DeleteDB](https://cloud.tencent.com/document/api/238/19971)
-* Delete: [DeletePublishSubscribe](https://cloud.tencent.com/document/api/238/46284)
-* Delete: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
-* Delete: [DescribePublishSubscribe](https://cloud.tencent.com/document/api/238/46282)
+* Create: [CreatePublishSubscribe](https://www.tencentcloud.com/document/api/238/72748)
+* Create: [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
+* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+* Create: [DescribePublishSubscribe](https://www.tencentcloud.com/document/api/238/72746)
+* Read: [DescribePublishSubscribe](https://www.tencentcloud.com/document/api/238/72746)
+* Update: [DeleteDB](https://www.tencentcloud.com/document/api/238/32117)
+* Update: [DeletePublishSubscribe](https://www.tencentcloud.com/document/api/238/72747)
+* Update: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+* Update: [DescribePublishSubscribe](https://www.tencentcloud.com/document/api/238/72746)
+* Update: [ModifyPublishSubscribeName](https://www.tencentcloud.com/document/api/238/72744)
+* Delete: [DeleteDB](https://www.tencentcloud.com/document/api/238/32117)
+* Delete: [DeletePublishSubscribe](https://www.tencentcloud.com/document/api/238/72747)
+* Delete: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+* Delete: [DescribePublishSubscribe](https://www.tencentcloud.com/document/api/238/72746)
 
 ## Import
 

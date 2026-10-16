@@ -95,13 +95,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRocketMQVipInstance](https://cloud.tencent.com/document/api/1179/95721)
-* Create: [DescribeRocketMQVipInstances](https://cloud.tencent.com/document/api/1179/80903)
-* Read: [DescribeRocketMQVipInstanceDetail](https://cloud.tencent.com/document/api/1179/86725)
-* Read: [DescribeRocketMQVipInstances](https://cloud.tencent.com/document/api/1179/80903)
-* Update: [DescribeRocketMQVipInstances](https://cloud.tencent.com/document/api/1179/80903)
-* Update: [ModifyRocketMQCluster](https://cloud.tencent.com/document/api/1179/63417)
-* Update: [ModifyRocketMQInstanceSpec](https://cloud.tencent.com/document/api/1179/90461)
-* Delete: [DeleteRocketMQVipInstance](https://cloud.tencent.com/document/api/1179/95802)
-* Delete: [DescribeRocketMQVipInstanceDetail](https://cloud.tencent.com/document/api/1179/86725)
+* Create: [CreateRocketMQVipInstance](https://www.tencentcloud.com/search/?wd=CreateRocketMQVipInstance&type=document&lang=en)
+* Create: [DescribeRocketMQVipInstances](https://www.tencentcloud.com/search/?wd=DescribeRocketMQVipInstances&type=document&lang=en)
+* Read: [DescribeRocketMQVipInstanceDetail](https://www.tencentcloud.com/search/?wd=DescribeRocketMQVipInstanceDetail&type=document&lang=en)
+* Read: [DescribeRocketMQVipInstances](https://www.tencentcloud.com/search/?wd=DescribeRocketMQVipInstances&type=document&lang=en)
+* Update: [DescribeRocketMQVipInstances](https://www.tencentcloud.com/search/?wd=DescribeRocketMQVipInstances&type=document&lang=en)
+* Update: [ModifyRocketMQCluster](https://www.tencentcloud.com/search/?wd=ModifyRocketMQCluster&type=document&lang=en)
+* Update: [ModifyRocketMQInstanceSpec](https://www.tencentcloud.com/search/?wd=ModifyRocketMQInstanceSpec&type=document&lang=en)
+* Delete: [DeleteRocketMQVipInstance](https://www.tencentcloud.com/search/?wd=DeleteRocketMQVipInstance&type=document&lang=en)
+* Delete: [DescribeRocketMQVipInstanceDetail](https://www.tencentcloud.com/search/?wd=DescribeRocketMQVipInstanceDetail&type=document&lang=en)
 

@@ -70,16 +70,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateResource](https://cloud.tencent.com/document/api/1025/100130)
-* Create: [DeployResource](https://cloud.tencent.com/document/api/1025/86961)
-* Create: [DescribeResources](https://cloud.tencent.com/document/api/1025/74801)
-* Read: [DescribeResources](https://cloud.tencent.com/document/api/1025/74801)
-* Update: [DescribeResources](https://cloud.tencent.com/document/api/1025/74801)
-* Update: [DisableExternalAccess](https://cloud.tencent.com/document/api/1025/125055)
-* Update: [DisableIntranetAccess](https://cloud.tencent.com/document/api/1025/125054)
-* Update: [EnableExternalAccess](https://cloud.tencent.com/document/api/1025/125053)
-* Update: [EnableIntranetAccess](https://cloud.tencent.com/document/api/1025/125052)
-* Update: [ModifyResource](https://cloud.tencent.com/document/api/1025/100129)
+* Create: [CreateResource](https://www.tencentcloud.com/search/?wd=CreateResource&type=document&lang=en)
+* Create: [DeployResource](https://www.tencentcloud.com/search/?wd=DeployResource&type=document&lang=en)
+* Create: [DescribeResources](https://www.tencentcloud.com/search/?wd=DescribeResources&type=document&lang=en)
+* Read: [DescribeResources](https://www.tencentcloud.com/search/?wd=DescribeResources&type=document&lang=en)
+* Update: [DescribeResources](https://www.tencentcloud.com/search/?wd=DescribeResources&type=document&lang=en)
+* Update: [DisableExternalAccess](https://www.tencentcloud.com/search/?wd=DisableExternalAccess&type=document&lang=en)
+* Update: [DisableIntranetAccess](https://www.tencentcloud.com/search/?wd=DisableIntranetAccess&type=document&lang=en)
+* Update: [EnableExternalAccess](https://www.tencentcloud.com/search/?wd=EnableExternalAccess&type=document&lang=en)
+* Update: [EnableIntranetAccess](https://www.tencentcloud.com/search/?wd=EnableIntranetAccess&type=document&lang=en)
+* Update: [ModifyResource](https://www.tencentcloud.com/search/?wd=ModifyResource&type=document&lang=en)
 
 ## Import
 

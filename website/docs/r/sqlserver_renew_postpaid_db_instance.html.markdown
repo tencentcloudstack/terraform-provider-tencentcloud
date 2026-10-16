@@ -83,9 +83,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RenewPostpaidDBInstance](https://cloud.tencent.com/document/api/238/46805)
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969)
-* Update: [RenewPostpaidDBInstance](https://cloud.tencent.com/document/api/238/46805)
+* Create: [RenewPostpaidDBInstance](https://www.tencentcloud.com/document/api/238/72754)
+* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
+* Update: [RenewPostpaidDBInstance](https://www.tencentcloud.com/document/api/238/72754)
 
 ## Import
 

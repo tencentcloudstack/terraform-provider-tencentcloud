@@ -74,10 +74,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWatermarkTemplate](https://cloud.tencent.com/document/api/862/37604)
-* Read: [DescribeWatermarkTemplates](https://cloud.tencent.com/document/api/862/37592)
-* Update: [ModifyWatermarkTemplate](https://cloud.tencent.com/document/api/862/37586)
-* Delete: [DeleteWatermarkTemplate](https://cloud.tencent.com/document/api/862/37598)
+* Create: [CreateWatermarkTemplate](https://www.tencentcloud.com/search/?wd=CreateWatermarkTemplate&type=document&lang=en)
+* Read: [DescribeWatermarkTemplates](https://www.tencentcloud.com/search/?wd=DescribeWatermarkTemplates&type=document&lang=en)
+* Update: [ModifyWatermarkTemplate](https://www.tencentcloud.com/search/?wd=ModifyWatermarkTemplate&type=document&lang=en)
+* Delete: [DeleteWatermarkTemplate](https://www.tencentcloud.com/search/?wd=DeleteWatermarkTemplate&type=document&lang=en)
 
 ## Import
 

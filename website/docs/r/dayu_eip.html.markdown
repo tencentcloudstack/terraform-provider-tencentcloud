@@ -52,9 +52,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateDDoSEipAddress](https://cloud.tencent.com/document/api/297/95297)
-* Create: [AssociateDDoSEipLoadBalancer](https://cloud.tencent.com/document/api/297/95296)
-* Create: [DescribeListBGPIPInstances](https://cloud.tencent.com/document/api/297/95347)
-* Read: [DescribeListBGPIPInstances](https://cloud.tencent.com/document/api/297/95347)
-* Delete: [DisassociateDDoSEipAddress](https://cloud.tencent.com/document/api/297/95295)
+* Create: [AssociateDDoSEipAddress](https://www.tencentcloud.com/search/?wd=AssociateDDoSEipAddress&type=document&lang=en)
+* Create: [AssociateDDoSEipLoadBalancer](https://www.tencentcloud.com/search/?wd=AssociateDDoSEipLoadBalancer&type=document&lang=en)
+* Create: [DescribeListBGPIPInstances](https://www.tencentcloud.com/search/?wd=DescribeListBGPIPInstances&type=document&lang=en)
+* Read: [DescribeListBGPIPInstances](https://www.tencentcloud.com/search/?wd=DescribeListBGPIPInstances&type=document&lang=en)
+* Delete: [DisassociateDDoSEipAddress](https://www.tencentcloud.com/search/?wd=DisassociateDDoSEipAddress&type=document&lang=en)
 

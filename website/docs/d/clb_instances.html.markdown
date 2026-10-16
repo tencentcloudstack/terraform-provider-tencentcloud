@@ -120,5 +120,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685)
+* Read: [DescribeLoadBalancers](https://www.tencentcloud.com/document/api/214/33830)
 

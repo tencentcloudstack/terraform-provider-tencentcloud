@@ -142,15 +142,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachCcnInstances](https://cloud.tencent.com/document/api/215/19205)
-* Create: [DescribeCcnAttachedInstances](https://cloud.tencent.com/document/api/215/19202)
-* Create: [DescribeCcnRoutes](https://cloud.tencent.com/document/api/215/19200)
-* Read: [DescribeCcnAttachedInstances](https://cloud.tencent.com/document/api/215/19202)
-* Read: [DescribeCcnRoutes](https://cloud.tencent.com/document/api/215/19200)
-* Update: [DescribeCcnAttachedInstances](https://cloud.tencent.com/document/api/215/19202)
-* Update: [DescribeCcnRoutes](https://cloud.tencent.com/document/api/215/19200)
-* Update: [ModifyCcnAttachedInstancesAttribute](https://cloud.tencent.com/document/api/215/54517)
-* Delete: [DetachCcnInstances](https://cloud.tencent.com/document/api/215/19198)
+* Create: [AttachCcnInstances](https://www.tencentcloud.com/document/api/215/34792)
+* Create: [DescribeCcnAttachedInstances](https://www.tencentcloud.com/document/api/215/34789)
+* Create: [DescribeCcnRoutes](https://www.tencentcloud.com/document/api/215/34788)
+* Read: [DescribeCcnAttachedInstances](https://www.tencentcloud.com/document/api/215/34789)
+* Read: [DescribeCcnRoutes](https://www.tencentcloud.com/document/api/215/34788)
+* Update: [DescribeCcnAttachedInstances](https://www.tencentcloud.com/document/api/215/34789)
+* Update: [DescribeCcnRoutes](https://www.tencentcloud.com/document/api/215/34788)
+* Update: [ModifyCcnAttachedInstancesAttribute](https://www.tencentcloud.com/document/api/215/40101)
+* Delete: [DetachCcnInstances](https://www.tencentcloud.com/document/api/215/34786)
 
 ## Import
 

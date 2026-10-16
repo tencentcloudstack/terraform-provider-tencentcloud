@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeJobSavepoint](https://cloud.tencent.com/document/api/849/74226)
+* Read: [DescribeJobSavepoint](https://www.tencentcloud.com/search/?wd=DescribeJobSavepoint&type=document&lang=en)
 

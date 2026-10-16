@@ -65,9 +65,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateNetworkAclSubnets](https://cloud.tencent.com/document/api/215/42163)
-* Read: [DescribeNetworkAcls](https://cloud.tencent.com/document/api/215/42160)
-* Delete: [DisassociateNetworkAclSubnets](https://cloud.tencent.com/document/api/215/42159)
+* Create: [AssociateNetworkAclSubnets](https://www.tencentcloud.com/document/api/215/35623)
+* Read: [DescribeNetworkAcls](https://www.tencentcloud.com/document/api/215/35620)
+* Delete: [DisassociateNetworkAclSubnets](https://www.tencentcloud.com/document/api/215/35619)
 
 ## Import
 

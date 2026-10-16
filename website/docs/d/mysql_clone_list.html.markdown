@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCloneList](https://cloud.tencent.com/document/api/236/50423)
+* Read: [DescribeCloneList](https://www.tencentcloud.com/document/api/236/38952)
 

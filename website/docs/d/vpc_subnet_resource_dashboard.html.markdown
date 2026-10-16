@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSubnetResourceDashboard](https://cloud.tencent.com/document/api/215/91088)
+* Read: [DescribeSubnetResourceDashboard](https://www.tencentcloud.com/document/api/215/55086)
 

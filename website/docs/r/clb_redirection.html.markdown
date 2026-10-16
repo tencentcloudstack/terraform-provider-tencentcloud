@@ -65,12 +65,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AutoRewrite](https://cloud.tencent.com/document/api/214/34901)
-* Create: [DescribeListeners](https://cloud.tencent.com/document/api/214/30686)
-* Create: [ManualRewrite](https://cloud.tencent.com/document/api/214/34897)
-* Read: [DescribeRewrite](https://cloud.tencent.com/document/api/214/34899)
-* Delete: [DeleteRewrite](https://cloud.tencent.com/document/api/214/34900)
-* Delete: [DescribeRewrite](https://cloud.tencent.com/document/api/214/34899)
+* Create: [AutoRewrite](https://www.tencentcloud.com/document/api/214/33846)
+* Create: [DescribeListeners](https://www.tencentcloud.com/document/api/214/33831)
+* Create: [ManualRewrite](https://www.tencentcloud.com/document/api/214/33821)
+* Read: [DescribeRewrite](https://www.tencentcloud.com/document/api/214/33829)
+* Delete: [DeleteRewrite](https://www.tencentcloud.com/document/api/214/33836)
+* Delete: [DescribeRewrite](https://www.tencentcloud.com/document/api/214/33829)
 
 ## Import
 

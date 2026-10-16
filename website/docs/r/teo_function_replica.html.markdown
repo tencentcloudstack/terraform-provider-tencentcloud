@@ -44,12 +44,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateFunctionReplica](https://cloud.tencent.com/document/api/1552/132393)
-* Create: [DescribeFunctionReplicas](https://cloud.tencent.com/document/api/1552/132391)
-* Read: [DescribeFunctionReplicas](https://cloud.tencent.com/document/api/1552/132391)
-* Update: [DescribeFunctionReplicas](https://cloud.tencent.com/document/api/1552/132391)
-* Update: [ModifyFunctionReplica](https://cloud.tencent.com/document/api/1552/132390)
-* Delete: [DeleteFunctionReplica](https://cloud.tencent.com/document/api/1552/132392)
+* Create: [CreateFunctionReplica](https://www.tencentcloud.com/search/?wd=CreateFunctionReplica&type=document&lang=en)
+* Create: [DescribeFunctionReplicas](https://www.tencentcloud.com/search/?wd=DescribeFunctionReplicas&type=document&lang=en)
+* Read: [DescribeFunctionReplicas](https://www.tencentcloud.com/search/?wd=DescribeFunctionReplicas&type=document&lang=en)
+* Update: [DescribeFunctionReplicas](https://www.tencentcloud.com/search/?wd=DescribeFunctionReplicas&type=document&lang=en)
+* Update: [ModifyFunctionReplica](https://www.tencentcloud.com/search/?wd=ModifyFunctionReplica&type=document&lang=en)
+* Delete: [DeleteFunctionReplica](https://www.tencentcloud.com/search/?wd=DeleteFunctionReplica&type=document&lang=en)
 
 ## Import
 

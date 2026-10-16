@@ -84,11 +84,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410)
-* Create: [SwitchDrInstanceToMaster](https://cloud.tencent.com/document/api/236/52562)
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872)
-* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410)
-* Update: [SwitchDrInstanceToMaster](https://cloud.tencent.com/document/api/236/52562)
+* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+* Create: [SwitchDrInstanceToMaster](https://www.tencentcloud.com/document/api/236/39627)
+* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
+* Update: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+* Update: [SwitchDrInstanceToMaster](https://www.tencentcloud.com/document/api/236/39627)
 
 ## Import
 

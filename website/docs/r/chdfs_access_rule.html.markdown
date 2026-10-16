@@ -53,10 +53,10 @@ The `access_rule` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccessRules](https://cloud.tencent.com/document/api/1105/52339)
-* Read: [DescribeAccessRules](https://cloud.tencent.com/document/api/1105/51138)
-* Update: [ModifyAccessRules](https://cloud.tencent.com/document/api/1105/52337)
-* Delete: [DeleteAccessRules](https://cloud.tencent.com/document/api/1105/52338)
+* Create: [CreateAccessRules](https://www.tencentcloud.com/search/?wd=CreateAccessRules&type=document&lang=en)
+* Read: [DescribeAccessRules](https://www.tencentcloud.com/search/?wd=DescribeAccessRules&type=document&lang=en)
+* Update: [ModifyAccessRules](https://www.tencentcloud.com/search/?wd=ModifyAccessRules&type=document&lang=en)
+* Delete: [DeleteAccessRules](https://www.tencentcloud.com/search/?wd=DeleteAccessRules&type=document&lang=en)
 
 ## Import
 

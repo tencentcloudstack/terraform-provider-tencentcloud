@@ -40,9 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [PublishVersion](https://cloud.tencent.com/document/api/583/37161)
-* Read: [GetFunction](https://cloud.tencent.com/document/api/583/18584)
-* Delete: [DeleteFunction](https://cloud.tencent.com/document/api/583/18585)
+* Create: [PublishVersion](https://www.tencentcloud.com/document/api/583/34415)
+* Read: [GetFunction](https://www.tencentcloud.com/search/?wd=GetFunction&type=document&lang=en)
+* Delete: [DeleteFunction](https://www.tencentcloud.com/document/api/583/18585)
 
 ## Import
 

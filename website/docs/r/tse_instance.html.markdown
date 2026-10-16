@@ -154,16 +154,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEngine](https://cloud.tencent.com/document/api/1364/75218)
-* Create: [DescribeSREInstances](https://cloud.tencent.com/document/api/1364/54940)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Read: [DescribeSREInstances](https://cloud.tencent.com/document/api/1364/54940)
-* Update: [DescribeSREInstances](https://cloud.tencent.com/document/api/1364/54940)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Update: [UpdateEngineInternetAccess](https://cloud.tencent.com/document/api/1364/81352)
-* Delete: [DeleteEngine](https://cloud.tencent.com/document/api/1364/75217)
-* Delete: [DescribeSREInstances](https://cloud.tencent.com/document/api/1364/54940)
+* Create: [CreateEngine](https://www.tencentcloud.com/search/?wd=CreateEngine&type=document&lang=en)
+* Create: [DescribeSREInstances](https://www.tencentcloud.com/search/?wd=DescribeSREInstances&type=document&lang=en)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Read: [DescribeSREInstances](https://www.tencentcloud.com/search/?wd=DescribeSREInstances&type=document&lang=en)
+* Update: [DescribeSREInstances](https://www.tencentcloud.com/search/?wd=DescribeSREInstances&type=document&lang=en)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Update: [UpdateEngineInternetAccess](https://www.tencentcloud.com/search/?wd=UpdateEngineInternetAccess&type=document&lang=en)
+* Delete: [DeleteEngine](https://www.tencentcloud.com/search/?wd=DeleteEngine&type=document&lang=en)
+* Delete: [DescribeSREInstances](https://www.tencentcloud.com/search/?wd=DescribeSREInstances&type=document&lang=en)
 
 ## Import
 

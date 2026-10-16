@@ -71,12 +71,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateReceiver](https://cloud.tencent.com/document/api/1288/68360)
-* Create: [CreateReceiverDetail](https://cloud.tencent.com/document/api/1288/68359)
-* Create: [CreateReceiverDetailWithData](https://cloud.tencent.com/document/api/1288/70776)
-* Read: [ListReceiverDetails](https://cloud.tencent.com/document/api/1288/97935)
-* Read: [ListReceivers](https://cloud.tencent.com/document/api/1288/68358)
-* Delete: [DeleteReceiver](https://cloud.tencent.com/document/api/1288/71169)
+* Create: [CreateReceiver](https://www.tencentcloud.com/search/?wd=CreateReceiver&type=document&lang=en)
+* Create: [CreateReceiverDetail](https://www.tencentcloud.com/search/?wd=CreateReceiverDetail&type=document&lang=en)
+* Create: [CreateReceiverDetailWithData](https://www.tencentcloud.com/search/?wd=CreateReceiverDetailWithData&type=document&lang=en)
+* Read: [ListReceiverDetails](https://www.tencentcloud.com/search/?wd=ListReceiverDetails&type=document&lang=en)
+* Read: [ListReceivers](https://www.tencentcloud.com/search/?wd=ListReceivers&type=document&lang=en)
+* Delete: [DeleteReceiver](https://www.tencentcloud.com/search/?wd=DeleteReceiver&type=document&lang=en)
 
 ## Import
 

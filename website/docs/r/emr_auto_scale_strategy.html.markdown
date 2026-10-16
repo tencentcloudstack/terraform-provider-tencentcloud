@@ -174,12 +174,12 @@ The `time_auto_scale_strategy` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddMetricScaleStrategy](https://cloud.tencent.com/document/api/589/103997)
-* Read: [DescribeAutoScaleStrategies](https://cloud.tencent.com/document/api/589/103998)
-* Update: [DescribeAutoScaleStrategies](https://cloud.tencent.com/document/api/589/103998)
-* Update: [ModifyAutoScaleStrategy](https://cloud.tencent.com/document/api/589/103995)
-* Delete: [DeleteAutoScaleStrategy](https://cloud.tencent.com/document/api/589/103996)
-* Delete: [DescribeAutoScaleStrategies](https://cloud.tencent.com/document/api/589/103998)
+* Create: [AddMetricScaleStrategy](https://www.tencentcloud.com/search/?wd=AddMetricScaleStrategy&type=document&lang=en)
+* Read: [DescribeAutoScaleStrategies](https://www.tencentcloud.com/search/?wd=DescribeAutoScaleStrategies&type=document&lang=en)
+* Update: [DescribeAutoScaleStrategies](https://www.tencentcloud.com/search/?wd=DescribeAutoScaleStrategies&type=document&lang=en)
+* Update: [ModifyAutoScaleStrategy](https://www.tencentcloud.com/search/?wd=ModifyAutoScaleStrategy&type=document&lang=en)
+* Delete: [DeleteAutoScaleStrategy](https://www.tencentcloud.com/search/?wd=DeleteAutoScaleStrategy&type=document&lang=en)
+* Delete: [DescribeAutoScaleStrategies](https://www.tencentcloud.com/search/?wd=DescribeAutoScaleStrategies&type=document&lang=en)
 
 ## Import
 

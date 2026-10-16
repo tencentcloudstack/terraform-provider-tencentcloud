@@ -42,6 +42,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601)
-* Create: [UpgradeSmallVersion](https://cloud.tencent.com/document/api/239/74596)
+* Create: [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+* Create: [UpgradeSmallVersion](https://www.tencentcloud.com/document/api/239/47723)
 

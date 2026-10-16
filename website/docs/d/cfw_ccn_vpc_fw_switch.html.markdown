@@ -49,5 +49,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCcnVpcFwSwitch](https://cloud.tencent.com/document/api/1132/127058)
+* Read: [DescribeCcnVpcFwSwitch](https://www.tencentcloud.com/search/?wd=DescribeCcnVpcFwSwitch&type=document&lang=en)
 

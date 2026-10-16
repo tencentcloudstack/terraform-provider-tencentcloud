@@ -47,5 +47,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRecordLineList](https://cloud.tencent.com/document/api/1427/56167)
+* Read: [DescribeRecordLineList](https://www.tencentcloud.com/search/?wd=DescribeRecordLineList&type=document&lang=en)
 

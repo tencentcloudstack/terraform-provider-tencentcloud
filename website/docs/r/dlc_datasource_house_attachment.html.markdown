@@ -252,9 +252,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateDatasourceHouse](https://cloud.tencent.com/document/api/1342/122147)
-* Create: [DescribeNetworkConnections](https://cloud.tencent.com/document/api/1342/122146)
-* Read: [DescribeNetworkConnections](https://cloud.tencent.com/document/api/1342/122146)
-* Update: [UpdateNetworkConnection](https://cloud.tencent.com/document/api/1342/122144)
-* Delete: [UnboundDatasourceHouse](https://cloud.tencent.com/document/api/1342/122145)
+* Create: [AssociateDatasourceHouse](https://www.tencentcloud.com/search/?wd=AssociateDatasourceHouse&type=document&lang=en)
+* Create: [DescribeNetworkConnections](https://www.tencentcloud.com/search/?wd=DescribeNetworkConnections&type=document&lang=en)
+* Read: [DescribeNetworkConnections](https://www.tencentcloud.com/search/?wd=DescribeNetworkConnections&type=document&lang=en)
+* Update: [UpdateNetworkConnection](https://www.tencentcloud.com/search/?wd=UpdateNetworkConnection&type=document&lang=en)
+* Delete: [UnboundDatasourceHouse](https://www.tencentcloud.com/search/?wd=UnboundDatasourceHouse&type=document&lang=en)
 

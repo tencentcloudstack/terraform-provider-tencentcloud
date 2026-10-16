@@ -48,9 +48,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachPolicy](https://cloud.tencent.com/document/api/850/105319)
-* Read: [ListTargetsForPolicy](https://cloud.tencent.com/document/api/850/105309)
-* Delete: [DetachPolicy](https://cloud.tencent.com/document/api/850/105314)
+* Create: [AttachPolicy](https://www.tencentcloud.com/search/?wd=AttachPolicy&type=document&lang=en)
+* Read: [ListTargetsForPolicy](https://www.tencentcloud.com/search/?wd=ListTargetsForPolicy&type=document&lang=en)
+* Delete: [DetachPolicy](https://www.tencentcloud.com/search/?wd=DetachPolicy&type=document&lang=en)
 
 ## Import
 

@@ -70,7 +70,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSignature](https://cloud.tencent.com/document/api/1141/79571)
+* Create: [CreateSignature](https://www.tencentcloud.com/search/?wd=CreateSignature&type=document&lang=en)
 
 ## Import
 

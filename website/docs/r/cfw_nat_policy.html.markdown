@@ -59,10 +59,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddNatAcRule](https://cloud.tencent.com/document/api/1132/86861)
-* Read: [DescribeNatAcRule](https://cloud.tencent.com/document/api/1132/86860)
-* Update: [ModifyNatAcRule](https://cloud.tencent.com/document/api/1132/86859)
-* Delete: [RemoveNatAcRule](https://cloud.tencent.com/document/api/1132/86858)
+* Create: [AddNatAcRule](https://www.tencentcloud.com/search/?wd=AddNatAcRule&type=document&lang=en)
+* Read: [DescribeNatAcRule](https://www.tencentcloud.com/search/?wd=DescribeNatAcRule&type=document&lang=en)
+* Update: [ModifyNatAcRule](https://www.tencentcloud.com/search/?wd=ModifyNatAcRule&type=document&lang=en)
+* Delete: [RemoveNatAcRule](https://www.tencentcloud.com/search/?wd=RemoveNatAcRule&type=document&lang=en)
 
 ## Import
 

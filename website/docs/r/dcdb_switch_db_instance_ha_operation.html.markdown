@@ -38,6 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/557/56485)
-* Create: [SwitchDBInstanceHA](https://cloud.tencent.com/document/api/557/68111)
+* Create: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
+* Create: [SwitchDBInstanceHA](https://www.tencentcloud.com/search/?wd=SwitchDBInstanceHA&type=document&lang=en)
 

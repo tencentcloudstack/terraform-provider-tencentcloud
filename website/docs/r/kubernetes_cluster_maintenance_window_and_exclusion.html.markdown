@@ -77,10 +77,10 @@ The `exclusions` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateClusterMaintenanceWindowAndExclusions](https://cloud.tencent.com/document/api/457/125946)
-* Read: [DescribeClusterMaintenanceWindowAndExclusions](https://cloud.tencent.com/document/api/457/125940)
-* Update: [ModifyClusterMaintenanceWindowAndExclusions](https://cloud.tencent.com/document/api/457/125934)
-* Delete: [DeleteClusterMaintenanceWindowAndExclusion](https://cloud.tencent.com/document/api/457/125943)
+* Create: [CreateClusterMaintenanceWindowAndExclusions](https://www.tencentcloud.com/search/?wd=CreateClusterMaintenanceWindowAndExclusions&type=document&lang=en)
+* Read: [DescribeClusterMaintenanceWindowAndExclusions](https://www.tencentcloud.com/search/?wd=DescribeClusterMaintenanceWindowAndExclusions&type=document&lang=en)
+* Update: [ModifyClusterMaintenanceWindowAndExclusions](https://www.tencentcloud.com/search/?wd=ModifyClusterMaintenanceWindowAndExclusions&type=document&lang=en)
+* Delete: [DeleteClusterMaintenanceWindowAndExclusion](https://www.tencentcloud.com/search/?wd=DeleteClusterMaintenanceWindowAndExclusion&type=document&lang=en)
 
 ## Import
 

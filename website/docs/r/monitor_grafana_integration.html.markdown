@@ -71,8 +71,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGrafanaIntegration](https://cloud.tencent.com/document/api/248/79218)
-* Read: [DescribeGrafanaIntegrations](https://cloud.tencent.com/document/api/248/79207)
-* Update: [UpdateGrafanaIntegration](https://cloud.tencent.com/document/api/248/79191)
-* Delete: [DeleteGrafanaIntegration](https://cloud.tencent.com/document/api/248/79214)
+* Create: [CreateGrafanaIntegration](https://www.tencentcloud.com/document/api/248/49769)
+* Read: [DescribeGrafanaIntegrations](https://www.tencentcloud.com/document/api/248/49758)
+* Update: [UpdateGrafanaIntegration](https://www.tencentcloud.com/document/api/248/49743)
+* Delete: [DeleteGrafanaIntegration](https://www.tencentcloud.com/document/api/248/49765)
 

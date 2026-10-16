@@ -300,10 +300,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateProcedureTemplate](https://cloud.tencent.com/document/api/266/33897)
-* Read: [DescribeProcedureTemplates](https://cloud.tencent.com/document/api/266/33895)
-* Update: [ResetProcedureTemplate](https://cloud.tencent.com/document/api/266/33894)
-* Delete: [DeleteProcedureTemplate](https://cloud.tencent.com/document/api/266/33896)
+* Create: [CreateProcedureTemplate](https://www.tencentcloud.com/document/api/266/34167)
+* Read: [DescribeProcedureTemplates](https://www.tencentcloud.com/document/api/266/34147)
+* Update: [ResetProcedureTemplate](https://www.tencentcloud.com/document/api/266/34134)
+* Delete: [DeleteProcedureTemplate](https://www.tencentcloud.com/document/api/266/34158)
 
 ## Import
 

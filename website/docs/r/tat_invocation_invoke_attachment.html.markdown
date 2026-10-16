@@ -67,11 +67,11 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInvocations](https://cloud.tencent.com/document/api/1340/52679)
-* Create: [InvokeCommand](https://cloud.tencent.com/document/api/1340/52678)
-* Read: [DescribeInvocations](https://cloud.tencent.com/document/api/1340/52679)
-* Delete: [CancelInvocation](https://cloud.tencent.com/document/api/1340/65770)
-* Delete: [DescribeInvocations](https://cloud.tencent.com/document/api/1340/52679)
+* Create: [DescribeInvocations](https://www.tencentcloud.com/search/?wd=DescribeInvocations&type=document&lang=en)
+* Create: [InvokeCommand](https://www.tencentcloud.com/search/?wd=InvokeCommand&type=document&lang=en)
+* Read: [DescribeInvocations](https://www.tencentcloud.com/search/?wd=DescribeInvocations&type=document&lang=en)
+* Delete: [CancelInvocation](https://www.tencentcloud.com/search/?wd=CancelInvocation&type=document&lang=en)
+* Delete: [DescribeInvocations](https://www.tencentcloud.com/search/?wd=DescribeInvocations&type=document&lang=en)
 
 ## Import
 

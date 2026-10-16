@@ -61,14 +61,14 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSecurityGroup](https://cloud.tencent.com/document/api/215/15806)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Read: [DescribeSecurityGroups](https://cloud.tencent.com/document/api/215/15808)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Update: [ModifySecurityGroupAttribute](https://cloud.tencent.com/document/api/215/15805)
-* Delete: [DeleteSecurityGroup](https://cloud.tencent.com/document/api/215/15803)
-* Delete: [DescribeSecurityGroupAssociationStatistics](https://cloud.tencent.com/document/api/215/17799)
+* Create: [CreateSecurityGroup](https://www.tencentcloud.com/document/api/215/15806)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Read: [DescribeSecurityGroups](https://www.tencentcloud.com/document/api/215/15808)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Update: [ModifySecurityGroupAttribute](https://www.tencentcloud.com/document/api/215/15805)
+* Delete: [DeleteSecurityGroup](https://www.tencentcloud.com/document/api/215/15803)
+* Delete: [DescribeSecurityGroupAssociationStatistics](https://www.tencentcloud.com/document/api/215/17799)
 
 ## Import
 

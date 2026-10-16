@@ -38,6 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
-* Create: [StartBackupMigration](https://cloud.tencent.com/document/api/238/53181)
+* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+* Create: [StartBackupMigration](https://www.tencentcloud.com/document/api/238/39832)
 

@@ -139,10 +139,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDlcDeliver](https://cloud.tencent.com/document/api/614/125886)
-* Read: [DescribeDlcDelivers](https://cloud.tencent.com/document/api/614/125884)
-* Update: [ModifyDlcDeliver](https://cloud.tencent.com/document/api/614/125883)
-* Delete: [DeleteDlcDeliver](https://cloud.tencent.com/document/api/614/125885)
+* Create: [CreateDlcDeliver](https://www.tencentcloud.com/document/api/614/80552)
+* Read: [DescribeDlcDelivers](https://www.tencentcloud.com/document/api/614/80550)
+* Update: [ModifyDlcDeliver](https://www.tencentcloud.com/document/api/614/80549)
+* Delete: [DeleteDlcDeliver](https://www.tencentcloud.com/document/api/614/80551)
 
 ## Import
 

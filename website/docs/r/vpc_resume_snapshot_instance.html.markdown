@@ -86,5 +86,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ResumeSnapshotInstance](https://cloud.tencent.com/document/api/215/85148)
+* Create: [ResumeSnapshotInstance](https://www.tencentcloud.com/document/api/215/55049)
 

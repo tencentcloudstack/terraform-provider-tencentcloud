@@ -57,15 +57,15 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGlobalAcceleratorAclPolicy](https://cloud.tencent.com/document/api/1817/134623)
-* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942)
-* Create: [ModifyGlobalAcceleratorAclPolicy](https://cloud.tencent.com/document/api/1817/134619)
-* Read: [DescribeGlobalAcceleratorAclPolicies](https://cloud.tencent.com/document/api/1817/134688)
-* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942)
-* Update: [ModifyGlobalAcceleratorAclPolicy](https://cloud.tencent.com/document/api/1817/134619)
-* Delete: [DeleteGlobalAcceleratorAclPolicy](https://cloud.tencent.com/document/api/1817/134621)
-* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942)
-* Delete: [ModifyGlobalAcceleratorAclPolicy](https://cloud.tencent.com/document/api/1817/134619)
+* Create: [CreateGlobalAcceleratorAclPolicy](https://www.tencentcloud.com/search/?wd=CreateGlobalAcceleratorAclPolicy&type=document&lang=en)
+* Create: [DescribeTaskResult](https://www.tencentcloud.com/search/?wd=DescribeTaskResult&type=document&lang=en)
+* Create: [ModifyGlobalAcceleratorAclPolicy](https://www.tencentcloud.com/search/?wd=ModifyGlobalAcceleratorAclPolicy&type=document&lang=en)
+* Read: [DescribeGlobalAcceleratorAclPolicies](https://www.tencentcloud.com/search/?wd=DescribeGlobalAcceleratorAclPolicies&type=document&lang=en)
+* Update: [DescribeTaskResult](https://www.tencentcloud.com/search/?wd=DescribeTaskResult&type=document&lang=en)
+* Update: [ModifyGlobalAcceleratorAclPolicy](https://www.tencentcloud.com/search/?wd=ModifyGlobalAcceleratorAclPolicy&type=document&lang=en)
+* Delete: [DeleteGlobalAcceleratorAclPolicy](https://www.tencentcloud.com/search/?wd=DeleteGlobalAcceleratorAclPolicy&type=document&lang=en)
+* Delete: [DescribeTaskResult](https://www.tencentcloud.com/search/?wd=DescribeTaskResult&type=document&lang=en)
+* Delete: [ModifyGlobalAcceleratorAclPolicy](https://www.tencentcloud.com/search/?wd=ModifyGlobalAcceleratorAclPolicy&type=document&lang=en)
 
 ## Import
 

@@ -57,12 +57,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeKafkaConsumer](https://cloud.tencent.com/document/api/614/95719)
-* Create: [OpenKafkaConsumer](https://cloud.tencent.com/document/api/614/72339)
-* Read: [DescribeKafkaConsumer](https://cloud.tencent.com/document/api/614/95719)
-* Update: [DescribeKafkaConsumer](https://cloud.tencent.com/document/api/614/95719)
-* Update: [ModifyKafkaConsumer](https://cloud.tencent.com/document/api/614/95720)
-* Delete: [CloseKafkaConsumer](https://cloud.tencent.com/document/api/614/72340)
+* Create: [DescribeKafkaConsumer](https://www.tencentcloud.com/document/api/614/59908)
+* Create: [OpenKafkaConsumer](https://www.tencentcloud.com/document/api/614/46784)
+* Read: [DescribeKafkaConsumer](https://www.tencentcloud.com/document/api/614/59908)
+* Update: [DescribeKafkaConsumer](https://www.tencentcloud.com/document/api/614/59908)
+* Update: [ModifyKafkaConsumer](https://www.tencentcloud.com/document/api/614/59907)
+* Delete: [CloseKafkaConsumer](https://www.tencentcloud.com/document/api/614/46785)
 
 ## Import
 

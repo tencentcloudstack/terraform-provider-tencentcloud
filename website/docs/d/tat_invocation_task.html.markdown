@@ -75,5 +75,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInvocationTasks](https://cloud.tencent.com/document/api/1340/52680)
+* Read: [DescribeInvocationTasks](https://www.tencentcloud.com/search/?wd=DescribeInvocationTasks&type=document&lang=en)
 

@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyBinlogSaveDays](https://cloud.tencent.com/document/api/1003/92725)
-* Read: [DescribeBinlogSaveDays](https://cloud.tencent.com/document/api/1003/76372)
-* Update: [ModifyBinlogSaveDays](https://cloud.tencent.com/document/api/1003/92725)
+* Create: [ModifyBinlogSaveDays](https://www.tencentcloud.com/search/?wd=ModifyBinlogSaveDays&type=document&lang=en)
+* Read: [DescribeBinlogSaveDays](https://www.tencentcloud.com/search/?wd=DescribeBinlogSaveDays&type=document&lang=en)
+* Update: [ModifyBinlogSaveDays](https://www.tencentcloud.com/search/?wd=ModifyBinlogSaveDays&type=document&lang=en)
 
 ## Import
 

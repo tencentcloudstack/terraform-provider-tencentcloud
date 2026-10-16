@@ -55,10 +55,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSecurityGroupMapping](https://cloud.tencent.com/document/api/1824/136777)
-* Create: [DescribeSecurityGroupMappings](https://cloud.tencent.com/document/api/1824/136757)
-* Read: [DescribeSecurityGroupMappings](https://cloud.tencent.com/document/api/1824/136757)
-* Delete: [DeleteSecurityGroupMapping](https://cloud.tencent.com/document/api/1824/136771)
+* Create: [CreateSecurityGroupMapping](https://www.tencentcloud.com/search/?wd=CreateSecurityGroupMapping&type=document&lang=en)
+* Create: [DescribeSecurityGroupMappings](https://www.tencentcloud.com/search/?wd=DescribeSecurityGroupMappings&type=document&lang=en)
+* Read: [DescribeSecurityGroupMappings](https://www.tencentcloud.com/search/?wd=DescribeSecurityGroupMappings&type=document&lang=en)
+* Delete: [DeleteSecurityGroupMapping](https://www.tencentcloud.com/search/?wd=DeleteSecurityGroupMapping&type=document&lang=en)
 
 ## Import
 

@@ -83,11 +83,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBackUpSchedule](https://cloud.tencent.com/document/api/1299/83424)
-* Create: [DescribeBackUpSchedule](https://cloud.tencent.com/document/api/1299/86155)
-* Read: [DescribeBackUpSchedule](https://cloud.tencent.com/document/api/1299/86155)
-* Update: [CreateBackUpSchedule](https://cloud.tencent.com/document/api/1299/83424)
-* Update: [DescribeBackUpSchedule](https://cloud.tencent.com/document/api/1299/86155)
+* Create: [CreateBackUpSchedule](https://www.tencentcloud.com/search/?wd=CreateBackUpSchedule&type=document&lang=en)
+* Create: [DescribeBackUpSchedule](https://www.tencentcloud.com/search/?wd=DescribeBackUpSchedule&type=document&lang=en)
+* Read: [DescribeBackUpSchedule](https://www.tencentcloud.com/search/?wd=DescribeBackUpSchedule&type=document&lang=en)
+* Update: [CreateBackUpSchedule](https://www.tencentcloud.com/search/?wd=CreateBackUpSchedule&type=document&lang=en)
+* Update: [DescribeBackUpSchedule](https://www.tencentcloud.com/search/?wd=DescribeBackUpSchedule&type=document&lang=en)
 
 ## Import
 

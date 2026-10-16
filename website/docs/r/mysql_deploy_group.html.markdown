@@ -42,10 +42,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDeployGroup](https://cloud.tencent.com/document/api/236/38681)
-* Read: [DescribeDeployGroupList](https://cloud.tencent.com/document/api/236/38679)
-* Update: [ModifyNameOrDescByDpId](https://cloud.tencent.com/document/api/236/38678)
-* Delete: [DeleteDeployGroups](https://cloud.tencent.com/document/api/236/38680)
+* Create: [CreateDeployGroup](https://www.tencentcloud.com/document/api/236/34485)
+* Read: [DescribeDeployGroupList](https://www.tencentcloud.com/document/api/236/34482)
+* Update: [ModifyNameOrDescByDpId](https://www.tencentcloud.com/document/api/236/34477)
+* Delete: [DeleteDeployGroups](https://www.tencentcloud.com/document/api/236/34484)
 
 ## Import
 

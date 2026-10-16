@@ -114,13 +114,13 @@ The `trigger` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWebhookTrigger](https://cloud.tencent.com/document/api/1141/43531)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Read: [DescribeWebhookTrigger](https://cloud.tencent.com/document/api/1141/43529)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Update: [ModifyWebhookTrigger](https://cloud.tencent.com/document/api/1141/43527)
-* Delete: [DeleteWebhookTrigger](https://cloud.tencent.com/document/api/1141/43530)
+* Create: [CreateWebhookTrigger](https://www.tencentcloud.com/search/?wd=CreateWebhookTrigger&type=document&lang=en)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Read: [DescribeWebhookTrigger](https://www.tencentcloud.com/search/?wd=DescribeWebhookTrigger&type=document&lang=en)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Update: [ModifyWebhookTrigger](https://www.tencentcloud.com/search/?wd=ModifyWebhookTrigger&type=document&lang=en)
+* Delete: [DeleteWebhookTrigger](https://www.tencentcloud.com/search/?wd=DeleteWebhookTrigger&type=document&lang=en)
 
 ## Import
 

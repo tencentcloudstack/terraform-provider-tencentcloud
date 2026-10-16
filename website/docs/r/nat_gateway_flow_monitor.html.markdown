@@ -38,13 +38,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CheckGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/116856)
-* Create: [DisableGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/43270)
-* Create: [EnableGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/43269)
-* Read: [CheckGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/116856)
-* Update: [CheckGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/116856)
-* Update: [DisableGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/43270)
-* Update: [EnableGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/43269)
+* Create: [CheckGatewayFlowMonitor](https://www.tencentcloud.com/document/api/215/83846)
+* Create: [DisableGatewayFlowMonitor](https://www.tencentcloud.com/document/api/215/36087)
+* Create: [EnableGatewayFlowMonitor](https://www.tencentcloud.com/document/api/215/36086)
+* Read: [CheckGatewayFlowMonitor](https://www.tencentcloud.com/document/api/215/83846)
+* Update: [CheckGatewayFlowMonitor](https://www.tencentcloud.com/document/api/215/83846)
+* Update: [DisableGatewayFlowMonitor](https://www.tencentcloud.com/document/api/215/36087)
+* Update: [EnableGatewayFlowMonitor](https://www.tencentcloud.com/document/api/215/36086)
 
 ## Import
 

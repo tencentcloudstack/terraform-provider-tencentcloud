@@ -126,16 +126,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateVpnGatewaySslServer](https://cloud.tencent.com/document/api/215/70289)
-* Create: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Read: [DescribeVpnGatewaySslServers](https://cloud.tencent.com/document/api/215/70285)
-* Update: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Update: [ModifyVpnGatewaySslServer](https://cloud.tencent.com/document/api/215/100955)
-* Delete: [DeleteVpnGatewaySslServer](https://cloud.tencent.com/document/api/215/70287)
-* Delete: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037)
+* Create: [CreateVpnGatewaySslServer](https://www.tencentcloud.com/search/?wd=CreateVpnGatewaySslServer&type=document&lang=en)
+* Create: [DescribeVpcTaskResult](https://www.tencentcloud.com/document/api/215/41567)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Read: [DescribeVpnGatewaySslServers](https://www.tencentcloud.com/search/?wd=DescribeVpnGatewaySslServers&type=document&lang=en)
+* Update: [DescribeVpcTaskResult](https://www.tencentcloud.com/document/api/215/41567)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Update: [ModifyVpnGatewaySslServer](https://www.tencentcloud.com/search/?wd=ModifyVpnGatewaySslServer&type=document&lang=en)
+* Delete: [DeleteVpnGatewaySslServer](https://www.tencentcloud.com/search/?wd=DeleteVpnGatewaySslServer&type=document&lang=en)
+* Delete: [DescribeVpcTaskResult](https://www.tencentcloud.com/document/api/215/41567)
 
 ## Import
 

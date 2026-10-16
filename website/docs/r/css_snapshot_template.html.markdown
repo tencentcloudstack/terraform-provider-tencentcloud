@@ -54,10 +54,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLiveSnapshotTemplate](https://cloud.tencent.com/document/api/267/32624)
-* Read: [DescribeLiveSnapshotTemplate](https://cloud.tencent.com/document/api/267/32620)
-* Update: [ModifyLiveSnapshotTemplate](https://cloud.tencent.com/document/api/267/32618)
-* Delete: [DeleteLiveSnapshotTemplate](https://cloud.tencent.com/document/api/267/32622)
+* Create: [CreateLiveSnapshotTemplate](https://www.tencentcloud.com/document/api/267/30834)
+* Read: [DescribeLiveSnapshotTemplate](https://www.tencentcloud.com/document/api/267/30830)
+* Update: [ModifyLiveSnapshotTemplate](https://www.tencentcloud.com/document/api/267/30828)
+* Delete: [DeleteLiveSnapshotTemplate](https://www.tencentcloud.com/document/api/267/30832)
 
 ## Import
 

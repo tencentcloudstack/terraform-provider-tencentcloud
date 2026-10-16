@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRollbackRangeTime](https://cloud.tencent.com/document/api/236/18726)
+* Read: [DescribeRollbackRangeTime](https://www.tencentcloud.com/document/api/236/18726)
 

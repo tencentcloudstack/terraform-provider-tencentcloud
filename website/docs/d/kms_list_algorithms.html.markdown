@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListAlgorithms](https://cloud.tencent.com/document/api/573/42143)
+* Read: [ListAlgorithms](https://www.tencentcloud.com/search/?wd=ListAlgorithms&type=document&lang=en)
 

@@ -38,6 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410)
-* Create: [StopRollback](https://cloud.tencent.com/document/api/236/50422)
+* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+* Create: [StopRollback](https://www.tencentcloud.com/document/api/236/38951)
 

@@ -65,5 +65,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeContainerGroups](https://cloud.tencent.com/document/api/649/36068)
+* Read: [DescribeContainerGroups](https://www.tencentcloud.com/search/?wd=DescribeContainerGroups&type=document&lang=en)
 

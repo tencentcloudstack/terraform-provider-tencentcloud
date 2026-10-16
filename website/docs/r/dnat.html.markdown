@@ -115,13 +115,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNatGatewayDestinationIpPortTranslationNatRule](https://cloud.tencent.com/document/api/215/36720)
-* Create: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://cloud.tencent.com/document/api/215/36717)
-* Read: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://cloud.tencent.com/document/api/215/36717)
-* Update: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://cloud.tencent.com/document/api/215/36717)
-* Update: [ModifyNatGatewayDestinationIpPortTranslationNatRule](https://cloud.tencent.com/document/api/215/36714)
-* Delete: [DeleteNatGatewayDestinationIpPortTranslationNatRule](https://cloud.tencent.com/document/api/215/36718)
-* Delete: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://cloud.tencent.com/document/api/215/36717)
+* Create: [CreateNatGatewayDestinationIpPortTranslationNatRule](https://www.tencentcloud.com/document/api/215/34756)
+* Create: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://www.tencentcloud.com/document/api/215/34753)
+* Read: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://www.tencentcloud.com/document/api/215/34753)
+* Update: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://www.tencentcloud.com/document/api/215/34753)
+* Update: [ModifyNatGatewayDestinationIpPortTranslationNatRule](https://www.tencentcloud.com/document/api/215/34749)
+* Delete: [DeleteNatGatewayDestinationIpPortTranslationNatRule](https://www.tencentcloud.com/document/api/215/34754)
+* Delete: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://www.tencentcloud.com/document/api/215/34753)
 
 ## Import
 

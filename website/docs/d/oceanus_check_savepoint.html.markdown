@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [CheckSavepoint](https://cloud.tencent.com/document/api/849/74227)
+* Read: [CheckSavepoint](https://www.tencentcloud.com/search/?wd=CheckSavepoint&type=document&lang=en)
 

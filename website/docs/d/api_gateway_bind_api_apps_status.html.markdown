@@ -57,5 +57,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeApiBindApiAppsStatus](https://cloud.tencent.com/document/api/628/58633)
+* Read: [DescribeApiBindApiAppsStatus](https://www.tencentcloud.com/search/?wd=DescribeApiBindApiAppsStatus&type=document&lang=en)
 

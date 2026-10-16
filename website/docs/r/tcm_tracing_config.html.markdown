@@ -76,9 +76,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyTracingConfig](https://cloud.tencent.com/document/api/1261/82278)
-* Read: [DescribeMesh](https://cloud.tencent.com/document/api/1261/63842)
-* Update: [ModifyTracingConfig](https://cloud.tencent.com/document/api/1261/82278)
+* Create: [ModifyTracingConfig](https://www.tencentcloud.com/search/?wd=ModifyTracingConfig&type=document&lang=en)
+* Read: [DescribeMesh](https://www.tencentcloud.com/search/?wd=DescribeMesh&type=document&lang=en)
+* Update: [ModifyTracingConfig](https://www.tencentcloud.com/search/?wd=ModifyTracingConfig&type=document&lang=en)
 
 ## Import
 

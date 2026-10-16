@@ -101,8 +101,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGrafanaNotificationChannel](https://cloud.tencent.com/document/api/248/79217)
-* Read: [DescribeGrafanaChannels](https://cloud.tencent.com/document/api/248/80324)
-* Update: [UpdateGrafanaNotificationChannel](https://cloud.tencent.com/document/api/248/79190)
-* Delete: [DeleteGrafanaNotificationChannel](https://cloud.tencent.com/document/api/248/79213)
+* Create: [CreateGrafanaNotificationChannel](https://www.tencentcloud.com/document/api/248/49768)
+* Read: [DescribeGrafanaChannels](https://www.tencentcloud.com/document/api/248/50845)
+* Update: [UpdateGrafanaNotificationChannel](https://www.tencentcloud.com/document/api/248/49742)
+* Delete: [DeleteGrafanaNotificationChannel](https://www.tencentcloud.com/document/api/248/49764)
 

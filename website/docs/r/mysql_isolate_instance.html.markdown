@@ -86,11 +86,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872)
-* Create: [IsolateDBInstance](https://cloud.tencent.com/document/api/236/15869)
-* Create: [ReleaseIsolatedDBInstances](https://cloud.tencent.com/document/api/236/40937)
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872)
-* Update: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872)
-* Update: [IsolateDBInstance](https://cloud.tencent.com/document/api/236/15869)
-* Update: [ReleaseIsolatedDBInstances](https://cloud.tencent.com/document/api/236/40937)
+* Create: [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
+* Create: [IsolateDBInstance](https://www.tencentcloud.com/document/api/236/15869)
+* Create: [ReleaseIsolatedDBInstances](https://www.tencentcloud.com/document/api/236/35703)
+* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
+* Update: [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
+* Update: [IsolateDBInstance](https://www.tencentcloud.com/document/api/236/15869)
+* Update: [ReleaseIsolatedDBInstances](https://www.tencentcloud.com/document/api/236/35703)
 

@@ -114,17 +114,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateReadOnlyDBInstances](https://cloud.tencent.com/document/api/238/46807)
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
-* Create: [DescribeOrders](https://cloud.tencent.com/document/api/238/19937)
-* Create: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeReadOnlyGroupByReadOnlyInstance](https://cloud.tencent.com/document/api/238/46773)
-* Read: [DescribeReadOnlyGroupList](https://cloud.tencent.com/document/api/238/46771)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Delete: [DeleteDBInstance](https://cloud.tencent.com/document/api/238/46806)
-* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969)
-* Delete: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210)
+* Create: [CreateReadOnlyDBInstances](https://www.tencentcloud.com/document/api/238/66348)
+* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+* Create: [DescribeOrders](https://www.tencentcloud.com/document/api/238/32134)
+* Create: [ModifyDBInstanceName](https://www.tencentcloud.com/document/api/238/32104)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeReadOnlyGroupByReadOnlyInstance](https://www.tencentcloud.com/document/api/238/72740)
+* Read: [DescribeReadOnlyGroupList](https://www.tencentcloud.com/document/api/238/72738)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Delete: [DeleteDBInstance](https://www.tencentcloud.com/document/api/238/72759)
+* Delete: [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
+* Delete: [TerminateDBInstance](https://www.tencentcloud.com/document/api/238/34685)
 
 ## Import
 

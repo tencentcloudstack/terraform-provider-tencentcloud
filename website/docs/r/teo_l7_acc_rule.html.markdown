@@ -844,13 +844,13 @@ The `rules` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeZoneConfigImportResult](https://cloud.tencent.com/document/api/1552/113231)
-* Create: [ImportZoneConfig](https://cloud.tencent.com/document/api/1552/113229)
-* Read: [DescribeL7AccRules](https://cloud.tencent.com/document/api/1552/115820)
-* Update: [DescribeZoneConfigImportResult](https://cloud.tencent.com/document/api/1552/113231)
-* Update: [ImportZoneConfig](https://cloud.tencent.com/document/api/1552/113229)
-* Delete: [DescribeZoneConfigImportResult](https://cloud.tencent.com/document/api/1552/113231)
-* Delete: [ImportZoneConfig](https://cloud.tencent.com/document/api/1552/113229)
+* Create: [DescribeZoneConfigImportResult](https://www.tencentcloud.com/search/?wd=DescribeZoneConfigImportResult&type=document&lang=en)
+* Create: [ImportZoneConfig](https://www.tencentcloud.com/search/?wd=ImportZoneConfig&type=document&lang=en)
+* Read: [DescribeL7AccRules](https://www.tencentcloud.com/search/?wd=DescribeL7AccRules&type=document&lang=en)
+* Update: [DescribeZoneConfigImportResult](https://www.tencentcloud.com/search/?wd=DescribeZoneConfigImportResult&type=document&lang=en)
+* Update: [ImportZoneConfig](https://www.tencentcloud.com/search/?wd=ImportZoneConfig&type=document&lang=en)
+* Delete: [DescribeZoneConfigImportResult](https://www.tencentcloud.com/search/?wd=DescribeZoneConfigImportResult&type=document&lang=en)
+* Delete: [ImportZoneConfig](https://www.tencentcloud.com/search/?wd=ImportZoneConfig&type=document&lang=en)
 
 ## Import
 

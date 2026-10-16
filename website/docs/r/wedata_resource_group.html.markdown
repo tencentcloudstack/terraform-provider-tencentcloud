@@ -114,8 +114,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateResourceGroup](https://cloud.tencent.com/document/api/1267/123984)
-* Read: [ListResourceGroups](https://cloud.tencent.com/document/api/1267/123980)
-* Update: [UpdateResourceGroup](https://cloud.tencent.com/document/api/1267/123979)
-* Delete: [DeleteResourceGroup](https://cloud.tencent.com/document/api/1267/123983)
+* Create: [CreateResourceGroup](https://www.tencentcloud.com/search/?wd=CreateResourceGroup&type=document&lang=en)
+* Read: [ListResourceGroups](https://www.tencentcloud.com/search/?wd=ListResourceGroups&type=document&lang=en)
+* Update: [UpdateResourceGroup](https://www.tencentcloud.com/search/?wd=UpdateResourceGroup&type=document&lang=en)
+* Delete: [DeleteResourceGroup](https://www.tencentcloud.com/search/?wd=DeleteResourceGroup&type=document&lang=en)
 

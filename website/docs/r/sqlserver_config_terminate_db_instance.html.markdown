@@ -79,9 +79,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210)
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969)
-* Update: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210)
+* Create: [TerminateDBInstance](https://www.tencentcloud.com/document/api/238/34685)
+* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
+* Update: [TerminateDBInstance](https://www.tencentcloud.com/document/api/238/34685)
 
 ## Import
 

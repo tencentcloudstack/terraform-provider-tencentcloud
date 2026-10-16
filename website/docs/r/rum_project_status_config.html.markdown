@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Read: [DescribeProjects](https://cloud.tencent.com/document/api/1464/61475)
-* Update: [ResumeProject](https://cloud.tencent.com/document/api/1464/86367)
-* Update: [StopProject](https://cloud.tencent.com/document/api/1464/84458)
+* Read: [DescribeProjects](https://www.tencentcloud.com/search/?wd=DescribeProjects&type=document&lang=en)
+* Update: [ResumeProject](https://www.tencentcloud.com/search/?wd=ResumeProject&type=document&lang=en)
+* Update: [StopProject](https://www.tencentcloud.com/search/?wd=StopProject&type=document&lang=en)
 
 ## Import
 

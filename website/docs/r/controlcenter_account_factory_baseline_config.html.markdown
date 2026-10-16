@@ -68,9 +68,9 @@ The `baseline_config_items` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateAccountFactoryBaseline](https://cloud.tencent.com/document/api/1708/116706)
-* Read: [GetAccountFactoryBaseline](https://cloud.tencent.com/document/api/1708/116709)
-* Update: [UpdateAccountFactoryBaseline](https://cloud.tencent.com/document/api/1708/116706)
+* Create: [UpdateAccountFactoryBaseline](https://www.tencentcloud.com/search/?wd=UpdateAccountFactoryBaseline&type=document&lang=en)
+* Read: [GetAccountFactoryBaseline](https://www.tencentcloud.com/search/?wd=GetAccountFactoryBaseline&type=document&lang=en)
+* Update: [UpdateAccountFactoryBaseline](https://www.tencentcloud.com/search/?wd=UpdateAccountFactoryBaseline&type=document&lang=en)
 
 ## Import
 

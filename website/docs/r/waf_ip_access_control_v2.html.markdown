@@ -92,10 +92,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateIpAccessControl](https://cloud.tencent.com/document/api/627/105915)
-* Read: [DescribeIpAccessControl](https://cloud.tencent.com/document/api/627/72645)
-* Update: [ModifyIpAccessControl](https://cloud.tencent.com/document/api/627/105912)
-* Delete: [DeleteIpAccessControlV2](https://cloud.tencent.com/document/api/627/105914)
+* Create: [CreateIpAccessControl](https://www.tencentcloud.com/document/api/627/64775)
+* Read: [DescribeIpAccessControl](https://www.tencentcloud.com/document/api/627/64773)
+* Update: [ModifyIpAccessControl](https://www.tencentcloud.com/document/api/627/64771)
+* Delete: [DeleteIpAccessControlV2](https://www.tencentcloud.com/document/api/627/64774)
 
 ## Import
 

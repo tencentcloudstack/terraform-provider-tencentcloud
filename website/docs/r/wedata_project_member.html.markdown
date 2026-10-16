@@ -68,11 +68,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateProjectMember](https://cloud.tencent.com/document/api/1267/123974)
-* Read: [ListProjectMembers](https://cloud.tencent.com/document/api/1267/123964)
-* Update: [GrantMemberProjectRole](https://cloud.tencent.com/document/api/1267/123966)
-* Update: [RemoveMemberProjectRole](https://cloud.tencent.com/document/api/1267/123960)
-* Delete: [DeleteProjectMember](https://cloud.tencent.com/document/api/1267/123972)
+* Create: [CreateProjectMember](https://www.tencentcloud.com/search/?wd=CreateProjectMember&type=document&lang=en)
+* Read: [ListProjectMembers](https://www.tencentcloud.com/search/?wd=ListProjectMembers&type=document&lang=en)
+* Update: [GrantMemberProjectRole](https://www.tencentcloud.com/search/?wd=GrantMemberProjectRole&type=document&lang=en)
+* Update: [RemoveMemberProjectRole](https://www.tencentcloud.com/search/?wd=RemoveMemberProjectRole&type=document&lang=en)
+* Delete: [DeleteProjectMember](https://www.tencentcloud.com/search/?wd=DeleteProjectMember&type=document&lang=en)
 
 ## Import
 

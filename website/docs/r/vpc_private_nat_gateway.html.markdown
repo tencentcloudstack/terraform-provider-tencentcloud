@@ -45,13 +45,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrivateNatGateway](https://cloud.tencent.com/document/api/215/107904)
-* Create: [DescribePrivateNatGateways](https://cloud.tencent.com/document/api/215/107891)
-* Read: [DescribePrivateNatGateways](https://cloud.tencent.com/document/api/215/107891)
-* Update: [DescribePrivateNatGateways](https://cloud.tencent.com/document/api/215/107891)
-* Update: [ModifyPrivateNatGatewayAttribute](https://cloud.tencent.com/document/api/215/107890)
-* Delete: [DeletePrivateNatGateway](https://cloud.tencent.com/document/api/215/107900)
-* Delete: [DescribePrivateNatGateways](https://cloud.tencent.com/document/api/215/107891)
+* Create: [CreatePrivateNatGateway](https://www.tencentcloud.com/search/?wd=CreatePrivateNatGateway&type=document&lang=en)
+* Create: [DescribePrivateNatGateways](https://www.tencentcloud.com/search/?wd=DescribePrivateNatGateways&type=document&lang=en)
+* Read: [DescribePrivateNatGateways](https://www.tencentcloud.com/search/?wd=DescribePrivateNatGateways&type=document&lang=en)
+* Update: [DescribePrivateNatGateways](https://www.tencentcloud.com/search/?wd=DescribePrivateNatGateways&type=document&lang=en)
+* Update: [ModifyPrivateNatGatewayAttribute](https://www.tencentcloud.com/search/?wd=ModifyPrivateNatGatewayAttribute&type=document&lang=en)
+* Delete: [DeletePrivateNatGateway](https://www.tencentcloud.com/search/?wd=DeletePrivateNatGateway&type=document&lang=en)
+* Delete: [DescribePrivateNatGateways](https://www.tencentcloud.com/search/?wd=DescribePrivateNatGateways&type=document&lang=en)
 
 ## Import
 

@@ -75,9 +75,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateGrafanaConfig](https://cloud.tencent.com/document/api/248/79193)
-* Read: [DescribeGrafanaConfig](https://cloud.tencent.com/document/api/248/79210)
-* Update: [UpdateGrafanaConfig](https://cloud.tencent.com/document/api/248/79193)
+* Create: [UpdateGrafanaConfig](https://www.tencentcloud.com/document/api/248/49745)
+* Read: [DescribeGrafanaConfig](https://www.tencentcloud.com/document/api/248/49761)
+* Update: [UpdateGrafanaConfig](https://www.tencentcloud.com/document/api/248/49745)
 
 ## Import
 

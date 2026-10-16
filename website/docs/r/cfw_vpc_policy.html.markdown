@@ -60,10 +60,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddVpcAcRule](https://cloud.tencent.com/document/api/1132/97846)
-* Read: [DescribeVpcAcRule](https://cloud.tencent.com/document/api/1132/97844)
-* Update: [ModifyVpcAcRule](https://cloud.tencent.com/document/api/1132/97842)
-* Delete: [RemoveVpcAcRule](https://cloud.tencent.com/document/api/1132/97837)
+* Create: [AddVpcAcRule](https://www.tencentcloud.com/search/?wd=AddVpcAcRule&type=document&lang=en)
+* Read: [DescribeVpcAcRule](https://www.tencentcloud.com/search/?wd=DescribeVpcAcRule&type=document&lang=en)
+* Update: [ModifyVpcAcRule](https://www.tencentcloud.com/search/?wd=ModifyVpcAcRule&type=document&lang=en)
+* Delete: [RemoveVpcAcRule](https://www.tencentcloud.com/search/?wd=RemoveVpcAcRule&type=document&lang=en)
 
 ## Import
 

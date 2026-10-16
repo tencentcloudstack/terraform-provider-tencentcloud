@@ -67,10 +67,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSQLScript](https://cloud.tencent.com/document/api/1267/123609)
-* Read: [GetSQLScript](https://cloud.tencent.com/document/api/1267/123603)
-* Update: [UpdateSQLScript](https://cloud.tencent.com/document/api/1267/123594)
-* Delete: [DeleteSQLScript](https://cloud.tencent.com/document/api/1267/123605)
+* Create: [CreateSQLScript](https://www.tencentcloud.com/search/?wd=CreateSQLScript&type=document&lang=en)
+* Read: [GetSQLScript](https://www.tencentcloud.com/search/?wd=GetSQLScript&type=document&lang=en)
+* Update: [UpdateSQLScript](https://www.tencentcloud.com/search/?wd=UpdateSQLScript&type=document&lang=en)
+* Delete: [DeleteSQLScript](https://www.tencentcloud.com/search/?wd=DeleteSQLScript&type=document&lang=en)
 
 ## Import
 

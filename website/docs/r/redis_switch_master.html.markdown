@@ -98,9 +98,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ChangeReplicaToMaster](https://cloud.tencent.com/document/api/239/56698)
-* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601)
-* Read: [DescribeInstanceZoneInfo](https://cloud.tencent.com/document/api/239/50312)
-* Update: [ChangeReplicaToMaster](https://cloud.tencent.com/document/api/239/56698)
-* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601)
+* Create: [ChangeReplicaToMaster](https://www.tencentcloud.com/document/api/239/41037)
+* Create: [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+* Read: [DescribeInstanceZoneInfo](https://www.tencentcloud.com/document/api/239/39091)
+* Update: [ChangeReplicaToMaster](https://www.tencentcloud.com/document/api/239/41037)
+* Update: [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
 

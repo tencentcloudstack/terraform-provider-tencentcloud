@@ -87,5 +87,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeViews](https://cloud.tencent.com/document/api/845/66674)
+* Read: [DescribeViews](https://www.tencentcloud.com/document/api/845/44349)
 

@@ -145,7 +145,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ImportOpenApi](https://cloud.tencent.com/document/api/628/79383)
-* Read: [DescribeApi](https://cloud.tencent.com/document/api/628/45241)
-* Delete: [DeleteApi](https://cloud.tencent.com/document/api/628/45242)
+* Create: [ImportOpenApi](https://www.tencentcloud.com/search/?wd=ImportOpenApi&type=document&lang=en)
+* Read: [DescribeApi](https://www.tencentcloud.com/search/?wd=DescribeApi&type=document&lang=en)
+* Delete: [DeleteApi](https://www.tencentcloud.com/search/?wd=DeleteApi&type=document&lang=en)
 

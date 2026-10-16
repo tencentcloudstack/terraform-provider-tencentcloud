@@ -43,19 +43,19 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCustomerGateway](https://cloud.tencent.com/document/api/215/17523)
-* Create: [DescribeCustomerGateways](https://cloud.tencent.com/document/api/215/17516)
-* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeCustomerGateways](https://cloud.tencent.com/document/api/215/17516)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [DescribeCustomerGateways](https://cloud.tencent.com/document/api/215/17516)
-* Update: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ModifyCustomerGatewayAttribute](https://cloud.tencent.com/document/api/215/17509)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeleteCustomerGateway](https://cloud.tencent.com/document/api/215/17520)
-* Delete: [DescribeCustomerGateways](https://cloud.tencent.com/document/api/215/17516)
-* Delete: [DescribeVpnConnections](https://cloud.tencent.com/document/api/215/17515)
+* Create: [CreateCustomerGateway](https://www.tencentcloud.com/document/api/215/17523)
+* Create: [DescribeCustomerGateways](https://www.tencentcloud.com/document/api/215/17516)
+* Create: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeCustomerGateways](https://www.tencentcloud.com/document/api/215/17516)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [DescribeCustomerGateways](https://www.tencentcloud.com/document/api/215/17516)
+* Update: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyCustomerGatewayAttribute](https://www.tencentcloud.com/document/api/215/17509)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteCustomerGateway](https://www.tencentcloud.com/document/api/215/17520)
+* Delete: [DescribeCustomerGateways](https://www.tencentcloud.com/document/api/215/17516)
+* Delete: [DescribeVpnConnections](https://www.tencentcloud.com/document/api/215/17515)
 
 ## Import
 

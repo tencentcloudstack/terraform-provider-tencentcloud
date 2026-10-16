@@ -42,10 +42,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateFolder](https://cloud.tencent.com/document/api/849/77739)
-* Read: [DescribeFolder](https://cloud.tencent.com/document/api/849/102187)
-* Update: [ModifyFolder](https://cloud.tencent.com/document/api/849/100452)
-* Delete: [DeleteFolders](https://cloud.tencent.com/document/api/849/100453)
+* Create: [CreateFolder](https://www.tencentcloud.com/search/?wd=CreateFolder&type=document&lang=en)
+* Read: [DescribeFolder](https://www.tencentcloud.com/search/?wd=DescribeFolder&type=document&lang=en)
+* Update: [ModifyFolder](https://www.tencentcloud.com/search/?wd=ModifyFolder&type=document&lang=en)
+* Delete: [DeleteFolders](https://www.tencentcloud.com/search/?wd=DeleteFolders&type=document&lang=en)
 
 ## Import
 

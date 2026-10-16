@@ -56,11 +56,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDirectConnectGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/19191)
-* Create: [DescribeDirectConnectGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/19189)
-* Read: [DescribeDirectConnectGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/19189)
-* Delete: [DeleteDirectConnectGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/19190)
-* Delete: [DescribeDirectConnectGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/19189)
+* Create: [CreateDirectConnectGatewayCcnRoutes](https://www.tencentcloud.com/document/api/215/34777)
+* Create: [DescribeDirectConnectGatewayCcnRoutes](https://www.tencentcloud.com/document/api/215/34775)
+* Read: [DescribeDirectConnectGatewayCcnRoutes](https://www.tencentcloud.com/document/api/215/34775)
+* Delete: [DeleteDirectConnectGatewayCcnRoutes](https://www.tencentcloud.com/document/api/215/34776)
+* Delete: [DescribeDirectConnectGatewayCcnRoutes](https://www.tencentcloud.com/document/api/215/34775)
 
 ## Import
 

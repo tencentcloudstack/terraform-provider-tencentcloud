@@ -111,12 +111,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrivateNatGatewayTranslationNatRule](https://cloud.tencent.com/document/api/215/107901)
-* Read: [DescribePrivateNatGatewayTranslationNatRules](https://cloud.tencent.com/document/api/215/107892)
-* Update: [CreatePrivateNatGatewayTranslationNatRule](https://cloud.tencent.com/document/api/215/107901)
-* Update: [DeletePrivateNatGatewayTranslationNatRule](https://cloud.tencent.com/document/api/215/107897)
-* Delete: [DeletePrivateNatGatewayTranslationNatRule](https://cloud.tencent.com/document/api/215/107897)
-* Delete: [DescribePrivateNatGatewayTranslationNatRules](https://cloud.tencent.com/document/api/215/107892)
+* Create: [CreatePrivateNatGatewayTranslationNatRule](https://www.tencentcloud.com/search/?wd=CreatePrivateNatGatewayTranslationNatRule&type=document&lang=en)
+* Read: [DescribePrivateNatGatewayTranslationNatRules](https://www.tencentcloud.com/search/?wd=DescribePrivateNatGatewayTranslationNatRules&type=document&lang=en)
+* Update: [CreatePrivateNatGatewayTranslationNatRule](https://www.tencentcloud.com/search/?wd=CreatePrivateNatGatewayTranslationNatRule&type=document&lang=en)
+* Update: [DeletePrivateNatGatewayTranslationNatRule](https://www.tencentcloud.com/search/?wd=DeletePrivateNatGatewayTranslationNatRule&type=document&lang=en)
+* Delete: [DeletePrivateNatGatewayTranslationNatRule](https://www.tencentcloud.com/search/?wd=DeletePrivateNatGatewayTranslationNatRule&type=document&lang=en)
+* Delete: [DescribePrivateNatGatewayTranslationNatRules](https://www.tencentcloud.com/search/?wd=DescribePrivateNatGatewayTranslationNatRules&type=document&lang=en)
 
 ## Import
 

@@ -120,5 +120,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeWorkGroupInfo](https://cloud.tencent.com/document/api/1342/99260)
+* Read: [DescribeWorkGroupInfo](https://www.tencentcloud.com/search/?wd=DescribeWorkGroupInfo&type=document&lang=en)
 

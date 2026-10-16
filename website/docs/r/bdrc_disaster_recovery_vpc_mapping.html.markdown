@@ -59,10 +59,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDisasterRecoveryVpcMapping](https://cloud.tencent.com/document/api/1824/136780)
-* Create: [DescribeVpcMappings](https://cloud.tencent.com/document/api/1824/136756)
-* Read: [DescribeVpcMappings](https://cloud.tencent.com/document/api/1824/136756)
-* Delete: [DeleteDisasterRecoveryVpcMapping](https://cloud.tencent.com/document/api/1824/136773)
+* Create: [CreateDisasterRecoveryVpcMapping](https://www.tencentcloud.com/search/?wd=CreateDisasterRecoveryVpcMapping&type=document&lang=en)
+* Create: [DescribeVpcMappings](https://www.tencentcloud.com/search/?wd=DescribeVpcMappings&type=document&lang=en)
+* Read: [DescribeVpcMappings](https://www.tencentcloud.com/search/?wd=DescribeVpcMappings&type=document&lang=en)
+* Delete: [DeleteDisasterRecoveryVpcMapping](https://www.tencentcloud.com/search/?wd=DeleteDisasterRecoveryVpcMapping&type=document&lang=en)
 
 ## Import
 

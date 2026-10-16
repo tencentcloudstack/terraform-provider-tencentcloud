@@ -61,15 +61,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddUser](https://cloud.tencent.com/document/api/598/34595)
-* Create: [GetUser](https://cloud.tencent.com/document/api/598/34590)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Read: [GetUser](https://cloud.tencent.com/document/api/598/34590)
-* Update: [GetUser](https://cloud.tencent.com/document/api/598/34590)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Update: [UpdateUser](https://cloud.tencent.com/document/api/598/34583)
-* Delete: [DeleteUser](https://cloud.tencent.com/document/api/598/34592)
+* Create: [AddUser](https://www.tencentcloud.com/document/api/598/32265)
+* Create: [GetUser](https://www.tencentcloud.com/document/api/598/32259)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Read: [GetUser](https://www.tencentcloud.com/document/api/598/32259)
+* Update: [GetUser](https://www.tencentcloud.com/document/api/598/32259)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Update: [UpdateUser](https://www.tencentcloud.com/document/api/598/32252)
+* Delete: [DeleteUser](https://www.tencentcloud.com/document/api/598/32261)
 
 ## Import
 

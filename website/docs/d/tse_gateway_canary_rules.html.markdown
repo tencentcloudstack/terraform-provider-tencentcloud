@@ -57,5 +57,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCloudNativeAPIGatewayCanaryRules](https://cloud.tencent.com/document/api/1364/94844)
+* Read: [DescribeCloudNativeAPIGatewayCanaryRules](https://www.tencentcloud.com/search/?wd=DescribeCloudNativeAPIGatewayCanaryRules&type=document&lang=en)
 

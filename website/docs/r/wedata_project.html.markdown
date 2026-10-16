@@ -83,11 +83,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateProject](https://cloud.tencent.com/document/api/1267/123975)
-* Create: [DisableProject](https://cloud.tencent.com/document/api/1267/123971)
-* Read: [GetProject](https://cloud.tencent.com/document/api/1267/123967)
-* Update: [DisableProject](https://cloud.tencent.com/document/api/1267/123971)
-* Update: [EnableProject](https://cloud.tencent.com/document/api/1267/123970)
-* Update: [UpdateProject](https://cloud.tencent.com/document/api/1267/123958)
-* Delete: [DeleteProject](https://cloud.tencent.com/document/api/1267/127290)
+* Create: [CreateProject](https://www.tencentcloud.com/search/?wd=CreateProject&type=document&lang=en)
+* Create: [DisableProject](https://www.tencentcloud.com/search/?wd=DisableProject&type=document&lang=en)
+* Read: [GetProject](https://www.tencentcloud.com/search/?wd=GetProject&type=document&lang=en)
+* Update: [DisableProject](https://www.tencentcloud.com/search/?wd=DisableProject&type=document&lang=en)
+* Update: [EnableProject](https://www.tencentcloud.com/search/?wd=EnableProject&type=document&lang=en)
+* Update: [UpdateProject](https://www.tencentcloud.com/search/?wd=UpdateProject&type=document&lang=en)
+* Delete: [DeleteProject](https://www.tencentcloud.com/search/?wd=DeleteProject&type=document&lang=en)
 

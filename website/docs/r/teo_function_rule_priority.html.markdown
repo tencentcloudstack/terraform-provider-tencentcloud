@@ -43,9 +43,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyFunctionRulePriority](https://cloud.tencent.com/document/api/1552/111379)
-* Read: [DescribeFunctionRules](https://cloud.tencent.com/document/api/1552/111385)
-* Update: [ModifyFunctionRulePriority](https://cloud.tencent.com/document/api/1552/111379)
+* Create: [ModifyFunctionRulePriority](https://www.tencentcloud.com/search/?wd=ModifyFunctionRulePriority&type=document&lang=en)
+* Read: [DescribeFunctionRules](https://www.tencentcloud.com/search/?wd=DescribeFunctionRules&type=document&lang=en)
+* Update: [ModifyFunctionRulePriority](https://www.tencentcloud.com/search/?wd=ModifyFunctionRulePriority&type=document&lang=en)
 
 ## Import
 

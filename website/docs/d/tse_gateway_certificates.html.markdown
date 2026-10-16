@@ -59,5 +59,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCloudNativeAPIGatewayCertificates](https://cloud.tencent.com/document/api/1364/98588)
+* Read: [DescribeCloudNativeAPIGatewayCertificates](https://www.tencentcloud.com/search/?wd=DescribeCloudNativeAPIGatewayCertificates&type=document&lang=en)
 

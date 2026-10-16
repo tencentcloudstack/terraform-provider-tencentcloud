@@ -236,22 +236,22 @@ The `ports` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddSpartaProtection](https://cloud.tencent.com/document/api/627/72689)
-* Create: [DescribeDomainVerifyResult](https://cloud.tencent.com/document/api/627/97869)
-* Create: [DescribeDomains](https://cloud.tencent.com/document/api/627/72840)
-* Create: [ModifyApiAnalyzeStatus](https://cloud.tencent.com/document/api/627/97282)
-* Create: [ModifyBotStatus](https://cloud.tencent.com/document/api/627/97281)
-* Create: [ModifyDomainsCLSStatus](https://cloud.tencent.com/document/api/627/96937)
-* Create: [ModifyProtectionStatus](https://cloud.tencent.com/document/api/627/96931)
-* Read: [DescribeDomainDetailsSaas](https://cloud.tencent.com/document/api/627/82938)
-* Read: [DescribeDomains](https://cloud.tencent.com/document/api/627/72840)
-* Update: [DescribeDomainDetailsSaas](https://cloud.tencent.com/document/api/627/82938)
-* Update: [ModifyApiAnalyzeStatus](https://cloud.tencent.com/document/api/627/97282)
-* Update: [ModifyBotStatus](https://cloud.tencent.com/document/api/627/97281)
-* Update: [ModifyDomainsCLSStatus](https://cloud.tencent.com/document/api/627/96937)
-* Update: [ModifyProtectionStatus](https://cloud.tencent.com/document/api/627/96931)
-* Update: [ModifySpartaProtection](https://cloud.tencent.com/document/api/627/94309)
-* Delete: [DeleteSpartaProtection](https://cloud.tencent.com/document/api/627/96949)
+* Create: [AddSpartaProtection](https://www.tencentcloud.com/document/api/627/64571)
+* Create: [DescribeDomainVerifyResult](https://www.tencentcloud.com/document/api/627/64758)
+* Create: [DescribeDomains](https://www.tencentcloud.com/document/api/627/64580)
+* Create: [ModifyApiAnalyzeStatus](https://www.tencentcloud.com/document/api/627/64575)
+* Create: [ModifyBotStatus](https://www.tencentcloud.com/document/api/627/64540)
+* Create: [ModifyDomainsCLSStatus](https://www.tencentcloud.com/document/api/627/64539)
+* Create: [ModifyProtectionStatus](https://www.tencentcloud.com/document/api/627/64508)
+* Read: [DescribeDomainDetailsSaas](https://www.tencentcloud.com/document/api/627/64564)
+* Read: [DescribeDomains](https://www.tencentcloud.com/document/api/627/64580)
+* Update: [DescribeDomainDetailsSaas](https://www.tencentcloud.com/document/api/627/64564)
+* Update: [ModifyApiAnalyzeStatus](https://www.tencentcloud.com/document/api/627/64575)
+* Update: [ModifyBotStatus](https://www.tencentcloud.com/document/api/627/64540)
+* Update: [ModifyDomainsCLSStatus](https://www.tencentcloud.com/document/api/627/64539)
+* Update: [ModifyProtectionStatus](https://www.tencentcloud.com/document/api/627/64508)
+* Update: [ModifySpartaProtection](https://www.tencentcloud.com/document/api/627/64558)
+* Delete: [DeleteSpartaProtection](https://www.tencentcloud.com/document/api/627/64568)
 
 ## Import
 

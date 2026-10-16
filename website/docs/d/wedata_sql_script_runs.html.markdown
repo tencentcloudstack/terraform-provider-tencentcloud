@@ -76,5 +76,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListSQLScriptRuns](https://cloud.tencent.com/document/api/1267/123600)
+* Read: [ListSQLScriptRuns](https://www.tencentcloud.com/search/?wd=ListSQLScriptRuns&type=document&lang=en)
 

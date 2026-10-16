@@ -78,10 +78,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyRabbitMQPermission](https://cloud.tencent.com/document/api/1179/115237)
-* Read: [DescribeRabbitMQPermission](https://cloud.tencent.com/document/api/1179/115238)
-* Update: [ModifyRabbitMQPermission](https://cloud.tencent.com/document/api/1179/115237)
-* Delete: [DeleteRabbitMQPermission](https://cloud.tencent.com/document/api/1179/115239)
+* Create: [ModifyRabbitMQPermission](https://www.tencentcloud.com/search/?wd=ModifyRabbitMQPermission&type=document&lang=en)
+* Read: [DescribeRabbitMQPermission](https://www.tencentcloud.com/search/?wd=DescribeRabbitMQPermission&type=document&lang=en)
+* Update: [ModifyRabbitMQPermission](https://www.tencentcloud.com/search/?wd=ModifyRabbitMQPermission&type=document&lang=en)
+* Delete: [DeleteRabbitMQPermission](https://www.tencentcloud.com/search/?wd=DeleteRabbitMQPermission&type=document&lang=en)
 
 ## Import
 

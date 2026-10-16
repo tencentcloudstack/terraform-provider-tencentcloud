@@ -82,13 +82,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62278)
-* Create: [ModifyClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62277)
-* Read: [DescribeClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62278)
-* Update: [DescribeClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62278)
-* Update: [ModifyClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62277)
-* Delete: [DescribeClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62278)
-* Delete: [ModifyClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62277)
+* Create: [DescribeClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42699)
+* Create: [ModifyClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42698)
+* Read: [DescribeClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42699)
+* Update: [DescribeClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42699)
+* Update: [ModifyClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42698)
+* Delete: [DescribeClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42699)
+* Delete: [ModifyClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42698)
 
 ## Import
 

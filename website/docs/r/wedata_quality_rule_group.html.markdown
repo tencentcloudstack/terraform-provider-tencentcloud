@@ -130,8 +130,8 @@ The `rule_group_exec_strategy_bo_list` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateQualityRuleGroup](https://cloud.tencent.com/document/api/1267/127231)
-* Read: [ListQualityRuleGroups](https://cloud.tencent.com/document/api/1267/127351)
-* Update: [ModifyQualityRuleGroup](https://cloud.tencent.com/document/api/1267/127224)
-* Delete: [DeleteQualityRuleGroup](https://cloud.tencent.com/document/api/1267/127229)
+* Create: [CreateQualityRuleGroup](https://www.tencentcloud.com/search/?wd=CreateQualityRuleGroup&type=document&lang=en)
+* Read: [ListQualityRuleGroups](https://www.tencentcloud.com/search/?wd=ListQualityRuleGroups&type=document&lang=en)
+* Update: [ModifyQualityRuleGroup](https://www.tencentcloud.com/search/?wd=ModifyQualityRuleGroup&type=document&lang=en)
+* Delete: [DeleteQualityRuleGroup](https://www.tencentcloud.com/search/?wd=DeleteQualityRuleGroup&type=document&lang=en)
 

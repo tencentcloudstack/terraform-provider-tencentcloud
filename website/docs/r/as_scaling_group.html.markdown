@@ -185,16 +185,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAutoScalingGroup](https://cloud.tencent.com/document/api/377/20440)
-* Create: [DescribeAutoScalingGroups](https://cloud.tencent.com/document/api/377/20438)
-* Read: [DescribeAutoScalingGroups](https://cloud.tencent.com/document/api/377/20438)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ModifyAutoScalingGroup](https://cloud.tencent.com/document/api/377/20433)
-* Update: [ModifyLoadBalancers](https://cloud.tencent.com/document/api/377/32868)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeleteAutoScalingGroup](https://cloud.tencent.com/document/api/377/20439)
-* Delete: [DescribeAutoScalingGroups](https://cloud.tencent.com/document/api/377/20438)
-* Delete: [ModifyAutoScalingGroup](https://cloud.tencent.com/document/api/377/20433)
+* Create: [CreateAutoScalingGroup](https://www.tencentcloud.com/document/api/377/31016)
+* Create: [DescribeAutoScalingGroups](https://www.tencentcloud.com/document/api/377/31013)
+* Read: [DescribeAutoScalingGroups](https://www.tencentcloud.com/document/api/377/31013)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyAutoScalingGroup](https://www.tencentcloud.com/document/api/377/31008)
+* Update: [ModifyLoadBalancers](https://www.tencentcloud.com/document/api/377/31006)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteAutoScalingGroup](https://www.tencentcloud.com/document/api/377/31015)
+* Delete: [DescribeAutoScalingGroups](https://www.tencentcloud.com/document/api/377/31013)
+* Delete: [ModifyAutoScalingGroup](https://www.tencentcloud.com/document/api/377/31008)
 
 ## Import
 

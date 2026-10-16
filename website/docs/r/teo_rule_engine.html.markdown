@@ -320,10 +320,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRule](https://cloud.tencent.com/document/api/1552/80622)
-* Read: [DescribeRules](https://cloud.tencent.com/document/api/1552/80619)
-* Update: [ModifyRule](https://cloud.tencent.com/document/api/1552/80616)
-* Delete: [DeleteRules](https://cloud.tencent.com/document/api/1552/80621)
+* Create: [CreateRule](https://www.tencentcloud.com/search/?wd=CreateRule&type=document&lang=en)
+* Read: [DescribeRules](https://www.tencentcloud.com/search/?wd=DescribeRules&type=document&lang=en)
+* Update: [ModifyRule](https://www.tencentcloud.com/search/?wd=ModifyRule&type=document&lang=en)
+* Delete: [DeleteRules](https://www.tencentcloud.com/search/?wd=DeleteRules&type=document&lang=en)
 
 ## Import
 

@@ -79,8 +79,8 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAuditLogFile](https://cloud.tencent.com/document/api/409/131096)
-* Create: [DescribeAuditLogFiles](https://cloud.tencent.com/document/api/409/131093)
-* Read: [DescribeAuditLogFiles](https://cloud.tencent.com/document/api/409/131093)
-* Delete: [DeleteAuditLogFile](https://cloud.tencent.com/document/api/409/131095)
+* Create: [CreateAuditLogFile](https://www.tencentcloud.com/document/api/409/79969)
+* Create: [DescribeAuditLogFiles](https://www.tencentcloud.com/document/api/409/79966)
+* Read: [DescribeAuditLogFiles](https://www.tencentcloud.com/document/api/409/79966)
+* Delete: [DeleteAuditLogFile](https://www.tencentcloud.com/document/api/409/79968)
 

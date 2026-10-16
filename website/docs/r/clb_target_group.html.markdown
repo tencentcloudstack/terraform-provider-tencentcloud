@@ -220,11 +220,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTargetGroup](https://cloud.tencent.com/document/api/214/40559)
-* Read: [DescribeTargetGroupList](https://cloud.tencent.com/document/api/214/40555)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Update: [ModifyTargetGroupAttribute](https://cloud.tencent.com/document/api/214/40552)
-* Delete: [DeleteTargetGroups](https://cloud.tencent.com/document/api/214/40558)
+* Create: [CreateTargetGroup](https://www.tencentcloud.com/document/api/214/33839)
+* Read: [DescribeTargetGroupList](https://www.tencentcloud.com/document/api/214/33827)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Update: [ModifyTargetGroupAttribute](https://www.tencentcloud.com/document/api/214/33815)
+* Delete: [DeleteTargetGroups](https://www.tencentcloud.com/document/api/214/33834)
 
 ## Import
 

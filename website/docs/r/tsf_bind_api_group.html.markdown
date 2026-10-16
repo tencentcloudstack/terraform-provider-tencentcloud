@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindApiGroup](https://cloud.tencent.com/document/api/649/50644)
-* Read: [DescribeGroupBindedGateways](https://cloud.tencent.com/document/api/649/50631)
-* Delete: [UnbindApiGroup](https://cloud.tencent.com/document/api/649/50626)
+* Create: [BindApiGroup](https://www.tencentcloud.com/search/?wd=BindApiGroup&type=document&lang=en)
+* Read: [DescribeGroupBindedGateways](https://www.tencentcloud.com/search/?wd=DescribeGroupBindedGateways&type=document&lang=en)
+* Delete: [UnbindApiGroup](https://www.tencentcloud.com/search/?wd=UnbindApiGroup&type=document&lang=en)
 
 ## Import
 

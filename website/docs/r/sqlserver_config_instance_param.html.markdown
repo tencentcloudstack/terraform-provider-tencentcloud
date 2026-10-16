@@ -89,9 +89,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyInstanceParam](https://cloud.tencent.com/document/api/238/59107)
-* Read: [DescribeInstanceParams](https://cloud.tencent.com/document/api/238/59108)
-* Update: [ModifyInstanceParam](https://cloud.tencent.com/document/api/238/59107)
+* Create: [ModifyInstanceParam](https://www.tencentcloud.com/document/api/238/41637)
+* Read: [DescribeInstanceParams](https://www.tencentcloud.com/document/api/238/41641)
+* Update: [ModifyInstanceParam](https://www.tencentcloud.com/document/api/238/41637)
 
 ## Import
 

@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBInstanceRebootTime](https://cloud.tencent.com/document/api/236/15874)
+* Read: [DescribeDBInstanceRebootTime](https://www.tencentcloud.com/document/api/236/15874)
 

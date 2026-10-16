@@ -62,10 +62,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateVpcPeeringConnection](https://cloud.tencent.com/document/api/215/96025)
-* Read: [DescribeVpcPeeringConnections](https://cloud.tencent.com/document/api/215/96023)
-* Update: [ModifyVpcPeeringConnection](https://cloud.tencent.com/document/api/215/96022)
-* Delete: [DeleteVpcPeeringConnection](https://cloud.tencent.com/document/api/215/96024)
+* Create: [CreateVpcPeeringConnection](https://www.tencentcloud.com/search/?wd=CreateVpcPeeringConnection&type=document&lang=en)
+* Read: [DescribeVpcPeeringConnections](https://www.tencentcloud.com/search/?wd=DescribeVpcPeeringConnections&type=document&lang=en)
+* Update: [ModifyVpcPeeringConnection](https://www.tencentcloud.com/search/?wd=ModifyVpcPeeringConnection&type=document&lang=en)
+* Delete: [DeleteVpcPeeringConnection](https://www.tencentcloud.com/search/?wd=DeleteVpcPeeringConnection&type=document&lang=en)
 
 ## Import
 

@@ -33,5 +33,5 @@ The following arguments are supported:
 
 This action invokes the following TencentCloud APIs:
 
-* Invoke: [ConfirmOriginACLUpdate](https://cloud.tencent.com/document/api/1552/120409)
+* Invoke: [ConfirmOriginACLUpdate](https://www.tencentcloud.com/search/?wd=ConfirmOriginACLUpdate&type=document&lang=en)
 

@@ -54,12 +54,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLoadBalancerSnatIps](https://cloud.tencent.com/document/api/214/41505)
-* Read: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685)
-* Update: [CreateLoadBalancerSnatIps](https://cloud.tencent.com/document/api/214/41505)
-* Update: [DeleteLoadBalancerSnatIps](https://cloud.tencent.com/document/api/214/41503)
-* Delete: [DeleteLoadBalancerSnatIps](https://cloud.tencent.com/document/api/214/41503)
-* Delete: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685)
+* Create: [CreateLoadBalancerSnatIps](https://www.tencentcloud.com/document/api/214/37096)
+* Read: [DescribeLoadBalancers](https://www.tencentcloud.com/document/api/214/33830)
+* Update: [CreateLoadBalancerSnatIps](https://www.tencentcloud.com/document/api/214/37096)
+* Update: [DeleteLoadBalancerSnatIps](https://www.tencentcloud.com/document/api/214/37094)
+* Delete: [DeleteLoadBalancerSnatIps](https://www.tencentcloud.com/document/api/214/37094)
+* Delete: [DescribeLoadBalancers](https://www.tencentcloud.com/document/api/214/33830)
 
 ## Import
 

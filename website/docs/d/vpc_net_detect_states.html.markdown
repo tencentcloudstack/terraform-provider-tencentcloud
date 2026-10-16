@@ -48,5 +48,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeNetDetectStates](https://cloud.tencent.com/document/api/215/38697)
+* Read: [DescribeNetDetectStates](https://www.tencentcloud.com/document/api/215/34743)
 

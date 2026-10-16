@@ -64,11 +64,11 @@ The `life_cycle_rule` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLifeCycleRules](https://cloud.tencent.com/document/api/1105/52336)
-* Create: [DescribeLifeCycleRules](https://cloud.tencent.com/document/api/1105/52334)
-* Read: [DescribeLifeCycleRules](https://cloud.tencent.com/document/api/1105/52334)
-* Update: [ModifyLifeCycleRules](https://cloud.tencent.com/document/api/1105/52333)
-* Delete: [DeleteLifeCycleRules](https://cloud.tencent.com/document/api/1105/52335)
+* Create: [CreateLifeCycleRules](https://www.tencentcloud.com/search/?wd=CreateLifeCycleRules&type=document&lang=en)
+* Create: [DescribeLifeCycleRules](https://www.tencentcloud.com/search/?wd=DescribeLifeCycleRules&type=document&lang=en)
+* Read: [DescribeLifeCycleRules](https://www.tencentcloud.com/search/?wd=DescribeLifeCycleRules&type=document&lang=en)
+* Update: [ModifyLifeCycleRules](https://www.tencentcloud.com/search/?wd=ModifyLifeCycleRules&type=document&lang=en)
+* Delete: [DeleteLifeCycleRules](https://www.tencentcloud.com/search/?wd=DeleteLifeCycleRules&type=document&lang=en)
 
 ## Import
 

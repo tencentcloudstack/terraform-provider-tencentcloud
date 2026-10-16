@@ -84,13 +84,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateConsumerGroup](https://cloud.tencent.com/document/api/1493/97943)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeConsumerGroup](https://cloud.tencent.com/document/api/1493/97941)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ModifyConsumerGroup](https://cloud.tencent.com/document/api/1493/97940)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeleteConsumerGroup](https://cloud.tencent.com/document/api/1493/97942)
+* Create: [CreateConsumerGroup](https://www.tencentcloud.com/search/?wd=CreateConsumerGroup&type=document&lang=en)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeConsumerGroup](https://www.tencentcloud.com/search/?wd=DescribeConsumerGroup&type=document&lang=en)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyConsumerGroup](https://www.tencentcloud.com/search/?wd=ModifyConsumerGroup&type=document&lang=en)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteConsumerGroup](https://www.tencentcloud.com/search/?wd=DeleteConsumerGroup&type=document&lang=en)
 
 ## Import
 

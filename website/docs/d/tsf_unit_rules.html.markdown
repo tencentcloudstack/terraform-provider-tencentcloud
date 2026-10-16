@@ -63,5 +63,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeUnitRulesV2](https://cloud.tencent.com/document/api/649/90667)
+* Read: [DescribeUnitRulesV2](https://www.tencentcloud.com/search/?wd=DescribeUnitRulesV2&type=document&lang=en)
 

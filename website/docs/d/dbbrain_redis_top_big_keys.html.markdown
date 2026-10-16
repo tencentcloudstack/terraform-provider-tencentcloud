@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRedisTopBigKeys](https://cloud.tencent.com/document/api/1130/72832)
+* Read: [DescribeRedisTopBigKeys](https://www.tencentcloud.com/search/?wd=DescribeRedisTopBigKeys&type=document&lang=en)
 

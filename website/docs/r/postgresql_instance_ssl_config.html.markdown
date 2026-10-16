@@ -53,11 +53,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeTasks](https://cloud.tencent.com/document/api/409/116177)
-* Create: [ModifyDBInstanceSSLConfig](https://cloud.tencent.com/document/api/409/116171)
-* Read: [DescribeDBInstanceSSLConfig](https://cloud.tencent.com/document/api/409/116172)
-* Update: [DescribeTasks](https://cloud.tencent.com/document/api/409/116177)
-* Update: [ModifyDBInstanceSSLConfig](https://cloud.tencent.com/document/api/409/116171)
+* Create: [DescribeTasks](https://www.tencentcloud.com/document/api/409/78807)
+* Create: [ModifyDBInstanceSSLConfig](https://www.tencentcloud.com/document/api/409/78802)
+* Read: [DescribeDBInstanceSSLConfig](https://www.tencentcloud.com/document/api/409/78804)
+* Update: [DescribeTasks](https://www.tencentcloud.com/document/api/409/78807)
+* Update: [ModifyDBInstanceSSLConfig](https://www.tencentcloud.com/document/api/409/78802)
 
 ## Import
 

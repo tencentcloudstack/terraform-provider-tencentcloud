@@ -50,8 +50,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddSmsSign](https://cloud.tencent.com/document/api/382/55971)
-* Read: [DescribeSmsSignList](https://cloud.tencent.com/document/api/382/55969)
-* Update: [ModifySmsSign](https://cloud.tencent.com/document/api/382/55968)
-* Delete: [DeleteSmsSign](https://cloud.tencent.com/document/api/382/55970)
+* Create: [AddSmsSign](https://www.tencentcloud.com/document/api/382/40534)
+* Read: [DescribeSmsSignList](https://www.tencentcloud.com/document/api/382/40532)
+* Update: [ModifySmsSign](https://www.tencentcloud.com/document/api/382/40531)
+* Delete: [DeleteSmsSign](https://www.tencentcloud.com/document/api/382/40533)
 

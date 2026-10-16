@@ -143,5 +143,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeApmInstances](https://cloud.tencent.com/document/api/1463/65103)
+* Read: [DescribeApmInstances](https://www.tencentcloud.com/search/?wd=DescribeApmInstances&type=document&lang=en)
 

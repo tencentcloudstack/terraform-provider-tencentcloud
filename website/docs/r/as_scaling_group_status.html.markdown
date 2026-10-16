@@ -88,11 +88,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DisableAutoScalingGroup](https://cloud.tencent.com/document/api/377/20435)
-* Create: [EnableAutoScalingGroup](https://cloud.tencent.com/document/api/377/20434)
-* Read: [DescribeAutoScalingGroups](https://cloud.tencent.com/document/api/377/20438)
-* Update: [DisableAutoScalingGroup](https://cloud.tencent.com/document/api/377/20435)
-* Update: [EnableAutoScalingGroup](https://cloud.tencent.com/document/api/377/20434)
+* Create: [DisableAutoScalingGroup](https://www.tencentcloud.com/document/api/377/31010)
+* Create: [EnableAutoScalingGroup](https://www.tencentcloud.com/document/api/377/31009)
+* Read: [DescribeAutoScalingGroups](https://www.tencentcloud.com/document/api/377/31013)
+* Update: [DisableAutoScalingGroup](https://www.tencentcloud.com/document/api/377/31010)
+* Update: [EnableAutoScalingGroup](https://www.tencentcloud.com/document/api/377/31009)
 
 ## Import
 

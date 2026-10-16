@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ActiveHourDCDBInstance](https://cloud.tencent.com/document/api/557/70421)
+* Create: [ActiveHourDCDBInstance](https://www.tencentcloud.com/search/?wd=ActiveHourDCDBInstance&type=document&lang=en)
 

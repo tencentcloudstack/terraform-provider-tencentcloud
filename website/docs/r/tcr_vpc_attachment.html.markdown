@@ -71,14 +71,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569)
-* Create: [DescribeInternalEndpoints](https://cloud.tencent.com/document/api/1141/50734)
-* Create: [ManageInternalEndpoint](https://cloud.tencent.com/document/api/1141/50733)
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569)
-* Read: [DescribeInternalEndpoints](https://cloud.tencent.com/document/api/1141/50734)
-* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569)
-* Delete: [DescribeInternalEndpoints](https://cloud.tencent.com/document/api/1141/50734)
-* Delete: [ManageInternalEndpoint](https://cloud.tencent.com/document/api/1141/50733)
+* Create: [DescribeInstances](https://www.tencentcloud.com/search/?wd=DescribeInstances&type=document&lang=en)
+* Create: [DescribeInternalEndpoints](https://www.tencentcloud.com/search/?wd=DescribeInternalEndpoints&type=document&lang=en)
+* Create: [ManageInternalEndpoint](https://www.tencentcloud.com/search/?wd=ManageInternalEndpoint&type=document&lang=en)
+* Read: [DescribeInstances](https://www.tencentcloud.com/search/?wd=DescribeInstances&type=document&lang=en)
+* Read: [DescribeInternalEndpoints](https://www.tencentcloud.com/search/?wd=DescribeInternalEndpoints&type=document&lang=en)
+* Delete: [DescribeInstances](https://www.tencentcloud.com/search/?wd=DescribeInstances&type=document&lang=en)
+* Delete: [DescribeInternalEndpoints](https://www.tencentcloud.com/search/?wd=DescribeInternalEndpoints&type=document&lang=en)
+* Delete: [ManageInternalEndpoint](https://www.tencentcloud.com/search/?wd=ManageInternalEndpoint&type=document&lang=en)
 
 ## Import
 

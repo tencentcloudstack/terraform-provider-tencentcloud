@@ -67,10 +67,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccessKey](https://cloud.tencent.com/document/api/598/82370)
-* Read: [ListAccessKeys](https://cloud.tencent.com/document/api/598/45156)
-* Update: [UpdateAccessKey](https://cloud.tencent.com/document/api/598/82368)
-* Delete: [DeleteAccessKey](https://cloud.tencent.com/document/api/598/82369)
+* Create: [CreateAccessKey](https://www.tencentcloud.com/document/api/598/52594)
+* Read: [ListAccessKeys](https://www.tencentcloud.com/document/api/598/37088)
+* Update: [UpdateAccessKey](https://www.tencentcloud.com/document/api/598/52592)
+* Delete: [DeleteAccessKey](https://www.tencentcloud.com/document/api/598/52593)
 
 ## Import
 

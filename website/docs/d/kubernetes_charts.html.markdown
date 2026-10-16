@@ -57,5 +57,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetTkeAppChartList](https://cloud.tencent.com/document/api/457/64977)
+* Read: [GetTkeAppChartList](https://www.tencentcloud.com/document/api/457/69893)
 

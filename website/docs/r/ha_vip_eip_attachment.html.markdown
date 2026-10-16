@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650)
-* Create: [HaVipAssociateAddressIp](https://cloud.tencent.com/document/api/215/30649)
-* Read: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650)
-* Delete: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650)
-* Delete: [HaVipDisassociateAddressIp](https://cloud.tencent.com/document/api/215/30648)
+* Create: [DescribeHaVips](https://www.tencentcloud.com/document/api/215/34762)
+* Create: [HaVipAssociateAddressIp](https://www.tencentcloud.com/document/api/215/34761)
+* Read: [DescribeHaVips](https://www.tencentcloud.com/document/api/215/34762)
+* Delete: [DescribeHaVips](https://www.tencentcloud.com/document/api/215/34762)
+* Delete: [HaVipDisassociateAddressIp](https://www.tencentcloud.com/document/api/215/34760)
 
 ## Import
 

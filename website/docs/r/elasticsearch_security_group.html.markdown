@@ -41,9 +41,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyEsVipSecurityGroup](https://cloud.tencent.com/document/api/845/94985)
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/845/30631)
-* Update: [ModifyEsVipSecurityGroup](https://cloud.tencent.com/document/api/845/94985)
+* Create: [ModifyEsVipSecurityGroup](https://www.tencentcloud.com/search/?wd=ModifyEsVipSecurityGroup&type=document&lang=en)
+* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/845/32214)
+* Update: [ModifyEsVipSecurityGroup](https://www.tencentcloud.com/search/?wd=ModifyEsVipSecurityGroup&type=document&lang=en)
 
 ## Import
 

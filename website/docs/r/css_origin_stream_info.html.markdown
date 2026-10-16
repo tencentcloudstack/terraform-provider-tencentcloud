@@ -101,13 +101,13 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeOriginStreamInfo](https://cloud.tencent.com/document/api/267/130621)
-* Create: [ModifyOriginStreamInfo](https://cloud.tencent.com/document/api/267/130620)
-* Read: [DescribeOriginStreamInfo](https://cloud.tencent.com/document/api/267/130621)
-* Update: [DescribeOriginStreamInfo](https://cloud.tencent.com/document/api/267/130621)
-* Update: [ModifyOriginStreamInfo](https://cloud.tencent.com/document/api/267/130620)
-* Delete: [CloseSourceStream](https://cloud.tencent.com/document/api/267/130623)
-* Delete: [DescribeOriginStreamInfo](https://cloud.tencent.com/document/api/267/130621)
+* Create: [DescribeOriginStreamInfo](https://www.tencentcloud.com/search/?wd=DescribeOriginStreamInfo&type=document&lang=en)
+* Create: [ModifyOriginStreamInfo](https://www.tencentcloud.com/search/?wd=ModifyOriginStreamInfo&type=document&lang=en)
+* Read: [DescribeOriginStreamInfo](https://www.tencentcloud.com/search/?wd=DescribeOriginStreamInfo&type=document&lang=en)
+* Update: [DescribeOriginStreamInfo](https://www.tencentcloud.com/search/?wd=DescribeOriginStreamInfo&type=document&lang=en)
+* Update: [ModifyOriginStreamInfo](https://www.tencentcloud.com/search/?wd=ModifyOriginStreamInfo&type=document&lang=en)
+* Delete: [CloseSourceStream](https://www.tencentcloud.com/search/?wd=CloseSourceStream&type=document&lang=en)
+* Delete: [DescribeOriginStreamInfo](https://www.tencentcloud.com/search/?wd=DescribeOriginStreamInfo&type=document&lang=en)
 
 ## Import
 

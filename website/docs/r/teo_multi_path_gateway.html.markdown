@@ -68,13 +68,13 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateMultiPathGateway](https://cloud.tencent.com/document/api/1552/121343)
-* Create: [DescribeMultiPathGateways](https://cloud.tencent.com/document/api/1552/121334)
-* Read: [DescribeMultiPathGateways](https://cloud.tencent.com/document/api/1552/121334)
-* Update: [DescribeMultiPathGateways](https://cloud.tencent.com/document/api/1552/121334)
-* Update: [ModifyMultiPathGateway](https://cloud.tencent.com/document/api/1552/121333)
-* Update: [ModifyMultiPathGatewayStatus](https://cloud.tencent.com/document/api/1552/123858)
-* Delete: [DeleteMultiPathGateway](https://cloud.tencent.com/document/api/1552/121340)
+* Create: [CreateMultiPathGateway](https://www.tencentcloud.com/search/?wd=CreateMultiPathGateway&type=document&lang=en)
+* Create: [DescribeMultiPathGateways](https://www.tencentcloud.com/search/?wd=DescribeMultiPathGateways&type=document&lang=en)
+* Read: [DescribeMultiPathGateways](https://www.tencentcloud.com/search/?wd=DescribeMultiPathGateways&type=document&lang=en)
+* Update: [DescribeMultiPathGateways](https://www.tencentcloud.com/search/?wd=DescribeMultiPathGateways&type=document&lang=en)
+* Update: [ModifyMultiPathGateway](https://www.tencentcloud.com/search/?wd=ModifyMultiPathGateway&type=document&lang=en)
+* Update: [ModifyMultiPathGatewayStatus](https://www.tencentcloud.com/search/?wd=ModifyMultiPathGatewayStatus&type=document&lang=en)
+* Delete: [DeleteMultiPathGateway](https://www.tencentcloud.com/search/?wd=DeleteMultiPathGateway&type=document&lang=en)
 
 ## Import
 

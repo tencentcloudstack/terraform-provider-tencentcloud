@@ -89,9 +89,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateSecurityGroups](https://cloud.tencent.com/document/api/213/31282)
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728)
-* Delete: [DisassociateSecurityGroups](https://cloud.tencent.com/document/api/213/31281)
+* Create: [AssociateSecurityGroups](https://www.tencentcloud.com/document/api/213/33265)
+* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+* Delete: [DisassociateSecurityGroups](https://www.tencentcloud.com/document/api/213/33253)
 
 ## Import
 

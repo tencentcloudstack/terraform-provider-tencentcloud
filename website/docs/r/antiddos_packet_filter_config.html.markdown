@@ -78,11 +78,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePacketFilterConfig](https://cloud.tencent.com/document/api/297/95334)
-* Create: [DescribeListPacketFilterConfig](https://cloud.tencent.com/document/api/297/95310)
-* Read: [DescribeListPacketFilterConfig](https://cloud.tencent.com/document/api/297/95310)
-* Delete: [DeletePacketFilterConfig](https://cloud.tencent.com/document/api/297/95323)
-* Delete: [DescribeListPacketFilterConfig](https://cloud.tencent.com/document/api/297/95310)
+* Create: [CreatePacketFilterConfig](https://www.tencentcloud.com/search/?wd=CreatePacketFilterConfig&type=document&lang=en)
+* Create: [DescribeListPacketFilterConfig](https://www.tencentcloud.com/search/?wd=DescribeListPacketFilterConfig&type=document&lang=en)
+* Read: [DescribeListPacketFilterConfig](https://www.tencentcloud.com/search/?wd=DescribeListPacketFilterConfig&type=document&lang=en)
+* Delete: [DeletePacketFilterConfig](https://www.tencentcloud.com/search/?wd=DeletePacketFilterConfig&type=document&lang=en)
+* Delete: [DescribeListPacketFilterConfig](https://www.tencentcloud.com/search/?wd=DescribeListPacketFilterConfig&type=document&lang=en)
 
 ## Import
 

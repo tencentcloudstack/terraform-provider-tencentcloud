@@ -86,6 +86,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Read: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Read: [DescribeRouteTables](https://www.tencentcloud.com/document/api/215/15763)
 

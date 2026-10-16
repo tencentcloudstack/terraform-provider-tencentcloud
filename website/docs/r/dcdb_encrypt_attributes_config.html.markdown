@@ -105,9 +105,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyDBEncryptAttributes](https://cloud.tencent.com/document/api/557/86907)
-* Read: [DescribeDBEncryptAttributes](https://cloud.tencent.com/document/api/557/92617)
-* Update: [ModifyDBEncryptAttributes](https://cloud.tencent.com/document/api/557/86907)
+* Create: [ModifyDBEncryptAttributes](https://www.tencentcloud.com/search/?wd=ModifyDBEncryptAttributes&type=document&lang=en)
+* Read: [DescribeDBEncryptAttributes](https://www.tencentcloud.com/search/?wd=DescribeDBEncryptAttributes&type=document&lang=en)
+* Update: [ModifyDBEncryptAttributes](https://www.tencentcloud.com/search/?wd=ModifyDBEncryptAttributes&type=document&lang=en)
 
 ## Import
 

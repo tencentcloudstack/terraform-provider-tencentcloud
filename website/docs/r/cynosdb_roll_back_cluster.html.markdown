@@ -75,6 +75,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
-* Create: [RollBackCluster](https://cloud.tencent.com/document/api/1003/70115)
+* Create: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
+* Create: [RollBackCluster](https://www.tencentcloud.com/search/?wd=RollBackCluster&type=document&lang=en)
 

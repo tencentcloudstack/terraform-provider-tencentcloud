@@ -46,10 +46,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePersonSample](https://cloud.tencent.com/document/api/862/39445)
-* Read: [DescribePersonSamples](https://cloud.tencent.com/document/api/862/39441)
-* Update: [ModifyPersonSample](https://cloud.tencent.com/document/api/862/39439)
-* Delete: [DeletePersonSample](https://cloud.tencent.com/document/api/862/39443)
+* Create: [CreatePersonSample](https://www.tencentcloud.com/search/?wd=CreatePersonSample&type=document&lang=en)
+* Read: [DescribePersonSamples](https://www.tencentcloud.com/search/?wd=DescribePersonSamples&type=document&lang=en)
+* Update: [ModifyPersonSample](https://www.tencentcloud.com/search/?wd=ModifyPersonSample&type=document&lang=en)
+* Delete: [DeletePersonSample](https://www.tencentcloud.com/search/?wd=DeletePersonSample&type=document&lang=en)
 
 ## Import
 

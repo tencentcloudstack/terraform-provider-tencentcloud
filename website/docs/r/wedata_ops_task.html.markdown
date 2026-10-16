@@ -42,11 +42,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [GetOpsAsyncJob](https://cloud.tencent.com/document/api/1267/123587)
-* Create: [PauseOpsTasksAsync](https://cloud.tencent.com/document/api/1267/123569)
-* Create: [StartOpsTasks](https://cloud.tencent.com/document/api/1267/124031)
-* Read: [GetOpsTask](https://cloud.tencent.com/document/api/1267/123586)
-* Update: [GetOpsAsyncJob](https://cloud.tencent.com/document/api/1267/123587)
-* Update: [PauseOpsTasksAsync](https://cloud.tencent.com/document/api/1267/123569)
-* Update: [StartOpsTasks](https://cloud.tencent.com/document/api/1267/124031)
+* Create: [GetOpsAsyncJob](https://www.tencentcloud.com/search/?wd=GetOpsAsyncJob&type=document&lang=en)
+* Create: [PauseOpsTasksAsync](https://www.tencentcloud.com/search/?wd=PauseOpsTasksAsync&type=document&lang=en)
+* Create: [StartOpsTasks](https://www.tencentcloud.com/search/?wd=StartOpsTasks&type=document&lang=en)
+* Read: [GetOpsTask](https://www.tencentcloud.com/search/?wd=GetOpsTask&type=document&lang=en)
+* Update: [GetOpsAsyncJob](https://www.tencentcloud.com/search/?wd=GetOpsAsyncJob&type=document&lang=en)
+* Update: [PauseOpsTasksAsync](https://www.tencentcloud.com/search/?wd=PauseOpsTasksAsync&type=document&lang=en)
+* Update: [StartOpsTasks](https://www.tencentcloud.com/search/?wd=StartOpsTasks&type=document&lang=en)
 

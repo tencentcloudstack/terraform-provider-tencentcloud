@@ -57,10 +57,10 @@ The `strategy` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDataMaskStrategy](https://cloud.tencent.com/document/api/1342/122619)
-* Read: [DescribeDataMaskStrategies](https://cloud.tencent.com/document/api/1342/122617)
-* Update: [UpdateDataMaskStrategy](https://cloud.tencent.com/document/api/1342/122616)
-* Delete: [DeleteDataMaskStrategy](https://cloud.tencent.com/document/api/1342/122618)
+* Create: [CreateDataMaskStrategy](https://www.tencentcloud.com/search/?wd=CreateDataMaskStrategy&type=document&lang=en)
+* Read: [DescribeDataMaskStrategies](https://www.tencentcloud.com/search/?wd=DescribeDataMaskStrategies&type=document&lang=en)
+* Update: [UpdateDataMaskStrategy](https://www.tencentcloud.com/search/?wd=UpdateDataMaskStrategy&type=document&lang=en)
+* Delete: [DeleteDataMaskStrategy](https://www.tencentcloud.com/search/?wd=DeleteDataMaskStrategy&type=document&lang=en)
 
 ## Import
 

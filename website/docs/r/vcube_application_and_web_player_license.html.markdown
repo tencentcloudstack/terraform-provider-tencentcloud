@@ -47,9 +47,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateApplicationAndWebPlayerLicense](https://cloud.tencent.com/document/api/1449/113536)
-* Read: [DescribeVcubeApplicationAndPlayList](https://cloud.tencent.com/document/api/1449/113527)
-* Delete: [DeleteApplicationAndWebPlayerLicense](https://cloud.tencent.com/document/api/1449/125853)
+* Create: [CreateApplicationAndWebPlayerLicense](https://www.tencentcloud.com/search/?wd=CreateApplicationAndWebPlayerLicense&type=document&lang=en)
+* Read: [DescribeVcubeApplicationAndPlayList](https://www.tencentcloud.com/search/?wd=DescribeVcubeApplicationAndPlayList&type=document&lang=en)
+* Delete: [DeleteApplicationAndWebPlayerLicense](https://www.tencentcloud.com/search/?wd=DeleteApplicationAndWebPlayerLicense&type=document&lang=en)
 
 ## Import
 

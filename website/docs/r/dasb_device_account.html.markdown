@@ -45,9 +45,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDeviceAccount](https://cloud.tencent.com/document/api/1025/86956)
-* Read: [DescribeDeviceAccounts](https://cloud.tencent.com/document/api/1025/86952)
-* Delete: [DeleteDeviceAccounts](https://cloud.tencent.com/document/api/1025/86955)
+* Create: [CreateDeviceAccount](https://www.tencentcloud.com/search/?wd=CreateDeviceAccount&type=document&lang=en)
+* Read: [DescribeDeviceAccounts](https://www.tencentcloud.com/search/?wd=DescribeDeviceAccounts&type=document&lang=en)
+* Delete: [DeleteDeviceAccounts](https://www.tencentcloud.com/search/?wd=DeleteDeviceAccounts&type=document&lang=en)
 
 ## Import
 

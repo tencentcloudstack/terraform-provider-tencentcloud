@@ -76,10 +76,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNoticeContent](https://cloud.tencent.com/document/api/614/111716)
-* Read: [DescribeNoticeContents](https://cloud.tencent.com/document/api/614/111714)
-* Update: [ModifyNoticeContent](https://cloud.tencent.com/document/api/614/111713)
-* Delete: [DeleteNoticeContent](https://cloud.tencent.com/document/api/614/111715)
+* Create: [CreateNoticeContent](https://www.tencentcloud.com/document/api/614/80579)
+* Read: [DescribeNoticeContents](https://www.tencentcloud.com/document/api/614/80575)
+* Update: [ModifyNoticeContent](https://www.tencentcloud.com/document/api/614/80573)
+* Delete: [DeleteNoticeContent](https://www.tencentcloud.com/document/api/614/80577)
 
 ## Import
 

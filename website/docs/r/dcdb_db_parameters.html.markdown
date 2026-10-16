@@ -46,11 +46,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDBParameters](https://cloud.tencent.com/document/api/557/19992)
-* Create: [ModifyDBParameters](https://cloud.tencent.com/document/api/557/19982)
-* Read: [DescribeDBParameters](https://cloud.tencent.com/document/api/557/19992)
-* Update: [DescribeDBParameters](https://cloud.tencent.com/document/api/557/19992)
-* Update: [ModifyDBParameters](https://cloud.tencent.com/document/api/557/19982)
+* Create: [DescribeDBParameters](https://www.tencentcloud.com/search/?wd=DescribeDBParameters&type=document&lang=en)
+* Create: [ModifyDBParameters](https://www.tencentcloud.com/search/?wd=ModifyDBParameters&type=document&lang=en)
+* Read: [DescribeDBParameters](https://www.tencentcloud.com/search/?wd=DescribeDBParameters&type=document&lang=en)
+* Update: [DescribeDBParameters](https://www.tencentcloud.com/search/?wd=DescribeDBParameters&type=document&lang=en)
+* Update: [ModifyDBParameters](https://www.tencentcloud.com/search/?wd=ModifyDBParameters&type=document&lang=en)
 
 ## Import
 

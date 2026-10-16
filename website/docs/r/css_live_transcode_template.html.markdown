@@ -78,10 +78,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLiveTranscodeTemplate](https://cloud.tencent.com/document/api/267/32646)
-* Read: [DescribeLiveTranscodeTemplate](https://cloud.tencent.com/document/api/267/32642)
-* Update: [ModifyLiveTranscodeTemplate](https://cloud.tencent.com/document/api/267/32640)
-* Delete: [DeleteLiveTranscodeTemplate](https://cloud.tencent.com/document/api/267/32644)
+* Create: [CreateLiveTranscodeTemplate](https://www.tencentcloud.com/document/api/267/30790)
+* Read: [DescribeLiveTranscodeTemplate](https://www.tencentcloud.com/document/api/267/30786)
+* Update: [ModifyLiveTranscodeTemplate](https://www.tencentcloud.com/document/api/267/30784)
+* Delete: [DeleteLiveTranscodeTemplate](https://www.tencentcloud.com/document/api/267/30788)
 
 ## Import
 

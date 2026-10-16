@@ -53,14 +53,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateClusterInstances](https://cloud.tencent.com/document/api/1556/70690)
-* Create: [DescribeResourcesByDealName](https://cloud.tencent.com/document/api/1556/70679)
-* Read: [DescribeClusterInstances](https://cloud.tencent.com/document/api/1556/70688)
-* Update: [DescribeClusterInstances](https://cloud.tencent.com/document/api/1556/70688)
-* Update: [ModifyClusterInstancesSpec](https://cloud.tencent.com/document/api/1556/70686)
-* Delete: [DeleteClusterInstances](https://cloud.tencent.com/document/api/1556/70689)
-* Delete: [DescribeClusterInstances](https://cloud.tencent.com/document/api/1556/70688)
-* Delete: [IsolateClusterInstances](https://cloud.tencent.com/document/api/1556/70687)
+* Create: [CreateClusterInstances](https://www.tencentcloud.com/search/?wd=CreateClusterInstances&type=document&lang=en)
+* Create: [DescribeResourcesByDealName](https://www.tencentcloud.com/search/?wd=DescribeResourcesByDealName&type=document&lang=en)
+* Read: [DescribeClusterInstances](https://www.tencentcloud.com/search/?wd=DescribeClusterInstances&type=document&lang=en)
+* Update: [DescribeClusterInstances](https://www.tencentcloud.com/search/?wd=DescribeClusterInstances&type=document&lang=en)
+* Update: [ModifyClusterInstancesSpec](https://www.tencentcloud.com/search/?wd=ModifyClusterInstancesSpec&type=document&lang=en)
+* Delete: [DeleteClusterInstances](https://www.tencentcloud.com/search/?wd=DeleteClusterInstances&type=document&lang=en)
+* Delete: [DescribeClusterInstances](https://www.tencentcloud.com/search/?wd=DescribeClusterInstances&type=document&lang=en)
+* Delete: [IsolateClusterInstances](https://www.tencentcloud.com/search/?wd=IsolateClusterInstances&type=document&lang=en)
 
 ## Import
 

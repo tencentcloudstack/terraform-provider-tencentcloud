@@ -50,12 +50,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateUserOIDCConfig](https://cloud.tencent.com/document/api/598/72091)
-* Create: [DescribeUserOIDCConfig](https://cloud.tencent.com/document/api/598/72090)
-* Read: [DescribeUserOIDCConfig](https://cloud.tencent.com/document/api/598/72090)
-* Update: [DescribeUserOIDCConfig](https://cloud.tencent.com/document/api/598/72090)
-* Update: [UpdateUserOIDCConfig](https://cloud.tencent.com/document/api/598/72088)
-* Delete: [DisableUserSSO](https://cloud.tencent.com/document/api/598/72089)
+* Create: [CreateUserOIDCConfig](https://www.tencentcloud.com/document/api/598/46303)
+* Create: [DescribeUserOIDCConfig](https://www.tencentcloud.com/document/api/598/46302)
+* Read: [DescribeUserOIDCConfig](https://www.tencentcloud.com/document/api/598/46302)
+* Update: [DescribeUserOIDCConfig](https://www.tencentcloud.com/document/api/598/46302)
+* Update: [UpdateUserOIDCConfig](https://www.tencentcloud.com/document/api/598/46300)
+* Delete: [DisableUserSSO](https://www.tencentcloud.com/document/api/598/46301)
 
 ## Import
 

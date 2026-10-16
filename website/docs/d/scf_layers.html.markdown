@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListLayers](https://cloud.tencent.com/document/api/583/41384)
+* Read: [ListLayers](https://www.tencentcloud.com/document/api/583/36317)
 

@@ -43,10 +43,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ActivateInstance](https://cloud.tencent.com/document/api/1003/70116)
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
-* Create: [IsolateInstance](https://cloud.tencent.com/document/api/1003/48081)
-* Update: [ActivateInstance](https://cloud.tencent.com/document/api/1003/70116)
-* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
-* Update: [IsolateInstance](https://cloud.tencent.com/document/api/1003/48081)
+* Create: [ActivateInstance](https://www.tencentcloud.com/search/?wd=ActivateInstance&type=document&lang=en)
+* Create: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
+* Create: [IsolateInstance](https://www.tencentcloud.com/search/?wd=IsolateInstance&type=document&lang=en)
+* Update: [ActivateInstance](https://www.tencentcloud.com/search/?wd=ActivateInstance&type=document&lang=en)
+* Update: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
+* Update: [IsolateInstance](https://www.tencentcloud.com/search/?wd=IsolateInstance&type=document&lang=en)
 

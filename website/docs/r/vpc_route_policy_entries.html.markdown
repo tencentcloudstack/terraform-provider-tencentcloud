@@ -107,12 +107,12 @@ Note: This field may return null, indicating that no valid value was found.
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRoutePolicyEntries](https://cloud.tencent.com/document/api/215/124428)
-* Read: [DescribeRoutePolicyEntries](https://cloud.tencent.com/document/api/215/124424)
-* Update: [DescribeRoutePolicies](https://cloud.tencent.com/document/api/215/126466)
-* Update: [ResetRoutePolicyEntries](https://cloud.tencent.com/document/api/215/124419)
-* Delete: [DeleteRoutePolicyEntries](https://cloud.tencent.com/document/api/215/124425)
-* Delete: [DescribeRoutePolicyEntries](https://cloud.tencent.com/document/api/215/124424)
+* Create: [CreateRoutePolicyEntries](https://www.tencentcloud.com/document/api/215/74068)
+* Read: [DescribeRoutePolicyEntries](https://www.tencentcloud.com/document/api/215/74064)
+* Update: [DescribeRoutePolicies](https://www.tencentcloud.com/search/?wd=DescribeRoutePolicies&type=document&lang=en)
+* Update: [ResetRoutePolicyEntries](https://www.tencentcloud.com/document/api/215/74059)
+* Delete: [DeleteRoutePolicyEntries](https://www.tencentcloud.com/document/api/215/74065)
+* Delete: [DescribeRoutePolicyEntries](https://www.tencentcloud.com/document/api/215/74064)
 
 ## Import
 

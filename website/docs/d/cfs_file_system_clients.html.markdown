@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCfsFileSystemClients](https://cloud.tencent.com/document/api/582/47581)
+* Read: [DescribeCfsFileSystemClients](https://www.tencentcloud.com/document/api/582/38185)
 

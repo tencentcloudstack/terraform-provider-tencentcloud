@@ -141,11 +141,11 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410)
-* Create: [StartCpuExpand](https://cloud.tencent.com/document/api/236/96017)
-* Read: [DescribeCPUExpandStrategyInfo](https://cloud.tencent.com/document/api/236/116999)
-* Delete: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410)
-* Delete: [StopCpuExpand](https://cloud.tencent.com/document/api/236/96016)
+* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+* Create: [StartCpuExpand](https://www.tencentcloud.com/document/api/236/57242)
+* Read: [DescribeCPUExpandStrategyInfo](https://www.tencentcloud.com/document/api/236/80216)
+* Delete: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+* Delete: [StopCpuExpand](https://www.tencentcloud.com/document/api/236/57241)
 
 ## Import
 

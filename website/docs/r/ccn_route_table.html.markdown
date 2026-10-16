@@ -77,10 +77,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCcnRouteTables](https://cloud.tencent.com/document/api/215/108749)
-* Read: [DescribeCcnRouteTables](https://cloud.tencent.com/document/api/215/108745)
-* Update: [ModifyCcnRouteTables](https://cloud.tencent.com/document/api/215/108742)
-* Delete: [DeleteCcnRouteTables](https://cloud.tencent.com/document/api/215/108748)
+* Create: [CreateCcnRouteTables](https://www.tencentcloud.com/search/?wd=CreateCcnRouteTables&type=document&lang=en)
+* Read: [DescribeCcnRouteTables](https://www.tencentcloud.com/search/?wd=DescribeCcnRouteTables&type=document&lang=en)
+* Update: [ModifyCcnRouteTables](https://www.tencentcloud.com/search/?wd=ModifyCcnRouteTables&type=document&lang=en)
+* Delete: [DeleteCcnRouteTables](https://www.tencentcloud.com/search/?wd=DeleteCcnRouteTables&type=document&lang=en)
 
 ## Import
 

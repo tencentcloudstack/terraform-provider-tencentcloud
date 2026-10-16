@@ -83,5 +83,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeGroupInstances](https://cloud.tencent.com/document/api/649/36066)
+* Read: [DescribeGroupInstances](https://www.tencentcloud.com/search/?wd=DescribeGroupInstances&type=document&lang=en)
 

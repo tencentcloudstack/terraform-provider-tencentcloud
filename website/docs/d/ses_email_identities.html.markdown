@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListEmailIdentities](https://cloud.tencent.com/document/api/1288/51045)
+* Read: [ListEmailIdentities](https://www.tencentcloud.com/search/?wd=ListEmailIdentities&type=document&lang=en)
 

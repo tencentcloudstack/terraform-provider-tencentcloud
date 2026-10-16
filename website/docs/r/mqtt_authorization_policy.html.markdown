@@ -80,10 +80,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAuthorizationPolicy](https://cloud.tencent.com/document/api/1778/111079)
-* Read: [DescribeAuthorizationPolicies](https://cloud.tencent.com/document/api/1778/111074)
-* Update: [ModifyAuthorizationPolicy](https://cloud.tencent.com/document/api/1778/111072)
-* Delete: [DeleteAuthorizationPolicy](https://cloud.tencent.com/document/api/1778/111076)
+* Create: [CreateAuthorizationPolicy](https://www.tencentcloud.com/search/?wd=CreateAuthorizationPolicy&type=document&lang=en)
+* Read: [DescribeAuthorizationPolicies](https://www.tencentcloud.com/search/?wd=DescribeAuthorizationPolicies&type=document&lang=en)
+* Update: [ModifyAuthorizationPolicy](https://www.tencentcloud.com/search/?wd=ModifyAuthorizationPolicy&type=document&lang=en)
+* Delete: [DeleteAuthorizationPolicy](https://www.tencentcloud.com/search/?wd=DeleteAuthorizationPolicy&type=document&lang=en)
 
 ## Import
 

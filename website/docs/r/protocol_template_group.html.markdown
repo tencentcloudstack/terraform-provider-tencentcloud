@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateServiceTemplateGroup](https://cloud.tencent.com/document/api/215/16711)
-* Read: [DescribeServiceTemplateGroups](https://cloud.tencent.com/document/api/215/16718)
-* Update: [ModifyServiceTemplateGroupAttribute](https://cloud.tencent.com/document/api/215/16723)
-* Delete: [DeleteServiceTemplateGroup](https://cloud.tencent.com/document/api/215/16715)
-* Delete: [DescribeServiceTemplateGroups](https://cloud.tencent.com/document/api/215/16718)
+* Create: [CreateServiceTemplateGroup](https://www.tencentcloud.com/document/api/215/16711)
+* Read: [DescribeServiceTemplateGroups](https://www.tencentcloud.com/document/api/215/16718)
+* Update: [ModifyServiceTemplateGroupAttribute](https://www.tencentcloud.com/document/api/215/16723)
+* Delete: [DeleteServiceTemplateGroup](https://www.tencentcloud.com/document/api/215/16715)
+* Delete: [DescribeServiceTemplateGroups](https://www.tencentcloud.com/document/api/215/16718)
 
 ## Import
 

@@ -154,10 +154,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateOpsAlarmRule](https://cloud.tencent.com/document/api/1267/123591)
-* Read: [GetOpsAlarmRule](https://cloud.tencent.com/document/api/1267/123588)
-* Update: [UpdateOpsAlarmRule](https://cloud.tencent.com/document/api/1267/123565)
-* Delete: [DeleteOpsAlarmRule](https://cloud.tencent.com/document/api/1267/123590)
+* Create: [CreateOpsAlarmRule](https://www.tencentcloud.com/search/?wd=CreateOpsAlarmRule&type=document&lang=en)
+* Read: [GetOpsAlarmRule](https://www.tencentcloud.com/search/?wd=GetOpsAlarmRule&type=document&lang=en)
+* Update: [UpdateOpsAlarmRule](https://www.tencentcloud.com/search/?wd=UpdateOpsAlarmRule&type=document&lang=en)
+* Delete: [DeleteOpsAlarmRule](https://www.tencentcloud.com/search/?wd=DeleteOpsAlarmRule&type=document&lang=en)
 
 ## Import
 

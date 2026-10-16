@@ -88,5 +88,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListDiscoveredResources](https://cloud.tencent.com/document/api/1579/113061)
+* Read: [ListDiscoveredResources](https://www.tencentcloud.com/search/?wd=ListDiscoveredResources&type=document&lang=en)
 

@@ -225,10 +225,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateConsole](https://cloud.tencent.com/document/api/614/129856)
-* Read: [DescribeConsoles](https://cloud.tencent.com/document/api/614/129854)
-* Update: [ModifyConsole](https://cloud.tencent.com/document/api/614/129853)
-* Delete: [DeleteConsole](https://cloud.tencent.com/document/api/614/129855)
+* Create: [CreateConsole](https://www.tencentcloud.com/document/api/614/80563)
+* Read: [DescribeConsoles](https://www.tencentcloud.com/document/api/614/80559)
+* Update: [ModifyConsole](https://www.tencentcloud.com/document/api/614/80555)
+* Delete: [DeleteConsole](https://www.tencentcloud.com/document/api/614/80561)
 
 ## Import
 

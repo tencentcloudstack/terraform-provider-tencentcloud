@@ -115,5 +115,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRecordFilterList](https://cloud.tencent.com/document/api/1427/95521)
+* Read: [DescribeRecordFilterList](https://www.tencentcloud.com/search/?wd=DescribeRecordFilterList&type=document&lang=en)
 

@@ -40,10 +40,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateUserStore](https://cloud.tencent.com/document/api/1441/94460)
-* Read: [ListUserStore](https://cloud.tencent.com/document/api/1441/94458)
-* Update: [UpdateUserStore](https://cloud.tencent.com/document/api/1441/94457)
-* Delete: [DeleteUserStore](https://cloud.tencent.com/document/api/1441/94459)
+* Create: [CreateUserStore](https://www.tencentcloud.com/search/?wd=CreateUserStore&type=document&lang=en)
+* Read: [ListUserStore](https://www.tencentcloud.com/search/?wd=ListUserStore&type=document&lang=en)
+* Update: [UpdateUserStore](https://www.tencentcloud.com/search/?wd=UpdateUserStore&type=document&lang=en)
+* Delete: [DeleteUserStore](https://www.tencentcloud.com/search/?wd=DeleteUserStore&type=document&lang=en)
 
 ## Import
 

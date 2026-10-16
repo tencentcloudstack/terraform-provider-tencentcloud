@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeReadOnlyGroupList](https://cloud.tencent.com/document/api/238/46771)
+* Read: [DescribeReadOnlyGroupList](https://www.tencentcloud.com/document/api/238/72738)
 

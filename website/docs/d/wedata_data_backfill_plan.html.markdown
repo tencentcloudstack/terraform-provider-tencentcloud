@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetDataBackfillPlan](https://cloud.tencent.com/document/api/1267/124032)
+* Read: [GetDataBackfillPlan](https://www.tencentcloud.com/search/?wd=GetDataBackfillPlan&type=document&lang=en)
 

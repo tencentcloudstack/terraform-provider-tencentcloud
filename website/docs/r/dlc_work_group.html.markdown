@@ -39,10 +39,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWorkGroup](https://cloud.tencent.com/document/api/1342/58464)
-* Read: [DescribeWorkGroups](https://cloud.tencent.com/document/api/1342/58459)
-* Update: [ModifyWorkGroup](https://cloud.tencent.com/document/api/1342/58455)
-* Delete: [DeleteWorkGroup](https://cloud.tencent.com/document/api/1342/58461)
+* Create: [CreateWorkGroup](https://www.tencentcloud.com/search/?wd=CreateWorkGroup&type=document&lang=en)
+* Read: [DescribeWorkGroups](https://www.tencentcloud.com/search/?wd=DescribeWorkGroups&type=document&lang=en)
+* Update: [ModifyWorkGroup](https://www.tencentcloud.com/search/?wd=ModifyWorkGroup&type=document&lang=en)
+* Delete: [DeleteWorkGroup](https://www.tencentcloud.com/search/?wd=DeleteWorkGroup&type=document&lang=en)
 
 ## Import
 

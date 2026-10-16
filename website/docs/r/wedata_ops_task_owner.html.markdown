@@ -40,9 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateOpsTasksOwner](https://cloud.tencent.com/document/api/1267/123564)
-* Read: [GetOpsTask](https://cloud.tencent.com/document/api/1267/123586)
-* Update: [UpdateOpsTasksOwner](https://cloud.tencent.com/document/api/1267/123564)
+* Create: [UpdateOpsTasksOwner](https://www.tencentcloud.com/search/?wd=UpdateOpsTasksOwner&type=document&lang=en)
+* Read: [GetOpsTask](https://www.tencentcloud.com/search/?wd=GetOpsTask&type=document&lang=en)
+* Update: [UpdateOpsTasksOwner](https://www.tencentcloud.com/search/?wd=UpdateOpsTasksOwner&type=document&lang=en)
 
 ## Import
 

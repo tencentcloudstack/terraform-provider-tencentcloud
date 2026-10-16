@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeIdleLoadBalancers](https://cloud.tencent.com/document/api/214/79718)
+* Read: [DescribeIdleLoadBalancers](https://www.tencentcloud.com/document/api/214/50740)
 

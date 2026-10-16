@@ -50,5 +50,5 @@ The following arguments are supported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCrossBorderCompliance](https://cloud.tencent.com/document/api/215/47838)
+* Read: [DescribeCrossBorderCompliance](https://www.tencentcloud.com/document/api/215/38275)
 

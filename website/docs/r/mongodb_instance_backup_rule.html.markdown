@@ -57,11 +57,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeBackupRules](https://cloud.tencent.com/document/api/240/107169)
-* Create: [SetBackupRules](https://cloud.tencent.com/document/api/240/107166)
-* Read: [DescribeBackupRules](https://cloud.tencent.com/document/api/240/107169)
-* Update: [DescribeBackupRules](https://cloud.tencent.com/document/api/240/107169)
-* Update: [SetBackupRules](https://cloud.tencent.com/document/api/240/107166)
+* Create: [DescribeBackupRules](https://www.tencentcloud.com/document/api/240/74803)
+* Create: [SetBackupRules](https://www.tencentcloud.com/search/?wd=SetBackupRules&type=document&lang=en)
+* Read: [DescribeBackupRules](https://www.tencentcloud.com/document/api/240/74803)
+* Update: [DescribeBackupRules](https://www.tencentcloud.com/document/api/240/74803)
+* Update: [SetBackupRules](https://www.tencentcloud.com/search/?wd=SetBackupRules&type=document&lang=en)
 
 ## Import
 

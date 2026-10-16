@@ -106,10 +106,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyRouteTableSelectionPolicies](https://cloud.tencent.com/document/api/215/108741)
-* Read: [DescribeRouteTableSelectionPolicies](https://cloud.tencent.com/document/api/215/108743)
-* Update: [ModifyRouteTableSelectionPolicies](https://cloud.tencent.com/document/api/215/108741)
-* Delete: [ClearRouteTableSelectionPolicies](https://cloud.tencent.com/document/api/215/108750)
+* Create: [ModifyRouteTableSelectionPolicies](https://www.tencentcloud.com/search/?wd=ModifyRouteTableSelectionPolicies&type=document&lang=en)
+* Read: [DescribeRouteTableSelectionPolicies](https://www.tencentcloud.com/search/?wd=DescribeRouteTableSelectionPolicies&type=document&lang=en)
+* Update: [ModifyRouteTableSelectionPolicies](https://www.tencentcloud.com/search/?wd=ModifyRouteTableSelectionPolicies&type=document&lang=en)
+* Delete: [ClearRouteTableSelectionPolicies](https://www.tencentcloud.com/search/?wd=ClearRouteTableSelectionPolicies&type=document&lang=en)
 
 ## Import
 

@@ -166,13 +166,13 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateListener](https://cloud.tencent.com/document/api/1817/130171)
-* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942)
-* Read: [DescribeListeners](https://cloud.tencent.com/document/api/1817/130160)
-* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942)
-* Update: [ModifyListener](https://cloud.tencent.com/document/api/1817/130155)
-* Delete: [DeleteListener](https://cloud.tencent.com/document/api/1817/130166)
-* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942)
+* Create: [CreateListener](https://www.tencentcloud.com/search/?wd=CreateListener&type=document&lang=en)
+* Create: [DescribeTaskResult](https://www.tencentcloud.com/search/?wd=DescribeTaskResult&type=document&lang=en)
+* Read: [DescribeListeners](https://www.tencentcloud.com/search/?wd=DescribeListeners&type=document&lang=en)
+* Update: [DescribeTaskResult](https://www.tencentcloud.com/search/?wd=DescribeTaskResult&type=document&lang=en)
+* Update: [ModifyListener](https://www.tencentcloud.com/search/?wd=ModifyListener&type=document&lang=en)
+* Delete: [DeleteListener](https://www.tencentcloud.com/search/?wd=DeleteListener&type=document&lang=en)
+* Delete: [DescribeTaskResult](https://www.tencentcloud.com/search/?wd=DescribeTaskResult&type=document&lang=en)
 
 ## Import
 

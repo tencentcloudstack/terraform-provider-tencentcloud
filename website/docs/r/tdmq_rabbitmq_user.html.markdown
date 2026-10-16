@@ -82,10 +82,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRabbitMQUser](https://cloud.tencent.com/document/api/1179/90855)
-* Read: [DescribeRabbitMQUser](https://cloud.tencent.com/document/api/1179/93456)
-* Update: [ModifyRabbitMQUser](https://cloud.tencent.com/document/api/1179/93454)
-* Delete: [DeleteRabbitMQUser](https://cloud.tencent.com/document/api/1179/93458)
+* Create: [CreateRabbitMQUser](https://www.tencentcloud.com/search/?wd=CreateRabbitMQUser&type=document&lang=en)
+* Read: [DescribeRabbitMQUser](https://www.tencentcloud.com/search/?wd=DescribeRabbitMQUser&type=document&lang=en)
+* Update: [ModifyRabbitMQUser](https://www.tencentcloud.com/search/?wd=ModifyRabbitMQUser&type=document&lang=en)
+* Delete: [DeleteRabbitMQUser](https://www.tencentcloud.com/search/?wd=DeleteRabbitMQUser&type=document&lang=en)
 
 ## Import
 

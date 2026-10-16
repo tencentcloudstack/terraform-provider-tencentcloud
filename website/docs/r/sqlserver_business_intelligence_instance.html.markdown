@@ -90,14 +90,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBusinessDBInstances](https://cloud.tencent.com/document/api/238/80332)
-* Create: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969)
-* Create: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958)
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969)
-* Read: [DescribeMaintenanceSpan](https://cloud.tencent.com/document/api/238/46283)
-* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958)
-* Delete: [DeleteDBInstance](https://cloud.tencent.com/document/api/238/46806)
-* Delete: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210)
+* Create: [CreateBusinessDBInstances](https://www.tencentcloud.com/document/api/238/50610)
+* Create: [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
+* Create: [ModifyDBInstanceName](https://www.tencentcloud.com/document/api/238/32104)
+* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
+* Read: [DescribeMaintenanceSpan](https://www.tencentcloud.com/document/api/238/69303)
+* Update: [ModifyDBInstanceName](https://www.tencentcloud.com/document/api/238/32104)
+* Delete: [DeleteDBInstance](https://www.tencentcloud.com/document/api/238/72759)
+* Delete: [TerminateDBInstance](https://www.tencentcloud.com/document/api/238/34685)
 
 ## Import
 

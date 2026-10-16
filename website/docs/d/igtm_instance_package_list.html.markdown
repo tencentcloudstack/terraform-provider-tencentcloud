@@ -82,5 +82,5 @@ DISABLED: Disabled.
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstancePackageList](https://cloud.tencent.com/document/api/1551/121137)
+* Read: [DescribeInstancePackageList](https://www.tencentcloud.com/search/?wd=DescribeInstancePackageList&type=document&lang=en)
 

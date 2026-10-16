@@ -73,10 +73,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCustomDomain](https://cloud.tencent.com/document/api/583/111926)
-* Read: [GetCustomDomain](https://cloud.tencent.com/document/api/583/111924)
-* Update: [UpdateCustomDomain](https://cloud.tencent.com/document/api/583/111922)
-* Delete: [DeleteCustomDomain](https://cloud.tencent.com/document/api/583/111925)
+* Create: [CreateCustomDomain](https://www.tencentcloud.com/search/?wd=CreateCustomDomain&type=document&lang=en)
+* Read: [GetCustomDomain](https://www.tencentcloud.com/search/?wd=GetCustomDomain&type=document&lang=en)
+* Update: [UpdateCustomDomain](https://www.tencentcloud.com/search/?wd=UpdateCustomDomain&type=document&lang=en)
+* Delete: [DeleteCustomDomain](https://www.tencentcloud.com/search/?wd=DeleteCustomDomain&type=document&lang=en)
 
 ## Import
 

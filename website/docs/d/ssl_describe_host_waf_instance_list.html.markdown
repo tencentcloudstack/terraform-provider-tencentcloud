@@ -50,5 +50,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeHostWafInstanceList](https://cloud.tencent.com/document/api/400/91650)
+* Read: [DescribeHostWafInstanceList](https://www.tencentcloud.com/search/?wd=DescribeHostWafInstanceList&type=document&lang=en)
 

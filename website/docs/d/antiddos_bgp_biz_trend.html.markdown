@@ -48,5 +48,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBgpBizTrend](https://cloud.tencent.com/document/api/297/95361)
+* Read: [DescribeBgpBizTrend](https://www.tencentcloud.com/search/?wd=DescribeBgpBizTrend&type=document&lang=en)
 

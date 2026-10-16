@@ -46,9 +46,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindOrganizationMemberAuthAccount](https://cloud.tencent.com/document/api/850/63308)
-* Read: [DescribeOrganizationMemberAuthAccounts](https://cloud.tencent.com/document/api/850/82999)
-* Delete: [CancelOrganizationMemberAuthAccount](https://cloud.tencent.com/document/api/850/83000)
+* Create: [BindOrganizationMemberAuthAccount](https://www.tencentcloud.com/search/?wd=BindOrganizationMemberAuthAccount&type=document&lang=en)
+* Read: [DescribeOrganizationMemberAuthAccounts](https://www.tencentcloud.com/search/?wd=DescribeOrganizationMemberAuthAccounts&type=document&lang=en)
+* Delete: [CancelOrganizationMemberAuthAccount](https://www.tencentcloud.com/search/?wd=CancelOrganizationMemberAuthAccount&type=document&lang=en)
 
 ## Import
 

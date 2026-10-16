@@ -99,10 +99,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyTimeWindow](https://cloud.tencent.com/document/api/236/33888)
-* Read: [DescribeTimeWindow](https://cloud.tencent.com/document/api/236/33889)
-* Update: [ModifyTimeWindow](https://cloud.tencent.com/document/api/236/33888)
-* Delete: [DeleteTimeWindow](https://cloud.tencent.com/document/api/236/33890)
+* Create: [ModifyTimeWindow](https://www.tencentcloud.com/document/api/236/34476)
+* Read: [DescribeTimeWindow](https://www.tencentcloud.com/document/api/236/34480)
+* Update: [ModifyTimeWindow](https://www.tencentcloud.com/document/api/236/34476)
+* Delete: [DeleteTimeWindow](https://www.tencentcloud.com/document/api/236/34483)
 
 ## Import
 

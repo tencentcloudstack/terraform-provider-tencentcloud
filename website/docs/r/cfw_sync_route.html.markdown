@@ -38,6 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFwSyncStatus](https://cloud.tencent.com/document/api/1132/97920)
-* Create: [SyncFwOperate](https://cloud.tencent.com/document/api/1132/97916)
+* Create: [DescribeFwSyncStatus](https://www.tencentcloud.com/search/?wd=DescribeFwSyncStatus&type=document&lang=en)
+* Create: [SyncFwOperate](https://www.tencentcloud.com/search/?wd=SyncFwOperate&type=document&lang=en)
 

@@ -38,10 +38,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCfsPGroup](https://cloud.tencent.com/document/api/582/38161)
-* Read: [DescribeCfsPGroups](https://cloud.tencent.com/document/api/582/38157)
-* Update: [UpdateCfsPGroup](https://cloud.tencent.com/document/api/582/38155)
-* Delete: [DeleteCfsPGroup](https://cloud.tencent.com/document/api/582/38159)
+* Create: [CreateCfsPGroup](https://www.tencentcloud.com/document/api/582/34509)
+* Read: [DescribeCfsPGroups](https://www.tencentcloud.com/document/api/582/34505)
+* Update: [UpdateCfsPGroup](https://www.tencentcloud.com/document/api/582/34503)
+* Delete: [DeleteCfsPGroup](https://www.tencentcloud.com/document/api/582/34507)
 
 ## Import
 

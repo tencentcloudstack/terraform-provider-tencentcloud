@@ -76,11 +76,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSubscription](https://cloud.tencent.com/document/api/1179/46075)
-* Read: [DescribeSubscriptions](https://cloud.tencent.com/document/api/1179/46072)
-* Read: [DescribeTopics](https://cloud.tencent.com/document/api/1179/46086)
-* Delete: [DeleteSubscriptions](https://cloud.tencent.com/document/api/1179/46074)
-* Delete: [DeleteTopics](https://cloud.tencent.com/document/api/1179/46087)
+* Create: [CreateSubscription](https://www.tencentcloud.com/search/?wd=CreateSubscription&type=document&lang=en)
+* Read: [DescribeSubscriptions](https://www.tencentcloud.com/search/?wd=DescribeSubscriptions&type=document&lang=en)
+* Read: [DescribeTopics](https://www.tencentcloud.com/search/?wd=DescribeTopics&type=document&lang=en)
+* Delete: [DeleteSubscriptions](https://www.tencentcloud.com/search/?wd=DeleteSubscriptions&type=document&lang=en)
+* Delete: [DeleteTopics](https://www.tencentcloud.com/search/?wd=DeleteTopics&type=document&lang=en)
 
 ## Import
 

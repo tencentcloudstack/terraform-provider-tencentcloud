@@ -71,5 +71,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDataSource](https://cloud.tencent.com/document/api/1267/123976)
+* Create: [CreateDataSource](https://www.tencentcloud.com/search/?wd=CreateDataSource&type=document&lang=en)
 

@@ -46,12 +46,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTopic](https://cloud.tencent.com/document/api/214/46802)
-* Create: [DescribeLogsets](https://cloud.tencent.com/document/api/614/58624)
-* Create: [ModifyTopic](https://cloud.tencent.com/document/api/614/56453)
-* Read: [DescribeTopics](https://cloud.tencent.com/document/api/614/56454)
-* Update: [ModifyTopic](https://cloud.tencent.com/document/api/614/56453)
-* Delete: [DeleteTopic](https://cloud.tencent.com/document/api/614/56455)
+* Create: [CreateTopic](https://www.tencentcloud.com/document/api/214/37820)
+* Create: [DescribeLogsets](https://www.tencentcloud.com/document/api/614/42778)
+* Create: [ModifyTopic](https://www.tencentcloud.com/document/api/614/42782)
+* Read: [DescribeTopics](https://www.tencentcloud.com/document/api/614/42783)
+* Update: [ModifyTopic](https://www.tencentcloud.com/document/api/614/42782)
+* Delete: [DeleteTopic](https://www.tencentcloud.com/document/api/614/42784)
 
 ## Import
 

@@ -41,10 +41,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateVpcEndPointServiceWhiteList](https://cloud.tencent.com/document/api/215/54683)
-* Read: [DescribeVpcEndPointServiceWhiteList](https://cloud.tencent.com/document/api/215/54677)
-* Update: [ModifyVpcEndPointServiceWhiteList](https://cloud.tencent.com/document/api/215/54672)
-* Delete: [DeleteVpcEndPointServiceWhiteList](https://cloud.tencent.com/document/api/215/54680)
+* Create: [CreateVpcEndPointServiceWhiteList](https://www.tencentcloud.com/document/api/215/40157)
+* Read: [DescribeVpcEndPointServiceWhiteList](https://www.tencentcloud.com/document/api/215/40151)
+* Update: [ModifyVpcEndPointServiceWhiteList](https://www.tencentcloud.com/document/api/215/40146)
+* Delete: [DeleteVpcEndPointServiceWhiteList](https://www.tencentcloud.com/document/api/215/40154)
 
 ## Import
 

@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListReceivers](https://cloud.tencent.com/document/api/1288/68358)
+* Read: [ListReceivers](https://www.tencentcloud.com/search/?wd=ListReceivers&type=document&lang=en)
 

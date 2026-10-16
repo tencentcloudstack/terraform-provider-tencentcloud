@@ -42,9 +42,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyWafAutoDenyRules](https://cloud.tencent.com/document/api/627/72639)
-* Read: [DescribeWafAutoDenyRules](https://cloud.tencent.com/document/api/627/72643)
-* Delete: [ModifyWafAutoDenyRules](https://cloud.tencent.com/document/api/627/72639)
+* Create: [ModifyWafAutoDenyRules](https://www.tencentcloud.com/search/?wd=ModifyWafAutoDenyRules&type=document&lang=en)
+* Read: [DescribeWafAutoDenyRules](https://www.tencentcloud.com/search/?wd=DescribeWafAutoDenyRules&type=document&lang=en)
+* Delete: [ModifyWafAutoDenyRules](https://www.tencentcloud.com/search/?wd=ModifyWafAutoDenyRules&type=document&lang=en)
 
 ## Import
 

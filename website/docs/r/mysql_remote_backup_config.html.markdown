@@ -92,9 +92,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyRemoteBackupConfig](https://cloud.tencent.com/document/api/236/84374)
-* Read: [DescribeRemoteBackupConfig](https://cloud.tencent.com/document/api/236/84375)
-* Update: [ModifyRemoteBackupConfig](https://cloud.tencent.com/document/api/236/84374)
+* Create: [ModifyRemoteBackupConfig](https://www.tencentcloud.com/document/api/236/52528)
+* Read: [DescribeRemoteBackupConfig](https://www.tencentcloud.com/document/api/236/52529)
+* Update: [ModifyRemoteBackupConfig](https://www.tencentcloud.com/document/api/236/52528)
 
 ## Import
 

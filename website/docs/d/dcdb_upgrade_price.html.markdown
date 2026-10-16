@@ -96,5 +96,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDCDBUpgradePrice](https://cloud.tencent.com/document/api/557/16132)
+* Read: [DescribeDCDBUpgradePrice](https://www.tencentcloud.com/search/?wd=DescribeDCDBUpgradePrice&type=document&lang=en)
 

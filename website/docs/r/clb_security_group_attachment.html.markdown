@@ -83,9 +83,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SetSecurityGroupForLoadbalancers](https://cloud.tencent.com/document/api/214/36189)
-* Read: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685)
-* Delete: [SetSecurityGroupForLoadbalancers](https://cloud.tencent.com/document/api/214/36189)
+* Create: [SetSecurityGroupForLoadbalancers](https://www.tencentcloud.com/document/api/214/33797)
+* Read: [DescribeLoadBalancers](https://www.tencentcloud.com/document/api/214/33830)
+* Delete: [SetSecurityGroupForLoadbalancers](https://www.tencentcloud.com/document/api/214/33797)
 
 ## Import
 

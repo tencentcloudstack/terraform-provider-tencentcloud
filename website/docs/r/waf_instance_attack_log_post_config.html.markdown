@@ -40,9 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyInstanceAttackLogPost](https://cloud.tencent.com/document/api/627/118381)
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/627/75922)
-* Update: [ModifyInstanceAttackLogPost](https://cloud.tencent.com/document/api/627/118381)
+* Create: [ModifyInstanceAttackLogPost](https://www.tencentcloud.com/search/?wd=ModifyInstanceAttackLogPost&type=document&lang=en)
+* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/627/64766)
+* Update: [ModifyInstanceAttackLogPost](https://www.tencentcloud.com/search/?wd=ModifyInstanceAttackLogPost&type=document&lang=en)
 
 ## Import
 

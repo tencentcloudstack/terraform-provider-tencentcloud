@@ -85,14 +85,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTableGroup](https://cloud.tencent.com/document/api/596/41495)
-* Read: [DescribeTableGroupTags](https://cloud.tencent.com/document/api/596/45084)
-* Read: [DescribeTableGroups](https://cloud.tencent.com/document/api/596/41493)
-* Update: [DescribeTasks](https://cloud.tencent.com/document/api/596/39677)
-* Update: [ModifyTableGroupName](https://cloud.tencent.com/document/api/596/41492)
-* Update: [ModifyTableGroupTags](https://cloud.tencent.com/document/api/596/45083)
-* Delete: [DeleteTableGroup](https://cloud.tencent.com/document/api/596/41494)
-* Delete: [DescribeTableGroups](https://cloud.tencent.com/document/api/596/41493)
+* Create: [CreateTableGroup](https://www.tencentcloud.com/search/?wd=CreateTableGroup&type=document&lang=en)
+* Read: [DescribeTableGroupTags](https://www.tencentcloud.com/search/?wd=DescribeTableGroupTags&type=document&lang=en)
+* Read: [DescribeTableGroups](https://www.tencentcloud.com/search/?wd=DescribeTableGroups&type=document&lang=en)
+* Update: [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
+* Update: [ModifyTableGroupName](https://www.tencentcloud.com/search/?wd=ModifyTableGroupName&type=document&lang=en)
+* Update: [ModifyTableGroupTags](https://www.tencentcloud.com/search/?wd=ModifyTableGroupTags&type=document&lang=en)
+* Delete: [DeleteTableGroup](https://www.tencentcloud.com/search/?wd=DeleteTableGroup&type=document&lang=en)
+* Delete: [DescribeTableGroups](https://www.tencentcloud.com/search/?wd=DescribeTableGroups&type=document&lang=en)
 
 ## Import
 

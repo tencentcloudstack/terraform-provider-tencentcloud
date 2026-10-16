@@ -36,7 +36,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CheckCertificateChain](https://cloud.tencent.com/document/api/400/49323)
+* Create: [CheckCertificateChain](https://www.tencentcloud.com/search/?wd=CheckCertificateChain&type=document&lang=en)
 
 ## Import
 

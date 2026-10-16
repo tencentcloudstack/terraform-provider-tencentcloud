@@ -274,11 +274,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateScenario](https://cloud.tencent.com/document/api/1484/78091)
-* Create: [UpdateScenario](https://cloud.tencent.com/document/api/1484/78057)
-* Read: [DescribeScenarios](https://cloud.tencent.com/document/api/1484/78065)
-* Update: [UpdateScenario](https://cloud.tencent.com/document/api/1484/78057)
-* Delete: [DeleteScenarios](https://cloud.tencent.com/document/api/1484/78085)
+* Create: [CreateScenario](https://www.tencentcloud.com/search/?wd=CreateScenario&type=document&lang=en)
+* Create: [UpdateScenario](https://www.tencentcloud.com/search/?wd=UpdateScenario&type=document&lang=en)
+* Read: [DescribeScenarios](https://www.tencentcloud.com/search/?wd=DescribeScenarios&type=document&lang=en)
+* Update: [UpdateScenario](https://www.tencentcloud.com/search/?wd=UpdateScenario&type=document&lang=en)
+* Delete: [DeleteScenarios](https://www.tencentcloud.com/search/?wd=DeleteScenarios&type=document&lang=en)
 
 ## Import
 

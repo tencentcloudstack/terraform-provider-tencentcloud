@@ -223,6 +223,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDiskConfigQuota](https://cloud.tencent.com/document/api/362/16318)
-* Read: [DescribeZoneInstanceConfigInfos](https://cloud.tencent.com/document/api/213/17378)
+* Read: [DescribeDiskConfigQuota](https://www.tencentcloud.com/document/api/362/16318)
+* Read: [DescribeZoneInstanceConfigInfos](https://www.tencentcloud.com/document/api/213/33254)
 

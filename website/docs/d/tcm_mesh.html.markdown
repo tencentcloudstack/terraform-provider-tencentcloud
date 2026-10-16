@@ -59,5 +59,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeMeshList](https://cloud.tencent.com/document/api/1261/63841)
+* Read: [DescribeMeshList](https://www.tencentcloud.com/search/?wd=DescribeMeshList&type=document&lang=en)
 

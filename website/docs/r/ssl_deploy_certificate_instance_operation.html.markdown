@@ -41,7 +41,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DeployCertificateInstance](https://cloud.tencent.com/document/api/400/91667)
+* Create: [DeployCertificateInstance](https://www.tencentcloud.com/search/?wd=DeployCertificateInstance&type=document&lang=en)
 
 ## Import
 

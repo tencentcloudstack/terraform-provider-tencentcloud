@@ -146,11 +146,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Read: [DescribeMigrationDetail](https://cloud.tencent.com/document/api/571/82085)
-* Update: [CompleteMigrateJob](https://cloud.tencent.com/document/api/571/82094)
-* Update: [ContinueMigrateJob](https://cloud.tencent.com/document/api/571/85142)
-* Update: [DescribeMigrationDetail](https://cloud.tencent.com/document/api/571/82085)
-* Update: [PauseMigrateJob](https://cloud.tencent.com/document/api/571/85139)
-* Update: [RecoverMigrateJob](https://cloud.tencent.com/document/api/571/82076)
-* Update: [StopMigrateJob](https://cloud.tencent.com/document/api/571/82071)
+* Read: [DescribeMigrationDetail](https://www.tencentcloud.com/document/api/571/51813)
+* Update: [CompleteMigrateJob](https://www.tencentcloud.com/document/api/571/51822)
+* Update: [ContinueMigrateJob](https://www.tencentcloud.com/document/api/571/53982)
+* Update: [DescribeMigrationDetail](https://www.tencentcloud.com/document/api/571/51813)
+* Update: [PauseMigrateJob](https://www.tencentcloud.com/document/api/571/53981)
+* Update: [RecoverMigrateJob](https://www.tencentcloud.com/document/api/571/51804)
+* Update: [StopMigrateJob](https://www.tencentcloud.com/document/api/571/51799)
 

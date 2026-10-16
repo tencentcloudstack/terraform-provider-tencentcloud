@@ -59,21 +59,21 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateHTTPListener](https://cloud.tencent.com/document/api/608/37007)
-* Create: [CreateHTTPSListener](https://cloud.tencent.com/document/api/608/37006)
-* Create: [DescribeProxyDetail](https://cloud.tencent.com/document/api/608/36960)
-* Create: [DescribeProxyGroupDetails](https://cloud.tencent.com/document/api/608/36944)
-* Create: [SetTlsVersion](https://cloud.tencent.com/document/api/608/107933)
-* Read: [DescribeHTTPListeners](https://cloud.tencent.com/document/api/608/37002)
-* Read: [DescribeHTTPSListeners](https://cloud.tencent.com/document/api/608/37001)
-* Update: [DescribeProxyDetail](https://cloud.tencent.com/document/api/608/36960)
-* Update: [DescribeProxyGroupDetails](https://cloud.tencent.com/document/api/608/36944)
-* Update: [ModifyHTTPListenerAttribute](https://cloud.tencent.com/document/api/608/36997)
-* Update: [ModifyHTTPSListenerAttribute](https://cloud.tencent.com/document/api/608/36996)
-* Update: [SetTlsVersion](https://cloud.tencent.com/document/api/608/107933)
-* Delete: [DeleteListeners](https://cloud.tencent.com/document/api/608/37003)
-* Delete: [DescribeHTTPListeners](https://cloud.tencent.com/document/api/608/37002)
-* Delete: [DescribeHTTPSListeners](https://cloud.tencent.com/document/api/608/37001)
+* Create: [CreateHTTPListener](https://www.tencentcloud.com/document/api/608/33076)
+* Create: [CreateHTTPSListener](https://www.tencentcloud.com/document/api/608/33075)
+* Create: [DescribeProxyDetail](https://www.tencentcloud.com/document/api/608/33098)
+* Create: [DescribeProxyGroupDetails](https://www.tencentcloud.com/document/api/608/33082)
+* Create: [SetTlsVersion](https://www.tencentcloud.com/search/?wd=SetTlsVersion&type=document&lang=en)
+* Read: [DescribeHTTPListeners](https://www.tencentcloud.com/document/api/608/33071)
+* Read: [DescribeHTTPSListeners](https://www.tencentcloud.com/document/api/608/33070)
+* Update: [DescribeProxyDetail](https://www.tencentcloud.com/document/api/608/33098)
+* Update: [DescribeProxyGroupDetails](https://www.tencentcloud.com/document/api/608/33082)
+* Update: [ModifyHTTPListenerAttribute](https://www.tencentcloud.com/document/api/608/33066)
+* Update: [ModifyHTTPSListenerAttribute](https://www.tencentcloud.com/document/api/608/33065)
+* Update: [SetTlsVersion](https://www.tencentcloud.com/search/?wd=SetTlsVersion&type=document&lang=en)
+* Delete: [DeleteListeners](https://www.tencentcloud.com/document/api/608/33072)
+* Delete: [DescribeHTTPListeners](https://www.tencentcloud.com/document/api/608/33071)
+* Delete: [DescribeHTTPSListeners](https://www.tencentcloud.com/document/api/608/33070)
 
 ## Import
 

@@ -60,10 +60,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [PutRolePermissionsBoundary](https://cloud.tencent.com/document/api/598/46592)
-* Read: [GetRole](https://cloud.tencent.com/document/api/598/36221)
-* Read: [GetRolePermissionBoundary](https://cloud.tencent.com/document/api/598/66679)
-* Delete: [DeleteRolePermissionsBoundary](https://cloud.tencent.com/document/api/598/46593)
+* Create: [PutRolePermissionsBoundary](https://www.tencentcloud.com/document/api/598/37927)
+* Read: [GetRole](https://www.tencentcloud.com/document/api/598/33557)
+* Read: [GetRolePermissionBoundary](https://www.tencentcloud.com/search/?wd=GetRolePermissionBoundary&type=document&lang=en)
+* Delete: [DeleteRolePermissionsBoundary](https://www.tencentcloud.com/document/api/598/37928)
 
 ## Import
 

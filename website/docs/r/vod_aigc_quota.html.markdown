@@ -90,10 +90,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAigcQuota](https://cloud.tencent.com/document/api/266/133474)
-* Read: [DescribeAigcQuotas](https://cloud.tencent.com/document/api/266/133472)
-* Update: [ModifyAigcQuota](https://cloud.tencent.com/document/api/266/133471)
-* Delete: [DeleteAigcQuota](https://cloud.tencent.com/document/api/266/133473)
+* Create: [CreateAigcQuota](https://www.tencentcloud.com/document/api/266/81192)
+* Read: [DescribeAigcQuotas](https://www.tencentcloud.com/document/api/266/81190)
+* Update: [ModifyAigcQuota](https://www.tencentcloud.com/document/api/266/81189)
+* Delete: [DeleteAigcQuota](https://www.tencentcloud.com/document/api/266/81191)
 
 ## Import
 

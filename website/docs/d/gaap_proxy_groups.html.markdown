@@ -74,5 +74,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeProxyGroupList](https://cloud.tencent.com/document/api/608/36943)
+* Read: [DescribeProxyGroupList](https://www.tencentcloud.com/document/api/608/33081)
 

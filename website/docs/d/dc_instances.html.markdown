@@ -61,5 +61,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDirectConnects](https://cloud.tencent.com/document/api/216/34826)
+* Read: [DescribeDirectConnects](https://www.tencentcloud.com/document/api/216/35330)
 

@@ -74,5 +74,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSgSnapshotFileContent](https://cloud.tencent.com/document/api/215/85156)
+* Read: [DescribeSgSnapshotFileContent](https://www.tencentcloud.com/document/api/215/55057)
 

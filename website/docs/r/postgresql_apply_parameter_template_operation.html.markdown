@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772)
-* Create: [DescribeDBInstanceParameters](https://cloud.tencent.com/document/api/409/63344)
-* Create: [DescribeParameterTemplateAttributes](https://cloud.tencent.com/document/api/409/84068)
-* Create: [DescribeParamsEvent](https://cloud.tencent.com/document/api/409/63343)
-* Create: [ModifyDBInstanceParameters](https://cloud.tencent.com/document/api/409/63342)
+* Create: [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
+* Create: [DescribeDBInstanceParameters](https://www.tencentcloud.com/document/api/409/43284)
+* Create: [DescribeParameterTemplateAttributes](https://www.tencentcloud.com/document/api/409/52652)
+* Create: [DescribeParamsEvent](https://www.tencentcloud.com/document/api/409/43283)
+* Create: [ModifyDBInstanceParameters](https://www.tencentcloud.com/document/api/409/43282)
 

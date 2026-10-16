@@ -88,9 +88,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyAccessLogConfig](https://cloud.tencent.com/document/api/1261/83254)
-* Read: [DescribeAccessLogConfig](https://cloud.tencent.com/document/api/1261/83255)
-* Update: [ModifyAccessLogConfig](https://cloud.tencent.com/document/api/1261/83254)
+* Create: [ModifyAccessLogConfig](https://www.tencentcloud.com/search/?wd=ModifyAccessLogConfig&type=document&lang=en)
+* Read: [DescribeAccessLogConfig](https://www.tencentcloud.com/search/?wd=DescribeAccessLogConfig&type=document&lang=en)
+* Update: [ModifyAccessLogConfig](https://www.tencentcloud.com/search/?wd=ModifyAccessLogConfig&type=document&lang=en)
 
 ## Import
 

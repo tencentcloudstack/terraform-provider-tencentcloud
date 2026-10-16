@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeWebhookTriggerLog](https://cloud.tencent.com/document/api/1141/43528)
+* Read: [DescribeWebhookTriggerLog](https://www.tencentcloud.com/search/?wd=DescribeWebhookTriggerLog&type=document&lang=en)
 

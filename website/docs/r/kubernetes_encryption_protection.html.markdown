@@ -88,7 +88,7 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [EnableEncryptionProtection](https://cloud.tencent.com/document/api/457/94083)
-* Read: [DescribeEncryptionStatus](https://cloud.tencent.com/document/api/457/94085)
-* Delete: [DisableEncryptionProtection](https://cloud.tencent.com/document/api/457/94084)
+* Create: [EnableEncryptionProtection](https://www.tencentcloud.com/document/api/457/56946)
+* Read: [DescribeEncryptionStatus](https://www.tencentcloud.com/document/api/457/56948)
+* Delete: [DisableEncryptionProtection](https://www.tencentcloud.com/document/api/457/56947)
 

@@ -50,10 +50,10 @@ The `api_services` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSecurityAPIService](https://cloud.tencent.com/document/api/1552/122124)
-* Read: [DescribeSecurityAPIService](https://cloud.tencent.com/document/api/1552/122120)
-* Update: [ModifySecurityAPIService](https://cloud.tencent.com/document/api/1552/122118)
-* Delete: [DeleteSecurityAPIService](https://cloud.tencent.com/document/api/1552/122122)
+* Create: [CreateSecurityAPIService](https://www.tencentcloud.com/search/?wd=CreateSecurityAPIService&type=document&lang=en)
+* Read: [DescribeSecurityAPIService](https://www.tencentcloud.com/search/?wd=DescribeSecurityAPIService&type=document&lang=en)
+* Update: [ModifySecurityAPIService](https://www.tencentcloud.com/search/?wd=ModifySecurityAPIService&type=document&lang=en)
+* Delete: [DeleteSecurityAPIService](https://www.tencentcloud.com/search/?wd=DeleteSecurityAPIService&type=document&lang=en)
 
 ## Import
 

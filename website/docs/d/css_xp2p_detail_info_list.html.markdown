@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeLiveXP2PDetailInfoList](https://cloud.tencent.com/document/api/267/90905)
+* Read: [DescribeLiveXP2PDetailInfoList](https://www.tencentcloud.com/search/?wd=DescribeLiveXP2PDetailInfoList&type=document&lang=en)
 

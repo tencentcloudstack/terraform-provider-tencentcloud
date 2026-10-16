@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstancesModification](https://cloud.tencent.com/document/api/213/60294)
+* Read: [DescribeInstancesModification](https://www.tencentcloud.com/search/?wd=DescribeInstancesModification&type=document&lang=en)
 

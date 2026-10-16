@@ -62,5 +62,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyDiagDBInstanceConf](https://cloud.tencent.com/document/api/1130/57790)
+* Create: [ModifyDiagDBInstanceConf](https://www.tencentcloud.com/search/?wd=ModifyDiagDBInstanceConf&type=document&lang=en)
 

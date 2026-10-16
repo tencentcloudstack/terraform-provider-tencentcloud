@@ -51,11 +51,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateUserSAMLConfig](https://cloud.tencent.com/document/api/598/62664)
-* Read: [DescribeUserSAMLConfig](https://cloud.tencent.com/document/api/598/62663)
-* Update: [DescribeUserSAMLConfig](https://cloud.tencent.com/document/api/598/62663)
-* Update: [UpdateUserSAMLConfig](https://cloud.tencent.com/document/api/598/62662)
-* Delete: [UpdateUserSAMLConfig](https://cloud.tencent.com/document/api/598/62662)
+* Create: [CreateUserSAMLConfig](https://www.tencentcloud.com/document/api/598/42741)
+* Read: [DescribeUserSAMLConfig](https://www.tencentcloud.com/document/api/598/42740)
+* Update: [DescribeUserSAMLConfig](https://www.tencentcloud.com/document/api/598/42740)
+* Update: [UpdateUserSAMLConfig](https://www.tencentcloud.com/document/api/598/42739)
+* Delete: [UpdateUserSAMLConfig](https://www.tencentcloud.com/document/api/598/42739)
 
 ## Import
 

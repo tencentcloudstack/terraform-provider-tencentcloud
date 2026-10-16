@@ -52,8 +52,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateJob](https://cloud.tencent.com/document/api/849/52009)
-* Read: [DescribeJobs](https://cloud.tencent.com/document/api/849/52008)
-* Update: [ModifyJob](https://cloud.tencent.com/document/api/849/75553)
-* Delete: [DeleteJobs](https://cloud.tencent.com/document/api/849/76834)
+* Create: [CreateJob](https://www.tencentcloud.com/search/?wd=CreateJob&type=document&lang=en)
+* Read: [DescribeJobs](https://www.tencentcloud.com/search/?wd=DescribeJobs&type=document&lang=en)
+* Update: [ModifyJob](https://www.tencentcloud.com/search/?wd=ModifyJob&type=document&lang=en)
+* Delete: [DeleteJobs](https://www.tencentcloud.com/search/?wd=DeleteJobs&type=document&lang=en)
 

@@ -58,5 +58,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSREInstanceAccessAddress](https://cloud.tencent.com/document/api/1364/54941)
+* Read: [DescribeSREInstanceAccessAddress](https://www.tencentcloud.com/search/?wd=DescribeSREInstanceAccessAddress&type=document&lang=en)
 

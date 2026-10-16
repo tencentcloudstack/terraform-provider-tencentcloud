@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpsertCCAutoStatus](https://cloud.tencent.com/document/api/627/101567)
-* Read: [DescribeCCAutoStatus](https://cloud.tencent.com/document/api/627/101568)
-* Delete: [UpsertCCAutoStatus](https://cloud.tencent.com/document/api/627/101567)
+* Create: [UpsertCCAutoStatus](https://www.tencentcloud.com/search/?wd=UpsertCCAutoStatus&type=document&lang=en)
+* Read: [DescribeCCAutoStatus](https://www.tencentcloud.com/search/?wd=DescribeCCAutoStatus&type=document&lang=en)
+* Delete: [UpsertCCAutoStatus](https://www.tencentcloud.com/search/?wd=UpsertCCAutoStatus&type=document&lang=en)
 
 ## Import
 

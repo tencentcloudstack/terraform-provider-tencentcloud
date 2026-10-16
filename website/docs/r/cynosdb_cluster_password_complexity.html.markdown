@@ -51,15 +51,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CopyClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92723)
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
-* Create: [OpenClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92720)
-* Read: [DescribeClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92722)
-* Update: [CopyClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92723)
-* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
-* Update: [ModifyClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92721)
-* Delete: [CloseClusterPasswordComplexity](https://cloud.tencent.com/document/api/1003/92724)
-* Delete: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
+* Create: [CopyClusterPasswordComplexity](https://www.tencentcloud.com/search/?wd=CopyClusterPasswordComplexity&type=document&lang=en)
+* Create: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
+* Create: [OpenClusterPasswordComplexity](https://www.tencentcloud.com/search/?wd=OpenClusterPasswordComplexity&type=document&lang=en)
+* Read: [DescribeClusterPasswordComplexity](https://www.tencentcloud.com/search/?wd=DescribeClusterPasswordComplexity&type=document&lang=en)
+* Update: [CopyClusterPasswordComplexity](https://www.tencentcloud.com/search/?wd=CopyClusterPasswordComplexity&type=document&lang=en)
+* Update: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
+* Update: [ModifyClusterPasswordComplexity](https://www.tencentcloud.com/search/?wd=ModifyClusterPasswordComplexity&type=document&lang=en)
+* Delete: [CloseClusterPasswordComplexity](https://www.tencentcloud.com/search/?wd=CloseClusterPasswordComplexity&type=document&lang=en)
+* Delete: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
 
 ## Import
 

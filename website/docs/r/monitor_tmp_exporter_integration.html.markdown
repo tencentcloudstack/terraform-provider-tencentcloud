@@ -145,11 +145,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateExporterIntegration](https://cloud.tencent.com/document/api/248/76019)
-* Create: [DescribePrometheusInstanceInitStatus](https://cloud.tencent.com/document/api/248/85716)
-* Create: [RunPrometheusInstance](https://cloud.tencent.com/document/api/248/85710)
-* Read: [DescribeExporterIntegrations](https://cloud.tencent.com/document/api/248/76014)
-* Update: [UpdateExporterIntegration](https://cloud.tencent.com/document/api/248/76005)
-* Delete: [DeleteExporterIntegration](https://cloud.tencent.com/document/api/248/76016)
-* Delete: [DescribeExporterIntegrations](https://cloud.tencent.com/document/api/248/76014)
+* Create: [CreateExporterIntegration](https://www.tencentcloud.com/document/api/248/48766)
+* Create: [DescribePrometheusInstanceInitStatus](https://www.tencentcloud.com/document/api/248/53321)
+* Create: [RunPrometheusInstance](https://www.tencentcloud.com/document/api/248/53315)
+* Read: [DescribeExporterIntegrations](https://www.tencentcloud.com/document/api/248/48755)
+* Update: [UpdateExporterIntegration](https://www.tencentcloud.com/document/api/248/48741)
+* Delete: [DeleteExporterIntegration](https://www.tencentcloud.com/document/api/248/48759)
+* Delete: [DescribeExporterIntegrations](https://www.tencentcloud.com/document/api/248/48755)
 

@@ -88,14 +88,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAssistantCidr](https://cloud.tencent.com/document/api/215/43276)
-* Create: [CreateVpc](https://cloud.tencent.com/document/api/215/15774)
-* Read: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763)
-* Read: [DescribeVpcs](https://cloud.tencent.com/document/api/215/15778)
-* Update: [ModifyAssistantCidr](https://cloud.tencent.com/document/api/215/43272)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Update: [ModifyVpcAttribute](https://cloud.tencent.com/document/api/215/15773)
-* Delete: [DeleteVpc](https://cloud.tencent.com/document/api/215/15775)
+* Create: [CreateAssistantCidr](https://www.tencentcloud.com/document/api/215/36081)
+* Create: [CreateVpc](https://www.tencentcloud.com/document/api/215/15774)
+* Read: [DescribeRouteTables](https://www.tencentcloud.com/document/api/215/15763)
+* Read: [DescribeVpcs](https://www.tencentcloud.com/document/api/215/15778)
+* Update: [ModifyAssistantCidr](https://www.tencentcloud.com/document/api/215/36077)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Update: [ModifyVpcAttribute](https://www.tencentcloud.com/document/api/215/15773)
+* Delete: [DeleteVpc](https://www.tencentcloud.com/document/api/215/15775)
 
 ## Import
 

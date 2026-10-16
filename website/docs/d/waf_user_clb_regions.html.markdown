@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeUserClbWafRegions](https://cloud.tencent.com/document/api/627/53600)
+* Read: [DescribeUserClbWafRegions](https://www.tencentcloud.com/document/api/627/64769)
 

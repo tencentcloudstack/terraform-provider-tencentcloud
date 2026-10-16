@@ -56,5 +56,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeExternalClusterRegisterCommand](https://cloud.tencent.com/document/api/248/118965)
+* Read: [DescribeExternalClusterRegisterCommand](https://www.tencentcloud.com/search/?wd=DescribeExternalClusterRegisterCommand&type=document&lang=en)
 

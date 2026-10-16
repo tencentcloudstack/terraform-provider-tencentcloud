@@ -89,13 +89,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CloseSSL](https://cloud.tencent.com/document/api/239/81240)
-* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601)
-* Create: [OpenSSL](https://cloud.tencent.com/document/api/239/81239)
-* Read: [DescribeSSLStatus](https://cloud.tencent.com/document/api/239/88703)
-* Update: [CloseSSL](https://cloud.tencent.com/document/api/239/81240)
-* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601)
-* Update: [OpenSSL](https://cloud.tencent.com/document/api/239/81239)
+* Create: [CloseSSL](https://www.tencentcloud.com/document/api/239/51197)
+* Create: [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+* Create: [OpenSSL](https://www.tencentcloud.com/document/api/239/51196)
+* Read: [DescribeSSLStatus](https://www.tencentcloud.com/document/api/239/54350)
+* Update: [CloseSSL](https://www.tencentcloud.com/document/api/239/51197)
+* Update: [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+* Update: [OpenSSL](https://www.tencentcloud.com/document/api/239/51196)
 
 ## Import
 

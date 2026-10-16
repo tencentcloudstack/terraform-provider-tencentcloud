@@ -42,10 +42,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLiveRecordRule](https://cloud.tencent.com/document/api/267/32615)
-* Read: [DescribeLiveRecordRules](https://cloud.tencent.com/document/api/267/32611)
-* Delete: [DeleteLiveRecordRule](https://cloud.tencent.com/document/api/267/32613)
-* Delete: [DescribeLiveRecordRules](https://cloud.tencent.com/document/api/267/32611)
+* Create: [CreateLiveRecordRule](https://www.tencentcloud.com/document/api/267/30846)
+* Read: [DescribeLiveRecordRules](https://www.tencentcloud.com/document/api/267/30841)
+* Delete: [DeleteLiveRecordRule](https://www.tencentcloud.com/document/api/267/30843)
+* Delete: [DescribeLiveRecordRules](https://www.tencentcloud.com/document/api/267/30841)
 
 ## Import
 

@@ -96,7 +96,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ImportInstancesActionTimer](https://cloud.tencent.com/document/api/213/103949)
-* Read: [DescribeInstancesActionTimer](https://cloud.tencent.com/document/api/213/103950)
-* Delete: [DeleteInstancesActionTimer](https://cloud.tencent.com/document/api/213/103951)
+* Create: [ImportInstancesActionTimer](https://www.tencentcloud.com/search/?wd=ImportInstancesActionTimer&type=document&lang=en)
+* Read: [DescribeInstancesActionTimer](https://www.tencentcloud.com/search/?wd=DescribeInstancesActionTimer&type=document&lang=en)
+* Delete: [DeleteInstancesActionTimer](https://www.tencentcloud.com/search/?wd=DeleteInstancesActionTimer&type=document&lang=en)
 

@@ -155,12 +155,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RegisterTargets](https://cloud.tencent.com/document/api/214/30676)
-* Read: [DescribeListeners](https://cloud.tencent.com/document/api/214/30686)
-* Read: [DescribeTargets](https://cloud.tencent.com/document/api/214/30684)
-* Update: [ModifyTargetWeight](https://cloud.tencent.com/document/api/214/30677)
-* Update: [RegisterTargets](https://cloud.tencent.com/document/api/214/30676)
-* Delete: [DeregisterTargets](https://cloud.tencent.com/document/api/214/30687)
+* Create: [RegisterTargets](https://www.tencentcloud.com/document/api/214/33809)
+* Read: [DescribeListeners](https://www.tencentcloud.com/document/api/214/33831)
+* Read: [DescribeTargets](https://www.tencentcloud.com/document/api/214/33824)
+* Update: [ModifyTargetWeight](https://www.tencentcloud.com/document/api/214/33811)
+* Update: [RegisterTargets](https://www.tencentcloud.com/document/api/214/33809)
+* Delete: [DeregisterTargets](https://www.tencentcloud.com/document/api/214/33832)
 
 ## Import
 

@@ -38,10 +38,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCmdTemplate](https://cloud.tencent.com/document/api/1025/86964)
-* Read: [DescribeCmdTemplates](https://cloud.tencent.com/document/api/1025/86962)
-* Update: [ModifyCmdTemplate](https://cloud.tencent.com/document/api/1025/98702)
-* Delete: [DeleteCmdTemplates](https://cloud.tencent.com/document/api/1025/86963)
+* Create: [CreateCmdTemplate](https://www.tencentcloud.com/search/?wd=CreateCmdTemplate&type=document&lang=en)
+* Read: [DescribeCmdTemplates](https://www.tencentcloud.com/search/?wd=DescribeCmdTemplates&type=document&lang=en)
+* Update: [ModifyCmdTemplate](https://www.tencentcloud.com/search/?wd=ModifyCmdTemplate&type=document&lang=en)
+* Delete: [DeleteCmdTemplates](https://www.tencentcloud.com/search/?wd=DeleteCmdTemplates&type=document&lang=en)
 
 ## Import
 

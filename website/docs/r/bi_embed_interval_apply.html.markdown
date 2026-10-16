@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ApplyEmbedInterval](https://cloud.tencent.com/document/api/590/73725)
+* Create: [ApplyEmbedInterval](https://www.tencentcloud.com/search/?wd=ApplyEmbedInterval&type=document&lang=en)
 

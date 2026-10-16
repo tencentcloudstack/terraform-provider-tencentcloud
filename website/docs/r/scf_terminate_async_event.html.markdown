@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [TerminateAsyncEvent](https://cloud.tencent.com/document/api/583/52500)
+* Create: [TerminateAsyncEvent](https://www.tencentcloud.com/document/api/583/39733)
 

@@ -57,10 +57,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRocketMQTopic](https://cloud.tencent.com/document/api/1179/63426)
-* Read: [DescribeRocketMQTopics](https://cloud.tencent.com/document/api/1179/63418)
-* Update: [ModifyRocketMQTopic](https://cloud.tencent.com/document/api/1179/63414)
-* Delete: [DeleteRocketMQTopic](https://cloud.tencent.com/document/api/1179/63423)
+* Create: [CreateRocketMQTopic](https://www.tencentcloud.com/search/?wd=CreateRocketMQTopic&type=document&lang=en)
+* Read: [DescribeRocketMQTopics](https://www.tencentcloud.com/search/?wd=DescribeRocketMQTopics&type=document&lang=en)
+* Update: [ModifyRocketMQTopic](https://www.tencentcloud.com/search/?wd=ModifyRocketMQTopic&type=document&lang=en)
+* Delete: [DeleteRocketMQTopic](https://www.tencentcloud.com/search/?wd=DeleteRocketMQTopic&type=document&lang=en)
 
 ## Import
 

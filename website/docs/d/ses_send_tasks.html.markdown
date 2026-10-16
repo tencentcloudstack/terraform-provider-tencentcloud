@@ -62,5 +62,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListSendTasks](https://cloud.tencent.com/document/api/1288/68357)
+* Read: [ListSendTasks](https://www.tencentcloud.com/search/?wd=ListSendTasks&type=document&lang=en)
 

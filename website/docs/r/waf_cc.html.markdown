@@ -162,8 +162,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpsertCCRule](https://cloud.tencent.com/document/api/627/97646)
-* Read: [DescribeCCRuleList](https://cloud.tencent.com/document/api/627/97636)
-* Update: [UpsertCCRule](https://cloud.tencent.com/document/api/627/97646)
-* Delete: [DeleteCCRule](https://cloud.tencent.com/document/api/627/97648)
+* Create: [UpsertCCRule](https://www.tencentcloud.com/document/api/627/64535)
+* Read: [DescribeCCRuleList](https://www.tencentcloud.com/document/api/627/64524)
+* Update: [UpsertCCRule](https://www.tencentcloud.com/document/api/627/64535)
+* Delete: [DeleteCCRule](https://www.tencentcloud.com/document/api/627/64551)
 

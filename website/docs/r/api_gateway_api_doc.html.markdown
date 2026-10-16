@@ -51,10 +51,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAPIDoc](https://cloud.tencent.com/document/api/628/54951)
-* Create: [DescribeAPIDocDetail](https://cloud.tencent.com/document/api/628/54949)
-* Read: [DescribeAPIDocDetail](https://cloud.tencent.com/document/api/628/54949)
-* Update: [DescribeAPIDocDetail](https://cloud.tencent.com/document/api/628/54949)
-* Update: [ModifyAPIDoc](https://cloud.tencent.com/document/api/628/54947)
-* Delete: [DeleteAPIDoc](https://cloud.tencent.com/document/api/628/54950)
+* Create: [CreateAPIDoc](https://www.tencentcloud.com/search/?wd=CreateAPIDoc&type=document&lang=en)
+* Create: [DescribeAPIDocDetail](https://www.tencentcloud.com/search/?wd=DescribeAPIDocDetail&type=document&lang=en)
+* Read: [DescribeAPIDocDetail](https://www.tencentcloud.com/search/?wd=DescribeAPIDocDetail&type=document&lang=en)
+* Update: [DescribeAPIDocDetail](https://www.tencentcloud.com/search/?wd=DescribeAPIDocDetail&type=document&lang=en)
+* Update: [ModifyAPIDoc](https://www.tencentcloud.com/search/?wd=ModifyAPIDoc&type=document&lang=en)
+* Delete: [DeleteAPIDoc](https://www.tencentcloud.com/search/?wd=DeleteAPIDoc&type=document&lang=en)
 

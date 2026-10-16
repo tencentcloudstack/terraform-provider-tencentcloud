@@ -52,9 +52,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyEventConfig](https://cloud.tencent.com/document/api/266/55244)
-* Read: [DescribeEventConfig](https://cloud.tencent.com/document/api/266/55296)
-* Update: [ModifyEventConfig](https://cloud.tencent.com/document/api/266/55244)
+* Create: [ModifyEventConfig](https://www.tencentcloud.com/document/api/266/57589)
+* Read: [DescribeEventConfig](https://www.tencentcloud.com/document/api/266/64486)
+* Update: [ModifyEventConfig](https://www.tencentcloud.com/document/api/266/57589)
 
 ## Import
 

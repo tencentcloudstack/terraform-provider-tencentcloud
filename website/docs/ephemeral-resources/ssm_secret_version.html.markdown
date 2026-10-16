@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This ephemeral resource reads the following TencentCloud APIs:
 
-* Open: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522)
+* Open: [GetSecretValue](https://www.tencentcloud.com/search/?wd=GetSecretValue&type=document&lang=en)
 

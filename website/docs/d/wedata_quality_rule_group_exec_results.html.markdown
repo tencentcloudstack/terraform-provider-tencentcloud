@@ -83,5 +83,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListQualityRuleGroupExecResultsByPage](https://cloud.tencent.com/document/api/1267/127228)
+* Read: [ListQualityRuleGroupExecResultsByPage](https://www.tencentcloud.com/search/?wd=ListQualityRuleGroupExecResultsByPage&type=document&lang=en)
 

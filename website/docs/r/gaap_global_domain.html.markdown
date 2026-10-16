@@ -45,18 +45,18 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGlobalDomain](https://cloud.tencent.com/document/api/608/79567)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeGlobalDomains](https://cloud.tencent.com/document/api/608/79562)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [DescribeGlobalDomains](https://cloud.tencent.com/document/api/608/79562)
-* Update: [DisableGlobalDomain](https://cloud.tencent.com/document/api/608/79561)
-* Update: [EnableGlobalDomain](https://cloud.tencent.com/document/api/608/79560)
-* Update: [ModifyGlobalDomainAttribute](https://cloud.tencent.com/document/api/608/79559)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeleteGlobalDomain](https://cloud.tencent.com/document/api/608/79565)
-* Delete: [DescribeGlobalDomains](https://cloud.tencent.com/document/api/608/79562)
-* Delete: [DisableGlobalDomain](https://cloud.tencent.com/document/api/608/79561)
+* Create: [CreateGlobalDomain](https://www.tencentcloud.com/search/?wd=CreateGlobalDomain&type=document&lang=en)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeGlobalDomains](https://www.tencentcloud.com/search/?wd=DescribeGlobalDomains&type=document&lang=en)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [DescribeGlobalDomains](https://www.tencentcloud.com/search/?wd=DescribeGlobalDomains&type=document&lang=en)
+* Update: [DisableGlobalDomain](https://www.tencentcloud.com/search/?wd=DisableGlobalDomain&type=document&lang=en)
+* Update: [EnableGlobalDomain](https://www.tencentcloud.com/search/?wd=EnableGlobalDomain&type=document&lang=en)
+* Update: [ModifyGlobalDomainAttribute](https://www.tencentcloud.com/search/?wd=ModifyGlobalDomainAttribute&type=document&lang=en)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteGlobalDomain](https://www.tencentcloud.com/search/?wd=DeleteGlobalDomain&type=document&lang=en)
+* Delete: [DescribeGlobalDomains](https://www.tencentcloud.com/search/?wd=DescribeGlobalDomains&type=document&lang=en)
+* Delete: [DisableGlobalDomain](https://www.tencentcloud.com/search/?wd=DisableGlobalDomain&type=document&lang=en)
 
 ## Import
 

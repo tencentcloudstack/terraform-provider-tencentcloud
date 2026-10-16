@@ -88,10 +88,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAlias](https://cloud.tencent.com/document/api/583/44164)
-* Read: [GetAlias](https://cloud.tencent.com/document/api/583/44163)
-* Update: [UpdateAlias](https://cloud.tencent.com/document/api/583/44161)
-* Delete: [DeleteAlias](https://cloud.tencent.com/document/api/583/44048)
+* Create: [CreateAlias](https://www.tencentcloud.com/document/api/583/36325)
+* Read: [GetAlias](https://www.tencentcloud.com/document/api/583/36323)
+* Update: [UpdateAlias](https://www.tencentcloud.com/document/api/583/36321)
+* Delete: [DeleteAlias](https://www.tencentcloud.com/document/api/583/36324)
 
 ## Import
 

@@ -62,15 +62,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSubAppId](https://cloud.tencent.com/document/api/266/43744)
-* Create: [DescribeSubAppIds](https://cloud.tencent.com/document/api/266/36304)
-* Create: [ModifySubAppIdStatus](https://cloud.tencent.com/document/api/266/36302)
-* Read: [DescribeSubAppIds](https://cloud.tencent.com/document/api/266/36304)
-* Update: [DescribeSubAppIds](https://cloud.tencent.com/document/api/266/36304)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Update: [ModifySubAppIdInfo](https://cloud.tencent.com/document/api/266/36303)
-* Update: [ModifySubAppIdStatus](https://cloud.tencent.com/document/api/266/36302)
-* Delete: [ModifySubAppIdStatus](https://cloud.tencent.com/document/api/266/36302)
+* Create: [CreateSubAppId](https://www.tencentcloud.com/document/api/266/37569)
+* Create: [DescribeSubAppIds](https://www.tencentcloud.com/document/api/266/34177)
+* Create: [ModifySubAppIdStatus](https://www.tencentcloud.com/document/api/266/34173)
+* Read: [DescribeSubAppIds](https://www.tencentcloud.com/document/api/266/34177)
+* Update: [DescribeSubAppIds](https://www.tencentcloud.com/document/api/266/34177)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Update: [ModifySubAppIdInfo](https://www.tencentcloud.com/document/api/266/34174)
+* Update: [ModifySubAppIdStatus](https://www.tencentcloud.com/document/api/266/34173)
+* Delete: [ModifySubAppIdStatus](https://www.tencentcloud.com/document/api/266/34173)
 
 ## Import
 

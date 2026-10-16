@@ -67,5 +67,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBlueprintInstances](https://cloud.tencent.com/document/api/1207/55532)
+* Read: [DescribeBlueprintInstances](https://www.tencentcloud.com/search/?wd=DescribeBlueprintInstances&type=document&lang=en)
 

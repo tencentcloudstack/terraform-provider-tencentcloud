@@ -145,12 +145,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410)
-* Create: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/236/17496)
-* Read: [DescribeAccountPrivileges](https://cloud.tencent.com/document/api/236/17500)
-* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/236/17499)
-* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410)
-* Update: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/236/17496)
-* Delete: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410)
-* Delete: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/236/17496)
+* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+* Create: [ModifyAccountPrivileges](https://www.tencentcloud.com/document/api/236/17496)
+* Read: [DescribeAccountPrivileges](https://www.tencentcloud.com/document/api/236/17500)
+* Read: [DescribeAccounts](https://www.tencentcloud.com/document/api/236/17499)
+* Update: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+* Update: [ModifyAccountPrivileges](https://www.tencentcloud.com/document/api/236/17496)
+* Delete: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+* Delete: [ModifyAccountPrivileges](https://www.tencentcloud.com/document/api/236/17496)
 

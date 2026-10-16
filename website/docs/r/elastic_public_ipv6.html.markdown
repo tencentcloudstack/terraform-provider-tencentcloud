@@ -69,14 +69,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AllocateIPv6Addresses](https://cloud.tencent.com/document/api/215/113679)
-* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271)
-* Read: [DescribeIPv6Addresses](https://cloud.tencent.com/document/api/215/113677)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ModifyIPv6AddressesAttributes](https://cloud.tencent.com/document/api/215/113675)
-* Update: [ModifyIPv6AddressesBandwidth](https://cloud.tencent.com/document/api/215/113674)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [ReleaseIPv6Addresses](https://cloud.tencent.com/document/api/215/113673)
+* Create: [AllocateIPv6Addresses](https://www.tencentcloud.com/document/api/215/68132)
+* Create: [DescribeTaskResult](https://www.tencentcloud.com/document/api/215/34772)
+* Read: [DescribeIPv6Addresses](https://www.tencentcloud.com/document/api/215/68129)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyIPv6AddressesAttributes](https://www.tencentcloud.com/document/api/215/68126)
+* Update: [ModifyIPv6AddressesBandwidth](https://www.tencentcloud.com/document/api/215/68125)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [ReleaseIPv6Addresses](https://www.tencentcloud.com/document/api/215/68123)
 
 ## Import
 

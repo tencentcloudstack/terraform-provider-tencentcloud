@@ -428,17 +428,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindingPolicyTag](https://cloud.tencent.com/document/api/248/67219)
-* Create: [CreateAlarmPolicy](https://cloud.tencent.com/document/api/248/51287)
-* Create: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278)
-* Read: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278)
-* Update: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278)
-* Update: [ModifyAlarmPolicyCondition](https://cloud.tencent.com/document/api/248/51276)
-* Update: [ModifyAlarmPolicyInfo](https://cloud.tencent.com/document/api/248/51275)
-* Update: [ModifyAlarmPolicyNotice](https://cloud.tencent.com/document/api/248/51274)
-* Update: [ModifyAlarmPolicyStatus](https://cloud.tencent.com/document/api/248/51273)
-* Update: [ModifyAlarmPolicyTasks](https://cloud.tencent.com/document/api/248/51272)
-* Delete: [DeleteAlarmPolicy](https://cloud.tencent.com/document/api/248/51285)
+* Create: [BindingPolicyTag](https://www.tencentcloud.com/search/?wd=BindingPolicyTag&type=document&lang=en)
+* Create: [CreateAlarmPolicy](https://www.tencentcloud.com/document/api/248/39326)
+* Create: [DescribeAlarmPolicy](https://www.tencentcloud.com/document/api/248/39320)
+* Read: [DescribeAlarmPolicy](https://www.tencentcloud.com/document/api/248/39320)
+* Update: [DescribeAlarmPolicy](https://www.tencentcloud.com/document/api/248/39320)
+* Update: [ModifyAlarmPolicyCondition](https://www.tencentcloud.com/document/api/248/39317)
+* Update: [ModifyAlarmPolicyInfo](https://www.tencentcloud.com/document/api/248/39316)
+* Update: [ModifyAlarmPolicyNotice](https://www.tencentcloud.com/document/api/248/39315)
+* Update: [ModifyAlarmPolicyStatus](https://www.tencentcloud.com/document/api/248/39314)
+* Update: [ModifyAlarmPolicyTasks](https://www.tencentcloud.com/document/api/248/39313)
+* Delete: [DeleteAlarmPolicy](https://www.tencentcloud.com/document/api/248/39325)
 
 ## Import
 

@@ -53,5 +53,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/237/51787)
+* Read: [DescribeDBSecurityGroups](https://www.tencentcloud.com/document/api/237/39449)
 

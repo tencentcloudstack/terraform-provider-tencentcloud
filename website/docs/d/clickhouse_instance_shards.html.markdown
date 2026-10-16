@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceShards](https://cloud.tencent.com/document/api/1299/83427)
+* Read: [DescribeInstanceShards](https://www.tencentcloud.com/search/?wd=DescribeInstanceShards&type=document&lang=en)
 

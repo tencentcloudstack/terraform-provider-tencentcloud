@@ -291,10 +291,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateListener](https://cloud.tencent.com/document/api/214/30693)
-* Read: [DescribeListeners](https://cloud.tencent.com/document/api/214/30686)
-* Update: [ModifyListener](https://cloud.tencent.com/document/api/214/30681)
-* Delete: [DeleteListener](https://cloud.tencent.com/document/api/214/30690)
+* Create: [CreateListener](https://www.tencentcloud.com/document/api/214/33842)
+* Read: [DescribeListeners](https://www.tencentcloud.com/document/api/214/33831)
+* Update: [ModifyListener](https://www.tencentcloud.com/document/api/214/33818)
+* Delete: [DeleteListener](https://www.tencentcloud.com/document/api/214/33838)
 
 ## Import
 

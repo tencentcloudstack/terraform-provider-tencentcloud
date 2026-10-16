@@ -84,9 +84,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateAddon](https://cloud.tencent.com/document/api/457/94180)
-* Read: [DescribeAddon](https://cloud.tencent.com/document/api/457/94183)
-* Update: [UpdateAddon](https://cloud.tencent.com/document/api/457/94180)
+* Create: [UpdateAddon](https://www.tencentcloud.com/document/api/457/56950)
+* Read: [DescribeAddon](https://www.tencentcloud.com/document/api/457/56953)
+* Update: [UpdateAddon](https://www.tencentcloud.com/document/api/457/56950)
 
 ## Import
 

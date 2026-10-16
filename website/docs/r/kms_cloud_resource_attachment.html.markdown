@@ -44,9 +44,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindCloudResource](https://cloud.tencent.com/document/api/573/46918)
-* Read: [DescribeKey](https://cloud.tencent.com/document/api/573/34428)
-* Delete: [UnbindCloudResource](https://cloud.tencent.com/document/api/573/46917)
+* Create: [BindCloudResource](https://www.tencentcloud.com/search/?wd=BindCloudResource&type=document&lang=en)
+* Read: [DescribeKey](https://www.tencentcloud.com/search/?wd=DescribeKey&type=document&lang=en)
+* Delete: [UnbindCloudResource](https://www.tencentcloud.com/search/?wd=UnbindCloudResource&type=document&lang=en)
 
 ## Import
 

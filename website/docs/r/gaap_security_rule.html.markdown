@@ -57,10 +57,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSecurityRules](https://cloud.tencent.com/document/api/608/36969)
-* Read: [DescribeSecurityRules](https://cloud.tencent.com/document/api/608/39749)
-* Update: [ModifySecurityRule](https://cloud.tencent.com/document/api/608/36953)
-* Delete: [DeleteSecurityRules](https://cloud.tencent.com/document/api/608/36967)
+* Create: [CreateSecurityRules](https://www.tencentcloud.com/document/api/608/33107)
+* Read: [DescribeSecurityRules](https://www.tencentcloud.com/document/api/608/33138)
+* Update: [ModifySecurityRule](https://www.tencentcloud.com/document/api/608/33091)
+* Delete: [DeleteSecurityRules](https://www.tencentcloud.com/document/api/608/33105)
 
 ## Import
 

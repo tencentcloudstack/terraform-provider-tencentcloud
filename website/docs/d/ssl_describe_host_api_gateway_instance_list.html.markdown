@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeHostApiGatewayInstanceList](https://cloud.tencent.com/document/api/400/91664)
+* Read: [DescribeHostApiGatewayInstanceList](https://www.tencentcloud.com/search/?wd=DescribeHostApiGatewayInstanceList&type=document&lang=en)
 

@@ -51,9 +51,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
-* Create: [ModifyInstanceParam](https://cloud.tencent.com/document/api/1003/92727)
-* Read: [DescribeInstanceParams](https://cloud.tencent.com/document/api/1003/92729)
-* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
-* Update: [ModifyInstanceParam](https://cloud.tencent.com/document/api/1003/92727)
+* Create: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
+* Create: [ModifyInstanceParam](https://www.tencentcloud.com/search/?wd=ModifyInstanceParam&type=document&lang=en)
+* Read: [DescribeInstanceParams](https://www.tencentcloud.com/search/?wd=DescribeInstanceParams&type=document&lang=en)
+* Update: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
+* Update: [ModifyInstanceParam](https://www.tencentcloud.com/search/?wd=ModifyInstanceParam&type=document&lang=en)
 

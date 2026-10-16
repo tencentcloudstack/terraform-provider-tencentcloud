@@ -45,8 +45,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLoadBalancer](https://cloud.tencent.com/document/api/214/30692)
-* Read: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685)
-* Update: [ModifyLoadBalancerAttributes](https://cloud.tencent.com/document/api/214/30680)
-* Delete: [DeleteLoadBalancer](https://cloud.tencent.com/document/api/214/30689)
+* Create: [CreateLoadBalancer](https://www.tencentcloud.com/document/api/214/33841)
+* Read: [DescribeLoadBalancers](https://www.tencentcloud.com/document/api/214/33830)
+* Update: [ModifyLoadBalancerAttributes](https://www.tencentcloud.com/document/api/214/33817)
+* Delete: [DeleteLoadBalancer](https://www.tencentcloud.com/document/api/214/33837)
 

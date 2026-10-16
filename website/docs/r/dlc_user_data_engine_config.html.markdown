@@ -60,13 +60,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDataEngine](https://cloud.tencent.com/document/api/1342/99274)
-* Create: [DescribeDataEngines](https://cloud.tencent.com/document/api/1342/86308)
-* Create: [UpdateUserDataEngineConfig](https://cloud.tencent.com/document/api/1342/99264)
-* Read: [DescribeUserDataEngineConfig](https://cloud.tencent.com/document/api/1342/99278)
-* Update: [DescribeDataEngine](https://cloud.tencent.com/document/api/1342/99274)
-* Update: [DescribeDataEngines](https://cloud.tencent.com/document/api/1342/86308)
-* Update: [UpdateUserDataEngineConfig](https://cloud.tencent.com/document/api/1342/99264)
+* Create: [DescribeDataEngine](https://www.tencentcloud.com/search/?wd=DescribeDataEngine&type=document&lang=en)
+* Create: [DescribeDataEngines](https://www.tencentcloud.com/search/?wd=DescribeDataEngines&type=document&lang=en)
+* Create: [UpdateUserDataEngineConfig](https://www.tencentcloud.com/search/?wd=UpdateUserDataEngineConfig&type=document&lang=en)
+* Read: [DescribeUserDataEngineConfig](https://www.tencentcloud.com/search/?wd=DescribeUserDataEngineConfig&type=document&lang=en)
+* Update: [DescribeDataEngine](https://www.tencentcloud.com/search/?wd=DescribeDataEngine&type=document&lang=en)
+* Update: [DescribeDataEngines](https://www.tencentcloud.com/search/?wd=DescribeDataEngines&type=document&lang=en)
+* Update: [UpdateUserDataEngineConfig](https://www.tencentcloud.com/search/?wd=UpdateUserDataEngineConfig&type=document&lang=en)
 
 ## Import
 

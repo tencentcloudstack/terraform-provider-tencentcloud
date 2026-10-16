@@ -65,12 +65,12 @@ The `service` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateApplicationService](https://cloud.tencent.com/document/api/1371/81051)
-* Create: [DescribeApplicationServiceList](https://cloud.tencent.com/document/api/1371/81049)
-* Read: [DescribeApplicationServiceList](https://cloud.tencent.com/document/api/1371/81049)
-* Update: [DescribeApplicationServiceList](https://cloud.tencent.com/document/api/1371/81049)
-* Update: [ModifyApplicationService](https://cloud.tencent.com/document/api/1371/81048)
-* Delete: [DeleteApplicationService](https://cloud.tencent.com/document/api/1371/81050)
+* Create: [CreateApplicationService](https://www.tencentcloud.com/search/?wd=CreateApplicationService&type=document&lang=en)
+* Create: [DescribeApplicationServiceList](https://www.tencentcloud.com/search/?wd=DescribeApplicationServiceList&type=document&lang=en)
+* Read: [DescribeApplicationServiceList](https://www.tencentcloud.com/search/?wd=DescribeApplicationServiceList&type=document&lang=en)
+* Update: [DescribeApplicationServiceList](https://www.tencentcloud.com/search/?wd=DescribeApplicationServiceList&type=document&lang=en)
+* Update: [ModifyApplicationService](https://www.tencentcloud.com/search/?wd=ModifyApplicationService&type=document&lang=en)
+* Delete: [DeleteApplicationService](https://www.tencentcloud.com/search/?wd=DeleteApplicationService&type=document&lang=en)
 
 ## Import
 

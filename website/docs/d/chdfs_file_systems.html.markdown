@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeFileSystems](https://cloud.tencent.com/document/api/1105/51146)
+* Read: [DescribeFileSystems](https://www.tencentcloud.com/search/?wd=DescribeFileSystems&type=document&lang=en)
 

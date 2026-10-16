@@ -67,10 +67,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyUserNewPrivilege](https://cloud.tencent.com/document/api/1299/83422)
-* Read: [DescribeCkSqlApis](https://cloud.tencent.com/document/api/1299/83428)
-* Update: [ModifyUserNewPrivilege](https://cloud.tencent.com/document/api/1299/83422)
-* Delete: [DescribeCkSqlApis](https://cloud.tencent.com/document/api/1299/83428)
+* Create: [ModifyUserNewPrivilege](https://www.tencentcloud.com/search/?wd=ModifyUserNewPrivilege&type=document&lang=en)
+* Read: [DescribeCkSqlApis](https://www.tencentcloud.com/search/?wd=DescribeCkSqlApis&type=document&lang=en)
+* Update: [ModifyUserNewPrivilege](https://www.tencentcloud.com/search/?wd=ModifyUserNewPrivilege&type=document&lang=en)
+* Delete: [DescribeCkSqlApis](https://www.tencentcloud.com/search/?wd=DescribeCkSqlApis&type=document&lang=en)
 
 ## Import
 

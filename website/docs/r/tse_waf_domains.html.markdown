@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWafDomains](https://cloud.tencent.com/document/api/1364/101821)
-* Read: [DescribeWafDomains](https://cloud.tencent.com/document/api/1364/101827)
-* Delete: [DeleteWafDomains](https://cloud.tencent.com/document/api/1364/101828)
+* Create: [CreateWafDomains](https://www.tencentcloud.com/search/?wd=CreateWafDomains&type=document&lang=en)
+* Read: [DescribeWafDomains](https://www.tencentcloud.com/search/?wd=DescribeWafDomains&type=document&lang=en)
+* Delete: [DeleteWafDomains](https://www.tencentcloud.com/search/?wd=DeleteWafDomains&type=document&lang=en)
 
 ## Import
 

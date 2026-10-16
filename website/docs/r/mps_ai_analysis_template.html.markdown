@@ -73,10 +73,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAIAnalysisTemplate](https://cloud.tencent.com/document/api/862/40249)
-* Read: [DescribeAIAnalysisTemplates](https://cloud.tencent.com/document/api/862/40247)
-* Update: [ModifyAIAnalysisTemplate](https://cloud.tencent.com/document/api/862/40246)
-* Delete: [DeleteAIAnalysisTemplate](https://cloud.tencent.com/document/api/862/40248)
+* Create: [CreateAIAnalysisTemplate](https://www.tencentcloud.com/search/?wd=CreateAIAnalysisTemplate&type=document&lang=en)
+* Read: [DescribeAIAnalysisTemplates](https://www.tencentcloud.com/search/?wd=DescribeAIAnalysisTemplates&type=document&lang=en)
+* Update: [ModifyAIAnalysisTemplate](https://www.tencentcloud.com/search/?wd=ModifyAIAnalysisTemplate&type=document&lang=en)
+* Delete: [DeleteAIAnalysisTemplate](https://www.tencentcloud.com/search/?wd=DeleteAIAnalysisTemplate&type=document&lang=en)
 
 ## Import
 

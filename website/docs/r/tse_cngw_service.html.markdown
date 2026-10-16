@@ -135,14 +135,14 @@ The `targets` object of `upstream_info` exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCloudNativeAPIGatewayService](https://cloud.tencent.com/document/api/1364/94851)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeOneCloudNativeAPIGatewayService](https://cloud.tencent.com/document/api/1364/94839)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [DescribeOneCloudNativeAPIGatewayService](https://cloud.tencent.com/document/api/1364/94839)
-* Update: [ModifyCloudNativeAPIGatewayService](https://cloud.tencent.com/document/api/1364/94835)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeleteCloudNativeAPIGatewayService](https://cloud.tencent.com/document/api/1364/94846)
+* Create: [CreateCloudNativeAPIGatewayService](https://www.tencentcloud.com/search/?wd=CreateCloudNativeAPIGatewayService&type=document&lang=en)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeOneCloudNativeAPIGatewayService](https://www.tencentcloud.com/search/?wd=DescribeOneCloudNativeAPIGatewayService&type=document&lang=en)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [DescribeOneCloudNativeAPIGatewayService](https://www.tencentcloud.com/search/?wd=DescribeOneCloudNativeAPIGatewayService&type=document&lang=en)
+* Update: [ModifyCloudNativeAPIGatewayService](https://www.tencentcloud.com/search/?wd=ModifyCloudNativeAPIGatewayService&type=document&lang=en)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteCloudNativeAPIGatewayService](https://www.tencentcloud.com/search/?wd=DeleteCloudNativeAPIGatewayService&type=document&lang=en)
 
 ## Import
 

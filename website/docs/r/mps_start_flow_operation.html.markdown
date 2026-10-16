@@ -49,6 +49,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [StartStreamLinkFlow](https://cloud.tencent.com/document/api/862/82429)
-* Create: [StopStreamLinkFlow](https://cloud.tencent.com/document/api/862/82428)
+* Create: [StartStreamLinkFlow](https://www.tencentcloud.com/search/?wd=StartStreamLinkFlow&type=document&lang=en)
+* Create: [StopStreamLinkFlow](https://www.tencentcloud.com/search/?wd=StopStreamLinkFlow&type=document&lang=en)
 

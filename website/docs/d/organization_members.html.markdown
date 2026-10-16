@@ -70,5 +70,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeOrganizationMembers](https://cloud.tencent.com/document/api/850/67220)
+* Read: [DescribeOrganizationMembers](https://www.tencentcloud.com/search/?wd=DescribeOrganizationMembers&type=document&lang=en)
 

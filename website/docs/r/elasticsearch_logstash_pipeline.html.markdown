@@ -72,13 +72,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeLogstashPipelines](https://cloud.tencent.com/document/api/845/77238)
-* Create: [SaveAndDeployLogstashPipeline](https://cloud.tencent.com/document/api/845/77236)
-* Read: [DescribeLogstashPipelines](https://cloud.tencent.com/document/api/845/77238)
-* Update: [DescribeLogstashPipelines](https://cloud.tencent.com/document/api/845/77238)
-* Update: [SaveAndDeployLogstashPipeline](https://cloud.tencent.com/document/api/845/77236)
-* Delete: [DeleteLogstashPipelines](https://cloud.tencent.com/document/api/845/77242)
-* Delete: [DescribeLogstashPipelines](https://cloud.tencent.com/document/api/845/77238)
+* Create: [DescribeLogstashPipelines](https://www.tencentcloud.com/search/?wd=DescribeLogstashPipelines&type=document&lang=en)
+* Create: [SaveAndDeployLogstashPipeline](https://www.tencentcloud.com/search/?wd=SaveAndDeployLogstashPipeline&type=document&lang=en)
+* Read: [DescribeLogstashPipelines](https://www.tencentcloud.com/search/?wd=DescribeLogstashPipelines&type=document&lang=en)
+* Update: [DescribeLogstashPipelines](https://www.tencentcloud.com/search/?wd=DescribeLogstashPipelines&type=document&lang=en)
+* Update: [SaveAndDeployLogstashPipeline](https://www.tencentcloud.com/search/?wd=SaveAndDeployLogstashPipeline&type=document&lang=en)
+* Delete: [DeleteLogstashPipelines](https://www.tencentcloud.com/search/?wd=DeleteLogstashPipelines&type=document&lang=en)
+* Delete: [DescribeLogstashPipelines](https://www.tencentcloud.com/search/?wd=DescribeLogstashPipelines&type=document&lang=en)
 
 ## Import
 

@@ -241,10 +241,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNetDetect](https://cloud.tencent.com/document/api/215/38699)
-* Read: [DescribeNetDetects](https://cloud.tencent.com/document/api/215/38696)
-* Update: [ModifyNetDetect](https://cloud.tencent.com/document/api/215/38695)
-* Delete: [DeleteNetDetect](https://cloud.tencent.com/document/api/215/38698)
+* Create: [CreateNetDetect](https://www.tencentcloud.com/document/api/215/34745)
+* Read: [DescribeNetDetects](https://www.tencentcloud.com/document/api/215/34742)
+* Update: [ModifyNetDetect](https://www.tencentcloud.com/document/api/215/34741)
+* Delete: [DeleteNetDetect](https://www.tencentcloud.com/document/api/215/34744)
 
 ## Import
 

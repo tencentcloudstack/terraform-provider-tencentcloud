@@ -50,13 +50,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGroup](https://cloud.tencent.com/document/api/649/36074)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeGroup](https://cloud.tencent.com/document/api/649/36067)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ModifyGroup](https://cloud.tencent.com/document/api/649/85852)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeleteGroup](https://cloud.tencent.com/document/api/649/36072)
+* Create: [CreateGroup](https://www.tencentcloud.com/search/?wd=CreateGroup&type=document&lang=en)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeGroup](https://www.tencentcloud.com/search/?wd=DescribeGroup&type=document&lang=en)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyGroup](https://www.tencentcloud.com/search/?wd=ModifyGroup&type=document&lang=en)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteGroup](https://www.tencentcloud.com/search/?wd=DeleteGroup&type=document&lang=en)
 
 ## Import
 

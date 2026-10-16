@@ -55,7 +55,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateUserVpcConnection](https://cloud.tencent.com/document/api/1342/122143)
-* Read: [DescribeUserVpcConnection](https://cloud.tencent.com/document/api/1342/122139)
-* Delete: [DeleteUserVpcConnection](https://cloud.tencent.com/document/api/1342/122142)
+* Create: [CreateUserVpcConnection](https://www.tencentcloud.com/search/?wd=CreateUserVpcConnection&type=document&lang=en)
+* Read: [DescribeUserVpcConnection](https://www.tencentcloud.com/search/?wd=DescribeUserVpcConnection&type=document&lang=en)
+* Delete: [DeleteUserVpcConnection](https://www.tencentcloud.com/search/?wd=DeleteUserVpcConnection&type=document&lang=en)
 

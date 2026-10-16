@@ -44,9 +44,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyLiveDomainReferer](https://cloud.tencent.com/document/api/267/56105)
-* Read: [DescribeLiveDomainReferer](https://cloud.tencent.com/document/api/267/56106)
-* Update: [ModifyLiveDomainReferer](https://cloud.tencent.com/document/api/267/56105)
+* Create: [ModifyLiveDomainReferer](https://www.tencentcloud.com/document/api/267/40610)
+* Read: [DescribeLiveDomainReferer](https://www.tencentcloud.com/document/api/267/40611)
+* Update: [ModifyLiveDomainReferer](https://www.tencentcloud.com/document/api/267/40610)
 
 ## Import
 

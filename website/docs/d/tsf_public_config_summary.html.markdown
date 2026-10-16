@@ -60,5 +60,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribePublicConfigSummary](https://cloud.tencent.com/document/api/649/38336)
+* Read: [DescribePublicConfigSummary](https://www.tencentcloud.com/search/?wd=DescribePublicConfigSummary&type=document&lang=en)
 

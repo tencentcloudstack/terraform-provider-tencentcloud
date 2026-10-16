@@ -58,5 +58,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeJobSubmissionLog](https://cloud.tencent.com/document/api/849/95069)
+* Read: [DescribeJobSubmissionLog](https://www.tencentcloud.com/search/?wd=DescribeJobSubmissionLog&type=document&lang=en)
 

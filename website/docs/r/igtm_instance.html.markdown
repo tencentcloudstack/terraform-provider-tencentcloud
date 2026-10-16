@@ -58,9 +58,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstance](https://cloud.tencent.com/document/api/1551/120456)
-* Read: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1551/120455)
-* Update: [ModifyInstanceConfig](https://cloud.tencent.com/document/api/1551/120453)
+* Create: [CreateInstance](https://www.tencentcloud.com/search/?wd=CreateInstance&type=document&lang=en)
+* Read: [DescribeInstanceDetail](https://www.tencentcloud.com/search/?wd=DescribeInstanceDetail&type=document&lang=en)
+* Update: [ModifyInstanceConfig](https://www.tencentcloud.com/search/?wd=ModifyInstanceConfig&type=document&lang=en)
 
 ## Import
 

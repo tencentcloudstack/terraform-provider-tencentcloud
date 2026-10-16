@@ -2381,9 +2381,9 @@ The `slow_post_config` object of `security_config` exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifySecurityPolicy](https://cloud.tencent.com/document/api/1552/80669)
-* Read: [DescribeSecurityPolicy](https://cloud.tencent.com/document/api/1552/80677)
-* Update: [ModifySecurityPolicy](https://cloud.tencent.com/document/api/1552/80669)
+* Create: [ModifySecurityPolicy](https://www.tencentcloud.com/search/?wd=ModifySecurityPolicy&type=document&lang=en)
+* Read: [DescribeSecurityPolicy](https://www.tencentcloud.com/search/?wd=DescribeSecurityPolicy&type=document&lang=en)
+* Update: [ModifySecurityPolicy](https://www.tencentcloud.com/search/?wd=ModifySecurityPolicy&type=document&lang=en)
 
 ## Import
 

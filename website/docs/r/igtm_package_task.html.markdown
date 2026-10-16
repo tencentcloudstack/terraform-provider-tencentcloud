@@ -42,10 +42,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePackageAndPay](https://cloud.tencent.com/document/api/1551/126465)
-* Read: [DescribeDetectTaskPackageList](https://cloud.tencent.com/document/api/1551/121138)
-* Update: [CreatePackageAndPay](https://cloud.tencent.com/document/api/1551/126465)
-* Update: [ModifyPackageAutoRenew](https://cloud.tencent.com/document/api/1551/126464)
+* Create: [CreatePackageAndPay](https://www.tencentcloud.com/search/?wd=CreatePackageAndPay&type=document&lang=en)
+* Read: [DescribeDetectTaskPackageList](https://www.tencentcloud.com/search/?wd=DescribeDetectTaskPackageList&type=document&lang=en)
+* Update: [CreatePackageAndPay](https://www.tencentcloud.com/search/?wd=CreatePackageAndPay&type=document&lang=en)
+* Update: [ModifyPackageAutoRenew](https://www.tencentcloud.com/search/?wd=ModifyPackageAutoRenew&type=document&lang=en)
 
 ## Import
 

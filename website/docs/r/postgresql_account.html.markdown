@@ -88,14 +88,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccount](https://cloud.tencent.com/document/api/409/109071)
-* Create: [LockAccount](https://cloud.tencent.com/document/api/409/109068)
-* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/409/18109)
-* Update: [LockAccount](https://cloud.tencent.com/document/api/409/109068)
-* Update: [ModifyAccountRemark](https://cloud.tencent.com/document/api/409/18108)
-* Update: [ResetAccountPassword](https://cloud.tencent.com/document/api/409/18107)
-* Update: [UnlockAccount](https://cloud.tencent.com/document/api/409/109066)
-* Delete: [DeleteAccount](https://cloud.tencent.com/document/api/409/109070)
+* Create: [CreateAccount](https://www.tencentcloud.com/document/api/409/78820)
+* Create: [LockAccount](https://www.tencentcloud.com/document/api/409/78817)
+* Read: [DescribeAccounts](https://www.tencentcloud.com/document/api/409/18109)
+* Update: [LockAccount](https://www.tencentcloud.com/document/api/409/78817)
+* Update: [ModifyAccountRemark](https://www.tencentcloud.com/document/api/409/18108)
+* Update: [ResetAccountPassword](https://www.tencentcloud.com/document/api/409/18107)
+* Update: [UnlockAccount](https://www.tencentcloud.com/document/api/409/78815)
+* Delete: [DeleteAccount](https://www.tencentcloud.com/document/api/409/78819)
 
 ## Import
 

@@ -156,8 +156,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateOwaspWhiteRule](https://cloud.tencent.com/document/api/627/122157)
-* Read: [DescribeOwaspWhiteRules](https://cloud.tencent.com/document/api/627/122155)
-* Update: [ModifyOwaspWhiteRule](https://cloud.tencent.com/document/api/627/122154)
-* Delete: [DeleteOwaspWhiteRule](https://cloud.tencent.com/document/api/627/122156)
+* Create: [CreateOwaspWhiteRule](https://www.tencentcloud.com/document/api/627/73186)
+* Read: [DescribeOwaspWhiteRules](https://www.tencentcloud.com/document/api/627/73181)
+* Update: [ModifyOwaspWhiteRule](https://www.tencentcloud.com/document/api/627/73176)
+* Delete: [DeleteOwaspWhiteRule](https://www.tencentcloud.com/document/api/627/73184)
 

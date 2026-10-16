@@ -59,5 +59,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Read: [DescribePurgeTasks](https://cloud.tencent.com/document/api/228/37873)
+* Read: [DescribePurgeTasks](https://www.tencentcloud.com/document/api/228/33604)
 

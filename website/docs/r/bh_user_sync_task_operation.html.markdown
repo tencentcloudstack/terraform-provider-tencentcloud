@@ -36,6 +36,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSyncUserTask](https://cloud.tencent.com/document/api/1025/125474)
-* Create: [DescribeUserSyncStatus](https://cloud.tencent.com/document/api/1025/125470)
+* Create: [CreateSyncUserTask](https://www.tencentcloud.com/search/?wd=CreateSyncUserTask&type=document&lang=en)
+* Create: [DescribeUserSyncStatus](https://www.tencentcloud.com/search/?wd=DescribeUserSyncStatus&type=document&lang=en)
 

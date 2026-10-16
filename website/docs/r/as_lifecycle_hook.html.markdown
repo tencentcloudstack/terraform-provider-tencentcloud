@@ -145,10 +145,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLifecycleHook](https://cloud.tencent.com/document/api/377/34454)
-* Read: [DescribeLifecycleHooks](https://cloud.tencent.com/document/api/377/34452)
-* Update: [UpgradeLifecycleHook](https://cloud.tencent.com/document/api/377/34451)
-* Delete: [DeleteLifecycleHook](https://cloud.tencent.com/document/api/377/34453)
+* Create: [CreateLifecycleHook](https://www.tencentcloud.com/document/api/377/33199)
+* Read: [DescribeLifecycleHooks](https://www.tencentcloud.com/document/api/377/33197)
+* Update: [UpgradeLifecycleHook](https://www.tencentcloud.com/document/api/377/33196)
+* Delete: [DeleteLifecycleHook](https://www.tencentcloud.com/document/api/377/33198)
 
 ## Import
 

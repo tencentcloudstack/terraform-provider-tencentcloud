@@ -105,5 +105,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303)
+* Read: [DescribeClusterInstanceGrps](https://www.tencentcloud.com/search/?wd=DescribeClusterInstanceGrps&type=document&lang=en)
 

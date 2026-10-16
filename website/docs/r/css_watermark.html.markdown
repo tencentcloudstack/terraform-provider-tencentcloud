@@ -46,10 +46,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddLiveWatermark](https://cloud.tencent.com/document/api/267/30154)
-* Read: [DescribeLiveWatermark](https://cloud.tencent.com/document/api/267/32627)
-* Update: [UpdateLiveWatermark](https://cloud.tencent.com/document/api/267/30150)
-* Delete: [DeleteLiveWatermark](https://cloud.tencent.com/document/api/267/30153)
+* Create: [AddLiveWatermark](https://www.tencentcloud.com/document/api/267/30826)
+* Read: [DescribeLiveWatermark](https://www.tencentcloud.com/document/api/267/30822)
+* Update: [UpdateLiveWatermark](https://www.tencentcloud.com/document/api/267/30818)
+* Delete: [DeleteLiveWatermark](https://www.tencentcloud.com/document/api/267/30824)
 
 ## Import
 

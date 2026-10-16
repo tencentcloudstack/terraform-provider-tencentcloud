@@ -42,10 +42,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateKeyPair](https://cloud.tencent.com/document/api/1207/55543)
-* Create: [ImportKeyPair](https://cloud.tencent.com/document/api/1207/55538)
-* Read: [DescribeKeyPairs](https://cloud.tencent.com/document/api/1207/55540)
-* Delete: [DeleteKeyPairs](https://cloud.tencent.com/document/api/1207/55542)
+* Create: [CreateKeyPair](https://www.tencentcloud.com/search/?wd=CreateKeyPair&type=document&lang=en)
+* Create: [ImportKeyPair](https://www.tencentcloud.com/search/?wd=ImportKeyPair&type=document&lang=en)
+* Read: [DescribeKeyPairs](https://www.tencentcloud.com/search/?wd=DescribeKeyPairs&type=document&lang=en)
+* Delete: [DeleteKeyPairs](https://www.tencentcloud.com/search/?wd=DeleteKeyPairs&type=document&lang=en)
 
 ## Import
 

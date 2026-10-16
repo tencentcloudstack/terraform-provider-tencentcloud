@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeNativeSparkSessions](https://cloud.tencent.com/document/api/1342/122148)
+* Read: [DescribeNativeSparkSessions](https://www.tencentcloud.com/search/?wd=DescribeNativeSparkSessions&type=document&lang=en)
 

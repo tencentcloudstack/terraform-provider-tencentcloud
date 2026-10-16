@@ -119,15 +119,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstanceAccount](https://cloud.tencent.com/document/api/239/38926)
-* Create: [DescribeInstanceAccount](https://cloud.tencent.com/document/api/239/38924)
-* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601)
-* Read: [DescribeInstanceAccount](https://cloud.tencent.com/document/api/239/38924)
-* Update: [DescribeInstanceAccount](https://cloud.tencent.com/document/api/239/38924)
-* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601)
-* Update: [ModifyInstanceAccount](https://cloud.tencent.com/document/api/239/38923)
-* Delete: [DeleteInstanceAccount](https://cloud.tencent.com/document/api/239/38925)
-* Delete: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601)
+* Create: [CreateInstanceAccount](https://www.tencentcloud.com/document/api/239/33297)
+* Create: [DescribeInstanceAccount](https://www.tencentcloud.com/document/api/239/33295)
+* Create: [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+* Read: [DescribeInstanceAccount](https://www.tencentcloud.com/document/api/239/33295)
+* Update: [DescribeInstanceAccount](https://www.tencentcloud.com/document/api/239/33295)
+* Update: [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+* Update: [ModifyInstanceAccount](https://www.tencentcloud.com/document/api/239/33292)
+* Delete: [DeleteInstanceAccount](https://www.tencentcloud.com/document/api/239/33296)
+* Delete: [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
 
 ## Import
 

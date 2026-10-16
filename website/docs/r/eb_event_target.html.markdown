@@ -160,10 +160,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTarget](https://cloud.tencent.com/document/api/1359/67703)
-* Read: [ListTargets](https://cloud.tencent.com/document/api/1359/67701)
-* Update: [UpdateTarget](https://cloud.tencent.com/document/api/1359/67700)
-* Delete: [DeleteTarget](https://cloud.tencent.com/document/api/1359/67702)
+* Create: [CreateTarget](https://www.tencentcloud.com/search/?wd=CreateTarget&type=document&lang=en)
+* Read: [ListTargets](https://www.tencentcloud.com/search/?wd=ListTargets&type=document&lang=en)
+* Update: [UpdateTarget](https://www.tencentcloud.com/search/?wd=UpdateTarget&type=document&lang=en)
+* Delete: [DeleteTarget](https://www.tencentcloud.com/search/?wd=DeleteTarget&type=document&lang=en)
 
 ## Import
 

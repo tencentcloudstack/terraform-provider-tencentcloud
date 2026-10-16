@@ -46,12 +46,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateOIDCConfig](https://cloud.tencent.com/document/api/598/73473)
-* Create: [DescribeOIDCConfig](https://cloud.tencent.com/document/api/598/73471)
-* Read: [DescribeOIDCConfig](https://cloud.tencent.com/document/api/598/73471)
-* Update: [DescribeOIDCConfig](https://cloud.tencent.com/document/api/598/73471)
-* Update: [UpdateOIDCConfig](https://cloud.tencent.com/document/api/598/73470)
-* Delete: [DeleteOIDCConfig](https://cloud.tencent.com/document/api/598/73472)
+* Create: [CreateOIDCConfig](https://www.tencentcloud.com/document/api/598/47115)
+* Create: [DescribeOIDCConfig](https://www.tencentcloud.com/document/api/598/47113)
+* Read: [DescribeOIDCConfig](https://www.tencentcloud.com/document/api/598/47113)
+* Update: [DescribeOIDCConfig](https://www.tencentcloud.com/document/api/598/47113)
+* Update: [UpdateOIDCConfig](https://www.tencentcloud.com/document/api/598/47112)
+* Delete: [DeleteOIDCConfig](https://www.tencentcloud.com/document/api/598/47114)
 
 ## Import
 

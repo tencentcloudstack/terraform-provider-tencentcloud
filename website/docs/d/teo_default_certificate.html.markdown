@@ -65,5 +65,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDefaultCertificates](https://cloud.tencent.com/document/api/1552/80603)
+* Read: [DescribeDefaultCertificates](https://www.tencentcloud.com/search/?wd=DescribeDefaultCertificates&type=document&lang=en)
 

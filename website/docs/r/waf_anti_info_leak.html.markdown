@@ -59,12 +59,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddAntiInfoLeakRules](https://cloud.tencent.com/document/api/627/97643)
-* Create: [ModifyAntiInfoLeakRuleStatus](https://cloud.tencent.com/document/api/627/97633)
-* Read: [DescribeAntiInfoLeakageRules](https://cloud.tencent.com/document/api/627/97638)
-* Update: [ModifyAntiInfoLeakRuleStatus](https://cloud.tencent.com/document/api/627/97633)
-* Update: [ModifyAntiInfoLeakRules](https://cloud.tencent.com/document/api/627/97632)
-* Delete: [DeleteAntiInfoLeakRule](https://cloud.tencent.com/document/api/627/97649)
+* Create: [AddAntiInfoLeakRules](https://www.tencentcloud.com/document/api/627/64531)
+* Create: [ModifyAntiInfoLeakRuleStatus](https://www.tencentcloud.com/document/api/627/64515)
+* Read: [DescribeAntiInfoLeakageRules](https://www.tencentcloud.com/document/api/627/64526)
+* Update: [ModifyAntiInfoLeakRuleStatus](https://www.tencentcloud.com/document/api/627/64515)
+* Update: [ModifyAntiInfoLeakRules](https://www.tencentcloud.com/document/api/627/64514)
+* Delete: [DeleteAntiInfoLeakRule](https://www.tencentcloud.com/document/api/627/64552)
 
 ## Import
 

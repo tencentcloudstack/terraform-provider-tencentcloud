@@ -86,10 +86,10 @@ The `translation_acl_rules` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrivateNatGatewayTranslationAclRule](https://cloud.tencent.com/document/api/215/107902)
-* Read: [DescribePrivateNatGatewayTranslationAclRules](https://cloud.tencent.com/document/api/215/107893)
-* Update: [ModifyPrivateNatGatewayTranslationAclRule](https://cloud.tencent.com/document/api/215/107888)
-* Delete: [DeletePrivateNatGatewayTranslationAclRule](https://cloud.tencent.com/document/api/215/107898)
+* Create: [CreatePrivateNatGatewayTranslationAclRule](https://www.tencentcloud.com/search/?wd=CreatePrivateNatGatewayTranslationAclRule&type=document&lang=en)
+* Read: [DescribePrivateNatGatewayTranslationAclRules](https://www.tencentcloud.com/search/?wd=DescribePrivateNatGatewayTranslationAclRules&type=document&lang=en)
+* Update: [ModifyPrivateNatGatewayTranslationAclRule](https://www.tencentcloud.com/search/?wd=ModifyPrivateNatGatewayTranslationAclRule&type=document&lang=en)
+* Delete: [DeletePrivateNatGatewayTranslationAclRule](https://www.tencentcloud.com/search/?wd=DeletePrivateNatGatewayTranslationAclRule&type=document&lang=en)
 
 ## Import
 

@@ -101,12 +101,12 @@ The `l4_proxy_rules` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateL4ProxyRules](https://cloud.tencent.com/document/api/1552/103416)
-* Read: [DescribeL4ProxyRules](https://cloud.tencent.com/document/api/1552/103412)
-* Update: [ModifyL4ProxyRules](https://cloud.tencent.com/document/api/1552/103410)
-* Delete: [DeleteL4ProxyRules](https://cloud.tencent.com/document/api/1552/103414)
-* Delete: [DescribeL4ProxyRules](https://cloud.tencent.com/document/api/1552/103412)
-* Delete: [ModifyL4ProxyRulesStatus](https://cloud.tencent.com/document/api/1552/103409)
+* Create: [CreateL4ProxyRules](https://www.tencentcloud.com/search/?wd=CreateL4ProxyRules&type=document&lang=en)
+* Read: [DescribeL4ProxyRules](https://www.tencentcloud.com/search/?wd=DescribeL4ProxyRules&type=document&lang=en)
+* Update: [ModifyL4ProxyRules](https://www.tencentcloud.com/search/?wd=ModifyL4ProxyRules&type=document&lang=en)
+* Delete: [DeleteL4ProxyRules](https://www.tencentcloud.com/search/?wd=DeleteL4ProxyRules&type=document&lang=en)
+* Delete: [DescribeL4ProxyRules](https://www.tencentcloud.com/search/?wd=DescribeL4ProxyRules&type=document&lang=en)
+* Delete: [ModifyL4ProxyRulesStatus](https://www.tencentcloud.com/search/?wd=ModifyL4ProxyRulesStatus&type=document&lang=en)
 
 ## Import
 

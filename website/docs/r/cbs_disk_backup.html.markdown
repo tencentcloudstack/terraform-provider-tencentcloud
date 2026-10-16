@@ -54,11 +54,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDiskBackup](https://cloud.tencent.com/document/api/362/84591)
-* Create: [DescribeDiskBackups](https://cloud.tencent.com/document/api/362/80278)
-* Read: [DescribeDiskBackups](https://cloud.tencent.com/document/api/362/80278)
-* Delete: [DeleteDiskBackups](https://cloud.tencent.com/document/api/362/80279)
-* Delete: [DescribeDiskBackups](https://cloud.tencent.com/document/api/362/80278)
+* Create: [CreateDiskBackup](https://www.tencentcloud.com/document/api/362/53930)
+* Create: [DescribeDiskBackups](https://www.tencentcloud.com/document/api/362/50788)
+* Read: [DescribeDiskBackups](https://www.tencentcloud.com/document/api/362/50788)
+* Delete: [DeleteDiskBackups](https://www.tencentcloud.com/document/api/362/50789)
+* Delete: [DescribeDiskBackups](https://www.tencentcloud.com/document/api/362/50788)
 
 ## Import
 

@@ -56,5 +56,5 @@ Note: This field may return `null`, indicating that no valid values can be obtai
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAddon](https://cloud.tencent.com/document/api/457/94183)
+* Read: [DescribeAddon](https://www.tencentcloud.com/document/api/457/56953)
 

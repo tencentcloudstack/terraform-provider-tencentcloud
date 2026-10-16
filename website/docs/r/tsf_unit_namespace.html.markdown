@@ -41,10 +41,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateUnitNamespaces](https://cloud.tencent.com/document/api/649/91139)
-* Read: [DescribeUnitNamespaces](https://cloud.tencent.com/document/api/649/53900)
-* Delete: [DeleteUnitNamespaces](https://cloud.tencent.com/document/api/649/53903)
-* Delete: [DescribeUnitNamespaces](https://cloud.tencent.com/document/api/649/53900)
+* Create: [CreateUnitNamespaces](https://www.tencentcloud.com/search/?wd=CreateUnitNamespaces&type=document&lang=en)
+* Read: [DescribeUnitNamespaces](https://www.tencentcloud.com/search/?wd=DescribeUnitNamespaces&type=document&lang=en)
+* Delete: [DeleteUnitNamespaces](https://www.tencentcloud.com/search/?wd=DeleteUnitNamespaces&type=document&lang=en)
+* Delete: [DescribeUnitNamespaces](https://www.tencentcloud.com/search/?wd=DescribeUnitNamespaces&type=document&lang=en)
 
 ## Import
 

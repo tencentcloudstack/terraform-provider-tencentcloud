@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702)
+* Read: [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
 

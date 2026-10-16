@@ -44,9 +44,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyLivePushAuthKey](https://cloud.tencent.com/document/api/267/30423)
-* Read: [DescribeLivePushAuthKey](https://cloud.tencent.com/document/api/267/30425)
-* Update: [ModifyLivePushAuthKey](https://cloud.tencent.com/document/api/267/30423)
+* Create: [ModifyLivePushAuthKey](https://www.tencentcloud.com/document/api/267/30769)
+* Read: [DescribeLivePushAuthKey](https://www.tencentcloud.com/document/api/267/30771)
+* Update: [ModifyLivePushAuthKey](https://www.tencentcloud.com/document/api/267/30769)
 
 ## Import
 

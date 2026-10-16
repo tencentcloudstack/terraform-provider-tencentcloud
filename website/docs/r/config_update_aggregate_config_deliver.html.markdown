@@ -50,9 +50,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateAggregateConfigDeliver](https://cloud.tencent.com/document/api/1579/129732)
-* Read: [DescribeAggregateConfigDeliver](https://cloud.tencent.com/document/api/1579/129734)
-* Update: [UpdateAggregateConfigDeliver](https://cloud.tencent.com/document/api/1579/129732)
+* Create: [UpdateAggregateConfigDeliver](https://www.tencentcloud.com/search/?wd=UpdateAggregateConfigDeliver&type=document&lang=en)
+* Read: [DescribeAggregateConfigDeliver](https://www.tencentcloud.com/search/?wd=DescribeAggregateConfigDeliver&type=document&lang=en)
+* Update: [UpdateAggregateConfigDeliver](https://www.tencentcloud.com/search/?wd=UpdateAggregateConfigDeliver&type=document&lang=en)
 
 ## Import
 

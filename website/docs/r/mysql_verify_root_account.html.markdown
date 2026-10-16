@@ -87,6 +87,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410)
-* Create: [VerifyRootAccount](https://cloud.tencent.com/document/api/236/17495)
+* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+* Create: [VerifyRootAccount](https://www.tencentcloud.com/search/?wd=VerifyRootAccount&type=document&lang=en)
 

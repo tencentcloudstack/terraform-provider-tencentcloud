@@ -78,14 +78,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeStandardEngineResourceGroups](https://cloud.tencent.com/document/api/1342/122134)
-* Create: [UpdateStandardEngineResourceGroupConfigInfo](https://cloud.tencent.com/document/api/1342/122129)
-* Read: [DescribeStandardEngineResourceGroupConfigInfo](https://cloud.tencent.com/document/api/1342/122135)
-* Update: [DescribeStandardEngineResourceGroups](https://cloud.tencent.com/document/api/1342/122134)
-* Update: [UpdateStandardEngineResourceGroupConfigInfo](https://cloud.tencent.com/document/api/1342/122129)
-* Delete: [DescribeStandardEngineResourceGroupConfigInfo](https://cloud.tencent.com/document/api/1342/122135)
-* Delete: [DescribeStandardEngineResourceGroups](https://cloud.tencent.com/document/api/1342/122134)
-* Delete: [UpdateStandardEngineResourceGroupConfigInfo](https://cloud.tencent.com/document/api/1342/122129)
+* Create: [DescribeStandardEngineResourceGroups](https://www.tencentcloud.com/search/?wd=DescribeStandardEngineResourceGroups&type=document&lang=en)
+* Create: [UpdateStandardEngineResourceGroupConfigInfo](https://www.tencentcloud.com/search/?wd=UpdateStandardEngineResourceGroupConfigInfo&type=document&lang=en)
+* Read: [DescribeStandardEngineResourceGroupConfigInfo](https://www.tencentcloud.com/search/?wd=DescribeStandardEngineResourceGroupConfigInfo&type=document&lang=en)
+* Update: [DescribeStandardEngineResourceGroups](https://www.tencentcloud.com/search/?wd=DescribeStandardEngineResourceGroups&type=document&lang=en)
+* Update: [UpdateStandardEngineResourceGroupConfigInfo](https://www.tencentcloud.com/search/?wd=UpdateStandardEngineResourceGroupConfigInfo&type=document&lang=en)
+* Delete: [DescribeStandardEngineResourceGroupConfigInfo](https://www.tencentcloud.com/search/?wd=DescribeStandardEngineResourceGroupConfigInfo&type=document&lang=en)
+* Delete: [DescribeStandardEngineResourceGroups](https://www.tencentcloud.com/search/?wd=DescribeStandardEngineResourceGroups&type=document&lang=en)
+* Delete: [UpdateStandardEngineResourceGroupConfigInfo](https://www.tencentcloud.com/search/?wd=UpdateStandardEngineResourceGroupConfigInfo&type=document&lang=en)
 
 ## Import
 

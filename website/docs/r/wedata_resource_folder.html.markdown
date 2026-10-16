@@ -40,8 +40,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateResourceFolder](https://cloud.tencent.com/document/api/1267/123641)
-* Read: [ListResourceFolders](https://cloud.tencent.com/document/api/1267/123625)
-* Update: [UpdateResourceFolder](https://cloud.tencent.com/document/api/1267/123617)
-* Delete: [DeleteResourceFolder](https://cloud.tencent.com/document/api/1267/123636)
+* Create: [CreateResourceFolder](https://www.tencentcloud.com/search/?wd=CreateResourceFolder&type=document&lang=en)
+* Read: [ListResourceFolders](https://www.tencentcloud.com/search/?wd=ListResourceFolders&type=document&lang=en)
+* Update: [UpdateResourceFolder](https://www.tencentcloud.com/search/?wd=UpdateResourceFolder&type=document&lang=en)
+* Delete: [DeleteResourceFolder](https://www.tencentcloud.com/search/?wd=DeleteResourceFolder&type=document&lang=en)
 

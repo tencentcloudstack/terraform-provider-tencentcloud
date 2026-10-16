@@ -48,13 +48,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyOwaspRuleTypeAction](https://cloud.tencent.com/document/api/627/122543)
-* Create: [ModifyOwaspRuleTypeLevel](https://cloud.tencent.com/document/api/627/122542)
-* Create: [ModifyOwaspRuleTypeStatus](https://cloud.tencent.com/document/api/627/122541)
-* Read: [DescribeOwaspRuleTypes](https://cloud.tencent.com/document/api/627/122546)
-* Update: [ModifyOwaspRuleTypeAction](https://cloud.tencent.com/document/api/627/122543)
-* Update: [ModifyOwaspRuleTypeLevel](https://cloud.tencent.com/document/api/627/122542)
-* Update: [ModifyOwaspRuleTypeStatus](https://cloud.tencent.com/document/api/627/122541)
+* Create: [ModifyOwaspRuleTypeAction](https://www.tencentcloud.com/document/api/627/73179)
+* Create: [ModifyOwaspRuleTypeLevel](https://www.tencentcloud.com/document/api/627/73178)
+* Create: [ModifyOwaspRuleTypeStatus](https://www.tencentcloud.com/document/api/627/73177)
+* Read: [DescribeOwaspRuleTypes](https://www.tencentcloud.com/document/api/627/73183)
+* Update: [ModifyOwaspRuleTypeAction](https://www.tencentcloud.com/document/api/627/73179)
+* Update: [ModifyOwaspRuleTypeLevel](https://www.tencentcloud.com/document/api/627/73178)
+* Update: [ModifyOwaspRuleTypeStatus](https://www.tencentcloud.com/document/api/627/73177)
 
 ## Import
 

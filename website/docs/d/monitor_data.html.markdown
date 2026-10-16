@@ -78,5 +78,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetMonitorData](https://cloud.tencent.com/document/api/248/31014)
+* Read: [GetMonitorData](https://www.tencentcloud.com/document/api/248/33881)
 

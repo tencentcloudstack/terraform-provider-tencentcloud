@@ -48,9 +48,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyModuleStatus](https://cloud.tencent.com/document/api/627/99699)
-* Read: [DescribeModuleStatus](https://cloud.tencent.com/document/api/627/101340)
-* Update: [ModifyModuleStatus](https://cloud.tencent.com/document/api/627/99699)
+* Create: [ModifyModuleStatus](https://www.tencentcloud.com/document/api/627/64510)
+* Read: [DescribeModuleStatus](https://www.tencentcloud.com/document/api/627/64522)
+* Update: [ModifyModuleStatus](https://www.tencentcloud.com/document/api/627/64510)
 
 ## Import
 

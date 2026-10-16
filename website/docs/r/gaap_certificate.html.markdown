@@ -45,10 +45,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCertificate](https://cloud.tencent.com/document/api/608/36980)
-* Read: [DescribeCertificateDetail](https://cloud.tencent.com/document/api/608/36978)
-* Update: [ModifyCertificateAttributes](https://cloud.tencent.com/document/api/608/36976)
-* Delete: [DeleteCertificate](https://cloud.tencent.com/document/api/608/36979)
+* Create: [CreateCertificate](https://www.tencentcloud.com/document/api/608/33118)
+* Read: [DescribeCertificateDetail](https://www.tencentcloud.com/document/api/608/33116)
+* Update: [ModifyCertificateAttributes](https://www.tencentcloud.com/document/api/608/33114)
+* Delete: [DeleteCertificate](https://www.tencentcloud.com/document/api/608/33117)
 
 ## Import
 

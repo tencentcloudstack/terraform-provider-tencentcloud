@@ -58,12 +58,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRecord](https://cloud.tencent.com/document/api/1427/56180)
-* Create: [DescribeRecord](https://cloud.tencent.com/document/api/1427/56168)
-* Read: [DescribeRecord](https://cloud.tencent.com/document/api/1427/56168)
-* Update: [DescribeRecord](https://cloud.tencent.com/document/api/1427/56168)
-* Update: [ModifyRecord](https://cloud.tencent.com/document/api/1427/56157)
-* Delete: [DeleteRecord](https://cloud.tencent.com/document/api/1427/56176)
+* Create: [CreateRecord](https://www.tencentcloud.com/search/?wd=CreateRecord&type=document&lang=en)
+* Create: [DescribeRecord](https://www.tencentcloud.com/search/?wd=DescribeRecord&type=document&lang=en)
+* Read: [DescribeRecord](https://www.tencentcloud.com/search/?wd=DescribeRecord&type=document&lang=en)
+* Update: [DescribeRecord](https://www.tencentcloud.com/search/?wd=DescribeRecord&type=document&lang=en)
+* Update: [ModifyRecord](https://www.tencentcloud.com/search/?wd=ModifyRecord&type=document&lang=en)
+* Delete: [DeleteRecord](https://www.tencentcloud.com/search/?wd=DeleteRecord&type=document&lang=en)
 
 ## Import
 

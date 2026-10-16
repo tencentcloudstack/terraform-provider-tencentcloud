@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateService](https://cloud.tencent.com/document/api/628/45190)
+* Create: [UpdateService](https://www.tencentcloud.com/search/?wd=UpdateService&type=document&lang=en)
 

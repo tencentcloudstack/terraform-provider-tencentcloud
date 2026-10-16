@@ -254,5 +254,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAlarmPolicies](https://cloud.tencent.com/document/api/248/51279)
+* Read: [DescribeAlarmPolicies](https://www.tencentcloud.com/document/api/248/39321)
 

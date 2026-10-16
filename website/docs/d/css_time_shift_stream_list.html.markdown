@@ -54,5 +54,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTimeShiftStreamList](https://cloud.tencent.com/document/api/267/86090)
+* Read: [DescribeTimeShiftStreamList](https://www.tencentcloud.com/document/api/267/53719)
 

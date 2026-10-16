@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeMonitorTypes](https://cloud.tencent.com/document/api/248/49979)
+* Read: [DescribeMonitorTypes](https://www.tencentcloud.com/document/api/248/39318)
 

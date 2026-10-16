@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeVpcFwGroupSwitch](https://cloud.tencent.com/document/api/1132/97840)
+* Read: [DescribeVpcFwGroupSwitch](https://www.tencentcloud.com/search/?wd=DescribeVpcFwGroupSwitch&type=document&lang=en)
 

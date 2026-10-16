@@ -81,10 +81,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateMessageEnrichmentRule](https://cloud.tencent.com/document/api/1778/126116)
-* Read: [DescribeMessageEnrichmentRules](https://cloud.tencent.com/document/api/1778/126114)
-* Update: [ModifyMessageEnrichmentRule](https://cloud.tencent.com/document/api/1778/126113)
-* Delete: [DeleteMessageEnrichmentRule](https://cloud.tencent.com/document/api/1778/126115)
+* Create: [CreateMessageEnrichmentRule](https://www.tencentcloud.com/search/?wd=CreateMessageEnrichmentRule&type=document&lang=en)
+* Read: [DescribeMessageEnrichmentRules](https://www.tencentcloud.com/search/?wd=DescribeMessageEnrichmentRules&type=document&lang=en)
+* Update: [ModifyMessageEnrichmentRule](https://www.tencentcloud.com/search/?wd=ModifyMessageEnrichmentRule&type=document&lang=en)
+* Delete: [DeleteMessageEnrichmentRule](https://www.tencentcloud.com/search/?wd=DeleteMessageEnrichmentRule&type=document&lang=en)
 
 ## Import
 

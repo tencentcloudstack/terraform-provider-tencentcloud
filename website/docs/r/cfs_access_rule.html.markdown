@@ -44,8 +44,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCfsRule](https://cloud.tencent.com/document/api/582/38160)
-* Read: [DescribeCfsRules](https://cloud.tencent.com/document/api/582/38156)
-* Update: [UpdateCfsRule](https://cloud.tencent.com/document/api/582/38154)
-* Delete: [DeleteCfsRule](https://cloud.tencent.com/document/api/582/38158)
+* Create: [CreateCfsRule](https://www.tencentcloud.com/document/api/582/34508)
+* Read: [DescribeCfsRules](https://www.tencentcloud.com/document/api/582/34504)
+* Update: [UpdateCfsRule](https://www.tencentcloud.com/document/api/582/34502)
+* Delete: [DeleteCfsRule](https://www.tencentcloud.com/document/api/582/34506)
 

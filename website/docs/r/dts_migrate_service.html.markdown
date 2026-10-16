@@ -56,13 +56,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateMigrationService](https://cloud.tencent.com/document/api/571/82091)
-* Create: [DescribeMigrationDetail](https://cloud.tencent.com/document/api/571/82085)
-* Read: [DescribeMigrationDetail](https://cloud.tencent.com/document/api/571/82085)
-* Update: [ModifyMigrateJobSpec](https://cloud.tencent.com/document/api/571/82079)
-* Delete: [DescribeMigrationDetail](https://cloud.tencent.com/document/api/571/82085)
-* Delete: [DestroyMigrateJob](https://cloud.tencent.com/document/api/571/82083)
-* Delete: [IsolateMigrateJob](https://cloud.tencent.com/document/api/571/82082)
+* Create: [CreateMigrationService](https://www.tencentcloud.com/document/api/571/51819)
+* Create: [DescribeMigrationDetail](https://www.tencentcloud.com/document/api/571/51813)
+* Read: [DescribeMigrationDetail](https://www.tencentcloud.com/document/api/571/51813)
+* Update: [ModifyMigrateJobSpec](https://www.tencentcloud.com/document/api/571/51807)
+* Delete: [DescribeMigrationDetail](https://www.tencentcloud.com/document/api/571/51813)
+* Delete: [DestroyMigrateJob](https://www.tencentcloud.com/document/api/571/51811)
+* Delete: [IsolateMigrateJob](https://www.tencentcloud.com/document/api/571/51810)
 
 ## Import
 

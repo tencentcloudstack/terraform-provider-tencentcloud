@@ -83,13 +83,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNatFwInstanceWithDomain](https://cloud.tencent.com/document/api/1132/61923)
-* Create: [DescribeNatFwInstancesInfo](https://cloud.tencent.com/document/api/1132/60237)
-* Read: [DescribeCfwEips](https://cloud.tencent.com/document/api/1132/54259)
-* Read: [DescribeNatFwInstancesInfo](https://cloud.tencent.com/document/api/1132/60237)
-* Read: [DescribeNatFwVpcDnsLst](https://cloud.tencent.com/document/api/1132/60236)
-* Update: [ModifyNatInstance](https://cloud.tencent.com/document/api/1132/97914)
-* Delete: [DeleteNatFwInstance](https://cloud.tencent.com/document/api/1132/60235)
+* Create: [CreateNatFwInstanceWithDomain](https://www.tencentcloud.com/search/?wd=CreateNatFwInstanceWithDomain&type=document&lang=en)
+* Create: [DescribeNatFwInstancesInfo](https://www.tencentcloud.com/search/?wd=DescribeNatFwInstancesInfo&type=document&lang=en)
+* Read: [DescribeCfwEips](https://www.tencentcloud.com/search/?wd=DescribeCfwEips&type=document&lang=en)
+* Read: [DescribeNatFwInstancesInfo](https://www.tencentcloud.com/search/?wd=DescribeNatFwInstancesInfo&type=document&lang=en)
+* Read: [DescribeNatFwVpcDnsLst](https://www.tencentcloud.com/search/?wd=DescribeNatFwVpcDnsLst&type=document&lang=en)
+* Update: [ModifyNatInstance](https://www.tencentcloud.com/search/?wd=ModifyNatInstance&type=document&lang=en)
+* Delete: [DeleteNatFwInstance](https://www.tencentcloud.com/search/?wd=DeleteNatFwInstance&type=document&lang=en)
 
 ## Import
 

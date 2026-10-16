@@ -77,6 +77,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CancelDcnJob](https://cloud.tencent.com/document/api/557/58910)
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/557/56485)
+* Create: [CancelDcnJob](https://www.tencentcloud.com/search/?wd=CancelDcnJob&type=document&lang=en)
+* Create: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
 

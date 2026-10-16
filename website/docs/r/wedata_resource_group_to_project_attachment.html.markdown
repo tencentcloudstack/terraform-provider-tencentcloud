@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateResourceGroupToProject](https://cloud.tencent.com/document/api/1267/123985)
-* Read: [ListResourceGroups](https://cloud.tencent.com/document/api/1267/123980)
-* Delete: [DissociateResourceGroupFromProject](https://cloud.tencent.com/document/api/1267/123982)
+* Create: [AssociateResourceGroupToProject](https://www.tencentcloud.com/search/?wd=AssociateResourceGroupToProject&type=document&lang=en)
+* Read: [ListResourceGroups](https://www.tencentcloud.com/search/?wd=ListResourceGroups&type=document&lang=en)
+* Delete: [DissociateResourceGroupFromProject](https://www.tencentcloud.com/search/?wd=DissociateResourceGroupFromProject&type=document&lang=en)
 
 ## Import
 

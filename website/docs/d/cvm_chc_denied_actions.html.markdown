@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeChcDeniedActions](https://cloud.tencent.com/document/api/213/78724)
+* Read: [DescribeChcDeniedActions](https://www.tencentcloud.com/document/api/213/49703)
 

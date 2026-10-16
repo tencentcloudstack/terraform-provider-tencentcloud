@@ -36,9 +36,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyAssetSyncFlag](https://cloud.tencent.com/document/api/1025/125049)
-* Read: [DescribeAssetSyncFlag](https://cloud.tencent.com/document/api/1025/125051)
-* Update: [ModifyAssetSyncFlag](https://cloud.tencent.com/document/api/1025/125049)
+* Create: [ModifyAssetSyncFlag](https://www.tencentcloud.com/search/?wd=ModifyAssetSyncFlag&type=document&lang=en)
+* Read: [DescribeAssetSyncFlag](https://www.tencentcloud.com/search/?wd=DescribeAssetSyncFlag&type=document&lang=en)
+* Update: [ModifyAssetSyncFlag](https://www.tencentcloud.com/search/?wd=ModifyAssetSyncFlag&type=document&lang=en)
 
 ## Import
 

@@ -123,10 +123,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAdaptiveDynamicStreamingTemplate](https://cloud.tencent.com/document/api/266/43068)
-* Read: [DescribeAdaptiveDynamicStreamingTemplates](https://cloud.tencent.com/document/api/266/38084)
-* Update: [ModifyAdaptiveDynamicStreamingTemplate](https://cloud.tencent.com/document/api/266/43063)
-* Delete: [DeleteAdaptiveDynamicStreamingTemplate](https://cloud.tencent.com/document/api/266/43066)
+* Create: [CreateAdaptiveDynamicStreamingTemplate](https://www.tencentcloud.com/document/api/266/37567)
+* Read: [DescribeAdaptiveDynamicStreamingTemplates](https://www.tencentcloud.com/document/api/266/34152)
+* Update: [ModifyAdaptiveDynamicStreamingTemplate](https://www.tencentcloud.com/document/api/266/37561)
+* Delete: [DeleteAdaptiveDynamicStreamingTemplate](https://www.tencentcloud.com/document/api/266/37565)
 
 ## Import
 

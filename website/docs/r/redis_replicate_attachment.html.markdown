@@ -105,16 +105,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddReplicationInstance](https://cloud.tencent.com/document/api/239/68401)
-* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601)
-* Read: [DescribeReplicationGroup](https://cloud.tencent.com/document/api/239/71554)
-* Update: [AddReplicationInstance](https://cloud.tencent.com/document/api/239/68401)
-* Update: [ChangeMasterInstance](https://cloud.tencent.com/document/api/239/77862)
-* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601)
-* Update: [RemoveReplicationInstance](https://cloud.tencent.com/document/api/239/90099)
-* Delete: [DescribeReplicationGroup](https://cloud.tencent.com/document/api/239/71554)
-* Delete: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601)
-* Delete: [RemoveReplicationInstance](https://cloud.tencent.com/document/api/239/90099)
+* Create: [AddReplicationInstance](https://www.tencentcloud.com/document/api/239/59986)
+* Create: [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+* Read: [DescribeReplicationGroup](https://www.tencentcloud.com/document/api/239/46257)
+* Update: [AddReplicationInstance](https://www.tencentcloud.com/document/api/239/59986)
+* Update: [ChangeMasterInstance](https://www.tencentcloud.com/document/api/239/49358)
+* Update: [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+* Update: [RemoveReplicationInstance](https://www.tencentcloud.com/document/api/239/54674)
+* Delete: [DescribeReplicationGroup](https://www.tencentcloud.com/document/api/239/46257)
+* Delete: [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+* Delete: [RemoveReplicationInstance](https://www.tencentcloud.com/document/api/239/54674)
 
 ## Import
 

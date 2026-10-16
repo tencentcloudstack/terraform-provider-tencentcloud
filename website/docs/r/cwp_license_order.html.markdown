@@ -49,14 +49,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLicenseOrder](https://cloud.tencent.com/document/api/296/80402)
-* Create: [ModifyLicenseOrder](https://cloud.tencent.com/document/api/296/98700)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeLicenseList](https://cloud.tencent.com/document/api/296/80397)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ModifyLicenseOrder](https://cloud.tencent.com/document/api/296/98700)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DestroyOrder](https://cloud.tencent.com/document/api/296/80396)
+* Create: [CreateLicenseOrder](https://www.tencentcloud.com/document/api/296/63791)
+* Create: [ModifyLicenseOrder](https://www.tencentcloud.com/document/api/296/63774)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeLicenseList](https://www.tencentcloud.com/document/api/296/63781)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyLicenseOrder](https://www.tencentcloud.com/document/api/296/63774)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DestroyOrder](https://www.tencentcloud.com/document/api/296/63777)
 
 ## Import
 

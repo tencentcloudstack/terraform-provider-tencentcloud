@@ -133,18 +133,18 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCfsFileSystem](https://cloud.tencent.com/document/api/582/38174)
-* Create: [DescribeCfsFileSystems](https://cloud.tencent.com/document/api/582/38170)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeCfsFileSystems](https://cloud.tencent.com/document/api/582/38170)
-* Read: [DescribeMountTargets](https://cloud.tencent.com/document/api/582/38169)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [DescribeCfsFileSystems](https://cloud.tencent.com/document/api/582/38170)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Update: [ScaleUpFileSystem](https://cloud.tencent.com/document/api/582/90456)
-* Update: [UpdateCfsFileSystemName](https://cloud.tencent.com/document/api/582/38168)
-* Update: [UpdateCfsFileSystemPGroup](https://cloud.tencent.com/document/api/582/38167)
-* Delete: [DeleteCfsFileSystem](https://cloud.tencent.com/document/api/582/38173)
+* Create: [CreateCfsFileSystem](https://www.tencentcloud.com/document/api/582/34517)
+* Create: [DescribeCfsFileSystems](https://www.tencentcloud.com/document/api/582/34514)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeCfsFileSystems](https://www.tencentcloud.com/document/api/582/34514)
+* Read: [DescribeMountTargets](https://www.tencentcloud.com/document/api/582/34513)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [DescribeCfsFileSystems](https://www.tencentcloud.com/document/api/582/34514)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Update: [ScaleUpFileSystem](https://www.tencentcloud.com/document/api/582/55870)
+* Update: [UpdateCfsFileSystemName](https://www.tencentcloud.com/document/api/582/35059)
+* Update: [UpdateCfsFileSystemPGroup](https://www.tencentcloud.com/document/api/582/34512)
+* Delete: [DeleteCfsFileSystem](https://www.tencentcloud.com/document/api/582/34516)
 
 ## Import
 

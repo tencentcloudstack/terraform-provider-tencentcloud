@@ -79,14 +79,14 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAliasDomain](https://cloud.tencent.com/document/api/1552/81247)
-* Create: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245)
-* Create: [ModifyAliasDomainStatus](https://cloud.tencent.com/document/api/1552/81243)
-* Read: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245)
-* Update: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245)
-* Update: [ModifyAliasDomain](https://cloud.tencent.com/document/api/1552/81244)
-* Update: [ModifyAliasDomainStatus](https://cloud.tencent.com/document/api/1552/81243)
-* Delete: [DeleteAliasDomain](https://cloud.tencent.com/document/api/1552/81246)
-* Delete: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245)
-* Delete: [ModifyAliasDomainStatus](https://cloud.tencent.com/document/api/1552/81243)
+* Create: [CreateAliasDomain](https://www.tencentcloud.com/search/?wd=CreateAliasDomain&type=document&lang=en)
+* Create: [DescribeAliasDomains](https://www.tencentcloud.com/search/?wd=DescribeAliasDomains&type=document&lang=en)
+* Create: [ModifyAliasDomainStatus](https://www.tencentcloud.com/search/?wd=ModifyAliasDomainStatus&type=document&lang=en)
+* Read: [DescribeAliasDomains](https://www.tencentcloud.com/search/?wd=DescribeAliasDomains&type=document&lang=en)
+* Update: [DescribeAliasDomains](https://www.tencentcloud.com/search/?wd=DescribeAliasDomains&type=document&lang=en)
+* Update: [ModifyAliasDomain](https://www.tencentcloud.com/search/?wd=ModifyAliasDomain&type=document&lang=en)
+* Update: [ModifyAliasDomainStatus](https://www.tencentcloud.com/search/?wd=ModifyAliasDomainStatus&type=document&lang=en)
+* Delete: [DeleteAliasDomain](https://www.tencentcloud.com/search/?wd=DeleteAliasDomain&type=document&lang=en)
+* Delete: [DescribeAliasDomains](https://www.tencentcloud.com/search/?wd=DescribeAliasDomains&type=document&lang=en)
+* Delete: [ModifyAliasDomainStatus](https://www.tencentcloud.com/search/?wd=ModifyAliasDomainStatus&type=document&lang=en)
 

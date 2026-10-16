@@ -179,17 +179,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstanceNew](https://cloud.tencent.com/document/api/1299/84353)
-* Create: [DescribeInstance](https://cloud.tencent.com/document/api/1299/84354)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeInstancesNew](https://cloud.tencent.com/document/api/1299/93328)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [DescribeInstanceState](https://cloud.tencent.com/document/api/1299/89676)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Update: [ResizeDisk](https://cloud.tencent.com/document/api/1299/86158)
-* Delete: [DescribeInstance](https://cloud.tencent.com/document/api/1299/84354)
-* Delete: [DescribeInstancesNew](https://cloud.tencent.com/document/api/1299/93328)
-* Delete: [DestroyInstance](https://cloud.tencent.com/document/api/1299/86254)
+* Create: [CreateInstanceNew](https://www.tencentcloud.com/search/?wd=CreateInstanceNew&type=document&lang=en)
+* Create: [DescribeInstance](https://www.tencentcloud.com/search/?wd=DescribeInstance&type=document&lang=en)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeInstancesNew](https://www.tencentcloud.com/search/?wd=DescribeInstancesNew&type=document&lang=en)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [DescribeInstanceState](https://www.tencentcloud.com/search/?wd=DescribeInstanceState&type=document&lang=en)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Update: [ResizeDisk](https://www.tencentcloud.com/search/?wd=ResizeDisk&type=document&lang=en)
+* Delete: [DescribeInstance](https://www.tencentcloud.com/search/?wd=DescribeInstance&type=document&lang=en)
+* Delete: [DescribeInstancesNew](https://www.tencentcloud.com/search/?wd=DescribeInstancesNew&type=document&lang=en)
+* Delete: [DestroyInstance](https://www.tencentcloud.com/search/?wd=DestroyInstance&type=document&lang=en)
 
 ## Import
 

@@ -60,11 +60,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeVpcFwGroupSwitch](https://cloud.tencent.com/document/api/1132/97840)
-* Create: [ModifyFwGroupSwitch](https://cloud.tencent.com/document/api/1132/97851)
-* Read: [DescribeVpcFwGroupSwitch](https://cloud.tencent.com/document/api/1132/97840)
-* Update: [DescribeVpcFwGroupSwitch](https://cloud.tencent.com/document/api/1132/97840)
-* Update: [ModifyFwGroupSwitch](https://cloud.tencent.com/document/api/1132/97851)
+* Create: [DescribeVpcFwGroupSwitch](https://www.tencentcloud.com/search/?wd=DescribeVpcFwGroupSwitch&type=document&lang=en)
+* Create: [ModifyFwGroupSwitch](https://www.tencentcloud.com/search/?wd=ModifyFwGroupSwitch&type=document&lang=en)
+* Read: [DescribeVpcFwGroupSwitch](https://www.tencentcloud.com/search/?wd=DescribeVpcFwGroupSwitch&type=document&lang=en)
+* Update: [DescribeVpcFwGroupSwitch](https://www.tencentcloud.com/search/?wd=DescribeVpcFwGroupSwitch&type=document&lang=en)
+* Update: [ModifyFwGroupSwitch](https://www.tencentcloud.com/search/?wd=ModifyFwGroupSwitch&type=document&lang=en)
 
 ## Import
 

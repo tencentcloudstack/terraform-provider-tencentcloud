@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetAsyncEventStatus](https://cloud.tencent.com/document/api/583/65704)
+* Read: [GetAsyncEventStatus](https://www.tencentcloud.com/document/api/583/44482)
 

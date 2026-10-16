@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SendRocketMQMessage](https://cloud.tencent.com/document/api/1179/94179)
+* Create: [SendRocketMQMessage](https://www.tencentcloud.com/search/?wd=SendRocketMQMessage&type=document&lang=en)
 

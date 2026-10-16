@@ -103,10 +103,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateStreamLinkOutputInfo](https://cloud.tencent.com/document/api/862/82444)
-* Read: [DescribeStreamLinkFlow](https://cloud.tencent.com/document/api/862/82440)
-* Update: [ModifyStreamLinkOutputInfo](https://cloud.tencent.com/document/api/862/82430)
-* Delete: [DeleteStreamLinkOutput](https://cloud.tencent.com/document/api/862/82442)
+* Create: [CreateStreamLinkOutputInfo](https://www.tencentcloud.com/search/?wd=CreateStreamLinkOutputInfo&type=document&lang=en)
+* Read: [DescribeStreamLinkFlow](https://www.tencentcloud.com/search/?wd=DescribeStreamLinkFlow&type=document&lang=en)
+* Update: [ModifyStreamLinkOutputInfo](https://www.tencentcloud.com/search/?wd=ModifyStreamLinkOutputInfo&type=document&lang=en)
+* Delete: [DeleteStreamLinkOutput](https://www.tencentcloud.com/search/?wd=DeleteStreamLinkOutput&type=document&lang=en)
 
 ## Import
 

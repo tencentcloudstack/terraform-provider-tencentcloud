@@ -114,5 +114,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeClusterNodes](https://cloud.tencent.com/document/api/589/41707)
+* Read: [DescribeClusterNodes](https://www.tencentcloud.com/search/?wd=DescribeClusterNodes&type=document&lang=en)
 

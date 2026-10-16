@@ -73,12 +73,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAuditLogFile](https://cloud.tencent.com/document/api/240/125363)
-* Create: [DescribeAuditLogFiles](https://cloud.tencent.com/document/api/240/128357)
-* Read: [DescribeAuditLogFiles](https://cloud.tencent.com/document/api/240/128357)
-* Update: [DescribeAuditLogFiles](https://cloud.tencent.com/document/api/240/128357)
-* Delete: [DeleteAuditLogFile](https://cloud.tencent.com/document/api/240/125362)
-* Delete: [DescribeAuditLogFiles](https://cloud.tencent.com/document/api/240/128357)
+* Create: [CreateAuditLogFile](https://www.tencentcloud.com/search/?wd=CreateAuditLogFile&type=document&lang=en)
+* Create: [DescribeAuditLogFiles](https://www.tencentcloud.com/document/api/240/79888)
+* Read: [DescribeAuditLogFiles](https://www.tencentcloud.com/document/api/240/79888)
+* Update: [DescribeAuditLogFiles](https://www.tencentcloud.com/document/api/240/79888)
+* Delete: [DeleteAuditLogFile](https://www.tencentcloud.com/search/?wd=DeleteAuditLogFile&type=document&lang=en)
+* Delete: [DescribeAuditLogFiles](https://www.tencentcloud.com/document/api/240/79888)
 
 ## Import
 

@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeLogstashInstanceLogs](https://cloud.tencent.com/document/api/845/77241)
+* Read: [DescribeLogstashInstanceLogs](https://www.tencentcloud.com/search/?wd=DescribeLogstashInstanceLogs&type=document&lang=en)
 

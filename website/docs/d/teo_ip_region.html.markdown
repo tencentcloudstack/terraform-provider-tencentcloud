@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeIPRegion](https://cloud.tencent.com/document/api/1552/102227)
+* Read: [DescribeIPRegion](https://www.tencentcloud.com/search/?wd=DescribeIPRegion&type=document&lang=en)
 

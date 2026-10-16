@@ -109,8 +109,8 @@ The `ingress` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Read: [DescribeIngress](https://cloud.tencent.com/document/api/1371/60169)
-* Delete: [DeleteIngress](https://cloud.tencent.com/document/api/1371/60170)
+* Read: [DescribeIngress](https://www.tencentcloud.com/search/?wd=DescribeIngress&type=document&lang=en)
+* Delete: [DeleteIngress](https://www.tencentcloud.com/search/?wd=DeleteIngress&type=document&lang=en)
 
 ## Import
 

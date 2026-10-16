@@ -53,5 +53,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeGatewayAllGroupApis](https://cloud.tencent.com/document/api/649/50633)
+* Read: [DescribeGatewayAllGroupApis](https://www.tencentcloud.com/search/?wd=DescribeGatewayAllGroupApis&type=document&lang=en)
 

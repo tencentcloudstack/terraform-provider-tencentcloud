@@ -59,15 +59,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDomain](https://cloud.tencent.com/document/api/1427/56184)
-* Create: [DescribeDomain](https://cloud.tencent.com/document/api/1427/56173)
-* Create: [ModifyDomainRemark](https://cloud.tencent.com/document/api/1427/56161)
-* Create: [ModifyDomainStatus](https://cloud.tencent.com/document/api/1427/56160)
-* Read: [DescribeDomain](https://cloud.tencent.com/document/api/1427/56173)
-* Update: [DescribeDomain](https://cloud.tencent.com/document/api/1427/56173)
-* Update: [ModifyDomainRemark](https://cloud.tencent.com/document/api/1427/56161)
-* Update: [ModifyDomainStatus](https://cloud.tencent.com/document/api/1427/56160)
-* Delete: [DeleteDomain](https://cloud.tencent.com/document/api/1427/56178)
+* Create: [CreateDomain](https://www.tencentcloud.com/search/?wd=CreateDomain&type=document&lang=en)
+* Create: [DescribeDomain](https://www.tencentcloud.com/search/?wd=DescribeDomain&type=document&lang=en)
+* Create: [ModifyDomainRemark](https://www.tencentcloud.com/search/?wd=ModifyDomainRemark&type=document&lang=en)
+* Create: [ModifyDomainStatus](https://www.tencentcloud.com/search/?wd=ModifyDomainStatus&type=document&lang=en)
+* Read: [DescribeDomain](https://www.tencentcloud.com/search/?wd=DescribeDomain&type=document&lang=en)
+* Update: [DescribeDomain](https://www.tencentcloud.com/search/?wd=DescribeDomain&type=document&lang=en)
+* Update: [ModifyDomainRemark](https://www.tencentcloud.com/search/?wd=ModifyDomainRemark&type=document&lang=en)
+* Update: [ModifyDomainStatus](https://www.tencentcloud.com/search/?wd=ModifyDomainStatus&type=document&lang=en)
+* Delete: [DeleteDomain](https://www.tencentcloud.com/search/?wd=DeleteDomain&type=document&lang=en)
 
 ## Import
 

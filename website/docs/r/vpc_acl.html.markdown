@@ -54,17 +54,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNetworkAcl](https://cloud.tencent.com/document/api/215/42162)
-* Create: [ModifyNetworkAclEntries](https://cloud.tencent.com/document/api/215/42107)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeNetworkAcls](https://cloud.tencent.com/document/api/215/42160)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ModifyNetworkAclAttribute](https://cloud.tencent.com/document/api/215/42158)
-* Update: [ModifyNetworkAclEntries](https://cloud.tencent.com/document/api/215/42107)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeleteNetworkAcl](https://cloud.tencent.com/document/api/215/42161)
-* Delete: [DescribeNetworkAcls](https://cloud.tencent.com/document/api/215/42160)
-* Delete: [DisassociateNetworkAclSubnets](https://cloud.tencent.com/document/api/215/42159)
+* Create: [CreateNetworkAcl](https://www.tencentcloud.com/document/api/215/35622)
+* Create: [ModifyNetworkAclEntries](https://www.tencentcloud.com/document/api/215/35617)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeNetworkAcls](https://www.tencentcloud.com/document/api/215/35620)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyNetworkAclAttribute](https://www.tencentcloud.com/document/api/215/35618)
+* Update: [ModifyNetworkAclEntries](https://www.tencentcloud.com/document/api/215/35617)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteNetworkAcl](https://www.tencentcloud.com/document/api/215/35621)
+* Delete: [DescribeNetworkAcls](https://www.tencentcloud.com/document/api/215/35620)
+* Delete: [DisassociateNetworkAclSubnets](https://www.tencentcloud.com/document/api/215/35619)
 
 ## Import
 

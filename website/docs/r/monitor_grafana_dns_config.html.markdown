@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208)
-* Create: [UpdateDNSConfig](https://cloud.tencent.com/document/api/248/79194)
-* Read: [DescribeDNSConfig](https://cloud.tencent.com/document/api/248/79211)
-* Update: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208)
-* Update: [UpdateDNSConfig](https://cloud.tencent.com/document/api/248/79194)
+* Create: [DescribeGrafanaInstances](https://www.tencentcloud.com/document/api/248/49759)
+* Create: [UpdateDNSConfig](https://www.tencentcloud.com/document/api/248/49746)
+* Read: [DescribeDNSConfig](https://www.tencentcloud.com/document/api/248/49762)
+* Update: [DescribeGrafanaInstances](https://www.tencentcloud.com/document/api/248/49759)
+* Update: [UpdateDNSConfig](https://www.tencentcloud.com/document/api/248/49746)
 
 ## Import
 

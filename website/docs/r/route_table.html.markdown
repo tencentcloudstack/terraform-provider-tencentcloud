@@ -47,13 +47,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRouteTable](https://cloud.tencent.com/document/api/215/15768)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Read: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Update: [ModifyRouteTableAttribute](https://cloud.tencent.com/document/api/215/15766)
-* Delete: [DeleteRouteTable](https://cloud.tencent.com/document/api/215/15771)
+* Create: [CreateRouteTable](https://www.tencentcloud.com/document/api/215/15768)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Read: [DescribeRouteTables](https://www.tencentcloud.com/document/api/215/15763)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Update: [ModifyRouteTableAttribute](https://www.tencentcloud.com/document/api/215/15766)
+* Delete: [DeleteRouteTable](https://www.tencentcloud.com/document/api/215/15771)
 
 ## Import
 

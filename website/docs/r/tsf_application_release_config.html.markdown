@@ -49,9 +49,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ReleaseConfigWithDetailResp](https://cloud.tencent.com/document/api/649/89206)
-* Read: [DescribeConfigReleases](https://cloud.tencent.com/document/api/649/38342)
-* Delete: [RevocationConfig](https://cloud.tencent.com/document/api/649/38331)
+* Create: [ReleaseConfigWithDetailResp](https://www.tencentcloud.com/search/?wd=ReleaseConfigWithDetailResp&type=document&lang=en)
+* Read: [DescribeConfigReleases](https://www.tencentcloud.com/search/?wd=DescribeConfigReleases&type=document&lang=en)
+* Delete: [RevocationConfig](https://www.tencentcloud.com/search/?wd=RevocationConfig&type=document&lang=en)
 
 ## Import
 

@@ -65,9 +65,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDomainErrorPageInfo](https://cloud.tencent.com/document/api/608/39347)
-* Create: [DescribeDomainErrorPageInfoByIds](https://cloud.tencent.com/document/api/608/40489)
-* Read: [DescribeDomainErrorPageInfo](https://cloud.tencent.com/document/api/608/39345)
-* Delete: [DeleteDomainErrorPageInfo](https://cloud.tencent.com/document/api/608/39346)
-* Delete: [DescribeDomainErrorPageInfoByIds](https://cloud.tencent.com/document/api/608/40489)
+* Create: [CreateDomainErrorPageInfo](https://www.tencentcloud.com/document/api/608/33137)
+* Create: [DescribeDomainErrorPageInfoByIds](https://www.tencentcloud.com/document/api/608/37590)
+* Read: [DescribeDomainErrorPageInfo](https://www.tencentcloud.com/document/api/608/33135)
+* Delete: [DeleteDomainErrorPageInfo](https://www.tencentcloud.com/document/api/608/33136)
+* Delete: [DescribeDomainErrorPageInfoByIds](https://www.tencentcloud.com/document/api/608/37590)
 

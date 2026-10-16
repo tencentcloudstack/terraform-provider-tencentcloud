@@ -43,21 +43,21 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086)
-* Create: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303)
-* Create: [DescribeClusters](https://cloud.tencent.com/document/api/1003/48085)
-* Create: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/1003/48096)
-* Read: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303)
-* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/1003/48305)
-* Update: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086)
-* Update: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303)
-* Update: [DescribeClusters](https://cloud.tencent.com/document/api/1003/48085)
-* Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/1003/48096)
-* Delete: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086)
-* Delete: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303)
-* Delete: [DescribeClusters](https://cloud.tencent.com/document/api/1003/48085)
-* Delete: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/1003/48305)
-* Delete: [DisassociateSecurityGroups](https://cloud.tencent.com/document/api/1003/70117)
+* Create: [DescribeClusterDetail](https://www.tencentcloud.com/search/?wd=DescribeClusterDetail&type=document&lang=en)
+* Create: [DescribeClusterInstanceGrps](https://www.tencentcloud.com/search/?wd=DescribeClusterInstanceGrps&type=document&lang=en)
+* Create: [DescribeClusters](https://www.tencentcloud.com/search/?wd=DescribeClusters&type=document&lang=en)
+* Create: [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/search/?wd=ModifyDBInstanceSecurityGroups&type=document&lang=en)
+* Read: [DescribeClusterInstanceGrps](https://www.tencentcloud.com/search/?wd=DescribeClusterInstanceGrps&type=document&lang=en)
+* Read: [DescribeDBSecurityGroups](https://www.tencentcloud.com/search/?wd=DescribeDBSecurityGroups&type=document&lang=en)
+* Update: [DescribeClusterDetail](https://www.tencentcloud.com/search/?wd=DescribeClusterDetail&type=document&lang=en)
+* Update: [DescribeClusterInstanceGrps](https://www.tencentcloud.com/search/?wd=DescribeClusterInstanceGrps&type=document&lang=en)
+* Update: [DescribeClusters](https://www.tencentcloud.com/search/?wd=DescribeClusters&type=document&lang=en)
+* Update: [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/search/?wd=ModifyDBInstanceSecurityGroups&type=document&lang=en)
+* Delete: [DescribeClusterDetail](https://www.tencentcloud.com/search/?wd=DescribeClusterDetail&type=document&lang=en)
+* Delete: [DescribeClusterInstanceGrps](https://www.tencentcloud.com/search/?wd=DescribeClusterInstanceGrps&type=document&lang=en)
+* Delete: [DescribeClusters](https://www.tencentcloud.com/search/?wd=DescribeClusters&type=document&lang=en)
+* Delete: [DescribeDBSecurityGroups](https://www.tencentcloud.com/search/?wd=DescribeDBSecurityGroups&type=document&lang=en)
+* Delete: [DisassociateSecurityGroups](https://www.tencentcloud.com/search/?wd=DisassociateSecurityGroups&type=document&lang=en)
 
 ## Import
 

@@ -100,10 +100,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateKafkaRecharge](https://cloud.tencent.com/document/api/614/94448)
-* Read: [DescribeKafkaRecharges](https://cloud.tencent.com/document/api/614/94446)
-* Update: [ModifyKafkaRecharge](https://cloud.tencent.com/document/api/614/94445)
-* Delete: [DeleteKafkaRecharge](https://cloud.tencent.com/document/api/614/94447)
+* Create: [CreateKafkaRecharge](https://www.tencentcloud.com/document/api/614/56113)
+* Read: [DescribeKafkaRecharges](https://www.tencentcloud.com/document/api/614/56111)
+* Update: [ModifyKafkaRecharge](https://www.tencentcloud.com/document/api/614/56110)
+* Delete: [DeleteKafkaRecharge](https://www.tencentcloud.com/document/api/614/56112)
 
 ## Import
 

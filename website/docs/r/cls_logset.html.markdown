@@ -49,13 +49,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLogset](https://cloud.tencent.com/document/api/614/58626)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeLogsets](https://cloud.tencent.com/document/api/614/58624)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ModifyLogset](https://cloud.tencent.com/document/api/614/58623)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeleteLogset](https://cloud.tencent.com/document/api/614/58625)
+* Create: [CreateLogset](https://www.tencentcloud.com/document/api/614/42780)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeLogsets](https://www.tencentcloud.com/document/api/614/42778)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyLogset](https://www.tencentcloud.com/document/api/614/42777)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteLogset](https://www.tencentcloud.com/document/api/614/42779)
 
 ## Import
 

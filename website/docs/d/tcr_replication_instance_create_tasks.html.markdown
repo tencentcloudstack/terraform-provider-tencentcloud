@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeReplicationInstanceCreateTasks](https://cloud.tencent.com/document/api/1141/49202)
+* Read: [DescribeReplicationInstanceCreateTasks](https://www.tencentcloud.com/search/?wd=DescribeReplicationInstanceCreateTasks&type=document&lang=en)
 

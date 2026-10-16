@@ -80,11 +80,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateJustInTimeTranscodeTemplate](https://cloud.tencent.com/document/api/1552/122116)
-* Create: [DescribeJustInTimeTranscodeTemplates](https://cloud.tencent.com/document/api/1552/122114)
-* Read: [DescribeJustInTimeTranscodeTemplates](https://cloud.tencent.com/document/api/1552/122114)
-* Update: [DescribeJustInTimeTranscodeTemplates](https://cloud.tencent.com/document/api/1552/122114)
-* Delete: [DeleteJustInTimeTranscodeTemplates](https://cloud.tencent.com/document/api/1552/122115)
+* Create: [CreateJustInTimeTranscodeTemplate](https://www.tencentcloud.com/search/?wd=CreateJustInTimeTranscodeTemplate&type=document&lang=en)
+* Create: [DescribeJustInTimeTranscodeTemplates](https://www.tencentcloud.com/search/?wd=DescribeJustInTimeTranscodeTemplates&type=document&lang=en)
+* Read: [DescribeJustInTimeTranscodeTemplates](https://www.tencentcloud.com/search/?wd=DescribeJustInTimeTranscodeTemplates&type=document&lang=en)
+* Update: [DescribeJustInTimeTranscodeTemplates](https://www.tencentcloud.com/search/?wd=DescribeJustInTimeTranscodeTemplates&type=document&lang=en)
+* Delete: [DeleteJustInTimeTranscodeTemplates](https://www.tencentcloud.com/search/?wd=DeleteJustInTimeTranscodeTemplates&type=document&lang=en)
 
 ## Import
 

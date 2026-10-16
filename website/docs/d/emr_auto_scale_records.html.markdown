@@ -57,5 +57,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAutoScaleRecords](https://cloud.tencent.com/document/api/589/100248)
+* Read: [DescribeAutoScaleRecords](https://www.tencentcloud.com/search/?wd=DescribeAutoScaleRecords&type=document&lang=en)
 

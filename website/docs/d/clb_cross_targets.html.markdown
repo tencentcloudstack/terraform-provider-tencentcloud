@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCrossTargets](https://cloud.tencent.com/document/api/214/65902)
+* Read: [DescribeCrossTargets](https://www.tencentcloud.com/document/api/214/45272)
 

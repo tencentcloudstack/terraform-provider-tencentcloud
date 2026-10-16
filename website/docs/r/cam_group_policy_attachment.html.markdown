@@ -57,10 +57,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachGroupPolicy](https://cloud.tencent.com/document/api/598/34580)
-* Create: [ListAttachedGroupPolicies](https://cloud.tencent.com/document/api/598/34573)
-* Read: [ListAttachedGroupPolicies](https://cloud.tencent.com/document/api/598/34573)
-* Delete: [DetachGroupPolicy](https://cloud.tencent.com/document/api/598/34576)
+* Create: [AttachGroupPolicy](https://www.tencentcloud.com/document/api/598/32250)
+* Create: [ListAttachedGroupPolicies](https://www.tencentcloud.com/document/api/598/32243)
+* Read: [ListAttachedGroupPolicies](https://www.tencentcloud.com/document/api/598/32243)
+* Delete: [DetachGroupPolicy](https://www.tencentcloud.com/document/api/598/32246)
 
 ## Import
 

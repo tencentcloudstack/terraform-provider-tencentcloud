@@ -47,5 +47,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeUploadIncrementalInfo](https://cloud.tencent.com/document/api/238/53184)
+* Read: [DescribeUploadIncrementalInfo](https://www.tencentcloud.com/document/api/238/72765)
 

@@ -76,12 +76,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGatewayLoadBalancer](https://cloud.tencent.com/document/api/1782/111685)
-* Create: [DescribeTaskStatus](https://cloud.tencent.com/document/api/1782/111700)
-* Read: [DescribeGatewayLoadBalancers](https://cloud.tencent.com/document/api/1782/111683)
-* Update: [ModifyGatewayLoadBalancerAttribute](https://cloud.tencent.com/document/api/1782/111681)
-* Delete: [DeleteGatewayLoadBalancer](https://cloud.tencent.com/document/api/1782/111684)
-* Delete: [DescribeTaskStatus](https://cloud.tencent.com/document/api/1782/111700)
+* Create: [CreateGatewayLoadBalancer](https://www.tencentcloud.com/search/?wd=CreateGatewayLoadBalancer&type=document&lang=en)
+* Create: [DescribeTaskStatus](https://www.tencentcloud.com/search/?wd=DescribeTaskStatus&type=document&lang=en)
+* Read: [DescribeGatewayLoadBalancers](https://www.tencentcloud.com/search/?wd=DescribeGatewayLoadBalancers&type=document&lang=en)
+* Update: [ModifyGatewayLoadBalancerAttribute](https://www.tencentcloud.com/search/?wd=ModifyGatewayLoadBalancerAttribute&type=document&lang=en)
+* Delete: [DeleteGatewayLoadBalancer](https://www.tencentcloud.com/search/?wd=DeleteGatewayLoadBalancer&type=document&lang=en)
+* Delete: [DescribeTaskStatus](https://www.tencentcloud.com/search/?wd=DescribeTaskStatus&type=document&lang=en)
 
 ## Import
 

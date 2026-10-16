@@ -78,10 +78,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindPrometheusManagedGrafana](https://cloud.tencent.com/document/api/248/76020)
-* Read: [DescribePrometheusInstances](https://cloud.tencent.com/document/api/248/66097)
-* Delete: [DescribePrometheusInstances](https://cloud.tencent.com/document/api/248/66097)
-* Delete: [UnbindPrometheusManagedGrafana](https://cloud.tencent.com/document/api/248/76007)
+* Create: [BindPrometheusManagedGrafana](https://www.tencentcloud.com/document/api/248/48768)
+* Read: [DescribePrometheusInstances](https://www.tencentcloud.com/document/api/248/48753)
+* Delete: [DescribePrometheusInstances](https://www.tencentcloud.com/document/api/248/48753)
+* Delete: [UnbindPrometheusManagedGrafana](https://www.tencentcloud.com/document/api/248/48745)
 
 ## Import
 

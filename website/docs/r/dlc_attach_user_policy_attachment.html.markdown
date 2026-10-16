@@ -111,10 +111,10 @@ The `policy_set` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachUserPolicy](https://cloud.tencent.com/document/api/1342/58468)
-* Create: [DescribeUserInfo](https://cloud.tencent.com/document/api/1342/99262)
-* Read: [DescribeUserInfo](https://cloud.tencent.com/document/api/1342/99262)
-* Delete: [DetachUserPolicy](https://cloud.tencent.com/document/api/1342/58458)
+* Create: [AttachUserPolicy](https://www.tencentcloud.com/search/?wd=AttachUserPolicy&type=document&lang=en)
+* Create: [DescribeUserInfo](https://www.tencentcloud.com/search/?wd=DescribeUserInfo&type=document&lang=en)
+* Read: [DescribeUserInfo](https://www.tencentcloud.com/search/?wd=DescribeUserInfo&type=document&lang=en)
+* Delete: [DetachUserPolicy](https://www.tencentcloud.com/search/?wd=DetachUserPolicy&type=document&lang=en)
 
 ## Import
 

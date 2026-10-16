@@ -78,10 +78,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLivePullStreamTask](https://cloud.tencent.com/document/api/267/56245)
-* Read: [DescribeLivePullStreamTasks](https://cloud.tencent.com/document/api/267/56243)
-* Update: [ModifyLivePullStreamTask](https://cloud.tencent.com/document/api/267/56242)
-* Delete: [DeleteLivePullStreamTask](https://cloud.tencent.com/document/api/267/56244)
+* Create: [CreateLivePullStreamTask](https://www.tencentcloud.com/document/api/267/48357)
+* Read: [DescribeLivePullStreamTasks](https://www.tencentcloud.com/document/api/267/48355)
+* Update: [ModifyLivePullStreamTask](https://www.tencentcloud.com/document/api/267/48354)
+* Delete: [DeleteLivePullStreamTask](https://www.tencentcloud.com/document/api/267/48356)
 
 ## Import
 

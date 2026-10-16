@@ -31,5 +31,5 @@ The following arguments are supported:
 
 This action invokes the following TencentCloud APIs:
 
-* Invoke: [InitializeTCLake](https://cloud.tencent.com/document/api/1342/131533)
+* Invoke: [InitializeTCLake](https://www.tencentcloud.com/search/?wd=InitializeTCLake&type=document&lang=en)
 

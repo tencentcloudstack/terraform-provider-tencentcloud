@@ -75,13 +75,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrivateZoneRecord](https://cloud.tencent.com/document/api/1338/55945)
-* Create: [DescribeRecord](https://cloud.tencent.com/document/api/1338/118984)
-* Create: [ModifyRecordsStatus](https://cloud.tencent.com/document/api/1338/81950)
-* Read: [DescribeRecord](https://cloud.tencent.com/document/api/1338/118984)
-* Update: [ModifyPrivateZoneRecord](https://cloud.tencent.com/document/api/1338/55934)
-* Update: [ModifyRecordsStatus](https://cloud.tencent.com/document/api/1338/81950)
-* Delete: [DeletePrivateZoneRecord](https://cloud.tencent.com/document/api/1338/55943)
+* Create: [CreatePrivateZoneRecord](https://www.tencentcloud.com/search/?wd=CreatePrivateZoneRecord&type=document&lang=en)
+* Create: [DescribeRecord](https://www.tencentcloud.com/search/?wd=DescribeRecord&type=document&lang=en)
+* Create: [ModifyRecordsStatus](https://www.tencentcloud.com/search/?wd=ModifyRecordsStatus&type=document&lang=en)
+* Read: [DescribeRecord](https://www.tencentcloud.com/search/?wd=DescribeRecord&type=document&lang=en)
+* Update: [ModifyPrivateZoneRecord](https://www.tencentcloud.com/search/?wd=ModifyPrivateZoneRecord&type=document&lang=en)
+* Update: [ModifyRecordsStatus](https://www.tencentcloud.com/search/?wd=ModifyRecordsStatus&type=document&lang=en)
+* Delete: [DeletePrivateZoneRecord](https://www.tencentcloud.com/search/?wd=DeletePrivateZoneRecord&type=document&lang=en)
 
 ## Import
 

@@ -70,11 +70,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEnvironment](https://cloud.tencent.com/document/api/1179/46081)
-* Read: [DescribeEnvironments](https://cloud.tencent.com/document/api/1179/46078)
-* Update: [ModifyEnvironmentAttributes](https://cloud.tencent.com/document/api/1179/46077)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeleteEnvironments](https://cloud.tencent.com/document/api/1179/46080)
+* Create: [CreateEnvironment](https://www.tencentcloud.com/search/?wd=CreateEnvironment&type=document&lang=en)
+* Read: [DescribeEnvironments](https://www.tencentcloud.com/search/?wd=DescribeEnvironments&type=document&lang=en)
+* Update: [ModifyEnvironmentAttributes](https://www.tencentcloud.com/search/?wd=ModifyEnvironmentAttributes&type=document&lang=en)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteEnvironments](https://www.tencentcloud.com/search/?wd=DeleteEnvironments&type=document&lang=en)
 
 ## Import
 

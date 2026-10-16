@@ -212,12 +212,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddCustomRule](https://cloud.tencent.com/document/api/627/53608)
-* Create: [ModifyCustomRuleStatus](https://cloud.tencent.com/document/api/627/53599)
-* Read: [DescribeCustomRuleList](https://cloud.tencent.com/document/api/627/97443)
-* Update: [ModifyCustomRule](https://cloud.tencent.com/document/api/627/97442)
-* Update: [ModifyCustomRuleStatus](https://cloud.tencent.com/document/api/627/53599)
-* Delete: [DeleteCustomRule](https://cloud.tencent.com/document/api/627/97444)
+* Create: [AddCustomRule](https://www.tencentcloud.com/document/api/627/64553)
+* Create: [ModifyCustomRuleStatus](https://www.tencentcloud.com/document/api/627/64512)
+* Read: [DescribeCustomRuleList](https://www.tencentcloud.com/document/api/627/64523)
+* Update: [ModifyCustomRule](https://www.tencentcloud.com/document/api/627/64513)
+* Update: [ModifyCustomRuleStatus](https://www.tencentcloud.com/document/api/627/64512)
+* Delete: [DeleteCustomRule](https://www.tencentcloud.com/document/api/627/64550)
 
 ## Import
 

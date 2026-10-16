@@ -74,12 +74,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601)
-* Create: [ModifyConnectionConfig](https://cloud.tencent.com/document/api/239/49639)
-* Read: [DescribeBandwidthRange](https://cloud.tencent.com/document/api/239/90100)
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/239/20018)
-* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601)
-* Update: [ModifyConnectionConfig](https://cloud.tencent.com/document/api/239/49639)
+* Create: [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+* Create: [ModifyConnectionConfig](https://www.tencentcloud.com/document/api/239/59981)
+* Read: [DescribeBandwidthRange](https://www.tencentcloud.com/document/api/239/54675)
+* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/239/32065)
+* Update: [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+* Update: [ModifyConnectionConfig](https://www.tencentcloud.com/document/api/239/59981)
 
 ## Import
 

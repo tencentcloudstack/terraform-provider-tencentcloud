@@ -170,7 +170,7 @@ Default value: 0.
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/409/18109)
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/409/16773)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
+* Read: [DescribeAccounts](https://www.tencentcloud.com/document/api/409/18109)
+* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/api/409/16773)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
 

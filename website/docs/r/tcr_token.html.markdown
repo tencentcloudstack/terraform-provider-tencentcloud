@@ -53,12 +53,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstanceToken](https://cloud.tencent.com/document/api/1141/41571)
-* Create: [ModifyInstanceToken](https://cloud.tencent.com/document/api/1141/42910)
-* Read: [DescribeInstanceToken](https://cloud.tencent.com/document/api/1141/42911)
-* Update: [ModifyInstanceToken](https://cloud.tencent.com/document/api/1141/42910)
-* Delete: [DeleteInstanceToken](https://cloud.tencent.com/document/api/1141/42912)
-* Delete: [DescribeInstanceToken](https://cloud.tencent.com/document/api/1141/42911)
+* Create: [CreateInstanceToken](https://www.tencentcloud.com/search/?wd=CreateInstanceToken&type=document&lang=en)
+* Create: [ModifyInstanceToken](https://www.tencentcloud.com/search/?wd=ModifyInstanceToken&type=document&lang=en)
+* Read: [DescribeInstanceToken](https://www.tencentcloud.com/search/?wd=DescribeInstanceToken&type=document&lang=en)
+* Update: [ModifyInstanceToken](https://www.tencentcloud.com/search/?wd=ModifyInstanceToken&type=document&lang=en)
+* Delete: [DeleteInstanceToken](https://www.tencentcloud.com/search/?wd=DeleteInstanceToken&type=document&lang=en)
+* Delete: [DescribeInstanceToken](https://www.tencentcloud.com/search/?wd=DescribeInstanceToken&type=document&lang=en)
 
 ## Import
 

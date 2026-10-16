@@ -67,11 +67,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDnsRecord](https://cloud.tencent.com/document/api/1552/80720)
-* Read: [DescribeDnsRecords](https://cloud.tencent.com/document/api/1552/80716)
-* Update: [ModifyDnsRecords](https://cloud.tencent.com/document/api/1552/114252)
-* Update: [ModifyDnsRecordsStatus](https://cloud.tencent.com/document/api/1552/114251)
-* Delete: [DeleteDnsRecords](https://cloud.tencent.com/document/api/1552/80718)
+* Create: [CreateDnsRecord](https://www.tencentcloud.com/search/?wd=CreateDnsRecord&type=document&lang=en)
+* Read: [DescribeDnsRecords](https://www.tencentcloud.com/search/?wd=DescribeDnsRecords&type=document&lang=en)
+* Update: [ModifyDnsRecords](https://www.tencentcloud.com/search/?wd=ModifyDnsRecords&type=document&lang=en)
+* Update: [ModifyDnsRecordsStatus](https://www.tencentcloud.com/search/?wd=ModifyDnsRecordsStatus&type=document&lang=en)
+* Delete: [DeleteDnsRecords](https://www.tencentcloud.com/search/?wd=DeleteDnsRecords&type=document&lang=en)
 
 ## Import
 

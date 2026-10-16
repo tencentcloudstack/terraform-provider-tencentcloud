@@ -96,17 +96,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindListenerRealServers](https://cloud.tencent.com/document/api/608/37008)
-* Create: [CreateTCPListeners](https://cloud.tencent.com/document/api/608/37005)
-* Create: [CreateUDPListeners](https://cloud.tencent.com/document/api/608/37004)
-* Read: [DescribeTCPListeners](https://cloud.tencent.com/document/api/608/36999)
-* Read: [DescribeUDPListeners](https://cloud.tencent.com/document/api/608/36998)
-* Update: [BindListenerRealServers](https://cloud.tencent.com/document/api/608/37008)
-* Update: [ModifyTCPListenerAttribute](https://cloud.tencent.com/document/api/608/36995)
-* Update: [ModifyUDPListenerAttribute](https://cloud.tencent.com/document/api/608/36994)
-* Delete: [DeleteListeners](https://cloud.tencent.com/document/api/608/37003)
-* Delete: [DescribeTCPListeners](https://cloud.tencent.com/document/api/608/36999)
-* Delete: [DescribeUDPListeners](https://cloud.tencent.com/document/api/608/36998)
+* Create: [BindListenerRealServers](https://www.tencentcloud.com/document/api/608/33077)
+* Create: [CreateTCPListeners](https://www.tencentcloud.com/document/api/608/33074)
+* Create: [CreateUDPListeners](https://www.tencentcloud.com/document/api/608/33073)
+* Read: [DescribeTCPListeners](https://www.tencentcloud.com/document/api/608/33068)
+* Read: [DescribeUDPListeners](https://www.tencentcloud.com/document/api/608/33067)
+* Update: [BindListenerRealServers](https://www.tencentcloud.com/document/api/608/33077)
+* Update: [ModifyTCPListenerAttribute](https://www.tencentcloud.com/document/api/608/33064)
+* Update: [ModifyUDPListenerAttribute](https://www.tencentcloud.com/document/api/608/33063)
+* Delete: [DeleteListeners](https://www.tencentcloud.com/document/api/608/33072)
+* Delete: [DescribeTCPListeners](https://www.tencentcloud.com/document/api/608/33068)
+* Delete: [DescribeUDPListeners](https://www.tencentcloud.com/document/api/608/33067)
 
 ## Import
 

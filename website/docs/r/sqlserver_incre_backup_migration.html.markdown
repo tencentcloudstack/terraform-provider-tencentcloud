@@ -42,10 +42,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateIncrementalMigration](https://cloud.tencent.com/document/api/238/53192)
-* Read: [DescribeIncrementalMigration](https://cloud.tencent.com/document/api/238/53186)
-* Update: [ModifyIncrementalMigration](https://cloud.tencent.com/document/api/238/53182)
-* Delete: [DeleteIncrementalMigration](https://cloud.tencent.com/document/api/238/53190)
+* Create: [CreateIncrementalMigration](https://www.tencentcloud.com/document/api/238/39842)
+* Read: [DescribeIncrementalMigration](https://www.tencentcloud.com/document/api/238/39836)
+* Update: [ModifyIncrementalMigration](https://www.tencentcloud.com/document/api/238/39833)
+* Delete: [DeleteIncrementalMigration](https://www.tencentcloud.com/document/api/238/39840)
 
 ## Import
 

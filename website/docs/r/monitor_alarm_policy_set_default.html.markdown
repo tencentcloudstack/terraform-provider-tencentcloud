@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SetDefaultAlarmPolicy](https://cloud.tencent.com/document/api/248/51271)
+* Create: [SetDefaultAlarmPolicy](https://www.tencentcloud.com/document/api/248/39312)
 

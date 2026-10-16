@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [OpenBackUp](https://cloud.tencent.com/document/api/1299/83421)
-* Read: [DescribeBackUpSchedule](https://cloud.tencent.com/document/api/1299/86155)
-* Delete: [OpenBackUp](https://cloud.tencent.com/document/api/1299/83421)
+* Create: [OpenBackUp](https://www.tencentcloud.com/search/?wd=OpenBackUp&type=document&lang=en)
+* Read: [DescribeBackUpSchedule](https://www.tencentcloud.com/search/?wd=DescribeBackUpSchedule&type=document&lang=en)
+* Delete: [OpenBackUp](https://www.tencentcloud.com/search/?wd=OpenBackUp&type=document&lang=en)
 
 ## Import
 

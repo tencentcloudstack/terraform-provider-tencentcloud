@@ -111,6 +111,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735)
-* Create: [StartAutoScalingInstances](https://cloud.tencent.com/document/api/377/40287)
+* Create: [DescribeAutoScalingActivities](https://www.tencentcloud.com/document/api/377/31014)
+* Create: [StartAutoScalingInstances](https://www.tencentcloud.com/document/api/377/37502)
 

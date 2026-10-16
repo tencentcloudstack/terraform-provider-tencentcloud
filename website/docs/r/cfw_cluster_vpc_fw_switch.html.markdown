@@ -171,15 +171,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeClusterVpcFwSwitchs](https://cloud.tencent.com/document/api/1132/127064)
-* Create: [DescribeSwitchError](https://cloud.tencent.com/document/api/1132/127053)
-* Create: [ModifyClusterVpcFwSwitch](https://cloud.tencent.com/document/api/1132/127061)
-* Read: [DescribeCcnVpcFwSwitch](https://cloud.tencent.com/document/api/1132/127058)
-* Read: [DescribeClusterVpcFwSwitchs](https://cloud.tencent.com/document/api/1132/127064)
-* Update: [DescribeClusterVpcFwSwitchs](https://cloud.tencent.com/document/api/1132/127064)
-* Update: [DescribeSwitchError](https://cloud.tencent.com/document/api/1132/127053)
-* Update: [UpdateClusterVpcFw](https://cloud.tencent.com/document/api/1132/127055)
-* Delete: [DescribeClusterVpcFwSwitchs](https://cloud.tencent.com/document/api/1132/127064)
-* Delete: [DescribeSwitchError](https://cloud.tencent.com/document/api/1132/127053)
-* Delete: [ModifyClusterVpcFwSwitch](https://cloud.tencent.com/document/api/1132/127061)
+* Create: [DescribeClusterVpcFwSwitchs](https://www.tencentcloud.com/search/?wd=DescribeClusterVpcFwSwitchs&type=document&lang=en)
+* Create: [DescribeSwitchError](https://www.tencentcloud.com/search/?wd=DescribeSwitchError&type=document&lang=en)
+* Create: [ModifyClusterVpcFwSwitch](https://www.tencentcloud.com/search/?wd=ModifyClusterVpcFwSwitch&type=document&lang=en)
+* Read: [DescribeCcnVpcFwSwitch](https://www.tencentcloud.com/search/?wd=DescribeCcnVpcFwSwitch&type=document&lang=en)
+* Read: [DescribeClusterVpcFwSwitchs](https://www.tencentcloud.com/search/?wd=DescribeClusterVpcFwSwitchs&type=document&lang=en)
+* Update: [DescribeClusterVpcFwSwitchs](https://www.tencentcloud.com/search/?wd=DescribeClusterVpcFwSwitchs&type=document&lang=en)
+* Update: [DescribeSwitchError](https://www.tencentcloud.com/search/?wd=DescribeSwitchError&type=document&lang=en)
+* Update: [UpdateClusterVpcFw](https://www.tencentcloud.com/search/?wd=UpdateClusterVpcFw&type=document&lang=en)
+* Delete: [DescribeClusterVpcFwSwitchs](https://www.tencentcloud.com/search/?wd=DescribeClusterVpcFwSwitchs&type=document&lang=en)
+* Delete: [DescribeSwitchError](https://www.tencentcloud.com/search/?wd=DescribeSwitchError&type=document&lang=en)
+* Delete: [ModifyClusterVpcFwSwitch](https://www.tencentcloud.com/search/?wd=ModifyClusterVpcFwSwitch&type=document&lang=en)
 

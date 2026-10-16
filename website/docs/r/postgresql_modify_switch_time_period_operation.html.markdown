@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifySwitchTimePeriod](https://cloud.tencent.com/document/api/409/59030)
+* Create: [ModifySwitchTimePeriod](https://www.tencentcloud.com/document/api/409/41612)
 

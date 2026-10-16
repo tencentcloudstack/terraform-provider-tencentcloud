@@ -62,10 +62,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyFunctionComponentBindings](https://cloud.tencent.com/document/api/1552/130179)
-* Read: [DescribeFunctionComponentBindings](https://cloud.tencent.com/document/api/1552/130180)
-* Update: [ModifyFunctionComponentBindings](https://cloud.tencent.com/document/api/1552/130179)
-* Delete: [ModifyFunctionComponentBindings](https://cloud.tencent.com/document/api/1552/130179)
+* Create: [ModifyFunctionComponentBindings](https://www.tencentcloud.com/search/?wd=ModifyFunctionComponentBindings&type=document&lang=en)
+* Read: [DescribeFunctionComponentBindings](https://www.tencentcloud.com/search/?wd=DescribeFunctionComponentBindings&type=document&lang=en)
+* Update: [ModifyFunctionComponentBindings](https://www.tencentcloud.com/search/?wd=ModifyFunctionComponentBindings&type=document&lang=en)
+* Delete: [ModifyFunctionComponentBindings](https://www.tencentcloud.com/search/?wd=ModifyFunctionComponentBindings&type=document&lang=en)
 
 ## Import
 

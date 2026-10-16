@@ -67,5 +67,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribePrivateZoneRecordList](https://cloud.tencent.com/document/api/1338/55938)
+* Read: [DescribePrivateZoneRecordList](https://www.tencentcloud.com/search/?wd=DescribePrivateZoneRecordList&type=document&lang=en)
 

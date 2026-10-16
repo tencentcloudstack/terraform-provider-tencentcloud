@@ -86,9 +86,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAlertChannel](https://cloud.tencent.com/document/api/1484/78095)
-* Read: [DescribeAlertChannels](https://cloud.tencent.com/document/api/1484/78084)
-* Delete: [DeleteAlertChannel](https://cloud.tencent.com/document/api/1484/78090)
+* Create: [CreateAlertChannel](https://www.tencentcloud.com/search/?wd=CreateAlertChannel&type=document&lang=en)
+* Read: [DescribeAlertChannels](https://www.tencentcloud.com/search/?wd=DescribeAlertChannels&type=document&lang=en)
+* Delete: [DeleteAlertChannel](https://www.tencentcloud.com/search/?wd=DeleteAlertChannel&type=document&lang=en)
 
 ## Import
 

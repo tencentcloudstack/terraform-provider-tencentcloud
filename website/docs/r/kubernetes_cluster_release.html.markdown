@@ -74,11 +74,11 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateClusterRelease](https://cloud.tencent.com/document/api/457/83554)
-* Create: [DescribeClusterPendingReleases](https://cloud.tencent.com/document/api/457/83758)
-* Create: [DescribeClusterReleaseDetails](https://cloud.tencent.com/document/api/457/83757)
-* Read: [DescribeClusterReleaseDetails](https://cloud.tencent.com/document/api/457/83757)
-* Update: [DescribeClusterReleases](https://cloud.tencent.com/document/api/457/83755)
-* Update: [UpgradeClusterRelease](https://cloud.tencent.com/document/api/457/83752)
-* Delete: [UninstallClusterRelease](https://cloud.tencent.com/document/api/457/83753)
+* Create: [CreateClusterRelease](https://www.tencentcloud.com/search/?wd=CreateClusterRelease&type=document&lang=en)
+* Create: [DescribeClusterPendingReleases](https://www.tencentcloud.com/search/?wd=DescribeClusterPendingReleases&type=document&lang=en)
+* Create: [DescribeClusterReleaseDetails](https://www.tencentcloud.com/search/?wd=DescribeClusterReleaseDetails&type=document&lang=en)
+* Read: [DescribeClusterReleaseDetails](https://www.tencentcloud.com/search/?wd=DescribeClusterReleaseDetails&type=document&lang=en)
+* Update: [DescribeClusterReleases](https://www.tencentcloud.com/search/?wd=DescribeClusterReleases&type=document&lang=en)
+* Update: [UpgradeClusterRelease](https://www.tencentcloud.com/search/?wd=UpgradeClusterRelease&type=document&lang=en)
+* Delete: [UninstallClusterRelease](https://www.tencentcloud.com/search/?wd=UninstallClusterRelease&type=document&lang=en)
 

@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribePendingRiskInfo](https://cloud.tencent.com/document/api/297/95351)
+* Read: [DescribePendingRiskInfo](https://www.tencentcloud.com/search/?wd=DescribePendingRiskInfo&type=document&lang=en)
 

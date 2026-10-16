@@ -172,11 +172,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeTasks](https://cloud.tencent.com/document/api/457/125020)
-* Create: [ModifyClusterSchedulerPolicy](https://cloud.tencent.com/document/api/457/130333)
-* Read: [DescribeClusterSchedulerPolicy](https://cloud.tencent.com/document/api/457/130334)
-* Update: [DescribeTasks](https://cloud.tencent.com/document/api/457/125020)
-* Update: [ModifyClusterSchedulerPolicy](https://cloud.tencent.com/document/api/457/130333)
+* Create: [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
+* Create: [ModifyClusterSchedulerPolicy](https://www.tencentcloud.com/search/?wd=ModifyClusterSchedulerPolicy&type=document&lang=en)
+* Read: [DescribeClusterSchedulerPolicy](https://www.tencentcloud.com/search/?wd=DescribeClusterSchedulerPolicy&type=document&lang=en)
+* Update: [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
+* Update: [ModifyClusterSchedulerPolicy](https://www.tencentcloud.com/search/?wd=ModifyClusterSchedulerPolicy&type=document&lang=en)
 
 ## Import
 

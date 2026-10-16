@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeProductQuota](https://cloud.tencent.com/document/api/215/49629)
+* Read: [DescribeProductQuota](https://www.tencentcloud.com/search/?wd=DescribeProductQuota&type=document&lang=en)
 

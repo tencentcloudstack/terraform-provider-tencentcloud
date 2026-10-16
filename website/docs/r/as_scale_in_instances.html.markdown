@@ -78,7 +78,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ScaleInInstances](https://cloud.tencent.com/document/api/377/56370)
+* Create: [ScaleInInstances](https://www.tencentcloud.com/document/api/377/40718)
 
 ## Import
 

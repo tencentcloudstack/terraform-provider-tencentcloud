@@ -90,11 +90,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601)
-* Create: [DisableReplicaReadonly](https://cloud.tencent.com/document/api/239/34438)
-* Create: [EnableReplicaReadonly](https://cloud.tencent.com/document/api/239/34437)
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/239/20018)
-* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601)
-* Update: [DisableReplicaReadonly](https://cloud.tencent.com/document/api/239/34438)
-* Update: [EnableReplicaReadonly](https://cloud.tencent.com/document/api/239/34437)
+* Create: [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+* Create: [DisableReplicaReadonly](https://www.tencentcloud.com/document/api/239/32061)
+* Create: [EnableReplicaReadonly](https://www.tencentcloud.com/document/api/239/32060)
+* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/239/32065)
+* Update: [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+* Update: [DisableReplicaReadonly](https://www.tencentcloud.com/document/api/239/32061)
+* Update: [EnableReplicaReadonly](https://www.tencentcloud.com/document/api/239/32060)
 

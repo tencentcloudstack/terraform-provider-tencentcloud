@@ -110,18 +110,18 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrivateZone](https://cloud.tencent.com/document/api/1338/55946)
-* Create: [DescribePrivateZone](https://cloud.tencent.com/document/api/1338/55940)
-* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribePrivateZone](https://cloud.tencent.com/document/api/1338/55940)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [DescribePrivateZone](https://cloud.tencent.com/document/api/1338/55940)
-* Update: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ModifyPrivateZone](https://cloud.tencent.com/document/api/1338/55935)
-* Update: [ModifyPrivateZoneVpc](https://cloud.tencent.com/document/api/1338/55933)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeletePrivateZone](https://cloud.tencent.com/document/api/1338/55944)
+* Create: [CreatePrivateZone](https://www.tencentcloud.com/search/?wd=CreatePrivateZone&type=document&lang=en)
+* Create: [DescribePrivateZone](https://www.tencentcloud.com/search/?wd=DescribePrivateZone&type=document&lang=en)
+* Create: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribePrivateZone](https://www.tencentcloud.com/search/?wd=DescribePrivateZone&type=document&lang=en)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [DescribePrivateZone](https://www.tencentcloud.com/search/?wd=DescribePrivateZone&type=document&lang=en)
+* Update: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyPrivateZone](https://www.tencentcloud.com/search/?wd=ModifyPrivateZone&type=document&lang=en)
+* Update: [ModifyPrivateZoneVpc](https://www.tencentcloud.com/search/?wd=ModifyPrivateZoneVpc&type=document&lang=en)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeletePrivateZone](https://www.tencentcloud.com/search/?wd=DeletePrivateZone&type=document&lang=en)
 
 ## Import
 

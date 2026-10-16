@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetMetaTable](https://cloud.tencent.com/document/api/849/102773)
+* Read: [GetMetaTable](https://www.tencentcloud.com/search/?wd=GetMetaTable&type=document&lang=en)
 

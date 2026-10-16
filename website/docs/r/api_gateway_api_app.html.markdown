@@ -58,13 +58,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateApiApp](https://cloud.tencent.com/document/api/628/58638)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeApiAppsStatus](https://cloud.tencent.com/document/api/628/58634)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ModifyApiApp](https://cloud.tencent.com/document/api/628/58631)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeleteApiApp](https://cloud.tencent.com/document/api/628/58637)
+* Create: [CreateApiApp](https://www.tencentcloud.com/search/?wd=CreateApiApp&type=document&lang=en)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeApiAppsStatus](https://www.tencentcloud.com/search/?wd=DescribeApiAppsStatus&type=document&lang=en)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyApiApp](https://www.tencentcloud.com/search/?wd=ModifyApiApp&type=document&lang=en)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteApiApp](https://www.tencentcloud.com/search/?wd=DeleteApiApp&type=document&lang=en)
 
 ## Import
 

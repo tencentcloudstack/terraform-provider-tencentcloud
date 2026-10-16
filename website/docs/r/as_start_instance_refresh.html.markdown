@@ -71,6 +71,6 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeRefreshActivities](https://cloud.tencent.com/document/api/377/99175)
-* Create: [StartInstanceRefresh](https://cloud.tencent.com/document/api/377/99172)
+* Create: [DescribeRefreshActivities](https://www.tencentcloud.com/document/api/377/59082)
+* Create: [StartInstanceRefresh](https://www.tencentcloud.com/document/api/377/59079)
 

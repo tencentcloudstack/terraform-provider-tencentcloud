@@ -46,14 +46,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEnvironment](https://cloud.tencent.com/document/api/1371/60150)
-* Create: [DescribeEnvironmentStatus](https://cloud.tencent.com/document/api/1371/78168)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeEnvironment](https://cloud.tencent.com/document/api/1371/78842)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ModifyEnvironment](https://cloud.tencent.com/document/api/1371/60148)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DestroyEnvironment](https://cloud.tencent.com/document/api/1371/77632)
+* Create: [CreateEnvironment](https://www.tencentcloud.com/search/?wd=CreateEnvironment&type=document&lang=en)
+* Create: [DescribeEnvironmentStatus](https://www.tencentcloud.com/search/?wd=DescribeEnvironmentStatus&type=document&lang=en)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeEnvironment](https://www.tencentcloud.com/search/?wd=DescribeEnvironment&type=document&lang=en)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyEnvironment](https://www.tencentcloud.com/search/?wd=ModifyEnvironment&type=document&lang=en)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DestroyEnvironment](https://www.tencentcloud.com/search/?wd=DestroyEnvironment&type=document&lang=en)
 
 ## Import
 

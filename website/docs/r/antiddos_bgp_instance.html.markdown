@@ -140,8 +140,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBgpInstance](https://cloud.tencent.com/document/api/297/126515)
-* Read: [DescribeBgpInstances](https://cloud.tencent.com/document/api/297/126514)
+* Create: [CreateBgpInstance](https://www.tencentcloud.com/search/?wd=CreateBgpInstance&type=document&lang=en)
+* Read: [DescribeBgpInstances](https://www.tencentcloud.com/search/?wd=DescribeBgpInstances&type=document&lang=en)
 
 ## Import
 

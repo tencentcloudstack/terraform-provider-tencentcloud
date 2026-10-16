@@ -232,12 +232,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateIndex](https://cloud.tencent.com/document/api/614/56445)
-* Create: [DescribeIndex](https://cloud.tencent.com/document/api/614/56443)
-* Read: [DescribeIndex](https://cloud.tencent.com/document/api/614/56443)
-* Update: [DescribeIndex](https://cloud.tencent.com/document/api/614/56443)
-* Update: [ModifyIndex](https://cloud.tencent.com/document/api/614/56442)
-* Delete: [DeleteIndex](https://cloud.tencent.com/document/api/614/56444)
+* Create: [CreateIndex](https://www.tencentcloud.com/document/api/614/42805)
+* Create: [DescribeIndex](https://www.tencentcloud.com/document/api/614/42803)
+* Read: [DescribeIndex](https://www.tencentcloud.com/document/api/614/42803)
+* Update: [DescribeIndex](https://www.tencentcloud.com/document/api/614/42803)
+* Update: [ModifyIndex](https://www.tencentcloud.com/document/api/614/42802)
+* Delete: [DeleteIndex](https://www.tencentcloud.com/document/api/614/42804)
 
 ## Import
 

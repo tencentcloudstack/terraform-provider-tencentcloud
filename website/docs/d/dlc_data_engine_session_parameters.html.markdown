@@ -37,5 +37,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDataEngineSessionParameters](https://cloud.tencent.com/document/api/1342/122141)
+* Read: [DescribeDataEngineSessionParameters](https://www.tencentcloud.com/search/?wd=DescribeDataEngineSessionParameters&type=document&lang=en)
 

@@ -95,10 +95,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateScheduledAction](https://cloud.tencent.com/document/api/377/20452)
-* Read: [DescribeScheduledActions](https://cloud.tencent.com/document/api/377/20450)
-* Update: [ModifyScheduledAction](https://cloud.tencent.com/document/api/377/20449)
-* Delete: [DeleteScheduledAction](https://cloud.tencent.com/document/api/377/20451)
+* Create: [CreateScheduledAction](https://www.tencentcloud.com/document/api/377/30996)
+* Read: [DescribeScheduledActions](https://www.tencentcloud.com/document/api/377/30994)
+* Update: [ModifyScheduledAction](https://www.tencentcloud.com/document/api/377/30993)
+* Delete: [DeleteScheduledAction](https://www.tencentcloud.com/document/api/377/30995)
 
 ## Import
 

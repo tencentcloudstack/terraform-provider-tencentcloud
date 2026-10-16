@@ -40,12 +40,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindSharedCNAME](https://cloud.tencent.com/document/api/1552/101363)
-* Create: [DescribeSharedCNAME](https://cloud.tencent.com/document/api/1552/130048)
-* Read: [DescribeSharedCNAME](https://cloud.tencent.com/document/api/1552/130048)
-* Update: [BindSharedCNAME](https://cloud.tencent.com/document/api/1552/101363)
-* Update: [DescribeSharedCNAME](https://cloud.tencent.com/document/api/1552/130048)
-* Delete: [BindSharedCNAME](https://cloud.tencent.com/document/api/1552/101363)
+* Create: [BindSharedCNAME](https://www.tencentcloud.com/search/?wd=BindSharedCNAME&type=document&lang=en)
+* Create: [DescribeSharedCNAME](https://www.tencentcloud.com/search/?wd=DescribeSharedCNAME&type=document&lang=en)
+* Read: [DescribeSharedCNAME](https://www.tencentcloud.com/search/?wd=DescribeSharedCNAME&type=document&lang=en)
+* Update: [BindSharedCNAME](https://www.tencentcloud.com/search/?wd=BindSharedCNAME&type=document&lang=en)
+* Update: [DescribeSharedCNAME](https://www.tencentcloud.com/search/?wd=DescribeSharedCNAME&type=document&lang=en)
+* Delete: [BindSharedCNAME](https://www.tencentcloud.com/search/?wd=BindSharedCNAME&type=document&lang=en)
 
 ## Import
 

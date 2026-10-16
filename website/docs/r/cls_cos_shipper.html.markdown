@@ -181,10 +181,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateShipper](https://cloud.tencent.com/document/api/614/58747)
-* Read: [DescribeShippers](https://cloud.tencent.com/document/api/614/58744)
-* Update: [ModifyShipper](https://cloud.tencent.com/document/api/614/58743)
-* Delete: [DeleteShipper](https://cloud.tencent.com/document/api/614/58746)
+* Create: [CreateShipper](https://www.tencentcloud.com/document/api/614/42775)
+* Read: [DescribeShippers](https://www.tencentcloud.com/document/api/614/42772)
+* Update: [ModifyShipper](https://www.tencentcloud.com/document/api/614/42771)
+* Delete: [DeleteShipper](https://www.tencentcloud.com/document/api/614/42774)
 
 ## Import
 

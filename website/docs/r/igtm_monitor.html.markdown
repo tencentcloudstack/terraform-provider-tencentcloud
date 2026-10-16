@@ -67,10 +67,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateMonitor](https://cloud.tencent.com/document/api/1551/120449)
-* Read: [DescribeMonitorDetail](https://cloud.tencent.com/document/api/1551/120447)
-* Update: [ModifyMonitor](https://cloud.tencent.com/document/api/1551/120445)
-* Delete: [DeleteMonitor](https://cloud.tencent.com/document/api/1551/120448)
+* Create: [CreateMonitor](https://www.tencentcloud.com/search/?wd=CreateMonitor&type=document&lang=en)
+* Read: [DescribeMonitorDetail](https://www.tencentcloud.com/search/?wd=DescribeMonitorDetail&type=document&lang=en)
+* Update: [ModifyMonitor](https://www.tencentcloud.com/search/?wd=ModifyMonitor&type=document&lang=en)
+* Delete: [DeleteMonitor](https://www.tencentcloud.com/search/?wd=DeleteMonitor&type=document&lang=en)
 
 ## Import
 

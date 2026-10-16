@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [OverwriteWhiteBoxDeviceFingerprints](https://cloud.tencent.com/document/api/573/45805)
+* Create: [OverwriteWhiteBoxDeviceFingerprints](https://www.tencentcloud.com/search/?wd=OverwriteWhiteBoxDeviceFingerprints&type=document&lang=en)
 

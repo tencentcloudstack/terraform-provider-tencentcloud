@@ -71,9 +71,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateFile](https://cloud.tencent.com/document/api/1484/78093)
-* Read: [DescribeFiles](https://cloud.tencent.com/document/api/1484/78079)
-* Delete: [DeleteFiles](https://cloud.tencent.com/document/api/1484/78088)
+* Create: [CreateFile](https://www.tencentcloud.com/search/?wd=CreateFile&type=document&lang=en)
+* Read: [DescribeFiles](https://www.tencentcloud.com/search/?wd=DescribeFiles&type=document&lang=en)
+* Delete: [DeleteFiles](https://www.tencentcloud.com/search/?wd=DeleteFiles&type=document&lang=en)
 
 ## Import
 

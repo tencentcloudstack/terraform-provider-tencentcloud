@@ -230,9 +230,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstanceCopyPair](https://cloud.tencent.com/document/api/1824/136779)
-* Create: [DescribeCopyPairs](https://cloud.tencent.com/document/api/1824/136770)
-* Read: [DescribeCopyPairs](https://cloud.tencent.com/document/api/1824/136770)
-* Update: [ModifyCopyPairAttribute](https://cloud.tencent.com/document/api/1824/136754)
-* Delete: [DeleteCopyPairs](https://cloud.tencent.com/document/api/1824/136776)
+* Create: [CreateInstanceCopyPair](https://www.tencentcloud.com/search/?wd=CreateInstanceCopyPair&type=document&lang=en)
+* Create: [DescribeCopyPairs](https://www.tencentcloud.com/search/?wd=DescribeCopyPairs&type=document&lang=en)
+* Read: [DescribeCopyPairs](https://www.tencentcloud.com/search/?wd=DescribeCopyPairs&type=document&lang=en)
+* Update: [ModifyCopyPairAttribute](https://www.tencentcloud.com/search/?wd=ModifyCopyPairAttribute&type=document&lang=en)
+* Delete: [DeleteCopyPairs](https://www.tencentcloud.com/search/?wd=DeleteCopyPairs&type=document&lang=en)
 

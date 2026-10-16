@@ -89,13 +89,13 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79555)
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
-* Read: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086)
-* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
-* Update: [ModifyClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79554)
-* Delete: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162)
-* Delete: [RemoveClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79553)
+* Create: [AddClusterSlaveZone](https://www.tencentcloud.com/search/?wd=AddClusterSlaveZone&type=document&lang=en)
+* Create: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
+* Read: [DescribeClusterDetail](https://www.tencentcloud.com/search/?wd=DescribeClusterDetail&type=document&lang=en)
+* Update: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
+* Update: [ModifyClusterSlaveZone](https://www.tencentcloud.com/search/?wd=ModifyClusterSlaveZone&type=document&lang=en)
+* Delete: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
+* Delete: [RemoveClusterSlaveZone](https://www.tencentcloud.com/search/?wd=RemoveClusterSlaveZone&type=document&lang=en)
 
 ## Import
 

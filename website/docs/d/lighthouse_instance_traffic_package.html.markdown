@@ -48,5 +48,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstancesTrafficPackages](https://cloud.tencent.com/document/api/1207/48681)
+* Read: [DescribeInstancesTrafficPackages](https://www.tencentcloud.com/search/?wd=DescribeInstancesTrafficPackages&type=document&lang=en)
 

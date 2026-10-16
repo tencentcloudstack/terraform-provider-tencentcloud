@@ -70,12 +70,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNamespace](https://cloud.tencent.com/document/api/1141/42729)
-* Read: [DescribeNamespaces](https://cloud.tencent.com/document/api/1141/42765)
-* Update: [ModifyNamespace](https://cloud.tencent.com/document/api/1141/42727)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeleteNamespace](https://cloud.tencent.com/document/api/1141/42728)
-* Delete: [DescribeNamespaces](https://cloud.tencent.com/document/api/1141/42765)
+* Create: [CreateNamespace](https://www.tencentcloud.com/search/?wd=CreateNamespace&type=document&lang=en)
+* Read: [DescribeNamespaces](https://www.tencentcloud.com/search/?wd=DescribeNamespaces&type=document&lang=en)
+* Update: [ModifyNamespace](https://www.tencentcloud.com/search/?wd=ModifyNamespace&type=document&lang=en)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteNamespace](https://www.tencentcloud.com/search/?wd=DeleteNamespace&type=document&lang=en)
+* Delete: [DescribeNamespaces](https://www.tencentcloud.com/search/?wd=DescribeNamespaces&type=document&lang=en)
 
 ## Import
 

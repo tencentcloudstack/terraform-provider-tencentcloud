@@ -118,10 +118,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAcl](https://cloud.tencent.com/document/api/1025/74411)
-* Read: [DescribeAcls](https://cloud.tencent.com/document/api/1025/74409)
-* Update: [ModifyAcl](https://cloud.tencent.com/document/api/1025/74408)
-* Delete: [DeleteAcls](https://cloud.tencent.com/document/api/1025/74410)
+* Create: [CreateAcl](https://www.tencentcloud.com/search/?wd=CreateAcl&type=document&lang=en)
+* Read: [DescribeAcls](https://www.tencentcloud.com/search/?wd=DescribeAcls&type=document&lang=en)
+* Update: [ModifyAcl](https://www.tencentcloud.com/search/?wd=ModifyAcl&type=document&lang=en)
+* Delete: [DeleteAcls](https://www.tencentcloud.com/search/?wd=DeleteAcls&type=document&lang=en)
 
 ## Import
 

@@ -48,5 +48,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListOpsTriggerWorkflows](https://cloud.tencent.com/document/api/1267/127215)
+* Read: [ListOpsTriggerWorkflows](https://www.tencentcloud.com/search/?wd=ListOpsTriggerWorkflows&type=document&lang=en)
 

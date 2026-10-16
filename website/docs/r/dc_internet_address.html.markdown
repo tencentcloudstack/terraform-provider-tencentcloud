@@ -40,9 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ApplyInternetAddress](https://cloud.tencent.com/document/api/216/51491)
-* Read: [DescribeInternetAddress](https://cloud.tencent.com/document/api/216/51490)
-* Delete: [ReleaseInternetAddress](https://cloud.tencent.com/document/api/216/51485)
+* Create: [ApplyInternetAddress](https://www.tencentcloud.com/document/api/216/39499)
+* Read: [DescribeInternetAddress](https://www.tencentcloud.com/document/api/216/39498)
+* Delete: [ReleaseInternetAddress](https://www.tencentcloud.com/document/api/216/39493)
 
 ## Import
 

@@ -65,9 +65,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssignIpv6SubnetCidrBlock](https://cloud.tencent.com/document/api/215/34471)
-* Read: [DescribeSubnets](https://cloud.tencent.com/document/api/215/15784)
-* Delete: [UnassignIpv6SubnetCidrBlock](https://cloud.tencent.com/document/api/215/34470)
+* Create: [AssignIpv6SubnetCidrBlock](https://www.tencentcloud.com/document/api/215/34800)
+* Read: [DescribeSubnets](https://www.tencentcloud.com/document/api/215/15784)
+* Delete: [UnassignIpv6SubnetCidrBlock](https://www.tencentcloud.com/document/api/215/34798)
 
 ## Import
 

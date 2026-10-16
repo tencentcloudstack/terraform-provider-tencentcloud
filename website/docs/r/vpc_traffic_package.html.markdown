@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTrafficPackages](https://cloud.tencent.com/document/api/215/85309)
-* Read: [DescribeTrafficPackages](https://cloud.tencent.com/document/api/215/80090)
-* Delete: [DeleteTrafficPackages](https://cloud.tencent.com/document/api/215/91087)
+* Create: [CreateTrafficPackages](https://www.tencentcloud.com/search/?wd=CreateTrafficPackages&type=document&lang=en)
+* Read: [DescribeTrafficPackages](https://www.tencentcloud.com/document/api/215/52740)
+* Delete: [DeleteTrafficPackages](https://www.tencentcloud.com/document/api/215/56576)
 
 ## Import
 

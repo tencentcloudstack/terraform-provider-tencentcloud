@@ -54,9 +54,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateFunctionEventInvokeConfig](https://cloud.tencent.com/document/api/583/53639)
-* Read: [GetFunctionEventInvokeConfig](https://cloud.tencent.com/document/api/583/53640)
-* Update: [UpdateFunctionEventInvokeConfig](https://cloud.tencent.com/document/api/583/53639)
+* Create: [UpdateFunctionEventInvokeConfig](https://www.tencentcloud.com/document/api/583/39920)
+* Read: [GetFunctionEventInvokeConfig](https://www.tencentcloud.com/document/api/583/39921)
+* Update: [UpdateFunctionEventInvokeConfig](https://www.tencentcloud.com/document/api/583/39920)
 
 ## Import
 

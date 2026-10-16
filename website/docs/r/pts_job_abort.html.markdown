@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AbortJob](https://cloud.tencent.com/document/api/1484/78098)
+* Create: [AbortJob](https://www.tencentcloud.com/search/?wd=AbortJob&type=document&lang=en)
 

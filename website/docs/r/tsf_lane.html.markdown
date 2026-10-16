@@ -63,8 +63,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLane](https://cloud.tencent.com/document/api/649/44508)
-* Read: [DescribeLanes](https://cloud.tencent.com/document/api/649/44504)
-* Update: [ModifyLane](https://cloud.tencent.com/document/api/649/44503)
-* Delete: [DeleteLane](https://cloud.tencent.com/document/api/649/44506)
+* Create: [CreateLane](https://www.tencentcloud.com/search/?wd=CreateLane&type=document&lang=en)
+* Read: [DescribeLanes](https://www.tencentcloud.com/search/?wd=DescribeLanes&type=document&lang=en)
+* Update: [ModifyLane](https://www.tencentcloud.com/search/?wd=ModifyLane&type=document&lang=en)
+* Delete: [DeleteLane](https://www.tencentcloud.com/search/?wd=DeleteLane&type=document&lang=en)
 

@@ -37,5 +37,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListResourceTypes](https://cloud.tencent.com/document/api/1579/129698)
+* Read: [ListResourceTypes](https://www.tencentcloud.com/search/?wd=ListResourceTypes&type=document&lang=en)
 

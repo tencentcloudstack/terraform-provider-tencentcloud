@@ -65,10 +65,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRocketMQGroup](https://cloud.tencent.com/document/api/1179/63428)
-* Read: [DescribeRocketMQGroups](https://cloud.tencent.com/document/api/1179/63420)
-* Update: [ModifyRocketMQGroup](https://cloud.tencent.com/document/api/1179/63416)
-* Delete: [DeleteRocketMQGroup](https://cloud.tencent.com/document/api/1179/63424)
+* Create: [CreateRocketMQGroup](https://www.tencentcloud.com/search/?wd=CreateRocketMQGroup&type=document&lang=en)
+* Read: [DescribeRocketMQGroups](https://www.tencentcloud.com/search/?wd=DescribeRocketMQGroups&type=document&lang=en)
+* Update: [ModifyRocketMQGroup](https://www.tencentcloud.com/search/?wd=ModifyRocketMQGroup&type=document&lang=en)
+* Delete: [DeleteRocketMQGroup](https://www.tencentcloud.com/search/?wd=DeleteRocketMQGroup&type=document&lang=en)
 
 ## Import
 

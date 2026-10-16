@@ -50,9 +50,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindSubDomain](https://cloud.tencent.com/document/api/628/45188)
-* Read: [DescribeServiceSubDomainMappings](https://cloud.tencent.com/document/api/628/45186)
-* Read: [DescribeServiceSubDomains](https://cloud.tencent.com/document/api/628/45185)
-* Update: [ModifySubDomain](https://cloud.tencent.com/document/api/628/45184)
-* Delete: [UnBindSubDomain](https://cloud.tencent.com/document/api/628/45183)
+* Create: [BindSubDomain](https://www.tencentcloud.com/search/?wd=BindSubDomain&type=document&lang=en)
+* Read: [DescribeServiceSubDomainMappings](https://www.tencentcloud.com/search/?wd=DescribeServiceSubDomainMappings&type=document&lang=en)
+* Read: [DescribeServiceSubDomains](https://www.tencentcloud.com/search/?wd=DescribeServiceSubDomains&type=document&lang=en)
+* Update: [ModifySubDomain](https://www.tencentcloud.com/search/?wd=ModifySubDomain&type=document&lang=en)
+* Delete: [UnBindSubDomain](https://www.tencentcloud.com/search/?wd=UnBindSubDomain&type=document&lang=en)
 

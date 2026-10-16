@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateSCIMSynchronizationStatus](https://cloud.tencent.com/document/api/850/112047)
-* Read: [GetSCIMSynchronizationStatus](https://cloud.tencent.com/document/api/850/112050)
-* Update: [UpdateSCIMSynchronizationStatus](https://cloud.tencent.com/document/api/850/112047)
+* Create: [UpdateSCIMSynchronizationStatus](https://www.tencentcloud.com/search/?wd=UpdateSCIMSynchronizationStatus&type=document&lang=en)
+* Read: [GetSCIMSynchronizationStatus](https://www.tencentcloud.com/search/?wd=GetSCIMSynchronizationStatus&type=document&lang=en)
+* Update: [UpdateSCIMSynchronizationStatus](https://www.tencentcloud.com/search/?wd=UpdateSCIMSynchronizationStatus&type=document&lang=en)
 
 ## Import
 

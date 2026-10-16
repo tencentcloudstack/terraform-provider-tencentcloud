@@ -60,15 +60,15 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBaseBackup](https://cloud.tencent.com/document/api/409/89028)
-* Create: [DescribeBaseBackups](https://cloud.tencent.com/document/api/409/89022)
-* Create: [ModifyBaseBackupExpireTime](https://cloud.tencent.com/document/api/409/89020)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeBaseBackups](https://cloud.tencent.com/document/api/409/89022)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ModifyBaseBackupExpireTime](https://cloud.tencent.com/document/api/409/89020)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeleteBaseBackup](https://cloud.tencent.com/document/api/409/89027)
+* Create: [CreateBaseBackup](https://www.tencentcloud.com/document/api/409/54349)
+* Create: [DescribeBaseBackups](https://www.tencentcloud.com/document/api/409/54343)
+* Create: [ModifyBaseBackupExpireTime](https://www.tencentcloud.com/document/api/409/54341)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeBaseBackups](https://www.tencentcloud.com/document/api/409/54343)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyBaseBackupExpireTime](https://www.tencentcloud.com/document/api/409/54341)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteBaseBackup](https://www.tencentcloud.com/document/api/409/54348)
 
 ## Import
 

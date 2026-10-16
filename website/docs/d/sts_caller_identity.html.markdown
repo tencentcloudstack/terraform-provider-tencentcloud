@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetCallerIdentity](https://cloud.tencent.com/document/api/1312/66098)
+* Read: [GetCallerIdentity](https://www.tencentcloud.com/search/?wd=GetCallerIdentity&type=document&lang=en)
 

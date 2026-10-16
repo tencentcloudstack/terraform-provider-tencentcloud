@@ -81,9 +81,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/1003/92714)
-* Read: [DescribeAccountAllGrantPrivileges](https://cloud.tencent.com/document/api/1003/70114)
-* Update: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/1003/92714)
+* Create: [ModifyAccountPrivileges](https://www.tencentcloud.com/search/?wd=ModifyAccountPrivileges&type=document&lang=en)
+* Read: [DescribeAccountAllGrantPrivileges](https://www.tencentcloud.com/search/?wd=DescribeAccountAllGrantPrivileges&type=document&lang=en)
+* Update: [ModifyAccountPrivileges](https://www.tencentcloud.com/search/?wd=ModifyAccountPrivileges&type=document&lang=en)
 
 ## Import
 

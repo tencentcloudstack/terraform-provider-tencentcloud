@@ -227,8 +227,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DeployContainerGroup](https://cloud.tencent.com/document/api/649/36071)
-* Create: [DescribeContainerGroupAttribute](https://cloud.tencent.com/document/api/649/93216)
-* Read: [DescribeContainerGroupDeployInfo](https://cloud.tencent.com/document/api/649/67221)
-* Update: [ModifyContainerReplicas](https://cloud.tencent.com/document/api/649/36061)
+* Create: [DeployContainerGroup](https://www.tencentcloud.com/search/?wd=DeployContainerGroup&type=document&lang=en)
+* Create: [DescribeContainerGroupAttribute](https://www.tencentcloud.com/search/?wd=DescribeContainerGroupAttribute&type=document&lang=en)
+* Read: [DescribeContainerGroupDeployInfo](https://www.tencentcloud.com/search/?wd=DescribeContainerGroupDeployInfo&type=document&lang=en)
+* Update: [ModifyContainerReplicas](https://www.tencentcloud.com/search/?wd=ModifyContainerReplicas&type=document&lang=en)
 

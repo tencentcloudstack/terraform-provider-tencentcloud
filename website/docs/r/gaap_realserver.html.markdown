@@ -45,14 +45,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddRealServers](https://cloud.tencent.com/document/api/608/37014)
-* Create: [DescribeRealServers](https://cloud.tencent.com/document/api/608/37013)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeRealServers](https://cloud.tencent.com/document/api/608/37013)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ModifyRealServerName](https://cloud.tencent.com/document/api/608/37011)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [RemoveRealServers](https://cloud.tencent.com/document/api/608/37010)
+* Create: [AddRealServers](https://www.tencentcloud.com/document/api/608/33061)
+* Create: [DescribeRealServers](https://www.tencentcloud.com/document/api/608/33060)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeRealServers](https://www.tencentcloud.com/document/api/608/33060)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyRealServerName](https://www.tencentcloud.com/document/api/608/33058)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [RemoveRealServers](https://www.tencentcloud.com/document/api/608/33057)
 
 ## Import
 

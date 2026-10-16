@@ -57,10 +57,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDashboard](https://cloud.tencent.com/document/api/614/127511)
-* Read: [DescribeDashboards](https://cloud.tencent.com/document/api/614/95636)
-* Update: [ModifyDashboard](https://cloud.tencent.com/document/api/614/127509)
-* Delete: [DeleteDashboard](https://cloud.tencent.com/document/api/614/127510)
+* Create: [CreateDashboard](https://www.tencentcloud.com/document/api/614/80547)
+* Read: [DescribeDashboards](https://www.tencentcloud.com/document/api/614/82371)
+* Update: [ModifyDashboard](https://www.tencentcloud.com/document/api/614/82370)
+* Delete: [DeleteDashboard](https://www.tencentcloud.com/document/api/614/80546)
 
 ## Import
 

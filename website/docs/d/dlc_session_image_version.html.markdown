@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSessionImageVersion](https://cloud.tencent.com/document/api/1342/122136)
+* Read: [DescribeSessionImageVersion](https://www.tencentcloud.com/search/?wd=DescribeSessionImageVersion&type=document&lang=en)
 

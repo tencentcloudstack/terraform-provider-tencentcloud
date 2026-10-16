@@ -37,5 +37,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCrossRegionZone](https://cloud.tencent.com/document/api/238/47201)
+* Read: [DescribeCrossRegionZone](https://www.tencentcloud.com/document/api/238/72758)
 

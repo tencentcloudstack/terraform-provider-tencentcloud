@@ -40,15 +40,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CloseSSL](https://cloud.tencent.com/document/api/1003/118379)
-* Create: [DescribeSSLStatus](https://cloud.tencent.com/document/api/1003/118100)
-* Create: [DescribeTasks](https://cloud.tencent.com/document/api/1003/103866)
-* Create: [OpenSSL](https://cloud.tencent.com/document/api/1003/118099)
-* Read: [DescribeSSLStatus](https://cloud.tencent.com/document/api/1003/118100)
-* Update: [CloseSSL](https://cloud.tencent.com/document/api/1003/118379)
-* Update: [DescribeSSLStatus](https://cloud.tencent.com/document/api/1003/118100)
-* Update: [DescribeTasks](https://cloud.tencent.com/document/api/1003/103866)
-* Update: [OpenSSL](https://cloud.tencent.com/document/api/1003/118099)
+* Create: [CloseSSL](https://www.tencentcloud.com/search/?wd=CloseSSL&type=document&lang=en)
+* Create: [DescribeSSLStatus](https://www.tencentcloud.com/search/?wd=DescribeSSLStatus&type=document&lang=en)
+* Create: [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
+* Create: [OpenSSL](https://www.tencentcloud.com/search/?wd=OpenSSL&type=document&lang=en)
+* Read: [DescribeSSLStatus](https://www.tencentcloud.com/search/?wd=DescribeSSLStatus&type=document&lang=en)
+* Update: [CloseSSL](https://www.tencentcloud.com/search/?wd=CloseSSL&type=document&lang=en)
+* Update: [DescribeSSLStatus](https://www.tencentcloud.com/search/?wd=DescribeSSLStatus&type=document&lang=en)
+* Update: [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
+* Update: [OpenSSL](https://www.tencentcloud.com/search/?wd=OpenSSL&type=document&lang=en)
 
 ## Import
 

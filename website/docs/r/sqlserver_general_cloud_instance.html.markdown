@@ -108,21 +108,21 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCloudDBInstances](https://cloud.tencent.com/document/api/238/91710)
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
-* Create: [DescribeOrders](https://cloud.tencent.com/document/api/238/19937)
-* Create: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958)
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969)
-* Read: [DescribeDBInstancesAttribute](https://cloud.tencent.com/document/api/238/90299)
-* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/238/46812)
-* Read: [DescribeMaintenanceSpan](https://cloud.tencent.com/document/api/238/46283)
-* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
-* Update: [DescribeOrders](https://cloud.tencent.com/document/api/238/19937)
-* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958)
-* Update: [UpgradeDBInstance](https://cloud.tencent.com/document/api/238/19948)
-* Delete: [DeleteDBInstance](https://cloud.tencent.com/document/api/238/46806)
-* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969)
-* Delete: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210)
+* Create: [CreateCloudDBInstances](https://www.tencentcloud.com/document/api/238/55674)
+* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+* Create: [DescribeOrders](https://www.tencentcloud.com/document/api/238/32134)
+* Create: [ModifyDBInstanceName](https://www.tencentcloud.com/document/api/238/32104)
+* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
+* Read: [DescribeDBInstancesAttribute](https://www.tencentcloud.com/document/api/238/54811)
+* Read: [DescribeDBSecurityGroups](https://www.tencentcloud.com/document/api/238/72730)
+* Read: [DescribeMaintenanceSpan](https://www.tencentcloud.com/document/api/238/69303)
+* Update: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+* Update: [DescribeOrders](https://www.tencentcloud.com/document/api/238/32134)
+* Update: [ModifyDBInstanceName](https://www.tencentcloud.com/document/api/238/32104)
+* Update: [UpgradeDBInstance](https://www.tencentcloud.com/document/api/238/32094)
+* Delete: [DeleteDBInstance](https://www.tencentcloud.com/document/api/238/72759)
+* Delete: [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
+* Delete: [TerminateDBInstance](https://www.tencentcloud.com/document/api/238/34685)
 
 ## Import
 

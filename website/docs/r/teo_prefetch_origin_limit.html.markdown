@@ -55,11 +55,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribePrefetchOriginLimit](https://cloud.tencent.com/document/api/1552/126842)
-* Create: [ModifyPrefetchOriginLimit](https://cloud.tencent.com/document/api/1552/126841)
-* Read: [DescribePrefetchOriginLimit](https://cloud.tencent.com/document/api/1552/126842)
-* Update: [ModifyPrefetchOriginLimit](https://cloud.tencent.com/document/api/1552/126841)
-* Delete: [ModifyPrefetchOriginLimit](https://cloud.tencent.com/document/api/1552/126841)
+* Create: [DescribePrefetchOriginLimit](https://www.tencentcloud.com/search/?wd=DescribePrefetchOriginLimit&type=document&lang=en)
+* Create: [ModifyPrefetchOriginLimit](https://www.tencentcloud.com/search/?wd=ModifyPrefetchOriginLimit&type=document&lang=en)
+* Read: [DescribePrefetchOriginLimit](https://www.tencentcloud.com/search/?wd=DescribePrefetchOriginLimit&type=document&lang=en)
+* Update: [ModifyPrefetchOriginLimit](https://www.tencentcloud.com/search/?wd=ModifyPrefetchOriginLimit&type=document&lang=en)
+* Delete: [ModifyPrefetchOriginLimit](https://www.tencentcloud.com/search/?wd=ModifyPrefetchOriginLimit&type=document&lang=en)
 
 ## Import
 

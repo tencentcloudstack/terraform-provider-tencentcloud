@@ -70,11 +70,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeResourcePoolPacks](https://cloud.tencent.com/document/api/213/129952)
-* Create: [PurchaseResourcePoolPacks](https://cloud.tencent.com/document/api/213/129950)
-* Read: [DescribeResourcePoolPacks](https://cloud.tencent.com/document/api/213/129952)
-* Delete: [DescribeResourcePoolPacks](https://cloud.tencent.com/document/api/213/129952)
-* Delete: [TerminateResourcePoolPacks](https://cloud.tencent.com/document/api/213/129949)
+* Create: [DescribeResourcePoolPacks](https://www.tencentcloud.com/search/?wd=DescribeResourcePoolPacks&type=document&lang=en)
+* Create: [PurchaseResourcePoolPacks](https://www.tencentcloud.com/search/?wd=PurchaseResourcePoolPacks&type=document&lang=en)
+* Read: [DescribeResourcePoolPacks](https://www.tencentcloud.com/search/?wd=DescribeResourcePoolPacks&type=document&lang=en)
+* Delete: [DescribeResourcePoolPacks](https://www.tencentcloud.com/search/?wd=DescribeResourcePoolPacks&type=document&lang=en)
+* Delete: [TerminateResourcePoolPacks](https://www.tencentcloud.com/search/?wd=TerminateResourcePoolPacks&type=document&lang=en)
 
 ## Import
 

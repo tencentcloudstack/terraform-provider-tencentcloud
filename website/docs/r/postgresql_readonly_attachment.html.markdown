@@ -38,7 +38,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddDBInstanceToReadOnlyGroup](https://cloud.tencent.com/document/api/409/52603)
-* Read: [DescribeReadOnlyGroups](https://cloud.tencent.com/document/api/409/52599)
-* Delete: [RemoveDBInstanceFromReadOnlyGroup](https://cloud.tencent.com/document/api/409/52595)
+* Create: [AddDBInstanceToReadOnlyGroup](https://www.tencentcloud.com/document/api/409/39729)
+* Read: [DescribeReadOnlyGroups](https://www.tencentcloud.com/document/api/409/39725)
+* Delete: [RemoveDBInstanceFromReadOnlyGroup](https://www.tencentcloud.com/document/api/409/39721)
 

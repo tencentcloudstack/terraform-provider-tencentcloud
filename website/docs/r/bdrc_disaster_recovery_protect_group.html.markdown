@@ -79,10 +79,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDisasterRecoveryProtectGroup](https://cloud.tencent.com/document/api/1824/136782)
-* Read: [DescribeDisasterRecoveryProtectGroups](https://cloud.tencent.com/document/api/1824/136766)
-* Update: [ModifyProtectGroupAttribute](https://cloud.tencent.com/document/api/1824/136751)
-* Delete: [DeleteDisasterRecoveryProtectGroups](https://cloud.tencent.com/document/api/1824/136775)
+* Create: [CreateDisasterRecoveryProtectGroup](https://www.tencentcloud.com/search/?wd=CreateDisasterRecoveryProtectGroup&type=document&lang=en)
+* Read: [DescribeDisasterRecoveryProtectGroups](https://www.tencentcloud.com/search/?wd=DescribeDisasterRecoveryProtectGroups&type=document&lang=en)
+* Update: [ModifyProtectGroupAttribute](https://www.tencentcloud.com/search/?wd=ModifyProtectGroupAttribute&type=document&lang=en)
+* Delete: [DeleteDisasterRecoveryProtectGroups](https://www.tencentcloud.com/search/?wd=DeleteDisasterRecoveryProtectGroups&type=document&lang=en)
 
 ## Import
 

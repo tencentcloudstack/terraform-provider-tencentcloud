@@ -55,5 +55,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetCcnRegionBandwidthLimits](https://cloud.tencent.com/document/api/215/45482)
+* Read: [GetCcnRegionBandwidthLimits](https://www.tencentcloud.com/document/api/215/37319)
 

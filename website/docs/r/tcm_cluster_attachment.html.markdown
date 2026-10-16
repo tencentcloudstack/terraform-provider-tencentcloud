@@ -54,11 +54,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeMesh](https://cloud.tencent.com/document/api/1261/63842)
-* Create: [LinkClusterList](https://cloud.tencent.com/document/api/1261/81603)
-* Read: [DescribeMesh](https://cloud.tencent.com/document/api/1261/63842)
-* Delete: [DescribeMesh](https://cloud.tencent.com/document/api/1261/63842)
-* Delete: [UnlinkCluster](https://cloud.tencent.com/document/api/1261/81602)
+* Create: [DescribeMesh](https://www.tencentcloud.com/search/?wd=DescribeMesh&type=document&lang=en)
+* Create: [LinkClusterList](https://www.tencentcloud.com/search/?wd=LinkClusterList&type=document&lang=en)
+* Read: [DescribeMesh](https://www.tencentcloud.com/search/?wd=DescribeMesh&type=document&lang=en)
+* Delete: [DescribeMesh](https://www.tencentcloud.com/search/?wd=DescribeMesh&type=document&lang=en)
+* Delete: [UnlinkCluster](https://www.tencentcloud.com/search/?wd=UnlinkCluster&type=document&lang=en)
 
 ## Import
 

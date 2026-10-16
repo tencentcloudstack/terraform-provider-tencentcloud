@@ -100,5 +100,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ReplaceCertForLoadBalancers](https://cloud.tencent.com/document/api/214/36907)
+* Create: [ReplaceCertForLoadBalancers](https://www.tencentcloud.com/document/api/214/33799)
 

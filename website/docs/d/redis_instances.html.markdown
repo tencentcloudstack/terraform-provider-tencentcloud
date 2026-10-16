@@ -65,6 +65,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/239/20018)
-* Read: [DescribeZones](https://cloud.tencent.com/document/api/1596/77929)
+* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/239/32065)
+* Read: [DescribeZones](https://www.tencentcloud.com/search/?wd=DescribeZones&type=document&lang=en)
 

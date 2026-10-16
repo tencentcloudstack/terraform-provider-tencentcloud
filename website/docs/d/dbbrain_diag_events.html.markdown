@@ -68,5 +68,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBDiagEvents](https://cloud.tencent.com/document/api/1130/65947)
+* Read: [DescribeDBDiagEvents](https://www.tencentcloud.com/search/?wd=DescribeDBDiagEvents&type=document&lang=en)
 

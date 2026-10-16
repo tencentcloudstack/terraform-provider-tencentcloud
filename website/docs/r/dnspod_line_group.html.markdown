@@ -43,10 +43,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLineGroup](https://cloud.tencent.com/document/api/1427/112219)
-* Read: [DescribeLineGroupList](https://cloud.tencent.com/document/api/1427/112216)
-* Update: [ModifyLineGroup](https://cloud.tencent.com/document/api/1427/112215)
-* Delete: [DeleteLineGroup](https://cloud.tencent.com/document/api/1427/112217)
+* Create: [CreateLineGroup](https://www.tencentcloud.com/search/?wd=CreateLineGroup&type=document&lang=en)
+* Read: [DescribeLineGroupList](https://www.tencentcloud.com/search/?wd=DescribeLineGroupList&type=document&lang=en)
+* Update: [ModifyLineGroup](https://www.tencentcloud.com/search/?wd=ModifyLineGroup&type=document&lang=en)
+* Delete: [DeleteLineGroup](https://www.tencentcloud.com/search/?wd=DeleteLineGroup&type=document&lang=en)
 
 ## Import
 

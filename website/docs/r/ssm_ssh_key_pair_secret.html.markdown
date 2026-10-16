@@ -67,21 +67,21 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSSHKeyPairSecret](https://cloud.tencent.com/document/api/1140/60331)
-* Create: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526)
-* Create: [DisableSecret](https://cloud.tencent.com/document/api/1140/40525)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Read: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526)
-* Read: [GetSSHKeyPairValue](https://cloud.tencent.com/document/api/1140/60330)
-* Read: [ListSecrets](https://cloud.tencent.com/document/api/1140/40519)
-* Update: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526)
-* Update: [DisableSecret](https://cloud.tencent.com/document/api/1140/40525)
-* Update: [EnableSecret](https://cloud.tencent.com/document/api/1140/40524)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Update: [UpdateDescription](https://cloud.tencent.com/document/api/1140/40516)
-* Delete: [DeleteSecret](https://cloud.tencent.com/document/api/1140/40528)
-* Delete: [DisableSecret](https://cloud.tencent.com/document/api/1140/40525)
+* Create: [CreateSSHKeyPairSecret](https://www.tencentcloud.com/search/?wd=CreateSSHKeyPairSecret&type=document&lang=en)
+* Create: [DescribeSecret](https://www.tencentcloud.com/search/?wd=DescribeSecret&type=document&lang=en)
+* Create: [DisableSecret](https://www.tencentcloud.com/search/?wd=DisableSecret&type=document&lang=en)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Read: [DescribeSecret](https://www.tencentcloud.com/search/?wd=DescribeSecret&type=document&lang=en)
+* Read: [GetSSHKeyPairValue](https://www.tencentcloud.com/search/?wd=GetSSHKeyPairValue&type=document&lang=en)
+* Read: [ListSecrets](https://www.tencentcloud.com/search/?wd=ListSecrets&type=document&lang=en)
+* Update: [DescribeSecret](https://www.tencentcloud.com/search/?wd=DescribeSecret&type=document&lang=en)
+* Update: [DisableSecret](https://www.tencentcloud.com/search/?wd=DisableSecret&type=document&lang=en)
+* Update: [EnableSecret](https://www.tencentcloud.com/search/?wd=EnableSecret&type=document&lang=en)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Update: [UpdateDescription](https://www.tencentcloud.com/search/?wd=UpdateDescription&type=document&lang=en)
+* Delete: [DeleteSecret](https://www.tencentcloud.com/search/?wd=DeleteSecret&type=document&lang=en)
+* Delete: [DisableSecret](https://www.tencentcloud.com/search/?wd=DisableSecret&type=document&lang=en)
 
 ## Import
 

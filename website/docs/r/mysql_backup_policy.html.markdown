@@ -98,7 +98,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Read: [DescribeBackupConfig](https://cloud.tencent.com/document/api/236/15837)
-* Update: [ModifyBackupConfig](https://cloud.tencent.com/document/api/236/15839)
-* Delete: [ModifyBackupConfig](https://cloud.tencent.com/document/api/236/15839)
+* Read: [DescribeBackupConfig](https://www.tencentcloud.com/document/api/236/15837)
+* Update: [ModifyBackupConfig](https://www.tencentcloud.com/document/api/236/15839)
+* Delete: [ModifyBackupConfig](https://www.tencentcloud.com/document/api/236/15839)
 

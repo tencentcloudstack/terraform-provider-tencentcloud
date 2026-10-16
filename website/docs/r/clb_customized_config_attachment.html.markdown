@@ -92,11 +92,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateCustomizedConfig](https://cloud.tencent.com/document/api/214/116389)
-* Read: [DescribeCustomizedConfigAssociateList](https://cloud.tencent.com/document/api/214/60010)
-* Update: [AssociateCustomizedConfig](https://cloud.tencent.com/document/api/214/116389)
-* Update: [DisassociateCustomizedConfig](https://cloud.tencent.com/document/api/214/116387)
-* Delete: [DisassociateCustomizedConfig](https://cloud.tencent.com/document/api/214/116387)
+* Create: [AssociateCustomizedConfig](https://www.tencentcloud.com/document/api/214/74449)
+* Read: [DescribeCustomizedConfigAssociateList](https://www.tencentcloud.com/document/api/214/42308)
+* Update: [AssociateCustomizedConfig](https://www.tencentcloud.com/document/api/214/74449)
+* Update: [DisassociateCustomizedConfig](https://www.tencentcloud.com/document/api/214/74446)
+* Delete: [DisassociateCustomizedConfig](https://www.tencentcloud.com/document/api/214/74446)
 
 ## Import
 

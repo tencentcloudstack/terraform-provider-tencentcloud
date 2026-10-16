@@ -72,9 +72,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTagRetentionExecution](https://cloud.tencent.com/document/api/1141/54804)
-* Create: [DescribeTagRetentionExecution](https://cloud.tencent.com/document/api/1141/54801)
-* Read: [DescribeTagRetentionExecution](https://cloud.tencent.com/document/api/1141/54801)
-* Update: [CreateTagRetentionExecution](https://cloud.tencent.com/document/api/1141/54804)
-* Update: [DescribeTagRetentionExecution](https://cloud.tencent.com/document/api/1141/54801)
+* Create: [CreateTagRetentionExecution](https://www.tencentcloud.com/search/?wd=CreateTagRetentionExecution&type=document&lang=en)
+* Create: [DescribeTagRetentionExecution](https://www.tencentcloud.com/search/?wd=DescribeTagRetentionExecution&type=document&lang=en)
+* Read: [DescribeTagRetentionExecution](https://www.tencentcloud.com/search/?wd=DescribeTagRetentionExecution&type=document&lang=en)
+* Update: [CreateTagRetentionExecution](https://www.tencentcloud.com/search/?wd=CreateTagRetentionExecution&type=document&lang=en)
+* Update: [DescribeTagRetentionExecution](https://www.tencentcloud.com/search/?wd=DescribeTagRetentionExecution&type=document&lang=en)
 

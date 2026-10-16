@@ -64,9 +64,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SetMfaFlag](https://cloud.tencent.com/document/api/598/36227)
-* Read: [DescribeSafeAuthFlagColl](https://cloud.tencent.com/document/api/598/48602)
-* Update: [SetMfaFlag](https://cloud.tencent.com/document/api/598/36227)
+* Create: [SetMfaFlag](https://www.tencentcloud.com/document/api/598/36305)
+* Read: [DescribeSafeAuthFlagColl](https://www.tencentcloud.com/document/api/598/38353)
+* Update: [SetMfaFlag](https://www.tencentcloud.com/document/api/598/36305)
 
 ## Import
 

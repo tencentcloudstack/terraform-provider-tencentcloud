@@ -61,5 +61,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTargetGroupList](https://cloud.tencent.com/document/api/214/40555)
+* Read: [DescribeTargetGroupList](https://www.tencentcloud.com/document/api/214/33827)
 

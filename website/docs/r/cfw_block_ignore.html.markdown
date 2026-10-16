@@ -64,10 +64,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBlockIgnoreRuleList](https://cloud.tencent.com/document/api/1132/97724)
-* Read: [DescribeBlockIgnoreList](https://cloud.tencent.com/document/api/1132/86691)
-* Update: [ModifyBlockIgnoreRule](https://cloud.tencent.com/document/api/1132/97852)
-* Delete: [DeleteBlockIgnoreRuleList](https://cloud.tencent.com/document/api/1132/97856)
+* Create: [CreateBlockIgnoreRuleList](https://www.tencentcloud.com/search/?wd=CreateBlockIgnoreRuleList&type=document&lang=en)
+* Read: [DescribeBlockIgnoreList](https://www.tencentcloud.com/search/?wd=DescribeBlockIgnoreList&type=document&lang=en)
+* Update: [ModifyBlockIgnoreRule](https://www.tencentcloud.com/search/?wd=ModifyBlockIgnoreRule&type=document&lang=en)
+* Delete: [DeleteBlockIgnoreRuleList](https://www.tencentcloud.com/search/?wd=DeleteBlockIgnoreRuleList&type=document&lang=en)
 
 ## Import
 

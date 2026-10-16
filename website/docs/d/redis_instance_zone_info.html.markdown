@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceZoneInfo](https://cloud.tencent.com/document/api/239/50312)
+* Read: [DescribeInstanceZoneInfo](https://www.tencentcloud.com/document/api/239/39091)
 

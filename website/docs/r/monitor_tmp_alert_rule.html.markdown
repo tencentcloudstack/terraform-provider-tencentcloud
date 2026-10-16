@@ -108,10 +108,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAlertRule](https://cloud.tencent.com/document/api/248/55635)
-* Read: [DescribeAlertRules](https://cloud.tencent.com/document/api/248/55633)
-* Update: [UpdateAlertRule](https://cloud.tencent.com/document/api/248/55632)
-* Delete: [DeleteAlertRules](https://cloud.tencent.com/document/api/248/55634)
+* Create: [CreateAlertRule](https://www.tencentcloud.com/document/api/248/48767)
+* Read: [DescribeAlertRules](https://www.tencentcloud.com/document/api/248/48756)
+* Update: [UpdateAlertRule](https://www.tencentcloud.com/document/api/248/48743)
+* Delete: [DeleteAlertRules](https://www.tencentcloud.com/document/api/248/48760)
 
 ## Import
 

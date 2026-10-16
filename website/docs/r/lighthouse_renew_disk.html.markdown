@@ -51,6 +51,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDisks](https://cloud.tencent.com/document/api/1207/66093)
-* Create: [RenewDisks](https://cloud.tencent.com/document/api/1207/90903)
+* Create: [DescribeDisks](https://www.tencentcloud.com/search/?wd=DescribeDisks&type=document&lang=en)
+* Create: [RenewDisks](https://www.tencentcloud.com/search/?wd=RenewDisks&type=document&lang=en)
 

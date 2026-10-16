@@ -86,14 +86,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/557/56485)
-* Create: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/557/83475)
-* Read: [DescribeAccountPrivileges](https://cloud.tencent.com/document/api/557/19994)
-* Read: [DescribeDatabaseObjects](https://cloud.tencent.com/document/api/557/19989)
-* Read: [DescribeDatabaseTable](https://cloud.tencent.com/document/api/557/19988)
-* Read: [DescribeDatabases](https://cloud.tencent.com/document/api/557/19987)
-* Update: [DescribeFlow](https://cloud.tencent.com/document/api/557/56485)
-* Update: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/557/83475)
+* Create: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
+* Create: [ModifyAccountPrivileges](https://www.tencentcloud.com/search/?wd=ModifyAccountPrivileges&type=document&lang=en)
+* Read: [DescribeAccountPrivileges](https://www.tencentcloud.com/search/?wd=DescribeAccountPrivileges&type=document&lang=en)
+* Read: [DescribeDatabaseObjects](https://www.tencentcloud.com/search/?wd=DescribeDatabaseObjects&type=document&lang=en)
+* Read: [DescribeDatabaseTable](https://www.tencentcloud.com/search/?wd=DescribeDatabaseTable&type=document&lang=en)
+* Read: [DescribeDatabases](https://www.tencentcloud.com/search/?wd=DescribeDatabases&type=document&lang=en)
+* Update: [DescribeFlow](https://www.tencentcloud.com/search/?wd=DescribeFlow&type=document&lang=en)
+* Update: [ModifyAccountPrivileges](https://www.tencentcloud.com/search/?wd=ModifyAccountPrivileges&type=document&lang=en)
 
 ## Import
 

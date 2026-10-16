@@ -37,5 +37,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAvailableRecoveryTime](https://cloud.tencent.com/document/api/409/68070)
+* Read: [DescribeAvailableRecoveryTime](https://www.tencentcloud.com/document/api/409/45152)
 

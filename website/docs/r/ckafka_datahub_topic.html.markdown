@@ -48,13 +48,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDatahubTopic](https://cloud.tencent.com/document/api/597/89017)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeDatahubTopic](https://cloud.tencent.com/document/api/597/86862)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ModifyDatahubTopic](https://cloud.tencent.com/document/api/597/89542)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeleteDatahubTopic](https://cloud.tencent.com/document/api/597/77803)
+* Create: [CreateDatahubTopic](https://www.tencentcloud.com/document/api/597/54303)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeDatahubTopic](https://www.tencentcloud.com/document/api/597/54002)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyDatahubTopic](https://www.tencentcloud.com/document/api/597/54582)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteDatahubTopic](https://www.tencentcloud.com/search/?wd=DeleteDatahubTopic&type=document&lang=en)
 
 ## Import
 

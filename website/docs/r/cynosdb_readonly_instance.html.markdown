@@ -62,21 +62,21 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddInstances](https://cloud.tencent.com/document/api/1003/48088)
-* Create: [DescribeResourcesByDealName](https://cloud.tencent.com/document/api/1003/52131)
-* Create: [ModifyMaintainPeriodConfig](https://cloud.tencent.com/document/api/1003/48080)
-* Read: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250)
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334)
-* Read: [DescribeMaintainPeriod](https://cloud.tencent.com/document/api/1003/48083)
-* Update: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250)
-* Update: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334)
-* Update: [ModifyInstanceName](https://cloud.tencent.com/document/api/1003/71728)
-* Update: [ModifyMaintainPeriodConfig](https://cloud.tencent.com/document/api/1003/48080)
-* Update: [UpgradeInstance](https://cloud.tencent.com/document/api/1003/48077)
-* Delete: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250)
-* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334)
-* Delete: [IsolateInstance](https://cloud.tencent.com/document/api/1003/48081)
-* Delete: [OfflineInstance](https://cloud.tencent.com/document/api/1003/48249)
+* Create: [AddInstances](https://www.tencentcloud.com/search/?wd=AddInstances&type=document&lang=en)
+* Create: [DescribeResourcesByDealName](https://www.tencentcloud.com/search/?wd=DescribeResourcesByDealName&type=document&lang=en)
+* Create: [ModifyMaintainPeriodConfig](https://www.tencentcloud.com/search/?wd=ModifyMaintainPeriodConfig&type=document&lang=en)
+* Read: [DescribeInstanceDetail](https://www.tencentcloud.com/search/?wd=DescribeInstanceDetail&type=document&lang=en)
+* Read: [DescribeInstances](https://www.tencentcloud.com/search/?wd=DescribeInstances&type=document&lang=en)
+* Read: [DescribeMaintainPeriod](https://www.tencentcloud.com/search/?wd=DescribeMaintainPeriod&type=document&lang=en)
+* Update: [DescribeInstanceDetail](https://www.tencentcloud.com/search/?wd=DescribeInstanceDetail&type=document&lang=en)
+* Update: [DescribeInstances](https://www.tencentcloud.com/search/?wd=DescribeInstances&type=document&lang=en)
+* Update: [ModifyInstanceName](https://www.tencentcloud.com/search/?wd=ModifyInstanceName&type=document&lang=en)
+* Update: [ModifyMaintainPeriodConfig](https://www.tencentcloud.com/search/?wd=ModifyMaintainPeriodConfig&type=document&lang=en)
+* Update: [UpgradeInstance](https://www.tencentcloud.com/search/?wd=UpgradeInstance&type=document&lang=en)
+* Delete: [DescribeInstanceDetail](https://www.tencentcloud.com/search/?wd=DescribeInstanceDetail&type=document&lang=en)
+* Delete: [DescribeInstances](https://www.tencentcloud.com/search/?wd=DescribeInstances&type=document&lang=en)
+* Delete: [IsolateInstance](https://www.tencentcloud.com/search/?wd=IsolateInstance&type=document&lang=en)
+* Delete: [OfflineInstance](https://www.tencentcloud.com/search/?wd=OfflineInstance&type=document&lang=en)
 
 ## Import
 

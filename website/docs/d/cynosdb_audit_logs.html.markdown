@@ -82,5 +82,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAuditLogs](https://cloud.tencent.com/document/api/1003/81437)
+* Read: [DescribeAuditLogs](https://www.tencentcloud.com/search/?wd=DescribeAuditLogs&type=document&lang=en)
 

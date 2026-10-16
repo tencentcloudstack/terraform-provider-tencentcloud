@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRealServersStatus](https://cloud.tencent.com/document/api/608/37012)
+* Read: [DescribeRealServersStatus](https://www.tencentcloud.com/document/api/608/33059)
 

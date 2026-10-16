@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCountryAreaMapping](https://cloud.tencent.com/document/api/608/36946)
+* Read: [DescribeCountryAreaMapping](https://www.tencentcloud.com/document/api/608/33084)
 

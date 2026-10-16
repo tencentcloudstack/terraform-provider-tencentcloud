@@ -53,10 +53,10 @@ The `ip_group` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSecurityIPGroup](https://cloud.tencent.com/document/api/1552/90651)
-* Read: [DescribeSecurityIPGroup](https://cloud.tencent.com/document/api/1552/105866)
-* Update: [ModifySecurityIPGroup](https://cloud.tencent.com/document/api/1552/90649)
-* Delete: [DeleteSecurityIPGroup](https://cloud.tencent.com/document/api/1552/90650)
+* Create: [CreateSecurityIPGroup](https://www.tencentcloud.com/search/?wd=CreateSecurityIPGroup&type=document&lang=en)
+* Read: [DescribeSecurityIPGroup](https://www.tencentcloud.com/search/?wd=DescribeSecurityIPGroup&type=document&lang=en)
+* Update: [ModifySecurityIPGroup](https://www.tencentcloud.com/search/?wd=ModifySecurityIPGroup&type=document&lang=en)
+* Delete: [DeleteSecurityIPGroup](https://www.tencentcloud.com/search/?wd=DeleteSecurityIPGroup&type=document&lang=en)
 
 ## Import
 

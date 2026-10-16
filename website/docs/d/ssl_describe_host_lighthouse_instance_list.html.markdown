@@ -49,5 +49,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeHostLighthouseInstanceList](https://cloud.tencent.com/document/api/400/91657)
+* Read: [DescribeHostLighthouseInstanceList](https://www.tencentcloud.com/search/?wd=DescribeHostLighthouseInstanceList&type=document&lang=en)
 

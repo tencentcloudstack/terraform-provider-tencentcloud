@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListAlarmMessages](https://cloud.tencent.com/document/api/1267/123580)
+* Read: [ListAlarmMessages](https://www.tencentcloud.com/search/?wd=ListAlarmMessages&type=document&lang=en)
 

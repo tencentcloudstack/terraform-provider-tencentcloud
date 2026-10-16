@@ -66,5 +66,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SendEmail](https://cloud.tencent.com/document/api/1288/51034)
+* Create: [SendEmail](https://www.tencentcloud.com/search/?wd=SendEmail&type=document&lang=en)
 

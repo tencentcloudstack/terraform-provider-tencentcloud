@@ -50,5 +50,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RejectAttachCcnInstances](https://cloud.tencent.com/document/api/215/20250)
+* Create: [RejectAttachCcnInstances](https://www.tencentcloud.com/document/api/215/34781)
 

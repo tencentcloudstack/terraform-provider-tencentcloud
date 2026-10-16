@@ -54,12 +54,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccountUser](https://cloud.tencent.com/document/api/240/84704)
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601)
-* Read: [DescribeAccountUsers](https://cloud.tencent.com/document/api/240/80800)
-* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601)
-* Update: [ResetDBInstancePassword](https://cloud.tencent.com/document/api/240/46598)
-* Update: [SetAccountUserPrivilege](https://cloud.tencent.com/document/api/240/67357)
-* Delete: [DeleteAccountUser](https://cloud.tencent.com/document/api/240/90048)
-* Delete: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601)
+* Create: [CreateAccountUser](https://www.tencentcloud.com/document/api/240/74806)
+* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/240/37921)
+* Read: [DescribeAccountUsers](https://www.tencentcloud.com/document/api/240/79919)
+* Update: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/240/37921)
+* Update: [ResetDBInstancePassword](https://www.tencentcloud.com/document/api/240/37924)
+* Update: [SetAccountUserPrivilege](https://www.tencentcloud.com/document/api/240/74805)
+* Delete: [DeleteAccountUser](https://www.tencentcloud.com/document/api/240/74804)
+* Delete: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/240/37921)
 

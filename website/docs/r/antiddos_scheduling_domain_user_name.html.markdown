@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyDomainUsrName](https://cloud.tencent.com/document/api/297/95363)
-* Read: [DescribeListSchedulingDomain](https://cloud.tencent.com/document/api/297/95364)
-* Update: [ModifyDomainUsrName](https://cloud.tencent.com/document/api/297/95363)
+* Create: [ModifyDomainUsrName](https://www.tencentcloud.com/search/?wd=ModifyDomainUsrName&type=document&lang=en)
+* Read: [DescribeListSchedulingDomain](https://www.tencentcloud.com/search/?wd=DescribeListSchedulingDomain&type=document&lang=en)
+* Update: [ModifyDomainUsrName](https://www.tencentcloud.com/search/?wd=ModifyDomainUsrName&type=document&lang=en)
 
 ## Import
 

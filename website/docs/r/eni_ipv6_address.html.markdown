@@ -86,12 +86,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssignIpv6Addresses](https://cloud.tencent.com/document/api/215/34469)
-* Create: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037)
-* Read: [DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817)
-* Delete: [DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817)
-* Delete: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037)
-* Delete: [UnassignIpv6Addresses](https://cloud.tencent.com/document/api/215/34467)
+* Create: [AssignIpv6Addresses](https://www.tencentcloud.com/document/api/215/34769)
+* Create: [DescribeVpcTaskResult](https://www.tencentcloud.com/document/api/215/41567)
+* Read: [DescribeNetworkInterfaces](https://www.tencentcloud.com/document/api/215/15817)
+* Delete: [DescribeNetworkInterfaces](https://www.tencentcloud.com/document/api/215/15817)
+* Delete: [DescribeVpcTaskResult](https://www.tencentcloud.com/document/api/215/41567)
+* Delete: [UnassignIpv6Addresses](https://www.tencentcloud.com/document/api/215/34766)
 
 ## Import
 

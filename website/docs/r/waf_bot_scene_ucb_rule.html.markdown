@@ -258,10 +258,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyBotSceneUCBRule](https://cloud.tencent.com/document/api/627/118055)
-* Read: [DescribeBotSceneUCBRule](https://cloud.tencent.com/document/api/627/118057)
-* Update: [ModifyBotSceneUCBRule](https://cloud.tencent.com/document/api/627/118055)
-* Delete: [DeleteBotSceneUCBRule](https://cloud.tencent.com/document/api/627/118060)
+* Create: [ModifyBotSceneUCBRule](https://www.tencentcloud.com/search/?wd=ModifyBotSceneUCBRule&type=document&lang=en)
+* Read: [DescribeBotSceneUCBRule](https://www.tencentcloud.com/search/?wd=DescribeBotSceneUCBRule&type=document&lang=en)
+* Update: [ModifyBotSceneUCBRule](https://www.tencentcloud.com/search/?wd=ModifyBotSceneUCBRule&type=document&lang=en)
+* Delete: [DeleteBotSceneUCBRule](https://www.tencentcloud.com/search/?wd=DeleteBotSceneUCBRule&type=document&lang=en)
 
 ## Import
 

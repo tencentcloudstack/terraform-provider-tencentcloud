@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [FlushBinlog](https://cloud.tencent.com/document/api/557/47582)
+* Create: [FlushBinlog](https://www.tencentcloud.com/search/?wd=FlushBinlog&type=document&lang=en)
 

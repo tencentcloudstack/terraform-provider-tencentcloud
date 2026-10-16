@@ -100,5 +100,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceSlowQueries](https://cloud.tencent.com/document/api/1003/76369)
+* Read: [DescribeInstanceSlowQueries](https://www.tencentcloud.com/search/?wd=DescribeInstanceSlowQueries&type=document&lang=en)
 

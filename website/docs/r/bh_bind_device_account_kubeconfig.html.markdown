@@ -46,6 +46,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindDeviceAccountKubeconfig](https://cloud.tencent.com/document/api/1025/131312)
-* Update: [BindDeviceAccountKubeconfig](https://cloud.tencent.com/document/api/1025/131312)
+* Create: [BindDeviceAccountKubeconfig](https://www.tencentcloud.com/search/?wd=BindDeviceAccountKubeconfig&type=document&lang=en)
+* Update: [BindDeviceAccountKubeconfig](https://www.tencentcloud.com/search/?wd=BindDeviceAccountKubeconfig&type=document&lang=en)
 

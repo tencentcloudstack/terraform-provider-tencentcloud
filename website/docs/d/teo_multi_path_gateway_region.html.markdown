@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeMultiPathGatewayRegions](https://cloud.tencent.com/document/api/1552/121336)
+* Read: [DescribeMultiPathGatewayRegions](https://www.tencentcloud.com/search/?wd=DescribeMultiPathGatewayRegions&type=document&lang=en)
 

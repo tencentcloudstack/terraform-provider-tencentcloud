@@ -117,13 +117,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindEnvironment](https://cloud.tencent.com/document/api/628/45226)
-* Create: [BindSecretIds](https://cloud.tencent.com/document/api/628/45225)
-* Read: [DescribeApiUsagePlan](https://cloud.tencent.com/document/api/628/45240)
-* Read: [DescribeServiceUsagePlan](https://cloud.tencent.com/document/api/628/45195)
-* Read: [DescribeUsagePlanSecretIds](https://cloud.tencent.com/document/api/628/45219)
-* Delete: [UnBindEnvironment](https://cloud.tencent.com/document/api/628/45216)
-* Delete: [UnBindSecretIds](https://cloud.tencent.com/document/api/628/45215)
+* Create: [BindEnvironment](https://www.tencentcloud.com/search/?wd=BindEnvironment&type=document&lang=en)
+* Create: [BindSecretIds](https://www.tencentcloud.com/search/?wd=BindSecretIds&type=document&lang=en)
+* Read: [DescribeApiUsagePlan](https://www.tencentcloud.com/search/?wd=DescribeApiUsagePlan&type=document&lang=en)
+* Read: [DescribeServiceUsagePlan](https://www.tencentcloud.com/search/?wd=DescribeServiceUsagePlan&type=document&lang=en)
+* Read: [DescribeUsagePlanSecretIds](https://www.tencentcloud.com/search/?wd=DescribeUsagePlanSecretIds&type=document&lang=en)
+* Delete: [UnBindEnvironment](https://www.tencentcloud.com/search/?wd=UnBindEnvironment&type=document&lang=en)
+* Delete: [UnBindSecretIds](https://www.tencentcloud.com/search/?wd=UnBindSecretIds&type=document&lang=en)
 
 ## Import
 

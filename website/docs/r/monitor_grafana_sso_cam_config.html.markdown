@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [EnableSSOCamCheck](https://cloud.tencent.com/document/api/248/79199)
-* Read: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208)
-* Update: [EnableSSOCamCheck](https://cloud.tencent.com/document/api/248/79199)
+* Create: [EnableSSOCamCheck](https://www.tencentcloud.com/document/api/248/49751)
+* Read: [DescribeGrafanaInstances](https://www.tencentcloud.com/document/api/248/49759)
+* Update: [EnableSSOCamCheck](https://www.tencentcloud.com/document/api/248/49751)
 
 ## Import
 

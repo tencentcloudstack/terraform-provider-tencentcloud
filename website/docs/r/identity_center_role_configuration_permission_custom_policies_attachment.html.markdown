@@ -68,9 +68,9 @@ The `policies` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddPermissionPolicyToRoleConfiguration](https://cloud.tencent.com/document/api/850/109938)
-* Read: [ListPermissionPoliciesInRoleConfiguration](https://cloud.tencent.com/document/api/850/109934)
-* Delete: [RemovePermissionPolicyFromRoleConfiguration](https://cloud.tencent.com/document/api/850/109931)
+* Create: [AddPermissionPolicyToRoleConfiguration](https://www.tencentcloud.com/search/?wd=AddPermissionPolicyToRoleConfiguration&type=document&lang=en)
+* Read: [ListPermissionPoliciesInRoleConfiguration](https://www.tencentcloud.com/search/?wd=ListPermissionPoliciesInRoleConfiguration&type=document&lang=en)
+* Delete: [RemovePermissionPolicyFromRoleConfiguration](https://www.tencentcloud.com/search/?wd=RemovePermissionPolicyFromRoleConfiguration&type=document&lang=en)
 
 ## Import
 

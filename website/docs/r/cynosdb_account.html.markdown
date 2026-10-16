@@ -61,14 +61,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccounts](https://cloud.tencent.com/document/api/1003/71660)
-* Create: [DescribeTasks](https://cloud.tencent.com/document/api/1003/103866)
-* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/1003/48075)
-* Update: [ModifyAccountDescription](https://cloud.tencent.com/document/api/1003/92716)
-* Update: [ModifyAccountHost](https://cloud.tencent.com/document/api/1003/92715)
-* Update: [ModifyAccountParams](https://cloud.tencent.com/document/api/1003/70112)
-* Update: [ResetAccountPassword](https://cloud.tencent.com/document/api/1003/83592)
-* Delete: [DeleteAccounts](https://cloud.tencent.com/document/api/1003/92718)
+* Create: [CreateAccounts](https://www.tencentcloud.com/search/?wd=CreateAccounts&type=document&lang=en)
+* Create: [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
+* Read: [DescribeAccounts](https://www.tencentcloud.com/search/?wd=DescribeAccounts&type=document&lang=en)
+* Update: [ModifyAccountDescription](https://www.tencentcloud.com/search/?wd=ModifyAccountDescription&type=document&lang=en)
+* Update: [ModifyAccountHost](https://www.tencentcloud.com/search/?wd=ModifyAccountHost&type=document&lang=en)
+* Update: [ModifyAccountParams](https://www.tencentcloud.com/search/?wd=ModifyAccountParams&type=document&lang=en)
+* Update: [ResetAccountPassword](https://www.tencentcloud.com/search/?wd=ResetAccountPassword&type=document&lang=en)
+* Delete: [DeleteAccounts](https://www.tencentcloud.com/search/?wd=DeleteAccounts&type=document&lang=en)
 
 ## Import
 

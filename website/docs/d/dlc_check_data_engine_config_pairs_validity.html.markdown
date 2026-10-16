@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [CheckDataEngineConfigPairsValidity](https://cloud.tencent.com/document/api/1342/99277)
+* Read: [CheckDataEngineConfigPairsValidity](https://www.tencentcloud.com/search/?wd=CheckDataEngineConfigPairsValidity&type=document&lang=en)
 

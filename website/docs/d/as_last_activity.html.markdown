@@ -75,5 +75,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAutoScalingGroupLastActivities](https://cloud.tencent.com/document/api/377/37652)
+* Read: [DescribeAutoScalingGroupLastActivities](https://www.tencentcloud.com/document/api/377/33204)
 

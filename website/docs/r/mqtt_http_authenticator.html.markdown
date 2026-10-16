@@ -71,10 +71,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateHttpAuthenticator](https://cloud.tencent.com/document/api/1778/116787)
-* Read: [DescribeAuthenticator](https://cloud.tencent.com/document/api/1778/111075)
-* Update: [ModifyHttpAuthenticator](https://cloud.tencent.com/document/api/1778/116786)
-* Delete: [DeleteAuthenticator](https://cloud.tencent.com/document/api/1778/111088)
+* Create: [CreateHttpAuthenticator](https://www.tencentcloud.com/search/?wd=CreateHttpAuthenticator&type=document&lang=en)
+* Read: [DescribeAuthenticator](https://www.tencentcloud.com/search/?wd=DescribeAuthenticator&type=document&lang=en)
+* Update: [ModifyHttpAuthenticator](https://www.tencentcloud.com/search/?wd=ModifyHttpAuthenticator&type=document&lang=en)
+* Delete: [DeleteAuthenticator](https://www.tencentcloud.com/search/?wd=DeleteAuthenticator&type=document&lang=en)
 
 ## Import
 

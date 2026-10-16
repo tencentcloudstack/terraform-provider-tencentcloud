@@ -47,5 +47,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDomainErrorPageInfoByIds](https://cloud.tencent.com/document/api/608/40489)
+* Read: [DescribeDomainErrorPageInfoByIds](https://www.tencentcloud.com/document/api/608/37590)
 

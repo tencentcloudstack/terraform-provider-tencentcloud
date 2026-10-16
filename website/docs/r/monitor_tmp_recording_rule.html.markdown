@@ -76,10 +76,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRecordingRule](https://cloud.tencent.com/document/api/248/76041)
-* Read: [DescribeRecordingRules](https://cloud.tencent.com/document/api/248/76039)
-* Update: [UpdateRecordingRule](https://cloud.tencent.com/document/api/248/76038)
-* Delete: [DeleteRecordingRules](https://cloud.tencent.com/document/api/248/76040)
+* Create: [CreateRecordingRule](https://www.tencentcloud.com/document/api/248/48762)
+* Read: [DescribeRecordingRules](https://www.tencentcloud.com/document/api/248/48751)
+* Update: [UpdateRecordingRule](https://www.tencentcloud.com/document/api/248/48738)
+* Delete: [DeleteRecordingRules](https://www.tencentcloud.com/document/api/248/48757)
 
 ## Import
 

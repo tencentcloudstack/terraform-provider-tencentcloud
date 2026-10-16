@@ -72,6 +72,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeHTTPListeners](https://cloud.tencent.com/document/api/608/37002)
-* Read: [DescribeHTTPSListeners](https://cloud.tencent.com/document/api/608/37001)
+* Read: [DescribeHTTPListeners](https://www.tencentcloud.com/document/api/608/33071)
+* Read: [DescribeHTTPSListeners](https://www.tencentcloud.com/document/api/608/33070)
 

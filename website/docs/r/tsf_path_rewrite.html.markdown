@@ -44,10 +44,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePathRewritesWithDetailResp](https://cloud.tencent.com/document/api/649/89210)
-* Read: [DescribePathRewrite](https://cloud.tencent.com/document/api/649/52209)
-* Update: [ModifyPathRewrite](https://cloud.tencent.com/document/api/649/52207)
-* Delete: [DeletePathRewrites](https://cloud.tencent.com/document/api/649/52210)
+* Create: [CreatePathRewritesWithDetailResp](https://www.tencentcloud.com/search/?wd=CreatePathRewritesWithDetailResp&type=document&lang=en)
+* Read: [DescribePathRewrite](https://www.tencentcloud.com/search/?wd=DescribePathRewrite&type=document&lang=en)
+* Update: [ModifyPathRewrite](https://www.tencentcloud.com/search/?wd=ModifyPathRewrite&type=document&lang=en)
+* Delete: [DeletePathRewrites](https://www.tencentcloud.com/search/?wd=DeletePathRewrites&type=document&lang=en)
 
 ## Import
 

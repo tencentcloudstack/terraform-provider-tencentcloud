@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeFirewallRulesTemplate](https://cloud.tencent.com/document/api/1207/55530)
+* Read: [DescribeFirewallRulesTemplate](https://www.tencentcloud.com/search/?wd=DescribeFirewallRulesTemplate&type=document&lang=en)
 

@@ -45,12 +45,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddAntiFakeUrl](https://cloud.tencent.com/document/api/627/97644)
-* Create: [ModifyAntiFakeUrlStatus](https://cloud.tencent.com/document/api/627/97647)
-* Read: [DescribeAntiFakeRules](https://cloud.tencent.com/document/api/627/97641)
-* Update: [ModifyAntiFakeUrl](https://cloud.tencent.com/document/api/627/97634)
-* Update: [ModifyAntiFakeUrlStatus](https://cloud.tencent.com/document/api/627/97647)
-* Delete: [DeleteAntiFakeUrl](https://cloud.tencent.com/document/api/627/97642)
+* Create: [AddAntiFakeUrl](https://www.tencentcloud.com/document/api/627/64532)
+* Create: [ModifyAntiFakeUrlStatus](https://www.tencentcloud.com/document/api/627/64541)
+* Read: [DescribeAntiFakeRules](https://www.tencentcloud.com/document/api/627/64529)
+* Update: [ModifyAntiFakeUrl](https://www.tencentcloud.com/document/api/627/64516)
+* Update: [ModifyAntiFakeUrlStatus](https://www.tencentcloud.com/document/api/627/64541)
+* Delete: [DeleteAntiFakeUrl](https://www.tencentcloud.com/document/api/627/64530)
 
 ## Import
 

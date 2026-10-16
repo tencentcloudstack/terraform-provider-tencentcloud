@@ -38,7 +38,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DownloadCertificate](https://cloud.tencent.com/document/api/400/41670)
+* Create: [DownloadCertificate](https://www.tencentcloud.com/search/?wd=DownloadCertificate&type=document&lang=en)
 
 ## Import
 

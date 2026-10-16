@@ -48,11 +48,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDBParams](https://cloud.tencent.com/document/api/878/116658)
-* Create: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160)
-* Create: [ModifyDBParameters](https://cloud.tencent.com/document/api/878/116655)
-* Read: [DescribeDBParams](https://cloud.tencent.com/document/api/878/116658)
-* Update: [DescribeDBParams](https://cloud.tencent.com/document/api/878/116658)
-* Update: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160)
-* Update: [ModifyDBParameters](https://cloud.tencent.com/document/api/878/116655)
+* Create: [DescribeDBParams](https://www.tencentcloud.com/search/?wd=DescribeDBParams&type=document&lang=en)
+* Create: [DescribeInstanceState](https://www.tencentcloud.com/search/?wd=DescribeInstanceState&type=document&lang=en)
+* Create: [ModifyDBParameters](https://www.tencentcloud.com/search/?wd=ModifyDBParameters&type=document&lang=en)
+* Read: [DescribeDBParams](https://www.tencentcloud.com/search/?wd=DescribeDBParams&type=document&lang=en)
+* Update: [DescribeDBParams](https://www.tencentcloud.com/search/?wd=DescribeDBParams&type=document&lang=en)
+* Update: [DescribeInstanceState](https://www.tencentcloud.com/search/?wd=DescribeInstanceState&type=document&lang=en)
+* Update: [ModifyDBParameters](https://www.tencentcloud.com/search/?wd=ModifyDBParameters&type=document&lang=en)
 

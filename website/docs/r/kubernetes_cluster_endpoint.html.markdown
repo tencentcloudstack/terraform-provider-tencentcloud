@@ -81,9 +81,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863)
-* Create: [DescribeClusterVirtualNode](https://cloud.tencent.com/document/api/457/85351)
-* Read: [DescribeClusterKubeconfig](https://cloud.tencent.com/document/api/457/48149)
-* Read: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862)
-* Update: [ModifyClusterEndpointSP](https://cloud.tencent.com/document/api/457/39408)
+* Create: [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
+* Create: [DescribeClusterVirtualNode](https://www.tencentcloud.com/document/api/457/53272)
+* Read: [DescribeClusterKubeconfig](https://www.tencentcloud.com/document/api/457/38510)
+* Read: [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
+* Update: [ModifyClusterEndpointSP](https://www.tencentcloud.com/document/api/457/33864)
 

@@ -55,9 +55,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssignIpv6CidrBlock](https://cloud.tencent.com/document/api/215/34466)
-* Read: [DescribeVpcs](https://cloud.tencent.com/document/api/215/15778)
-* Delete: [UnassignIpv6CidrBlock](https://cloud.tencent.com/document/api/215/34464)
+* Create: [AssignIpv6CidrBlock](https://www.tencentcloud.com/document/api/215/34801)
+* Read: [DescribeVpcs](https://www.tencentcloud.com/document/api/215/15778)
+* Delete: [UnassignIpv6CidrBlock](https://www.tencentcloud.com/document/api/215/34803)
 
 ## Import
 

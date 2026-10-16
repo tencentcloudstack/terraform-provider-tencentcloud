@@ -67,10 +67,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RegisterFunctionTargets](https://cloud.tencent.com/document/api/214/84625)
-* Read: [DescribeTargets](https://cloud.tencent.com/document/api/214/30684)
-* Update: [ModifyFunctionTargets](https://cloud.tencent.com/document/api/214/86609)
-* Delete: [DeregisterFunctionTargets](https://cloud.tencent.com/document/api/214/84626)
+* Create: [RegisterFunctionTargets](https://www.tencentcloud.com/document/api/214/54047)
+* Read: [DescribeTargets](https://www.tencentcloud.com/document/api/214/33824)
+* Update: [ModifyFunctionTargets](https://www.tencentcloud.com/document/api/214/54135)
+* Delete: [DeregisterFunctionTargets](https://www.tencentcloud.com/document/api/214/54048)
 
 ## Import
 

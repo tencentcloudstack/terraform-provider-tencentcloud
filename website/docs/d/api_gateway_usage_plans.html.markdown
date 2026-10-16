@@ -55,5 +55,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeUsagePlansStatus](https://cloud.tencent.com/document/api/628/45218)
+* Read: [DescribeUsagePlansStatus](https://www.tencentcloud.com/search/?wd=DescribeUsagePlansStatus&type=document&lang=en)
 

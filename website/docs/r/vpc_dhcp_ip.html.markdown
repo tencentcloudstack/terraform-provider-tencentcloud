@@ -55,10 +55,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDhcpIp](https://cloud.tencent.com/document/api/215/45092)
-* Read: [DescribeDhcpIps](https://cloud.tencent.com/document/api/215/45090)
-* Update: [ModifyDhcpIpAttribute](https://cloud.tencent.com/document/api/215/45088)
-* Delete: [DeleteDhcpIp](https://cloud.tencent.com/document/api/215/45091)
+* Create: [CreateDhcpIp](https://www.tencentcloud.com/search/?wd=CreateDhcpIp&type=document&lang=en)
+* Read: [DescribeDhcpIps](https://www.tencentcloud.com/search/?wd=DescribeDhcpIps&type=document&lang=en)
+* Update: [ModifyDhcpIpAttribute](https://www.tencentcloud.com/search/?wd=ModifyDhcpIpAttribute&type=document&lang=en)
+* Delete: [DeleteDhcpIp](https://www.tencentcloud.com/search/?wd=DeleteDhcpIp&type=document&lang=en)
 
 ## Import
 

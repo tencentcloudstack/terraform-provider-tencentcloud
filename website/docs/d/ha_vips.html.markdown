@@ -70,5 +70,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650)
+* Read: [DescribeHaVips](https://www.tencentcloud.com/document/api/215/34762)
 

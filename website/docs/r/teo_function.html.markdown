@@ -50,11 +50,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateFunction](https://cloud.tencent.com/document/api/1552/111389)
-* Create: [DescribeFunctions](https://cloud.tencent.com/document/api/1552/111383)
-* Read: [DescribeFunctions](https://cloud.tencent.com/document/api/1552/111383)
-* Update: [ModifyFunction](https://cloud.tencent.com/document/api/1552/111381)
-* Delete: [DeleteFunction](https://cloud.tencent.com/document/api/1552/111387)
+* Create: [CreateFunction](https://www.tencentcloud.com/search/?wd=CreateFunction&type=document&lang=en)
+* Create: [DescribeFunctions](https://www.tencentcloud.com/search/?wd=DescribeFunctions&type=document&lang=en)
+* Read: [DescribeFunctions](https://www.tencentcloud.com/search/?wd=DescribeFunctions&type=document&lang=en)
+* Update: [ModifyFunction](https://www.tencentcloud.com/search/?wd=ModifyFunction&type=document&lang=en)
+* Delete: [DeleteFunction](https://www.tencentcloud.com/search/?wd=DeleteFunction&type=document&lang=en)
 
 ## Import
 

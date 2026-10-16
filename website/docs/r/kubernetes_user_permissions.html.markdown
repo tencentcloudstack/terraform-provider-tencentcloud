@@ -61,12 +61,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [GrantUserPermissions](https://cloud.tencent.com/document/api/457/127539)
-* Read: [DescribeUserPermissions](https://cloud.tencent.com/document/api/457/127540)
-* Update: [DeleteUserPermissions](https://cloud.tencent.com/document/api/457/127541)
-* Update: [GrantUserPermissions](https://cloud.tencent.com/document/api/457/127539)
-* Delete: [DeleteUserPermissions](https://cloud.tencent.com/document/api/457/127541)
-* Delete: [DescribeUserPermissions](https://cloud.tencent.com/document/api/457/127540)
+* Create: [GrantUserPermissions](https://www.tencentcloud.com/search/?wd=GrantUserPermissions&type=document&lang=en)
+* Read: [DescribeUserPermissions](https://www.tencentcloud.com/search/?wd=DescribeUserPermissions&type=document&lang=en)
+* Update: [DeleteUserPermissions](https://www.tencentcloud.com/search/?wd=DeleteUserPermissions&type=document&lang=en)
+* Update: [GrantUserPermissions](https://www.tencentcloud.com/search/?wd=GrantUserPermissions&type=document&lang=en)
+* Delete: [DeleteUserPermissions](https://www.tencentcloud.com/search/?wd=DeleteUserPermissions&type=document&lang=en)
+* Delete: [DescribeUserPermissions](https://www.tencentcloud.com/search/?wd=DescribeUserPermissions&type=document&lang=en)
 
 ## Import
 

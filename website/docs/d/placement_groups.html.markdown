@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDisasterRecoverGroups](https://cloud.tencent.com/document/api/213/17810)
+* Read: [DescribeDisasterRecoverGroups](https://www.tencentcloud.com/document/api/213/33261)
 

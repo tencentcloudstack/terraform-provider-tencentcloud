@@ -54,11 +54,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeClusterNatCcnFwSwitchList](https://cloud.tencent.com/document/api/1132/132581)
-* Create: [ModifyClusterFwBypass](https://cloud.tencent.com/document/api/1132/132579)
-* Read: [DescribeClusterNatCcnFwSwitchList](https://cloud.tencent.com/document/api/1132/132581)
-* Update: [DescribeClusterNatCcnFwSwitchList](https://cloud.tencent.com/document/api/1132/132581)
-* Update: [ModifyClusterFwBypass](https://cloud.tencent.com/document/api/1132/132579)
+* Create: [DescribeClusterNatCcnFwSwitchList](https://www.tencentcloud.com/search/?wd=DescribeClusterNatCcnFwSwitchList&type=document&lang=en)
+* Create: [ModifyClusterFwBypass](https://www.tencentcloud.com/search/?wd=ModifyClusterFwBypass&type=document&lang=en)
+* Read: [DescribeClusterNatCcnFwSwitchList](https://www.tencentcloud.com/search/?wd=DescribeClusterNatCcnFwSwitchList&type=document&lang=en)
+* Update: [DescribeClusterNatCcnFwSwitchList](https://www.tencentcloud.com/search/?wd=DescribeClusterNatCcnFwSwitchList&type=document&lang=en)
+* Update: [ModifyClusterFwBypass](https://www.tencentcloud.com/search/?wd=ModifyClusterFwBypass&type=document&lang=en)
 
 ## Import
 

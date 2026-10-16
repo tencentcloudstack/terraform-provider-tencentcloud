@@ -50,6 +50,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindDeviceAccountPassword](https://cloud.tencent.com/document/api/1025/86959)
-* Delete: [ResetDeviceAccountPassword](https://cloud.tencent.com/document/api/1025/86950)
+* Create: [BindDeviceAccountPassword](https://www.tencentcloud.com/search/?wd=BindDeviceAccountPassword&type=document&lang=en)
+* Delete: [ResetDeviceAccountPassword](https://www.tencentcloud.com/search/?wd=ResetDeviceAccountPassword&type=document&lang=en)
 

@@ -61,10 +61,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCronJob](https://cloud.tencent.com/document/api/1484/78094)
-* Read: [DescribeCronJobs](https://cloud.tencent.com/document/api/1484/78080)
-* Update: [UpdateCronJob](https://cloud.tencent.com/document/api/1484/78061)
-* Delete: [DeleteCronJobs](https://cloud.tencent.com/document/api/1484/78089)
+* Create: [CreateCronJob](https://www.tencentcloud.com/search/?wd=CreateCronJob&type=document&lang=en)
+* Read: [DescribeCronJobs](https://www.tencentcloud.com/search/?wd=DescribeCronJobs&type=document&lang=en)
+* Update: [UpdateCronJob](https://www.tencentcloud.com/search/?wd=UpdateCronJob&type=document&lang=en)
+* Delete: [DeleteCronJobs](https://www.tencentcloud.com/search/?wd=DeleteCronJobs&type=document&lang=en)
 
 ## Import
 

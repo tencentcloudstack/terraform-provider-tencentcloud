@@ -112,10 +112,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrometheusAlertGroup](https://cloud.tencent.com/document/api/248/102990)
-* Read: [DescribePrometheusAlertGroups](https://cloud.tencent.com/document/api/248/102988)
-* Update: [UpdatePrometheusAlertGroup](https://cloud.tencent.com/document/api/248/102987)
-* Delete: [DeletePrometheusAlertGroups](https://cloud.tencent.com/document/api/248/102989)
+* Create: [CreatePrometheusAlertGroup](https://www.tencentcloud.com/document/api/248/74016)
+* Read: [DescribePrometheusAlertGroups](https://www.tencentcloud.com/document/api/248/74014)
+* Update: [UpdatePrometheusAlertGroup](https://www.tencentcloud.com/document/api/248/74013)
+* Delete: [DeletePrometheusAlertGroups](https://www.tencentcloud.com/document/api/248/74015)
 
 ## Import
 

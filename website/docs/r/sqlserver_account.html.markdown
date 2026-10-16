@@ -94,14 +94,14 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccount](https://cloud.tencent.com/document/api/238/19975)
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
-* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970)
-* Update: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970)
-* Update: [ModifyAccountRemark](https://cloud.tencent.com/document/api/238/19935)
-* Update: [ResetAccountPassword](https://cloud.tencent.com/document/api/238/19952)
-* Delete: [DeleteAccount](https://cloud.tencent.com/document/api/238/19972)
-* Delete: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970)
+* Create: [CreateAccount](https://www.tencentcloud.com/document/api/238/32121)
+* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+* Read: [DescribeAccounts](https://www.tencentcloud.com/document/api/238/32116)
+* Update: [DescribeAccounts](https://www.tencentcloud.com/document/api/238/32116)
+* Update: [ModifyAccountRemark](https://www.tencentcloud.com/document/api/238/32132)
+* Update: [ResetAccountPassword](https://www.tencentcloud.com/document/api/238/32098)
+* Delete: [DeleteAccount](https://www.tencentcloud.com/document/api/238/32118)
+* Delete: [DescribeAccounts](https://www.tencentcloud.com/document/api/238/32116)
 
 ## Import
 

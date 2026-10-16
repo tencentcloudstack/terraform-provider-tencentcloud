@@ -38,6 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [GetEmailIdentity](https://cloud.tencent.com/document/api/1288/51046)
-* Create: [UpdateEmailIdentity](https://cloud.tencent.com/document/api/1288/51044)
+* Create: [GetEmailIdentity](https://www.tencentcloud.com/search/?wd=GetEmailIdentity&type=document&lang=en)
+* Create: [UpdateEmailIdentity](https://www.tencentcloud.com/search/?wd=UpdateEmailIdentity&type=document&lang=en)
 

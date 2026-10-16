@@ -40,10 +40,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCmqTopic](https://cloud.tencent.com/document/api/1179/55915)
-* Read: [DescribeCmqTopicDetail](https://cloud.tencent.com/document/api/1179/55907)
-* Update: [ModifyCmqTopicAttribute](https://cloud.tencent.com/document/api/1179/55903)
-* Delete: [DeleteCmqTopic](https://cloud.tencent.com/document/api/1179/55912)
+* Create: [CreateCmqTopic](https://www.tencentcloud.com/search/?wd=CreateCmqTopic&type=document&lang=en)
+* Read: [DescribeCmqTopicDetail](https://www.tencentcloud.com/search/?wd=DescribeCmqTopicDetail&type=document&lang=en)
+* Update: [ModifyCmqTopicAttribute](https://www.tencentcloud.com/search/?wd=ModifyCmqTopicAttribute&type=document&lang=en)
+* Delete: [DeleteCmqTopic](https://www.tencentcloud.com/search/?wd=DeleteCmqTopic&type=document&lang=en)
 
 ## Import
 

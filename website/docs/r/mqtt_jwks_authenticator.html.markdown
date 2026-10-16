@@ -56,10 +56,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateJWKSAuthenticator](https://cloud.tencent.com/document/api/1778/111078)
-* Read: [DescribeAuthenticator](https://cloud.tencent.com/document/api/1778/111075)
-* Update: [ModifyJWKSAuthenticator](https://cloud.tencent.com/document/api/1778/111087)
-* Delete: [DeleteAuthenticator](https://cloud.tencent.com/document/api/1778/111088)
+* Create: [CreateJWKSAuthenticator](https://www.tencentcloud.com/search/?wd=CreateJWKSAuthenticator&type=document&lang=en)
+* Read: [DescribeAuthenticator](https://www.tencentcloud.com/search/?wd=DescribeAuthenticator&type=document&lang=en)
+* Update: [ModifyJWKSAuthenticator](https://www.tencentcloud.com/search/?wd=ModifyJWKSAuthenticator&type=document&lang=en)
+* Delete: [DeleteAuthenticator](https://www.tencentcloud.com/search/?wd=DeleteAuthenticator&type=document&lang=en)
 
 ## Import
 

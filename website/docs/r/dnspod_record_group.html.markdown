@@ -38,10 +38,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRecordGroup](https://cloud.tencent.com/document/api/1427/83227)
-* Read: [DescribeRecordGroupList](https://cloud.tencent.com/document/api/1427/83225)
-* Update: [ModifyRecordGroup](https://cloud.tencent.com/document/api/1427/83224)
-* Delete: [DeleteRecordGroup](https://cloud.tencent.com/document/api/1427/83226)
+* Create: [CreateRecordGroup](https://www.tencentcloud.com/search/?wd=CreateRecordGroup&type=document&lang=en)
+* Read: [DescribeRecordGroupList](https://www.tencentcloud.com/search/?wd=DescribeRecordGroupList&type=document&lang=en)
+* Update: [ModifyRecordGroup](https://www.tencentcloud.com/search/?wd=ModifyRecordGroup&type=document&lang=en)
+* Delete: [DeleteRecordGroup](https://www.tencentcloud.com/search/?wd=DeleteRecordGroup&type=document&lang=en)
 
 ## Import
 

@@ -61,11 +61,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifySecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15810)
-* Read: [DescribeSecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15804)
-* Update: [DeleteSecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15809)
-* Update: [ModifySecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15810)
-* Delete: [ModifySecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15810)
+* Create: [ModifySecurityGroupPolicies](https://www.tencentcloud.com/document/api/215/15810)
+* Read: [DescribeSecurityGroupPolicies](https://www.tencentcloud.com/document/api/215/15804)
+* Update: [DeleteSecurityGroupPolicies](https://www.tencentcloud.com/document/api/215/15809)
+* Update: [ModifySecurityGroupPolicies](https://www.tencentcloud.com/document/api/215/15810)
+* Delete: [ModifySecurityGroupPolicies](https://www.tencentcloud.com/document/api/215/15810)
 
 ## Import
 

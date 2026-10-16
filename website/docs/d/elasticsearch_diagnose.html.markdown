@@ -72,5 +72,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDiagnose](https://cloud.tencent.com/document/api/845/100954)
+* Read: [DescribeDiagnose](https://www.tencentcloud.com/search/?wd=DescribeDiagnose&type=document&lang=en)
 

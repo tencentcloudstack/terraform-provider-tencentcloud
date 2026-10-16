@@ -50,5 +50,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeReplicationInstanceSyncStatus](https://cloud.tencent.com/document/api/1141/55297)
+* Read: [DescribeReplicationInstanceSyncStatus](https://www.tencentcloud.com/search/?wd=DescribeReplicationInstanceSyncStatus&type=document&lang=en)
 

@@ -160,22 +160,22 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDisks](https://cloud.tencent.com/document/api/362/16312)
-* Create: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315)
-* Create: [ModifyDiskBackupQuota](https://cloud.tencent.com/document/api/362/80276)
-* Read: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ApplySnapshot](https://cloud.tencent.com/document/api/362/15643)
-* Update: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315)
-* Update: [ModifyDiskAttributes](https://cloud.tencent.com/document/api/362/15659)
-* Update: [ModifyDiskBackupQuota](https://cloud.tencent.com/document/api/362/80276)
-* Update: [ModifyDiskExtraPerformance](https://cloud.tencent.com/document/api/362/51483)
-* Update: [ModifyDisksChargeType](https://cloud.tencent.com/document/api/362/38075)
-* Update: [ModifyDisksRenewFlag](https://cloud.tencent.com/document/api/362/15668)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Update: [ResizeDisk](https://cloud.tencent.com/document/api/362/16310)
-* Delete: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315)
-* Delete: [TerminateDisks](https://cloud.tencent.com/document/api/362/16321)
+* Create: [CreateDisks](https://www.tencentcloud.com/document/api/362/16312)
+* Create: [DescribeDisks](https://www.tencentcloud.com/document/api/362/16315)
+* Create: [ModifyDiskBackupQuota](https://www.tencentcloud.com/document/api/362/50786)
+* Read: [DescribeDisks](https://www.tencentcloud.com/document/api/362/16315)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ApplySnapshot](https://www.tencentcloud.com/document/api/362/15643)
+* Update: [DescribeDisks](https://www.tencentcloud.com/document/api/362/16315)
+* Update: [ModifyDiskAttributes](https://www.tencentcloud.com/document/api/362/15659)
+* Update: [ModifyDiskBackupQuota](https://www.tencentcloud.com/document/api/362/50786)
+* Update: [ModifyDiskExtraPerformance](https://www.tencentcloud.com/document/api/362/40191)
+* Update: [ModifyDisksChargeType](https://www.tencentcloud.com/search/?wd=ModifyDisksChargeType&type=document&lang=en)
+* Update: [ModifyDisksRenewFlag](https://www.tencentcloud.com/search/?wd=ModifyDisksRenewFlag&type=document&lang=en)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Update: [ResizeDisk](https://www.tencentcloud.com/document/api/362/16310)
+* Delete: [DescribeDisks](https://www.tencentcloud.com/document/api/362/16315)
+* Delete: [TerminateDisks](https://www.tencentcloud.com/document/api/362/16321)
 
 ## Import
 

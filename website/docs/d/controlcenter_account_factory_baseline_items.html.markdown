@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListAccountFactoryBaselineItems](https://cloud.tencent.com/document/api/1708/116708)
+* Read: [ListAccountFactoryBaselineItems](https://www.tencentcloud.com/search/?wd=ListAccountFactoryBaselineItems&type=document&lang=en)
 

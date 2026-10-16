@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAutoSnapshotPolicies](https://cloud.tencent.com/document/api/362/33556)
+* Read: [DescribeAutoSnapshotPolicies](https://www.tencentcloud.com/document/api/362/32165)
 

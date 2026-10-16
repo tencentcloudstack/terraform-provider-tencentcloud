@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSupportProxyVersion](https://cloud.tencent.com/document/api/1003/94260)
+* Read: [DescribeSupportProxyVersion](https://www.tencentcloud.com/search/?wd=DescribeSupportProxyVersion&type=document&lang=en)
 

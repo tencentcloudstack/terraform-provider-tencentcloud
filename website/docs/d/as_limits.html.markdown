@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAccountLimits](https://cloud.tencent.com/document/api/377/20443)
+* Read: [DescribeAccountLimits](https://www.tencentcloud.com/document/api/377/31003)
 

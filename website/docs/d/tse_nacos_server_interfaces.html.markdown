@@ -37,5 +37,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeNacosServerInterfaces](https://cloud.tencent.com/document/api/1364/76100)
+* Read: [DescribeNacosServerInterfaces](https://www.tencentcloud.com/search/?wd=DescribeNacosServerInterfaces&type=document&lang=en)
 

@@ -40,12 +40,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGlobalDomainDns](https://cloud.tencent.com/document/api/608/79566)
-* Create: [DescribeGlobalDomainDns](https://cloud.tencent.com/document/api/608/79563)
-* Read: [DescribeGlobalDomainDns](https://cloud.tencent.com/document/api/608/79563)
-* Update: [DescribeGlobalDomainDns](https://cloud.tencent.com/document/api/608/79563)
-* Update: [ModifyGlobalDomainDns](https://cloud.tencent.com/document/api/608/79558)
-* Delete: [DeleteGlobalDomainDns](https://cloud.tencent.com/document/api/608/79564)
+* Create: [CreateGlobalDomainDns](https://www.tencentcloud.com/search/?wd=CreateGlobalDomainDns&type=document&lang=en)
+* Create: [DescribeGlobalDomainDns](https://www.tencentcloud.com/search/?wd=DescribeGlobalDomainDns&type=document&lang=en)
+* Read: [DescribeGlobalDomainDns](https://www.tencentcloud.com/search/?wd=DescribeGlobalDomainDns&type=document&lang=en)
+* Update: [DescribeGlobalDomainDns](https://www.tencentcloud.com/search/?wd=DescribeGlobalDomainDns&type=document&lang=en)
+* Update: [ModifyGlobalDomainDns](https://www.tencentcloud.com/search/?wd=ModifyGlobalDomainDns&type=document&lang=en)
+* Delete: [DeleteGlobalDomainDns](https://www.tencentcloud.com/search/?wd=DeleteGlobalDomainDns&type=document&lang=en)
 
 ## Import
 

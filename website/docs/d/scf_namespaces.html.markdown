@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListNamespaces](https://cloud.tencent.com/document/api/583/37158)
+* Read: [ListNamespaces](https://www.tencentcloud.com/document/api/583/34411)
 

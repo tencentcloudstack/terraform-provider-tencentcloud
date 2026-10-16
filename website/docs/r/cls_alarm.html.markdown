@@ -270,13 +270,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAlarm](https://cloud.tencent.com/document/api/614/56466)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeAlarms](https://cloud.tencent.com/document/api/614/56461)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ModifyAlarm](https://cloud.tencent.com/document/api/614/56459)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeleteAlarm](https://cloud.tencent.com/document/api/614/56464)
+* Create: [CreateAlarm](https://www.tencentcloud.com/document/api/614/42830)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeAlarms](https://www.tencentcloud.com/document/api/614/42825)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyAlarm](https://www.tencentcloud.com/document/api/614/42823)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteAlarm](https://www.tencentcloud.com/document/api/614/42828)
 
 ## Import
 

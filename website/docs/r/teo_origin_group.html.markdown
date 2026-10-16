@@ -96,10 +96,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateOriginGroup](https://cloud.tencent.com/document/api/1552/80598)
-* Read: [DescribeOriginGroup](https://cloud.tencent.com/document/api/1552/80594)
-* Update: [ModifyOriginGroup](https://cloud.tencent.com/document/api/1552/80592)
-* Delete: [DeleteOriginGroup](https://cloud.tencent.com/document/api/1552/80596)
+* Create: [CreateOriginGroup](https://www.tencentcloud.com/search/?wd=CreateOriginGroup&type=document&lang=en)
+* Read: [DescribeOriginGroup](https://www.tencentcloud.com/search/?wd=DescribeOriginGroup&type=document&lang=en)
+* Update: [ModifyOriginGroup](https://www.tencentcloud.com/search/?wd=ModifyOriginGroup&type=document&lang=en)
+* Delete: [DeleteOriginGroup](https://www.tencentcloud.com/search/?wd=DeleteOriginGroup&type=document&lang=en)
 
 ## Import
 

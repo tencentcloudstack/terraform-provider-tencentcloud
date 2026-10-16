@@ -84,6 +84,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTCPListeners](https://cloud.tencent.com/document/api/608/36999)
-* Read: [DescribeUDPListeners](https://cloud.tencent.com/document/api/608/36998)
+* Read: [DescribeTCPListeners](https://www.tencentcloud.com/document/api/608/33068)
+* Read: [DescribeUDPListeners](https://www.tencentcloud.com/document/api/608/33067)
 

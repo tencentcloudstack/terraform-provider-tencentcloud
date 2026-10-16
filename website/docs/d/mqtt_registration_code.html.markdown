@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ApplyRegistrationCode](https://cloud.tencent.com/document/api/1778/116204)
+* Read: [ApplyRegistrationCode](https://www.tencentcloud.com/search/?wd=ApplyRegistrationCode&type=document&lang=en)
 

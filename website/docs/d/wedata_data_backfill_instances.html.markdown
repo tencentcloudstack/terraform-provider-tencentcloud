@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListDataBackfillInstances](https://cloud.tencent.com/document/api/1267/123579)
+* Read: [ListDataBackfillInstances](https://www.tencentcloud.com/search/?wd=ListDataBackfillInstances&type=document&lang=en)
 

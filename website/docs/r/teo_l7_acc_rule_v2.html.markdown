@@ -663,10 +663,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateL7AccRules](https://cloud.tencent.com/document/api/1552/115822)
-* Read: [DescribeL7AccRules](https://cloud.tencent.com/document/api/1552/115820)
-* Update: [ModifyL7AccRule](https://cloud.tencent.com/document/api/1552/115818)
-* Delete: [DeleteL7AccRules](https://cloud.tencent.com/document/api/1552/115821)
+* Create: [CreateL7AccRules](https://www.tencentcloud.com/search/?wd=CreateL7AccRules&type=document&lang=en)
+* Read: [DescribeL7AccRules](https://www.tencentcloud.com/search/?wd=DescribeL7AccRules&type=document&lang=en)
+* Update: [ModifyL7AccRule](https://www.tencentcloud.com/search/?wd=ModifyL7AccRule&type=document&lang=en)
+* Delete: [DeleteL7AccRules](https://www.tencentcloud.com/search/?wd=DeleteL7AccRules&type=document&lang=en)
 
 ## Import
 

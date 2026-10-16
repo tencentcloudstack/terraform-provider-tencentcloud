@@ -70,12 +70,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
-* Create: [ModifyCloseWanIp](https://cloud.tencent.com/document/api/238/101718)
-* Create: [ModifyOpenWanIp](https://cloud.tencent.com/document/api/238/101717)
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969)
-* Read: [DescribeReadOnlyGroupList](https://cloud.tencent.com/document/api/238/46771)
-* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
-* Update: [ModifyCloseWanIp](https://cloud.tencent.com/document/api/238/101718)
-* Update: [ModifyOpenWanIp](https://cloud.tencent.com/document/api/238/101717)
+* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+* Create: [ModifyCloseWanIp](https://www.tencentcloud.com/document/api/238/72751)
+* Create: [ModifyOpenWanIp](https://www.tencentcloud.com/document/api/238/72750)
+* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
+* Read: [DescribeReadOnlyGroupList](https://www.tencentcloud.com/document/api/238/72738)
+* Update: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+* Update: [ModifyCloseWanIp](https://www.tencentcloud.com/document/api/238/72751)
+* Update: [ModifyOpenWanIp](https://www.tencentcloud.com/document/api/238/72750)
 

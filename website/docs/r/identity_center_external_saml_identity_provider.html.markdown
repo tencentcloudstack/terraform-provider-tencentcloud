@@ -66,13 +66,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SetExternalSAMLIdentityProvider](https://cloud.tencent.com/document/api/850/109960)
-* Read: [GetExternalSAMLIdentityProvider](https://cloud.tencent.com/document/api/850/109964)
-* Read: [GetZoneSAMLServiceProviderInfo](https://cloud.tencent.com/document/api/850/109963)
-* Update: [SetExternalSAMLIdentityProvider](https://cloud.tencent.com/document/api/850/109960)
-* Delete: [ClearExternalSAMLIdentityProvider](https://cloud.tencent.com/document/api/850/109965)
-* Delete: [GetExternalSAMLIdentityProvider](https://cloud.tencent.com/document/api/850/109964)
-* Delete: [SetExternalSAMLIdentityProvider](https://cloud.tencent.com/document/api/850/109960)
+* Create: [SetExternalSAMLIdentityProvider](https://www.tencentcloud.com/search/?wd=SetExternalSAMLIdentityProvider&type=document&lang=en)
+* Read: [GetExternalSAMLIdentityProvider](https://www.tencentcloud.com/search/?wd=GetExternalSAMLIdentityProvider&type=document&lang=en)
+* Read: [GetZoneSAMLServiceProviderInfo](https://www.tencentcloud.com/search/?wd=GetZoneSAMLServiceProviderInfo&type=document&lang=en)
+* Update: [SetExternalSAMLIdentityProvider](https://www.tencentcloud.com/search/?wd=SetExternalSAMLIdentityProvider&type=document&lang=en)
+* Delete: [ClearExternalSAMLIdentityProvider](https://www.tencentcloud.com/search/?wd=ClearExternalSAMLIdentityProvider&type=document&lang=en)
+* Delete: [GetExternalSAMLIdentityProvider](https://www.tencentcloud.com/search/?wd=GetExternalSAMLIdentityProvider&type=document&lang=en)
+* Delete: [SetExternalSAMLIdentityProvider](https://www.tencentcloud.com/search/?wd=SetExternalSAMLIdentityProvider&type=document&lang=en)
 
 ## Import
 

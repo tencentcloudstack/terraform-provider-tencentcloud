@@ -65,13 +65,13 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAddon](https://cloud.tencent.com/document/api/457/94183)
-* Create: [InstallAddon](https://cloud.tencent.com/document/api/457/94181)
-* Read: [DescribeAddon](https://cloud.tencent.com/document/api/457/94183)
-* Update: [DescribeAddon](https://cloud.tencent.com/document/api/457/94183)
-* Update: [UpdateAddon](https://cloud.tencent.com/document/api/457/94180)
-* Delete: [DeleteAddon](https://cloud.tencent.com/document/api/457/94184)
-* Delete: [DescribeAddon](https://cloud.tencent.com/document/api/457/94183)
+* Create: [DescribeAddon](https://www.tencentcloud.com/document/api/457/56953)
+* Create: [InstallAddon](https://www.tencentcloud.com/document/api/457/56951)
+* Read: [DescribeAddon](https://www.tencentcloud.com/document/api/457/56953)
+* Update: [DescribeAddon](https://www.tencentcloud.com/document/api/457/56953)
+* Update: [UpdateAddon](https://www.tencentcloud.com/document/api/457/56950)
+* Delete: [DeleteAddon](https://www.tencentcloud.com/document/api/457/56954)
+* Delete: [DescribeAddon](https://www.tencentcloud.com/document/api/457/56953)
 
 ## Import
 

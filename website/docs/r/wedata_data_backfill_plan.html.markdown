@@ -95,10 +95,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDataBackfillPlan](https://cloud.tencent.com/document/api/1267/123592)
-* Read: [GetDataBackfillPlan](https://cloud.tencent.com/document/api/1267/124032)
-* Delete: [DeleteDataBackfillPlanAsync](https://cloud.tencent.com/document/api/1267/127220)
-* Delete: [GetOpsAsyncJob](https://cloud.tencent.com/document/api/1267/123587)
+* Create: [CreateDataBackfillPlan](https://www.tencentcloud.com/search/?wd=CreateDataBackfillPlan&type=document&lang=en)
+* Read: [GetDataBackfillPlan](https://www.tencentcloud.com/search/?wd=GetDataBackfillPlan&type=document&lang=en)
+* Delete: [DeleteDataBackfillPlanAsync](https://www.tencentcloud.com/search/?wd=DeleteDataBackfillPlanAsync&type=document&lang=en)
+* Delete: [GetOpsAsyncJob](https://www.tencentcloud.com/search/?wd=GetOpsAsyncJob&type=document&lang=en)
 
 ## Import
 

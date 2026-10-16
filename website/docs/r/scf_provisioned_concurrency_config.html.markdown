@@ -64,7 +64,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [PutProvisionedConcurrencyConfig](https://cloud.tencent.com/document/api/583/51246)
-* Read: [GetProvisionedConcurrencyConfig](https://cloud.tencent.com/document/api/583/51248)
-* Delete: [DeleteProvisionedConcurrencyConfig](https://cloud.tencent.com/document/api/583/51250)
+* Create: [PutProvisionedConcurrencyConfig](https://www.tencentcloud.com/document/api/583/39225)
+* Read: [GetProvisionedConcurrencyConfig](https://www.tencentcloud.com/document/api/583/39227)
+* Delete: [DeleteProvisionedConcurrencyConfig](https://www.tencentcloud.com/document/api/583/39229)
 

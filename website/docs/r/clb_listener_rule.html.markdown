@@ -123,15 +123,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRule](https://cloud.tencent.com/document/api/214/30691)
-* Create: [DescribeListeners](https://cloud.tencent.com/document/api/214/30686)
-* Create: [ModifyDomainAttributes](https://cloud.tencent.com/document/api/214/38092)
-* Create: [ModifyRule](https://cloud.tencent.com/document/api/214/30679)
-* Read: [DescribeListeners](https://cloud.tencent.com/document/api/214/30686)
-* Update: [DescribeListeners](https://cloud.tencent.com/document/api/214/30686)
-* Update: [ModifyDomainAttributes](https://cloud.tencent.com/document/api/214/38092)
-* Update: [ModifyRule](https://cloud.tencent.com/document/api/214/30679)
-* Delete: [DeleteRule](https://cloud.tencent.com/document/api/214/30688)
+* Create: [CreateRule](https://www.tencentcloud.com/document/api/214/33840)
+* Create: [DescribeListeners](https://www.tencentcloud.com/document/api/214/33831)
+* Create: [ModifyDomainAttributes](https://www.tencentcloud.com/document/api/214/33819)
+* Create: [ModifyRule](https://www.tencentcloud.com/document/api/214/33816)
+* Read: [DescribeListeners](https://www.tencentcloud.com/document/api/214/33831)
+* Update: [DescribeListeners](https://www.tencentcloud.com/document/api/214/33831)
+* Update: [ModifyDomainAttributes](https://www.tencentcloud.com/document/api/214/33819)
+* Update: [ModifyRule](https://www.tencentcloud.com/document/api/214/33816)
+* Delete: [DeleteRule](https://www.tencentcloud.com/document/api/214/33835)
 
 ## Import
 

@@ -129,10 +129,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachLoadBalancers](https://cloud.tencent.com/document/api/377/67354)
-* Read: [DescribeAutoScalingGroups](https://cloud.tencent.com/document/api/377/20438)
-* Update: [ModifyLoadBalancerTargetAttributes](https://cloud.tencent.com/document/api/377/67352)
-* Delete: [ModifyLoadBalancers](https://cloud.tencent.com/document/api/377/32868)
+* Create: [AttachLoadBalancers](https://www.tencentcloud.com/document/api/377/44582)
+* Read: [DescribeAutoScalingGroups](https://www.tencentcloud.com/document/api/377/31013)
+* Update: [ModifyLoadBalancerTargetAttributes](https://www.tencentcloud.com/document/api/377/44579)
+* Delete: [ModifyLoadBalancers](https://www.tencentcloud.com/document/api/377/31006)
 
 ## Import
 

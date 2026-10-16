@@ -69,16 +69,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrometheusMultiTenantInstancePostPayMode](https://cloud.tencent.com/document/api/248/76097)
-* Create: [DescribePrometheusInstances](https://cloud.tencent.com/document/api/248/66097)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribePrometheusInstances](https://cloud.tencent.com/document/api/248/66097)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ModifyPrometheusInstanceAttributes](https://cloud.tencent.com/document/api/248/76009)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DescribePrometheusInstances](https://cloud.tencent.com/document/api/248/66097)
-* Delete: [DestroyPrometheusInstance](https://cloud.tencent.com/document/api/248/76011)
-* Delete: [TerminatePrometheusInstances](https://cloud.tencent.com/document/api/248/76008)
+* Create: [CreatePrometheusMultiTenantInstancePostPayMode](https://www.tencentcloud.com/document/api/248/48764)
+* Create: [DescribePrometheusInstances](https://www.tencentcloud.com/document/api/248/48753)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribePrometheusInstances](https://www.tencentcloud.com/document/api/248/48753)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyPrometheusInstanceAttributes](https://www.tencentcloud.com/document/api/248/48747)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DescribePrometheusInstances](https://www.tencentcloud.com/document/api/248/48753)
+* Delete: [DestroyPrometheusInstance](https://www.tencentcloud.com/document/api/248/48749)
+* Delete: [TerminatePrometheusInstances](https://www.tencentcloud.com/document/api/248/48746)
 
 ## Import
 

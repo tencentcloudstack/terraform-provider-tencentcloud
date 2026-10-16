@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeLiveStreamMonitor](https://cloud.tencent.com/document/api/267/93519)
-* Create: [StartLiveStreamMonitor](https://cloud.tencent.com/document/api/267/93515)
-* Read: [DescribeLiveStreamMonitor](https://cloud.tencent.com/document/api/267/93519)
-* Delete: [DescribeLiveStreamMonitor](https://cloud.tencent.com/document/api/267/93519)
-* Delete: [StopLiveStreamMonitor](https://cloud.tencent.com/document/api/267/93514)
+* Create: [DescribeLiveStreamMonitor](https://www.tencentcloud.com/search/?wd=DescribeLiveStreamMonitor&type=document&lang=en)
+* Create: [StartLiveStreamMonitor](https://www.tencentcloud.com/search/?wd=StartLiveStreamMonitor&type=document&lang=en)
+* Read: [DescribeLiveStreamMonitor](https://www.tencentcloud.com/search/?wd=DescribeLiveStreamMonitor&type=document&lang=en)
+* Delete: [DescribeLiveStreamMonitor](https://www.tencentcloud.com/search/?wd=DescribeLiveStreamMonitor&type=document&lang=en)
+* Delete: [StopLiveStreamMonitor](https://www.tencentcloud.com/search/?wd=StopLiveStreamMonitor&type=document&lang=en)
 
 ## Import
 

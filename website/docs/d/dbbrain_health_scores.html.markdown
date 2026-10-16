@@ -56,5 +56,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeHealthScore](https://cloud.tencent.com/document/api/1130/57797)
+* Read: [DescribeHealthScore](https://www.tencentcloud.com/search/?wd=DescribeHealthScore&type=document&lang=en)
 

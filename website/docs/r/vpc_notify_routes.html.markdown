@@ -48,9 +48,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [NotifyRoutes](https://cloud.tencent.com/document/api/215/52618)
-* Read: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763)
-* Delete: [WithdrawNotifyRoutes](https://cloud.tencent.com/document/api/215/52617)
+* Create: [NotifyRoutes](https://www.tencentcloud.com/document/api/215/39642)
+* Read: [DescribeRouteTables](https://www.tencentcloud.com/document/api/215/15763)
+* Delete: [WithdrawNotifyRoutes](https://www.tencentcloud.com/document/api/215/39641)
 
 ## Import
 

@@ -50,12 +50,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindSecretIds](https://cloud.tencent.com/document/api/628/45225)
-* Create: [DescribeApiKeysStatus](https://cloud.tencent.com/document/api/628/45210)
-* Create: [DescribeUsagePlan](https://cloud.tencent.com/document/api/628/45221)
-* Read: [DescribeUsagePlan](https://cloud.tencent.com/document/api/628/45221)
-* Delete: [DescribeUsagePlan](https://cloud.tencent.com/document/api/628/45221)
-* Delete: [UnBindSecretIds](https://cloud.tencent.com/document/api/628/45215)
+* Create: [BindSecretIds](https://www.tencentcloud.com/search/?wd=BindSecretIds&type=document&lang=en)
+* Create: [DescribeApiKeysStatus](https://www.tencentcloud.com/search/?wd=DescribeApiKeysStatus&type=document&lang=en)
+* Create: [DescribeUsagePlan](https://www.tencentcloud.com/search/?wd=DescribeUsagePlan&type=document&lang=en)
+* Read: [DescribeUsagePlan](https://www.tencentcloud.com/search/?wd=DescribeUsagePlan&type=document&lang=en)
+* Delete: [DescribeUsagePlan](https://www.tencentcloud.com/search/?wd=DescribeUsagePlan&type=document&lang=en)
+* Delete: [UnBindSecretIds](https://www.tencentcloud.com/search/?wd=UnBindSecretIds&type=document&lang=en)
 
 ## Import
 

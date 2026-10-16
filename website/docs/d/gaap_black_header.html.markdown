@@ -34,5 +34,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBlackHeader](https://cloud.tencent.com/document/api/608/59241)
+* Read: [DescribeBlackHeader](https://www.tencentcloud.com/document/api/608/41733)
 

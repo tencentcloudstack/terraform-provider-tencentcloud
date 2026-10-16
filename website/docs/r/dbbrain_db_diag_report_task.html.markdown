@@ -46,8 +46,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDBDiagReportTask](https://cloud.tencent.com/document/api/1130/57802)
-* Create: [DescribeDBDiagReportTasks](https://cloud.tencent.com/document/api/1130/57805)
-* Read: [DescribeDBDiagReportTasks](https://cloud.tencent.com/document/api/1130/57805)
-* Delete: [DeleteDBDiagReportTasks](https://cloud.tencent.com/document/api/1130/90009)
+* Create: [CreateDBDiagReportTask](https://www.tencentcloud.com/search/?wd=CreateDBDiagReportTask&type=document&lang=en)
+* Create: [DescribeDBDiagReportTasks](https://www.tencentcloud.com/search/?wd=DescribeDBDiagReportTasks&type=document&lang=en)
+* Read: [DescribeDBDiagReportTasks](https://www.tencentcloud.com/search/?wd=DescribeDBDiagReportTasks&type=document&lang=en)
+* Delete: [DeleteDBDiagReportTasks](https://www.tencentcloud.com/search/?wd=DeleteDBDiagReportTasks&type=document&lang=en)
 

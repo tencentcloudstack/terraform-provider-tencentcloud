@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeOverviewAttackTrend](https://cloud.tencent.com/document/api/297/95356)
+* Read: [DescribeOverviewAttackTrend](https://www.tencentcloud.com/search/?wd=DescribeOverviewAttackTrend&type=document&lang=en)
 

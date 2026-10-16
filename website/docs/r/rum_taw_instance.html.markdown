@@ -53,12 +53,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Read: [DescribeTawInstances](https://cloud.tencent.com/document/api/1464/69213)
-* Update: [ModifyInstance](https://cloud.tencent.com/document/api/1464/69210)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeleteInstance](https://cloud.tencent.com/document/api/1464/69242)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Read: [DescribeTawInstances](https://www.tencentcloud.com/search/?wd=DescribeTawInstances&type=document&lang=en)
+* Update: [ModifyInstance](https://www.tencentcloud.com/search/?wd=ModifyInstance&type=document&lang=en)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteInstance](https://www.tencentcloud.com/search/?wd=DeleteInstance&type=document&lang=en)
 
 ## Import
 

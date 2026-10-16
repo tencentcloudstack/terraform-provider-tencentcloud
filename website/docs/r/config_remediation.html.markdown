@@ -46,10 +46,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRemediation](https://cloud.tencent.com/document/api/1579/129723)
-* Read: [ListRemediations](https://cloud.tencent.com/document/api/1579/129715)
-* Update: [UpdateRemediation](https://cloud.tencent.com/document/api/1579/129706)
-* Delete: [DeleteRemediations](https://cloud.tencent.com/document/api/1579/129720)
+* Create: [CreateRemediation](https://www.tencentcloud.com/search/?wd=CreateRemediation&type=document&lang=en)
+* Read: [ListRemediations](https://www.tencentcloud.com/search/?wd=ListRemediations&type=document&lang=en)
+* Update: [UpdateRemediation](https://www.tencentcloud.com/search/?wd=UpdateRemediation&type=document&lang=en)
+* Delete: [DeleteRemediations](https://www.tencentcloud.com/search/?wd=DeleteRemediations&type=document&lang=en)
 
 ## Import
 

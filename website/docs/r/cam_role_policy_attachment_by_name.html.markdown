@@ -56,10 +56,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachRolePolicy](https://cloud.tencent.com/document/api/598/36226)
-* Create: [ListAttachedRolePolicies](https://cloud.tencent.com/document/api/598/36220)
-* Read: [ListAttachedRolePolicies](https://cloud.tencent.com/document/api/598/36220)
-* Delete: [DetachRolePolicy](https://cloud.tencent.com/document/api/598/36222)
+* Create: [AttachRolePolicy](https://www.tencentcloud.com/document/api/598/33562)
+* Create: [ListAttachedRolePolicies](https://www.tencentcloud.com/document/api/598/33556)
+* Read: [ListAttachedRolePolicies](https://www.tencentcloud.com/document/api/598/33556)
+* Delete: [DetachRolePolicy](https://www.tencentcloud.com/document/api/598/33558)
 
 ## Import
 

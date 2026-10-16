@@ -34,7 +34,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [GetClsService](https://cloud.tencent.com/document/api/614/132612)
-* Create: [OpenClsService](https://cloud.tencent.com/document/api/614/132611)
-* Read: [GetClsService](https://cloud.tencent.com/document/api/614/132612)
+* Create: [GetClsService](https://www.tencentcloud.com/document/api/614/80501)
+* Create: [OpenClsService](https://www.tencentcloud.com/document/api/614/80500)
+* Read: [GetClsService](https://www.tencentcloud.com/document/api/614/80501)
 

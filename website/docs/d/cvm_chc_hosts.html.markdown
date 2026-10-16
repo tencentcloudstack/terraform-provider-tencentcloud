@@ -87,5 +87,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeChcHosts](https://cloud.tencent.com/document/api/213/76366)
+* Read: [DescribeChcHosts](https://www.tencentcloud.com/document/api/213/48899)
 

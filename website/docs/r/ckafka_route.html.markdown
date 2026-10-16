@@ -58,10 +58,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRoute](https://cloud.tencent.com/document/api/597/70172)
-* Create: [DescribeTaskStatus](https://cloud.tencent.com/document/api/597/90934)
-* Read: [DescribeRoute](https://cloud.tencent.com/document/api/597/45484)
-* Delete: [DeleteRoute](https://cloud.tencent.com/document/api/597/73213)
+* Create: [CreateRoute](https://www.tencentcloud.com/document/api/597/74258)
+* Create: [DescribeTaskStatus](https://www.tencentcloud.com/document/api/597/55881)
+* Read: [DescribeRoute](https://www.tencentcloud.com/document/api/597/37090)
+* Delete: [DeleteRoute](https://www.tencentcloud.com/document/api/597/47140)
 
 ## Import
 

@@ -240,10 +240,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateContentReviewTemplate](https://cloud.tencent.com/document/api/862/39435)
-* Read: [DescribeContentReviewTemplates](https://cloud.tencent.com/document/api/862/39431)
-* Update: [ModifyContentReviewTemplate](https://cloud.tencent.com/document/api/862/39429)
-* Delete: [DeleteContentReviewTemplate](https://cloud.tencent.com/document/api/862/39433)
+* Create: [CreateContentReviewTemplate](https://www.tencentcloud.com/search/?wd=CreateContentReviewTemplate&type=document&lang=en)
+* Read: [DescribeContentReviewTemplates](https://www.tencentcloud.com/search/?wd=DescribeContentReviewTemplates&type=document&lang=en)
+* Update: [ModifyContentReviewTemplate](https://www.tencentcloud.com/search/?wd=ModifyContentReviewTemplate&type=document&lang=en)
+* Delete: [DeleteContentReviewTemplate](https://www.tencentcloud.com/search/?wd=DeleteContentReviewTemplate&type=document&lang=en)
 
 ## Import
 

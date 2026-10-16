@@ -91,11 +91,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBackup](https://cloud.tencent.com/document/api/238/19946)
-* Create: [DescribeBackupByFlowId](https://cloud.tencent.com/document/api/238/47203)
-* Read: [DescribeBackups](https://cloud.tencent.com/document/api/238/19943)
-* Update: [ModifyBackupName](https://cloud.tencent.com/document/api/238/47202)
-* Delete: [RemoveBackups](https://cloud.tencent.com/document/api/238/46287)
+* Create: [CreateBackup](https://www.tencentcloud.com/document/api/238/32130)
+* Create: [DescribeBackupByFlowId](https://www.tencentcloud.com/document/api/238/72780)
+* Read: [DescribeBackups](https://www.tencentcloud.com/document/api/238/32127)
+* Update: [ModifyBackupName](https://www.tencentcloud.com/document/api/238/72774)
+* Delete: [RemoveBackups](https://www.tencentcloud.com/document/api/238/72776)
 
 ## Import
 

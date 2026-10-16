@@ -68,9 +68,9 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ConfirmMultiPathGatewayOriginACL](https://cloud.tencent.com/document/api/1552/123860)
-* Read: [DescribeMultiPathGatewayOriginACL](https://cloud.tencent.com/document/api/1552/123859)
-* Update: [ConfirmMultiPathGatewayOriginACL](https://cloud.tencent.com/document/api/1552/123860)
+* Create: [ConfirmMultiPathGatewayOriginACL](https://www.tencentcloud.com/search/?wd=ConfirmMultiPathGatewayOriginACL&type=document&lang=en)
+* Read: [DescribeMultiPathGatewayOriginACL](https://www.tencentcloud.com/search/?wd=DescribeMultiPathGatewayOriginACL&type=document&lang=en)
+* Update: [ConfirmMultiPathGatewayOriginACL](https://www.tencentcloud.com/search/?wd=ConfirmMultiPathGatewayOriginACL&type=document&lang=en)
 
 ## Import
 

@@ -150,17 +150,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRole](https://cloud.tencent.com/document/api/598/36225)
-* Create: [DescribeRoleList](https://cloud.tencent.com/document/api/598/36223)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Read: [DescribeRoleList](https://cloud.tencent.com/document/api/598/36223)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Update: [UpdateAssumeRolePolicy](https://cloud.tencent.com/document/api/598/36219)
-* Update: [UpdateRoleConsoleLogin](https://cloud.tencent.com/document/api/598/43469)
-* Update: [UpdateRoleDescription](https://cloud.tencent.com/document/api/598/36218)
-* Update: [UpdateRoleSessionDuration](https://cloud.tencent.com/document/api/598/113746)
-* Delete: [DeleteRole](https://cloud.tencent.com/document/api/598/36224)
+* Create: [CreateRole](https://www.tencentcloud.com/document/api/598/33561)
+* Create: [DescribeRoleList](https://www.tencentcloud.com/document/api/598/33559)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Read: [DescribeRoleList](https://www.tencentcloud.com/document/api/598/33559)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Update: [UpdateAssumeRolePolicy](https://www.tencentcloud.com/document/api/598/33555)
+* Update: [UpdateRoleConsoleLogin](https://www.tencentcloud.com/document/api/598/35737)
+* Update: [UpdateRoleDescription](https://www.tencentcloud.com/document/api/598/33554)
+* Update: [UpdateRoleSessionDuration](https://www.tencentcloud.com/search/?wd=UpdateRoleSessionDuration&type=document&lang=en)
+* Delete: [DeleteRole](https://www.tencentcloud.com/document/api/598/33560)
 
 ## Import
 

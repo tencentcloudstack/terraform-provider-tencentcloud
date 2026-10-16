@@ -34,5 +34,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeImageQuota](https://cloud.tencent.com/document/api/213/15719)
+* Read: [DescribeImageQuota](https://www.tencentcloud.com/document/api/213/33274)
 

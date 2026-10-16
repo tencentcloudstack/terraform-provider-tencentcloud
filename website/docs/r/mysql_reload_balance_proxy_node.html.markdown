@@ -105,5 +105,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ReloadBalanceProxyNode](https://cloud.tencent.com/document/api/236/68163)
+* Create: [ReloadBalanceProxyNode](https://www.tencentcloud.com/document/api/236/45189)
 

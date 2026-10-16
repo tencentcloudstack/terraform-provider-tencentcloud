@@ -58,5 +58,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBCustomClusterResources](https://cloud.tencent.com/document/api/1322/135266)
+* Read: [DescribeDBCustomClusterResources](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterResources&type=document&lang=en)
 

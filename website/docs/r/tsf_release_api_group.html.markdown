@@ -36,6 +36,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ReleaseApiGroup](https://cloud.tencent.com/document/api/649/50627)
-* Read: [DescribeApiGroup](https://cloud.tencent.com/document/api/649/50637)
+* Create: [ReleaseApiGroup](https://www.tencentcloud.com/search/?wd=ReleaseApiGroup&type=document&lang=en)
+* Read: [DescribeApiGroup](https://www.tencentcloud.com/search/?wd=DescribeApiGroup&type=document&lang=en)
 

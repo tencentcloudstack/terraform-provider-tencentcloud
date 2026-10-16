@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RollbackDataEngineImage](https://cloud.tencent.com/document/api/1342/99267)
+* Create: [RollbackDataEngineImage](https://www.tencentcloud.com/search/?wd=RollbackDataEngineImage&type=document&lang=en)
 

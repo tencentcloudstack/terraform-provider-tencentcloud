@@ -79,14 +79,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyInstanceLogDelivery](https://cloud.tencent.com/document/api/239/110877)
-* Read: [DescribeInstanceLogDelivery](https://cloud.tencent.com/document/api/239/110878)
-* Read: [DescribeLogsets](https://cloud.tencent.com/document/api/614/58624)
-* Read: [DescribeTopics](https://cloud.tencent.com/document/api/614/56454)
-* Update: [ModifyInstanceLogDelivery](https://cloud.tencent.com/document/api/239/110877)
-* Delete: [DeleteLogset](https://cloud.tencent.com/document/api/614/58625)
-* Delete: [DeleteTopic](https://cloud.tencent.com/document/api/614/56455)
-* Delete: [ModifyInstanceLogDelivery](https://cloud.tencent.com/document/api/239/110877)
+* Create: [ModifyInstanceLogDelivery](https://www.tencentcloud.com/document/api/239/66802)
+* Read: [DescribeInstanceLogDelivery](https://www.tencentcloud.com/document/api/239/66803)
+* Read: [DescribeLogsets](https://www.tencentcloud.com/document/api/614/42778)
+* Read: [DescribeTopics](https://www.tencentcloud.com/document/api/614/42783)
+* Update: [ModifyInstanceLogDelivery](https://www.tencentcloud.com/document/api/239/66802)
+* Delete: [DeleteLogset](https://www.tencentcloud.com/document/api/614/42779)
+* Delete: [DeleteTopic](https://www.tencentcloud.com/document/api/614/42784)
+* Delete: [ModifyInstanceLogDelivery](https://www.tencentcloud.com/document/api/239/66802)
 
 ## Import
 

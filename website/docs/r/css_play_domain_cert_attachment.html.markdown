@@ -54,9 +54,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyLiveDomainCertBindings](https://cloud.tencent.com/document/api/267/78655)
-* Read: [DescribeLiveDomainCertBindings](https://cloud.tencent.com/document/api/267/78656)
-* Delete: [UnBindLiveDomainCert](https://cloud.tencent.com/document/api/267/32649)
+* Create: [ModifyLiveDomainCertBindings](https://www.tencentcloud.com/document/api/267/49644)
+* Read: [DescribeLiveDomainCertBindings](https://www.tencentcloud.com/document/api/267/49645)
+* Delete: [UnBindLiveDomainCert](https://www.tencentcloud.com/document/api/267/30774)
 
 ## Import
 

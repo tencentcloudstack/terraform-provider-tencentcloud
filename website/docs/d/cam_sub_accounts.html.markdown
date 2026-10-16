@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSubAccounts](https://cloud.tencent.com/document/api/598/53486)
+* Read: [DescribeSubAccounts](https://www.tencentcloud.com/document/api/598/39986)
 

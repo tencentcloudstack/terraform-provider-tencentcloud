@@ -46,8 +46,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddSmsTemplate](https://cloud.tencent.com/document/api/382/55974)
-* Read: [DescribeSmsTemplateList](https://cloud.tencent.com/document/api/382/52067)
-* Update: [ModifySmsTemplate](https://cloud.tencent.com/document/api/382/55972)
-* Delete: [DeleteSmsTemplate](https://cloud.tencent.com/document/api/382/55973)
+* Create: [AddSmsTemplate](https://www.tencentcloud.com/document/api/382/40526)
+* Read: [DescribeSmsTemplateList](https://www.tencentcloud.com/document/api/382/40524)
+* Update: [ModifySmsTemplate](https://www.tencentcloud.com/document/api/382/40523)
+* Delete: [DeleteSmsTemplate](https://www.tencentcloud.com/document/api/382/40525)
 

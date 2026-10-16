@@ -85,5 +85,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BatchSendEmail](https://cloud.tencent.com/document/api/1288/63481)
+* Create: [BatchSendEmail](https://www.tencentcloud.com/search/?wd=BatchSendEmail&type=document&lang=en)
 

@@ -43,10 +43,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateUser](https://cloud.tencent.com/document/api/1778/116051)
-* Read: [DescribeUserList](https://cloud.tencent.com/document/api/1778/116049)
-* Update: [ModifyUser](https://cloud.tencent.com/document/api/1778/116048)
-* Delete: [DeleteUser](https://cloud.tencent.com/document/api/1778/116050)
+* Create: [CreateUser](https://www.tencentcloud.com/search/?wd=CreateUser&type=document&lang=en)
+* Read: [DescribeUserList](https://www.tencentcloud.com/search/?wd=DescribeUserList&type=document&lang=en)
+* Update: [ModifyUser](https://www.tencentcloud.com/search/?wd=ModifyUser&type=document&lang=en)
+* Delete: [DeleteUser](https://www.tencentcloud.com/search/?wd=DeleteUser&type=document&lang=en)
 
 ## Import
 

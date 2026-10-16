@@ -48,5 +48,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSecurityAuditLogDownloadUrls](https://cloud.tencent.com/document/api/1130/57796)
+* Read: [DescribeSecurityAuditLogDownloadUrls](https://www.tencentcloud.com/search/?wd=DescribeSecurityAuditLogDownloadUrls&type=document&lang=en)
 

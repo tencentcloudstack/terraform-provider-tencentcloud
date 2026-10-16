@@ -68,12 +68,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInstalledPlugins](https://cloud.tencent.com/document/api/248/79204)
-* Create: [InstallPlugins](https://cloud.tencent.com/document/api/248/79198)
-* Read: [DescribeInstalledPlugins](https://cloud.tencent.com/document/api/248/79204)
-* Update: [DescribeInstalledPlugins](https://cloud.tencent.com/document/api/248/79204)
-* Update: [InstallPlugins](https://cloud.tencent.com/document/api/248/79198)
-* Delete: [UninstallGrafanaPlugins](https://cloud.tencent.com/document/api/248/79195)
+* Create: [DescribeInstalledPlugins](https://www.tencentcloud.com/document/api/248/49755)
+* Create: [InstallPlugins](https://www.tencentcloud.com/document/api/248/49750)
+* Read: [DescribeInstalledPlugins](https://www.tencentcloud.com/document/api/248/49755)
+* Update: [DescribeInstalledPlugins](https://www.tencentcloud.com/document/api/248/49755)
+* Update: [InstallPlugins](https://www.tencentcloud.com/document/api/248/49750)
+* Delete: [UninstallGrafanaPlugins](https://www.tencentcloud.com/document/api/248/49747)
 
 ## Import
 

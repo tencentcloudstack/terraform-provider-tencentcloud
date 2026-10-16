@@ -42,7 +42,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifySpartaProtectionMode](https://cloud.tencent.com/document/api/627/96930)
-* Read: [DescribeSpartaProtectionInfo](https://cloud.tencent.com/document/api/627/100463)
-* Update: [ModifySpartaProtectionMode](https://cloud.tencent.com/document/api/627/96930)
+* Create: [ModifySpartaProtectionMode](https://www.tencentcloud.com/document/api/627/64507)
+* Read: [DescribeSpartaProtectionInfo](https://www.tencentcloud.com/document/api/627/64518)
+* Update: [ModifySpartaProtectionMode](https://www.tencentcloud.com/document/api/627/64507)
 

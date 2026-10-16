@@ -60,11 +60,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AllocateHosts](https://cloud.tencent.com/document/api/213/16473)
-* Create: [DescribeHosts](https://cloud.tencent.com/document/api/213/16474)
-* Create: [ModifyHostsAttribute](https://cloud.tencent.com/document/api/213/16475)
-* Read: [DescribeHosts](https://cloud.tencent.com/document/api/213/16474)
-* Update: [ModifyHostsAttribute](https://cloud.tencent.com/document/api/213/16475)
+* Create: [AllocateHosts](https://www.tencentcloud.com/search/?wd=AllocateHosts&type=document&lang=en)
+* Create: [DescribeHosts](https://www.tencentcloud.com/search/?wd=DescribeHosts&type=document&lang=en)
+* Create: [ModifyHostsAttribute](https://www.tencentcloud.com/search/?wd=ModifyHostsAttribute&type=document&lang=en)
+* Read: [DescribeHosts](https://www.tencentcloud.com/search/?wd=DescribeHosts&type=document&lang=en)
+* Update: [ModifyHostsAttribute](https://www.tencentcloud.com/search/?wd=ModifyHostsAttribute&type=document&lang=en)
 
 ## Import
 

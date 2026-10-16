@@ -42,10 +42,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ActionAlterCkUser](https://cloud.tencent.com/document/api/1299/83425)
-* Read: [DescribeCkSqlApis](https://cloud.tencent.com/document/api/1299/83428)
-* Update: [ActionAlterCkUser](https://cloud.tencent.com/document/api/1299/83425)
-* Delete: [DescribeCkSqlApis](https://cloud.tencent.com/document/api/1299/83428)
+* Create: [ActionAlterCkUser](https://www.tencentcloud.com/search/?wd=ActionAlterCkUser&type=document&lang=en)
+* Read: [DescribeCkSqlApis](https://www.tencentcloud.com/search/?wd=DescribeCkSqlApis&type=document&lang=en)
+* Update: [ActionAlterCkUser](https://www.tencentcloud.com/search/?wd=ActionAlterCkUser&type=document&lang=en)
+* Delete: [DescribeCkSqlApis](https://www.tencentcloud.com/search/?wd=DescribeCkSqlApis&type=document&lang=en)
 
 ## Import
 

@@ -57,11 +57,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AuthorizeDataSource](https://cloud.tencent.com/document/api/1267/127235)
-* Read: [DescribeDataSourceAuthority](https://cloud.tencent.com/document/api/1267/127234)
-* Update: [AuthorizeDataSource](https://cloud.tencent.com/document/api/1267/127235)
-* Update: [RevokeDataSourceAuthorization](https://cloud.tencent.com/document/api/1267/127233)
-* Delete: [RevokeDataSourceAuthorization](https://cloud.tencent.com/document/api/1267/127233)
+* Create: [AuthorizeDataSource](https://www.tencentcloud.com/search/?wd=AuthorizeDataSource&type=document&lang=en)
+* Read: [DescribeDataSourceAuthority](https://www.tencentcloud.com/search/?wd=DescribeDataSourceAuthority&type=document&lang=en)
+* Update: [AuthorizeDataSource](https://www.tencentcloud.com/search/?wd=AuthorizeDataSource&type=document&lang=en)
+* Update: [RevokeDataSourceAuthorization](https://www.tencentcloud.com/search/?wd=RevokeDataSourceAuthorization&type=document&lang=en)
+* Delete: [RevokeDataSourceAuthorization](https://www.tencentcloud.com/search/?wd=RevokeDataSourceAuthorization&type=document&lang=en)
 
 ## Import
 

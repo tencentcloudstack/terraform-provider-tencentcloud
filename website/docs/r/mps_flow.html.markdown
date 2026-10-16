@@ -204,10 +204,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateStreamLinkFlow](https://cloud.tencent.com/document/api/862/82445)
-* Read: [DescribeStreamLinkFlow](https://cloud.tencent.com/document/api/862/82440)
-* Update: [ModifyStreamLinkFlow](https://cloud.tencent.com/document/api/862/82432)
-* Delete: [DeleteStreamLinkFlow](https://cloud.tencent.com/document/api/862/82443)
+* Create: [CreateStreamLinkFlow](https://www.tencentcloud.com/search/?wd=CreateStreamLinkFlow&type=document&lang=en)
+* Read: [DescribeStreamLinkFlow](https://www.tencentcloud.com/search/?wd=DescribeStreamLinkFlow&type=document&lang=en)
+* Update: [ModifyStreamLinkFlow](https://www.tencentcloud.com/search/?wd=ModifyStreamLinkFlow&type=document&lang=en)
+* Delete: [DeleteStreamLinkFlow](https://www.tencentcloud.com/search/?wd=DeleteStreamLinkFlow&type=document&lang=en)
 
 ## Import
 

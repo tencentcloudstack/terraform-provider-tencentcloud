@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeNacosReplicas](https://cloud.tencent.com/document/api/1364/76101)
+* Read: [DescribeNacosReplicas](https://www.tencentcloud.com/search/?wd=DescribeNacosReplicas&type=document&lang=en)
 

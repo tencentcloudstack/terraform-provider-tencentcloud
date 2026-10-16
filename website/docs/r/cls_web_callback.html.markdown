@@ -55,10 +55,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWebCallback](https://cloud.tencent.com/document/api/614/115231)
-* Read: [DescribeWebCallbacks](https://cloud.tencent.com/document/api/614/115229)
-* Update: [ModifyWebCallback](https://cloud.tencent.com/document/api/614/115228)
-* Delete: [DeleteWebCallback](https://cloud.tencent.com/document/api/614/115230)
+* Create: [CreateWebCallback](https://www.tencentcloud.com/document/api/614/80578)
+* Read: [DescribeWebCallbacks](https://www.tencentcloud.com/document/api/614/80574)
+* Update: [ModifyWebCallback](https://www.tencentcloud.com/document/api/614/80572)
+* Delete: [DeleteWebCallback](https://www.tencentcloud.com/document/api/614/80576)
 
 ## Import
 

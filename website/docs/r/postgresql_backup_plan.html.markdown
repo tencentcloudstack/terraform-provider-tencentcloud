@@ -52,11 +52,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBackupPlan](https://cloud.tencent.com/document/api/409/116174)
-* Create: [ModifyBackupPlan](https://cloud.tencent.com/document/api/409/68067)
-* Read: [DescribeBackupPlans](https://cloud.tencent.com/document/api/409/68069)
-* Update: [ModifyBackupPlan](https://cloud.tencent.com/document/api/409/68067)
-* Delete: [DeleteBackupPlan](https://cloud.tencent.com/document/api/409/116173)
+* Create: [CreateBackupPlan](https://www.tencentcloud.com/document/api/409/78805)
+* Create: [ModifyBackupPlan](https://www.tencentcloud.com/document/api/409/45149)
+* Read: [DescribeBackupPlans](https://www.tencentcloud.com/document/api/409/45151)
+* Update: [ModifyBackupPlan](https://www.tencentcloud.com/document/api/409/45149)
+* Delete: [DeleteBackupPlan](https://www.tencentcloud.com/document/api/409/78814)
 
 ## Import
 

@@ -213,8 +213,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrometheusRecordRuleYaml](https://cloud.tencent.com/document/api/248/85707)
-* Read: [DescribePrometheusRecordRules](https://cloud.tencent.com/document/api/248/85714)
-* Update: [ModifyPrometheusRecordRuleYaml](https://cloud.tencent.com/document/api/248/85703)
-* Delete: [DeletePrometheusRecordRuleYaml](https://cloud.tencent.com/document/api/248/85706)
+* Create: [CreatePrometheusRecordRuleYaml](https://www.tencentcloud.com/document/api/248/53334)
+* Read: [DescribePrometheusRecordRules](https://www.tencentcloud.com/document/api/248/53319)
+* Update: [ModifyPrometheusRecordRuleYaml](https://www.tencentcloud.com/document/api/248/53330)
+* Delete: [DeletePrometheusRecordRuleYaml](https://www.tencentcloud.com/document/api/248/53333)
 

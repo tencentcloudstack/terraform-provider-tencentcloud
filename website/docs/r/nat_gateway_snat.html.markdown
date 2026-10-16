@@ -149,11 +149,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNatGatewaySourceIpTranslationNatRule](https://cloud.tencent.com/document/api/215/52622)
-* Create: [DescribeNatGatewaySourceIpTranslationNatRules](https://cloud.tencent.com/document/api/215/52620)
-* Read: [DescribeNatGatewaySourceIpTranslationNatRules](https://cloud.tencent.com/document/api/215/52620)
-* Update: [ModifyNatGatewaySourceIpTranslationNatRule](https://cloud.tencent.com/document/api/215/52619)
-* Delete: [DeleteNatGatewaySourceIpTranslationNatRule](https://cloud.tencent.com/document/api/215/52621)
+* Create: [CreateNatGatewaySourceIpTranslationNatRule](https://www.tencentcloud.com/document/api/215/39646)
+* Create: [DescribeNatGatewaySourceIpTranslationNatRules](https://www.tencentcloud.com/document/api/215/39644)
+* Read: [DescribeNatGatewaySourceIpTranslationNatRules](https://www.tencentcloud.com/document/api/215/39644)
+* Update: [ModifyNatGatewaySourceIpTranslationNatRule](https://www.tencentcloud.com/document/api/215/39643)
+* Delete: [DeleteNatGatewaySourceIpTranslationNatRule](https://www.tencentcloud.com/document/api/215/39645)
 
 ## Import
 

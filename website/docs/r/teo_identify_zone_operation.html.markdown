@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [IdentifyZone](https://cloud.tencent.com/document/api/1552/80712)
+* Create: [IdentifyZone](https://www.tencentcloud.com/search/?wd=IdentifyZone&type=document&lang=en)
 

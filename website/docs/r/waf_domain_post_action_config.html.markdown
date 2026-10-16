@@ -40,9 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyDomainPostAction](https://cloud.tencent.com/document/api/627/103434)
-* Read: [DescribeDomains](https://cloud.tencent.com/document/api/627/72840)
-* Update: [ModifyDomainPostAction](https://cloud.tencent.com/document/api/627/103434)
+* Create: [ModifyDomainPostAction](https://www.tencentcloud.com/document/api/627/66359)
+* Read: [DescribeDomains](https://www.tencentcloud.com/document/api/627/64580)
+* Update: [ModifyDomainPostAction](https://www.tencentcloud.com/document/api/627/66359)
 
 ## Import
 

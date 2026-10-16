@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBLogFiles](https://cloud.tencent.com/document/api/557/16133)
+* Read: [DescribeDBLogFiles](https://www.tencentcloud.com/search/?wd=DescribeDBLogFiles&type=document&lang=en)
 

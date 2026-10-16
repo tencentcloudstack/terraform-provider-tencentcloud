@@ -40,10 +40,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateHpcCluster](https://cloud.tencent.com/document/api/213/83222)
-* Read: [DescribeHpcClusters](https://cloud.tencent.com/document/api/213/83220)
-* Update: [ModifyHpcClusterAttribute](https://cloud.tencent.com/document/api/213/83219)
-* Delete: [DeleteHpcClusters](https://cloud.tencent.com/document/api/213/83221)
+* Create: [CreateHpcCluster](https://www.tencentcloud.com/search/?wd=CreateHpcCluster&type=document&lang=en)
+* Read: [DescribeHpcClusters](https://www.tencentcloud.com/search/?wd=DescribeHpcClusters&type=document&lang=en)
+* Update: [ModifyHpcClusterAttribute](https://www.tencentcloud.com/search/?wd=ModifyHpcClusterAttribute&type=document&lang=en)
+* Delete: [DeleteHpcClusters](https://www.tencentcloud.com/search/?wd=DeleteHpcClusters&type=document&lang=en)
 
 ## Import
 

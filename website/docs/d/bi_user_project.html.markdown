@@ -53,5 +53,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeUserProjectList](https://cloud.tencent.com/document/api/590/98844)
+* Read: [DescribeUserProjectList](https://www.tencentcloud.com/search/?wd=DescribeUserProjectList&type=document&lang=en)
 

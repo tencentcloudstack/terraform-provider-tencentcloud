@@ -37,5 +37,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBCustomRegions](https://cloud.tencent.com/document/api/1322/135272)
+* Read: [DescribeDBCustomRegions](https://www.tencentcloud.com/search/?wd=DescribeDBCustomRegions&type=document&lang=en)
 

@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeUserType](https://cloud.tencent.com/document/api/1342/99261)
+* Read: [DescribeUserType](https://www.tencentcloud.com/search/?wd=DescribeUserType&type=document&lang=en)
 

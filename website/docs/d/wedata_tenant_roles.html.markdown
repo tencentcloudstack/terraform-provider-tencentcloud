@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListTenantRoles](https://cloud.tencent.com/document/api/1267/123961)
+* Read: [ListTenantRoles](https://www.tencentcloud.com/search/?wd=ListTenantRoles&type=document&lang=en)
 

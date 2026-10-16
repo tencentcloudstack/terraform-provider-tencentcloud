@@ -91,12 +91,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInsPublicEndpoint](https://cloud.tencent.com/document/api/1778/116045)
-* Create: [DescribeInsPublicEndpoints](https://cloud.tencent.com/document/api/1778/116041)
-* Read: [DescribeInsPublicEndpoints](https://cloud.tencent.com/document/api/1778/116041)
-* Update: [DescribeInsPublicEndpoints](https://cloud.tencent.com/document/api/1778/116041)
-* Update: [ModifyInsPublicEndpoint](https://cloud.tencent.com/document/api/1778/116040)
-* Delete: [DeleteInsPublicEndpoint](https://cloud.tencent.com/document/api/1778/116043)
+* Create: [CreateInsPublicEndpoint](https://www.tencentcloud.com/search/?wd=CreateInsPublicEndpoint&type=document&lang=en)
+* Create: [DescribeInsPublicEndpoints](https://www.tencentcloud.com/search/?wd=DescribeInsPublicEndpoints&type=document&lang=en)
+* Read: [DescribeInsPublicEndpoints](https://www.tencentcloud.com/search/?wd=DescribeInsPublicEndpoints&type=document&lang=en)
+* Update: [DescribeInsPublicEndpoints](https://www.tencentcloud.com/search/?wd=DescribeInsPublicEndpoints&type=document&lang=en)
+* Update: [ModifyInsPublicEndpoint](https://www.tencentcloud.com/search/?wd=ModifyInsPublicEndpoint&type=document&lang=en)
+* Delete: [DeleteInsPublicEndpoint](https://www.tencentcloud.com/search/?wd=DeleteInsPublicEndpoint&type=document&lang=en)
 
 ## Import
 

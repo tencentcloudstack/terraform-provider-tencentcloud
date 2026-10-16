@@ -70,5 +70,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeNetworkAcls](https://cloud.tencent.com/document/api/215/42160)
+* Read: [DescribeNetworkAcls](https://www.tencentcloud.com/document/api/215/35620)
 

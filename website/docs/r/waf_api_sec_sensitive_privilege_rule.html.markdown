@@ -72,10 +72,10 @@ The `api_name_method` object of `api_name_op` exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyApiSecSensitiveRule](https://cloud.tencent.com/document/api/627/125861)
-* Read: [DescribeApiSecSensitiveRuleList](https://cloud.tencent.com/document/api/627/129030)
-* Update: [ModifyApiSecSensitiveRule](https://cloud.tencent.com/document/api/627/125861)
-* Delete: [ModifyApiSecSensitiveRule](https://cloud.tencent.com/document/api/627/125861)
+* Create: [ModifyApiSecSensitiveRule](https://www.tencentcloud.com/search/?wd=ModifyApiSecSensitiveRule&type=document&lang=en)
+* Read: [DescribeApiSecSensitiveRuleList](https://www.tencentcloud.com/search/?wd=DescribeApiSecSensitiveRuleList&type=document&lang=en)
+* Update: [ModifyApiSecSensitiveRule](https://www.tencentcloud.com/search/?wd=ModifyApiSecSensitiveRule&type=document&lang=en)
+* Delete: [ModifyApiSecSensitiveRule](https://www.tencentcloud.com/search/?wd=ModifyApiSecSensitiveRule&type=document&lang=en)
 
 ## Import
 

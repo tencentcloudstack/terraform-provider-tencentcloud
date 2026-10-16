@@ -77,5 +77,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeForwardRuleList](https://cloud.tencent.com/document/api/1338/124329)
+* Read: [DescribeForwardRuleList](https://www.tencentcloud.com/search/?wd=DescribeForwardRuleList&type=document&lang=en)
 

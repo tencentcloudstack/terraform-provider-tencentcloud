@@ -47,5 +47,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeProbeMetricData](https://cloud.tencent.com/document/api/280/71856)
+* Read: [DescribeProbeMetricData](https://www.tencentcloud.com/search/?wd=DescribeProbeMetricData&type=document&lang=en)
 

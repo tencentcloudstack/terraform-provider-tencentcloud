@@ -112,15 +112,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCertificate](https://cloud.tencent.com/document/api/400/49427)
-* Read: [DescribeCertificateDetail](https://cloud.tencent.com/document/api/400/41673)
-* Update: [CertificateOrderSubmit](https://cloud.tencent.com/document/api/400/116032)
-* Update: [DescribeCertificateDetail](https://cloud.tencent.com/document/api/400/41673)
-* Update: [ModifyCertificateAlias](https://cloud.tencent.com/document/api/400/41669)
-* Update: [ModifyCertificateProject](https://cloud.tencent.com/document/api/400/41668)
-* Update: [SubmitCertificateInformation](https://cloud.tencent.com/document/api/400/41666)
-* Update: [UploadConfirmLetter](https://cloud.tencent.com/document/api/400/49425)
-* Delete: [CancelCertificateOrder](https://cloud.tencent.com/document/api/400/41677)
+* Create: [CreateCertificate](https://www.tencentcloud.com/search/?wd=CreateCertificate&type=document&lang=en)
+* Read: [DescribeCertificateDetail](https://www.tencentcloud.com/search/?wd=DescribeCertificateDetail&type=document&lang=en)
+* Update: [CertificateOrderSubmit](https://www.tencentcloud.com/search/?wd=CertificateOrderSubmit&type=document&lang=en)
+* Update: [DescribeCertificateDetail](https://www.tencentcloud.com/search/?wd=DescribeCertificateDetail&type=document&lang=en)
+* Update: [ModifyCertificateAlias](https://www.tencentcloud.com/search/?wd=ModifyCertificateAlias&type=document&lang=en)
+* Update: [ModifyCertificateProject](https://www.tencentcloud.com/search/?wd=ModifyCertificateProject&type=document&lang=en)
+* Update: [SubmitCertificateInformation](https://www.tencentcloud.com/search/?wd=SubmitCertificateInformation&type=document&lang=en)
+* Update: [UploadConfirmLetter](https://www.tencentcloud.com/search/?wd=UploadConfirmLetter&type=document&lang=en)
+* Delete: [CancelCertificateOrder](https://www.tencentcloud.com/search/?wd=CancelCertificateOrder&type=document&lang=en)
 
 ## Import
 

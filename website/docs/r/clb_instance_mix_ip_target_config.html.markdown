@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyLoadBalancerMixIpTarget](https://cloud.tencent.com/document/api/214/70576)
-* Read: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685)
-* Update: [ModifyLoadBalancerMixIpTarget](https://cloud.tencent.com/document/api/214/70576)
+* Create: [ModifyLoadBalancerMixIpTarget](https://www.tencentcloud.com/search/?wd=ModifyLoadBalancerMixIpTarget&type=document&lang=en)
+* Read: [DescribeLoadBalancers](https://www.tencentcloud.com/document/api/214/33830)
+* Update: [ModifyLoadBalancerMixIpTarget](https://www.tencentcloud.com/search/?wd=ModifyLoadBalancerMixIpTarget&type=document&lang=en)
 
 ## Import
 

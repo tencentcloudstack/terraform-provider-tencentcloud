@@ -37,5 +37,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInternetAddressQuota](https://cloud.tencent.com/document/api/216/51489)
+* Read: [DescribeInternetAddressQuota](https://www.tencentcloud.com/document/api/216/39497)
 

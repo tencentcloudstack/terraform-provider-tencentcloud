@@ -357,17 +357,17 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDBInstance](https://cloud.tencent.com/document/api/236/15871)
-* Create: [CreateDBInstanceHour](https://cloud.tencent.com/document/api/236/15865)
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410)
-* Create: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Create: [OpenWanService](https://cloud.tencent.com/document/api/236/15875)
-* Read: [DescribeDBInstanceConfig](https://cloud.tencent.com/document/api/236/17491)
-* Read: [DescribeInstanceParams](https://cloud.tencent.com/document/api/236/20411)
-* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872)
-* Delete: [IsolateDBInstance](https://cloud.tencent.com/document/api/236/15869)
-* Delete: [OfflineIsolatedInstances](https://cloud.tencent.com/document/api/236/36197)
+* Create: [CreateDBInstance](https://www.tencentcloud.com/document/api/236/15871)
+* Create: [CreateDBInstanceHour](https://www.tencentcloud.com/document/api/236/15865)
+* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+* Create: [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Create: [OpenWanService](https://www.tencentcloud.com/document/api/236/15875)
+* Read: [DescribeDBInstanceConfig](https://www.tencentcloud.com/document/api/236/17491)
+* Read: [DescribeInstanceParams](https://www.tencentcloud.com/document/api/236/34467)
+* Delete: [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
+* Delete: [IsolateDBInstance](https://www.tencentcloud.com/document/api/236/15869)
+* Delete: [OfflineIsolatedInstances](https://www.tencentcloud.com/document/api/236/34475)
 
 ## Import
 

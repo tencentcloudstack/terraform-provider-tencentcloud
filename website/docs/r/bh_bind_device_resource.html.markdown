@@ -60,13 +60,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindDeviceResource](https://cloud.tencent.com/document/api/1025/74792)
-* Create: [DescribeDevices](https://cloud.tencent.com/document/api/1025/74415)
-* Read: [DescribeDevices](https://cloud.tencent.com/document/api/1025/74415)
-* Update: [BindDeviceResource](https://cloud.tencent.com/document/api/1025/74792)
-* Update: [DescribeDevices](https://cloud.tencent.com/document/api/1025/74415)
-* Delete: [BindDeviceResource](https://cloud.tencent.com/document/api/1025/74792)
-* Delete: [DescribeDevices](https://cloud.tencent.com/document/api/1025/74415)
+* Create: [BindDeviceResource](https://www.tencentcloud.com/search/?wd=BindDeviceResource&type=document&lang=en)
+* Create: [DescribeDevices](https://www.tencentcloud.com/search/?wd=DescribeDevices&type=document&lang=en)
+* Read: [DescribeDevices](https://www.tencentcloud.com/search/?wd=DescribeDevices&type=document&lang=en)
+* Update: [BindDeviceResource](https://www.tencentcloud.com/search/?wd=BindDeviceResource&type=document&lang=en)
+* Update: [DescribeDevices](https://www.tencentcloud.com/search/?wd=DescribeDevices&type=document&lang=en)
+* Delete: [BindDeviceResource](https://www.tencentcloud.com/search/?wd=BindDeviceResource&type=document&lang=en)
+* Delete: [DescribeDevices](https://www.tencentcloud.com/search/?wd=DescribeDevices&type=document&lang=en)
 
 ## Import
 

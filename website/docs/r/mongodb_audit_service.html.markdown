@@ -78,14 +78,14 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAuditConfig](https://cloud.tencent.com/document/api/240/128358)
-* Create: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/240/125361)
-* Create: [OpenAuditService](https://cloud.tencent.com/document/api/240/125359)
-* Read: [DescribeAuditConfig](https://cloud.tencent.com/document/api/240/128358)
-* Update: [DescribeAuditConfig](https://cloud.tencent.com/document/api/240/128358)
-* Update: [ModifyAuditService](https://cloud.tencent.com/document/api/240/125360)
-* Delete: [CloseAuditService](https://cloud.tencent.com/document/api/240/128359)
-* Delete: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/240/125361)
+* Create: [DescribeAuditConfig](https://www.tencentcloud.com/document/api/240/79889)
+* Create: [DescribeAuditInstanceList](https://www.tencentcloud.com/search/?wd=DescribeAuditInstanceList&type=document&lang=en)
+* Create: [OpenAuditService](https://www.tencentcloud.com/search/?wd=OpenAuditService&type=document&lang=en)
+* Read: [DescribeAuditConfig](https://www.tencentcloud.com/document/api/240/79889)
+* Update: [DescribeAuditConfig](https://www.tencentcloud.com/document/api/240/79889)
+* Update: [ModifyAuditService](https://www.tencentcloud.com/search/?wd=ModifyAuditService&type=document&lang=en)
+* Delete: [CloseAuditService](https://www.tencentcloud.com/document/api/240/79890)
+* Delete: [DescribeAuditInstanceList](https://www.tencentcloud.com/search/?wd=DescribeAuditInstanceList&type=document&lang=en)
 
 ## Import
 

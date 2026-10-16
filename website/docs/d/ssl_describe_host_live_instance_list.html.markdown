@@ -49,5 +49,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeHostLiveInstanceList](https://cloud.tencent.com/document/api/400/91656)
+* Read: [DescribeHostLiveInstanceList](https://www.tencentcloud.com/search/?wd=DescribeHostLiveInstanceList&type=document&lang=en)
 

@@ -106,11 +106,11 @@ The `vpc_fw_instances` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateVpcFwGroup](https://cloud.tencent.com/document/api/1132/97855)
-* Create: [DescribeFwGroupInstanceInfo](https://cloud.tencent.com/document/api/1132/97853)
-* Read: [DescribeFwGroupInstanceInfo](https://cloud.tencent.com/document/api/1132/97853)
-* Update: [ModifyVpcFwGroup](https://cloud.tencent.com/document/api/1132/97849)
-* Delete: [DeleteVpcFwGroup](https://cloud.tencent.com/document/api/1132/97854)
+* Create: [CreateVpcFwGroup](https://www.tencentcloud.com/search/?wd=CreateVpcFwGroup&type=document&lang=en)
+* Create: [DescribeFwGroupInstanceInfo](https://www.tencentcloud.com/search/?wd=DescribeFwGroupInstanceInfo&type=document&lang=en)
+* Read: [DescribeFwGroupInstanceInfo](https://www.tencentcloud.com/search/?wd=DescribeFwGroupInstanceInfo&type=document&lang=en)
+* Update: [ModifyVpcFwGroup](https://www.tencentcloud.com/search/?wd=ModifyVpcFwGroup&type=document&lang=en)
+* Delete: [DeleteVpcFwGroup](https://www.tencentcloud.com/search/?wd=DeleteVpcFwGroup&type=document&lang=en)
 
 ## Import
 

@@ -155,10 +155,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DeployApplication](https://cloud.tencent.com/document/api/1371/60158)
-* Read: [DescribeApplicationInfo](https://cloud.tencent.com/document/api/1371/78239)
-* Update: [DeployApplication](https://cloud.tencent.com/document/api/1371/60158)
-* Delete: [DeleteApplication](https://cloud.tencent.com/document/api/1371/66645)
+* Create: [DeployApplication](https://www.tencentcloud.com/search/?wd=DeployApplication&type=document&lang=en)
+* Read: [DescribeApplicationInfo](https://www.tencentcloud.com/search/?wd=DescribeApplicationInfo&type=document&lang=en)
+* Update: [DeployApplication](https://www.tencentcloud.com/search/?wd=DeployApplication&type=document&lang=en)
+* Delete: [DeleteApplication](https://www.tencentcloud.com/search/?wd=DeleteApplication&type=document&lang=en)
 
 ## Import
 

@@ -50,10 +50,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCustomHeader](https://cloud.tencent.com/document/api/608/59242)
-* Read: [DescribeCustomHeader](https://cloud.tencent.com/document/api/608/59240)
-* Update: [CreateCustomHeader](https://cloud.tencent.com/document/api/608/59242)
-* Delete: [CreateCustomHeader](https://cloud.tencent.com/document/api/608/59242)
+* Create: [CreateCustomHeader](https://www.tencentcloud.com/document/api/608/41734)
+* Read: [DescribeCustomHeader](https://www.tencentcloud.com/document/api/608/41732)
+* Update: [CreateCustomHeader](https://www.tencentcloud.com/document/api/608/41734)
+* Delete: [CreateCustomHeader](https://www.tencentcloud.com/document/api/608/41734)
 
 ## Import
 

@@ -136,21 +136,21 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateVpnConnection](https://cloud.tencent.com/document/api/215/17522)
-* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Create: [DescribeVpnConnections](https://cloud.tencent.com/document/api/215/17515)
-* Create: [DescribeVpnGateways](https://cloud.tencent.com/document/api/215/17514)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Read: [DescribeVpnConnections](https://cloud.tencent.com/document/api/215/17515)
-* Read: [DescribeVpnGateways](https://cloud.tencent.com/document/api/215/17514)
-* Update: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [DescribeVpnConnections](https://cloud.tencent.com/document/api/215/17515)
-* Update: [DescribeVpnGateways](https://cloud.tencent.com/document/api/215/17514)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Update: [ModifyVpnConnectionAttribute](https://cloud.tencent.com/document/api/215/17508)
-* Delete: [DeleteVpnConnection](https://cloud.tencent.com/document/api/215/17519)
-* Delete: [DescribeVpnConnections](https://cloud.tencent.com/document/api/215/17515)
+* Create: [CreateVpnConnection](https://www.tencentcloud.com/document/api/215/17522)
+* Create: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Create: [DescribeVpnConnections](https://www.tencentcloud.com/document/api/215/17515)
+* Create: [DescribeVpnGateways](https://www.tencentcloud.com/document/api/215/17514)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Read: [DescribeVpnConnections](https://www.tencentcloud.com/document/api/215/17515)
+* Read: [DescribeVpnGateways](https://www.tencentcloud.com/document/api/215/17514)
+* Update: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [DescribeVpnConnections](https://www.tencentcloud.com/document/api/215/17515)
+* Update: [DescribeVpnGateways](https://www.tencentcloud.com/document/api/215/17514)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Update: [ModifyVpnConnectionAttribute](https://www.tencentcloud.com/document/api/215/17508)
+* Delete: [DeleteVpnConnection](https://www.tencentcloud.com/document/api/215/17519)
+* Delete: [DescribeVpnConnections](https://www.tencentcloud.com/document/api/215/17515)
 
 ## Import
 

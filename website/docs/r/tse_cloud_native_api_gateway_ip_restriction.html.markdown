@@ -46,12 +46,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateOrModifyCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125038)
-* Create: [DescribeCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125036)
-* Read: [DescribeCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125036)
-* Update: [CreateOrModifyCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125038)
-* Update: [DescribeCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125036)
-* Delete: [DeleteCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125037)
+* Create: [CreateOrModifyCloudNativeAPIGatewayIPRestriction](https://www.tencentcloud.com/search/?wd=CreateOrModifyCloudNativeAPIGatewayIPRestriction&type=document&lang=en)
+* Create: [DescribeCloudNativeAPIGatewayIPRestriction](https://www.tencentcloud.com/search/?wd=DescribeCloudNativeAPIGatewayIPRestriction&type=document&lang=en)
+* Read: [DescribeCloudNativeAPIGatewayIPRestriction](https://www.tencentcloud.com/search/?wd=DescribeCloudNativeAPIGatewayIPRestriction&type=document&lang=en)
+* Update: [CreateOrModifyCloudNativeAPIGatewayIPRestriction](https://www.tencentcloud.com/search/?wd=CreateOrModifyCloudNativeAPIGatewayIPRestriction&type=document&lang=en)
+* Update: [DescribeCloudNativeAPIGatewayIPRestriction](https://www.tencentcloud.com/search/?wd=DescribeCloudNativeAPIGatewayIPRestriction&type=document&lang=en)
+* Delete: [DeleteCloudNativeAPIGatewayIPRestriction](https://www.tencentcloud.com/search/?wd=DeleteCloudNativeAPIGatewayIPRestriction&type=document&lang=en)
 
 ## Import
 

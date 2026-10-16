@@ -52,9 +52,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyAutoOpenProVersionConfig](https://cloud.tencent.com/document/api/296/19863)
-* Read: [DescribeLicenseGeneral](https://cloud.tencent.com/document/api/296/80398)
-* Update: [ModifyAutoOpenProVersionConfig](https://cloud.tencent.com/document/api/296/19863)
+* Create: [ModifyAutoOpenProVersionConfig](https://www.tencentcloud.com/document/api/296/30875)
+* Read: [DescribeLicenseGeneral](https://www.tencentcloud.com/document/api/296/63782)
+* Update: [ModifyAutoOpenProVersionConfig](https://www.tencentcloud.com/document/api/296/30875)
 
 ## Import
 

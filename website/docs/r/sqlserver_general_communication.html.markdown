@@ -79,11 +79,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
-* Create: [OpenInterCommunication](https://cloud.tencent.com/document/api/238/80327)
-* Read: [DescribeDBInstanceInter](https://cloud.tencent.com/document/api/238/80328)
-* Delete: [CloseInterCommunication](https://cloud.tencent.com/document/api/238/80333)
-* Delete: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
+* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+* Create: [OpenInterCommunication](https://www.tencentcloud.com/document/api/238/50605)
+* Read: [DescribeDBInstanceInter](https://www.tencentcloud.com/document/api/238/50606)
+* Delete: [CloseInterCommunication](https://www.tencentcloud.com/document/api/238/50611)
+* Delete: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
 
 ## Import
 

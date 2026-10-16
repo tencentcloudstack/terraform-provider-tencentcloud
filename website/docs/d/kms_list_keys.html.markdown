@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListKeys](https://cloud.tencent.com/document/api/573/34415)
+* Read: [ListKeys](https://www.tencentcloud.com/search/?wd=ListKeys&type=document&lang=en)
 

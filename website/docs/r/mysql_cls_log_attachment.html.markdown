@@ -118,7 +118,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyDBInstanceLogToCLS](https://cloud.tencent.com/document/api/236/100575)
-* Read: [DescribeDBInstanceLogToCLS](https://cloud.tencent.com/document/api/236/100576)
-* Delete: [ModifyDBInstanceLogToCLS](https://cloud.tencent.com/document/api/236/100575)
+* Create: [ModifyDBInstanceLogToCLS](https://www.tencentcloud.com/document/api/236/57988)
+* Read: [DescribeDBInstanceLogToCLS](https://www.tencentcloud.com/document/api/236/57978)
+* Delete: [ModifyDBInstanceLogToCLS](https://www.tencentcloud.com/document/api/236/57988)
 

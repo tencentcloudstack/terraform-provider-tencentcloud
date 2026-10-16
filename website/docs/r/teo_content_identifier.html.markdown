@@ -53,10 +53,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateContentIdentifier](https://cloud.tencent.com/document/api/1552/114249)
-* Read: [DescribeContentIdentifiers](https://cloud.tencent.com/document/api/1552/114247)
-* Update: [ModifyContentIdentifier](https://cloud.tencent.com/document/api/1552/114246)
-* Delete: [DeleteContentIdentifier](https://cloud.tencent.com/document/api/1552/114248)
+* Create: [CreateContentIdentifier](https://www.tencentcloud.com/search/?wd=CreateContentIdentifier&type=document&lang=en)
+* Read: [DescribeContentIdentifiers](https://www.tencentcloud.com/search/?wd=DescribeContentIdentifiers&type=document&lang=en)
+* Update: [ModifyContentIdentifier](https://www.tencentcloud.com/search/?wd=ModifyContentIdentifier&type=document&lang=en)
+* Delete: [DeleteContentIdentifier](https://www.tencentcloud.com/search/?wd=DeleteContentIdentifier&type=document&lang=en)
 
 ## Import
 

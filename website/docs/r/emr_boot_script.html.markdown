@@ -61,10 +61,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyBootScript](https://cloud.tencent.com/document/api/589/130556)
-* Read: [DescribeBootScript](https://cloud.tencent.com/document/api/589/130557)
-* Update: [ModifyBootScript](https://cloud.tencent.com/document/api/589/130556)
-* Delete: [ModifyBootScript](https://cloud.tencent.com/document/api/589/130556)
+* Create: [ModifyBootScript](https://www.tencentcloud.com/search/?wd=ModifyBootScript&type=document&lang=en)
+* Read: [DescribeBootScript](https://www.tencentcloud.com/search/?wd=DescribeBootScript&type=document&lang=en)
+* Update: [ModifyBootScript](https://www.tencentcloud.com/search/?wd=ModifyBootScript&type=document&lang=en)
+* Delete: [ModifyBootScript](https://www.tencentcloud.com/search/?wd=ModifyBootScript&type=document&lang=en)
 
 ## Import
 

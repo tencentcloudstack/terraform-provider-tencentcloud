@@ -75,11 +75,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ApplyCertificate](https://cloud.tencent.com/document/api/400/41678)
-* Read: [DescribeCertificateDetail](https://cloud.tencent.com/document/api/400/41673)
-* Update: [ModifyCertificateAlias](https://cloud.tencent.com/document/api/400/41669)
-* Update: [ModifyCertificateProject](https://cloud.tencent.com/document/api/400/41668)
-* Delete: [DeleteCertificate](https://cloud.tencent.com/document/api/400/41675)
+* Create: [ApplyCertificate](https://www.tencentcloud.com/search/?wd=ApplyCertificate&type=document&lang=en)
+* Read: [DescribeCertificateDetail](https://www.tencentcloud.com/search/?wd=DescribeCertificateDetail&type=document&lang=en)
+* Update: [ModifyCertificateAlias](https://www.tencentcloud.com/search/?wd=ModifyCertificateAlias&type=document&lang=en)
+* Update: [ModifyCertificateProject](https://www.tencentcloud.com/search/?wd=ModifyCertificateProject&type=document&lang=en)
+* Delete: [DeleteCertificate](https://www.tencentcloud.com/search/?wd=DeleteCertificate&type=document&lang=en)
 
 ## Import
 

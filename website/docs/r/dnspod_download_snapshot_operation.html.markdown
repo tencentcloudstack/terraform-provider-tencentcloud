@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DownloadSnapshot](https://cloud.tencent.com/document/api/1427/83177)
+* Create: [DownloadSnapshot](https://www.tencentcloud.com/search/?wd=DownloadSnapshot&type=document&lang=en)
 

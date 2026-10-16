@@ -110,10 +110,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWorkloadGroup](https://cloud.tencent.com/document/api/1387/109440)
-* Read: [DescribeWorkloadGroup](https://cloud.tencent.com/document/api/1387/109437)
-* Update: [ModifyWorkloadGroup](https://cloud.tencent.com/document/api/1387/109431)
-* Delete: [DeleteWorkloadGroup](https://cloud.tencent.com/document/api/1387/109439)
+* Create: [CreateWorkloadGroup](https://www.tencentcloud.com/search/?wd=CreateWorkloadGroup&type=document&lang=en)
+* Read: [DescribeWorkloadGroup](https://www.tencentcloud.com/search/?wd=DescribeWorkloadGroup&type=document&lang=en)
+* Update: [ModifyWorkloadGroup](https://www.tencentcloud.com/search/?wd=ModifyWorkloadGroup&type=document&lang=en)
+* Delete: [DeleteWorkloadGroup](https://www.tencentcloud.com/search/?wd=DeleteWorkloadGroup&type=document&lang=en)
 
 ## Import
 

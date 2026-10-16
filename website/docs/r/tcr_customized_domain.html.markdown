@@ -54,13 +54,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstanceCustomizedDomain](https://cloud.tencent.com/document/api/1141/79579)
-* Create: [DescribeInstanceCustomizedDomain](https://cloud.tencent.com/document/api/1141/79573)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeInstanceCustomizedDomain](https://cloud.tencent.com/document/api/1141/79573)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeleteInstanceCustomizedDomain](https://cloud.tencent.com/document/api/1141/79576)
+* Create: [CreateInstanceCustomizedDomain](https://www.tencentcloud.com/search/?wd=CreateInstanceCustomizedDomain&type=document&lang=en)
+* Create: [DescribeInstanceCustomizedDomain](https://www.tencentcloud.com/search/?wd=DescribeInstanceCustomizedDomain&type=document&lang=en)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeInstanceCustomizedDomain](https://www.tencentcloud.com/search/?wd=DescribeInstanceCustomizedDomain&type=document&lang=en)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteInstanceCustomizedDomain](https://www.tencentcloud.com/search/?wd=DeleteInstanceCustomizedDomain&type=document&lang=en)
 
 ## Import
 

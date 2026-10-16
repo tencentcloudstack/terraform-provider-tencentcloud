@@ -37,5 +37,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [VerifyOwnership](https://cloud.tencent.com/document/api/1552/98879)
+* Create: [VerifyOwnership](https://www.tencentcloud.com/search/?wd=VerifyOwnership&type=document&lang=en)
 

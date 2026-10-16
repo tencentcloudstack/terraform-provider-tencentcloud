@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCcnAssociatedInstances](https://cloud.tencent.com/document/api/1132/127060)
+* Read: [DescribeCcnAssociatedInstances](https://www.tencentcloud.com/search/?wd=DescribeCcnAssociatedInstances&type=document&lang=en)
 

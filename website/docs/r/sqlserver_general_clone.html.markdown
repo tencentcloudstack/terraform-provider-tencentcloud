@@ -90,13 +90,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CloneDB](https://cloud.tencent.com/document/api/238/52563)
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
-* Read: [DescribeDBsNormal](https://cloud.tencent.com/document/api/238/59034)
-* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
-* Update: [ModifyDBName](https://cloud.tencent.com/document/api/238/19955)
-* Delete: [DeleteDB](https://cloud.tencent.com/document/api/238/19971)
-* Delete: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
+* Create: [CloneDB](https://www.tencentcloud.com/document/api/238/39659)
+* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+* Read: [DescribeDBsNormal](https://www.tencentcloud.com/document/api/238/41643)
+* Update: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+* Update: [ModifyDBName](https://www.tencentcloud.com/document/api/238/32101)
+* Delete: [DeleteDB](https://www.tencentcloud.com/document/api/238/32117)
+* Delete: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
 
 ## Import
 

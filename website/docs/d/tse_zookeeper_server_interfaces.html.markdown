@@ -37,5 +37,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeZookeeperServerInterfaces](https://cloud.tencent.com/document/api/1364/76098)
+* Read: [DescribeZookeeperServerInterfaces](https://www.tencentcloud.com/search/?wd=DescribeZookeeperServerInterfaces&type=document&lang=en)
 

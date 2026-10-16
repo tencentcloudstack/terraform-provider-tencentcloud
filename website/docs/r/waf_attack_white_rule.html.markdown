@@ -116,10 +116,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddAttackWhiteRule](https://cloud.tencent.com/document/api/627/100203)
-* Read: [DescribeAttackWhiteRule](https://cloud.tencent.com/document/api/627/100201)
-* Update: [ModifyAttackWhiteRule](https://cloud.tencent.com/document/api/627/100200)
-* Delete: [DeleteAttackWhiteRule](https://cloud.tencent.com/document/api/627/100202)
+* Create: [AddAttackWhiteRule](https://www.tencentcloud.com/search/?wd=AddAttackWhiteRule&type=document&lang=en)
+* Read: [DescribeAttackWhiteRule](https://www.tencentcloud.com/search/?wd=DescribeAttackWhiteRule&type=document&lang=en)
+* Update: [ModifyAttackWhiteRule](https://www.tencentcloud.com/search/?wd=ModifyAttackWhiteRule&type=document&lang=en)
+* Delete: [DeleteAttackWhiteRule](https://www.tencentcloud.com/search/?wd=DeleteAttackWhiteRule&type=document&lang=en)
 
 ## Import
 

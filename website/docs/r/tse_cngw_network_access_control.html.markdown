@@ -51,11 +51,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723)
-* Create: [ModifyNetworkAccessStrategy](https://cloud.tencent.com/document/api/1364/102775)
-* Read: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723)
-* Update: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723)
-* Update: [ModifyNetworkAccessStrategy](https://cloud.tencent.com/document/api/1364/102775)
+* Create: [DescribePublicNetwork](https://www.tencentcloud.com/search/?wd=DescribePublicNetwork&type=document&lang=en)
+* Create: [ModifyNetworkAccessStrategy](https://www.tencentcloud.com/search/?wd=ModifyNetworkAccessStrategy&type=document&lang=en)
+* Read: [DescribePublicNetwork](https://www.tencentcloud.com/search/?wd=DescribePublicNetwork&type=document&lang=en)
+* Update: [DescribePublicNetwork](https://www.tencentcloud.com/search/?wd=DescribePublicNetwork&type=document&lang=en)
+* Update: [ModifyNetworkAccessStrategy](https://www.tencentcloud.com/search/?wd=ModifyNetworkAccessStrategy&type=document&lang=en)
 
 ## Import
 

@@ -54,5 +54,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInvokers](https://cloud.tencent.com/document/api/1340/61759)
+* Read: [DescribeInvokers](https://www.tencentcloud.com/search/?wd=DescribeInvokers&type=document&lang=en)
 

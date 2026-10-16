@@ -70,7 +70,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachDataMaskPolicy](https://cloud.tencent.com/document/api/1342/122615)
-* Read: [DescribeTable](https://cloud.tencent.com/document/api/1342/53768)
-* Delete: [AttachDataMaskPolicy](https://cloud.tencent.com/document/api/1342/122615)
+* Create: [AttachDataMaskPolicy](https://www.tencentcloud.com/search/?wd=AttachDataMaskPolicy&type=document&lang=en)
+* Read: [DescribeTable](https://www.tencentcloud.com/search/?wd=DescribeTable&type=document&lang=en)
+* Delete: [AttachDataMaskPolicy](https://www.tencentcloud.com/search/?wd=AttachDataMaskPolicy&type=document&lang=en)
 

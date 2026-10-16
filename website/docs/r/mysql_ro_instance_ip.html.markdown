@@ -58,6 +58,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRoInstanceIp](https://cloud.tencent.com/document/api/236/46596)
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872)
+* Create: [CreateRoInstanceIp](https://www.tencentcloud.com/document/api/236/37830)
+* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
 

@@ -46,15 +46,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWhiteBoxKey](https://cloud.tencent.com/document/api/573/43443)
-* Create: [DisableWhiteBoxKey](https://cloud.tencent.com/document/api/573/43437)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Read: [DescribeWhiteBoxKey](https://cloud.tencent.com/document/api/573/43440)
-* Update: [DisableWhiteBoxKey](https://cloud.tencent.com/document/api/573/43437)
-* Update: [EnableWhiteBoxKey](https://cloud.tencent.com/document/api/573/43435)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeleteWhiteBoxKey](https://cloud.tencent.com/document/api/573/43442)
+* Create: [CreateWhiteBoxKey](https://www.tencentcloud.com/search/?wd=CreateWhiteBoxKey&type=document&lang=en)
+* Create: [DisableWhiteBoxKey](https://www.tencentcloud.com/search/?wd=DisableWhiteBoxKey&type=document&lang=en)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Read: [DescribeWhiteBoxKey](https://www.tencentcloud.com/search/?wd=DescribeWhiteBoxKey&type=document&lang=en)
+* Update: [DisableWhiteBoxKey](https://www.tencentcloud.com/search/?wd=DisableWhiteBoxKey&type=document&lang=en)
+* Update: [EnableWhiteBoxKey](https://www.tencentcloud.com/search/?wd=EnableWhiteBoxKey&type=document&lang=en)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteWhiteBoxKey](https://www.tencentcloud.com/search/?wd=DeleteWhiteBoxKey&type=document&lang=en)
 
 ## Import
 

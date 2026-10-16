@@ -46,13 +46,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInstanceState](https://cloud.tencent.com/document/api/1299/89676)
-* Create: [ModifyInstanceKeyValConfigs](https://cloud.tencent.com/document/api/1299/86159)
-* Read: [DescribeInstanceKeyValConfigs](https://cloud.tencent.com/document/api/1299/86160)
-* Update: [DescribeInstanceState](https://cloud.tencent.com/document/api/1299/89676)
-* Update: [ModifyInstanceKeyValConfigs](https://cloud.tencent.com/document/api/1299/86159)
-* Delete: [DescribeInstanceState](https://cloud.tencent.com/document/api/1299/89676)
-* Delete: [ModifyInstanceKeyValConfigs](https://cloud.tencent.com/document/api/1299/86159)
+* Create: [DescribeInstanceState](https://www.tencentcloud.com/search/?wd=DescribeInstanceState&type=document&lang=en)
+* Create: [ModifyInstanceKeyValConfigs](https://www.tencentcloud.com/search/?wd=ModifyInstanceKeyValConfigs&type=document&lang=en)
+* Read: [DescribeInstanceKeyValConfigs](https://www.tencentcloud.com/search/?wd=DescribeInstanceKeyValConfigs&type=document&lang=en)
+* Update: [DescribeInstanceState](https://www.tencentcloud.com/search/?wd=DescribeInstanceState&type=document&lang=en)
+* Update: [ModifyInstanceKeyValConfigs](https://www.tencentcloud.com/search/?wd=ModifyInstanceKeyValConfigs&type=document&lang=en)
+* Delete: [DescribeInstanceState](https://www.tencentcloud.com/search/?wd=DescribeInstanceState&type=document&lang=en)
+* Delete: [ModifyInstanceKeyValConfigs](https://www.tencentcloud.com/search/?wd=ModifyInstanceKeyValConfigs&type=document&lang=en)
 
 ## Import
 

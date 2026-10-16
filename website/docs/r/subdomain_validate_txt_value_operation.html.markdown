@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSubdomainValidateTXTValue](https://cloud.tencent.com/document/api/1427/113012)
+* Create: [CreateSubdomainValidateTXTValue](https://www.tencentcloud.com/search/?wd=CreateSubdomainValidateTXTValue&type=document&lang=en)
 

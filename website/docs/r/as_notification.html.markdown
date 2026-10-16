@@ -86,8 +86,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNotificationConfiguration](https://cloud.tencent.com/document/api/377/33185)
-* Read: [DescribeNotificationConfigurations](https://cloud.tencent.com/document/api/377/33183)
-* Update: [ModifyNotificationConfiguration](https://cloud.tencent.com/document/api/377/33182)
-* Delete: [DeleteNotificationConfiguration](https://cloud.tencent.com/document/api/377/33184)
+* Create: [CreateNotificationConfiguration](https://www.tencentcloud.com/document/api/377/33194)
+* Read: [DescribeNotificationConfigurations](https://www.tencentcloud.com/document/api/377/33192)
+* Update: [ModifyNotificationConfiguration](https://www.tencentcloud.com/document/api/377/33191)
+* Delete: [DeleteNotificationConfiguration](https://www.tencentcloud.com/document/api/377/33193)
 

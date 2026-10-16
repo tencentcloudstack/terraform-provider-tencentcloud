@@ -59,11 +59,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateFirewallTemplate](https://cloud.tencent.com/document/api/1207/96882)
-* Read: [DescribeFirewallTemplateRules](https://cloud.tencent.com/document/api/1207/96875)
-* Read: [DescribeFirewallTemplates](https://cloud.tencent.com/document/api/1207/96874)
-* Update: [ModifyFirewallTemplate](https://cloud.tencent.com/document/api/1207/96873)
-* Delete: [DeleteFirewallTemplate](https://cloud.tencent.com/document/api/1207/96880)
+* Create: [CreateFirewallTemplate](https://www.tencentcloud.com/search/?wd=CreateFirewallTemplate&type=document&lang=en)
+* Read: [DescribeFirewallTemplateRules](https://www.tencentcloud.com/search/?wd=DescribeFirewallTemplateRules&type=document&lang=en)
+* Read: [DescribeFirewallTemplates](https://www.tencentcloud.com/search/?wd=DescribeFirewallTemplates&type=document&lang=en)
+* Update: [ModifyFirewallTemplate](https://www.tencentcloud.com/search/?wd=ModifyFirewallTemplate&type=document&lang=en)
+* Delete: [DeleteFirewallTemplate](https://www.tencentcloud.com/search/?wd=DeleteFirewallTemplate&type=document&lang=en)
 
 ## Import
 

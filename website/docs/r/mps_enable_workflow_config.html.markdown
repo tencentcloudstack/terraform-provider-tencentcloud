@@ -138,11 +138,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DisableWorkflow](https://cloud.tencent.com/document/api/862/37580)
-* Create: [EnableWorkflow](https://cloud.tencent.com/document/api/862/37579)
-* Read: [DescribeWorkflows](https://cloud.tencent.com/document/api/862/37581)
-* Update: [DisableWorkflow](https://cloud.tencent.com/document/api/862/37580)
-* Update: [EnableWorkflow](https://cloud.tencent.com/document/api/862/37579)
+* Create: [DisableWorkflow](https://www.tencentcloud.com/search/?wd=DisableWorkflow&type=document&lang=en)
+* Create: [EnableWorkflow](https://www.tencentcloud.com/search/?wd=EnableWorkflow&type=document&lang=en)
+* Read: [DescribeWorkflows](https://www.tencentcloud.com/search/?wd=DescribeWorkflows&type=document&lang=en)
+* Update: [DisableWorkflow](https://www.tencentcloud.com/search/?wd=DisableWorkflow&type=document&lang=en)
+* Update: [EnableWorkflow](https://www.tencentcloud.com/search/?wd=EnableWorkflow&type=document&lang=en)
 
 ## Import
 

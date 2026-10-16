@@ -54,5 +54,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeMySqlProcessList](https://cloud.tencent.com/document/api/1130/57824)
+* Read: [DescribeMySqlProcessList](https://www.tencentcloud.com/search/?wd=DescribeMySqlProcessList&type=document&lang=en)
 

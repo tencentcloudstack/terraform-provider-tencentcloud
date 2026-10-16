@@ -185,9 +185,9 @@ The `system_disk` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLaunchTemplateVersion](https://cloud.tencent.com/document/api/213/66326)
-* Read: [DescribeLaunchTemplateVersions](https://cloud.tencent.com/document/api/213/66323)
-* Delete: [DeleteLaunchTemplateVersions](https://cloud.tencent.com/document/api/213/66324)
+* Create: [CreateLaunchTemplateVersion](https://www.tencentcloud.com/document/api/213/45361)
+* Read: [DescribeLaunchTemplateVersions](https://www.tencentcloud.com/document/api/213/45358)
+* Delete: [DeleteLaunchTemplateVersions](https://www.tencentcloud.com/document/api/213/45359)
 
 ## Import
 

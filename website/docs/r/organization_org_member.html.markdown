@@ -63,13 +63,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateOrganizationMember](https://cloud.tencent.com/document/api/850/63310)
-* Read: [DescribeOrganizationMembers](https://cloud.tencent.com/document/api/850/67220)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Update: [MoveOrganizationNodeMembers](https://cloud.tencent.com/document/api/850/82925)
-* Update: [UpdateOrganizationMember](https://cloud.tencent.com/document/api/850/94392)
-* Delete: [DeleteAccount](https://cloud.tencent.com/document/api/850/100808)
-* Delete: [DeleteOrganizationMembers](https://cloud.tencent.com/document/api/850/82929)
+* Create: [CreateOrganizationMember](https://www.tencentcloud.com/search/?wd=CreateOrganizationMember&type=document&lang=en)
+* Read: [DescribeOrganizationMembers](https://www.tencentcloud.com/search/?wd=DescribeOrganizationMembers&type=document&lang=en)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Update: [MoveOrganizationNodeMembers](https://www.tencentcloud.com/search/?wd=MoveOrganizationNodeMembers&type=document&lang=en)
+* Update: [UpdateOrganizationMember](https://www.tencentcloud.com/search/?wd=UpdateOrganizationMember&type=document&lang=en)
+* Delete: [DeleteAccount](https://www.tencentcloud.com/search/?wd=DeleteAccount&type=document&lang=en)
+* Delete: [DeleteOrganizationMembers](https://www.tencentcloud.com/search/?wd=DeleteOrganizationMembers&type=document&lang=en)
 
 ## Import
 

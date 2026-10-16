@@ -53,5 +53,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRouteConflicts](https://cloud.tencent.com/document/api/215/19217)
+* Read: [DescribeRouteConflicts](https://www.tencentcloud.com/search/?wd=DescribeRouteConflicts&type=document&lang=en)
 

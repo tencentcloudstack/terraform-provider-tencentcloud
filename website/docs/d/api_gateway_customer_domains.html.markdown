@@ -55,6 +55,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeServiceSubDomainMappings](https://cloud.tencent.com/document/api/628/45186)
-* Read: [DescribeServiceSubDomains](https://cloud.tencent.com/document/api/628/45185)
+* Read: [DescribeServiceSubDomainMappings](https://www.tencentcloud.com/search/?wd=DescribeServiceSubDomainMappings&type=document&lang=en)
+* Read: [DescribeServiceSubDomains](https://www.tencentcloud.com/search/?wd=DescribeServiceSubDomains&type=document&lang=en)
 

@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetPlatformEventTemplate](https://cloud.tencent.com/document/api/1359/97863)
+* Read: [GetPlatformEventTemplate](https://www.tencentcloud.com/search/?wd=GetPlatformEventTemplate&type=document&lang=en)
 

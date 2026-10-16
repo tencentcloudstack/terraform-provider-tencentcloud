@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDedicatedClusterInstanceTypes](https://cloud.tencent.com/document/api/1346/73762)
+* Read: [DescribeDedicatedClusterInstanceTypes](https://www.tencentcloud.com/search/?wd=DescribeDedicatedClusterInstanceTypes&type=document&lang=en)
 

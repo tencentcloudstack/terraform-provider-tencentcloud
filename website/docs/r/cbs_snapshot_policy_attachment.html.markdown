@@ -108,10 +108,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindAutoSnapshotPolicy](https://cloud.tencent.com/document/api/362/33559)
-* Read: [DescribeAutoSnapshotPolicies](https://cloud.tencent.com/document/api/362/33556)
-* Read: [DescribeDiskAssociatedAutoSnapshotPolicy](https://cloud.tencent.com/document/api/362/33555)
-* Delete: [UnbindAutoSnapshotPolicy](https://cloud.tencent.com/document/api/362/33554)
+* Create: [BindAutoSnapshotPolicy](https://www.tencentcloud.com/document/api/362/32168)
+* Read: [DescribeAutoSnapshotPolicies](https://www.tencentcloud.com/document/api/362/32165)
+* Read: [DescribeDiskAssociatedAutoSnapshotPolicy](https://www.tencentcloud.com/document/api/362/32164)
+* Delete: [UnbindAutoSnapshotPolicy](https://www.tencentcloud.com/document/api/362/32161)
 
 ## Import
 

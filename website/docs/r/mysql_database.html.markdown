@@ -40,9 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDatabase](https://cloud.tencent.com/document/api/236/94238)
-* Read: [DescribeDatabases](https://cloud.tencent.com/document/api/236/17493)
-* Delete: [DeleteDatabase](https://cloud.tencent.com/document/api/236/101808)
+* Create: [CreateDatabase](https://www.tencentcloud.com/document/api/236/56094)
+* Read: [DescribeDatabases](https://www.tencentcloud.com/document/api/236/17493)
+* Delete: [DeleteDatabase](https://www.tencentcloud.com/document/api/236/80218)
 
 ## Import
 

@@ -68,5 +68,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeListListener](https://cloud.tencent.com/document/api/297/95345)
+* Read: [DescribeListListener](https://www.tencentcloud.com/search/?wd=DescribeListListener&type=document&lang=en)
 

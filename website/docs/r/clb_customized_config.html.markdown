@@ -55,13 +55,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeCustomizedConfigAssociateList](https://cloud.tencent.com/document/api/214/60010)
-* Create: [DescribeCustomizedConfigList](https://cloud.tencent.com/document/api/214/60009)
-* Create: [SetCustomizedConfigForLoadBalancer](https://cloud.tencent.com/document/api/214/60008)
-* Read: [DescribeCustomizedConfigAssociateList](https://cloud.tencent.com/document/api/214/60010)
-* Read: [DescribeCustomizedConfigList](https://cloud.tencent.com/document/api/214/60009)
-* Update: [SetCustomizedConfigForLoadBalancer](https://cloud.tencent.com/document/api/214/60008)
-* Delete: [SetCustomizedConfigForLoadBalancer](https://cloud.tencent.com/document/api/214/60008)
+* Create: [DescribeCustomizedConfigAssociateList](https://www.tencentcloud.com/document/api/214/42308)
+* Create: [DescribeCustomizedConfigList](https://www.tencentcloud.com/document/api/214/42307)
+* Create: [SetCustomizedConfigForLoadBalancer](https://www.tencentcloud.com/document/api/214/51215)
+* Read: [DescribeCustomizedConfigAssociateList](https://www.tencentcloud.com/document/api/214/42308)
+* Read: [DescribeCustomizedConfigList](https://www.tencentcloud.com/document/api/214/42307)
+* Update: [SetCustomizedConfigForLoadBalancer](https://www.tencentcloud.com/document/api/214/51215)
+* Delete: [SetCustomizedConfigForLoadBalancer](https://www.tencentcloud.com/document/api/214/51215)
 
 ## Import
 

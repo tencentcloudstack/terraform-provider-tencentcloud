@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateApiAppKey](https://cloud.tencent.com/document/api/628/58629)
+* Create: [UpdateApiAppKey](https://www.tencentcloud.com/search/?wd=UpdateApiAppKey&type=document&lang=en)
 

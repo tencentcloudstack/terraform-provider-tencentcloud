@@ -92,9 +92,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindApiApp](https://cloud.tencent.com/document/api/628/58639)
-* Read: [DescribeApiAppBindApisStatus](https://cloud.tencent.com/document/api/628/58635)
-* Delete: [UnbindApiApp](https://cloud.tencent.com/document/api/628/58630)
+* Create: [BindApiApp](https://www.tencentcloud.com/search/?wd=BindApiApp&type=document&lang=en)
+* Read: [DescribeApiAppBindApisStatus](https://www.tencentcloud.com/search/?wd=DescribeApiAppBindApisStatus&type=document&lang=en)
+* Delete: [UnbindApiApp](https://www.tencentcloud.com/search/?wd=UnbindApiApp&type=document&lang=en)
 
 ## Import
 

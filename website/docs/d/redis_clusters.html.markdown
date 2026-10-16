@@ -74,5 +74,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRedisClusters](https://cloud.tencent.com/document/api/239/109628)
+* Read: [DescribeRedisClusters](https://www.tencentcloud.com/document/api/239/66798)
 

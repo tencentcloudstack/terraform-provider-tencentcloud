@@ -77,5 +77,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDiagDBInstances](https://cloud.tencent.com/document/api/1130/57798)
+* Read: [DescribeDiagDBInstances](https://www.tencentcloud.com/search/?wd=DescribeDiagDBInstances&type=document&lang=en)
 

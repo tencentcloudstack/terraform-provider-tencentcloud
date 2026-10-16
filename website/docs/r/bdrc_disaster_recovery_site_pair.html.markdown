@@ -80,10 +80,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDisasterRecoverySitePair](https://cloud.tencent.com/document/api/1824/136781)
-* Read: [DescribeDisasterRecoverySitePairs](https://cloud.tencent.com/document/api/1824/136765)
-* Update: [ModifySitePairAttribute](https://cloud.tencent.com/document/api/1824/136750)
-* Delete: [DeleteDisasterRecoverySitePairs](https://cloud.tencent.com/document/api/1824/136774)
+* Create: [CreateDisasterRecoverySitePair](https://www.tencentcloud.com/search/?wd=CreateDisasterRecoverySitePair&type=document&lang=en)
+* Read: [DescribeDisasterRecoverySitePairs](https://www.tencentcloud.com/search/?wd=DescribeDisasterRecoverySitePairs&type=document&lang=en)
+* Update: [ModifySitePairAttribute](https://www.tencentcloud.com/search/?wd=ModifySitePairAttribute&type=document&lang=en)
+* Delete: [DeleteDisasterRecoverySitePairs](https://www.tencentcloud.com/search/?wd=DeleteDisasterRecoverySitePairs&type=document&lang=en)
 
 ## Import
 

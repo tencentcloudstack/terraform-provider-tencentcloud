@@ -50,9 +50,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddUserGroupMembers](https://cloud.tencent.com/document/api/1025/74799)
-* Read: [DescribeUserGroupMembers](https://cloud.tencent.com/document/api/1025/74795)
-* Delete: [DeleteUserGroupMembers](https://cloud.tencent.com/document/api/1025/74797)
+* Create: [AddUserGroupMembers](https://www.tencentcloud.com/search/?wd=AddUserGroupMembers&type=document&lang=en)
+* Read: [DescribeUserGroupMembers](https://www.tencentcloud.com/search/?wd=DescribeUserGroupMembers&type=document&lang=en)
+* Delete: [DeleteUserGroupMembers](https://www.tencentcloud.com/search/?wd=DeleteUserGroupMembers&type=document&lang=en)
 
 ## Import
 

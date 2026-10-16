@@ -51,10 +51,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSampleSnapshotTemplate](https://cloud.tencent.com/document/api/862/37607)
-* Read: [DescribeSampleSnapshotTemplates](https://cloud.tencent.com/document/api/862/37595)
-* Update: [ModifySampleSnapshotTemplate](https://cloud.tencent.com/document/api/862/37589)
-* Delete: [DeleteSampleSnapshotTemplate](https://cloud.tencent.com/document/api/862/37601)
+* Create: [CreateSampleSnapshotTemplate](https://www.tencentcloud.com/search/?wd=CreateSampleSnapshotTemplate&type=document&lang=en)
+* Read: [DescribeSampleSnapshotTemplates](https://www.tencentcloud.com/search/?wd=DescribeSampleSnapshotTemplates&type=document&lang=en)
+* Update: [ModifySampleSnapshotTemplate](https://www.tencentcloud.com/search/?wd=ModifySampleSnapshotTemplate&type=document&lang=en)
+* Delete: [DeleteSampleSnapshotTemplate](https://www.tencentcloud.com/search/?wd=DeleteSampleSnapshotTemplate&type=document&lang=en)
 
 ## Import
 

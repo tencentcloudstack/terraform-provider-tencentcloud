@@ -100,15 +100,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateZone](https://cloud.tencent.com/document/api/1552/80719)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Read: [DescribeZones](https://cloud.tencent.com/document/api/1552/80713)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Update: [ModifyZone](https://cloud.tencent.com/document/api/1552/80709)
-* Update: [ModifyZoneStatus](https://cloud.tencent.com/document/api/1552/80707)
-* Update: [ModifyZoneWorkMode](https://cloud.tencent.com/document/api/1552/127806)
-* Delete: [DeleteZone](https://cloud.tencent.com/document/api/1552/80717)
+* Create: [CreateZone](https://www.tencentcloud.com/search/?wd=CreateZone&type=document&lang=en)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Read: [DescribeZones](https://www.tencentcloud.com/search/?wd=DescribeZones&type=document&lang=en)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Update: [ModifyZone](https://www.tencentcloud.com/search/?wd=ModifyZone&type=document&lang=en)
+* Update: [ModifyZoneStatus](https://www.tencentcloud.com/search/?wd=ModifyZoneStatus&type=document&lang=en)
+* Update: [ModifyZoneWorkMode](https://www.tencentcloud.com/search/?wd=ModifyZoneWorkMode&type=document&lang=en)
+* Delete: [DeleteZone](https://www.tencentcloud.com/search/?wd=DeleteZone&type=document&lang=en)
 
 ## Import
 

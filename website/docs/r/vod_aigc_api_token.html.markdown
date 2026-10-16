@@ -55,11 +55,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAigcApiToken](https://cloud.tencent.com/document/api/266/128054)
-* Create: [DescribeAigcApiTokens](https://cloud.tencent.com/document/api/266/128052)
-* Read: [DescribeAigcApiTokens](https://cloud.tencent.com/document/api/266/128052)
-* Delete: [DeleteAigcApiToken](https://cloud.tencent.com/document/api/266/128053)
-* Delete: [DescribeAigcApiTokens](https://cloud.tencent.com/document/api/266/128052)
+* Create: [CreateAigcApiToken](https://www.tencentcloud.com/document/api/266/78287)
+* Create: [DescribeAigcApiTokens](https://www.tencentcloud.com/document/api/266/78285)
+* Read: [DescribeAigcApiTokens](https://www.tencentcloud.com/document/api/266/78285)
+* Delete: [DeleteAigcApiToken](https://www.tencentcloud.com/document/api/266/78286)
+* Delete: [DescribeAigcApiTokens](https://www.tencentcloud.com/document/api/266/78285)
 
 ## Import
 

@@ -54,5 +54,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTopSpaceTableTimeSeries](https://cloud.tencent.com/document/api/1130/57792)
+* Read: [DescribeTopSpaceTableTimeSeries](https://www.tencentcloud.com/search/?wd=DescribeTopSpaceTableTimeSeries&type=document&lang=en)
 

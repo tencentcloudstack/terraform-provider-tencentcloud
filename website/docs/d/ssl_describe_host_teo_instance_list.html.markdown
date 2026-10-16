@@ -50,5 +50,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeHostTeoInstanceList](https://cloud.tencent.com/document/api/400/91655)
+* Read: [DescribeHostTeoInstanceList](https://www.tencentcloud.com/search/?wd=DescribeHostTeoInstanceList&type=document&lang=en)
 

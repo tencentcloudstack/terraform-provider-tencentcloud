@@ -93,15 +93,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateProCluster](https://cloud.tencent.com/document/api/1179/101433)
-* Create: [DescribePulsarProInstances](https://cloud.tencent.com/document/api/1179/90376)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribePulsarProInstanceDetail](https://cloud.tencent.com/document/api/1179/90377)
-* Read: [DescribePulsarProInstances](https://cloud.tencent.com/document/api/1179/90376)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ModifyCluster](https://cloud.tencent.com/document/api/1179/52189)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeleteProCluster](https://cloud.tencent.com/document/api/1179/101986)
+* Create: [CreateProCluster](https://www.tencentcloud.com/search/?wd=CreateProCluster&type=document&lang=en)
+* Create: [DescribePulsarProInstances](https://www.tencentcloud.com/search/?wd=DescribePulsarProInstances&type=document&lang=en)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribePulsarProInstanceDetail](https://www.tencentcloud.com/search/?wd=DescribePulsarProInstanceDetail&type=document&lang=en)
+* Read: [DescribePulsarProInstances](https://www.tencentcloud.com/search/?wd=DescribePulsarProInstances&type=document&lang=en)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyCluster](https://www.tencentcloud.com/search/?wd=ModifyCluster&type=document&lang=en)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteProCluster](https://www.tencentcloud.com/search/?wd=DeleteProCluster&type=document&lang=en)
 
 ## Import
 

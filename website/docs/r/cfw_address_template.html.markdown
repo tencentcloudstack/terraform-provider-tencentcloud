@@ -55,10 +55,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAddressTemplate](https://cloud.tencent.com/document/api/1132/95034)
-* Read: [DescribeAddressTemplateList](https://cloud.tencent.com/document/api/1132/97918)
-* Update: [ModifyAddressTemplate](https://cloud.tencent.com/document/api/1132/97919)
-* Delete: [DeleteAddressTemplate](https://cloud.tencent.com/document/api/1132/95033)
+* Create: [CreateAddressTemplate](https://www.tencentcloud.com/search/?wd=CreateAddressTemplate&type=document&lang=en)
+* Read: [DescribeAddressTemplateList](https://www.tencentcloud.com/search/?wd=DescribeAddressTemplateList&type=document&lang=en)
+* Update: [ModifyAddressTemplate](https://www.tencentcloud.com/search/?wd=ModifyAddressTemplate&type=document&lang=en)
+* Delete: [DeleteAddressTemplate](https://www.tencentcloud.com/search/?wd=DeleteAddressTemplate&type=document&lang=en)
 
 ## Import
 

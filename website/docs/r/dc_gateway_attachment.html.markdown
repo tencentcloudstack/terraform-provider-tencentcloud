@@ -40,9 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateDirectConnectGatewayNatGateway](https://cloud.tencent.com/document/api/215/47109)
-* Read: [DescribeDirectConnectGateways](https://cloud.tencent.com/document/api/215/30644)
-* Delete: [DisassociateDirectConnectGatewayNatGateway](https://cloud.tencent.com/document/api/215/47108)
+* Create: [AssociateDirectConnectGatewayNatGateway](https://www.tencentcloud.com/document/api/215/38101)
+* Read: [DescribeDirectConnectGateways](https://www.tencentcloud.com/document/api/215/36913)
+* Delete: [DisassociateDirectConnectGatewayNatGateway](https://www.tencentcloud.com/document/api/215/38100)
 
 ## Import
 

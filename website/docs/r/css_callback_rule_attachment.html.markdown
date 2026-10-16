@@ -40,10 +40,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLiveCallbackRule](https://cloud.tencent.com/document/api/267/32638)
-* Read: [DescribeLiveCallbackRules](https://cloud.tencent.com/document/api/267/32634)
-* Delete: [DeleteLiveCallbackRule](https://cloud.tencent.com/document/api/267/32636)
-* Delete: [DescribeLiveCallbackRules](https://cloud.tencent.com/document/api/267/32634)
+* Create: [CreateLiveCallbackRule](https://www.tencentcloud.com/document/api/267/30816)
+* Read: [DescribeLiveCallbackRules](https://www.tencentcloud.com/document/api/267/30812)
+* Delete: [DeleteLiveCallbackRule](https://www.tencentcloud.com/document/api/267/30814)
+* Delete: [DescribeLiveCallbackRules](https://www.tencentcloud.com/document/api/267/30812)
 
 ## Import
 

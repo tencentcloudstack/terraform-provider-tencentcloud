@@ -59,5 +59,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTopicFlowRanking](https://cloud.tencent.com/document/api/597/90976)
+* Read: [DescribeTopicFlowRanking](https://www.tencentcloud.com/search/?wd=DescribeTopicFlowRanking&type=document&lang=en)
 

@@ -59,5 +59,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRulesSetting](https://cloud.tencent.com/document/api/1552/80618)
+* Read: [DescribeRulesSetting](https://www.tencentcloud.com/search/?wd=DescribeRulesSetting&type=document&lang=en)
 

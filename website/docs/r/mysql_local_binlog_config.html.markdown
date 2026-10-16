@@ -88,9 +88,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyLocalBinlogConfig](https://cloud.tencent.com/document/api/236/68173)
-* Read: [DescribeLocalBinlogConfig](https://cloud.tencent.com/document/api/236/68174)
-* Update: [ModifyLocalBinlogConfig](https://cloud.tencent.com/document/api/236/68173)
+* Create: [ModifyLocalBinlogConfig](https://www.tencentcloud.com/document/api/236/45200)
+* Read: [DescribeLocalBinlogConfig](https://www.tencentcloud.com/document/api/236/45201)
+* Update: [ModifyLocalBinlogConfig](https://www.tencentcloud.com/document/api/236/45200)
 
 ## Import
 

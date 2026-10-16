@@ -148,18 +148,18 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstances](https://cloud.tencent.com/document/api/1207/69573)
-* Create: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573)
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573)
-* Update: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573)
-* Update: [ModifyInstancesAttribute](https://cloud.tencent.com/document/api/1207/55548)
-* Update: [ModifyInstancesBundle](https://cloud.tencent.com/document/api/1207/82998)
-* Update: [ModifyInstancesRenewFlag](https://cloud.tencent.com/document/api/1207/55547)
-* Update: [ResetInstance](https://cloud.tencent.com/document/api/1207/47571)
-* Update: [ResetInstancesPassword](https://cloud.tencent.com/document/api/1207/55546)
-* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573)
-* Delete: [IsolateInstances](https://cloud.tencent.com/document/api/1207/73214)
-* Delete: [TerminateInstances](https://cloud.tencent.com/document/api/1207/55545)
+* Create: [CreateInstances](https://www.tencentcloud.com/search/?wd=CreateInstances&type=document&lang=en)
+* Create: [DescribeInstances](https://www.tencentcloud.com/search/?wd=DescribeInstances&type=document&lang=en)
+* Read: [DescribeInstances](https://www.tencentcloud.com/search/?wd=DescribeInstances&type=document&lang=en)
+* Update: [DescribeInstances](https://www.tencentcloud.com/search/?wd=DescribeInstances&type=document&lang=en)
+* Update: [ModifyInstancesAttribute](https://www.tencentcloud.com/search/?wd=ModifyInstancesAttribute&type=document&lang=en)
+* Update: [ModifyInstancesBundle](https://www.tencentcloud.com/search/?wd=ModifyInstancesBundle&type=document&lang=en)
+* Update: [ModifyInstancesRenewFlag](https://www.tencentcloud.com/search/?wd=ModifyInstancesRenewFlag&type=document&lang=en)
+* Update: [ResetInstance](https://www.tencentcloud.com/search/?wd=ResetInstance&type=document&lang=en)
+* Update: [ResetInstancesPassword](https://www.tencentcloud.com/search/?wd=ResetInstancesPassword&type=document&lang=en)
+* Delete: [DescribeInstances](https://www.tencentcloud.com/search/?wd=DescribeInstances&type=document&lang=en)
+* Delete: [IsolateInstances](https://www.tencentcloud.com/search/?wd=IsolateInstances&type=document&lang=en)
+* Delete: [TerminateInstances](https://www.tencentcloud.com/search/?wd=TerminateInstances&type=document&lang=en)
 
 ## Import
 

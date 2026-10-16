@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifySnapshotConfig](https://cloud.tencent.com/document/api/1427/83176)
-* Read: [DescribeSnapshotConfig](https://cloud.tencent.com/document/api/1427/83181)
-* Update: [ModifySnapshotConfig](https://cloud.tencent.com/document/api/1427/83176)
+* Create: [ModifySnapshotConfig](https://www.tencentcloud.com/search/?wd=ModifySnapshotConfig&type=document&lang=en)
+* Read: [DescribeSnapshotConfig](https://www.tencentcloud.com/search/?wd=DescribeSnapshotConfig&type=document&lang=en)
+* Update: [ModifySnapshotConfig](https://www.tencentcloud.com/search/?wd=ModifySnapshotConfig&type=document&lang=en)
 
 ## Import
 

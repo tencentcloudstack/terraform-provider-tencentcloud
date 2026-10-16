@@ -59,11 +59,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [GetLayerVersion](https://cloud.tencent.com/document/api/583/41386)
-* Create: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522)
-* Create: [PublishLayerVersion](https://cloud.tencent.com/document/api/583/41383)
-* Read: [GetLayerVersion](https://cloud.tencent.com/document/api/583/41386)
-* Delete: [DeleteLayerVersion](https://cloud.tencent.com/document/api/583/41387)
+* Create: [GetLayerVersion](https://www.tencentcloud.com/document/api/583/36319)
+* Create: [GetSecretValue](https://www.tencentcloud.com/search/?wd=GetSecretValue&type=document&lang=en)
+* Create: [PublishLayerVersion](https://www.tencentcloud.com/document/api/583/36316)
+* Read: [GetLayerVersion](https://www.tencentcloud.com/document/api/583/36319)
+* Delete: [DeleteLayerVersion](https://www.tencentcloud.com/document/api/583/36320)
 
 ## Import
 

@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ConfirmOriginACLUpdate](https://cloud.tencent.com/document/api/1552/120409)
+* Create: [ConfirmOriginACLUpdate](https://www.tencentcloud.com/search/?wd=ConfirmOriginACLUpdate&type=document&lang=en)
 

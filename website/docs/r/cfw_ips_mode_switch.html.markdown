@@ -36,9 +36,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyIpsModeSwitch](https://cloud.tencent.com/document/api/1132/127532)
-* Read: [DescribeIpsModeSwitch](https://cloud.tencent.com/document/api/1132/127533)
-* Update: [ModifyIpsModeSwitch](https://cloud.tencent.com/document/api/1132/127532)
+* Create: [ModifyIpsModeSwitch](https://www.tencentcloud.com/search/?wd=ModifyIpsModeSwitch&type=document&lang=en)
+* Read: [DescribeIpsModeSwitch](https://www.tencentcloud.com/search/?wd=DescribeIpsModeSwitch&type=document&lang=en)
+* Update: [ModifyIpsModeSwitch](https://www.tencentcloud.com/search/?wd=ModifyIpsModeSwitch&type=document&lang=en)
 
 ## Import
 

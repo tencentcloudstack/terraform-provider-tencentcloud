@@ -54,5 +54,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeNatFwClusterRegionStatus](https://cloud.tencent.com/document/api/1132/132584)
+* Read: [DescribeNatFwClusterRegionStatus](https://www.tencentcloud.com/search/?wd=DescribeNatFwClusterRegionStatus&type=document&lang=en)
 

@@ -55,10 +55,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateImageSpriteTemplate](https://cloud.tencent.com/document/api/862/37608)
-* Read: [DescribeImageSpriteTemplates](https://cloud.tencent.com/document/api/862/37596)
-* Update: [ModifyImageSpriteTemplate](https://cloud.tencent.com/document/api/862/37590)
-* Delete: [DeleteImageSpriteTemplate](https://cloud.tencent.com/document/api/862/37602)
+* Create: [CreateImageSpriteTemplate](https://www.tencentcloud.com/search/?wd=CreateImageSpriteTemplate&type=document&lang=en)
+* Read: [DescribeImageSpriteTemplates](https://www.tencentcloud.com/search/?wd=DescribeImageSpriteTemplates&type=document&lang=en)
+* Update: [ModifyImageSpriteTemplate](https://www.tencentcloud.com/search/?wd=ModifyImageSpriteTemplate&type=document&lang=en)
+* Delete: [DeleteImageSpriteTemplate](https://www.tencentcloud.com/search/?wd=DeleteImageSpriteTemplate&type=document&lang=en)
 
 ## Import
 

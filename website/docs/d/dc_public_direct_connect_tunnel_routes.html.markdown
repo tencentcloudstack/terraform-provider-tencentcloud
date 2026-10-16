@@ -48,5 +48,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribePublicDirectConnectTunnelRoutes](https://cloud.tencent.com/document/api/216/49101)
+* Read: [DescribePublicDirectConnectTunnelRoutes](https://www.tencentcloud.com/search/?wd=DescribePublicDirectConnectTunnelRoutes&type=document&lang=en)
 

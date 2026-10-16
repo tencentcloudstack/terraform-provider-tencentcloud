@@ -48,9 +48,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateExport](https://cloud.tencent.com/document/api/614/56451)
-* Read: [DescribeExports](https://cloud.tencent.com/document/api/614/56449)
-* Delete: [DeleteExport](https://cloud.tencent.com/document/api/614/56450)
+* Create: [CreateExport](https://www.tencentcloud.com/document/api/614/42798)
+* Read: [DescribeExports](https://www.tencentcloud.com/document/api/614/42790)
+* Delete: [DeleteExport](https://www.tencentcloud.com/document/api/614/42795)
 
 ## Import
 

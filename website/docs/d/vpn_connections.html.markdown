@@ -89,6 +89,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Read: [DescribeVpnConnections](https://cloud.tencent.com/document/api/215/17515)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Read: [DescribeVpnConnections](https://www.tencentcloud.com/document/api/215/17515)
 

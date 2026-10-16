@@ -53,10 +53,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDedicatedCluster](https://cloud.tencent.com/document/api/1346/73710)
-* Read: [DescribeDedicatedClusters](https://cloud.tencent.com/document/api/1346/73758)
-* Update: [ModifyDedicatedClusterInfo](https://cloud.tencent.com/document/api/1346/73754)
-* Delete: [DeleteDedicatedClusters](https://cloud.tencent.com/document/api/1346/73767)
+* Create: [CreateDedicatedCluster](https://www.tencentcloud.com/search/?wd=CreateDedicatedCluster&type=document&lang=en)
+* Read: [DescribeDedicatedClusters](https://www.tencentcloud.com/search/?wd=DescribeDedicatedClusters&type=document&lang=en)
+* Update: [ModifyDedicatedClusterInfo](https://www.tencentcloud.com/search/?wd=ModifyDedicatedClusterInfo&type=document&lang=en)
+* Delete: [DeleteDedicatedClusters](https://www.tencentcloud.com/search/?wd=DeleteDedicatedClusters&type=document&lang=en)
 
 ## Import
 

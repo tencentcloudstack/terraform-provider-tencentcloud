@@ -105,13 +105,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachInstances](https://cloud.tencent.com/document/api/377/20441)
-* Create: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735)
-* Read: [DescribeAutoScalingInstances](https://cloud.tencent.com/document/api/377/20437)
-* Update: [AttachInstances](https://cloud.tencent.com/document/api/377/20441)
-* Update: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735)
-* Update: [DetachInstances](https://cloud.tencent.com/document/api/377/20436)
-* Delete: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735)
-* Delete: [DescribeAutoScalingInstances](https://cloud.tencent.com/document/api/377/20437)
-* Delete: [DetachInstances](https://cloud.tencent.com/document/api/377/20436)
+* Create: [AttachInstances](https://www.tencentcloud.com/document/api/377/31017)
+* Create: [DescribeAutoScalingActivities](https://www.tencentcloud.com/document/api/377/31014)
+* Read: [DescribeAutoScalingInstances](https://www.tencentcloud.com/document/api/377/31012)
+* Update: [AttachInstances](https://www.tencentcloud.com/document/api/377/31017)
+* Update: [DescribeAutoScalingActivities](https://www.tencentcloud.com/document/api/377/31014)
+* Update: [DetachInstances](https://www.tencentcloud.com/document/api/377/31011)
+* Delete: [DescribeAutoScalingActivities](https://www.tencentcloud.com/document/api/377/31014)
+* Delete: [DescribeAutoScalingInstances](https://www.tencentcloud.com/document/api/377/31012)
+* Delete: [DetachInstances](https://www.tencentcloud.com/document/api/377/31011)
 

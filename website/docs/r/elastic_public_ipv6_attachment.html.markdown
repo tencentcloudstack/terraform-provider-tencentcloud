@@ -41,9 +41,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateIPv6Address](https://cloud.tencent.com/document/api/215/113678)
-* Read: [DescribeIPv6Addresses](https://cloud.tencent.com/document/api/215/113677)
-* Delete: [DisassociateIPv6Address](https://cloud.tencent.com/document/api/215/113676)
+* Create: [AssociateIPv6Address](https://www.tencentcloud.com/document/api/215/68130)
+* Read: [DescribeIPv6Addresses](https://www.tencentcloud.com/document/api/215/68129)
+* Delete: [DisassociateIPv6Address](https://www.tencentcloud.com/document/api/215/68127)
 
 ## Import
 

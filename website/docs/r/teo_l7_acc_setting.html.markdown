@@ -380,9 +380,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyL7AccSetting](https://cloud.tencent.com/document/api/1552/115817)
-* Read: [DescribeL7AccSetting](https://cloud.tencent.com/document/api/1552/115819)
-* Update: [ModifyL7AccSetting](https://cloud.tencent.com/document/api/1552/115817)
+* Create: [ModifyL7AccSetting](https://www.tencentcloud.com/search/?wd=ModifyL7AccSetting&type=document&lang=en)
+* Read: [DescribeL7AccSetting](https://www.tencentcloud.com/search/?wd=DescribeL7AccSetting&type=document&lang=en)
+* Update: [ModifyL7AccSetting](https://www.tencentcloud.com/search/?wd=ModifyL7AccSetting&type=document&lang=en)
 
 ## Import
 

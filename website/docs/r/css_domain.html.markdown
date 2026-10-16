@@ -47,15 +47,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddLiveDomain](https://cloud.tencent.com/document/api/267/33862)
-* Create: [AuthenticateDomainOwner](https://cloud.tencent.com/document/api/267/80524)
-* Create: [EnableLiveDomain](https://cloud.tencent.com/document/api/267/33855)
-* Create: [ForbidLiveDomain](https://cloud.tencent.com/document/api/267/33854)
-* Read: [DescribeLiveDomain](https://cloud.tencent.com/document/api/267/33858)
-* Update: [EnableLiveDomain](https://cloud.tencent.com/document/api/267/33855)
-* Update: [ForbidLiveDomain](https://cloud.tencent.com/document/api/267/33854)
-* Update: [ModifyLivePlayDomain](https://cloud.tencent.com/document/api/267/33853)
-* Delete: [DeleteLiveDomain](https://cloud.tencent.com/document/api/267/33860)
+* Create: [AddLiveDomain](https://www.tencentcloud.com/document/api/267/35189)
+* Create: [AuthenticateDomainOwner](https://www.tencentcloud.com/document/api/267/50612)
+* Create: [EnableLiveDomain](https://www.tencentcloud.com/document/api/267/35185)
+* Create: [ForbidLiveDomain](https://www.tencentcloud.com/document/api/267/35184)
+* Read: [DescribeLiveDomain](https://www.tencentcloud.com/document/api/267/35187)
+* Update: [EnableLiveDomain](https://www.tencentcloud.com/document/api/267/35185)
+* Update: [ForbidLiveDomain](https://www.tencentcloud.com/document/api/267/35184)
+* Update: [ModifyLivePlayDomain](https://www.tencentcloud.com/document/api/267/35183)
+* Delete: [DeleteLiveDomain](https://www.tencentcloud.com/document/api/267/35188)
 
 ## Import
 

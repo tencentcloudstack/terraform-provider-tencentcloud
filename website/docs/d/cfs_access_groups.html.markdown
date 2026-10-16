@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCfsPGroups](https://cloud.tencent.com/document/api/582/38157)
+* Read: [DescribeCfsPGroups](https://www.tencentcloud.com/document/api/582/34505)
 

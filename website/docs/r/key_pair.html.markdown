@@ -54,16 +54,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateKeyPair](https://cloud.tencent.com/document/api/213/15702)
-* Create: [ImportKeyPair](https://cloud.tencent.com/document/api/213/15703)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeKeyPairs](https://cloud.tencent.com/document/api/213/15699)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ModifyKeyPairAttribute](https://cloud.tencent.com/document/api/213/15701)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeleteKeyPairs](https://cloud.tencent.com/document/api/213/15700)
-* Delete: [DescribeKeyPairs](https://cloud.tencent.com/document/api/213/15699)
-* Delete: [DisassociateInstancesKeyPairs](https://cloud.tencent.com/document/api/213/15697)
+* Create: [CreateKeyPair](https://www.tencentcloud.com/document/api/213/33231)
+* Create: [ImportKeyPair](https://www.tencentcloud.com/document/api/213/33227)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeKeyPairs](https://www.tencentcloud.com/document/api/213/33229)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyKeyPairAttribute](https://www.tencentcloud.com/document/api/213/33226)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteKeyPairs](https://www.tencentcloud.com/document/api/213/33230)
+* Delete: [DescribeKeyPairs](https://www.tencentcloud.com/document/api/213/33229)
+* Delete: [DisassociateInstancesKeyPairs](https://www.tencentcloud.com/document/api/213/33228)
 
 ## Import
 

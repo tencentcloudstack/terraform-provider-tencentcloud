@@ -586,5 +586,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ProcessMedia](https://cloud.tencent.com/document/api/862/37578)
+* Create: [ProcessMedia](https://www.tencentcloud.com/search/?wd=ProcessMedia&type=document&lang=en)
 

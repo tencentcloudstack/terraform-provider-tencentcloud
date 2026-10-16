@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RenewVideo](https://cloud.tencent.com/document/api/1449/113517)
+* Create: [RenewVideo](https://www.tencentcloud.com/search/?wd=RenewVideo&type=document&lang=en)
 

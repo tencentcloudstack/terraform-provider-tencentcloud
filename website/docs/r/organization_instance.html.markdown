@@ -52,14 +52,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateOrganization](https://cloud.tencent.com/document/api/850/98673)
-* Create: [DescribeOrganization](https://cloud.tencent.com/document/api/850/67059)
-* Create: [UpdateOrganizationNode](https://cloud.tencent.com/document/api/850/82924)
-* Read: [DescribeOrganization](https://cloud.tencent.com/document/api/850/67059)
-* Read: [DescribeOrganizationNodes](https://cloud.tencent.com/document/api/850/82926)
-* Update: [DescribeOrganization](https://cloud.tencent.com/document/api/850/67059)
-* Update: [UpdateOrganizationNode](https://cloud.tencent.com/document/api/850/82924)
-* Delete: [DeleteOrganization](https://cloud.tencent.com/document/api/850/98672)
+* Create: [CreateOrganization](https://www.tencentcloud.com/search/?wd=CreateOrganization&type=document&lang=en)
+* Create: [DescribeOrganization](https://www.tencentcloud.com/search/?wd=DescribeOrganization&type=document&lang=en)
+* Create: [UpdateOrganizationNode](https://www.tencentcloud.com/search/?wd=UpdateOrganizationNode&type=document&lang=en)
+* Read: [DescribeOrganization](https://www.tencentcloud.com/search/?wd=DescribeOrganization&type=document&lang=en)
+* Read: [DescribeOrganizationNodes](https://www.tencentcloud.com/search/?wd=DescribeOrganizationNodes&type=document&lang=en)
+* Update: [DescribeOrganization](https://www.tencentcloud.com/search/?wd=DescribeOrganization&type=document&lang=en)
+* Update: [UpdateOrganizationNode](https://www.tencentcloud.com/search/?wd=UpdateOrganizationNode&type=document&lang=en)
+* Delete: [DeleteOrganization](https://www.tencentcloud.com/search/?wd=DeleteOrganization&type=document&lang=en)
 
 ## Import
 

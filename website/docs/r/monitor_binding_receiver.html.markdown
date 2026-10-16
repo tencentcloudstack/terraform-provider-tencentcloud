@@ -74,11 +74,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945)
-* Create: [ModifyAlarmReceivers](https://cloud.tencent.com/document/api/248/40417)
-* Read: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945)
-* Update: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945)
-* Update: [ModifyAlarmReceivers](https://cloud.tencent.com/document/api/248/40417)
-* Delete: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945)
-* Delete: [ModifyAlarmReceivers](https://cloud.tencent.com/document/api/248/40417)
+* Create: [DescribePolicyGroupList](https://www.tencentcloud.com/document/api/248/35977)
+* Create: [ModifyAlarmReceivers](https://www.tencentcloud.com/document/api/248/35975)
+* Read: [DescribePolicyGroupList](https://www.tencentcloud.com/document/api/248/35977)
+* Update: [DescribePolicyGroupList](https://www.tencentcloud.com/document/api/248/35977)
+* Update: [ModifyAlarmReceivers](https://www.tencentcloud.com/document/api/248/35975)
+* Delete: [DescribePolicyGroupList](https://www.tencentcloud.com/document/api/248/35977)
+* Delete: [ModifyAlarmReceivers](https://www.tencentcloud.com/document/api/248/35975)
 

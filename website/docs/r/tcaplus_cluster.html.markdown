@@ -109,17 +109,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCluster](https://cloud.tencent.com/document/api/596/41491)
-* Create: [DescribeClusters](https://cloud.tencent.com/document/api/596/41489)
-* Read: [DescribeClusterTags](https://cloud.tencent.com/document/api/596/45082)
-* Read: [DescribeClusters](https://cloud.tencent.com/document/api/596/41489)
-* Update: [DescribeClusters](https://cloud.tencent.com/document/api/596/41489)
-* Update: [ModifyClusterMachine](https://cloud.tencent.com/document/api/596/50731)
-* Update: [ModifyClusterName](https://cloud.tencent.com/document/api/596/41488)
-* Update: [ModifyClusterPassword](https://cloud.tencent.com/document/api/596/41487)
-* Update: [ModifyClusterTags](https://cloud.tencent.com/document/api/596/45081)
-* Delete: [DeleteCluster](https://cloud.tencent.com/document/api/596/41490)
-* Delete: [DescribeClusters](https://cloud.tencent.com/document/api/596/41489)
+* Create: [CreateCluster](https://www.tencentcloud.com/search/?wd=CreateCluster&type=document&lang=en)
+* Create: [DescribeClusters](https://www.tencentcloud.com/search/?wd=DescribeClusters&type=document&lang=en)
+* Read: [DescribeClusterTags](https://www.tencentcloud.com/search/?wd=DescribeClusterTags&type=document&lang=en)
+* Read: [DescribeClusters](https://www.tencentcloud.com/search/?wd=DescribeClusters&type=document&lang=en)
+* Update: [DescribeClusters](https://www.tencentcloud.com/search/?wd=DescribeClusters&type=document&lang=en)
+* Update: [ModifyClusterMachine](https://www.tencentcloud.com/search/?wd=ModifyClusterMachine&type=document&lang=en)
+* Update: [ModifyClusterName](https://www.tencentcloud.com/search/?wd=ModifyClusterName&type=document&lang=en)
+* Update: [ModifyClusterPassword](https://www.tencentcloud.com/search/?wd=ModifyClusterPassword&type=document&lang=en)
+* Update: [ModifyClusterTags](https://www.tencentcloud.com/search/?wd=ModifyClusterTags&type=document&lang=en)
+* Delete: [DeleteCluster](https://www.tencentcloud.com/search/?wd=DeleteCluster&type=document&lang=en)
+* Delete: [DescribeClusters](https://www.tencentcloud.com/search/?wd=DescribeClusters&type=document&lang=en)
 
 ## Import
 

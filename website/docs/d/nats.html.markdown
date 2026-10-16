@@ -64,5 +64,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeNatGateways](https://cloud.tencent.com/document/api/215/36034)
+* Read: [DescribeNatGateways](https://www.tencentcloud.com/document/api/215/34752)
 

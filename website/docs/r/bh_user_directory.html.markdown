@@ -67,10 +67,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateUserDirectory](https://cloud.tencent.com/document/api/1025/125473)
-* Read: [DescribeUserDirectory](https://cloud.tencent.com/document/api/1025/125471)
-* Update: [ModifyUserDirectory](https://cloud.tencent.com/document/api/1025/125469)
-* Delete: [DeleteUserDirectory](https://cloud.tencent.com/document/api/1025/125472)
+* Create: [CreateUserDirectory](https://www.tencentcloud.com/search/?wd=CreateUserDirectory&type=document&lang=en)
+* Read: [DescribeUserDirectory](https://www.tencentcloud.com/search/?wd=DescribeUserDirectory&type=document&lang=en)
+* Update: [ModifyUserDirectory](https://www.tencentcloud.com/search/?wd=ModifyUserDirectory&type=document&lang=en)
+* Delete: [DeleteUserDirectory](https://www.tencentcloud.com/search/?wd=DeleteUserDirectory&type=document&lang=en)
 
 ## Import
 

@@ -48,11 +48,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601)
-* Create: [DescribeTransparentDataEncryptionStatus](https://cloud.tencent.com/document/api/240/107168)
-* Create: [EnableTransparentDataEncryption](https://cloud.tencent.com/document/api/240/107167)
-* Read: [DescribeTransparentDataEncryptionStatus](https://cloud.tencent.com/document/api/240/107168)
-* Update: [DescribeTransparentDataEncryptionStatus](https://cloud.tencent.com/document/api/240/107168)
+* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/240/37921)
+* Create: [DescribeTransparentDataEncryptionStatus](https://www.tencentcloud.com/search/?wd=DescribeTransparentDataEncryptionStatus&type=document&lang=en)
+* Create: [EnableTransparentDataEncryption](https://www.tencentcloud.com/document/api/240/74801)
+* Read: [DescribeTransparentDataEncryptionStatus](https://www.tencentcloud.com/search/?wd=DescribeTransparentDataEncryptionStatus&type=document&lang=en)
+* Update: [DescribeTransparentDataEncryptionStatus](https://www.tencentcloud.com/search/?wd=DescribeTransparentDataEncryptionStatus&type=document&lang=en)
 
 ## Import
 

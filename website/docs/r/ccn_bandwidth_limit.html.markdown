@@ -79,11 +79,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199)
-* Create: [SetCcnRegionBandwidthLimits](https://cloud.tencent.com/document/api/215/19194)
-* Read: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199)
-* Read: [GetCcnRegionBandwidthLimits](https://cloud.tencent.com/document/api/215/45482)
-* Update: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199)
-* Update: [SetCcnRegionBandwidthLimits](https://cloud.tencent.com/document/api/215/19194)
-* Delete: [SetCcnRegionBandwidthLimits](https://cloud.tencent.com/document/api/215/19194)
+* Create: [DescribeCcns](https://www.tencentcloud.com/document/api/215/34787)
+* Create: [SetCcnRegionBandwidthLimits](https://www.tencentcloud.com/document/api/215/34779)
+* Read: [DescribeCcns](https://www.tencentcloud.com/document/api/215/34787)
+* Read: [GetCcnRegionBandwidthLimits](https://www.tencentcloud.com/document/api/215/37319)
+* Update: [DescribeCcns](https://www.tencentcloud.com/document/api/215/34787)
+* Update: [SetCcnRegionBandwidthLimits](https://www.tencentcloud.com/document/api/215/34779)
+* Delete: [SetCcnRegionBandwidthLimits](https://www.tencentcloud.com/document/api/215/34779)
 

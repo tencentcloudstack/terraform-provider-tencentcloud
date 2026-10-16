@@ -68,10 +68,10 @@ The `address_set` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAddressPool](https://cloud.tencent.com/document/api/1551/120464)
-* Read: [DescribeAddressPoolDetail](https://cloud.tencent.com/document/api/1551/120461)
-* Update: [ModifyAddressPool](https://cloud.tencent.com/document/api/1551/120458)
-* Delete: [DeleteAddressPool](https://cloud.tencent.com/document/api/1551/120463)
+* Create: [CreateAddressPool](https://www.tencentcloud.com/search/?wd=CreateAddressPool&type=document&lang=en)
+* Read: [DescribeAddressPoolDetail](https://www.tencentcloud.com/search/?wd=DescribeAddressPoolDetail&type=document&lang=en)
+* Update: [ModifyAddressPool](https://www.tencentcloud.com/search/?wd=ModifyAddressPool&type=document&lang=en)
+* Delete: [DeleteAddressPool](https://www.tencentcloud.com/search/?wd=DeleteAddressPool&type=document&lang=en)
 
 ## Import
 

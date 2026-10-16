@@ -120,12 +120,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDataEngine](https://cloud.tencent.com/document/api/1342/87875)
-* Create: [DescribeDataEngine](https://cloud.tencent.com/document/api/1342/99274)
-* Read: [DescribeDataEngines](https://cloud.tencent.com/document/api/1342/86308)
-* Update: [DescribeDataEngine](https://cloud.tencent.com/document/api/1342/99274)
-* Update: [UpdateDataEngine](https://cloud.tencent.com/document/api/1342/99271)
-* Delete: [DeleteDataEngine](https://cloud.tencent.com/document/api/1342/99279)
+* Create: [CreateDataEngine](https://www.tencentcloud.com/search/?wd=CreateDataEngine&type=document&lang=en)
+* Create: [DescribeDataEngine](https://www.tencentcloud.com/search/?wd=DescribeDataEngine&type=document&lang=en)
+* Read: [DescribeDataEngines](https://www.tencentcloud.com/search/?wd=DescribeDataEngines&type=document&lang=en)
+* Update: [DescribeDataEngine](https://www.tencentcloud.com/search/?wd=DescribeDataEngine&type=document&lang=en)
+* Update: [UpdateDataEngine](https://www.tencentcloud.com/search/?wd=UpdateDataEngine&type=document&lang=en)
+* Delete: [DeleteDataEngine](https://www.tencentcloud.com/search/?wd=DeleteDataEngine&type=document&lang=en)
 
 ## Import
 

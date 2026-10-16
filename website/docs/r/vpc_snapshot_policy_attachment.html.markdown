@@ -86,10 +86,10 @@ The `instances` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachSnapshotInstances](https://cloud.tencent.com/document/api/215/85159)
-* Read: [DescribeSnapshotAttachedInstances](https://cloud.tencent.com/document/api/215/85155)
-* Delete: [DescribeSnapshotAttachedInstances](https://cloud.tencent.com/document/api/215/85155)
-* Delete: [DetachSnapshotInstances](https://cloud.tencent.com/document/api/215/85152)
+* Create: [AttachSnapshotInstances](https://www.tencentcloud.com/document/api/215/55060)
+* Read: [DescribeSnapshotAttachedInstances](https://www.tencentcloud.com/document/api/215/55056)
+* Delete: [DescribeSnapshotAttachedInstances](https://www.tencentcloud.com/document/api/215/55056)
+* Delete: [DetachSnapshotInstances](https://www.tencentcloud.com/document/api/215/55053)
 
 ## Import
 

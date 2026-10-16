@@ -472,20 +472,20 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateClusterNodePool](https://cloud.tencent.com/document/api/457/49436)
-* Read: [DescribeClusterNodePoolDetail](https://cloud.tencent.com/document/api/457/49433)
-* Read: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862)
-* Update: [DeleteMachine](https://cloud.tencent.com/document/api/296/19844)
-* Update: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735)
-* Update: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863)
-* Update: [DescribeClusterNodePoolDetail](https://cloud.tencent.com/document/api/457/49433)
-* Update: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862)
-* Update: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728)
-* Update: [InvokeCommand](https://cloud.tencent.com/document/api/1340/52678)
-* Update: [ModifyClusterNodePool](https://cloud.tencent.com/document/api/457/49431)
-* Update: [ModifyLaunchConfigurationAttributes](https://cloud.tencent.com/document/api/377/31298)
-* Update: [ModifyNodePoolDesiredCapacityAboutAsg](https://cloud.tencent.com/document/api/457/51013)
-* Delete: [DeleteClusterNodePool](https://cloud.tencent.com/document/api/457/49434)
+* Create: [CreateClusterNodePool](https://www.tencentcloud.com/document/api/457/38781)
+* Read: [DescribeClusterNodePoolDetail](https://www.tencentcloud.com/document/api/457/38778)
+* Read: [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
+* Update: [DeleteMachine](https://www.tencentcloud.com/document/api/296/30907)
+* Update: [DescribeAutoScalingActivities](https://www.tencentcloud.com/document/api/377/31014)
+* Update: [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
+* Update: [DescribeClusterNodePoolDetail](https://www.tencentcloud.com/document/api/457/38778)
+* Update: [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
+* Update: [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+* Update: [InvokeCommand](https://www.tencentcloud.com/search/?wd=InvokeCommand&type=document&lang=en)
+* Update: [ModifyClusterNodePool](https://www.tencentcloud.com/document/api/457/38776)
+* Update: [ModifyLaunchConfigurationAttributes](https://www.tencentcloud.com/document/api/377/30998)
+* Update: [ModifyNodePoolDesiredCapacityAboutAsg](https://www.tencentcloud.com/search/?wd=ModifyNodePoolDesiredCapacityAboutAsg&type=document&lang=en)
+* Delete: [DeleteClusterNodePool](https://www.tencentcloud.com/document/api/457/38779)
 
 ## Import
 

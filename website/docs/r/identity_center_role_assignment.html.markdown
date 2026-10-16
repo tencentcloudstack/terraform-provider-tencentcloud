@@ -56,12 +56,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRoleAssignment](https://cloud.tencent.com/document/api/850/109958)
-* Create: [GetTaskStatus](https://cloud.tencent.com/document/api/850/109955)
-* Read: [ListRoleAssignments](https://cloud.tencent.com/document/api/850/109954)
-* Delete: [DeleteRoleAssignment](https://cloud.tencent.com/document/api/850/109957)
-* Delete: [DismantleRoleConfiguration](https://cloud.tencent.com/document/api/850/109956)
-* Delete: [GetTaskStatus](https://cloud.tencent.com/document/api/850/109955)
+* Create: [CreateRoleAssignment](https://www.tencentcloud.com/search/?wd=CreateRoleAssignment&type=document&lang=en)
+* Create: [GetTaskStatus](https://www.tencentcloud.com/search/?wd=GetTaskStatus&type=document&lang=en)
+* Read: [ListRoleAssignments](https://www.tencentcloud.com/search/?wd=ListRoleAssignments&type=document&lang=en)
+* Delete: [DeleteRoleAssignment](https://www.tencentcloud.com/search/?wd=DeleteRoleAssignment&type=document&lang=en)
+* Delete: [DismantleRoleConfiguration](https://www.tencentcloud.com/search/?wd=DismantleRoleConfiguration&type=document&lang=en)
+* Delete: [GetTaskStatus](https://www.tencentcloud.com/search/?wd=GetTaskStatus&type=document&lang=en)
 
 ## Import
 

@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindClusterResourcePackages](https://cloud.tencent.com/document/api/1003/93014)
-* Read: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086)
-* Delete: [UnbindClusterResourcePackages](https://cloud.tencent.com/document/api/1003/93006)
+* Create: [BindClusterResourcePackages](https://www.tencentcloud.com/search/?wd=BindClusterResourcePackages&type=document&lang=en)
+* Read: [DescribeClusterDetail](https://www.tencentcloud.com/search/?wd=DescribeClusterDetail&type=document&lang=en)
+* Delete: [UnbindClusterResourcePackages](https://www.tencentcloud.com/search/?wd=UnbindClusterResourcePackages&type=document&lang=en)
 
 ## Import
 

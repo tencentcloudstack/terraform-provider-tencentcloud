@@ -90,11 +90,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177)
-* Create: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/237/56486)
-* Read: [DescribeAccountPrivileges](https://cloud.tencent.com/document/api/237/16164)
-* Update: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177)
-* Update: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/237/56486)
+* Create: [DescribeFlow](https://www.tencentcloud.com/document/api/237/16177)
+* Create: [ModifyAccountPrivileges](https://www.tencentcloud.com/document/api/237/40959)
+* Read: [DescribeAccountPrivileges](https://www.tencentcloud.com/document/api/237/16164)
+* Update: [DescribeFlow](https://www.tencentcloud.com/document/api/237/16177)
+* Update: [ModifyAccountPrivileges](https://www.tencentcloud.com/document/api/237/40959)
 
 ## Import
 

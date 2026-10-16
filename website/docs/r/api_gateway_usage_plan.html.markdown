@@ -54,12 +54,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateUsagePlan](https://cloud.tencent.com/document/api/628/45224)
-* Create: [DescribeUsagePlan](https://cloud.tencent.com/document/api/628/45221)
-* Read: [DescribeUsagePlan](https://cloud.tencent.com/document/api/628/45221)
-* Read: [DescribeUsagePlanEnvironments](https://cloud.tencent.com/document/api/628/45220)
-* Update: [ModifyUsagePlan](https://cloud.tencent.com/document/api/628/45217)
-* Delete: [DeleteUsagePlan](https://cloud.tencent.com/document/api/628/45223)
+* Create: [CreateUsagePlan](https://www.tencentcloud.com/search/?wd=CreateUsagePlan&type=document&lang=en)
+* Create: [DescribeUsagePlan](https://www.tencentcloud.com/search/?wd=DescribeUsagePlan&type=document&lang=en)
+* Read: [DescribeUsagePlan](https://www.tencentcloud.com/search/?wd=DescribeUsagePlan&type=document&lang=en)
+* Read: [DescribeUsagePlanEnvironments](https://www.tencentcloud.com/search/?wd=DescribeUsagePlanEnvironments&type=document&lang=en)
+* Update: [ModifyUsagePlan](https://www.tencentcloud.com/search/?wd=ModifyUsagePlan&type=document&lang=en)
+* Delete: [DeleteUsagePlan](https://www.tencentcloud.com/search/?wd=DeleteUsagePlan&type=document&lang=en)
 
 ## Import
 

@@ -44,13 +44,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateServiceLinkedRole](https://cloud.tencent.com/document/api/598/43711)
-* Read: [GetRole](https://cloud.tencent.com/document/api/598/36221)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Update: [UpdateRoleDescription](https://cloud.tencent.com/document/api/598/36218)
-* Delete: [DeleteServiceLinkedRole](https://cloud.tencent.com/document/api/598/43710)
-* Delete: [GetRole](https://cloud.tencent.com/document/api/598/36221)
-* Delete: [GetServiceLinkedRoleDeletionStatus](https://cloud.tencent.com/document/api/598/43709)
+* Create: [CreateServiceLinkedRole](https://www.tencentcloud.com/document/api/598/36308)
+* Read: [GetRole](https://www.tencentcloud.com/document/api/598/33557)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Update: [UpdateRoleDescription](https://www.tencentcloud.com/document/api/598/33554)
+* Delete: [DeleteServiceLinkedRole](https://www.tencentcloud.com/document/api/598/36307)
+* Delete: [GetRole](https://www.tencentcloud.com/document/api/598/33557)
+* Delete: [GetServiceLinkedRoleDeletionStatus](https://www.tencentcloud.com/document/api/598/36306)
 
 ## Import
 

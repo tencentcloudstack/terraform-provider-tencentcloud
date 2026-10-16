@@ -36,7 +36,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DeployCertificateRecordRollback](https://cloud.tencent.com/document/api/400/91665)
+* Create: [DeployCertificateRecordRollback](https://www.tencentcloud.com/search/?wd=DeployCertificateRecordRollback&type=document&lang=en)
 
 ## Import
 

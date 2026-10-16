@@ -89,13 +89,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSplunkDeliver](https://cloud.tencent.com/document/api/614/126749)
-* Create: [DescribeSplunkDelivers](https://cloud.tencent.com/document/api/614/126747)
-* Create: [ModifySplunkDeliver](https://cloud.tencent.com/document/api/614/126745)
-* Read: [DescribeSplunkDelivers](https://cloud.tencent.com/document/api/614/126747)
-* Update: [DescribeSplunkDelivers](https://cloud.tencent.com/document/api/614/126747)
-* Update: [ModifySplunkDeliver](https://cloud.tencent.com/document/api/614/126745)
-* Delete: [DeleteSplunkDeliver](https://cloud.tencent.com/document/api/614/126748)
+* Create: [CreateSplunkDeliver](https://www.tencentcloud.com/document/api/614/80498)
+* Create: [DescribeSplunkDelivers](https://www.tencentcloud.com/document/api/614/80496)
+* Create: [ModifySplunkDeliver](https://www.tencentcloud.com/document/api/614/80494)
+* Read: [DescribeSplunkDelivers](https://www.tencentcloud.com/document/api/614/80496)
+* Update: [DescribeSplunkDelivers](https://www.tencentcloud.com/document/api/614/80496)
+* Update: [ModifySplunkDeliver](https://www.tencentcloud.com/document/api/614/80494)
+* Delete: [DeleteSplunkDeliver](https://www.tencentcloud.com/document/api/614/80497)
 
 ## Import
 

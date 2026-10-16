@@ -77,10 +77,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateUnitRuleWithDetailResp](https://cloud.tencent.com/document/api/649/89209)
-* Read: [DescribeUnitRule](https://cloud.tencent.com/document/api/649/53899)
-* Update: [UpdateUnitRule](https://cloud.tencent.com/document/api/649/53891)
-* Delete: [DeleteUnitRule](https://cloud.tencent.com/document/api/649/53902)
+* Create: [CreateUnitRuleWithDetailResp](https://www.tencentcloud.com/search/?wd=CreateUnitRuleWithDetailResp&type=document&lang=en)
+* Read: [DescribeUnitRule](https://www.tencentcloud.com/search/?wd=DescribeUnitRule&type=document&lang=en)
+* Update: [UpdateUnitRule](https://www.tencentcloud.com/search/?wd=UpdateUnitRule&type=document&lang=en)
+* Delete: [DeleteUnitRule](https://www.tencentcloud.com/search/?wd=DeleteUnitRule&type=document&lang=en)
 
 ## Import
 

@@ -112,13 +112,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDirectConnectGateway](https://cloud.tencent.com/document/api/215/19192)
-* Create: [ModifyDirectConnectGatewayAttribute](https://cloud.tencent.com/document/api/215/30643)
-* Read: [DescribeDirectConnectGateways](https://cloud.tencent.com/document/api/215/30644)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ModifyDirectConnectGatewayAttribute](https://cloud.tencent.com/document/api/215/30643)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeleteDirectConnectGateway](https://cloud.tencent.com/document/api/215/30645)
+* Create: [CreateDirectConnectGateway](https://www.tencentcloud.com/document/api/215/36915)
+* Create: [ModifyDirectConnectGatewayAttribute](https://www.tencentcloud.com/document/api/215/36912)
+* Read: [DescribeDirectConnectGateways](https://www.tencentcloud.com/document/api/215/36913)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyDirectConnectGatewayAttribute](https://www.tencentcloud.com/document/api/215/36912)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteDirectConnectGateway](https://www.tencentcloud.com/document/api/215/36914)
 
 ## Import
 

@@ -44,9 +44,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SwitchBackupStream](https://cloud.tencent.com/document/api/267/100420)
-* Read: [DescribeBackupStreamList](https://cloud.tencent.com/document/api/267/100422)
-* Update: [SwitchBackupStream](https://cloud.tencent.com/document/api/267/100420)
+* Create: [SwitchBackupStream](https://www.tencentcloud.com/search/?wd=SwitchBackupStream&type=document&lang=en)
+* Read: [DescribeBackupStreamList](https://www.tencentcloud.com/search/?wd=DescribeBackupStreamList&type=document&lang=en)
+* Update: [SwitchBackupStream](https://www.tencentcloud.com/search/?wd=SwitchBackupStream&type=document&lang=en)
 
 ## Import
 

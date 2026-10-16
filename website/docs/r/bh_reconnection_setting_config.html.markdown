@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyReconnectionSetting](https://cloud.tencent.com/document/api/1025/125047)
-* Read: [DescribeSecuritySetting](https://cloud.tencent.com/document/api/1025/125050)
-* Update: [ModifyReconnectionSetting](https://cloud.tencent.com/document/api/1025/125047)
+* Create: [ModifyReconnectionSetting](https://www.tencentcloud.com/search/?wd=ModifyReconnectionSetting&type=document&lang=en)
+* Read: [DescribeSecuritySetting](https://www.tencentcloud.com/search/?wd=DescribeSecuritySetting&type=document&lang=en)
+* Update: [ModifyReconnectionSetting](https://www.tencentcloud.com/search/?wd=ModifyReconnectionSetting&type=document&lang=en)
 
 ## Import
 

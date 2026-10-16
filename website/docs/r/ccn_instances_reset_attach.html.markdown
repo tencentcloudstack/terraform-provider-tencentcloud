@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ResetAttachCcnInstances](https://cloud.tencent.com/document/api/215/20249)
+* Create: [ResetAttachCcnInstances](https://www.tencentcloud.com/document/api/215/34780)
 

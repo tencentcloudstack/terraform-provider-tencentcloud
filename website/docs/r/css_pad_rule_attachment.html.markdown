@@ -42,10 +42,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLivePadRule](https://cloud.tencent.com/document/api/267/93530)
-* Read: [DescribeLivePadRules](https://cloud.tencent.com/document/api/267/93526)
-* Delete: [DeleteLivePadRule](https://cloud.tencent.com/document/api/267/93528)
-* Delete: [DescribeLivePadRules](https://cloud.tencent.com/document/api/267/93526)
+* Create: [CreateLivePadRule](https://www.tencentcloud.com/document/api/267/71832)
+* Read: [DescribeLivePadRules](https://www.tencentcloud.com/search/?wd=DescribeLivePadRules&type=document&lang=en)
+* Delete: [DeleteLivePadRule](https://www.tencentcloud.com/search/?wd=DeleteLivePadRule&type=document&lang=en)
+* Delete: [DescribeLivePadRules](https://www.tencentcloud.com/search/?wd=DescribeLivePadRules&type=document&lang=en)
 
 ## Import
 

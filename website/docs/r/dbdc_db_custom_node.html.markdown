@@ -178,19 +178,19 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDBCustomNodes](https://cloud.tencent.com/document/api/1322/132929)
-* Create: [DescribeDBCustomNodeSecurityGroups](https://cloud.tencent.com/document/api/1322/135270)
-* Create: [DescribeDBCustomNodes](https://cloud.tencent.com/document/api/1322/132923)
-* Read: [DescribeDBCustomNodeSecurityGroups](https://cloud.tencent.com/document/api/1322/135270)
-* Read: [DescribeDBCustomNodes](https://cloud.tencent.com/document/api/1322/132923)
-* Update: [DescribeDBCustomNodeSecurityGroups](https://cloud.tencent.com/document/api/1322/135270)
-* Update: [DescribeDBCustomNodes](https://cloud.tencent.com/document/api/1322/132923)
-* Update: [ModifyDBCustomNodeSecurityGroups](https://cloud.tencent.com/document/api/1322/135269)
-* Update: [ModifyDBCustomNodeTags](https://cloud.tencent.com/document/api/1322/132917)
-* Update: [ModifyDBCustomNodesDisasterRecoverGroup](https://cloud.tencent.com/document/api/1322/137562)
-* Update: [RenewDBCustomNode](https://cloud.tencent.com/document/api/1322/132915)
-* Delete: [DestroyDBCustomNode](https://cloud.tencent.com/document/api/1322/132920)
-* Delete: [IsolateDBCustomNode](https://cloud.tencent.com/document/api/1322/132919)
+* Create: [CreateDBCustomNodes](https://www.tencentcloud.com/search/?wd=CreateDBCustomNodes&type=document&lang=en)
+* Create: [DescribeDBCustomNodeSecurityGroups](https://www.tencentcloud.com/search/?wd=DescribeDBCustomNodeSecurityGroups&type=document&lang=en)
+* Create: [DescribeDBCustomNodes](https://www.tencentcloud.com/search/?wd=DescribeDBCustomNodes&type=document&lang=en)
+* Read: [DescribeDBCustomNodeSecurityGroups](https://www.tencentcloud.com/search/?wd=DescribeDBCustomNodeSecurityGroups&type=document&lang=en)
+* Read: [DescribeDBCustomNodes](https://www.tencentcloud.com/search/?wd=DescribeDBCustomNodes&type=document&lang=en)
+* Update: [DescribeDBCustomNodeSecurityGroups](https://www.tencentcloud.com/search/?wd=DescribeDBCustomNodeSecurityGroups&type=document&lang=en)
+* Update: [DescribeDBCustomNodes](https://www.tencentcloud.com/search/?wd=DescribeDBCustomNodes&type=document&lang=en)
+* Update: [ModifyDBCustomNodeSecurityGroups](https://www.tencentcloud.com/search/?wd=ModifyDBCustomNodeSecurityGroups&type=document&lang=en)
+* Update: [ModifyDBCustomNodeTags](https://www.tencentcloud.com/search/?wd=ModifyDBCustomNodeTags&type=document&lang=en)
+* Update: [ModifyDBCustomNodesDisasterRecoverGroup](https://www.tencentcloud.com/search/?wd=ModifyDBCustomNodesDisasterRecoverGroup&type=document&lang=en)
+* Update: [RenewDBCustomNode](https://www.tencentcloud.com/search/?wd=RenewDBCustomNode&type=document&lang=en)
+* Delete: [DestroyDBCustomNode](https://www.tencentcloud.com/search/?wd=DestroyDBCustomNode&type=document&lang=en)
+* Delete: [IsolateDBCustomNode](https://www.tencentcloud.com/search/?wd=IsolateDBCustomNode&type=document&lang=en)
 
 ## Import
 

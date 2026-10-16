@@ -48,14 +48,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSnapshot](https://cloud.tencent.com/document/api/362/15648)
-* Create: [DescribeSnapshots](https://cloud.tencent.com/document/api/362/15647)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Read: [DescribeSnapshots](https://cloud.tencent.com/document/api/362/15647)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Update: [ModifySnapshotAttribute](https://cloud.tencent.com/document/api/362/15650)
-* Delete: [DeleteSnapshots](https://cloud.tencent.com/document/api/362/15645)
+* Create: [CreateSnapshot](https://www.tencentcloud.com/document/api/362/15648)
+* Create: [DescribeSnapshots](https://www.tencentcloud.com/document/api/362/15647)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Read: [DescribeSnapshots](https://www.tencentcloud.com/document/api/362/15647)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Update: [ModifySnapshotAttribute](https://www.tencentcloud.com/document/api/362/15650)
+* Delete: [DeleteSnapshots](https://www.tencentcloud.com/document/api/362/15645)
 
 ## Import
 

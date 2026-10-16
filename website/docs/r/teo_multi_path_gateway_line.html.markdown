@@ -59,10 +59,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateMultiPathGatewayLine](https://cloud.tencent.com/document/api/1552/121342)
-* Read: [DescribeMultiPathGatewayLine](https://cloud.tencent.com/document/api/1552/121337)
-* Update: [ModifyMultiPathGatewayLine](https://cloud.tencent.com/document/api/1552/121332)
-* Delete: [DeleteMultiPathGatewayLine](https://cloud.tencent.com/document/api/1552/121339)
+* Create: [CreateMultiPathGatewayLine](https://www.tencentcloud.com/search/?wd=CreateMultiPathGatewayLine&type=document&lang=en)
+* Read: [DescribeMultiPathGatewayLine](https://www.tencentcloud.com/search/?wd=DescribeMultiPathGatewayLine&type=document&lang=en)
+* Update: [ModifyMultiPathGatewayLine](https://www.tencentcloud.com/search/?wd=ModifyMultiPathGatewayLine&type=document&lang=en)
+* Delete: [DeleteMultiPathGatewayLine](https://www.tencentcloud.com/search/?wd=DeleteMultiPathGatewayLine&type=document&lang=en)
 
 ## Import
 

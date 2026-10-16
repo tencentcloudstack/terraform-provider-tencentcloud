@@ -69,9 +69,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyMaintenanceWindow](https://cloud.tencent.com/document/api/239/46335)
-* Read: [DescribeMaintenanceWindow](https://cloud.tencent.com/document/api/239/46336)
-* Update: [ModifyMaintenanceWindow](https://cloud.tencent.com/document/api/239/46335)
+* Create: [ModifyMaintenanceWindow](https://www.tencentcloud.com/document/api/239/37832)
+* Read: [DescribeMaintenanceWindow](https://www.tencentcloud.com/document/api/239/37833)
+* Update: [ModifyMaintenanceWindow](https://www.tencentcloud.com/document/api/239/37832)
 
 ## Import
 

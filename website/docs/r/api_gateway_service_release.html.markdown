@@ -83,10 +83,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeService](https://cloud.tencent.com/document/api/628/45199)
-* Create: [ReleaseService](https://cloud.tencent.com/document/api/628/45192)
-* Read: [DescribeServiceEnvironmentReleaseHistory](https://cloud.tencent.com/document/api/628/45197)
-* Delete: [UnReleaseService](https://cloud.tencent.com/document/api/628/45191)
+* Create: [DescribeService](https://www.tencentcloud.com/search/?wd=DescribeService&type=document&lang=en)
+* Create: [ReleaseService](https://www.tencentcloud.com/search/?wd=ReleaseService&type=document&lang=en)
+* Read: [DescribeServiceEnvironmentReleaseHistory](https://www.tencentcloud.com/search/?wd=DescribeServiceEnvironmentReleaseHistory&type=document&lang=en)
+* Delete: [UnReleaseService](https://www.tencentcloud.com/search/?wd=UnReleaseService&type=document&lang=en)
 
 ## Import
 

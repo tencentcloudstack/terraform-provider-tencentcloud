@@ -67,5 +67,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListLineage](https://cloud.tencent.com/document/api/1267/123991)
+* Read: [ListLineage](https://www.tencentcloud.com/search/?wd=ListLineage&type=document&lang=en)
 

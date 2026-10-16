@@ -66,18 +66,18 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDomain](https://cloud.tencent.com/document/api/608/36991)
-* Create: [DescribeHTTPListeners](https://cloud.tencent.com/document/api/608/37002)
-* Create: [DescribeHTTPSListeners](https://cloud.tencent.com/document/api/608/37001)
-* Create: [DescribeRules](https://cloud.tencent.com/document/api/608/36986)
-* Create: [SetAuthentication](https://cloud.tencent.com/document/api/608/36982)
-* Read: [DescribeRules](https://cloud.tencent.com/document/api/608/36986)
-* Update: [DescribeHTTPSListeners](https://cloud.tencent.com/document/api/608/37001)
-* Update: [ModifyCertificate](https://cloud.tencent.com/document/api/608/36985)
-* Update: [ModifyDomain](https://cloud.tencent.com/document/api/608/36984)
-* Update: [SetAuthentication](https://cloud.tencent.com/document/api/608/36982)
-* Delete: [DeleteDomain](https://cloud.tencent.com/document/api/608/36989)
-* Delete: [DescribeRules](https://cloud.tencent.com/document/api/608/36986)
+* Create: [CreateDomain](https://www.tencentcloud.com/document/api/608/33046)
+* Create: [DescribeHTTPListeners](https://www.tencentcloud.com/document/api/608/33071)
+* Create: [DescribeHTTPSListeners](https://www.tencentcloud.com/document/api/608/33070)
+* Create: [DescribeRules](https://www.tencentcloud.com/document/api/608/33041)
+* Create: [SetAuthentication](https://www.tencentcloud.com/document/api/608/33037)
+* Read: [DescribeRules](https://www.tencentcloud.com/document/api/608/33041)
+* Update: [DescribeHTTPSListeners](https://www.tencentcloud.com/document/api/608/33070)
+* Update: [ModifyCertificate](https://www.tencentcloud.com/document/api/608/33040)
+* Update: [ModifyDomain](https://www.tencentcloud.com/document/api/608/33039)
+* Update: [SetAuthentication](https://www.tencentcloud.com/document/api/608/33037)
+* Delete: [DeleteDomain](https://www.tencentcloud.com/document/api/608/33044)
+* Delete: [DescribeRules](https://www.tencentcloud.com/document/api/608/33041)
 
 ## Import
 

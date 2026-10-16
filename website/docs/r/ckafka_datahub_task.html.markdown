@@ -962,13 +962,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDatahubTask](https://cloud.tencent.com/document/api/597/77736)
-* Create: [DescribeDatahubTask](https://cloud.tencent.com/document/api/597/77796)
-* Read: [DescribeDatahubTask](https://cloud.tencent.com/document/api/597/77796)
-* Update: [DescribeDatahubTask](https://cloud.tencent.com/document/api/597/77796)
-* Update: [ModifyDatahubTask](https://cloud.tencent.com/document/api/597/77793)
-* Delete: [DeleteDatahubTask](https://cloud.tencent.com/document/api/597/77799)
-* Delete: [DescribeDatahubTask](https://cloud.tencent.com/document/api/597/77796)
+* Create: [CreateDatahubTask](https://www.tencentcloud.com/search/?wd=CreateDatahubTask&type=document&lang=en)
+* Create: [DescribeDatahubTask](https://www.tencentcloud.com/search/?wd=DescribeDatahubTask&type=document&lang=en)
+* Read: [DescribeDatahubTask](https://www.tencentcloud.com/search/?wd=DescribeDatahubTask&type=document&lang=en)
+* Update: [DescribeDatahubTask](https://www.tencentcloud.com/search/?wd=DescribeDatahubTask&type=document&lang=en)
+* Update: [ModifyDatahubTask](https://www.tencentcloud.com/search/?wd=ModifyDatahubTask&type=document&lang=en)
+* Delete: [DeleteDatahubTask](https://www.tencentcloud.com/search/?wd=DeleteDatahubTask&type=document&lang=en)
+* Delete: [DescribeDatahubTask](https://www.tencentcloud.com/search/?wd=DescribeDatahubTask&type=document&lang=en)
 
 ## Import
 

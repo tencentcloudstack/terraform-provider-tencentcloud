@@ -45,12 +45,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/409/131094)
-* Create: [OpenAuditService](https://cloud.tencent.com/document/api/409/131090)
-* Read: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/409/131094)
-* Update: [ModifyAuditService](https://cloud.tencent.com/document/api/409/131091)
-* Delete: [CloseAuditService](https://cloud.tencent.com/document/api/409/131097)
-* Delete: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/409/131094)
+* Create: [DescribeAuditInstanceList](https://www.tencentcloud.com/document/api/409/79967)
+* Create: [OpenAuditService](https://www.tencentcloud.com/document/api/409/79963)
+* Read: [DescribeAuditInstanceList](https://www.tencentcloud.com/document/api/409/79967)
+* Update: [ModifyAuditService](https://www.tencentcloud.com/document/api/409/79964)
+* Delete: [CloseAuditService](https://www.tencentcloud.com/document/api/409/79970)
+* Delete: [DescribeAuditInstanceList](https://www.tencentcloud.com/document/api/409/79967)
 
 ## Import
 

@@ -167,12 +167,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateConnectResource](https://cloud.tencent.com/document/api/597/77737)
-* Create: [DescribeConnectResource](https://cloud.tencent.com/document/api/597/77798)
-* Read: [DescribeConnectResource](https://cloud.tencent.com/document/api/597/77798)
-* Update: [DescribeConnectResource](https://cloud.tencent.com/document/api/597/77798)
-* Update: [ModifyConnectResource](https://cloud.tencent.com/document/api/597/77794)
-* Delete: [DeleteConnectResource](https://cloud.tencent.com/document/api/597/77800)
+* Create: [CreateConnectResource](https://www.tencentcloud.com/search/?wd=CreateConnectResource&type=document&lang=en)
+* Create: [DescribeConnectResource](https://www.tencentcloud.com/search/?wd=DescribeConnectResource&type=document&lang=en)
+* Read: [DescribeConnectResource](https://www.tencentcloud.com/search/?wd=DescribeConnectResource&type=document&lang=en)
+* Update: [DescribeConnectResource](https://www.tencentcloud.com/search/?wd=DescribeConnectResource&type=document&lang=en)
+* Update: [ModifyConnectResource](https://www.tencentcloud.com/search/?wd=ModifyConnectResource&type=document&lang=en)
+* Delete: [DeleteConnectResource](https://www.tencentcloud.com/search/?wd=DeleteConnectResource&type=document&lang=en)
 
 ## Import
 

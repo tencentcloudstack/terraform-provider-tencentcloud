@@ -61,15 +61,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateImage](https://cloud.tencent.com/document/api/213/16726)
-* Create: [DescribeImages](https://cloud.tencent.com/document/api/213/15715)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeImages](https://cloud.tencent.com/document/api/213/15715)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ModifyImageAttribute](https://cloud.tencent.com/document/api/213/15713)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeleteImages](https://cloud.tencent.com/document/api/213/15716)
-* Delete: [DescribeImages](https://cloud.tencent.com/document/api/213/15715)
+* Create: [CreateImage](https://www.tencentcloud.com/document/api/213/33276)
+* Create: [DescribeImages](https://www.tencentcloud.com/document/api/213/33272)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeImages](https://www.tencentcloud.com/document/api/213/33272)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyImageAttribute](https://www.tencentcloud.com/document/api/213/33269)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteImages](https://www.tencentcloud.com/document/api/213/33275)
+* Delete: [DescribeImages](https://www.tencentcloud.com/document/api/213/33272)
 
 ## Import
 

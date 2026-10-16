@@ -86,6 +86,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AdjustPublicAddress](https://cloud.tencent.com/document/api/215/75874)
-* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271)
+* Create: [AdjustPublicAddress](https://www.tencentcloud.com/document/api/215/48353)
+* Create: [DescribeTaskResult](https://www.tencentcloud.com/document/api/215/34772)
 

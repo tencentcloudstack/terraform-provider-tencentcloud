@@ -84,5 +84,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSimpleClusters](https://cloud.tencent.com/document/api/649/36047)
+* Read: [DescribeSimpleClusters](https://www.tencentcloud.com/search/?wd=DescribeSimpleClusters&type=document&lang=en)
 

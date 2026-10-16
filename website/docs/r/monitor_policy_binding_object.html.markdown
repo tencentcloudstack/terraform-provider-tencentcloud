@@ -89,13 +89,13 @@ The `dimensions` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindingPolicyObject](https://cloud.tencent.com/document/api/248/40421)
-* Create: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278)
-* Read: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278)
-* Read: [DescribeBindingPolicyObjectList](https://cloud.tencent.com/document/api/248/40570)
-* Read: [DescribePolicyObjectCount](https://cloud.tencent.com/document/api/248/118054)
-* Delete: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278)
-* Delete: [DescribePolicyObjectCount](https://cloud.tencent.com/document/api/248/118054)
+* Create: [BindingPolicyObject](https://www.tencentcloud.com/document/api/248/35985)
+* Create: [DescribeAlarmPolicy](https://www.tencentcloud.com/document/api/248/39320)
+* Read: [DescribeAlarmPolicy](https://www.tencentcloud.com/document/api/248/39320)
+* Read: [DescribeBindingPolicyObjectList](https://www.tencentcloud.com/document/api/248/35980)
+* Read: [DescribePolicyObjectCount](https://www.tencentcloud.com/search/?wd=DescribePolicyObjectCount&type=document&lang=en)
+* Delete: [DescribeAlarmPolicy](https://www.tencentcloud.com/document/api/248/39320)
+* Delete: [DescribePolicyObjectCount](https://www.tencentcloud.com/search/?wd=DescribePolicyObjectCount&type=document&lang=en)
 
 ## Import
 

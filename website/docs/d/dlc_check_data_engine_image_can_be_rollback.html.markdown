@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [CheckDataEngineImageCanBeRollback](https://cloud.tencent.com/document/api/1342/99276)
+* Read: [CheckDataEngineImageCanBeRollback](https://www.tencentcloud.com/search/?wd=CheckDataEngineImageCanBeRollback&type=document&lang=en)
 

@@ -390,13 +390,13 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEndpointGroup](https://cloud.tencent.com/document/api/1817/130173)
-* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942)
-* Read: [DescribeEndpointGroups](https://cloud.tencent.com/document/api/1817/130163)
-* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942)
-* Update: [ModifyEndpointGroup](https://cloud.tencent.com/document/api/1817/130158)
-* Delete: [DeleteEndpointGroups](https://cloud.tencent.com/document/api/1817/130169)
-* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942)
+* Create: [CreateEndpointGroup](https://www.tencentcloud.com/search/?wd=CreateEndpointGroup&type=document&lang=en)
+* Create: [DescribeTaskResult](https://www.tencentcloud.com/search/?wd=DescribeTaskResult&type=document&lang=en)
+* Read: [DescribeEndpointGroups](https://www.tencentcloud.com/search/?wd=DescribeEndpointGroups&type=document&lang=en)
+* Update: [DescribeTaskResult](https://www.tencentcloud.com/search/?wd=DescribeTaskResult&type=document&lang=en)
+* Update: [ModifyEndpointGroup](https://www.tencentcloud.com/search/?wd=ModifyEndpointGroup&type=document&lang=en)
+* Delete: [DeleteEndpointGroups](https://www.tencentcloud.com/search/?wd=DeleteEndpointGroups&type=document&lang=en)
+* Delete: [DescribeTaskResult](https://www.tencentcloud.com/search/?wd=DescribeTaskResult&type=document&lang=en)
 
 ## Import
 

@@ -100,15 +100,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateServiceAccount](https://cloud.tencent.com/document/api/1141/94608)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Create: [ModifyServiceAccountPassword](https://cloud.tencent.com/document/api/1141/103857)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Read: [DescribeServiceAccounts](https://cloud.tencent.com/document/api/1141/94606)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Update: [ModifyServiceAccount](https://cloud.tencent.com/document/api/1141/94605)
-* Update: [ModifyServiceAccountPassword](https://cloud.tencent.com/document/api/1141/103857)
-* Delete: [DeleteServiceAccount](https://cloud.tencent.com/document/api/1141/94607)
+* Create: [CreateServiceAccount](https://www.tencentcloud.com/search/?wd=CreateServiceAccount&type=document&lang=en)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Create: [ModifyServiceAccountPassword](https://www.tencentcloud.com/search/?wd=ModifyServiceAccountPassword&type=document&lang=en)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Read: [DescribeServiceAccounts](https://www.tencentcloud.com/search/?wd=DescribeServiceAccounts&type=document&lang=en)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Update: [ModifyServiceAccount](https://www.tencentcloud.com/search/?wd=ModifyServiceAccount&type=document&lang=en)
+* Update: [ModifyServiceAccountPassword](https://www.tencentcloud.com/search/?wd=ModifyServiceAccountPassword&type=document&lang=en)
+* Delete: [DeleteServiceAccount](https://www.tencentcloud.com/search/?wd=DeleteServiceAccount&type=document&lang=en)
 
 ## Import
 

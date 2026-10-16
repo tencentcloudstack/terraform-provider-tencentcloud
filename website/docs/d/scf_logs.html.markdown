@@ -67,5 +67,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetFunctionLogs](https://cloud.tencent.com/document/api/583/18583)
+* Read: [GetFunctionLogs](https://www.tencentcloud.com/document/api/583/18583)
 

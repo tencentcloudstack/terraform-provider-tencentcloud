@@ -44,9 +44,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBackupStorageLocation](https://cloud.tencent.com/document/api/457/90380)
-* Read: [DescribeBackupStorageLocations](https://cloud.tencent.com/document/api/457/90378)
-* Delete: [DeleteBackupStorageLocation](https://cloud.tencent.com/document/api/457/90379)
+* Create: [CreateBackupStorageLocation](https://www.tencentcloud.com/document/api/457/55012)
+* Read: [DescribeBackupStorageLocations](https://www.tencentcloud.com/document/api/457/55010)
+* Delete: [DeleteBackupStorageLocation](https://www.tencentcloud.com/document/api/457/55011)
 
 ## Import
 

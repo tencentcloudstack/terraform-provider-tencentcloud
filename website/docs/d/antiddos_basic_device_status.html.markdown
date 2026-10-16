@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBasicDeviceStatus](https://cloud.tencent.com/document/api/297/95386)
+* Read: [DescribeBasicDeviceStatus](https://www.tencentcloud.com/search/?wd=DescribeBasicDeviceStatus&type=document&lang=en)
 

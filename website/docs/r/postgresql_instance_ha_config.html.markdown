@@ -57,7 +57,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyDBInstanceHAConfig](https://cloud.tencent.com/document/api/409/95969)
-* Read: [DescribeDBInstanceHAConfig](https://cloud.tencent.com/document/api/409/95970)
-* Update: [ModifyDBInstanceHAConfig](https://cloud.tencent.com/document/api/409/95969)
+* Create: [ModifyDBInstanceHAConfig](https://www.tencentcloud.com/document/api/409/57239)
+* Read: [DescribeDBInstanceHAConfig](https://www.tencentcloud.com/document/api/409/57240)
+* Update: [ModifyDBInstanceHAConfig](https://www.tencentcloud.com/document/api/409/57239)
 

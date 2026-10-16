@@ -47,5 +47,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTopicSyncReplica](https://cloud.tencent.com/document/api/597/60811)
+* Read: [DescribeTopicSyncReplica](https://www.tencentcloud.com/document/api/597/42213)
 

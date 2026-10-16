@@ -107,11 +107,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateApplicationAutoscaler](https://cloud.tencent.com/document/api/1371/78341)
-* Read: [DescribeApplicationAutoscalerList](https://cloud.tencent.com/document/api/1371/78339)
-* Update: [ModifyApplicationAutoscaler](https://cloud.tencent.com/document/api/1371/78338)
-* Delete: [DeleteApplicationAutoscaler](https://cloud.tencent.com/document/api/1371/78340)
-* Delete: [DisableApplicationAutoscaler](https://cloud.tencent.com/document/api/1371/78955)
+* Create: [CreateApplicationAutoscaler](https://www.tencentcloud.com/search/?wd=CreateApplicationAutoscaler&type=document&lang=en)
+* Read: [DescribeApplicationAutoscalerList](https://www.tencentcloud.com/search/?wd=DescribeApplicationAutoscalerList&type=document&lang=en)
+* Update: [ModifyApplicationAutoscaler](https://www.tencentcloud.com/search/?wd=ModifyApplicationAutoscaler&type=document&lang=en)
+* Delete: [DeleteApplicationAutoscaler](https://www.tencentcloud.com/search/?wd=DeleteApplicationAutoscaler&type=document&lang=en)
+* Delete: [DisableApplicationAutoscaler](https://www.tencentcloud.com/search/?wd=DisableApplicationAutoscaler&type=document&lang=en)
 
 ## Import
 

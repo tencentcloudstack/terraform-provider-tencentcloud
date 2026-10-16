@@ -40,10 +40,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddShareUnit](https://cloud.tencent.com/document/api/850/103056)
-* Read: [DescribeShareUnits](https://cloud.tencent.com/document/api/850/103047)
-* Update: [UpdateShareUnit](https://cloud.tencent.com/document/api/850/103046)
-* Delete: [DeleteShareUnit](https://cloud.tencent.com/document/api/850/103053)
+* Create: [AddShareUnit](https://www.tencentcloud.com/search/?wd=AddShareUnit&type=document&lang=en)
+* Read: [DescribeShareUnits](https://www.tencentcloud.com/search/?wd=DescribeShareUnits&type=document&lang=en)
+* Update: [UpdateShareUnit](https://www.tencentcloud.com/search/?wd=UpdateShareUnit&type=document&lang=en)
+* Delete: [DeleteShareUnit](https://www.tencentcloud.com/search/?wd=DeleteShareUnit&type=document&lang=en)
 
 ## Import
 

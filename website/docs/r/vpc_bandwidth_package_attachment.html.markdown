@@ -78,7 +78,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddBandwidthPackageResources](https://cloud.tencent.com/document/api/215/19213)
-* Read: [DescribeBandwidthPackageResources](https://cloud.tencent.com/document/api/215/48944)
-* Delete: [RemoveBandwidthPackageResources](https://cloud.tencent.com/document/api/215/19207)
+* Create: [AddBandwidthPackageResources](https://www.tencentcloud.com/document/api/215/36923)
+* Read: [DescribeBandwidthPackageResources](https://www.tencentcloud.com/document/api/215/38516)
+* Delete: [RemoveBandwidthPackageResources](https://www.tencentcloud.com/document/api/215/36917)
 

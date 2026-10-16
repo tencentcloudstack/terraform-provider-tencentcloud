@@ -66,14 +66,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [PutSecretValue](https://cloud.tencent.com/document/api/1140/40518)
-* Read: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526)
-* Read: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522)
-* Read: [ListSecretVersionIds](https://cloud.tencent.com/document/api/1140/40520)
-* Update: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526)
-* Update: [UpdateSecret](https://cloud.tencent.com/document/api/1140/40515)
-* Delete: [DeleteSecretVersion](https://cloud.tencent.com/document/api/1140/40527)
-* Delete: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522)
+* Create: [PutSecretValue](https://www.tencentcloud.com/search/?wd=PutSecretValue&type=document&lang=en)
+* Read: [DescribeSecret](https://www.tencentcloud.com/search/?wd=DescribeSecret&type=document&lang=en)
+* Read: [GetSecretValue](https://www.tencentcloud.com/search/?wd=GetSecretValue&type=document&lang=en)
+* Read: [ListSecretVersionIds](https://www.tencentcloud.com/search/?wd=ListSecretVersionIds&type=document&lang=en)
+* Update: [DescribeSecret](https://www.tencentcloud.com/search/?wd=DescribeSecret&type=document&lang=en)
+* Update: [UpdateSecret](https://www.tencentcloud.com/search/?wd=UpdateSecret&type=document&lang=en)
+* Delete: [DeleteSecretVersion](https://www.tencentcloud.com/search/?wd=DeleteSecretVersion&type=document&lang=en)
+* Delete: [GetSecretValue](https://www.tencentcloud.com/search/?wd=GetSecretValue&type=document&lang=en)
 
 ## Import
 

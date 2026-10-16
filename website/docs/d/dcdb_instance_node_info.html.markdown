@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDCDBInstanceNodeInfo](https://cloud.tencent.com/document/api/557/54943)
+* Read: [DescribeDCDBInstanceNodeInfo](https://www.tencentcloud.com/search/?wd=DescribeDCDBInstanceNodeInfo&type=document&lang=en)
 

@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeGroupAttribute](https://cloud.tencent.com/document/api/649/64979)
-* Create: [StartGroup](https://cloud.tencent.com/document/api/649/36057)
-* Create: [StopGroup](https://cloud.tencent.com/document/api/649/36055)
-* Read: [DescribeGroupAttribute](https://cloud.tencent.com/document/api/649/64979)
-* Update: [DescribeGroupAttribute](https://cloud.tencent.com/document/api/649/64979)
-* Update: [StartGroup](https://cloud.tencent.com/document/api/649/36057)
-* Update: [StopGroup](https://cloud.tencent.com/document/api/649/36055)
+* Create: [DescribeGroupAttribute](https://www.tencentcloud.com/search/?wd=DescribeGroupAttribute&type=document&lang=en)
+* Create: [StartGroup](https://www.tencentcloud.com/search/?wd=StartGroup&type=document&lang=en)
+* Create: [StopGroup](https://www.tencentcloud.com/search/?wd=StopGroup&type=document&lang=en)
+* Read: [DescribeGroupAttribute](https://www.tencentcloud.com/search/?wd=DescribeGroupAttribute&type=document&lang=en)
+* Update: [DescribeGroupAttribute](https://www.tencentcloud.com/search/?wd=DescribeGroupAttribute&type=document&lang=en)
+* Update: [StartGroup](https://www.tencentcloud.com/search/?wd=StartGroup&type=document&lang=en)
+* Update: [StopGroup](https://www.tencentcloud.com/search/?wd=StopGroup&type=document&lang=en)
 

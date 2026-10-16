@@ -40,10 +40,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateMountPoint](https://cloud.tencent.com/document/api/1105/51154)
-* Read: [DescribeMountPoint](https://cloud.tencent.com/document/api/1105/51153)
-* Update: [ModifyMountPoint](https://cloud.tencent.com/document/api/1105/51150)
-* Delete: [DeleteMountPoint](https://cloud.tencent.com/document/api/1105/52342)
+* Create: [CreateMountPoint](https://www.tencentcloud.com/search/?wd=CreateMountPoint&type=document&lang=en)
+* Read: [DescribeMountPoint](https://www.tencentcloud.com/search/?wd=DescribeMountPoint&type=document&lang=en)
+* Update: [ModifyMountPoint](https://www.tencentcloud.com/search/?wd=ModifyMountPoint&type=document&lang=en)
+* Delete: [DeleteMountPoint](https://www.tencentcloud.com/search/?wd=DeleteMountPoint&type=document&lang=en)
 
 ## Import
 

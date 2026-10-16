@@ -71,10 +71,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeLicenseBindSchedule](https://cloud.tencent.com/document/api/296/80399)
-* Create: [ModifyLicenseBinds](https://cloud.tencent.com/document/api/296/80394)
-* Read: [DescribeLicenseBindList](https://cloud.tencent.com/document/api/296/80400)
-* Delete: [ModifyLicenseUnBinds](https://cloud.tencent.com/document/api/296/80393)
+* Create: [DescribeLicenseBindSchedule](https://www.tencentcloud.com/document/api/296/63783)
+* Create: [ModifyLicenseBinds](https://www.tencentcloud.com/document/api/296/63775)
+* Read: [DescribeLicenseBindList](https://www.tencentcloud.com/document/api/296/63784)
+* Delete: [ModifyLicenseUnBinds](https://www.tencentcloud.com/document/api/296/84588)
 
 ## Import
 

@@ -145,13 +145,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateFlowLog](https://cloud.tencent.com/document/api/215/35015)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Read: [DescribeFlowLogs](https://cloud.tencent.com/document/api/215/35012)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319)
-* Update: [ModifyFlowLogAttribute](https://cloud.tencent.com/document/api/215/35011)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322)
-* Delete: [DeleteFlowLog](https://cloud.tencent.com/document/api/215/35014)
+* Create: [CreateFlowLog](https://www.tencentcloud.com/document/api/215/36911)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read: [DescribeFlowLogs](https://www.tencentcloud.com/document/api/215/36908)
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyFlowLogAttribute](https://www.tencentcloud.com/document/api/215/36907)
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteFlowLog](https://www.tencentcloud.com/document/api/215/36910)
 
 ## Import
 

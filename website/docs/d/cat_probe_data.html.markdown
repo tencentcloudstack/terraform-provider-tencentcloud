@@ -66,5 +66,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDetailedSingleProbeData](https://cloud.tencent.com/document/api/280/66205)
+* Read: [DescribeDetailedSingleProbeData](https://www.tencentcloud.com/search/?wd=DescribeDetailedSingleProbeData&type=document&lang=en)
 

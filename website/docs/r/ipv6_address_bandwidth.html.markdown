@@ -42,10 +42,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AllocateIp6AddressesBandwidth](https://cloud.tencent.com/document/api/215/40090)
-* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271)
-* Read: [DescribeIp6Addresses](https://cloud.tencent.com/document/api/215/40089)
-* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271)
-* Update: [ModifyIp6AddressesBandwidth](https://cloud.tencent.com/document/api/215/40088)
-* Delete: [ReleaseIp6AddressesBandwidth](https://cloud.tencent.com/document/api/215/40087)
+* Create: [AllocateIp6AddressesBandwidth](https://www.tencentcloud.com/document/api/215/68131)
+* Create: [DescribeTaskResult](https://www.tencentcloud.com/document/api/215/34772)
+* Read: [DescribeIp6Addresses](https://www.tencentcloud.com/document/api/215/68128)
+* Update: [DescribeTaskResult](https://www.tencentcloud.com/document/api/215/34772)
+* Update: [ModifyIp6AddressesBandwidth](https://www.tencentcloud.com/document/api/215/68124)
+* Delete: [ReleaseIp6AddressesBandwidth](https://www.tencentcloud.com/document/api/215/68122)
 

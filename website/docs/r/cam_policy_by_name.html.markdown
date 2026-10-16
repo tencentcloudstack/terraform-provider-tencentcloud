@@ -57,13 +57,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePolicy](https://cloud.tencent.com/document/api/598/34578)
-* Create: [ListPolicies](https://cloud.tencent.com/document/api/598/34570)
-* Read: [GetPolicy](https://cloud.tencent.com/document/api/598/34574)
-* Read: [ListPolicies](https://cloud.tencent.com/document/api/598/34570)
-* Update: [UpdatePolicy](https://cloud.tencent.com/document/api/598/34569)
-* Delete: [DeletePolicy](https://cloud.tencent.com/document/api/598/34577)
-* Delete: [ListPolicies](https://cloud.tencent.com/document/api/598/34570)
+* Create: [CreatePolicy](https://www.tencentcloud.com/document/api/598/32248)
+* Create: [ListPolicies](https://www.tencentcloud.com/document/api/598/32240)
+* Read: [GetPolicy](https://www.tencentcloud.com/document/api/598/32244)
+* Read: [ListPolicies](https://www.tencentcloud.com/document/api/598/32240)
+* Update: [UpdatePolicy](https://www.tencentcloud.com/document/api/598/45874)
+* Delete: [DeletePolicy](https://www.tencentcloud.com/document/api/598/32247)
+* Delete: [ListPolicies](https://www.tencentcloud.com/document/api/598/32240)
 
 ## Import
 

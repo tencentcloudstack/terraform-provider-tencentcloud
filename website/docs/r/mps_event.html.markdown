@@ -38,10 +38,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateStreamLinkEvent](https://cloud.tencent.com/document/api/862/93422)
-* Read: [DescribeStreamLinkEvent](https://cloud.tencent.com/document/api/862/93420)
-* Update: [ModifyStreamLinkEvent](https://cloud.tencent.com/document/api/862/93418)
-* Delete: [DeleteStreamLinkEvent](https://cloud.tencent.com/document/api/862/93421)
+* Create: [CreateStreamLinkEvent](https://www.tencentcloud.com/search/?wd=CreateStreamLinkEvent&type=document&lang=en)
+* Read: [DescribeStreamLinkEvent](https://www.tencentcloud.com/search/?wd=DescribeStreamLinkEvent&type=document&lang=en)
+* Update: [ModifyStreamLinkEvent](https://www.tencentcloud.com/search/?wd=ModifyStreamLinkEvent&type=document&lang=en)
+* Delete: [DeleteStreamLinkEvent](https://www.tencentcloud.com/search/?wd=DeleteStreamLinkEvent&type=document&lang=en)
 
 ## Import
 

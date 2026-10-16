@@ -91,11 +91,11 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstance](https://cloud.tencent.com/document/api/555/127790)
-* Create: [DescribeDealsByCond](https://cloud.tencent.com/document/api/555/19179)
-* Read: [DescribeRenewInstances](https://cloud.tencent.com/document/api/555/127836)
-* Update: [DescribeDealsByCond](https://cloud.tencent.com/document/api/555/19179)
-* Update: [RenewInstance](https://cloud.tencent.com/document/api/555/127788)
-* Delete: [DescribeDealsByCond](https://cloud.tencent.com/document/api/555/19179)
-* Delete: [RefundInstance](https://cloud.tencent.com/document/api/555/127789)
+* Create: [CreateInstance](https://www.tencentcloud.com/document/api/555/77176)
+* Create: [DescribeDealsByCond](https://www.tencentcloud.com/document/api/555/67735)
+* Read: [DescribeRenewInstances](https://www.tencentcloud.com/document/api/555/78424)
+* Update: [DescribeDealsByCond](https://www.tencentcloud.com/document/api/555/67735)
+* Update: [RenewInstance](https://www.tencentcloud.com/document/api/555/77178)
+* Delete: [DescribeDealsByCond](https://www.tencentcloud.com/document/api/555/67735)
+* Delete: [RefundInstance](https://www.tencentcloud.com/document/api/555/77180)
 

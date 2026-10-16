@@ -60,5 +60,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeParamTemplates](https://cloud.tencent.com/document/api/1003/77805)
+* Read: [DescribeParamTemplates](https://www.tencentcloud.com/search/?wd=DescribeParamTemplates&type=document&lang=en)
 

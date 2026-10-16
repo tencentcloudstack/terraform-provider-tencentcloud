@@ -48,5 +48,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeWhiteBoxKeyDetails](https://cloud.tencent.com/document/api/573/43439)
+* Read: [DescribeWhiteBoxKeyDetails](https://www.tencentcloud.com/search/?wd=DescribeWhiteBoxKeyDetails&type=document&lang=en)
 

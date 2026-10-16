@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribePublisherSummary](https://cloud.tencent.com/document/api/1179/66370)
+* Read: [DescribePublisherSummary](https://www.tencentcloud.com/search/?wd=DescribePublisherSummary&type=document&lang=en)
 

@@ -114,9 +114,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyReadOnlyGroupDetails](https://cloud.tencent.com/document/api/238/46774)
-* Read: [DescribeReadOnlyGroupDetails](https://cloud.tencent.com/document/api/238/46772)
-* Update: [ModifyReadOnlyGroupDetails](https://cloud.tencent.com/document/api/238/46774)
+* Create: [ModifyReadOnlyGroupDetails](https://www.tencentcloud.com/document/api/238/72737)
+* Read: [DescribeReadOnlyGroupDetails](https://www.tencentcloud.com/document/api/238/72739)
+* Update: [ModifyReadOnlyGroupDetails](https://www.tencentcloud.com/document/api/238/72737)
 
 ## Import
 

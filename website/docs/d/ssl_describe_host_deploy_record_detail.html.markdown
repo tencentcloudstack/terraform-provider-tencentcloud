@@ -60,5 +60,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeHostDeployRecordDetail](https://cloud.tencent.com/document/api/400/91658)
+* Read: [DescribeHostDeployRecordDetail](https://www.tencentcloud.com/search/?wd=DescribeHostDeployRecordDetail&type=document&lang=en)
 

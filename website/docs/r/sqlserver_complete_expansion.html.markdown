@@ -105,6 +105,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CompleteExpansion](https://cloud.tencent.com/document/api/238/46286)
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967)
+* Create: [CompleteExpansion](https://www.tencentcloud.com/document/api/238/72761)
+* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
 

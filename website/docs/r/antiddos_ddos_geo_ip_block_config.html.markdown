@@ -48,12 +48,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95336)
-* Create: [DescribeListDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95312)
-* Read: [DescribeListDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95312)
-* Update: [ModifyDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95303)
-* Delete: [DeleteDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95325)
-* Delete: [DescribeListDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95312)
+* Create: [CreateDDoSGeoIPBlockConfig](https://www.tencentcloud.com/search/?wd=CreateDDoSGeoIPBlockConfig&type=document&lang=en)
+* Create: [DescribeListDDoSGeoIPBlockConfig](https://www.tencentcloud.com/search/?wd=DescribeListDDoSGeoIPBlockConfig&type=document&lang=en)
+* Read: [DescribeListDDoSGeoIPBlockConfig](https://www.tencentcloud.com/search/?wd=DescribeListDDoSGeoIPBlockConfig&type=document&lang=en)
+* Update: [ModifyDDoSGeoIPBlockConfig](https://www.tencentcloud.com/search/?wd=ModifyDDoSGeoIPBlockConfig&type=document&lang=en)
+* Delete: [DeleteDDoSGeoIPBlockConfig](https://www.tencentcloud.com/search/?wd=DeleteDDoSGeoIPBlockConfig&type=document&lang=en)
+* Delete: [DescribeListDDoSGeoIPBlockConfig](https://www.tencentcloud.com/search/?wd=DescribeListDDoSGeoIPBlockConfig&type=document&lang=en)
 
 ## Import
 

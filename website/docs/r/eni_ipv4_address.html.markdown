@@ -105,11 +105,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssignPrivateIpAddresses](https://cloud.tencent.com/document/api/215/15813)
-* Read: [DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817)
-* Delete: [DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817)
-* Delete: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037)
-* Delete: [UnassignPrivateIpAddresses](https://cloud.tencent.com/document/api/215/15814)
+* Create: [AssignPrivateIpAddresses](https://www.tencentcloud.com/document/api/215/15813)
+* Read: [DescribeNetworkInterfaces](https://www.tencentcloud.com/document/api/215/15817)
+* Delete: [DescribeNetworkInterfaces](https://www.tencentcloud.com/document/api/215/15817)
+* Delete: [DescribeVpcTaskResult](https://www.tencentcloud.com/document/api/215/41567)
+* Delete: [UnassignPrivateIpAddresses](https://www.tencentcloud.com/document/api/215/15814)
 
 ## Import
 

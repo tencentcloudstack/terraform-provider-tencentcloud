@@ -112,5 +112,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RemoveInstances](https://cloud.tencent.com/document/api/377/20431)
+* Create: [RemoveInstances](https://www.tencentcloud.com/document/api/377/31005)
 

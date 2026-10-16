@@ -65,11 +65,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCCPrecisionPolicy](https://cloud.tencent.com/document/api/297/95392)
-* Create: [DescribeCCPrecisionPlyList](https://cloud.tencent.com/document/api/297/95383)
-* Read: [DescribeCCPrecisionPlyList](https://cloud.tencent.com/document/api/297/95383)
-* Update: [ModifyCCPrecisionPolicy](https://cloud.tencent.com/document/api/297/95379)
-* Delete: [DeleteCCPrecisionPolicy](https://cloud.tencent.com/document/api/297/95389)
+* Create: [CreateCCPrecisionPolicy](https://www.tencentcloud.com/search/?wd=CreateCCPrecisionPolicy&type=document&lang=en)
+* Create: [DescribeCCPrecisionPlyList](https://www.tencentcloud.com/search/?wd=DescribeCCPrecisionPlyList&type=document&lang=en)
+* Read: [DescribeCCPrecisionPlyList](https://www.tencentcloud.com/search/?wd=DescribeCCPrecisionPlyList&type=document&lang=en)
+* Update: [ModifyCCPrecisionPolicy](https://www.tencentcloud.com/search/?wd=ModifyCCPrecisionPolicy&type=document&lang=en)
+* Delete: [DeleteCCPrecisionPolicy](https://www.tencentcloud.com/search/?wd=DeleteCCPrecisionPolicy&type=document&lang=en)
 
 ## Import
 

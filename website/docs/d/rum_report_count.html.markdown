@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDataReportCount](https://cloud.tencent.com/document/api/1464/69228)
+* Read: [DescribeDataReportCount](https://www.tencentcloud.com/search/?wd=DescribeDataReportCount&type=document&lang=en)
 

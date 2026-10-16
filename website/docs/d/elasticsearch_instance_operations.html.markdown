@@ -72,5 +72,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceOperations](https://cloud.tencent.com/document/api/845/33759)
+* Read: [DescribeInstanceOperations](https://www.tencentcloud.com/document/api/845/32215)
 

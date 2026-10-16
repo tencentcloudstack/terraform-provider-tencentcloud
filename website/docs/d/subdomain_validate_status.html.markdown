@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSubdomainValidateStatus](https://cloud.tencent.com/document/api/1427/113011)
+* Read: [DescribeSubdomainValidateStatus](https://www.tencentcloud.com/search/?wd=DescribeSubdomainValidateStatus&type=document&lang=en)
 

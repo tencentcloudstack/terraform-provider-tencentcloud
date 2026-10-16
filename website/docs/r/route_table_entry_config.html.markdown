@@ -54,11 +54,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DisableRoutes](https://cloud.tencent.com/document/api/215/19216)
-* Create: [EnableRoutes](https://cloud.tencent.com/document/api/215/19215)
-* Read: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763)
-* Update: [DisableRoutes](https://cloud.tencent.com/document/api/215/19216)
-* Update: [EnableRoutes](https://cloud.tencent.com/document/api/215/19215)
+* Create: [DisableRoutes](https://www.tencentcloud.com/document/api/215/68967)
+* Create: [EnableRoutes](https://www.tencentcloud.com/document/api/215/68966)
+* Read: [DescribeRouteTables](https://www.tencentcloud.com/document/api/215/15763)
+* Update: [DisableRoutes](https://www.tencentcloud.com/document/api/215/68967)
+* Update: [EnableRoutes](https://www.tencentcloud.com/document/api/215/68966)
 
 ## Import
 

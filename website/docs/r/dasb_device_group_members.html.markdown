@@ -49,9 +49,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddDeviceGroupMembers](https://cloud.tencent.com/document/api/1025/74791)
-* Read: [DescribeDeviceGroupMembers](https://cloud.tencent.com/document/api/1025/74787)
-* Delete: [DeleteDeviceGroupMembers](https://cloud.tencent.com/document/api/1025/74789)
+* Create: [AddDeviceGroupMembers](https://www.tencentcloud.com/search/?wd=AddDeviceGroupMembers&type=document&lang=en)
+* Read: [DescribeDeviceGroupMembers](https://www.tencentcloud.com/search/?wd=DescribeDeviceGroupMembers&type=document&lang=en)
+* Delete: [DeleteDeviceGroupMembers](https://www.tencentcloud.com/search/?wd=DeleteDeviceGroupMembers&type=document&lang=en)
 
 ## Import
 

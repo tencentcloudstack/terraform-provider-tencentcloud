@@ -93,16 +93,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccounts](https://cloud.tencent.com/document/api/236/17502)
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410)
-* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/236/17499)
-* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410)
-* Update: [ModifyAccountDescription](https://cloud.tencent.com/document/api/236/17498)
-* Update: [ModifyAccountHost](https://cloud.tencent.com/document/api/236/60617)
-* Update: [ModifyAccountMaxUserConnections](https://cloud.tencent.com/document/api/236/56200)
-* Update: [ModifyAccountPassword](https://cloud.tencent.com/document/api/236/17497)
-* Delete: [DeleteAccounts](https://cloud.tencent.com/document/api/236/17501)
-* Delete: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410)
+* Create: [CreateAccounts](https://www.tencentcloud.com/document/api/236/17502)
+* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+* Read: [DescribeAccounts](https://www.tencentcloud.com/document/api/236/17499)
+* Update: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+* Update: [ModifyAccountDescription](https://www.tencentcloud.com/document/api/236/17498)
+* Update: [ModifyAccountHost](https://www.tencentcloud.com/search/?wd=ModifyAccountHost&type=document&lang=en)
+* Update: [ModifyAccountMaxUserConnections](https://www.tencentcloud.com/document/api/236/40589)
+* Update: [ModifyAccountPassword](https://www.tencentcloud.com/document/api/236/17497)
+* Delete: [DeleteAccounts](https://www.tencentcloud.com/document/api/236/17501)
+* Delete: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
 
 ## Import
 

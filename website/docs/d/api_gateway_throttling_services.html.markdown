@@ -54,6 +54,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeServiceEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45180)
-* Read: [DescribeServicesStatus](https://cloud.tencent.com/document/api/628/45194)
+* Read: [DescribeServiceEnvironmentStrategy](https://www.tencentcloud.com/search/?wd=DescribeServiceEnvironmentStrategy&type=document&lang=en)
+* Read: [DescribeServicesStatus](https://www.tencentcloud.com/search/?wd=DescribeServicesStatus&type=document&lang=en)
 

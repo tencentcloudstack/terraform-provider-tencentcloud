@@ -71,5 +71,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeHostClbInstanceList](https://cloud.tencent.com/document/api/400/91662)
+* Read: [DescribeHostClbInstanceList](https://www.tencentcloud.com/search/?wd=DescribeHostClbInstanceList&type=document&lang=en)
 

@@ -47,10 +47,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRole](https://cloud.tencent.com/document/api/1179/62401)
-* Read: [DescribeRoles](https://cloud.tencent.com/document/api/1179/62399)
-* Update: [ModifyRole](https://cloud.tencent.com/document/api/1179/62397)
-* Delete: [DeleteRoles](https://cloud.tencent.com/document/api/1179/62403)
+* Create: [CreateRole](https://www.tencentcloud.com/search/?wd=CreateRole&type=document&lang=en)
+* Read: [DescribeRoles](https://www.tencentcloud.com/search/?wd=DescribeRoles&type=document&lang=en)
+* Update: [ModifyRole](https://www.tencentcloud.com/search/?wd=ModifyRole&type=document&lang=en)
+* Delete: [DeleteRoles](https://www.tencentcloud.com/search/?wd=DeleteRoles&type=document&lang=en)
 
 ## Import
 

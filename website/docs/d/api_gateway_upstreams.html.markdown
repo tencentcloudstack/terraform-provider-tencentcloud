@@ -60,5 +60,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeUpstreamBindApis](https://cloud.tencent.com/document/api/628/70412)
+* Read: [DescribeUpstreamBindApis](https://www.tencentcloud.com/search/?wd=DescribeUpstreamBindApis&type=document&lang=en)
 

@@ -52,6 +52,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindDeviceAccountPrivateKey](https://cloud.tencent.com/document/api/1025/86958)
-* Delete: [ResetDeviceAccountPrivateKey](https://cloud.tencent.com/document/api/1025/86949)
+* Create: [BindDeviceAccountPrivateKey](https://www.tencentcloud.com/search/?wd=BindDeviceAccountPrivateKey&type=document&lang=en)
+* Delete: [ResetDeviceAccountPrivateKey](https://www.tencentcloud.com/search/?wd=ResetDeviceAccountPrivateKey&type=document&lang=en)
 

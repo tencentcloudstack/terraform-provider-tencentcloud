@@ -74,5 +74,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSuperPlayerConfigs](https://cloud.tencent.com/document/api/266/43064)
+* Read: [DescribeSuperPlayerConfigs](https://www.tencentcloud.com/search/?wd=DescribeSuperPlayerConfigs&type=document&lang=en)
 

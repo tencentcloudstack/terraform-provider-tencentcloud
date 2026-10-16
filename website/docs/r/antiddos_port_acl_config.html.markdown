@@ -57,9 +57,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePortAclConfig](https://cloud.tencent.com/document/api/297/95333)
-* Read: [DescribeListPortAclList](https://cloud.tencent.com/document/api/297/95309)
-* Delete: [DeletePortAclConfig](https://cloud.tencent.com/document/api/297/95322)
+* Create: [CreatePortAclConfig](https://www.tencentcloud.com/search/?wd=CreatePortAclConfig&type=document&lang=en)
+* Read: [DescribeListPortAclList](https://www.tencentcloud.com/search/?wd=DescribeListPortAclList&type=document&lang=en)
+* Delete: [DeletePortAclConfig](https://www.tencentcloud.com/search/?wd=DeletePortAclConfig&type=document&lang=en)
 
 ## Import
 

@@ -78,11 +78,11 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDBCustomCluster](https://cloud.tencent.com/document/api/1322/132930)
-* Read: [DescribeDBCustomClusterDetail](https://cloud.tencent.com/document/api/1322/132928)
-* Update: [ModifyDBCustomClusterAttributes](https://cloud.tencent.com/document/api/1322/135706)
-* Update: [ModifyDBCustomClusterTags](https://cloud.tencent.com/document/api/1322/132918)
-* Delete: [DestroyDBCustomCluster](https://cloud.tencent.com/document/api/1322/132921)
+* Create: [CreateDBCustomCluster](https://www.tencentcloud.com/search/?wd=CreateDBCustomCluster&type=document&lang=en)
+* Read: [DescribeDBCustomClusterDetail](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterDetail&type=document&lang=en)
+* Update: [ModifyDBCustomClusterAttributes](https://www.tencentcloud.com/search/?wd=ModifyDBCustomClusterAttributes&type=document&lang=en)
+* Update: [ModifyDBCustomClusterTags](https://www.tencentcloud.com/search/?wd=ModifyDBCustomClusterTags&type=document&lang=en)
+* Delete: [DestroyDBCustomCluster](https://www.tencentcloud.com/search/?wd=DestroyDBCustomCluster&type=document&lang=en)
 
 ## Import
 

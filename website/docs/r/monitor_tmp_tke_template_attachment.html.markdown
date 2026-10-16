@@ -294,7 +294,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SyncPrometheusTemp](https://cloud.tencent.com/document/api/248/85709)
-* Read: [DescribePrometheusTempSync](https://cloud.tencent.com/document/api/248/85712)
-* Delete: [DeletePrometheusTempSync](https://cloud.tencent.com/document/api/248/85720)
+* Create: [SyncPrometheusTemp](https://www.tencentcloud.com/document/api/248/53314)
+* Read: [DescribePrometheusTempSync](https://www.tencentcloud.com/document/api/248/53317)
+* Delete: [DeletePrometheusTempSync](https://www.tencentcloud.com/document/api/248/53325)
 

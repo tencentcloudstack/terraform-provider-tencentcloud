@@ -38,13 +38,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121341)
-* Create: [DescribeMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121335)
-* Create: [ModifyMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121331)
-* Read: [DescribeMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121335)
-* Update: [CreateMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121341)
-* Update: [DescribeMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121335)
-* Update: [ModifyMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121331)
+* Create: [CreateMultiPathGatewaySecretKey](https://www.tencentcloud.com/search/?wd=CreateMultiPathGatewaySecretKey&type=document&lang=en)
+* Create: [DescribeMultiPathGatewaySecretKey](https://www.tencentcloud.com/search/?wd=DescribeMultiPathGatewaySecretKey&type=document&lang=en)
+* Create: [ModifyMultiPathGatewaySecretKey](https://www.tencentcloud.com/search/?wd=ModifyMultiPathGatewaySecretKey&type=document&lang=en)
+* Read: [DescribeMultiPathGatewaySecretKey](https://www.tencentcloud.com/search/?wd=DescribeMultiPathGatewaySecretKey&type=document&lang=en)
+* Update: [CreateMultiPathGatewaySecretKey](https://www.tencentcloud.com/search/?wd=CreateMultiPathGatewaySecretKey&type=document&lang=en)
+* Update: [DescribeMultiPathGatewaySecretKey](https://www.tencentcloud.com/search/?wd=DescribeMultiPathGatewaySecretKey&type=document&lang=en)
+* Update: [ModifyMultiPathGatewaySecretKey](https://www.tencentcloud.com/search/?wd=ModifyMultiPathGatewaySecretKey&type=document&lang=en)
 
 ## Import
 

@@ -48,10 +48,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLiveTimeShiftTemplate](https://cloud.tencent.com/document/api/267/86169)
-* Read: [DescribeLiveTimeShiftTemplates](https://cloud.tencent.com/document/api/267/86165)
-* Update: [ModifyLiveTimeShiftTemplate](https://cloud.tencent.com/document/api/267/86164)
-* Delete: [DeleteLiveTimeShiftTemplate](https://cloud.tencent.com/document/api/267/86167)
+* Create: [CreateLiveTimeShiftTemplate](https://www.tencentcloud.com/document/api/267/53725)
+* Read: [DescribeLiveTimeShiftTemplates](https://www.tencentcloud.com/document/api/267/53721)
+* Update: [ModifyLiveTimeShiftTemplate](https://www.tencentcloud.com/document/api/267/53718)
+* Delete: [DeleteLiveTimeShiftTemplate](https://www.tencentcloud.com/document/api/267/53723)
 
 ## Import
 

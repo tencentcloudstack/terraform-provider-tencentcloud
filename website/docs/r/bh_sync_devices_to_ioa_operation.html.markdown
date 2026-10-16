@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SyncDevicesToIOA](https://cloud.tencent.com/document/api/1025/125467)
+* Create: [SyncDevicesToIOA](https://www.tencentcloud.com/search/?wd=SyncDevicesToIOA&type=document&lang=en)
 

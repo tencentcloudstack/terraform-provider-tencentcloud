@@ -70,9 +70,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Read: [DescribeAutoBackupConfig](https://cloud.tencent.com/document/api/239/20019)
-* Update: [ModifyAutoBackupConfig](https://cloud.tencent.com/document/api/239/20016)
-* Delete: [ModifyAutoBackupConfig](https://cloud.tencent.com/document/api/239/20016)
+* Read: [DescribeAutoBackupConfig](https://www.tencentcloud.com/document/api/239/32068)
+* Update: [ModifyAutoBackupConfig](https://www.tencentcloud.com/document/api/239/32058)
+* Delete: [ModifyAutoBackupConfig](https://www.tencentcloud.com/document/api/239/32058)
 
 ## Import
 

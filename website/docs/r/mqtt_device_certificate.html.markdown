@@ -74,13 +74,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RegisterDeviceCertificate](https://cloud.tencent.com/document/api/1778/111071)
-* Read: [DescribeDeviceCertificate](https://cloud.tencent.com/document/api/1778/113748)
-* Update: [ActivateDeviceCertificate](https://cloud.tencent.com/document/api/1778/113648)
-* Update: [DeactivateDeviceCertificate](https://cloud.tencent.com/document/api/1778/113750)
-* Delete: [DeactivateDeviceCertificate](https://cloud.tencent.com/document/api/1778/113750)
-* Delete: [DeleteDeviceCertificate](https://cloud.tencent.com/document/api/1778/113749)
-* Delete: [DescribeDeviceCertificate](https://cloud.tencent.com/document/api/1778/113748)
+* Create: [RegisterDeviceCertificate](https://www.tencentcloud.com/search/?wd=RegisterDeviceCertificate&type=document&lang=en)
+* Read: [DescribeDeviceCertificate](https://www.tencentcloud.com/search/?wd=DescribeDeviceCertificate&type=document&lang=en)
+* Update: [ActivateDeviceCertificate](https://www.tencentcloud.com/search/?wd=ActivateDeviceCertificate&type=document&lang=en)
+* Update: [DeactivateDeviceCertificate](https://www.tencentcloud.com/search/?wd=DeactivateDeviceCertificate&type=document&lang=en)
+* Delete: [DeactivateDeviceCertificate](https://www.tencentcloud.com/search/?wd=DeactivateDeviceCertificate&type=document&lang=en)
+* Delete: [DeleteDeviceCertificate](https://www.tencentcloud.com/search/?wd=DeleteDeviceCertificate&type=document&lang=en)
+* Delete: [DescribeDeviceCertificate](https://www.tencentcloud.com/search/?wd=DescribeDeviceCertificate&type=document&lang=en)
 
 ## Import
 

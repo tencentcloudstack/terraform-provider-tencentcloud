@@ -76,10 +76,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRabbitMQVirtualHost](https://cloud.tencent.com/document/api/1179/90854)
-* Read: [DescribeRabbitMQVirtualHost](https://cloud.tencent.com/document/api/1179/93455)
-* Update: [ModifyRabbitMQVirtualHost](https://cloud.tencent.com/document/api/1179/93453)
-* Delete: [DeleteRabbitMQVirtualHost](https://cloud.tencent.com/document/api/1179/93457)
+* Create: [CreateRabbitMQVirtualHost](https://www.tencentcloud.com/search/?wd=CreateRabbitMQVirtualHost&type=document&lang=en)
+* Read: [DescribeRabbitMQVirtualHost](https://www.tencentcloud.com/search/?wd=DescribeRabbitMQVirtualHost&type=document&lang=en)
+* Update: [ModifyRabbitMQVirtualHost](https://www.tencentcloud.com/search/?wd=ModifyRabbitMQVirtualHost&type=document&lang=en)
+* Delete: [DeleteRabbitMQVirtualHost](https://www.tencentcloud.com/search/?wd=DeleteRabbitMQVirtualHost&type=document&lang=en)
 
 ## Import
 

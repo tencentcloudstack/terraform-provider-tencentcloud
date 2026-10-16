@@ -104,5 +104,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBackupByFlowId](https://cloud.tencent.com/document/api/238/47203)
+* Read: [DescribeBackupByFlowId](https://www.tencentcloud.com/document/api/238/72780)
 

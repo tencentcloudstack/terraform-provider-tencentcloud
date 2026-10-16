@@ -40,9 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ResetAccountPassword](https://cloud.tencent.com/document/api/878/116659)
-* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/878/116666)
-* Update: [ResetAccountPassword](https://cloud.tencent.com/document/api/878/116659)
+* Create: [ResetAccountPassword](https://www.tencentcloud.com/search/?wd=ResetAccountPassword&type=document&lang=en)
+* Read: [DescribeAccounts](https://www.tencentcloud.com/search/?wd=DescribeAccounts&type=document&lang=en)
+* Update: [ResetAccountPassword](https://www.tencentcloud.com/search/?wd=ResetAccountPassword&type=document&lang=en)
 
 ## Import
 

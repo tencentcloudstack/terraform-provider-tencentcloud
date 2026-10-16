@@ -111,11 +111,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RegisterTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111687)
-* Read: [DescribeTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111693)
-* Update: [DeregisterTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111695)
-* Update: [RegisterTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111687)
-* Delete: [DeregisterTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111695)
+* Create: [RegisterTargetGroupInstances](https://www.tencentcloud.com/search/?wd=RegisterTargetGroupInstances&type=document&lang=en)
+* Read: [DescribeTargetGroupInstances](https://www.tencentcloud.com/search/?wd=DescribeTargetGroupInstances&type=document&lang=en)
+* Update: [DeregisterTargetGroupInstances](https://www.tencentcloud.com/search/?wd=DeregisterTargetGroupInstances&type=document&lang=en)
+* Update: [RegisterTargetGroupInstances](https://www.tencentcloud.com/search/?wd=RegisterTargetGroupInstances&type=document&lang=en)
+* Delete: [DeregisterTargetGroupInstances](https://www.tencentcloud.com/search/?wd=DeregisterTargetGroupInstances&type=document&lang=en)
 
 ## Import
 

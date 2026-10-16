@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifySnapshotsSharePermission](https://cloud.tencent.com/document/api/362/38073)
-* Read: [DescribeSnapshotSharePermission](https://cloud.tencent.com/document/api/362/38074)
-* Update: [ModifySnapshotsSharePermission](https://cloud.tencent.com/document/api/362/38073)
-* Delete: [DescribeSnapshotSharePermission](https://cloud.tencent.com/document/api/362/38074)
-* Delete: [ModifySnapshotsSharePermission](https://cloud.tencent.com/document/api/362/38073)
+* Create: [ModifySnapshotsSharePermission](https://www.tencentcloud.com/document/api/362/33299)
+* Read: [DescribeSnapshotSharePermission](https://www.tencentcloud.com/document/api/362/33300)
+* Update: [ModifySnapshotsSharePermission](https://www.tencentcloud.com/document/api/362/33299)
+* Delete: [DescribeSnapshotSharePermission](https://www.tencentcloud.com/document/api/362/33300)
+* Delete: [ModifySnapshotsSharePermission](https://www.tencentcloud.com/document/api/362/33299)
 
 ## Import
 
