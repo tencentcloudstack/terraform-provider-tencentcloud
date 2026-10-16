@@ -83,7 +83,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.486
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver v1.3.68
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl v1.3.105
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm v1.0.691
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm v1.3.164
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts v1.1.11
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag v1.0.860
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat v1.0.634
