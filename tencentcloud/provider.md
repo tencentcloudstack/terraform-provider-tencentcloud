@@ -799,6 +799,7 @@ tencentcloud_mongodb_instance_ssl
 tencentcloud_mongodb_readonly_instance
 tencentcloud_mongodb_audit_log_file
 tencentcloud_mongodb_audit_service
+tencentcloud_mongodb_scale_up_db_instance_cpu
 
 TencentDB for MySQL(cdb)
 Data Source
@@ -1536,6 +1537,7 @@ tencentcloud_cls_console
 tencentcloud_cls_metric_subscribe
 tencentcloud_cls_splunk_deliver
 tencentcloud_cls_remote_write_task
+tencentcloud_cls_deliver_task
 
 Data Source
 tencentcloud_cls_shipper_tasks

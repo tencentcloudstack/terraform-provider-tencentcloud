@@ -45,7 +45,7 @@ The following arguments are supported:
 * `instance_class` - (Optional, String) Sync link specification, such as `micro`, `small`, `medium`, `large`. Default is `medium`.
 * `job_name` - (Optional, String, ForceNew) Sync job name.
 * `specification` - (Optional, String, ForceNew) Sync job specification. `Standard` indicates the standard edition; currently only `Standard` is supported.
-* `tags` - (Optional, List, ForceNew) Tag information.
+* `tags` - (Optional, Set) Tag information.Cannot be modified.
 
 The `tags` object supports the following:
 

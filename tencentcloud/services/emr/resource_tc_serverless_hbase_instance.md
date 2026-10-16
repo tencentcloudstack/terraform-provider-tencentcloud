@@ -24,6 +24,8 @@ resource "tencentcloud_serverless_hbase_instance" "serverless_hbase_instance" {
 }
 ```
 
+The `disk_size` field supports in-place expansion (only allows scale-up, the new value must be a multiple of 100 GB). The expansion is asynchronous and the resource will wait until the instance returns to running state.
+
 Import
 
 emr serverless_hbase_instance can be imported using the id, e.g.
