@@ -2169,6 +2169,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_import_zone_config_operation":                                         teo.ResourceTencentCloudTeoImportZoneConfigOperation(),
 			"tencentcloud_teo_prefetch_task_operation":                                              teo.ResourceTencentCloudTeoPrefetchTaskOperation(),
 			"tencentcloud_teo_acceleration_domain":                                                  teo.ResourceTencentCloudTeoAccelerationDomain(),
+			"tencentcloud_teo_inference_domain":                                                     teo.ResourceTencentCloudTeoInferenceDomain(),
 			"tencentcloud_teo_application_proxy":                                                    teo.ResourceTencentCloudTeoApplicationProxy(),
 			"tencentcloud_teo_application_proxy_rule":                                               teo.ResourceTencentCloudTeoApplicationProxyRule(),
 			"tencentcloud_teo_realtime_log_delivery":                                                teo.ResourceTencentCloudTeoRealtimeLogDelivery(),

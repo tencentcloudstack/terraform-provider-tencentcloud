@@ -1679,6 +1679,7 @@ tencentcloud_teo_domain_shared_cname_attachment
 tencentcloud_teo_edge_kv
 tencentcloud_teo_edge_kv_namespace
 tencentcloud_teo_dns_records_status
+tencentcloud_teo_inference_domain
 
 Action
 tencentcloud_teo_confirm_origin_acl_update
