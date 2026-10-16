@@ -12,10 +12,11 @@ package main
 //     The SDK client method name is identical to the cloud API action name;
 //     the client accessor (UseXxxClient) is resolved to a catalog product.
 //
-//  2. TencentCloud's public API catalog (fetched live by 'make doc', with
-//     an embedded snapshot as offline fallback), which resolves
-//     (product, action) -> doc URL. Entries without a catalog URL fall
-//     back to the international site's search URL for the action name.
+//  2. TencentCloud's international API catalog (fetched live by 'make
+//     doc', with a bundled snapshot at gendoc/data/api-intl-snapshot.json
+//     as the offline fallback), which resolves (product, action) -> doc
+//     URL. Entries without a catalog URL fall back to the international
+//     site's search URL for the action name.
 //
 // SDK import aliases do not always match the catalog product key, so an
 // alias table built from the SDK import paths (plus a tiny manual override
@@ -47,7 +48,7 @@ type apiRef struct {
 // manualProductAlias overrides the automatic product resolution for the few
 // clients whose SDK product name differs from the international docs slug.
 var manualProductAlias = map[string]string{
-	"dasb":  "dasb",  // placeholder; real aliases are resolved by action-set matching
+	"dasb":  "dasb", // placeholder; real aliases are resolved by action-set matching
 	"css":   "css",
 	"audit": "audit",
 }

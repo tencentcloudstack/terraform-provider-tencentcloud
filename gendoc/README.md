@@ -169,40 +169,38 @@ resource、data source、action 与 ephemeral resource 的文档均包含一个�
 
 **完全以国际站为准**：产品的名称与 ID 均取自国际站（slug 如 `cvm`/`teo`/`csip`），不使用国内站的任何信息。SDK 侧的产品名与国际站 slug 直接匹配；命名不一致的产品（如 SDK `redis` vs slug `crs`）通过动作集合的 Jaccard 相似度自动对齐。
 
-**仅使用国际站链接**：渲染时只输出国际站（www.tencentcloud.com）链接。国际站未收录的接口回退到国际站搜索页：
-
-**渲染格式**：API Reference 只列出接口名称与对应的文档链接，不含接口描述，例如：
-
-```
-* Create: [CreateVpc](https://cloud.tencent.com/document/api/215/15800)
-```
-
-目录中未提供文档链接的接口回退到国际站搜索页：
+**仅使用国际站链接**：渲染时只输出国际站（www.tencentcloud.com）链接。目录中未提供文档链接的接口回退到国际站搜索页：
 
 ```
 https://www.tencentcloud.com/search/?wd=<ActionName>&type=document&lang=en
 ```
 
-生成的 API Reference 中不会出现任何 `cloud.tencent.com`（中国站）链接。抓取失败不影响构建，全部条目降级为搜索链接。
+**渲染格式**：API Reference 只列出接口名称与对应的文档链接，不含接口描述，例如：
+
+```
+* Create: [CreateVpc](https://www.tencentcloud.com/document/api/215/15774)
+```
+
+生成的 API Reference 中不会出现任何 `cloud.tencent.com`（中国站）链接。抓取失败不影响构建，条目降级为搜索链接。
 
 覆盖率：resource 95.7%（1302/1360）、data source 97.3%（923/949）、action 与 ephemeral 全覆盖；未覆盖项均为 S3 兼容 REST 接口（cos/ci）、已下线产品（dayu）、目录未收录的新版本 API，或**同名方法跨服务歧义**（分析器宁缺毋滥，跳过不确定的映射），可用下述人工段兜底。
 
 
-人工兑底：当静态分析无法覆盖（如 COS/CI 的 S3 兼容 REST API、目录未收录的老版本产品）或需要修正时，可在资源描述文件 `services/<product>/resource_tc_<name>.md` 中编写 "API" 段（位于正文与 "Example Usage" 之间），生成器会优先使用人工内容：
+人工兜底：当静态分析无法覆盖（如 COS/CI 的 S3 兼容 REST API、目录未收录的老版本产品）或需要修正时，可在资源描述文件 `tencentcloud/services/<product>/resource_tc_<name>.md` 中编写 "API" 段（位于正文与 "Example Usage" 之间），生成器会优先使用人工内容：
 
 ```
 Use this resource to create dayu DDoS policy
 
 API
 
-* Create: CreateDDoSPolicy - https://cloud.tencent.com/document/product/1022/37825
-* Read: DescribeDDoSPolicy - https://cloud.tencent.com/document/product/1022/37826
+* Create: CreateDDoSPolicy - https://www.tencentcloud.com/document/product/1022/37825
+* Read: DescribeDDoSPolicy - https://www.tencentcloud.com/document/product/1022/37826
 
 Example Usage
 ...
 ```
 
-快照随 `make doc` 自动更新（在线拉取成功时），无需手动刷新；离线运行时自动回退到仓库内置快照。
+目录快照：在线拉取成功时，`make doc` 会把最新目录原子写入快照 `gendoc/data/api-intl-snapshot.json` 并随提交入库；在线拉取失败（如离线环境）时自动回退到该快照，生成结果与在线时保持一致，仅快照日期可能滞后。两种来源都不可用时，全部条目降级为搜索链接。
 
 ## 文档索引更新
 

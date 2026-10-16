@@ -168,3 +168,68 @@ func TestBalanceFences(t *testing.T) {
 		t.Errorf("balanced input modified: %q", got)
 	}
 }
+
+func TestCatalogSnapshotRoundTripAndFallback(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "api-intl-snapshot.json")
+
+	// Build a catalog and persist it.
+	c := &catalog{urlIdx: map[string]string{
+		"vpc.CreateVpc":         "https://www.tencentcloud.com/document/api/215/15774",
+		"vpc.DescribeVpcs":      "https://www.tencentcloud.com/document/api/215/15778",
+		"crs.DescribeInstances": "https://www.tencentcloud.com/document/api/236/15878",
+	}}
+	if err := c.saveSnapshot(path); err != nil {
+		t.Fatalf("saveSnapshot: %v", err)
+	}
+
+	// Offline fallback: a fresh catalog loads the snapshot.
+	offline := &catalog{urlIdx: map[string]string{}}
+	if err := offline.loadSnapshot(path); err != nil {
+		t.Fatalf("loadSnapshot: %v", err)
+	}
+	for k, want := range c.urlIdx {
+		if got := offline.urlIdx[k]; got != want {
+			t.Errorf("snapshot key %s: got %q, want %q", k, got, want)
+		}
+	}
+
+	// resolveAPI falls back to the search URL when the snapshot lacks the
+	// action but has the product.
+	a := &apiAnalyzer{clientProd: map[string]string{"vpc": "vpc"}, catalog: offline}
+	ref := a.resolveAPI(apiCallKey{client: "vpc", action: "CreateVpc"})
+	if ref == nil || ref.URL != c.urlIdx["vpc.CreateVpc"] {
+		t.Errorf("resolveAPI with snapshot: got %+v", ref)
+	}
+	ref = a.resolveAPI(apiCallKey{client: "vpc", action: "NoSuchAction"})
+	if ref == nil || !strings.Contains(ref.URL, "www.tencentcloud.com/search/?wd=NoSuchAction") {
+		t.Errorf("resolveAPI search fallback: got %+v", ref)
+	}
+
+	// Missing snapshot leaves the index empty (all search fallbacks).
+	empty := &catalog{urlIdx: map[string]string{}}
+	if err := empty.loadSnapshot(filepath.Join(dir, "missing.json")); err == nil {
+		t.Errorf("expected error for missing snapshot")
+	}
+	if len(empty.urlIdx) != 0 {
+		t.Errorf("expected empty index, got %d entries", len(empty.urlIdx))
+	}
+}
+
+func TestAlignCatalogDeterministicOnTies(t *testing.T) {
+	// Two docs products with identical action sets: the alias must be the
+	// lexicographically smaller slug regardless of map iteration order.
+	c := &catalog{urlIdx: map[string]string{
+		"aaa.Act1": "u1", "aaa.Act2": "u2",
+		"bbb.Act1": "u1", "bbb.Act2": "u2",
+	}}
+	known := map[string]map[string]bool{
+		"sdk": {"Act1": true, "Act2": true},
+	}
+	for i := 0; i < 20; i++ {
+		c.alignCatalogWithSDKProducts(known)
+		if got := c.urlIdx["sdk.Act1"]; got != "u1" {
+			t.Fatalf("iteration %d: sdk.Act1 = %q, want u1 (aaa alias)", i, got)
+		}
+	}
+}
