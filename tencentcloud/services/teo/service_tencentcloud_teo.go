@@ -876,6 +876,65 @@ func (me *TeoService) DescribeTeoAccelerationDomainById(ctx context.Context, zon
 	return
 }
 
+func (me *TeoService) DescribeTeoInferenceDomainById(ctx context.Context, zoneId string, serviceId string, domain string) (ret *teo.InferenceDomain, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribeInferenceDomainsRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.ServiceId = helper.String(serviceId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 200
+	)
+	var instances []*teo.InferenceDomain
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response := teo.NewDescribeInferenceDomainsResponse()
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseTeoClient().DescribeInferenceDomains(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.Domains) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Domains...)
+		if len(response.Response.Domains) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	for _, instance := range instances {
+		if instance != nil && instance.Domain != nil && *instance.Domain == domain {
+			ret = instance
+			return
+		}
+	}
+
+	return
+}
+
 func (me *TeoService) DescribeIdentifications(ctx context.Context, domain string) (identifications []*teo.Identification, errRet error) {
 	var (
 		logId    = tccommon.GetLogId(ctx)
