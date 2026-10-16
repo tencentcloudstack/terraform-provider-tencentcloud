@@ -19,18 +19,18 @@ Provides a resource to create a VDB instance.
 
 ```hcl
 resource "tencentcloud_vdb_instance" "example" {
-  vpc_id             = "vpc-xxxxxxxx"
-  subnet_id          = "subnet-xxxxxxxx"
+  vpc_id             = "vpc-i5yyodl9"
+  subnet_id          = "subnet-hhi88a58"
   pay_mode           = 0
-  security_group_ids = ["sg-xxxxxxxx"]
+  security_group_ids = ["sg-4rd5741x"]
   instance_name      = "tf-example"
   instance_type      = "single"
-  node_type          = "normal"
+  node_type          = "store"
   cpu                = 2
-  memory             = 4
+  memory             = 16
   disk_size          = 50
   worker_node_num    = 1
-  force_delete       = false
+  force_delete       = true
 }
 ```
 
@@ -38,33 +38,26 @@ resource "tencentcloud_vdb_instance" "example" {
 
 ```hcl
 resource "tencentcloud_vdb_instance" "cluster" {
-  vpc_id          = "vpc-xxxxxxxx"
-  subnet_id       = "subnet-xxxxxxxx"
-  pay_mode        = 1
-  pay_period      = 1
-  auto_renew      = 1
-  instance_name   = "tf-example-cluster"
-  instance_type   = "cluster"
-  mode            = "two"
-  product_type    = 0
-  node_type       = "compute"
-  cpu             = 4
-  memory          = 8
-  disk_size       = 100
-  worker_node_num = 2
-  params          = "{\"key\":\"value\"}"
-  force_delete    = true
-
-  security_group_ids = ["sg-xxxxxxxx"]
-
+  vpc_id             = "vpc-i5yyodl9"
+  subnet_id          = "subnet-hhi88a58"
+  security_group_ids = ["sg-4rd5741x"]
+  pay_mode           = 1
+  pay_period         = 1
+  auto_renew         = 1
+  instance_name      = "tf-example"
+  instance_type      = "cluster"
+  mode               = "two"
+  product_type       = 0
+  node_type          = "compute"
+  cpu                = 4
+  memory             = 8
+  disk_size          = 100
+  worker_node_num    = 2
+  params             = "{\"key\":\"value\"}"
+  force_delete       = true
   resource_tags {
-    tag_key   = "env"
-    tag_value = "test"
-  }
-
-  resource_tags {
-    tag_key   = "project"
-    tag_value = "demo"
+    tag_key   = "createBy"
+    tag_value = "Terraform"
   }
 }
 ```
@@ -108,10 +101,12 @@ In addition to all arguments above, the following attributes are exported:
 * `engine_version` - Engine version.
 * `expired_at` - Expiration time.
 * `extend` - Extended information in JSON format.
+* `instance_id` - Instance ID.
 * `is_no_expired` - Whether the instance never expires.
 * `isolate_at` - Isolation time.
 * `networks` - Network information.
   * `expire_time` - Old IP expiration time.
+  * `is_ssl` - Whether it is an SSL network.
   * `port` - Internal port.
   * `preserve_duration` - Old IP preservation duration in days.
   * `subnet_id` - Subnet ID.
@@ -141,6 +136,6 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 VDB instance can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_vdb_instance.example vdb-xxxxxxxx
+terraform import tencentcloud_vdb_instance.example vdb-oft69wcm
 ```
 
