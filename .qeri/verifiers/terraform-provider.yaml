@@ -1,33 +1,20 @@
 # yaml-language-server: $schema=https://mirrors.tencent.com/repository/generic/qeri/qeri-schema/stable/schema/verifier-schema.json
 # terraform-provider-tencentcloud 的 Qeri 验证器组合
-# 参考接入文档：apps/woa/qeri/docs/guide/onboard-terraform-provider-tencentcloud.md
+# 对齐 GitHub Actions 的 docs 检查（.github/workflows/mkdocs.yml）：
+#   1. make doc 生成文档（gendoc）
+#   2. website/ 不允许存在未提交的 diff，否则判 FAIL
 version: 1
 verifiers:
-  # Go 静态检查：覆盖 stages 并放宽 timeout（仓库大，首次冷启动安装 + 编译缓存耗时）
-  - name: qeri-builtin.golangci-lint
+  - name: tencentcloud-doc-check
+    description: '文档生成检查：make doc 后 website/ 下不允许出现未提交的变更（对齐 Actions docs workflow）'
     stages:
-      - post-generate
       - pre-commit
-    timeout: '300s'
+      - merge-request
+    timeout: '900s' # gendoc 需编译整个 provider（vendor 模式），冷启动较慢，放宽 timeout
     watch:
-      includeFiles: '**/*.go'
-      excludeFiles:
-        - '**/vendor/**'
-    suggestion: '根据 golangci-lint 输出的具体告警逐项修复（govet / staticcheck / errcheck）'
-
-  # 资源命名规范：轻量 grep 规则
-  # 本仓库资源实现文件位于 tencentcloud/services/<service>/resource_tc_*.go，
-  # 并以 "tencentcloud_<service>_<resource>" 形式注册到 provider（resource.tencentcloud_xxx）
-  - name: tencentcloud-resource-naming
-    description: '资源实现文件与注册名必须以 tencentcloud_ 前缀命名'
-    stages: pre-commit
-    timeout: '10s'
-    watch:
-      includeFiles: 'tencentcloud/services/**/resource_*.go'
+      includeFiles: 'tencentcloud/**' # 与 Actions 触发路径保持一致
     runner:
       outputFormat: grep
       command:
-        # 注意：grep -L 的退出码语义是「存在不含模式的文件 → 1」，恰好对齐 lint 语义，
-        # 因此这里不加 `!` 取反（与 grep -q/-l 形式相反），违规文件名会被列出并上报
-        run: grep -Ln "tencentcloud_" {{ files }}
-    suggestion: 'Resource 命名须符合 tencentcloud_<service>_<resource> 规范'
+        run: sh -c 'make doc >/dev/null 2>&1 || { echo "doc generate failed"; exit 1; }; diff=$(git diff --name-only website/); if [ -n "$diff" ]; then echo "$diff"; exit 1; fi'
+    suggestion: '重新执行 make doc，并将 website/ 下新生成的文档一并 git add 提交（"There are docs updated when checking, ''git add'' it first."）'
