@@ -828,7 +828,7 @@ func resourceTencentCloudBhResourceUpdate(d *schema.ResourceData, meta interface
 					log.Printf("[CRITAL]%s enable web access bh resource failed, reason:%+v", logId, reqErr)
 					return reqErr
 				}
-			} else {
+			} else if v.(int) == 0 {
 				request := bhv20230418.NewDisableWebAccessRequest()
 				request.ResourceId = helper.String(resourceId)
 				reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -878,6 +878,8 @@ func resourceTencentCloudBhResourceUpdate(d *schema.ResourceData, meta interface
 					log.Printf("[CRITAL]%s disable web access bh resource failed, reason:%+v", logId, reqErr)
 					return reqErr
 				}
+			} else {
+				return fmt.Errorf("web_access only support 0 or 1")
 			}
 		}
 	}
@@ -934,7 +936,7 @@ func resourceTencentCloudBhResourceUpdate(d *schema.ResourceData, meta interface
 					log.Printf("[CRITAL]%s enable client access bh resource failed, reason:%+v", logId, reqErr)
 					return reqErr
 				}
-			} else {
+			} else if v.(int) == 0 {
 				request := bhv20230418.NewDisableClientTcpAccessRequest()
 				request.ResourceId = helper.String(resourceId)
 				reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -984,6 +986,8 @@ func resourceTencentCloudBhResourceUpdate(d *schema.ResourceData, meta interface
 					log.Printf("[CRITAL]%s disable client access bh resource failed, reason:%+v", logId, reqErr)
 					return reqErr
 				}
+			} else {
+				return fmt.Errorf("client_access only support 0 or 1")
 			}
 		}
 	}
