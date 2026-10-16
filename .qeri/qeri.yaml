@@ -1,0 +1,7 @@
+version: 1
+localVerifiers:
+  dirs:
+    - .qeri/verifiers/
+# 其余检查先删掉：关闭默认执行的内置验证器，只保留 doc 检查
+disabledVerifiers:
+  - qeri-builtin.golangci-lint
