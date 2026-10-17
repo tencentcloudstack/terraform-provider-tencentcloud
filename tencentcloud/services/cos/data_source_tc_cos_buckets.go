@@ -91,10 +91,21 @@ func DataSourceTencentCloudCosBuckets() *schema.Resource {
 							Description: "The lifecycle configuration of a bucket.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
+									"status": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Whether the lifecycle rule is enabled.",
+									},
 									"filter_prefix": {
 										Type:        schema.TypeString,
 										Computed:    true,
 										Description: "Object key prefix identifying one or more objects to which the rule applies.",
+									},
+									"filter_tags": {
+										Type:        schema.TypeMap,
+										Computed:    true,
+										Elem:        &schema.Schema{Type: schema.TypeString},
+										Description: "Object tags identifying objects to which the rule applies.",
 									},
 									"transition": {
 										Type:        schema.TypeList,

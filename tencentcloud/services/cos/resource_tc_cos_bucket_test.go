@@ -244,7 +244,10 @@ func TestAccTencentCloudCosBucketResource_lifecycle(t *testing.T) {
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_lifecycle"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.id", "rule1"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.status", "Disabled"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.filter_prefix", "test/"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.filter_tags.env", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.filter_tags.team", "storage"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.expiration.#", "1"),
 					resource.TestCheckTypeSetElemNestedAttrs("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.expiration.*",
 						map[string]string{
@@ -268,8 +271,10 @@ func TestAccTencentCloudCosBucketResource_lifecycle(t *testing.T) {
 				Config: testAccBucket_lifecycleUpdate(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_lifecycle"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.status", "Enabled"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.filter_prefix", "test/"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.filter_tags.env", "prod"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.expiration.#", "1"),
 					resource.TestCheckTypeSetElemNestedAttrs("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.expiration.*",
 						map[string]string{
@@ -288,8 +293,9 @@ func TestAccTencentCloudCosBucketResource_lifecycle(t *testing.T) {
 						}),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.non_current_expiration.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.non_current_transition.#", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.abort_incomplete_multipart_upload.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.abort_incomplete_multipart_upload.0.days_after_initiation", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.1.status", "Enabled"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.1.abort_incomplete_multipart_upload.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.1.abort_incomplete_multipart_upload.0.days_after_initiation", "1"),
 				),
 			},
 			{
@@ -749,8 +755,13 @@ resource "tencentcloud_cos_bucket" "bucket_lifecycle" {
   acl    = "public-read"
   versioning_enable = true
   lifecycle_rules {
-    id = "rule1"
+    id            = "rule1"
+    status        = "Disabled"
     filter_prefix = "test/"
+    filter_tags = {
+      env  = "test"
+      team = "storage"
+    }
     expiration {
       days = 365
     }
@@ -776,8 +787,12 @@ resource "tencentcloud_cos_bucket" "bucket_lifecycle" {
   acl    = "public-read"
   versioning_enable = true
   lifecycle_rules {
-    id = "rule1"
+    id            = "rule1"
+    status        = "Enabled"
     filter_prefix = "test/"
+    filter_tags = {
+      env = "prod"
+    }
     expiration {
       days = 300
     }
@@ -803,6 +818,12 @@ resource "tencentcloud_cos_bucket" "bucket_lifecycle" {
       non_current_days = 180
       storage_class = "ARCHIVE"
     }
+
+  }
+
+  lifecycle_rules {
+    id     = "abort-multipart"
+    status = "Enabled"
 
     abort_incomplete_multipart_upload {
       days_after_initiation = 1
