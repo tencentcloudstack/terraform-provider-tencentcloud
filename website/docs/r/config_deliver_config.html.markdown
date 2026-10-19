@@ -46,7 +46,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateConfigDeliver](https://www.tencentcloud.com/search/?wd=UpdateConfigDeliver&type=document&lang=en)
-* Read: [DescribeConfigDeliver](https://www.tencentcloud.com/search/?wd=DescribeConfigDeliver&type=document&lang=en)
-* Update: [UpdateConfigDeliver](https://www.tencentcloud.com/search/?wd=UpdateConfigDeliver&type=document&lang=en)
+* Create: [UpdateConfigDeliver](https://www.tencentcloud.com/document/api/1164/84990)
+* Read: [DescribeConfigDeliver](https://www.tencentcloud.com/document/api/1164/84992)
+* Update: [UpdateConfigDeliver](https://www.tencentcloud.com/document/api/1164/84990)
 

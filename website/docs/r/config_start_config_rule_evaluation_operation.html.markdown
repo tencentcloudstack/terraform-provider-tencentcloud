@@ -47,5 +47,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [StartConfigRuleEvaluation](https://www.tencentcloud.com/search/?wd=StartConfigRuleEvaluation&type=document&lang=en)
+* Create: [StartConfigRuleEvaluation](https://www.tencentcloud.com/document/api/1164/84958)
 

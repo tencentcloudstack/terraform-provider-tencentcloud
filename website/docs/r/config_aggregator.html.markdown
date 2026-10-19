@@ -59,10 +59,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAggregator](https://www.tencentcloud.com/search/?wd=CreateAggregator&type=document&lang=en)
-* Read: [DescribeAggregator](https://www.tencentcloud.com/search/?wd=DescribeAggregator&type=document&lang=en)
-* Update: [UpdateAggregator](https://www.tencentcloud.com/search/?wd=UpdateAggregator&type=document&lang=en)
-* Delete: [DeleteAggregators](https://www.tencentcloud.com/search/?wd=DeleteAggregators&type=document&lang=en)
+* Create: [CreateAggregator](https://www.tencentcloud.com/document/api/1164/85020)
+* Read: [DescribeAggregator](https://www.tencentcloud.com/document/api/1164/85018)
+* Update: [UpdateAggregator](https://www.tencentcloud.com/document/api/1164/85016)
+* Delete: [DeleteAggregators](https://www.tencentcloud.com/document/api/1164/85019)
 
 ## Import
 
