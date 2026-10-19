@@ -78,12 +78,12 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create:
-  - [DescribeInstancePasswordPolicy](https://www.tencentcloud.com/search/?wd=DescribeInstancePasswordPolicy&type=document&lang=en)
-  - [ModifyInstancePasswordPolicy](https://www.tencentcloud.com/search/?wd=ModifyInstancePasswordPolicy&type=document&lang=en)
-* Read: [DescribeInstancePasswordPolicy](https://www.tencentcloud.com/search/?wd=DescribeInstancePasswordPolicy&type=document&lang=en)
+  - [DescribeInstancePasswordPolicy](https://www.tencentcloud.com/document/api/239/85023)
+  - [ModifyInstancePasswordPolicy](https://www.tencentcloud.com/document/api/239/85022)
+* Read: [DescribeInstancePasswordPolicy](https://www.tencentcloud.com/document/api/239/85023)
 * Update:
-  - [DescribeInstancePasswordPolicy](https://www.tencentcloud.com/search/?wd=DescribeInstancePasswordPolicy&type=document&lang=en)
-  - [ModifyInstancePasswordPolicy](https://www.tencentcloud.com/search/?wd=ModifyInstancePasswordPolicy&type=document&lang=en)
+  - [DescribeInstancePasswordPolicy](https://www.tencentcloud.com/document/api/239/85023)
+  - [ModifyInstancePasswordPolicy](https://www.tencentcloud.com/document/api/239/85022)
 
 ## Import
 

@@ -67,5 +67,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListConfigRuleEvaluationResults](https://www.tencentcloud.com/search/?wd=ListConfigRuleEvaluationResults&type=document&lang=en)
+* Read: [ListConfigRuleEvaluationResults](https://www.tencentcloud.com/document/api/1164/84965)
 
