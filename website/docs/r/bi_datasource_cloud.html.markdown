@@ -70,4 +70,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDatasourceCloud](https://www.tencentcloud.com/document/api/1270/72677)
+* Read: [DescribeDatasourceList](https://www.tencentcloud.com/document/api/1270/72631)
+* Update: [ModifyDatasourceCloud](https://www.tencentcloud.com/document/api/1270/72632)
+* Delete: [DeleteDatasource](https://www.tencentcloud.com/document/api/1270/72634)
 

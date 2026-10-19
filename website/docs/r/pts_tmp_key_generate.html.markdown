@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
 * `expired_time` - Timestamp of temporary access credential timeout (in seconds).
 * `start_time` - The timestamp of the moment when the temporary access credential was obtained (in seconds).
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [GenerateTmpKey](https://www.tencentcloud.com/document/api/1249/68501)
 

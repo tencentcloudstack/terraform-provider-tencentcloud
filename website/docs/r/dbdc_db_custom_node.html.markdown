@@ -174,6 +174,27 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `1h0m`) Used when creating the resource.
 * `update` - (Defaults to `1h0m`) Used when updating the resource.
 * `delete` - (Defaults to `1h0m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateDBCustomNodes](https://www.tencentcloud.com/search/?wd=CreateDBCustomNodes&type=document&lang=en)
+  - [DescribeDBCustomNodeSecurityGroups](https://www.tencentcloud.com/search/?wd=DescribeDBCustomNodeSecurityGroups&type=document&lang=en)
+  - [DescribeDBCustomNodes](https://www.tencentcloud.com/search/?wd=DescribeDBCustomNodes&type=document&lang=en)
+* Read:
+  - [DescribeDBCustomNodeSecurityGroups](https://www.tencentcloud.com/search/?wd=DescribeDBCustomNodeSecurityGroups&type=document&lang=en)
+  - [DescribeDBCustomNodes](https://www.tencentcloud.com/search/?wd=DescribeDBCustomNodes&type=document&lang=en)
+* Update:
+  - [DescribeDBCustomNodeSecurityGroups](https://www.tencentcloud.com/search/?wd=DescribeDBCustomNodeSecurityGroups&type=document&lang=en)
+  - [DescribeDBCustomNodes](https://www.tencentcloud.com/search/?wd=DescribeDBCustomNodes&type=document&lang=en)
+  - [ModifyDBCustomNodeSecurityGroups](https://www.tencentcloud.com/search/?wd=ModifyDBCustomNodeSecurityGroups&type=document&lang=en)
+  - [ModifyDBCustomNodeTags](https://www.tencentcloud.com/search/?wd=ModifyDBCustomNodeTags&type=document&lang=en)
+  - [ModifyDBCustomNodesDisasterRecoverGroup](https://www.tencentcloud.com/search/?wd=ModifyDBCustomNodesDisasterRecoverGroup&type=document&lang=en)
+  - [RenewDBCustomNode](https://www.tencentcloud.com/search/?wd=RenewDBCustomNode&type=document&lang=en)
+* Delete:
+  - [DestroyDBCustomNode](https://www.tencentcloud.com/search/?wd=DestroyDBCustomNode&type=document&lang=en)
+  - [IsolateDBCustomNode](https://www.tencentcloud.com/search/?wd=IsolateDBCustomNode&type=document&lang=en)
 
 ## Import
 

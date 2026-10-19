@@ -52,4 +52,9 @@ Note: This field may return `null`, indicating that no valid values can be obtai
   * `reason` - Reason for add-on failure
 Note: This field may return `null`, indicating that no valid values can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAddon](https://www.tencentcloud.com/document/api/457/56953)
 

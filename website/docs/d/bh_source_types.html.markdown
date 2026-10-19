@@ -33,4 +33,9 @@ In addition to all arguments above, the following attributes are exported:
   * `target` - Distinguish between ioa original and iam-mini.
   * `type` - Account group source type.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSourceTypes](https://www.tencentcloud.com/search/?wd=DescribeSourceTypes&type=document&lang=en)
 

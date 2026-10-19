@@ -49,6 +49,21 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateClusterInstances](https://www.tencentcloud.com/search/?wd=CreateClusterInstances&type=document&lang=en)
+  - [DescribeResourcesByDealName](https://www.tencentcloud.com/search/?wd=DescribeResourcesByDealName&type=document&lang=en)
+* Read: [DescribeClusterInstances](https://www.tencentcloud.com/search/?wd=DescribeClusterInstances&type=document&lang=en)
+* Update:
+  - [DescribeClusterInstances](https://www.tencentcloud.com/search/?wd=DescribeClusterInstances&type=document&lang=en)
+  - [ModifyClusterInstancesSpec](https://www.tencentcloud.com/search/?wd=ModifyClusterInstancesSpec&type=document&lang=en)
+* Delete:
+  - [DeleteClusterInstances](https://www.tencentcloud.com/search/?wd=DeleteClusterInstances&type=document&lang=en)
+  - [DescribeClusterInstances](https://www.tencentcloud.com/search/?wd=DescribeClusterInstances&type=document&lang=en)
+  - [IsolateClusterInstances](https://www.tencentcloud.com/search/?wd=IsolateClusterInstances&type=document&lang=en)
 
 ## Import
 

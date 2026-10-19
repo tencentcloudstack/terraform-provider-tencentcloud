@@ -98,6 +98,14 @@ In addition to all arguments above, the following attributes are exported:
 * `page_id` - Page ID.
 * `references` - List of business IDs that reference this error page.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCustomizeErrorPage](https://www.tencentcloud.com/document/api/1145/60769)
+* Read: [DescribeCustomErrorPages](https://www.tencentcloud.com/document/api/1145/60767)
+* Update: [ModifyCustomErrorPage](https://www.tencentcloud.com/document/api/1145/60766)
+* Delete: [DeleteCustomErrorPage](https://www.tencentcloud.com/document/api/1145/60768)
 
 ## Import
 

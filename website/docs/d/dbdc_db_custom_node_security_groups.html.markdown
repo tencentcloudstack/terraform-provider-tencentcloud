@@ -55,4 +55,9 @@ In addition to all arguments above, the following attributes are exported:
   * `security_group_name` - Security group name.
   * `security_group_remark` - Security group remark.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBCustomNodeSecurityGroups](https://www.tencentcloud.com/search/?wd=DescribeDBCustomNodeSecurityGroups&type=document&lang=en)
 

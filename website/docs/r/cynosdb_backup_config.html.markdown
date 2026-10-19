@@ -153,6 +153,13 @@ The `snapshot_secondary_backup_config` object exports the following:
 * `cross_regions_enable` - Whether cross-region backup is enabled. Values: `yes`, `no`.
 * `cross_regions` - Cross-region backup target regions.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyBackupConfig](https://www.tencentcloud.com/document/api/1098/40756)
+* Read: [DescribeBackupConfig](https://www.tencentcloud.com/document/api/1098/40760)
+* Update: [ModifyBackupConfig](https://www.tencentcloud.com/document/api/1098/40756)
 
 ## Import
 

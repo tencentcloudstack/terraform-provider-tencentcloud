@@ -200,4 +200,9 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - VPC ID.
   * `workload` - K8S cluster workload.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDevices](https://www.tencentcloud.com/search/?wd=DescribeDevices&type=document&lang=en)
 

@@ -49,4 +49,9 @@ In addition to all arguments above, the following attributes are exported:
     * `group_id` - api group id.Note: This field may return null, which means no valid value was found.
     * `group_name` - api group name.Note: This field may return null, which means no valid value was found.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeGatewayAllGroupApis](https://www.tencentcloud.com/search/?wd=DescribeGatewayAllGroupApis&type=document&lang=en)
 

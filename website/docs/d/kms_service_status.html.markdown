@@ -46,4 +46,9 @@ Note: this field may return null, indicating that no valid values can be obtaine
 Note: This field may return null, indicating that no valid values can be obtained.
 * `user_level` - 0: Basic Edition, 1: Ultimate Edition.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetServiceStatus](https://www.tencentcloud.com/document/api/1030/32186)
 

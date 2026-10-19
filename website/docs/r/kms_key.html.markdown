@@ -111,6 +111,29 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `key_state` - State of CMK.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [ArchiveKey](https://www.tencentcloud.com/document/api/1030/38198)
+  - [CreateKey](https://www.tencentcloud.com/document/api/1030/32199)
+  - [DescribeKey](https://www.tencentcloud.com/document/api/1030/32197)
+  - [DisableKey](https://www.tencentcloud.com/document/api/1030/32195)
+  - [EnableKeyRotation](https://www.tencentcloud.com/document/api/1030/32191)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeKey](https://www.tencentcloud.com/document/api/1030/32197)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [DescribeKey](https://www.tencentcloud.com/document/api/1030/32197)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [UpdateAlias](https://www.tencentcloud.com/document/api/1030/32182)
+  - [UpdateKeyDescription](https://www.tencentcloud.com/document/api/1030/32181)
+* Delete:
+  - [DescribeKey](https://www.tencentcloud.com/document/api/1030/32197)
+  - [DisableKey](https://www.tencentcloud.com/document/api/1030/32195)
+  - [ScheduleKeyDeletion](https://www.tencentcloud.com/document/api/1030/33534)
 
 ## Import
 

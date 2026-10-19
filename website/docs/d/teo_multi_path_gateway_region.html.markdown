@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
   * `en_name` - English name of the region.
   * `region_id` - Region ID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeMultiPathGatewayRegions](https://www.tencentcloud.com/document/api/1145/72298)
 

@@ -46,4 +46,9 @@ In addition to all arguments above, the following attributes are exported:
   * `retry_num` - Retry Attempts.
   * `start_time` - Request start time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetRequestStatus](https://www.tencentcloud.com/document/api/583/44481)
 

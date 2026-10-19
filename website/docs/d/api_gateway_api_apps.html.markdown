@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `created_time` - ApiApp create time.
   * `modified_time` - ApiApp modified time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeApiAppsStatus](https://www.tencentcloud.com/search/?wd=DescribeApiAppsStatus&type=document&lang=en)
 

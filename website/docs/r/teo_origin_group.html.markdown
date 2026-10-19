@@ -92,6 +92,14 @@ In addition to all arguments above, the following attributes are exported:
   * `zone_name` - The zone name of the referenced instance.
 * `update_time` - Origin site group update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateOriginGroup](https://www.tencentcloud.com/document/api/1145/50974)
+* Read: [DescribeOriginGroup](https://www.tencentcloud.com/document/api/1145/50970)
+* Update: [ModifyOriginGroup](https://www.tencentcloud.com/document/api/1145/50967)
+* Delete: [DeleteOriginGroup](https://www.tencentcloud.com/document/api/1145/50972)
 
 ## Import
 

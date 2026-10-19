@@ -43,4 +43,9 @@ In addition to all arguments above, the following attributes are exported:
   * `zone_name` - Chinese name of availability zone.
   * `zone` - Availability zone.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeZones](https://www.tencentcloud.com/document/api/1103/42467)
 

@@ -119,6 +119,21 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `rule_id` - ID of this CLB listener rule.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateRule](https://www.tencentcloud.com/document/api/214/33840)
+  - [DescribeListeners](https://www.tencentcloud.com/document/api/214/33831)
+  - [ModifyDomainAttributes](https://www.tencentcloud.com/document/api/214/33819)
+  - [ModifyRule](https://www.tencentcloud.com/document/api/214/33816)
+* Read: [DescribeListeners](https://www.tencentcloud.com/document/api/214/33831)
+* Update:
+  - [DescribeListeners](https://www.tencentcloud.com/document/api/214/33831)
+  - [ModifyDomainAttributes](https://www.tencentcloud.com/document/api/214/33819)
+  - [ModifyRule](https://www.tencentcloud.com/document/api/214/33816)
+* Delete: [DeleteRule](https://www.tencentcloud.com/document/api/214/33835)
 
 ## Import
 

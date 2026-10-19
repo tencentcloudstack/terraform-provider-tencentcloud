@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `job_status` - Job status.
   * `snapshot` - Back up job name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBackUpJob](https://www.tencentcloud.com/search/?wd=DescribeBackUpJob&type=document&lang=en)
 

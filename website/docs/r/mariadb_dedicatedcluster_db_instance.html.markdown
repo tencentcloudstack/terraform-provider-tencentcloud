@@ -49,6 +49,28 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateDedicatedClusterDBInstance](https://www.tencentcloud.com/search/?wd=CreateDedicatedClusterDBInstance&type=document&lang=en)
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/237/16184)
+  - [InitDBInstances](https://www.tencentcloud.com/document/api/237/16185)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/237/16184)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/237/16177)
+  - [ModifyDBInstanceName](https://www.tencentcloud.com/document/api/237/16190)
+  - [ModifyDBInstancesProject](https://www.tencentcloud.com/document/api/237/16176)
+  - [ModifyInstanceNetwork](https://www.tencentcloud.com/document/api/237/51318)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete:
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/237/16184)
+  - [IsolateDedicatedDBInstance](https://www.tencentcloud.com/document/api/237/51453)
+  - [TerminateDedicatedDBInstance](https://www.tencentcloud.com/document/api/237/51452)
 
 ## Import
 

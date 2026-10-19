@@ -57,6 +57,14 @@ In addition to all arguments above, the following attributes are exported:
 * `code_file_id` - Code file ID.
 * `path` - The full path of the node, /aaa/bbb/ccc.ipynb, consists of the names of each node.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCodeFile](https://www.tencentcloud.com/document/api/1174/73857)
+* Read: [GetCodeFile](https://www.tencentcloud.com/document/api/1174/73849)
+* Update: [UpdateCodeFile](https://www.tencentcloud.com/document/api/1174/73842)
+* Delete: [DeleteCodeFile](https://www.tencentcloud.com/document/api/1174/73853)
 
 ## Import
 

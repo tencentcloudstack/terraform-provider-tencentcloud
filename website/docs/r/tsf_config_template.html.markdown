@@ -47,4 +47,12 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - creation time.
 * `update_time` - update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateConfigTemplateWithDetailResp](https://www.tencentcloud.com/search/?wd=CreateConfigTemplateWithDetailResp&type=document&lang=en)
+* Read: [DescribeConfigTemplate](https://www.tencentcloud.com/search/?wd=DescribeConfigTemplate&type=document&lang=en)
+* Update: [UpdateConfigTemplate](https://www.tencentcloud.com/search/?wd=UpdateConfigTemplate&type=document&lang=en)
+* Delete: [DeleteConfigTemplate](https://www.tencentcloud.com/search/?wd=DeleteConfigTemplate&type=document&lang=en)
 

@@ -84,4 +84,9 @@ TABLE|METRIC|MODEL|SERVICE|COLUMN.
     * `resource_unique_id` - Entity original unique ID.
     * `update_time` - Update time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListColumnLineage](https://www.tencentcloud.com/document/api/1174/77949)
 

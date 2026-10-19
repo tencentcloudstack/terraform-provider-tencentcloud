@@ -67,4 +67,9 @@ In addition to all arguments above, the following attributes are exported:
   * `port` - Port of the security policy rule.
   * `protocol` - Protocol of the security policy rule.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSecurityPolicyDetail](https://www.tencentcloud.com/document/api/608/33097)
 

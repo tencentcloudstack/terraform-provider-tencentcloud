@@ -71,6 +71,16 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Certificate status. 0 = Approving, 1 = Approved, 2 = Approve failed, 3 = expired, 4 = DNS record added, 5 = OV/EV Certificate and confirm letter needed, 6 = Order canceling, 7 = Order canceled, 8 = Submitted and confirm letter needed, 9 = Revoking, 10 = Revoked, 11 = re-applying, 12 = Revoke and confirm letter needed, 13 = Free SSL and confirm letter needed.
 * `vulnerability_status` - Vulnerability status.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ApplyCertificate](https://www.tencentcloud.com/document/api/1007/36592)
+* Read: [DescribeCertificateDetail](https://www.tencentcloud.com/document/api/1007/36587)
+* Update:
+  - [ModifyCertificateAlias](https://www.tencentcloud.com/document/api/1007/36583)
+  - [ModifyCertificateProject](https://www.tencentcloud.com/document/api/1007/36582)
+* Delete: [DeleteCertificate](https://www.tencentcloud.com/document/api/1007/36589)
 
 ## Import
 

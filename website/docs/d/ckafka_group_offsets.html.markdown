@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
     * `partition` - topic partitionId.
   * `topic` - topicName.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeGroupOffsets](https://www.tencentcloud.com/document/api/597/35359)
 

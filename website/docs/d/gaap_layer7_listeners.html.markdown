@@ -68,4 +68,11 @@ In addition to all arguments above, the following attributes are exported:
   * `tls_ciphers` - Password Suite, optional GAAP_TLS_CIPHERS_STRICT, GAAP_TLS_CIPHERS_GENERAL, GAAP_TLS_CIPHERS_WIDE(default).
   * `tls_support_versions` - TLS version, optional TLSv1, TLSv1.1, TLSv1.2, TLSv1.3.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read:
+  - [DescribeHTTPListeners](https://www.tencentcloud.com/document/api/608/33071)
+  - [DescribeHTTPSListeners](https://www.tencentcloud.com/document/api/608/33070)
 

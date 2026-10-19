@@ -33,4 +33,9 @@ In addition to all arguments above, the following attributes are exported:
   * `zone_state` - Zone sale status. Values: `SELL` (normal sale), `SOLD_OUT` (sold out).
   * `zone` - Available zone, such as `ap-guangzhou-3`.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBCustomZones](https://www.tencentcloud.com/search/?wd=DescribeDBCustomZones&type=document&lang=en)
 

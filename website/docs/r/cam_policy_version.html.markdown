@@ -86,6 +86,13 @@ The `policy_version` object exports the following:
 * `is_default_version` - Whether it is an effective version.0 means not, 1 means yesNote: This field may return NULL, indicating that the valid value cannot be obtained.
 * `version_id` - Strategic version numberNote: This field may return NULL, indicating that the valid value cannot be obtained.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePolicyVersion](https://www.tencentcloud.com/document/api/598/36313)
+* Read: [GetPolicyVersion](https://www.tencentcloud.com/document/api/598/36311)
+* Delete: [DeletePolicyVersion](https://www.tencentcloud.com/document/api/598/36312)
 
 ## Import
 

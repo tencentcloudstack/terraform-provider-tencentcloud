@@ -143,6 +143,20 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `cdc_id` - ID of the dedicated cluster.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [AssociateAddress](https://www.tencentcloud.com/document/api/215/16700)
+  - [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
+* Read: [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
+* Delete:
+  - [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
+  - [DescribeNatGateways](https://www.tencentcloud.com/document/api/215/34752)
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/215/34772)
+  - [DisassociateAddress](https://www.tencentcloud.com/document/api/215/16703)
+  - [DisassociateNatGatewayAddress](https://www.tencentcloud.com/document/api/215/34751)
 
 ## Import
 

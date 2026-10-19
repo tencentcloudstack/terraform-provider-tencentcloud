@@ -61,4 +61,9 @@ In addition to all arguments above, the following attributes are exported:
   * `trigger_type` - Trigger type list.
   * `update_time` - Last update time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListSystemRules](https://www.tencentcloud.com/search/?wd=ListSystemRules&type=document&lang=en)
 

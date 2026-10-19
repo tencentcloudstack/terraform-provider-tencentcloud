@@ -48,6 +48,20 @@ In addition to all arguments above, the following attributes are exported:
 * `resource_id` - The intranet retains the resource instance ID bound to the IPs.
 * `state` - Binding status.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateReserveIpAddresses](https://www.tencentcloud.com/document/api/215/66342)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeReserveIpAddresses](https://www.tencentcloud.com/document/api/215/66340)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [ModifyReserveIpAddress](https://www.tencentcloud.com/document/api/215/66339)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteReserveIpAddresses](https://www.tencentcloud.com/document/api/215/66341)
 
 ## Import
 

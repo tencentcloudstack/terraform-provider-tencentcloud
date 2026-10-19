@@ -30,4 +30,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeAssetSync](https://www.tencentcloud.com/search/?wd=DescribeAssetSync&type=document&lang=en)
+  - [ModifyAssetSync](https://www.tencentcloud.com/search/?wd=ModifyAssetSync&type=document&lang=en)
 

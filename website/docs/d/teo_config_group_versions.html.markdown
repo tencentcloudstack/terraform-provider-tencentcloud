@@ -49,4 +49,9 @@ In addition to all arguments above, the following attributes are exported:
   * `version_id` - Version ID.
   * `version_number` - Version No.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeConfigGroupVersions](https://www.tencentcloud.com/document/api/1145/57974)
 

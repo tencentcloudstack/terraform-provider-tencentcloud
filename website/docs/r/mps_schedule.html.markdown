@@ -678,6 +678,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSchedule](https://www.tencentcloud.com/document/api/1041/54035)
+* Read: [DescribeSchedules](https://www.tencentcloud.com/document/api/1041/54033)
+* Update: [ModifySchedule](https://www.tencentcloud.com/document/api/1041/54030)
+* Delete: [DeleteSchedule](https://www.tencentcloud.com/document/api/1041/54034)
 
 ## Import
 

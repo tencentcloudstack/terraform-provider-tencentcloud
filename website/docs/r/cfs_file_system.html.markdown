@@ -129,6 +129,25 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `20m`) Used when creating the resource.
 * `update` - (Defaults to `20m`) Used when updating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateCfsFileSystem](https://www.tencentcloud.com/document/api/582/34517)
+  - [DescribeCfsFileSystems](https://www.tencentcloud.com/document/api/582/34514)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeCfsFileSystems](https://www.tencentcloud.com/document/api/582/34514)
+  - [DescribeMountTargets](https://www.tencentcloud.com/document/api/582/34513)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [DescribeCfsFileSystems](https://www.tencentcloud.com/document/api/582/34514)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [ScaleUpFileSystem](https://www.tencentcloud.com/document/api/582/55870)
+  - [UpdateCfsFileSystemName](https://www.tencentcloud.com/document/api/582/35059)
+  - [UpdateCfsFileSystemPGroup](https://www.tencentcloud.com/document/api/582/34512)
+* Delete: [DeleteCfsFileSystem](https://www.tencentcloud.com/document/api/582/34516)
 
 ## Import
 

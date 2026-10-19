@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `engine_session_images` - Engine session image information.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSessionImageVersion](https://www.tencentcloud.com/document/api/1155/73638)
 

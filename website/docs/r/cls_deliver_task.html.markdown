@@ -103,6 +103,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `task_id` - Deliver task id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateCLSDeliverTask](https://www.tencentcloud.com/document/api/614/83887)
+  - [ModifyCLSDeliverTask](https://www.tencentcloud.com/document/api/614/83884)
+* Read: [DescribeCLSDeliverTasks](https://www.tencentcloud.com/document/api/614/83885)
+* Update: [ModifyCLSDeliverTask](https://www.tencentcloud.com/document/api/614/83884)
+* Delete: [DeleteCLSDeliverTask](https://www.tencentcloud.com/document/api/614/83886)
 
 ## Import
 

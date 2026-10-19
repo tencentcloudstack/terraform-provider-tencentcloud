@@ -54,4 +54,10 @@ In addition to all arguments above, the following attributes are exported:
 * `ro_vip` - Intranet IP address of the read-only instance.
 * `ro_vport` - Intranet port number of the read-only instance.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRoInstanceIp](https://www.tencentcloud.com/document/api/236/37830)
+* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
 

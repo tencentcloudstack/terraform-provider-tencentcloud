@@ -59,6 +59,16 @@ In addition to all arguments above, the following attributes are exported:
 * `user_id` - User id.
 * `user_type` - User type.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateUser](https://www.tencentcloud.com/document/api/1031/63563)
+* Read: [GetUser](https://www.tencentcloud.com/document/api/1031/63561)
+* Update:
+  - [UpdateUser](https://www.tencentcloud.com/document/api/1031/63559)
+  - [UpdateUserStatus](https://www.tencentcloud.com/document/api/1031/63558)
+* Delete: [DeleteUser](https://www.tencentcloud.com/document/api/1031/63562)
 
 ## Import
 

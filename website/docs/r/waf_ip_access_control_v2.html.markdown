@@ -88,6 +88,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateIpAccessControl](https://www.tencentcloud.com/document/api/627/64775)
+* Read: [DescribeIpAccessControl](https://www.tencentcloud.com/document/api/627/64773)
+* Update: [ModifyIpAccessControl](https://www.tencentcloud.com/document/api/627/64771)
+* Delete: [DeleteIpAccessControlV2](https://www.tencentcloud.com/document/api/627/64774)
 
 ## Import
 

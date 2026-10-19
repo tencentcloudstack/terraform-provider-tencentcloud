@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
   * `spark_image_version` - Name of the spark image.
   * `update_time` - Spark image update time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDataEnginePythonSparkImages](https://www.tencentcloud.com/document/api/1155/62692)
 

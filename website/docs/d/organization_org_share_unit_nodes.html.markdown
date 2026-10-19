@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
   * `create_time` - Create time.
   * `share_node_id` - Department ID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeShareUnitNodes](https://www.tencentcloud.com/document/api/1031/78347)
 

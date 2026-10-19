@@ -45,4 +45,9 @@ In addition to all arguments above, the following attributes are exported:
 * `create_at` - Create time.
 * `udpate_at` - Upadte time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateEmbedToken](https://www.tencentcloud.com/document/api/1270/72621)
 

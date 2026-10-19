@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `customer_gateway_configuration` - xml configuration.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DownloadCustomerGatewayConfiguration](https://www.tencentcloud.com/document/api/215/17513)
 

@@ -71,4 +71,9 @@ In addition to all arguments above, the following attributes are exported:
   * `update_end_time` - Upgrade end time.
   * `update_start_time` - Upgrade start time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeMachineGroups](https://www.tencentcloud.com/document/api/614/42818)
 

@@ -61,6 +61,18 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [AutoRewrite](https://www.tencentcloud.com/document/api/214/33846)
+  - [DescribeListeners](https://www.tencentcloud.com/document/api/214/33831)
+  - [ManualRewrite](https://www.tencentcloud.com/document/api/214/33821)
+* Read: [DescribeRewrite](https://www.tencentcloud.com/document/api/214/33829)
+* Delete:
+  - [DeleteRewrite](https://www.tencentcloud.com/document/api/214/33836)
+  - [DescribeRewrite](https://www.tencentcloud.com/document/api/214/33829)
 
 ## Import
 

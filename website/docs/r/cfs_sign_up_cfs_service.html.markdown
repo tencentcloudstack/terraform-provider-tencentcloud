@@ -30,4 +30,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `cfs_service_status` - Current status of the CFS service for this user. Valid values: creating (activating); created (activated).
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeCfsServiceStatus](https://www.tencentcloud.com/document/api/582/34499)
+  - [SignUpCfsService](https://www.tencentcloud.com/document/api/582/34498)
+* Read: [DescribeCfsServiceStatus](https://www.tencentcloud.com/document/api/582/34499)
 

@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
   * `is_public` - Indicate that the namespace is public or not.
   * `name` - Name of TCR namespace.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeNamespaces](https://www.tencentcloud.com/document/api/1051/50693)
 

@@ -52,6 +52,18 @@ In addition to all arguments above, the following attributes are exported:
 * `target_name` - Target name.
 * `update_time` - Update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateRoleAssignment](https://www.tencentcloud.com/document/api/1031/63611)
+  - [GetTaskStatus](https://www.tencentcloud.com/document/api/1031/63608)
+* Read: [ListRoleAssignments](https://www.tencentcloud.com/document/api/1031/63607)
+* Delete:
+  - [DeleteRoleAssignment](https://www.tencentcloud.com/document/api/1031/63610)
+  - [DismantleRoleConfiguration](https://www.tencentcloud.com/document/api/1031/63609)
+  - [GetTaskStatus](https://www.tencentcloud.com/document/api/1031/63608)
 
 ## Import
 

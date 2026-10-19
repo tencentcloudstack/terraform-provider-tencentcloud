@@ -63,4 +63,9 @@ In addition to all arguments above, the following attributes are exported:
   * `result_recorded_time` - Evaluation result recorded time.
   * `risk_level` - Risk level. Valid values: 1 (high risk), 2 (medium risk), 3 (low risk).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListConfigRuleEvaluationResults](https://www.tencentcloud.com/search/?wd=ListConfigRuleEvaluationResults&type=document&lang=en)
 

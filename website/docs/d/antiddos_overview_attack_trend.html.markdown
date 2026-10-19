@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
 * `data` - Number of attacks per cycle point.
 * `period_point_count` - Number of period points included.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeOverviewAttackTrend](https://www.tencentcloud.com/search/?wd=DescribeOverviewAttackTrend&type=document&lang=en)
 

@@ -46,4 +46,9 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Domain name.
   * `zone_id` - Regional IDNote: This field may return NULL, indicating that the valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeHostTeoInstanceList](https://www.tencentcloud.com/document/api/1007/57016)
 

@@ -55,4 +55,9 @@ In addition to all arguments above, the following attributes are exported:
   * `total_quota` - Total unblock quota.
   * `used_quota` - Used unblock quota.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDDoSBlockRecords](https://www.tencentcloud.com/document/api/1213/81312)
 

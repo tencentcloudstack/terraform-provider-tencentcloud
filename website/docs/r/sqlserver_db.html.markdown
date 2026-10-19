@@ -82,6 +82,21 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Database creation time.
 * `status` - Database status, could be `creating`, `running`, `modifying` which means changing the remark, and `deleting`.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateDB](https://www.tencentcloud.com/document/api/238/32120)
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
+  - [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+* Read: [DescribeDBs](https://www.tencentcloud.com/document/api/238/32114)
+* Update: [ModifyDBRemark](https://www.tencentcloud.com/document/api/238/32100)
+* Delete:
+  - [DeleteDB](https://www.tencentcloud.com/document/api/238/32117)
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
+  - [DescribeDBs](https://www.tencentcloud.com/document/api/238/32114)
+  - [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
 
 ## Import
 

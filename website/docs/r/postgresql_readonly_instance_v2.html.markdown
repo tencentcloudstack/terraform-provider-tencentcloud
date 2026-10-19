@@ -108,6 +108,34 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `20m`) Used when creating the resource.
 * `update` - (Defaults to `20m`) Used when updating the resource.
 * `delete` - (Defaults to `20m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateReadOnlyDBInstance](https://www.tencentcloud.com/document/api/409/39728)
+  - [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
+  - [DescribeOrders](https://www.tencentcloud.com/document/api/409/18104)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
+  - [DescribeDBInstanceSecurityGroups](https://www.tencentcloud.com/document/api/409/52648)
+  - [DescribeReadOnlyGroups](https://www.tencentcloud.com/document/api/409/39725)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
+  - [DescribeReadOnlyGroups](https://www.tencentcloud.com/document/api/409/39725)
+  - [ModifyDBInstanceDeletionProtection](https://www.tencentcloud.com/document/api/409/79011)
+  - [ModifyDBInstanceName](https://www.tencentcloud.com/document/api/409/18101)
+  - [ModifyDBInstanceReadOnlyGroup](https://www.tencentcloud.com/document/api/409/39724)
+  - [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/document/api/409/52647)
+  - [ModifyDBInstanceSpec](https://www.tencentcloud.com/document/api/409/43296)
+  - [ModifyDBInstancesProject](https://www.tencentcloud.com/document/api/409/18100)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete:
+  - [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
+  - [DestroyDBInstance](https://www.tencentcloud.com/document/api/409/37117)
+  - [IsolateDBInstances](https://www.tencentcloud.com/document/api/409/40109)
 
 ## Import
 

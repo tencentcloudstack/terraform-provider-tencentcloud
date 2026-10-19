@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
 * `task_info` - The queried task information. If the returned value is empty, the task with the entered task ID does not exist. The task result will be returned only if the task status is `2` (succeeded).
 Note: This field may return null, indicating that no valid values can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTaskResult](https://www.tencentcloud.com/document/api/1155/49003)
 

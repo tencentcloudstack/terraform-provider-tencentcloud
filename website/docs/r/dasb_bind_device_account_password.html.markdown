@@ -46,4 +46,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [BindDeviceAccountPassword](https://www.tencentcloud.com/search/?wd=BindDeviceAccountPassword&type=document&lang=en)
+* Delete: [ResetDeviceAccountPassword](https://www.tencentcloud.com/search/?wd=ResetDeviceAccountPassword&type=document&lang=en)
 
