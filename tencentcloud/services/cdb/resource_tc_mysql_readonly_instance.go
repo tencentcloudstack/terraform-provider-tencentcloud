@@ -91,6 +91,8 @@ func mysqlCreateReadonlyInstancePayByMonth(ctx context.Context, d *schema.Resour
 	request := cdb.NewCreateDBInstanceRequest()
 	instanceRole := "ro"
 	request.InstanceRole = &instanceRole
+	clientToken := helper.BuildToken()
+	request.ClientToken = &clientToken
 
 	payType, ok := d.GetOk("pay_type")
 	var period int
@@ -146,15 +148,30 @@ func mysqlCreateReadonlyInstancePayByMonth(ctx context.Context, d *schema.Resour
 		return err
 	}
 
-	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMysqlClient().CreateDBInstance(request)
+	var response *cdb.CreateDBInstanceResponse
+	err := resource.Retry(2*tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		// shadowed response will not pass to outside
+		r, inErr := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMysqlClient().CreateDBInstance(request)
+		if inErr != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), inErr.Error())
+			return tccommon.RetryError(inErr)
+		}
+
+		if len(r.Response.InstanceIds) < 1 && clientToken != "" {
+			return resource.RetryableError(fmt.Errorf("%s returns nil instanceIds but client token provided, retrying", request.GetAction()))
+		}
+
+		response = r
+		return nil
+	})
+
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
-	} else {
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	if len(response.Response.InstanceIds) != 1 {
 		return fmt.Errorf("mysql CreateDBInstance return len(InstanceIds) is not 1,but %d", len(response.Response.InstanceIds))
 	}
@@ -168,6 +185,8 @@ func mysqlCreateReadonlyInstancePayByUse(ctx context.Context, d *schema.Resource
 	request := cdb.NewCreateDBInstanceHourRequest()
 	instanceRole := "ro"
 	request.InstanceRole = &instanceRole
+	clientToken := helper.BuildToken()
+	request.ClientToken = &clientToken
 
 	masterInstanceId := d.Get("master_instance_id").(string)
 	request.MasterInstanceId = &masterInstanceId
@@ -207,15 +226,28 @@ func mysqlCreateReadonlyInstancePayByUse(ctx context.Context, d *schema.Resource
 		request.MasterRegion = &masterRegion
 	}
 
-	response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMysqlClient().CreateDBInstanceHour(request)
+	var response *cdb.CreateDBInstanceHourResponse
+	err := resource.Retry(2*tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		// shadowed response will not pass to outside
+		r, inErr := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMysqlClient().CreateDBInstanceHour(request)
+		if inErr != nil {
+			return tccommon.RetryError(inErr)
+		}
+		if len(r.Response.InstanceIds) < 1 && clientToken != "" {
+			return resource.RetryableError(fmt.Errorf("%s returns nil instanceIds but client token provided, retrying", request.GetAction()))
+		}
+		response = r
+		return nil
+	})
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
-	} else {
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	if len(response.Response.InstanceIds) != 1 {
 		return fmt.Errorf("mysql CreateDBInstanceHour return len(InstanceIds) is not 1,but %d", len(response.Response.InstanceIds))
 	}
