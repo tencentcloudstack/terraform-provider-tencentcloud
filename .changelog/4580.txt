@@ -1,7 +1,11 @@
 ```release-note:bug
-resource/tencentcloud_network_acl: fix provider panic (nil pointer dereference) when DescribeNetWorkAcls receives a nil response
+resource/tencentcloud_vpc_acl: fix provider panic (nil pointer dereference) when DescribeNetWorkAcls receives a nil response
 ```
 
 ```release-note:bug
-resource/tencentcloud_ddos_attack_record: fix provider panic (nil pointer dereference) when antiddos DescribeListBGPIPInstances / DescribeListBGPIPInstanceById / DescribeListBGPInstanceById receive a nil response
+resource/tencentcloud_dayu_eip: fix provider panic (nil pointer dereference) when antiddos DescribeListBGPIPInstances / DescribeListBGPIPInstanceById / DescribeListBGPInstanceById receive a nil response
+```
+
+```release-note:bug
+resource/tencentcloud_eni: fix provider panic (nil pointer dereference) in DetachEniFromCvm when ResourceNotFound is swallowed
 ```

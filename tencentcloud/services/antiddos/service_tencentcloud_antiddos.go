@@ -46,25 +46,24 @@ func (me *AntiddosService) DescribeListBGPIPInstances(ctx context.Context, insta
 	ratelimit.Check(request.GetAction())
 	var response *antiddos.DescribeListBGPIPInstancesResponse
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := me.client.UseAntiddosClient().DescribeListBGPIPInstances(request)
+		response, err = me.client.UseAntiddosClient().DescribeListBGPIPInstances(request)
 
-		if sdkErr, ok := e.(*errors.TencentCloudSDKError); ok {
-			if sdkErr.GetCode() == "InternalError.ClusterNotFound" {
+		if e, ok := err.(*errors.TencentCloudSDKError); ok {
+			if e.GetCode() == "InternalError.ClusterNotFound" {
 				return nil
 			}
 		}
-		if e != nil {
-			return resource.RetryableError(e)
+		if err != nil {
+			return resource.RetryableError(err)
 		}
-		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("DescribeListBGPIPInstances failed, Response is nil."))
-		}
-		response = result
 		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return
+	}
+	if response == nil || response.Response == nil {
 		return
 	}
 	result = response.Response.InstanceList
