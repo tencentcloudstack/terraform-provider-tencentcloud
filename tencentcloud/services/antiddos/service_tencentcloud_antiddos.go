@@ -46,9 +46,7 @@ func (me *AntiddosService) DescribeListBGPIPInstances(ctx context.Context, insta
 	ratelimit.Check(request.GetAction())
 	var response *antiddos.DescribeListBGPIPInstancesResponse
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		var result *antiddos.DescribeListBGPIPInstancesResponse
-		var e error
-		result, e = me.client.UseAntiddosClient().DescribeListBGPIPInstances(request)
+		result, e := me.client.UseAntiddosClient().DescribeListBGPIPInstances(request)
 
 		if sdkErr, ok := e.(*errors.TencentCloudSDKError); ok {
 			if sdkErr.GetCode() == "InternalError.ClusterNotFound" {
