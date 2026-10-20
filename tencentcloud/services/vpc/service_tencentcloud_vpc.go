@@ -4295,15 +4295,15 @@ func (me *VpcService) DeleteAclAttachment(ctx context.Context, attachmentAcl str
 
 func (me *VpcService) DescribeVpngwById(ctx context.Context, vpngwId string) (has bool, gateway *vpc.VpnGateway, err error) {
 	var (
-		logId    = tccommon.GetLogId(ctx)
-		request  = vpc.NewDescribeVpnGatewaysRequest()
-		response = vpc.NewDescribeVpnGatewaysResponse()
+		logId   = tccommon.GetLogId(ctx)
+		request = vpc.NewDescribeVpnGatewaysRequest()
 	)
 
 	var specArgs connectivity.IacExtInfo
 	specArgs.InstanceId = vpngwId
 
 	request.VpnGatewayIds = []*string{&vpngwId}
+	var response *vpc.DescribeVpnGatewaysResponse
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, err := me.client.UseVpcClient(specArgs).DescribeVpnGateways(request)
 		if err != nil {
@@ -4334,7 +4334,7 @@ func (me *VpcService) DescribeVpngwById(ctx context.Context, vpngwId string) (ha
 		return
 	}
 
-	if len(response.Response.VpnGatewaySet) < 1 {
+	if response == nil || response.Response == nil || len(response.Response.VpnGatewaySet) < 1 {
 		has = false
 		return
 	}
