@@ -3455,7 +3455,7 @@ func (me *VpcService) DetachEniFromCvm(ctx context.Context, eniId, cvmId string)
 	client := me.client.UseVpcClient()
 
 	request := vpc.NewDetachNetworkInterfaceRequest()
-	response := vpc.NewDetachNetworkInterfaceResponse()
+	var response *vpc.DetachNetworkInterfaceResponse
 	request.NetworkInterfaceId = &eniId
 	request.InstanceId = &cvmId
 
@@ -3488,6 +3488,13 @@ func (me *VpcService) DetachEniFromCvm(ctx context.Context, eniId, cvmId string)
 	}); err != nil {
 		log.Printf("[CRITAL]%s detach eni from instance failed, reason: %v", logId, err)
 		return err
+	}
+
+	if response == nil || response.Response == nil || response.Response.RequestId == nil {
+		// ResourceNotFound was swallowed in the retry loop: eni or cvm doesn't exist,
+		// treat the eni as already detached and skip the task-result polling.
+		log.Printf("[WARN]%s detach eni from instance: response is nil, skip waiting for task result", logId)
+		return nil
 	}
 
 	// wait
@@ -4211,7 +4218,7 @@ func (me *VpcService) DescribeNetWorkAcls(ctx context.Context, aclID, vpcID, nam
 			errRet = err
 			return
 		}
-		if response.Response == nil {
+		if response == nil || response.Response == nil {
 			return
 		}
 

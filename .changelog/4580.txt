@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_network_acl: fix provider panic (nil pointer dereference) when DescribeNetWorkAcls receives a nil response
+```
