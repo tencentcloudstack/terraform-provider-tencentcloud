@@ -77,6 +77,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/emr"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/es"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fl"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fwm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ga2"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gaap"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gs"
@@ -2797,6 +2798,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_bdrc_disaster_recovery_vpc_mapping":                                       bdrc.ResourceTencentCloudBdrcDisasterRecoveryVpcMapping(),
 			"tencentcloud_bdrc_security_group_mapping":                                              bdrc.ResourceTencentCloudBdrcSecurityGroupMapping(),
 			"tencentcloud_bdrc_instance_copy_pair":                                                  bdrc.ResourceTencentCloudBdrcInstanceCopyPair(),
+			"tencentcloud_fwm_strategy":                                                             fwm.ResourceTencentCloudFwmStrategy(),
 		},
 
 		ConfigureFunc: providerConfigure,
