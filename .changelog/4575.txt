@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_fwm_strategy: add `strategy_ids` computed output parameter
+```
