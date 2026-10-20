@@ -3490,6 +3490,13 @@ func (me *VpcService) DetachEniFromCvm(ctx context.Context, eniId, cvmId string)
 		return err
 	}
 
+	if response == nil || response.Response == nil || response.Response.RequestId == nil {
+		// response is left blank when the api error was swallowed in the retry loop (e.g. ResourceNotFound),
+		// treat the eni as already detached and skip the task-result polling.
+		log.Printf("[WARN]%s detach eni from instance: response is nil, skip waiting for task result", logId)
+		return nil
+	}
+
 	// wait
 	err := me.DescribeVpcTaskResult(ctx, response.Response.RequestId)
 	if err != nil {
@@ -4211,7 +4218,7 @@ func (me *VpcService) DescribeNetWorkAcls(ctx context.Context, aclID, vpcID, nam
 			errRet = err
 			return
 		}
-		if response.Response == nil {
+		if response == nil || response.Response == nil {
 			return
 		}
 

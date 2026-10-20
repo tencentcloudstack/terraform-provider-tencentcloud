@@ -63,6 +63,9 @@ func (me *AntiddosService) DescribeListBGPIPInstances(ctx context.Context, insta
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return
 	}
+	if response == nil || response.Response == nil {
+		return
+	}
 	result = response.Response.InstanceList
 	return
 }
@@ -1376,6 +1379,9 @@ func (me *AntiddosService) DescribeListBGPIPInstanceById(ctx context.Context, bu
 			err = e
 			return
 		}
+		if response == nil || response.Response == nil {
+			return
+		}
 		bgpipInstanceList := response.Response.InstanceList
 		if len(bgpipInstanceList) > 0 {
 			result = append(result, bgpipInstanceList...)
@@ -1401,6 +1407,9 @@ func (me *AntiddosService) DescribeListBGPInstanceById(ctx context.Context, busi
 		response, e := me.client.UseAntiddosClient().DescribeListBGPInstances(request)
 		if e != nil {
 			err = e
+			return
+		}
+		if response == nil || response.Response == nil {
 			return
 		}
 		bgpipInstanceList := response.Response.InstanceList
