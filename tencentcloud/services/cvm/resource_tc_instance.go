@@ -531,7 +531,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Computed:    true,
-				Description: "Whether to enable jumbo frames for the instance. Only supported instance types accept `true`. See https://cloud.tencent.com/document/product/213/11518 for supported instance types.",
+				Description: "Whether to enable jumbo frames for the instance. Only supported instance types accept `true`. See https://cloud.tencent.com/document/product/213/11518 for supported instance types. **NOTE: modifying this field automatically reboots the instance (`AutoReboot` is always set to `true` on update); use with caution**.",
 			},
 			// role
 			"cam_role_name": {

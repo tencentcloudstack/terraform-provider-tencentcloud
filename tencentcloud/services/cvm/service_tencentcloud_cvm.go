@@ -317,6 +317,7 @@ func (me *CvmService) ModifyEnableJumboFrame(ctx context.Context, instanceId str
 	logId := tccommon.GetLogId(ctx)
 	request := cvm.NewModifyInstancesAttributeRequest()
 	request.InstanceIds = []*string{&instanceId}
+	request.AutoReboot = helper.Bool(true)
 	request.EnableJumboFrame = &enableJumboFrame
 
 	ratelimit.Check(request.GetAction())
