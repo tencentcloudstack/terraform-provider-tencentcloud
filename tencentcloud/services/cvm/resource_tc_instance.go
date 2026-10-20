@@ -527,6 +527,12 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Whether the termination protection is enabled. Default is `false`. If set true, which means that this instance can not be deleted by an API action.",
 			},
+			"enable_jumbo_frame": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to enable jumbo frames for the instance. Only supported instance types accept `true`. See https://cloud.tencent.com/document/product/213/11518 for supported instance types. **NOTE: modifying this field automatically reboots the instance (`AutoReboot` is always set to `true` on update); use with caution**.",
+			},
 			// role
 			"cam_role_name": {
 				Type:        schema.TypeString,
@@ -1067,6 +1073,10 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		request.DisableApiTermination = helper.Bool(v.(bool))
 	}
 
+	if v, ok := d.GetOkExists("enable_jumbo_frame"); ok {
+		request.EnableJumboFrame = helper.Bool(v.(bool))
+	}
+
 	var launchTemplate cvm.LaunchTemplate
 	if v, ok := d.GetOk("launch_template_id"); ok {
 		launchTemplate.LaunchTemplateId = helper.String(v.(string))
@@ -1381,6 +1391,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("expired_time", instance.ExpiredTime)
 	_ = d.Set("cam_role_name", instance.CamRoleName)
 	_ = d.Set("disable_api_termination", instance.DisableApiTermination)
+	_ = d.Set("enable_jumbo_frame", instance.EnableJumboFrame)
 	_ = d.Set("cpu", instance.CPU)
 	_ = d.Set("memory", instance.Memory)
 	_ = d.Set("os_name", instance.OsName)
@@ -2087,6 +2098,13 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 
 	if d.HasChange("disable_api_termination") {
 		err := cvmService.ModifyDisableApiTermination(ctx, instanceId, d.Get("disable_api_termination").(bool))
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("enable_jumbo_frame") {
+		err := cvmService.ModifyEnableJumboFrame(ctx, instanceId, d.Get("enable_jumbo_frame").(bool))
 		if err != nil {
 			return err
 		}
