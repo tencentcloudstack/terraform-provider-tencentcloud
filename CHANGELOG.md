@@ -1,3 +1,12 @@
+## 1.83.37(October 20, 2026)
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_organization_nodes: Optimize queries. ([#4572](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4572))
+* resource/tencentcloud_instance: support `enable_jumbo_frame` parameter ([#4573](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4573))
+* resource/tencentcloud_mysql_readonly_instance: use clientToken polling mechanism for create operations ([#4574](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4574))
+* resource/tencentcloud_vpn_gateway: fix provider panic (nil pointer dereference) when Read encounters ResourceNotFound, so refresh can properly remove deleted resources from state ([#4570](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4570))
+
 ## 1.83.36(October 16, 2026)
 
 FEATURES:
