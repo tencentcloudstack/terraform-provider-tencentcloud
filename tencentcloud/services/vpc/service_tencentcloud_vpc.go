@@ -4305,7 +4305,8 @@ func (me *VpcService) DescribeVpngwById(ctx context.Context, vpngwId string) (ha
 
 	request.VpnGatewayIds = []*string{&vpngwId}
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, err := me.client.UseVpcClient(specArgs).DescribeVpnGateways(request)
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseVpcClient(specArgs).DescribeVpnGatewaysWithContext(ctx, request)
 		if err != nil {
 			ee, ok := err.(*sdkErrors.TencentCloudSDKError)
 			if !ok {
@@ -4322,7 +4323,7 @@ func (me *VpcService) DescribeVpngwById(ctx context.Context, vpngwId string) (ha
 		}
 
 		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Describ vpn gateways failed, Response is nil."))
+			return resource.NonRetryableError(fmt.Errorf("Describe vpn gateways failed, Response is nil."))
 		}
 
 		response = result
@@ -4334,7 +4335,7 @@ func (me *VpcService) DescribeVpngwById(ctx context.Context, vpngwId string) (ha
 		return
 	}
 
-	if len(response.Response.VpnGatewaySet) < 1 {
+	if response == nil || response.Response == nil || len(response.Response.VpnGatewaySet) < 1 {
 		has = false
 		return
 	}
