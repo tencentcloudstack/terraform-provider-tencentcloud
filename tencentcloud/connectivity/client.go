@@ -71,6 +71,7 @@ import (
 	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
+	fwmv20250611 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/fwm/v20250611"
 	ga2v20250115 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ga2/v20250115"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	gsv20191118 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gs/v20191118"
@@ -249,6 +250,7 @@ type TencentCloudClient struct {
 	sslv20191205Conn            *sslCertificate.Client
 	postgresv20170312Conn       *postgre.Client
 	cfwv20190904Conn            *cfw.Client
+	fwmv20250611Conn            *fwmv20250611.Client
 	ccnv20170312Conn            *vpc.Client
 	tcssv20201101Conn           *tcss.Client
 	cloudauditv20190319Conn     *audit.Client
@@ -2061,6 +2063,18 @@ func (me *TencentCloudClient) UseCfwV20190904Client() *cfw.Client {
 	me.cfwv20190904Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.cfwv20190904Conn
+}
+
+// UseFwmV20250611Client return FWM client for service
+func (me *TencentCloudClient) UseFwmV20250611Client() *fwmv20250611.Client {
+	if me.fwmv20250611Conn != nil {
+		return me.fwmv20250611Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.fwmv20250611Conn, _ = fwmv20250611.NewClient(me.Credential, me.Region, cpf)
+	me.fwmv20250611Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.fwmv20250611Conn
 }
 
 // UseCcnV20170312Client return CCN client for service
