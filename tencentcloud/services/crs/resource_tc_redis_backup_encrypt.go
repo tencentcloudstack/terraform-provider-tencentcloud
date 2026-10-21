@@ -151,7 +151,7 @@ func resourceTencentCloudRedisBackupEncryptUpdate(d *schema.ResourceData, meta i
 	request := redis.NewModifyBackupEncryptRequest()
 	request.InstanceId = helper.String(instanceId)
 
-	if v, ok := d.GetOk("backup_encrypt"); ok {
+	if v, ok := d.GetOkExists("backup_encrypt"); ok {
 		request.BackupEncrypt = helper.Bool(v.(bool))
 	}
 
