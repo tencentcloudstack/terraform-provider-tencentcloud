@@ -3,139 +3,158 @@
 ## Purpose
 TBD - created by archiving change add-fwm-rule-group-resource. Update Purpose after archive.
 ## Requirements
-### Requirement: Resource MUST be registered as `tencentcloud_fwm_rule_group`
+### Requirement: Resource manages FWM rule group lifecycle
 
-The provider SHALL register a new RESOURCE_KIND_GENERAL resource named `tencentcloud_fwm_rule_group`, whose Create / Read / Update / Delete callbacks invoke `CreateRuleGroup`, `DescribeRuleGroups`, `ModifyRuleGroup`, `DeleteRuleGroup` of `github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/fwm/v20250611`. The resource SHALL live in the new service package `tencentcloud/services/fwm/` with file name `resource_tc_fwm_rule_group.go`.
+The provider SHALL expose a resource `tencentcloud_fwm_rule_group` that manages a Tencent Cloud Firewall Manager rule group via `CreateRuleGroup`, `DescribeRuleGroups`, `ModifyRuleGroup` and `DeleteRuleGroup` in the `fwm/v20250611` SDK namespace. All four APIs are synchronous; no async task polling is required.
 
-#### Scenario: Resource registered in provider map
+#### Scenario: Create provisions a rule group
 
-- **WHEN** the provider is loaded
-- **THEN** `tencentcloud/provider.go` exposes the key `"tencentcloud_fwm_rule_group"` mapped to `fwm.ResourceTencentCloudFwmRuleGroup()`, and `tencentcloud/provider.md` lists `tencentcloud_fwm_rule_group` under a `Firewall Manager(FWM)` resource section.
+- **WHEN** a user defines the resource with `group_name` and `product`
+- **THEN** the provider SHALL call `CreateRuleGroup` with `GroupName` and `Product`, require a non-nil non-empty `Response.GroupId`, and set the resource ID to that bare `GroupId` value (`fwmrg-` prefix)
 
-#### Scenario: Client factory is available
+#### Scenario: Create rejects an empty group id
 
-- **WHEN** any CRUD callback needs the FWM client
-- **THEN** `(*connectivity.TencentCloudClient).UseFwmV20250611Client()` returns a cached `*fwmv20250611.Client` created via `fwmv20250611.NewClient(me.Credential, me.Region, me.NewClientProfile(300))` with `WithHttpTransport(&LogRoundTripper{})`.
+- **WHEN** `CreateRuleGroup` returns `Response == nil`, `Response.GroupId == nil`, or an empty string id
+- **THEN** the provider SHALL return `resource.NonRetryableError` and SHALL NOT write a resource ID
 
-#### Scenario: Importer is configured
+#### Scenario: Read reflects current cloud state
+
+- **WHEN** the provider reads the resource
+- **THEN** it SHALL call `DescribeRuleGroups` with a `GroupId` filter, and map every non-nil field of the matching `RuleGroupResp` into Terraform state
+
+#### Scenario: Read clears state when the group is gone
+
+- **WHEN** `DescribeRuleGroups` returns no record whose `GroupId` exactly equals `d.Id()`
+- **THEN** the provider SHALL log `[CRUD] tencentcloud_fwm_rule_group id=<id>` and then call `d.SetId("")`, returning nil
+
+#### Scenario: Update renames the group
+
+- **WHEN** `group_name` changes
+- **THEN** the provider SHALL call `ModifyRuleGroup` with `GroupId = d.Id()` and the new `GroupName`, then re-read the resource
+
+#### Scenario: Update is a no-op without changes
+
+- **WHEN** no mutable attribute has changed
+- **THEN** the provider SHALL skip the `ModifyRuleGroup` call and only perform a read
+
+#### Scenario: Delete removes the group
+
+- **WHEN** the resource is destroyed
+- **THEN** the provider SHALL call `DeleteRuleGroup` with `GroupIds` containing exactly one element — `d.Id()`
+
+### Requirement: Resource is importable by rule group id
+
+The resource ID SHALL be the bare rule group ID, and the resource SHALL support `terraform import` with that ID.
+
+#### Scenario: Import with an existing id
 
 - **WHEN** a user runs `terraform import tencentcloud_fwm_rule_group.example fwmrg-wsrrhuvrib`
-- **THEN** the importer SHALL pass the imported id straight into Read (`schema.ImportStatePassthrough`), and Read SHALL hydrate state from `DescribeRuleGroups` filtered by `GroupId`.
+- **THEN** the provider SHALL accept the ID through `schema.ImportStatePassthrough` and populate all fields from `DescribeRuleGroups` on the subsequent read
 
-### Requirement: Schema MUST expose only writable cloud API fields plus flattened computed fields
+#### Scenario: Id is used directly in every API call
 
-The resource schema SHALL declare `group_name` (`TypeString`, Required), `product` (`TypeString`, Required, **ForceNew**, validated against `enterprise_sg` / `cfw_nat_acl` / `cfw_vpc_acl` / `cfw_edge_acl`), and the following Computed fields flattened from `RuleGroupResp` with NO `rule_groups` wrapper layer: `group_id` (String), `app_id` (String), `rule_count` (Int), `create_time` (String), `update_time` (String), `create_by` (String), `create_name` (String), `update_by` (String), `update_name` (String), `receive_account` (List of object), `exec_areas` (List of String), `direction` (Int).
+- **WHEN** Read, Update or Delete is invoked
+- **THEN** the provider SHALL use `d.Id()` verbatim as `GroupId` (or as the single element of `GroupIds`) without splitting or re-joining it on any separator
 
-`receive_account` SHALL contain `uin` (String), `nickname` (String), `receiver_type` (Int) and `members` (List of object); each `members` element SHALL contain `app_id`, `uin`, `nickname`, `member_id`, `node_name` (all String).
+### Requirement: Schema mirrors the mutable API parameters
 
-The query-side parameters of `DescribeRuleGroups` (`Product` as a filter, `Filters`, `Filters.Name`, `Filters.Values`, `Filters.OperatorType`, `Order`, `By`, `Offset`, `Limit`) SHALL NOT be exposed in the resource schema.
+The resource schema SHALL contain `group_name` and `product` as the only user-configurable attributes, and SHALL expose all describe-only fields as computed attributes, flattened to the top level without a `rule_groups` wrapper layer.
 
-#### Scenario: Writable fields are required and typed correctly
+#### Scenario: Required attributes enforced
 
-- **WHEN** the schema is inspected
-- **THEN** `group_name` is Required `TypeString` without ForceNew, and `product` is Required `TypeString` with `ForceNew: true` and a `validation.StringInSlice` validator over the 4 allowed product names.
+- **WHEN** a user omits `group_name` or `product`
+- **THEN** Terraform SHALL return a validation error before any API call
 
-#### Scenario: Invalid product is rejected at plan time
+#### Scenario: Product is validated and immutable
 
-- **WHEN** a configuration sets `product = "all"` or any value outside the 4 allowed names
-- **THEN** `terraform plan` fails schema validation before any cloud API call.
+- **WHEN** `product` is set to a value outside `enterprise_sg`, `cfw_nat_acl`, `cfw_vpc_acl`, `cfw_edge_acl`
+- **THEN** Terraform SHALL reject the configuration at plan time
+- **AND WHEN** a user changes `product` on an existing resource
+- **THEN** Terraform SHALL plan a destroy-and-recreate, because `ModifyRuleGroup` cannot change the product
 
-#### Scenario: Computed results are flattened
+#### Scenario: Computed attributes mirror RuleGroupResp
 
-- **WHEN** the schema is inspected
-- **THEN** there is no `rule_groups` (or equivalently named list-of-resource) attribute, and every `RuleGroupResp` scalar field appears as its own top-level Computed attribute.
+- **WHEN** the resource is read
+- **THEN** `group_id`, `app_id`, `rule_count`, `create_time`, `update_time`, `create_by`, `create_name`, `update_by`, `update_name`, `receive_account`, `exec_areas` and `direction` SHALL be set from the corresponding `RuleGroupResp` fields, each guarded by a nil check
 
-#### Scenario: Query-only parameters are not exposed
+#### Scenario: Nested receive_account mirrors SDK structs
 
-- **WHEN** the schema is inspected
-- **THEN** none of `filters`, `name`, `values`, `operator_type`, `order`, `by`, `offset`, `limit` exist as resource attributes.
+- **WHEN** `RuleGroupResp.ReceiveAccount` is non-empty
+- **THEN** each element SHALL be exposed with `uin`, `nickname`, `receiver_type`, and a nested `members` list whose elements carry `app_id`, `uin`, `nickname`, `member_id` and `node_name`
 
-### Requirement: Resource ID MUST be the cloud API `GroupId`
+#### Scenario: The rule_groups list is not wrapped
 
-Create SHALL set `d.Id()` to the value of `response.Response.GroupId`; Read / Update / Delete SHALL read the identifier from `d.Id()` and use it directly as `GroupId` / `GroupIds[0]`. No composite id (no `tccommon.FILED_SP` splitting) is used because `GroupId` is globally unique.
+- **WHEN** the schema is defined
+- **THEN** it SHALL NOT contain a `rule_groups` (or `rule_groups_set` / `rule_groups_list`) attribute; the fields of the single matched `RuleGroupResp` SHALL live at the top level
 
-#### Scenario: ID set from CreateRuleGroup response
+### Requirement: Product numeric code is normalized on read
 
-- **GIVEN** a successful `CreateRuleGroup` returning `GroupId = "fwmrg-wsrrhuvrib"`
-- **WHEN** Create completes
-- **THEN** `d.Id()` equals `"fwmrg-wsrrhuvrib"` and the `group_id` attribute also equals `"fwmrg-wsrrhuvrib"`.
+`DescribeRuleGroups` returns `Product` as a numeric code while `CreateRuleGroup` accepts a string name. Read SHALL translate the code back to the configured name so that no spurious diff is produced.
 
-#### Scenario: Empty Create response id is fatal
+#### Scenario: Numeric code is mapped to its product name
 
-- **WHEN** `CreateRuleGroup` returns `result == nil`, or `result.Response == nil`, or `result.Response.GroupId == nil`, or `*GroupId == ""`
-- **THEN** Create SHALL return `resource.NonRetryableError` whose message mentions the missing `GroupId`, and `d.SetId` SHALL NOT be called with an empty value.
+- **WHEN** the describe response returns `Product` equal to `1`, `2`, `3` or `4`
+- **THEN** the provider SHALL set the `product` attribute to `enterprise_sg`, `cfw_nat_acl`, `cfw_vpc_acl` or `cfw_edge_acl` respectively
 
-### Requirement: Read MUST locate the group via DescribeRuleGroups with a fixed GroupId filter
+#### Scenario: An already-named product passes through
 
-The service helper `(*FwmService).DescribeFwmRuleGroupById(ctx context.Context, groupId string) (*fwmv20250611.RuleGroupResp, error)` SHALL call `DescribeRuleGroups` with `Filters = [{Name: "GroupId", Values: [<groupId>], OperatorType: 9}]` and paginate via `Offset` / `Limit`, returning the entry whose `GroupId` exactly equals the requested id, or `(nil, nil)` when absent. The request SHALL NOT use `Product` as a filter.
+- **WHEN** the describe response returns `Product` as a product name rather than a numeric code
+- **THEN** the provider SHALL store that value unchanged
 
-#### Scenario: Read hydrates all fields
+### Requirement: Single-group lookup uses a GroupId filter with exact client-side match
 
-- **GIVEN** `DescribeRuleGroups` returns one `RuleGroupResp` with `GroupId == d.Id()`
-- **WHEN** Read completes
-- **THEN** `group_name`, `product`, `group_id`, `app_id`, `rule_count`, `create_time`, `update_time`, `create_by`, `create_name`, `update_by`, `update_name`, `receive_account`, `exec_areas` and `direction` are written to state, and each `d.Set` call is guarded by a nil check on the corresponding SDK field.
+Because the SDK exposes no get-by-id API, Read SHALL resolve a single rule group through `DescribeRuleGroups`.
 
-#### Scenario: Missing group clears state after logging
+#### Scenario: Filter shape
 
-- **GIVEN** `DescribeRuleGroups` returns zero matching entries
-- **WHEN** Read completes
-- **THEN** Read logs `[CRUD] tencentcloud_fwm_rule_group id=<id>` **before** calling `d.SetId("")`, and returns `nil`.
+- **WHEN** the service helper queries one rule group
+- **THEN** it SHALL send `Filters: [{Name: "GroupId", Values: [<id>], OperatorType: 9}]` using the SDK type `CommonFilter`
 
-#### Scenario: Product is normalized from numeric to name
+#### Scenario: Exact match guards the fuzzy operator
 
-- **GIVEN** the cloud API returns `Product = "2"` for the rule group
-- **WHEN** Read completes
-- **THEN** the `product` attribute in state equals `"cfw_nat_acl"` (mapping `1→enterprise_sg`, `2→cfw_nat_acl`, `3→cfw_vpc_acl`, `4→cfw_edge_acl`), and a value that is already a product name or is unmapped is stored unchanged.
+- **WHEN** the fuzzy filter returns multiple `RuleGroups`
+- **THEN** the helper SHALL return only the element whose `GroupId` exactly equals the requested id, and SHALL return `(nil, nil)` if none matches
 
-### Requirement: Update MUST only modify `group_name` through ModifyRuleGroup
+#### Scenario: Pagination uses the maximum page size
 
-Update SHALL treat `group_name` as the only mutable argument. When `d.HasChange("group_name")` is true it SHALL call `ModifyRuleGroup` with `GroupId = d.Id()` and `GroupName` from state, then re-run Read. If a ForceNew-only argument such as `product` is detected as changed inside Update, Update SHALL return an error instead of silently ignoring it. Update SHALL NOT send `Product`.
+- **WHEN** the helper paginates `DescribeRuleGroups`
+- **THEN** it SHALL pass `Limit = 100` and increment `Offset` by `100` until the returned page is shorter than the limit
 
-#### Scenario: Renaming a rule group
+### Requirement: Every SDK invocation is wrapped with project retry semantics
 
-- **GIVEN** an existing rule group with `group_name = "old-name"` and the configuration changed to `"new-name"`
-- **WHEN** Update runs
-- **THEN** exactly one `ModifyRuleGroup` call is issued with `GroupId` equal to `d.Id()` and `GroupName = "new-name"`, followed by a Read.
+Every SDK call SHALL be invoked inside `resource.Retry(...)` using the project timeout constants.
 
-#### Scenario: Product change never reaches Update
+#### Scenario: Read calls use ReadRetryTimeout
 
-- **WHEN** a user changes `product` in configuration
-- **THEN** Terraform plans a destroy + create cycle because `product` is `ForceNew`, so Update is not invoked with a product change.
+- **WHEN** `DescribeRuleGroups` is invoked from Read or from the service helper
+- **THEN** the call SHALL be wrapped in `resource.Retry(tccommon.ReadRetryTimeout, ...)` and use `tccommon.RetryError` for retryable errors
 
-### Requirement: Delete MUST call DeleteRuleGroup with a single-element GroupIds list
+#### Scenario: Mutating calls use WriteRetryTimeout
 
-Delete SHALL call `DeleteRuleGroup` with `GroupIds = []*string{&d.Id()}` and treat a non-error response as completion, without additional polling.
+- **WHEN** `CreateRuleGroup`, `ModifyRuleGroup` or `DeleteRuleGroup` is invoked
+- **THEN** the call SHALL be wrapped in `resource.Retry(tccommon.WriteRetryTimeout, ...)` and use `tccommon.RetryError` for retryable errors
 
-#### Scenario: Single group deletion
+#### Scenario: Nil SDK response is non-retryable
 
-- **GIVEN** `d.Id() == "fwmrg-wsrrhuvrib"`
-- **WHEN** Delete runs
-- **THEN** the request contains exactly one element `"fwmrg-wsrrhuvrib"` in `GroupIds` and no error is returned on success.
+- **WHEN** any SDK call returns `result == nil` or `result.Response == nil`
+- **THEN** the call SHALL return `resource.NonRetryableError` with a message naming `tencentcloud_fwm_rule_group`
 
-### Requirement: Every cloud API call MUST be retry-wrapped with empty-response protection
+#### Scenario: No nested retries
 
-All Create / Update / Delete calls SHALL be wrapped in `resource.Retry(tccommon.WriteRetryTimeout, ...)` returning `tccommon.RetryError(e)` on error, and the Read helper SHALL be wrapped in `resource.Retry(tccommon.ReadRetryTimeout, ...)`. Nil `result` or nil `Response` SHALL produce `resource.NonRetryableError`. No polling / `Timeouts` block is required because all four APIs are synchronous.
+- **WHEN** a resource CRUD function calls a service helper that already retries
+- **THEN** the resource SHALL NOT add a second `resource.Retry` around that helper call
 
-#### Scenario: Transient error is retried
+### Requirement: Create waits for read-after-create visibility
 
-- **WHEN** the SDK returns a retryable error from `CreateRuleGroup`, `ModifyRuleGroup` or `DeleteRuleGroup`
-- **THEN** the call is retried within `tccommon.WriteRetryTimeout` rather than failing immediately.
+`CreateRuleGroup` is synchronous but list queries are eventually consistent, so Create SHALL confirm visibility before delegating to Read.
 
-#### Scenario: Nil response is not retried forever
+#### Scenario: Visibility confirmed before read
 
-- **WHEN** the SDK returns `nil` response or `nil` `Response` body
-- **THEN** the callback returns `resource.NonRetryableError` so the retry loop stops.
+- **WHEN** `CreateRuleGroup` returns a `GroupId` and `d.SetId` has been called
+- **THEN** the provider SHALL poll `DescribeRuleGroups` (via the service helper) inside `resource.Retry(tccommon.ReadRetryTimeout, ...)` returning `resource.RetryableError` while the group is not yet visible, and SHALL only then invoke Read
 
-### Requirement: Resource documentation and unit tests MUST be provided
+#### Scenario: SetId happens before any polling
 
-The change SHALL add `tencentcloud/services/fwm/resource_tc_fwm_rule_group.md` with a one-line description mentioning FWM, an `Example Usage` HCL block and an `Import` section, without `Argument Reference` / `Attribute Reference` (generated by `make doc`). It SHALL add `tencentcloud/services/fwm/resource_tc_fwm_rule_group_test.go` using `gomonkey` mocks (not the terraform acceptance test harness) covering Create, Read (including product normalization and not-found), Update and Delete.
+- **WHEN** the create response carries a valid `GroupId`
+- **THEN** `d.SetId(<group_id>)` SHALL be executed before the visibility poll, so a failed poll still leaves an id in state that `terraform destroy` can clean up
 
-#### Scenario: Example file drives generated docs
-
-- **WHEN** `make doc` runs in the finalize phase
-- **THEN** `website/docs/r/fwm_rule_group.html.markdown` is generated from `resource_tc_fwm_rule_group.md` without manual edits to `website/`.
-
-#### Scenario: Unit tests mock the cloud API
-
-- **WHEN** the unit test suite for `tencentcloud_fwm_rule_group` runs
-- **THEN** it patches `UseFwmV20250611Client` and the four `*WithContext` SDK methods with `gomonkey`, builds `schema.ResourceData` via `schema.TestResourceDataRaw`, and asserts request fields and resulting state without contacting the cloud.

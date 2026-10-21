@@ -267,8 +267,8 @@ type TencentCloudClient struct {
 	billingv20180709Conn        *billing.Client
 	bdrcv20260330Conn           *bdrcv20260330.Client
 	igtmv20231024Conn           *igtmv20231024.Client
+	fwmv20250611Conn            *fwmv20250611.Client
 	ga2v20250115Conn            *ga2v20250115.Client
-	fwmV20250611Conn            *fwmv20250611.Client
 	gsv20191118Conn             *gsv20191118.Client
 	keewidbv20220308Conn        *keewidbv20220308.Client
 	vdbv20230616Conn            *vdbv20230616.Client
@@ -2260,14 +2260,14 @@ func (me *TencentCloudClient) UseIgtmV20231024Client() *igtmv20231024.Client {
 
 // UseFwmV20250611Client return FWM client for service
 func (me *TencentCloudClient) UseFwmV20250611Client() *fwmv20250611.Client {
-	if me.fwmV20250611Conn != nil {
-		return me.fwmV20250611Conn
+	if me.fwmv20250611Conn != nil {
+		return me.fwmv20250611Conn
 	}
 	cpf := me.NewClientProfile(300)
-	me.fwmV20250611Conn, _ = fwmv20250611.NewClient(me.Credential, me.Region, cpf)
-	me.fwmV20250611Conn.WithHttpTransport(&LogRoundTripper{})
+	me.fwmv20250611Conn, _ = fwmv20250611.NewClient(me.Credential, me.Region, cpf)
+	me.fwmv20250611Conn.WithHttpTransport(&LogRoundTripper{})
 
-	return me.fwmV20250611Conn
+	return me.fwmv20250611Conn
 }
 
 // UseGa2V20250115Client return GA2 (Global Accelerator 2) client for service

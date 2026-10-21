@@ -1,4 +1,4 @@
-Provides a resource to create a FWM rule group.
+Provides a resource to create a FWM rule group
 
 Example Usage
 
@@ -11,7 +11,7 @@ resource "tencentcloud_fwm_rule_group" "example" {
 
 Import
 
-FWM rule group can be imported using the groupId, e.g.
+FWM rule group can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_fwm_rule_group.example fwmrg-wsrrhuvrib
