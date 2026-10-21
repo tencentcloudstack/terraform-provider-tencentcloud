@@ -120,6 +120,7 @@ func resourceTencentCloudRedisBackupEncryptRead(d *schema.ResourceData, meta int
 		d.SetId("")
 		return nil
 	}
+	_ = d.Set("instance_id", instanceId)
 
 	if response.Response != nil {
 		if response.Response.BackupEncrypt != nil {
