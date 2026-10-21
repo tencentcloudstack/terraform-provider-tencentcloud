@@ -77,6 +77,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/emr"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/es"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fl"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fwm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ga2"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gaap"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gs"
@@ -1613,6 +1614,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_gwlb_target_group":                                                        gwlb.ResourceTencentCloudGwlbTargetGroup(),
 			"tencentcloud_gwlb_instance_associate_target_group":                                     gwlb.ResourceTencentCloudGwlbInstanceAssociateTargetGroup(),
 			"tencentcloud_gwlb_target_group_register_instances":                                     gwlb.ResourceTencentCloudGwlbTargetGroupRegisterInstances(),
+			"tencentcloud_fwm_security_group_rule":                                                  fwm.ResourceTencentCloudFwmSecurityGroupRule(),
 			"tencentcloud_container_cluster":                                                        tke.ResourceTencentCloudContainerCluster(),
 			"tencentcloud_container_cluster_instance":                                               tke.ResourceTencentCloudContainerClusterInstance(),
 			"tencentcloud_kubernetes_cluster":                                                       tke.ResourceTencentCloudKubernetesCluster(),
