@@ -1724,6 +1724,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_redis_log_delivery":                                                       crs.ResourceTencentCloudRedisLogDelivery(),
 			"tencentcloud_redis_audit_log":                                                          crs.ResourceTencentCloudRedisAuditLog(),
 			"tencentcloud_redis_instance_password_policy_config":                                    crs.ResourceTencentCloudRedisInstancePasswordPolicyConfig(),
+			"tencentcloud_redis_backup_encrypt":                                                     crs.ResourceTencentCloudRedisBackupEncrypt(),
 			"tencentcloud_as_load_balancer":                                                         as.ResourceTencentCloudAsLoadBalancer(),
 			"tencentcloud_as_scaling_config":                                                        as.ResourceTencentCloudAsScalingConfig(),
 			"tencentcloud_as_scaling_group":                                                         as.ResourceTencentCloudAsScalingGroup(),
