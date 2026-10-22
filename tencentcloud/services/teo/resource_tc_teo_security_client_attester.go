@@ -53,6 +53,16 @@ func ResourceTencentCloudTeoSecurityClientAttester() *schema.Resource {
 							Optional:    true,
 							Description: "Authentication validity duration. Default `60s`. Supported units: `s` (60-43200), `m` (1-720), `h` (1-12). e.g. `300s`, `5m`, `1h`.",
 						},
+						"usage_limit": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Whether to enable authentication result usage limit. Valid values: `on`, `off`. Default `off`.",
+						},
+						"max_usage_count": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Maximum usage count of authentication result. Required when `usage_limit` is `on`. Range [1, 100000].",
+						},
 						"tc_rce_option": {
 							Type:        schema.TypeList,
 							Optional:    true,
@@ -105,6 +115,11 @@ func ResourceTencentCloudTeoSecurityClientAttester() *schema.Resource {
 										Type:        schema.TypeString,
 										Required:    true,
 										Description: "EdgeOne CAPTCHA mode. Valid values: `Invisible`, `Adaptive`.",
+									},
+									"mobile_captcha_mode": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Mobile native app human-machine verification interaction mode. Valid values: `Invisible`, `Visible`. Default `Invisible`.",
 									},
 								},
 							},
@@ -231,6 +246,14 @@ func resourceTencentCloudTeoSecurityClientAttesterRead(d *schema.ResourceData, m
 		attesterMap["attester_duration"] = *respData.AttesterDuration
 	}
 
+	if respData.UsageLimit != nil {
+		attesterMap["usage_limit"] = *respData.UsageLimit
+	}
+
+	if respData.MaxUsageCount != nil {
+		attesterMap["max_usage_count"] = int(*respData.MaxUsageCount)
+	}
+
 	if respData.TCRCEOption != nil {
 		opt := map[string]interface{}{}
 		if respData.TCRCEOption.Channel != nil {
@@ -257,6 +280,9 @@ func resourceTencentCloudTeoSecurityClientAttesterRead(d *schema.ResourceData, m
 		opt := map[string]interface{}{}
 		if respData.TCEOCaptchaOption.CaptchaMode != nil {
 			opt["captcha_mode"] = *respData.TCEOCaptchaOption.CaptchaMode
+		}
+		if respData.TCEOCaptchaOption.MobileCaptchaMode != nil {
+			opt["mobile_captcha_mode"] = *respData.TCEOCaptchaOption.MobileCaptchaMode
 		}
 		attesterMap["tc_eo_captcha_option"] = []interface{}{opt}
 	}
@@ -364,6 +390,14 @@ func buildClientAttesterFromMap(m map[string]interface{}, id string) *teo.Client
 		attester.AttesterDuration = helper.String(val)
 	}
 
+	if val, ok := m["usage_limit"].(string); ok && val != "" {
+		attester.UsageLimit = helper.String(val)
+	}
+
+	if val, ok := m["max_usage_count"].(int); ok && val != 0 {
+		attester.MaxUsageCount = helper.IntInt64(val)
+	}
+
 	if val, ok := m["tc_rce_option"].([]interface{}); ok && len(val) > 0 {
 		opt := val[0].(map[string]interface{})
 		rce := &teo.TCRCEOption{}
@@ -393,6 +427,9 @@ func buildClientAttesterFromMap(m map[string]interface{}, id string) *teo.Client
 		eoOpt := &teo.TCEOCaptchaOption{}
 		if v, ok := opt["captcha_mode"].(string); ok && v != "" {
 			eoOpt.CaptchaMode = helper.String(v)
+		}
+		if v, ok := opt["mobile_captcha_mode"].(string); ok && v != "" {
+			eoOpt.MobileCaptchaMode = helper.String(v)
 		}
 		attester.TCEOCaptchaOption = eoOpt
 	}
