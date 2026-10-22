@@ -77,6 +77,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/emr"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/es"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fl"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fwm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ga2"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gaap"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gs"
@@ -2675,6 +2676,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfw_ips_mode_switch":                                                      cfw.ResourceTencentCloudCfwIpsModeSwitch(),
 			"tencentcloud_cfw_cluster_nat_fw_switch":                                                cfw.ResourceTencentCloudCfwClusterNatFwSwitch(),
 			"tencentcloud_cfw_cluster_fw_bypass_config":                                             cfw.ResourceTencentCloudCfwClusterFwBypassConfig(),
+			"tencentcloud_fwm_cfw_share_role":                                                       fwm.ResourceTencentCloudFwmCfwShareRole(),
 			"tencentcloud_config_compliance_pack":                                                   config.ResourceTencentCloudConfigCompliancePack(),
 			"tencentcloud_config_remediation":                                                       config.ResourceTencentCloudConfigRemediation(),
 			"tencentcloud_config_start_config_rule_evaluation_operation":                            config.ResourceTencentCloudConfigStartConfigRuleEvaluationOperation(),
