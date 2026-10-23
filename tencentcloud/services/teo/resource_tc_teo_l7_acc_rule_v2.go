@@ -55,6 +55,55 @@ func ResourceTencentCloudTeoL7AccRuleV2() *schema.Resource {
 					Schema: TencentTeoL7RuleBranchBasicInfo(1),
 				},
 			},
+			"custom_variables": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "List of rule-level custom variables.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Variable name. needs to use the user.rule. prefix.",
+						},
+						"initial_value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Variable initial value. supports constant strings, variables, and formulas. length<=255.",
+						},
+						"description": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Variable description. length<=60.",
+						},
+					},
+				},
+			},
+			"custom_variable_operations": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Rule-level custom variable operations. this list currently supports filling in only one rule; multiple entries are invalid.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"branches": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Sub-rule branch. this list currently supports filling in only one rule; multiple entries are invalid.",
+							Elem: &schema.Resource{
+								Schema: TencentTeoCustomVariableOperationBranchBasicInfo(),
+							},
+						},
+						"description": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Rule comments.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+					},
+				},
+			},
 			"rule_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -99,6 +148,14 @@ func ResourceTencentCloudTeoL7AccRuleV2Create(d *schema.ResourceData, meta inter
 
 	if v, ok := d.GetOk("branches"); ok {
 		rule.Branches = resourceTencentCloudTeoL7AccRuleGetBranchs(map[string]interface{}{"branches": v})
+	}
+
+	if v, ok := d.GetOk("custom_variables"); ok {
+		rule.CustomVariables = resourceTencentCloudTeoL7AccRuleGetCustomVariables(v)
+	}
+
+	if v, ok := d.GetOk("custom_variable_operations"); ok {
+		rule.CustomVariableOperations = resourceTencentCloudTeoL7AccRuleGetCustomVariableOperations(v)
 	}
 
 	request.Rules = []*teov20220901.RuleEngineItem{rule}
@@ -160,6 +217,12 @@ func ResourceTencentCloudTeoL7AccRuleV2Read(d *schema.ResourceData, meta interfa
 		_ = d.Set("description", rule.Description)
 		_ = d.Set("rule_priority", rule.RulePriority)
 		_ = d.Set("branches", resourceTencentCloudTeoL7AccRuleSetBranchs(rule.Branches))
+		if rule.CustomVariables != nil {
+			_ = d.Set("custom_variables", resourceTencentCloudTeoL7AccRuleSetCustomVariables(rule.CustomVariables))
+		}
+		if rule.CustomVariableOperations != nil {
+			_ = d.Set("custom_variable_operations", resourceTencentCloudTeoL7AccRuleSetCustomVariableOperations(rule.CustomVariableOperations))
+		}
 	}
 
 	return nil
@@ -183,7 +246,7 @@ func ResourceTencentCloudTeoL7AccRuleV2Update(d *schema.ResourceData, meta inter
 	rule := &teov20220901.RuleEngineItem{}
 	rule.RuleId = &ruleId
 
-	if d.HasChange("status") || d.HasChange("rule_name") || d.HasChange("description") || d.HasChange("branches") {
+	if d.HasChange("status") || d.HasChange("rule_name") || d.HasChange("description") || d.HasChange("branches") || d.HasChange("custom_variables") || d.HasChange("custom_variable_operations") {
 		if v, ok := d.GetOk("status"); ok {
 			rule.Status = helper.String(v.(string))
 		}
@@ -199,6 +262,12 @@ func ResourceTencentCloudTeoL7AccRuleV2Update(d *schema.ResourceData, meta inter
 		}
 		if v, ok := d.GetOk("branches"); ok {
 			rule.Branches = resourceTencentCloudTeoL7AccRuleGetBranchs(map[string]interface{}{"branches": v})
+		}
+		if v, ok := d.GetOk("custom_variables"); ok {
+			rule.CustomVariables = resourceTencentCloudTeoL7AccRuleGetCustomVariables(v)
+		}
+		if v, ok := d.GetOk("custom_variable_operations"); ok {
+			rule.CustomVariableOperations = resourceTencentCloudTeoL7AccRuleGetCustomVariableOperations(v)
 		}
 
 		request.Rule = rule
