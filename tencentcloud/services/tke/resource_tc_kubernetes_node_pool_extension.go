@@ -23,10 +23,7 @@ import (
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 )
 
-var importFlag = false
-
 func nodePoolCustomResourceImporter(ctx context.Context, d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
-	importFlag = true
 	err := resourceTencentCloudKubernetesNodePoolRead(d, m)
 	if err != nil {
 		return nil, fmt.Errorf("failed to import resource")
@@ -194,7 +191,7 @@ func resourceTencentCloudKubernetesNodePoolReadPostHandleResponse1(ctx context.C
 	AutoscalingAddedTotal := *nodePool.NodeCountSummary.AutoscalingAdded.Total
 	ManuallyAddedTotal := *nodePool.NodeCountSummary.ManuallyAdded.Total
 	_ = d.Set("node_count", AutoscalingAddedTotal+ManuallyAddedTotal)
-	if _, ok := d.GetOkExists("unschedulable"); !ok && importFlag {
+	if nodePool.Unschedulable != nil {
 		_ = d.Set("unschedulable", nodePool.Unschedulable)
 	}
 	if nodePool.AutoscalingGroupStatus != nil {
@@ -389,17 +386,6 @@ func resourceTencentCloudKubernetesNodePoolReadPostHandleResponse1(ctx context.C
 		nodeConfig["pre_start_user_script"] = helper.PString(nodePool.PreStartUserScript)
 	}
 
-	if helper.PInt64(nodePool.Unschedulable) != 0 {
-		nodeConfig["is_schedule"] = false
-	} else {
-		nodeConfig["is_schedule"] = true
-	}
-
-	if helper.PString(nodePool.DockerGraphPath) != "" {
-		nodeConfig["docker_graph_path"] = helper.PString(nodePool.DockerGraphPath)
-	} else {
-		nodeConfig["docker_graph_path"] = "/var/lib/docker"
-	}
 	if nodePool.ExtraArgs != nil && len(nodePool.ExtraArgs.Kubelet) > 0 {
 		extraArgs := make([]string, 0)
 		for i := range nodePool.ExtraArgs.Kubelet {
