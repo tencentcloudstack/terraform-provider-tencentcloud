@@ -464,73 +464,6 @@ func resourceTencentCloudKubernetesNodePoolReadPostHandleResponse1(ctx context.C
 		}
 	}
 
-	// if importFlag {
-	// 	if nodePool.ExtraArgs != nil && len(nodePool.ExtraArgs.Kubelet) > 0 {
-	// 		extraArgs := make([]string, 0)
-	// 		for i := range nodePool.ExtraArgs.Kubelet {
-	// 			extraArgs = append(extraArgs, helper.PString(nodePool.ExtraArgs.Kubelet[i]))
-	// 		}
-	// 		nodeConfig["extra_args"] = extraArgs
-	// 	}
-
-	// 	if helper.PString(nodePool.UserScript) != "" {
-	// 		nodeConfig["user_data"] = helper.PString(nodePool.UserScript)
-	// 	}
-
-	// 	if helper.PString(nodePool.PreStartUserScript) != "" {
-	// 		nodeConfig["pre_start_user_script"] = helper.PString(nodePool.PreStartUserScript)
-	// 	}
-
-	// 	if nodePool.GPUArgs != nil {
-	// 		setting := nodePool.GPUArgs
-	// 		var driverEmptyFlag, cudaEmptyFlag, cudnnEmptyFlag, customDriverEmptyFlag bool
-	// 		gpuArgs := map[string]interface{}{
-	// 			"mig_enable": helper.PBool(setting.MIGEnable),
-	// 		}
-
-	// 		if !isDriverEmpty(setting.Driver) {
-	// 			driverEmptyFlag = true
-	// 			driver := map[string]interface{}{
-	// 				"version": helper.PString(setting.Driver.Version),
-	// 				"name":    helper.PString(setting.Driver.Name),
-	// 			}
-	// 			gpuArgs["driver"] = driver
-	// 		}
-
-	// 		if !isCUDAEmpty(setting.CUDA) {
-	// 			cudaEmptyFlag = true
-	// 			cuda := map[string]interface{}{
-	// 				"version": helper.PString(setting.CUDA.Version),
-	// 				"name":    helper.PString(setting.CUDA.Name),
-	// 			}
-	// 			gpuArgs["cuda"] = cuda
-	// 		}
-
-	// 		if !isCUDNNEmpty(setting.CUDNN) {
-	// 			cudnnEmptyFlag = true
-	// 			cudnn := map[string]interface{}{
-	// 				"version":  helper.PString(setting.CUDNN.Version),
-	// 				"name":     helper.PString(setting.CUDNN.Name),
-	// 				"doc_name": helper.PString(setting.CUDNN.DocName),
-	// 				"dev_name": helper.PString(setting.CUDNN.DevName),
-	// 			}
-	// 			gpuArgs["cudnn"] = cudnn
-	// 		}
-
-	// 		if !isCustomDriverEmpty(setting.CustomDriver) {
-	// 			customDriverEmptyFlag = true
-	// 			customDriver := map[string]interface{}{
-	// 				"address": helper.PString(setting.CustomDriver.Address),
-	// 			}
-	// 			gpuArgs["custom_driver"] = customDriver
-	// 		}
-	// 		if driverEmptyFlag || cudaEmptyFlag || cudnnEmptyFlag || customDriverEmptyFlag {
-	// 			nodeConfig["gpu_args"] = []map[string]interface{}{gpuArgs}
-	// 		}
-	// 	}
-	// 	importFlag = false
-	// }
-
 	nodeConfigs = append(nodeConfigs, nodeConfig)
 	_ = d.Set("node_config", nodeConfigs)
 
@@ -574,7 +507,6 @@ func resourceTencentCloudKubernetesNodePoolReadPostHandleResponse1(ctx context.C
 		if asg.MultiZoneSubnetPolicy != nil {
 			_ = d.Set("multi_zone_subnet_policy", asg.MultiZoneSubnetPolicy)
 		}
-
 	}
 	if v, ok := d.GetOkExists("delete_keep_instance"); ok {
 		_ = d.Set("delete_keep_instance", v.(bool))
