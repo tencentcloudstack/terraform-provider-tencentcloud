@@ -2567,6 +2567,10 @@ tencentcloud_cfw_ips_mode_switch
 tencentcloud_cfw_cluster_nat_fw_switch
 tencentcloud_cfw_cluster_fw_bypass_config
 
+Cloud Firewall(FWM)
+Resource
+tencentcloud_fwm_cfw_share_role
+
 Bastion Host(BH)
 Data Source
 tencentcloud_bh_account_groups
