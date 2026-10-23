@@ -131,6 +131,7 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 			"multi_zone_subnet_policy": {
 				Type:         schema.TypeString,
 				Optional:     true,
+				Computed:     true,
 				Description:  "Multi-availability zone/subnet policy. Valid values: PRIORITY and EQUALITY. Default value: PRIORITY.",
 				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{svcas.MultiZoneSubnetPolicyPriority, svcas.MultiZoneSubnetPolicyEquality}),
 			},
@@ -138,6 +139,7 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 			"node_config": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Node config.",
 				Elem: &schema.Resource{
