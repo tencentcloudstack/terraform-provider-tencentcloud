@@ -155,6 +155,87 @@ resource "tencentcloud_teo_l7_acc_rule_v2" "example_failover" {
 }
 ```
 
+Using custom_variables and custom_variable_operations
+
+```hcl
+resource "tencentcloud_teo_l7_acc_rule_v2" "example_custom_vars" {
+  zone_id     = "zone-3fkff38fyw8s"
+  description  = ["description"]
+  rule_name   = "Web Acceleration Custom Vars"
+  status       = "enable"
+
+  custom_variables {
+    name          = "user.rule.var1"
+    initial_value = "default_value"
+    description   = "custom variable 1"
+  }
+
+  custom_variable_operations {
+    branches {
+      condition = "$${http.request.host} in ['www.example.com']"
+      actions {
+        name = "Set"
+        set_parameters {
+          name  = "user.rule.var1"
+          value = "$${http.request.uri.path}"
+        }
+      }
+      sub_rules {
+        branches {
+          condition = "lower($${http.request.file_extension}) in ['html']"
+          actions {
+            name = "Set"
+            set_parameters {
+              name  = "user.rule.var1"
+              value = "static"
+            }
+          }
+        }
+        description = ["sub-rule-desc"]
+      }
+    }
+    description = ["main-desc"]
+  }
+
+  branches {
+    condition = "$${http.request.host} in ['www.example.com']"
+  }
+}
+```
+
+Using CustomAction with custom_action_parameters
+
+```hcl
+resource "tencentcloud_teo_l7_acc_rule_v2" "example_custom_action" {
+  zone_id     = "zone-3fkff38fyw8s"
+  description  = ["description"]
+  rule_name   = "Web Acceleration Custom Action"
+  status       = "enable"
+
+  branches {
+    condition = "$${http.request.host} in ['www.example.com']"
+    actions {
+      name = "CustomAction"
+      custom_action_parameters {
+        custom_actions {
+          action_id = "action-001"
+          parameters {
+            name        = "param1"
+            value_type  = "String"
+            string_value = "value1"
+          }
+          parameters {
+            name           = "param2"
+            value_type     = "Integer"
+            integer_value  = 42
+          }
+        }
+      }
+    }
+  }
+}
+```
+
 Import
 
 TEO l7 acc rule v2 can be imported using the {zone_id}#{rule_id}, e.g.
