@@ -59,6 +59,46 @@ resource "tencentcloud_teo_realtime_log_delivery" "teo_realtime_log_delivery" {
 }
 ```
 
+### Example Usage - aws_s3 delivery with custom_expression_fields and log_format.record_template
+
+```hcl
+resource "tencentcloud_teo_realtime_log_delivery" "aws_s3_delivery" {
+  area            = "overseas"
+  delivery_status = "enabled"
+  entity_list = [
+    "example.com",
+  ]
+  fields = [
+    "ClientIP",
+    "RequestTime",
+  ]
+  log_type  = "domain"
+  sample    = 1000
+  task_name = "test-aws-s3"
+  task_type = "aws_s3"
+  zone_id   = "zone-2qtuhspy7cr6"
+
+  custom_expression_fields {
+    name       = "expr_field_1"
+    expression = "$request_id"
+    enabled    = true
+  }
+
+  log_format {
+    format_type     = "template"
+    record_template = "$time $host $request_uri"
+  }
+
+  aws_s3 {
+    endpoint      = "s3.us-west-2.amazonaws.com"
+    bucket_name   = "my-bucket"
+    path          = "eo-logs/l7-access-logs"
+    role_arn      = "arn:aws:iam::123456789012:role/eo-logs"
+    compress_type = "gzip"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -69,15 +109,25 @@ The following arguments are supported:
 * `log_type` - (Required, String) Data delivery type, the values are: `domain`: site acceleration log; `application`: four-layer proxy log; `web-rateLiming`: rate limit and CC attack protection log; `web-attack`: managed rule log; `web-rule`: custom rule log; `web-bot`: Bot management log.
 * `sample` - (Required, Int) The sampling ratio is in thousandths, with a value range of 1-1000. For example, filling in 605 means the sampling ratio is 60.5%. Leaving it blank means the sampling ratio is 100%.
 * `task_name` - (Required, String) The name of the real-time log delivery task. The format is a combination of numbers, English, -, and _. The maximum length is 200 characters.
-* `task_type` - (Required, String) The real-time log delivery task type. The possible values are: `cls`: push to Tencent Cloud CLS; `custom_endpoint`: push to a custom HTTP(S) address; `s3`: push to an AWS S3 compatible storage bucket address; `log_analysis`: push to EdgeOne log analysis.
+* `task_type` - (Required, String) The real-time log delivery task type. The possible values are: `cls`: push to Tencent Cloud CLS; `custom_endpoint`: push to a custom HTTP(S) address; `s3`: push to an AWS S3 compatible storage bucket address; `aws_s3`: push to an AWS native S3 bucket address (using IAM role authorization); `log_analysis`: push to EdgeOne log analysis.
 * `zone_id` - (Required, String, ForceNew) ID of the site.
+* `aws_s3` - (Optional, List) Configuration information of AWS native S3 storage bucket. This parameter is required when TaskType is aws_s3. It uses IAM role authorization to avoid long-term credentials.
 * `cls` - (Optional, List) CLS configuration information. This parameter is required when TaskType is cls.
 * `custom_endpoint` - (Optional, List) Customize the configuration information of the HTTP service. This parameter is required when TaskType is set to custom_endpoint.
+* `custom_expression_fields` - (Optional, List) List of custom expression fields delivered. It supports personalized real-time log content delivery through custom log field names and value expressions. Note: if a field in CustomExpressionFields has the same name as one in Fields or CustomFields, the value in CustomExpressionFields takes precedence.
 * `custom_fields` - (Optional, List) The list of custom fields delivered supports extracting specified field values from HTTP request headers, response headers, and cookies. Custom field names cannot be repeated and cannot exceed 200 fields.
 * `delivery_conditions` - (Optional, List) The filter condition for log delivery. If it is not filled, all logs will be delivered.
 * `delivery_status` - (Optional, String) The status of the real-time log delivery task. The values are: `enabled`: enabled; `disabled`: disabled. Leave it blank to keep the original configuration. Not required when creating.
 * `log_format` - (Optional, List) The output format of log delivery. If it is not filled, it means the default format. The default format logic is as follows: when TaskType is `custom_endpoint`, the default format is an array of multiple JSON objects, each JSON object is a log; when TaskType is `s3`, the default format is JSON Lines; in particular, when TaskType is `cls`, the value of LogFormat.FormatType can only be json, and other parameters in LogFormat will be ignored. It is recommended not to pass LogFormat.
 * `s3` - (Optional, List) Configuration information of AWS S3 compatible storage bucket. This parameter is required when TaskType is s3.
+
+The `aws_s3` object supports the following:
+
+* `bucket_name` - (Required, String) AWS S3 bucket name. The length must be 3-63 characters, only lowercase letters, numbers, periods (.) and hyphens (-) are allowed, and must start and end with a letter or number.
+* `endpoint` - (Required, String) The service endpoint domain of the AWS S3 bucket. Refer to AWS service endpoints, for example: `s3.us-west-2.amazonaws.com`.
+* `path` - (Required, String) The storage directory path of the log file in the AWS S3 bucket, separated by / to create multi-level directories. Example: `eo-logs/l7-access-logs`.
+* `role_arn` - (Required, String) The ARN of the IAM role that authorizes EdgeOne to access the AWS S3 bucket. Example: `arn:aws:iam::123456789012:role/eo-logs`.
+* `compress_type` - (Optional, String) Data compression type, the values are: `gzip`: gzip compression. If it is not filled in, compression is not enabled.
 
 The `cls` object supports the following:
 
@@ -99,6 +149,12 @@ The `custom_endpoint` object supports the following:
 * `compress_type` - (Optional, String) Data compression type, the possible values are: `gzip`: use gzip compression. If it is not filled in, compression is not enabled.
 * `headers` - (Optional, List) The custom request header carried when delivering logs. If the header name you fill in is the default header carried by EdgeOne log push, such as Content-Type, then the header value you fill in will overwrite the default value. The header value references a single variable ${batchSize} to obtain the number of logs included in each POST request.
 * `protocol` - (Optional, String) When sending logs via POST request, the application layer protocol type used can be: `http`: HTTP protocol; `https`: HTTPS protocol. If not filled in, the protocol type will be parsed according to the filled in URL address.
+
+The `custom_expression_fields` object supports the following:
+
+* `expression` - (Required, String) The value expression of the custom log field, with a maximum length of 4KB.
+* `name` - (Required, String) Custom log field name. 1-100 characters are allowed, only letters, numbers, and _, and must start with a letter. The name cannot be repeated.
+* `enabled` - (Optional, Bool) Whether to deliver this field. If left blank, this field will not be delivered.
 
 The `custom_fields` object supports the following:
 
@@ -125,6 +181,7 @@ The `log_format` object supports the following:
 `: newline character; `	`: tab character; `,`: comma.
 * `record_prefix` - (Optional, String) A string to prepend to each log record.
 * `record_suffix` - (Optional, String) A string to append to each log record.
+* `record_template` - (Optional, String) Log output template, the output template of a single log, with a length limit of 4KB. Only takes effect when FormatType is `template`.
 
 The `s3` object supports the following:
 
