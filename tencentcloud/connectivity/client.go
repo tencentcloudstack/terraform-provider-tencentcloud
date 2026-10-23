@@ -71,6 +71,7 @@ import (
 	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
+	fwm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/fwm/v20250611"
 	ga2v20250115 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ga2/v20250115"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	gsv20191118 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gs/v20191118"
@@ -228,6 +229,7 @@ type TencentCloudClient struct {
 	wedatav20250806Conn   *wedatav20250806.Client
 	wafConn               *waf.Client
 	cfwConn               *cfw.Client
+	fwmConn               *fwm.Client
 	oceanusConn           *oceanus.Client
 	dasbConn              *dasb.Client
 	trocketConn           *trocket.Client
@@ -1784,6 +1786,24 @@ func (me *TencentCloudClient) UseCfwClient(iacExtInfo ...IacExtInfo) *cfw.Client
 	me.cfwConn.WithHttpTransport(&logRoundTripper)
 
 	return me.cfwConn
+}
+
+func (me *TencentCloudClient) UseFwmClient(iacExtInfo ...IacExtInfo) *fwm.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
+	if me.fwmConn != nil {
+		me.fwmConn.WithHttpTransport(&logRoundTripper)
+		return me.fwmConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.fwmConn, _ = fwm.NewClient(me.Credential, me.Region, cpf)
+	me.fwmConn.WithHttpTransport(&logRoundTripper)
+
+	return me.fwmConn
 }
 
 func (me *TencentCloudClient) UseOceanusClient() *oceanus.Client {

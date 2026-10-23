@@ -77,6 +77,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/emr"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/es"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fl"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fwm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ga2"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gaap"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gs"
@@ -2782,6 +2783,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_igtm_address_pool":                                                        igtm.ResourceTencentCloudIgtmAddressPool(),
 			"tencentcloud_igtm_monitor":                                                             igtm.ResourceTencentCloudIgtmMonitor(),
 			"tencentcloud_igtm_strategy":                                                            igtm.ResourceTencentCloudIgtmStrategy(),
+			"tencentcloud_fwm_member_group":                                                         fwm.ResourceTencentCloudFwmMemberGroup(),
 			"tencentcloud_igtm_package_instance":                                                    igtm.ResourceTencentCloudIgtmPackageInstance(),
 			"tencentcloud_igtm_package_task":                                                        igtm.ResourceTencentCloudIgtmPackageTask(),
 			"tencentcloud_dbdc_db_custom_cluster":                                                   dbdc.ResourceTencentCloudDbdcDbCustomCluster(),
