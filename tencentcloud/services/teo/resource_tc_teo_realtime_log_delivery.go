@@ -41,7 +41,7 @@ func ResourceTencentCloudTeoRealtimeLogDelivery() *schema.Resource {
 			"task_type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "The real-time log delivery task type. The possible values are: `cls`: push to Tencent Cloud CLS; `custom_endpoint`: push to a custom HTTP(S) address; `s3`: push to an AWS S3 compatible storage bucket address; `log_analysis`: push to EdgeOne log analysis.",
+				Description: "The real-time log delivery task type. The possible values are: `cls`: push to Tencent Cloud CLS; `custom_endpoint`: push to a custom HTTP(S) address; `s3`: push to an AWS S3 compatible storage bucket address; `aws_s3`: push to an AWS native S3 bucket address (using IAM role authorization); `log_analysis`: push to EdgeOne log analysis.",
 			},
 
 			"entity_list": {
@@ -90,6 +90,32 @@ func ResourceTencentCloudTeoRealtimeLogDelivery() *schema.Resource {
 							Type:        schema.TypeString,
 							Required:    true,
 							Description: "The name of the parameter whose value needs to be extracted, for example: Accept-Language.",
+						},
+						"enabled": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Whether to deliver this field. If left blank, this field will not be delivered.",
+						},
+					},
+				},
+			},
+
+			"custom_expression_fields": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				Description: "List of custom expression fields delivered. It supports personalized real-time log content delivery through custom log field names and value expressions. Note: if a field in CustomExpressionFields has the same name as one in Fields or CustomFields, the value in CustomExpressionFields takes precedence.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Custom log field name. 1-100 characters are allowed, only letters, numbers, and _, and must start with a letter. The name cannot be repeated.",
+						},
+						"expression": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The value expression of the custom log field, with a maximum length of 4KB.",
 						},
 						"enabled": {
 							Type:        schema.TypeBool,
@@ -186,6 +212,11 @@ func ResourceTencentCloudTeoRealtimeLogDelivery() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "In a single log record, a string is inserted between fields as a separator. The possible values are: `\t`: tab character; `,`: comma; `;`: semicolon.",
+						},
+						"record_template": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Log output template, the output template of a single log, with a length limit of 4KB. Only takes effect when FormatType is `template`.",
 						},
 					},
 				},
@@ -317,6 +348,43 @@ func ResourceTencentCloudTeoRealtimeLogDelivery() *schema.Resource {
 				},
 			},
 
+			"aws_s3": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				MaxItems:    1,
+				Description: "Configuration information of AWS native S3 storage bucket. This parameter is required when TaskType is aws_s3. It uses IAM role authorization to avoid long-term credentials.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"endpoint": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The service endpoint domain of the AWS S3 bucket. Refer to AWS service endpoints, for example: `s3.us-west-2.amazonaws.com`.",
+						},
+						"bucket_name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "AWS S3 bucket name. The length must be 3-63 characters, only lowercase letters, numbers, periods (.) and hyphens (-) are allowed, and must start and end with a letter or number.",
+						},
+						"path": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The storage directory path of the log file in the AWS S3 bucket, separated by / to create multi-level directories. Example: `eo-logs/l7-access-logs`.",
+						},
+						"role_arn": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The ARN of the IAM role that authorizes EdgeOne to access the AWS S3 bucket. Example: `arn:aws:iam::123456789012:role/eo-logs`.",
+						},
+						"compress_type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Data compression type, the values are: `gzip`: gzip compression. If it is not filled in, compression is not enabled.",
+						},
+					},
+				},
+			},
+
 			"delivery_status": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -401,6 +469,23 @@ func resourceTencentCloudTeoRealtimeLogDeliveryCreate(d *schema.ResourceData, me
 		}
 	}
 
+	if v, ok := d.GetOk("custom_expression_fields"); ok {
+		for _, item := range v.([]interface{}) {
+			customExpressionFieldsMap := item.(map[string]interface{})
+			customExpressionField := teo.CustomExpressionField{}
+			if v, ok := customExpressionFieldsMap["name"]; ok {
+				customExpressionField.Name = helper.String(v.(string))
+			}
+			if v, ok := customExpressionFieldsMap["expression"]; ok {
+				customExpressionField.Expression = helper.String(v.(string))
+			}
+			if v, ok := customExpressionFieldsMap["enabled"]; ok {
+				customExpressionField.Enabled = helper.Bool(v.(bool))
+			}
+			request.CustomExpressionFields = append(request.CustomExpressionFields, &customExpressionField)
+		}
+	}
+
 	if v, ok := d.GetOk("delivery_conditions"); ok {
 		for _, item := range v.([]interface{}) {
 			deliveryConditionsMap := item.(map[string]interface{})
@@ -453,6 +538,9 @@ func resourceTencentCloudTeoRealtimeLogDeliveryCreate(d *schema.ResourceData, me
 		}
 		if v, ok := logFormatMap["field_delimiter"]; ok {
 			logFormat.FieldDelimiter = helper.String(v.(string))
+		}
+		if v, ok := logFormatMap["record_template"]; ok {
+			logFormat.RecordTemplate = helper.String(v.(string))
 		}
 		request.LogFormat = &logFormat
 	}
@@ -527,6 +615,26 @@ func resourceTencentCloudTeoRealtimeLogDeliveryCreate(d *schema.ResourceData, me
 		request.S3 = &s3
 	}
 
+	if awsS3Map, ok := helper.InterfacesHeadMap(d, "aws_s3"); ok {
+		awsS3 := teo.AWSS3{}
+		if v, ok := awsS3Map["endpoint"]; ok {
+			awsS3.Endpoint = helper.String(v.(string))
+		}
+		if v, ok := awsS3Map["bucket_name"]; ok {
+			awsS3.BucketName = helper.String(v.(string))
+		}
+		if v, ok := awsS3Map["path"]; ok {
+			awsS3.Path = helper.String(v.(string))
+		}
+		if v, ok := awsS3Map["role_arn"]; ok {
+			awsS3.RoleARN = helper.String(v.(string))
+		}
+		if v, ok := awsS3Map["compress_type"]; ok {
+			awsS3.CompressType = helper.String(v.(string))
+		}
+		request.AWSS3 = &awsS3
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().CreateRealtimeLogDeliveryTaskWithContext(ctx, request)
 		if e != nil {
@@ -542,13 +650,18 @@ func resourceTencentCloudTeoRealtimeLogDeliveryCreate(d *schema.ResourceData, me
 		return err
 	}
 
+	if response == nil || response.Response == nil || response.Response.TaskId == nil || *response.Response.TaskId == "" {
+		log.Printf("[CRITAL]%s create teo_realtime_log_delivery failed, logId=%s, d.Id()=%s, response is empty or TaskId is empty", logId, logId, d.Id())
+		return fmt.Errorf("create teo_realtime_log_delivery failed: TaskId is empty")
+	}
+
 	taskId = *response.Response.TaskId
+
+	d.SetId(strings.Join([]string{zoneId, taskId}, tccommon.FILED_SP))
 
 	if err := resourceTencentCloudTeoRealtimeLogDeliveryCreatePostHandleResponse0(ctx, response); err != nil {
 		return err
 	}
-
-	d.SetId(strings.Join([]string{zoneId, taskId}, tccommon.FILED_SP))
 
 	return resourceTencentCloudTeoRealtimeLogDeliveryRead(d, meta)
 }
@@ -578,6 +691,7 @@ func resourceTencentCloudTeoRealtimeLogDeliveryRead(d *schema.ResourceData, meta
 	}
 
 	if respData == nil {
+		log.Printf("[CRUD] teo_realtime_log_delivery id=%s", d.Id())
 		d.SetId("")
 		log.Printf("[WARN]%s resource `teo_realtime_log_delivery` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
@@ -640,6 +754,29 @@ func resourceTencentCloudTeoRealtimeLogDeliveryRead(d *schema.ResourceData, meta
 		}
 
 		_ = d.Set("custom_fields", customFieldsList)
+	}
+
+	customExpressionFieldsList := make([]map[string]interface{}, 0, len(respData.CustomExpressionFields))
+	if respData.CustomExpressionFields != nil {
+		for _, customExpressionFields := range respData.CustomExpressionFields {
+			customExpressionFieldsMap := map[string]interface{}{}
+
+			if customExpressionFields.Name != nil {
+				customExpressionFieldsMap["name"] = customExpressionFields.Name
+			}
+
+			if customExpressionFields.Expression != nil {
+				customExpressionFieldsMap["expression"] = customExpressionFields.Expression
+			}
+
+			if customExpressionFields.Enabled != nil {
+				customExpressionFieldsMap["enabled"] = customExpressionFields.Enabled
+			}
+
+			customExpressionFieldsList = append(customExpressionFieldsList, customExpressionFieldsMap)
+		}
+
+		_ = d.Set("custom_expression_fields", customExpressionFieldsList)
 	}
 
 	deliveryConditionsList := make([]map[string]interface{}, 0, len(respData.DeliveryConditions))
@@ -708,6 +845,10 @@ func resourceTencentCloudTeoRealtimeLogDeliveryRead(d *schema.ResourceData, meta
 
 		if respData.LogFormat.FieldDelimiter != nil {
 			logFormatMap["field_delimiter"] = respData.LogFormat.FieldDelimiter
+		}
+
+		if respData.LogFormat.RecordTemplate != nil {
+			logFormatMap["record_template"] = respData.LogFormat.RecordTemplate
 		}
 
 		_ = d.Set("log_format", []interface{}{logFormatMap})
@@ -805,6 +946,32 @@ func resourceTencentCloudTeoRealtimeLogDeliveryRead(d *schema.ResourceData, meta
 		_ = d.Set("s3", []interface{}{s3Map})
 	}
 
+	awsS3Map := map[string]interface{}{}
+
+	if respData.AWSS3 != nil {
+		if respData.AWSS3.Endpoint != nil {
+			awsS3Map["endpoint"] = respData.AWSS3.Endpoint
+		}
+
+		if respData.AWSS3.BucketName != nil {
+			awsS3Map["bucket_name"] = respData.AWSS3.BucketName
+		}
+
+		if respData.AWSS3.Path != nil {
+			awsS3Map["path"] = respData.AWSS3.Path
+		}
+
+		if respData.AWSS3.RoleARN != nil {
+			awsS3Map["role_arn"] = respData.AWSS3.RoleARN
+		}
+
+		if respData.AWSS3.CompressType != nil {
+			awsS3Map["compress_type"] = respData.AWSS3.CompressType
+		}
+
+		_ = d.Set("aws_s3", []interface{}{awsS3Map})
+	}
+
 	return nil
 }
 
@@ -830,7 +997,7 @@ func resourceTencentCloudTeoRealtimeLogDeliveryUpdate(d *schema.ResourceData, me
 	taskId := idSplit[1]
 
 	needChange := false
-	mutableArgs := []string{"task_name", "delivery_status", "entity_list", "fields", "custom_fields", "delivery_conditions", "sample", "log_format", "custom_endpoint", "s3"}
+	mutableArgs := []string{"task_name", "delivery_status", "entity_list", "fields", "custom_fields", "custom_expression_fields", "delivery_conditions", "sample", "log_format", "custom_endpoint", "s3", "aws_s3"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -881,6 +1048,23 @@ func resourceTencentCloudTeoRealtimeLogDeliveryUpdate(d *schema.ResourceData, me
 					customField.Enabled = helper.Bool(v.(bool))
 				}
 				request.CustomFields = append(request.CustomFields, &customField)
+			}
+		}
+
+		if v, ok := d.GetOk("custom_expression_fields"); ok {
+			for _, item := range v.([]interface{}) {
+				customExpressionFieldsMap := item.(map[string]interface{})
+				customExpressionField := teo.CustomExpressionField{}
+				if v, ok := customExpressionFieldsMap["name"]; ok {
+					customExpressionField.Name = helper.String(v.(string))
+				}
+				if v, ok := customExpressionFieldsMap["expression"]; ok {
+					customExpressionField.Expression = helper.String(v.(string))
+				}
+				if v, ok := customExpressionFieldsMap["enabled"]; ok {
+					customExpressionField.Enabled = helper.Bool(v.(bool))
+				}
+				request.CustomExpressionFields = append(request.CustomExpressionFields, &customExpressionField)
 			}
 		}
 
@@ -936,6 +1120,9 @@ func resourceTencentCloudTeoRealtimeLogDeliveryUpdate(d *schema.ResourceData, me
 			}
 			if v, ok := logFormatMap["field_delimiter"]; ok {
 				logFormat.FieldDelimiter = helper.String(v.(string))
+			}
+			if v, ok := logFormatMap["record_template"]; ok {
+				logFormat.RecordTemplate = helper.String(v.(string))
 			}
 			request.LogFormat = &logFormat
 		}
@@ -994,6 +1181,26 @@ func resourceTencentCloudTeoRealtimeLogDeliveryUpdate(d *schema.ResourceData, me
 				s3.CompressType = helper.String(v.(string))
 			}
 			request.S3 = &s3
+		}
+
+		if awsS3Map, ok := helper.InterfacesHeadMap(d, "aws_s3"); ok {
+			awsS3 := teo.AWSS3{}
+			if v, ok := awsS3Map["endpoint"]; ok {
+				awsS3.Endpoint = helper.String(v.(string))
+			}
+			if v, ok := awsS3Map["bucket_name"]; ok {
+				awsS3.BucketName = helper.String(v.(string))
+			}
+			if v, ok := awsS3Map["path"]; ok {
+				awsS3.Path = helper.String(v.(string))
+			}
+			if v, ok := awsS3Map["role_arn"]; ok {
+				awsS3.RoleARN = helper.String(v.(string))
+			}
+			if v, ok := awsS3Map["compress_type"]; ok {
+				awsS3.CompressType = helper.String(v.(string))
+			}
+			request.AWSS3 = &awsS3
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
