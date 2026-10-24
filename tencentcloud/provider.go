@@ -77,6 +77,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/emr"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/es"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fl"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fwm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ga2"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gaap"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gs"
@@ -1770,6 +1771,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dayu_l7_rule":                                                             dayu.ResourceTencentCloudDayuL7Rule(),
 			"tencentcloud_dayu_l7_rule_v2":                                                          dayuv2.ResourceTencentCloudDayuL7RuleV2(),
 			"tencentcloud_dayu_eip":                                                                 dayuv2.ResourceTencentCloudDayuEip(),
+			"tencentcloud_fwm_vpc_acl_rule":                                                         fwm.ResourceTencentCloudFwmVpcAclRule(),
 			"tencentcloud_ga2_global_accelerator":                                                   ga2.ResourceTencentCloudGa2GlobalAccelerator(),
 			"tencentcloud_ga2_global_accelerator_acl_policy":                                        ga2.ResourceTencentCloudGa2GlobalAcceleratorAclPolicy(),
 			"tencentcloud_ga2_global_accelerator_acl_rule":                                          ga2.ResourceTencentCloudGa2GlobalAcceleratorAclRule(),
