@@ -30,6 +30,27 @@ resource "tencentcloud_teo_security_client_attester" "example" {
 }
 ```
 
+### Example Usage - TC-EO-CAPTCHA with usage limit and mobile captcha mode
+
+```hcl
+resource "tencentcloud_teo_security_client_attester" "eo_example" {
+  zone_id = "zone-3fkff38fyw8s"
+
+  client_attesters {
+    name              = "tf-eo-example"
+    attester_source   = "TC-EO-CAPTCHA"
+    attester_duration = "300s"
+    usage_limit       = "on"
+    max_usage_count   = 100
+
+    tc_eo_captcha_option {
+      captcha_mode        = "Invisible"
+      mobile_captcha_mode = "Visible"
+    }
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -42,9 +63,11 @@ The `client_attesters` object supports the following:
 * `attester_source` - (Required, String) Authentication method. Valid values: `TC-RCE` (Tencent Cloud RCE), `TC-CAPTCHA` (Tencent CAPTCHA), `TC-EO-CAPTCHA` (EdgeOne CAPTCHA).
 * `name` - (Required, String) Attester name.
 * `attester_duration` - (Optional, String) Authentication validity duration. Default `60s`. Supported units: `s` (60-43200), `m` (1-720), `h` (1-12). e.g. `300s`, `5m`, `1h`.
+* `max_usage_count` - (Optional, Int) Maximum usage count of authentication result. Required when `usage_limit` is `on`. Range [1, 100000].
 * `tc_captcha_option` - (Optional, List) TC-CAPTCHA authentication configuration. Required when `attester_source` is `TC-CAPTCHA`.
 * `tc_eo_captcha_option` - (Optional, List) TC-EO-CAPTCHA authentication configuration. Required when `attester_source` is `TC-EO-CAPTCHA`.
 * `tc_rce_option` - (Optional, List) TC-RCE authentication configuration. Required when `attester_source` is `TC-RCE`.
+* `usage_limit` - (Optional, String) Whether to enable authentication result usage limit. Valid values: `on`, `off`. Default `off`.
 
 The `tc_captcha_option` object of `client_attesters` supports the following:
 
@@ -54,6 +77,7 @@ The `tc_captcha_option` object of `client_attesters` supports the following:
 The `tc_eo_captcha_option` object of `client_attesters` supports the following:
 
 * `captcha_mode` - (Required, String) EdgeOne CAPTCHA mode. Valid values: `Invisible`, `Adaptive`.
+* `mobile_captcha_mode` - (Optional, String) Mobile native app human-machine verification interaction mode. Valid values: `Invisible`, `Visible`. Default `Invisible`.
 
 The `tc_rce_option` object of `client_attesters` supports the following:
 

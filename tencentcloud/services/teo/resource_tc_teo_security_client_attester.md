@@ -19,6 +19,27 @@ resource "tencentcloud_teo_security_client_attester" "example" {
 }
 ```
 
+Example Usage - TC-EO-CAPTCHA with usage limit and mobile captcha mode
+
+```hcl
+resource "tencentcloud_teo_security_client_attester" "eo_example" {
+  zone_id = "zone-3fkff38fyw8s"
+
+  client_attesters {
+    name             = "tf-eo-example"
+    attester_source   = "TC-EO-CAPTCHA"
+    attester_duration = "300s"
+    usage_limit       = "on"
+    max_usage_count   = 100
+
+    tc_eo_captcha_option {
+      captcha_mode        = "Invisible"
+      mobile_captcha_mode = "Visible"
+    }
+  }
+}
+```
+
 Import
 
 TEO security client attester can be imported using the zoneId#clientAttesterId, e.g.
