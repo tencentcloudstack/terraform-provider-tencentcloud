@@ -77,6 +77,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/emr"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/es"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fl"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fwm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ga2"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gaap"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gs"
@@ -2668,6 +2669,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfw_sync_asset":                                                           cfw.ResourceTencentCloudCfwSyncAsset(),
 			"tencentcloud_cfw_sync_route":                                                           cfw.ResourceTencentCloudCfwSyncRoute(),
 			"tencentcloud_cfw_nat_firewall_switch":                                                  cfw.ResourceTencentCloudCfwNatFirewallSwitch(),
+			"tencentcloud_fwm_nat_acl_rule":                                                         fwm.ResourceTencentCloudFwmNatAclRule(),
 			"tencentcloud_cfw_vpc_firewall_switch":                                                  cfw.ResourceTencentCloudCfwVpcFirewallSwitch(),
 			"tencentcloud_cfw_edge_firewall_switch":                                                 cfw.ResourceTencentCloudCfwEdgeFirewallSwitch(),
 			"tencentcloud_sg_rule":                                                                  cfw.ResourceTencentCloudSgRule(),
