@@ -10,6 +10,8 @@ resource "tencentcloud_ckafka_route" "example" {
   subnet_id      = "subnet-j5vja918"
   access_type    = 0
   public_network = 3
+
+  security_group_ids = ["sg-xxxx"]
 }
 ```
 

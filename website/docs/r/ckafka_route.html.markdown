@@ -21,6 +21,8 @@ resource "tencentcloud_ckafka_route" "example" {
   subnet_id      = "subnet-j5vja918"
   access_type    = 0
   public_network = 3
+
+  security_group_ids = ["sg-xxxx"]
 }
 ```
 
@@ -39,6 +41,7 @@ The following arguments are supported:
 * `caller_appid` - (Optional, Int) Caller appid.
 * `ip` - (Optional, String) Ip.
 * `public_network` - (Optional, Int) Public network.
+* `security_group_ids` - (Optional, List: [`String`]) List of associated security group IDs in order.
 * `subnet_id` - (Optional, String) Subnet id.
 * `vpc_id` - (Optional, String) Vpc id.
 
@@ -61,7 +64,10 @@ This resource interacts with the following TencentCloud APIs:
 * Create:
   - [CreateRoute](https://www.tencentcloud.com/document/api/597/74258)
   - [DescribeTaskStatus](https://www.tencentcloud.com/document/api/597/55881)
-* Read: [DescribeRoute](https://www.tencentcloud.com/document/api/597/37090)
+* Read:
+  - [DescribeRoute](https://www.tencentcloud.com/document/api/597/37090)
+  - [DescribeSecurityGroupRoutes](https://www.tencentcloud.com/document/api/597/74257)
+* Update: [ModifyRouteSecurityGroups](https://www.tencentcloud.com/search/?wd=ModifyRouteSecurityGroups&type=document&lang=en)
 * Delete: [DeleteRoute](https://www.tencentcloud.com/document/api/597/47140)
 
 ## Import
