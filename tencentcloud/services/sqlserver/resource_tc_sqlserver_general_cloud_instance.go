@@ -527,7 +527,7 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceRead(d *schema.ResourceDat
 		return err
 	}
 
-	if insAttribute.IsDiskEncryptFlag != nil {
+	if insAttribute != nil && insAttribute.IsDiskEncryptFlag != nil {
 		_ = d.Set("disk_encrypt_flag", insAttribute.IsDiskEncryptFlag)
 	}
 
