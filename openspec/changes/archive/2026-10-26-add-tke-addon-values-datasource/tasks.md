@@ -32,3 +32,17 @@
 - [x] 5.1 对照 `design.md` 的「云 API 参考」核对 request/response 字段名拼写（`ClusterId`/`AddonName`/`Values`/`DefaultValues`）与 `tccommon.FILED_SP` 常量拼写
 - [x] 5.2 确认未新增/修改服务层方法（`DescribeAddonValuesList` 已存在）
 - [x] 5.3 由收尾阶段统一执行 `gofmt`、`make doc` 与 changelog 生成，本阶段不执行
+
+## Follow-up fixes (found by real-cluster verification, 2026-10-26)
+
+- [x] Document that `values` is NOT empty for a not-installed addon whose chart exists
+      (schema `Description` + `data_source_tc_tke_addon_values.md` + website doc)
+- [x] Add `ValidateFunc: validation.StringIsNotEmpty` to `cluster_id` / `addon_name`
+- [x] Fail fast (`NonRetryableError`) for deterministic errors:
+      `not found chart`, `resource name may not be empty`
+- [x] Pass the real payload to `tccommon.WriteToFile` so `result_output_file` is not `{}`
+- [x] Unit tests: `ReadNotInstalled`, `ReadNotFoundChartNonRetryable`,
+      `ReadEmptyResourceNameNonRetryable`, `ReadRetryableErrorStillRetried`,
+      `ResultOutputFile`, `EmptyArgumentsRejected`
+- [x] Revert the unnecessary SDK bump (common 1.3.194 / tke 1.3.178 already contain
+      `DescribeAddonValues`) to keep the regression surface minimal

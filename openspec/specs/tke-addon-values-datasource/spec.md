@@ -41,6 +41,12 @@ The data source SHALL require `cluster_id` and `addon_name`, both of type string
 - **THEN** `addon_name` SHALL be `schema.TypeString` with `Required: true`
 - **AND** its description SHALL identify it as the addon name
 
+#### Scenario: Inputs are validated before calling the cloud API
+
+- **WHEN** defining the data source schema
+- **THEN** both `cluster_id` and `addon_name` SHALL have `ValidateFunc: validation.StringIsNotEmpty`
+- **AND** an empty value SHALL be rejected at plan time, so the request never reaches the cloud API
+
 #### Scenario: Inputs are passed to the cloud API request
 
 - **WHEN** the read handler executes
@@ -64,6 +70,13 @@ The data source SHALL expose `values` and `default_values` as computed string fi
 - **AND** `default_values` SHALL be `schema.TypeString` with `Computed: true`, mapped from `Response.DefaultValues`
 - **AND** neither field SHALL be decoded or restructured from JSON
 
+#### Scenario: not-installed addon still returns a rendered payload
+
+- **WHEN** the addon is not installed in the cluster but its chart exists in the addon repository
+- **THEN** the cloud API still returns a rendered `Values` payload (the chart defaults) which is byte-identical to `DefaultValues`
+- **AND** the data source SHALL pass it through unchanged (it SHALL NOT clear `values`, and it SHALL NOT pretend the addon is installed)
+- **AND** the documentation SHALL state that `values` is NOT empty in this case, and that `tencentcloud_kubernetes_addons` is the way to check the installation status
+
 #### Scenario: nil response fields are skipped
 
 - **WHEN** the cloud API response contains a nil `Values` or nil `DefaultValues`
@@ -79,8 +92,15 @@ The read handler SHALL call `DescribeAddonValues` through the existing service m
 
 - **WHEN** the read handler is invoked with valid `cluster_id` and `addon_name`
 - **THEN** it SHALL call `TkeService.DescribeAddonValuesList(ctx, clusterId, addonName)` inside `resource.Retry(tccommon.ReadRetryTimeout, ...)`
-- **AND** it SHALL convert errors via `tccommon.RetryError(e)`
+- **AND** it SHALL convert retryable errors via `tccommon.RetryError(e)`
 - **AND** it SHALL return the retry error to Terraform when retries are exhausted
+
+#### Scenario: deterministic errors are not retried
+
+- **WHEN** the cloud API returns a deterministic failure, i.e. `Code=ResourceUnavailable` with message `not found chart` or `resource name may not be empty`
+- **THEN** the read handler SHALL return `resource.NonRetryableError` immediately (a single API call)
+- **AND** it SHALL NOT consume the whole `ReadRetryTimeout` (3 minutes by default)
+- **AND** genuinely retryable codes (e.g. `RequestLimitExceeded`) SHALL still be retried
 
 #### Scenario: Standard deferred helpers
 
@@ -103,7 +123,8 @@ The read handler SHALL call `DescribeAddonValues` through the existing service m
 #### Scenario: Result written to file when requested
 
 - **WHEN** `result_output_file` is configured with a non-empty path
-- **THEN** the read handler SHALL call `tccommon.WriteToFile(output, d)`
+- **THEN** the read handler SHALL call `tccommon.WriteToFile(output, <payload>)` with the actual payload, i.e. a `map[string]interface{}` containing `values` and `default_values`
+- **AND** it SHALL NOT pass `d` (`*schema.ResourceData`), which marshals to `{}`
 - **AND** it SHALL return the error if writing fails
 
 ### Requirement: Documentation
@@ -136,4 +157,9 @@ The data source SHALL be covered by mock-based unit tests that do not require re
 - **AND** they SHALL assert nil `Values` is handled without error
 - **AND** they SHALL assert a service-layer error is propagated
 - **AND** they SHALL assert the schema declares `cluster_id`, `addon_name`, `values`, `default_values`, and `result_output_file` with the expected Required/Computed flags
+- **AND** they SHALL assert a not-installed addon keeps its rendered `values` (equal to `default_values`) instead of being cleared
+- **AND** they SHALL assert a deterministic error is propagated after a single call (no retry)
+- **AND** they SHALL assert a retryable error is still retried
+- **AND** they SHALL assert `result_output_file` contains the real payload (not `{}`)
+- **AND** they SHALL assert empty `cluster_id` / `addon_name` are rejected by `ValidateFunc`
 

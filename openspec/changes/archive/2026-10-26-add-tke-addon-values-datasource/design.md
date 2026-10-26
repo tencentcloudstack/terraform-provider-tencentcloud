@@ -40,6 +40,14 @@ TKE（容器服务）addon 通过 `tencentcloud_kubernetes_addon_config` 资源�
 - **理由**：本次需求明确指定资源名为 `tencentcloud_tke_addon_values`，且文件命名规范为 `data_source_tc_<Product>_<资源名>.go`（Product = `tke`）。tke 服务目录下两类前缀并存（如 `data_source_tc_eks_clusters.go`），不冲突。
 - 仍需放在 `tencentcloud/services/tke/` 包内，包名为 `tke`。
 
+### 决策 1.1：输入参数加非空校验
+
+- **选择**：`cluster_id` 与 `addon_name` 都加 `ValidateFunc: validation.StringIsNotEmpty`。
+- **理由（实测）**：`Required: true` **不拦空串**。`addon_name = ""` 能通过
+  `terraform validate`，一路打到云端才返回
+  `ResourceUnavailable: resource name may not be empty`，并被重试满 3 分钟。
+  加校验后在 plan 阶段就失败，零 API 调用。
+
 ### 决策 2：直接复用服务层 `DescribeAddonValuesList`，不在 data source 内重复 retry
 
 - **选择**：data source Read 内用 `resource.Retry(tccommon.ReadRetryTimeout, ...)` 包裹对 `service.DescribeAddonValuesList(ctx, clusterId, addonName)` 的调用。
@@ -57,6 +65,25 @@ TKE（容器服务）addon 通过 `tencentcloud_kubernetes_addon_config` 资源�
   - 展开会引入"未知字段无法表达"与"state 漂移"风险；保持字符串可让用户用 `jsondecode(data.tencentcloud_tke_addon_values.this.values)` 自行消费。
   - 与已有 `tencentcloud_kubernetes_addons` 中 `raw_values` 的处理方式一致（字符串透传）。
 
+### 决策 3.1：`values` 在「未安装」时**不是空**（实测修正）
+
+原 design 假设「未安装 addon → 云端 `Values` 为 nil → `values` 为空字符串」。
+真机实测（2026-10-26，`cls-dhhfi9n8`）证明该假设**只在 chart 都不存在时才成立**：
+
+| 情形 | 实测 |
+|---|---|
+| 已安装（`rdma-agent`） | `Values` 与 `DefaultValues` 均为 1247B，`global.cluster.id = cls-dhhfi9n8` |
+| **chart 存在但未安装**（`tke-log-agent` / `cfs` / `qgpu`） | `Values` **非空**（8865 / 2868 / 1629B），且与 `DefaultValues` **逐字节相同**；`global.cluster.id` 为**空串**，`kubeversion` 是 chart 里的硬编码值 |
+| chart 不存在（名字写错） | `ResourceUnavailable: not found chart` |
+
+结论与做法：
+
+- provider 侧**保持原样透传**（不改代码逻辑），因为云端返回的就是这份渲染结果；
+- `nil` 分支保留为防御性代码，但**不再作为文档承诺**；
+- schema `Description` 与 website 文档改为实测语义，并明确指向
+  `tencentcloud_kubernetes_addons` 判断安装状态；
+- 单测新增 `ReadNotInstalled`，锁住「未安装也要原样透传、不清空」这一行为。
+
 ### 决策 4：`d.SetId()` 使用联合 id `cluster_id#addon_name`
 
 - **选择**：`d.SetId(strings.Join([]string{clusterId, addonName}, tccommon.FILED_SP))`。
@@ -71,10 +98,14 @@ TKE（容器服务）addon 通过 `tencentcloud_kubernetes_addon_config` 资源�
 - `Response.Values == nil` 或 `DefaultValues == nil` → 不报错，跳过对应 `d.Set()`（遵循"setXX 前先判 nil"的约束），仍设置 `d.SetId()`。
 - 绝不调用 `d.SetId("")`（data source 的 id 是查询结果标识，清空会导致 state 中丢失定位信息）。
 
-### 决策 6：`result_output_file` 写入 `d`
+### 决策 6：`result_output_file` 写入**真实数据**
 
-- **选择**：`tccommon.WriteToFile(output.(string), d)`。
-- **理由**：`igtm_instance_list` 亦传 `d`，`WriteToFile` 内部用 `json.Marshal(d)`；这样输出文件内容包含 schema 全量字段，便于排障。返回的 error 需检查。
+- **选择**：`tccommon.WriteToFile(output.(string), map[string]interface{}{"values": d.Get("values"), "default_values": d.Get("default_values")})`。
+- **理由（实测修正）**：原方案传 `d`，而 `WriteToFile` 内部是
+  `json.MarshalIndent(data, ...)`；`*schema.ResourceData` 没有导出字段、也没有实现
+  `MarshalJSON`，落盘结果只能是 `{}`（实测文件 2 字节）。同包
+  `data_source_tc_kubernetes_addons.go` 传的是真实 list，能正常落盘。
+- 返回的 error 需检查。
 
 ## 云 API 参考（vendor 摘录，实施阶段可直接使用，无需回读大文件）
 
@@ -310,7 +341,14 @@ tencentcloud_tke_addon_values
 
 ## Risks / Trade-offs
 
-- **[`values` 在 addon 未安装时为空]** → 不视为错误：文档中说明"未安装时 `values` 为空字符串，可用 `default_values` 获取可配置项"，并在 Read 中判 nil 跳过 set，避免 state 写入 `<nil>` 字符串。
+- **[`values` 在 addon 未安装时不为空（实测）]** → 云端对「chart 存在但未安装」的 addon
+  返回纯 chart 默认值的渲染结果（与 `DefaultValues` 逐字节相同、不含集群信息）。
+  Read 中判 nil 跳过 set 只作为防御；文档明确写「非空」并提示用
+  `tencentcloud_kubernetes_addons` 判断安装状态，避免用户误判。
+- **[`ResourceUnavailable` 是通用可重试码]** → `not found chart` /
+  `resource name may not be empty` 这类确定性失败会被重试满 3 分钟（实测 22 次调用）。
+  Read 中对这两种 message 直接返回 `resource.NonRetryableError`，其余仍走
+  `tccommon.RetryError`。
 - **[JSON 字符串在 state 中的格式漂移]**（云 API 每次渲染 key 顺序可能不同）→ data source 每次 read 都重新拉取、不做 diff 抑制；由于是纯 computed，不会触发 update 计划，风险仅体现在 `values` 值变化导致下游 `raw_values` 变化，属预期语义。
 - **[复用服务层方法，若后续服务层签名变更]** → 影响面限于本文件一处调用；且本次不改服务层，风险低。
 - **[gomonkey 依赖编译期打桩]** → 测试需 `-gcflags="all=-l"`；已在测试文件头注释说明，不影响正常运行。
