@@ -96,6 +96,12 @@ func ResourceTencentCloudCkafkaRoute() *schema.Resource {
 				},
 				Description: "List of associated security group IDs in order.",
 			},
+			// computed
+			"route_id": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Route ID.",
+			},
 			"vip_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -217,7 +223,7 @@ func resourceTencentCloudCkafkaRouteCreate(d *schema.ResourceData, meta interfac
 
 	service := CkafkaService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	conf := tccommon.BuildStateChangeConf([]string{}, []string{"0"}, 1*tccommon.ReadRetryTimeout, time.Second, service.CkafkaRouteStateRefreshFunc(flowIdInt64, []string{}))
+	conf := tccommon.BuildStateChangeConf([]string{}, []string{"0"}, tccommon.ReadRetryTimeout, time.Second, service.CkafkaRouteStateRefreshFunc(flowIdInt64, []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
@@ -250,27 +256,18 @@ func resourceTencentCloudCkafkaRouteRead(d *schema.ResourceData, meta interface{
 	if err != nil {
 		return err
 	}
-	_ = d.Set("instance_id", instanceId)
+
 	if route == nil {
-		log.Printf("[CRUD] ckafka_route id=%s", d.Id())
+		log.Printf("[WARN]%s resource `tencentcloud_ckafka_route` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `CkafkaRoute` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
-	securityGroupRoute, err := service.DescribeCkafkaRouteSecurityGroupRoutes(ctx, instanceId, routeIdInt64)
-	if err != nil {
-		return err
+	_ = d.Set("instance_id", instanceId)
+
+	if route.RouteId != nil {
+		_ = d.Set("route_id", route.RouteId)
 	}
-	securityGroupIds := make([]string, 0)
-	if securityGroupRoute != nil && len(securityGroupRoute.SecurityGroupIds) > 0 {
-		for _, sgId := range securityGroupRoute.SecurityGroupIds {
-			if sgId != nil {
-				securityGroupIds = append(securityGroupIds, *sgId)
-			}
-		}
-	}
-	_ = d.Set("security_group_ids", securityGroupIds)
 
 	if route.VipType != nil {
 		_ = d.Set("vip_type", route.VipType)
@@ -307,6 +304,21 @@ func resourceTencentCloudCkafkaRouteRead(d *schema.ResourceData, meta interface{
 		})
 	}
 	_ = d.Set("broker_vip_list", brokerVipList)
+
+	securityGroupRoute, err := service.DescribeCkafkaRouteSecurityGroupRoutes(ctx, instanceId, routeIdInt64)
+	if err != nil {
+		return err
+	}
+
+	securityGroupIds := make([]string, 0)
+	if securityGroupRoute != nil && len(securityGroupRoute.SecurityGroupIds) > 0 {
+		for _, sgId := range securityGroupRoute.SecurityGroupIds {
+			if sgId != nil {
+				securityGroupIds = append(securityGroupIds, *sgId)
+			}
+		}
+	}
+	_ = d.Set("security_group_ids", securityGroupIds)
 
 	return nil
 }

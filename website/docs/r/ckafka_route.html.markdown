@@ -15,14 +15,17 @@ Provides a resource to create a ckafka route
 
 ```hcl
 resource "tencentcloud_ckafka_route" "example" {
-  instance_id    = "ckafka-8j4rodrr"
+  instance_id    = "ckafka-8j4ra928"
   vip_type       = 3
-  vpc_id         = "vpc-axrsmmrv"
-  subnet_id      = "subnet-j5vja918"
+  vpc_id         = "vpc-i5yyodl9"
+  subnet_id      = "subnet-hhi88a58"
   access_type    = 0
   public_network = 3
-
-  security_group_ids = ["sg-xxxx"]
+  security_group_ids = [
+    "sg-8ztqghor",
+    "sg-rc9644tr",
+    "sg-n8zf5ry9"
+  ]
 }
 ```
 
@@ -53,6 +56,7 @@ In addition to all arguments above, the following attributes are exported:
 * `broker_vip_list` - Virtual IP list (1 to 1 broker nodes).
   * `vip` - Virtual IP.
   * `vport` - Virtual port.
+* `route_id` - Route ID.
 * `vip_list` - Virtual IP list.
   * `vip` - Virtual IP.
   * `vport` - Virtual port.
@@ -72,9 +76,9 @@ This resource interacts with the following TencentCloud APIs:
 
 ## Import
 
-ckafka route can be imported using the id, e.g.
+ckafka route can be imported using the instanceId#routeId, e.g.
 
 ```
-terraform import tencentcloud_ckafka_route.example ckafka-8j4rodrr#135912
+terraform import tencentcloud_ckafka_route.example ckafka-8j4ra928#135912
 ```
 

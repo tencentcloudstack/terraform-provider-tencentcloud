@@ -1757,20 +1757,22 @@ func (me *CkafkaService) DescribeCkafkaRouteById(ctx context.Context, instanceId
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseCkafkaClient().DescribeRoute(request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	response, err := me.client.UseCkafkaClient().DescribeRoute(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		if response == nil || response.Response == nil || response.Response.Result == nil || len(response.Response.Result.Routers) < 1 {
+			return nil
+		}
 
-	if response.Response == nil || response.Response.Result == nil || len(response.Response.Result.Routers) < 1 {
-		return
-	}
+		route = response.Response.Result.Routers[0]
+		return nil
+	})
 
-	route = response.Response.Result.Routers[0]
 	return
 }
 
