@@ -2238,7 +2238,7 @@ func (me *SqlserverService) DescribeMaintenanceSpanById(ctx context.Context, ins
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response.Response == nil {
+	if response == nil || response.Response == nil {
 		return
 	}
 
@@ -2818,8 +2818,15 @@ func (me *SqlserverService) DescribeSqlserverGeneralCloudInstanceById(ctx contex
 	}
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response == nil || response.Response == nil {
+		return
+	}
 
-	if *response.Response.TotalCount == 0 {
+	if response.Response.TotalCount != nil && *response.Response.TotalCount == 0 {
+		return
+	}
+
+	if len(response.Response.DBInstances) == 0 {
 		return
 	}
 

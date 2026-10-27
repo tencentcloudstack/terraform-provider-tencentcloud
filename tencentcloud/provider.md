@@ -1045,6 +1045,7 @@ tencentcloud_redis_connection_config
 tencentcloud_redis_log_delivery
 tencentcloud_redis_audit_log
 tencentcloud_redis_instance_password_policy_config
+tencentcloud_redis_backup_encrypt
 
 Serverless Cloud Function(SCF)
 Data Source
@@ -1943,6 +1944,7 @@ tencentcloud_organization_org_share_unit_members
 tencentcloud_organization_org_share_unit_nodes
 tencentcloud_role_configuration_provisionings
 tencentcloud_organization_resource_to_share_member
+
 Resource
 tencentcloud_organization_instance
 tencentcloud_organization_org_node
@@ -1983,6 +1985,9 @@ tencentcloud_provision_role_configuration_operation
 tencentcloud_organization_member_auth_policy_attachment
 tencentcloud_organization_external_saml_identity_provider
 tencentcloud_organization_ip_whitelist_config
+
+Action
+tencentcloud_organization_provision_role_configuration
 
 TDSQL-C for PostgreSQL(TDCPG)
 Data Source
@@ -2035,6 +2040,7 @@ tencentcloud_dts_migrate_db_instances
 Resource
 tencentcloud_dts_sync_job
 tencentcloud_dts_sync_config
+tencentcloud_dts_sync_job_config
 tencentcloud_dts_sync_check_job_operation
 tencentcloud_dts_sync_job_resume_operation
 tencentcloud_dts_sync_job_start_operation
@@ -2370,6 +2376,7 @@ tencentcloud_dlc_attach_data_mask_policy
 tencentcloud_dlc_standard_engine_resource_group_config_info
 tencentcloud_dlc_datasource_house_attachment
 tencentcloud_dlc_attach_user_policy_attachment
+tencentcloud_dlc_meta_database
 
 Web Application Firewall(WAF)
 Data Source

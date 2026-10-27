@@ -1,3 +1,16 @@
+## 1.83.38(October 23, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_redis_backup_encrypt` ([#4582](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4582))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_dayu_eip: fix provider panic (nil pointer dereference) when antiddos DescribeListBGPIPInstances / DescribeListBGPIPInstanceById / DescribeListBGPInstanceById receive a nil response ([#4580](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4580))
+* resource/tencentcloud_eni: fix provider panic (nil pointer dereference) in DetachEniFromCvm when ResourceNotFound is swallowed ([#4580](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4580))
+* resource/tencentcloud_postgresql_instance: fix the wrong error variable passed to `RetryError` when `CreateBackupPlan` fails during creation, which swallowed the real API error and reported `empty non-retryable error received` ([#4595](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4595))
+* resource/tencentcloud_vpc_acl: fix provider panic (nil pointer dereference) when DescribeNetWorkAcls receives a nil response ([#4580](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4580))
+
 ## 1.83.37(October 20, 2026)
 
 ENHANCEMENTS:

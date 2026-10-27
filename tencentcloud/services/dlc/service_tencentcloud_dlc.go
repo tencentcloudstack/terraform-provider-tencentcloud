@@ -1683,3 +1683,46 @@ func (me *DlcService) InitializeTCLake(ctx context.Context) (response *dlc.Initi
 
 	return
 }
+
+// DescribeDlcMetaDatabaseByName queries the meta database by the datasource
+// connection name and the database name. nil is returned when the meta
+// database does not exist.
+func (me *DlcService) DescribeDlcMetaDatabaseByName(ctx context.Context, datasourceConnectionName, databaseName string) (ret *dlc.DatabaseResponseInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := dlc.NewDescribeDatabaseRequest()
+	response := dlc.NewDescribeDatabaseResponse()
+	request.DatabaseName = helper.String(databaseName)
+	request.DatasourceConnectionName = helper.String(datasourceConnectionName)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().DescribeDatabaseWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe dlc meta database failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		log.Printf("[CRITAL]%s describe dlc meta database failed, reason:%+v", logId, errRet)
+		return
+	}
+
+	ret = response.Response.DatabaseInfo
+	return
+}
