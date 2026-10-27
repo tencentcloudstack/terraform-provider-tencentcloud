@@ -2368,6 +2368,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_trocket_rocketmq_role":                                                    trocket.ResourceTencentCloudTrocketRocketmqRole(),
 			"tencentcloud_dts_sync_job":                                                             dts.ResourceTencentCloudDtsSyncJob(),
 			"tencentcloud_dts_sync_config":                                                          dts.ResourceTencentCloudDtsSyncConfig(),
+			"tencentcloud_dts_sync_job_config":                                                      dts.ResourceTencentCloudDtsSyncJobConfig(),
 			"tencentcloud_dts_sync_check_job_operation":                                             dts.ResourceTencentCloudDtsSyncCheckJobOperation(),
 			"tencentcloud_dts_sync_job_resume_operation":                                            dts.ResourceTencentCloudDtsSyncJobResumeOperation(),
 			"tencentcloud_dts_sync_job_start_operation":                                             dts.ResourceTencentCloudDtsSyncJobStartOperation(),
