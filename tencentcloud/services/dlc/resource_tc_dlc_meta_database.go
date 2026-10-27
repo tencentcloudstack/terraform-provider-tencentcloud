@@ -39,6 +39,7 @@ func ResourceTencentCloudDlcMetaDatabase() *schema.Resource {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Meta database basic information, which corresponds to the `MetaDatabaseInfo` structure of the `CreateMetaDatabase` API.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -51,6 +52,7 @@ func ResourceTencentCloudDlcMetaDatabase() *schema.Resource {
 						"comment": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Description of the DLC meta database, length 0~2048.",
 						},
 					},
