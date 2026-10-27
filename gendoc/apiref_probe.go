@@ -162,7 +162,7 @@ func findResourceFile(repoRoot, resName string) string {
 		fmt.Sprintf("resource_tc_%s_config.go", short),
 	}
 	var found string
-	filepath.Walk(filepath.Join(repoRoot, "tencentcloud", "services"), func(path string, fi os.FileInfo, err error) error {
+	walkErr := filepath.Walk(filepath.Join(repoRoot, "tencentcloud", "services"), func(path string, fi os.FileInfo, err error) error {
 		if err != nil || found != "" || fi.IsDir() {
 			return nil
 		}
@@ -173,6 +173,11 @@ func findResourceFile(repoRoot, resName string) string {
 		}
 		return nil
 	})
+	if walkErr != nil {
+		// Best effort: report the traversal failure but keep whatever was found.
+		fmt.Fprintf(os.Stderr, "walk tencentcloud/services failed: %v\n", walkErr)
+	}
+
 	return found
 }
 

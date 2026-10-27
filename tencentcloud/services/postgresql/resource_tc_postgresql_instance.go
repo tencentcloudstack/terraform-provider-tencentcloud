@@ -1763,8 +1763,9 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 
 	if d.HasChange("db_kernel_version") || d.HasChange("db_major_vesion") || d.HasChange("db_major_version") || d.HasChange("engine_version") {
 		oldKVInterface, newKVInterface := d.GetChange("db_kernel_version")
-		oldMVInterface, newMVInterface := d.GetChange("db_major_vesion")
-		oldMVInterface, newMVInterface = d.GetChange("db_major_version")
+		// `db_major_vesion` is only a deprecated alias of `db_major_version`,
+		// both of them carry the same value, so read the effective one.
+		oldMVInterface, newMVInterface := d.GetChange("db_major_version")
 		oldEVInterface, newEVInterface := d.GetChange("engine_version")
 
 		oldKVValue := oldKVInterface.(string)
@@ -1785,7 +1786,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		}
 
 		if oldResult == nil || len(oldResult) == 0 {
-			return fmt.Errorf("Current postgresql instance engine_version: %s, db_major_version: %s and db_kernel_version: %s. has no available upgrade target verison.", oldEVValue, oldMVValue, oldKVValue)
+			return fmt.Errorf("Current postgresql instance engine_version: %s, db_major_version: %s and db_kernel_version: %s. has no available upgrade target version.", oldEVValue, oldMVValue, oldKVValue)
 		}
 
 		// check new version value
@@ -1799,7 +1800,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		}
 
 		if newResult == nil || len(newResult) == 0 {
-			return fmt.Errorf("The expected modifications of engine_version: %s, db_major_version: %s and db_kernel_version: %s are illegal, available upgrade target verison cannot be found.", newEVValue, newMVValue, newKVValue)
+			return fmt.Errorf("The expected modifications of engine_version: %s, db_major_version: %s and db_kernel_version: %s are illegal, available upgrade target version cannot be found.", newEVValue, newMVValue, newKVValue)
 		}
 
 		if oldMVValue != newMVValue {

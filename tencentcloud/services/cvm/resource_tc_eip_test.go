@@ -149,9 +149,13 @@ func TestAccTencentCloudEipResource_basic(t *testing.T) {
 
 func TestAccTencentCloudEipResource_anycast(t *testing.T) {
 	defer func() {
-		os.Setenv(tcprovider.PROVIDER_REGION, "")
+		if err := os.Setenv(tcprovider.PROVIDER_REGION, ""); err != nil {
+			t.Errorf("failed to reset %s: %v", tcprovider.PROVIDER_REGION, err)
+		}
 	}()
-	os.Setenv(tcprovider.PROVIDER_REGION, "ap-hongkong")
+	if err := os.Setenv(tcprovider.PROVIDER_REGION, "ap-hongkong"); err != nil {
+		t.Fatalf("failed to set %s: %v", tcprovider.PROVIDER_REGION, err)
+	}
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { tcacctest.AccPreCheck(t) },
 		Providers:    tcacctest.AccProviders,
