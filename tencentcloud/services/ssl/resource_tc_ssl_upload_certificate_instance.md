@@ -1,5 +1,7 @@
 Provides a resource to create a SSL upload certificate instance. The `tencentcloud_ssl_upload_certificate_instance` resource uploads new certificate public/private key content and updates associated cloud resources (such as clb) without changing the certificate id.
 
+
+
 Example Usage
 
 ```hcl
@@ -23,12 +25,4 @@ resource "tencentcloud_ssl_upload_certificate_instance" "example" {
   certificate_id      = "f8xnynbe"
   resource_types      = ["clb"]
 }
-```
-
-Import
-
-SSL upload certificate instance can be imported using the deploy record id, e.g.
-
-```
-$ terraform import tencentcloud_ssl_upload_certificate_instance.example 12345
 ```
