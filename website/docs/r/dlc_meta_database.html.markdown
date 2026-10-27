@@ -28,7 +28,7 @@ resource "tencentcloud_dlc_meta_database" "example" {
 The following arguments are supported:
 
 * `datasource_connection_name` - (Required, String, ForceNew) Datasource connection name, default `DataLakeCatalog`.
-* `meta_database_info` - (Required, List) Meta database basic information, which corresponds to the `MetaDatabaseInfo` structure of the `CreateMetaDatabase` API.
+* `meta_database_info` - (Required, List, ForceNew) Meta database basic information, which corresponds to the `MetaDatabaseInfo` structure of the `CreateMetaDatabase` API.
 * `govern_policy` - (Optional, List) Data governance config.
 * `smart_policy` - (Optional, List) Smart data governance config.
 
@@ -86,7 +86,7 @@ The `lifecycle` object of `policy` supports the following:
 The `meta_database_info` object supports the following:
 
 * `database_name` - (Required, String, ForceNew) Name of the DLC meta database, length 0~128, digits, letters and underscores are supported, cannot start with a digit, and is converted to lowercase.
-* `comment` - (Optional, String) Description of the DLC meta database, length 0~2048.
+* `comment` - (Optional, String, ForceNew) Description of the DLC meta database, length 0~2048.
 
 The `policy` object of `smart_policy` supports the following:
 
