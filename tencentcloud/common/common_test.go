@@ -1,6 +1,7 @@
 package common
 
 import (
+	"errors"
 	"reflect"
 	"testing"
 
@@ -373,6 +374,30 @@ func TestStringListDiffSuppressIgnoreOrder_SubElements(t *testing.T) {
 			result := suppressFn(tc.key, "", "", d)
 			if result != tc.expected {
 				t.Errorf("key %s: expected %v, got %v", tc.key, tc.expected, result)
+			}
+		})
+	}
+}
+
+func TestIsDeterministicError(t *testing.T) {
+	cases := []struct {
+		name     string
+		err      error
+		expected bool
+	}{
+		{"nil error", nil, false},
+		{"not found chart", sdkErrors.NewTencentCloudSDKError("ResourceUnavailable", "not found chart", "req"), true},
+		{"empty resource name", sdkErrors.NewTencentCloudSDKError("ResourceUnavailable", "resource name may not be empty", "req"), true},
+		{"retryable throttling", sdkErrors.NewTencentCloudSDKError("RequestLimitExceeded", "too many requests", "req"), false},
+		{"other ResourceUnavailable", sdkErrors.NewTencentCloudSDKError("ResourceUnavailable", "instance busy", "req"), false},
+		{"plain error carrying the message", errors.New("Code=ResourceUnavailable, Message=not found chart"), true},
+		{"plain unrelated error", errors.New("boom"), false},
+	}
+
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if got := IsDeterministicError(c.err); got != c.expected {
+				t.Errorf("IsDeterministicError(%v) = %v, want %v", c.err, got, c.expected)
 			}
 		})
 	}
