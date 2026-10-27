@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
   * `route_type` - Route type: BGP/STATIC route.
   * `status` - ENABLE: routing is enabled, DISABLE: routing is disabled.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribePublicDirectConnectTunnelRoutes](https://www.tencentcloud.com/search/?wd=DescribePublicDirectConnectTunnelRoutes&type=document&lang=en)
 

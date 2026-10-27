@@ -33,4 +33,9 @@ In addition to all arguments above, the following attributes are exported:
 * `msg` - API call information.
 * `unique_id_set` - Unique identifier of the user to be listened on(aid or uin).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeOfflineLogConfigs](https://www.tencentcloud.com/search/?wd=DescribeOfflineLogConfigs&type=document&lang=en)
 

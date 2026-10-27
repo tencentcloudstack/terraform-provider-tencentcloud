@@ -108,6 +108,12 @@ func ResourceTencentCloudDlcAttachUserPolicyAttachment() *schema.Resource {
 							Computed:    true,
 							Description: "The grant mode, Valid values: `COMMON` and `SENIOR`.",
 						},
+						"re_auth": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Computed:    true,
+							Description: "Whether the grantee is allowed to further grant the permissions. Valid values: `false` (default) and `true` (the grantee can grant permissions gained here to other sub-users).",
+						},
 						// computed
 						"policy_id": {
 							Type:        schema.TypeString,
@@ -143,11 +149,6 @@ func ResourceTencentCloudDlcAttachUserPolicyAttachment() *schema.Resource {
 							Type:        schema.TypeBool,
 							Computed:    true,
 							Description: "Whether the permission source is admin.",
-						},
-						"re_auth": {
-							Type:        schema.TypeBool,
-							Computed:    true,
-							Description: "Whether the grantee is allowed to further grant the permissions. Valid values: `false` (default) and `true` (the grantee can grant permissions gained here to other sub-users).",
 						},
 					},
 				},
@@ -229,6 +230,10 @@ func resourceTencentCloudDlcAttachUserPolicyAttachmentCreate(d *schema.ResourceD
 
 			if v, ok := dMap["model"]; ok {
 				policy.Model = helper.String(v.(string))
+			}
+
+			if v, ok := dMap["re_auth"]; ok {
+				policy.ReAuth = helper.Bool(v.(bool))
 			}
 
 			if v, ok := dMap["source"]; ok {

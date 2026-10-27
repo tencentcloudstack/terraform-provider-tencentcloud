@@ -61,6 +61,17 @@ In addition to all arguments above, the following attributes are exported:
 * `ssl_validity_period` - SSL certificate validity period, format: YYYY-MM-DD HH:MM:SS.
 * `ssl_validity` - SSL certificate validity. 0: invalid, 1: valid.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+  - [ModifyDBInstanceSSL](https://www.tencentcloud.com/document/api/238/72764)
+* Read: [DescribeDBInstancesAttribute](https://www.tencentcloud.com/document/api/238/54811)
+* Update:
+  - [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+  - [ModifyDBInstanceSSL](https://www.tencentcloud.com/document/api/238/72764)
 
 ## Import
 

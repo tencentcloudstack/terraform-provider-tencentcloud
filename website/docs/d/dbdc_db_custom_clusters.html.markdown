@@ -94,4 +94,9 @@ In addition to all arguments above, the following attributes are exported:
     * `key` - Tag key.
     * `value` - Tag value.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBCustomClusters](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusters&type=document&lang=en)
 

@@ -7,6 +7,7 @@ resource "tencentcloud_clb_log_topic" "example" {
   log_set_id = "2ed70190-bf06-4777-980d-2d8a327a2554"
   topic_name = "tf-example"
   status     = true
+  period     = 30
   tags = {
     env = "prod"
   }

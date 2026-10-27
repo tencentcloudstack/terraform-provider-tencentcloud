@@ -42,6 +42,21 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateEventBus](https://www.tencentcloud.com/document/api/1108/45829)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [GetEventBus](https://www.tencentcloud.com/document/api/1108/45827)
+* Update:
+  - [GetEventBus](https://www.tencentcloud.com/document/api/1108/45827)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [UpdateEventBus](https://www.tencentcloud.com/document/api/1108/45825)
+* Delete: [DeleteEventBus](https://www.tencentcloud.com/document/api/1108/45828)
 
 ## Import
 

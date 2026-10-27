@@ -377,7 +377,7 @@ func resourceTencentCloudLiteHbaseInstanceUpdate(d *schema.ResourceData, meta in
 
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	immutableArgs := []string{"instance_name", "pay_mode", "disk_type", "disk_size", "node_type", "tags", "time_span", "time_unit", "auto_renew_flag"}
+	immutableArgs := []string{"instance_name", "pay_mode", "disk_type", "node_type", "tags", "time_span", "time_unit", "auto_renew_flag"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -439,6 +439,46 @@ func resourceTencentCloudLiteHbaseInstanceUpdate(d *schema.ResourceData, meta in
 			if _, e := conf.WaitForState(); e != nil {
 				return e
 			}
+		}
+	}
+
+	if d.HasChange("disk_size") {
+		// ModifySLInstance requires Zone; use the zone of the first zone_settings block.
+		var zone string
+		if zoneSettings, ok := d.Get("zone_settings").([]interface{}); ok && len(zoneSettings) > 0 {
+			if zoneSettingMap, ok := zoneSettings[0].(map[string]interface{}); ok {
+				zone, _ = zoneSettingMap["zone"].(string)
+			}
+		}
+		if zone == "" {
+			return fmt.Errorf("`zone_settings.0.zone` is required to update `disk_size`")
+		}
+
+		request := emr.NewModifySLInstanceRequest()
+		request.InstanceId = helper.String(instanceId)
+		request.Zone = helper.String(zone)
+		if v, ok := d.GetOkExists("disk_size"); ok {
+			request.DiskSize = helper.IntInt64(v.(int))
+		}
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ModifySLInstanceWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update lite hbase instance failed, reason:%+v", logId, err)
+			return err
+		}
+		emrService := EMRService{
+			client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
+		}
+		conf := tccommon.BuildStateChangeConf([]string{"22"}, []string{"2"}, 10*tccommon.ReadRetryTimeout, time.Second, emrService.SLInstanceStateRefreshFunc(instanceId, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
 		}
 	}
 

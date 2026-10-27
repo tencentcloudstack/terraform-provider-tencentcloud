@@ -17,7 +17,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/list"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bdrc"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dlc"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mongodb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssm"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 )
 
 // resourceFactories lists every framework Resource factory.
@@ -40,7 +45,13 @@ var ephemeralResourceFactories = []func() ephemeral.EphemeralResource{
 var listResourceFactories = []func() list.ListResource{}
 
 // actionFactories lists every framework Action factory.
-var actionFactories = []func() action.Action{}
+var actionFactories = []func() action.Action{
+	teo.NewTeoConfirmOriginAclUpdate,
+	bdrc.NewBdrcRunCopyPairTasks,
+	dlc.NewDlcInitializeTCLake,
+	mongodb.NewMongodbRestoreDbInstance,
+	antiddos.NewAntiddosUnblockResources,
+}
 
 // frameworkResources returns every framework Resource factory.
 func frameworkResources() []func() resource.Resource { return resourceFactories }

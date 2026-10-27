@@ -490,62 +490,92 @@ func (r *AddUserGroupMembersResponse) FromJsonString(s string) error {
 }
 
 type AppAsset struct {
-	// 应用资产id
+	// <p>应用资产id</p>
 	Id *uint64 `json:"Id,omitnil,omitempty" name:"Id"`
 
-	// 实例id
+	// <p>实例id</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 资产名称
+	// <p>资产名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 应用服务器id
+	// <p>应用服务器id</p>
 	DeviceId *uint64 `json:"DeviceId,omitnil,omitempty" name:"DeviceId"`
 
-	// 应用服务器账号id
+	// <p>应用服务器账号id</p>
 	DeviceAccountId *uint64 `json:"DeviceAccountId,omitnil,omitempty" name:"DeviceAccountId"`
 
-	// 应用资产类型。1-web应用
+	// <p>应用资产类型。1-web应用</p>
 	Kind *uint64 `json:"Kind,omitnil,omitempty" name:"Kind"`
 
-	// 客户端工具路径
+	// <p>客户端工具路径</p>
 	ClientAppPath *string `json:"ClientAppPath,omitnil,omitempty" name:"ClientAppPath"`
 
-	// 客户端工具类型
+	// <p>客户端工具类型</p>
 	ClientAppKind *string `json:"ClientAppKind,omitnil,omitempty" name:"ClientAppKind"`
 
-	// 应用资产url
+	// <p>客户端工具启动参数</p>
+	ClientAppArgs []*string `json:"ClientAppArgs,omitnil,omitempty" name:"ClientAppArgs"`
+
+	// <p>应用资产url</p>
 	Url *string `json:"Url,omitnil,omitempty" name:"Url"`
 
-	// 托管状态。0-未托管，1-已托管
+	// <p>托管状态</p><p>枚举值：</p><ul><li>0： 未托管</li><li>1： 已托管</li></ul>
 	BindStatus *uint64 `json:"BindStatus,omitnil,omitempty" name:"BindStatus"`
 
-	// 应用服务器实例id
+	// <p>应用服务器实例id</p>
 	DeviceInstanceId *string `json:"DeviceInstanceId,omitnil,omitempty" name:"DeviceInstanceId"`
 
-	// 应用服务器名称
+	// <p>应用服务器名称</p>
 	DeviceName *string `json:"DeviceName,omitnil,omitempty" name:"DeviceName"`
 
-	// 应用服务器账号名称
+	// <p>应用服务器账号名称</p>
 	DeviceAccountName *string `json:"DeviceAccountName,omitnil,omitempty" name:"DeviceAccountName"`
 
-	// 堡垒机实例id
+	// <p>堡垒机实例id</p>
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 堡垒机实例信息
+	// <p>堡垒机实例信息</p>
 	Resource *Resource `json:"Resource,omitnil,omitempty" name:"Resource"`
 
-	// 网络域id
+	// <p>网络域id</p>
 	DomainId *string `json:"DomainId,omitnil,omitempty" name:"DomainId"`
 
-	// 网络域名称
+	// <p>网络域名称</p>
 	DomainName *string `json:"DomainName,omitnil,omitempty" name:"DomainName"`
 
-	// 资产组信息
+	// <p>资产组信息</p>
 	GroupSet []*Group `json:"GroupSet,omitnil,omitempty" name:"GroupSet"`
 
-	// 资产所属部门
+	// <p>资产所属部门</p>
 	Department *Department `json:"Department,omitnil,omitempty" name:"Department"`
+
+	// <p>账号数量</p>
+	AccountCount *uint64 `json:"AccountCount,omitnil,omitempty" name:"AccountCount"`
+
+	// <p>代填类型</p><p>枚举值：</p><ul><li>0： 不支持代填</li><li>1： 元素定位代填</li></ul>
+	AgentInputType *uint64 `json:"AgentInputType,omitnil,omitempty" name:"AgentInputType"`
+
+	// <p>是否自动提交</p><p>枚举值：</p><ul><li>0： 不自动提交</li><li>1： 自动提交</li></ul>
+	AgentInputSubmit *uint64 `json:"AgentInputSubmit,omitnil,omitempty" name:"AgentInputSubmit"`
+
+	// <p>用户名输入框选择器类型</p><p>枚举值：</p><ul><li>id： html标签id属性</li><li>name： html标签name属性</li><li>selector： css选择器</li><li>xpath： xpath</li></ul>
+	UserNameType *string `json:"UserNameType,omitnil,omitempty" name:"UserNameType"`
+
+	// <p>用户名输入框选择器属性</p>
+	UserNameValue *string `json:"UserNameValue,omitnil,omitempty" name:"UserNameValue"`
+
+	// <p>密码输入框选择器类型</p><p>枚举值：</p><ul><li>id： html标签id属性</li><li>name： html标签name属性</li><li>selector： css选择器</li><li>xpath： xpath</li></ul>
+	PasswordType *string `json:"PasswordType,omitnil,omitempty" name:"PasswordType"`
+
+	// <p>密码输入框选择器属性</p>
+	PasswordValue *string `json:"PasswordValue,omitnil,omitempty" name:"PasswordValue"`
+
+	// <p>提交按钮选择器类型，为空表示不支持自动提交</p><p>枚举值：</p><ul><li>id： html标签id属性</li><li>name： html标签name属性</li><li>selector： css选择器</li><li>xpath： xpath</li></ul>
+	SubmitType *string `json:"SubmitType,omitnil,omitempty" name:"SubmitType"`
+
+	// <p>提交按钮选择器属性值</p>
+	SubmitValue *string `json:"SubmitValue,omitnil,omitempty" name:"SubmitValue"`
 }
 
 type AssetSyncFlags struct {
@@ -2231,45 +2261,57 @@ func (r *CreateSyncUserTaskResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateUserDirectoryRequestParams struct {
-	// 目录id
+	// <p>目录id</p>
 	DirId *uint64 `json:"DirId,omitnil,omitempty" name:"DirId"`
 
-	// 目录名称
+	// <p>目录名称</p>
 	DirName *string `json:"DirName,omitnil,omitempty" name:"DirName"`
 
-	// ioa分组信息
+	// <p>ioa分组信息</p>
 	UserOrgSet []*UserOrg `json:"UserOrgSet,omitnil,omitempty" name:"UserOrgSet"`
 
-	// ioa关联用户源类型
+	// <p>ioa关联用户源类型</p>
 	Source *uint64 `json:"Source,omitnil,omitempty" name:"Source"`
 
-	// ioa关联用户源名称
+	// <p>ioa关联用户源名称</p>
 	SourceName *string `json:"SourceName,omitnil,omitempty" name:"SourceName"`
 
-	// 目录包含用户数
+	// <p>目录包含用户数</p>
 	UserCount *uint64 `json:"UserCount,omitnil,omitempty" name:"UserCount"`
+
+	// <p>是否开启自动同步</p>
+	AutoSync *bool `json:"AutoSync,omitnil,omitempty" name:"AutoSync"`
+
+	// <p>同步周期（5段式 crontab 表达式）</p>
+	SyncCron *string `json:"SyncCron,omitnil,omitempty" name:"SyncCron"`
 }
 
 type CreateUserDirectoryRequest struct {
 	*tchttp.BaseRequest
 	
-	// 目录id
+	// <p>目录id</p>
 	DirId *uint64 `json:"DirId,omitnil,omitempty" name:"DirId"`
 
-	// 目录名称
+	// <p>目录名称</p>
 	DirName *string `json:"DirName,omitnil,omitempty" name:"DirName"`
 
-	// ioa分组信息
+	// <p>ioa分组信息</p>
 	UserOrgSet []*UserOrg `json:"UserOrgSet,omitnil,omitempty" name:"UserOrgSet"`
 
-	// ioa关联用户源类型
+	// <p>ioa关联用户源类型</p>
 	Source *uint64 `json:"Source,omitnil,omitempty" name:"Source"`
 
-	// ioa关联用户源名称
+	// <p>ioa关联用户源名称</p>
 	SourceName *string `json:"SourceName,omitnil,omitempty" name:"SourceName"`
 
-	// 目录包含用户数
+	// <p>目录包含用户数</p>
 	UserCount *uint64 `json:"UserCount,omitnil,omitempty" name:"UserCount"`
+
+	// <p>是否开启自动同步</p>
+	AutoSync *bool `json:"AutoSync,omitnil,omitempty" name:"AutoSync"`
+
+	// <p>同步周期（5段式 crontab 表达式）</p>
+	SyncCron *string `json:"SyncCron,omitnil,omitempty" name:"SyncCron"`
 }
 
 func (r *CreateUserDirectoryRequest) ToJsonString() string {
@@ -2290,6 +2332,8 @@ func (r *CreateUserDirectoryRequest) FromJsonString(s string) error {
 	delete(f, "Source")
 	delete(f, "SourceName")
 	delete(f, "UserCount")
+	delete(f, "AutoSync")
+	delete(f, "SyncCron")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateUserDirectoryRequest has unknown keys!", "")
 	}
@@ -2298,7 +2342,7 @@ func (r *CreateUserDirectoryRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateUserDirectoryResponseParams struct {
-	// 目录Id
+	// <p>目录Id</p>
 	Id *uint64 `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -3260,99 +3304,129 @@ type Departments struct {
 
 // Predefined struct for user
 type DeployResourceRequestParams struct {
-	// 需要开通服务的资源ID
+	// <p>需要开通服务的资源ID</p>
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 需要开通服务的地域
+	// <p>需要开通服务的地域</p>
 	ApCode *string `json:"ApCode,omitnil,omitempty" name:"ApCode"`
 
-	// 子网所在可用区
+	// <p>子网所在可用区</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 需要开通服务的VPC
+	// <p>需要开通服务的VPC</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 需要开通服务的子网ID
+	// <p>需要开通服务的子网ID，此字段即将废除，请填写DeploySubnets包含的子网</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 需要开通服务的子网网段
+	// <p>需要开通服务的子网网段，此字段即将废除，请填写DeploySubnets包含的子网</p>
 	CidrBlock *string `json:"CidrBlock,omitnil,omitempty" name:"CidrBlock"`
 
-	// 需要开通服务的VPC名称
+	// <p>需要开通服务的VPC名称</p>
 	VpcName *string `json:"VpcName,omitnil,omitempty" name:"VpcName"`
 
-	// 需要开通服务的VPC对应的网段
+	// <p>需要开通服务的VPC对应的网段</p>
 	VpcCidrBlock *string `json:"VpcCidrBlock,omitnil,omitempty" name:"VpcCidrBlock"`
 
-	// 需要开通服务的子网名称
+	// <p>需要开通服务的子网名称，此字段即将废除，请填写DeploySubnets包含的子网</p>
 	SubnetName *string `json:"SubnetName,omitnil,omitempty" name:"SubnetName"`
 
-	// 需要开通实例所属的CDC集群ID
+	// <p>需要开通实例所属的CDC集群ID</p>
 	CdcClusterId *string `json:"CdcClusterId,omitnil,omitempty" name:"CdcClusterId"`
 
-	// 开通堡垒机指定共享的clbId
+	// <p>开通堡垒机指定共享的clbId</p>
 	ShareClbId *string `json:"ShareClbId,omitnil,omitempty" name:"ShareClbId"`
 
-	// 0-关闭web访问堡垒机，1-开启web访问堡垒机
+	// <p>0-关闭web访问堡垒机，1-开启web访问堡垒机</p>
 	WebAccess *uint64 `json:"WebAccess,omitnil,omitempty" name:"WebAccess"`
 
-	// 0-关闭客户端访问堡垒机，1-开启客户端访问堡垒机
+	// <p>0-关闭客户端访问堡垒机，1-开启客户端访问堡垒机</p>
 	ClientAccess *uint64 `json:"ClientAccess,omitnil,omitempty" name:"ClientAccess"`
 
-	// 0-关闭内网访问堡垒机，1-开启内网访问堡垒机
+	// <p>0-关闭内网访问堡垒机，1-开启内网访问堡垒机</p>
 	IntranetAccess *uint64 `json:"IntranetAccess,omitnil,omitempty" name:"IntranetAccess"`
 
-	// 0-关闭公网访问堡垒机，1-开启公网访问堡垒机
+	// <p>0-关闭公网访问堡垒机，1-开启公网访问堡垒机</p>
 	ExternalAccess *uint64 `json:"ExternalAccess,omitnil,omitempty" name:"ExternalAccess"`
+
+	// <p>开通堡垒机的子网信息，最多支持2个子网</p>
+	DeploySubnets []*ParamInitResourceSubnet `json:"DeploySubnets,omitnil,omitempty" name:"DeploySubnets"`
+
+	// <p>开通内网访问的VPC ID</p>
+	IntranetVpcId *string `json:"IntranetVpcId,omitnil,omitempty" name:"IntranetVpcId"`
+
+	// <p>开通内网访问的VPC 网段</p>
+	IntranetVpcCidrBlock *string `json:"IntranetVpcCidrBlock,omitnil,omitempty" name:"IntranetVpcCidrBlock"`
+
+	// <p>开通内网访问的VPC名称</p>
+	IntranetVpcName *string `json:"IntranetVpcName,omitnil,omitempty" name:"IntranetVpcName"`
+
+	// <p>开通内网访问的子网信息，最多支持2个子网</p>
+	IntranetSubnets []*ParamInitResourceSubnet `json:"IntranetSubnets,omitnil,omitempty" name:"IntranetSubnets"`
 }
 
 type DeployResourceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 需要开通服务的资源ID
+	// <p>需要开通服务的资源ID</p>
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 需要开通服务的地域
+	// <p>需要开通服务的地域</p>
 	ApCode *string `json:"ApCode,omitnil,omitempty" name:"ApCode"`
 
-	// 子网所在可用区
+	// <p>子网所在可用区</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 需要开通服务的VPC
+	// <p>需要开通服务的VPC</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 需要开通服务的子网ID
+	// <p>需要开通服务的子网ID，此字段即将废除，请填写DeploySubnets包含的子网</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 需要开通服务的子网网段
+	// <p>需要开通服务的子网网段，此字段即将废除，请填写DeploySubnets包含的子网</p>
 	CidrBlock *string `json:"CidrBlock,omitnil,omitempty" name:"CidrBlock"`
 
-	// 需要开通服务的VPC名称
+	// <p>需要开通服务的VPC名称</p>
 	VpcName *string `json:"VpcName,omitnil,omitempty" name:"VpcName"`
 
-	// 需要开通服务的VPC对应的网段
+	// <p>需要开通服务的VPC对应的网段</p>
 	VpcCidrBlock *string `json:"VpcCidrBlock,omitnil,omitempty" name:"VpcCidrBlock"`
 
-	// 需要开通服务的子网名称
+	// <p>需要开通服务的子网名称，此字段即将废除，请填写DeploySubnets包含的子网</p>
 	SubnetName *string `json:"SubnetName,omitnil,omitempty" name:"SubnetName"`
 
-	// 需要开通实例所属的CDC集群ID
+	// <p>需要开通实例所属的CDC集群ID</p>
 	CdcClusterId *string `json:"CdcClusterId,omitnil,omitempty" name:"CdcClusterId"`
 
-	// 开通堡垒机指定共享的clbId
+	// <p>开通堡垒机指定共享的clbId</p>
 	ShareClbId *string `json:"ShareClbId,omitnil,omitempty" name:"ShareClbId"`
 
-	// 0-关闭web访问堡垒机，1-开启web访问堡垒机
+	// <p>0-关闭web访问堡垒机，1-开启web访问堡垒机</p>
 	WebAccess *uint64 `json:"WebAccess,omitnil,omitempty" name:"WebAccess"`
 
-	// 0-关闭客户端访问堡垒机，1-开启客户端访问堡垒机
+	// <p>0-关闭客户端访问堡垒机，1-开启客户端访问堡垒机</p>
 	ClientAccess *uint64 `json:"ClientAccess,omitnil,omitempty" name:"ClientAccess"`
 
-	// 0-关闭内网访问堡垒机，1-开启内网访问堡垒机
+	// <p>0-关闭内网访问堡垒机，1-开启内网访问堡垒机</p>
 	IntranetAccess *uint64 `json:"IntranetAccess,omitnil,omitempty" name:"IntranetAccess"`
 
-	// 0-关闭公网访问堡垒机，1-开启公网访问堡垒机
+	// <p>0-关闭公网访问堡垒机，1-开启公网访问堡垒机</p>
 	ExternalAccess *uint64 `json:"ExternalAccess,omitnil,omitempty" name:"ExternalAccess"`
+
+	// <p>开通堡垒机的子网信息，最多支持2个子网</p>
+	DeploySubnets []*ParamInitResourceSubnet `json:"DeploySubnets,omitnil,omitempty" name:"DeploySubnets"`
+
+	// <p>开通内网访问的VPC ID</p>
+	IntranetVpcId *string `json:"IntranetVpcId,omitnil,omitempty" name:"IntranetVpcId"`
+
+	// <p>开通内网访问的VPC 网段</p>
+	IntranetVpcCidrBlock *string `json:"IntranetVpcCidrBlock,omitnil,omitempty" name:"IntranetVpcCidrBlock"`
+
+	// <p>开通内网访问的VPC名称</p>
+	IntranetVpcName *string `json:"IntranetVpcName,omitnil,omitempty" name:"IntranetVpcName"`
+
+	// <p>开通内网访问的子网信息，最多支持2个子网</p>
+	IntranetSubnets []*ParamInitResourceSubnet `json:"IntranetSubnets,omitnil,omitempty" name:"IntranetSubnets"`
 }
 
 func (r *DeployResourceRequest) ToJsonString() string {
@@ -3382,6 +3456,11 @@ func (r *DeployResourceRequest) FromJsonString(s string) error {
 	delete(f, "ClientAccess")
 	delete(f, "IntranetAccess")
 	delete(f, "ExternalAccess")
+	delete(f, "DeploySubnets")
+	delete(f, "IntranetVpcId")
+	delete(f, "IntranetVpcCidrBlock")
+	delete(f, "IntranetVpcName")
+	delete(f, "IntranetSubnets")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeployResourceRequest has unknown keys!", "")
 	}
@@ -5502,10 +5581,10 @@ func (r *DescribeSourceTypesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeSourceTypesResponseParams struct {
-	// 认证源总数
+	// <p>认证源总数</p>
 	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 认证源信息
+	// <p>认证源信息</p>
 	SourceTypeSet []*SourceType `json:"SourceTypeSet,omitnil,omitempty" name:"SourceTypeSet"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5530,20 +5609,20 @@ func (r *DescribeSourceTypesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeUserDirectoryRequestParams struct {
-	// 分页大小
+	// <p>分页大小</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 分页偏移
+	// <p>分页偏移</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 type DescribeUserDirectoryRequest struct {
 	*tchttp.BaseRequest
 	
-	// 分页大小
+	// <p>分页大小</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 分页偏移
+	// <p>分页偏移</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
@@ -5569,10 +5648,10 @@ func (r *DescribeUserDirectoryRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeUserDirectoryResponseParams struct {
-	// 用户目录集
+	// <p>用户目录集</p>
 	UserDirSet []*UserDirectory `json:"UserDirSet,omitnil,omitempty" name:"UserDirSet"`
 
-	// 用户目录集总数
+	// <p>用户目录集总数</p>
 	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5989,103 +6068,103 @@ func (r *DescribeUsersResponse) FromJsonString(s string) error {
 }
 
 type Device struct {
-	// 资产ID
+	// <p>资产ID</p>
 	Id *uint64 `json:"Id,omitnil,omitempty" name:"Id"`
 
-	// 实例ID，对应CVM、CDB等实例ID
+	// <p>实例ID，对应CVM、CDB等实例ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 资产名
+	// <p>资产名</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 公网IP
+	// <p>公网IP</p>
 	PublicIp *string `json:"PublicIp,omitnil,omitempty" name:"PublicIp"`
 
-	// 内网IP
+	// <p>内网IP</p>
 	PrivateIp *string `json:"PrivateIp,omitnil,omitempty" name:"PrivateIp"`
 
-	// 地域编码
+	// <p>地域编码</p>
 	ApCode *string `json:"ApCode,omitnil,omitempty" name:"ApCode"`
 
-	// 地域名称
+	// <p>地域名称</p>
 	ApName *string `json:"ApName,omitnil,omitempty" name:"ApName"`
 
-	// 操作系统名称
+	// <p>操作系统名称</p>
 	OsName *string `json:"OsName,omitnil,omitempty" name:"OsName"`
 
-	// 资产类型 1 - Linux, 2 - Windows, 3 - MySQL, 4 - SQLServer
+	// <p>资产类型 1 - Linux, 2 - Windows, 3 - MySQL, 4 - SQLServer</p>
 	Kind *uint64 `json:"Kind,omitnil,omitempty" name:"Kind"`
 
-	// 管理端口
+	// <p>管理端口</p>
 	Port *uint64 `json:"Port,omitnil,omitempty" name:"Port"`
 
-	// 所属资产组列表
+	// <p>所属资产组列表</p>
 	GroupSet []*Group `json:"GroupSet,omitnil,omitempty" name:"GroupSet"`
 
-	// 资产绑定的账号数
+	// <p>资产绑定的账号数</p>
 	AccountCount *uint64 `json:"AccountCount,omitnil,omitempty" name:"AccountCount"`
 
-	// VPC ID
+	// <p>VPC ID</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 子网ID
+	// <p>子网ID</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 堡垒机服务信息，注意没有绑定服务时为null
+	// <p>堡垒机服务信息，注意没有绑定服务时为null</p>
 	Resource *Resource `json:"Resource,omitnil,omitempty" name:"Resource"`
 
-	// 资产所属部门
+	// <p>资产所属部门</p>
 	Department *Department `json:"Department,omitnil,omitempty" name:"Department"`
 
-	// 数据库资产的多节点
+	// <p>数据库资产的多节点</p>
 	IpPortSet []*string `json:"IpPortSet,omitnil,omitempty" name:"IpPortSet"`
 
-	// 网络域Id
+	// <p>网络域Id</p>
 	DomainId *string `json:"DomainId,omitnil,omitempty" name:"DomainId"`
 
-	// 网络域名称
+	// <p>网络域名称</p>
 	DomainName *string `json:"DomainName,omitnil,omitempty" name:"DomainName"`
 
-	// 是否启用SSL，仅支持Redis资产。0：禁用 1：启用
+	// <p>是否启用SSL，仅支持Redis资产。0：禁用 1：启用</p>
 	EnableSSL *int64 `json:"EnableSSL,omitnil,omitempty" name:"EnableSSL"`
 
-	// 已上传的SSL证书名称
+	// <p>已上传的SSL证书名称</p>
 	SSLCertName *string `json:"SSLCertName,omitnil,omitempty" name:"SSLCertName"`
 
-	// IOA侧的资源ID
+	// <p>IOA侧的资源ID</p>
 	IOAId *int64 `json:"IOAId,omitnil,omitempty" name:"IOAId"`
 
-	// K8S集群托管维度。1-集群，2-命名空间，3-工作负载
+	// <p>K8S集群托管维度。1-集群，2-命名空间，3-工作负载</p>
 	ManageDimension *uint64 `json:"ManageDimension,omitnil,omitempty" name:"ManageDimension"`
 
-	// K8S集群托管账号id	
+	// <p>K8S集群托管账号id</p>
 	ManageAccountId *uint64 `json:"ManageAccountId,omitnil,omitempty" name:"ManageAccountId"`
 
-	// K8S集群命名空间	
+	// <p>K8S集群命名空间</p>
 	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
 
-	// K8S集群工作负载	
+	// <p>K8S集群工作负载</p>
 	Workload *string `json:"Workload,omitnil,omitempty" name:"Workload"`
 
-	// K8S集群pod已同步数量
+	// <p>K8S集群pod已同步数量</p>
 	SyncPodCount *uint64 `json:"SyncPodCount,omitnil,omitempty" name:"SyncPodCount"`
 
-	// K8S集群pod总数量	
+	// <p>K8S集群pod总数量</p>
 	TotalPodCount *uint64 `json:"TotalPodCount,omitnil,omitempty" name:"TotalPodCount"`
 
-	// 云账号id
+	// <p>云账号id</p>
 	CloudAccountId *uint64 `json:"CloudAccountId,omitnil,omitempty" name:"CloudAccountId"`
 
-	// 云账号名称
+	// <p>云账号名称</p>
 	CloudAccountName *string `json:"CloudAccountName,omitnil,omitempty" name:"CloudAccountName"`
 
-	// 云厂商类型1-腾讯云，2-阿里云
+	// <p>云厂商类型1-腾讯云，2-阿里云</p>
 	ProviderType *uint64 `json:"ProviderType,omitnil,omitempty" name:"ProviderType"`
 
-	// 云厂商名称
+	// <p>云厂商名称</p>
 	ProviderName *string `json:"ProviderName,omitnil,omitempty" name:"ProviderName"`
 
-	// 同步的云资产状态，标记同步的资产的状态情况，0-已删除,1-正常,2-已隔离,3-已过期
+	// <p>同步的云资产状态，标记同步的资产的状态情况，0-已删除,1-正常,2-已隔离,3-已过期</p>
 	SyncCloudDeviceStatus *uint64 `json:"SyncCloudDeviceStatus,omitnil,omitempty" name:"SyncCloudDeviceStatus"`
 }
 
@@ -6475,39 +6554,59 @@ func (r *EnableExternalAccessResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type EnableIntranetAccessRequestParams struct {
-	// 堡垒机实例id
+	// <p>堡垒机实例id</p>
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 开通内网访问的vpc id
+	// <p>开通内网访问的vpc id</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// vpc的网段
+	// <p>vpc名称</p>
+	VpcName *string `json:"VpcName,omitnil,omitempty" name:"VpcName"`
+
+	// <p>vpc地域</p>
+	VpcRegion *string `json:"VpcRegion,omitnil,omitempty" name:"VpcRegion"`
+
+	// <p>vpc的网段</p>
 	VpcCidrBlock *string `json:"VpcCidrBlock,omitnil,omitempty" name:"VpcCidrBlock"`
 
-	// 开通内网访问的subnet id
+	// <p>开通内网访问的subnet id</p>
+	//
+	// Deprecated: SubnetId is deprecated.
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 内网ip的自定义域名，可为空
+	// <p>内网ip的自定义域名，可为空</p>
 	DomainName *string `json:"DomainName,omitnil,omitempty" name:"DomainName"`
+
+	// <p>开通内网的子网信息</p>
+	IntranetSubnets []*ParamInitResourceSubnet `json:"IntranetSubnets,omitnil,omitempty" name:"IntranetSubnets"`
 }
 
 type EnableIntranetAccessRequest struct {
 	*tchttp.BaseRequest
 	
-	// 堡垒机实例id
+	// <p>堡垒机实例id</p>
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 开通内网访问的vpc id
+	// <p>开通内网访问的vpc id</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// vpc的网段
+	// <p>vpc名称</p>
+	VpcName *string `json:"VpcName,omitnil,omitempty" name:"VpcName"`
+
+	// <p>vpc地域</p>
+	VpcRegion *string `json:"VpcRegion,omitnil,omitempty" name:"VpcRegion"`
+
+	// <p>vpc的网段</p>
 	VpcCidrBlock *string `json:"VpcCidrBlock,omitnil,omitempty" name:"VpcCidrBlock"`
 
-	// 开通内网访问的subnet id
+	// <p>开通内网访问的subnet id</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 内网ip的自定义域名，可为空
+	// <p>内网ip的自定义域名，可为空</p>
 	DomainName *string `json:"DomainName,omitnil,omitempty" name:"DomainName"`
+
+	// <p>开通内网的子网信息</p>
+	IntranetSubnets []*ParamInitResourceSubnet `json:"IntranetSubnets,omitnil,omitempty" name:"IntranetSubnets"`
 }
 
 func (r *EnableIntranetAccessRequest) ToJsonString() string {
@@ -6524,9 +6623,12 @@ func (r *EnableIntranetAccessRequest) FromJsonString(s string) error {
 	}
 	delete(f, "ResourceId")
 	delete(f, "VpcId")
+	delete(f, "VpcName")
+	delete(f, "VpcRegion")
 	delete(f, "VpcCidrBlock")
 	delete(f, "SubnetId")
 	delete(f, "DomainName")
+	delete(f, "IntranetSubnets")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "EnableIntranetAccessRequest has unknown keys!", "")
 	}
@@ -6689,20 +6791,23 @@ type Group struct {
 }
 
 type IOAUserGroup struct {
-	// ioa用户组织id
+	// <p>ioa用户组织id</p>
 	OrgId *uint64 `json:"OrgId,omitnil,omitempty" name:"OrgId"`
 
-	// ioa用户组织名称
+	// <p>ioa用户组织名称</p>
 	OrgName *string `json:"OrgName,omitnil,omitempty" name:"OrgName"`
 
-	// ioa用户组织id路径	
+	// <p>ioa用户组织id路径</p>
 	OrgIdPath *string `json:"OrgIdPath,omitnil,omitempty" name:"OrgIdPath"`
 
-	// ioa用户组织名称路径	
+	// <p>ioa用户组织名称路径</p>
 	OrgNamePath *string `json:"OrgNamePath,omitnil,omitempty" name:"OrgNamePath"`
 
-	// ioa关联用户源类型
+	// <p>ioa关联用户源类型</p>
 	Source *uint64 `json:"Source,omitnil,omitempty" name:"Source"`
+
+	// <p>用户所属目录</p>
+	UserDirName *string `json:"UserDirName,omitnil,omitempty" name:"UserDirName"`
 }
 
 // Predefined struct for user
@@ -6854,17 +6959,20 @@ type LoginEvent struct {
 }
 
 type LoginSetting struct {
-	// 登录会话超时，10分钟，20分钟，30分钟，默认20分钟
+	// <p>登录会话超时，10分钟，20分钟，30分钟，默认20分钟</p>
 	TimeOut *uint64 `json:"TimeOut,omitnil,omitempty" name:"TimeOut"`
 
-	// 连续密码错误次数，超过锁定账号，3-5
+	// <p>连续密码错误次数，超过锁定账号，3-5</p>
 	LockThreshold *uint64 `json:"LockThreshold,omitnil,omitempty" name:"LockThreshold"`
 
-	// 账号锁定时长，10分钟，20分钟，30分钟
+	// <p>账号锁定时长，10分钟，20分钟，30分钟</p>
 	LockTime *uint64 `json:"LockTime,omitnil,omitempty" name:"LockTime"`
 
-	// 用户多少天不活跃，账号自动锁定
+	// <p>用户多少天不活跃，账号自动锁定</p>
 	InactiveUserLock *uint64 `json:"InactiveUserLock,omitnil,omitempty" name:"InactiveUserLock"`
+
+	// <p>运维账号单点登录开关：0-关闭，1-开启</p>
+	EnableSingleLogin *uint64 `json:"EnableSingleLogin,omitnil,omitempty" name:"EnableSingleLogin"`
 }
 
 // Predefined struct for user
@@ -8440,21 +8548,33 @@ func (r *ModifyResourceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyUserDirectoryRequestParams struct {
-	// 目录id
+	// <p>目录id</p>
 	Id *uint64 `json:"Id,omitnil,omitempty" name:"Id"`
 
-	// ioa分组信息
+	// <p>ioa分组信息</p>
 	UserOrgSet []*UserOrg `json:"UserOrgSet,omitnil,omitempty" name:"UserOrgSet"`
+
+	// <p>是否开启自动同步</p>
+	AutoSync *bool `json:"AutoSync,omitnil,omitempty" name:"AutoSync"`
+
+	// <p>同步周期（5段式 crontab 表达式）</p>
+	SyncCron *string `json:"SyncCron,omitnil,omitempty" name:"SyncCron"`
 }
 
 type ModifyUserDirectoryRequest struct {
 	*tchttp.BaseRequest
 	
-	// 目录id
+	// <p>目录id</p>
 	Id *uint64 `json:"Id,omitnil,omitempty" name:"Id"`
 
-	// ioa分组信息
+	// <p>ioa分组信息</p>
 	UserOrgSet []*UserOrg `json:"UserOrgSet,omitnil,omitempty" name:"UserOrgSet"`
+
+	// <p>是否开启自动同步</p>
+	AutoSync *bool `json:"AutoSync,omitnil,omitempty" name:"AutoSync"`
+
+	// <p>同步周期（5段式 crontab 表达式）</p>
+	SyncCron *string `json:"SyncCron,omitnil,omitempty" name:"SyncCron"`
 }
 
 func (r *ModifyUserDirectoryRequest) ToJsonString() string {
@@ -8471,6 +8591,8 @@ func (r *ModifyUserDirectoryRequest) FromJsonString(s string) error {
 	}
 	delete(f, "Id")
 	delete(f, "UserOrgSet")
+	delete(f, "AutoSync")
+	delete(f, "SyncCron")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyUserDirectoryRequest has unknown keys!", "")
 	}
@@ -8569,72 +8691,68 @@ func (r *ModifyUserGroupResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyUserRequestParams struct {
-	// 用户ID
+	// <p>用户ID</p>
 	Id *uint64 `json:"Id,omitnil,omitempty" name:"Id"`
 
-	// 用户姓名，最大长度20个字符，不能包含空格
+	// <p>用户姓名，最大长度20个字符，不能包含空格</p>
 	RealName *string `json:"RealName,omitnil,omitempty" name:"RealName"`
 
-	// 按照"国家地区代码|手机号"的格式输入。如: "+86|xxxxxxxx"
+	// <p>按照&quot;国家地区代码|手机号&quot;的格式输入。如: &quot;+86|xxxxxxxx&quot;</p>
 	Phone *string `json:"Phone,omitnil,omitempty" name:"Phone"`
 
-	// 电子邮件
+	// <p>电子邮件</p>
 	Email *string `json:"Email,omitnil,omitempty" name:"Email"`
 
-	// 用户生效时间，如:"2021-09-22T00:00:00+00:00"
-	// 生效、失效时间不填则用户长期有效
+	// <p>用户生效时间，如:&quot;2021-09-22T00:00:00+00:00&quot;<br>生效、失效时间不填则用户长期有效</p>
 	ValidateFrom *string `json:"ValidateFrom,omitnil,omitempty" name:"ValidateFrom"`
 
-	// 用户失效时间，如:"2021-09-23T00:00:00+00:00"
-	// 生效、失效时间不填则用户长期有效
+	// <p>用户失效时间，如:&quot;2021-09-23T00:00:00+00:00&quot;<br>生效、失效时间不填则用户长期有效</p>
 	ValidateTo *string `json:"ValidateTo,omitnil,omitempty" name:"ValidateTo"`
 
-	// 所属用户组ID集合
+	// <p>所属用户组ID集合</p>
 	GroupIdSet []*uint64 `json:"GroupIdSet,omitnil,omitempty" name:"GroupIdSet"`
 
-	// 认证方式，0 - 本地，1 - LDAP，2 - OAuth 不传则默认为0
+	// <p>认证方式，0 - 本地，1 - LDAP，2 - OAuth 不传则默认为0</p>
 	AuthType *uint64 `json:"AuthType,omitnil,omitempty" name:"AuthType"`
 
-	// 访问时间段限制， 由0、1组成的字符串，长度168(7 × 24)，代表该用户在一周中允许访问的时间段。字符串中第N个字符代表在一周中的第N个小时， 0 - 代表不允许访问，1 - 代表允许访问
+	// <p>访问时间段限制， 由0、1组成的字符串，长度168(7 × 24)，代表该用户在一周中允许访问的时间段。字符串中第N个字符代表在一周中的第N个小时， 0 - 代表不允许访问，1 - 代表允许访问</p>
 	ValidateTime *string `json:"ValidateTime,omitnil,omitempty" name:"ValidateTime"`
 
-	// 用户所属部门的ID，如1.2.3
+	// <p>用户所属部门的ID，如1.2.3</p>
 	DepartmentId *string `json:"DepartmentId,omitnil,omitempty" name:"DepartmentId"`
 }
 
 type ModifyUserRequest struct {
 	*tchttp.BaseRequest
 	
-	// 用户ID
+	// <p>用户ID</p>
 	Id *uint64 `json:"Id,omitnil,omitempty" name:"Id"`
 
-	// 用户姓名，最大长度20个字符，不能包含空格
+	// <p>用户姓名，最大长度20个字符，不能包含空格</p>
 	RealName *string `json:"RealName,omitnil,omitempty" name:"RealName"`
 
-	// 按照"国家地区代码|手机号"的格式输入。如: "+86|xxxxxxxx"
+	// <p>按照&quot;国家地区代码|手机号&quot;的格式输入。如: &quot;+86|xxxxxxxx&quot;</p>
 	Phone *string `json:"Phone,omitnil,omitempty" name:"Phone"`
 
-	// 电子邮件
+	// <p>电子邮件</p>
 	Email *string `json:"Email,omitnil,omitempty" name:"Email"`
 
-	// 用户生效时间，如:"2021-09-22T00:00:00+00:00"
-	// 生效、失效时间不填则用户长期有效
+	// <p>用户生效时间，如:&quot;2021-09-22T00:00:00+00:00&quot;<br>生效、失效时间不填则用户长期有效</p>
 	ValidateFrom *string `json:"ValidateFrom,omitnil,omitempty" name:"ValidateFrom"`
 
-	// 用户失效时间，如:"2021-09-23T00:00:00+00:00"
-	// 生效、失效时间不填则用户长期有效
+	// <p>用户失效时间，如:&quot;2021-09-23T00:00:00+00:00&quot;<br>生效、失效时间不填则用户长期有效</p>
 	ValidateTo *string `json:"ValidateTo,omitnil,omitempty" name:"ValidateTo"`
 
-	// 所属用户组ID集合
+	// <p>所属用户组ID集合</p>
 	GroupIdSet []*uint64 `json:"GroupIdSet,omitnil,omitempty" name:"GroupIdSet"`
 
-	// 认证方式，0 - 本地，1 - LDAP，2 - OAuth 不传则默认为0
+	// <p>认证方式，0 - 本地，1 - LDAP，2 - OAuth 不传则默认为0</p>
 	AuthType *uint64 `json:"AuthType,omitnil,omitempty" name:"AuthType"`
 
-	// 访问时间段限制， 由0、1组成的字符串，长度168(7 × 24)，代表该用户在一周中允许访问的时间段。字符串中第N个字符代表在一周中的第N个小时， 0 - 代表不允许访问，1 - 代表允许访问
+	// <p>访问时间段限制， 由0、1组成的字符串，长度168(7 × 24)，代表该用户在一周中允许访问的时间段。字符串中第N个字符代表在一周中的第N个小时， 0 - 代表不允许访问，1 - 代表允许访问</p>
 	ValidateTime *string `json:"ValidateTime,omitnil,omitempty" name:"ValidateTime"`
 
-	// 用户所属部门的ID，如1.2.3
+	// <p>用户所属部门的ID，如1.2.3</p>
 	DepartmentId *string `json:"DepartmentId,omitnil,omitempty" name:"DepartmentId"`
 }
 
@@ -8764,6 +8882,20 @@ type OperationTask struct {
 
 	// 下一次执行时间
 	FirstTime *string `json:"FirstTime,omitnil,omitempty" name:"FirstTime"`
+}
+
+type ParamInitResourceSubnet struct {
+	// <p>xa0子网id</p>
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
+
+	// <p>子网名称</p>
+	SubnetName *string `json:"SubnetName,omitnil,omitempty" name:"SubnetName"`
+
+	// <p>子网可用区</p>
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
+
+	// <p>子网cidr</p>
+	SubnetCidrBlock *string `json:"SubnetCidrBlock,omitnil,omitempty" name:"SubnetCidrBlock"`
 }
 
 type PasswordSetting struct {
@@ -8969,15 +9101,21 @@ func (r *ResetDeviceAccountPrivateKeyResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ResetUserRequestParams struct {
-	// 用户ID集合
+	// <p>用户ID集合</p>
 	IdSet []*uint64 `json:"IdSet,omitnil,omitempty" name:"IdSet"`
+
+	// <p>重置类型</p><p>枚举值：</p><ul><li>0： 同时重置本地认证密码、OTP验证码</li><li>1： 仅重置本地认证密码</li><li>2： 仅重置OTP验证码</li></ul><p>默认值：0</p>
+	ResetType *uint64 `json:"ResetType,omitnil,omitempty" name:"ResetType"`
 }
 
 type ResetUserRequest struct {
 	*tchttp.BaseRequest
 	
-	// 用户ID集合
+	// <p>用户ID集合</p>
 	IdSet []*uint64 `json:"IdSet,omitnil,omitempty" name:"IdSet"`
+
+	// <p>重置类型</p><p>枚举值：</p><ul><li>0： 同时重置本地认证密码、OTP验证码</li><li>1： 仅重置本地认证密码</li><li>2： 仅重置OTP验证码</li></ul><p>默认值：0</p>
+	ResetType *uint64 `json:"ResetType,omitnil,omitempty" name:"ResetType"`
 }
 
 func (r *ResetUserRequest) ToJsonString() string {
@@ -8993,6 +9131,7 @@ func (r *ResetUserRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "IdSet")
+	delete(f, "ResetType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ResetUserRequest has unknown keys!", "")
 	}
@@ -9022,185 +9161,228 @@ func (r *ResetUserResponse) FromJsonString(s string) error {
 }
 
 type Resource struct {
-	// 服务实例ID，如bh-saas-s3ed4r5e
+	// <p>服务实例ID，如bh-saas-s3ed4r5e</p>
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 地域编码
+	// <p>地域编码</p>
 	ApCode *string `json:"ApCode,omitnil,omitempty" name:"ApCode"`
 
-	// 服务实例规格信息
+	// <p>服务实例规格信息</p>
 	SvArgs *string `json:"SvArgs,omitnil,omitempty" name:"SvArgs"`
 
-	// VPC ID
+	// <p>VPC ID</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 服务规格对应的资产数
+	// <p>服务规格对应的资产数</p>
 	Nodes *uint64 `json:"Nodes,omitnil,omitempty" name:"Nodes"`
 
-	// 自动续费标记，0 - 表示默认状态，1 - 表示自动续费，2 - 表示明确不自动续费
+	// <p>自动续费标记，0 - 表示默认状态，1 - 表示自动续费，2 - 表示明确不自动续费</p>
 	RenewFlag *uint64 `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`
 
-	// 过期时间
+	// <p>过期时间</p>
 	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 
-	// 资源状态，0 - 未初始化，1 - 正常，2 - 隔离，3 - 销毁，4 - 初始化失败，5 - 初始化中
+	// <p>资源状态，0 - 未初始化，1 - 正常，2 - 隔离，3 - 销毁，4 - 初始化失败，5 - 初始化中</p>
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 服务实例名，如T-Sec-堡垒机（SaaS型）
+	// <p>服务实例名，如T-Sec-堡垒机（SaaS型）</p>
 	ResourceName *string `json:"ResourceName,omitnil,omitempty" name:"ResourceName"`
 
-	// 定价模型ID
+	// <p>定价模型ID</p>
 	Pid *uint64 `json:"Pid,omitnil,omitempty" name:"Pid"`
 
-	// 资源创建时间
+	// <p>资源创建时间</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 商品码, p_cds_dasb
+	// <p>商品码, p_cds_dasb</p>
 	ProductCode *string `json:"ProductCode,omitnil,omitempty" name:"ProductCode"`
 
-	// 子商品码, sp_cds_dasb_bh_saas
+	// <p>子商品码, sp_cds_dasb_bh_saas</p>
 	SubProductCode *string `json:"SubProductCode,omitnil,omitempty" name:"SubProductCode"`
 
-	// 可用区
+	// <p>可用区</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 是否过期，true-过期，false-未过期
+	// <p>是否过期，true-过期，false-未过期</p>
 	Expired *bool `json:"Expired,omitnil,omitempty" name:"Expired"`
 
-	// 是否开通，true-开通，false-未开通
+	// <p>是否开通，true-开通，false-未开通</p>
 	Deployed *bool `json:"Deployed,omitnil,omitempty" name:"Deployed"`
 
-	// 开通服务的 VPC 名称
+	// <p>开通服务的 VPC 名称</p>
 	VpcName *string `json:"VpcName,omitnil,omitempty" name:"VpcName"`
 
-	// 开通服务的 VPC 对应的网段
+	// <p>开通服务的 VPC 对应的网段</p>
 	VpcCidrBlock *string `json:"VpcCidrBlock,omitnil,omitempty" name:"VpcCidrBlock"`
 
-	// 开通服务的子网ID
+	// <p>开通服务的子网ID</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 开通服务的子网名称
+	// <p>开通服务的子网名称</p>
 	SubnetName *string `json:"SubnetName,omitnil,omitempty" name:"SubnetName"`
 
-	// 开通服务的子网网段
+	// <p>开通服务的子网网段</p>
 	CidrBlock *string `json:"CidrBlock,omitnil,omitempty" name:"CidrBlock"`
 
-	// 外部IP
+	// <p>外部IP</p>
 	PublicIpSet []*string `json:"PublicIpSet,omitnil,omitempty" name:"PublicIpSet"`
 
-	// 内部IP
+	// <p>内部IP</p>
 	PrivateIpSet []*string `json:"PrivateIpSet,omitnil,omitempty" name:"PrivateIpSet"`
 
-	// 服务开通的高级功能列表，如:[DB]
+	// <p>服务开通的高级功能列表，如:[DB]</p>
 	ModuleSet []*string `json:"ModuleSet,omitnil,omitempty" name:"ModuleSet"`
 
-	// 已使用的授权点数
+	// <p>已使用的授权点数</p>
 	UsedNodes *uint64 `json:"UsedNodes,omitnil,omitempty" name:"UsedNodes"`
 
-	// 扩展点数
+	// <p>扩展点数</p>
 	ExtendPoints *uint64 `json:"ExtendPoints,omitnil,omitempty" name:"ExtendPoints"`
 
-	// 带宽扩展包个数(4M)
+	// <p>带宽扩展包个数(4M)</p>
 	PackageBandwidth *uint64 `json:"PackageBandwidth,omitnil,omitempty" name:"PackageBandwidth"`
 
-	// 授权点数扩展包个数(50点)
+	// <p>授权点数扩展包个数(50点)</p>
 	PackageNode *uint64 `json:"PackageNode,omitnil,omitempty" name:"PackageNode"`
 
-	// 日志投递规格信息
+	// <p>日志投递规格信息</p>
 	LogDeliveryArgs *string `json:"LogDeliveryArgs,omitnil,omitempty" name:"LogDeliveryArgs"`
 
-	// 堡垒机资源LB	
+	// <p>堡垒机资源LB</p>
 	ClbSet []*Clb `json:"ClbSet,omitnil,omitempty" name:"ClbSet"`
 
-	// 网络域个数
+	// <p>网络域个数</p>
 	DomainCount *uint64 `json:"DomainCount,omitnil,omitempty" name:"DomainCount"`
 
-	// 已经使用的网络域个数
+	// <p>已经使用的网络域个数</p>
 	UsedDomainCount *uint64 `json:"UsedDomainCount,omitnil,omitempty" name:"UsedDomainCount"`
 
-	// 0 非试用版，1 试用版
+	// <p>开启的网络域个数（不包含默认网络域）</p>
+	EnabledDomainCount *uint64 `json:"EnabledDomainCount,omitnil,omitempty" name:"EnabledDomainCount"`
+
+	// <p>0 非试用版，1 试用版</p>
 	Trial *uint64 `json:"Trial,omitnil,omitempty" name:"Trial"`
 
-	// 日志投递规格信息
+	// <p>日志投递规格信息</p>
 	LogDelivery *string `json:"LogDelivery,omitnil,omitempty" name:"LogDelivery"`
 
-	// cdc集群id
+	// <p>cdc集群id</p>
 	CdcClusterId *string `json:"CdcClusterId,omitnil,omitempty" name:"CdcClusterId"`
 
-	// 部署模式 默认0 0-cvm 1-tke
+	// <p>部署模式 默认0 0-cvm 1-tke</p>
 	DeployModel *uint64 `json:"DeployModel,omitnil,omitempty" name:"DeployModel"`
 
-	// 0 默认值，非内网访问，1 内网访问，2 内网访问开通中，3 内网访问关闭中
+	// <p>0 默认值，非内网访问，1 内网访问，2 内网访问开通中，3 内网访问关闭中</p>
 	IntranetAccess *uint64 `json:"IntranetAccess,omitnil,omitempty" name:"IntranetAccess"`
 
-	// 内网访问的ip
+	// <p>内网访问的ip</p>
 	IntranetPrivateIpSet []*string `json:"IntranetPrivateIpSet,omitnil,omitempty" name:"IntranetPrivateIpSet"`
 
-	// 开通内网访问的vpc
+	// <p>开通内网访问的vpc</p>
 	IntranetVpcId *string `json:"IntranetVpcId,omitnil,omitempty" name:"IntranetVpcId"`
 
-	// 开通内网访问的subnetId
+	// <p>开通内网访问的subnetId</p>
+	//
+	// Deprecated: IntranetSubnetId is deprecated.
 	IntranetSubnetId *string `json:"IntranetSubnetId,omitnil,omitempty" name:"IntranetSubnetId"`
 
-	// 开通内网访问vpc的网段
+	// <p>开通内网访问的子网集合</p>
+	IntranetSubnetIdSet []*string `json:"IntranetSubnetIdSet,omitnil,omitempty" name:"IntranetSubnetIdSet"`
+
+	// <p>开通内网访问vpc的网段</p>
 	IntranetVpcCidr *string `json:"IntranetVpcCidr,omitnil,omitempty" name:"IntranetVpcCidr"`
 
-	// 堡垒机内网ip自定义域名
+	// <p>堡垒机内网ip自定义域名</p>
 	DomainName *string `json:"DomainName,omitnil,omitempty" name:"DomainName"`
 
-	// 是否共享clb，true-共享clb，false-独享clb
+	// <p>是否共享clb，true-共享clb，false-独享clb</p>
 	ShareClb *bool `json:"ShareClb,omitnil,omitempty" name:"ShareClb"`
 
-	// 共享clb id
+	// <p>共享clb id</p>
 	OpenClbId *string `json:"OpenClbId,omitnil,omitempty" name:"OpenClbId"`
 
-	// 运营商信息
+	// <p>运营商信息</p>
 	LbVipIsp *string `json:"LbVipIsp,omitnil,omitempty" name:"LbVipIsp"`
 
-	// linux资产命令行运维端口
+	// <p>linux资产命令行运维端口</p>
 	TUICmdPort *int64 `json:"TUICmdPort,omitnil,omitempty" name:"TUICmdPort"`
 
-	// linux资产直连端口
+	// <p>linux资产直连端口</p>
 	TUIDirectPort *int64 `json:"TUIDirectPort,omitnil,omitempty" name:"TUIDirectPort"`
 
-	// 1 默认值，web访问开启，0 web访问关闭，2 web访问开通中，3 web访问关闭中
+	// <p>1 默认值，web访问开启，0 web访问关闭，2 web访问开通中，3 web访问关闭中</p>
 	WebAccess *uint64 `json:"WebAccess,omitnil,omitempty" name:"WebAccess"`
 
-	// 1 默认值，客户单访问开启，0 客户端访问关闭，2 客户端访问开通中，3 客户端访问关闭中
+	// <p>1 默认值，客户单访问开启，0 客户端访问关闭，2 客户端访问开通中，3 客户端访问关闭中</p>
 	ClientAccess *uint64 `json:"ClientAccess,omitnil,omitempty" name:"ClientAccess"`
 
-	// 1 默认值，外网访问开启，0 外网访问关闭，2 外网访问开通中，3 外网访问关闭中
+	// <p>1 默认值，外网访问开启，0 外网访问关闭，2 外网访问开通中，3 外网访问关闭中</p>
 	ExternalAccess *uint64 `json:"ExternalAccess,omitnil,omitempty" name:"ExternalAccess"`
 
-	// 0默认值。0-免费版（试用版）ioa，1-付费版ioa
+	// <p>0默认值。0-免费版（试用版）ioa，1-付费版ioa</p>
 	IOAResource *uint64 `json:"IOAResource,omitnil,omitempty" name:"IOAResource"`
 
-	// 零信任堡垒机用户扩展包个数。1个扩展包对应20个用户数
+	// <p>零信任堡垒机用户扩展包个数。1个扩展包对应20个用户数</p>
 	PackageIOAUserCount *uint64 `json:"PackageIOAUserCount,omitnil,omitempty" name:"PackageIOAUserCount"`
 
-	//  零信任堡垒机带宽扩展包个数。一个扩展包表示4M带宽
+	// <p>零信任堡垒机带宽扩展包个数。一个扩展包表示4M带宽</p>
 	PackageIOABandwidth *uint64 `json:"PackageIOABandwidth,omitnil,omitempty" name:"PackageIOABandwidth"`
 
-	// 堡垒机实例对应的零信任实例id
+	// <p>堡垒机实例对应的零信任实例id</p>
 	IOAResourceId *string `json:"IOAResourceId,omitnil,omitempty" name:"IOAResourceId"`
 
-	// 资源类型 免费版/标准版/专业版 /国密版 free/standard/pro/gm
+	// <p>资源类型 免费版/标准版/专业版 /国密版 free/standard/pro/gm</p>
 	ResourceEdition *string `json:"ResourceEdition,omitnil,omitempty" name:"ResourceEdition"`
 
-	// 计费周期 年：y，月：m，日：d，时：h，分：M，秒：s，一次性购买：p
+	// <p>计费周期 年：y，月：m，日：d，时：h，分：M，秒：s，一次性购买：p</p>
 	TimeUnit *string `json:"TimeUnit,omitnil,omitempty" name:"TimeUnit"`
 
-	// 计费时长
+	// <p>计费时长</p>
 	TimeSpan *uint64 `json:"TimeSpan,omitnil,omitempty" name:"TimeSpan"`
 
-	// 计费模式 0后付费，1预付费
+	// <p>计费模式 0后付费，1预付费</p>
 	PayMode *uint64 `json:"PayMode,omitnil,omitempty" name:"PayMode"`
 
-	// 计费侧地域
+	// <p>计费侧地域</p>
 	BillingRegion *string `json:"BillingRegion,omitnil,omitempty" name:"BillingRegion"`
 
-	// 计费侧可用区
+	// <p>计费侧可用区</p>
 	BillingZone *string `json:"BillingZone,omitnil,omitempty" name:"BillingZone"`
+
+	// <p>部署的cvm个数</p>
+	DeployCvmCount *uint64 `json:"DeployCvmCount,omitnil,omitempty" name:"DeployCvmCount"`
+
+	// <p>堡垒机实例的可用区信息</p>
+	ResourceZoneSet []*ResourceDeployZone `json:"ResourceZoneSet,omitnil,omitempty" name:"ResourceZoneSet"`
+}
+
+type ResourceDeployZone struct {
+	// <p>部署堡垒机的VpcId</p>
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// <p>部署堡垒机vpc的名称</p>
+	VpcName *string `json:"VpcName,omitnil,omitempty" name:"VpcName"`
+
+	// <p>部署堡垒机vpc的cidr</p>
+	VpcCidrBlock *string `json:"VpcCidrBlock,omitnil,omitempty" name:"VpcCidrBlock"`
+
+	// <p>部署堡垒机的子网Id</p>
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
+
+	// <p>部署堡垒机的子网名称</p>
+	SubnetName *string `json:"SubnetName,omitnil,omitempty" name:"SubnetName"`
+
+	// <p>子网cidr</p>
+	SubnetCidrBlock *string `json:"SubnetCidrBlock,omitnil,omitempty" name:"SubnetCidrBlock"`
+
+	// <p>部署堡垒机的地域</p>
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
+
+	// <p>部署堡垒机的可用区</p>
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
+
+	// <p>子网的作用场景</p><p>枚举值：</p><ul><li>DEPLOY： 部署堡垒机的子网</li><li>INTERNAL： 开通内网访问的子网</li></ul>
+	SubnetUsageType *string `json:"SubnetUsageType,omitnil,omitempty" name:"SubnetUsageType"`
 }
 
 type RunChangePwdTaskDetail struct {
@@ -10497,68 +10679,62 @@ func (r *SearchSubtaskResultByIdResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type SearchTaskResultRequestParams struct {
-	// 搜索区间的开始时间
+	// <p>搜索区间的开始时间，缺省时取结束时间前7天（含结束时间当日）</p>
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 搜索区间的结束时间
+	// <p>搜索区间的结束时间。未指定时，默认取当前时间</p>
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 运维任务ID
+	// <p>运维任务ID</p>
 	OperationId *string `json:"OperationId,omitnil,omitempty" name:"OperationId"`
 
-	// 运维任务名称
+	// <p>运维任务名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 用户名，长度不超过20
+	// <p>用户名，长度不超过20</p>
 	UserName *string `json:"UserName,omitnil,omitempty" name:"UserName"`
 
-	// 姓名，长度不超过20
+	// <p>姓名，长度不超过20</p>
 	RealName *string `json:"RealName,omitnil,omitempty" name:"RealName"`
 
-	// 任务类型
-	// 1 手工运维任务
-	// 2 定时任务
-	// 3 账号推送任务
+	// <p>任务类型<br>1 手工运维任务<br>2 定时任务<br>3 账号推送任务</p>
 	TaskType []*uint64 `json:"TaskType,omitnil,omitempty" name:"TaskType"`
 
-	// 查询偏移
+	// <p>查询偏移</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 分页的页内记录数，默认为20，最大200
+	// <p>分页的页内记录数，默认为20，最大200</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
 type SearchTaskResultRequest struct {
 	*tchttp.BaseRequest
 	
-	// 搜索区间的开始时间
+	// <p>搜索区间的开始时间，缺省时取结束时间前7天（含结束时间当日）</p>
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 搜索区间的结束时间
+	// <p>搜索区间的结束时间。未指定时，默认取当前时间</p>
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 运维任务ID
+	// <p>运维任务ID</p>
 	OperationId *string `json:"OperationId,omitnil,omitempty" name:"OperationId"`
 
-	// 运维任务名称
+	// <p>运维任务名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 用户名，长度不超过20
+	// <p>用户名，长度不超过20</p>
 	UserName *string `json:"UserName,omitnil,omitempty" name:"UserName"`
 
-	// 姓名，长度不超过20
+	// <p>姓名，长度不超过20</p>
 	RealName *string `json:"RealName,omitnil,omitempty" name:"RealName"`
 
-	// 任务类型
-	// 1 手工运维任务
-	// 2 定时任务
-	// 3 账号推送任务
+	// <p>任务类型<br>1 手工运维任务<br>2 定时任务<br>3 账号推送任务</p>
 	TaskType []*uint64 `json:"TaskType,omitnil,omitempty" name:"TaskType"`
 
-	// 查询偏移
+	// <p>查询偏移</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 分页的页内记录数，默认为20，最大200
+	// <p>分页的页内记录数，默认为20，最大200</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
@@ -10591,10 +10767,10 @@ func (r *SearchTaskResultRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type SearchTaskResultResponseParams struct {
-	// 记录数
+	// <p>记录数</p>
 	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 运维任务执行结果
+	// <p>运维任务执行结果</p>
 	TaskResult []*TaskResult `json:"TaskResult,omitnil,omitempty" name:"TaskResult"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -11110,44 +11286,56 @@ type User struct {
 }
 
 type UserDirectory struct {
-	// 目录id
+	// <p>目录id</p>
 	Id *uint64 `json:"Id,omitnil,omitempty" name:"Id"`
 
-	// ioa目录id
+	// <p>ioa目录id</p>
 	DirId *uint64 `json:"DirId,omitnil,omitempty" name:"DirId"`
 
-	// ioa目录名称
+	// <p>ioa目录名称</p>
 	DirName *string `json:"DirName,omitnil,omitempty" name:"DirName"`
 
-	// ioa关联用户源类型
+	// <p>ioa关联用户源类型</p>
 	Source *uint64 `json:"Source,omitnil,omitempty" name:"Source"`
 
-	// ioa关联用户源名称
+	// <p>ioa关联用户源名称</p>
 	SourceName *string `json:"SourceName,omitnil,omitempty" name:"SourceName"`
 
-	// 目录包含用户数
+	// <p>目录包含用户数</p>
 	UserTotal *uint64 `json:"UserTotal,omitnil,omitempty" name:"UserTotal"`
 
-	// 目录接入时间
+	// <p>目录接入时间</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 目录下的组织细节信息
+	// <p>目录下的组织细节信息</p>
 	UserOrgSet []*UserOrg `json:"UserOrgSet,omitnil,omitempty" name:"UserOrgSet"`
+
+	// <p>是否开启自动同步</p>
+	AutoSync *bool `json:"AutoSync,omitnil,omitempty" name:"AutoSync"`
+
+	// <p>同步周期（5段式 crontab 表达式）</p>
+	SyncCron *string `json:"SyncCron,omitnil,omitempty" name:"SyncCron"`
+
+	// <p>下次同步时间</p><p>参数格式：2026-06-05T11:30:00+08:00</p>
+	NextSyncTime *string `json:"NextSyncTime,omitnil,omitempty" name:"NextSyncTime"`
 }
 
 type UserOrg struct {
-	// ioa用户组织id
+	// <p>ioa用户组织id</p>
 	OrgId *uint64 `json:"OrgId,omitnil,omitempty" name:"OrgId"`
 
-	// ioa用户组织名称
+	// <p>ioa用户组织名称</p>
 	OrgName *string `json:"OrgName,omitnil,omitempty" name:"OrgName"`
 
-	// ioa用户组织id路径
+	// <p>ioa用户组织id路径</p>
 	OrgIdPath *string `json:"OrgIdPath,omitnil,omitempty" name:"OrgIdPath"`
 
-	// ioa用户组织名称路径
+	// <p>ioa用户组织名称路径</p>
 	OrgNamePath *string `json:"OrgNamePath,omitnil,omitempty" name:"OrgNamePath"`
 
-	// ioa用户组织id下的用户数
+	// <p>ioa用户组织id下的用户数</p>
 	UserTotal *uint64 `json:"UserTotal,omitnil,omitempty" name:"UserTotal"`
+
+	// <p>组织绑定的用户组 id 列表</p>
+	BindGroupIds []*uint64 `json:"BindGroupIds,omitnil,omitempty" name:"BindGroupIds"`
 }

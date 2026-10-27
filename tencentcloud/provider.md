@@ -61,6 +61,7 @@ tencentcloud_antiddos_bgp_biz_trend
 tencentcloud_antiddos_list_listener
 tencentcloud_antiddos_overview_attack_trend
 tencentcloud_antiddos_bgp_instances
+tencentcloud_antiddos_ddos_block_records
 
 Resource
 tencentcloud_antiddos_bgp_instance
@@ -264,6 +265,7 @@ tencentcloud_cam_policy_granting_service_access
 tencentcloud_cam_oidc_config
 tencentcloud_cam_group_user_account
 tencentcloud_cam_sub_accounts
+tencentcloud_cam_accounts
 tencentcloud_cam_role_detail
 tencentcloud_cam_policy_detail
 
@@ -797,6 +799,7 @@ tencentcloud_mongodb_instance_ssl
 tencentcloud_mongodb_readonly_instance
 tencentcloud_mongodb_audit_log_file
 tencentcloud_mongodb_audit_service
+tencentcloud_mongodb_scale_up_db_instance_cpu
 
 TencentDB for MySQL(cdb)
 Data Source
@@ -871,6 +874,7 @@ tencentcloud_mysql_ssl
 tencentcloud_mysql_cls_log_attachment
 tencentcloud_cdb_start_cpu_expand
 tencentcloud_mysql_audit_service
+tencentcloud_mysql_clone_instance
 
 Cloud Monitor(Monitor)
 Data Source
@@ -1000,6 +1004,7 @@ tencentcloud_postgresql_instance_ssl_config
 tencentcloud_postgresql_restore_db_instance_objects_operation
 tencentcloud_postgresql_time_window
 tencentcloud_postgres_audit_service
+tencentcloud_postgres_audit_log_file
 tencentcloud_postgresql_database
 
 TencentDB for Redis(crs)
@@ -1040,6 +1045,7 @@ tencentcloud_redis_connection_config
 tencentcloud_redis_log_delivery
 tencentcloud_redis_audit_log
 tencentcloud_redis_instance_password_policy_config
+tencentcloud_redis_backup_encrypt
 
 Serverless Cloud Function(SCF)
 Data Source
@@ -1531,6 +1537,8 @@ tencentcloud_cls_dlc_deliver
 tencentcloud_cls_console
 tencentcloud_cls_metric_subscribe
 tencentcloud_cls_splunk_deliver
+tencentcloud_cls_remote_write_task
+tencentcloud_cls_deliver_task
 
 Data Source
 tencentcloud_cls_shipper_tasks
@@ -1671,6 +1679,10 @@ tencentcloud_teo_shared_cname
 tencentcloud_teo_domain_shared_cname_attachment
 tencentcloud_teo_edge_kv
 tencentcloud_teo_edge_kv_namespace
+tencentcloud_teo_dns_records_status
+
+Action
+tencentcloud_teo_confirm_origin_acl_update
 
 TencentCloud ServiceMesh(TCM)
 Data Source
@@ -1750,11 +1762,20 @@ Resource
 tencentcloud_sms_sign
 tencentcloud_sms_template
 
+Captcha
+Resource
+tencentcloud_captcha_info_international
+tencentcloud_captcha_ip_white_list_international
+
 Cloud Automated Testing(CAT)
 Data Source
 tencentcloud_cat_probe_data
 tencentcloud_cat_node
+tencentcloud_cat_node_groups
 tencentcloud_cat_metric_data
+tencentcloud_cat_probe_metric_tag_values
+tencentcloud_cat_instant_tasks
+tencentcloud_cat_probe_tasks
 
 Resource
 tencentcloud_cat_task_set
@@ -2321,6 +2342,7 @@ tencentcloud_dlc_standard_engine_resource_group_config_information
 tencentcloud_dlc_data_engine_network
 tencentcloud_dlc_data_engine_session_parameters
 tencentcloud_dlc_session_image_version
+tencentcloud_dlc_tc_lake_meta_instance
 
 Resource
 tencentcloud_dlc_work_group
@@ -2639,6 +2661,7 @@ tencentcloud_cdc_dedicated_cluster_image_cache
 
 CdwDoris
 Data Source
+tencentcloud_cdwdoris_instance_nodes
 tencentcloud_cdwdoris_instances
 Resource
 tencentcloud_cdwdoris_instance
@@ -2676,6 +2699,7 @@ tencentcloud_mqtt_message_enrichment_rule
 
 Billing
 Data Source
+tencentcloud_billing_bill_detail
 tencentcloud_billing_budget_operation_log
 Resource
 tencentcloud_billing_allocation_tag
@@ -2722,6 +2746,7 @@ Resource
 tencentcloud_dbdc_db_custom_cluster
 tencentcloud_dbdc_db_custom_node
 tencentcloud_dbdc_node_to_db_custom_cluster_attachment
+tencentcloud_dbdc_db_custom_disaster_recover_group
 
 VCube
 Resource
@@ -2752,13 +2777,17 @@ tencentcloud_config_rule_evaluation_results
 tencentcloud_config_rules
 tencentcloud_config_discovered_resources
 tencentcloud_config_resource_types
+tencentcloud_config_list_aggregators
 
 Resource
 tencentcloud_config_compliance_pack
 tencentcloud_config_remediation
 tencentcloud_config_start_config_rule_evaluation_operation
 tencentcloud_config_deliver_config
+tencentcloud_config_update_config_deliver
+tencentcloud_config_update_aggregate_config_deliver
 tencentcloud_config_recorder_config
+tencentcloud_config_aggregator
 
 GS
 Data Source
@@ -2767,3 +2796,14 @@ tencentcloud_gs_android_instances
 KeeWiDB
 Data Source
 tencentcloud_keewidb_instances
+
+Backup and Disaster Recovery Center(BDRC)
+Resource
+tencentcloud_bdrc_disaster_recovery_site_pair
+tencentcloud_bdrc_disaster_recovery_protect_group
+tencentcloud_bdrc_disaster_recovery_vpc_mapping
+tencentcloud_bdrc_security_group_mapping
+tencentcloud_bdrc_instance_copy_pair
+
+Action
+tencentcloud_bdrc_run_copy_pair_tasks

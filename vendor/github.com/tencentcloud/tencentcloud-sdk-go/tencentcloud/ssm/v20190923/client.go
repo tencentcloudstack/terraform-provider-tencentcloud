@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -59,8 +59,9 @@ func NewCreateProductSecretRequest() (request *CreateProductSecretRequest) {
 func NewCreateProductSecretResponse() (response *CreateProductSecretResponse) {
     response = &CreateProductSecretResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateProductSecret
@@ -133,6 +134,7 @@ func (c *Client) CreateProductSecretWithContext(ctx context.Context, request *Cr
     if request == nil {
         request = NewCreateProductSecretRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "CreateProductSecret")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateProductSecret require credential")
@@ -159,8 +161,9 @@ func NewCreateSSHKeyPairSecretRequest() (request *CreateSSHKeyPairSecretRequest)
 func NewCreateSSHKeyPairSecretResponse() (response *CreateSSHKeyPairSecretResponse) {
     response = &CreateSSHKeyPairSecretResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateSSHKeyPairSecret
@@ -213,6 +216,7 @@ func (c *Client) CreateSSHKeyPairSecretWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCreateSSHKeyPairSecretRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "CreateSSHKeyPairSecret")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateSSHKeyPairSecret require credential")
@@ -239,8 +243,9 @@ func NewCreateSecretRequest() (request *CreateSecretRequest) {
 func NewCreateSecretResponse() (response *CreateSecretResponse) {
     response = &CreateSecretResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateSecret
@@ -277,6 +282,7 @@ func (c *Client) CreateSecretWithContext(ctx context.Context, request *CreateSec
     if request == nil {
         request = NewCreateSecretRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "CreateSecret")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateSecret require credential")
@@ -303,8 +309,9 @@ func NewDeleteSecretRequest() (request *DeleteSecretRequest) {
 func NewDeleteSecretResponse() (response *DeleteSecretResponse) {
     response = &DeleteSecretResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteSecret
@@ -337,6 +344,7 @@ func (c *Client) DeleteSecretWithContext(ctx context.Context, request *DeleteSec
     if request == nil {
         request = NewDeleteSecretRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "DeleteSecret")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteSecret require credential")
@@ -363,8 +371,9 @@ func NewDeleteSecretVersionRequest() (request *DeleteSecretVersionRequest) {
 func NewDeleteSecretVersionResponse() (response *DeleteSecretVersionResponse) {
     response = &DeleteSecretVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteSecretVersion
@@ -401,6 +410,7 @@ func (c *Client) DeleteSecretVersionWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeleteSecretVersionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "DeleteSecretVersion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteSecretVersion require credential")
@@ -427,8 +437,9 @@ func NewDescribeAsyncRequestInfoRequest() (request *DescribeAsyncRequestInfoRequ
 func NewDescribeAsyncRequestInfoResponse() (response *DescribeAsyncRequestInfoResponse) {
     response = &DescribeAsyncRequestInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAsyncRequestInfo
@@ -505,6 +516,7 @@ func (c *Client) DescribeAsyncRequestInfoWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeAsyncRequestInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "DescribeAsyncRequestInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAsyncRequestInfo require credential")
@@ -531,8 +543,9 @@ func NewDescribeRotationDetailRequest() (request *DescribeRotationDetailRequest)
 func NewDescribeRotationDetailResponse() (response *DescribeRotationDetailResponse) {
     response = &DescribeRotationDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRotationDetail
@@ -613,6 +626,7 @@ func (c *Client) DescribeRotationDetailWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeRotationDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "DescribeRotationDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRotationDetail require credential")
@@ -639,8 +653,9 @@ func NewDescribeRotationHistoryRequest() (request *DescribeRotationHistoryReques
 func NewDescribeRotationHistoryResponse() (response *DescribeRotationHistoryResponse) {
     response = &DescribeRotationHistoryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRotationHistory
@@ -721,6 +736,7 @@ func (c *Client) DescribeRotationHistoryWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeRotationHistoryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "DescribeRotationHistory")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRotationHistory require credential")
@@ -747,8 +763,9 @@ func NewDescribeSecretRequest() (request *DescribeSecretRequest) {
 func NewDescribeSecretResponse() (response *DescribeSecretResponse) {
     response = &DescribeSecretResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSecret
@@ -781,6 +798,7 @@ func (c *Client) DescribeSecretWithContext(ctx context.Context, request *Describ
     if request == nil {
         request = NewDescribeSecretRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "DescribeSecret")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSecret require credential")
@@ -807,8 +825,9 @@ func NewDescribeSupportedProductsRequest() (request *DescribeSupportedProductsRe
 func NewDescribeSupportedProductsResponse() (response *DescribeSupportedProductsResponse) {
     response = &DescribeSupportedProductsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSupportedProducts
@@ -885,6 +904,7 @@ func (c *Client) DescribeSupportedProductsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeSupportedProductsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "DescribeSupportedProducts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSupportedProducts require credential")
@@ -911,8 +931,9 @@ func NewDisableSecretRequest() (request *DisableSecretRequest) {
 func NewDisableSecretResponse() (response *DisableSecretResponse) {
     response = &DisableSecretResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisableSecret
@@ -945,6 +966,7 @@ func (c *Client) DisableSecretWithContext(ctx context.Context, request *DisableS
     if request == nil {
         request = NewDisableSecretRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "DisableSecret")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisableSecret require credential")
@@ -971,8 +993,9 @@ func NewEnableSecretRequest() (request *EnableSecretRequest) {
 func NewEnableSecretResponse() (response *EnableSecretResponse) {
     response = &EnableSecretResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableSecret
@@ -1005,6 +1028,7 @@ func (c *Client) EnableSecretWithContext(ctx context.Context, request *EnableSec
     if request == nil {
         request = NewEnableSecretRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "EnableSecret")
     
     if c.GetCredential() == nil {
         return nil, errors.New("EnableSecret require credential")
@@ -1031,8 +1055,9 @@ func NewGetRegionsRequest() (request *GetRegionsRequest) {
 func NewGetRegionsResponse() (response *GetRegionsResponse) {
     response = &GetRegionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetRegions
@@ -1055,6 +1080,7 @@ func (c *Client) GetRegionsWithContext(ctx context.Context, request *GetRegionsR
     if request == nil {
         request = NewGetRegionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "GetRegions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetRegions require credential")
@@ -1081,8 +1107,9 @@ func NewGetSSHKeyPairValueRequest() (request *GetSSHKeyPairValueRequest) {
 func NewGetSSHKeyPairValueResponse() (response *GetSSHKeyPairValueResponse) {
     response = &GetSSHKeyPairValueResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetSSHKeyPairValue
@@ -1133,6 +1160,7 @@ func (c *Client) GetSSHKeyPairValueWithContext(ctx context.Context, request *Get
     if request == nil {
         request = NewGetSSHKeyPairValueRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "GetSSHKeyPairValue")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetSSHKeyPairValue require credential")
@@ -1159,8 +1187,9 @@ func NewGetSecretValueRequest() (request *GetSecretValueRequest) {
 func NewGetSecretValueResponse() (response *GetSecretValueResponse) {
     response = &GetSecretValueResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetSecretValue
@@ -1207,6 +1236,7 @@ func (c *Client) GetSecretValueWithContext(ctx context.Context, request *GetSecr
     if request == nil {
         request = NewGetSecretValueRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "GetSecretValue")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetSecretValue require credential")
@@ -1233,8 +1263,9 @@ func NewGetServiceStatusRequest() (request *GetServiceStatusRequest) {
 func NewGetServiceStatusResponse() (response *GetServiceStatusResponse) {
     response = &GetServiceStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetServiceStatus
@@ -1257,6 +1288,7 @@ func (c *Client) GetServiceStatusWithContext(ctx context.Context, request *GetSe
     if request == nil {
         request = NewGetServiceStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "GetServiceStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetServiceStatus require credential")
@@ -1283,8 +1315,9 @@ func NewListSecretVersionIdsRequest() (request *ListSecretVersionIdsRequest) {
 func NewListSecretVersionIdsResponse() (response *ListSecretVersionIdsResponse) {
     response = &ListSecretVersionIdsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListSecretVersionIds
@@ -1315,6 +1348,7 @@ func (c *Client) ListSecretVersionIdsWithContext(ctx context.Context, request *L
     if request == nil {
         request = NewListSecretVersionIdsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "ListSecretVersionIds")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListSecretVersionIds require credential")
@@ -1341,14 +1375,16 @@ func NewListSecretsRequest() (request *ListSecretsRequest) {
 func NewListSecretsResponse() (response *ListSecretsResponse) {
     response = &ListSecretsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListSecrets
 // 该接口用于获取所有凭据的详细列表，可以指定过滤字段、排序方式等。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  RESOURCEUNAVAILABLE_NOTPURCHASED = "ResourceUnavailable.NotPurchased"
@@ -1361,6 +1397,7 @@ func (c *Client) ListSecrets(request *ListSecretsRequest) (response *ListSecrets
 // 该接口用于获取所有凭据的详细列表，可以指定过滤字段、排序方式等。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  RESOURCEUNAVAILABLE_NOTPURCHASED = "ResourceUnavailable.NotPurchased"
@@ -1369,6 +1406,7 @@ func (c *Client) ListSecretsWithContext(ctx context.Context, request *ListSecret
     if request == nil {
         request = NewListSecretsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "ListSecrets")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListSecrets require credential")
@@ -1395,8 +1433,9 @@ func NewPutSecretValueRequest() (request *PutSecretValueRequest) {
 func NewPutSecretValueResponse() (response *PutSecretValueResponse) {
     response = &PutSecretValueResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // PutSecretValue
@@ -1439,6 +1478,7 @@ func (c *Client) PutSecretValueWithContext(ctx context.Context, request *PutSecr
     if request == nil {
         request = NewPutSecretValueRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "PutSecretValue")
     
     if c.GetCredential() == nil {
         return nil, errors.New("PutSecretValue require credential")
@@ -1465,8 +1505,9 @@ func NewRestoreSecretRequest() (request *RestoreSecretRequest) {
 func NewRestoreSecretResponse() (response *RestoreSecretResponse) {
     response = &RestoreSecretResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RestoreSecret
@@ -1497,6 +1538,7 @@ func (c *Client) RestoreSecretWithContext(ctx context.Context, request *RestoreS
     if request == nil {
         request = NewRestoreSecretRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "RestoreSecret")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RestoreSecret require credential")
@@ -1523,8 +1565,9 @@ func NewRotateProductSecretRequest() (request *RotateProductSecretRequest) {
 func NewRotateProductSecretResponse() (response *RotateProductSecretResponse) {
     response = &RotateProductSecretResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RotateProductSecret
@@ -1611,6 +1654,7 @@ func (c *Client) RotateProductSecretWithContext(ctx context.Context, request *Ro
     if request == nil {
         request = NewRotateProductSecretRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "RotateProductSecret")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RotateProductSecret require credential")
@@ -1637,8 +1681,9 @@ func NewUpdateDescriptionRequest() (request *UpdateDescriptionRequest) {
 func NewUpdateDescriptionResponse() (response *UpdateDescriptionResponse) {
     response = &UpdateDescriptionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateDescription
@@ -1667,6 +1712,7 @@ func (c *Client) UpdateDescriptionWithContext(ctx context.Context, request *Upda
     if request == nil {
         request = NewUpdateDescriptionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "UpdateDescription")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateDescription require credential")
@@ -1693,8 +1739,9 @@ func NewUpdateRotationStatusRequest() (request *UpdateRotationStatusRequest) {
 func NewUpdateRotationStatusResponse() (response *UpdateRotationStatusResponse) {
     response = &UpdateRotationStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateRotationStatus
@@ -1785,6 +1832,7 @@ func (c *Client) UpdateRotationStatusWithContext(ctx context.Context, request *U
     if request == nil {
         request = NewUpdateRotationStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "UpdateRotationStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateRotationStatus require credential")
@@ -1811,8 +1859,9 @@ func NewUpdateSecretRequest() (request *UpdateSecretRequest) {
 func NewUpdateSecretResponse() (response *UpdateSecretResponse) {
     response = &UpdateSecretResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateSecret
@@ -1851,6 +1900,7 @@ func (c *Client) UpdateSecretWithContext(ctx context.Context, request *UpdateSec
     if request == nil {
         request = NewUpdateSecretRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "ssm", APIVersion, "UpdateSecret")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateSecret require credential")

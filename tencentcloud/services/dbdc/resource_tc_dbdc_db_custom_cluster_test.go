@@ -22,6 +22,7 @@ func TestAccTencentCloudDbdcDbCustomClusterResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_dbdc_db_custom_cluster.example", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_dbdc_db_custom_cluster.example", "cluster_name", "tf-example"),
 					resource.TestCheckResourceAttr("tencentcloud_dbdc_db_custom_cluster.example", "cluster_description", "tf example cluster"),
+					resource.TestCheckResourceAttr("tencentcloud_dbdc_db_custom_cluster.example", "deletion_protection", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_dbdc_db_custom_cluster.example", "tags.createBy", "Terraform"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dbdc_db_custom_cluster.example", "cluster_status"),
 				),
@@ -30,6 +31,7 @@ func TestAccTencentCloudDbdcDbCustomClusterResource_basic(t *testing.T) {
 				Config: testAccDbdcDbCustomClusterUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_dbdc_db_custom_cluster.example", "tags.createBy", "TerraformUpdate"),
+					resource.TestCheckResourceAttr("tencentcloud_dbdc_db_custom_cluster.example", "deletion_protection", "false"),
 				),
 			},
 			{
@@ -45,6 +47,7 @@ const testAccDbdcDbCustomCluster = `
 resource "tencentcloud_dbdc_db_custom_cluster" "example" {
   cluster_name        = "tf-example"
   cluster_description = "tf example cluster"
+  deletion_protection = true
 
   container_network {
     vpc_id     = "vpc-xxxxxxxx"
@@ -66,6 +69,7 @@ const testAccDbdcDbCustomClusterUpdate = `
 resource "tencentcloud_dbdc_db_custom_cluster" "example" {
   cluster_name        = "tf-example"
   cluster_description = "tf example cluster"
+  deletion_protection = false
 
   container_network {
     vpc_id     = "vpc-xxxxxxxx"

@@ -213,6 +213,62 @@ func (c *Client) CreateDBCustomClusterWithContext(ctx context.Context, request *
     return
 }
 
+func NewCreateDBCustomDisasterRecoverGroupRequest() (request *CreateDBCustomDisasterRecoverGroupRequest) {
+    request = &CreateDBCustomDisasterRecoverGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dbdc", APIVersion, "CreateDBCustomDisasterRecoverGroup")
+    
+    
+    return
+}
+
+func NewCreateDBCustomDisasterRecoverGroupResponse() (response *CreateDBCustomDisasterRecoverGroupResponse) {
+    response = &CreateDBCustomDisasterRecoverGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateDBCustomDisasterRecoverGroup
+// 该接口（CreateDBCustomDisasterRecoverGroup）用于创建 DB Custom 置放群组。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) CreateDBCustomDisasterRecoverGroup(request *CreateDBCustomDisasterRecoverGroupRequest) (response *CreateDBCustomDisasterRecoverGroupResponse, err error) {
+    return c.CreateDBCustomDisasterRecoverGroupWithContext(context.Background(), request)
+}
+
+// CreateDBCustomDisasterRecoverGroup
+// 该接口（CreateDBCustomDisasterRecoverGroup）用于创建 DB Custom 置放群组。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) CreateDBCustomDisasterRecoverGroupWithContext(ctx context.Context, request *CreateDBCustomDisasterRecoverGroupRequest) (response *CreateDBCustomDisasterRecoverGroupResponse, err error) {
+    if request == nil {
+        request = NewCreateDBCustomDisasterRecoverGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dbdc", APIVersion, "CreateDBCustomDisasterRecoverGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateDBCustomDisasterRecoverGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateDBCustomDisasterRecoverGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateDBCustomNodesRequest() (request *CreateDBCustomNodesRequest) {
     request = &CreateDBCustomNodesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -265,6 +321,118 @@ func (c *Client) CreateDBCustomNodesWithContext(ctx context.Context, request *Cr
     request.SetContext(ctx)
     
     response = NewCreateDBCustomNodesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteDBCustomDisasterRecoverGroupsRequest() (request *DeleteDBCustomDisasterRecoverGroupsRequest) {
+    request = &DeleteDBCustomDisasterRecoverGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dbdc", APIVersion, "DeleteDBCustomDisasterRecoverGroups")
+    
+    
+    return
+}
+
+func NewDeleteDBCustomDisasterRecoverGroupsResponse() (response *DeleteDBCustomDisasterRecoverGroupsResponse) {
+    response = &DeleteDBCustomDisasterRecoverGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteDBCustomDisasterRecoverGroups
+// 该接口（DeleteDBCustomDisasterRecoverGroups）用于删除 DB Custom 置放群组。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DeleteDBCustomDisasterRecoverGroups(request *DeleteDBCustomDisasterRecoverGroupsRequest) (response *DeleteDBCustomDisasterRecoverGroupsResponse, err error) {
+    return c.DeleteDBCustomDisasterRecoverGroupsWithContext(context.Background(), request)
+}
+
+// DeleteDBCustomDisasterRecoverGroups
+// 该接口（DeleteDBCustomDisasterRecoverGroups）用于删除 DB Custom 置放群组。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DeleteDBCustomDisasterRecoverGroupsWithContext(ctx context.Context, request *DeleteDBCustomDisasterRecoverGroupsRequest) (response *DeleteDBCustomDisasterRecoverGroupsResponse, err error) {
+    if request == nil {
+        request = NewDeleteDBCustomDisasterRecoverGroupsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dbdc", APIVersion, "DeleteDBCustomDisasterRecoverGroups")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteDBCustomDisasterRecoverGroups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteDBCustomDisasterRecoverGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteDBCustomNodesDisasterRecoverGroupRequest() (request *DeleteDBCustomNodesDisasterRecoverGroupRequest) {
+    request = &DeleteDBCustomNodesDisasterRecoverGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dbdc", APIVersion, "DeleteDBCustomNodesDisasterRecoverGroup")
+    
+    
+    return
+}
+
+func NewDeleteDBCustomNodesDisasterRecoverGroupResponse() (response *DeleteDBCustomNodesDisasterRecoverGroupResponse) {
+    response = &DeleteDBCustomNodesDisasterRecoverGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteDBCustomNodesDisasterRecoverGroup
+// 该接口（DeleteDBCustomNodesDisasterRecoverGroup）用于移除 DB Custom 节点的置放群组。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DeleteDBCustomNodesDisasterRecoverGroup(request *DeleteDBCustomNodesDisasterRecoverGroupRequest) (response *DeleteDBCustomNodesDisasterRecoverGroupResponse, err error) {
+    return c.DeleteDBCustomNodesDisasterRecoverGroupWithContext(context.Background(), request)
+}
+
+// DeleteDBCustomNodesDisasterRecoverGroup
+// 该接口（DeleteDBCustomNodesDisasterRecoverGroup）用于移除 DB Custom 节点的置放群组。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DeleteDBCustomNodesDisasterRecoverGroupWithContext(ctx context.Context, request *DeleteDBCustomNodesDisasterRecoverGroupRequest) (response *DeleteDBCustomNodesDisasterRecoverGroupResponse, err error) {
+    if request == nil {
+        request = NewDeleteDBCustomNodesDisasterRecoverGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dbdc", APIVersion, "DeleteDBCustomNodesDisasterRecoverGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteDBCustomNodesDisasterRecoverGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteDBCustomNodesDisasterRecoverGroupResponse()
     err = c.Send(request, response)
     return
 }
@@ -657,6 +825,118 @@ func (c *Client) DescribeDBCustomClustersWithContext(ctx context.Context, reques
     request.SetContext(ctx)
     
     response = NewDescribeDBCustomClustersResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDBCustomDisasterRecoverGroupQuotaRequest() (request *DescribeDBCustomDisasterRecoverGroupQuotaRequest) {
+    request = &DescribeDBCustomDisasterRecoverGroupQuotaRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dbdc", APIVersion, "DescribeDBCustomDisasterRecoverGroupQuota")
+    
+    
+    return
+}
+
+func NewDescribeDBCustomDisasterRecoverGroupQuotaResponse() (response *DescribeDBCustomDisasterRecoverGroupQuotaResponse) {
+    response = &DescribeDBCustomDisasterRecoverGroupQuotaResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDBCustomDisasterRecoverGroupQuota
+// 该接口（DescribeDBCustomDisasterRecoverGroupQuota）用于查询 DB Custom 置放群组配额。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeDBCustomDisasterRecoverGroupQuota(request *DescribeDBCustomDisasterRecoverGroupQuotaRequest) (response *DescribeDBCustomDisasterRecoverGroupQuotaResponse, err error) {
+    return c.DescribeDBCustomDisasterRecoverGroupQuotaWithContext(context.Background(), request)
+}
+
+// DescribeDBCustomDisasterRecoverGroupQuota
+// 该接口（DescribeDBCustomDisasterRecoverGroupQuota）用于查询 DB Custom 置放群组配额。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeDBCustomDisasterRecoverGroupQuotaWithContext(ctx context.Context, request *DescribeDBCustomDisasterRecoverGroupQuotaRequest) (response *DescribeDBCustomDisasterRecoverGroupQuotaResponse, err error) {
+    if request == nil {
+        request = NewDescribeDBCustomDisasterRecoverGroupQuotaRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dbdc", APIVersion, "DescribeDBCustomDisasterRecoverGroupQuota")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBCustomDisasterRecoverGroupQuota require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDBCustomDisasterRecoverGroupQuotaResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDBCustomDisasterRecoverGroupsRequest() (request *DescribeDBCustomDisasterRecoverGroupsRequest) {
+    request = &DescribeDBCustomDisasterRecoverGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dbdc", APIVersion, "DescribeDBCustomDisasterRecoverGroups")
+    
+    
+    return
+}
+
+func NewDescribeDBCustomDisasterRecoverGroupsResponse() (response *DescribeDBCustomDisasterRecoverGroupsResponse) {
+    response = &DescribeDBCustomDisasterRecoverGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDBCustomDisasterRecoverGroups
+// 该接口（DescribeDBCustomDisasterRecoverGroups）用于查询 DB Custom 置放群组列表。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeDBCustomDisasterRecoverGroups(request *DescribeDBCustomDisasterRecoverGroupsRequest) (response *DescribeDBCustomDisasterRecoverGroupsResponse, err error) {
+    return c.DescribeDBCustomDisasterRecoverGroupsWithContext(context.Background(), request)
+}
+
+// DescribeDBCustomDisasterRecoverGroups
+// 该接口（DescribeDBCustomDisasterRecoverGroups）用于查询 DB Custom 置放群组列表。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeDBCustomDisasterRecoverGroupsWithContext(ctx context.Context, request *DescribeDBCustomDisasterRecoverGroupsRequest) (response *DescribeDBCustomDisasterRecoverGroupsResponse, err error) {
+    if request == nil {
+        request = NewDescribeDBCustomDisasterRecoverGroupsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dbdc", APIVersion, "DescribeDBCustomDisasterRecoverGroups")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBCustomDisasterRecoverGroups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDBCustomDisasterRecoverGroupsResponse()
     err = c.Send(request, response)
     return
 }
@@ -1515,6 +1795,62 @@ func (c *Client) IsolateDBCustomNodeWithContext(ctx context.Context, request *Is
     return
 }
 
+func NewModifyDBCustomClusterAttributesRequest() (request *ModifyDBCustomClusterAttributesRequest) {
+    request = &ModifyDBCustomClusterAttributesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dbdc", APIVersion, "ModifyDBCustomClusterAttributes")
+    
+    
+    return
+}
+
+func NewModifyDBCustomClusterAttributesResponse() (response *ModifyDBCustomClusterAttributesResponse) {
+    response = &ModifyDBCustomClusterAttributesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyDBCustomClusterAttributes
+// 该接口（ModifyDBCustomClusterAttributes）用于修改 DB Custom 集群的属性。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) ModifyDBCustomClusterAttributes(request *ModifyDBCustomClusterAttributesRequest) (response *ModifyDBCustomClusterAttributesResponse, err error) {
+    return c.ModifyDBCustomClusterAttributesWithContext(context.Background(), request)
+}
+
+// ModifyDBCustomClusterAttributes
+// 该接口（ModifyDBCustomClusterAttributes）用于修改 DB Custom 集群的属性。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) ModifyDBCustomClusterAttributesWithContext(ctx context.Context, request *ModifyDBCustomClusterAttributesRequest) (response *ModifyDBCustomClusterAttributesResponse, err error) {
+    if request == nil {
+        request = NewModifyDBCustomClusterAttributesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dbdc", APIVersion, "ModifyDBCustomClusterAttributes")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDBCustomClusterAttributes require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDBCustomClusterAttributesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyDBCustomClusterNodeConfigRequest() (request *ModifyDBCustomClusterNodeConfigRequest) {
     request = &ModifyDBCustomClusterNodeConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1627,6 +1963,174 @@ func (c *Client) ModifyDBCustomClusterTagsWithContext(ctx context.Context, reque
     return
 }
 
+func NewModifyDBCustomDisasterRecoverGroupAttributeRequest() (request *ModifyDBCustomDisasterRecoverGroupAttributeRequest) {
+    request = &ModifyDBCustomDisasterRecoverGroupAttributeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dbdc", APIVersion, "ModifyDBCustomDisasterRecoverGroupAttribute")
+    
+    
+    return
+}
+
+func NewModifyDBCustomDisasterRecoverGroupAttributeResponse() (response *ModifyDBCustomDisasterRecoverGroupAttributeResponse) {
+    response = &ModifyDBCustomDisasterRecoverGroupAttributeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyDBCustomDisasterRecoverGroupAttribute
+// 该接口（ModifyDBCustomDisasterRecoverGroupAttribute）用于修改 DB Custom 置放群组的属性。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) ModifyDBCustomDisasterRecoverGroupAttribute(request *ModifyDBCustomDisasterRecoverGroupAttributeRequest) (response *ModifyDBCustomDisasterRecoverGroupAttributeResponse, err error) {
+    return c.ModifyDBCustomDisasterRecoverGroupAttributeWithContext(context.Background(), request)
+}
+
+// ModifyDBCustomDisasterRecoverGroupAttribute
+// 该接口（ModifyDBCustomDisasterRecoverGroupAttribute）用于修改 DB Custom 置放群组的属性。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) ModifyDBCustomDisasterRecoverGroupAttributeWithContext(ctx context.Context, request *ModifyDBCustomDisasterRecoverGroupAttributeRequest) (response *ModifyDBCustomDisasterRecoverGroupAttributeResponse, err error) {
+    if request == nil {
+        request = NewModifyDBCustomDisasterRecoverGroupAttributeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dbdc", APIVersion, "ModifyDBCustomDisasterRecoverGroupAttribute")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDBCustomDisasterRecoverGroupAttribute require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDBCustomDisasterRecoverGroupAttributeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyDBCustomDisasterRecoverGroupTagsRequest() (request *ModifyDBCustomDisasterRecoverGroupTagsRequest) {
+    request = &ModifyDBCustomDisasterRecoverGroupTagsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dbdc", APIVersion, "ModifyDBCustomDisasterRecoverGroupTags")
+    
+    
+    return
+}
+
+func NewModifyDBCustomDisasterRecoverGroupTagsResponse() (response *ModifyDBCustomDisasterRecoverGroupTagsResponse) {
+    response = &ModifyDBCustomDisasterRecoverGroupTagsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyDBCustomDisasterRecoverGroupTags
+// 该接口（ModifyDBCustomDisasterRecoverGroupTags）用于修改 DB Custom 置放群组绑定的标签。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) ModifyDBCustomDisasterRecoverGroupTags(request *ModifyDBCustomDisasterRecoverGroupTagsRequest) (response *ModifyDBCustomDisasterRecoverGroupTagsResponse, err error) {
+    return c.ModifyDBCustomDisasterRecoverGroupTagsWithContext(context.Background(), request)
+}
+
+// ModifyDBCustomDisasterRecoverGroupTags
+// 该接口（ModifyDBCustomDisasterRecoverGroupTags）用于修改 DB Custom 置放群组绑定的标签。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) ModifyDBCustomDisasterRecoverGroupTagsWithContext(ctx context.Context, request *ModifyDBCustomDisasterRecoverGroupTagsRequest) (response *ModifyDBCustomDisasterRecoverGroupTagsResponse, err error) {
+    if request == nil {
+        request = NewModifyDBCustomDisasterRecoverGroupTagsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dbdc", APIVersion, "ModifyDBCustomDisasterRecoverGroupTags")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDBCustomDisasterRecoverGroupTags require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDBCustomDisasterRecoverGroupTagsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyDBCustomNodeAttributesRequest() (request *ModifyDBCustomNodeAttributesRequest) {
+    request = &ModifyDBCustomNodeAttributesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dbdc", APIVersion, "ModifyDBCustomNodeAttributes")
+    
+    
+    return
+}
+
+func NewModifyDBCustomNodeAttributesResponse() (response *ModifyDBCustomNodeAttributesResponse) {
+    response = &ModifyDBCustomNodeAttributesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyDBCustomNodeAttributes
+// 该接口（ModifyDBCustomNodeAttributes）用于修改 DB Custom 节点的属性。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) ModifyDBCustomNodeAttributes(request *ModifyDBCustomNodeAttributesRequest) (response *ModifyDBCustomNodeAttributesResponse, err error) {
+    return c.ModifyDBCustomNodeAttributesWithContext(context.Background(), request)
+}
+
+// ModifyDBCustomNodeAttributes
+// 该接口（ModifyDBCustomNodeAttributes）用于修改 DB Custom 节点的属性。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) ModifyDBCustomNodeAttributesWithContext(ctx context.Context, request *ModifyDBCustomNodeAttributesRequest) (response *ModifyDBCustomNodeAttributesResponse, err error) {
+    if request == nil {
+        request = NewModifyDBCustomNodeAttributesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dbdc", APIVersion, "ModifyDBCustomNodeAttributes")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDBCustomNodeAttributes require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDBCustomNodeAttributesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyDBCustomNodeSecurityGroupsRequest() (request *ModifyDBCustomNodeSecurityGroupsRequest) {
     request = &ModifyDBCustomNodeSecurityGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1735,6 +2239,62 @@ func (c *Client) ModifyDBCustomNodeTagsWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewModifyDBCustomNodeTagsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyDBCustomNodesDisasterRecoverGroupRequest() (request *ModifyDBCustomNodesDisasterRecoverGroupRequest) {
+    request = &ModifyDBCustomNodesDisasterRecoverGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dbdc", APIVersion, "ModifyDBCustomNodesDisasterRecoverGroup")
+    
+    
+    return
+}
+
+func NewModifyDBCustomNodesDisasterRecoverGroupResponse() (response *ModifyDBCustomNodesDisasterRecoverGroupResponse) {
+    response = &ModifyDBCustomNodesDisasterRecoverGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyDBCustomNodesDisasterRecoverGroup
+// 该接口（ModifyDBCustomNodesDisasterRecoverGroup）用于修改 DB Custom 节点的置放群组。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) ModifyDBCustomNodesDisasterRecoverGroup(request *ModifyDBCustomNodesDisasterRecoverGroupRequest) (response *ModifyDBCustomNodesDisasterRecoverGroupResponse, err error) {
+    return c.ModifyDBCustomNodesDisasterRecoverGroupWithContext(context.Background(), request)
+}
+
+// ModifyDBCustomNodesDisasterRecoverGroup
+// 该接口（ModifyDBCustomNodesDisasterRecoverGroup）用于修改 DB Custom 节点的置放群组。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) ModifyDBCustomNodesDisasterRecoverGroupWithContext(ctx context.Context, request *ModifyDBCustomNodesDisasterRecoverGroupRequest) (response *ModifyDBCustomNodesDisasterRecoverGroupResponse, err error) {
+    if request == nil {
+        request = NewModifyDBCustomNodesDisasterRecoverGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dbdc", APIVersion, "ModifyDBCustomNodesDisasterRecoverGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDBCustomNodesDisasterRecoverGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDBCustomNodesDisasterRecoverGroupResponse()
     err = c.Send(request, response)
     return
 }

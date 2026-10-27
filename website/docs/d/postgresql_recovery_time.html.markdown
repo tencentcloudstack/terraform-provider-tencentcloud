@@ -33,4 +33,9 @@ In addition to all arguments above, the following attributes are exported:
 * `recovery_begin_time` - The earliest restoration time (UTC+8).
 * `recovery_end_time` - The latest restoration time (UTC+8).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAvailableRecoveryTime](https://www.tencentcloud.com/document/api/409/45152)
 

@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
   * `service_id` - Instance ID.
   * `service_name` - Example name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeHostApiGatewayInstanceList](https://www.tencentcloud.com/search/?wd=DescribeHostApiGatewayInstanceList&type=document&lang=en)
 

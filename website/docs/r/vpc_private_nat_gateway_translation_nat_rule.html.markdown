@@ -107,6 +107,18 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePrivateNatGatewayTranslationNatRule](https://www.tencentcloud.com/search/?wd=CreatePrivateNatGatewayTranslationNatRule&type=document&lang=en)
+* Read: [DescribePrivateNatGatewayTranslationNatRules](https://www.tencentcloud.com/search/?wd=DescribePrivateNatGatewayTranslationNatRules&type=document&lang=en)
+* Update:
+  - [CreatePrivateNatGatewayTranslationNatRule](https://www.tencentcloud.com/search/?wd=CreatePrivateNatGatewayTranslationNatRule&type=document&lang=en)
+  - [DeletePrivateNatGatewayTranslationNatRule](https://www.tencentcloud.com/search/?wd=DeletePrivateNatGatewayTranslationNatRule&type=document&lang=en)
+* Delete:
+  - [DeletePrivateNatGatewayTranslationNatRule](https://www.tencentcloud.com/search/?wd=DeletePrivateNatGatewayTranslationNatRule&type=document&lang=en)
+  - [DescribePrivateNatGatewayTranslationNatRules](https://www.tencentcloud.com/search/?wd=DescribePrivateNatGatewayTranslationNatRules&type=document&lang=en)
 
 ## Import
 

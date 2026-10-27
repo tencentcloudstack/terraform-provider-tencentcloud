@@ -65,4 +65,9 @@ In addition to all arguments above, the following attributes are exported:
   * `resource_count` - The total number of resources in the cluster.
   * `zone` - .
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeExclusiveClusters](https://www.tencentcloud.com/search/?wd=DescribeExclusiveClusters&type=document&lang=en)
 

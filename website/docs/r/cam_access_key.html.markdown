@@ -63,6 +63,14 @@ In addition to all arguments above, the following attributes are exported:
 * `key_fingerprint` - Fingerprint of the PGP key used to encrypt the secret. This attribute is not available for imported resources.
 * `secret_access_key` - Access key (key is only visible when created, please keep it properly).
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAccessKey](https://www.tencentcloud.com/document/api/598/52594)
+* Read: [ListAccessKeys](https://www.tencentcloud.com/document/api/598/37088)
+* Update: [UpdateAccessKey](https://www.tencentcloud.com/document/api/598/52592)
+* Delete: [DeleteAccessKey](https://www.tencentcloud.com/document/api/598/52593)
 
 ## Import
 

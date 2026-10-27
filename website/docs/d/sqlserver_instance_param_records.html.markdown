@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
   * `param_name` - Parameter name.
   * `status` - Parameter modification status. Valid values: 1 (initializing and waiting for modification), 2 (modification succeed), 3 (modification failed), 4 (modifying).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstanceParamRecords](https://www.tencentcloud.com/document/api/238/41642)
 

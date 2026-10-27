@@ -45,4 +45,9 @@ In addition to all arguments above, the following attributes are exported:
   * `state` - Version status. 1: initializing; 2: online; 3: offline.
   * `update_time` - Update time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDataEngineImageVersions](https://www.tencentcloud.com/document/api/1155/62655)
 

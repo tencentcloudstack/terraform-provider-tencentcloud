@@ -42,4 +42,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateDBDiagReportTask](https://www.tencentcloud.com/document/api/1035/41199)
+  - [DescribeDBDiagReportTasks](https://www.tencentcloud.com/document/api/1035/41202)
+* Read: [DescribeDBDiagReportTasks](https://www.tencentcloud.com/document/api/1035/41202)
+* Delete: [DeleteDBDiagReportTasks](https://www.tencentcloud.com/document/api/1035/54782)
 

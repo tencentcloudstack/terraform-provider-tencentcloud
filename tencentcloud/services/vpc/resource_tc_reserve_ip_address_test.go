@@ -42,7 +42,7 @@ func TestAccTencentCloudReserveIpAddressesResource_SetIpAddress(t *testing.T) {
 				ResourceName:            "tencentcloud_reserve_ip_address.reserve_ip",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"subnet_id"},
+				ImportStateVerifyIgnore: []string{},
 			}},
 	})
 }
@@ -71,7 +71,7 @@ func TestAccTencentCloudReserveIpAddressesResource_NotSetIpAddress(t *testing.T)
 				ResourceName:            "tencentcloud_reserve_ip_address.reserve_ip",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"subnet_id"},
+				ImportStateVerifyIgnore: []string{},
 			}},
 	})
 }

@@ -49,4 +49,9 @@ In addition to all arguments above, the following attributes are exported:
   * `load_balancer_id` - Loadbalance Id.
   * `vip` - vip.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeClusterResources](https://www.tencentcloud.com/search/?wd=DescribeClusterResources&type=document&lang=en)
 

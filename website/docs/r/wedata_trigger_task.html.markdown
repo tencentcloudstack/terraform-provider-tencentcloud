@@ -174,6 +174,14 @@ The `trigger_task_configuration` object exports the following:
   * `param_key` - Parameter name.
   * `param_value` - Parameter value.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateTriggerTask](https://www.tencentcloud.com/document/api/1174/77937)
+* Read: [GetTriggerTask](https://www.tencentcloud.com/document/api/1174/77927)
+* Update: [UpdateTriggerTask](https://www.tencentcloud.com/document/api/1174/77912)
+* Delete: [DeleteTriggerTask](https://www.tencentcloud.com/document/api/1174/77933)
 
 ## Import
 

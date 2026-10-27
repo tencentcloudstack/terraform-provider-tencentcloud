@@ -3294,14 +3294,21 @@ func NewDescribeAuditInstanceListResponse() (response *DescribeAuditInstanceList
 // 本接口（DescribeAuditInstanceList）用于获取审计实例列表。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION_AUDITCONFIGNOTEXIST = "FailedOperation.AuditConfigNotExist"
+//  FAILEDOPERATION_QUERYINSTANCEERROR = "FailedOperation.QueryInstanceError"
 //  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
 //  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
+//  OPERATIONDENIED_ACCOUNTOPERATIONDENIED = "OperationDenied.AccountOperationDenied"
+//  OPERATIONDENIED_INSTANCELOGSTATUSERROR = "OperationDenied.InstanceLogStatusError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
 //  OPERATIONDENIED_RESOURCENOTFUNDERROR = "OperationDenied.ResourceNotFundError"
+//  RESOURCENOTFOUND_INSTANCENOTFUNDERROR = "ResourceNotFound.InstanceNotFundError"
 func (c *Client) DescribeAuditInstanceList(request *DescribeAuditInstanceListRequest) (response *DescribeAuditInstanceListResponse, err error) {
     return c.DescribeAuditInstanceListWithContext(context.Background(), request)
 }
@@ -3310,14 +3317,21 @@ func (c *Client) DescribeAuditInstanceList(request *DescribeAuditInstanceListReq
 // 本接口（DescribeAuditInstanceList）用于获取审计实例列表。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION_AUDITCONFIGNOTEXIST = "FailedOperation.AuditConfigNotExist"
+//  FAILEDOPERATION_QUERYINSTANCEERROR = "FailedOperation.QueryInstanceError"
 //  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
 //  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
+//  OPERATIONDENIED_ACCOUNTOPERATIONDENIED = "OperationDenied.AccountOperationDenied"
+//  OPERATIONDENIED_INSTANCELOGSTATUSERROR = "OperationDenied.InstanceLogStatusError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
 //  OPERATIONDENIED_RESOURCENOTFUNDERROR = "OperationDenied.ResourceNotFundError"
+//  RESOURCENOTFOUND_INSTANCENOTFUNDERROR = "ResourceNotFound.InstanceNotFundError"
 func (c *Client) DescribeAuditInstanceListWithContext(ctx context.Context, request *DescribeAuditInstanceListRequest) (response *DescribeAuditInstanceListResponse, err error) {
     if request == nil {
         request = NewDescribeAuditInstanceListRequest()

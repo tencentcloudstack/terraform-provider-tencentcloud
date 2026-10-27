@@ -45,6 +45,14 @@ In addition to all arguments above, the following attributes are exported:
 * `support_download_keytab` - If support download keytab.
 * `user_type` - User type.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddUsersForUserManager](https://www.tencentcloud.com/document/api/1026/47537)
+* Read: [DescribeUsersForUserManager](https://www.tencentcloud.com/document/api/1026/47536)
+* Update: [ModifyUserManagerPwd](https://www.tencentcloud.com/document/api/1026/58391)
+* Delete: [DeleteUserManagerUserList](https://www.tencentcloud.com/search/?wd=DeleteUserManagerUserList&type=document&lang=en)
 
 ## Import
 

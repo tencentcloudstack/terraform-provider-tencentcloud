@@ -49,6 +49,14 @@ The `access_rule` object exports the following:
 * `access_rule_id` - single rule id.
 * `create_time` - rule create time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAccessRules](https://www.tencentcloud.com/document/api/1106/42418)
+* Read: [DescribeAccessRules](https://www.tencentcloud.com/document/api/1106/42416)
+* Update: [ModifyAccessRules](https://www.tencentcloud.com/document/api/1106/42415)
+* Delete: [DeleteAccessRules](https://www.tencentcloud.com/document/api/1106/42417)
 
 ## Import
 

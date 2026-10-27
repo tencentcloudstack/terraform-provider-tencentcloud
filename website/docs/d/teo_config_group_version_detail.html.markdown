@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
 * `config_group_version_info` - Version information.
 * `content` - Version file content. It is returned in JSON format.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeConfigGroupVersionDetail](https://www.tencentcloud.com/document/api/1145/57975)
 

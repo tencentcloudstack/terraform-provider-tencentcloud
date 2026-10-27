@@ -21,10 +21,10 @@ import (
 )
 
 type Account struct {
-	// <p>账号名，可输入1 - 32个字符。</p>
+	// 账号名称
 	User *string `json:"User,omitnil,omitempty" name:"User"`
 
-	// <p>账号的主机。</p><p>IP 形式，支持填入%。</p>
+	// 账号的主机地址
 	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
 }
 
@@ -353,53 +353,45 @@ func (r *AdjustCdbProxyAddressResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AdjustCdbProxyRequestParams struct {
-	// 实例 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
+	// <p>实例 ID。可通过 <a href="https://cloud.tencent.com/document/product/236/15872">DescribeDBInstances</a> 接口获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 代理组 ID。可通过 [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) 接口获取。
+	// <p>代理组 ID。可通过 <a href="https://cloud.tencent.com/document/api/236/90585">DescribeCdbProxyInfo</a> 接口获取。</p>
 	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
 
-	// 节点规格配置
-	// 备注：数据库代理支持的节点规格为：2C4000MB、4C8000MB、8C16000MB。
-	// 示例中参数说明：
-	// NodeCount：节点个数
-	// Region：节点地域
-	// Zone：节点可用区
-	// Cpu：单个代理节点核数（单位：核）
-	// Mem：单个代理节点内存数（单位：MB）
+	// <p>节点规格配置<br>备注：数据库代理支持的节点规格为：2C4000MB、4C8000MB、8C16000MB。<br>示例中参数说明：<br>NodeCount：节点个数<br>Region：节点地域<br>Zone：节点可用区<br>Cpu：单个代理节点核数（单位：核）<br>Mem：单个代理节点内存数（单位：MB）</p>
 	ProxyNodeCustom []*ProxyNodeCustom `json:"ProxyNodeCustom,omitnil,omitempty" name:"ProxyNodeCustom"`
 
-	// 重新负载均衡：auto(自动),manual(手动)
+	// <p>重新负载均衡：auto(自动),manual(手动)</p>
 	ReloadBalance *string `json:"ReloadBalance,omitnil,omitempty" name:"ReloadBalance"`
 
-	// 升级切换时间：nowTime(升级完成时),timeWindow(维护时间内)
+	// <p>升级切换时间。</p><p>枚举值：</p><ul><li>nowTime： 升级完成时</li><li>timeWindow： 维护时间内</li><li>rollUpgrade： 滚动升级</li></ul>
 	UpgradeTime *string `json:"UpgradeTime,omitnil,omitempty" name:"UpgradeTime"`
+
+	// <p>滚动升级或平滑变配等待时间</p><p>取值范围：[0, 3600]</p><p>单位：秒</p>
+	RollUpgradeWaitingTime *int64 `json:"RollUpgradeWaitingTime,omitnil,omitempty" name:"RollUpgradeWaitingTime"`
 }
 
 type AdjustCdbProxyRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
+	// <p>实例 ID。可通过 <a href="https://cloud.tencent.com/document/product/236/15872">DescribeDBInstances</a> 接口获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 代理组 ID。可通过 [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) 接口获取。
+	// <p>代理组 ID。可通过 <a href="https://cloud.tencent.com/document/api/236/90585">DescribeCdbProxyInfo</a> 接口获取。</p>
 	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
 
-	// 节点规格配置
-	// 备注：数据库代理支持的节点规格为：2C4000MB、4C8000MB、8C16000MB。
-	// 示例中参数说明：
-	// NodeCount：节点个数
-	// Region：节点地域
-	// Zone：节点可用区
-	// Cpu：单个代理节点核数（单位：核）
-	// Mem：单个代理节点内存数（单位：MB）
+	// <p>节点规格配置<br>备注：数据库代理支持的节点规格为：2C4000MB、4C8000MB、8C16000MB。<br>示例中参数说明：<br>NodeCount：节点个数<br>Region：节点地域<br>Zone：节点可用区<br>Cpu：单个代理节点核数（单位：核）<br>Mem：单个代理节点内存数（单位：MB）</p>
 	ProxyNodeCustom []*ProxyNodeCustom `json:"ProxyNodeCustom,omitnil,omitempty" name:"ProxyNodeCustom"`
 
-	// 重新负载均衡：auto(自动),manual(手动)
+	// <p>重新负载均衡：auto(自动),manual(手动)</p>
 	ReloadBalance *string `json:"ReloadBalance,omitnil,omitempty" name:"ReloadBalance"`
 
-	// 升级切换时间：nowTime(升级完成时),timeWindow(维护时间内)
+	// <p>升级切换时间。</p><p>枚举值：</p><ul><li>nowTime： 升级完成时</li><li>timeWindow： 维护时间内</li><li>rollUpgrade： 滚动升级</li></ul>
 	UpgradeTime *string `json:"UpgradeTime,omitnil,omitempty" name:"UpgradeTime"`
+
+	// <p>滚动升级或平滑变配等待时间</p><p>取值范围：[0, 3600]</p><p>单位：秒</p>
+	RollUpgradeWaitingTime *int64 `json:"RollUpgradeWaitingTime,omitnil,omitempty" name:"RollUpgradeWaitingTime"`
 }
 
 func (r *AdjustCdbProxyRequest) ToJsonString() string {
@@ -419,6 +411,7 @@ func (r *AdjustCdbProxyRequest) FromJsonString(s string) error {
 	delete(f, "ProxyNodeCustom")
 	delete(f, "ReloadBalance")
 	delete(f, "UpgradeTime")
+	delete(f, "RollUpgradeWaitingTime")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AdjustCdbProxyRequest has unknown keys!", "")
 	}
@@ -427,7 +420,7 @@ func (r *AdjustCdbProxyRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AdjustCdbProxyResponseParams struct {
-	// 异步任务ID
+	// <p>异步任务ID</p>
 	AsyncRequestId *string `json:"AsyncRequestId,omitnil,omitempty" name:"AsyncRequestId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1270,19 +1263,13 @@ type CdbSellConfig struct {
 }
 
 type CdbSellType struct {
-	// 售卖实例名称。
-	// Z3：是高可用类型，对应规格中的 DeviceType，包含 UNIVERSAL，EXCLUSIVE。
-	// CVM：是基础版类型，对应规格中的 DeviceType 是 BASIC（已下线）。
-	// TKE：是基础版v2类型，对应规格中的 DeviceType 是 BASIC_V2。
-	// CLOUD_NATIVE_CLUSTER：表示云盘版标准型。
-	// CLOUD_NATIVE_CLUSTER_EXCLUSIVE：表示云盘版加强型。
-	// ECONOMICAL：表示经济型。
+	// <p>售卖实例名称。<br>Z3：是高可用类型，对应规格中的 DeviceType，包含 UNIVERSAL，EXCLUSIVE。<br>CVM：是基础版类型，对应规格中的 DeviceType 是 BASIC（已下线）。<br>TKE：是基础版v2类型，对应规格中的 DeviceType 是 BASIC_V2。<br>CLOUD_NATIVE_CLUSTER：表示云盘版标准型。<br>CLOUD_NATIVE_CLUSTER_EXCLUSIVE：表示云盘版加强型。<br>CLOUD_NATIVE_CLUSTER_ULTRA：表示云盘版旗舰型。<br>CLOUD_NATIVE_SINGLE_NODE：表示云盘版单节点<br>ECONOMICAL：表示经济型。</p>
 	TypeName *string `json:"TypeName,omitnil,omitempty" name:"TypeName"`
 
-	// 引擎版本号
+	// <p>引擎版本号</p>
 	EngineVersion []*string `json:"EngineVersion,omitnil,omitempty" name:"EngineVersion"`
 
-	// 售卖规格Id
+	// <p>售卖规格Id</p>
 	ConfigIds []*int64 `json:"ConfigIds,omitnil,omitempty" name:"ConfigIds"`
 }
 
@@ -3235,6 +3222,9 @@ type CreateDBInstanceHourRequestParams struct {
 	// <p>硬盘类型，单节点（云盘）或者云盘版实例可以指定此参数。CLOUD_SSD 表示 SSD 云硬盘，CLOUD_HSSD 表示增强型 SSD 云硬盘，CLOUD_PREMIUM 表示高性能云硬盘。<br>说明：单节点（云盘）、云盘版实例硬盘类型所支持的地域略有不同，具体支持情况请参考 <a href="https://cloud.tencent.com/document/product/236/8458">地域和可用区</a>。</p>
 	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
 
+	// <p>CDC集群ID，非CDC场景无需指定该入参</p>
+	CdcId *string `json:"CdcId,omitnil,omitempty" name:"CdcId"`
+
 	// <p>集群类型:cage——金融围拢，cdc——CDB ON CDC；dedicate——独享集群</p>
 	ClusterType *string `json:"ClusterType,omitnil,omitempty" name:"ClusterType"`
 
@@ -3246,6 +3236,9 @@ type CreateDBInstanceHourRequestParams struct {
 
 	// <p>备库 3 的可用区信息，默认为空，购买四节点主实例时可指定该参数。</p>
 	FourthZone *string `json:"FourthZone,omitnil,omitempty" name:"FourthZone"`
+
+	// <p>弹性扩容参数（如果不传，则不开启）</p>
+	AutoStrategy *AutoStrategy `json:"AutoStrategy,omitnil,omitempty" name:"AutoStrategy"`
 }
 
 type CreateDBInstanceHourRequest struct {
@@ -3371,6 +3364,9 @@ type CreateDBInstanceHourRequest struct {
 	// <p>硬盘类型，单节点（云盘）或者云盘版实例可以指定此参数。CLOUD_SSD 表示 SSD 云硬盘，CLOUD_HSSD 表示增强型 SSD 云硬盘，CLOUD_PREMIUM 表示高性能云硬盘。<br>说明：单节点（云盘）、云盘版实例硬盘类型所支持的地域略有不同，具体支持情况请参考 <a href="https://cloud.tencent.com/document/product/236/8458">地域和可用区</a>。</p>
 	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
 
+	// <p>CDC集群ID，非CDC场景无需指定该入参</p>
+	CdcId *string `json:"CdcId,omitnil,omitempty" name:"CdcId"`
+
 	// <p>集群类型:cage——金融围拢，cdc——CDB ON CDC；dedicate——独享集群</p>
 	ClusterType *string `json:"ClusterType,omitnil,omitempty" name:"ClusterType"`
 
@@ -3382,6 +3378,9 @@ type CreateDBInstanceHourRequest struct {
 
 	// <p>备库 3 的可用区信息，默认为空，购买四节点主实例时可指定该参数。</p>
 	FourthZone *string `json:"FourthZone,omitnil,omitempty" name:"FourthZone"`
+
+	// <p>弹性扩容参数（如果不传，则不开启）</p>
+	AutoStrategy *AutoStrategy `json:"AutoStrategy,omitnil,omitempty" name:"AutoStrategy"`
 }
 
 func (r *CreateDBInstanceHourRequest) ToJsonString() string {
@@ -3436,10 +3435,12 @@ func (r *CreateDBInstanceHourRequest) FromJsonString(s string) error {
 	delete(f, "DataProtectVolume")
 	delete(f, "ClusterTopology")
 	delete(f, "DiskType")
+	delete(f, "CdcId")
 	delete(f, "ClusterType")
 	delete(f, "DiskEncryption")
 	delete(f, "DestroyProtect")
 	delete(f, "FourthZone")
+	delete(f, "AutoStrategy")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDBInstanceHourRequest has unknown keys!", "")
 	}
@@ -3607,6 +3608,9 @@ type CreateDBInstanceRequestParams struct {
 
 	// <p>备库 3 的可用区信息，默认为空，购买四节点主实例时可指定该参数。</p>
 	FourthZone *string `json:"FourthZone,omitnil,omitempty" name:"FourthZone"`
+
+	// <p>弹性扩容参数（如果不传，则不开启）</p>
+	AutoStrategy *AutoStrategy `json:"AutoStrategy,omitnil,omitempty" name:"AutoStrategy"`
 }
 
 type CreateDBInstanceRequest struct {
@@ -3743,6 +3747,9 @@ type CreateDBInstanceRequest struct {
 
 	// <p>备库 3 的可用区信息，默认为空，购买四节点主实例时可指定该参数。</p>
 	FourthZone *string `json:"FourthZone,omitnil,omitempty" name:"FourthZone"`
+
+	// <p>弹性扩容参数（如果不传，则不开启）</p>
+	AutoStrategy *AutoStrategy `json:"AutoStrategy,omitnil,omitempty" name:"AutoStrategy"`
 }
 
 func (r *CreateDBInstanceRequest) ToJsonString() string {
@@ -3801,6 +3808,7 @@ func (r *CreateDBInstanceRequest) FromJsonString(s string) error {
 	delete(f, "DiskEncryption")
 	delete(f, "DestroyProtect")
 	delete(f, "FourthZone")
+	delete(f, "AutoStrategy")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDBInstanceRequest has unknown keys!", "")
 	}
@@ -4976,26 +4984,26 @@ type DeployGroupInfo struct {
 
 // Predefined struct for user
 type DescribeAccountPrivilegesRequestParams struct {
-	// 实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+	// <p>实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 数据库的账号名称。可通过 [DescribeAccounts](https://cloud.tencent.com/document/api/236/17499) 接口获取。
+	// <p>数据库的账号名称。可通过 <a href="https://cloud.tencent.com/document/api/236/17499">DescribeAccounts</a> 接口获取。</p>
 	User *string `json:"User,omitnil,omitempty" name:"User"`
 
-	// 数据库的账号域名。可通过 [DescribeAccounts](https://cloud.tencent.com/document/api/236/17499) 接口获取。
+	// <p>数据库的账号域名。可通过 <a href="https://cloud.tencent.com/document/api/236/17499">DescribeAccounts</a> 接口获取。</p>
 	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
 }
 
 type DescribeAccountPrivilegesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+	// <p>实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 数据库的账号名称。可通过 [DescribeAccounts](https://cloud.tencent.com/document/api/236/17499) 接口获取。
+	// <p>数据库的账号名称。可通过 <a href="https://cloud.tencent.com/document/api/236/17499">DescribeAccounts</a> 接口获取。</p>
 	User *string `json:"User,omitnil,omitempty" name:"User"`
 
-	// 数据库的账号域名。可通过 [DescribeAccounts](https://cloud.tencent.com/document/api/236/17499) 接口获取。
+	// <p>数据库的账号域名。可通过 <a href="https://cloud.tencent.com/document/api/236/17499">DescribeAccounts</a> 接口获取。</p>
 	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
 }
 
@@ -5022,16 +5030,16 @@ func (r *DescribeAccountPrivilegesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeAccountPrivilegesResponseParams struct {
-	// 全局权限数组。
+	// <p>全局权限数组。</p>
 	GlobalPrivileges []*string `json:"GlobalPrivileges,omitnil,omitempty" name:"GlobalPrivileges"`
 
-	// 数据库权限数组。
+	// <p>数据库权限数组。</p>
 	DatabasePrivileges []*DatabasePrivilege `json:"DatabasePrivileges,omitnil,omitempty" name:"DatabasePrivileges"`
 
-	// 数据库中的表权限数组。
+	// <p>数据库中的表权限数组。</p>
 	TablePrivileges []*TablePrivilege `json:"TablePrivileges,omitnil,omitempty" name:"TablePrivileges"`
 
-	// 数据库表中的列权限数组。
+	// <p>数据库表中的列权限数组。</p>
 	ColumnPrivileges []*ColumnPrivilege `json:"ColumnPrivileges,omitnil,omitempty" name:"ColumnPrivileges"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6424,27 +6432,39 @@ func (r *DescribeBackupSummariesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeBackupsRequestParams struct {
-	// 实例 ID，格式如：cdb-c1nl9rpv。与云数据库控制台页面中显示的实例 ID 相同。
+	// <p>实例 ID，格式如：cdb-c1nl9rpv。与云数据库控制台页面中显示的实例 ID 相同。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 偏移量，最小值为0。
+	// <p>偏移量，最小值为0。</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 分页大小，默认值为20，最小值为1，最大值为1000。
+	// <p>分页大小，默认值为20，最小值为1，最大值为1000。</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>备份开始时间，筛选大于等于此值，时间格式：2016-03-17 02:10:37</p>
+	MinStartTime *string `json:"MinStartTime,omitnil,omitempty" name:"MinStartTime"`
+
+	// <p>备份开始时间，筛选小于等于此值，时间格式：2016-03-17 02:10:37</p>
+	MaxStartTime *string `json:"MaxStartTime,omitnil,omitempty" name:"MaxStartTime"`
 }
 
 type DescribeBackupsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID，格式如：cdb-c1nl9rpv。与云数据库控制台页面中显示的实例 ID 相同。
+	// <p>实例 ID，格式如：cdb-c1nl9rpv。与云数据库控制台页面中显示的实例 ID 相同。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 偏移量，最小值为0。
+	// <p>偏移量，最小值为0。</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 分页大小，默认值为20，最小值为1，最大值为1000。
+	// <p>分页大小，默认值为20，最小值为1，最大值为1000。</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>备份开始时间，筛选大于等于此值，时间格式：2016-03-17 02:10:37</p>
+	MinStartTime *string `json:"MinStartTime,omitnil,omitempty" name:"MinStartTime"`
+
+	// <p>备份开始时间，筛选小于等于此值，时间格式：2016-03-17 02:10:37</p>
+	MaxStartTime *string `json:"MaxStartTime,omitnil,omitempty" name:"MaxStartTime"`
 }
 
 func (r *DescribeBackupsRequest) ToJsonString() string {
@@ -6462,6 +6482,8 @@ func (r *DescribeBackupsRequest) FromJsonString(s string) error {
 	delete(f, "InstanceId")
 	delete(f, "Offset")
 	delete(f, "Limit")
+	delete(f, "MinStartTime")
+	delete(f, "MaxStartTime")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeBackupsRequest has unknown keys!", "")
 	}
@@ -6470,10 +6492,10 @@ func (r *DescribeBackupsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeBackupsResponseParams struct {
-	// 符合查询条件的实例总数。
+	// <p>符合查询条件的实例总数。</p>
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 符合查询条件的备份信息详情。
+	// <p>符合查询条件的备份信息详情。</p>
 	Items []*BackupInfo `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6939,16 +6961,14 @@ func (r *DescribeCloneListResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeClusterInfoRequestParams struct {
-	// 实例 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
-	// 说明：仅能输入实例架构为云盘版的实例 ID，对应控制台实例配置显示为“云盘版（云盘）”的实例。
+	// <p>实例 ID。可通过 <a href="https://cloud.tencent.com/document/product/236/15872">DescribeDBInstances</a> 接口获取。<br>说明：仅能输入实例架构为云盘版的实例 ID，对应控制台实例配置显示为“云盘版（云盘）”的实例。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type DescribeClusterInfoRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
-	// 说明：仅能输入实例架构为云盘版的实例 ID，对应控制台实例配置显示为“云盘版（云盘）”的实例。
+	// <p>实例 ID。可通过 <a href="https://cloud.tencent.com/document/product/236/15872">DescribeDBInstances</a> 接口获取。<br>说明：仅能输入实例架构为云盘版的实例 ID，对应控制台实例配置显示为“云盘版（云盘）”的实例。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -6973,22 +6993,22 @@ func (r *DescribeClusterInfoRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeClusterInfoResponseParams struct {
-	// 实例名称。
+	// <p>实例名称。</p>
 	ClusterName *string `json:"ClusterName,omitnil,omitempty" name:"ClusterName"`
 
-	// 云盘版实例的读写地址信息。
+	// <p>云盘版实例的读写地址信息。</p>
 	ReadWriteAddress *AddressInfo `json:"ReadWriteAddress,omitnil,omitempty" name:"ReadWriteAddress"`
 
-	// 云盘版实例的只读地址信息。
+	// <p>云盘版实例的只读地址信息。</p>
 	ReadOnlyAddress []*AddressInfo `json:"ReadOnlyAddress,omitnil,omitempty" name:"ReadOnlyAddress"`
 
-	// 云盘版实例的节点列表信息。
+	// <p>云盘版实例的节点列表信息。</p>
 	NodeList []*ClusterNodeInfo `json:"NodeList,omitnil,omitempty" name:"NodeList"`
 
-	// 只读空间保护阈值,单位GB
+	// <p>只读空间保护阈值,单位GB</p>
 	ReadonlyLimit *int64 `json:"ReadonlyLimit,omitnil,omitempty" name:"ReadonlyLimit"`
 
-	// 实例节点数。
+	// <p>实例节点数。</p>
 	NodeCount *int64 `json:"NodeCount,omitnil,omitempty" name:"NodeCount"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -11670,6 +11690,9 @@ type InstanceInfo struct {
 	// <p>实例销毁保护状态，on表示开启保护，否则为关闭保护</p>
 	DestroyProtect *string `json:"DestroyProtect,omitnil,omitempty" name:"DestroyProtect"`
 
+	// <p>云盘版实例才使用该值。 on表示磁盘加密，否则为不加密。</p>
+	DiskEncryption *string `json:"DiskEncryption,omitnil,omitempty" name:"DiskEncryption"`
+
 	// <p>TDSQL引擎参数</p>
 	CpuModel *string `json:"CpuModel,omitnil,omitempty" name:"CpuModel"`
 
@@ -12110,16 +12133,16 @@ func (r *ModifyAccountMaxUserConnectionsResponse) FromJsonString(s string) error
 
 // Predefined struct for user
 type ModifyAccountPasswordRequestParams struct {
-	// 实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+	// <p>实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 数据库账号的新密码。密码应至少包含字母、数字和字符（_+-&=!@#$%^*()）中的两种，长度为8-64个字符。
+	// <p>数据库账号的新密码。密码应至少包含字母、数字和字符（_+-&amp;=!@#$%^*()）中的两种，长度为8-64个字符。</p>
 	NewPassword *string `json:"NewPassword,omitnil,omitempty" name:"NewPassword"`
 
-	// 云数据库账号。可通过 [DescribeAccounts](https://cloud.tencent.com/document/api/236/17499) 接口获取。
+	// <p>云数据库账号。可通过 <a href="https://cloud.tencent.com/document/api/236/17499">DescribeAccounts</a> 接口获取。</p>
 	Accounts []*Account `json:"Accounts,omitnil,omitempty" name:"Accounts"`
 
-	// 该字段已废弃。
+	// <p>该字段已废弃。</p>
 	//
 	// Deprecated: SkipValidatePassword is deprecated.
 	SkipValidatePassword *bool `json:"SkipValidatePassword,omitnil,omitempty" name:"SkipValidatePassword"`
@@ -12128,16 +12151,16 @@ type ModifyAccountPasswordRequestParams struct {
 type ModifyAccountPasswordRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+	// <p>实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 数据库账号的新密码。密码应至少包含字母、数字和字符（_+-&=!@#$%^*()）中的两种，长度为8-64个字符。
+	// <p>数据库账号的新密码。密码应至少包含字母、数字和字符（_+-&amp;=!@#$%^*()）中的两种，长度为8-64个字符。</p>
 	NewPassword *string `json:"NewPassword,omitnil,omitempty" name:"NewPassword"`
 
-	// 云数据库账号。可通过 [DescribeAccounts](https://cloud.tencent.com/document/api/236/17499) 接口获取。
+	// <p>云数据库账号。可通过 <a href="https://cloud.tencent.com/document/api/236/17499">DescribeAccounts</a> 接口获取。</p>
 	Accounts []*Account `json:"Accounts,omitnil,omitempty" name:"Accounts"`
 
-	// 该字段已废弃。
+	// <p>该字段已废弃。</p>
 	SkipValidatePassword *bool `json:"SkipValidatePassword,omitnil,omitempty" name:"SkipValidatePassword"`
 }
 
@@ -12165,7 +12188,7 @@ func (r *ModifyAccountPasswordRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyAccountPasswordResponseParams struct {
-	// 异步任务的请求 ID，可使用此 ID 查询异步任务的执行结果。
+	// <p>异步任务的请求 ID，可使用此 ID 查询异步任务的执行结果。</p>
 	AsyncRequestId *string `json:"AsyncRequestId,omitnil,omitempty" name:"AsyncRequestId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -12190,58 +12213,50 @@ func (r *ModifyAccountPasswordResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyAccountPrivilegesRequestParams struct {
-	// 实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+	// <p>实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 数据库的账号，包括用户名和域名。可通过 [DescribeAccounts](https://cloud.tencent.com/document/api/236/17499) 接口获取。
+	// <p>数据库的账号，包括用户名和域名。可通过 <a href="https://cloud.tencent.com/document/api/236/17499">DescribeAccounts</a> 接口获取。</p>
 	Accounts []*Account `json:"Accounts,omitnil,omitempty" name:"Accounts"`
 
-	// 全局权限。其中，GlobalPrivileges 中权限的可选值为："SELECT","INSERT","UPDATE","DELETE","CREATE", "PROCESS", "DROP","REFERENCES","INDEX","ALTER","SHOW DATABASES","CREATE TEMPORARY TABLES","LOCK TABLES","EXECUTE","CREATE VIEW","SHOW VIEW","CREATE ROUTINE","ALTER ROUTINE","EVENT","TRIGGER","CREATE USER","RELOAD","REPLICATION CLIENT","REPLICATION SLAVE"。
-	// 注意，ModifyAction为空时，不传该参数表示清除该权限。
+	// <p>全局权限。其中，GlobalPrivileges 中权限的可选值为：&quot;SELECT&quot;,&quot;INSERT&quot;,&quot;UPDATE&quot;,&quot;DELETE&quot;,&quot;CREATE&quot;, &quot;PROCESS&quot;, &quot;DROP&quot;,&quot;REFERENCES&quot;,&quot;INDEX&quot;,&quot;ALTER&quot;,&quot;SHOW DATABASES&quot;,&quot;CREATE TEMPORARY TABLES&quot;,&quot;LOCK TABLES&quot;,&quot;EXECUTE&quot;,&quot;CREATE VIEW&quot;,&quot;SHOW VIEW&quot;,&quot;CREATE ROUTINE&quot;,&quot;ALTER ROUTINE&quot;,&quot;EVENT&quot;,&quot;TRIGGER&quot;,&quot;CREATE USER&quot;,&quot;RELOAD&quot;,&quot;REPLICATION CLIENT&quot;,&quot;REPLICATION SLAVE&quot;。<br>注意，ModifyAction为空时，不传该参数表示清除该权限。</p>
 	GlobalPrivileges []*string `json:"GlobalPrivileges,omitnil,omitempty" name:"GlobalPrivileges"`
 
-	// 数据库的权限。Privileges 权限的可选值为："SELECT","INSERT","UPDATE","DELETE","CREATE",	"DROP","REFERENCES","INDEX","ALTER","CREATE TEMPORARY TABLES","LOCK TABLES","EXECUTE","CREATE VIEW","SHOW VIEW","CREATE ROUTINE","ALTER ROUTINE","EVENT","TRIGGER"。
-	// 注意，ModifyAction为空时，不传该参数表示清除该权限。
+	// <p>数据库的权限。Privileges 权限的可选值为：&quot;SELECT&quot;,&quot;INSERT&quot;,&quot;UPDATE&quot;,&quot;DELETE&quot;,&quot;CREATE&quot;,    &quot;DROP&quot;,&quot;REFERENCES&quot;,&quot;INDEX&quot;,&quot;ALTER&quot;,&quot;CREATE TEMPORARY TABLES&quot;,&quot;LOCK TABLES&quot;,&quot;EXECUTE&quot;,&quot;CREATE VIEW&quot;,&quot;SHOW VIEW&quot;,&quot;CREATE ROUTINE&quot;,&quot;ALTER ROUTINE&quot;,&quot;EVENT&quot;,&quot;TRIGGER&quot;。<br>注意，ModifyAction为空时，不传该参数表示清除该权限。</p>
 	DatabasePrivileges []*DatabasePrivilege `json:"DatabasePrivileges,omitnil,omitempty" name:"DatabasePrivileges"`
 
-	// 数据库中表的权限。Privileges 权限的可选值为：权限的可选值为："SELECT","INSERT","UPDATE","DELETE","CREATE",	"DROP","REFERENCES","INDEX","ALTER","CREATE VIEW","SHOW VIEW", "TRIGGER"。
-	// 注意，ModifyAction为空时，不传该参数表示清除该权限。
+	// <p>数据库中表的权限。Privileges 权限的可选值为：权限的可选值为：&quot;SELECT&quot;,&quot;INSERT&quot;,&quot;UPDATE&quot;,&quot;DELETE&quot;,&quot;CREATE&quot;,    &quot;DROP&quot;,&quot;REFERENCES&quot;,&quot;INDEX&quot;,&quot;ALTER&quot;,&quot;CREATE VIEW&quot;,&quot;SHOW VIEW&quot;, &quot;TRIGGER&quot;。<br>注意，ModifyAction为空时，不传该参数表示清除该权限。</p>
 	TablePrivileges []*TablePrivilege `json:"TablePrivileges,omitnil,omitempty" name:"TablePrivileges"`
 
-	// 数据库表中列的权限。Privileges 权限的可选值为："SELECT","INSERT","UPDATE","REFERENCES"。
-	// 注意，ModifyAction为空时，不传该参数表示清除该权限。
+	// <p>数据库表中列的权限。Privileges 权限的可选值为：&quot;SELECT&quot;,&quot;INSERT&quot;,&quot;UPDATE&quot;,&quot;REFERENCES&quot;。<br>注意，ModifyAction为空时，不传该参数表示清除该权限。</p>
 	ColumnPrivileges []*ColumnPrivilege `json:"ColumnPrivileges,omitnil,omitempty" name:"ColumnPrivileges"`
 
-	// 该参数不为空时，为批量修改权限。可选值为：grant - 授予权限，revoke - 回收权限。
+	// <p>该参数不为空时，为批量修改权限。可选值为：grant - 授予权限，revoke - 回收权限。</p>
 	ModifyAction *string `json:"ModifyAction,omitnil,omitempty" name:"ModifyAction"`
 }
 
 type ModifyAccountPrivilegesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+	// <p>实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 数据库的账号，包括用户名和域名。可通过 [DescribeAccounts](https://cloud.tencent.com/document/api/236/17499) 接口获取。
+	// <p>数据库的账号，包括用户名和域名。可通过 <a href="https://cloud.tencent.com/document/api/236/17499">DescribeAccounts</a> 接口获取。</p>
 	Accounts []*Account `json:"Accounts,omitnil,omitempty" name:"Accounts"`
 
-	// 全局权限。其中，GlobalPrivileges 中权限的可选值为："SELECT","INSERT","UPDATE","DELETE","CREATE", "PROCESS", "DROP","REFERENCES","INDEX","ALTER","SHOW DATABASES","CREATE TEMPORARY TABLES","LOCK TABLES","EXECUTE","CREATE VIEW","SHOW VIEW","CREATE ROUTINE","ALTER ROUTINE","EVENT","TRIGGER","CREATE USER","RELOAD","REPLICATION CLIENT","REPLICATION SLAVE"。
-	// 注意，ModifyAction为空时，不传该参数表示清除该权限。
+	// <p>全局权限。其中，GlobalPrivileges 中权限的可选值为：&quot;SELECT&quot;,&quot;INSERT&quot;,&quot;UPDATE&quot;,&quot;DELETE&quot;,&quot;CREATE&quot;, &quot;PROCESS&quot;, &quot;DROP&quot;,&quot;REFERENCES&quot;,&quot;INDEX&quot;,&quot;ALTER&quot;,&quot;SHOW DATABASES&quot;,&quot;CREATE TEMPORARY TABLES&quot;,&quot;LOCK TABLES&quot;,&quot;EXECUTE&quot;,&quot;CREATE VIEW&quot;,&quot;SHOW VIEW&quot;,&quot;CREATE ROUTINE&quot;,&quot;ALTER ROUTINE&quot;,&quot;EVENT&quot;,&quot;TRIGGER&quot;,&quot;CREATE USER&quot;,&quot;RELOAD&quot;,&quot;REPLICATION CLIENT&quot;,&quot;REPLICATION SLAVE&quot;。<br>注意，ModifyAction为空时，不传该参数表示清除该权限。</p>
 	GlobalPrivileges []*string `json:"GlobalPrivileges,omitnil,omitempty" name:"GlobalPrivileges"`
 
-	// 数据库的权限。Privileges 权限的可选值为："SELECT","INSERT","UPDATE","DELETE","CREATE",	"DROP","REFERENCES","INDEX","ALTER","CREATE TEMPORARY TABLES","LOCK TABLES","EXECUTE","CREATE VIEW","SHOW VIEW","CREATE ROUTINE","ALTER ROUTINE","EVENT","TRIGGER"。
-	// 注意，ModifyAction为空时，不传该参数表示清除该权限。
+	// <p>数据库的权限。Privileges 权限的可选值为：&quot;SELECT&quot;,&quot;INSERT&quot;,&quot;UPDATE&quot;,&quot;DELETE&quot;,&quot;CREATE&quot;,    &quot;DROP&quot;,&quot;REFERENCES&quot;,&quot;INDEX&quot;,&quot;ALTER&quot;,&quot;CREATE TEMPORARY TABLES&quot;,&quot;LOCK TABLES&quot;,&quot;EXECUTE&quot;,&quot;CREATE VIEW&quot;,&quot;SHOW VIEW&quot;,&quot;CREATE ROUTINE&quot;,&quot;ALTER ROUTINE&quot;,&quot;EVENT&quot;,&quot;TRIGGER&quot;。<br>注意，ModifyAction为空时，不传该参数表示清除该权限。</p>
 	DatabasePrivileges []*DatabasePrivilege `json:"DatabasePrivileges,omitnil,omitempty" name:"DatabasePrivileges"`
 
-	// 数据库中表的权限。Privileges 权限的可选值为：权限的可选值为："SELECT","INSERT","UPDATE","DELETE","CREATE",	"DROP","REFERENCES","INDEX","ALTER","CREATE VIEW","SHOW VIEW", "TRIGGER"。
-	// 注意，ModifyAction为空时，不传该参数表示清除该权限。
+	// <p>数据库中表的权限。Privileges 权限的可选值为：权限的可选值为：&quot;SELECT&quot;,&quot;INSERT&quot;,&quot;UPDATE&quot;,&quot;DELETE&quot;,&quot;CREATE&quot;,    &quot;DROP&quot;,&quot;REFERENCES&quot;,&quot;INDEX&quot;,&quot;ALTER&quot;,&quot;CREATE VIEW&quot;,&quot;SHOW VIEW&quot;, &quot;TRIGGER&quot;。<br>注意，ModifyAction为空时，不传该参数表示清除该权限。</p>
 	TablePrivileges []*TablePrivilege `json:"TablePrivileges,omitnil,omitempty" name:"TablePrivileges"`
 
-	// 数据库表中列的权限。Privileges 权限的可选值为："SELECT","INSERT","UPDATE","REFERENCES"。
-	// 注意，ModifyAction为空时，不传该参数表示清除该权限。
+	// <p>数据库表中列的权限。Privileges 权限的可选值为：&quot;SELECT&quot;,&quot;INSERT&quot;,&quot;UPDATE&quot;,&quot;REFERENCES&quot;。<br>注意，ModifyAction为空时，不传该参数表示清除该权限。</p>
 	ColumnPrivileges []*ColumnPrivilege `json:"ColumnPrivileges,omitnil,omitempty" name:"ColumnPrivileges"`
 
-	// 该参数不为空时，为批量修改权限。可选值为：grant - 授予权限，revoke - 回收权限。
+	// <p>该参数不为空时，为批量修改权限。可选值为：grant - 授予权限，revoke - 回收权限。</p>
 	ModifyAction *string `json:"ModifyAction,omitnil,omitempty" name:"ModifyAction"`
 }
 
@@ -12272,7 +12287,7 @@ func (r *ModifyAccountPrivilegesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyAccountPrivilegesResponseParams struct {
-	// 异步任务的请求 ID，可使用此 ID 查询异步任务的执行结果。
+	// <p>异步任务的请求 ID，可使用此 ID 查询异步任务的执行结果。</p>
 	AsyncRequestId *string `json:"AsyncRequestId,omitnil,omitempty" name:"AsyncRequestId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -13675,20 +13690,20 @@ func (r *ModifyDBInstanceProjectResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyDBInstanceReadOnlyStatusRequestParams struct {
-	// 实例ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例ID相同，可使用[查询实例列表](https://cloud.tencent.com/document/api/236/15872) 接口获取，其值为输出参数中字段 InstanceId 的值。
+	// <p>实例ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例ID相同，可使用<a href="https://cloud.tencent.com/document/api/236/15872">查询实例列表</a> 接口获取，其值为输出参数中字段 InstanceId 的值。此接口不支持设置云盘版实例为只读。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 是否设置为只读。其中：1表示设置实例为只读，0表示解除只读状态
+	// <p>是否设置为只读。其中：1表示设置实例为只读，0表示解除只读状态</p>
 	ReadOnly *int64 `json:"ReadOnly,omitnil,omitempty" name:"ReadOnly"`
 }
 
 type ModifyDBInstanceReadOnlyStatusRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例ID相同，可使用[查询实例列表](https://cloud.tencent.com/document/api/236/15872) 接口获取，其值为输出参数中字段 InstanceId 的值。
+	// <p>实例ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例ID相同，可使用<a href="https://cloud.tencent.com/document/api/236/15872">查询实例列表</a> 接口获取，其值为输出参数中字段 InstanceId 的值。此接口不支持设置云盘版实例为只读。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 是否设置为只读。其中：1表示设置实例为只读，0表示解除只读状态
+	// <p>是否设置为只读。其中：1表示设置实例为只读，0表示解除只读状态</p>
 	ReadOnly *int64 `json:"ReadOnly,omitnil,omitempty" name:"ReadOnly"`
 }
 
@@ -15096,26 +15111,26 @@ func (r *OpenAuditServiceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type OpenDBInstanceEncryptionRequestParams struct {
-	// 云数据库实例 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
+	// <p>云数据库实例 ID。可通过 <a href="https://cloud.tencent.com/document/product/236/15872">DescribeDBInstances</a> 接口获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 用户自定义密钥 ID，CMK 唯一标识符。该值为空时，将使用腾讯云自动生成的密钥 KMS-CDB。
+	// <p>用户自定义密钥 ID，CMK 唯一标识符。该值为空时，将使用腾讯云自动生成的密钥 KMS-CDB。</p>
 	KeyId *string `json:"KeyId,omitnil,omitempty" name:"KeyId"`
 
-	// 用户自定义密钥的存储地域。如：ap-guangzhou 。KeyId 不为空时，该参数必填。
+	// <p>用户自定义密钥的存储地域。如：ap-guangzhou 。KeyId 不为空时，该参数必填。</p>
 	KeyRegion *string `json:"KeyRegion,omitnil,omitempty" name:"KeyRegion"`
 }
 
 type OpenDBInstanceEncryptionRequest struct {
 	*tchttp.BaseRequest
 	
-	// 云数据库实例 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
+	// <p>云数据库实例 ID。可通过 <a href="https://cloud.tencent.com/document/product/236/15872">DescribeDBInstances</a> 接口获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 用户自定义密钥 ID，CMK 唯一标识符。该值为空时，将使用腾讯云自动生成的密钥 KMS-CDB。
+	// <p>用户自定义密钥 ID，CMK 唯一标识符。该值为空时，将使用腾讯云自动生成的密钥 KMS-CDB。</p>
 	KeyId *string `json:"KeyId,omitnil,omitempty" name:"KeyId"`
 
-	// 用户自定义密钥的存储地域。如：ap-guangzhou 。KeyId 不为空时，该参数必填。
+	// <p>用户自定义密钥的存储地域。如：ap-guangzhou 。KeyId 不为空时，该参数必填。</p>
 	KeyRegion *string `json:"KeyRegion,omitnil,omitempty" name:"KeyRegion"`
 }
 
@@ -16143,6 +16158,9 @@ type RoGroup struct {
 
 	// <p>延迟复制时间。单位：秒。值范围：1-259200，整数。</p>
 	DelayReplicationTime *int64 `json:"DelayReplicationTime,omitnil,omitempty" name:"DelayReplicationTime"`
+
+	// <p>只读组类型。</p><p>枚举值：</p><ul><li>normal： 普通RO组</li><li>direct： 纯网络转发模式</li><li>default： 默认RO组</li></ul><p>默认值：normal</p>
+	RoGroupType *string `json:"RoGroupType,omitnil,omitempty" name:"RoGroupType"`
 }
 
 type RoGroupAttr struct {
@@ -16431,6 +16449,9 @@ type SlaveInfo struct {
 
 	// <p>第二备机信息</p>
 	Second *SlaveInstanceInfo `json:"Second,omitnil,omitempty" name:"Second"`
+
+	// <p>第三备机信息</p>
+	Third *SlaveInstanceInfo `json:"Third,omitnil,omitempty" name:"Third"`
 }
 
 type SlaveInstanceInfo struct {
@@ -17177,15 +17198,21 @@ func (r *SwitchDBInstanceMasterSlaveResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type SwitchDrInstanceToMasterRequestParams struct {
-	// 灾备实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+	// <p>灾备实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>忽略同步延迟的阈值，不填默认为0表示完全等待追平</p><p>取值范围：[0, 104857600]</p><p>默认值：0</p>
+	IgnoreSyncDelay *int64 `json:"IgnoreSyncDelay,omitnil,omitempty" name:"IgnoreSyncDelay"`
 }
 
 type SwitchDrInstanceToMasterRequest struct {
 	*tchttp.BaseRequest
 	
-	// 灾备实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+	// <p>灾备实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>忽略同步延迟的阈值，不填默认为0表示完全等待追平</p><p>取值范围：[0, 104857600]</p><p>默认值：0</p>
+	IgnoreSyncDelay *int64 `json:"IgnoreSyncDelay,omitnil,omitempty" name:"IgnoreSyncDelay"`
 }
 
 func (r *SwitchDrInstanceToMasterRequest) ToJsonString() string {
@@ -17201,6 +17228,7 @@ func (r *SwitchDrInstanceToMasterRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "InstanceId")
+	delete(f, "IgnoreSyncDelay")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "SwitchDrInstanceToMasterRequest has unknown keys!", "")
 	}
@@ -17209,7 +17237,7 @@ func (r *SwitchDrInstanceToMasterRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type SwitchDrInstanceToMasterResponseParams struct {
-	// 异步任务的请求ID，可使用此ID查询异步任务的执行结果。
+	// <p>异步任务的请求ID，可使用此ID查询异步任务的执行结果。</p>
 	AsyncRequestId *string `json:"AsyncRequestId,omitnil,omitempty" name:"AsyncRequestId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -17474,39 +17502,45 @@ type UpgradeAnalysisInstanceVersionInfo struct {
 
 // Predefined struct for user
 type UpgradeCDBProxyVersionRequestParams struct {
-	// 实例 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
+	// <p>实例 ID。可通过 <a href="https://cloud.tencent.com/document/product/236/15872">DescribeDBInstances</a> 接口获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 数据库代理 ID。可通过 [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) 接口获取。
+	// <p>数据库代理 ID。可通过 <a href="https://cloud.tencent.com/document/api/236/90585">DescribeCdbProxyInfo</a> 接口获取。</p>
 	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
 
-	// 数据库代理当前版本
+	// <p>数据库代理当前版本</p>
 	SrcProxyVersion *string `json:"SrcProxyVersion,omitnil,omitempty" name:"SrcProxyVersion"`
 
-	// 数据库代理升级版本
+	// <p>数据库代理升级版本</p>
 	DstProxyVersion *string `json:"DstProxyVersion,omitnil,omitempty" name:"DstProxyVersion"`
 
-	// 升级时间 ：nowTime（升级完成时）timeWindow（实例维护时间）
+	// <p>升级切换时间</p><p>枚举值：</p><ul><li>nowTime： 升级完成时</li><li>timeWindow： 实例维护时间</li><li>rollUpgrade： 滚动升级</li></ul>
 	UpgradeTime *string `json:"UpgradeTime,omitnil,omitempty" name:"UpgradeTime"`
+
+	// <p>滚动升级等待时间</p><p>取值范围：[10, 3600]</p><p>单位：秒</p>
+	RollUpgradeWaitingTime *int64 `json:"RollUpgradeWaitingTime,omitnil,omitempty" name:"RollUpgradeWaitingTime"`
 }
 
 type UpgradeCDBProxyVersionRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
+	// <p>实例 ID。可通过 <a href="https://cloud.tencent.com/document/product/236/15872">DescribeDBInstances</a> 接口获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 数据库代理 ID。可通过 [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) 接口获取。
+	// <p>数据库代理 ID。可通过 <a href="https://cloud.tencent.com/document/api/236/90585">DescribeCdbProxyInfo</a> 接口获取。</p>
 	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
 
-	// 数据库代理当前版本
+	// <p>数据库代理当前版本</p>
 	SrcProxyVersion *string `json:"SrcProxyVersion,omitnil,omitempty" name:"SrcProxyVersion"`
 
-	// 数据库代理升级版本
+	// <p>数据库代理升级版本</p>
 	DstProxyVersion *string `json:"DstProxyVersion,omitnil,omitempty" name:"DstProxyVersion"`
 
-	// 升级时间 ：nowTime（升级完成时）timeWindow（实例维护时间）
+	// <p>升级切换时间</p><p>枚举值：</p><ul><li>nowTime： 升级完成时</li><li>timeWindow： 实例维护时间</li><li>rollUpgrade： 滚动升级</li></ul>
 	UpgradeTime *string `json:"UpgradeTime,omitnil,omitempty" name:"UpgradeTime"`
+
+	// <p>滚动升级等待时间</p><p>取值范围：[10, 3600]</p><p>单位：秒</p>
+	RollUpgradeWaitingTime *int64 `json:"RollUpgradeWaitingTime,omitnil,omitempty" name:"RollUpgradeWaitingTime"`
 }
 
 func (r *UpgradeCDBProxyVersionRequest) ToJsonString() string {
@@ -17526,6 +17560,7 @@ func (r *UpgradeCDBProxyVersionRequest) FromJsonString(s string) error {
 	delete(f, "SrcProxyVersion")
 	delete(f, "DstProxyVersion")
 	delete(f, "UpgradeTime")
+	delete(f, "RollUpgradeWaitingTime")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpgradeCDBProxyVersionRequest has unknown keys!", "")
 	}
@@ -17534,7 +17569,7 @@ func (r *UpgradeCDBProxyVersionRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type UpgradeCDBProxyVersionResponseParams struct {
-	// 异步处理ID
+	// <p>异步处理ID</p>
 	AsyncRequestId *string `json:"AsyncRequestId,omitnil,omitempty" name:"AsyncRequestId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -17635,6 +17670,9 @@ func (r *UpgradeDBInstanceEngineVersionRequest) FromJsonString(s string) error {
 type UpgradeDBInstanceEngineVersionResponseParams struct {
 	// <p>异步任务 ID，可使用 <a href="https://cloud.tencent.com/document/api/236/20410">查询异步任务的执行结果</a> 获取其执行情况。</p>
 	AsyncRequestId *string `json:"AsyncRequestId,omitnil,omitempty" name:"AsyncRequestId"`
+
+	// <p>任务列表ID</p>
+	JobId *int64 `json:"JobId,omitnil,omitempty" name:"JobId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`

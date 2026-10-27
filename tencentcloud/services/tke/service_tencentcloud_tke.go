@@ -1828,6 +1828,33 @@ func (me *TkeService) ModifyClusterNodePoolPreStartUserScript(ctx context.Contex
 	return
 }
 
+func (me *TkeService) ModifyClusterNodePoolExtraArgs(ctx context.Context, clusterId, nodePoolId string, extraArgs []*string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := tke.NewModifyClusterNodePoolRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &clusterId
+	request.NodePoolId = &nodePoolId
+	if len(extraArgs) > 0 {
+		request.ExtraArgs = &tke.InstanceExtraArgs{
+			Kubelet: extraArgs,
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseTkeClient().ModifyClusterNodePool(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
 func (me *TkeService) DeleteClusterNodePool(ctx context.Context, id, nodePoolId string, deleteKeepInstance bool) (errRet error) {
 
 	logId := tccommon.GetLogId(ctx)
@@ -2708,30 +2735,6 @@ func ModifyClusterInternetOrIntranetAccess(ctx context.Context, d *schema.Resour
 		}
 	}
 	return nil
-}
-
-func (me *TkeService) createBackupStorageLocation(ctx context.Context, request *tke.CreateBackupStorageLocationRequest) (errRet error) {
-	logId := tccommon.GetLogId(ctx)
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseTkeClient().CreateBackupStorageLocation(request)
-
-	if err != nil {
-		errRet = err
-		return
-	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	return
 }
 
 func (me *TkeService) DescribeBackupStorageLocations(ctx context.Context, names []string) (locations []*tke.BackupStorageLocation, errRet error) {

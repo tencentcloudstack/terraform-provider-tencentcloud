@@ -535,6 +535,43 @@ func (me *EMRService) DescribeEmrClusterV2ById(ctx context.Context, instanceId s
 	return
 }
 
+// DescribeEmrMetaDBInfo wraps the DescribeMetaDBInfo API to query the custom
+// MetaDB group information of a cluster. The response may contain sensitive
+// credentials (MetaDataPass), so the raw response body is never logged.
+func (me *EMRService) DescribeEmrMetaDBInfo(ctx context.Context, instanceId string) (metaDBGroupInfo []*emr.CustomMetaDBInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := emr.NewDescribeMetaDBInfoRequest()
+	request.InstanceId = helper.String(instanceId)
+
+	ratelimit.Check(request.GetAction())
+	var response *emr.DescribeMetaDBInfoResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseEmrClient().DescribeMetaDBInfoWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		return
+	}
+	// NOTE: the response may contain sensitive credentials (MetaDataPass),
+	// so the raw response body is intentionally NOT logged.
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], got %d meta db group entries\n",
+		logId, request.GetAction(), request.ToJsonString(), len(response.Response.MetaDBGroupInfo))
+
+	metaDBGroupInfo = response.Response.MetaDBGroupInfo
+	return
+}
+
 // DescribeEmrClusterV2Nodes paginates DescribeClusterNodes for the new
 // tencentcloud_emr_cluster_v2 resource. nodeFlag follows the EMR API contract
 // (e.g. "all", "master", "core", "task", "common", "router").

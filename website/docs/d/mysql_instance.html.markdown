@@ -76,4 +76,9 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - ID of Virtual Private Cloud.
   * `zone` - Information of available zone.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
 

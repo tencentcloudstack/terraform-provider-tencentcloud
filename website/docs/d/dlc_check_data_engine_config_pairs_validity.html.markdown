@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 * `is_available` - Parameter validity: true: valid, false: at least one invalid parameter exists.
 * `unavailable_config` - Invalid parameter set.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [CheckDataEngineConfigPairsValidity](https://www.tencentcloud.com/document/api/1155/62696)
 

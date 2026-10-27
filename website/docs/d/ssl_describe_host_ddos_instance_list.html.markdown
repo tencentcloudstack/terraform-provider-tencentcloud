@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
   * `protocol` - agreement type.
   * `virtual_port` - Forwarding port.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeHostDdosInstanceList](https://www.tencentcloud.com/search/?wd=DescribeHostDdosInstanceList&type=document&lang=en)
 

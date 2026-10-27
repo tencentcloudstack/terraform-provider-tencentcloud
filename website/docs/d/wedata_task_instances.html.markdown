@@ -50,4 +50,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - Instance result set.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListTaskInstances](https://www.tencentcloud.com/document/api/1174/73817)
 

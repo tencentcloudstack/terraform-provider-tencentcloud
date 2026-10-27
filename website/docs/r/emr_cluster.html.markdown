@@ -324,4 +324,26 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `instance_id` - Created EMR instance id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateInstance](https://www.tencentcloud.com/document/api/1026/31045)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1026/31052)
+* Read:
+  - [DescribeClusterNodes](https://www.tencentcloud.com/document/api/1026/35198)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1026/31052)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [DescribeClusterFlowStatusDetail](https://www.tencentcloud.com/document/api/1026/73259)
+  - [DescribeZones](https://www.tencentcloud.com/document/api/213/35071)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [ModifyResourcesTags](https://www.tencentcloud.com/document/api/1026/58392)
+  - [ScaleOutInstance](https://www.tencentcloud.com/document/api/1026/31048)
+  - [TerminateClusterNodes](https://www.tencentcloud.com/document/api/1026/54558)
+* Delete:
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1026/31052)
+  - [OfflineIsolatedInstances](https://www.tencentcloud.com/document/api/236/34475)
+  - [TerminateInstance](https://www.tencentcloud.com/document/api/1026/31044)
 

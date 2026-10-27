@@ -156,6 +156,32 @@ In addition to all arguments above, the following attributes are exported:
 * `vip` - IP of the Mongodb instance.
 * `vport` - IP port of the Mongodb instance.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateDBInstance](https://www.tencentcloud.com/search/?wd=CreateDBInstance&type=document&lang=en)
+  - [CreateDBInstanceHour](https://www.tencentcloud.com/document/api/240/34704)
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/240/34702)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [RenameInstance](https://www.tencentcloud.com/document/api/240/34697)
+* Read:
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/240/34702)
+  - [DescribeSecurityGroup](https://www.tencentcloud.com/document/api/240/40341)
+  - [DescribeTransparentDataEncryptionStatus](https://www.tencentcloud.com/search/?wd=DescribeTransparentDataEncryptionStatus&type=document&lang=en)
+* Update:
+  - [AssignProject](https://www.tencentcloud.com/document/api/240/34705)
+  - [DescribeDBInstanceDeal](https://www.tencentcloud.com/document/api/240/37330)
+  - [ModifyDBInstanceSecurityGroup](https://www.tencentcloud.com/document/api/240/45894)
+  - [ModifyDBInstanceSpec](https://www.tencentcloud.com/document/api/240/34699)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [RenameInstance](https://www.tencentcloud.com/document/api/240/34697)
+  - [RenewDBInstances](https://www.tencentcloud.com/document/api/240/37326)
+* Delete:
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/240/34702)
+  - [IsolateDBInstance](https://www.tencentcloud.com/document/api/240/34700)
+  - [OfflineIsolatedDBInstance](https://www.tencentcloud.com/document/api/240/34698)
 
 ## Import
 

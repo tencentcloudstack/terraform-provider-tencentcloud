@@ -24,6 +24,13 @@ func ResourceTencentCloudDlcInternalTable() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
+			"datasource_connection_name": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "The name of the datasource connection to which the table belongs.",
+			},
+
 			"database_name": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -36,12 +43,6 @@ func ResourceTencentCloudDlcInternalTable() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Description: "The name of the internal table.",
-			},
-
-			"datasource_connection_name": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "The name of the datasource connection to which the table belongs.",
 			},
 
 			"table_comment": {
@@ -629,6 +630,7 @@ func ResourceTencentCloudDlcInternalTable() *schema.Resource {
 				},
 			},
 
+			// computed
 			"location": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -703,21 +705,26 @@ func resourceTencentCloudDlcInternalTableCreate(d *schema.ResourceData, meta int
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId    = tccommon.GetLogId(tccommon.ContextNil)
-		ctx      = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		request  = dlc.NewGenerateInternalTableRequest()
-		response = dlc.NewGenerateInternalTableResponse()
+		logId                    = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                      = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request                  = dlc.NewGenerateInternalTableRequest()
+		datasourceConnectionName string
+		databaseName             string
+		tableName                string
 	)
 
 	tableBaseInfo := &dlc.TableBaseInfo{}
 	if v, ok := d.GetOk("database_name"); ok {
 		tableBaseInfo.DatabaseName = helper.String(v.(string))
+		databaseName = v.(string)
 	}
 	if v, ok := d.GetOk("table_name"); ok {
 		tableBaseInfo.TableName = helper.String(v.(string))
+		tableName = v.(string)
 	}
 	if v, ok := d.GetOk("datasource_connection_name"); ok {
 		tableBaseInfo.DatasourceConnectionName = helper.String(v.(string))
+		datasourceConnectionName = v.(string)
 	}
 	if v, ok := d.GetOk("table_comment"); ok {
 		tableBaseInfo.TableComment = helper.String(v.(string))
@@ -862,7 +869,6 @@ func resourceTencentCloudDlcInternalTableCreate(d *schema.ResourceData, meta int
 			return resource.NonRetryableError(fmt.Errorf("Create dlc_internal_table failed, Response is nil."))
 		}
 
-		response = result
 		return nil
 	})
 
@@ -871,28 +877,9 @@ func resourceTencentCloudDlcInternalTableCreate(d *schema.ResourceData, meta int
 		return reqErr
 	}
 
-	log.Printf("[CRUD]%s api[%s] dlc_internal_table response: %s, logId=%s, d.Id()=%s", logId, request.GetAction(), response.ToJsonString(), logId, d.Id())
-
-	if response.Response.Execution == nil {
-		return fmt.Errorf("dlc_internal_table create response Execution is nil")
-	}
-
-	databaseName := ""
-	tableName := ""
-	if v, ok := d.GetOk("database_name"); ok {
-		databaseName = v.(string)
-	}
-	if v, ok := d.GetOk("table_name"); ok {
-		tableName = v.(string)
-	}
-	d.SetId(strings.Join([]string{databaseName, tableName}, tccommon.FILED_SP))
-
-	if response.Response.Execution != nil && response.Response.Execution.SQL != nil {
-		_ = d.Set("execution", response.Response.Execution.SQL)
-	}
-	if response.Response.IsTIcebergSql != nil {
-		_ = d.Set("is_t_iceberg_sql", response.Response.IsTIcebergSql)
-	}
+	// The resource id is composed of the datasource connection name, the
+	// database name and the table name.
+	d.SetId(strings.Join([]string{datasourceConnectionName, databaseName, tableName}, tccommon.FILED_SP))
 
 	return resourceTencentCloudDlcInternalTableRead(d, meta)
 }
@@ -907,17 +894,9 @@ func resourceTencentCloudDlcInternalTableRead(d *schema.ResourceData, meta inter
 		service = DlcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-
-	databaseName := idSplit[0]
-	tableName := idSplit[1]
-
-	datasourceConnectionName := ""
-	if v, ok := d.GetOk("datasource_connection_name"); ok {
-		datasourceConnectionName = v.(string)
+	datasourceConnectionName, databaseName, tableName, err := parseDlcInternalTableId(d.Id())
+	if err != nil {
+		return err
 	}
 
 	tableInfo, err := service.DescribeDlcInternalTableById(ctx, databaseName, tableName, datasourceConnectionName)
@@ -931,16 +910,14 @@ func resourceTencentCloudDlcInternalTableRead(d *schema.ResourceData, meta inter
 		return nil
 	}
 
+	// The datasource connection name, the database name and the table name
+	// compose the resource id, so they are restored from the id instead of the
+	// response to keep the state consistent with the id.
+	_ = d.Set("datasource_connection_name", datasourceConnectionName)
+	_ = d.Set("database_name", databaseName)
+	_ = d.Set("table_name", tableName)
+
 	if tableInfo.TableBaseInfo != nil {
-		if tableInfo.TableBaseInfo.DatabaseName != nil {
-			_ = d.Set("database_name", tableInfo.TableBaseInfo.DatabaseName)
-		}
-		if tableInfo.TableBaseInfo.TableName != nil {
-			_ = d.Set("table_name", tableInfo.TableBaseInfo.TableName)
-		}
-		if tableInfo.TableBaseInfo.DatasourceConnectionName != nil {
-			_ = d.Set("datasource_connection_name", tableInfo.TableBaseInfo.DatasourceConnectionName)
-		}
 		if tableInfo.TableBaseInfo.TableComment != nil {
 			_ = d.Set("table_comment", tableInfo.TableBaseInfo.TableComment)
 		}
@@ -1141,16 +1118,13 @@ func resourceTencentCloudDlcInternalTableUpdate(d *schema.ResourceData, meta int
 		ctx   = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 	)
 
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
+	datasourceConnectionName, databaseName, tableName, err := parseDlcInternalTableId(d.Id())
+	if err != nil {
+		return err
 	}
 
-	databaseName := idSplit[0]
-	tableName := idSplit[1]
-
 	needChange := false
-	mutableArgs := []string{"datasource_connection_name", "table_comment", "type", "table_format", "user_alias", "user_sub_uin", "db_govern_policy_is_disable", "govern_policy", "smart_policy"}
+	mutableArgs := []string{"table_comment", "type", "table_format", "user_alias", "user_sub_uin", "db_govern_policy_is_disable", "govern_policy", "smart_policy"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -1163,10 +1137,8 @@ func resourceTencentCloudDlcInternalTableUpdate(d *schema.ResourceData, meta int
 		tableBaseInfo := &dlc.TableBaseInfo{}
 		tableBaseInfo.DatabaseName = helper.String(databaseName)
 		tableBaseInfo.TableName = helper.String(tableName)
+		tableBaseInfo.DatasourceConnectionName = helper.String(datasourceConnectionName)
 
-		if v, ok := d.GetOk("datasource_connection_name"); ok {
-			tableBaseInfo.DatasourceConnectionName = helper.String(v.(string))
-		}
 		if v, ok := d.GetOk("table_comment"); ok {
 			tableBaseInfo.TableComment = helper.String(v.(string))
 		}
@@ -1239,21 +1211,16 @@ func resourceTencentCloudDlcInternalTableDelete(d *schema.ResourceData, meta int
 		ctx   = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 	)
 
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
+	datasourceConnectionName, databaseName, tableName, err := parseDlcInternalTableId(d.Id())
+	if err != nil {
+		return err
 	}
-
-	databaseName := idSplit[0]
-	tableName := idSplit[1]
 
 	request := dlc.NewDeleteTableRequest()
 	tableBaseInfo := &dlc.TableBaseInfo{}
 	tableBaseInfo.DatabaseName = helper.String(databaseName)
 	tableBaseInfo.TableName = helper.String(tableName)
-	if v, ok := d.GetOk("datasource_connection_name"); ok {
-		tableBaseInfo.DatasourceConnectionName = helper.String(v.(string))
-	}
+	tableBaseInfo.DatasourceConnectionName = helper.String(datasourceConnectionName)
 	request.TableBaseInfo = tableBaseInfo
 
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -1277,6 +1244,21 @@ func resourceTencentCloudDlcInternalTableDelete(d *schema.ResourceData, meta int
 	}
 
 	return nil
+}
+
+// parseDlcInternalTableId splits the resource id
+// `datasourceConnectionName#databaseName#tableName` into its three parts.
+func parseDlcInternalTableId(id string) (datasourceConnectionName, databaseName, tableName string, err error) {
+	idSplit := strings.Split(id, tccommon.FILED_SP)
+	if len(idSplit) != 3 || idSplit[0] == "" || idSplit[1] == "" || idSplit[2] == "" {
+		err = fmt.Errorf("id is broken,%s", id)
+		return
+	}
+
+	datasourceConnectionName = idSplit[0]
+	databaseName = idSplit[1]
+	tableName = idSplit[2]
+	return
 }
 
 func buildSmartPolicy(smartPolicyList []interface{}) *dlc.SmartPolicy {

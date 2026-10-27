@@ -56,4 +56,9 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - ID of the VPC.
   * `vport` - IP port of the Mongodb instance.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/api/240/34702)
 

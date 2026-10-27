@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
   * `related_type` - Association type. 1. User association; 2 User Group Association.
   * `uin` - Entity UinNote: This field may return null, indicating that a valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListEntitiesForPolicy](https://www.tencentcloud.com/document/api/598/32241)
 

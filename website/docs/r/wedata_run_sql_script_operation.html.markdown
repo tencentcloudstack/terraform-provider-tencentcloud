@@ -46,4 +46,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `job_id` - Job ID of the SQL script operation.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [RunSQLScript](https://www.tencentcloud.com/document/api/1174/73844)
 

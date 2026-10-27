@@ -45,4 +45,9 @@ In addition to all arguments above, the following attributes are exported:
 * `provider_type` - IdP type. 11: Role IdP.
 * `status` - Status. 0: Not set; 2: Disabled; 11: Enabled.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeOIDCConfig](https://www.tencentcloud.com/document/api/598/47113)
 

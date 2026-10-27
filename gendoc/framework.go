@@ -5,15 +5,16 @@
 // next to the Go source under tencentcloud/services/<product>/, and
 // renders them into website/docs/<dir>/<resource>.html.markdown.
 //
-// Output dirs (single-letter where possible, mirroring the SDKv2 d/r
-// shorthand):
+// Output dirs (Terraform Registry canonical directory names; the SDKv2
+// d/r shorthand is still accepted by the Registry, but the newer reference
+// types must use their full names):
 //
 //	resource           -> website/docs/r/
 //	datasource         -> website/docs/d/
-//	function           -> website/docs/f/
-//	ephemeral resource -> website/docs/e/
-//	list resource      -> website/docs/l/
-//	action             -> website/docs/a/
+//	function           -> website/docs/functions/
+//	ephemeral resource -> website/docs/ephemeral-resources/
+//	list resource      -> website/docs/list-resources/
+//	action             -> website/docs/actions/
 //
 // The framework references are listed inside the unified index file
 // tencentcloud/provider.md alongside SDKv2 references. GetIndex (in
@@ -54,7 +55,9 @@ const (
 )
 
 // outputDir maps a framework doc type to its registry website directory.
-// The single-letter shorthands mirror the SDKv2 d/r convention.
+// The SDKv2 d/r shorthand is still accepted by the Registry, but the newer
+// reference types must use their full canonical directory names ("actions",
+// "ephemeral-resources", "functions", "list-resources").
 func (t fwDocType) outputDir() string {
 	switch t {
 	case fwResource:
@@ -62,13 +65,13 @@ func (t fwDocType) outputDir() string {
 	case fwDataSrc:
 		return "d"
 	case fwFunction:
-		return "f"
+		return "functions"
 	case fwEphemeral:
-		return "e"
+		return "ephemeral-resources"
 	case fwList:
-		return "l"
+		return "list-resources"
 	case fwAction:
-		return "a"
+		return "actions"
 	}
 	return ""
 }
@@ -209,7 +212,7 @@ func genFrameworkDoc(servicesRoot string, dtype fwDocType, name, product string,
 	if err != nil {
 		fail(fmt.Sprintf("read %s failed: %s", mdPath, err))
 	}
-	desc := strings.TrimSpace(string(raw))
+	desc := balanceFences(strings.TrimSpace(string(raw)))
 	if desc == "" {
 		fail(fmt.Sprintf("description empty: %s", mdPath))
 	}
@@ -219,6 +222,22 @@ func genFrameworkDoc(servicesRoot string, dtype fwDocType, name, product string,
 	if i := strings.Index(desc, "\nImport\n"); i != -1 {
 		importBlock = strings.TrimSpace(desc[i+8:])
 		desc = strings.TrimSpace(desc[:i])
+	}
+
+	// Optional manual API section; overrides the auto-extracted mapping.
+	// The section sits before "Example Usage", so cut the span
+	// [apiPos, examplePos) and join the rest back together.
+	manualAPI := ""
+	if dtype == fwResource || dtype == fwDataSrc || dtype == fwAction || dtype == fwEphemeral {
+		if apiPos := strings.Index(desc, "\nAPI\n"); apiPos != -1 {
+			examplePos := strings.Index(desc, "\nExample Usage\n")
+			apiEnd := len(desc)
+			if examplePos != -1 && examplePos > apiPos {
+				apiEnd = examplePos
+			}
+			manualAPI = strings.TrimSpace(desc[apiPos+5 : apiEnd])
+			desc = strings.TrimSpace(desc[:apiPos] + desc[apiEnd:])
+		}
 	}
 
 	// Required Example Usage section.
@@ -257,6 +276,43 @@ func genFrameworkDoc(servicesRoot string, dtype fwDocType, name, product string,
 		"attributes":        attributes,
 		"timeouts":          "",
 		"import":            importBlock,
+		"api":               "",
+	}
+
+	// API Reference section for framework resources, data sources,
+	// actions and ephemeral resources.
+	if dtype == fwResource || dtype == fwDataSrc || dtype == fwAction || dtype == fwEphemeral {
+		analyzer := getSharedAPIAnalyzer()
+		switch {
+		case manualAPI != "":
+			out["api"] = manualAPI
+		case analyzer == nil:
+			// leave empty
+		default:
+			repoRoot, _ := filepath.Abs("..")
+			if dtype == fwResource {
+				resFile := findResourceFile(repoRoot, name)
+				// Framework resources keep their CRUD in Create/Read/
+				// Update/Delete methods on the resource struct; resolve
+				// the receiver type from the declaring file.
+				var refsByVerb map[string][]apiRef
+				if resFile != "" {
+					recv := frameworkResourceRecvType(analyzer, resFile, name)
+					if recv != "" {
+						refsByVerb = map[string][]apiRef{}
+						for _, verb := range []string{"Create", "Read", "Update", "Delete"} {
+							fd := analyzer.lookupMethodByReceiver(recv, verb)
+							if fd != nil {
+								refsByVerb[verb] = analyzer.analyzeLifecycle(fd)
+							}
+						}
+					}
+				}
+				out["api"] = renderAPIRefsFor(string(dtype), dedupVerbRefs(refsByVerb))
+			} else {
+				out["api"] = renderFrameworkRefAPISection(analyzer, repoRoot, name, string(dtype))
+			}
+		}
 	}
 
 	outPath := filepath.Join(docRoot, dtype.outputDir(), fmt.Sprintf("%s.html.markdown", resName))
@@ -293,7 +349,7 @@ func genFrameworkListPlaceholder(servicesRoot, name, product string) {
 	if err != nil {
 		fail(fmt.Sprintf("read %s failed: %s", mdPath, err))
 	}
-	desc := strings.TrimSpace(string(raw))
+	desc := balanceFences(strings.TrimSpace(string(raw)))
 	if desc == "" {
 		fail(fmt.Sprintf("description empty: %s", mdPath))
 	}

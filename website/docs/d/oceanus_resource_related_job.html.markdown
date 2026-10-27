@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `job_id` - Job ID.
   * `resource_version` - Resource version.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeResourceRelatedJobs](https://www.tencentcloud.com/search/?wd=DescribeResourceRelatedJobs&type=document&lang=en)
 

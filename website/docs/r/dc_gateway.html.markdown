@@ -108,6 +108,20 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Creation time of resource.
 * `enable_bgp` - Indicates whether the BGP is enabled.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateDirectConnectGateway](https://www.tencentcloud.com/document/api/215/36915)
+  - [ModifyDirectConnectGatewayAttribute](https://www.tencentcloud.com/document/api/215/36912)
+* Read:
+  - [DescribeDirectConnectGateways](https://www.tencentcloud.com/document/api/215/36913)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [ModifyDirectConnectGatewayAttribute](https://www.tencentcloud.com/document/api/215/36912)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteDirectConnectGateway](https://www.tencentcloud.com/document/api/215/36914)
 
 ## Import
 

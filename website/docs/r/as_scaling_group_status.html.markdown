@@ -84,6 +84,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DisableAutoScalingGroup](https://www.tencentcloud.com/document/api/377/31010)
+  - [EnableAutoScalingGroup](https://www.tencentcloud.com/document/api/377/31009)
+* Read: [DescribeAutoScalingGroups](https://www.tencentcloud.com/document/api/377/31013)
+* Update:
+  - [DisableAutoScalingGroup](https://www.tencentcloud.com/document/api/377/31010)
+  - [EnableAutoScalingGroup](https://www.tencentcloud.com/document/api/377/31009)
 
 ## Import
 

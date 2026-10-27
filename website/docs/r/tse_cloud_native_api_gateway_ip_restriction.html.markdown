@@ -42,6 +42,18 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateOrModifyCloudNativeAPIGatewayIPRestriction](https://www.tencentcloud.com/search/?wd=CreateOrModifyCloudNativeAPIGatewayIPRestriction&type=document&lang=en)
+  - [DescribeCloudNativeAPIGatewayIPRestriction](https://www.tencentcloud.com/search/?wd=DescribeCloudNativeAPIGatewayIPRestriction&type=document&lang=en)
+* Read: [DescribeCloudNativeAPIGatewayIPRestriction](https://www.tencentcloud.com/search/?wd=DescribeCloudNativeAPIGatewayIPRestriction&type=document&lang=en)
+* Update:
+  - [CreateOrModifyCloudNativeAPIGatewayIPRestriction](https://www.tencentcloud.com/search/?wd=CreateOrModifyCloudNativeAPIGatewayIPRestriction&type=document&lang=en)
+  - [DescribeCloudNativeAPIGatewayIPRestriction](https://www.tencentcloud.com/search/?wd=DescribeCloudNativeAPIGatewayIPRestriction&type=document&lang=en)
+* Delete: [DeleteCloudNativeAPIGatewayIPRestriction](https://www.tencentcloud.com/search/?wd=DeleteCloudNativeAPIGatewayIPRestriction&type=document&lang=en)
 
 ## Import
 

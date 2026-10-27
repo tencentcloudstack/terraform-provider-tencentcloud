@@ -130,6 +130,20 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `read` - (Defaults to `3m`) Used when reading the resource.
 * `update` - (Defaults to `20m`) Used when updating the resource.
 * `delete` - (Defaults to `20m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateAccelerationDomain](https://www.tencentcloud.com/document/api/1145/54134)
+  - [ModifyAccelerationDomainStatuses](https://www.tencentcloud.com/document/api/1145/54130)
+* Read: [DescribeAccelerationDomains](https://www.tencentcloud.com/document/api/1145/54132)
+* Update:
+  - [ModifyAccelerationDomain](https://www.tencentcloud.com/document/api/1145/54131)
+  - [ModifyAccelerationDomainStatuses](https://www.tencentcloud.com/document/api/1145/54130)
+* Delete:
+  - [DeleteAccelerationDomains](https://www.tencentcloud.com/document/api/1145/54133)
+  - [ModifyAccelerationDomainStatuses](https://www.tencentcloud.com/document/api/1145/54130)
 
 ## Import
 

@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
   * `remark` - Remark.
 * `total_num` - The total number of user groups the sub-user has joined.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListGroupsForUser](https://www.tencentcloud.com/document/api/598/32257)
 

@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
   * `reason` - Execution reason.
   * `result` - Trigger result.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInvokerRecords](https://www.tencentcloud.com/document/api/1147/46694)
 

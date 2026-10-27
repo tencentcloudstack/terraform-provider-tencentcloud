@@ -33,4 +33,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data_engine_parameters` - Engine Session Configuration List.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDataEngineSessionParameters](https://www.tencentcloud.com/search/?wd=DescribeDataEngineSessionParameters&type=document&lang=en)
 

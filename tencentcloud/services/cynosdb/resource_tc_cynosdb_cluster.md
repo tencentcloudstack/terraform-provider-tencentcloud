@@ -108,6 +108,8 @@ resource "tencentcloud_cynosdb_cluster" "example" {
 
 The `SyncWay` argument specifies the cluster synchronization way, valid values are `async`, `semisync` and `sync`. The `SemiSyncTimeout` argument specifies the semi-sync timeout in ms, value range `[1000, 4294967295]`, and it works when `SyncWay` is `semisync` or `sync`. Both arguments are only configurable during creation and cannot be modified after creation. The `BinlogSyncWay` attribute is computed and reflects the binlog sync way of the slave zone read from the `DescribeClusterDetail` API.
 
+The `storage_pay_mode` argument specifies the storage pay mode of the CynosDB cluster, valid values are `0` (postpaid/pay-as-you-go) and `1` (prepaid/yearly-monthly). It supports modification from prepaid(`1`) to postpaid(`0`) only, which is a one-way operation performed by the `TransferStoragePrepayToPostpay` API. Transferring from postpaid(`0`) to prepaid(`1`) is not supported.
+
 Create a multiple availability zone SERVERLESS CynosDB cluster
 
 ```hcl

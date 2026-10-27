@@ -91,7 +91,8 @@ resource "tencentcloud_kubernetes_native_node_pool" "example" {
       auto_format_and_mount = true
     }
 
-    key_ids = ["skey-9pcs2100"]
+    key_ids      = ["skey-9pcs2100"]
+    custom_image = "img-j9tbqlc2"
   }
 
   annotations {
@@ -177,6 +178,7 @@ The `native` object supports the following:
 * `subnet_ids` - (Required, List) Subnet list.
 * `system_disk` - (Required, List, ForceNew) System disk configuration.
 * `auto_repair` - (Optional, Bool) Whether to enable self-healing ability.
+* `custom_image` - (Optional, String) Custom image ID.
 * `data_disks` - (Optional, List) Native node pool data disk list.
 * `enable_autoscaling` - (Optional, Bool) Whether to enable elastic scaling.
 * `health_check_policy_name` - (Optional, String) Fault self-healing rule name.
@@ -229,6 +231,19 @@ In addition to all arguments above, the following attributes are exported:
 * `created_at` - Creation time.
 * `life_state` - Node pool status.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateNodePool](https://www.tencentcloud.com/document/api/457/66318)
+  - [DescribeNodePools](https://www.tencentcloud.com/document/api/457/66311)
+* Read: [DescribeNodePools](https://www.tencentcloud.com/document/api/457/66311)
+* Update: [ModifyNodePool](https://www.tencentcloud.com/document/api/457/66309)
+* Delete:
+  - [DeleteNodePool](https://www.tencentcloud.com/document/api/457/66316)
+  - [DescribeClusterMachines](https://www.tencentcloud.com/search/?wd=DescribeClusterMachines&type=document&lang=en)
+  - [DescribeNodePools](https://www.tencentcloud.com/document/api/457/66311)
 
 ## Import
 

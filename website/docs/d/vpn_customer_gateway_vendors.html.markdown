@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
   * `software_version` - SoftwareVersion.
   * `vendor_name` - VendorName.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCustomerGatewayVendors](https://www.tencentcloud.com/document/api/215/17517)
 

@@ -56,6 +56,16 @@ In addition to all arguments above, the following attributes are exported:
   * `memory_total_size` - Instance memory total capacity, unit in GB.
 * `host_state` - State of the CDH instance.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [AllocateHosts](https://www.tencentcloud.com/search/?wd=AllocateHosts&type=document&lang=en)
+  - [DescribeHosts](https://www.tencentcloud.com/search/?wd=DescribeHosts&type=document&lang=en)
+  - [ModifyHostsAttribute](https://www.tencentcloud.com/search/?wd=ModifyHostsAttribute&type=document&lang=en)
+* Read: [DescribeHosts](https://www.tencentcloud.com/search/?wd=DescribeHosts&type=document&lang=en)
+* Update: [ModifyHostsAttribute](https://www.tencentcloud.com/search/?wd=ModifyHostsAttribute&type=document&lang=en)
 
 ## Import
 

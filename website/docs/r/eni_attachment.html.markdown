@@ -84,6 +84,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [AttachNetworkInterface](https://www.tencentcloud.com/document/api/215/15819)
+  - [DescribeNetworkInterfaces](https://www.tencentcloud.com/document/api/215/15817)
+* Read: [DescribeNetworkInterfaces](https://www.tencentcloud.com/document/api/215/15817)
+* Delete: [DetachNetworkInterface](https://www.tencentcloud.com/document/api/215/15816)
 
 ## Import
 

@@ -54,6 +54,18 @@ In addition to all arguments above, the following attributes are exported:
 * `record_id` - ID of the record.
 * `updated_on` - Last update time of the record.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateRecord](https://www.tencentcloud.com/document/api/1157/49041)
+  - [DescribeRecord](https://www.tencentcloud.com/document/api/1157/49037)
+* Read: [DescribeRecord](https://www.tencentcloud.com/document/api/1157/49037)
+* Update:
+  - [DescribeRecord](https://www.tencentcloud.com/document/api/1157/49037)
+  - [ModifyRecord](https://www.tencentcloud.com/document/api/1157/49034)
+* Delete: [DeleteRecord](https://www.tencentcloud.com/document/api/1157/49039)
 
 ## Import
 

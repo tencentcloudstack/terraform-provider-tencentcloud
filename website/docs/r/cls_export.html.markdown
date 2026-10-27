@@ -44,6 +44,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateExport](https://www.tencentcloud.com/document/api/614/42798)
+* Read: [DescribeExports](https://www.tencentcloud.com/document/api/614/42790)
+* Delete: [DeleteExport](https://www.tencentcloud.com/document/api/614/42795)
 
 ## Import
 

@@ -9,10 +9,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/ephemeral/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/sharedmeta"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
 )
 
-var _ ephemeral.EphemeralResource = &SsmSecretVersionEphemeralResource{}
+// _ ephemeral.EphemeralResource is intentionally omitted: the factory
+// function NewSsmSecretVersionEphemeralResource returns
+// ephemeral.EphemeralResource, which already performs the implicit
+// compile-time check at the return statement. Only the extended-interface
+// assertion is kept here.
 var _ ephemeral.EphemeralResourceWithConfigure = &SsmSecretVersionEphemeralResource{}
 
 // NewSsmSecretVersionEphemeralResource is the factory referenced by
@@ -24,7 +28,7 @@ func NewSsmSecretVersionEphemeralResource() ephemeral.EphemeralResource {
 // SsmSecretVersionEphemeralResource implements ephemeral.EphemeralResource for
 // tencentcloud_ssm_secret_version.
 type SsmSecretVersionEphemeralResource struct {
-	client SsmService
+	fw.EphemeralResourceWithConfigure
 }
 
 // SsmSecretVersionEphemeralResourceModel maps the schema attributes.
@@ -67,29 +71,6 @@ func (e *SsmSecretVersionEphemeralResource) Schema(_ context.Context, _ ephemera
 	}
 }
 
-// Configure receives the *sharedmeta.ProviderMeta populated by
-// framework.Provider.Configure (which itself reuses the SDKv2-built
-// *connectivity.TencentCloudClient). We then construct the SDKv2-style
-// SsmService directly from the shared client, mirroring how SDKv2 resources
-// in this package construct it.
-func (e *SsmSecretVersionEphemeralResource) Configure(_ context.Context, req ephemeral.ConfigureRequest, resp *ephemeral.ConfigureResponse) {
-	if req.ProviderData == nil {
-		return
-	}
-
-	meta, ok := req.ProviderData.(*sharedmeta.ProviderMeta)
-	if !ok {
-		resp.Diagnostics.AddError(
-			"Unexpected ProviderData type",
-			fmt.Sprintf("Expected *sharedmeta.ProviderMeta, got: %T. "+
-				"This is a bug in the provider; please report it.", req.ProviderData),
-		)
-		return
-	}
-
-	e.client = NewSsmService(meta.Client)
-}
-
 // Open is invoked once per plan/apply. It reads the secret value via the SSM
 // API and writes it back to resp.Result.
 func (e *SsmSecretVersionEphemeralResource) Open(ctx context.Context, req ephemeral.OpenRequest, resp *ephemeral.OpenResponse) {
@@ -112,7 +93,8 @@ func (e *SsmSecretVersionEphemeralResource) Open(ctx context.Context, req epheme
 		return
 	}
 
-	secretVersion, err := e.client.DescribeSecretVersion(ctx, secretName, versionId)
+	service := NewSsmService(e.Client())
+	secretVersion, err := service.DescribeSecretVersion(ctx, secretName, versionId)
 	if err != nil {
 		if strings.Contains(err.Error(), "ResourceNotFound") {
 			resp.Diagnostics.AddError(

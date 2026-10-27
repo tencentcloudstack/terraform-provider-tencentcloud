@@ -3787,3 +3787,102 @@ func TestUnitInstance_ReadPlacementGroupIdNotOverwritten(t *testing.T) {
 	assert.Equal(t, []string{"ps-001", "ps-002"}, result["disaster_recover_group_ids"])
 	assert.Equal(t, 2, result["partition_number"])
 }
+
+func TestAccTencentCloudInstanceResourceWithEnableJumboFrame(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			acctest.AccPreCheck(t)
+		},
+		Providers:    acctest.AccProviders,
+		CheckDestroy: testAccCheckCvmInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCvmInstanceResource_WithEnableJumboFrameCreate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCvmInstanceExists("tencentcloud_instance.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "enable_jumbo_frame", "false"),
+				),
+			},
+			{
+				Config: testAccCvmInstanceResource_WithEnableJumboFrameChange,
+				PreConfig: func() {
+					time.Sleep(time.Second * 5)
+				},
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCvmInstanceExists("tencentcloud_instance.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "enable_jumbo_frame", "true"),
+				),
+			},
+		},
+	})
+}
+
+const testAccCvmInstanceResource_WithEnableJumboFrameCreate = `
+
+data "tencentcloud_availability_zones" "default" {
+}
+data "tencentcloud_images" "default" {
+    image_type = ["PUBLIC_IMAGE"]
+    image_name_regex = "Final"
+}
+data "tencentcloud_instance_types" "default" {
+
+    filter {
+        name = "instance-family"
+        values = ["S1","S2","S3","S4","S5"]
+    }
+    filter {
+        name = "zone"
+        values = ["ap-guangzhou-7"]
+    }
+    cpu_core_count = 2
+    memory_size = 2
+    exclude_sold_out = true
+}
+resource "tencentcloud_instance" "foo" {
+    system_disk_type = "CLOUD_PREMIUM"
+    disable_api_termination = false
+    enable_jumbo_frame = false
+    instance_name = "tf-ci-test-jumbo"
+    availability_zone = "ap-guangzhou-7"
+    image_id = data.tencentcloud_images.default.images.0.image_id
+    instance_type = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+}
+
+`
+const testAccCvmInstanceResource_WithEnableJumboFrameChange = `
+
+data "tencentcloud_availability_zones" "default" {
+}
+data "tencentcloud_images" "default" {
+    image_type = ["PUBLIC_IMAGE"]
+    image_name_regex = "Final"
+}
+data "tencentcloud_instance_types" "default" {
+
+    filter {
+        name = "instance-family"
+        values = ["S1","S2","S3","S4","S5"]
+    }
+    filter {
+        name = "zone"
+        values = ["ap-guangzhou-7"]
+    }
+    cpu_core_count = 2
+    memory_size = 2
+    exclude_sold_out = true
+}
+resource "tencentcloud_instance" "foo" {
+    system_disk_type = "CLOUD_PREMIUM"
+    disable_api_termination = false
+    enable_jumbo_frame = true
+    instance_name = "tf-ci-test-jumbo"
+    availability_zone = "ap-guangzhou-7"
+    image_id = data.tencentcloud_images.default.images.0.image_id
+    instance_type = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+}
+
+`

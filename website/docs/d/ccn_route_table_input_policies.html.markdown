@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `policy_set` - Policy set.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCcnRouteTableInputPolicys](https://www.tencentcloud.com/search/?wd=DescribeCcnRouteTableInputPolicys&type=document&lang=en)
 

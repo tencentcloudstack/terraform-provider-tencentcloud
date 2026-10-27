@@ -68,4 +68,9 @@ In addition to all arguments above, the following attributes are exported:
     * `zone_name` - zone name.
     * `zone_status` - zone status.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCkafkaZone](https://www.tencentcloud.com/document/api/597/40318)
 

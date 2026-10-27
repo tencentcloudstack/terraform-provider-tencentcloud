@@ -561,6 +561,12 @@ func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 							ForceNew:    true,
 							Description: "Node pool type. Example value: `NativeCVM` or `Native`. Default is `Native`.",
 						},
+						"custom_image": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Custom image ID.",
+						},
 					},
 				},
 			},
@@ -941,6 +947,9 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 		if v, ok := nativeMap["machine_type"]; ok {
 			createNativeNodePoolParam.MachineType = helper.String(v.(string))
 		}
+		if v, ok := nativeMap["custom_image"]; ok {
+			createNativeNodePoolParam.CustomImage = helper.String(v.(string))
+		}
 		request.Native = &createNativeNodePoolParam
 	}
 
@@ -1272,6 +1281,10 @@ func resourceTencentCloudKubernetesNativeNodePoolRead(d *schema.ResourceData, me
 
 		if respData.Native.MachineType != nil {
 			nativeMap["machine_type"] = respData.Native.MachineType
+		}
+
+		if respData.Native.CustomImage != nil {
+			nativeMap["custom_image"] = respData.Native.CustomImage
 		}
 
 		managementMap := map[string]interface{}{}
@@ -1772,6 +1785,9 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 						updateNativeNodePoolParam.KeyIds = append(updateNativeNodePoolParam.KeyIds, helper.String(keyIds))
 					}
 				}
+			}
+			if v, ok := nativeMap["custom_image"]; ok {
+				updateNativeNodePoolParam.CustomImage = helper.String(v.(string))
 			}
 			request.Native = &updateNativeNodePoolParam
 		}

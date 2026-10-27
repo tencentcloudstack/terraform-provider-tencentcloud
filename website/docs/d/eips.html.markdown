@@ -78,4 +78,11 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - The EIP current status.
   * `tags` - Tags of the EIP.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read:
+  - [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
 

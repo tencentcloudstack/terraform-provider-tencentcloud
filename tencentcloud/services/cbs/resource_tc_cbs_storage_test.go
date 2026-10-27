@@ -390,3 +390,50 @@ resource "tencentcloud_cbs_storage" "storage_upgrade" {
 	force_delete = true
 }
 `
+
+func TestAccTencentCloudCbsStorageResource_instanceId(t *testing.T) {
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckCbsStorageDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCbsStorage_instanceId,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckStorageExists("tencentcloud_cbs_storage.storage_instance_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cbs_storage.storage_instance_id", "instance_id"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_cbs_storage.storage_instance_id",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"force_delete"},
+			},
+		},
+	})
+}
+
+const testAccCbsStorage_instanceId = tcacctest.DefaultInstanceVariable + tcacctest.DefaultAzVariable + `
+resource "tencentcloud_instance" "test_cbs_instance_id" {
+  instance_name     = "test-cbs-instance-id-cvm"
+  availability_zone = var.default_az
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  system_disk_type  = "CLOUD_PREMIUM"
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+}
+
+resource "tencentcloud_cbs_storage" "storage_instance_id" {
+  storage_name      = "tf-storage-instance-id"
+  storage_type      = "CLOUD_PREMIUM"
+  storage_size      = 50
+  availability_zone = var.default_az
+  charge_type       = "POSTPAID_BY_HOUR"
+  instance_id       = tencentcloud_instance.test_cbs_instance_id.id
+
+  tags = {
+    createBy = "Terraform"
+  }
+}
+`

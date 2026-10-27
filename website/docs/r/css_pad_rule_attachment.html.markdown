@@ -38,6 +38,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLivePadRule](https://www.tencentcloud.com/document/api/267/71832)
+* Read: [DescribeLivePadRules](https://www.tencentcloud.com/search/?wd=DescribeLivePadRules&type=document&lang=en)
+* Delete:
+  - [DeleteLivePadRule](https://www.tencentcloud.com/search/?wd=DeleteLivePadRule&type=document&lang=en)
+  - [DescribeLivePadRules](https://www.tencentcloud.com/search/?wd=DescribeLivePadRules&type=document&lang=en)
 
 ## Import
 

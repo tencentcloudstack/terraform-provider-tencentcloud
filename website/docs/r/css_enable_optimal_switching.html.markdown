@@ -38,6 +38,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [EnableOptimalSwitching](https://www.tencentcloud.com/search/?wd=EnableOptimalSwitching&type=document&lang=en)
+* Read: [DescribeBackupStreamList](https://www.tencentcloud.com/search/?wd=DescribeBackupStreamList&type=document&lang=en)
+* Update: [EnableOptimalSwitching](https://www.tencentcloud.com/search/?wd=EnableOptimalSwitching&type=document&lang=en)
 
 ## Import
 

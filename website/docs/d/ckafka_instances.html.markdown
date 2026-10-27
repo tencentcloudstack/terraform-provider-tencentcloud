@@ -95,4 +95,9 @@ In addition to all arguments above, the following attributes are exported:
   * `zone_id` - Availability Zone ID.
   * `zone_ids` - Across Availability Zones. Note: This field may return null, indicating that a valid value could not be retrieved.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstancesDetail](https://www.tencentcloud.com/document/api/597/35356)
 

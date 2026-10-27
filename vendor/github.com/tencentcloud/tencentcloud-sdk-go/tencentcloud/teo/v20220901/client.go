@@ -6441,6 +6441,56 @@ func (c *Client) DescribeApplicationProxiesWithContext(ctx context.Context, requ
     return
 }
 
+func NewDescribeAvailableCustomActionsForRuleEngineRequest() (request *DescribeAvailableCustomActionsForRuleEngineRequest) {
+    request = &DescribeAvailableCustomActionsForRuleEngineRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeAvailableCustomActionsForRuleEngine")
+    
+    
+    return
+}
+
+func NewDescribeAvailableCustomActionsForRuleEngineResponse() (response *DescribeAvailableCustomActionsForRuleEngineResponse) {
+    response = &DescribeAvailableCustomActionsForRuleEngineResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAvailableCustomActionsForRuleEngine
+// 查询站点规则引擎操作可用的定制配置列表。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_ZONENOTFOUND = "InvalidParameterValue.ZoneNotFound"
+func (c *Client) DescribeAvailableCustomActionsForRuleEngine(request *DescribeAvailableCustomActionsForRuleEngineRequest) (response *DescribeAvailableCustomActionsForRuleEngineResponse, err error) {
+    return c.DescribeAvailableCustomActionsForRuleEngineWithContext(context.Background(), request)
+}
+
+// DescribeAvailableCustomActionsForRuleEngine
+// 查询站点规则引擎操作可用的定制配置列表。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_ZONENOTFOUND = "InvalidParameterValue.ZoneNotFound"
+func (c *Client) DescribeAvailableCustomActionsForRuleEngineWithContext(ctx context.Context, request *DescribeAvailableCustomActionsForRuleEngineRequest) (response *DescribeAvailableCustomActionsForRuleEngineResponse, err error) {
+    if request == nil {
+        request = NewDescribeAvailableCustomActionsForRuleEngineRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "DescribeAvailableCustomActionsForRuleEngine")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAvailableCustomActionsForRuleEngine require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAvailableCustomActionsForRuleEngineResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeAvailablePlansRequest() (request *DescribeAvailablePlansRequest) {
     request = &DescribeAvailablePlansRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -7069,6 +7119,8 @@ func NewDescribeDefaultCertificatesResponse() (response *DescribeDefaultCertific
 // DescribeDefaultCertificates
 // 查询默认证书列表
 //
+// <p style="color: red;">注意：该旧版接口已停止更新迭代，后续新增功能将仅在新版接口中提供，旧版接口支持的原有能力将不受影响。如需查询域名配置的证书，请使用DescribeAccelerationDomains。</p>
+//
 // 可能返回的错误码:
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
@@ -7085,6 +7137,8 @@ func (c *Client) DescribeDefaultCertificates(request *DescribeDefaultCertificate
 
 // DescribeDefaultCertificates
 // 查询默认证书列表
+//
+// <p style="color: red;">注意：该旧版接口已停止更新迭代，后续新增功能将仅在新版接口中提供，旧版接口支持的原有能力将不受影响。如需查询域名配置的证书，请使用DescribeAccelerationDomains。</p>
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DBERROR = "InternalError.DBError"

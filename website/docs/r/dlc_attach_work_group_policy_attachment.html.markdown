@@ -106,6 +106,13 @@ The `policy_set` object exports the following:
 * `source_id` - The ID of the work group, which applies only when the value of the `Source` field is `WORKGROUP`.
 * `source_name` - The name of the work group, which applies only when the value of the `Source` field is `WORKGROUP`.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AttachWorkGroupPolicy](https://www.tencentcloud.com/document/api/1155/62677)
+* Read: [DescribeWorkGroupInfo](https://www.tencentcloud.com/document/api/1155/62667)
+* Delete: [DetachWorkGroupPolicy](https://www.tencentcloud.com/document/api/1155/62664)
 
 ## Import
 

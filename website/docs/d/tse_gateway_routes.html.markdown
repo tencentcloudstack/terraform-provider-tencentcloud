@@ -55,4 +55,9 @@ In addition to all arguments above, the following attributes are exported:
     * `strip_path` - whether to strip path when forwarding to the backend.
   * `total_count` - total count.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCloudNativeAPIGatewayRoutes](https://www.tencentcloud.com/document/api/1290/79259)
 

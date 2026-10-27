@@ -6,6 +6,7 @@ Example Usage
 resource "tencentcloud_dbdc_db_custom_cluster" "example" {
   cluster_name        = "tf-example"
   cluster_description = "cluster description."
+  deletion_protection = true
 
   container_network {
     vpc_id     = "vpc-py7mlxqm"

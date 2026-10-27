@@ -295,6 +295,32 @@ resource "tencentcloud_teo_security_policy_config" "example" {
     }
 
     bot_management {
+      basic_bot_settings {
+        source_idc {
+          base_action {
+            name = "Monitor"
+          }
+          action_overrides {
+            rule_ids = ["rule-a", "rule-b"]
+            action {
+              name = "Deny"
+            }
+          }
+        }
+
+        search_engine_bots {
+          base_action {
+            name = "Monitor"
+          }
+          action_overrides {
+            rule_ids = ["rule-c"]
+            action {
+              name = "Monitor"
+            }
+          }
+        }
+      }
+
       client_attestation_rules {
         name        = "client-attestation-rule"
         enabled     = "on"
@@ -776,23 +802,27 @@ The `acl_user_rules` object of `acl_config` supports the following:
 
 The `action_overrides` object of `ip_reputation_group` supports the following:
 
-* `rule_id` - (Required, String) Rule ID or category ID for action override.
 * `action` - (Optional, List) Action override configuration.
+* `rule_id` - (Optional, String, **Deprecated**) It has been deprecated from version 1.83.31. Please use `rule_ids` instead. A single bot rule ID (or category ID) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids. Deprecated: use `rule_ids` to support one or more IDs.
+* `rule_ids` - (Optional, List) One or more bot rule IDs (or category IDs) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids ([]*string). If both `rule_ids` and `rule_id` are set, `rule_ids` takes precedence.
 
 The `action_overrides` object of `known_bot_categories` supports the following:
 
-* `rule_id` - (Required, String) Rule ID or category ID for action override.
 * `action` - (Optional, List) Action override configuration.
+* `rule_id` - (Optional, String, **Deprecated**) It has been deprecated from version 1.83.31. Please use `rule_ids` instead. A single bot rule ID (or category ID) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids. Deprecated: use `rule_ids` to support one or more IDs.
+* `rule_ids` - (Optional, List) One or more bot rule IDs (or category IDs) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids ([]*string). If both `rule_ids` and `rule_id` are set, `rule_ids` takes precedence.
 
 The `action_overrides` object of `search_engine_bots` supports the following:
 
-* `rule_id` - (Required, String) Rule ID or category ID for action override.
 * `action` - (Optional, List) Action override configuration.
+* `rule_id` - (Optional, String, **Deprecated**) It has been deprecated from version 1.83.31. Please use `rule_ids` instead. A single bot rule ID (or category ID) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids. Deprecated: use `rule_ids` to support one or more IDs.
+* `rule_ids` - (Optional, List) One or more bot rule IDs (or category IDs) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids ([]*string). If both `rule_ids` and `rule_id` are set, `rule_ids` takes precedence.
 
 The `action_overrides` object of `source_idc` supports the following:
 
-* `rule_id` - (Required, String) Rule ID or category ID for action override.
 * `action` - (Optional, List) Action override configuration.
+* `rule_id` - (Optional, String, **Deprecated**) It has been deprecated from version 1.83.31. Please use `rule_ids` instead. A single bot rule ID (or category ID) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids. Deprecated: use `rule_ids` to support one or more IDs.
+* `rule_ids` - (Optional, List) One or more bot rule IDs (or category IDs) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids ([]*string). If both `rule_ids` and `rule_id` are set, `rule_ids` takes precedence.
 
 The `action` object of `action_overrides` supports the following:
 
@@ -2347,6 +2377,13 @@ The `slow_post_config` object of `security_config` exports the following:
 
 * `rule_id` - Rule ID. Output-only.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifySecurityPolicy](https://www.tencentcloud.com/document/api/1145/50950)
+* Read: [DescribeSecurityPolicy](https://www.tencentcloud.com/document/api/1145/50958)
+* Update: [ModifySecurityPolicy](https://www.tencentcloud.com/document/api/1145/50950)
 
 ## Import
 

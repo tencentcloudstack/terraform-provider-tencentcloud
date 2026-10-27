@@ -17,6 +17,7 @@ Provides a resource to create a DBDC db custom cluster.
 resource "tencentcloud_dbdc_db_custom_cluster" "example" {
   cluster_name        = "tf-example"
   cluster_description = "cluster description."
+  deletion_protection = true
 
   container_network {
     vpc_id     = "vpc-py7mlxqm"
@@ -42,6 +43,7 @@ The following arguments are supported:
 * `cluster_name` - (Required, String, ForceNew) Cluster name. Up to 128 characters, only Chinese, English and underscore are allowed.
 * `container_network` - (Required, List, ForceNew) Container network. All pods in this cluster are connected to this network.
 * `cluster_description` - (Optional, String, ForceNew) Cluster description.
+* `deletion_protection` - (Optional, Bool) Whether to enable cluster deletion protection. Valid values: `true` (enabled, API default), `false` (disabled).
 * `tags` - (Optional, Map) Cluster tags.
 
 The `api_server_network` object supports the following:
@@ -72,6 +74,16 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `1h0m`) Used when creating the resource.
 * `delete` - (Defaults to `1h0m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDBCustomCluster](https://www.tencentcloud.com/search/?wd=CreateDBCustomCluster&type=document&lang=en)
+* Read: [DescribeDBCustomClusterDetail](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterDetail&type=document&lang=en)
+* Update:
+  - [ModifyDBCustomClusterAttributes](https://www.tencentcloud.com/search/?wd=ModifyDBCustomClusterAttributes&type=document&lang=en)
+  - [ModifyDBCustomClusterTags](https://www.tencentcloud.com/search/?wd=ModifyDBCustomClusterTags&type=document&lang=en)
+* Delete: [DestroyDBCustomCluster](https://www.tencentcloud.com/search/?wd=DestroyDBCustomCluster&type=document&lang=en)
 
 ## Import
 

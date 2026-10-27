@@ -95,6 +95,58 @@ func (me *ConfigService) DescribeConfigCompliancePacksByFilter(ctx context.Conte
 	return
 }
 
+func (me *ConfigService) DescribeConfigListAggregatorsByFilter(ctx context.Context, paramMap map[string]interface{}) (items []*configv20220802.Aggregator, total uint64, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := configv20220802.NewListAggregatorsRequest()
+	request.Limit = helper.Uint64(100)
+	request.Offset = helper.Uint64(0)
+
+	items = make([]*configv20220802.Aggregator, 0)
+
+	for {
+		var (
+			pageItems []*configv20220802.Aggregator
+		)
+
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseConfigV20220802Client().ListAggregatorsWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("list config aggregators failed, Response is nil"))
+			}
+
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+			if result.Response.Total != nil {
+				total = *result.Response.Total
+			}
+
+			pageItems = result.Response.Items
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		items = append(items, pageItems...)
+
+		if uint64(len(items)) >= total {
+			break
+		}
+
+		*request.Offset += *request.Limit
+	}
+
+	return
+}
+
 func (me *ConfigService) DescribeSystemConfigCompliancePacks(ctx context.Context) (items []*configv20220802.SystemCompliancePack, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
@@ -614,6 +666,46 @@ func (me *ConfigService) DescribeConfigDeliver(ctx context.Context) (ret *config
 	return
 }
 
+func (me *ConfigService) DescribeAggregateConfigDeliver(ctx context.Context, accountGroupId string) (ret *configv20220802.DescribeAggregateConfigDeliverResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := configv20220802.NewDescribeAggregateConfigDeliverRequest()
+	response := configv20220802.NewDescribeAggregateConfigDeliverResponse()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.AccountGroupId = helper.String(accountGroupId)
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseConfigV20220802Client().DescribeAggregateConfigDeliver(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("describe aggregate config deliver failed, Response is nil"))
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
 func (me *ConfigService) DescribeConfigRemediationById(ctx context.Context, ruleId, remediationId string) (ret *configv20220802.Remediation, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
@@ -683,6 +775,46 @@ func (me *ConfigService) DescribeConfigCompliancePackById(ctx context.Context, c
 		if result == nil || result.Response == nil {
 			return resource.NonRetryableError(fmt.Errorf("describe config compliance pack failed, Response is nil"))
 		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *ConfigService) DescribeConfigAggregatorById(ctx context.Context, accountGroupId, ownerUin string) (ret *configv20220802.DescribeAggregatorResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := configv20220802.NewDescribeAggregatorRequest()
+	response := configv20220802.NewDescribeAggregatorResponse()
+	request.AccountGroupId = &accountGroupId
+	request.OwnerUin = helper.StrToUint64Point(ownerUin)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseConfigV20220802Client().DescribeAggregatorWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("describe config aggregator failed, Response is nil"))
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 
 		response = result
 		return nil

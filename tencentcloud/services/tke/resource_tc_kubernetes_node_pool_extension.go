@@ -858,6 +858,24 @@ func resourceTencentCloudKubernetesNodePoolUpdateOnExit(ctx context.Context) err
 		}
 	}
 
+	if d.HasChange("node_config.0.extra_args") {
+		// `node_config.0.extra_args` is a flat list of "key=value" strings that
+		// maps to InstanceExtraArgs.Kubelet.
+		extraArgs := helper.InterfacesStringsPoint(d.Get("node_config.0.extra_args").([]interface{}))
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			errRet := service.ModifyClusterNodePoolExtraArgs(ctx, clusterId, nodePoolId, extraArgs)
+			if errRet != nil {
+				return tccommon.RetryError(errRet)
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
+	}
+
 	d.Partial(false)
 
 	return nil

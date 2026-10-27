@@ -50,4 +50,9 @@ In addition to all arguments above, the following attributes are exported:
   * `privileges` - Permission List.
   * `table_name` - Table Name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAccountAllGrantPrivileges](https://www.tencentcloud.com/search/?wd=DescribeAccountAllGrantPrivileges&type=document&lang=en)
 
