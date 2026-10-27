@@ -10,6 +10,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
 	svccvm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
+	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
 	"context"
 	"fmt"
@@ -2269,6 +2270,34 @@ resource "tencentcloud_instance" "foo" {
 
 `
 
+func testAccCheckSecurityGroupExists(n string, id *string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		rs, ok := s.RootModule().Resources[n]
+		if !ok {
+			return fmt.Errorf("not found: %s", n)
+		}
+
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("no security group ID is set")
+		}
+
+		service := svcvpc.NewVpcService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+
+		sg, err := service.DescribeSecurityGroup(context.TODO(), rs.Primary.ID)
+		if err != nil {
+			return err
+		}
+
+		if sg == nil {
+			return fmt.Errorf("security group not found: %s", rs.Primary.ID)
+		}
+
+		*id = rs.Primary.ID
+
+		return nil
+	}
+}
+
 func testAccCheckTencentCloudInstanceExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := tccommon.GetLogId(tccommon.ContextNil)
@@ -2332,6 +2361,161 @@ func testAccCheckInstanceDestroy(s *terraform.State) error {
 	return nil
 }
 
+const testAccTencentCloudInstanceBasic = tcacctest.DefaultInstanceVariable + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "cvm-basic-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "cvm-basic-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = var.availability_cvm_zone
+}
+
+resource "tencentcloud_instance" "cvm_basic" {
+  instance_name     = var.instance_name
+  availability_zone = var.availability_cvm_zone
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  system_disk_type  = "CLOUD_PREMIUM"
+  project_id        = 0
+
+  tags = {
+    hostname = "tci"
+  }
+  lifecycle {
+	ignore_changes = [instance_type]
+  }
+}
+`
+
+const testAccTencentCloudInstancePrepaidBasic = tcacctest.DefaultInstanceVariable + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "cvm-prepaid-basic-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "cvm-prepaid-basic-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = var.availability_cvm_zone
+}
+
+resource "tencentcloud_instance" "cvm_prepaid_basic" {
+  instance_name     = var.instance_name
+  availability_zone = var.availability_cvm_zone
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  system_disk_type  = "CLOUD_PREMIUM"
+  project_id        = 0
+  instance_charge_type                    = "PREPAID"
+  instance_charge_type_prepaid_period     = 1
+  instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
+  force_delete = true
+  tags = {
+    hostname = "tci"
+  }
+}
+`
+
+const testAccTencentCloudInstanceWithDataDiskOrder = tcacctest.DefaultInstanceVariable + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "cvm-with-cbs-order-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "cvm-with-cbs-order-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = var.availability_cvm_zone
+}
+
+resource "tencentcloud_instance" "foo" {
+  instance_name     = var.instance_name
+  availability_zone = var.availability_cvm_zone
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  system_disk_type  = "CLOUD_PREMIUM"
+  project_id        = 0
+
+  data_disks {
+    data_disk_size         = 100
+    data_disk_type         = "CLOUD_PREMIUM"
+    delete_with_instance   = true
+  }
+  data_disks {
+    data_disk_size         = 50
+    data_disk_type         = "CLOUD_PREMIUM"
+    delete_with_instance   = true
+  }
+  data_disks {
+    data_disk_size         = 70
+    data_disk_type         = "CLOUD_PREMIUM"
+    delete_with_instance   = true
+  }
+}
+`
+
+const testAccTencentCloudInstanceAddDataDiskByCbs = tcacctest.DefaultInstanceVariable + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "cvm-attach-cbs-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "cvm-attach-cbs-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = var.availability_cvm_zone
+}
+
+resource "tencentcloud_instance" "cvm_add_data_disk_by_cbs" {
+  instance_name     = "cvm-add-data-disk-by-cbs"
+  availability_zone = var.availability_cvm_zone
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  system_disk_type  = "CLOUD_PREMIUM"
+  project_id        = 0
+}
+
+resource "tencentcloud_cbs_storage" "cbs_disk1" {
+	storage_name = "cbs_disk1"
+	storage_type = "CLOUD_SSD"
+	storage_size = 200
+	availability_zone = var.availability_cvm_zone
+	project_id = 0
+	encrypt = false
+}
+resource "tencentcloud_cbs_storage" "cbs_disk2" {
+	storage_name = "cbs_disk2"
+	storage_type = "CLOUD_SSD"
+	storage_size = 100
+	availability_zone = var.availability_cvm_zone
+	project_id = 0
+	encrypt = false
+}
+resource "tencentcloud_cbs_storage_attachment" "attachment_cbs_disk1" {
+	storage_id = tencentcloud_cbs_storage.cbs_disk1.id
+	instance_id = tencentcloud_instance.cvm_add_data_disk_by_cbs.id
+}
+resource "tencentcloud_cbs_storage_attachment" "attachment_cbs_disk2" {
+	storage_id = tencentcloud_cbs_storage.cbs_disk2.id
+	instance_id = tencentcloud_instance.cvm_add_data_disk_by_cbs.id
+}
+`
+
 const testAccTencentCloudInstancePostPaid = `
 data "tencentcloud_instance_types" "default" {
   filter {
@@ -2383,6 +2567,243 @@ resource "tencentcloud_instance" "foo" {
 }
 `
 
+const testAccTencentCloudInstanceModifyInstanceType = tcacctest.DefaultInstanceVariable + `
+data "tencentcloud_instance_types" "new_type" {
+	availability_zone = var.availability_cvm_zone
+  
+	cpu_core_count = 2
+	memory_size    = 2
+  }
+
+resource "tencentcloud_vpc" "vpc" {
+	name       = "cvm-basic-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "cvm-basic-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = var.availability_cvm_zone
+}
+
+resource "tencentcloud_instance" "cvm_basic" {
+  instance_name     = var.instance_name
+  availability_zone = var.availability_cvm_zone
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.new_type.instance_types.0.instance_type
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  system_disk_type  = "CLOUD_PREMIUM"
+  project_id        = 0
+
+  tags = {
+    hostname = "tci"
+  }
+  lifecycle {
+	ignore_changes = [instance_type]
+  }
+}
+`
+
+const testAccTencentCloudInstanceWithDataDisk = tcacctest.DefaultInstanceVariable + `
+resource "tencentcloud_instance" "foo" {
+  instance_name     = var.instance_name
+  availability_zone = var.availability_cvm_zone
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+
+  system_disk_type = "CLOUD_PREMIUM"
+  system_disk_size = 100
+
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 100
+    delete_with_instance  = true
+	// encrypt = true
+  } 
+   
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 100
+    # data_disk_snapshot_id = "snap-nvzu3dmh"
+    delete_with_instance  = true
+  }
+
+  disable_security_service = true
+  disable_monitor_service  = true
+  disable_automation_service = true
+  lifecycle {
+	ignore_changes = [instance_type]
+  }
+}
+`
+
+const testAccTencentCloudInstanceWithDataDiskUpdate = tcacctest.DefaultInstanceVariable + `
+resource "tencentcloud_instance" "foo" {
+  instance_name     = var.instance_name
+  availability_zone = var.availability_cvm_zone
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+
+  system_disk_type = "CLOUD_PREMIUM"
+  system_disk_size = 100
+
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  } 
+   
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+
+
+
+  disable_security_service = true
+  disable_monitor_service  = true
+  disable_automation_service = true
+  lifecycle {
+	ignore_changes = [instance_type]
+  }
+}
+`
+
+func testAccTencentCloudInstanceWithNetworkFalse(hasPublicIp string) string {
+	return fmt.Sprintf(
+		tcacctest.DefaultInstanceVariable+`
+resource "tencentcloud_instance" "foo" {
+  instance_name              = var.instance_name
+  availability_zone          = var.availability_cvm_zone
+  image_id                   = data.tencentcloud_images.default.images.0.image_id
+  instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  allocate_public_ip         = %s
+  system_disk_type           = "CLOUD_PREMIUM"
+  lifecycle {
+	ignore_changes = [instance_type]
+  }
+}
+`,
+		hasPublicIp,
+	)
+}
+
+func testAccTencentCloudInstanceWithNetwork(hasPublicIp string, maxBandWidthOut int64) string {
+	return fmt.Sprintf(
+		tcacctest.DefaultInstanceVariable+`
+resource "tencentcloud_instance" "foo" {
+  instance_name              = var.instance_name
+  availability_zone          = var.availability_cvm_zone
+  image_id                   = data.tencentcloud_images.default.images.0.image_id
+  instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  internet_max_bandwidth_out = %d
+  allocate_public_ip         = %s
+  system_disk_type           = "CLOUD_PREMIUM"
+  lifecycle {
+	ignore_changes = [instance_type]
+  }
+}
+`,
+		maxBandWidthOut, hasPublicIp,
+	)
+}
+
+const testAccTencentCloudInstanceWithPrivateIP = tcacctest.DefaultInstanceVariable + `
+resource "tencentcloud_vpc" "vpc" {
+	name       = "cvm-with-privateip-vpc"
+	cidr_block = "10.0.0.0/16"
+  }
+  
+resource "tencentcloud_subnet" "subnet" {
+	vpc_id            = tencentcloud_vpc.vpc.id
+	name              = "cvm-with-privateip-subnet"
+	cidr_block        = "10.0.0.0/16"
+	availability_zone = var.availability_cvm_zone
+}
+
+resource "tencentcloud_instance" "foo" {
+  instance_name     = var.instance_name
+  availability_zone = var.availability_cvm_zone
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  system_disk_type  = "CLOUD_PREMIUM"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  private_ip        = "10.0.0.123"
+}
+`
+
 const testAccTencentCloudInstanceWithKeyPair_withoutKeyPair = tcacctest.DefaultInstanceVariable + `
 resource "tencentcloud_instance" "foo" {
 	instance_name     = var.instance_name
@@ -2430,6 +2851,147 @@ resource "tencentcloud_instance" "foo" {
 		keyIds,
 	)
 }
+
+func testAccTencentCloudInstanceWithPassword(password string) string {
+	return fmt.Sprintf(
+		tcacctest.DefaultInstanceVariable+`
+resource "tencentcloud_instance" "foo" {
+  instance_name              = var.instance_name
+  availability_zone          = var.availability_cvm_zone
+  image_id                   = data.tencentcloud_images.default.images.0.image_id
+  instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  password                   = "%s"
+  system_disk_type           = "CLOUD_PREMIUM"
+  lifecycle {
+	ignore_changes = [instance_type]
+  }
+}
+`,
+		password,
+	)
+}
+
+const testAccTencentCloudInstanceWithImageLogin = tcacctest.DefaultInstanceVariable + `
+data "tencentcloud_images" "zoo" {
+  image_type = ["PRIVATE_IMAGE"]
+}
+resource "tencentcloud_instance" "foo" {
+  instance_name              = var.instance_name
+  availability_zone          = var.availability_cvm_zone
+  image_id                   = data.tencentcloud_images.zoo.images.0.image_id
+  instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  keep_image_login 			 = true
+  system_disk_type           = "CLOUD_PREMIUM"
+  disable_api_termination    = false
+}
+`
+
+func testAccTencentCloudInstanceWithName(instanceName string) string {
+	return fmt.Sprintf(
+		tcacctest.DefaultInstanceVariable+`
+resource "tencentcloud_instance" "foo" {
+  instance_name     = "%s"
+  availability_zone = var.availability_cvm_zone
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  system_disk_type  = "CLOUD_PREMIUM"
+  lifecycle {
+	ignore_changes = [instance_type]
+  }
+}
+`,
+		instanceName,
+	)
+}
+
+const testAccTencentCloudInstanceWithHostname = tcacctest.DefaultInstanceVariable + `
+resource "tencentcloud_instance" "foo" {
+  instance_name     = var.instance_name
+  availability_zone = var.availability_cvm_zone
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  hostname          = var.instance_name
+  system_disk_type  = "CLOUD_PREMIUM"
+}
+`
+
+func testAccTencentCloudInstanceWithSecurityGroup(ids string) string {
+	return fmt.Sprintf(
+		tcacctest.DefaultInstanceVariable+`
+resource "tencentcloud_instance" "foo" {
+  instance_name              = var.instance_name
+  availability_zone          = var.availability_cvm_zone
+  image_id                   = data.tencentcloud_images.default.images.0.image_id
+  instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  system_disk_type           = "CLOUD_PREMIUM"
+  security_groups            = %s
+  lifecycle {
+	ignore_changes = [instance_type]
+  }
+}
+`,
+		ids,
+	)
+}
+
+func testAccTencentCloudInstanceWithTags(tags string) string {
+	return fmt.Sprintf(
+		tcacctest.DefaultInstanceVariable+`
+resource "tencentcloud_instance" "foo" {
+  instance_name     = var.instance_name
+  availability_zone = var.availability_cvm_zone
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  system_disk_type  = "CLOUD_PREMIUM"
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  lifecycle {
+	ignore_changes = [instance_type]
+  }
+  tags = %s
+}
+`,
+		tags,
+	)
+}
+
+const testAccTencentCloudInstanceWithPlacementGroup = tcacctest.DefaultInstanceVariable + `
+resource "tencentcloud_instance" "foo" {
+  instance_name      = var.instance_name
+  availability_zone  = var.availability_cvm_zone
+  image_id           = data.tencentcloud_images.default.images.0.image_id
+  instance_type      = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  system_disk_type   = "CLOUD_PREMIUM"
+  placement_group_id = "ps-1y147q03"
+}
+`
+
+const testAccTencentCloudInstanceWithSpotpaid = tcacctest.DefaultInstanceVariable + `
+resource "tencentcloud_instance" "foo" {
+  instance_name        = var.instance_name
+  availability_zone    = var.availability_cvm_zone
+  image_id             = data.tencentcloud_images.default.images.0.image_id
+  instance_type        = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  system_disk_type     = "CLOUD_PREMIUM"
+  instance_charge_type = "SPOTPAID"
+  spot_instance_type   = "ONE-TIME"
+  spot_max_price       = "0.5"
+}
+`
+
+const testAccTencentCloudInstanceOrderlySecurityGroups = tcacctest.DefaultInstanceVariable + `
+resource "tencentcloud_instance" "cvm_with_orderly_sg" {
+	instance_name              = "test-orderly-sg-cvm"
+	availability_zone          = var.availability_cvm_zone
+	image_id                   = data.tencentcloud_images.default.images.0.image_id
+	instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+	system_disk_type           = "CLOUD_PREMIUM"
+	orderly_security_groups    = ["sg-cm7fbbf3", "sg-kensue7b", "sg-05f7wnhn"]
+}
+`
 
 func TestAccTencentCloudInstanceResourceHPC(t *testing.T) {
 	t.Parallel()

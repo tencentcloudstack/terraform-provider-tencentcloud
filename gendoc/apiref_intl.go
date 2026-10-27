@@ -33,6 +33,7 @@ import (
 	"fmt"
 	"os/exec"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -233,3 +234,34 @@ func parseInt64(s string) int64 {
 	}
 	return v
 }
+
+// isActionTitle reports whether a tree page title reads like an API action
+// name (CamelCase, no spaces) rather than a prose page ("Introduction").
+func isActionTitle(title string) bool {
+	if len(title) < 4 || title[0] < 'A' || title[0] > 'Z' {
+		return false
+	}
+	if strings.ContainsAny(title, " _") {
+		return false
+	}
+	// Reject all-caps prose-like titles and pure words such as "Overview".
+	hasLower := false
+	for i := 1; i < len(title); i++ {
+		if title[i] >= 'a' && title[i] <= 'z' {
+			hasLower = true
+			break
+		}
+	}
+	if !hasLower {
+		return false
+	}
+	for _, w := range []string{"Overview", "Introduction", "History", "Glossary", "Billing", "Strengths"} {
+		if title == w {
+			return false
+		}
+	}
+	return true
+}
+
+// sortInt64s is a small helper for deterministic logging.
+func sortInt64s(s []int64) { sort.Slice(s, func(i, j int) bool { return s[i] < s[j] }) }

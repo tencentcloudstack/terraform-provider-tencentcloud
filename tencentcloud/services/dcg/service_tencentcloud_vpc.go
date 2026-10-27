@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -89,6 +90,14 @@ type VpcSecurityGroupLiteRule struct {
 	protocolTemplateId      string
 	protocolTemplateGroupId string
 }
+
+var securityGroupIdRE = regexp.MustCompile(`^sg-\w{8}$`)
+var ipAddressIdRE = regexp.MustCompile(`^ipm-\w{8}$`)
+var ipAddressGroupIdRE = regexp.MustCompile(`^ipmg-\w{8}$`)
+var protocolTemplateRE = regexp.MustCompile(`^ppmg?-\w{8}$`)
+var protocolTemplateIdRE = regexp.MustCompile(`^ppm-\w{8}$`)
+var protocolTemplateGroupIdRE = regexp.MustCompile(`^ppmg-\w{8}$`)
+var portRE = regexp.MustCompile(`^(\d{1,5},)*\d{1,5}$|^\d{1,5}-\d{1,5}$`)
 
 // acl rule
 type VpcACLRule struct {
@@ -2189,6 +2198,78 @@ func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info sec
 	return true
 }
 
+func parseRule(str string) (liteRule VpcSecurityGroupLiteRule, err error) {
+	split := strings.Split(str, "#")
+	if len(split) != 4 {
+		err = fmt.Errorf("invalid security group rule %s", str)
+		return
+	}
+
+	var (
+		source   string
+		port     string
+		protocol string
+		// source is "sg-xxxxxx" / "ipm-xxxxxx" / "ipmg-xxxxxx" formatted
+		isInstanceIdSource = true
+	)
+
+	liteRule.action, source, port, protocol = split[0], split[1], split[2], split[3]
+
+	if securityGroupIdRE.MatchString(source) {
+		liteRule.securityGroupId = source
+	} else if ipAddressIdRE.MatchString(source) {
+		liteRule.addressId = source
+	} else if ipAddressGroupIdRE.MatchString(source) {
+		liteRule.addressGroupId = source
+	} else {
+		isInstanceIdSource = false
+		liteRule.cidrIp = source
+	}
+
+	if v := liteRule.action; v != "ACCEPT" && v != "DROP" {
+		err = fmt.Errorf("invalid action `%s`, available actions: `ACCEPT`, `DROP`", v)
+		return
+	}
+
+	if net.ParseIP(liteRule.cidrIp) == nil && !isInstanceIdSource {
+		if _, _, err = net.ParseCIDR(liteRule.cidrIp); err != nil {
+			err = fmt.Errorf("invalid cidr_ip %s, allow cidr_ip format is `8.8.8.8` or `10.0.1.0/24`", liteRule.cidrIp)
+			return
+		}
+	}
+
+	liteRule.port = port
+	if port != "ALL" && !portRE.MatchString(port) && !protocolTemplateRE.MatchString(protocol) {
+		err = fmt.Errorf("invalid port %s, allow port format is `ALL`, `53`, `80,443` or `80-90`", liteRule.port)
+		return
+	}
+
+	liteRule.protocol = protocol
+	if protocolTemplateRE.MatchString(protocol) {
+		liteRule.port = ""
+		liteRule.protocol = ""
+		if protocolTemplateIdRE.MatchString(protocol) {
+			liteRule.protocolTemplateId = protocol
+		} else if protocolTemplateGroupIdRE.MatchString(protocol) {
+			liteRule.protocolTemplateGroupId = protocol
+		}
+	} else if protocol != "TCP" && protocol != "UDP" && protocol != "ALL" && protocol != "ICMP" {
+		err = fmt.Errorf("invalid protocol %s, allow protocol is `ALL`, `TCP`, `UDP`, `ICMP` or `ppm(g?)-xxxxxxxx`", liteRule.protocol)
+	} else if protocol == "ALL" || protocol == "ICMP" {
+		if liteRule.port != "ALL" {
+			err = fmt.Errorf("when protocol is %s, port must be ALL", protocol)
+		} else {
+			liteRule.port = ""
+		}
+	}
+
+	if err != nil {
+		return
+	}
+
+	return
+}
+
 /*
 EIP
 */
@@ -3476,6 +3557,17 @@ func waitEniReady(ctx context.Context, id string, client *vpc.Client, wantIpv4s 
 	return nil
 }
 
+func flattenVpnSPDList(spd []*vpc.SecurityPolicyDatabase) (mapping []*map[string]interface{}) {
+	mapping = make([]*map[string]interface{}, 0, len(spd))
+	for _, spg := range spd {
+		item := make(map[string]interface{})
+		item["local_cidr_block"] = spg.LocalCidrBlock
+		item["remote_cidr_block"] = spg.RemoteCidrBlock
+		mapping = append(mapping, &item)
+	}
+	return
+}
+
 func waitEniDetach(ctx context.Context, id string, client *vpc.Client) error {
 	logId := tccommon.GetLogId(ctx)
 
@@ -3522,6 +3614,55 @@ func waitEniDetach(ctx context.Context, id string, client *vpc.Client) error {
 
 		return nil
 	})
+}
+
+// deal acl
+func parseACLRule(str string) (liteRule VpcACLRule, err error) {
+	split := strings.Split(str, "#")
+	if len(split) != 4 {
+		err = fmt.Errorf("invalid acl rule %s", str)
+		return
+	}
+
+	liteRule.action, liteRule.cidrIp, liteRule.port, liteRule.protocol = split[0], split[1], split[2], split[3]
+
+	switch liteRule.action {
+	default:
+		err = fmt.Errorf("invalid action %s, allow action is `ACCEPT` or `DROP`", liteRule.action)
+		return
+	case "ACCEPT", "DROP":
+	}
+
+	if net.ParseIP(liteRule.cidrIp) == nil {
+		if _, _, err = net.ParseCIDR(liteRule.cidrIp); err != nil {
+			err = fmt.Errorf("invalid cidr_ip %s, allow cidr_ip format is `8.8.8.8` or `10.0.1.0/24`", liteRule.cidrIp)
+			return
+		}
+	}
+
+	if liteRule.port != "ALL" && !regexp.MustCompile(`^(\d{1,5},)*\d{1,5}$|^\d{1,5}-\d{1,5}$`).MatchString(liteRule.port) {
+		err = fmt.Errorf("invalid port %s, allow port format is `ALL`, `53`, `80,443` or `80-90`", liteRule.port)
+		return
+	}
+
+	switch liteRule.protocol {
+	default:
+		err = fmt.Errorf("invalid protocol %s, allow protocol is `ALL`, `TCP`, `UDP` or `ICMP`", liteRule.protocol)
+		return
+
+	case "ALL", "ICMP":
+		if liteRule.port != "ALL" {
+			err = fmt.Errorf("when protocol is %s, port must be ALL", liteRule.protocol)
+			return
+		}
+
+		// when protocol is ALL or ICMP, port should be "" to avoid sdk error
+		liteRule.port = ""
+
+	case "TCP", "UDP":
+	}
+
+	return
 }
 
 func (me *VpcService) CreateVpcNetworkAcl(ctx context.Context, vpcID string, name string, tags map[string]string) (aclID string, errRet error) {
