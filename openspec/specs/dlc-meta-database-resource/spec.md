@@ -9,7 +9,7 @@ The system SHALL define a Terraform resource named `tencentcloud_dlc_meta_databa
 #### Scenario: top-level input fields
 - **WHEN** the `tencentcloud_dlc_meta_database` resource schema is defined
 - **THEN** it includes `meta_database_info` of type `schema.TypeList` with `Required: true` and `MaxItems: 1`
-- **AND** it includes `datasource_connection_name` of type `schema.TypeString` with `Optional: true`
+- **AND** it includes `datasource_connection_name` of type `schema.TypeString` with `Required: true` and `ForceNew: true`
 - **AND** it includes `govern_policy` of type `schema.TypeList` with `Optional: true` and `MaxItems: 1`
 - **AND** it includes `smart_policy` of type `schema.TypeList` with `Optional: true` and `MaxItems: 1`
 - **AND** it does NOT declare top-level `database_name` or `comment`
@@ -107,19 +107,14 @@ The system SHALL define a Terraform resource named `tencentcloud_dlc_meta_databa
 ### Requirement: dlc_meta_database resource ID format
 The system SHALL use a composite resource ID that encodes `datasource_connection_name` and `database_name` so that Read and Delete can reconstruct cloud API requests.
 
-#### Scenario: ID with datasource_connection_name
-- **WHEN** the user provides `datasource_connection_name` during create
-- **THEN** the resource ID is set to `datasource_connection_name` + `tccommon.FILED_SP` + `database_name`
-
-#### Scenario: ID without datasource_connection_name
-- **WHEN** the user does not provide `datasource_connection_name` during create
-- **THEN** the resource ID is set to just `database_name`
+#### Scenario: ID composition on create
+- **WHEN** the Create handler finishes successfully
+- **THEN** the resource ID is set to `datasource_connection_name` + `tccommon.FILED_SP` + `meta_database_info.0.database_name`
 
 #### Scenario: ID parsing on read/delete
 - **WHEN** the Read or Delete handler parses `d.Id()`
-- **THEN** it splits by `tccommon.FILED_SP`
-- **AND** if the split yields two parts, the first is `datasource_connection_name` and the second is `database_name`
-- **AND** if the split yields one part, it is `database_name` and `datasource_connection_name` is empty
+- **THEN** it splits by `tccommon.FILED_SP` and requires exactly two non-empty parts, the first is `datasource_connection_name` and the second is `database_name`
+- **AND** it returns an error `id is broken,<id>` when the format does not match
 
 ### Requirement: dlc_meta_database create operation
 The system SHALL create a DLC meta database by calling `CreateMetaDatabase` with all configured schema fields mapped to the request, then poll `DescribeDatabase` until the resource is confirmed present.
@@ -136,7 +131,7 @@ The system SHALL create a DLC meta database by calling `CreateMetaDatabase` with
 #### Scenario: async polling after create
 - **WHEN** `CreateMetaDatabase` returns successfully with a non-nil `Response`
 - **THEN** the system sets `d.SetId(...)` outside the retry block
-- **AND** it polls `DescribeDatabase` using `resource.Retry` with `tccommon.ReadRetryTimeout` until the database is found
+- **AND** it polls `DlcService.DescribeDlcMetaDatabaseByName` using `resource.Retry` with `tccommon.WriteRetryTimeout` until the database is found
 - **AND** if the database is not found within the timeout, the system returns a `NonRetryableError`
 
 #### Scenario: nil response guard
@@ -148,19 +143,19 @@ The system SHALL read the DLC meta database by calling `DescribeDatabase` and fl
 
 #### Scenario: build DescribeDatabase request from ID
 - **WHEN** the Read handler is invoked
-- **THEN** it parses `d.Id()` to extract `database_name` and optionally `datasource_connection_name`
-- **AND** it builds a `DescribeDatabaseRequest` with both fields
+- **THEN** it parses `d.Id()` to extract `datasource_connection_name` and `database_name`
+- **AND** it queries `DlcService.DescribeDlcMetaDatabaseByName`, which builds a `DescribeDatabaseRequest` with both fields
 
 #### Scenario: flatten response into state
 - **WHEN** `DescribeDatabase` returns a non-nil `DatabaseInfo` (of type `DatabaseResponseInfo`)
-- **THEN** the system sets the `meta_database_info` block from the response `DatabaseName` and `Comment`, falling back to the values resolved from the ID/state when the response omits them
+- **THEN** the system sets `meta_database_info.0.database_name` from the ID and `meta_database_info.0.comment` from the response `Comment`, falling back to the value in state when the response omits it
 - **AND** it sets `location`, `create_time`, `modified_time`, `user_alias`, `user_sub_uin`, `database_id`, `catalog_name`, `catalog_type`, `is_information_schema` from the response fields when they are non-nil
 - **AND** it flattens `Properties` into the `properties` list
 - **AND** it flattens `GovernPolicy` into the `govern_policy` block
 
 #### Scenario: resource not found on read
-- **WHEN** `DescribeDatabase` returns an empty or nil response
-- **THEN** the system logs `[CRUD] dlc_meta_database id=<id>` for traceability
+- **WHEN** `DescribeDatabase` returns an empty or nil `DatabaseInfo`
+- **THEN** the system returns `nil` without error
 - **AND** it calls `d.SetId("")` to remove the resource from state
 
 #### Scenario: retry on read
@@ -173,19 +168,20 @@ The system SHALL delete the DLC meta database by calling `DeleteMetaDatabase`, t
 
 #### Scenario: build DeleteMetaDatabase request from ID
 - **WHEN** the Delete handler is invoked
-- **THEN** it parses `d.Id()` to extract `database_name` and optionally `datasource_connection_name`
+- **THEN** it parses `d.Id()` to extract `datasource_connection_name` and `database_name`
 - **AND** it builds a `DeleteMetaDatabaseRequest` with both fields
 
 #### Scenario: async polling after delete
 - **WHEN** `DeleteMetaDatabase` returns successfully
-- **THEN** the system polls `DescribeDatabase` using `resource.Retry` until the database is no longer found
+- **THEN** the system polls `DlcService.DescribeDlcMetaDatabaseByName` using `resource.Retry` until the database is no longer found
+- **AND** a `ResourceNotFound` error is treated as deleted
 - **AND** if the database is still present within the timeout, the system returns an error
 
 ### Requirement: dlc_meta_database update immutability enforcement
 The system SHALL implement an Update handler that enforces immutability of all non-ID top-level schema fields, because no cloud API Update endpoint exists.
 
 #### Scenario: immutable field changed
-- **WHEN** the Update handler is invoked and any of `datasource_connection_name`, `meta_database_info.0.comment`, `govern_policy`, `smart_policy` has changed
+- **WHEN** the Update handler is invoked and any of `datasource_connection_name`, `meta_database_info`, `govern_policy`, `smart_policy` has changed
 - **THEN** the system returns `fmt.Errorf("argument `%s` cannot be changed", v)` naming the changed field
 
 #### Scenario: no changes
@@ -199,9 +195,9 @@ The system SHALL support Terraform import via `schema.ImportStatePassthrough`.
 - **WHEN** the user runs `terraform import tencentcloud_dlc_meta_database.example <datasource_connection_name>#<database_name>`
 - **THEN** the import succeeds and the Read handler populates the state from `DescribeDatabase`
 
-#### Scenario: import with bare database_name
-- **WHEN** the user runs `terraform import tencentcloud_dlc_meta_database.example <database_name>`
-- **THEN** the import succeeds and the Read handler populates the state from `DescribeDatabase` with default `datasource_connection_name`
+#### Scenario: import with malformed ID
+- **WHEN** the user runs `terraform import` with an ID that is not `<datasource_connection_name>#<database_name>`
+- **THEN** the Read handler returns an `id is broken,<id>` error
 
 ### Requirement: dlc_meta_database provider registration
 The system SHALL register `tencentcloud_dlc_meta_database` in `tencentcloud/provider.go` `ResourcesMap` and document it in `tencentcloud/provider.md`.

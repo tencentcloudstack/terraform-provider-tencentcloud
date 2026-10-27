@@ -15,14 +15,10 @@ Provides a resource to create a DLC meta database
 
 ```hcl
 resource "tencentcloud_dlc_meta_database" "example" {
+  datasource_connection_name = "DataLakeCatalog"
   meta_database_info {
     database_name = "tf_example_db"
     comment       = "tf example meta database"
-  }
-
-  govern_policy {
-    rule_type     = "Customize"
-    govern_engine = "engine_name"
   }
 }
 ```
@@ -31,8 +27,8 @@ resource "tencentcloud_dlc_meta_database" "example" {
 
 The following arguments are supported:
 
+* `datasource_connection_name` - (Required, String, ForceNew) Datasource connection name, default `DataLakeCatalog`.
 * `meta_database_info` - (Required, List) Meta database basic information, which corresponds to the `MetaDatabaseInfo` structure of the `CreateMetaDatabase` API.
-* `datasource_connection_name` - (Optional, String) Datasource connection name, default `DataLakeCatalog`.
 * `govern_policy` - (Optional, List) Data governance config.
 * `smart_policy` - (Optional, List) Smart data governance config.
 
@@ -143,18 +139,15 @@ The `written` object of `policy` supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `batch_id` - Batch ID of the async task.
 * `catalog_name` - Catalog name.
 * `catalog_type` - Catalog type.
 * `create_time` - Database create time, in seconds.
-* `database_id` - Database ID.
 * `is_information_schema` - Whether it is InformationSchema.
 * `location` - COS storage path.
 * `modified_time` - Database modified time, in seconds.
 * `properties` - Properties of the database.
   * `key` - Property key.
   * `value` - Property value.
-* `task_id_set` - Task ID set.
 * `user_alias` - User alias who created the database.
 * `user_sub_uin` - User sub UIN who created the database.
 
@@ -162,22 +155,25 @@ In addition to all arguments above, the following attributes are exported:
 
 The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
 
-* `create` - (Defaults to `20m`) Used when creating the resource.
-* `read` - (Defaults to `10m`) Used when reading the resource.
-* `update` - (Defaults to `20m`) Used when updating the resource.
-* `delete` - (Defaults to `20m`) Used when deleting the resource.
+* `create` - (Defaults to `5m`) Used when creating the resource.
+* `delete` - (Defaults to `5m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateMetaDatabase](https://www.tencentcloud.com/search/?wd=CreateMetaDatabase&type=document&lang=en)
+  - [DescribeDatabase](https://www.tencentcloud.com/search/?wd=DescribeDatabase&type=document&lang=en)
+* Read: [DescribeDatabase](https://www.tencentcloud.com/search/?wd=DescribeDatabase&type=document&lang=en)
+* Delete:
+  - [DeleteMetaDatabase](https://www.tencentcloud.com/search/?wd=DeleteMetaDatabase&type=document&lang=en)
+  - [DescribeDatabase](https://www.tencentcloud.com/search/?wd=DescribeDatabase&type=document&lang=en)
 
 ## Import
 
-DLC meta database can be imported using the datasourceConnectionName#databaseName when `datasource_connection_name` is set, or just the bare databaseName otherwise, e.g.
+DLC meta database can be imported using the datasourceConnectionName#databaseName, e.g.
 
 ```
 terraform import tencentcloud_dlc_meta_database.example DataLakeCatalog#tf_example_db
-```
-
-or
-
-```
-terraform import tencentcloud_dlc_meta_database.example tf_example_db
 ```
 

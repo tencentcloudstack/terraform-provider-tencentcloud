@@ -25,12 +25,16 @@ func ResourceTencentCloudDlcMetaDatabase() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Timeouts: &schema.ResourceTimeout{
-			Create: schema.DefaultTimeout(20 * time.Minute),
-			Read:   schema.DefaultTimeout(10 * time.Minute),
-			Update: schema.DefaultTimeout(20 * time.Minute),
-			Delete: schema.DefaultTimeout(20 * time.Minute),
+			Create: schema.DefaultTimeout(5 * time.Minute),
+			Delete: schema.DefaultTimeout(5 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
+			"datasource_connection_name": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "Datasource connection name, default `DataLakeCatalog`.",
+			},
 			"meta_database_info": {
 				Type:        schema.TypeList,
 				MaxItems:    1,
@@ -52,26 +56,24 @@ func ResourceTencentCloudDlcMetaDatabase() *schema.Resource {
 					},
 				},
 			},
-			"datasource_connection_name": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Datasource connection name, default `DataLakeCatalog`.",
-			},
 			"govern_policy": {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
+				Computed:    true,
 				Description: "Data governance config.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"rule_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Govern rule type, `Customize` or `Intelligence`.",
 						},
 						"govern_engine": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Govern engine.",
 						},
 					},
@@ -409,21 +411,7 @@ func ResourceTencentCloudDlcMetaDatabase() *schema.Resource {
 					},
 				},
 			},
-
 			// computed
-			"batch_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Batch ID of the async task.",
-			},
-			"task_id_set": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "Task ID set.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
 			"properties": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -468,11 +456,6 @@ func ResourceTencentCloudDlcMetaDatabase() *schema.Resource {
 				Computed:    true,
 				Description: "User sub UIN who created the database.",
 			},
-			"database_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Database ID.",
-			},
 			"catalog_name": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -497,21 +480,26 @@ func resourceTencentCloudDlcMetaDatabaseCreate(d *schema.ResourceData, meta inte
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = tccommon.GetLogId(tccommon.ContextNil)
-		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-		request = dlc.NewCreateMetaDatabaseRequest()
+		logId                    = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                      = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request                  = dlc.NewCreateMetaDatabaseRequest()
+		datasourceConnectionName string
+		databaseName             string
 	)
-
-	metaDatabaseInfo := buildDlcMetaDatabaseInfo(d.Get("meta_database_info").([]interface{}))
-	if metaDatabaseInfo == nil || metaDatabaseInfo.DatabaseName == nil || *metaDatabaseInfo.DatabaseName == "" {
-		return fmt.Errorf("meta_database_info.database_name is required")
-	}
-
-	databaseName := *metaDatabaseInfo.DatabaseName
-	request.MetaDatabaseInfo = metaDatabaseInfo
 
 	if v, ok := d.GetOk("datasource_connection_name"); ok {
 		request.DatasourceConnectionName = helper.String(v.(string))
+		datasourceConnectionName = v.(string)
+	}
+
+	if v, ok := d.GetOk("meta_database_info"); ok {
+		request.MetaDatabaseInfo = buildDlcMetaDatabaseInfo(v.([]interface{}))
+	}
+
+	if request.MetaDatabaseInfo == nil || request.MetaDatabaseInfo.DatabaseName == nil {
+		return fmt.Errorf("meta_database_info.database_name is required.")
+	} else {
+		databaseName = *request.MetaDatabaseInfo.DatabaseName
 	}
 
 	if v, ok := d.GetOk("govern_policy"); ok {
@@ -528,8 +516,7 @@ func resourceTencentCloudDlcMetaDatabaseCreate(d *schema.ResourceData, meta inte
 		}
 	}
 
-	response := dlc.NewCreateMetaDatabaseResponse()
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().CreateMetaDatabaseWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
@@ -538,66 +525,40 @@ func resourceTencentCloudDlcMetaDatabaseCreate(d *schema.ResourceData, meta inte
 		}
 
 		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Create dlc_meta_database failed, Response is nil."))
+			return resource.NonRetryableError(fmt.Errorf("Create dlc meta database failed, Response is nil."))
 		}
 
-		response = result
 		return nil
 	})
-	if err != nil {
-		log.Printf("[CRITAL]%s create dlc_meta_database failed, reason:%+v", logId, err)
-		return err
+
+	if reqErr != nil {
+		log.Printf("[CRITAL]%s create dlc meta database failed, reason:%+v", logId, reqErr)
+		return reqErr
 	}
 
-	log.Printf("[DEBUG]%s dlc_meta_database create response, logId=%s, d.Id()=%s", logId, logId, d.Id())
+	d.SetId(strings.Join([]string{datasourceConnectionName, databaseName}, tccommon.FILED_SP))
 
-	if response.Response.BatchId == nil {
-		return fmt.Errorf("dlc_meta_database BatchId is nil, request body [%s]", request.ToJsonString())
-	}
+	// wait 10 seconds for database sync
+	time.Sleep(10 * time.Second)
 
-	batchId := *response.Response.BatchId
-	log.Printf("[DEBUG]%s dlc_meta_database BatchId=%s", logId, batchId)
-	_ = d.Set("batch_id", batchId)
-	if len(response.Response.TaskIdSet) > 0 {
-		taskIdSet := make([]interface{}, 0, len(response.Response.TaskIdSet))
-		for _, taskId := range response.Response.TaskIdSet {
-			if taskId != nil {
-				taskIdSet = append(taskIdSet, *taskId)
-			}
-		}
-		_ = d.Set("task_id_set", taskIdSet)
-	}
-
-	var datasourceConnectionName string
-	if v, ok := d.GetOk("datasource_connection_name"); ok {
-		datasourceConnectionName = v.(string)
-	}
-	if datasourceConnectionName != "" {
-		d.SetId(strings.Join([]string{datasourceConnectionName, databaseName}, tccommon.FILED_SP))
-	} else {
-		d.SetId(databaseName)
-	}
-
-	// async poll: wait until the database is queryable
-	describeRequest := dlc.NewDescribeDatabaseRequest()
-	describeRequest.DatabaseName = helper.String(databaseName)
-	if datasourceConnectionName != "" {
-		describeRequest.DatasourceConnectionName = helper.String(datasourceConnectionName)
-	}
-	waitErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().DescribeDatabaseWithContext(ctx, describeRequest)
+	// The create interface is asynchronous, wait until the meta database is
+	// visible before reading it back.
+	service := DlcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	waitErr := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
+		respData, e := service.DescribeDlcMetaDatabaseByName(ctx, datasourceConnectionName, databaseName)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
-		if result == nil || result.Response == nil || result.Response.DatabaseInfo == nil {
-			e = fmt.Errorf("[DEBUG]%s api[%s] dlc_meta_database not ready, request body [%s]", logId, describeRequest.GetAction(), describeRequest.ToJsonString())
-			log.Println(e)
-			return resource.RetryableError(e)
+
+		if respData == nil {
+			return resource.RetryableError(fmt.Errorf("waiting for dlc meta database %s to be created.", d.Id()))
 		}
+
 		return nil
 	})
+
 	if waitErr != nil {
-		log.Printf("[CRITAL]%s create dlc_meta_database wait failed, reason:%+v", logId, waitErr)
+		log.Printf("[CRITAL]%s create dlc meta database failed, reason:%+v", logId, waitErr)
 		return waitErr
 	}
 
@@ -609,122 +570,93 @@ func resourceTencentCloudDlcMetaDatabaseRead(d *schema.ResourceData, meta interf
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId = tccommon.GetLogId(tccommon.ContextNil)
-		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		service = DlcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	var datasourceConnectionName, databaseName string
-	if len(idSplit) == 2 {
-		datasourceConnectionName = idSplit[0]
-		databaseName = idSplit[1]
-	} else if len(idSplit) == 1 {
-		databaseName = idSplit[0]
-	} else {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-
-	request := dlc.NewDescribeDatabaseRequest()
-	request.DatabaseName = helper.String(databaseName)
-	if datasourceConnectionName != "" {
-		request.DatasourceConnectionName = helper.String(datasourceConnectionName)
-	}
-
-	response := dlc.NewDescribeDatabaseResponse()
-	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().DescribeDatabaseWithContext(ctx, request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-
-		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Describe dlc_meta_database failed, Response is nil."))
-		}
-
-		response = result
-		return nil
-	})
+	datasourceConnectionName, databaseName, err := parseDlcMetaDatabaseId(d.Id())
 	if err != nil {
-		log.Printf("[CRITAL]%s read dlc_meta_database failed, reason:%+v", logId, err)
 		return err
 	}
 
-	if response.Response.DatabaseInfo == nil {
-		log.Printf("[CRUD] dlc_meta_database id=%s", d.Id())
+	respData, err := service.DescribeDlcMetaDatabaseByName(ctx, datasourceConnectionName, databaseName)
+	if err != nil {
+		return err
+	}
+
+	if respData == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_dlc_meta_database` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
 
-	info := response.Response.DatabaseInfo
+	_ = d.Set("datasource_connection_name", datasourceConnectionName)
 
-	// meta_database_info maps 1:1 to the MetaDatabaseInfo structure. SDKv2
-	// replaces the whole nested block on Set, so fields that the API does not
-	// return fall back to the configured value instead of being cleared.
+	comment := d.Get("meta_database_info.0.comment").(string)
+	if respData.Comment != nil {
+		comment = *respData.Comment
+	}
+
 	metaDatabaseInfo := map[string]interface{}{
 		"database_name": databaseName,
-		"comment":       d.Get("meta_database_info.0.comment").(string),
+		"comment":       comment,
 	}
-	if info.DatabaseName != nil {
-		metaDatabaseInfo["database_name"] = *info.DatabaseName
-	}
-	if info.Comment != nil {
-		metaDatabaseInfo["comment"] = *info.Comment
-	}
+
 	_ = d.Set("meta_database_info", []interface{}{metaDatabaseInfo})
 
-	if info.Location != nil {
-		_ = d.Set("location", *info.Location)
-	}
-	if info.CreateTime != nil {
-		_ = d.Set("create_time", *info.CreateTime)
-	}
-	if info.ModifiedTime != nil {
-		_ = d.Set("modified_time", *info.ModifiedTime)
-	}
-	if info.UserAlias != nil {
-		_ = d.Set("user_alias", *info.UserAlias)
-	}
-	if info.UserSubUin != nil {
-		_ = d.Set("user_sub_uin", *info.UserSubUin)
-	}
-	if info.DatabaseId != nil {
-		_ = d.Set("database_id", *info.DatabaseId)
-	}
-	if info.CatalogName != nil {
-		_ = d.Set("catalog_name", *info.CatalogName)
-	}
-	if info.CatalogType != nil {
-		_ = d.Set("catalog_type", *info.CatalogType)
-	}
-	if info.IsInformationSchema != nil {
-		_ = d.Set("is_information_schema", *info.IsInformationSchema)
+	if respData.GovernPolicy != nil {
+		_ = d.Set("govern_policy", flattenDlcMetaDatabaseGovernPolicy(respData.GovernPolicy))
 	}
 
-	if info.Properties != nil {
-		propertiesList := make([]interface{}, 0, len(info.Properties))
-		for _, p := range info.Properties {
-			m := map[string]interface{}{}
-			if p.Key != nil {
-				m["key"] = *p.Key
+	if respData.Properties != nil {
+		propertiesList := make([]interface{}, 0, len(respData.Properties))
+		for _, property := range respData.Properties {
+			propertiesMap := map[string]interface{}{}
+			if property.Key != nil {
+				propertiesMap["key"] = *property.Key
 			}
-			if p.Value != nil {
-				m["value"] = *p.Value
+
+			if property.Value != nil {
+				propertiesMap["value"] = *property.Value
 			}
-			propertiesList = append(propertiesList, m)
+
+			propertiesList = append(propertiesList, propertiesMap)
 		}
+
 		_ = d.Set("properties", propertiesList)
 	}
 
-	if info.GovernPolicy != nil {
-		governPolicyList := flattenDlcMetaDatabaseGovernPolicy(info.GovernPolicy)
-		_ = d.Set("govern_policy", governPolicyList)
+	if respData.CreateTime != nil {
+		_ = d.Set("create_time", respData.CreateTime)
 	}
 
-	// datasource_connection_name is not returned by DescribeDatabase, keep the value from config/state
-	if datasourceConnectionName != "" {
-		_ = d.Set("datasource_connection_name", datasourceConnectionName)
+	if respData.ModifiedTime != nil {
+		_ = d.Set("modified_time", respData.ModifiedTime)
+	}
+
+	if respData.Location != nil {
+		_ = d.Set("location", respData.Location)
+	}
+
+	if respData.UserAlias != nil {
+		_ = d.Set("user_alias", respData.UserAlias)
+	}
+
+	if respData.UserSubUin != nil {
+		_ = d.Set("user_sub_uin", respData.UserSubUin)
+	}
+
+	if respData.CatalogName != nil {
+		_ = d.Set("catalog_name", respData.CatalogName)
+	}
+
+	if respData.CatalogType != nil {
+		_ = d.Set("catalog_type", respData.CatalogType)
+	}
+
+	if respData.IsInformationSchema != nil {
+		_ = d.Set("is_information_schema", respData.IsInformationSchema)
 	}
 
 	return nil
@@ -734,7 +666,10 @@ func resourceTencentCloudDlcMetaDatabaseUpdate(d *schema.ResourceData, meta inte
 	defer tccommon.LogElapsed("resource.tencentcloud_dlc_meta_database.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	immutableArgs := []string{"datasource_connection_name", "meta_database_info.0.comment", "govern_policy", "smart_policy"}
+	// The DLC meta database only provides create/describe/delete interfaces and
+	// the resource id is composed of the datasource connection name and the
+	// database name, so all the arguments are immutable.
+	immutableArgs := []string{"govern_policy", "smart_policy"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -749,28 +684,19 @@ func resourceTencentCloudDlcMetaDatabaseDelete(d *schema.ResourceData, meta inte
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId = tccommon.GetLogId(tccommon.ContextNil)
-		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request = dlc.NewDeleteMetaDatabaseRequest()
 	)
 
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	var datasourceConnectionName, databaseName string
-	if len(idSplit) == 2 {
-		datasourceConnectionName = idSplit[0]
-		databaseName = idSplit[1]
-	} else if len(idSplit) == 1 {
-		databaseName = idSplit[0]
-	} else {
-		return fmt.Errorf("id is broken,%s", d.Id())
+	datasourceConnectionName, databaseName, err := parseDlcMetaDatabaseId(d.Id())
+	if err != nil {
+		return err
 	}
 
-	request := dlc.NewDeleteMetaDatabaseRequest()
 	request.DatabaseName = helper.String(databaseName)
-	if datasourceConnectionName != "" {
-		request.DatasourceConnectionName = helper.String(datasourceConnectionName)
-	}
-
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+	request.DatasourceConnectionName = helper.String(datasourceConnectionName)
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().DeleteMetaDatabaseWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
@@ -779,40 +705,56 @@ func resourceTencentCloudDlcMetaDatabaseDelete(d *schema.ResourceData, meta inte
 		}
 
 		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Delete dlc_meta_database failed, Response is nil."))
+			return resource.NonRetryableError(fmt.Errorf("Delete dlc meta database failed, Response is nil."))
 		}
 
 		return nil
 	})
-	if err != nil {
-		log.Printf("[CRITAL]%s delete dlc_meta_database failed, reason:%+v", logId, err)
-		return err
+
+	if reqErr != nil {
+		log.Printf("[CRITAL]%s delete dlc meta database failed, reason:%+v", logId, reqErr)
+		return reqErr
 	}
 
-	// async poll: wait until the database is gone
-	describeRequest := dlc.NewDescribeDatabaseRequest()
-	describeRequest.DatabaseName = helper.String(databaseName)
-	if datasourceConnectionName != "" {
-		describeRequest.DatasourceConnectionName = helper.String(datasourceConnectionName)
-	}
-	waitErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().DescribeDatabaseWithContext(ctx, describeRequest)
+	// The delete interface is asynchronous, wait until the meta database is gone.
+	service := DlcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	waitErr := resource.Retry(d.Timeout(schema.TimeoutDelete), func() *resource.RetryError {
+		respData, e := service.DescribeDlcMetaDatabaseByName(ctx, datasourceConnectionName, databaseName)
 		if e != nil {
+			if tccommon.IsExpectError(e, []string{"ResourceNotFound", "FailedOperation.DatabaseNotExist"}) {
+				return nil
+			}
+
 			return tccommon.RetryError(e)
 		}
-		if result == nil || result.Response == nil || result.Response.DatabaseInfo == nil {
-			return nil
+
+		if respData != nil {
+			return resource.RetryableError(fmt.Errorf("waiting for dlc meta database %s to be deleted.", d.Id()))
 		}
-		e = fmt.Errorf("[DEBUG]%s api[%s] dlc_meta_database still exists", logId, describeRequest.GetAction())
-		log.Println(e)
-		return resource.RetryableError(e)
+
+		return nil
 	})
+
 	if waitErr != nil {
-		log.Printf("[CRITAL]%s delete dlc_meta_database wait failed, reason:%+v", logId, waitErr)
+		log.Printf("[CRITAL]%s delete dlc meta database failed, reason:%+v", logId, waitErr)
 		return waitErr
 	}
 
 	return nil
+}
+
+// parseDlcMetaDatabaseId splits the resource id `datasourceConnectionName#databaseName`
+// into the datasource connection name and the meta database name.
+func parseDlcMetaDatabaseId(id string) (datasourceConnectionName, databaseName string, err error) {
+	idSplit := strings.Split(id, tccommon.FILED_SP)
+	if len(idSplit) != 2 || idSplit[0] == "" || idSplit[1] == "" {
+		err = fmt.Errorf("id is broken,%s", id)
+		return
+	}
+
+	datasourceConnectionName = idSplit[0]
+	databaseName = idSplit[1]
+	return
 }
 
 // buildDlcMetaDatabaseInfo maps the `meta_database_info` block onto the

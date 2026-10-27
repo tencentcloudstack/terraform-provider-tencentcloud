@@ -98,6 +98,7 @@ func TestResourceTencentCloudDlcMetaDatabaseCreate(t *testing.T) {
 				"comment":       "tf example meta database",
 			},
 		},
+		"datasource_connection_name": "DataLakeCatalog",
 		"govern_policy": []interface{}{
 			map[string]interface{}{
 				"rule_type":     "Customize",
@@ -115,7 +116,7 @@ func TestResourceTencentCloudDlcMetaDatabaseCreate(t *testing.T) {
 	assert.NotNil(t, capturedRequest.GovernPolicy)
 	assert.Equal(t, "Customize", *capturedRequest.GovernPolicy.RuleType)
 
-	assert.Equal(t, "tf_example_db", d.Id())
+	assert.Equal(t, "DataLakeCatalog#tf_example_db", d.Id())
 	assert.Equal(t, "tf_example_db", d.Get("meta_database_info.0.database_name").(string))
 	assert.Equal(t, "tf example meta database", d.Get("meta_database_info.0.comment").(string))
 	assert.Equal(t, "batch-123", d.Get("batch_id").(string))
@@ -248,15 +249,17 @@ func TestResourceTencentCloudDlcMetaDatabaseRead(t *testing.T) {
 	meta := newMockMetaDlcMetaDatabase()
 	res := svcdlc.ResourceTencentCloudDlcMetaDatabase()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{})
-	d.SetId("tf_example_db")
+	d.SetId("DataLakeCatalog#tf_example_db")
 
 	err := res.Read(d, meta)
 	assert.NoError(t, err)
 	assert.NotNil(t, capturedRequest)
 	assert.Equal(t, "tf_example_db", *capturedRequest.DatabaseName)
-	assert.Nil(t, capturedRequest.DatasourceConnectionName)
+	assert.NotNil(t, capturedRequest.DatasourceConnectionName)
+	assert.Equal(t, "DataLakeCatalog", *capturedRequest.DatasourceConnectionName)
 
-	assert.Equal(t, "tf_example_db", d.Id())
+	assert.Equal(t, "DataLakeCatalog#tf_example_db", d.Id())
+	assert.Equal(t, "DataLakeCatalog", d.Get("datasource_connection_name").(string))
 	assert.Equal(t, "tf_example_db", d.Get("meta_database_info.0.database_name").(string))
 	assert.Equal(t, "tf example meta database", d.Get("meta_database_info.0.comment").(string))
 	assert.Equal(t, "cosn://example/path", d.Get("location").(string))
@@ -332,7 +335,7 @@ func TestResourceTencentCloudDlcMetaDatabaseReadNotFound(t *testing.T) {
 	meta := newMockMetaDlcMetaDatabase()
 	res := svcdlc.ResourceTencentCloudDlcMetaDatabase()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{})
-	d.SetId("tf_example_db")
+	d.SetId("DataLakeCatalog#tf_example_db")
 
 	err := res.Read(d, meta)
 	assert.NoError(t, err)
@@ -381,44 +384,15 @@ func TestResourceTencentCloudDlcMetaDatabaseDelete(t *testing.T) {
 	assert.Equal(t, "custom_connection", *capturedRequest.DatasourceConnectionName)
 }
 
-func TestResourceTencentCloudDlcMetaDatabaseDeleteBareId(t *testing.T) {
-	patches := gomonkey.NewPatches()
-	defer patches.Reset()
-
-	dlcClient := &dlc.Client{}
-	patches.ApplyMethodReturn(newMockMetaDlcMetaDatabase().client, "UseDlcClient", dlcClient)
-
-	var capturedRequest *dlc.DeleteMetaDatabaseRequest
-	patches.ApplyMethodFunc(dlcClient, "DeleteMetaDatabaseWithContext", func(_ context.Context, request *dlc.DeleteMetaDatabaseRequest) (*dlc.DeleteMetaDatabaseResponse, error) {
-		capturedRequest = request
-		resp := dlc.NewDeleteMetaDatabaseResponse()
-		resp.Response = &dlc.DeleteMetaDatabaseResponseParams{
-			BatchId:   ptrStrMetaDb("batch-del"),
-			TaskIdSet: []*string{ptrStrMetaDb("task-del-1")},
-			RequestId: ptrStrMetaDb("fake-request-id-delete"),
-		}
-		return resp, nil
-	})
-
-	patches.ApplyMethodFunc(dlcClient, "DescribeDatabaseWithContext", func(_ context.Context, request *dlc.DescribeDatabaseRequest) (*dlc.DescribeDatabaseResponse, error) {
-		resp := dlc.NewDescribeDatabaseResponse()
-		resp.Response = &dlc.DescribeDatabaseResponseParams{
-			DatabaseInfo: nil,
-			RequestId:    ptrStrMetaDb("fake-request-id-read"),
-		}
-		return resp, nil
-	})
-
+func TestResourceTencentCloudDlcMetaDatabaseDeleteBrokenId(t *testing.T) {
 	meta := newMockMetaDlcMetaDatabase()
 	res := svcdlc.ResourceTencentCloudDlcMetaDatabase()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{})
 	d.SetId("tf_example_db")
 
 	err := res.Delete(d, meta)
-	assert.NoError(t, err)
-	assert.NotNil(t, capturedRequest)
-	assert.Equal(t, "tf_example_db", *capturedRequest.DatabaseName)
-	assert.Nil(t, capturedRequest.DatasourceConnectionName)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "id is broken")
 }
 
 func TestResourceTencentCloudDlcMetaDatabaseUpdateImmutableChanged(t *testing.T) {
@@ -437,14 +411,14 @@ func TestResourceTencentCloudDlcMetaDatabaseUpdateImmutableChanged(t *testing.T)
 	})
 	d.SetId("tf_example_db")
 
-	// Patch HasChange to simulate a change in meta_database_info.0.comment
+	// Patch HasChange to simulate a change in meta_database_info
 	patches.ApplyMethodFunc(d, "HasChange", func(key string) bool {
-		return key == "meta_database_info.0.comment"
+		return key == "meta_database_info"
 	})
 
 	err := res.Update(d, meta)
 	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "argument `meta_database_info.0.comment` cannot be changed")
+	assert.Contains(t, err.Error(), "argument `meta_database_info` cannot be changed")
 }
 
 func TestResourceTencentCloudDlcMetaDatabaseUpdateNoChange(t *testing.T) {
@@ -475,7 +449,7 @@ func TestResourceTencentCloudDlcMetaDatabaseUpdateNoChange(t *testing.T) {
 			},
 		},
 	})
-	d.SetId("tf_example_db")
+	d.SetId("DataLakeCatalog#tf_example_db")
 
 	// Patch HasChange to simulate no changes
 	patches.ApplyMethodFunc(d, "HasChange", func(key string) bool {
@@ -531,6 +505,11 @@ func TestResourceTencentCloudDlcMetaDatabaseSchema(t *testing.T) {
 	assert.True(t, governPolicy.Optional)
 	assert.Equal(t, 1, governPolicy.MaxItems)
 
+	datasourceConnectionName := res.Schema["datasource_connection_name"]
+	assert.Equal(t, schema.TypeString, datasourceConnectionName.Type)
+	assert.True(t, datasourceConnectionName.Required)
+	assert.True(t, datasourceConnectionName.ForceNew)
+
 	smartPolicy := res.Schema["smart_policy"]
 	assert.Equal(t, schema.TypeList, smartPolicy.Type)
 	assert.True(t, smartPolicy.Optional)
@@ -585,6 +564,7 @@ func TestResourceTencentCloudDlcMetaDatabaseCreateFullSmartPolicy(t *testing.T) 
 				"database_name": "tf_example_db",
 			},
 		},
+		"datasource_connection_name": "DataLakeCatalog",
 		"smart_policy": []interface{}{
 			map[string]interface{}{
 				"base_info": []interface{}{
