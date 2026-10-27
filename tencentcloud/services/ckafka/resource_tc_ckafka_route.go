@@ -88,6 +88,20 @@ func ResourceTencentCloudCkafkaRoute() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Ip.",
 			},
+			"security_group_ids": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "List of associated security group IDs in order.",
+			},
+			// computed
+			"route_id": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Route ID.",
+			},
 			"vip_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -178,6 +192,15 @@ func resourceTencentCloudCkafkaRouteCreate(d *schema.ResourceData, meta interfac
 		request.Ip = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("security_group_ids"); ok {
+		securityGroupIds := v.([]interface{})
+		tmp := make([]*string, 0, len(securityGroupIds))
+		for _, item := range securityGroupIds {
+			tmp = append(tmp, helper.String(item.(string)))
+		}
+		request.SecurityGroupIds = tmp
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCkafkaClient().CreateRoute(request)
 		if e != nil {
@@ -200,7 +223,7 @@ func resourceTencentCloudCkafkaRouteCreate(d *schema.ResourceData, meta interfac
 
 	service := CkafkaService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	conf := tccommon.BuildStateChangeConf([]string{}, []string{"0"}, 1*tccommon.ReadRetryTimeout, time.Second, service.CkafkaRouteStateRefreshFunc(flowIdInt64, []string{}))
+	conf := tccommon.BuildStateChangeConf([]string{}, []string{"0"}, tccommon.ReadRetryTimeout, time.Second, service.CkafkaRouteStateRefreshFunc(flowIdInt64, []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
@@ -233,11 +256,17 @@ func resourceTencentCloudCkafkaRouteRead(d *schema.ResourceData, meta interface{
 	if err != nil {
 		return err
 	}
-	_ = d.Set("instance_id", instanceId)
+
 	if route == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_ckafka_route` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `CkafkaRoute` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
+	}
+
+	_ = d.Set("instance_id", instanceId)
+
+	if route.RouteId != nil {
+		_ = d.Set("route_id", route.RouteId)
 	}
 
 	if route.VipType != nil {
@@ -276,6 +305,21 @@ func resourceTencentCloudCkafkaRouteRead(d *schema.ResourceData, meta interface{
 	}
 	_ = d.Set("broker_vip_list", brokerVipList)
 
+	securityGroupRoute, err := service.DescribeCkafkaRouteSecurityGroupRoutes(ctx, instanceId, routeIdInt64)
+	if err != nil {
+		return err
+	}
+
+	securityGroupIds := make([]string, 0)
+	if securityGroupRoute != nil && len(securityGroupRoute.SecurityGroupIds) > 0 {
+		for _, sgId := range securityGroupRoute.SecurityGroupIds {
+			if sgId != nil {
+				securityGroupIds = append(securityGroupIds, *sgId)
+			}
+		}
+	}
+	_ = d.Set("security_group_ids", securityGroupIds)
+
 	return nil
 }
 
@@ -290,6 +334,39 @@ func resourceTencentCloudCkafkaRouteUpdate(d *schema.ResourceData, meta interfac
 			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
+
+	if d.HasChange("security_group_ids") {
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+
+		service := CkafkaService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		items := strings.Split(d.Id(), tccommon.FILED_SP)
+		if len(items) < 2 {
+			return fmt.Errorf("id is broken,%s", d.Id())
+		}
+		instanceId := items[0]
+		routeId := items[1]
+		routeIdInt64, err := strconv.ParseInt(routeId, 10, 64)
+		if err != nil {
+			return err
+		}
+
+		if v, ok := d.GetOk("security_group_ids"); ok {
+			securityGroupIds := v.([]interface{})
+			tmp := make([]*string, 0, len(securityGroupIds))
+			for _, item := range securityGroupIds {
+				tmp = append(tmp, helper.String(item.(string)))
+			}
+			if err := service.ModifyCkafkaRouteSecurityGroups(ctx, instanceId, routeIdInt64, tmp); err != nil {
+				return err
+			}
+		} else {
+			if err := service.ModifyCkafkaRouteSecurityGroups(ctx, instanceId, routeIdInt64, []*string{}); err != nil {
+				return err
+			}
+		}
+	}
+
 	return resourceTencentCloudCkafkaRouteRead(d, meta)
 }
 
