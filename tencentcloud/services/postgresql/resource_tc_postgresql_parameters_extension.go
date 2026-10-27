@@ -55,6 +55,41 @@ func resourceTencentCloudPostgresqlParametersUpdateRequestOnError0(ctx context.C
 	return nil
 }
 
+func resourceTencentCloudParamChange(ctx context.Context) (bool, error) {
+	d := tccommon.ResourceDataFromContext(ctx)
+	if d == nil {
+		return false, fmt.Errorf("resource data can not be nil")
+	}
+	meta := tccommon.ProviderMetaFromContext(ctx)
+	if meta == nil {
+		return false, fmt.Errorf("provider meta can not be nil")
+	}
+
+	service := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	respData, err := service.DescribePostgresqlParametersById(ctx, d.Id())
+	if err != nil {
+		return false, err
+	}
+
+	if respData == nil || respData.Detail == nil {
+		return false, fmt.Errorf("respData or respData.Detail be nil")
+	}
+
+	change := false
+	for _, v := range respData.Detail {
+		for _, param := range d.Get("param_list").([]interface{}) {
+			paramMap := param.(map[string]interface{})
+			if paramMap["name"].(string) == *v.Name {
+				if paramMap["expected_value"].(string) != *v.CurrentValue {
+					change = true
+					break
+				}
+			}
+		}
+	}
+	return change, nil
+}
+
 func resourceTencentCloudPostgresqlParametersUpdatePreHandleResponse0(ctx context.Context, resp *postgresv20170312.ModifyDBInstanceParametersResponse) error {
 	d := tccommon.ResourceDataFromContext(ctx)
 	if _, err := (&resource.StateChangeConf{
