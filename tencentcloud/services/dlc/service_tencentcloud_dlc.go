@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -25,6 +26,25 @@ type DlcService struct {
 // DLC action implementations can be registered in framework/registry.go.
 func NewDlcService(client *connectivity.TencentCloudClient) DlcService {
 	return DlcService{client: client}
+}
+
+var DlcResourceNotFoundErrorList = []string{
+	"ResourceNotFound.TableNotFound",
+}
+
+func IsDlcResourceNotFoundError(err error) bool {
+	sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError)
+	if !ok {
+		return false
+	}
+
+	for _, code := range DlcResourceNotFoundErrorList {
+		if sdkErr.Code == code {
+			return true
+		}
+	}
+
+	return false
 }
 
 func (me *DlcService) DescribeDlcWorkGroupById(ctx context.Context, workGroupId string) (workGroup *dlc.WorkGroupInfo, errRet error) {

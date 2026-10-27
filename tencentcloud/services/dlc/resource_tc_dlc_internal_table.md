@@ -106,8 +106,8 @@ resource "tencentcloud_dlc_internal_table" "example" {
 
 Import
 
-DLC internal table can be imported using the composite id (`database_name#table_name`), e.g.
+DLC internal table can be imported using the composite id (`datasource_connection_name#database_name#table_name`), e.g.
 
 ```
-terraform import tencentcloud_dlc_internal_table.example tf_example_database#tf_example_table
+terraform import tencentcloud_dlc_internal_table.example DataLakeCatalog#tf_example_database#tf_example_table
 ```

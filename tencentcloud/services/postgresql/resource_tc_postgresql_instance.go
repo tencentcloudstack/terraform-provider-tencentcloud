@@ -1763,8 +1763,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 
 	if d.HasChange("db_kernel_version") || d.HasChange("db_major_vesion") || d.HasChange("db_major_version") || d.HasChange("engine_version") {
 		oldKVInterface, newKVInterface := d.GetChange("db_kernel_version")
-		oldMVInterface, newMVInterface := d.GetChange("db_major_vesion")
-		oldMVInterface, newMVInterface = d.GetChange("db_major_version")
+		oldMVInterface, newMVInterface := d.GetChange("db_major_version")
 		oldEVInterface, newEVInterface := d.GetChange("engine_version")
 
 		oldKVValue := oldKVInterface.(string)

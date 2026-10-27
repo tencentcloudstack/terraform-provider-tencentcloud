@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -465,36 +466,43 @@ func ResourceTencentCloudDlcInternalTable() *schema.Resource {
 						"comment": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Column comment.",
 						},
 						"default": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Column default value.",
 						},
 						"not_null": {
 							Type:        schema.TypeBool,
 							Optional:    true,
+							Computed:    true,
 							Description: "Whether the column is not null.",
 						},
 						"precision": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							Description: "The precision of the numeric type.",
 						},
 						"scale": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							Description: "The scale of the numeric type.",
 						},
 						"position": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							Description: "Column position, smaller is earlier.",
 						},
 						"is_partition": {
 							Type:        schema.TypeBool,
 							Optional:    true,
+							Computed:    true,
 							Description: "Whether the column is a partition field.",
 						},
 						"nullable": {
@@ -559,6 +567,7 @@ func ResourceTencentCloudDlcInternalTable() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				ForceNew:    true,
+				Computed:    true,
 				Description: "Partition information of the table.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -603,6 +612,7 @@ func ResourceTencentCloudDlcInternalTable() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				ForceNew:    true,
+				Computed:    true,
 				Description: "Property information of the table.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -624,6 +634,7 @@ func ResourceTencentCloudDlcInternalTable() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				ForceNew:    true,
+				Computed:    true,
 				Description: "Upsert keys for V2 upsert table.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -714,6 +725,10 @@ func resourceTencentCloudDlcInternalTableCreate(d *schema.ResourceData, meta int
 	)
 
 	tableBaseInfo := &dlc.TableBaseInfo{}
+	if v, ok := d.GetOk("datasource_connection_name"); ok {
+		tableBaseInfo.DatasourceConnectionName = helper.String(v.(string))
+		datasourceConnectionName = v.(string)
+	}
 	if v, ok := d.GetOk("database_name"); ok {
 		tableBaseInfo.DatabaseName = helper.String(v.(string))
 		databaseName = v.(string)
@@ -721,10 +736,6 @@ func resourceTencentCloudDlcInternalTableCreate(d *schema.ResourceData, meta int
 	if v, ok := d.GetOk("table_name"); ok {
 		tableBaseInfo.TableName = helper.String(v.(string))
 		tableName = v.(string)
-	}
-	if v, ok := d.GetOk("datasource_connection_name"); ok {
-		tableBaseInfo.DatasourceConnectionName = helper.String(v.(string))
-		datasourceConnectionName = v.(string)
 	}
 	if v, ok := d.GetOk("table_comment"); ok {
 		tableBaseInfo.TableComment = helper.String(v.(string))
@@ -881,6 +892,9 @@ func resourceTencentCloudDlcInternalTableCreate(d *schema.ResourceData, meta int
 	// database name and the table name.
 	d.SetId(strings.Join([]string{datasourceConnectionName, databaseName, tableName}, tccommon.FILED_SP))
 
+	// wait 10 seconds for table sync
+	time.Sleep(10 * time.Second)
+
 	return resourceTencentCloudDlcInternalTableRead(d, meta)
 }
 
@@ -901,11 +915,17 @@ func resourceTencentCloudDlcInternalTableRead(d *schema.ResourceData, meta inter
 
 	tableInfo, err := service.DescribeDlcInternalTableById(ctx, databaseName, tableName, datasourceConnectionName)
 	if err != nil {
+		if !d.IsNewResource() && IsDlcResourceNotFoundError(err) {
+			log.Printf("[CRUD] tencentcloud_dlc_internal_table id=%s", d.Id())
+			d.SetId("")
+			return nil
+		}
+
 		return err
 	}
 
 	if tableInfo == nil {
-		log.Printf("[CRUD] dlc_internal_table id=%s", d.Id())
+		log.Printf("[WARN]%s resource `tencentcloud_dlc_internal_table` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
