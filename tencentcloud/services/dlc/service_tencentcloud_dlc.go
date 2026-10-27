@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -25,6 +26,25 @@ type DlcService struct {
 // DLC action implementations can be registered in framework/registry.go.
 func NewDlcService(client *connectivity.TencentCloudClient) DlcService {
 	return DlcService{client: client}
+}
+
+var DlcResourceNotFoundErrorList = []string{
+	"ResourceNotFound.TableNotFound",
+}
+
+func IsDlcResourceNotFoundError(err error) bool {
+	sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError)
+	if !ok {
+		return false
+	}
+
+	for _, code := range DlcResourceNotFoundErrorList {
+		if sdkErr.Code == code {
+			return true
+		}
+	}
+
+	return false
 }
 
 func (me *DlcService) DescribeDlcWorkGroupById(ctx context.Context, workGroupId string) (workGroup *dlc.WorkGroupInfo, errRet error) {
@@ -1678,6 +1698,51 @@ func (me *DlcService) InitializeTCLake(ctx context.Context) (response *dlc.Initi
 	})
 
 	if errRet != nil {
+		return
+	}
+
+	return
+}
+
+func (me *DlcService) DescribeDlcInternalTableById(ctx context.Context, databaseName, tableName, datasourceConnectionName string) (tableInfo *dlc.TableResponseInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := dlc.NewDescribeTableRequest()
+	request.DatabaseName = helper.String(databaseName)
+	request.TableName = helper.String(tableName)
+	if datasourceConnectionName != "" {
+		request.DatasourceConnectionName = helper.String(datasourceConnectionName)
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().DescribeTable(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe dlc internal table failed, Response is nil."))
+		}
+
+		if result.Response.Table == nil {
+			return nil
+		}
+
+		tableInfo = result.Response.Table
+		return nil
+	})
+
+	if errRet != nil {
+		log.Printf("[CRITAL]%s describe dlc internal table failed, reason:%+v", logId, errRet)
 		return
 	}
 
