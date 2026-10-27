@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"math"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
@@ -1545,6 +1546,101 @@ func (me *SslService) DescribeSslDescribeCertificateBindResourceTaskResultByFilt
 		return
 	}
 	describeCertificateBindResourceTaskResult = response.Response.SyncTaskBindResourceResult
+
+	return
+}
+
+// Deploy record status enum of the ssl upload-update task: 0 means the task is
+// in progress, 1 means the task is completed.
+const (
+	SSLUploadUpdateRecordStatusInProgress uint64 = 0
+	SSLUploadUpdateRecordStatusDone       uint64 = 1
+)
+
+func (me *SSLService) UploadUpdateCertificateInstance(ctx context.Context, request *ssl.UploadUpdateCertificateInstanceRequest) (deployRecordId uint64, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseSSLCertificateClient().UploadUpdateCertificateInstanceWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		if result == nil || result.Response == nil || result.Response.DeployRecordId == nil {
+			return resource.RetryableError(fmt.Errorf("operate ssl uploadCertificateInstance response is null"))
+		}
+		if *result.Response.DeployRecordId == uint64(0) {
+			return resource.RetryableError(fmt.Errorf("operate ssl uploadCertificateInstance not done"))
+		}
+		deployRecordId = *result.Response.DeployRecordId
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
+// DescribeHostUploadUpdateRecordStatus polls DescribeHostUploadUpdateRecord
+// until the deploy record of the given old certificate reaches the completed
+// status (or the timeout is reached).
+func (me *SSLService) DescribeHostUploadUpdateRecordStatus(ctx context.Context, oldCertificateId string, deployRecordId uint64, timeout time.Duration) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	err := resource.Retry(timeout, func() *resource.RetryError {
+		var recordList []*ssl.UploadUpdateRecordInfo
+		limit, offset := uint64(200), uint64(0)
+		for {
+			request := ssl.NewDescribeHostUploadUpdateRecordRequest()
+			request.Limit = &limit
+			request.Offset = &offset
+			request.OldCertificateId = helper.String(oldCertificateId)
+
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseSSLCertificateClient().DescribeHostUploadUpdateRecordWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			if result == nil || result.Response == nil || len(result.Response.DeployRecordList) == 0 {
+				break
+			}
+			recordList = append(recordList, result.Response.DeployRecordList...)
+			if result.Response.TotalCount == nil || uint64(len(recordList)) >= *result.Response.TotalCount {
+				break
+			}
+			offset += limit
+		}
+
+		for _, record := range recordList {
+			if record.Id != nil && *record.Id == deployRecordId {
+				if record.Status == nil {
+					return resource.RetryableError(fmt.Errorf("ssl uploadCertificateInstance deploy record %d status is nil", deployRecordId))
+				}
+				if *record.Status == SSLUploadUpdateRecordStatusInProgress {
+					return resource.RetryableError(fmt.Errorf("ssl uploadCertificateInstance deploy record %d is still in progress", deployRecordId))
+				}
+				return nil
+			}
+		}
+		return resource.RetryableError(fmt.Errorf("ssl uploadCertificateInstance deploy record %d not found", deployRecordId))
+	})
+
+	if err != nil {
+		errRet = err
+	}
 
 	return
 }

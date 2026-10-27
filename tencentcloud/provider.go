@@ -2731,7 +2731,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssl_update_certificate_record_retry_operation":                            ssl.ResourceTencentCloudSslUpdateCertificateRecordRetryOperation(),
 			"tencentcloud_ssl_update_certificate_record_rollback_operation":                         ssl.ResourceTencentCloudSslUpdateCertificateRecordRollbackOperation(),
 			"tencentcloud_ssl_upload_revoke_letter_operation":                                       ssl.ResourceTencentCloudSslUploadRevokeLetterOperation(),
-			"tencentcloud_ssl_upload_certificate_instance":                                          ssl.ResourceTencentCloudSslUploadCertificateInstance(),
 			"tencentcloud_bi_project":                                                               bi.ResourceTencentCloudBiProject(),
 			"tencentcloud_bi_user_role":                                                             bi.ResourceTencentCloudBiUserRole(),
 			"tencentcloud_bi_project_user_role":                                                     bi.ResourceTencentCloudBiProjectUserRole(),
