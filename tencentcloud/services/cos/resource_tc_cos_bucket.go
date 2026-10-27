@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/url"
 	"strings"
@@ -603,6 +603,16 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 							Optional:    true,
 							Description: "An absolute path to the document to return in case of a 4XX error.",
 						},
+						"original_http_status": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The HTTP status code for configuring hit error documents, with optional values of `Enabled` or `Disabled`, defaulting to `Enabled`.",
+						},
+						"charity_404": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "To configure whether to display the 404 public welfare page when the error code is 404, the optional values are `Enabled` or `Disabled`, with the default set to `Disabled`.",
+						},
 						"redirect_all_requests_to": {
 							Type:         schema.TypeString,
 							Optional:     true,
@@ -922,6 +932,36 @@ func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{
 	return resourceTencentCloudCosBucketUpdate(d, meta)
 }
 
+// preserveWebsiteFieldsNotReturnedByApi keeps the values of the website fields which can not be
+// queried by the `GetBucketWebsite` API, the value is taken from the configuration or the state,
+// so that the fields will not be reset to empty after apply.
+func preserveWebsiteFieldsNotReturnedByApi(d *schema.ResourceData, website map[string]interface{}) {
+	if website == nil {
+		return
+	}
+
+	websiteList, ok := d.Get("website").([]interface{})
+	if !ok || len(websiteList) == 0 || websiteList[0] == nil {
+		return
+	}
+
+	websiteMap, ok := websiteList[0].(map[string]interface{})
+	if !ok || websiteMap == nil {
+		return
+	}
+
+	for _, key := range []string{"original_http_status", "charity_404"} {
+		// The API returns the value, take precedence over the value in the configuration.
+		if v, ok := website[key].(string); ok && v != "" {
+			continue
+		}
+
+		if v, ok := websiteMap[key].(string); ok && v != "" {
+			website[key] = v
+		}
+	}
+}
+
 func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
@@ -1032,6 +1072,12 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 			// {bucket}.cos-website.{region}.myqcloud.com
 			endPointUrl := fmt.Sprintf("%s.cos-website.%s.myqcloud.com", d.Id(), meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region)
 			website[0]["endpoint"] = endPointUrl
+		}
+		// The `original_http_status` and `charity_404` fields can only be set by the `PutBucketWebsite`
+		// API, but they are not returned by the `GetBucketWebsite` API. Keep the values in the state
+		// when the API does not return them, otherwise it will cause a diff after apply.
+		if len(website) > 0 {
+			preserveWebsiteFieldsNotReturnedByApi(d, website[0])
 		}
 		if err = d.Set("website", website); err != nil {
 			return fmt.Errorf("setting website error: %v", err)
@@ -1719,12 +1765,16 @@ func resourceTencentCloudCosBucketAccelerationUpdate(ctx context.Context, meta i
 			logId, "put bucket acceleration", opt.Status, err.Error())
 		return fmt.Errorf("cos put bucket acceleration error: %s, bucket: %s", err.Error(), bucket)
 	}
-	rb, _ := ioutil.ReadAll(response.Body)
-	body, _ := json.Marshal(rb)
+	rb, err := io.ReadAll(response.Body)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, status [%s], read response body fail, reason[%s]\n",
+			logId, "put bucket acceleration", opt.Status, err.Error())
+		return fmt.Errorf("cos put bucket acceleration error: read response body fail: %s, bucket: %s", err.Error(), bucket)
+	}
 	log.Printf("[DEBUG]%s api[%s] success, status [%s], response body [%s]\n",
-		logId, "put bucket acceleration", opt.Status, string(body))
+		logId, "put bucket acceleration", opt.Status, string(rb))
 
-	return err
+	return nil
 }
 
 func resourceTencentCloudCosBucketReplicaUpdate(ctx context.Context, service CosService, d *schema.ResourceData) error {
@@ -2033,10 +2083,25 @@ func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, meta interf
 			websiteConfiguration.Index = v
 		}
 
+		webSiteConfigurationError := &cos.ErrorDocument{}
+		webSiteFlag := false
 		if v, ok := w["error_document"].(string); ok && v != "" {
-			websiteConfiguration.Error = &cos.ErrorDocument{
-				Key: v,
-			}
+			webSiteConfigurationError.Key = v
+			webSiteFlag = true
+		}
+
+		if v, ok := w["original_http_status"].(string); ok && v != "" {
+			webSiteConfigurationError.OriginalHttpStatus = v
+			webSiteFlag = true
+		}
+
+		if v, ok := w["charity_404"].(string); ok && v != "" {
+			webSiteConfigurationError.Charity404 = v
+			webSiteFlag = true
+		}
+
+		if webSiteFlag {
+			websiteConfiguration.Error = webSiteConfigurationError
 		}
 
 		if v, ok := w["redirect_all_requests_to"].(string); ok && v != "" {
