@@ -1120,20 +1120,23 @@ func (me *DtsService) DescribeDtsSyncJobConfigById(ctx context.Context, jobId st
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseDtsClient().DescribeSyncJobs(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		response, err := me.client.UseDtsClient().DescribeSyncJobs(request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.JobList) < 1 {
-		return
-	}
+		if response == nil || response.Response == nil || len(response.Response.JobList) < 1 {
+			return nil
+		}
 
-	syncConfig = response.Response.JobList[0]
+		syncConfig = response.Response.JobList[0]
+		return nil
+	})
+
 	return
 }
 

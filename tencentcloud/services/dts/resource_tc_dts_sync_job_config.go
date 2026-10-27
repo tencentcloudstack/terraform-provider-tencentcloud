@@ -2,6 +2,7 @@ package dts
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -19,6 +20,7 @@ func ddlOptionSchemaMap() map[string]*schema.Schema {
 		"ddl_object": {
 			Type:        schema.TypeString,
 			Optional:    true,
+			Computed:    true,
 			Description: "Ddl type, such as Database, Table, View, Index, etc. Note: This field may return null, indicating that no valid value can be obtained.",
 		},
 		"ddl_value": {
@@ -27,6 +29,7 @@ func ddlOptionSchemaMap() map[string]*schema.Schema {
 				Type: schema.TypeString,
 			},
 			Optional:    true,
+			Computed:    true,
 			Description: "The specific value of ddl, the possible values for Database [Create,Drop,Alter].The possible values for Table [Create,Drop,Alter,Truncate,Rename].The possible values for View[Create,Drop].For the possible values of Index [Create, Drop]. Note: This field may return null, indicating that no valid value can be obtained.",
 		},
 	}
@@ -40,11 +43,13 @@ func opFilterSchemaMap() map[string]*schema.Schema {
 				Type: schema.TypeString,
 			},
 			Optional:    true,
+			Computed:    true,
 			Description: "DML white list.",
 		},
 		"ddl_options": {
 			Type:        schema.TypeList,
 			Optional:    true,
+			Computed:    true,
 			Description: "DDL white list.",
 			Elem: &schema.Resource{
 				Schema: ddlOptionSchemaMap(),
@@ -94,89 +99,106 @@ func ResourceTencentCloudDtsSyncJobConfig() *schema.Resource {
 						"mode": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Migration object type Partial (partial object). Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"databases": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "Synchronization object, not null when Mode is Partial. Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"db_name": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "The name of the library that needs to be migrated or synchronized. This item is required when the ObjectMode is Partial. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"new_db_name": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "The name of the library after migration or synchronization, which is the same as the source library by default. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"db_mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "DB selection mode: All (for all objects under the current object), Partial (for some objects), when the Mode is Partial, this item is required. Note that synchronization of advanced objects does not depend on this value. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"schema_name": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Migrated or synchronized schema. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"new_schema_name": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Schema name after migration or synchronization. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"schema_mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Schema selection mode, used by PostgreSQL and SQL Server sync links. Valid values: `All` (all objects under the current object), `Partial` (some objects). Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"table_mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Table selection mode: All (for all objects under the current object), Partial (for some objects), this item is required when the DBMode is Partial. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"tables": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										Description: "A collection of table graph objects, when TableMode is Partial, this item needs to be filled in. Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"table_name": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Table name. Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 												"new_table_name": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "New table name. Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 												"filter_condition": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Filter condition. Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 												"column_mode": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Whether to synchronize all columns in the table, All: all columns under the current table, Partial: part of the columns under the current table, fill in the detailed column information through the columns field. Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 												"columns": {
 													Type:        schema.TypeList,
 													Optional:    true,
+													Computed:    true,
 													Description: "Synchronized column information, required when ColumnMode is Partial. Note: This field may return null, indicating that no valid value can be obtained.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"column_name": {
 																Type:        schema.TypeString,
 																Optional:    true,
+																Computed:    true,
 																Description: "Column name. Note: This field may return null, indicating that no valid value can be obtained.",
 															},
 															"new_column_name": {
 																Type:        schema.TypeString,
 																Optional:    true,
+																Computed:    true,
 																Description: "New column name. Note: This field may return null, indicating that no valid value can be obtained.",
 															},
 														},
@@ -188,11 +210,13 @@ func ResourceTencentCloudDtsSyncJobConfig() *schema.Resource {
 														Type: schema.TypeString,
 													},
 													Optional:    true,
+													Computed:    true,
 													Description: "Temporary table generated by pt-osc/gh-ost. Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 												"table_edit_mode": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Edit table type, rename (table mapping), pt (synchronize attached tables). Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 											},
@@ -201,22 +225,26 @@ func ResourceTencentCloudDtsSyncJobConfig() *schema.Resource {
 									"view_mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "View selection mode: All is all view objects under the current object, Partial is part of the view objects. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"views": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										Description: "View object collection, when ViewMode is Partial, this item needs to be filled in. Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"view_name": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "View name. Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 												"new_view_name": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "New view name. Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 											},
@@ -225,6 +253,7 @@ func ResourceTencentCloudDtsSyncJobConfig() *schema.Resource {
 									"function_mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Select the mode to be synchronized, Partial is a part, all is an entire selection. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"functions": {
@@ -233,11 +262,13 @@ func ResourceTencentCloudDtsSyncJobConfig() *schema.Resource {
 											Type: schema.TypeString,
 										},
 										Optional:    true,
+										Computed:    true,
 										Description: "Required when the FunctionMode value is Partial. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"procedure_mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Select the mode to be synchronized, Partial is part, All is the whole selection. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"procedures": {
@@ -246,11 +277,13 @@ func ResourceTencentCloudDtsSyncJobConfig() *schema.Resource {
 											Type: schema.TypeString,
 										},
 										Optional:    true,
+										Computed:    true,
 										Description: "Required when the value of ProcedureMode is Partial. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"trigger_mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Trigger migration mode, all (for all objects under the current object), partial (partial objects). Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"triggers": {
@@ -259,11 +292,13 @@ func ResourceTencentCloudDtsSyncJobConfig() *schema.Resource {
 											Type: schema.TypeString,
 										},
 										Optional:    true,
+										Computed:    true,
 										Description: "When TriggerMode is partial, specify the name of the trigger to be migrated. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"event_mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Event migration mode, all (for all objects under the current object), partial (partial objects). Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"events": {
@@ -272,6 +307,7 @@ func ResourceTencentCloudDtsSyncJobConfig() *schema.Resource {
 											Type: schema.TypeString,
 										},
 										Optional:    true,
+										Computed:    true,
 										Description: "When EventMode is partial, specify the name of the event to be migrated. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 								},
@@ -283,12 +319,14 @@ func ResourceTencentCloudDtsSyncJobConfig() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Optional:    true,
+							Computed:    true,
 							Description: "For advanced object types, such as function and procedure, when an advanced object needs to be synchronized, the initialization type must include the structure initialization type, that is, the value of the Options.InitType field is Structure or Full. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"online_ddl": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
+							Computed:    true,
 							Deprecated:  "It has been deprecated.",
 							Description: "OnlineDDL type. Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
@@ -305,6 +343,7 @@ func ResourceTencentCloudDtsSyncJobConfig() *schema.Resource {
 						"databases_op_filter": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "Library/table/view level DML/DDL white list. Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -313,10 +352,11 @@ func ResourceTencentCloudDtsSyncJobConfig() *schema.Resource {
 										Required:    true,
 										Description: "Database name that the rule takes effect on.",
 									},
-									"op_filter": opFilterListSchema(false, "Database level DDL/DML filter rule."),
+									"op_filter": opFilterListSchema(true, "Database level DDL/DML filter rule."),
 									"tables": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										Description: "Table level DDL/DML filter info.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -325,13 +365,14 @@ func ResourceTencentCloudDtsSyncJobConfig() *schema.Resource {
 													Required:    true,
 													Description: "Table name that the rule takes effect on.",
 												},
-												"op_filter": opFilterListSchema(false, "Table level DDL/DML filter rule."),
+												"op_filter": opFilterListSchema(true, "Table level DDL/DML filter rule."),
 											},
 										},
 									},
 									"views": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										Description: "View level DDL/DML filter info.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -340,7 +381,7 @@ func ResourceTencentCloudDtsSyncJobConfig() *schema.Resource {
 													Required:    true,
 													Description: "View name that the rule takes effect on.",
 												},
-												"op_filter": opFilterListSchema(false, "View level DDL/DML filter rule."),
+												"op_filter": opFilterListSchema(true, "View level DDL/DML filter rule."),
 											},
 										},
 									},
@@ -378,28 +419,33 @@ func ResourceTencentCloudDtsSyncJobConfig() *schema.Resource {
 						"conflict_handle_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Conflict handling options, ReportError (error report, the default value), Ignore (ignore), Cover (cover), ConditionCover (condition coverage). Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"conflict_handle_option": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
+							Computed:    true,
 							Description: "Detailed options for conflict handling, such as conditional rows and conditional actions in conditional overrides. Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"condition_column": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Columns covered by the condition. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"condition_operator": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Conditional Override Operation. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"condition_order_in_src_and_dst": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Conditional Override Priority Processing. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 								},
@@ -409,58 +455,69 @@ func ResourceTencentCloudDtsSyncJobConfig() *schema.Resource {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
+							Computed:    true,
 							Description: "Kafka config for sync to kafka link. Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"data_type": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Data type delivered to kafka, such as Avro, Json, canal-pb, canal-json, debezium.",
 									},
 									"topic_type": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Sync topic strategy, such as Single (centralized delivery to single topic), Multi (custom topic name).",
 									},
 									"ddl_topic_name": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Topic used to store ddl.",
 									},
 									"topic_rules": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										Description: "Description of single topic and custom topic.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"topic_name": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Topic name. When single topic, all TopicName must be the same.",
 												},
 												"partition_type": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Topic partition strategy.",
 												},
 												"db_match_mode": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Database name matching rule, such as Regular, Default.",
 												},
 												"db_name": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Database name, takes effect when DbMatchMode=Regular.",
 												},
 												"table_match_mode": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Table name matching rule, such as Regular, Default.",
 												},
 												"table_name": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Table name, only takes effect when TableMatchMode=Regular.",
 												},
 												"columns": {
@@ -469,6 +526,7 @@ func ResourceTencentCloudDtsSyncJobConfig() *schema.Resource {
 														Type: schema.TypeString,
 													},
 													Optional:    true,
+													Computed:    true,
 													Description: "Column names for partition by columns, multiple columns can be selected.",
 												},
 											},
@@ -477,17 +535,20 @@ func ResourceTencentCloudDtsSyncJobConfig() *schema.Resource {
 									"data_option": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										Description: "Other additional information, for specific data types extra parameters can be set.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"key": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Option key.",
 												},
 												"value": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Option value.",
 												},
 											},
@@ -499,21 +560,25 @@ func ResourceTencentCloudDtsSyncJobConfig() *schema.Resource {
 						"filter_begin_commit": {
 							Type:        schema.TypeBool,
 							Optional:    true,
+							Computed:    true,
 							Description: "Whether to filter out begin and commit messages for sync to kafka link. Currently only mysql2kafka link supports it.",
 						},
 						"filter_checkpoint": {
 							Type:        schema.TypeBool,
 							Optional:    true,
+							Computed:    true,
 							Description: "Whether to filter out checkpoint messages for sync to kafka link. Currently only mysql2kafka link supports it.",
 						},
 						"deal_of_exist_same_table": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "The processing of the table with the same name, ReportErrorAfterCheck (pre-check and report error, default), ExecuteAfterIgnore (ignore and continue to execute). Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"start_position": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Only incremental tasks reset the designated site.",
 						},
 					},
@@ -669,10 +734,51 @@ func resourceTencentCloudDtsSyncJobConfigCreate(d *schema.ResourceData, meta int
 	defer tccommon.LogElapsed("resource.tencentcloud_dts_sync_job_config.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
+	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+	)
+
 	var jobId string
 	if v, ok := d.GetOk("job_id"); ok {
 		jobId = v.(string)
 	}
+
+	// job config only support job status is running
+	request := dts.NewDescribeSyncJobsRequest()
+	request.JobId = &jobId
+	err := resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDtsClient().DescribeSyncJobs(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe dts syncJob failed, Response is nil."))
+		}
+
+		if result.Response.JobList == nil || len(result.Response.JobList) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("Describe dts syncJob failed, JobList is nil."))
+		}
+
+		jobObj := result.Response.JobList[0]
+		if jobObj.Status == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe dts syncJob failed, JobList status is nil."))
+		}
+
+		if *jobObj.Status == "Running" {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("Current job %s status is %s, not running...", jobId, *jobObj.Status))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s Describe dts sync job config failed, reason:%+v", logId, err)
+		return err
+	}
+
 	d.SetId(jobId)
 
 	return resourceTencentCloudDtsSyncJobConfigUpdate(d, meta)
@@ -682,13 +788,12 @@ func resourceTencentCloudDtsSyncJobConfigRead(d *schema.ResourceData, meta inter
 	defer tccommon.LogElapsed("resource.tencentcloud_dts_sync_job_config.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := DtsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	jobId := d.Id()
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = DtsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		jobId   = d.Id()
+	)
 
 	syncJobConfig, err := service.DescribeDtsSyncJobConfigById(ctx, jobId)
 	if err != nil {
@@ -696,7 +801,7 @@ func resourceTencentCloudDtsSyncJobConfigRead(d *schema.ResourceData, meta inter
 	}
 
 	if syncJobConfig == nil {
-		log.Printf("[CRUD] dts_sync_job_config id=%s", d.Id())
+		log.Printf("[WARN]%s resource `tencentcloud_dts_sync_job_config` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
@@ -1240,15 +1345,13 @@ func resourceTencentCloudDtsSyncJobConfigUpdate(d *schema.ResourceData, meta int
 	defer tccommon.LogElapsed("resource.tencentcloud_dts_sync_job_config.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	request := dts.NewModifySyncJobConfigRequest()
-
-	jobId := d.Id()
-
-	request.JobId = &jobId
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = DtsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		request = dts.NewModifySyncJobConfigRequest()
+		jobId   = d.Id()
+	)
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "dynamic_objects"); ok {
 		objects := dts.Objects{}
@@ -1554,8 +1657,7 @@ func resourceTencentCloudDtsSyncJobConfigUpdate(d *schema.ResourceData, meta int
 		request.DynamicOptions = &dynamicOptions
 	}
 
-	service := DtsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
+	request.JobId = &jobId
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := service.ModifyDtsSyncJobConfig(ctx, request)
 		if e != nil {
@@ -1565,13 +1667,13 @@ func resourceTencentCloudDtsSyncJobConfigUpdate(d *schema.ResourceData, meta int
 		}
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s update dts_sync_job_config failed, reason:%+v", logId, err)
 		return err
 	}
 
 	conf := tccommon.BuildStateChangeConf([]string{}, []string{"Running", "Paused"}, tccommon.ReadRetryTimeout, time.Second, service.DtsSyncJobStateRefreshFunc(d.Id(), "", []string{}))
-
 	if _, e := conf.WaitForState(); e != nil {
 		return e
 	}

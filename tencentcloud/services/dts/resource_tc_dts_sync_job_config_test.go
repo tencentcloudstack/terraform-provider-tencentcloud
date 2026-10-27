@@ -1,10 +1,12 @@
 package dts_test
 
 import (
+	"context"
 	"testing"
 
 	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/stretchr/testify/assert"
 	dts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts/v20211206"
 
@@ -305,6 +307,85 @@ func TestDtsSyncJobConfig_Update_APIError(t *testing.T) {
 
 	err := res.Update(d, meta)
 	assert.Error(t, err)
+}
+
+// TestDtsSyncJobConfig_ComputedFieldsNoDiff ensures that the fields returned by the API,
+// but not configured by the user, will not produce a diff after the resource is applied.
+func TestDtsSyncJobConfig_ComputedFieldsNoDiff(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	dtsClient := &dts.Client{}
+	patches.ApplyMethodReturn(newMockMetaDtsSyncJobConfig().client, "UseDtsClient", dtsClient)
+
+	patches.ApplyMethodFunc(dtsClient, "DescribeSyncJobs", func(request *dts.DescribeSyncJobsRequest) (*dts.DescribeSyncJobsResponse, error) {
+		resp := dts.NewDescribeSyncJobsResponse()
+		resp.Response = &dts.DescribeSyncJobsResponseParams{
+			JobList: []*dts.SyncJobInfo{
+				{
+					JobId:   ptrStringDtsSyncJobConfig("sync-computed-test"),
+					JobName: ptrStringDtsSyncJobConfig("tf_test_computed"),
+					Status:  ptrStringDtsSyncJobConfig("Running"),
+					Objects: &dts.Objects{
+						Mode: ptrStringDtsSyncJobConfig("Partial"),
+						Databases: []*dts.Database{
+							{
+								DbName:    ptrStringDtsSyncJobConfig("tf_ci_test"),
+								DbMode:    ptrStringDtsSyncJobConfig("Partial"),
+								TableMode: ptrStringDtsSyncJobConfig("All"),
+								Tables: []*dts.Table{
+									{
+										TableName:       ptrStringDtsSyncJobConfig("tf_ci_table"),
+										FilterCondition: ptrStringDtsSyncJobConfig("id > 0"),
+									},
+								},
+							},
+						},
+					},
+					Options: &dts.Options{
+						OpTypes:              []*string{ptrStringDtsSyncJobConfig("Insert")},
+						ConflictHandleType:   ptrStringDtsSyncJobConfig("ReportError"),
+						DealOfExistSameTable: ptrStringDtsSyncJobConfig("ReportErrorAfterCheck"),
+					},
+				},
+			},
+			RequestId: ptrStringDtsSyncJobConfig("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaDtsSyncJobConfig()
+	res := dtssvc.ResourceTencentCloudDtsSyncJobConfig()
+
+	// The user only configures `job_id`, the nested blocks are not configured at all.
+	cfg := terraform.NewResourceConfigRaw(map[string]interface{}{
+		"job_id": "sync-computed-test",
+	})
+
+	d := schema.TestResourceDataRaw(t, res.Schema, cfg.Raw)
+	d.SetId("sync-computed-test")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+
+	// The values returned by the API should be kept in the state even if they are not configured.
+	assert.Equal(t, "Partial", d.Get("dynamic_objects.0.mode").(string))
+	assert.Equal(t, "id > 0", d.Get("dynamic_objects.0.databases.0.tables.0.filter_condition").(string))
+	assert.Equal(t, "ReportError", d.Get("dynamic_options.0.conflict_handle_type").(string))
+
+	// Planning again with the same config should not produce any diff.
+	// The only tolerated entries are the normalization of the computed lists
+	// (`actions`, `all_actions`) which are not returned by the API and absent in state.
+	diff, err := res.Diff(context.Background(), d.State(), cfg, meta)
+	assert.NoError(t, err)
+	if diff != nil {
+		for k, v := range diff.Attributes {
+			if (v.Old == "" || v.Old == "0") && (v.New == "" || v.New == "0") {
+				continue
+			}
+			assert.Failf(t, "unexpected diff", "%s: %q -> %q", k, v.Old, v.New)
+		}
+	}
 }
 
 // TestDtsSyncJobConfig_Delete tests Delete is a no-op for config resources
