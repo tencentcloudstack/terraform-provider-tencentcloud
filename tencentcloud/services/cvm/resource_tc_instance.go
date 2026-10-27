@@ -3272,7 +3272,7 @@ func extractInt(value interface{}) (int, error) {
 		return 0, fmt.Errorf("value is nil.")
 	}
 
-	if reflect.TypeOf(value).Kind() == reflect.Pointer {
+	if reflect.TypeOf(value).Kind() == reflect.Ptr {
 		ptrValue := reflect.ValueOf(value).Elem().Interface()
 		return extractInt(ptrValue)
 	}
