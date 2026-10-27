@@ -56,4 +56,9 @@ In addition to all arguments above, the following attributes are exported:
   * `vip_type` - Routing network type. 3: vpc routing, 7: internal support routing, 1: public network routing.
   * `vpc_id` - Vpc id.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRoute](https://www.tencentcloud.com/document/api/597/37090)
 

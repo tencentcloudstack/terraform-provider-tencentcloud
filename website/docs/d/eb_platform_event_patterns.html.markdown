@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
   * `event_name` - Platform event name.Note: This field may return null, indicating that no valid value can be obtained.
   * `event_pattern` - Platform event matching rules.Note: This field may return null, indicating that no valid value can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListPlatformEventPatterns](https://www.tencentcloud.com/search/?wd=ListPlatformEventPatterns&type=document&lang=en)
 

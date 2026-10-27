@@ -70,4 +70,9 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Type of the SSL certificate.
   * `validity_period` - Validity period: unit (month).Note: This field may return NULL, indicating that the valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCertificateDetail](https://www.tencentcloud.com/document/api/1007/36587)
 

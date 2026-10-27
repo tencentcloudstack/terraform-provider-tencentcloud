@@ -114,4 +114,9 @@ Note: This field may return null, indicating that no valid values can be obtaine
   * `zone_id` - Site ID.
   * `zone_name` - The site name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeZones](https://www.tencentcloud.com/document/api/1145/50481)
 

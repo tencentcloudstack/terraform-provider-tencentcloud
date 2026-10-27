@@ -74,6 +74,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreatePacketFilterConfig](https://www.tencentcloud.com/document/api/1213/61378)
+  - [DescribeListPacketFilterConfig](https://www.tencentcloud.com/document/api/1213/61360)
+* Read: [DescribeListPacketFilterConfig](https://www.tencentcloud.com/document/api/1213/61360)
+* Delete:
+  - [DeletePacketFilterConfig](https://www.tencentcloud.com/document/api/1213/61370)
+  - [DescribeListPacketFilterConfig](https://www.tencentcloud.com/document/api/1213/61360)
 
 ## Import
 

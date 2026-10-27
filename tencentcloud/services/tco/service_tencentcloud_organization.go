@@ -2076,11 +2076,11 @@ func (me *OrganizationService) DescribeOrganizationNodesByFilter(ctx context.Con
 		limit  int64 = 50
 		offset int64 = 0
 	)
-	request.Limit = &limit
-	request.Offset = &offset
 	nodes = make([]*organization.OrgNode, 0)
 
 	for {
+		request.Limit = &limit
+		request.Offset = &offset
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseOrganizationClient().DescribeOrganizationNodes(request)
 		if err != nil {
@@ -2097,6 +2097,10 @@ func (me *OrganizationService) DescribeOrganizationNodesByFilter(ctx context.Con
 		if len(response.Response.Items) < int(limit) {
 			break
 		}
+		// Advance to the next page: request.Offset already points at the
+		// local `offset` variable, so bumping it here is picked up by the
+		// next request. Without this the loop re-fetches page 0 forever.
+		offset += limit
 	}
 	return
 }

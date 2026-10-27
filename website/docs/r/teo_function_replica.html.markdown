@@ -40,6 +40,18 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateFunctionReplica](https://www.tencentcloud.com/document/api/1145/80477)
+  - [DescribeFunctionReplicas](https://www.tencentcloud.com/document/api/1145/80475)
+* Read: [DescribeFunctionReplicas](https://www.tencentcloud.com/document/api/1145/80475)
+* Update:
+  - [DescribeFunctionReplicas](https://www.tencentcloud.com/document/api/1145/80475)
+  - [ModifyFunctionReplica](https://www.tencentcloud.com/document/api/1145/80474)
+* Delete: [DeleteFunctionReplica](https://www.tencentcloud.com/document/api/1145/80476)
 
 ## Import
 

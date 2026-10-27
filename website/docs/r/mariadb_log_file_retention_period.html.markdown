@@ -34,6 +34,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyLogFileRetentionPeriod](https://www.tencentcloud.com/document/api/237/16151)
+* Read: [DescribeLogFileRetentionPeriod](https://www.tencentcloud.com/document/api/237/16152)
+* Update: [ModifyLogFileRetentionPeriod](https://www.tencentcloud.com/document/api/237/16151)
 
 ## Import
 

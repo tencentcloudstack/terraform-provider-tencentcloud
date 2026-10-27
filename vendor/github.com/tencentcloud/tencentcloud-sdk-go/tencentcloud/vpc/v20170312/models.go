@@ -1203,32 +1203,32 @@ func (r *AllocateIp6AddressesBandwidthResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AssignIpv6AddressesRequestParams struct {
-	// 弹性网卡实例`ID`，形如：`eni-m6dyj72l`。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
+	// <p>弹性网卡实例<code>ID</code>，形如：<code>eni-m6dyj72l</code>。可通过<a href="https://cloud.tencent.com/document/product/215/15817">DescribeNetworkInterfaces</a>接口获取。</p>
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
-	// 指定的`IPv6`地址列表，单次最多指定10个。与入参`Ipv6AddressCount`合并计算配额。与Ipv6AddressCount必填一个。
+	// <p>指定的<code>IPv6</code>地址列表，单次最多指定10个。与入参<code>Ipv6AddressCount</code>合并计算配额。与Ipv6AddressCount必填一个。</p>
 	Ipv6Addresses []*Ipv6Address `json:"Ipv6Addresses,omitnil,omitempty" name:"Ipv6Addresses"`
 
-	// 自动分配`IPv6`地址个数，内网IP地址个数总和不能超过配额数。与入参`Ipv6Addresses`合并计算配额。与Ipv6Addresses必填一个。
+	// <p>自动分配<code>IPv6</code>地址个数，内网IP地址个数总和不能超过配额数。与入参<code>Ipv6Addresses</code>合并计算配额。与Ipv6Addresses必填一个。</p>
 	Ipv6AddressCount *uint64 `json:"Ipv6AddressCount,omitnil,omitempty" name:"Ipv6AddressCount"`
 
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
+	// <p>用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 }
 
 type AssignIpv6AddressesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 弹性网卡实例`ID`，形如：`eni-m6dyj72l`。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
+	// <p>弹性网卡实例<code>ID</code>，形如：<code>eni-m6dyj72l</code>。可通过<a href="https://cloud.tencent.com/document/product/215/15817">DescribeNetworkInterfaces</a>接口获取。</p>
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
-	// 指定的`IPv6`地址列表，单次最多指定10个。与入参`Ipv6AddressCount`合并计算配额。与Ipv6AddressCount必填一个。
+	// <p>指定的<code>IPv6</code>地址列表，单次最多指定10个。与入参<code>Ipv6AddressCount</code>合并计算配额。与Ipv6AddressCount必填一个。</p>
 	Ipv6Addresses []*Ipv6Address `json:"Ipv6Addresses,omitnil,omitempty" name:"Ipv6Addresses"`
 
-	// 自动分配`IPv6`地址个数，内网IP地址个数总和不能超过配额数。与入参`Ipv6Addresses`合并计算配额。与Ipv6Addresses必填一个。
+	// <p>自动分配<code>IPv6</code>地址个数，内网IP地址个数总和不能超过配额数。与入参<code>Ipv6Addresses</code>合并计算配额。与Ipv6Addresses必填一个。</p>
 	Ipv6AddressCount *uint64 `json:"Ipv6AddressCount,omitnil,omitempty" name:"Ipv6AddressCount"`
 
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
+	// <p>用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 }
 
@@ -1256,7 +1256,7 @@ func (r *AssignIpv6AddressesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AssignIpv6AddressesResponseParams struct {
-	// 分配给弹性网卡的`IPv6`地址列表。
+	// <p>分配给弹性网卡的<code>IPv6</code>地址列表。</p>
 	Ipv6AddressSet []*Ipv6Address `json:"Ipv6AddressSet,omitnil,omitempty" name:"Ipv6AddressSet"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1281,20 +1281,20 @@ func (r *AssignIpv6AddressesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AssignIpv6CidrBlockRequestParams struct {
-	// `VPC`实例`ID`，形如：`vpc-f49l6u0z`。
+	// <p><code>VPC</code>实例<code>ID</code>，形如：<code>vpc-f49l6u0z</code>。</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 申请IPv6 Cidr 的类型，`GUA`(全球单播地址), `ULA`(唯一本地地址)。
+	// <p>申请IPv6 Cidr 的类型，<code>GUA</code>(全球单播地址), <code>ULA</code>(唯一本地地址)。</p>
 	AddressType *string `json:"AddressType,omitnil,omitempty" name:"AddressType"`
 }
 
 type AssignIpv6CidrBlockRequest struct {
 	*tchttp.BaseRequest
 	
-	// `VPC`实例`ID`，形如：`vpc-f49l6u0z`。
+	// <p><code>VPC</code>实例<code>ID</code>，形如：<code>vpc-f49l6u0z</code>。</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 申请IPv6 Cidr 的类型，`GUA`(全球单播地址), `ULA`(唯一本地地址)。
+	// <p>申请IPv6 Cidr 的类型，<code>GUA</code>(全球单播地址), <code>ULA</code>(唯一本地地址)。</p>
 	AddressType *string `json:"AddressType,omitnil,omitempty" name:"AddressType"`
 }
 
@@ -1320,10 +1320,10 @@ func (r *AssignIpv6CidrBlockRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AssignIpv6CidrBlockResponseParams struct {
-	// 分配的 `IPv6` 网段。形如：`3402:4e00:20:1000::/56`。
+	// <p>分配的 <code>IPv6</code> 网段。形如：<code>3402:4e00:20:1000::/56</code>。</p>
 	Ipv6CidrBlock *string `json:"Ipv6CidrBlock,omitnil,omitempty" name:"Ipv6CidrBlock"`
 
-	// 申请IPv6 Cidr 的类型，`GUA`,  `ULA`
+	// <p>申请IPv6 Cidr 的类型，<code>GUA</code>,  <code>ULA</code></p>
 	AddressType *string `json:"AddressType,omitnil,omitempty" name:"AddressType"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1419,38 +1419,38 @@ func (r *AssignIpv6SubnetCidrBlockResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AssignPrivateIpAddressesRequestParams struct {
-	// 弹性网卡实例ID，例如：eni-m6dyj72l。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
+	// <p>弹性网卡实例ID，例如：eni-m6dyj72l。可通过<a href="https://cloud.tencent.com/document/product/215/15817">DescribeNetworkInterfaces</a>接口获取。</p>
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
-	// 指定的内网IP信息，单次最多指定10个。与SecondaryPrivateIpAddressCount至少提供一个。
+	// <p>指定的内网IP信息，单次最多指定10个。与SecondaryPrivateIpAddressCount至少提供一个。</p>
 	PrivateIpAddresses []*PrivateIpAddressSpecification `json:"PrivateIpAddresses,omitnil,omitempty" name:"PrivateIpAddresses"`
 
-	// 新申请的内网IP地址个数，与PrivateIpAddresses至少提供一个。内网IP地址个数总和不能超过配额数，详见<a href="/document/product/576/18527">弹性网卡使用限制</a>。
+	// <p>新申请的内网IP地址个数，与PrivateIpAddresses至少提供一个。内网IP地址个数总和不能超过配额数，详见<a href="/document/product/576/18527">弹性网卡使用限制</a>。</p>
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitnil,omitempty" name:"SecondaryPrivateIpAddressCount"`
 
-	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。
+	// <p>IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。</p>
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
 
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
+	// <p>用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 }
 
 type AssignPrivateIpAddressesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 弹性网卡实例ID，例如：eni-m6dyj72l。可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/product/215/15817)接口获取。
+	// <p>弹性网卡实例ID，例如：eni-m6dyj72l。可通过<a href="https://cloud.tencent.com/document/product/215/15817">DescribeNetworkInterfaces</a>接口获取。</p>
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
-	// 指定的内网IP信息，单次最多指定10个。与SecondaryPrivateIpAddressCount至少提供一个。
+	// <p>指定的内网IP信息，单次最多指定10个。与SecondaryPrivateIpAddressCount至少提供一个。</p>
 	PrivateIpAddresses []*PrivateIpAddressSpecification `json:"PrivateIpAddresses,omitnil,omitempty" name:"PrivateIpAddresses"`
 
-	// 新申请的内网IP地址个数，与PrivateIpAddresses至少提供一个。内网IP地址个数总和不能超过配额数，详见<a href="/document/product/576/18527">弹性网卡使用限制</a>。
+	// <p>新申请的内网IP地址个数，与PrivateIpAddresses至少提供一个。内网IP地址个数总和不能超过配额数，详见<a href="/document/product/576/18527">弹性网卡使用限制</a>。</p>
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitnil,omitempty" name:"SecondaryPrivateIpAddressCount"`
 
-	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。
+	// <p>IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。</p>
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
 
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
+	// <p>用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 }
 
@@ -1479,7 +1479,7 @@ func (r *AssignPrivateIpAddressesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AssignPrivateIpAddressesResponseParams struct {
-	// 内网IP详细信息。
+	// <p>内网IP详细信息。</p>
 	PrivateIpAddressSet []*PrivateIpAddressSpecification `json:"PrivateIpAddressSet,omitnil,omitempty" name:"PrivateIpAddressSet"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1518,44 +1518,44 @@ type AssistantCidr struct {
 
 // Predefined struct for user
 type AssociateAddressRequestParams struct {
-	// 标识 EIP 的唯一 ID。可以使用[DescribeAddresses](https://cloud.tencent.com/document/product/215/16702)接口获取AddressId。EIP 唯一 ID 形如：`eip-11112222`。
+	// <p>标识 EIP 的唯一 ID。可以使用<a href="https://cloud.tencent.com/document/product/215/16702">DescribeAddresses</a>接口获取AddressId。EIP 唯一 ID 形如：<code>eip-11112222</code>。</p>
 	AddressId *string `json:"AddressId,omitnil,omitempty" name:"AddressId"`
 
-	// 要绑定的实例 ID。实例 ID 形如：`ins-11112222`、`lb-11112222`。可通过登录[控制台](https://console.cloud.tencent.com/cvm)查询，也可通过 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) 接口返回值中的`InstanceId`获取。
+	// <p>要绑定的实例 ID。实例 ID 形如：<code>ins-11112222</code>、<code>lb-11112222</code>。可通过登录<a href="https://console.cloud.tencent.com/cvm">控制台</a>查询，也可通过 <a href="https://cloud.tencent.com/document/api/213/15728">DescribeInstances</a> 接口返回值中的<code>InstanceId</code>获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 要绑定的弹性网卡 ID。 弹性网卡 ID 形如：`eni-11112222`。`NetworkInterfaceId` 与 `InstanceId` 不可同时指定。弹性网卡 ID 可通过登录[控制台](https://console.cloud.tencent.com/vpc/eni)查询，也可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817)接口返回值中的`networkInterfaceId`获取。
+	// <p>要绑定的弹性网卡 ID。 弹性网卡 ID 形如：<code>eni-11112222</code>。<code>NetworkInterfaceId</code> 与 <code>InstanceId</code> 不可同时指定。弹性网卡 ID 可通过登录<a href="https://console.cloud.tencent.com/vpc/eni">控制台</a>查询，也可通过<a href="https://cloud.tencent.com/document/api/215/15817">DescribeNetworkInterfaces</a>接口返回值中的<code>networkInterfaceId</code>获取。</p>
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
-	// 要绑定的内网 IP。如果指定了 `NetworkInterfaceId` 则也必须指定 `PrivateIpAddress` ，表示将 EIP 绑定到指定弹性网卡的指定内网 IP 上。同时要确保指定的 `PrivateIpAddress` 是指定的 `NetworkInterfaceId` 上的一个内网 IP。指定弹性网卡的内网 IP 可通过登录[控制台](https://console.cloud.tencent.com/vpc/eni)查询，也可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817)接口返回值中的`privateIpAddress`获取。
+	// <p>要绑定的内网 IP。如果指定了 <code>NetworkInterfaceId</code> 则也必须指定 <code>PrivateIpAddress</code> ，表示将 EIP 绑定到指定弹性网卡的指定内网 IP 上。同时要确保指定的 <code>PrivateIpAddress</code> 是指定的 <code>NetworkInterfaceId</code> 上的一个内网 IP。指定弹性网卡的内网 IP 可通过登录<a href="https://console.cloud.tencent.com/vpc/eni">控制台</a>查询，也可通过<a href="https://cloud.tencent.com/document/api/215/15817">DescribeNetworkInterfaces</a>接口返回值中的<code>privateIpAddress</code>获取。</p>
 	PrivateIpAddress *string `json:"PrivateIpAddress,omitnil,omitempty" name:"PrivateIpAddress"`
 
-	// 指定绑定时是否设置直通。弹性公网 IP 直通请参见 [EIP 直通](https://cloud.tencent.com/document/product/1199/41709)。取值：true、false，默认值为 false。当绑定 CVM 实例、EKS 弹性集群时，可设定此参数为 true。此参数目前处于内测中，如需使用，请提交 [工单申请](https://console.cloud.tencent.com/workorder/category?level1_id=6&level2_id=163&source=0&data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20CLB&level3_id=1071&queue=96&scene_code=34639&step=2)。
+	// <p>指定绑定时是否设置直通。弹性公网 IP 直通请参见 <a href="https://cloud.tencent.com/document/product/1199/41709">EIP 直通</a>。取值：true、false，默认值为 false。当绑定 CVM 实例、EKS 弹性集群时，可设定此参数为 true。此参数目前处于内测中，如需使用，请提交 <a href="https://console.cloud.tencent.com/workorder/category?level1_id=6&amp;level2_id=163&amp;source=0&amp;data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20CLB&amp;level3_id=1071&amp;queue=96&amp;scene_code=34639&amp;step=2">工单申请</a>。</p>
 	EipDirectConnection *bool `json:"EipDirectConnection,omitnil,omitempty" name:"EipDirectConnection"`
 
-	// 要绑定的实例所在地域。默认无需填写，仅限GAAP特殊场景需指定实例所在地域。
+	// <p>要绑定的实例所在地域。默认无需填写，仅限GAAP特殊场景需指定实例所在地域。</p>
 	InstanceRegion *string `json:"InstanceRegion,omitnil,omitempty" name:"InstanceRegion"`
 }
 
 type AssociateAddressRequest struct {
 	*tchttp.BaseRequest
 	
-	// 标识 EIP 的唯一 ID。可以使用[DescribeAddresses](https://cloud.tencent.com/document/product/215/16702)接口获取AddressId。EIP 唯一 ID 形如：`eip-11112222`。
+	// <p>标识 EIP 的唯一 ID。可以使用<a href="https://cloud.tencent.com/document/product/215/16702">DescribeAddresses</a>接口获取AddressId。EIP 唯一 ID 形如：<code>eip-11112222</code>。</p>
 	AddressId *string `json:"AddressId,omitnil,omitempty" name:"AddressId"`
 
-	// 要绑定的实例 ID。实例 ID 形如：`ins-11112222`、`lb-11112222`。可通过登录[控制台](https://console.cloud.tencent.com/cvm)查询，也可通过 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) 接口返回值中的`InstanceId`获取。
+	// <p>要绑定的实例 ID。实例 ID 形如：<code>ins-11112222</code>、<code>lb-11112222</code>。可通过登录<a href="https://console.cloud.tencent.com/cvm">控制台</a>查询，也可通过 <a href="https://cloud.tencent.com/document/api/213/15728">DescribeInstances</a> 接口返回值中的<code>InstanceId</code>获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 要绑定的弹性网卡 ID。 弹性网卡 ID 形如：`eni-11112222`。`NetworkInterfaceId` 与 `InstanceId` 不可同时指定。弹性网卡 ID 可通过登录[控制台](https://console.cloud.tencent.com/vpc/eni)查询，也可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817)接口返回值中的`networkInterfaceId`获取。
+	// <p>要绑定的弹性网卡 ID。 弹性网卡 ID 形如：<code>eni-11112222</code>。<code>NetworkInterfaceId</code> 与 <code>InstanceId</code> 不可同时指定。弹性网卡 ID 可通过登录<a href="https://console.cloud.tencent.com/vpc/eni">控制台</a>查询，也可通过<a href="https://cloud.tencent.com/document/api/215/15817">DescribeNetworkInterfaces</a>接口返回值中的<code>networkInterfaceId</code>获取。</p>
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
-	// 要绑定的内网 IP。如果指定了 `NetworkInterfaceId` 则也必须指定 `PrivateIpAddress` ，表示将 EIP 绑定到指定弹性网卡的指定内网 IP 上。同时要确保指定的 `PrivateIpAddress` 是指定的 `NetworkInterfaceId` 上的一个内网 IP。指定弹性网卡的内网 IP 可通过登录[控制台](https://console.cloud.tencent.com/vpc/eni)查询，也可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817)接口返回值中的`privateIpAddress`获取。
+	// <p>要绑定的内网 IP。如果指定了 <code>NetworkInterfaceId</code> 则也必须指定 <code>PrivateIpAddress</code> ，表示将 EIP 绑定到指定弹性网卡的指定内网 IP 上。同时要确保指定的 <code>PrivateIpAddress</code> 是指定的 <code>NetworkInterfaceId</code> 上的一个内网 IP。指定弹性网卡的内网 IP 可通过登录<a href="https://console.cloud.tencent.com/vpc/eni">控制台</a>查询，也可通过<a href="https://cloud.tencent.com/document/api/215/15817">DescribeNetworkInterfaces</a>接口返回值中的<code>privateIpAddress</code>获取。</p>
 	PrivateIpAddress *string `json:"PrivateIpAddress,omitnil,omitempty" name:"PrivateIpAddress"`
 
-	// 指定绑定时是否设置直通。弹性公网 IP 直通请参见 [EIP 直通](https://cloud.tencent.com/document/product/1199/41709)。取值：true、false，默认值为 false。当绑定 CVM 实例、EKS 弹性集群时，可设定此参数为 true。此参数目前处于内测中，如需使用，请提交 [工单申请](https://console.cloud.tencent.com/workorder/category?level1_id=6&level2_id=163&source=0&data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20CLB&level3_id=1071&queue=96&scene_code=34639&step=2)。
+	// <p>指定绑定时是否设置直通。弹性公网 IP 直通请参见 <a href="https://cloud.tencent.com/document/product/1199/41709">EIP 直通</a>。取值：true、false，默认值为 false。当绑定 CVM 实例、EKS 弹性集群时，可设定此参数为 true。此参数目前处于内测中，如需使用，请提交 <a href="https://console.cloud.tencent.com/workorder/category?level1_id=6&amp;level2_id=163&amp;source=0&amp;data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20CLB&amp;level3_id=1071&amp;queue=96&amp;scene_code=34639&amp;step=2">工单申请</a>。</p>
 	EipDirectConnection *bool `json:"EipDirectConnection,omitnil,omitempty" name:"EipDirectConnection"`
 
-	// 要绑定的实例所在地域。默认无需填写，仅限GAAP特殊场景需指定实例所在地域。
+	// <p>要绑定的实例所在地域。默认无需填写，仅限GAAP特殊场景需指定实例所在地域。</p>
 	InstanceRegion *string `json:"InstanceRegion,omitnil,omitempty" name:"InstanceRegion"`
 }
 
@@ -1585,7 +1585,7 @@ func (r *AssociateAddressRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AssociateAddressResponseParams struct {
-	// 异步任务TaskId。可以使用[DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271)接口查询任务状态。
+	// <p>异步任务TaskId。可以使用<a href="https://cloud.tencent.com/document/api/215/36271">DescribeTaskResult</a>接口查询任务状态。</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -3913,87 +3913,111 @@ func (r *CreateAddressTemplateResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateAndAttachNetworkInterfaceRequestParams struct {
-	// VPC实例ID。可通过[DescribeVpcs](https://cloud.tencent.com/document/product/215/15778)接口获取。
+	// <p>VPC实例ID。可通过<a href="https://cloud.tencent.com/document/product/215/15778">DescribeVpcs</a>接口获取。</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 弹性网卡名称，最大长度不能超过60个字符。
+	// <p>弹性网卡名称，最大长度不能超过60个字符。</p>
 	NetworkInterfaceName *string `json:"NetworkInterfaceName,omitnil,omitempty" name:"NetworkInterfaceName"`
 
-	// 弹性网卡所在的子网实例ID，例如：subnet-0ap8nwca。可通过[DescribeSubnets](https://cloud.tencent.com/document/product/215/15784)接口获取。
+	// <p>弹性网卡所在的子网实例ID，例如：subnet-0ap8nwca。可通过<a href="https://cloud.tencent.com/document/product/215/15784">DescribeSubnets</a>接口获取。</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 云服务器实例ID。可通过[DescribeInstances](https://cloud.tencent.com/document/product/213/15728)接口获取。
+	// <p>云服务器实例ID。可通过<a href="https://cloud.tencent.com/document/product/213/15728">DescribeInstances</a>接口获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 指定的内网IP信息，单次最多指定10个。
+	// <p>指定的内网IP信息，单次最多指定10个。</p>
 	PrivateIpAddresses []*PrivateIpAddressSpecification `json:"PrivateIpAddresses,omitnil,omitempty" name:"PrivateIpAddresses"`
 
-	// 新申请的内网IP地址个数，内网IP地址个数总和不能超过配额数。
+	// <p>新申请的内网IP地址个数，内网IP地址个数总和不能超过配额数。</p>
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitnil,omitempty" name:"SecondaryPrivateIpAddressCount"`
 
-	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。
+	// <p>指定的<code>IPv6</code>地址列表，单次最多指定10个。与入参<code>Ipv6AddressCount</code>合并计算配额。</p>
+	Ipv6Addresses []*Ipv6Address `json:"Ipv6Addresses,omitnil,omitempty" name:"Ipv6Addresses"`
+
+	// <p>自动分配<code>IPv6</code>地址个数，内网IP地址个数总和不能超过配额数。与入参<code>Ipv6Addresses</code>合并计算配额。</p><p>取值范围：[1, 10]</p><p>单位：个</p>
+	Ipv6AddressCount *uint64 `json:"Ipv6AddressCount,omitnil,omitempty" name:"Ipv6AddressCount"`
+
+	// <p>IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。</p>
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
 
-	// 指定绑定的安全组，例如：['sg-1dd51d']。可通过[DescribeSecurityGroups](https://cloud.tencent.com/document/product/215/15808)接口获取。
+	// <p>指定绑定的安全组，例如：[&#39;sg-1dd51d&#39;]。可通过<a href="https://cloud.tencent.com/document/product/215/15808">DescribeSecurityGroups</a>接口获取。</p>
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 弹性网卡描述，可任意命名，但不得超过60个字符。
+	// <p>弹性网卡描述，可任意命名，但不得超过60个字符。</p>
 	NetworkInterfaceDescription *string `json:"NetworkInterfaceDescription,omitnil,omitempty" name:"NetworkInterfaceDescription"`
 
-	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]。
+	// <p>指定绑定的标签列表，例如：[{&quot;Key&quot;: &quot;city&quot;, &quot;Value&quot;: &quot;shanghai&quot;}]。</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 绑定类型：0 标准型 1 扩展型。
+	// <p>绑定类型：0 标准型 1 扩展型。</p>
 	AttachType *uint64 `json:"AttachType,omitnil,omitempty" name:"AttachType"`
 
-	// 是否创建RDMA弹性网卡，true:创建rdma弹性网卡，false:普通弹性网卡。不填默认为false。
+	// <p>是否创建RDMA弹性网卡，true:创建rdma弹性网卡，false:普通弹性网卡。不填默认为false。</p>
 	IsRdma *bool `json:"IsRdma,omitnil,omitempty" name:"IsRdma"`
 
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。	
+	// <p>用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
+
+	// <p>删除保护。</p>
+	TerminationProtection *bool `json:"TerminationProtection,omitnil,omitempty" name:"TerminationProtection"`
+
+	// <p>流量保护。</p>
+	TrafficProtection *bool `json:"TrafficProtection,omitnil,omitempty" name:"TrafficProtection"`
 }
 
 type CreateAndAttachNetworkInterfaceRequest struct {
 	*tchttp.BaseRequest
 	
-	// VPC实例ID。可通过[DescribeVpcs](https://cloud.tencent.com/document/product/215/15778)接口获取。
+	// <p>VPC实例ID。可通过<a href="https://cloud.tencent.com/document/product/215/15778">DescribeVpcs</a>接口获取。</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 弹性网卡名称，最大长度不能超过60个字符。
+	// <p>弹性网卡名称，最大长度不能超过60个字符。</p>
 	NetworkInterfaceName *string `json:"NetworkInterfaceName,omitnil,omitempty" name:"NetworkInterfaceName"`
 
-	// 弹性网卡所在的子网实例ID，例如：subnet-0ap8nwca。可通过[DescribeSubnets](https://cloud.tencent.com/document/product/215/15784)接口获取。
+	// <p>弹性网卡所在的子网实例ID，例如：subnet-0ap8nwca。可通过<a href="https://cloud.tencent.com/document/product/215/15784">DescribeSubnets</a>接口获取。</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 云服务器实例ID。可通过[DescribeInstances](https://cloud.tencent.com/document/product/213/15728)接口获取。
+	// <p>云服务器实例ID。可通过<a href="https://cloud.tencent.com/document/product/213/15728">DescribeInstances</a>接口获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 指定的内网IP信息，单次最多指定10个。
+	// <p>指定的内网IP信息，单次最多指定10个。</p>
 	PrivateIpAddresses []*PrivateIpAddressSpecification `json:"PrivateIpAddresses,omitnil,omitempty" name:"PrivateIpAddresses"`
 
-	// 新申请的内网IP地址个数，内网IP地址个数总和不能超过配额数。
+	// <p>新申请的内网IP地址个数，内网IP地址个数总和不能超过配额数。</p>
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitnil,omitempty" name:"SecondaryPrivateIpAddressCount"`
 
-	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。
+	// <p>指定的<code>IPv6</code>地址列表，单次最多指定10个。与入参<code>Ipv6AddressCount</code>合并计算配额。</p>
+	Ipv6Addresses []*Ipv6Address `json:"Ipv6Addresses,omitnil,omitempty" name:"Ipv6Addresses"`
+
+	// <p>自动分配<code>IPv6</code>地址个数，内网IP地址个数总和不能超过配额数。与入参<code>Ipv6Addresses</code>合并计算配额。</p><p>取值范围：[1, 10]</p><p>单位：个</p>
+	Ipv6AddressCount *uint64 `json:"Ipv6AddressCount,omitnil,omitempty" name:"Ipv6AddressCount"`
+
+	// <p>IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。</p>
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
 
-	// 指定绑定的安全组，例如：['sg-1dd51d']。可通过[DescribeSecurityGroups](https://cloud.tencent.com/document/product/215/15808)接口获取。
+	// <p>指定绑定的安全组，例如：[&#39;sg-1dd51d&#39;]。可通过<a href="https://cloud.tencent.com/document/product/215/15808">DescribeSecurityGroups</a>接口获取。</p>
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 弹性网卡描述，可任意命名，但不得超过60个字符。
+	// <p>弹性网卡描述，可任意命名，但不得超过60个字符。</p>
 	NetworkInterfaceDescription *string `json:"NetworkInterfaceDescription,omitnil,omitempty" name:"NetworkInterfaceDescription"`
 
-	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]。
+	// <p>指定绑定的标签列表，例如：[{&quot;Key&quot;: &quot;city&quot;, &quot;Value&quot;: &quot;shanghai&quot;}]。</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 绑定类型：0 标准型 1 扩展型。
+	// <p>绑定类型：0 标准型 1 扩展型。</p>
 	AttachType *uint64 `json:"AttachType,omitnil,omitempty" name:"AttachType"`
 
-	// 是否创建RDMA弹性网卡，true:创建rdma弹性网卡，false:普通弹性网卡。不填默认为false。
+	// <p>是否创建RDMA弹性网卡，true:创建rdma弹性网卡，false:普通弹性网卡。不填默认为false。</p>
 	IsRdma *bool `json:"IsRdma,omitnil,omitempty" name:"IsRdma"`
 
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。	
+	// <p>用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
+
+	// <p>删除保护。</p>
+	TerminationProtection *bool `json:"TerminationProtection,omitnil,omitempty" name:"TerminationProtection"`
+
+	// <p>流量保护。</p>
+	TrafficProtection *bool `json:"TrafficProtection,omitnil,omitempty" name:"TrafficProtection"`
 }
 
 func (r *CreateAndAttachNetworkInterfaceRequest) ToJsonString() string {
@@ -4014,6 +4038,8 @@ func (r *CreateAndAttachNetworkInterfaceRequest) FromJsonString(s string) error 
 	delete(f, "InstanceId")
 	delete(f, "PrivateIpAddresses")
 	delete(f, "SecondaryPrivateIpAddressCount")
+	delete(f, "Ipv6Addresses")
+	delete(f, "Ipv6AddressCount")
 	delete(f, "QosLevel")
 	delete(f, "SecurityGroupIds")
 	delete(f, "NetworkInterfaceDescription")
@@ -4021,6 +4047,8 @@ func (r *CreateAndAttachNetworkInterfaceRequest) FromJsonString(s string) error 
 	delete(f, "AttachType")
 	delete(f, "IsRdma")
 	delete(f, "ClientToken")
+	delete(f, "TerminationProtection")
+	delete(f, "TrafficProtection")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateAndAttachNetworkInterfaceRequest has unknown keys!", "")
 	}
@@ -4029,7 +4057,7 @@ func (r *CreateAndAttachNetworkInterfaceRequest) FromJsonString(s string) error 
 
 // Predefined struct for user
 type CreateAndAttachNetworkInterfaceResponseParams struct {
-	// 弹性网卡实例。
+	// <p>弹性网卡实例。</p>
 	NetworkInterface *NetworkInterface `json:"NetworkInterface,omitnil,omitempty" name:"NetworkInterface"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6381,83 +6409,105 @@ func (r *CreateNetworkAclResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateNetworkInterfaceRequestParams struct {
-	// VPC实例ID。可通过[DescribeVpcs](https://cloud.tencent.com/document/product/215/15778)接口获取。
+	// <p>VPC实例ID。可通过<a href="https://cloud.tencent.com/document/product/215/15778">DescribeVpcs</a>接口获取。</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 弹性网卡名称，最大长度不能超过60个字节。
+	// <p>弹性网卡名称，最大长度不能超过60个字节。</p>
 	NetworkInterfaceName *string `json:"NetworkInterfaceName,omitnil,omitempty" name:"NetworkInterfaceName"`
 
-	// 弹性网卡所在的子网实例ID，例如：subnet-0ap8nwca。可通过[DescribeSubnets](https://cloud.tencent.com/document/product/215/15784)接口获取。
+	// <p>弹性网卡所在的子网实例ID，例如：subnet-0ap8nwca。可通过<a href="https://cloud.tencent.com/document/product/215/15784">DescribeSubnets</a>接口获取。</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 弹性网卡描述，可任意命名，但不得超过60个字符。
+	// <p>弹性网卡描述，可任意命名，但不得超过60个字符。</p>
 	NetworkInterfaceDescription *string `json:"NetworkInterfaceDescription,omitnil,omitempty" name:"NetworkInterfaceDescription"`
 
-	// 新申请的内网IP地址个数，内网IP地址个数总和不能超过配额数。
-	// 配额数查询：[DescribeVpcLimits](https://cloud.tencent.com/document/api/215/42942)。
-	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitnil,omitempty" name:"SecondaryPrivateIpAddressCount"`
-
-	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。
+	// <p>IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。</p>
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
 
-	// 指定绑定的安全组，例如：['sg-1dd51d']。可通过[DescribeSecurityGroups](https://cloud.tencent.com/document/product/215/15808)接口获取。
+	// <p>指定绑定的安全组，例如：[&#39;sg-1dd51d&#39;]。可通过<a href="https://cloud.tencent.com/document/product/215/15808">DescribeSecurityGroups</a>接口获取。</p>
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 指定的内网IP信息，单次最多指定10个。
+	// <p>指定的内网IP信息，单次最多指定10个。</p>
 	PrivateIpAddresses []*PrivateIpAddressSpecification `json:"PrivateIpAddresses,omitnil,omitempty" name:"PrivateIpAddresses"`
 
-	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]
+	// <p>新申请的内网IP地址个数，内网IP地址个数总和不能超过配额数。<br>配额数查询：<a href="https://cloud.tencent.com/document/api/215/42942">DescribeVpcLimits</a>。</p>
+	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitnil,omitempty" name:"SecondaryPrivateIpAddressCount"`
+
+	// <p>指定的<code>IPv6</code>地址列表，单次最多指定10个。与入参<code>Ipv6AddressCount</code>合并计算配额。</p>
+	Ipv6Addresses []*Ipv6Address `json:"Ipv6Addresses,omitnil,omitempty" name:"Ipv6Addresses"`
+
+	// <p>自动分配<code>IPv6</code>地址个数，内网IP地址个数总和不能超过配额数。与入参<code>Ipv6Addresses</code>合并计算配额。</p><p>取值范围：[1, 10]</p><p>单位：个</p>
+	Ipv6AddressCount *uint64 `json:"Ipv6AddressCount,omitnil,omitempty" name:"Ipv6AddressCount"`
+
+	// <p>指定绑定的标签列表，例如：[{&quot;Key&quot;: &quot;city&quot;, &quot;Value&quot;: &quot;shanghai&quot;}]</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 网卡trunking模式设置，Enable-开启，Disable--关闭，默认关闭。
+	// <p>网卡trunking模式设置，Enable-开启，Disable--关闭，默认关闭。</p>
 	TrunkingFlag *string `json:"TrunkingFlag,omitnil,omitempty" name:"TrunkingFlag"`
 
-	// 是否创建RDMA弹性网卡，true:创建rdma弹性网卡，false:普通弹性网卡。不填默认为false
+	// <p>是否创建RDMA弹性网卡，true:创建rdma弹性网卡，false:普通弹性网卡。不填默认为false</p>
 	IsRdma *bool `json:"IsRdma,omitnil,omitempty" name:"IsRdma"`
 
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。	
+	// <p>用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
+
+	// <p>删除保护。</p>
+	TerminationProtection *bool `json:"TerminationProtection,omitnil,omitempty" name:"TerminationProtection"`
+
+	// <p>流量保护。</p>
+	TrafficProtection *bool `json:"TrafficProtection,omitnil,omitempty" name:"TrafficProtection"`
 }
 
 type CreateNetworkInterfaceRequest struct {
 	*tchttp.BaseRequest
 	
-	// VPC实例ID。可通过[DescribeVpcs](https://cloud.tencent.com/document/product/215/15778)接口获取。
+	// <p>VPC实例ID。可通过<a href="https://cloud.tencent.com/document/product/215/15778">DescribeVpcs</a>接口获取。</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 弹性网卡名称，最大长度不能超过60个字节。
+	// <p>弹性网卡名称，最大长度不能超过60个字节。</p>
 	NetworkInterfaceName *string `json:"NetworkInterfaceName,omitnil,omitempty" name:"NetworkInterfaceName"`
 
-	// 弹性网卡所在的子网实例ID，例如：subnet-0ap8nwca。可通过[DescribeSubnets](https://cloud.tencent.com/document/product/215/15784)接口获取。
+	// <p>弹性网卡所在的子网实例ID，例如：subnet-0ap8nwca。可通过<a href="https://cloud.tencent.com/document/product/215/15784">DescribeSubnets</a>接口获取。</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 弹性网卡描述，可任意命名，但不得超过60个字符。
+	// <p>弹性网卡描述，可任意命名，但不得超过60个字符。</p>
 	NetworkInterfaceDescription *string `json:"NetworkInterfaceDescription,omitnil,omitempty" name:"NetworkInterfaceDescription"`
 
-	// 新申请的内网IP地址个数，内网IP地址个数总和不能超过配额数。
-	// 配额数查询：[DescribeVpcLimits](https://cloud.tencent.com/document/api/215/42942)。
-	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitnil,omitempty" name:"SecondaryPrivateIpAddressCount"`
-
-	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。
+	// <p>IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。</p>
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
 
-	// 指定绑定的安全组，例如：['sg-1dd51d']。可通过[DescribeSecurityGroups](https://cloud.tencent.com/document/product/215/15808)接口获取。
+	// <p>指定绑定的安全组，例如：[&#39;sg-1dd51d&#39;]。可通过<a href="https://cloud.tencent.com/document/product/215/15808">DescribeSecurityGroups</a>接口获取。</p>
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 指定的内网IP信息，单次最多指定10个。
+	// <p>指定的内网IP信息，单次最多指定10个。</p>
 	PrivateIpAddresses []*PrivateIpAddressSpecification `json:"PrivateIpAddresses,omitnil,omitempty" name:"PrivateIpAddresses"`
 
-	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]
+	// <p>新申请的内网IP地址个数，内网IP地址个数总和不能超过配额数。<br>配额数查询：<a href="https://cloud.tencent.com/document/api/215/42942">DescribeVpcLimits</a>。</p>
+	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitnil,omitempty" name:"SecondaryPrivateIpAddressCount"`
+
+	// <p>指定的<code>IPv6</code>地址列表，单次最多指定10个。与入参<code>Ipv6AddressCount</code>合并计算配额。</p>
+	Ipv6Addresses []*Ipv6Address `json:"Ipv6Addresses,omitnil,omitempty" name:"Ipv6Addresses"`
+
+	// <p>自动分配<code>IPv6</code>地址个数，内网IP地址个数总和不能超过配额数。与入参<code>Ipv6Addresses</code>合并计算配额。</p><p>取值范围：[1, 10]</p><p>单位：个</p>
+	Ipv6AddressCount *uint64 `json:"Ipv6AddressCount,omitnil,omitempty" name:"Ipv6AddressCount"`
+
+	// <p>指定绑定的标签列表，例如：[{&quot;Key&quot;: &quot;city&quot;, &quot;Value&quot;: &quot;shanghai&quot;}]</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 网卡trunking模式设置，Enable-开启，Disable--关闭，默认关闭。
+	// <p>网卡trunking模式设置，Enable-开启，Disable--关闭，默认关闭。</p>
 	TrunkingFlag *string `json:"TrunkingFlag,omitnil,omitempty" name:"TrunkingFlag"`
 
-	// 是否创建RDMA弹性网卡，true:创建rdma弹性网卡，false:普通弹性网卡。不填默认为false
+	// <p>是否创建RDMA弹性网卡，true:创建rdma弹性网卡，false:普通弹性网卡。不填默认为false</p>
 	IsRdma *bool `json:"IsRdma,omitnil,omitempty" name:"IsRdma"`
 
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。	
+	// <p>用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
+
+	// <p>删除保护。</p>
+	TerminationProtection *bool `json:"TerminationProtection,omitnil,omitempty" name:"TerminationProtection"`
+
+	// <p>流量保护。</p>
+	TrafficProtection *bool `json:"TrafficProtection,omitnil,omitempty" name:"TrafficProtection"`
 }
 
 func (r *CreateNetworkInterfaceRequest) ToJsonString() string {
@@ -6476,14 +6526,18 @@ func (r *CreateNetworkInterfaceRequest) FromJsonString(s string) error {
 	delete(f, "NetworkInterfaceName")
 	delete(f, "SubnetId")
 	delete(f, "NetworkInterfaceDescription")
-	delete(f, "SecondaryPrivateIpAddressCount")
 	delete(f, "QosLevel")
 	delete(f, "SecurityGroupIds")
 	delete(f, "PrivateIpAddresses")
+	delete(f, "SecondaryPrivateIpAddressCount")
+	delete(f, "Ipv6Addresses")
+	delete(f, "Ipv6AddressCount")
 	delete(f, "Tags")
 	delete(f, "TrunkingFlag")
 	delete(f, "IsRdma")
 	delete(f, "ClientToken")
+	delete(f, "TerminationProtection")
+	delete(f, "TrafficProtection")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateNetworkInterfaceRequest has unknown keys!", "")
 	}
@@ -6492,7 +6546,7 @@ func (r *CreateNetworkInterfaceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateNetworkInterfaceResponseParams struct {
-	// 弹性网卡实例。
+	// <p>弹性网卡实例。</p>
 	NetworkInterface *NetworkInterface `json:"NetworkInterface,omitnil,omitempty" name:"NetworkInterface"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -7710,44 +7764,56 @@ func (r *CreateSnapshotPoliciesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateSubnetRequestParams struct {
-	// 待操作的VPC实例ID。可通过DescribeVpcs接口返回值中的VpcId获取。
+	// <p>待操作的VPC实例ID。可通过DescribeVpcs接口返回值中的VpcId获取。</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 子网名称，最大长度不能超过60个字节。
+	// <p>子网名称，最大长度不能超过60个字节。</p>
 	SubnetName *string `json:"SubnetName,omitnil,omitempty" name:"SubnetName"`
 
-	// 子网网段，子网网段必须在VPC网段内，相同VPC内子网网段不能重叠。
-	CidrBlock *string `json:"CidrBlock,omitnil,omitempty" name:"CidrBlock"`
-
-	// 子网所在的可用区ID，不同子网选择不同可用区可以做跨可用区灾备。
+	// <p>子网所在的可用区ID，不同子网选择不同可用区可以做跨可用区灾备。</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]
+	// <p>协议栈类型</p><p>枚举值：</p><ul><li>DualStack： IPv4和IPv6双栈</li><li>IPv6Only： IPv6单栈</li></ul>
+	StackType *string `json:"StackType,omitnil,omitempty" name:"StackType"`
+
+	// <p>子网网段，子网网段必须在VPC网段内，相同VPC内子网网段不能重叠。</p>
+	CidrBlock *string `json:"CidrBlock,omitnil,omitempty" name:"CidrBlock"`
+
+	// <p>IPv6网段</p>
+	Ipv6CidrBlock *string `json:"Ipv6CidrBlock,omitnil,omitempty" name:"Ipv6CidrBlock"`
+
+	// <p>指定绑定的标签列表，例如：[{&quot;Key&quot;: &quot;city&quot;, &quot;Value&quot;: &quot;shanghai&quot;}]</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// CDC实例ID。
+	// <p>CDC实例ID。</p>
 	CdcId *string `json:"CdcId,omitnil,omitempty" name:"CdcId"`
 }
 
 type CreateSubnetRequest struct {
 	*tchttp.BaseRequest
 	
-	// 待操作的VPC实例ID。可通过DescribeVpcs接口返回值中的VpcId获取。
+	// <p>待操作的VPC实例ID。可通过DescribeVpcs接口返回值中的VpcId获取。</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 子网名称，最大长度不能超过60个字节。
+	// <p>子网名称，最大长度不能超过60个字节。</p>
 	SubnetName *string `json:"SubnetName,omitnil,omitempty" name:"SubnetName"`
 
-	// 子网网段，子网网段必须在VPC网段内，相同VPC内子网网段不能重叠。
-	CidrBlock *string `json:"CidrBlock,omitnil,omitempty" name:"CidrBlock"`
-
-	// 子网所在的可用区ID，不同子网选择不同可用区可以做跨可用区灾备。
+	// <p>子网所在的可用区ID，不同子网选择不同可用区可以做跨可用区灾备。</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]
+	// <p>协议栈类型</p><p>枚举值：</p><ul><li>DualStack： IPv4和IPv6双栈</li><li>IPv6Only： IPv6单栈</li></ul>
+	StackType *string `json:"StackType,omitnil,omitempty" name:"StackType"`
+
+	// <p>子网网段，子网网段必须在VPC网段内，相同VPC内子网网段不能重叠。</p>
+	CidrBlock *string `json:"CidrBlock,omitnil,omitempty" name:"CidrBlock"`
+
+	// <p>IPv6网段</p>
+	Ipv6CidrBlock *string `json:"Ipv6CidrBlock,omitnil,omitempty" name:"Ipv6CidrBlock"`
+
+	// <p>指定绑定的标签列表，例如：[{&quot;Key&quot;: &quot;city&quot;, &quot;Value&quot;: &quot;shanghai&quot;}]</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// CDC实例ID。
+	// <p>CDC实例ID。</p>
 	CdcId *string `json:"CdcId,omitnil,omitempty" name:"CdcId"`
 }
 
@@ -7765,8 +7831,10 @@ func (r *CreateSubnetRequest) FromJsonString(s string) error {
 	}
 	delete(f, "VpcId")
 	delete(f, "SubnetName")
-	delete(f, "CidrBlock")
 	delete(f, "Zone")
+	delete(f, "StackType")
+	delete(f, "CidrBlock")
+	delete(f, "Ipv6CidrBlock")
 	delete(f, "Tags")
 	delete(f, "CdcId")
 	if len(f) > 0 {
@@ -7777,7 +7845,7 @@ func (r *CreateSubnetRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateSubnetResponseParams struct {
-	// 子网对象。
+	// <p>子网对象。</p>
 	Subnet *Subnet `json:"Subnet,omitnil,omitempty" name:"Subnet"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -8608,56 +8676,74 @@ func (r *CreateVpcPeeringConnectionResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateVpcRequestParams struct {
-	// vpc名称，最大长度不能超过60个字节。
+	// <p>vpc名称，最大长度不能超过60个字节。</p>
 	VpcName *string `json:"VpcName,omitnil,omitempty" name:"VpcName"`
 
-	// vpc的cidr，仅能在10.0.0.0/12，172.16.0.0/12，192.168.0.0/16这三个内网网段内。
+	// <p>协议栈类型</p><p>枚举值：</p><ul><li>DualStack： IPv4和IPv6双栈</li><li>IPv6Only： IPv6单栈</li></ul>
+	StackType *string `json:"StackType,omitnil,omitempty" name:"StackType"`
+
+	// <p>vpc的cidr，仅能在10.0.0.0/12，172.16.0.0/12，192.168.0.0/16这三个内网网段内。</p>
 	CidrBlock *string `json:"CidrBlock,omitnil,omitempty" name:"CidrBlock"`
 
-	// 是否开启组播。true: 开启, false: 不开启。
+	// <p><code>VPC</code>的<code>IPv6</code> <code>CIDR</code>。</p>
+	Ipv6CidrBlock *string `json:"Ipv6CidrBlock,omitnil,omitempty" name:"Ipv6CidrBlock"`
+
+	// <p>IPv6网段类型</p><p>枚举值：</p><ul><li>GUA： 全球单播地址</li><li>ULA： 唯一本地地址</li></ul>
+	AddressType *string `json:"AddressType,omitnil,omitempty" name:"AddressType"`
+
+	// <p>是否开启组播。true: 开启, false: 不开启。</p>
 	EnableMulticast *string `json:"EnableMulticast,omitnil,omitempty" name:"EnableMulticast"`
 
-	// DNS地址，最多支持4个。
+	// <p>DNS地址，最多支持4个。</p>
 	DnsServers []*string `json:"DnsServers,omitnil,omitempty" name:"DnsServers"`
 
-	// DHCP使用的域名。
+	// <p>DHCP使用的域名。</p>
 	DomainName *string `json:"DomainName,omitnil,omitempty" name:"DomainName"`
 
-	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]。
+	// <p>指定绑定的标签列表，例如：[{&quot;Key&quot;: &quot;city&quot;, &quot;Value&quot;: &quot;shanghai&quot;}]。</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// vpc关联云联网时路由发布策略， true：开启cidr路由发布，false：开启subnet子网路由发布。创建vpc时默认为子网路由发布，当选择cidr路由发布时,请通过工单加入白名单
+	// <p>vpc关联云联网时路由发布策略， true：开启cidr路由发布，false：开启subnet子网路由发布。创建vpc时默认为子网路由发布，当选择cidr路由发布时,请通过工单加入白名单</p>
 	EnableRouteVpcPublish *bool `json:"EnableRouteVpcPublish,omitnil,omitempty" name:"EnableRouteVpcPublish"`
 
-	// vpc关联云联网时IPv6类型路由发布策略， true：开启cidr路由发布，false：开启subnet子网路由发布。创建vpc时默认为子网路由发布，当选择cidr路由发布时，请通过工单加入白名单。
+	// <p>vpc关联云联网时IPv6类型路由发布策略， true：开启cidr路由发布，false：开启subnet子网路由发布。创建vpc时默认为子网路由发布，当选择cidr路由发布时，请通过工单加入白名单。</p>
 	EnableRouteVpcPublishIpv6 *bool `json:"EnableRouteVpcPublishIpv6,omitnil,omitempty" name:"EnableRouteVpcPublishIpv6"`
 }
 
 type CreateVpcRequest struct {
 	*tchttp.BaseRequest
 	
-	// vpc名称，最大长度不能超过60个字节。
+	// <p>vpc名称，最大长度不能超过60个字节。</p>
 	VpcName *string `json:"VpcName,omitnil,omitempty" name:"VpcName"`
 
-	// vpc的cidr，仅能在10.0.0.0/12，172.16.0.0/12，192.168.0.0/16这三个内网网段内。
+	// <p>协议栈类型</p><p>枚举值：</p><ul><li>DualStack： IPv4和IPv6双栈</li><li>IPv6Only： IPv6单栈</li></ul>
+	StackType *string `json:"StackType,omitnil,omitempty" name:"StackType"`
+
+	// <p>vpc的cidr，仅能在10.0.0.0/12，172.16.0.0/12，192.168.0.0/16这三个内网网段内。</p>
 	CidrBlock *string `json:"CidrBlock,omitnil,omitempty" name:"CidrBlock"`
 
-	// 是否开启组播。true: 开启, false: 不开启。
+	// <p><code>VPC</code>的<code>IPv6</code> <code>CIDR</code>。</p>
+	Ipv6CidrBlock *string `json:"Ipv6CidrBlock,omitnil,omitempty" name:"Ipv6CidrBlock"`
+
+	// <p>IPv6网段类型</p><p>枚举值：</p><ul><li>GUA： 全球单播地址</li><li>ULA： 唯一本地地址</li></ul>
+	AddressType *string `json:"AddressType,omitnil,omitempty" name:"AddressType"`
+
+	// <p>是否开启组播。true: 开启, false: 不开启。</p>
 	EnableMulticast *string `json:"EnableMulticast,omitnil,omitempty" name:"EnableMulticast"`
 
-	// DNS地址，最多支持4个。
+	// <p>DNS地址，最多支持4个。</p>
 	DnsServers []*string `json:"DnsServers,omitnil,omitempty" name:"DnsServers"`
 
-	// DHCP使用的域名。
+	// <p>DHCP使用的域名。</p>
 	DomainName *string `json:"DomainName,omitnil,omitempty" name:"DomainName"`
 
-	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]。
+	// <p>指定绑定的标签列表，例如：[{&quot;Key&quot;: &quot;city&quot;, &quot;Value&quot;: &quot;shanghai&quot;}]。</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// vpc关联云联网时路由发布策略， true：开启cidr路由发布，false：开启subnet子网路由发布。创建vpc时默认为子网路由发布，当选择cidr路由发布时,请通过工单加入白名单
+	// <p>vpc关联云联网时路由发布策略， true：开启cidr路由发布，false：开启subnet子网路由发布。创建vpc时默认为子网路由发布，当选择cidr路由发布时,请通过工单加入白名单</p>
 	EnableRouteVpcPublish *bool `json:"EnableRouteVpcPublish,omitnil,omitempty" name:"EnableRouteVpcPublish"`
 
-	// vpc关联云联网时IPv6类型路由发布策略， true：开启cidr路由发布，false：开启subnet子网路由发布。创建vpc时默认为子网路由发布，当选择cidr路由发布时，请通过工单加入白名单。
+	// <p>vpc关联云联网时IPv6类型路由发布策略， true：开启cidr路由发布，false：开启subnet子网路由发布。创建vpc时默认为子网路由发布，当选择cidr路由发布时，请通过工单加入白名单。</p>
 	EnableRouteVpcPublishIpv6 *bool `json:"EnableRouteVpcPublishIpv6,omitnil,omitempty" name:"EnableRouteVpcPublishIpv6"`
 }
 
@@ -8674,7 +8760,10 @@ func (r *CreateVpcRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "VpcName")
+	delete(f, "StackType")
 	delete(f, "CidrBlock")
+	delete(f, "Ipv6CidrBlock")
+	delete(f, "AddressType")
 	delete(f, "EnableMulticast")
 	delete(f, "DnsServers")
 	delete(f, "DomainName")
@@ -8689,7 +8778,7 @@ func (r *CreateVpcRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateVpcResponseParams struct {
-	// Vpc对象。
+	// <p>Vpc对象。</p>
 	Vpc *Vpc `json:"Vpc,omitnil,omitempty" name:"Vpc"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -8933,6 +9022,8 @@ type CreateVpnGatewayRequestParams struct {
 	InstanceChargePrepaid *InstanceChargePrepaid `json:"InstanceChargePrepaid,omitnil,omitempty" name:"InstanceChargePrepaid"`
 
 	// <p>可用区，如：ap-guangzhou-2。</p>
+	//
+	// Deprecated: Zone is deprecated.
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
 	// <p>VPN网关类型，默认为IPSEC。值“IPSEC”为VPC型IPSEC VPN网关，值“SSL”为VPC型SSL VPN网关，值“CCN”为云联网型IPSEC VPN网关，值“SSL_CCN”为云联网型SSL VPN网关。</p>
@@ -8949,6 +9040,21 @@ type CreateVpnGatewayRequestParams struct {
 
 	// <p>BGP ASN。</p>
 	BgpAsn *uint64 `json:"BgpAsn,omitnil,omitempty" name:"BgpAsn"`
+
+	// <p>是否是私网类型</p>
+	IsPrivate *bool `json:"IsPrivate,omitnil,omitempty" name:"IsPrivate"`
+
+	// <p>私网唯一ID</p>
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
+
+	// <p>BGP 开关，开启时需指定BgpAsn。</p>
+	BgpEnable *bool `json:"BgpEnable,omitnil,omitempty" name:"BgpEnable"`
+
+	// <p>内外层IP协议</p><p>枚举值：</p><ul><li>4in4： IPv4 over IPv4</li><li>6in4： IPv6 over IPv4</li><li>6in6： IPv6 over IPv6</li><li>4in6： IPv4 over IPv6</li></ul><p>默认值：4in4</p>
+	IpStack *string `json:"IpStack,omitnil,omitempty" name:"IpStack"`
+
+	// <p>CCN类型私网VPN接入网段</p>
+	AccessSubnet *string `json:"AccessSubnet,omitnil,omitempty" name:"AccessSubnet"`
 }
 
 type CreateVpnGatewayRequest struct {
@@ -8986,6 +9092,21 @@ type CreateVpnGatewayRequest struct {
 
 	// <p>BGP ASN。</p>
 	BgpAsn *uint64 `json:"BgpAsn,omitnil,omitempty" name:"BgpAsn"`
+
+	// <p>是否是私网类型</p>
+	IsPrivate *bool `json:"IsPrivate,omitnil,omitempty" name:"IsPrivate"`
+
+	// <p>私网唯一ID</p>
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
+
+	// <p>BGP 开关，开启时需指定BgpAsn。</p>
+	BgpEnable *bool `json:"BgpEnable,omitnil,omitempty" name:"BgpEnable"`
+
+	// <p>内外层IP协议</p><p>枚举值：</p><ul><li>4in4： IPv4 over IPv4</li><li>6in4： IPv6 over IPv4</li><li>6in6： IPv6 over IPv6</li><li>4in6： IPv4 over IPv6</li></ul><p>默认值：4in4</p>
+	IpStack *string `json:"IpStack,omitnil,omitempty" name:"IpStack"`
+
+	// <p>CCN类型私网VPN接入网段</p>
+	AccessSubnet *string `json:"AccessSubnet,omitnil,omitempty" name:"AccessSubnet"`
 }
 
 func (r *CreateVpnGatewayRequest) ToJsonString() string {
@@ -9011,6 +9132,11 @@ func (r *CreateVpnGatewayRequest) FromJsonString(s string) error {
 	delete(f, "CdcId")
 	delete(f, "MaxConnection")
 	delete(f, "BgpAsn")
+	delete(f, "IsPrivate")
+	delete(f, "SubnetId")
+	delete(f, "BgpEnable")
+	delete(f, "IpStack")
+	delete(f, "AccessSubnet")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateVpnGatewayRequest has unknown keys!", "")
 	}
@@ -9108,32 +9234,32 @@ func (r *CreateVpnGatewayRoutesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateVpnGatewaySslClientRequestParams struct {
-	// SSL-VPN-SERVER 实例ID。
+	// <p>SSL-VPN-SERVER 实例ID。</p>
 	SslVpnServerId *string `json:"SslVpnServerId,omitnil,omitempty" name:"SslVpnServerId"`
 
-	// SSL-VPN-CLIENT实例Name。不可和SslVpnClientNames同时使用。
+	// <p>SSL-VPN-CLIENT实例Name。不可和SslVpnClientNames同时使用。</p>
 	SslVpnClientName *string `json:"SslVpnClientName,omitnil,omitempty" name:"SslVpnClientName"`
 
-	// SSL-VPN-CLIENT实例Name数字。批量创建时使用。不可和SslVpnClientName同时使用。
+	// <p>SSL-VPN-CLIENT实例Name数字。批量创建时使用。不可和SslVpnClientName同时使用。</p>
 	SslVpnClientNames []*string `json:"SslVpnClientNames,omitnil,omitempty" name:"SslVpnClientNames"`
 
-	// 指定绑定的标签列表
+	// <p>指定绑定的标签列表</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type CreateVpnGatewaySslClientRequest struct {
 	*tchttp.BaseRequest
 	
-	// SSL-VPN-SERVER 实例ID。
+	// <p>SSL-VPN-SERVER 实例ID。</p>
 	SslVpnServerId *string `json:"SslVpnServerId,omitnil,omitempty" name:"SslVpnServerId"`
 
-	// SSL-VPN-CLIENT实例Name。不可和SslVpnClientNames同时使用。
+	// <p>SSL-VPN-CLIENT实例Name。不可和SslVpnClientNames同时使用。</p>
 	SslVpnClientName *string `json:"SslVpnClientName,omitnil,omitempty" name:"SslVpnClientName"`
 
-	// SSL-VPN-CLIENT实例Name数字。批量创建时使用。不可和SslVpnClientName同时使用。
+	// <p>SSL-VPN-CLIENT实例Name数字。批量创建时使用。不可和SslVpnClientName同时使用。</p>
 	SslVpnClientNames []*string `json:"SslVpnClientNames,omitnil,omitempty" name:"SslVpnClientNames"`
 
-	// 指定绑定的标签列表
+	// <p>指定绑定的标签列表</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
@@ -9161,11 +9287,14 @@ func (r *CreateVpnGatewaySslClientRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateVpnGatewaySslClientResponseParams struct {
-	// 异步任务ID。
+	// <p>异步任务ID。</p>
 	TaskId *uint64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// SSL-VPN client 唯一ID
+	// <p>SSL VPN客户端唯一ID</p>
 	SslVpnClientId *string `json:"SslVpnClientId,omitnil,omitempty" name:"SslVpnClientId"`
+
+	// <p>SSL VPN客户端唯一ID</p><p>仅批量场景返回</p>
+	SslVpnClientIds []*string `json:"SslVpnClientIds,omitnil,omitempty" name:"SslVpnClientIds"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -9189,92 +9318,92 @@ func (r *CreateVpnGatewaySslClientResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateVpnGatewaySslServerRequestParams struct {
-	// VPN网关实例ID。
+	// <p>VPN网关实例ID。</p>
 	VpnGatewayId *string `json:"VpnGatewayId,omitnil,omitempty" name:"VpnGatewayId"`
 
-	// SSL-VPN-SERVER 实例名称，长度不超过60个字节。
+	// <p>SSL-VPN-SERVER 实例名称，长度不超过60个字节。</p>
 	SslVpnServerName *string `json:"SslVpnServerName,omitnil,omitempty" name:"SslVpnServerName"`
 
-	// 客户端地址网段。
+	// <p>客户端地址网段。</p>
 	RemoteAddress *string `json:"RemoteAddress,omitnil,omitempty" name:"RemoteAddress"`
 
-	// 云端地址（CIDR）列表。
+	// <p>云端地址（CIDR）列表。</p>
 	LocalAddress []*string `json:"LocalAddress,omitnil,omitempty" name:"LocalAddress"`
 
-	// SSL VPN服务端监听协议。当前仅支持 UDP，默认UDP。
+	// <p>SSL VPN服务端监听协议。当前仅支持 UDP，默认UDP。</p>
 	SslVpnProtocol *string `json:"SslVpnProtocol,omitnil,omitempty" name:"SslVpnProtocol"`
 
-	// SSL VPN服务端监听协议端口，默认1194。
+	// <p>SSL VPN服务端监听协议端口，默认9798。</p>
 	SslVpnPort *int64 `json:"SslVpnPort,omitnil,omitempty" name:"SslVpnPort"`
 
-	// 认证算法。可选 'SHA1'，默认SHA1。
+	// <p>认证算法。可选 &#39;SHA1&#39;, &#39;SHA224&#39;, &#39;SHA256&#39;, &#39;SHA384&#39;, &#39;SHA512&#39; 默认SHA1。</p>
 	IntegrityAlgorithm *string `json:"IntegrityAlgorithm,omitnil,omitempty" name:"IntegrityAlgorithm"`
 
-	// 加密算法。可选 'AES-128-CBC','AES-192-CBC', 'AES-256-CBC', 默认AES-128-CBC。
+	// <p>加密算法。可选 &#39;AES-128-CBC&#39;,&#39;AES-192-CBC&#39;, &#39;AES-256-CBC&#39;, &#39;AES-128-GCM&#39;, &#39;AES-192-GCM&#39;, &#39;AES-256-GCM&#39;。</p><p>默认值：AES-128-CBC</p>
 	EncryptAlgorithm *string `json:"EncryptAlgorithm,omitnil,omitempty" name:"EncryptAlgorithm"`
 
-	// 是否支持压缩。当前不支持压缩，默认False。
+	// <p>是否支持压缩。当前不支持压缩，默认False。</p>
 	Compress *bool `json:"Compress,omitnil,omitempty" name:"Compress"`
 
-	// 是否开启SSO认证。默认为False。该功能当前需要申请开白使用。
+	// <p>是否开启SSO认证。默认为False。该功能当前需要申请开白使用。</p>
 	SsoEnabled *bool `json:"SsoEnabled,omitnil,omitempty" name:"SsoEnabled"`
 
-	// 是否开启策略访问控制。默认为False
+	// <p>是否开启策略访问控制。默认为False</p>
 	AccessPolicyEnabled *bool `json:"AccessPolicyEnabled,omitnil,omitempty" name:"AccessPolicyEnabled"`
 
-	// SAML-DATA，开启SSO时传。
+	// <p>SAML-DATA，开启SSO时传。</p>
 	SamlData *string `json:"SamlData,omitnil,omitempty" name:"SamlData"`
 
-	// 指定绑定的标签列表
+	// <p>指定绑定的标签列表</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// DNS Server 地址
+	// <p>DNS Server 地址</p>
 	DnsServers *DnsServers `json:"DnsServers,omitnil,omitempty" name:"DnsServers"`
 }
 
 type CreateVpnGatewaySslServerRequest struct {
 	*tchttp.BaseRequest
 	
-	// VPN网关实例ID。
+	// <p>VPN网关实例ID。</p>
 	VpnGatewayId *string `json:"VpnGatewayId,omitnil,omitempty" name:"VpnGatewayId"`
 
-	// SSL-VPN-SERVER 实例名称，长度不超过60个字节。
+	// <p>SSL-VPN-SERVER 实例名称，长度不超过60个字节。</p>
 	SslVpnServerName *string `json:"SslVpnServerName,omitnil,omitempty" name:"SslVpnServerName"`
 
-	// 客户端地址网段。
+	// <p>客户端地址网段。</p>
 	RemoteAddress *string `json:"RemoteAddress,omitnil,omitempty" name:"RemoteAddress"`
 
-	// 云端地址（CIDR）列表。
+	// <p>云端地址（CIDR）列表。</p>
 	LocalAddress []*string `json:"LocalAddress,omitnil,omitempty" name:"LocalAddress"`
 
-	// SSL VPN服务端监听协议。当前仅支持 UDP，默认UDP。
+	// <p>SSL VPN服务端监听协议。当前仅支持 UDP，默认UDP。</p>
 	SslVpnProtocol *string `json:"SslVpnProtocol,omitnil,omitempty" name:"SslVpnProtocol"`
 
-	// SSL VPN服务端监听协议端口，默认1194。
+	// <p>SSL VPN服务端监听协议端口，默认9798。</p>
 	SslVpnPort *int64 `json:"SslVpnPort,omitnil,omitempty" name:"SslVpnPort"`
 
-	// 认证算法。可选 'SHA1'，默认SHA1。
+	// <p>认证算法。可选 &#39;SHA1&#39;, &#39;SHA224&#39;, &#39;SHA256&#39;, &#39;SHA384&#39;, &#39;SHA512&#39; 默认SHA1。</p>
 	IntegrityAlgorithm *string `json:"IntegrityAlgorithm,omitnil,omitempty" name:"IntegrityAlgorithm"`
 
-	// 加密算法。可选 'AES-128-CBC','AES-192-CBC', 'AES-256-CBC', 默认AES-128-CBC。
+	// <p>加密算法。可选 &#39;AES-128-CBC&#39;,&#39;AES-192-CBC&#39;, &#39;AES-256-CBC&#39;, &#39;AES-128-GCM&#39;, &#39;AES-192-GCM&#39;, &#39;AES-256-GCM&#39;。</p><p>默认值：AES-128-CBC</p>
 	EncryptAlgorithm *string `json:"EncryptAlgorithm,omitnil,omitempty" name:"EncryptAlgorithm"`
 
-	// 是否支持压缩。当前不支持压缩，默认False。
+	// <p>是否支持压缩。当前不支持压缩，默认False。</p>
 	Compress *bool `json:"Compress,omitnil,omitempty" name:"Compress"`
 
-	// 是否开启SSO认证。默认为False。该功能当前需要申请开白使用。
+	// <p>是否开启SSO认证。默认为False。该功能当前需要申请开白使用。</p>
 	SsoEnabled *bool `json:"SsoEnabled,omitnil,omitempty" name:"SsoEnabled"`
 
-	// 是否开启策略访问控制。默认为False
+	// <p>是否开启策略访问控制。默认为False</p>
 	AccessPolicyEnabled *bool `json:"AccessPolicyEnabled,omitnil,omitempty" name:"AccessPolicyEnabled"`
 
-	// SAML-DATA，开启SSO时传。
+	// <p>SAML-DATA，开启SSO时传。</p>
 	SamlData *string `json:"SamlData,omitnil,omitempty" name:"SamlData"`
 
-	// 指定绑定的标签列表
+	// <p>指定绑定的标签列表</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// DNS Server 地址
+	// <p>DNS Server 地址</p>
 	DnsServers *DnsServers `json:"DnsServers,omitnil,omitempty" name:"DnsServers"`
 }
 
@@ -9312,10 +9441,10 @@ func (r *CreateVpnGatewaySslServerRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateVpnGatewaySslServerResponseParams struct {
-	// 创建SSL-VPN server 异步任务ID。
+	// <p>创建SSL-VPN server 异步任务ID。</p>
 	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// SSL-VPN-SERVER 唯一ID。
+	// <p>SSL-VPN-SERVER 唯一ID。</p>
 	SslVpnServerId *string `json:"SslVpnServerId,omitnil,omitempty" name:"SslVpnServerId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -9410,6 +9539,9 @@ type CrossBorderCompliance struct {
 
 	// 法定代表人身份证。
 	LegalPersonIdCard *string `json:"LegalPersonIdCard,omitnil,omitempty" name:"LegalPersonIdCard"`
+
+	// 白名单开关是否开启
+	WhiteListFlag *bool `json:"WhiteListFlag,omitnil,omitempty" name:"WhiteListFlag"`
 }
 
 type CrossBorderFlowMonitorData struct {
@@ -9427,20 +9559,26 @@ type CrossBorderFlowMonitorData struct {
 }
 
 type CustomerGateway struct {
-	// 用户网关唯一ID
+	// <p>用户网关唯一ID</p>
 	CustomerGatewayId *string `json:"CustomerGatewayId,omitnil,omitempty" name:"CustomerGatewayId"`
 
-	// 网关名称
+	// <p>网关名称</p>
 	CustomerGatewayName *string `json:"CustomerGatewayName,omitnil,omitempty" name:"CustomerGatewayName"`
 
-	// 公网地址
+	// <p>公网地址</p>
 	IpAddress *string `json:"IpAddress,omitnil,omitempty" name:"IpAddress"`
 
-	// 创建时间
+	// <p>创建时间</p>
 	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 
-	// BGP ASN。
+	// <p>BGP ASN。</p>
 	BgpAsn *uint64 `json:"BgpAsn,omitnil,omitempty" name:"BgpAsn"`
+
+	// <p>关联通道数</p>
+	VpnConnNum *uint64 `json:"VpnConnNum,omitnil,omitempty" name:"VpnConnNum"`
+
+	// <p>标签信息</p>
+	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 }
 
 type CustomerGatewayVendor struct {
@@ -15409,38 +15547,32 @@ func (r *DescribeCustomerGatewayVendorsResponse) FromJsonString(s string) error 
 
 // Predefined struct for user
 type DescribeCustomerGatewaysRequestParams struct {
-	// 对端网关ID，例如：cgw-2wqq41m9。每次请求的实例的上限为100。参数不支持同时指定CustomerGatewayIds和Filters。
+	// <p>对端网关ID，例如：cgw-2wqq41m9。每次请求的实例的上限为100。参数不支持同时指定CustomerGatewayIds和Filters。</p>
 	CustomerGatewayIds []*string `json:"CustomerGatewayIds,omitnil,omitempty" name:"CustomerGatewayIds"`
 
-	// 过滤条件，详见下表：实例过滤条件表。每次请求的Filters的上限为10，Filter.Values的上限为5。参数不支持同时指定CustomerGatewayIds和Filters。
-	// <li>customer-gateway-id - String - （过滤条件）用户网关唯一ID形如：`cgw-mgp33pll`。</li>
-	// <li>customer-gateway-name - String - （过滤条件）用户网关名称形如：`test-cgw`。</li>
-	// <li>ip-address - String - （过滤条件）公网地址形如：`58.211.1.12`。</li>
+	// <p>过滤条件，详见下表：实例过滤条件表。每次请求的Filters的上限为10，Filter.Values的上限为5。参数不支持同时指定CustomerGatewayIds和Filters。<li>customer-gateway-id - String - （过滤条件）用户网关唯一ID形如：<code>cgw-mgp33pll</code>。</li><li>customer-gateway-name - String - （过滤条件）用户网关名称形如：<code>test-cgw</code>。</li><li>ip-address - String - （过滤条件）公网地址形如：<code>58.211.1.12</code>。</li><li>ip-version - String - （过滤条件）公网地址类型,可选值[&#39;IPv4&#39;,&#39;IPv6&#39;]。</li></p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 偏移量，默认为0。关于Offset的更进一步介绍请参考 API [简介](https://cloud.tencent.com/document/api/213/11646)中的相关小节。
+	// <p>偏移量，默认为0。关于Offset的更进一步介绍请参考 API <a href="https://cloud.tencent.com/document/api/213/11646">简介</a>中的相关小节。</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，默认为20，最大值为100。
+	// <p>返回数量，默认为20，最大值为100。</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
 type DescribeCustomerGatewaysRequest struct {
 	*tchttp.BaseRequest
 	
-	// 对端网关ID，例如：cgw-2wqq41m9。每次请求的实例的上限为100。参数不支持同时指定CustomerGatewayIds和Filters。
+	// <p>对端网关ID，例如：cgw-2wqq41m9。每次请求的实例的上限为100。参数不支持同时指定CustomerGatewayIds和Filters。</p>
 	CustomerGatewayIds []*string `json:"CustomerGatewayIds,omitnil,omitempty" name:"CustomerGatewayIds"`
 
-	// 过滤条件，详见下表：实例过滤条件表。每次请求的Filters的上限为10，Filter.Values的上限为5。参数不支持同时指定CustomerGatewayIds和Filters。
-	// <li>customer-gateway-id - String - （过滤条件）用户网关唯一ID形如：`cgw-mgp33pll`。</li>
-	// <li>customer-gateway-name - String - （过滤条件）用户网关名称形如：`test-cgw`。</li>
-	// <li>ip-address - String - （过滤条件）公网地址形如：`58.211.1.12`。</li>
+	// <p>过滤条件，详见下表：实例过滤条件表。每次请求的Filters的上限为10，Filter.Values的上限为5。参数不支持同时指定CustomerGatewayIds和Filters。<li>customer-gateway-id - String - （过滤条件）用户网关唯一ID形如：<code>cgw-mgp33pll</code>。</li><li>customer-gateway-name - String - （过滤条件）用户网关名称形如：<code>test-cgw</code>。</li><li>ip-address - String - （过滤条件）公网地址形如：<code>58.211.1.12</code>。</li><li>ip-version - String - （过滤条件）公网地址类型,可选值[&#39;IPv4&#39;,&#39;IPv6&#39;]。</li></p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 偏移量，默认为0。关于Offset的更进一步介绍请参考 API [简介](https://cloud.tencent.com/document/api/213/11646)中的相关小节。
+	// <p>偏移量，默认为0。关于Offset的更进一步介绍请参考 API <a href="https://cloud.tencent.com/document/api/213/11646">简介</a>中的相关小节。</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，默认为20，最大值为100。
+	// <p>返回数量，默认为20，最大值为100。</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
@@ -15468,10 +15600,10 @@ func (r *DescribeCustomerGatewaysRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeCustomerGatewaysResponseParams struct {
-	// 对端网关对象列表。
+	// <p>对端网关对象列表。</p>
 	CustomerGatewaySet []*CustomerGateway `json:"CustomerGatewaySet,omitnil,omitempty" name:"CustomerGatewaySet"`
 
-	// 符合条件的实例数量。
+	// <p>符合条件的实例数量。</p>
 	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -24065,20 +24197,20 @@ func (r *DisableVpnGatewaySslClientCertResponse) FromJsonString(s string) error 
 
 // Predefined struct for user
 type DisassociateAddressRequestParams struct {
-	// 标识 EIP 的唯一 ID。EIP 唯一 ID 形如：`eip-11112222`。可以使用[DescribeAddresses](https://cloud.tencent.com/document/product/215/16702)接口获取AddressId。
+	// <p>标识 EIP 的唯一 ID。EIP 唯一 ID 形如：<code>eip-11112222</code>。可以使用<a href="https://cloud.tencent.com/document/product/215/16702">DescribeAddresses</a>接口获取AddressId。</p>
 	AddressId *string `json:"AddressId,omitnil,omitempty" name:"AddressId"`
 
-	// 表示解绑 EIP 之后是否分配普通公网 IP。取值范围：<li>TRUE：表示解绑 EIP 之后分配普通公网 IP。</li><li>FALSE：表示解绑 EIP 之后不分配普通公网 IP。</li>默认取值：FALSE。<br><br>只有满足以下条件时才能指定该参数：<li>只有在解绑主网卡的主内网 IP 上的 EIP 时才能指定该参数。</li><li>解绑 EIP 后重新分配普通公网 IP 操作一个账号每天最多操作 10 次；详情可通过 [DescribeAddressQuota](https://cloud.tencent.com/document/api/213/1378) 接口获取。</li>
+	// <p>表示解绑 EIP 之后是否分配普通公网 IP。取值范围：<li><code>true</code>：表示解绑 EIP 之后分配普通公网 IP。</li><li><code>false</code>：表示解绑 EIP 之后不分配普通公网 IP。</li>默认取值：<code>false</code>。<br><br>只有满足以下条件时才能指定该参数：<li>只有在解绑主网卡的主内网 IP 上的 EIP 时才能指定该参数。</li><li>解绑 EIP 后重新分配普通公网 IP 操作一个账号每天最多操作 10 次；详情可通过 <a href="https://cloud.tencent.com/document/api/213/1378">DescribeAddressQuota</a> 接口获取。</li></p>
 	ReallocateNormalPublicIp *bool `json:"ReallocateNormalPublicIp,omitnil,omitempty" name:"ReallocateNormalPublicIp"`
 }
 
 type DisassociateAddressRequest struct {
 	*tchttp.BaseRequest
 	
-	// 标识 EIP 的唯一 ID。EIP 唯一 ID 形如：`eip-11112222`。可以使用[DescribeAddresses](https://cloud.tencent.com/document/product/215/16702)接口获取AddressId。
+	// <p>标识 EIP 的唯一 ID。EIP 唯一 ID 形如：<code>eip-11112222</code>。可以使用<a href="https://cloud.tencent.com/document/product/215/16702">DescribeAddresses</a>接口获取AddressId。</p>
 	AddressId *string `json:"AddressId,omitnil,omitempty" name:"AddressId"`
 
-	// 表示解绑 EIP 之后是否分配普通公网 IP。取值范围：<li>TRUE：表示解绑 EIP 之后分配普通公网 IP。</li><li>FALSE：表示解绑 EIP 之后不分配普通公网 IP。</li>默认取值：FALSE。<br><br>只有满足以下条件时才能指定该参数：<li>只有在解绑主网卡的主内网 IP 上的 EIP 时才能指定该参数。</li><li>解绑 EIP 后重新分配普通公网 IP 操作一个账号每天最多操作 10 次；详情可通过 [DescribeAddressQuota](https://cloud.tencent.com/document/api/213/1378) 接口获取。</li>
+	// <p>表示解绑 EIP 之后是否分配普通公网 IP。取值范围：<li><code>true</code>：表示解绑 EIP 之后分配普通公网 IP。</li><li><code>false</code>：表示解绑 EIP 之后不分配普通公网 IP。</li>默认取值：<code>false</code>。<br><br>只有满足以下条件时才能指定该参数：<li>只有在解绑主网卡的主内网 IP 上的 EIP 时才能指定该参数。</li><li>解绑 EIP 后重新分配普通公网 IP 操作一个账号每天最多操作 10 次；详情可通过 <a href="https://cloud.tencent.com/document/api/213/1378">DescribeAddressQuota</a> 接口获取。</li></p>
 	ReallocateNormalPublicIp *bool `json:"ReallocateNormalPublicIp,omitnil,omitempty" name:"ReallocateNormalPublicIp"`
 }
 
@@ -24104,7 +24236,7 @@ func (r *DisassociateAddressRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DisassociateAddressResponseParams struct {
-	// 异步任务TaskId。可以使用[DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271)接口查询任务状态。
+	// <p>异步任务TaskId。可以使用<a href="https://cloud.tencent.com/document/api/215/36271">DescribeTaskResult</a>接口查询任务状态。</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -25928,13 +26060,13 @@ type IPSECOptionsSpecification struct {
 }
 
 type ISPIPv6CidrBlock struct {
-	// IPv6 CIdr Block
+	// <p>IPv6网段</p>
 	IPv6CidrBlock *string `json:"IPv6CidrBlock,omitnil,omitempty" name:"IPv6CidrBlock"`
 
-	// 网络运营商类型 取值范围:'BGP'-默认, 'CMCC'-中国移动, 'CTCC'-中国电信, 'CUCC'-中国联调
+	// <p>网络运营商类型</p><p>枚举值：</p><ul><li>BGP： 默认</li><li>CMCC： 中国移动</li><li>CTCC： 中国电信</li><li>CUCC： 中国联通</li></ul>
 	ISPType *string `json:"ISPType,omitnil,omitempty" name:"ISPType"`
 
-	// IPv6 Cidr 的类型：`GUA`(全球单播地址), `ULA`(唯一本地地址)
+	// <p>IPv6网段类型</p><p>枚举值：</p><ul><li>GUA： 全球单播地址</li><li>ULA： 唯一本地地址</li></ul>
 	AddressType *string `json:"AddressType,omitnil,omitempty" name:"AddressType"`
 }
 
@@ -28605,33 +28737,33 @@ func (r *ModifyFlowLogAttributeResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyGatewayFlowQosRequestParams struct {
-	// 网关实例ID，目前我们支持的网关实例类型有，
-	// 专线网关实例ID，形如，`dcg-ltjahce6`；
-	// Nat网关实例ID，形如，`nat-ltjahce6`；
-	// VPN网关实例ID，形如，`vpn-ltjahce6`。
+	// <p>网关实例ID，目前我们支持的网关实例类型有，<br>专线网关实例ID，形如，<code>dcg-ltjahce6</code>；<br>Nat网关实例ID，形如，<code>nat-ltjahce6</code>；<br>VPN网关实例ID，形如，<code>vpn-ltjahce6</code>。</p>
 	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
-	// 流控带宽值。取值大于0，表示限流到指定的Mbps；取值等于0，表示完全限流；取值为-1，不限流。
+	// <p>流控带宽值。取值大于0，表示限流到指定的Mbps；取值等于0，表示完全限流；取值为-1，不限流。</p>
 	Bandwidth *int64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
 
-	// 限流的云服务器内网IP。
+	// <p>限流的云服务器内网IP。</p><p>参数格式：10.0.0.2</p>
 	IpAddresses []*string `json:"IpAddresses,omitnil,omitempty" name:"IpAddresses"`
+
+	// <p>限流方向，取值为In代表入向，Out代表出向。当前仅标准型Nat实例网关流控带宽方向可设置入向限流。</p>
+	Direction *string `json:"Direction,omitnil,omitempty" name:"Direction"`
 }
 
 type ModifyGatewayFlowQosRequest struct {
 	*tchttp.BaseRequest
 	
-	// 网关实例ID，目前我们支持的网关实例类型有，
-	// 专线网关实例ID，形如，`dcg-ltjahce6`；
-	// Nat网关实例ID，形如，`nat-ltjahce6`；
-	// VPN网关实例ID，形如，`vpn-ltjahce6`。
+	// <p>网关实例ID，目前我们支持的网关实例类型有，<br>专线网关实例ID，形如，<code>dcg-ltjahce6</code>；<br>Nat网关实例ID，形如，<code>nat-ltjahce6</code>；<br>VPN网关实例ID，形如，<code>vpn-ltjahce6</code>。</p>
 	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
-	// 流控带宽值。取值大于0，表示限流到指定的Mbps；取值等于0，表示完全限流；取值为-1，不限流。
+	// <p>流控带宽值。取值大于0，表示限流到指定的Mbps；取值等于0，表示完全限流；取值为-1，不限流。</p>
 	Bandwidth *int64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
 
-	// 限流的云服务器内网IP。
+	// <p>限流的云服务器内网IP。</p><p>参数格式：10.0.0.2</p>
 	IpAddresses []*string `json:"IpAddresses,omitnil,omitempty" name:"IpAddresses"`
+
+	// <p>限流方向，取值为In代表入向，Out代表出向。当前仅标准型Nat实例网关流控带宽方向可设置入向限流。</p>
+	Direction *string `json:"Direction,omitnil,omitempty" name:"Direction"`
 }
 
 func (r *ModifyGatewayFlowQosRequest) ToJsonString() string {
@@ -28649,6 +28781,7 @@ func (r *ModifyGatewayFlowQosRequest) FromJsonString(s string) error {
 	delete(f, "GatewayId")
 	delete(f, "Bandwidth")
 	delete(f, "IpAddresses")
+	delete(f, "Direction")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyGatewayFlowQosRequest has unknown keys!", "")
 	}
@@ -32362,80 +32495,82 @@ func (r *ModifyVpnGatewaySslClientCertResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyVpnGatewaySslServerRequestParams struct {
-	// SSL-VPN SERVER 实例ID
+	// <p>SSL-VPN SERVER 实例ID</p>
 	SslVpnServerId *string `json:"SslVpnServerId,omitnil,omitempty" name:"SslVpnServerId"`
 
-	// SSL-VPN SERVER NAME
+	// <p>SSL-VPN SERVER NAME</p>
 	SslVpnServerName *string `json:"SslVpnServerName,omitnil,omitempty" name:"SslVpnServerName"`
 
-	// 本端地址
+	// <p>本端地址</p>
 	LocalAddress []*string `json:"LocalAddress,omitnil,omitempty" name:"LocalAddress"`
 
-	// 客户端地址
+	// <p>客户端地址</p>
 	RemoteAddress *string `json:"RemoteAddress,omitnil,omitempty" name:"RemoteAddress"`
 
-	// SSL VPN服务端监听协议。当前仅支持 UDP。默认UDP
+	// <p>SSL VPN服务端监听协议。当前仅支持 UDP。默认UDP</p>
+	//
+	// Deprecated: SslVpnProtocol is deprecated.
 	SslVpnProtocol *string `json:"SslVpnProtocol,omitnil,omitempty" name:"SslVpnProtocol"`
 
-	// SSL VPN服务端监听协议端口。
+	// <p>SSL VPN服务端监听协议端口。</p>
 	SslVpnPort *int64 `json:"SslVpnPort,omitnil,omitempty" name:"SslVpnPort"`
 
-	// 加密算法。可选 'AES-128-CBC','AES-192-CBC', 'AES-256-CBC', 默认AES-128-CBC。
+	// <p>加密算法。可选值 &#39;AES-128-CBC&#39;, &#39;AES-192-CBC&#39;, &#39;AES-256-CBC&#39;, &#39;AES-128-GCM&#39;, &#39;AES-192-GCM&#39;, &#39;AES-256-GCM&#39;, 默认AES-128-CBC。</p>
 	EncryptAlgorithm *string `json:"EncryptAlgorithm,omitnil,omitempty" name:"EncryptAlgorithm"`
 
-	// 认证算法。可选 'SHA1'，默认SHA1。
+	// <p>认证算法。可选 &#39;SHA1&#39;, &#39;MD5&#39;, &#39;SHA224&#39;, &#39;SHA256&#39;, &#39;SHA384&#39;, &#39;SHA512&#39;，默认SHA1。</p>
 	IntegrityAlgorithm *string `json:"IntegrityAlgorithm,omitnil,omitempty" name:"IntegrityAlgorithm"`
 
-	// 是否支持压缩。当前不支持压缩。默认False。
+	// <p>是否支持压缩。当前不支持压缩。默认False。</p>
 	Compress *bool `json:"Compress,omitnil,omitempty" name:"Compress"`
 
-	// 是否开启SSO认证。默认为False。该功能当前需要申请开白使用。
+	// <p>是否开启SSO认证。默认为False。该功能当前需要申请开白使用。</p>
 	SsoEnabled *bool `json:"SsoEnabled,omitnil,omitempty" name:"SsoEnabled"`
 
-	// SAML-DATA
+	// <p>SAML-DATA</p>
 	SamlData *string `json:"SamlData,omitnil,omitempty" name:"SamlData"`
 
-	// DNS Server地址
+	// <p>DNS Server地址</p>
 	DnsServers *DnsServers `json:"DnsServers,omitnil,omitempty" name:"DnsServers"`
 }
 
 type ModifyVpnGatewaySslServerRequest struct {
 	*tchttp.BaseRequest
 	
-	// SSL-VPN SERVER 实例ID
+	// <p>SSL-VPN SERVER 实例ID</p>
 	SslVpnServerId *string `json:"SslVpnServerId,omitnil,omitempty" name:"SslVpnServerId"`
 
-	// SSL-VPN SERVER NAME
+	// <p>SSL-VPN SERVER NAME</p>
 	SslVpnServerName *string `json:"SslVpnServerName,omitnil,omitempty" name:"SslVpnServerName"`
 
-	// 本端地址
+	// <p>本端地址</p>
 	LocalAddress []*string `json:"LocalAddress,omitnil,omitempty" name:"LocalAddress"`
 
-	// 客户端地址
+	// <p>客户端地址</p>
 	RemoteAddress *string `json:"RemoteAddress,omitnil,omitempty" name:"RemoteAddress"`
 
-	// SSL VPN服务端监听协议。当前仅支持 UDP。默认UDP
+	// <p>SSL VPN服务端监听协议。当前仅支持 UDP。默认UDP</p>
 	SslVpnProtocol *string `json:"SslVpnProtocol,omitnil,omitempty" name:"SslVpnProtocol"`
 
-	// SSL VPN服务端监听协议端口。
+	// <p>SSL VPN服务端监听协议端口。</p>
 	SslVpnPort *int64 `json:"SslVpnPort,omitnil,omitempty" name:"SslVpnPort"`
 
-	// 加密算法。可选 'AES-128-CBC','AES-192-CBC', 'AES-256-CBC', 默认AES-128-CBC。
+	// <p>加密算法。可选值 &#39;AES-128-CBC&#39;, &#39;AES-192-CBC&#39;, &#39;AES-256-CBC&#39;, &#39;AES-128-GCM&#39;, &#39;AES-192-GCM&#39;, &#39;AES-256-GCM&#39;, 默认AES-128-CBC。</p>
 	EncryptAlgorithm *string `json:"EncryptAlgorithm,omitnil,omitempty" name:"EncryptAlgorithm"`
 
-	// 认证算法。可选 'SHA1'，默认SHA1。
+	// <p>认证算法。可选 &#39;SHA1&#39;, &#39;MD5&#39;, &#39;SHA224&#39;, &#39;SHA256&#39;, &#39;SHA384&#39;, &#39;SHA512&#39;，默认SHA1。</p>
 	IntegrityAlgorithm *string `json:"IntegrityAlgorithm,omitnil,omitempty" name:"IntegrityAlgorithm"`
 
-	// 是否支持压缩。当前不支持压缩。默认False。
+	// <p>是否支持压缩。当前不支持压缩。默认False。</p>
 	Compress *bool `json:"Compress,omitnil,omitempty" name:"Compress"`
 
-	// 是否开启SSO认证。默认为False。该功能当前需要申请开白使用。
+	// <p>是否开启SSO认证。默认为False。该功能当前需要申请开白使用。</p>
 	SsoEnabled *bool `json:"SsoEnabled,omitnil,omitempty" name:"SsoEnabled"`
 
-	// SAML-DATA
+	// <p>SAML-DATA</p>
 	SamlData *string `json:"SamlData,omitnil,omitempty" name:"SamlData"`
 
-	// DNS Server地址
+	// <p>DNS Server地址</p>
 	DnsServers *DnsServers `json:"DnsServers,omitnil,omitempty" name:"DnsServers"`
 }
 
@@ -32471,7 +32606,7 @@ func (r *ModifyVpnGatewaySslServerRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyVpnGatewaySslServerResponseParams struct {
-	// 异步任务TASKID
+	// <p>异步任务TASKID</p>
 	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -32886,86 +33021,78 @@ type NetworkAclQuintupleEntry struct {
 }
 
 type NetworkInterface struct {
-	// 弹性网卡实例ID，例如：eni-f1xjkw1b。
+	// <p>弹性网卡实例ID，例如：eni-f1xjkw1b。</p>
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
-	// 弹性网卡名称。
+	// <p>弹性网卡名称。</p>
 	NetworkInterfaceName *string `json:"NetworkInterfaceName,omitnil,omitempty" name:"NetworkInterfaceName"`
 
-	// 弹性网卡描述。
+	// <p>弹性网卡描述。</p>
 	NetworkInterfaceDescription *string `json:"NetworkInterfaceDescription,omitnil,omitempty" name:"NetworkInterfaceDescription"`
 
-	// 子网实例ID。
+	// <p>子网实例ID。</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// VPC实例ID。
+	// <p>VPC实例ID。</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 绑定的安全组。
+	// <p>绑定的安全组。</p>
 	GroupSet []*string `json:"GroupSet,omitnil,omitempty" name:"GroupSet"`
 
-	// 是否是主网卡。
+	// <p>是否是主网卡。</p>
 	Primary *bool `json:"Primary,omitnil,omitempty" name:"Primary"`
 
-	// MAC地址。
+	// <p>MAC地址。</p>
 	MacAddress *string `json:"MacAddress,omitnil,omitempty" name:"MacAddress"`
 
-	// 弹性网卡状态：
-	// <li>`PENDING`：创建中</li>
-	// <li>`AVAILABLE`：可用的</li>
-	// <li>`ATTACHING`：绑定中</li>
-	// <li>`DETACHING`：解绑中</li>
-	// <li>`DELETING`：删除中</li>
+	// <p>弹性网卡状态：</p><li><code>PENDING</code>：创建中</li><li><code>AVAILABLE</code>：可用的</li><li><code>ATTACHING</code>：绑定中</li><li><code>DETACHING</code>：解绑中</li><li><code>DELETING</code>：删除中</li>
 	State *string `json:"State,omitnil,omitempty" name:"State"`
 
-	// 弹性网卡状态：
-	// <li>`PENDING`：创建中</li>
-	// <li>`AVAILABLE`：可用的</li>
-	// <li>`ATTACHING`：绑定中</li>
-	// <li>`DETACHING`：解绑中</li>
-	// <li>`DELETING`：删除中</li>
-	// <li>`INUSE`：已绑定</li>
+	// <p>弹性网卡状态：</p><li><code>PENDING</code>：创建中</li><li><code>AVAILABLE</code>：可用的</li><li><code>ATTACHING</code>：绑定中</li><li><code>DETACHING</code>：解绑中</li><li><code>DELETING</code>：删除中</li><li><code>INUSE</code>：已绑定</li>
 	NetworkInterfaceState *string `json:"NetworkInterfaceState,omitnil,omitempty" name:"NetworkInterfaceState"`
 
-	// 内网IP信息。
+	// <p>内网IP信息。</p>
 	PrivateIpAddressSet []*PrivateIpAddressSpecification `json:"PrivateIpAddressSet,omitnil,omitempty" name:"PrivateIpAddressSet"`
 
-	// 绑定的云服务器对象。
+	// <p>绑定的云服务器对象。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Attachment *NetworkInterfaceAttachment `json:"Attachment,omitnil,omitempty" name:"Attachment"`
 
-	// 可用区。
+	// <p>可用区。</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 创建时间。格式：YYYY-MM-DD hh:mm:ss。示例值：2020-10-28 08:23:59
+	// <p>创建时间。格式：YYYY-MM-DD hh:mm:ss。示例值：2020-10-28 08:23:59</p>
 	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 
-	// `IPv6`地址列表。
+	// <p><code>IPv6</code>地址列表。</p>
 	Ipv6AddressSet []*Ipv6Address `json:"Ipv6AddressSet,omitnil,omitempty" name:"Ipv6AddressSet"`
 
-	// 标签键值对。
+	// <p>标签键值对。</p>
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 
-	// 网卡类型。“0”-辅助网卡，“1”-主网卡，“2”：中继网卡
+	// <p>网卡类型。“0”-辅助网卡，“1”-主网卡，“2”：中继网卡</p>
 	EniType *uint64 `json:"EniType,omitnil,omitempty" name:"EniType"`
 
-	// 网卡绑定的子机类型：cvm（普通CVM子机），eks（弹性容器服务Elastic Kubernetes Service）， hai（高性能应用服务Hyper Application Inventor）。
+	// <p>网卡绑定的子机类型：cvm（普通CVM子机），eks（弹性容器服务Elastic Kubernetes Service）， hai（高性能应用服务Hyper Application Inventor）。</p>
 	Business *string `json:"Business,omitnil,omitempty" name:"Business"`
 
-	// 网卡所关联的CDC实例ID。
+	// <p>网卡所关联的CDC实例ID。</p>
 	CdcId *string `json:"CdcId,omitnil,omitempty" name:"CdcId"`
 
-	// 弹性网卡类型：0:标准型/1:扩展型。默认值为0。
+	// <p>弹性网卡类型：0:标准型/1:扩展型。默认值为0。</p>
 	AttachType *uint64 `json:"AttachType,omitnil,omitempty" name:"AttachType"`
 
-	// 用于保留网卡主IP的资源ID用于保留网卡主IP的资源ID。用于删除网卡时作为入参数。
+	// <p>用于保留网卡主IP的资源ID用于保留网卡主IP的资源ID。用于删除网卡时作为入参数。</p>
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 服务质量级别：
-	// PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。
-	// 
-	// 可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。
+	// <p>服务质量级别：<br>PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。</p><p>可选值：PT（云金）、AU（云银）、AG(云铜）、DEFAULT（默认）。</p>
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
+
+	// <p>指定的<code>IPv6</code>地址列表，单次最多指定10个。与入参<code>Ipv6AddressCount</code>合并计算配额。</p>
+	Ipv6Addresses []*Ipv6Address `json:"Ipv6Addresses,omitnil,omitempty" name:"Ipv6Addresses"`
+
+	// <p>自动分配<code>IPv6</code>地址个数，内网IP地址个数总和不能超过配额数。与入参<code>Ipv6Addresses</code>合并计算配额。</p><p>取值范围：[1, 10]</p><p>单位：个</p>
+	Ipv6AddressCount *uint64 `json:"Ipv6AddressCount,omitnil,omitempty" name:"Ipv6AddressCount"`
 }
 
 type NetworkInterfaceAttachment struct {
@@ -36233,6 +36360,9 @@ type SetCcnRegionBandwidthLimitsRequestParams struct {
 
 	// 是否恢复云联网地域出口/地域间带宽限速为默认值（1Gbps）。false表示不恢复；true表示恢复。恢复默认值后，限速实例将不在控制台展示。该参数默认为 false，不恢复。
 	SetDefaultLimitFlag *bool `json:"SetDefaultLimitFlag,omitnil,omitempty" name:"SetDefaultLimitFlag"`
+
+	// 是否设置默认QOS带宽；
+	SetQosDefaultLimitFlag *bool `json:"SetQosDefaultLimitFlag,omitnil,omitempty" name:"SetQosDefaultLimitFlag"`
 }
 
 type SetCcnRegionBandwidthLimitsRequest struct {
@@ -36246,6 +36376,9 @@ type SetCcnRegionBandwidthLimitsRequest struct {
 
 	// 是否恢复云联网地域出口/地域间带宽限速为默认值（1Gbps）。false表示不恢复；true表示恢复。恢复默认值后，限速实例将不在控制台展示。该参数默认为 false，不恢复。
 	SetDefaultLimitFlag *bool `json:"SetDefaultLimitFlag,omitnil,omitempty" name:"SetDefaultLimitFlag"`
+
+	// 是否设置默认QOS带宽；
+	SetQosDefaultLimitFlag *bool `json:"SetQosDefaultLimitFlag,omitnil,omitempty" name:"SetQosDefaultLimitFlag"`
 }
 
 func (r *SetCcnRegionBandwidthLimitsRequest) ToJsonString() string {
@@ -36263,6 +36396,7 @@ func (r *SetCcnRegionBandwidthLimitsRequest) FromJsonString(s string) error {
 	delete(f, "CcnId")
 	delete(f, "CcnRegionBandwidthLimits")
 	delete(f, "SetDefaultLimitFlag")
+	delete(f, "SetQosDefaultLimitFlag")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "SetCcnRegionBandwidthLimitsRequest has unknown keys!", "")
 	}
@@ -36747,19 +36881,28 @@ type Subnet struct {
 
 	// <p>是否是CDC所属子网。0:否 1:是</p>
 	IsCdcSubnet *int64 `json:"IsCdcSubnet,omitnil,omitempty" name:"IsCdcSubnet"`
+
+	// <p>协议栈类型</p><p>枚举值：</p><ul><li>DualStack： IPv4和IPv6双栈</li><li>IPv6Only： IPv6单栈</li></ul>
+	StackType *string `json:"StackType,omitnil,omitempty" name:"StackType"`
 }
 
 type SubnetInput struct {
-	// 子网的`CIDR`。
-	CidrBlock *string `json:"CidrBlock,omitnil,omitempty" name:"CidrBlock"`
-
-	// 子网名称。
+	// <p>子网名称。</p>
 	SubnetName *string `json:"SubnetName,omitnil,omitempty" name:"SubnetName"`
 
-	// 可用区。形如：`ap-guangzhou-2`。
+	// <p>可用区。形如：<code>ap-guangzhou-2</code>。</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 指定关联路由表，形如：`rtb-3ryrwzuu`。
+	// <p>协议栈类型</p><p>枚举值：</p><ul><li>DualStack： IPv4和IPv6双栈</li><li>IPv6Only： IPv6单栈</li></ul>
+	StackType *string `json:"StackType,omitnil,omitempty" name:"StackType"`
+
+	// <p>子网的<code>CIDR</code>。</p>
+	CidrBlock *string `json:"CidrBlock,omitnil,omitempty" name:"CidrBlock"`
+
+	// <p>子网的 <code>IPv6</code> <code>CIDR</code>。</p>
+	Ipv6CidrBlock *string `json:"Ipv6CidrBlock,omitnil,omitempty" name:"Ipv6CidrBlock"`
+
+	// <p>指定关联路由表，形如：<code>rtb-3ryrwzuu</code>。</p>
 	RouteTableId *string `json:"RouteTableId,omitnil,omitempty" name:"RouteTableId"`
 }
 
@@ -37813,6 +37956,9 @@ type Vpc struct {
 
 	// <p>vpc关联云联网时IPv6类型路由发布策略， true：开启cidr路由发布，false：开启subnet子网路由发布。创建vpc时默认为子网路由发布，当选择cidr路由发布时，请通过工单加入白名单。</p>
 	EnableRouteVpcPublishIpv6 *bool `json:"EnableRouteVpcPublishIpv6,omitnil,omitempty" name:"EnableRouteVpcPublishIpv6"`
+
+	// <p>协议栈类型</p><p>枚举值：</p><ul><li>DualStack： IPv4和IPv6双栈</li><li>IPv6Only： IPv6单栈</li></ul>
+	StackType *string `json:"StackType,omitnil,omitempty" name:"StackType"`
 }
 
 type VpcEndPointServiceUser struct {
@@ -37877,82 +38023,82 @@ type VpcTaskResultDetailInfo struct {
 }
 
 type VpnConnection struct {
-	// 通道实例ID。
+	// <p>通道实例ID。</p>
 	VpnConnectionId *string `json:"VpnConnectionId,omitnil,omitempty" name:"VpnConnectionId"`
 
-	// 通道名称。
+	// <p>通道名称。</p>
 	VpnConnectionName *string `json:"VpnConnectionName,omitnil,omitempty" name:"VpnConnectionName"`
 
-	// VPC实例ID。
+	// <p>VPC实例ID。</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// VPN网关实例ID。
+	// <p>VPN网关实例ID。</p>
 	VpnGatewayId *string `json:"VpnGatewayId,omitnil,omitempty" name:"VpnGatewayId"`
 
-	// 对端网关实例ID。
+	// <p>对端网关实例ID。</p>
 	CustomerGatewayId *string `json:"CustomerGatewayId,omitnil,omitempty" name:"CustomerGatewayId"`
 
-	// 预共享密钥。
+	// <p>预共享密钥。</p>
 	PreShareKey *string `json:"PreShareKey,omitnil,omitempty" name:"PreShareKey"`
 
-	// 通道传输协议。
+	// <p>通道传输协议。</p>
 	VpnProto *string `json:"VpnProto,omitnil,omitempty" name:"VpnProto"`
 
-	// 通道加密协议。
+	// <p>通道加密协议。</p>
 	EncryptProto *string `json:"EncryptProto,omitnil,omitempty" name:"EncryptProto"`
 
-	// 路由类型。
+	// <p>路由类型。</p>
 	RouteType *string `json:"RouteType,omitnil,omitempty" name:"RouteType"`
 
-	// 创建时间。
+	// <p>创建时间。</p>
 	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 
-	// 通道的生产状态，PENDING：生产中，AVAILABLE：运行中，DELETING：删除中。
+	// <p>通道的生产状态，PENDING：生产中，AVAILABLE：运行中，DELETING：删除中。</p>
 	State *string `json:"State,omitnil,omitempty" name:"State"`
 
-	// 通道连接状态，AVAILABLE：已连接。
+	// <p>通道连接状态，AVAILABLE：已连接。</p>
 	NetStatus *string `json:"NetStatus,omitnil,omitempty" name:"NetStatus"`
 
-	// SPD。
+	// <p>SPD。</p>
 	SecurityPolicyDatabaseSet []*SecurityPolicyDatabase `json:"SecurityPolicyDatabaseSet,omitnil,omitempty" name:"SecurityPolicyDatabaseSet"`
 
-	// IKE选项。
+	// <p>IKE选项。</p>
 	IKEOptionsSpecification *IKEOptionsSpecification `json:"IKEOptionsSpecification,omitnil,omitempty" name:"IKEOptionsSpecification"`
 
-	// IPSEC选择。
+	// <p>IPSEC选择。</p>
 	IPSECOptionsSpecification *IPSECOptionsSpecification `json:"IPSECOptionsSpecification,omitnil,omitempty" name:"IPSECOptionsSpecification"`
 
-	// 是否支持健康状态探测
+	// <p>是否支持健康状态探测</p>
 	EnableHealthCheck *bool `json:"EnableHealthCheck,omitnil,omitempty" name:"EnableHealthCheck"`
 
-	// 本端探测ip
+	// <p>本端探测ip</p>
 	HealthCheckLocalIp *string `json:"HealthCheckLocalIp,omitnil,omitempty" name:"HealthCheckLocalIp"`
 
-	// 对端探测ip
+	// <p>对端探测ip</p>
 	HealthCheckRemoteIp *string `json:"HealthCheckRemoteIp,omitnil,omitempty" name:"HealthCheckRemoteIp"`
 
-	// 通道健康检查状态，AVAILABLE：正常，UNAVAILABLE：不正常。 未配置健康检查不返回该对象
+	// <p>通道健康检查状态，AVAILABLE：正常，UNAVAILABLE：不正常。 未配置健康检查不返回该对象</p>
 	HealthCheckStatus *string `json:"HealthCheckStatus,omitnil,omitempty" name:"HealthCheckStatus"`
 
-	// DPD探测开关。默认为0，表示关闭DPD探测。可选值：0（关闭），1（开启）
+	// <p>DPD探测开关。默认为0，表示关闭DPD探测。可选值：0（关闭），1（开启）</p>
 	DpdEnable *int64 `json:"DpdEnable,omitnil,omitempty" name:"DpdEnable"`
 
-	// DPD超时时间。即探测确认对端不存在需要的时间。
+	// <p>DPD超时时间。即探测确认对端不存在需要的时间。</p>
 	DpdTimeout *string `json:"DpdTimeout,omitnil,omitempty" name:"DpdTimeout"`
 
-	// DPD超时后的动作。默认为clear。dpdEnable为1（开启）时有效。可取值为clear（断开）和restart（重试）
+	// <p>DPD超时后的动作。默认为clear。dpdEnable为1（开启）时有效。可取值为clear（断开）和restart（重试）</p>
 	DpdAction *string `json:"DpdAction,omitnil,omitempty" name:"DpdAction"`
 
-	// 标签键值对数组
+	// <p>标签键值对数组</p>
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 
-	// 协商类型
+	// <p>协商类型</p><p>枚举值：</p><ul><li>active： 主动协商</li><li>passive： 被动协商</li><li>flowTrigger： 流量协商</li></ul>
 	NegotiationType *string `json:"NegotiationType,omitnil,omitempty" name:"NegotiationType"`
 
-	// Bgp配置信息
+	// <p>Bgp配置信息</p>
 	BgpConfig *BgpConfigAndAsn `json:"BgpConfig,omitnil,omitempty" name:"BgpConfig"`
 
-	// Nqa配置信息
+	// <p>Nqa配置信息</p>
 	HealthCheckConfig *HealthCheckConfig `json:"HealthCheckConfig,omitnil,omitempty" name:"HealthCheckConfig"`
 }
 
@@ -38022,17 +38168,23 @@ type VpnGateway struct {
 
 	// <p>标签列表</p>
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
+
+	// <p>私网VPN标识</p>
+	IsPrivate *bool `json:"IsPrivate,omitnil,omitempty" name:"IsPrivate"`
 }
 
 type VpnGatewayQuota struct {
-	// 带宽配额，单位：Mbps。
+	// <p>带宽配额，单位：Mbps。</p>
 	Bandwidth *uint64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
 
-	// 配额中文名称
+	// <p>配额中文名称</p>
 	Cname *string `json:"Cname,omitnil,omitempty" name:"Cname"`
 
-	// 配额英文名称
+	// <p>配额英文名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>SSL 连接数可选配额</p>
+	MaxConnection []*uint64 `json:"MaxConnection,omitnil,omitempty" name:"MaxConnection"`
 }
 
 type VpnGatewayRoute struct {

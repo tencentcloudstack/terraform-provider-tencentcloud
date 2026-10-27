@@ -40,6 +40,13 @@ In addition to all arguments above, the following attributes are exported:
 * `message` - Message of the backup storage location.
 * `state` - State of the backup storage location.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateBackupStorageLocation](https://www.tencentcloud.com/document/api/457/55012)
+* Read: [DescribeBackupStorageLocations](https://www.tencentcloud.com/document/api/457/55010)
+* Delete: [DeleteBackupStorageLocation](https://www.tencentcloud.com/document/api/457/55011)
 
 ## Import
 

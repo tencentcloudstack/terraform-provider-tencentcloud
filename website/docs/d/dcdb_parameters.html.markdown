@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
   * `param` - parameter name.
   * `value` - parameter value.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBParameters](https://www.tencentcloud.com/document/api/1042/34444)
 

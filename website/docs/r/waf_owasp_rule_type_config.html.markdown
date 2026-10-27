@@ -44,6 +44,19 @@ In addition to all arguments above, the following attributes are exported:
 * `rule_type_name` - Rule type name.
 * `total_rule` - Specifies all rules under the rule type. always.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [ModifyOwaspRuleTypeAction](https://www.tencentcloud.com/document/api/627/73179)
+  - [ModifyOwaspRuleTypeLevel](https://www.tencentcloud.com/document/api/627/73178)
+  - [ModifyOwaspRuleTypeStatus](https://www.tencentcloud.com/document/api/627/73177)
+* Read: [DescribeOwaspRuleTypes](https://www.tencentcloud.com/document/api/627/73183)
+* Update:
+  - [ModifyOwaspRuleTypeAction](https://www.tencentcloud.com/document/api/627/73179)
+  - [ModifyOwaspRuleTypeLevel](https://www.tencentcloud.com/document/api/627/73178)
+  - [ModifyOwaspRuleTypeStatus](https://www.tencentcloud.com/document/api/627/73177)
 
 ## Import
 

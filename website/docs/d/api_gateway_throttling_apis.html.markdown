@@ -93,4 +93,11 @@ In addition to all arguments above, the following attributes are exported:
       * `quota` - Throttling value.
   * `service_id` - Unique service ID of API.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read:
+  - [DescribeApiEnvironmentStrategy](https://www.tencentcloud.com/search/?wd=DescribeApiEnvironmentStrategy&type=document&lang=en)
+  - [DescribeServicesStatus](https://www.tencentcloud.com/search/?wd=DescribeServicesStatus&type=document&lang=en)
 

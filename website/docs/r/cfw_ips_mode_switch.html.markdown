@@ -32,6 +32,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyIpsModeSwitch](https://www.tencentcloud.com/search/?wd=ModifyIpsModeSwitch&type=document&lang=en)
+* Read: [DescribeIpsModeSwitch](https://www.tencentcloud.com/search/?wd=DescribeIpsModeSwitch&type=document&lang=en)
+* Update: [ModifyIpsModeSwitch](https://www.tencentcloud.com/search/?wd=ModifyIpsModeSwitch&type=document&lang=en)
 
 ## Import
 

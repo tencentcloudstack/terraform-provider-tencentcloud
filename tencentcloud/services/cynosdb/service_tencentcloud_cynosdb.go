@@ -2638,6 +2638,30 @@ func (me *CynosdbService) ModifyClusterStorage(ctx context.Context, clusterId st
 	return
 }
 
+func (me *CynosdbService) TransferStoragePrepayToPostpay(ctx context.Context, clusterId string) (dealNames []*string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := cynosdb.NewTransferStoragePrepayToPostpayRequest()
+	request.ClusterId = &clusterId
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseCynosdbClient().TransferStoragePrepayToPostpay(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
+			return tccommon.RetryError(err)
+		}
+		if response != nil && response.Response != nil {
+			dealNames = response.Response.DealNames
+		}
+		return nil
+	})
+	if errRet != nil {
+		return
+	}
+
+	return
+}
+
 func (me *CynosdbService) SwitchClusterVpc(ctx context.Context, clusterId string, vpcId string, subnetId string, oldIpReserveHours int64) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := cynosdb.NewSwitchClusterVpcRequest()

@@ -34,6 +34,7 @@ type SecretInfo struct {
 	deleteTime       uint64
 	createTime       uint64
 	resourceId       string
+	encryptType      uint64
 }
 
 func (info SecretInfo) Status() string {
@@ -125,6 +126,9 @@ func (me *SsmService) DescribeSecretByName(ctx context.Context, secretName strin
 		deleteTime:       *response.Response.DeleteTime,
 		createTime:       *response.Response.CreateTime,
 		resourceId:       fmt.Sprintf("creatorUin/%d/%s", *response.Response.CreateUin, *response.Response.SecretName),
+	}
+	if response.Response.EncryptType != nil {
+		secret.encryptType = *response.Response.EncryptType
 	}
 	return
 }

@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
   * `name` - Name.
   * `parent_id` - Parent Id.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTreeJobs](https://www.tencentcloud.com/search/?wd=DescribeTreeJobs&type=document&lang=en)
 

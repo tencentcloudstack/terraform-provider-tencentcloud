@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
   * `algorithm` - Algorithm.
   * `key_usage` - Key usage.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListAlgorithms](https://www.tencentcloud.com/document/api/1030/35177)
 

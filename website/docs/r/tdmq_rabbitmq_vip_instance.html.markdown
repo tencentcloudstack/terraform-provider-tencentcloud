@@ -130,6 +130,18 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_endpoint` - VPC Endpoint.
   * `vpc_id` - VPC ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateRabbitMQVipInstance](https://www.tencentcloud.com/search/?wd=CreateRabbitMQVipInstance&type=document&lang=en)
+  - [DescribeRabbitMQVipInstances](https://www.tencentcloud.com/search/?wd=DescribeRabbitMQVipInstances&type=document&lang=en)
+* Read:
+  - [DescribeRabbitMQVipInstance](https://www.tencentcloud.com/search/?wd=DescribeRabbitMQVipInstance&type=document&lang=en)
+  - [DescribeRabbitMQVipInstances](https://www.tencentcloud.com/search/?wd=DescribeRabbitMQVipInstances&type=document&lang=en)
+* Update: [ModifyRabbitMQVipInstance](https://www.tencentcloud.com/search/?wd=ModifyRabbitMQVipInstance&type=document&lang=en)
+* Delete: [DeleteRabbitMQVipInstance](https://www.tencentcloud.com/search/?wd=DeleteRabbitMQVipInstance&type=document&lang=en)
 
 ## Import
 

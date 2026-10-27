@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
 * `secret_binary` - The binary credential information of the secret version, encoded using Base64.
 * `secret_string` - The text-based credential information of the secret version.
 
+## API Reference
+
+This ephemeral resource reads the following TencentCloud APIs:
+
+* Open: [GetSecretValue](https://www.tencentcloud.com/document/api/1078/38649)
 

@@ -57,4 +57,9 @@ In addition to all arguments above, the following attributes are exported:
   * `subnet_id` - Subnet id, support network and public network access point, this field is emptyNote: This field may return null, indicating that no valid value can be obtained.
   * `vpc_id` - The id of the vpc, the supporting network and the access point of the public network, this field is emptyNote: This field may return null, indicating that no valid value can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribePulsarProInstanceDetail](https://www.tencentcloud.com/search/?wd=DescribePulsarProInstanceDetail&type=document&lang=en)
 

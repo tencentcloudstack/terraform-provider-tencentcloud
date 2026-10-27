@@ -91,4 +91,9 @@ In addition to all arguments above, the following attributes are exported:
   * `vip_end_at` - Paid package expiration time.
   * `vip_start_at` - Paid package activation time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDomainFilterList](https://www.tencentcloud.com/search/?wd=DescribeDomainFilterList&type=document&lang=en)
 

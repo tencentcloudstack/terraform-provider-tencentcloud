@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
   * `month` - Month.
   * `total_cost` - Total cost of the month.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeOrganizationFinancialByMonth](https://www.tencentcloud.com/search/?wd=DescribeOrganizationFinancialByMonth&type=document&lang=en)
 

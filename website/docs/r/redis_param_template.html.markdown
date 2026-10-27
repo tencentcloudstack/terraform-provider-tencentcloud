@@ -76,6 +76,14 @@ In addition to all arguments above, the following attributes are exported:
   * `need_reboot` - Indicates whether to reboot redis instance if modified.
   * `param_type` - Parameter type.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateParamTemplate](https://www.tencentcloud.com/document/api/239/41921)
+* Read: [DescribeParamTemplateInfo](https://www.tencentcloud.com/document/api/239/41926)
+* Update: [ModifyParamTemplate](https://www.tencentcloud.com/document/api/239/41918)
+* Delete: [DeleteParamTemplate](https://www.tencentcloud.com/document/api/239/41920)
 
 ## Import
 

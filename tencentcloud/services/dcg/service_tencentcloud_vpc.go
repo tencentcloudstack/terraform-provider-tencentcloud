@@ -3991,7 +3991,7 @@ func (me *VpcService) DescribeNetWorkAcls(ctx context.Context, aclID, vpcID, nam
 			errRet = err
 			return
 		}
-		if response.Response == nil {
+		if response == nil || response.Response == nil {
 			return
 		}
 

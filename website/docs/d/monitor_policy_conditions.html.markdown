@@ -69,4 +69,9 @@ In addition to all arguments above, the following attributes are exported:
   * `policy_view_name` - Policy view name, eg:`cvm_device`,`BANDWIDTHPACKAGE`, refer to `data.tencentcloud_monitor_policy_conditions(policy_view_name)`.
   * `support_regions` - Support regions of this policy view.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribePolicyConditionList](https://www.tencentcloud.com/document/api/248/35979)
 

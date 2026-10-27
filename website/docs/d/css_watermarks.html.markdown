@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
   * `x_position` - Display position: X-axis offset.
   * `y_position` - Display position: Y-axis offset.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeLiveWatermarks](https://www.tencentcloud.com/document/api/267/30820)
 

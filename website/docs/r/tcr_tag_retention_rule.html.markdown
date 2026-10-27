@@ -99,6 +99,19 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `retention_id` - The ID of the retention task.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateTagRetentionRule](https://www.tencentcloud.com/document/api/1051/50690)
+  - [DescribeNamespaces](https://www.tencentcloud.com/document/api/1051/50693)
+  - [DescribeTagRetentionRules](https://www.tencentcloud.com/document/api/1051/50686)
+* Read: [DescribeTagRetentionRules](https://www.tencentcloud.com/document/api/1051/50686)
+* Update:
+  - [DescribeNamespaces](https://www.tencentcloud.com/document/api/1051/50693)
+  - [ModifyTagRetentionRule](https://www.tencentcloud.com/document/api/1051/50685)
+* Delete: [DeleteTagRetentionRule](https://www.tencentcloud.com/document/api/1051/50689)
 
 ## Import
 

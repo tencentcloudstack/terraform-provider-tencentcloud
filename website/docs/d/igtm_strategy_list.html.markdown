@@ -64,4 +64,9 @@ In addition to all arguments above, the following attributes are exported:
   * `switch_pool_type` - Scheduling mode: AUTO default; PAUSE only pause without switching.
   * `updated_on` - Update time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeStrategyList](https://www.tencentcloud.com/search/?wd=DescribeStrategyList&type=document&lang=en)
 

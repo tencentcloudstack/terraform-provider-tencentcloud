@@ -142,6 +142,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `task_id` - Real-time log delivery task ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRealtimeLogDeliveryTask](https://www.tencentcloud.com/document/api/1145/59507)
+* Read: [DescribeRealtimeLogDeliveryTasks](https://www.tencentcloud.com/document/api/1145/59503)
+* Update: [ModifyRealtimeLogDeliveryTask](https://www.tencentcloud.com/document/api/1145/59501)
+* Delete: [DeleteRealtimeLogDeliveryTask](https://www.tencentcloud.com/document/api/1145/59505)
 
 ## Import
 

@@ -119,6 +119,14 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Creation time of template in ISO date format.
 * `update_time` - Last modified time of template in ISO date format.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAdaptiveDynamicStreamingTemplate](https://www.tencentcloud.com/document/api/266/37567)
+* Read: [DescribeAdaptiveDynamicStreamingTemplates](https://www.tencentcloud.com/document/api/266/34152)
+* Update: [ModifyAdaptiveDynamicStreamingTemplate](https://www.tencentcloud.com/document/api/266/37561)
+* Delete: [DeleteAdaptiveDynamicStreamingTemplate](https://www.tencentcloud.com/document/api/266/37565)
 
 ## Import
 

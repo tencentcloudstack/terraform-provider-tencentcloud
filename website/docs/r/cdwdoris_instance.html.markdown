@@ -181,6 +181,7 @@ The following arguments are supported:
 * `workload_group_status` - (Required, String) Whether to enable resource group. `open` - enable, `close` - disable.
 * `zone` - (Required, String) Availability zone.
 * `case_sensitive` - (Optional, Int) Whether the table name is case sensitive, 0 refers to sensitive, 1 refers to insensitive, compared in lowercase; 2 refers to insensitive, and the table name is changed to lowercase for storage.
+* `disk_encrypt` - (Optional, Int, ForceNew) Disk encryption. Immutable after creation. `0` - disable, `1` - enable. Default is `0`.
 * `enable_multi_zones` - (Optional, Bool) Whether to enable multi-availability zone.
 * `ha_type` - (Optional, Int) High availability type: 0 indicates non-high availability (only one FE, FeSpec.CreateInstanceSpec.Count=1), 1 indicates read high availability (at least 3 FEs must be deployed, FeSpec.CreateInstanceSpec.Count>=3, and it must be an odd number), 2 indicates read and write high availability (at least 5 FEs must be deployed, FeSpec.CreateInstanceSpec.Count>=5, and it must be an odd number).
 * `is_ssc` - (Optional, Bool, ForceNew) Whether it is storage-compute separation. Default is false.
@@ -232,4 +233,25 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `30m`) Used when creating the resource.
 * `update` - (Defaults to `30m`) Used when updating the resource.
 * `delete` - (Defaults to `30m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateInstanceNew](https://www.tencentcloud.com/search/?wd=CreateInstanceNew&type=document&lang=en)
+  - [DescribeInstanceState](https://www.tencentcloud.com/search/?wd=DescribeInstanceState&type=document&lang=en)
+  - [ModifySecurityGroups](https://www.tencentcloud.com/search/?wd=ModifySecurityGroups&type=document&lang=en)
+  - [ModifyWorkloadGroupStatus](https://www.tencentcloud.com/search/?wd=ModifyWorkloadGroupStatus&type=document&lang=en)
+* Read:
+  - [DescribeInstance](https://www.tencentcloud.com/search/?wd=DescribeInstance&type=document&lang=en)
+  - [DescribeWorkloadGroup](https://www.tencentcloud.com/search/?wd=DescribeWorkloadGroup&type=document&lang=en)
+* Update:
+  - [DescribeInstanceState](https://www.tencentcloud.com/search/?wd=DescribeInstanceState&type=document&lang=en)
+  - [ModifyInstance](https://www.tencentcloud.com/search/?wd=ModifyInstance&type=document&lang=en)
+  - [ModifySecurityGroups](https://www.tencentcloud.com/search/?wd=ModifySecurityGroups&type=document&lang=en)
+  - [ModifyWorkloadGroupStatus](https://www.tencentcloud.com/search/?wd=ModifyWorkloadGroupStatus&type=document&lang=en)
+* Delete:
+  - [DescribeInstanceState](https://www.tencentcloud.com/search/?wd=DescribeInstanceState&type=document&lang=en)
+  - [DescribeInstances](https://www.tencentcloud.com/search/?wd=DescribeInstances&type=document&lang=en)
+  - [DestroyInstance](https://www.tencentcloud.com/search/?wd=DestroyInstance&type=document&lang=en)
 

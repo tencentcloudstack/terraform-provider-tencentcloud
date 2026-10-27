@@ -100,4 +100,9 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Backup file status, 0-creating; 1-success; 2-failure.
 * `strategy` - Backup strategy, 0-instance backup; 1-multi-database backup; when the instance status is 0-creating, this field is the default value 0, meaningless.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBackupByFlowId](https://www.tencentcloud.com/document/api/238/72780)
 

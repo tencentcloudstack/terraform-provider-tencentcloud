@@ -39,6 +39,29 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeClusterDetail](https://www.tencentcloud.com/document/api/1098/40752)
+  - [DescribeClusterInstanceGrps](https://www.tencentcloud.com/document/api/1098/40751)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/1098/40750)
+  - [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/document/api/1098/40734)
+* Read:
+  - [DescribeClusterInstanceGrps](https://www.tencentcloud.com/document/api/1098/40751)
+  - [DescribeDBSecurityGroups](https://www.tencentcloud.com/document/api/1098/40737)
+* Update:
+  - [DescribeClusterDetail](https://www.tencentcloud.com/document/api/1098/40752)
+  - [DescribeClusterInstanceGrps](https://www.tencentcloud.com/document/api/1098/40751)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/1098/40750)
+  - [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/document/api/1098/40734)
+* Delete:
+  - [DescribeClusterDetail](https://www.tencentcloud.com/document/api/1098/40752)
+  - [DescribeClusterInstanceGrps](https://www.tencentcloud.com/document/api/1098/40751)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/1098/40750)
+  - [DescribeDBSecurityGroups](https://www.tencentcloud.com/document/api/1098/40737)
+  - [DisassociateSecurityGroups](https://www.tencentcloud.com/document/api/1098/81007)
 
 ## Import
 

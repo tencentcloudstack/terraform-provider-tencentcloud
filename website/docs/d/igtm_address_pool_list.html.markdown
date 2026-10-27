@@ -77,4 +77,9 @@ Loopback addresses, reserved addresses, internal network addresses and Tencent r
   * `traffic_strategy` - Traffic strategy: WEIGHT load balancing, ALL resolve all.
   * `updated_on` - Update time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAddressPoolList](https://www.tencentcloud.com/search/?wd=DescribeAddressPoolList&type=document&lang=en)
 

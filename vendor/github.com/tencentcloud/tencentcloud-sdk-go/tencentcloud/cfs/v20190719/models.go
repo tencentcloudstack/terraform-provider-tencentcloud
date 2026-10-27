@@ -22,20 +22,20 @@ import (
 
 // Predefined struct for user
 type ApplyPathLifecyclePolicyRequestParams struct {
-	// 生命周期管理策略ID
+	// <p>生命周期管理策略ID</p>
 	LifecyclePolicyID *string `json:"LifecyclePolicyID,omitnil,omitempty" name:"LifecyclePolicyID"`
 
-	// 生命周期管理策略关联目录的绝对路径列表
+	// <p>生命周期管理策略所关联的目录路径列表，每个路径必须以 /cfs/ 开头，代表文件存储实例内部的逻辑路径，而非本地挂载点路径。</p><p>示例：</p><ul><li>若挂载的是CFS根目录 /，需关联挂载路径下的 test1/test2，则入参值为 /cfs/test1/test2</li><li>若挂载的是CFS子目录 /subdir，需关联挂载路径下的 test1/test2，则入参值为 /cfs/subdir/test1/test2</li></ul>
 	Paths []*PathInfo `json:"Paths,omitnil,omitempty" name:"Paths"`
 }
 
 type ApplyPathLifecyclePolicyRequest struct {
 	*tchttp.BaseRequest
 	
-	// 生命周期管理策略ID
+	// <p>生命周期管理策略ID</p>
 	LifecyclePolicyID *string `json:"LifecyclePolicyID,omitnil,omitempty" name:"LifecyclePolicyID"`
 
-	// 生命周期管理策略关联目录的绝对路径列表
+	// <p>生命周期管理策略所关联的目录路径列表，每个路径必须以 /cfs/ 开头，代表文件存储实例内部的逻辑路径，而非本地挂载点路径。</p><p>示例：</p><ul><li>若挂载的是CFS根目录 /，需关联挂载路径下的 test1/test2，则入参值为 /cfs/test1/test2</li><li>若挂载的是CFS子目录 /subdir，需关联挂载路径下的 test1/test2，则入参值为 /cfs/subdir/test1/test2</li></ul>
 	Paths []*PathInfo `json:"Paths,omitnil,omitempty" name:"Paths"`
 }
 
@@ -61,7 +61,7 @@ func (r *ApplyPathLifecyclePolicyRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ApplyPathLifecyclePolicyResponseParams struct {
-	// 有规则冲突时返回的已有冲突规则信息
+	// <p>有规则冲突时返回的已有冲突规则信息</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CheckResults []*CheckResult `json:"CheckResults,omitnil,omitempty" name:"CheckResults"`
 
@@ -177,14 +177,17 @@ type AvailableRegion struct {
 }
 
 type AvailableType struct {
-	// 协议与售卖详情
+	// <p>协议与售卖详情</p>
 	Protocols []*AvailableProtoStatus `json:"Protocols,omitnil,omitempty" name:"Protocols"`
 
-	// 存储类型。返回值中 SD 为通用标准型存储， HP为通用性能型存储， TB为Turbo标准型， TP 为Turbo性能型。
+	// <p>存储类型。返回值中 SD 为通用标准型存储， HP为通用性能型存储， TB为Turbo标准型， TP 为Turbo性能型。</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 是否支持预付费。返回值中 true 为支持、false 为不支持
+	// <p>是否支持预付费。返回值中 true 为支持、false 为不支持</p>
 	Prepayment *bool `json:"Prepayment,omitnil,omitempty" name:"Prepayment"`
+
+	// <p>文件系统版本</p><p>枚举值：</p><ul><li>v1.5： 通用系列</li><li>v3.1： 通用系列（增强型）</li><li>v4.0： Turbo系列</li></ul>
+	Version *string `json:"Version,omitnil,omitempty" name:"Version"`
 }
 
 type AvailableZone struct {
@@ -452,141 +455,135 @@ func (r *CreateAutoSnapshotPolicyResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateCfsFileSystemRequestParams struct {
-	// 可用区名称，例如ap-beijing-1，请参考 [概览](https://cloud.tencent.com/document/product/582/13225) 文档中的地域与可用区列表
+	// <p>可用区名称</p><p>取值参考：<a href="https://cloud.tencent.com/document/product/213/15707?">查询可用区列表</a></p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 网络类型，可选值为 VPC，CCN；其中 VPC 为私有网络， CCN 为云联网。通用标准型/性能型请选择VPC，Turbo标准型/性能型请选择CCN。
+	// <p>网络类型</p><p>枚举值：</p><ul><li><p>VPC： 私有网络</p></li><li><p>CCN： 云联网</p></li><li><p>通用标准型/性能型（含增强型）、吞吐型请选择VPC</p></li><li><p>Turbo标准型/性能型可选VPC或CCN</p></li><li><p>当 Scenario=AgentSandbox 时，即创建 AgentCFS时无需传入，传入将被忽略。</p></li></ul>
 	NetInterface *string `json:"NetInterface,omitnil,omitempty" name:"NetInterface"`
 
-	// 权限组 ID,pgroupbasic 是默认权限组，通过控制查询权限组列表接口获取[DescribeCfsPGroups](https://cloud.tencent.com/document/product/582/38157)
+	// <p>权限组 ID。权限组规定了一组可来访白名单及操作权限。</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/582/38157">DescribeCfsPGroups</a></p><ul><li>pgroupbasic 为【默认权限组】，【默认权限组】允许所有IP地址访问及读写权限。 </li><li>注意：当 Scenario=AgentSandbox 时，即创建 AgentCFS ，必须传入 pgroupbasic【默认权限组】，传其他值报错。</li></ul>
 	PGroupId *string `json:"PGroupId,omitnil,omitempty" name:"PGroupId"`
 
-	// 文件系统协议类型， 值为 NFS、CIFS、TURBO ; 若留空则默认为 NFS协议，turbo系列必须选择TURBO，不支持NFS、CIFS
+	// <p>文件系统协议类型</p><p>枚举值：</p><ul><li>NFS： 通用标准型（含增强型）、通用性能型（含增强型）支持创建此协议的实例</li><li>CIFS： 即SMB协议，仅部分可用区的通用标准型、吞吐型支持此协议。</li><li>TURBO： Turbo标准型/Turbo性能型/AgentCFS是支持创建此协议的实例</li></ul><p>默认值：NFS</p>
 	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
-	// 文件系统存储类型，默认值为 SD ；其中 SD 为通用标准型存储， HP为通用性能型存储， TB为Turbo标准型， TP 为Turbo性能型。
+	// <p>文件系统存储类型其中 SD 为通用标准型存储， HP为通用性能型存储， TB为Turbo标准型， TP 为Turbo性能型。</p><p>枚举值：</p><ul><li>SD： 通用标准型（含增强型）。通用标准型 version = v1.5，通用标准型（增强型） version = v3.1。</li><li>HP： 通用性能型（含增强型）。通用性能型 version = v1.5，通用性能型（增强型） version = v3.1。</li><li>TB： Turbo标准型</li><li>TP： Turbo性能型</li><li>THP： 吞吐型</li></ul><p>默认值：SD</p>
 	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 
-	// 私有网络（VPC） ID，若网络类型选择的是VPC，该字段为必填.通过查询私有网络接口获取，
-	// [DescribeVpcs](https://cloud.tencent.com/document/product/215/15778)
+	// <p>私有网络（VPC） ID，若网络类型选择的是VPC，该字段为必填。</p><p>取值参考：<a href="https://cloud.tencent.com/document/product/215/15778">查询VPC列表</a></p><p>当 Scenario=AgentSandbox 时，即创建 AgentCFS 时无需传入，传入将被忽略。</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 子网 ID，若网络类型选择的是VPC，该字段为必填。通过查询子网接口获取，
-	// [DescribeSubnets](https://cloud.tencent.com/document/product/215/15784)
+	// <p>子网 ID，若网络类型选择的是VPC，该字段为必填。</p><p>取值参考：<a href="https://cloud.tencent.com/document/product/215/15784">查询子网列表</a></p><p>当 Scenario=AgentSandbox 时，即创建 AgentCFS 时无需传入，传入将被忽略。</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 指定IP地址，仅VPC网络支持；若不填写、将在该子网下随机分配 IP，Turbo系列当前不支持指定
+	// <p>指定IP地址，仅VPC网络支持；若不填写、将在该子网下随机分配 IP，Turbo系列当前不支持指定</p>
 	MountIP *string `json:"MountIP,omitnil,omitempty" name:"MountIP"`
 
-	// 用户自定义文件系统名称
+	// <p>用户自定义文件系统名称</p>
 	FsName *string `json:"FsName,omitnil,omitempty" name:"FsName"`
 
-	// 文件系统标签
+	// <p>文件系统是否加密，若留空则默认为不加密</p>
+	Encrypted *bool `json:"Encrypted,omitnil,omitempty" name:"Encrypted"`
+
+	// <p>文件系统标签</p>
 	ResourceTags []*TagInfo `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。用于保证请求幂等性的字符串失效时间为2小时。
+	// <p>用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。用于保证请求幂等性的字符串失效时间为2小时。</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 
-	// 云联网ID， 若网络类型选择的是CCN，该字段为必填;通过查询云联网列表接口获取，通过接口
-	// [DescribeCcns](https://cloud.tencent.com/document/product/215/19199)
+	// <p>云联网ID， 若网络类型选择的是CCN，该字段为必填</p><p>取值参考：<a href="https://cloud.tencent.com/document/product/215/19199">查询CCN列表</a></p><p>当 Scenario=AgentSandbox 时，即创建 AgentCFS 时无需传入，传入将被忽略</p>
 	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
 
-	// 云联网中CFS使用的网段， 若网络类型选择的是Ccn，该字段为必填，且不能和Ccn中已经绑定的网段冲突
+	// <p>云联网中CFS使用的网段， 若网络类型选择的是CCN，该字段为必填，且不能和Ccn中已经绑定的网段冲突</p><p>当 Scenario=AgentSandbox 时，即创建 AgentCFS 时无需传入，传入将被忽略</p>
 	CidrBlock *string `json:"CidrBlock,omitnil,omitempty" name:"CidrBlock"`
 
-	// 文件系统容量，turbo系列必填，单位为GiB。 turbo标准型单位GB，起售20TiB，即20480 GiB；扩容步长10TiB，即10240 GiB。turbo性能型起售10TiB，即10240 GiB；扩容步长10TiB，10240 GiB。
+	// <p>文件系统容量，turbo系列必填</p><p>单位：GiB</p><p>Turbo标准型起售20TiB，即20480 GiB，扩容步长10TiB，即10240 GiB。Turbo性能型起售10TiB，即10240 GiB，扩容步长10TiB，即10240 GiB。</p>
 	Capacity *uint64 `json:"Capacity,omitnil,omitempty" name:"Capacity"`
 
-	// 文件系统快照ID，通过查询快照列表获取该参数，
-	// [DescribeCfsSnapshots](https://cloud.tencent.com/document/product/582/80206)
+	// <p>文件系统快照 ID</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/582/80206">DescribeCfsSnapshots</a></p>
 	SnapshotId *string `json:"SnapshotId,omitnil,omitempty" name:"SnapshotId"`
 
-	// 定期快照策略ID，通过查询快照策略信息获取,
-	// [DescribeAutoSnapshotPolicies](https://cloud.tencent.com/document/product/582/38157)
+	// <p>定期快照策略 ID</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/582/80208">DescribeAutoSnapshotPolicies</a></p>
 	AutoSnapshotPolicyId *string `json:"AutoSnapshotPolicyId,omitnil,omitempty" name:"AutoSnapshotPolicyId"`
 
-	// 是否开启默认扩容，仅turbo类型文件存储支持
+	// <p>是否开启自动扩容策略，仅turbo类型文件存储支持</p>
 	EnableAutoScaleUp *bool `json:"EnableAutoScaleUp,omitnil,omitempty" name:"EnableAutoScaleUp"`
 
-	// v1.5：创建普通版的通用文件系统；
-	// v3.1：创建增强版的通用文件系统
-	// 说明：增强版的通用系统需要开通白名单才能使用，如有需要请提交工单与我们联系。
+	// <p>文件系统版本号。</p><p>枚举值：</p><ul><li>v1.5： 创建通用标准型/通用性能型文件系统</li><li>v3.1： 创建通用标准型（增强型）/通用性能型（增强型）文件系统，如需创建增强型，此为必填项。</li><li>v4.0： 创建Turbo标准型、Turbo性能型、吞吐型文件系统，非必填项</li></ul><p>创建通用标准型（增强型）、通用性能型（增强型）须加白主账号，如需使用请联系我们。</p>
 	CfsVersion *string `json:"CfsVersion,omitnil,omitempty" name:"CfsVersion"`
 
-	// turbo文件系统元数据属性
-	// basic：创建标准型的元数据
-	// enhanced：创建增强型的元数据
+	// <p>turbo文件系统元数据类型</p><p>枚举值：</p><ul><li>basic： 创建标准版元数据。</li><li>enhanced： 创建增强版元数据</li></ul><p>详情参见<a href="https://cloud.tencent.com/document/product/582/116836">Turbo 文件系统元数据类型</a></p>
 	MetaType *string `json:"MetaType,omitnil,omitempty" name:"MetaType"`
+
+	// <p>业务场景。</p><p>枚举值：</p><ul><li>AgentSandbox： 创建 AgentCFS 时必传</li></ul>
+	Scenario *string `json:"Scenario,omitnil,omitempty" name:"Scenario"`
 }
 
 type CreateCfsFileSystemRequest struct {
 	*tchttp.BaseRequest
 	
-	// 可用区名称，例如ap-beijing-1，请参考 [概览](https://cloud.tencent.com/document/product/582/13225) 文档中的地域与可用区列表
+	// <p>可用区名称</p><p>取值参考：<a href="https://cloud.tencent.com/document/product/213/15707?">查询可用区列表</a></p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 网络类型，可选值为 VPC，CCN；其中 VPC 为私有网络， CCN 为云联网。通用标准型/性能型请选择VPC，Turbo标准型/性能型请选择CCN。
+	// <p>网络类型</p><p>枚举值：</p><ul><li><p>VPC： 私有网络</p></li><li><p>CCN： 云联网</p></li><li><p>通用标准型/性能型（含增强型）、吞吐型请选择VPC</p></li><li><p>Turbo标准型/性能型可选VPC或CCN</p></li><li><p>当 Scenario=AgentSandbox 时，即创建 AgentCFS时无需传入，传入将被忽略。</p></li></ul>
 	NetInterface *string `json:"NetInterface,omitnil,omitempty" name:"NetInterface"`
 
-	// 权限组 ID,pgroupbasic 是默认权限组，通过控制查询权限组列表接口获取[DescribeCfsPGroups](https://cloud.tencent.com/document/product/582/38157)
+	// <p>权限组 ID。权限组规定了一组可来访白名单及操作权限。</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/582/38157">DescribeCfsPGroups</a></p><ul><li>pgroupbasic 为【默认权限组】，【默认权限组】允许所有IP地址访问及读写权限。 </li><li>注意：当 Scenario=AgentSandbox 时，即创建 AgentCFS ，必须传入 pgroupbasic【默认权限组】，传其他值报错。</li></ul>
 	PGroupId *string `json:"PGroupId,omitnil,omitempty" name:"PGroupId"`
 
-	// 文件系统协议类型， 值为 NFS、CIFS、TURBO ; 若留空则默认为 NFS协议，turbo系列必须选择TURBO，不支持NFS、CIFS
+	// <p>文件系统协议类型</p><p>枚举值：</p><ul><li>NFS： 通用标准型（含增强型）、通用性能型（含增强型）支持创建此协议的实例</li><li>CIFS： 即SMB协议，仅部分可用区的通用标准型、吞吐型支持此协议。</li><li>TURBO： Turbo标准型/Turbo性能型/AgentCFS是支持创建此协议的实例</li></ul><p>默认值：NFS</p>
 	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
-	// 文件系统存储类型，默认值为 SD ；其中 SD 为通用标准型存储， HP为通用性能型存储， TB为Turbo标准型， TP 为Turbo性能型。
+	// <p>文件系统存储类型其中 SD 为通用标准型存储， HP为通用性能型存储， TB为Turbo标准型， TP 为Turbo性能型。</p><p>枚举值：</p><ul><li>SD： 通用标准型（含增强型）。通用标准型 version = v1.5，通用标准型（增强型） version = v3.1。</li><li>HP： 通用性能型（含增强型）。通用性能型 version = v1.5，通用性能型（增强型） version = v3.1。</li><li>TB： Turbo标准型</li><li>TP： Turbo性能型</li><li>THP： 吞吐型</li></ul><p>默认值：SD</p>
 	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 
-	// 私有网络（VPC） ID，若网络类型选择的是VPC，该字段为必填.通过查询私有网络接口获取，
-	// [DescribeVpcs](https://cloud.tencent.com/document/product/215/15778)
+	// <p>私有网络（VPC） ID，若网络类型选择的是VPC，该字段为必填。</p><p>取值参考：<a href="https://cloud.tencent.com/document/product/215/15778">查询VPC列表</a></p><p>当 Scenario=AgentSandbox 时，即创建 AgentCFS 时无需传入，传入将被忽略。</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 子网 ID，若网络类型选择的是VPC，该字段为必填。通过查询子网接口获取，
-	// [DescribeSubnets](https://cloud.tencent.com/document/product/215/15784)
+	// <p>子网 ID，若网络类型选择的是VPC，该字段为必填。</p><p>取值参考：<a href="https://cloud.tencent.com/document/product/215/15784">查询子网列表</a></p><p>当 Scenario=AgentSandbox 时，即创建 AgentCFS 时无需传入，传入将被忽略。</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 指定IP地址，仅VPC网络支持；若不填写、将在该子网下随机分配 IP，Turbo系列当前不支持指定
+	// <p>指定IP地址，仅VPC网络支持；若不填写、将在该子网下随机分配 IP，Turbo系列当前不支持指定</p>
 	MountIP *string `json:"MountIP,omitnil,omitempty" name:"MountIP"`
 
-	// 用户自定义文件系统名称
+	// <p>用户自定义文件系统名称</p>
 	FsName *string `json:"FsName,omitnil,omitempty" name:"FsName"`
 
-	// 文件系统标签
+	// <p>文件系统是否加密，若留空则默认为不加密</p>
+	Encrypted *bool `json:"Encrypted,omitnil,omitempty" name:"Encrypted"`
+
+	// <p>文件系统标签</p>
 	ResourceTags []*TagInfo `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。用于保证请求幂等性的字符串失效时间为2小时。
+	// <p>用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。用于保证请求幂等性的字符串失效时间为2小时。</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 
-	// 云联网ID， 若网络类型选择的是CCN，该字段为必填;通过查询云联网列表接口获取，通过接口
-	// [DescribeCcns](https://cloud.tencent.com/document/product/215/19199)
+	// <p>云联网ID， 若网络类型选择的是CCN，该字段为必填</p><p>取值参考：<a href="https://cloud.tencent.com/document/product/215/19199">查询CCN列表</a></p><p>当 Scenario=AgentSandbox 时，即创建 AgentCFS 时无需传入，传入将被忽略</p>
 	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
 
-	// 云联网中CFS使用的网段， 若网络类型选择的是Ccn，该字段为必填，且不能和Ccn中已经绑定的网段冲突
+	// <p>云联网中CFS使用的网段， 若网络类型选择的是CCN，该字段为必填，且不能和Ccn中已经绑定的网段冲突</p><p>当 Scenario=AgentSandbox 时，即创建 AgentCFS 时无需传入，传入将被忽略</p>
 	CidrBlock *string `json:"CidrBlock,omitnil,omitempty" name:"CidrBlock"`
 
-	// 文件系统容量，turbo系列必填，单位为GiB。 turbo标准型单位GB，起售20TiB，即20480 GiB；扩容步长10TiB，即10240 GiB。turbo性能型起售10TiB，即10240 GiB；扩容步长10TiB，10240 GiB。
+	// <p>文件系统容量，turbo系列必填</p><p>单位：GiB</p><p>Turbo标准型起售20TiB，即20480 GiB，扩容步长10TiB，即10240 GiB。Turbo性能型起售10TiB，即10240 GiB，扩容步长10TiB，即10240 GiB。</p>
 	Capacity *uint64 `json:"Capacity,omitnil,omitempty" name:"Capacity"`
 
-	// 文件系统快照ID，通过查询快照列表获取该参数，
-	// [DescribeCfsSnapshots](https://cloud.tencent.com/document/product/582/80206)
+	// <p>文件系统快照 ID</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/582/80206">DescribeCfsSnapshots</a></p>
 	SnapshotId *string `json:"SnapshotId,omitnil,omitempty" name:"SnapshotId"`
 
-	// 定期快照策略ID，通过查询快照策略信息获取,
-	// [DescribeAutoSnapshotPolicies](https://cloud.tencent.com/document/product/582/38157)
+	// <p>定期快照策略 ID</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/582/80208">DescribeAutoSnapshotPolicies</a></p>
 	AutoSnapshotPolicyId *string `json:"AutoSnapshotPolicyId,omitnil,omitempty" name:"AutoSnapshotPolicyId"`
 
-	// 是否开启默认扩容，仅turbo类型文件存储支持
+	// <p>是否开启自动扩容策略，仅turbo类型文件存储支持</p>
 	EnableAutoScaleUp *bool `json:"EnableAutoScaleUp,omitnil,omitempty" name:"EnableAutoScaleUp"`
 
-	// v1.5：创建普通版的通用文件系统；
-	// v3.1：创建增强版的通用文件系统
-	// 说明：增强版的通用系统需要开通白名单才能使用，如有需要请提交工单与我们联系。
+	// <p>文件系统版本号。</p><p>枚举值：</p><ul><li>v1.5： 创建通用标准型/通用性能型文件系统</li><li>v3.1： 创建通用标准型（增强型）/通用性能型（增强型）文件系统，如需创建增强型，此为必填项。</li><li>v4.0： 创建Turbo标准型、Turbo性能型、吞吐型文件系统，非必填项</li></ul><p>创建通用标准型（增强型）、通用性能型（增强型）须加白主账号，如需使用请联系我们。</p>
 	CfsVersion *string `json:"CfsVersion,omitnil,omitempty" name:"CfsVersion"`
 
-	// turbo文件系统元数据属性
-	// basic：创建标准型的元数据
-	// enhanced：创建增强型的元数据
+	// <p>turbo文件系统元数据类型</p><p>枚举值：</p><ul><li>basic： 创建标准版元数据。</li><li>enhanced： 创建增强版元数据</li></ul><p>详情参见<a href="https://cloud.tencent.com/document/product/582/116836">Turbo 文件系统元数据类型</a></p>
 	MetaType *string `json:"MetaType,omitnil,omitempty" name:"MetaType"`
+
+	// <p>业务场景。</p><p>枚举值：</p><ul><li>AgentSandbox： 创建 AgentCFS 时必传</li></ul>
+	Scenario *string `json:"Scenario,omitnil,omitempty" name:"Scenario"`
 }
 
 func (r *CreateCfsFileSystemRequest) ToJsonString() string {
@@ -610,6 +607,7 @@ func (r *CreateCfsFileSystemRequest) FromJsonString(s string) error {
 	delete(f, "SubnetId")
 	delete(f, "MountIP")
 	delete(f, "FsName")
+	delete(f, "Encrypted")
 	delete(f, "ResourceTags")
 	delete(f, "ClientToken")
 	delete(f, "CcnId")
@@ -620,6 +618,7 @@ func (r *CreateCfsFileSystemRequest) FromJsonString(s string) error {
 	delete(f, "EnableAutoScaleUp")
 	delete(f, "CfsVersion")
 	delete(f, "MetaType")
+	delete(f, "Scenario")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCfsFileSystemRequest has unknown keys!", "")
 	}
@@ -628,28 +627,28 @@ func (r *CreateCfsFileSystemRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateCfsFileSystemResponseParams struct {
-	// 文件系统创建时间
+	// <p>文件系统创建时间</p>
 	CreationTime *string `json:"CreationTime,omitnil,omitempty" name:"CreationTime"`
 
-	// 用户自定义文件系统名称
+	// <p>用户自定义文件系统名称</p>
 	CreationToken *string `json:"CreationToken,omitnil,omitempty" name:"CreationToken"`
 
-	// 文件系统 ID
+	// <p>文件系统 ID</p>
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
-	// 文件系统状态，可能出现状态包括：“creating”  创建中, “create_failed” 创建失败, “available” 可用, “unserviced” 不可用, “upgrading” 升级中， “deleting” 删除中。
+	// <p>文件系统状态，可能出现状态包括：“creating”  创建中, “create_failed” 创建失败, “available” 可用, “unserviced” 不可用, “upgrading” 升级中， “deleting” 删除中。</p>
 	LifeCycleState *string `json:"LifeCycleState,omitnil,omitempty" name:"LifeCycleState"`
 
-	// 文件系统已使用容量大小，单位为 Byte
+	// <p>文件系统已使用容量大小，单位为 Byte</p>
 	SizeByte *uint64 `json:"SizeByte,omitnil,omitempty" name:"SizeByte"`
 
-	// 可用区 ID
+	// <p>可用区 ID</p>
 	ZoneId *uint64 `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 用户自定义文件系统名称
+	// <p>用户自定义文件系统名称</p>
 	FsName *string `json:"FsName,omitnil,omitempty" name:"FsName"`
 
-	// 文件系统是否加密
+	// <p>文件系统是否加密</p>
 	Encrypted *bool `json:"Encrypted,omitnil,omitempty" name:"Encrypted"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -929,86 +928,86 @@ func (r *CreateCfsSnapshotResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateDataFlowRequestParams struct {
-	// 文件系统 ID ，通过查询文件系统 [DescribeCfsFileSystems](https://cloud.tencent.com/document/product/582/38170) 获取
+	// <p>文件系统 ID ，通过查询文件系统 <a href="https://cloud.tencent.com/document/product/582/38170">DescribeCfsFileSystems</a> 获取</p>
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
-	// 源端数据类型；包含S3_COS，S3_L5 
+	// <p>源端数据类型；包含S3_COS，S3_L5</p>
 	SourceStorageType *string `json:"SourceStorageType,omitnil,omitempty" name:"SourceStorageType"`
 
-	// 源端存储地址
+	// <p>源端存储地址</p>
 	SourceStorageAddress *string `json:"SourceStorageAddress,omitnil,omitempty" name:"SourceStorageAddress"`
 
-	// 源端路径
+	// <p>源端路径</p>
 	SourcePath *string `json:"SourcePath,omitnil,omitempty" name:"SourcePath"`
 
-	// 文件系统内目标路径
+	// <p>设置数据流动时指定的文件系统内目标路径，必须以 /cfs/ 开头，代表文件存储实例内部的逻辑路径，而非本地挂载点路径。<br>示例：</p><ul><li>若挂载的是CFS根目录 /，需将对象存储上的源端目录与挂载路径下的 test1/test2 建立映射关系，则入参值为 /cfs/test1/test2</li><li>若挂载的是CFS子目录 /subdir，需将对象存储上的源端目录与挂载路径下的 test1/test2 建立映射关系，则入参值为 /cfs/subdir/test1/test2</li></ul>
 	TargetPath *string `json:"TargetPath,omitnil,omitempty" name:"TargetPath"`
 
-	// 密钥 ID
+	// <p>密钥 ID</p>
 	SecretId *string `json:"SecretId,omitnil,omitempty" name:"SecretId"`
 
-	// 密钥 key
+	// <p>密钥 key</p>
 	SecretKey *string `json:"SecretKey,omitnil,omitempty" name:"SecretKey"`
 
-	// 数据流动名称；支持不超过64字符长度，支持中文、数字、_、-
+	// <p>数据流动名称；支持不超过64字符长度，支持中文、数字、_、-</p>
 	DataFlowName *string `json:"DataFlowName,omitnil,omitempty" name:"DataFlowName"`
 
-	//  0：不开启自动更新  1：开启自动更新
+	// <p>0：不开启自动更新  1：开启自动更新</p>
 	AutoRefresh *uint64 `json:"AutoRefresh,omitnil,omitempty" name:"AutoRefresh"`
 
-	// KafkaConsumer 消费时使用的Topic参数
+	// <p>KafkaConsumer 消费时使用的Topic参数</p>
 	UserKafkaTopic *string `json:"UserKafkaTopic,omitnil,omitempty" name:"UserKafkaTopic"`
 
-	// 	服务地址 示例值：kafkaconsumer-ap-beijing.cls.tencentyun.com:9095
+	// <p>服务地址 示例值：kafkaconsumer-ap-beijing.cls.tencentyun.com:9095</p>
 	ServerAddr *string `json:"ServerAddr,omitnil,omitempty" name:"ServerAddr"`
 
-	// Kafka消费用户名.示例值：name
+	// <p>Kafka消费用户名.示例值：name</p>
 	UserName *string `json:"UserName,omitnil,omitempty" name:"UserName"`
 
-	// Kafka消费用户密码。默认${SecretId}#${SecretKey}。
+	// <p>Kafka消费用户密码。默认${SecretId}#${SecretKey}。</p>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 }
 
 type CreateDataFlowRequest struct {
 	*tchttp.BaseRequest
 	
-	// 文件系统 ID ，通过查询文件系统 [DescribeCfsFileSystems](https://cloud.tencent.com/document/product/582/38170) 获取
+	// <p>文件系统 ID ，通过查询文件系统 <a href="https://cloud.tencent.com/document/product/582/38170">DescribeCfsFileSystems</a> 获取</p>
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
-	// 源端数据类型；包含S3_COS，S3_L5 
+	// <p>源端数据类型；包含S3_COS，S3_L5</p>
 	SourceStorageType *string `json:"SourceStorageType,omitnil,omitempty" name:"SourceStorageType"`
 
-	// 源端存储地址
+	// <p>源端存储地址</p>
 	SourceStorageAddress *string `json:"SourceStorageAddress,omitnil,omitempty" name:"SourceStorageAddress"`
 
-	// 源端路径
+	// <p>源端路径</p>
 	SourcePath *string `json:"SourcePath,omitnil,omitempty" name:"SourcePath"`
 
-	// 文件系统内目标路径
+	// <p>设置数据流动时指定的文件系统内目标路径，必须以 /cfs/ 开头，代表文件存储实例内部的逻辑路径，而非本地挂载点路径。<br>示例：</p><ul><li>若挂载的是CFS根目录 /，需将对象存储上的源端目录与挂载路径下的 test1/test2 建立映射关系，则入参值为 /cfs/test1/test2</li><li>若挂载的是CFS子目录 /subdir，需将对象存储上的源端目录与挂载路径下的 test1/test2 建立映射关系，则入参值为 /cfs/subdir/test1/test2</li></ul>
 	TargetPath *string `json:"TargetPath,omitnil,omitempty" name:"TargetPath"`
 
-	// 密钥 ID
+	// <p>密钥 ID</p>
 	SecretId *string `json:"SecretId,omitnil,omitempty" name:"SecretId"`
 
-	// 密钥 key
+	// <p>密钥 key</p>
 	SecretKey *string `json:"SecretKey,omitnil,omitempty" name:"SecretKey"`
 
-	// 数据流动名称；支持不超过64字符长度，支持中文、数字、_、-
+	// <p>数据流动名称；支持不超过64字符长度，支持中文、数字、_、-</p>
 	DataFlowName *string `json:"DataFlowName,omitnil,omitempty" name:"DataFlowName"`
 
-	//  0：不开启自动更新  1：开启自动更新
+	// <p>0：不开启自动更新  1：开启自动更新</p>
 	AutoRefresh *uint64 `json:"AutoRefresh,omitnil,omitempty" name:"AutoRefresh"`
 
-	// KafkaConsumer 消费时使用的Topic参数
+	// <p>KafkaConsumer 消费时使用的Topic参数</p>
 	UserKafkaTopic *string `json:"UserKafkaTopic,omitnil,omitempty" name:"UserKafkaTopic"`
 
-	// 	服务地址 示例值：kafkaconsumer-ap-beijing.cls.tencentyun.com:9095
+	// <p>服务地址 示例值：kafkaconsumer-ap-beijing.cls.tencentyun.com:9095</p>
 	ServerAddr *string `json:"ServerAddr,omitnil,omitempty" name:"ServerAddr"`
 
-	// Kafka消费用户名.示例值：name
+	// <p>Kafka消费用户名.示例值：name</p>
 	UserName *string `json:"UserName,omitnil,omitempty" name:"UserName"`
 
-	// Kafka消费用户密码。默认${SecretId}#${SecretKey}。
+	// <p>Kafka消费用户密码。默认${SecretId}#${SecretKey}。</p>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 }
 
@@ -1045,7 +1044,7 @@ func (r *CreateDataFlowRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateDataFlowResponseParams struct {
-	// 数据流动管理 ID
+	// <p>数据流动管理 ID</p>
 	DataFlowId *string `json:"DataFlowId,omitnil,omitempty" name:"DataFlowId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1069,46 +1068,151 @@ func (r *CreateDataFlowResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
-type CreateLifecycleDataTaskRequestParams struct {
-	// 文件系统唯一 ID
+type CreateDataRetrievalRequestParams struct {
+	// <p>文件系统实例 ID，通过查询文件系统 DescribeCfsFileSystems 获取 示例值：cfs-xxxxxx</p>
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
-	// 生命周期任务类型；archive：沉降；restore：预热；release：数据释放；metaload：元数据加载
+	// <p>数据检索名称 示例值：DataDive</p>
+	DataRetrievalName *string `json:"DataRetrievalName,omitnil,omitempty" name:"DataRetrievalName"`
+
+	// <p>聚合检索条件 示例值：from entries|where size &gt;4096</p>
+	CompoundCondition *string `json:"CompoundCondition,omitnil,omitempty" name:"CompoundCondition"`
+
+	// <p>列表检索条件</p>
+	QueryCondition *string `json:"QueryCondition,omitnil,omitempty" name:"QueryCondition"`
+
+	// <p>数据检索按月重复，每月1-31号，选择一天，每月将在这一天自动创建快照；例如1 代表1号；与DayOfWeek二选一 示例值：1</p>
+	DayOfMonth *string `json:"DayOfMonth,omitnil,omitempty" name:"DayOfMonth"`
+
+	// <p>数据检索重复日期，星期一到星期日。 1代表星期一、7代表星期天，与DayOfMonth，二选一 示例值：2,3</p>
+	DayOfWeek *string `json:"DayOfWeek,omitnil,omitempty" name:"DayOfWeek"`
+
+	// <p>重复时间点,0-23，小时 示例值：1,3,5</p>
+	Hour *string `json:"Hour,omitnil,omitempty" name:"Hour"`
+}
+
+type CreateDataRetrievalRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>文件系统实例 ID，通过查询文件系统 DescribeCfsFileSystems 获取 示例值：cfs-xxxxxx</p>
+	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
+
+	// <p>数据检索名称 示例值：DataDive</p>
+	DataRetrievalName *string `json:"DataRetrievalName,omitnil,omitempty" name:"DataRetrievalName"`
+
+	// <p>聚合检索条件 示例值：from entries|where size &gt;4096</p>
+	CompoundCondition *string `json:"CompoundCondition,omitnil,omitempty" name:"CompoundCondition"`
+
+	// <p>列表检索条件</p>
+	QueryCondition *string `json:"QueryCondition,omitnil,omitempty" name:"QueryCondition"`
+
+	// <p>数据检索按月重复，每月1-31号，选择一天，每月将在这一天自动创建快照；例如1 代表1号；与DayOfWeek二选一 示例值：1</p>
+	DayOfMonth *string `json:"DayOfMonth,omitnil,omitempty" name:"DayOfMonth"`
+
+	// <p>数据检索重复日期，星期一到星期日。 1代表星期一、7代表星期天，与DayOfMonth，二选一 示例值：2,3</p>
+	DayOfWeek *string `json:"DayOfWeek,omitnil,omitempty" name:"DayOfWeek"`
+
+	// <p>重复时间点,0-23，小时 示例值：1,3,5</p>
+	Hour *string `json:"Hour,omitnil,omitempty" name:"Hour"`
+}
+
+func (r *CreateDataRetrievalRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateDataRetrievalRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "FileSystemId")
+	delete(f, "DataRetrievalName")
+	delete(f, "CompoundCondition")
+	delete(f, "QueryCondition")
+	delete(f, "DayOfMonth")
+	delete(f, "DayOfWeek")
+	delete(f, "Hour")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDataRetrievalRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateDataRetrievalResponseParams struct {
+	// <p>数据检索ID示例值：dataretrieval-123456</p>
+	DataRetrievalId *string `json:"DataRetrievalId,omitnil,omitempty" name:"DataRetrievalId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateDataRetrievalResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateDataRetrievalResponseParams `json:"Response"`
+}
+
+func (r *CreateDataRetrievalResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateDataRetrievalResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateLifecycleDataTaskRequestParams struct {
+	// <p>文件系统唯一 ID</p>
+	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
+
+	// <p>生命周期任务类型；archive：沉降；restore：预热；release：数据释放；metaload：元数据加载</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 需要沉降的路径或文件，仅支持传入1个路径，不允许为空。
-	TaskPath *string `json:"TaskPath,omitnil,omitempty" name:"TaskPath"`
-
-	// 任务名称
+	// <p>任务名称</p>
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
-	// 数据流动 ID ，该接口可以通过 DescribeDataFlow 查询
+	// <p>需要沉降的路径或文件，仅支持传入1个路径，不允许为空。</p>
+	TaskPath *string `json:"TaskPath,omitnil,omitempty" name:"TaskPath"`
+
+	// <p>数据流动 ID ，该接口可以通过 DescribeDataFlow 查询</p>
 	DataFlowId *string `json:"DataFlowId,omitnil,omitempty" name:"DataFlowId"`
 
-	// 	 当CFSTurbo内的文件和外置存储存在同名情况时，是否覆盖。  ture：覆盖  false：不覆盖（同时也不会释放热存数据）  为空时，默认为false
+	// <p>当CFSTurbo内的文件和外置存储存在同名情况时，是否覆盖。  ture：覆盖  false：不覆盖（同时也不会释放热存数据）  为空时，默认为false</p>
 	IsOverwrite *bool `json:"IsOverwrite,omitnil,omitempty" name:"IsOverwrite"`
+
+	// <p>数据清单文件路径，清单文件内每行为待处理文件的完整路径。所有路径（包括清单文件路径、清单文件内每行表示的待处理文件的路径）必须以 /cfs 开头，指向CFS文件系统内已存在的文件，与 TaskPath 参数二选一填写。<br>示例：</p><ul><li>若挂载的是CFS根目录 /，清单文件位于挂载路径下的 lists/archive_list.txt，则入参值为 /cfs/lists/archive_list.txt</li><li>若挂载的是CFS子目录 /subdir，清单文件位于挂载路径下的 lists/archive_list.txt，则入参值为 /cfs/subdir/lists/archive_list.txt</li></ul>
+	ListPath *string `json:"ListPath,omitnil,omitempty" name:"ListPath"`
 }
 
 type CreateLifecycleDataTaskRequest struct {
 	*tchttp.BaseRequest
 	
-	// 文件系统唯一 ID
+	// <p>文件系统唯一 ID</p>
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
-	// 生命周期任务类型；archive：沉降；restore：预热；release：数据释放；metaload：元数据加载
+	// <p>生命周期任务类型；archive：沉降；restore：预热；release：数据释放；metaload：元数据加载</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 需要沉降的路径或文件，仅支持传入1个路径，不允许为空。
-	TaskPath *string `json:"TaskPath,omitnil,omitempty" name:"TaskPath"`
-
-	// 任务名称
+	// <p>任务名称</p>
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
-	// 数据流动 ID ，该接口可以通过 DescribeDataFlow 查询
+	// <p>需要沉降的路径或文件，仅支持传入1个路径，不允许为空。</p>
+	TaskPath *string `json:"TaskPath,omitnil,omitempty" name:"TaskPath"`
+
+	// <p>数据流动 ID ，该接口可以通过 DescribeDataFlow 查询</p>
 	DataFlowId *string `json:"DataFlowId,omitnil,omitempty" name:"DataFlowId"`
 
-	// 	 当CFSTurbo内的文件和外置存储存在同名情况时，是否覆盖。  ture：覆盖  false：不覆盖（同时也不会释放热存数据）  为空时，默认为false
+	// <p>当CFSTurbo内的文件和外置存储存在同名情况时，是否覆盖。  ture：覆盖  false：不覆盖（同时也不会释放热存数据）  为空时，默认为false</p>
 	IsOverwrite *bool `json:"IsOverwrite,omitnil,omitempty" name:"IsOverwrite"`
+
+	// <p>数据清单文件路径，清单文件内每行为待处理文件的完整路径。所有路径（包括清单文件路径、清单文件内每行表示的待处理文件的路径）必须以 /cfs 开头，指向CFS文件系统内已存在的文件，与 TaskPath 参数二选一填写。<br>示例：</p><ul><li>若挂载的是CFS根目录 /，清单文件位于挂载路径下的 lists/archive_list.txt，则入参值为 /cfs/lists/archive_list.txt</li><li>若挂载的是CFS子目录 /subdir，清单文件位于挂载路径下的 lists/archive_list.txt，则入参值为 /cfs/subdir/lists/archive_list.txt</li></ul>
+	ListPath *string `json:"ListPath,omitnil,omitempty" name:"ListPath"`
 }
 
 func (r *CreateLifecycleDataTaskRequest) ToJsonString() string {
@@ -1125,10 +1229,11 @@ func (r *CreateLifecycleDataTaskRequest) FromJsonString(s string) error {
 	}
 	delete(f, "FileSystemId")
 	delete(f, "Type")
-	delete(f, "TaskPath")
 	delete(f, "TaskName")
+	delete(f, "TaskPath")
 	delete(f, "DataFlowId")
 	delete(f, "IsOverwrite")
+	delete(f, "ListPath")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateLifecycleDataTaskRequest has unknown keys!", "")
 	}
@@ -1137,7 +1242,7 @@ func (r *CreateLifecycleDataTaskRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateLifecycleDataTaskResponseParams struct {
-	// 任务 ID
+	// <p>任务 ID</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1290,104 +1395,104 @@ func (r *CreateLifecyclePolicyResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateMigrationTaskRequestParams struct {
-	// 迁移任务名称
+	// <p>迁移任务名称</p>
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
-	// 迁移方式标志位，默认为0。0：桶迁移；1：清单迁移
+	// <p>迁移方式标志位，默认为0。0：桶迁移；1：清单迁移</p>
 	MigrationType *uint64 `json:"MigrationType,omitnil,omitempty" name:"MigrationType"`
 
-	// 迁移模式，默认为0。0: 全量迁移
+	// <p>迁移模式，默认为0。0: 全量迁移</p>
 	MigrationMode *uint64 `json:"MigrationMode,omitnil,omitempty" name:"MigrationMode"`
 
-	// 数据源账号的 SecretId
+	// <p>数据源账号的 SecretId</p>
 	SrcSecretId *string `json:"SrcSecretId,omitnil,omitempty" name:"SrcSecretId"`
 
-	// 数据源账号的 SecretKey
+	// <p>数据源账号的 SecretKey</p>
 	SrcSecretKey *string `json:"SrcSecretKey,omitnil,omitempty" name:"SrcSecretKey"`
 
-	// 文件系统实例 ID，通过查询文件系统 [DescribeCfsFileSystems](https://cloud.tencent.com/document/product/582/38170) 获取
+	// <p>文件系统实例 ID，通过查询文件系统 <a href="https://cloud.tencent.com/document/product/582/38170">DescribeCfsFileSystems</a> 获取</p>
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
-	// 文件系统路径
+	// <p>文件系统内目录路径，不涉及实际挂载子目录/根目录，无需以/cfs/作为前缀</p>
 	FsPath *string `json:"FsPath,omitnil,omitempty" name:"FsPath"`
 
-	// 同名文件迁移时覆盖策略，默认为0。0: 最后修改时间优先；1: 全覆盖；2: 不覆盖
+	// <p>同名文件迁移时覆盖策略，默认为0。0: 最后修改时间优先；1: 全覆盖；2: 不覆盖</p>
 	CoverType *uint64 `json:"CoverType,omitnil,omitempty" name:"CoverType"`
 
-	// 数据源服务商。COS：腾讯云COS，OSS：阿里云OSS，OBS：华为云OBS
+	// <p>数据源服务商</p><p>枚举值：</p><ul><li>COS： 腾讯云COS</li><li>OSS： 阿里云OSS</li><li>OBS： 华为云OBS</li><li>BOS： 百度云BOS</li><li>TOS： 火山引擎TOS</li></ul>
 	SrcService *string `json:"SrcService,omitnil,omitempty" name:"SrcService"`
 
-	// 数据源桶名称；桶迁移时，BucketName 和 BucketAddress 必填其一，清单迁移时无需填写此参数
+	// <p>数据源桶名称；桶迁移时，BucketName 和 BucketAddress 必填其一，清单迁移时无需填写此参数</p>
 	BucketName *string `json:"BucketName,omitnil,omitempty" name:"BucketName"`
 
-	// 数据源桶地域
+	// <p>数据源桶地域</p>
 	BucketRegion *string `json:"BucketRegion,omitnil,omitempty" name:"BucketRegion"`
 
-	// 数据源桶地址；桶迁移时，BucketName 和 BucketAddress 必填其一，清单迁移时无需填写此参数
+	// <p>数据源桶地址；桶迁移时，BucketName 和 BucketAddress 必填其一，清单迁移时无需填写此参数</p>
 	BucketAddress *string `json:"BucketAddress,omitnil,omitempty" name:"BucketAddress"`
 
-	// 清单地址，迁移方式为清单迁移时必填
+	// <p>清单地址，迁移方式为清单迁移时必填</p>
 	ListAddress *string `json:"ListAddress,omitnil,omitempty" name:"ListAddress"`
 
-	// 目标文件系统名称
+	// <p>目标文件系统名称</p>
 	FsName *string `json:"FsName,omitnil,omitempty" name:"FsName"`
 
-	// 源桶路径，默认为 /
+	// <p>源桶路径，默认为 /</p>
 	BucketPath *string `json:"BucketPath,omitnil,omitempty" name:"BucketPath"`
 
-	// 迁移方向；0：对象存储迁移至文件系统，1：文件系统迁移至对象存储。默认为0
+	// <p>迁移方向；0：对象存储迁移至文件系统，1：文件系统迁移至对象存储。默认为0</p>
 	Direction *uint64 `json:"Direction,omitnil,omitempty" name:"Direction"`
 }
 
 type CreateMigrationTaskRequest struct {
 	*tchttp.BaseRequest
 	
-	// 迁移任务名称
+	// <p>迁移任务名称</p>
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
-	// 迁移方式标志位，默认为0。0：桶迁移；1：清单迁移
+	// <p>迁移方式标志位，默认为0。0：桶迁移；1：清单迁移</p>
 	MigrationType *uint64 `json:"MigrationType,omitnil,omitempty" name:"MigrationType"`
 
-	// 迁移模式，默认为0。0: 全量迁移
+	// <p>迁移模式，默认为0。0: 全量迁移</p>
 	MigrationMode *uint64 `json:"MigrationMode,omitnil,omitempty" name:"MigrationMode"`
 
-	// 数据源账号的 SecretId
+	// <p>数据源账号的 SecretId</p>
 	SrcSecretId *string `json:"SrcSecretId,omitnil,omitempty" name:"SrcSecretId"`
 
-	// 数据源账号的 SecretKey
+	// <p>数据源账号的 SecretKey</p>
 	SrcSecretKey *string `json:"SrcSecretKey,omitnil,omitempty" name:"SrcSecretKey"`
 
-	// 文件系统实例 ID，通过查询文件系统 [DescribeCfsFileSystems](https://cloud.tencent.com/document/product/582/38170) 获取
+	// <p>文件系统实例 ID，通过查询文件系统 <a href="https://cloud.tencent.com/document/product/582/38170">DescribeCfsFileSystems</a> 获取</p>
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
-	// 文件系统路径
+	// <p>文件系统内目录路径，不涉及实际挂载子目录/根目录，无需以/cfs/作为前缀</p>
 	FsPath *string `json:"FsPath,omitnil,omitempty" name:"FsPath"`
 
-	// 同名文件迁移时覆盖策略，默认为0。0: 最后修改时间优先；1: 全覆盖；2: 不覆盖
+	// <p>同名文件迁移时覆盖策略，默认为0。0: 最后修改时间优先；1: 全覆盖；2: 不覆盖</p>
 	CoverType *uint64 `json:"CoverType,omitnil,omitempty" name:"CoverType"`
 
-	// 数据源服务商。COS：腾讯云COS，OSS：阿里云OSS，OBS：华为云OBS
+	// <p>数据源服务商</p><p>枚举值：</p><ul><li>COS： 腾讯云COS</li><li>OSS： 阿里云OSS</li><li>OBS： 华为云OBS</li><li>BOS： 百度云BOS</li><li>TOS： 火山引擎TOS</li></ul>
 	SrcService *string `json:"SrcService,omitnil,omitempty" name:"SrcService"`
 
-	// 数据源桶名称；桶迁移时，BucketName 和 BucketAddress 必填其一，清单迁移时无需填写此参数
+	// <p>数据源桶名称；桶迁移时，BucketName 和 BucketAddress 必填其一，清单迁移时无需填写此参数</p>
 	BucketName *string `json:"BucketName,omitnil,omitempty" name:"BucketName"`
 
-	// 数据源桶地域
+	// <p>数据源桶地域</p>
 	BucketRegion *string `json:"BucketRegion,omitnil,omitempty" name:"BucketRegion"`
 
-	// 数据源桶地址；桶迁移时，BucketName 和 BucketAddress 必填其一，清单迁移时无需填写此参数
+	// <p>数据源桶地址；桶迁移时，BucketName 和 BucketAddress 必填其一，清单迁移时无需填写此参数</p>
 	BucketAddress *string `json:"BucketAddress,omitnil,omitempty" name:"BucketAddress"`
 
-	// 清单地址，迁移方式为清单迁移时必填
+	// <p>清单地址，迁移方式为清单迁移时必填</p>
 	ListAddress *string `json:"ListAddress,omitnil,omitempty" name:"ListAddress"`
 
-	// 目标文件系统名称
+	// <p>目标文件系统名称</p>
 	FsName *string `json:"FsName,omitnil,omitempty" name:"FsName"`
 
-	// 源桶路径，默认为 /
+	// <p>源桶路径，默认为 /</p>
 	BucketPath *string `json:"BucketPath,omitnil,omitempty" name:"BucketPath"`
 
-	// 迁移方向；0：对象存储迁移至文件系统，1：文件系统迁移至对象存储。默认为0
+	// <p>迁移方向；0：对象存储迁移至文件系统，1：文件系统迁移至对象存储。默认为0</p>
 	Direction *uint64 `json:"Direction,omitnil,omitempty" name:"Direction"`
 }
 
@@ -1427,7 +1532,7 @@ func (r *CreateMigrationTaskRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateMigrationTaskResponseParams struct {
-	// 迁移任务 ID
+	// <p>迁移任务 ID</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1451,57 +1556,120 @@ func (r *CreateMigrationTaskResponse) FromJsonString(s string) error {
 }
 
 type DataFlowInfo struct {
-	// 数据流动管理 ID
+	// <p>数据流动管理 ID</p>
 	DataFlowId *string `json:"DataFlowId,omitnil,omitempty" name:"DataFlowId"`
 
-	// 数据流动名称
+	// <p>数据流动名称</p>
 	DataFlowName *string `json:"DataFlowName,omitnil,omitempty" name:"DataFlowName"`
 
-	// 源端数据类型
+	// <p>源端数据类型</p>
 	SourceStorageType *string `json:"SourceStorageType,omitnil,omitempty" name:"SourceStorageType"`
 
-	// 源端存储地址
+	// <p>源端存储地址</p>
 	SourceStorageAddress *string `json:"SourceStorageAddress,omitnil,omitempty" name:"SourceStorageAddress"`
 
-	// 源端路径
+	// <p>源端路径</p>
 	SourcePath *string `json:"SourcePath,omitnil,omitempty" name:"SourcePath"`
 
-	// 目录路径
+	// <p>设置数据流动时指定的文件系统内目标路径，必须以 /cfs/ 开头，代表文件存储实例内部的逻辑路径，而非本地挂载点路径。<br>示例：</p><ul><li>若挂载的是CFS根目录 /，需将对象存储上的源端目录与挂载路径下的 test1/test2 建立映射关系，则入参值为 /cfs/test1/test2</li><li>若挂载的是CFS子目录 /subdir，需将对象存储上的源端目录与挂载路径下的 test1/test2 建立映射关系，则入参值为 /cfs/subdir/test1/test2</li></ul>
 	TargetPath *string `json:"TargetPath,omitnil,omitempty" name:"TargetPath"`
 
-	// available：已生效
-	// pending：配置中
-	// unavailable：失效
-	// deleting：删除中
+	// <p>available：已生效<br>pending：配置中<br>unavailable：失效<br>deleting：删除中</p>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 创建时间
+	// <p>创建时间</p>
 	CreationTime *string `json:"CreationTime,omitnil,omitempty" name:"CreationTime"`
 
-	// 文件系统 ID
+	// <p>文件系统 ID</p>
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
-	// 0：不开启自动更新
-	// 
-	// 1：开启自动更新
+	// <p>0：不开启自动更新</p><p>1：开启自动更新</p>
 	AutoRefresh *uint64 `json:"AutoRefresh,omitnil,omitempty" name:"AutoRefresh"`
 
-	// KafkaConsumer 消费时使用的Topic参数
+	// <p>KafkaConsumer 消费时使用的Topic参数</p>
 	UserKafkaTopic *string `json:"UserKafkaTopic,omitnil,omitempty" name:"UserKafkaTopic"`
 
-	// 服务地址
+	// <p>服务地址</p>
 	ServerAddr *string `json:"ServerAddr,omitnil,omitempty" name:"ServerAddr"`
 
-	// Kafka消费用户名
+	// <p>Kafka消费用户名</p>
 	UserName *string `json:"UserName,omitnil,omitempty" name:"UserName"`
 
-	// 自动刷新的状态，available：已生效
-	// pending：配置中
-	// unavailable：失效
+	// <p>自动刷新的状态，available：已生效<br>pending：配置中<br>unavailable：失效</p>
 	AutoRefreshStatus *string `json:"AutoRefreshStatus,omitnil,omitempty" name:"AutoRefreshStatus"`
 
-	// 自动刷新开启时间
+	// <p>自动刷新开启时间</p>
 	AutoRefreshTime *string `json:"AutoRefreshTime,omitnil,omitempty" name:"AutoRefreshTime"`
+}
+
+type DataRetrievalInfo struct {
+	// <p>数据检索策略名称</p>
+	DataRetrievalName *string `json:"DataRetrievalName,omitnil,omitempty" name:"DataRetrievalName"`
+
+	// <p>迁移任务id<br>示例值：migrate-001</p>
+	DataRetrievalId *string `json:"DataRetrievalId,omitnil,omitempty" name:"DataRetrievalId"`
+
+	// <p>文件系统实例 ID，通过查询文件系统 DescribeCfsFileSystems </p><p>获取示例值：cfs-xxxxxx</p>
+	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
+
+	// <p>聚合检索条件</p>
+	CompoundCondition *string `json:"CompoundCondition,omitnil,omitempty" name:"CompoundCondition"`
+
+	// <p>创建时间<br>示例值：2023-01-09 15:03:57</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>数据检索重复日期，星期一到星期日。 1代表星期一、7代表星期天，与DayOfMonth，二选一</p>
+	DayOfWeek *string `json:"DayOfWeek,omitnil,omitempty" name:"DayOfWeek"`
+
+	// <p>数据检索按月重复，每月1-31号，选择一天，每月将在这一天自动创建快照；例如1 代表1号；与DayOfWeek二选一</p>
+	DayOfMonth *string `json:"DayOfMonth,omitnil,omitempty" name:"DayOfMonth"`
+
+	// <p>重复时间点,0-23，小时</p>
+	Hour *string `json:"Hour,omitnil,omitempty" name:"Hour"`
+
+	// <p>列表检索条件</p>
+	QueryCondition *string `json:"QueryCondition,omitnil,omitempty" name:"QueryCondition"`
+
+	// <p>修改时间</p><p>参数格式：2023-01-10 15:03:57</p>
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+}
+
+type DataRetrievalTaskInfo struct {
+	// <p>数据检索任务ID<br>示例值：dataretrievaltask-123456</p>
+	DataRetrievalTaskID *string `json:"DataRetrievalTaskID,omitnil,omitempty" name:"DataRetrievalTaskID"`
+
+	// <p>迁移任务id<br>示例值：migrate-001</p>
+	DataRetrievalId *string `json:"DataRetrievalId,omitnil,omitempty" name:"DataRetrievalId"`
+
+	// <p>文件系统实例 ID，通过查询文件系统 DescribeCfsFileSystems 获取示例值：cfs-xxxxxx</p>
+	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
+
+	// <p>聚合检索条件<br>示例值：from entries|where size &gt;4096</p>
+	CompoundCondition *string `json:"CompoundCondition,omitnil,omitempty" name:"CompoundCondition"`
+
+	// <p>列表检索条件</p>
+	QueryCondition *string `json:"QueryCondition,omitnil,omitempty" name:"QueryCondition"`
+
+	// <p>创建时间<br>示例值：2023-01-09 15:03:57</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>任务状态<br>已完成：completed<br>排队中：waiting<br>进行中：running<br>失败：failed</p>
+	State *string `json:"State,omitnil,omitempty" name:"State"`
+
+	// <p>文件数量<br>示例：1000</p>
+	FileNum *uint64 `json:"FileNum,omitnil,omitempty" name:"FileNum"`
+
+	// <p>目录数量<br>示例：1000</p>
+	DirNum *uint64 `json:"DirNum,omitnil,omitempty" name:"DirNum"`
+
+	// <p>总文件大小，单位KiB<br>示例：1024</p>
+	Size *uint64 `json:"Size,omitnil,omitempty" name:"Size"`
+
+	// <p>文件清单下载地址<br>示例值：https://xx-12345.cos.ap-shanghai.myqcloud.com/list.csv</p>
+	FileList *string `json:"FileList,omitnil,omitempty" name:"FileList"`
+
+	// <p>检索错误提示。默认：Null，当Status为failed时，将提示信息展示给用户。</p>
+	ErrorInfo *string `json:"ErrorInfo,omitnil,omitempty" name:"ErrorInfo"`
 }
 
 // Predefined struct for user
@@ -1870,6 +2038,60 @@ func (r *DeleteDataFlowResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DeleteDataRetrievalRequestParams struct {
+	// <p>数据检索 ID。可通过 DescribeDataRetrieval 接口获取。</p>
+	DataRetrievalId *string `json:"DataRetrievalId,omitnil,omitempty" name:"DataRetrievalId"`
+}
+
+type DeleteDataRetrievalRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>数据检索 ID。可通过 DescribeDataRetrieval 接口获取。</p>
+	DataRetrievalId *string `json:"DataRetrievalId,omitnil,omitempty" name:"DataRetrievalId"`
+}
+
+func (r *DeleteDataRetrievalRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteDataRetrievalRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DataRetrievalId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteDataRetrievalRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteDataRetrievalResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteDataRetrievalResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteDataRetrievalResponseParams `json:"Response"`
+}
+
+func (r *DeleteDataRetrievalResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteDataRetrievalResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DeleteLifecyclePolicyRequestParams struct {
 	// 生命周期管理策略ID
 	LifecyclePolicyID *string `json:"LifecyclePolicyID,omitnil,omitempty" name:"LifecyclePolicyID"`
@@ -1979,32 +2201,32 @@ func (r *DeleteMigrationTaskResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteUserQuotaRequestParams struct {
-	// 文件系统ID，通过查询文件系统列表获取；[DescribeCfsFileSystems](https://cloud.tencent.com/document/product/582/38170)
+	// <p>文件系统ID，通过查询文件系统列表获取；<a href="https://cloud.tencent.com/document/product/582/38170">DescribeCfsFileSystems</a></p>
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
-	// 指定配额类型，包括Uid（按用户ID限制）、Gid（按用户组ID限制）、Dir（按目录限制）
+	// <p>指定配额类型，包括Uid（按用户ID限制）、Gid（按用户组ID限制）、Dir（按目录限制）</p>
 	UserType *string `json:"UserType,omitnil,omitempty" name:"UserType"`
 
-	// UID/GID信息，和DirectoryPath参数，两者必须填写一个
+	// <p>UID/GID信息，和DirectoryPath参数，两者必须填写一个</p>
 	UserId *string `json:"UserId,omitnil,omitempty" name:"UserId"`
 
-	// 设置目录配额的目录的绝对路径，和UserId参数，两者必须填写一个
+	// <p>需删除配额的目录路径，必须以 /cfs/ 开头，代表文件存储实例内部的逻辑路径，而非本地挂载点路径。该参数与 UserId 参数至少填写一个。<br>示例：</p><ul><li>若挂载的是CFS根目录 /，需删除挂载路径下 test1/test2 的配额，则入参值为 /cfs/test1/test2</li><li>若挂载的是CFS子目录 /subdir，需删除挂载路径下 test1/test2 的配额，则入参值为 /cfs/subdir/test1/test2</li></ul>
 	DirectoryPath *string `json:"DirectoryPath,omitnil,omitempty" name:"DirectoryPath"`
 }
 
 type DeleteUserQuotaRequest struct {
 	*tchttp.BaseRequest
 	
-	// 文件系统ID，通过查询文件系统列表获取；[DescribeCfsFileSystems](https://cloud.tencent.com/document/product/582/38170)
+	// <p>文件系统ID，通过查询文件系统列表获取；<a href="https://cloud.tencent.com/document/product/582/38170">DescribeCfsFileSystems</a></p>
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
-	// 指定配额类型，包括Uid（按用户ID限制）、Gid（按用户组ID限制）、Dir（按目录限制）
+	// <p>指定配额类型，包括Uid（按用户ID限制）、Gid（按用户组ID限制）、Dir（按目录限制）</p>
 	UserType *string `json:"UserType,omitnil,omitempty" name:"UserType"`
 
-	// UID/GID信息，和DirectoryPath参数，两者必须填写一个
+	// <p>UID/GID信息，和DirectoryPath参数，两者必须填写一个</p>
 	UserId *string `json:"UserId,omitnil,omitempty" name:"UserId"`
 
-	// 设置目录配额的目录的绝对路径，和UserId参数，两者必须填写一个
+	// <p>需删除配额的目录路径，必须以 /cfs/ 开头，代表文件存储实例内部的逻辑路径，而非本地挂载点路径。该参数与 UserId 参数至少填写一个。<br>示例：</p><ul><li>若挂载的是CFS根目录 /，需删除挂载路径下 test1/test2 的配额，则入参值为 /cfs/test1/test2</li><li>若挂载的是CFS子目录 /subdir，需删除挂载路径下 test1/test2 的配额，则入参值为 /cfs/subdir/test1/test2</li></ul>
 	DirectoryPath *string `json:"DirectoryPath,omitnil,omitempty" name:"DirectoryPath"`
 }
 
@@ -2178,7 +2400,7 @@ func (r *DescribeAvailableZoneInfoRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeAvailableZoneInfoResponseParams struct {
-	// 各可用区的资源售卖情况以及支持的存储类型、存储协议等信息
+	// <p>各可用区的资源售卖情况以及支持的存储类型、存储协议等信息</p>
 	RegionZones []*AvailableRegion `json:"RegionZones,omitnil,omitempty" name:"RegionZones"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -2351,45 +2573,57 @@ func (r *DescribeCfsFileSystemClientsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeCfsFileSystemsRequestParams struct {
-	// 文件系统 ID
+	// <p>文件系统 ID</p>
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
-	// 私有网络（VPC） ID
+	// <p>私有网络（VPC） ID</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 子网 ID
+	// <p>子网 ID</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// Offset 分页码,默认0
+	// <p>Offset 分页码,默认0</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// Limit 页面大小，默认10
+	// <p>Limit 页面大小，默认10</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 用户自定义名称
+	// <p>用户自定义名称</p>
 	CreationToken *string `json:"CreationToken,omitnil,omitempty" name:"CreationToken"`
+
+	// <p>过滤条件。<br><br><li>Protocol - Array of String - 是否必填：否 -（过滤条件）按协议过滤。(NFS | CIFS | TURBO) </li><br><br><li>StorageType - Array of String - 是否必填：否 -（过滤条件）按存储类型过滤。(SD | HP | TB | TP | THP) </li><br><br><li>LifeCycleState - Array of String - 是否必填：否 -（过滤条件）按生命周期过滤。(creating | create_failed | available | deleting | delete_failed | upgrading | unserviced | expanding) </li><br><br><li>Zone - Array of String - 是否必填：否 -（过滤条件）按可用区过滤。(例如：ap-guangzhou-3) </li><br><br><li>IpAddress - Array of String - 是否必填：否 -（过滤条件）按导出点IP地址过滤。(例如：10.0.0.3) </li><br><br><li>PGroupId - Array of String - 是否必填：否 -（过滤条件）按权限组ID过滤。(例如：pgroup-xxxxxrxt) </li><br><br><li>PGroupName - Array of String - 是否必填：否 -（过滤条件）按权限组名称过滤。(例如：默认权限组) </li><br><br><li>Scenario- Array of String - 是否必填：否 -（过滤条件）按权限组名称过滤。(例如：AgentSandbox) </li></p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>标签</p>
+	Tags []*TagInfo `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type DescribeCfsFileSystemsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 文件系统 ID
+	// <p>文件系统 ID</p>
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
-	// 私有网络（VPC） ID
+	// <p>私有网络（VPC） ID</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 子网 ID
+	// <p>子网 ID</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// Offset 分页码,默认0
+	// <p>Offset 分页码,默认0</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// Limit 页面大小，默认10
+	// <p>Limit 页面大小，默认10</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 用户自定义名称
+	// <p>用户自定义名称</p>
 	CreationToken *string `json:"CreationToken,omitnil,omitempty" name:"CreationToken"`
+
+	// <p>过滤条件。<br><br><li>Protocol - Array of String - 是否必填：否 -（过滤条件）按协议过滤。(NFS | CIFS | TURBO) </li><br><br><li>StorageType - Array of String - 是否必填：否 -（过滤条件）按存储类型过滤。(SD | HP | TB | TP | THP) </li><br><br><li>LifeCycleState - Array of String - 是否必填：否 -（过滤条件）按生命周期过滤。(creating | create_failed | available | deleting | delete_failed | upgrading | unserviced | expanding) </li><br><br><li>Zone - Array of String - 是否必填：否 -（过滤条件）按可用区过滤。(例如：ap-guangzhou-3) </li><br><br><li>IpAddress - Array of String - 是否必填：否 -（过滤条件）按导出点IP地址过滤。(例如：10.0.0.3) </li><br><br><li>PGroupId - Array of String - 是否必填：否 -（过滤条件）按权限组ID过滤。(例如：pgroup-xxxxxrxt) </li><br><br><li>PGroupName - Array of String - 是否必填：否 -（过滤条件）按权限组名称过滤。(例如：默认权限组) </li><br><br><li>Scenario- Array of String - 是否必填：否 -（过滤条件）按权限组名称过滤。(例如：AgentSandbox) </li></p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>标签</p>
+	Tags []*TagInfo `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 func (r *DescribeCfsFileSystemsRequest) ToJsonString() string {
@@ -2410,6 +2644,8 @@ func (r *DescribeCfsFileSystemsRequest) FromJsonString(s string) error {
 	delete(f, "Offset")
 	delete(f, "Limit")
 	delete(f, "CreationToken")
+	delete(f, "Filters")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCfsFileSystemsRequest has unknown keys!", "")
 	}
@@ -2418,10 +2654,10 @@ func (r *DescribeCfsFileSystemsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeCfsFileSystemsResponseParams struct {
-	// 文件系统信息
+	// <p>文件系统信息</p>
 	FileSystems []*FileSystemInfo `json:"FileSystems,omitnil,omitempty" name:"FileSystems"`
 
-	// 文件系统总数
+	// <p>文件系统总数</p>
 	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -2867,6 +3103,175 @@ func (r *DescribeDataFlowResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDataFlowResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDataRetrievalRequestParams struct {
+	// <p>分页偏移量，默认值为 0。</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>分页单页限制数目，默认值为 20，最大值为 100。</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>过滤条件列表。支持的过滤字段：FileSystemId（文件系统 ID）、DataRetrievalId（数据检索 ID）、Name（数据检索名称，支持模糊搜索）。最多支持 10 个。</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+type DescribeDataRetrievalRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>分页偏移量，默认值为 0。</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>分页单页限制数目，默认值为 20，最大值为 100。</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>过滤条件列表。支持的过滤字段：FileSystemId（文件系统 ID）、DataRetrievalId（数据检索 ID）、Name（数据检索名称，支持模糊搜索）。最多支持 10 个。</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+func (r *DescribeDataRetrievalRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDataRetrievalRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "Filters")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDataRetrievalRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDataRetrievalResponseParams struct {
+	// <p>数据检索总数。</p>
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// <p>数据检索策略的详细信息</p>
+	DataRetrievals []*DataRetrievalInfo `json:"DataRetrievals,omitnil,omitempty" name:"DataRetrievals"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeDataRetrievalResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDataRetrievalResponseParams `json:"Response"`
+}
+
+func (r *DescribeDataRetrievalResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDataRetrievalResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDataRetrievalTaskRequestParams struct {
+	// <p>开始时间。须早于 EndTime ，仅支持查询最近3个月内的任务数据</p><p>参数格式：2024-11-19 10:15:37</p>
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// <p>结束时间。须晚于 StartTime ，仅支持查询最近3个月内的任务数据。</p><p>参数格式：2024-10-  19 10:15:37</p>
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// <p>数据检索ID示例值：dataretrieval-123456</p>
+	DataRetrievalId *string `json:"DataRetrievalId,omitnil,omitempty" name:"DataRetrievalId"`
+
+	// <p>分页的偏移量，默认值为0。 示例值：0</p>
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>分页单页限制数目，默认值为20，最大值100。 示例值：20</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>DataRetrievalTaskID按照【数据检索任务id】进行过滤。类型：String</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+type DescribeDataRetrievalTaskRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>开始时间。须早于 EndTime ，仅支持查询最近3个月内的任务数据</p><p>参数格式：2024-11-19 10:15:37</p>
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// <p>结束时间。须晚于 StartTime ，仅支持查询最近3个月内的任务数据。</p><p>参数格式：2024-10-  19 10:15:37</p>
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// <p>数据检索ID示例值：dataretrieval-123456</p>
+	DataRetrievalId *string `json:"DataRetrievalId,omitnil,omitempty" name:"DataRetrievalId"`
+
+	// <p>分页的偏移量，默认值为0。 示例值：0</p>
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>分页单页限制数目，默认值为20，最大值100。 示例值：20</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>DataRetrievalTaskID按照【数据检索任务id】进行过滤。类型：String</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+func (r *DescribeDataRetrievalTaskRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDataRetrievalTaskRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "DataRetrievalId")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "Filters")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDataRetrievalTaskRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDataRetrievalTaskResponseParams struct {
+	// <p>数据检索任务总量 示例值：0</p>
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// <p>检索任务详情</p>
+	DataRetrievalTasks []*DataRetrievalTaskInfo `json:"DataRetrievalTasks,omitnil,omitempty" name:"DataRetrievalTasks"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeDataRetrievalTaskResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDataRetrievalTaskResponseParams `json:"Response"`
+}
+
+func (r *DescribeDataRetrievalTaskResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDataRetrievalTaskResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -3361,42 +3766,38 @@ func (r *DescribeUserQuotaResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DoDirectoryOperationRequestParams struct {
-	// 文件系统 ID。当前仅 Turbo 系列文件系统支持调用此接口，通用系列文件系统（含增强型）不支持调用。
+	// <p>文件系统 ID。当前仅 Turbo 系列文件系统支持调用此接口，通用系列文件系统（含增强型）不支持调用。</p>
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
-	// create：创建目录，等同于mkdir。
-	// check：确认目录是否存在，等同于stat。
-	// move：对文件/目录进行重命名，等同于mv。
+	// <p>create：创建目录，等同于mkdir。<br>check：确认目录是否存在，等同于stat。<br>move：对文件/目录进行重命名，等同于mv。</p>
 	OpetationType *string `json:"OpetationType,omitnil,omitempty" name:"OpetationType"`
 
-	// 目录的绝对路径  默认递归创建（即如果目录中有子目录不存在，则先创建出对应子目录）
+	// <p>系统会默认递归创建路径中的所有父级目录。路径必须从 /cfs/ 开始，代表文件存储实例内部的逻辑路径，而非本地挂载点路径。<br>示例：</p><ul><li><p>若操作为 create/check</p><ul><li>若挂载的是CFS根目录 /，需在挂载路径下创建/检查是否存在 test1/test2，则入参值为 /cfs/test1/test2</li><li>若挂载的是CFS子目录 /subdir，需在挂载路径下创建/检查是否存在 test1/test2，则入参值为 /cfs/subdir/test1/test2</li></ul></li><li><p>若操作为 move</p><ul><li>若挂载的是CFS根目录 /，需在挂载路径下移动 test1/test2 下的文件到 DestPath，则入参值为 /cfs/test1/test2</li><li>若挂载的是CFS子目录 /subdir，需在挂载路径下挂载路径下移动 test1/test2 下的文件到 DestPath，则入参值为 /cfs/subdir/test1/test2</li></ul></li></ul>
 	DirectoryPath *string `json:"DirectoryPath,omitnil,omitempty" name:"DirectoryPath"`
 
-	// 创建目录的权限，若不传，默认为0755。若OperationType为 check，此值无实际意义。
+	// <p>创建目录的权限，若不传，默认为0755。若OperationType为 check，此值无实际意义。</p>
 	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
 
-	// mv 操作的目标目录名称。路径必须以/cfs/开头
+	// <p>mv 操作的目标目录路径，必须以 /cfs/ 开头，代表文件存储实例内部的逻辑路径，而非本地挂载点路径。<br>示例：</p><ul><li>若挂载的是CFS根目录 /，需将 DirectoryPath 下的文件移动到挂载路径下的 test3/test4，则入参值为 /cfs/test3/test4</li><li>若挂载的是CFS子目录 /subdir，需将 DirectoryPath 下的文件移动到挂载路径下的 test3/test4，则入参值为 /cfs/subdir/ test3/test4</li></ul>
 	DestPath *string `json:"DestPath,omitnil,omitempty" name:"DestPath"`
 }
 
 type DoDirectoryOperationRequest struct {
 	*tchttp.BaseRequest
 	
-	// 文件系统 ID。当前仅 Turbo 系列文件系统支持调用此接口，通用系列文件系统（含增强型）不支持调用。
+	// <p>文件系统 ID。当前仅 Turbo 系列文件系统支持调用此接口，通用系列文件系统（含增强型）不支持调用。</p>
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
-	// create：创建目录，等同于mkdir。
-	// check：确认目录是否存在，等同于stat。
-	// move：对文件/目录进行重命名，等同于mv。
+	// <p>create：创建目录，等同于mkdir。<br>check：确认目录是否存在，等同于stat。<br>move：对文件/目录进行重命名，等同于mv。</p>
 	OpetationType *string `json:"OpetationType,omitnil,omitempty" name:"OpetationType"`
 
-	// 目录的绝对路径  默认递归创建（即如果目录中有子目录不存在，则先创建出对应子目录）
+	// <p>系统会默认递归创建路径中的所有父级目录。路径必须从 /cfs/ 开始，代表文件存储实例内部的逻辑路径，而非本地挂载点路径。<br>示例：</p><ul><li><p>若操作为 create/check</p><ul><li>若挂载的是CFS根目录 /，需在挂载路径下创建/检查是否存在 test1/test2，则入参值为 /cfs/test1/test2</li><li>若挂载的是CFS子目录 /subdir，需在挂载路径下创建/检查是否存在 test1/test2，则入参值为 /cfs/subdir/test1/test2</li></ul></li><li><p>若操作为 move</p><ul><li>若挂载的是CFS根目录 /，需在挂载路径下移动 test1/test2 下的文件到 DestPath，则入参值为 /cfs/test1/test2</li><li>若挂载的是CFS子目录 /subdir，需在挂载路径下挂载路径下移动 test1/test2 下的文件到 DestPath，则入参值为 /cfs/subdir/test1/test2</li></ul></li></ul>
 	DirectoryPath *string `json:"DirectoryPath,omitnil,omitempty" name:"DirectoryPath"`
 
-	// 创建目录的权限，若不传，默认为0755。若OperationType为 check，此值无实际意义。
+	// <p>创建目录的权限，若不传，默认为0755。若OperationType为 check，此值无实际意义。</p>
 	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
 
-	// mv 操作的目标目录名称。路径必须以/cfs/开头
+	// <p>mv 操作的目标目录路径，必须以 /cfs/ 开头，代表文件存储实例内部的逻辑路径，而非本地挂载点路径。<br>示例：</p><ul><li>若挂载的是CFS根目录 /，需将 DirectoryPath 下的文件移动到挂载路径下的 test3/test4，则入参值为 /cfs/test3/test4</li><li>若挂载的是CFS子目录 /subdir，需将 DirectoryPath 下的文件移动到挂载路径下的 test3/test4，则入参值为 /cfs/subdir/ test3/test4</li></ul>
 	DestPath *string `json:"DestPath,omitnil,omitempty" name:"DestPath"`
 }
 
@@ -3425,7 +3826,7 @@ func (r *DoDirectoryOperationRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DoDirectoryOperationResponseParams struct {
-	// 1:成功 0:失败。创建目录的操作，1表示创建成功，0表示创建失败。  确认目录是否存在的操作，1表示目录存在，0表示目录不存在。此外，创建目录操作若目录已存在，也会返回创建成功。
+	// <p>1:成功 0:失败。创建目录的操作，1表示创建成功，0表示创建失败。  确认目录是否存在的操作，1表示目录存在，0表示目录不存在。此外，创建目录操作若目录已存在，也会返回创建成功。</p>
 	Result *int64 `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -3500,100 +3901,102 @@ type FileSystemClient struct {
 }
 
 type FileSystemInfo struct {
-	// 创建时间
+	// <p>创建时间</p>
 	CreationTime *string `json:"CreationTime,omitnil,omitempty" name:"CreationTime"`
 
-	// 用户自定义名称
+	// <p>用户自定义名称</p>
 	CreationToken *string `json:"CreationToken,omitnil,omitempty" name:"CreationToken"`
 
-	// 文件系统 ID
+	// <p>文件系统 ID</p>
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
-	// 文件系统状态。取值范围：
-	// - creating:创建中
-	// - mounting:挂载中
-	// - create_failed:创建失败
-	// - available:可使用
-	// - unserviced:停服中
-	// - upgrading:升级中
+	// <p>文件系统状态。取值范围：</p><ul><li>creating:创建中</li><li>mounting:挂载中</li><li>create_failed:创建失败</li><li>available:可使用</li><li>unserviced:停服中</li><li>upgrading:升级中</li></ul>
 	LifeCycleState *string `json:"LifeCycleState,omitnil,omitempty" name:"LifeCycleState"`
 
-	// 文件系统已使用容量。单位：Byte
+	// <p>文件系统已使用容量。单位：Byte</p>
 	SizeByte *uint64 `json:"SizeByte,omitnil,omitempty" name:"SizeByte"`
 
-	// 文件系统空间限制。单位:GiB
+	// <p>文件系统空间限制。单位:GiB</p>
 	SizeLimit *uint64 `json:"SizeLimit,omitnil,omitempty" name:"SizeLimit"`
 
-	// 区域 ID
+	// <p>区域 ID</p>
 	ZoneId *uint64 `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 区域名称
+	// <p>区域名称</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 文件系统协议类型, 支持 NFS,CIFS,TURBO
+	// <p>文件系统协议类型, 支持 NFS,CIFS,TURBO</p>
 	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
-	// 存储类型，HP：通用性能型；SD：通用标准型；TP:turbo性能型；TB：turbo标准型；THP：吞吐型
+	// <p>存储类型，HP：通用性能型；SD：通用标准型；TP:turbo性能型；TB：turbo标准型；THP：吞吐型</p>
 	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 
-	// 文件系统绑定的预付费存储包
+	// <p>文件系统绑定的预付费存储包</p>
 	StorageResourcePkg *string `json:"StorageResourcePkg,omitnil,omitempty" name:"StorageResourcePkg"`
 
-	// 文件系统绑定的预付费带宽包（暂未支持）
+	// <p>文件系统绑定的预付费带宽包（暂未支持）</p>
 	BandwidthResourcePkg *string `json:"BandwidthResourcePkg,omitnil,omitempty" name:"BandwidthResourcePkg"`
 
-	// 文件系统绑定权限组信息
+	// <p>文件系统绑定权限组信息</p>
 	PGroup *PGroup `json:"PGroup,omitnil,omitempty" name:"PGroup"`
 
-	// 用户自定义名称
+	// <p>用户自定义名称</p>
 	FsName *string `json:"FsName,omitnil,omitempty" name:"FsName"`
 
-	// 文件系统是否加密,true：代表加密，false：非加密
+	// <p>文件系统是否加密,true：代表加密，false：非加密</p>
 	Encrypted *bool `json:"Encrypted,omitnil,omitempty" name:"Encrypted"`
 
-	// 加密所使用的密钥，可以为密钥的 ID 或者 ARN
+	// <p>加密所使用的密钥，可以为密钥的 ID 或者 ARN</p>
 	KmsKeyId *string `json:"KmsKeyId,omitnil,omitempty" name:"KmsKeyId"`
 
-	// 应用ID
+	// <p>应用ID</p>
 	AppId *int64 `json:"AppId,omitnil,omitempty" name:"AppId"`
 
-	// 文件系统吞吐上限，吞吐上限是根据文件系统当前已使用存储量、绑定的存储资源包以及吞吐资源包一同确定. 单位MiB/s
+	// <p>文件系统吞吐上限，吞吐上限是根据文件系统当前已使用存储量、绑定的存储资源包以及吞吐资源包一同确定. 单位MiB/s</p>
 	BandwidthLimit *float64 `json:"BandwidthLimit,omitnil,omitempty" name:"BandwidthLimit"`
 
-	// 文件系统关联的快照策略
+	// <p>文件系统关联的快照策略</p>
 	AutoSnapshotPolicyId *string `json:"AutoSnapshotPolicyId,omitnil,omitempty" name:"AutoSnapshotPolicyId"`
 
-	// 文件系统处理快照状态,snapping：快照中，normal：正常状态
+	// <p>文件系统处理快照状态,snapping：快照中，normal：正常状态</p>
 	SnapStatus *string `json:"SnapStatus,omitnil,omitempty" name:"SnapStatus"`
 
-	// 文件系统容量规格上限
-	// 单位:GiB
+	// <p>文件系统容量规格上限<br>单位:GiB</p>
 	Capacity *uint64 `json:"Capacity,omitnil,omitempty" name:"Capacity"`
 
-	// 文件系统标签列表
+	// <p>文件系统标签列表</p>
 	Tags []*TagInfo `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 文件系统生命周期管理状态
-	// NotAvailable：不可用
-	// Available:可用
+	// <p>文件系统生命周期管理状态<br>NotAvailable：不可用<br>Available:可用</p>
 	TieringState *string `json:"TieringState,omitnil,omitempty" name:"TieringState"`
 
-	// 分层存储详情
+	// <p>分层存储详情</p>
 	TieringDetail *TieringDetailInfo `json:"TieringDetail,omitnil,omitempty" name:"TieringDetail"`
 
-	// 文件系统自动扩容策略
+	// <p>文件系统自动扩容策略</p>
 	AutoScaleUpRule *AutoScaleUpRule `json:"AutoScaleUpRule,omitnil,omitempty" name:"AutoScaleUpRule"`
 
-	// 文件系统版本
+	// <p>文件系统版本</p>
 	Version *string `json:"Version,omitnil,omitempty" name:"Version"`
 
-	// 额外性能信息
+	// <p>额外性能信息</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExstraPerformanceInfo []*ExstraPerformanceInfo `json:"ExstraPerformanceInfo,omitnil,omitempty" name:"ExstraPerformanceInfo"`
 
-	// basic：标准版元数据类型
-	// enhanced：增项版元数据类型
+	// <p>basic：标准版元数据类型<br>enhanced：增项版元数据类型</p>
 	MetaType *string `json:"MetaType,omitnil,omitempty" name:"MetaType"`
+
+	// <p>业务场景。</p><p>枚举值：</p><ul><li>AgentSandbox： 创建 AgentCFS</li></ul>
+	Scenario *string `json:"Scenario,omitnil,omitempty" name:"Scenario"`
+
+	// <p>过满删除容量占比，0.0 表示关闭</p><p>取值范围：[0.0, 1.0]</p>
+	FullDeleteCapacityUsage *float64 `json:"FullDeleteCapacityUsage,omitnil,omitempty" name:"FullDeleteCapacityUsage"`
+
+	// <p>过满删除最小存活时间，单位秒</p><p>单位：秒</p>
+	FullDeleteMinTtl *uint64 `json:"FullDeleteMinTtl,omitnil,omitempty" name:"FullDeleteMinTtl"`
+
+	// <p>过期删除 TTL，单位秒，0 表示关闭</p><p>单位：秒</p>
+	ExpireDeleteTtl *uint64 `json:"ExpireDeleteTtl,omitnil,omitempty" name:"ExpireDeleteTtl"`
 }
 
 type Filter struct {
@@ -3604,74 +4007,80 @@ type Filter struct {
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 }
 
+type InputPermissionGroupRules struct {
+	// 允许访问的客户端IP
+	AuthClientIp *string `json:"AuthClientIp,omitnil,omitempty" name:"AuthClientIp"`
+
+	// 读写权限, ro为只读，rw为读写
+	RWPermission *string `json:"RWPermission,omitnil,omitempty" name:"RWPermission"`
+
+	// 用户权限。其中all_squash为所有访问用户都会被映射为匿名用户或用户组；no_all_squash为访问用户会先与本机用户匹配，匹配失败后再映射为匿名用户或用户组；root_squash为将来访的root用户映射为匿名用户或用户组；no_root_squash为来访的root用户保持root帐号权限。
+	UserPermission *string `json:"UserPermission,omitnil,omitempty" name:"UserPermission"`
+
+	// 规则优先级，1-100。 其中 1 为最高，100为最低
+	Priority *uint64 `json:"Priority,omitnil,omitempty" name:"Priority"`
+}
+
 type LifecycleDataTaskInfo struct {
-	// 任务id
+	// <p>任务id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// 任务状态.
-	// init：未执行
-	// running：执行中，finished：已完成
-	// ,failed：失败
-	// ,stopping：停止中,stopped：已停止
+	// <p>任务状态</p><p>枚举值：</p><ul><li>init： 排队中</li><li>running： 执行中</li><li>finished： 已完成</li><li>failed： 失败</li><li>stopping： 停止中</li><li>stopped： 已停止</li></ul>
 	TaskStatus *string `json:"TaskStatus,omitnil,omitempty" name:"TaskStatus"`
 
-	// 任务创建时间
+	// <p>任务创建时间</p>
 	CreationTime *string `json:"CreationTime,omitnil,omitempty" name:"CreationTime"`
 
-	// 任务结束时间
+	// <p>任务结束时间</p>
 	FinishTime *string `json:"FinishTime,omitnil,omitempty" name:"FinishTime"`
 
-	// 文件总数
+	// <p>文件总数</p>
 	FileTotalCount *uint64 `json:"FileTotalCount,omitnil,omitempty" name:"FileTotalCount"`
 
-	// 处理成功文件数量
+	// <p>处理成功文件数量</p>
 	FileSuccessedCount *uint64 `json:"FileSuccessedCount,omitnil,omitempty" name:"FileSuccessedCount"`
 
-	// 当前已经失败的文件数
+	// <p>当前已经失败的文件数</p>
 	FileFailedCount *uint64 `json:"FileFailedCount,omitnil,omitempty" name:"FileFailedCount"`
 
-	// 文件容量，单位Byte
-	// 
+	// <p>文件容量，单位Byte</p>
 	FileTotalSize *uint64 `json:"FileTotalSize,omitnil,omitempty" name:"FileTotalSize"`
 
-	// 已处理完成的文件容量，单位Byte
-	// 
+	// <p>已处理完成的文件容量，单位Byte</p>
 	FileSuccessedSize *uint64 `json:"FileSuccessedSize,omitnil,omitempty" name:"FileSuccessedSize"`
 
-	// 已处理失败文件容量，单位Byte
+	// <p>已处理失败文件容量，单位Byte</p>
 	FileFailedSize *uint64 `json:"FileFailedSize,omitnil,omitempty" name:"FileFailedSize"`
 
-	// 总文件列表
+	// <p>总文件列表</p>
 	FileTotalList *string `json:"FileTotalList,omitnil,omitempty" name:"FileTotalList"`
 
-	// 成功的文件列表
+	// <p>成功的文件列表</p>
 	FileSuccessedList *string `json:"FileSuccessedList,omitnil,omitempty" name:"FileSuccessedList"`
 
-	// 失败文件的列表
+	// <p>失败文件的列表</p>
 	FileFailedList *string `json:"FileFailedList,omitnil,omitempty" name:"FileFailedList"`
 
-	// FileSystemId
+	// <p>FileSystemId</p>
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
-	// 任务名称
+	// <p>任务名称</p>
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
-	// 任务路径
+	// <p>任务路径</p>
 	TaskPath *string `json:"TaskPath,omitnil,omitempty" name:"TaskPath"`
 
-	// 任务类型,archive:表示沉降任务，restore：表示拉取任务
+	// <p>任务类型,archive:表示沉降任务，restore：表示拉取任务</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 数据流动Id
+	// <p>数据流动Id</p>
 	DataFlowId *string `json:"DataFlowId,omitnil,omitempty" name:"DataFlowId"`
 
-	// 当CFSTurbo内的文件和外置存储存在同名情况时，是否覆盖。
-	// 
-	// ture：覆盖
-	// 
-	// false：不覆盖（同时也不会释放热存数据）
-	// 为空时，默认为false
+	// <p>当CFSTurbo内的文件和外置存储存在同名情况时，是否覆盖。</p><p>ture：覆盖</p><p>false：不覆盖（同时也不会释放热存数据）<br>为空时，默认为false</p>
 	IsOverwrite *bool `json:"IsOverwrite,omitnil,omitempty" name:"IsOverwrite"`
+
+	// <p>数据清单文件路径，清单文件内每行为待处理文件的完整路径。所有路径（包括清单文件路径、清单文件内每行表示的待处理文件的路径）必须以 /cfs 开头，指向CFS文件系统内已存在的文件，与 TaskPath 参数二选一填写。<br>示例：</p><ul><li>若挂载的是CFS根目录 /，清单文件位于挂载路径下的 lists/archive_list.txt，则入参值为 /cfs/lists/archive_list.txt</li><li>若挂载的是CFS子目录 /subdir，清单文件位于挂载路径下的 lists/archive_list.txt，则入参值为 /cfs/subdir/lists/archive_list.txt</li></ul>
+	ListPath *string `json:"ListPath,omitnil,omitempty" name:"ListPath"`
 }
 
 type LifecyclePolicy struct {
@@ -3695,124 +4104,130 @@ type LifecyclePolicy struct {
 }
 
 type LifecycleRule struct {
-	// 数据转储后的存储类型。其中：InfrequentAccess：低频介质存储；ColdStorage：冷存储。
+	// <p>数据转储后的存储类型。其中：InfrequentAccess：低频介质存储；ColdStorage：冷存储。</p>
 	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 
-	// 数据转储文件类型。其中，BIG_FILE：超大文件；STD_FILE：普通文件；SMALL_FILE：小文件；ALL：所有文件。
+	// <p>数据转储文件类型。其中，BIG_FILE：超大文件；STD_FILE：普通文件；SMALL_FILE：小文件；ALL：所有文件。</p>
 	FileType *string `json:"FileType,omitnil,omitempty" name:"FileType"`
 
-	// 数据转储行为。其中，Archive：沉降；Noarchive：不沉降。
+	// <p>数据转储行为。其中，Archive：沉降；Noarchive：不沉降。</p>
 	Action *string `json:"Action,omitnil,omitempty" name:"Action"`
 
-	// 数据转储触发时间。由“DEFAULT_ATIME_”与“数字”组成，单位为天。当 Action 为 Noarchive，请保持为空。
+	// <p>数据转储触发时间。由“DEFAULT_ATIME_”与“数字”组成，单位为天。当 Action 为 Noarchive，请保持为空。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Interval *string `json:"Interval,omitnil,omitempty" name:"Interval"`
 
-	// 数据转储文件最大规格。其数值需使用“数字+单位”格式进行表示，单位支持K（KiB）、M（MiB）、G（GiB）。
+	// <p>数据转储文件最大规格。其数值需使用“数字+单位”格式进行表示，单位支持K（KiB）、M（MiB）、G（GiB）。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	FileMaxSize *string `json:"FileMaxSize,omitnil,omitempty" name:"FileMaxSize"`
 
-	// 数据转储文件最小规格。其数值需使用“数字+单位”格式进行表示，单位支持K（KiB）、M（MiB）、G（GiB）。
+	// <p>数据转储文件最小规格。其数值需使用“数字+单位”格式进行表示，单位支持K（KiB）、M（MiB）、G（GiB）。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	FileMinSize *string `json:"FileMinSize,omitnil,omitempty" name:"FileMinSize"`
 
-	// 策略类型
+	// <p>策略类型</p>
 	PolicyType *string `json:"PolicyType,omitnil,omitempty" name:"PolicyType"`
 
-	// 阈值范围[10-90]
+	// <p>阈值范围[10-90]</p>
 	ExpireThreshold *uint64 `json:"ExpireThreshold,omitnil,omitempty" name:"ExpireThreshold"`
 
-	// 阈值范围[10-90]
+	// <p>阈值范围[10-90]</p>
 	TargetThreshold *uint64 `json:"TargetThreshold,omitnil,omitempty" name:"TargetThreshold"`
 
-	// 当CFSTurbo内的文件和外置存储存在同名情况时，是否覆盖。
-	// 
-	// ture：覆盖
-	// 
-	// false：不覆盖（同时也不会释放热存数据）
-	// 
-	// 为空时，默认为false
+	// <p>当CFSTurbo内的文件和外置存储存在同名情况时，是否覆盖。</p><p>ture：覆盖</p><p>false：不覆盖（同时也不会释放热存数据）</p><p>为空时，默认为false</p>
 	IsOverwrite *bool `json:"IsOverwrite,omitnil,omitempty" name:"IsOverwrite"`
+
+	// <p>新建文件是否近实时同步至 S3。true：近实时同步（30 秒内）/ false：基于策略配置时间同步。默认 false。仅当 StorageType=ExternalStorage 时生效</p>
+	IsCreateRealTimeSync *bool `json:"IsCreateRealTimeSync,omitnil,omitempty" name:"IsCreateRealTimeSync"`
+
+	// <p>修改文件是否近实时同步至 S3。true：近实时同步（30 秒内）/ false：基于策略配置时间同步。默认 false。仅当 StorageType=ExternalStorage 时生效。与 IsOverwrite 独立</p>
+	IsModifyRealTimeSync *bool `json:"IsModifyRealTimeSync,omitnil,omitempty" name:"IsModifyRealTimeSync"`
+
+	// <p>删除文件是否同步至 S3。true：同步删除（30 秒内）/ false：不同步删除。默认 false。为 true 时要求目标 COS Bucket 已开启多版本。仅当 StorageType=ExternalStorage 时生效</p>
+	IsSyncDelete *bool `json:"IsSyncDelete,omitnil,omitempty" name:"IsSyncDelete"`
 }
 
 type MigrationTaskInfo struct {
-	// 迁移任务名称
+	// <p>迁移任务名称</p>
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
-	// 迁移任务id
+	// <p>迁移任务id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// 迁移方式标志位，默认为0。0: 桶迁移；1: 清单迁移
+	// <p>迁移方式标志位，默认为0。0: 桶迁移；1: 清单迁移</p>
 	MigrationType *uint64 `json:"MigrationType,omitnil,omitempty" name:"MigrationType"`
 
-	// 迁移模式，默认为0。0: 全量迁移
+	// <p>迁移模式，默认为0。0: 全量迁移</p>
 	MigrationMode *uint64 `json:"MigrationMode,omitnil,omitempty" name:"MigrationMode"`
 
-	// 数据源桶名称
+	// <p>数据源桶名称</p>
 	BucketName *string `json:"BucketName,omitnil,omitempty" name:"BucketName"`
 
-	// 数据源桶地域
+	// <p>数据源桶地域</p>
 	BucketRegion *string `json:"BucketRegion,omitnil,omitempty" name:"BucketRegion"`
 
-	// 数据源桶地址
+	// <p>数据源桶地址</p>
 	BucketAddress *string `json:"BucketAddress,omitnil,omitempty" name:"BucketAddress"`
 
-	// 清单地址
+	// <p>清单地址</p>
 	ListAddress *string `json:"ListAddress,omitnil,omitempty" name:"ListAddress"`
 
-	// 文件系统实例名称
+	// <p>文件系统实例名称</p>
 	FsName *string `json:"FsName,omitnil,omitempty" name:"FsName"`
 
-	// 文件系统实例Id
+	// <p>文件系统实例Id</p>
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
-	// 文件系统路径
+	// <p>文件系统内目录路径，不涉及实际挂载子目录/根目录，无需以/cfs/作为前缀</p>
 	FsPath *string `json:"FsPath,omitnil,omitempty" name:"FsPath"`
 
-	// 同名文件迁移时覆盖策略，默认为0。0: 最后修改时间优先；1: 全覆盖；2: 不覆盖
+	// <p>同名文件迁移时覆盖策略，默认为0。0: 最后修改时间优先；1: 全覆盖；2: 不覆盖</p>
 	CoverType *uint64 `json:"CoverType,omitnil,omitempty" name:"CoverType"`
 
-	// 创建时间
+	// <p>创建时间</p>
 	CreateTime *int64 `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 完成/终止时间
+	// <p>完成/终止时间</p>
 	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 迁移状态。0: 已完成；1: 创建中；2: 运行中；3: 终止中；4: 已终止；5: 创建失败；6: 运行失败；7: 结束中；8: 删除中；9: 等待中
+	// <p>迁移状态。0: 已完成；1: 创建中；2: 运行中；3: 终止中；4: 已终止；5: 创建失败；6: 运行失败；7: 结束中；8: 删除中；9: 等待中</p>
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 文件数量
+	// <p>文件数量</p>
 	FileTotalCount *uint64 `json:"FileTotalCount,omitnil,omitempty" name:"FileTotalCount"`
 
-	// 已迁移文件数量
+	// <p>已迁移文件数量</p>
 	FileMigratedCount *uint64 `json:"FileMigratedCount,omitnil,omitempty" name:"FileMigratedCount"`
 
-	// 迁移失败文件数量
+	// <p>迁移失败文件数量</p>
 	FileFailedCount *uint64 `json:"FileFailedCount,omitnil,omitempty" name:"FileFailedCount"`
 
-	// 文件容量，单位Byte
+	// <p>文件容量，单位Byte</p>
 	FileTotalSize *int64 `json:"FileTotalSize,omitnil,omitempty" name:"FileTotalSize"`
 
-	// 已迁移文件容量，单位Byte
+	// <p>已迁移文件容量，单位Byte</p>
 	FileMigratedSize *int64 `json:"FileMigratedSize,omitnil,omitempty" name:"FileMigratedSize"`
 
-	// 迁移失败文件容量，单位Byte
+	// <p>迁移失败文件容量，单位Byte</p>
 	FileFailedSize *int64 `json:"FileFailedSize,omitnil,omitempty" name:"FileFailedSize"`
 
-	// 全部清单
+	// <p>全部清单</p>
 	FileTotalList *string `json:"FileTotalList,omitnil,omitempty" name:"FileTotalList"`
 
-	// 已完成文件清单
+	// <p>已完成文件清单</p>
 	FileCompletedList *string `json:"FileCompletedList,omitnil,omitempty" name:"FileCompletedList"`
 
-	// 失败文件清单
+	// <p>失败文件清单</p>
 	FileFailedList *string `json:"FileFailedList,omitnil,omitempty" name:"FileFailedList"`
 
-	// 源桶路径
+	// <p>源桶路径</p>
 	BucketPath *string `json:"BucketPath,omitnil,omitempty" name:"BucketPath"`
 
-	// 迁移方向。0: 对象存储迁移至文件系统，1: 文件系统迁移至对象存储。默认 0
+	// <p>迁移方向。0: 对象存储迁移至文件系统，1: 文件系统迁移至对象存储。默认 0</p>
 	Direction *uint64 `json:"Direction,omitnil,omitempty" name:"Direction"`
+
+	// <p>数据源服务商</p><p>枚举值：</p><ul><li>COS： 腾讯云COS</li><li>OSS： 阿里云OSS</li><li>OBS： 华为云OBS</li><li>BOS： 百度云BOS</li><li>TOS： 火山引擎TOS</li></ul>
+	SrcService *string `json:"SrcService,omitnil,omitempty" name:"SrcService"`
 }
 
 // Predefined struct for user
@@ -3932,6 +4347,102 @@ func (r *ModifyDataFlowResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyDataFlowResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyDataRetrievalRequestParams struct {
+	// <p>数据检索ID示例值：dataretrieval-123456</p>
+	DataRetrievalId *string `json:"DataRetrievalId,omitnil,omitempty" name:"DataRetrievalId"`
+
+	// <p>数据检索名称示例值：DataDive</p>
+	DataRetrievalName *string `json:"DataRetrievalName,omitnil,omitempty" name:"DataRetrievalName"`
+
+	// <p>聚合检索条件 示例值：from entries|where size &gt;4096</p>
+	CompoundCondition *string `json:"CompoundCondition,omitnil,omitempty" name:"CompoundCondition"`
+
+	// <p>列表检索条件</p>
+	QueryCondition *string `json:"QueryCondition,omitnil,omitempty" name:"QueryCondition"`
+
+	// <p>数据检索按月重复，每月1-31号，选择一天，每月将在这一天自动创建快照；例如1 代表1号；与DayOfWeek二选一</p>
+	DayOfMonth *string `json:"DayOfMonth,omitnil,omitempty" name:"DayOfMonth"`
+
+	// <p>数据检索重复日期，星期一到星期日。 1代表星期一、7代表星期天，与DayOfMonth，二选一</p>
+	DayOfWeek *string `json:"DayOfWeek,omitnil,omitempty" name:"DayOfWeek"`
+
+	// <p>重复时间点,0-23，小时</p>
+	Hour *string `json:"Hour,omitnil,omitempty" name:"Hour"`
+}
+
+type ModifyDataRetrievalRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>数据检索ID示例值：dataretrieval-123456</p>
+	DataRetrievalId *string `json:"DataRetrievalId,omitnil,omitempty" name:"DataRetrievalId"`
+
+	// <p>数据检索名称示例值：DataDive</p>
+	DataRetrievalName *string `json:"DataRetrievalName,omitnil,omitempty" name:"DataRetrievalName"`
+
+	// <p>聚合检索条件 示例值：from entries|where size &gt;4096</p>
+	CompoundCondition *string `json:"CompoundCondition,omitnil,omitempty" name:"CompoundCondition"`
+
+	// <p>列表检索条件</p>
+	QueryCondition *string `json:"QueryCondition,omitnil,omitempty" name:"QueryCondition"`
+
+	// <p>数据检索按月重复，每月1-31号，选择一天，每月将在这一天自动创建快照；例如1 代表1号；与DayOfWeek二选一</p>
+	DayOfMonth *string `json:"DayOfMonth,omitnil,omitempty" name:"DayOfMonth"`
+
+	// <p>数据检索重复日期，星期一到星期日。 1代表星期一、7代表星期天，与DayOfMonth，二选一</p>
+	DayOfWeek *string `json:"DayOfWeek,omitnil,omitempty" name:"DayOfWeek"`
+
+	// <p>重复时间点,0-23，小时</p>
+	Hour *string `json:"Hour,omitnil,omitempty" name:"Hour"`
+}
+
+func (r *ModifyDataRetrievalRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDataRetrievalRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DataRetrievalId")
+	delete(f, "DataRetrievalName")
+	delete(f, "CompoundCondition")
+	delete(f, "QueryCondition")
+	delete(f, "DayOfMonth")
+	delete(f, "DayOfWeek")
+	delete(f, "Hour")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyDataRetrievalRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyDataRetrievalResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyDataRetrievalResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyDataRetrievalResponseParams `json:"Response"`
+}
+
+func (r *ModifyDataRetrievalResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDataRetrievalResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4094,43 +4605,111 @@ func (r *ModifyLifecyclePolicyResponse) FromJsonString(s string) error {
 }
 
 type MountInfo struct {
-	// 文件系统 ID
+	// <p>文件系统 ID</p>
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
-	// 挂载点 ID
+	// <p>挂载点 ID</p>
 	MountTargetId *string `json:"MountTargetId,omitnil,omitempty" name:"MountTargetId"`
 
-	// 挂载点 IP
+	// <p>挂载点 IP</p>
 	IpAddress *string `json:"IpAddress,omitnil,omitempty" name:"IpAddress"`
 
-	// 挂载根目录
+	// <p>挂载根目录</p>
 	FSID *string `json:"FSID,omitnil,omitempty" name:"FSID"`
 
-	// 挂载点状态，包括creating：创建中；available：运行中；
-	// deleting：删除中；
-	// create_failed： 创建失败
+	// <p>挂载点状态，包括creating：创建中；available：运行中；<br>deleting：删除中；<br>create_failed： 创建失败</p>
 	LifeCycleState *string `json:"LifeCycleState,omitnil,omitempty" name:"LifeCycleState"`
 
-	// 网络类型，包括VPC,CCN
+	// <p>网络类型，包括VPC,CCN</p>
 	NetworkInterface *string `json:"NetworkInterface,omitnil,omitempty" name:"NetworkInterface"`
 
-	// 私有网络 ID
+	// <p>私有网络 ID</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 私有网络名称
+	// <p>私有网络名称</p>
 	VpcName *string `json:"VpcName,omitnil,omitempty" name:"VpcName"`
 
-	// 子网 Id
+	// <p>子网 Id</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 子网名称
+	// <p>子网名称</p>
 	SubnetName *string `json:"SubnetName,omitnil,omitempty" name:"SubnetName"`
 
-	// CFS Turbo使用的云联网ID
+	// <p>CFS Turbo使用的云联网ID</p>
 	CcnID *string `json:"CcnID,omitnil,omitempty" name:"CcnID"`
 
-	// 云联网中CFS Turbo使用的网段
+	// <p>云联网中CFS Turbo使用的网段</p>
 	CidrBlock *string `json:"CidrBlock,omitnil,omitempty" name:"CidrBlock"`
+
+	// <p>占用用户ip列表</p>
+	ServerList []*string `json:"ServerList,omitnil,omitempty" name:"ServerList"`
+
+	// <p>是否占用超过200个ip</p>
+	ServerListTruncated *bool `json:"ServerListTruncated,omitnil,omitempty" name:"ServerListTruncated"`
+}
+
+// Predefined struct for user
+type OverrideCfsRulesRequestParams struct {
+	// 权限组 ID
+	PermissionGroupId *string `json:"PermissionGroupId,omitnil,omitempty" name:"PermissionGroupId"`
+
+	// 权限组规则列表
+	RuleList []*InputPermissionGroupRules `json:"RuleList,omitnil,omitempty" name:"RuleList"`
+}
+
+type OverrideCfsRulesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 权限组 ID
+	PermissionGroupId *string `json:"PermissionGroupId,omitnil,omitempty" name:"PermissionGroupId"`
+
+	// 权限组规则列表
+	RuleList []*InputPermissionGroupRules `json:"RuleList,omitnil,omitempty" name:"RuleList"`
+}
+
+func (r *OverrideCfsRulesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *OverrideCfsRulesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "PermissionGroupId")
+	delete(f, "RuleList")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "OverrideCfsRulesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type OverrideCfsRulesResponseParams struct {
+	// 权限组规则列表
+	RuleList []*PGroupRuleInfo `json:"RuleList,omitnil,omitempty" name:"RuleList"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type OverrideCfsRulesResponse struct {
+	*tchttp.BaseResponse
+	Response *OverrideCfsRulesResponseParams `json:"Response"`
+}
+
+func (r *OverrideCfsRulesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *OverrideCfsRulesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type PGroup struct {
@@ -4190,8 +4769,65 @@ type PathInfo struct {
 }
 
 // Predefined struct for user
+type RunDataRetrievalTaskRequestParams struct {
+	// <p>数据检索 ID。可通过 DescribeDataRetrieval 接口获取。</p>
+	DataRetrievalId *string `json:"DataRetrievalId,omitnil,omitempty" name:"DataRetrievalId"`
+}
+
+type RunDataRetrievalTaskRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>数据检索 ID。可通过 DescribeDataRetrieval 接口获取。</p>
+	DataRetrievalId *string `json:"DataRetrievalId,omitnil,omitempty" name:"DataRetrievalId"`
+}
+
+func (r *RunDataRetrievalTaskRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RunDataRetrievalTaskRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DataRetrievalId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RunDataRetrievalTaskRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RunDataRetrievalTaskResponseParams struct {
+	// <p>数据检索任务 ID。</p>
+	DataRetrievalTaskId *string `json:"DataRetrievalTaskId,omitnil,omitempty" name:"DataRetrievalTaskId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type RunDataRetrievalTaskResponse struct {
+	*tchttp.BaseResponse
+	Response *RunDataRetrievalTaskResponseParams `json:"Response"`
+}
+
+func (r *RunDataRetrievalTaskResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RunDataRetrievalTaskResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ScaleUpFileSystemRequestParams struct {
-	// 文件系统Id,该参数通过查询文件系统列表接口获取
+	// 文件系统ID，通过查询文件系统列表获取；[DescribeCfsFileSystems](https://cloud.tencent.com/document/product/582/38170)
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
 	// 扩容的目标容量（单位GiB）
@@ -4201,7 +4837,7 @@ type ScaleUpFileSystemRequestParams struct {
 type ScaleUpFileSystemRequest struct {
 	*tchttp.BaseRequest
 	
-	// 文件系统Id,该参数通过查询文件系统列表接口获取
+	// 文件系统ID，通过查询文件系统列表获取；[DescribeCfsFileSystems](https://cloud.tencent.com/document/product/582/38170)
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
 	// 扩容的目标容量（单位GiB）
@@ -4258,44 +4894,44 @@ func (r *ScaleUpFileSystemResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type SetUserQuotaRequestParams struct {
-	// 文件系统 ID,通过[查询文件系统列表](https://cloud.tencent.com/document/api/582/38170)获取
+	// <p>文件系统 ID,通过<a href="https://cloud.tencent.com/document/api/582/38170">查询文件系统列表</a>获取</p>
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
-	// 指定配额类型，包括Uid、Gid，Dir，分别代表用户配额，用户组配额，目录配额
+	// <p>指定配额类型，包括Uid、Gid，Dir，分别代表用户配额，用户组配额，目录配额</p>
 	UserType *string `json:"UserType,omitnil,omitempty" name:"UserType"`
 
-	// UID/GID信息
+	// <p>UID/GID信息</p>
 	UserId *string `json:"UserId,omitnil,omitempty" name:"UserId"`
 
-	// 容量硬限制，单位GiB。设置范围10-10000000。
+	// <p>容量硬限制，单位GiB。设置范围10-10000000。</p>
 	CapacityHardLimit *uint64 `json:"CapacityHardLimit,omitnil,omitempty" name:"CapacityHardLimit"`
 
-	// 文件硬限制，单位个。设置范围1000-100000000
+	// <p>文件硬限制</p><p>取值范围：[1000, 1000000000]</p><p>单位：个</p><p>默认值：无默认值</p>
 	FileHardLimit *uint64 `json:"FileHardLimit,omitnil,omitempty" name:"FileHardLimit"`
 
-	// 需设置目录配额的目录绝对路径，不同目录不可存在包含关系
+	// <p>需设置配额的目录路径，必须以 /cfs/ 开头，代表文件存储实例内部的逻辑路径，而非本地挂载点路径。不同目录之间不可存在包含关系。<br>示例：</p><ul><li>若挂载的是CFS根目录 /，需对挂载路径下的 test1/test2 设置配额，则入参值为 /cfs/test1/test2</li><li>若挂载的是CFS子目录 /subdir，需对挂载路径下的 test1/test2 设置配额，则入参值为 /cfs/subdir/test1/test2</li></ul>
 	DirectoryPath *string `json:"DirectoryPath,omitnil,omitempty" name:"DirectoryPath"`
 }
 
 type SetUserQuotaRequest struct {
 	*tchttp.BaseRequest
 	
-	// 文件系统 ID,通过[查询文件系统列表](https://cloud.tencent.com/document/api/582/38170)获取
+	// <p>文件系统 ID,通过<a href="https://cloud.tencent.com/document/api/582/38170">查询文件系统列表</a>获取</p>
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
-	// 指定配额类型，包括Uid、Gid，Dir，分别代表用户配额，用户组配额，目录配额
+	// <p>指定配额类型，包括Uid、Gid，Dir，分别代表用户配额，用户组配额，目录配额</p>
 	UserType *string `json:"UserType,omitnil,omitempty" name:"UserType"`
 
-	// UID/GID信息
+	// <p>UID/GID信息</p>
 	UserId *string `json:"UserId,omitnil,omitempty" name:"UserId"`
 
-	// 容量硬限制，单位GiB。设置范围10-10000000。
+	// <p>容量硬限制，单位GiB。设置范围10-10000000。</p>
 	CapacityHardLimit *uint64 `json:"CapacityHardLimit,omitnil,omitempty" name:"CapacityHardLimit"`
 
-	// 文件硬限制，单位个。设置范围1000-100000000
+	// <p>文件硬限制</p><p>取值范围：[1000, 1000000000]</p><p>单位：个</p><p>默认值：无默认值</p>
 	FileHardLimit *uint64 `json:"FileHardLimit,omitnil,omitempty" name:"FileHardLimit"`
 
-	// 需设置目录配额的目录绝对路径，不同目录不可存在包含关系
+	// <p>需设置配额的目录路径，必须以 /cfs/ 开头，代表文件存储实例内部的逻辑路径，而非本地挂载点路径。不同目录之间不可存在包含关系。<br>示例：</p><ul><li>若挂载的是CFS根目录 /，需对挂载路径下的 test1/test2 设置配额，则入参值为 /cfs/test1/test2</li><li>若挂载的是CFS子目录 /subdir，需对挂载路径下的 test1/test2 设置配额，则入参值为 /cfs/subdir/test1/test2</li></ul>
 	DirectoryPath *string `json:"DirectoryPath,omitnil,omitempty" name:"DirectoryPath"`
 }
 
@@ -4325,7 +4961,7 @@ func (r *SetUserQuotaRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type SetUserQuotaResponseParams struct {
-	// UID/GID信息
+	// <p>UID/GID信息</p>
 	UserId *string `json:"UserId,omitnil,omitempty" name:"UserId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4403,50 +5039,50 @@ func (r *SignUpCfsServiceResponse) FromJsonString(s string) error {
 }
 
 type SnapshotInfo struct {
-	// 创建快照时间
+	// <p>创建快照时间</p>
 	CreationTime *string `json:"CreationTime,omitnil,omitempty" name:"CreationTime"`
 
-	// 快照名称
+	// <p>快照名称</p>
 	SnapshotName *string `json:"SnapshotName,omitnil,omitempty" name:"SnapshotName"`
 
-	// 快照ID
+	// <p>快照ID</p>
 	SnapshotId *string `json:"SnapshotId,omitnil,omitempty" name:"SnapshotId"`
 
-	// 快照状态，creating-创建中；available-运行中；deleting-删除中；rollbacking-new 创建新文件系统中；create-failed 创建失败
+	// <p>快照状态，creating-创建中；available-运行中；deleting-删除中；rollbacking-new 创建新文件系统中；create-failed 创建失败</p>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 地域名称
+	// <p>地域名称</p>
 	RegionName *string `json:"RegionName,omitnil,omitempty" name:"RegionName"`
 
-	// 文件系统ID
+	// <p>文件系统ID</p>
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
-	// 快照大小
+	// <p>快照大小</p><p>单位：MiB</p>
 	Size *uint64 `json:"Size,omitnil,omitempty" name:"Size"`
 
-	// 保留时长天
+	// <p>保留时长天</p>
 	AliveDay *uint64 `json:"AliveDay,omitnil,omitempty" name:"AliveDay"`
 
-	// 快照进度百分比，1表示1% 范围1-100
+	// <p>快照进度百分比，1表示1% 范围1-100</p>
 	Percent *uint64 `json:"Percent,omitnil,omitempty" name:"Percent"`
 
-	// 账号ID
+	// <p>账号ID</p>
 	AppId *uint64 `json:"AppId,omitnil,omitempty" name:"AppId"`
 
-	// 快照删除时间
+	// <p>快照删除时间</p>
 	DeleteTime *string `json:"DeleteTime,omitnil,omitempty" name:"DeleteTime"`
 
-	// 文件系统名称
+	// <p>文件系统名称</p>
 	FsName *string `json:"FsName,omitnil,omitempty" name:"FsName"`
 
-	// 快照标签
+	// <p>快照标签</p>
 	Tags []*TagInfo `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 快照类型，general为通用系列快照，turbo为Turbo系列快照
+	// <p>快照类型，general为通用系列快照，turbo为Turbo系列快照</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SnapshotType *string `json:"SnapshotType,omitnil,omitempty" name:"SnapshotType"`
 
-	// 实际快照时间，反映快照对应文件系统某个时刻的数据。
+	// <p>实际快照时间，反映快照对应文件系统某个时刻的数据。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SnapshotTime *string `json:"SnapshotTime,omitnil,omitempty" name:"SnapshotTime"`
 }
@@ -4610,10 +5246,10 @@ type TagInfo struct {
 }
 
 type TieringDetailInfo struct {
-	// 低频存储容量
+	// <p>低频存储容量</p><p>单位：Byte, B, 字节</p>
 	TieringSizeInBytes *int64 `json:"TieringSizeInBytes,omitnil,omitempty" name:"TieringSizeInBytes"`
 
-	// 冷存储容量
+	// <p>冷存储容量</p><p>单位：Byte, B, 字节</p>
 	SecondaryTieringSizeInBytes *int64 `json:"SecondaryTieringSizeInBytes,omitnil,omitempty" name:"SecondaryTieringSizeInBytes"`
 }
 
@@ -5310,31 +5946,31 @@ func (r *UpdateFileSystemBandwidthLimitResponse) FromJsonString(s string) error 
 }
 
 type UserQuota struct {
-	// 指定配额类型，包括Uid、Gid、Dir
+	// <p>指定配额类型，包括Uid、Gid、Dir</p>
 	UserType *string `json:"UserType,omitnil,omitempty" name:"UserType"`
 
-	// UID/GID信息
+	// <p>UID/GID信息</p>
 	UserId *string `json:"UserId,omitnil,omitempty" name:"UserId"`
 
-	// 容量硬限制，单位GiB
+	// <p>容量硬限制，单位GiB</p>
 	CapacityHardLimit *uint64 `json:"CapacityHardLimit,omitnil,omitempty" name:"CapacityHardLimit"`
 
-	// 文件硬限制，单位个
+	// <p>文件硬限制，单位个</p>
 	FileHardLimit *uint64 `json:"FileHardLimit,omitnil,omitempty" name:"FileHardLimit"`
 
-	// 文件系统ID
+	// <p>文件系统ID</p>
 	FileSystemId *string `json:"FileSystemId,omitnil,omitempty" name:"FileSystemId"`
 
-	// 容量使用，单位GiB
+	// <p>容量使用，单位GiB</p>
 	CapacityUsed *uint64 `json:"CapacityUsed,omitnil,omitempty" name:"CapacityUsed"`
 
-	// 文件使用个数，单位个
+	// <p>文件使用个数，单位个</p>
 	FileUsed *uint64 `json:"FileUsed,omitnil,omitempty" name:"FileUsed"`
 
-	// 目录配额的目录绝对路径
+	// <p>需设置配额的目录路径，必须以 /cfs/ 开头，代表文件存储实例内部的逻辑路径，而非本地挂载点路径。不同目录之间不可存在包含关系。<br>示例：</p><ul><li>若挂载的是CFS根目录 /，需对挂载路径下的 test1/test2 设置配额，则入参值为 /cfs/test1/test2</li><li>若挂载的是CFS子目录 /subdir，需对挂载路径下的 test1/test2 设置配额，则入参值为 /cfs/subdir/test1/test2</li></ul>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DirectoryPath *string `json:"DirectoryPath,omitnil,omitempty" name:"DirectoryPath"`
 
-	// 配置规则状态，inavailable---配置中，available --已生效，deleting--删除中，deleted 已删除，failed--配置失败
+	// <p>配置规则状态，inavailable---配置中，available --已生效，deleting--删除中，deleted 已删除，failed--配置失败</p>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 }

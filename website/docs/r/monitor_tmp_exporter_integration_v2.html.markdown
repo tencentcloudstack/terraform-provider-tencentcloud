@@ -146,6 +146,23 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateExporterIntegration](https://www.tencentcloud.com/document/api/248/48766)
+  - [DescribeExporterIntegrations](https://www.tencentcloud.com/document/api/248/48755)
+  - [DescribePrometheusInstanceInitStatus](https://www.tencentcloud.com/document/api/248/53321)
+  - [RunPrometheusInstance](https://www.tencentcloud.com/document/api/248/53315)
+  - [UpdateExporterIntegration](https://www.tencentcloud.com/document/api/248/48741)
+* Read: [DescribeExporterIntegrations](https://www.tencentcloud.com/document/api/248/48755)
+* Update:
+  - [DescribeExporterIntegrations](https://www.tencentcloud.com/document/api/248/48755)
+  - [UpdateExporterIntegration](https://www.tencentcloud.com/document/api/248/48741)
+* Delete:
+  - [DeleteExporterIntegration](https://www.tencentcloud.com/document/api/248/48759)
+  - [DescribeExporterIntegrations](https://www.tencentcloud.com/document/api/248/48755)
 
 ## Import
 

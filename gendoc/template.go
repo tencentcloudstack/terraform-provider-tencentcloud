@@ -35,6 +35,11 @@ In addition to all arguments above, the following attributes are exported:
 
 {{.timeouts}}
 {{- end}}
+{{- if ne .api ""}}
+## API Reference
+
+{{.api}}
+{{- end}}
 {{if ne .import ""}}
 ## Import
 

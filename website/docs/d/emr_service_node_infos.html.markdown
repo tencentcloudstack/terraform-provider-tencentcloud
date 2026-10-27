@@ -94,4 +94,9 @@ In addition to all arguments above, the following attributes are exported:
 * `support_node_flag_filter_list` - Supported FlagNode List.
 * `total_cnt` - Total Count.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeServiceNodeInfos](https://www.tencentcloud.com/document/api/1026/73239)
 

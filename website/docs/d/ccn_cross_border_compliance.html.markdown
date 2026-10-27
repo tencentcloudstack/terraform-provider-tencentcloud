@@ -46,4 +46,9 @@ The following arguments are supported:
 * `state` - (Optional, String) (Exact match) status. Pending: PENDING, Passed: APPROVED, Denied: DENY.
 * `uniform_social_credit_code` - (Optional, String) (Exact match) Uniform Social Credit Code.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCrossBorderCompliance](https://www.tencentcloud.com/document/api/215/38275)
 

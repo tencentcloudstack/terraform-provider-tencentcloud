@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
   * `internal_service` - is internal.
   * `ip` - client connection ip.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeClientConnections](https://www.tencentcloud.com/document/api/240/34703)
 

@@ -85,6 +85,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AssociateSecurityGroups](https://www.tencentcloud.com/document/api/239/37324)
+* Read: [DescribeDBSecurityGroups](https://www.tencentcloud.com/document/api/239/37323)
+* Delete: [DisassociateSecurityGroups](https://www.tencentcloud.com/document/api/239/37321)
 
 ## Import
 

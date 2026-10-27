@@ -43,4 +43,9 @@ In addition to all arguments above, the following attributes are exported:
   * `size` - the size of backup file.
   * `time` - The earliest time at which the backup starts. For example, `2` indicates 2:00 am.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBackups](https://www.tencentcloud.com/document/api/236/15842)
 

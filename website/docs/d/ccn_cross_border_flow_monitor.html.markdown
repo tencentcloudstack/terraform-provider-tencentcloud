@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
   * `out_bandwidth` - out bandwidth, `bps`.
   * `out_pkg` - out pkg, `pps`.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCrossBorderFlowMonitor](https://www.tencentcloud.com/search/?wd=DescribeCrossBorderFlowMonitor&type=document&lang=en)
 

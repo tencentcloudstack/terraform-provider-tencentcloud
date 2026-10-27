@@ -116,4 +116,9 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - VPC ID the node SSH endpoint belongs to.
   * `zone` - Availability zone the node belongs to.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBCustomNodes](https://www.tencentcloud.com/search/?wd=DescribeDBCustomNodes&type=document&lang=en)
 

@@ -38,6 +38,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `status` - Binding status.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [BindAutoScalerResourceStrategyToGroups](https://www.tencentcloud.com/document/api/1290/79299)
+  - [UnbindAutoScalerResourceStrategyFromGroups](https://www.tencentcloud.com/document/api/1290/79230)
+* Read: [DescribeAutoScalerResourceStrategyBindingGroups](https://www.tencentcloud.com/document/api/1290/79270)
+* Update:
+  - [BindAutoScalerResourceStrategyToGroups](https://www.tencentcloud.com/document/api/1290/79299)
+  - [UnbindAutoScalerResourceStrategyFromGroups](https://www.tencentcloud.com/document/api/1290/79230)
 
 ## Import
 

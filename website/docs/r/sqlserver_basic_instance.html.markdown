@@ -133,6 +133,36 @@ In addition to all arguments above, the following attributes are exported:
 * `vip` - IP for private access.
 * `vport` - Port for private access.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateBasicDBInstances](https://www.tencentcloud.com/document/api/238/66344)
+  - [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+  - [DescribeOrders](https://www.tencentcloud.com/document/api/238/32134)
+  - [ModifyDBInstanceName](https://www.tencentcloud.com/document/api/238/32104)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
+  - [DescribeDBInstancesAttribute](https://www.tencentcloud.com/document/api/238/54811)
+  - [DescribeDBSecurityGroups](https://www.tencentcloud.com/document/api/238/72730)
+  - [DescribeMaintenanceSpan](https://www.tencentcloud.com/document/api/238/69303)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [AssociateSecurityGroups](https://www.tencentcloud.com/document/api/238/72731)
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
+  - [DisassociateSecurityGroups](https://www.tencentcloud.com/document/api/238/72728)
+  - [ModifyDBInstanceName](https://www.tencentcloud.com/document/api/238/32104)
+  - [ModifyDBInstanceProject](https://www.tencentcloud.com/document/api/238/32103)
+  - [ModifyDBInstanceRenewFlag](https://www.tencentcloud.com/search/?wd=ModifyDBInstanceRenewFlag&type=document&lang=en)
+  - [ModifyMaintenanceSpan](https://www.tencentcloud.com/document/api/238/72749)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [UpgradeDBInstance](https://www.tencentcloud.com/document/api/238/32094)
+* Delete:
+  - [DeleteDBInstance](https://www.tencentcloud.com/document/api/238/72759)
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
+  - [TerminateDBInstance](https://www.tencentcloud.com/document/api/238/34685)
 
 ## Import
 
