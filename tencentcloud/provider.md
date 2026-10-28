@@ -1684,6 +1684,7 @@ tencentcloud_teo_dns_records_status
 
 Action
 tencentcloud_teo_confirm_origin_acl_update
+tencentcloud_teo_log_analysis_download_task
 
 TencentCloud ServiceMesh(TCM)
 Data Source
