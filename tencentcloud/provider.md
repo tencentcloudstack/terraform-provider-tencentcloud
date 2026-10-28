@@ -2817,3 +2817,4 @@ Firewall Manager(FWM)
 Resource
 tencentcloud_fwm_account_group
 tencentcloud_fwm_member_group_config
+tencentcloud_fwm_cfw_managed_config
