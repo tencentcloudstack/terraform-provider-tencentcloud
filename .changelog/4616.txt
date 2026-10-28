@@ -1,3 +1,7 @@
 ```release-note:new-resource
 tencentcloud_kms_instance_operation
 ```
+
+```release-note:enhancement
+framework: `tencentcloud_kms_instance_operation` is now implemented as a terraform-plugin-framework **action** (registered via `framework/registry.go`) instead of an SDKv2 resource. It is invoked with `action "tencentcloud_kms_instance_operation" { config { ... } }` and requires HashiCorp Terraform 1.14+.
+```
