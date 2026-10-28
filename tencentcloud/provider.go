@@ -1772,6 +1772,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dayu_l7_rule_v2":                                                          dayuv2.ResourceTencentCloudDayuL7RuleV2(),
 			"tencentcloud_dayu_eip":                                                                 dayuv2.ResourceTencentCloudDayuEip(),
 			"tencentcloud_fwm_account_group":                                                        fwm.ResourceTencentCloudFwmAccountGroup(),
+			"tencentcloud_fwm_member_group_config":                                                  fwm.ResourceTencentCloudFwmMemberGroupConfig(),
 			"tencentcloud_ga2_global_accelerator":                                                   ga2.ResourceTencentCloudGa2GlobalAccelerator(),
 			"tencentcloud_ga2_global_accelerator_acl_policy":                                        ga2.ResourceTencentCloudGa2GlobalAcceleratorAclPolicy(),
 			"tencentcloud_ga2_global_accelerator_acl_rule":                                          ga2.ResourceTencentCloudGa2GlobalAcceleratorAclRule(),
