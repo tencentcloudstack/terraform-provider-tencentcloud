@@ -13,14 +13,41 @@ Provides a resource to create a FWM (Firewall Manager) strategy.
 
 ## Example Usage
 
+### Create pre strategy
+
 ```hcl
 resource "tencentcloud_fwm_strategy" "example" {
-  product         = "enterprise_sg"
-  sub_account_uin = "100028274628"
-  exec_area       = "pre"
-  group_id        = "fwmg-xxxxxx"
-  sequence        = 1
-  receive_account = ["100028274628"]
+  product = "cfw_edge_acl"
+  receive_account = [
+    "100011949846",
+  ]
+  receive_group = [
+    "acg-y5tocz3d",
+    "acg-e6cvbls1"
+  ]
+
+  pre_strategy {
+    group_id = "fwmrg-qww1luux7z"
+  }
+}
+```
+
+### Create post strategy
+
+```hcl
+resource "tencentcloud_fwm_strategy" "example" {
+  product = "cfw_edge_acl"
+  receive_account = [
+    "100011949846",
+    "100049315301"
+  ]
+  receive_group = [
+    "acg-y5tocz3d",
+  ]
+
+  post_strategy {
+    group_id = "fwmrg-qww1luux7z"
+  }
 }
 ```
 
@@ -28,31 +55,34 @@ resource "tencentcloud_fwm_strategy" "example" {
 
 The following arguments are supported:
 
-* `exec_area` - (Required, String, ForceNew) Execution area, pre or post. Determines whether the strategy is created in PreStrategy or PostStrategy.
 * `product` - (Required, String, ForceNew) Product type, e.g. enterprise_sg / cfw_vpc_acl / cfw_nat_acl / cfw_edge_acl.
-* `sub_account_uin` - (Required, String, ForceNew) Sub account UIN. Declarative parameter: the FWM cloud API does not expose a corresponding input field, so it is not sent on Create/Modify and is not read back. The value is retained in state.
-* `group_id` - (Optional, String) Rule group ID.
-* `receive_account` - (Optional, List: [`String`]) List of receive account UINs.
-* `receive_group` - (Optional, List: [`String`]) List of receive account group IDs.
-* `sequence` - (Optional, Int) Priority, starting from 1.
+* `post_strategy` - (Optional, List) Post Rule Group.
+* `pre_strategy` - (Optional, List) Pre Rule Group.
+* `receive_account` - (Optional, Set: [`String`]) List of receive account UINs.
+* `receive_group` - (Optional, Set: [`String`]) List of receive account group IDs.
+
+The `post_strategy` object supports the following:
+
+* `group_id` - (Required, String) Rule group ID.
+
+The `pre_strategy` object supports the following:
+
+* `group_id` - (Required, String) Rule group ID.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `create_by` - Creator.
-* `create_name` - Creator name.
-* `create_time` - Create time.
-* `err_msg` - Dispatch failure reason.
-* `error_type` - Dispatch failure reason type.
-* `group_name` - Rule group name.
-* `rule_count` - Rule count.
-* `rule_status` - Strategy status.
 * `strategy_id` - Strategy ID.
-* `update_by` - Updater.
-* `update_name` - Updater name.
-* `update_time` - Update time.
+
+The `post_strategy` object exports the following:
+
+* `sequence` - Priority.
+
+The `pre_strategy` object exports the following:
+
+* `sequence` - Priority.
 
 ## API Reference
 
@@ -72,6 +102,6 @@ This resource interacts with the following TencentCloud APIs:
 FWM strategy can be imported using the StrategyId, e.g.
 
 ```
-terraform import tencentcloud_fwm_strategy.example fwms-xxxx
+terraform import tencentcloud_fwm_strategy.example fwms-s1d49yaf
 ```
 

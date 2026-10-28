@@ -143,6 +143,12 @@ func resourceTencentCloudIdentityCenterRoleConfigurationPermissionPolicyAttachme
 	rolePolicyIdString := strconv.FormatInt(rolePolicyId, 10)
 	d.SetId(strings.Join([]string{zoneId, roleConfigurationId, rolePolicyIdString}, tccommon.FILED_SP))
 
+	if v, ok := d.GetOkExists("auto_deploy"); ok {
+		if v.(bool) {
+
+		}
+	}
+
 	return resourceTencentCloudIdentityCenterRoleConfigurationPermissionPolicyAttachmentRead(d, meta)
 }
 
