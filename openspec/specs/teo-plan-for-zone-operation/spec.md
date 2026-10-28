@@ -1,84 +1,76 @@
 # teo-plan-for-zone-operation Specification
 
 ## Purpose
-TBD - created by archiving change add-teo-plan-for-zone-operation. Update Purpose after archive.
+Defines a one-time terraform-plugin-framework Action `tencentcloud_teo_plan_for_zone` that purchases an EdgeOne (TEO) plan for a zone that has not yet bound a plan, via the `CreatePlanForZone` API. The Action produces a side-effect only; it does not manage long-lived resource state.
 ## Requirements
 ### Requirement: Purchase a plan for a TEO zone
 
-The resource `tencentcloud_teo_plan_for_zone` SHALL purchase a plan for a zone that has not yet bound a plan via the `CreatePlanForZone` API. As a one-time operation resource, it MUST auto-generate its unique ID. The `CreatePlanForZone` API accepts `ZoneId` and `PlanType` inputs and returns `ResourceNames` and `DealNames`.
+The Action `tencentcloud_teo_plan_for_zone` SHALL purchase a plan for a zone that has not yet bound a plan via the `CreatePlanForZone` API. As a terraform-plugin-framework Action, it produces a side-effect only and MUST NOT manage any long-lived resource state. The `CreatePlanForZone` API accepts `ZoneId` and `PlanType` inputs and returns `ResourceNames` and `DealNames`; those response values are logged for diagnostics but not returned to the caller (framework Actions have no output-value mechanism).
 
 #### Scenario: Purchase a plan for a zone
 
-- **WHEN** the user applies the resource with `zone_id` and `plan_type` set
-- **THEN** the resource calls `CreatePlanForZone` wrapped in a retry mechanism with the provided `ZoneId` and `PlanType`
-- **AND** sets an auto-generated unique resource ID
-- **AND** populates the computed `resource_names` and `deal_names` attributes from the response in a nil-safe manner
-- **AND** then calls Read
+- **WHEN** the user invokes the Action with `zone_id` and `plan_type` set
+- **THEN** the Action calls `CreatePlanForZone` with the provided `ZoneId` and `PlanType`
+- **AND** the Action completes with no error diagnostics on success
+- **AND** the response `ResourceNames` and `DealNames` are logged for diagnostics
 
 #### Scenario: Plan purchase with empty response
 
-- **WHEN** the `CreatePlanForZone` response is nil or `response.Response` is nil
-- **THEN** the resource SHALL return a NonRetryableError to avoid persisting an empty state
+- **WHEN** the `CreatePlanForZone` response is nil or `response.Response` is nil, or both `ResourceNames` and `DealNames` are nil
+- **THEN** the Action SHALL add an error diagnostic to `InvokeResponse.Diagnostics`
 
-### Requirement: Resource schema definition
+### Requirement: Action schema definition
 
-The system SHALL define the following schema for `tencentcloud_teo_plan_for_zone`:
+The system SHALL define the following framework action schema for `tencentcloud_teo_plan_for_zone`:
 
-Required parameters (ForceNew):
-- `zone_id` (TypeString): Zone ID
-- `plan_type` (TypeString): Plan type to purchase
+Required attributes:
+- `zone_id` (StringAttribute): Zone ID
+- `plan_type` (StringAttribute): Plan type to purchase
 
-Computed parameters:
-- `resource_names` (TypeList, element TypeString): List of purchased resource names returned by `CreatePlanForZone`
-- `deal_names` (TypeList, element TypeString): List of purchased order/deal names returned by `CreatePlanForZone`
+The Action SHALL NOT define output attributes (framework actions cannot be Computed and have no result-set mechanism).
 
 #### Scenario: Schema validates required fields
 
-- **WHEN** user omits `zone_id` or `plan_type` in the resource configuration
+- **WHEN** user omits `zone_id` or `plan_type` in the action configuration
 - **THEN** Terraform SHALL produce a validation error indicating the missing required field
 
-#### Scenario: All input parameters are ForceNew
+### Requirement: Framework Action lifecycle
 
-- **WHEN** user changes `zone_id` or `plan_type` after creation
-- **THEN** Terraform SHALL force resource recreation
+The system SHALL implement `action.Action` and `action.ActionWithConfigure` for `tencentcloud_teo_plan_for_zone`. The `Invoke` method performs the purchase; there are no Read/Update/Delete lifecycles because framework Actions produce side-effects only.
 
-### Requirement: Empty Read/Update/Delete methods
+#### Scenario: Invoke performs the purchase
 
-The system SHALL implement empty Read, Update, and Delete methods for `tencentcloud_teo_plan_for_zone` resource, as this is a RESOURCE_KIND_OPERATION type. There is no query API for the purchase result, so Read is a no-op.
+- **WHEN** Terraform invokes the Action
+- **THEN** the system SHALL call `CreatePlanForZone` and surface any API error as an error diagnostic
 
-#### Scenario: Read method returns nil
+#### Scenario: Configure receives provider meta
 
-- **WHEN** Terraform calls the Read method
-- **THEN** the system SHALL return nil without making any API calls
+- **WHEN** the framework provider configures the Action
+- **THEN** the Action SHALL construct its `TeoService` from the shared `*connectivity.TencentCloudClient`
 
-#### Scenario: Delete method returns nil
+### Requirement: Action registration in provider
 
-- **WHEN** Terraform calls the Delete method
-- **THEN** the system SHALL return nil without making any API calls, and the purchased plan is not reverted
+The system SHALL register the `tencentcloud_teo_plan_for_zone` Action in `tencentcloud/framework/registry.go` `actionFactories` and list it under a new `Action` sub-section (TEO product) in `tencentcloud/provider.md`. The Action MUST NOT be registered in the SDKv2 `ResourcesMap` in `tencentcloud/provider.go`.
 
-### Requirement: Resource registration in provider
+#### Scenario: Action available in provider
 
-The system SHALL register `tencentcloud_teo_plan_for_zone` resource in `tencentcloud/provider.go` with the resource name "tencentcloud_teo_plan_for_zone" and add the corresponding entry in `tencentcloud/provider.md`.
-
-#### Scenario: Resource available in provider
-
-- **WHEN** user references `tencentcloud_teo_plan_for_zone` in Terraform configuration
-- **THEN** the provider SHALL recognize and process the resource
+- **WHEN** user references the `tencentcloud_teo_plan_for_zone` action in Terraform configuration
+- **THEN** the framework provider SHALL recognize and invoke it
 
 ### Requirement: Unit tests with gomonkey mock
 
-The system SHALL include unit tests in `resource_tc_teo_plan_for_zone_operation_test.go` using gomonkey to mock the TEO API client calls. Tests SHALL cover the Create operation with a successful response.
+The system SHALL include unit tests in `action_tc_teo_plan_for_zone_test.go` using gomonkey to mock the TEO API client calls. Tests SHALL cover the Invoke operation with a successful response, missing required fields, API error, and an empty response, plus Metadata/Schema/Configure validation.
 
 #### Scenario: Test successful plan purchase
 
 - **WHEN** unit test runs with mocked `CreatePlanForZone` returning `ResourceNames` and `DealNames`
-- **THEN** the test SHALL verify the resource ID is set and computed fields are populated
+- **THEN** the test SHALL verify `Invoke` produces no error diagnostics
 
-### Requirement: Resource documentation
+### Requirement: Action documentation
 
-The system SHALL include a `resource_tc_teo_plan_for_zone_operation.md` documentation file with a description, and example usage. No Import section is needed for an OPERATION type resource.
+The system SHALL include an `action_tc_teo_plan_for_zone.md` documentation file with a description and example usage. The website documentation (`website/docs/a/teo_plan_for_zone.html.markdown`) and sidebar entry are generated by `make doc`.
 
 #### Scenario: Documentation file exists
 
-- **WHEN** the resource is added
-- **THEN** a corresponding .md file SHALL exist in the teo service directory with proper format following the gendoc README guidelines
+- **WHEN** the Action is added
+- **THEN** a corresponding `action_tc_*.md` file SHALL exist in the teo service directory following the gendoc framework Action conventions

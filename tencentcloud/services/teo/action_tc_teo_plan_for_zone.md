@@ -1,4 +1,4 @@
-Provides a resource to purchase an EdgeOne (TEO) plan for a zone that has not yet bound a plan via the `CreatePlanForZone` API. This is a one-time operation resource; the plan purchase is irreversible and cannot be cancelled on resource destroy.
+Provides a resource to purchase an EdgeOne (TEO) plan for a zone that has not yet bound a plan via the `CreatePlanForZone` API. This is a one-time operation action; the plan purchase is irreversible and cannot be cancelled on resource destroy.
 
 Example Usage
 
