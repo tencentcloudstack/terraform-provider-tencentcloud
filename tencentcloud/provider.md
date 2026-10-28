@@ -2812,3 +2812,7 @@ tencentcloud_bdrc_instance_copy_pair
 
 Action
 tencentcloud_bdrc_run_copy_pair_tasks
+
+Firewall Manager(FWM)
+Resource
+tencentcloud_fwm_account_group

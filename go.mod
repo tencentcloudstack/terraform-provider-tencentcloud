@@ -126,6 +126,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip v1.0.860
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb v1.0.970
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbdc v1.3.174
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/fwm v1.3.197
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ga2 v1.3.144
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb v1.0.1127
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm v1.3.29

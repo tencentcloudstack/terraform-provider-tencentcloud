@@ -1006,6 +1006,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.186/go.mod 
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.188/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.193/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.194/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.197/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.198/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.199 h1:2dchZ8q0z4x8TIWPLQg3UHn/o+uOtCOq2viFuyRG31E=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.199/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
@@ -1047,6 +1048,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.3.188 h1:GD6Vz/3
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.3.188/go.mod h1:3j3Lzg64adFwi+5b3pYxZbn2x7f7ofbrEzrfeOUILfM=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.1.13 h1:1YXQtuxHwFLOLiKxxtVLjZ73XyWBtZHTnRX88jID9qo=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.1.13/go.mod h1:pIpYMasWxEcqh/YW9hr6kP78gwp8CP5Y2t3+SlyXp+s=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/fwm v1.3.197 h1:y8sGg5ZQdCXFPcnhtlUyxbXJt9AIj2OY66oQeEIDod8=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/fwm v1.3.197/go.mod h1:9EKOImDCNhPvdE1Uzqi9Hcc8wKYqxkLNZ26rvlot9Lk=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ga2 v1.3.144 h1:HaxRJHo07dU44E4lLaefdfGSyS70t0asZjwYpQnADS0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ga2 v1.3.144/go.mod h1:Ajcj7s+lULEUKfqflaDFsJrgNXFEwhtYYrjUq28Sq1M=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.970 h1:Z82LbcEnE2m4CGvcOY024N7REhAN++xdEyE88HG2YBA=
