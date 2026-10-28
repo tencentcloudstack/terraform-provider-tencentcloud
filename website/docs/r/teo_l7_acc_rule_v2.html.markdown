@@ -172,6 +172,8 @@ The following arguments are supported:
 
 * `zone_id` - (Required, String, ForceNew) Zone id.
 * `branches` - (Optional, List) Sub-Rule branch. this list currently supports filling in only one rule; multiple entries are invalid.
+* `custom_variable_operations` - (Optional, List) Rule-level custom variable operations. maps to the SDK RuleEngineItem.CustomVariableOperations field.
+* `custom_variables` - (Optional, List) Rule-level custom variable list. maps to the SDK RuleEngineItem.CustomVariables field.
 * `description` - (Optional, List: [`String`]) Rule annotation. multiple annotations can be added.
 * `rule_name` - (Optional, String) Rule name. The name length limit is 255 characters.
 * `status` - (Optional, String) Rule status. The possible values are: `enable`: enabled; `disable`: disabled.
@@ -183,6 +185,11 @@ The `access_url_redirect_parameters` object of `actions` supports the following:
 * `query_string` - (Optional, List) Carry query parameters.
 * `status_code` - (Optional, Int) Status code. valid values: 301, 302, 303, 307, 308.
 * `url_path` - (Optional, List) Target path.
+
+The `actions` object of `branches` supports the following:
+
+* `name` - (Optional, String) Operation name. only supports Set.
+* `set_parameters` - (Optional, List) Custom variable set parameters, maps to the SetParameters struct.
 
 The `actions` object of `branches` supports the following:
 
@@ -228,6 +235,7 @@ The `actions` object of `branches` supports the following:
 - `AdvancedOriginRouting`: Advanced origin routing optimization.
 - `Shield`: Origin offload (Shield).
 - `SiteFailover`: Origin site failover.
+- `CustomAction`: Custom configuration.
 * `access_url_redirect_parameters` - (Optional, List) The access url redirection configuration parameter. this parameter is required when name is accessurlredirect.
 * `advanced_origin_routing_parameters` - (Optional, List) Advanced origin routing optimization configuration parameter. This parameter is required when Name is set to AdvancedOriginRouting.
 * `authentication_parameters` - (Optional, List) Token authentication configuration parameter. this parameter is required when name is authentication.
@@ -238,6 +246,7 @@ The `actions` object of `branches` supports the following:
 * `client_ip_header_parameters` - (Optional, List) Client ip header configuration for storing client request ip information. this parameter is required when name is clientipheader.
 * `compression_parameters` - (Optional, List) Intelligent compression configuration. this parameter is required when name is set to compression.
 * `content_compression_parameters` - (Optional, List) Content compression configuration parameters. This parameter is required when the `Name` parameter is set to `ContentCompression`. This parameter uses a whitelist function; please contact Tencent Cloud engineers if needed.
+* `custom_action_parameters` - (Optional, List) Custom action configuration parameter. This parameter is required when Name is set to CustomAction.
 * `error_page_parameters` - (Optional, List) Custom error page configuration parameters. this parameter is required when name is errorpage.
 * `force_redirect_https_parameters` - (Optional, List) Force https redirect configuration parameter. this parameter is required when the name is set to forceredirecthttps.
 * `host_header_parameters` - (Optional, List) Host header rewrite configuration parameter. this parameter is required when name is set to hostheader.
@@ -270,6 +279,11 @@ The `actions` object of `branches` supports the following:
 * `vary_parameters` - (Optional, List) Vary configuration parameter. This parameter is required when Name is set to Vary.
 * `web_socket_parameters` - (Optional, List) The websocket configuration parameter. this parameter is required when name is websocket.
 
+The `actions` object of `sub_rules` supports the following:
+
+* `name` - (Optional, String) Operation name. only supports Set.
+* `set_parameters` - (Optional, List) Custom variable set parameters, maps to the SetParameters struct.
+
 The `advanced_origin_routing_parameters` object of `actions` supports the following:
 
 * `direction` - (Optional, String) Origin routing optimization direction. Values: MainlandChinaAndGlobalAdaptive: Adaptive. Domain must have SmartRouting enabled. EdgeOne will auto-match the optimal routing direction based on client/origin geography.
@@ -288,6 +302,19 @@ The `authentication_parameters` object of `actions` supports the following:
 * `time_format` - (Optional, String) Authentication time format. values: dec: decimal; hex: hexadecimal.
 * `time_param` - (Optional, String) Authentication timestamp. it cannot be the same as the value of the authparam field.note: this field is required when authtype is typed.
 * `timeout` - (Optional, Int) Validity period of the authentication url, in seconds, value range: 1-630720000. used to determine if the client access request has expired: If the current time exceeds "timestamp + validity period", it is an expired request, and a 403 is returned directly. If the current time does not exceed "timestamp + validity period", the request is not expired, and the md5 string is further validated. note: when authtype is one of typea, typeb, typec, or typed, this field is required.
+
+The `branches` object of `custom_variable_operations` supports the following:
+
+* `actions` - (Optional, List) Actions of custom variable operation.
+* `condition` - (Optional, String) Match condition.
+* `sub_rules` - (Optional, List) Sub-rule list of custom variable operation. only one layer of sub_rules is supported.
+
+The `branches` object of `sub_rules` supports the following:
+
+* `actions` - (Optional, List) Actions of custom variable operation.
+* `condition` - (Optional, String) Match condition.
+* `description` - (Optional, List) Rule annotation.
+* `sub_rules` - (Optional, List) Sub-rule list of custom variable operation sub-rule. only one layer is supported, no further recursion.
 
 The `branches` object of `sub_rules` supports the following:
 
@@ -363,11 +390,31 @@ The `cookie` object of `upstream_request_parameters` supports the following:
 * `switch` - (Optional, String) Whether to enable the origin-pull request parameter cookie. Values: on: enable; off: disable.
 * `values` - (Optional, List) Specifies parameter values. Up to 10 parameters are supported.
 
+The `custom_action_parameters` object of `actions` supports the following:
+
+* `custom_actions` - (Optional, List) List of custom actions.
+
+The `custom_actions` object of `custom_action_parameters` supports the following:
+
+* `action_id` - (Optional, String) Custom action configuration item ID.
+* `parameters` - (Optional, List) Parameter values under the custom action configuration item.
+
 The `custom_time` object of `cache_parameters` supports the following:
 
 * `cache_time` - (Optional, Int) Custom cache time value, unit: seconds. value range: 0-315360000.
 * `ignore_cache_control` - (Optional, String) Ignore origin server cachecontrol switch. values: `on`: Enable; `off`: Disable.
 * `switch` - (Optional, String) Custom cache time switch. values: `on`: Enable; `off`: Disable.
+
+The `custom_variable_operations` object supports the following:
+
+* `branches` - (Optional, List) Sub-rule branch of custom variable operation. this list currently supports filling in only one rule.
+* `description` - (Optional, List) Rule annotation.
+
+The `custom_variables` object supports the following:
+
+* `description` - (Optional, String) Variable description.
+* `initial_value` - (Optional, String) Variable initial value. supports constant strings, variables, and formulas.
+* `name` - (Optional, String) Variable name. must use the user.rule.* prefix.
 
 The `error_page_parameters` object of `actions` supports the following:
 
@@ -480,6 +527,11 @@ The `origin_pull_protocol_parameters` object of `actions` supports the following
 
 * `protocol` - (Optional, String) Back-to-origin protocol configuration. Possible values are: `http`: use HTTP protocol for back-to-origin; `https`: use HTTPS protocol for back-to-origin; `follow`: follow the protocol.
 
+The `parameters` object of `custom_actions` supports the following:
+
+* `name` - (Optional, String) Parameter field name under the custom action configuration item.
+* `value` - (Optional, String) Parameter field value. serialized from the typed value field corresponding to ValueType.
+
 The `post_max_size_parameters` object of `actions` supports the following:
 
 * `max_size` - (Optional, Int) Maximum size of the file uploaded for streaming via a post request, in bytes. value range: 1 * 2^20 bytes to 500 * 2^20 bytes.
@@ -545,6 +597,11 @@ The `set_content_identifier_parameters` object of `actions` supports the followi
 
 * `content_identifier` - (Optional, String) Content identifier id.
 
+The `set_parameters` object of `actions` supports the following:
+
+* `name` - (Optional, String) Custom variable name.
+* `value` - (Optional, String) Custom variable value. supports constant strings, variables, and formulas.
+
 The `shield_parameters` object of `actions` supports the following:
 
 * `shield_space_id` - (Optional, String) Origin offload space ID.
@@ -583,6 +640,17 @@ The `status_code_cache_params` object of `status_code_cache_parameters` supports
 
 * `cache_time` - (Optional, Int) Cache time value in seconds. value range: 0-31536000.
 * `status_code` - (Optional, Int) Status code. valid values: 400, 401, 403, 404, 405, 407, 414, 500, 501, 502, 503, 504, 509, 514.
+
+The `sub_rules` object of `branches` supports the following:
+
+* `actions` - (Optional, List) Actions of custom variable operation.
+* `condition` - (Optional, String) Match condition.
+* `description` - (Optional, List) Rule annotation.
+
+The `sub_rules` object of `branches` supports the following:
+
+* `branches` - (Optional, List) Sub-rule branch of custom variable operation sub-rule.
+* `description` - (Optional, List) Rule annotation.
 
 The `sub_rules` object of `branches` supports the following:
 
