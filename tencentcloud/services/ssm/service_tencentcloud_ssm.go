@@ -709,11 +709,11 @@ func (me *SsmService) DescribeSsmSshKeyPairValueByFilter(ctx context.Context, pa
 	return
 }
 
-// CreateService opens the SSM service (PostPay) for ssm_service_operation.
-// The CreateService API is asynchronous (the returned resource may still be
-// provisioning), so callers should poll GetServiceStatus afterwards to confirm
-// the service is enabled. The CreateService response (ResourceId / OrderId) is
-// returned so the operation resource can log it for observability.
+// CreateService opens the SSM service (PostPay). The CreateService API is
+// asynchronous (the returned resource may still be provisioning), so callers
+// should poll GetServiceStatus afterwards to confirm the service is enabled.
+// The CreateService response (ResourceId / OrderId) is returned so the action
+// can log it for observability.
 func (me *SsmService) CreateService(ctx context.Context, payMode, clientToken string) (response *ssm.CreateServiceResponse, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := ssm.NewCreateServiceRequest()
@@ -743,9 +743,9 @@ func (me *SsmService) CreateService(ctx context.Context, payMode, clientToken st
 	return
 }
 
-// GetServiceStatus returns the current SSM service activation status for
-// ssm_service_operation. It is retry-wrapped with ReadRetryTimeout and is
-// intended for the operation resource's activation polling loop.
+// GetServiceStatus returns the current SSM service activation status. It is
+// retry-wrapped with ReadRetryTimeout and is intended for the action's
+// activation polling loop.
 func (me *SsmService) GetServiceStatus(ctx context.Context) (response *ssm.GetServiceStatusResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := ssm.NewGetServiceStatusRequest()

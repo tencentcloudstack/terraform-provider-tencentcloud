@@ -51,6 +51,7 @@ var actionFactories = []func() action.Action{
 	dlc.NewDlcInitializeTCLake,
 	mongodb.NewMongodbRestoreDbInstance,
 	antiddos.NewAntiddosUnblockResources,
+	ssm.NewSsmServiceAction,
 }
 
 // frameworkResources returns every framework Resource factory.

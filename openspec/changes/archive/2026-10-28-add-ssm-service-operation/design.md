@@ -1,22 +1,26 @@
 ## Context
 
-The SSM (Secrets Manager) cloud API exposes two account-level operations in the vendored SDK `ssm/v20190923` (both verified present — present in `vendor/.../ssm/v20190923/`, no SDK upgrade needed):
+The SSM (Secrets Manager) cloud API exposes two account-level operations in the vendored SDK `ssm/v20190923`. `CreateService` does NOT exist in the previously vendored `ssm v1.3.164`, so this change bumps the vendored SSM SDK to `v1.3.199` (matching `common v1.3.199`) and `go.sum` / `vendor/` are updated accordingly:
 
 - `CreateService` (`CreateServiceWithContext`) — activates (opens) the SSM service for the calling account. Request fields: `PayMode *string` (PostPay only, case-sensitive, required), `ClientToken *string` (client-generated idempotent token, required, 1–64 visible ASCII chars, no spaces/Chinese/control chars; recommended `ssm-<UUID>`). Response fields: `ResourceId *string` (SSM service resource id, e.g. `ssm_<AppId>`), `OrderId *string` (billing order id). Per the API doc the returned resource "可能仍在发货，不代表服务已可用" — the call is **asynchronous**; activation is not guaranteed to have taken effect when the call returns.
 - `GetServiceStatus` (`GetServiceStatusWithContext`) — returns the SSM service activation status. Request: no parameters. Response fields: `ServiceEnabled *bool` (true = opened), `InvalidType *int64`, `AccessKeyEscrowEnabled *bool`, `ExpireTime *string`, `QPSLimit *int64`, `SecretLimit *int64`, `PayModel *string`, `RenewFlag *int64`, `ResourceId *string`, `TotalCount *int64`, `ResourceRegion *int64`.
 
-This is a **one-time operation** (RESOURCE_KIND_OPERATION): it triggers service activation; `Read`/`Delete` are no-ops. The implementation uses the SDKv2 operation resource pattern following `resource_tc_dnspod_modify_record_group_operation.go` and `resource_tc_sts_assume_role_operation.go`.
+This is a **one-time operation** (RESOURCE_KIND_OPERATION): it triggers service activation, no cloud-side state needs to be persisted after the action completes.
 
-The user requirement states `client_token` shall NOT be exposed as a schema field — it is generated internally via `helper.BuildToken()`.
+The user has explicitly requested that this be implemented with the **Terraform Plugin Framework `action.Action`** pattern (not the SDKv2 operation resource pattern), following the existing reference actions `NewDlcInitializeTCLake` (`tencentcloud/services/dlc/action_tc_dlc_initialize_tc_lake.go`, parameterless) and `NewAntiddosUnblockResources` (`tencentcloud/services/antiddos/action_tc_antiddos_unblock_resources.go`, takes input arguments).
 
 ### Vendored cloud API struct definitions (excerpted for implementation reference)
 
 From `vendor/github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923/models.go`:
 
-`CreateServiceRequestParams` / `CreateServiceRequest`:
+`CreateServiceRequestParams` (lines 449–455) / `CreateServiceRequest` (lines 457–465):
 ```go
 type CreateServiceRequestParams struct {
-    PayMode     *string `json:"PayMode,omitnil,omitempty" name:"PayMode"`
+    // 只支持 PostPay，区分大小写。枚举值：PostPay：后付费 按量计费模式
+    PayMode *string `json:"PayMode,omitnil,omitempty" name:"PayMode"`
+    // 客户端生成的创建请求标识。同一次逻辑创建发生重试时须使用相同的值。
+    // 格式：1～64 个可见 ASCII 字符（! 至 ~）。必填；不能含空格、中文或控制字符。建议 ssm-<UUID>。
+    // SSM 透传给计费侧，不存储或返回。订单状态不明时先核单，再决定是否用原值重试。
     ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 }
 type CreateServiceRequest struct {
@@ -26,12 +30,15 @@ type CreateServiceRequest struct {
 }
 ```
 
-`CreateServiceResponseParams` / `CreateServiceResponse`:
+`CreateServiceResponseParams` (lines 488–497) / `CreateServiceResponse` (lines 499–502):
 ```go
 type CreateServiceResponseParams struct {
+    // SSM 服务资源 ID，供调用方保存并标识该服务资源。格式：一期后付费为 ssm_ 加 AppId，如 ssm_1250000000。
+    // 返回时资源可能仍在发货，不代表服务已可用。
     ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
-    OrderId    *string `json:"OrderId,omitnil,omitempty" name:"OrderId"`
-    RequestId  *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+    // 计费交易订单号，用于核对本次开通订单
+    OrderId *string `json:"OrderId,omitnil,omitempty" name:"OrderId"`
+    RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 type CreateServiceResponse struct {
     *tchttp.BaseResponse
@@ -39,21 +46,21 @@ type CreateServiceResponse struct {
 }
 ```
 
-`GetServiceStatusRequestParams` / `GetServiceStatusRequest`: **empty** (no fields).
+`GetServiceStatusRequestParams` (lines 1379–1381) / `GetServiceStatusRequest` (lines 1383–1386): **empty** (no fields).
 
-`GetServiceStatusResponseParams` / `GetServiceStatusResponse`:
+`GetServiceStatusResponseParams` (lines 1408–1444) / `GetServiceStatusResponse` (lines 1446–1449):
 ```go
 type GetServiceStatusResponseParams struct {
-    ServiceEnabled         *bool   `json:"ServiceEnabled,omitnil,omitempty" name:"ServiceEnabled"`
-    InvalidType            *int64  `json:"InvalidType,omitnil,omitempty" name:"InvalidType"`
+    ServiceEnabled         *bool   `json:"ServiceEnabled,omitnil,omitempty" name:"ServiceEnabled"`         // true=服务已开通
+    InvalidType            *int64  `json:"InvalidType,omitnil,omitempty" name:"InvalidType"`              // 0未购买 1正常 2欠费停服 3资源释放
     AccessKeyEscrowEnabled *bool   `json:"AccessKeyEscrowEnabled,omitnil,omitempty" name:"AccessKeyEscrowEnabled"`
     ExpireTime             *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
     QPSLimit               *int64  `json:"QPSLimit,omitnil,omitempty" name:"QPSLimit"`
     SecretLimit            *int64  `json:"SecretLimit,omitnil,omitempty" name:"SecretLimit"`
     PayModel               *string `json:"PayModel,omitnil,omitempty" name:"PayModel"`
-    RenewFlag              *int64  `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`
+    RenewFlag              *int64  `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`                      // 0手动 1自动 2到期不续
     ResourceId             *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
-    TotalCount            *int64  `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+    TotalCount             *int64  `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
     ResourceRegion         *int64  `json:"ResourceRegion,omitnil,omitempty" name:"ResourceRegion"`
     RequestId              *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
@@ -62,117 +69,183 @@ type GetServiceStatusResponseParams struct {
 Client methods from `vendor/.../ssm/v20190923/client.go`:
 ```go
 func (c *Client) CreateServiceWithContext(ctx context.Context, request *CreateServiceRequest) (response *CreateServiceResponse, err error)
+//   InitBaseRequest("ssm", APIVersion, "CreateService"); requires credential.
 func (c *Client) GetServiceStatusWithContext(ctx context.Context, request *GetServiceStatusRequest) (response *GetServiceStatusResponse, err error)
+//   InitBaseRequest("ssm", APIVersion, "GetServiceStatus"); requires credential.
 ```
 
 ### Current SSM service layer state
 
 `tencentcloud/services/ssm/service_tencentcloud_ssm.go`:
 - `SsmService` struct holds `client *connectivity.TencentCloudClient`; client accessor `me.client.UseSsmClient()` returns `*ssm.Client`.
-- `NewSsmService(client *connectivity.TencentCloudClient) SsmService` is the constructor used by SDKv2 resources.
-- Existing `DescribeSsmServiceStatusByFilter(ctx)` wraps `GetServiceStatus` WITHOUT a retry block (returns `*ssm.GetServiceStatusResponseParams`). We add a NEW retry-wrapped method `GetServiceStatus` so the operation resource's polling loop benefits from `tccommon.ReadRetryTimeout`-bounded retry and `tccommon.RetryError` wrapping.
+- `NewSsmService(client *connectivity.TencentCloudClient) SsmService` is the constructor used by BOTH SDKv2 resources and framework resources (`resource_tc_ssm_secret_version_v2.go` calls `NewSsmService(r.Client())`).
+- Existing `DescribeSsmServiceStatusByFilter(ctx)` wraps `GetServiceStatus` WITHOUT a retry block (returns `*ssm.GetServiceStatusResponseParams`). We add a NEW retry-wrapped method `GetServiceStatus` so the action's polling loop benefits from `tccommon.ReadRetryTimeout`-bounded retry and `tccommon.RetryError` wrapping.
 
-### Reference operation resource structure (key structure, from `resource_tc_dnspod_modify_record_group_operation.go` & `resource_tc_sts_assume_role_operation.go`)
+### Reference action implementation structure (key structure, from `action_tc_dlc_initialize_tc_lake.go` & `action_tc_antiddos_unblock_resources.go`)
 
 ```go
 package <product>
 
-func ResourceTencentCloudXxxYyyOperation() *schema.Resource {
-    return &schema.Resource{
-        Create: resourceTencentCloudXxxYyyOperationCreate,
-        Read:   resourceTencentCloudXxxYyyOperationRead,
-        Delete: resourceTencentCloudXxxYyyOperationDelete,
-        Schema: map[string]*schema.Schema{
-            "input_foo": { Required: true, ForceNew: true, Type: schema.TypeString, Description: "..." },
-            // ...
-        },
-    }
+import (
+	"context"
+	"fmt"
+	"github.com/hashicorp/terraform-plugin-framework/action"
+	"github.com/hashicorp/terraform-plugin-framework/action/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
+	... sdk import ...
+)
+
+var _ action.ActionWithConfigure = &XxxYyyAction{}
+
+func NewXxxYyyAction() action.Action { return &XxxYyyAction{} }
+
+type XxxYyyAction struct { fw.ActionWithConfigure }
+
+type XxxYyyActionModel struct {
+	// inputs as types.String etc.
 }
 
-func resourceTencentCloudXxxYyyOperationCreate(d *schema.ResourceData, meta interface{}) error {
-    defer tccommon.LogElapsed("resource.tencentcloud_xxx_yyy_operation.create")()
-    defer tccommon.InconsistentCheck(d, meta)()
-    logId := tccommon.GetLogId(tccommon.ContextNil)
-    ctx := context.Background()
-    // ... read inputs, build service, call API, set id, return Read ...
+func (a *XxxYyyAction) Metadata(_ context.Context, _ action.MetadataRequest, resp *action.MetadataResponse) {
+	resp.TypeName = "tencentcloud_xxx_yyy"
 }
 
-func resourceTencentCloudXxxYyyOperationRead(d *schema.ResourceData, meta interface{}) error {
-    defer tccommon.LogElapsed("resource.tencentcloud_xxx_yyy_operation.read")()
-    defer tccommon.InconsistentCheck(d, meta)()
-    return nil  // no-op
+func (a *XxxYyyAction) Schema(_ context.Context, _ action.SchemaRequest, resp *action.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		Description: "...",
+		Attributes: map[string]schema.Attribute{
+			"input_foo": schema.StringAttribute{ Required: true, Description: "..." },
+			...
+		},
+	}
 }
 
-func resourceTencentCloudXxxYyyOperationDelete(d *schema.ResourceData, meta interface{}) error {
-    defer tccommon.LogElapsed("resource.tencentcloud_xxx_yyy_operation.delete")()
-    defer tccommon.InconsistentCheck(d, meta)()
-    return nil  // no-op
+func (a *XxxYyyAction) Invoke(ctx context.Context, req action.InvokeRequest, resp *action.InvokeResponse) {
+	var data XxxYyyActionModel
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
+	if resp.Diagnostics.HasError() { return }
+	// validate inputs (null/unknown/empty guards) -> AddError, return
+	if a.Client() == nil { resp.Diagnostics.AddError("Provider not configured", "..."); return }
+	service := NewXxxService(a.Client())
+	... call API; on err AddError; on success return (no state) ...
 }
 ```
+
+Key framework pieces:
+- `fw.ActionWithConfigure` (`tencentcloud/framework/fw/action_with_configure.go`) embeds `withMeta` and provides `Client()` accessor + `Configure` method that reads `*sharedmeta.ProviderMeta`.
+- Registration is ONLY in `tencentcloud/framework/registry.go`'s `actionFactories` slice (NOT in SDKv2 `provider.go`). `frameworkActions()` → `Provider.Actions()` exposes them.
+- Framework action test pattern (`action_tc_antiddos_unblock_resources_test.go`): build `action.InvokeRequest` with raw `tftypes.Value` config matching the schema; inject mock client via `action.ConfigureRequest{ProviderData: &sharedmeta.ProviderMeta{Client: client}}`; mock the SDK client method via gomonkey `ApplyMethodFunc`/`ApplyMethodReturn`.
+
+### Framework Action Constraint (Critical)
+
+The Terraform Plugin Framework `action.Action` schema attributes **cannot be Computed**. The `action.InvokeResponse` struct only carries `Diagnostics` and a `SendProgress` function; it has no mechanism to write output state back to Terraform. Consequently, even though `CreateService` returns `ResourceId`/`OrderId` and `GetServiceStatus` returns many status fields, NONE can be exposed as Terraform output attributes. The reference implementations confirm this: they invoke an API and surface only success/error diagnostics. All response fields are logged via `log.Printf` for observability but not persisted as Terraform state.
 
 ## Goals / Non-Goals
 
 **Goals:**
-- Add an SDKv2 operation resource `tencentcloud_ssm_service_operation` whose `Create` reads `pay_mode`, generates `client_token` internally, calls SSM `CreateService` to open the service, sets the id, then polls `GetServiceStatus` until `ServiceEnabled == true` to confirm the asynchronous activation took effect.
-- Follow the SDKv2 operation resource references precisely.
+- Add a framework action `tencentcloud_ssm_service` whose `Invoke` collects the required input `pay_mode`, generates `client_token` internally via `helper.BuildToken()`, calls SSM `CreateService` to open the service, then polls `GetServiceStatus` until `ServiceEnabled == true` to confirm the asynchronous activation took effect.
+- Follow the reference actions (`NewDlcInitializeTCLake`, `NewAntiddosUnblockResources`) precisely for the action struct, factory, model, metadata, schema, and invoke flow.
 - Wrap `CreateService` with `tccommon.WriteRetryTimeout` retry and `GetServiceStatus` with `tccommon.ReadRetryTimeout` retry, both with `resource.Retry` + `tccommon.RetryError(e)` and `ratelimit.Check(request.GetAction())`, in the service layer.
-- Poll `GetServiceStatus` in a bounded loop until `ServiceEnabled == true`; cap the loop by `tccommon.ReadRetryTimeout`.
-- Register the resource in `tencentcloud/provider.go`'s `ResourcesMap`; remove the prior framework action from `registry.go`.
-- Provide gomonkey-based unit tests covering: successful create, polling across not-yet-enabled, CreateService error, Read/Delete no-op, schema validation.
-- Provide a `.md` documentation file following the reference operation resource docs format.
+- Poll `GetServiceStatus` in a bounded loop until `ServiceEnabled == true`; cap the loop by `tccommon.ReadRetryTimeout` so it does not run forever. Log the status each iteration and the final confirmed-enabled status.
+- Register the action factory in `tencentcloud/framework/registry.go`'s `actionFactories` (the `ssm` services package is ALREADY imported there, so no new import is needed) and list `tencentcloud_ssm_service` under the SSM `Action` sub-section in `tencentcloud/provider.md`.
+- Provide gomonkey-based unit tests (no Terraform acceptance test suite) covering: successful invoke (CreateService ok + polling reaches ServiceEnabled==true, plus a generated non-empty `ClientToken`), missing `pay_mode`, `CreateService` API error, `GetServiceStatus` API error during polling, client-not-configured, and schema/metadata validation (asserting `client_token` is absent) — mirroring `action_tc_antiddos_unblock_resources_test.go`.
+- Provide a `.md` documentation file following the reference action docs format.
 
 **Non-Goals:**
-- Do NOT expose `client_token` as a schema field (generated internally).
-- Do NOT implement a Read/Update/Delete that calls cloud APIs (one-time operation; Read/Delete are no-ops).
+- Do NOT expose `client_token` as a schema attribute — it is generated internally via `helper.BuildToken()` so users never have to invent an idempotency token.
+- Do NOT implement this as an SDKv2 operation resource (`resource_tc_ssm_service_operation.go`) — the user explicitly requested the framework action pattern.
+- Do NOT expose any cloud API response field (`resource_id`, `order_id`, `service_enabled`, etc.) as a Terraform attribute (framework actions do not support Computed/output attributes and `InvokeResponse` has no output mechanism). All are logged for observability only.
+- Do NOT register the action in `tencentcloud/provider.go`'s `ResourcesMap` — framework actions are registered only in `tencentcloud/framework/registry.go`.
+- Do NOT add a Read/Update/Delete lifecycle — actions only implement `Invoke`.
 - Do NOT modify any existing SSM resource, data source, or schema.
 
 ## Decisions
 
-### 1. Implementation Pattern: SDKv2 Operation Resource
-**Decision**: Implement `tencentcloud_ssm_service_operation` as an SDKv2 operation resource (`RESOURCE_KIND_OPERATION`), following `resource_tc_dnspod_modify_record_group_operation.go` / `resource_tc_sts_assume_role_operation.go`.
+### 1. Implementation Pattern: Framework Action (not SDKv2 operation)
+**Decision**: Implement `tencentcloud_ssm_service` as a Terraform Plugin Framework `action.Action`, following `NewDlcInitializeTCLake` / `NewAntiddosUnblockResources`.
 
 **Rationale**:
-- The resource type is RESOURCE_KIND_OPERATION (one-time operation, Create-only, RUD no-ops).
-- Matches the user requirement for this resource kind.
+- The user explicitly requested the framework action pattern.
+- Framework actions are the correct primitive for one-time operations that do not persist state, which matches SSM service-activation semantics exactly.
+- `NewAntiddosUnblockResources` is the close reference because it takes a required input argument (`resources`) — our action takes `pay_mode` as its single input.
 
-### 2. client_token Handling
-**Decision**: Generate `clientToken` internally via `helper.BuildToken()`; do NOT expose it as a schema field.
-
-**Rationale**:
-- User requirement: "不暴露clientToken字段，直接使用clientToken := helper.BuildToken()即可".
-
-### 3. Schema Definition
-**Decision**: The schema defines exactly one required `StringAttribute`: `pay_mode` (ForceNew). It maps to `CreateServiceRequest.PayMode`.
-
-### 4. Async handling: poll GetServiceStatus after CreateService; set id before polling
-**Decision**: `CreateService` is asynchronous. After `CreateService` returns success, set `d.SetId(helper.BuildToken())` BEFORE polling, then poll `GetServiceStatus` until `ServiceEnabled == true`, bounded by `tccommon.ReadRetryTimeout`.
+### 2. Output Attribute Handling
+**Decision**: Do NOT expose `resource_id`/`order_id`/`service_enabled`/... as schema attributes. Log the `CreateService` response (`ResourceId`, `OrderId`) and the polled `GetServiceStatus` body via `log.Printf` inside the service methods (consistent with existing SSM service methods). The Invoke handler only acts on errors.
 
 **Rationale**:
-- Rule: for async resources, set id before polling so state retains it even if polling fails.
+- Framework action schema attributes cannot be `Computed`.
+- `action.InvokeResponse` only contains `Diagnostics` and `SendProgress` — there is no output/state write path.
+- Both reference implementations invoke their API and surface only diagnostics; neither exposes response fields as attributes.
+- The requirement's output mappings (`resource_id`, `order_id`, `service_enabled`, ...) are captured in the Go response structs and logged, fulfilling observability without violating framework constraints.
+
+### 3. Schema Definition (one required input attribute) and internal client_token
+**Decision**: The action schema defines exactly one required `StringAttribute`: `pay_mode` (the value `PostPay`). `client_token` — the second required field of `CreateServiceRequest` — is generated inside `Invoke` via `helper.BuildToken()` and is NOT exposed as an attribute.
+
+**Rationale**:
+- The cloud API `CreateServiceRequestParams` has two required fields (`PayMode`, `ClientToken`), but `ClientToken` is purely an idempotency marker with no user-visible semantics; forcing users to invent a unique token per apply is error-prone. `helper.BuildToken()` is the provider-wide convention for such tokens.
+- `NewAntiddosUnblockResources` demonstrates the Required-attribute pattern; we mirror it with a single `schema.StringAttribute{Required: true}`.
+- Keeping the schema minimal also keeps the generated docs clean (a single `pay_mode` argument).
+
+### 4. Async handling: poll GetServiceStatus after CreateService
+**Decision**: `CreateService` is asynchronous (API doc: "返回时资源可能仍在发货，不代表服务已可用"). After `CreateService` returns success, the Invoke handler SHALL poll `GetServiceStatus` until `ServiceEnabled == true`. The polling is bounded by `tccommon.ReadRetryTimeout` (reusing `resource.Retry(ReadRetryTimeout, ...)`): on each poll call the retry-wrapped `GetServiceStatus`; if `ServiceEnabled != nil && *ServiceEnabled == true` → done; otherwise return `resource.RetryableError(...)` so the loop continues; if `ReadRetryTimeout` is exhausted the action fails with a diagnostic.
+
+**Rationale**:
+- User requirement: for asynchronous interfaces, poll the Read interface until it takes effect.
 - `GetServiceStatus.ServiceEnabled` is the authoritative "is the service open" boolean.
+- Reusing `resource.Retry(ReadRetryTimeout, ...)` gives a single, project-standard bounded wait with `tccommon.RetryError` wrapping for non-retryable errors and a `RetryableError` to keep polling while not-yet-enabled.
+
+**Alternatives Considered**:
+- Return immediately after `CreateService` and skip polling: rejected — the API doc explicitly warns the returned resource may still be provisioning; users would see a "success" while the service is not yet usable.
+- Add a `timeouts` block (like mongodb restore): rejected for now — `CreateService` activation is fast and a single `ReadRetryTimeout`-bounded poll is sufficient; the timeouts block adds complexity not needed here. (Documented as an open option only if polling proves too short in practice.)
 
 ### 5. Service Layer Method Signatures
 **Decision**: Add to `service_tencentcloud_ssm.go`:
+
 ```go
+// CreateService opens the SSM service (PostPay). Returns the CreateServiceResponse
+// so the Invoke handler can log ResourceId/OrderId.
 func (me *SsmService) CreateService(ctx context.Context, payMode, clientToken string) (response *ssm.CreateServiceResponse, errRet error)
+
+// GetServiceStatus returns the current SSM service status (retry-wrapped), used by
+// the action's activation polling loop.
 func (me *SsmService) GetServiceStatus(ctx context.Context) (response *ssm.GetServiceStatusResponseParams, errRet error)
 ```
 
-### 6. Resource Registration
-**Decision**: Register in `tencentcloud/provider.go` `ResourcesMap`. Remove `ssm.NewSsmServiceAction` from `registry.go` `actionFactories`.
+**Rationale**:
+- Both use `resource.Retry` + `tccommon.RetryError(e)` + `ratelimit.Check(request.GetAction())` and the `log.Printf("[DEBUG]...")` / deferred `log.Printf("[CRITAL]...")` pattern used by every existing SSM service method.
+- `CreateService` uses `tccommon.WriteRetryTimeout`; `GetServiceStatus` uses `tccommon.ReadRetryTimeout`.
+- Returns raw responses so the Invoke handler / polling loop can inspect `ServiceEnabled` and log fields. `GetServiceStatus` returns `*GetServiceStatusResponseParams` (the `Response` inner struct) for parity with the existing `DescribeSsmServiceStatusByFilter` and to simplify nil-safe field access.
+- We deliberately do NOT add a separate `pay_mode`/`client_token` per-field param map — direct typed args are clearer, matching `RestoreDBInstance(ctx, instanceId, restoreTime, restoreDatabases)`.
+
+### 6. Action Factory & Registration
+**Decision**: Factory `NewSsmServiceAction() action.Action` returns `&SsmServiceAction{}`. Register `ssm.NewSsmServiceAction` in `tencentcloud/framework/registry.go`'s `actionFactories`. The `ssm` services package is ALREADY imported in `registry.go` (for the framework resource + ephemeral), so NO new import line is needed.
+
+**Rationale**:
+- Mirrors the exact registration pattern of the reference actions.
+- Framework actions are NOT registered in SDKv2 `provider.go`.
 
 ### 7. Naming
-- Type name: `ResourceTencentCloudSsmServiceOperation` (factory)
-- Resource name: `tencentcloud_ssm_service_operation`
-- Files: `resource_tc_ssm_service_operation.go`, `resource_tc_ssm_service_operation_test.go`, `resource_tc_ssm_service_operation.md`
-- Log messages use `ssm_service_operation` (snake_case)
+**Decision**:
+- Type name: `SsmServiceAction`
+- Factory: `NewSsmServiceAction`
+- Model type: `SsmServiceActionModel`
+- Action type name (Metadata): `tencentcloud_ssm_service`
+- Files: `action_tc_ssm_service.go`, `action_tc_ssm_service_test.go`, `action_tc_ssm_service.md`
+
+**Rationale**:
+- Follows the `NewDlcInitializeTCLake` / `NewAntiddosUnblockResources` naming convention (action files prefixed with `action_tc_`).
+- The action type name matches the requested resource name `tencentcloud_ssm_service`.
+
+### 8. Test Strategy
+**Decision**: Use gomonkey mocks (no Terraform acceptance test suite), mirroring `action_tc_antiddos_unblock_resources_test.go`. Mock `UseSsmClient` (returns `*ssm.Client`), `CreateServiceWithContext`, and `GetServiceStatusWithContext`. Tests cover: success (CreateService ok + GetServiceStatus returns ServiceEnabled==true, asserting the generated `ClientToken` is non-empty and `PayMode == "PostPay"`), polling across a not-yet-enabled status (first poll false, second poll true), missing pay_mode, CreateService error, GetServiceStatus error during polling, client-not-configured, and metadata/schema validation (asserting the attributes map contains exactly `pay_mode` and no `client_token`).
 
 ## Risks / Trade-offs
 
-- **[Risk] Users expect `resource_id`/`order_id`/`service_enabled` as outputs** → This is a one-time operation resource; the API responses are logged for observability. No output attributes are exposed.
-- **[Risk] `CreateService` may fail if SSM already opened** → Surfaces as a create error.
-- **[Risk] Polling `GetServiceStatus` may exceed `ReadRetryTimeout`** → Bounded failure; user can re-run.
+- **[Risk] Users expect `resource_id`/`order_id`/`service_enabled` as outputs** → Mitigation: Document clearly in the `.md` and design that framework actions do not expose output attributes; the API responses are logged for observability. The action's value is triggering the one-time activation, not reading back state.
+- **[Risk] `CreateService` may fail if the SSM service is already opened** (`ResourceInUse.ServiceAlreadyEnabled`) → Mitigation: The `tccommon.RetryError` attention maps transient errors as retryable; a non-retryable "already enabled" surfaces as a diagnostic. Since the goal is to ensure the service is enabled, an "already enabled" error may be treated as success (the desired end state is reached). Decision: surface it as a diagnostic (do not special-case) to keep behavior explicit; tracked as an Open Question if user-friendliness requires suppressing it later.
+- **[Risk] Polling `GetServiceStatus` may exceed `ReadRetryTimeout` on slow provisioning** → Mitigation: `ReadRetryTimeout` bounds the wait and surfaces a clear failure; the user can re-run the action (it is idempotent-ish). Documented as a future `timeouts` option if needed.
+- **[Risk] The `ssm` package import already exists in `registry.go`** → Mitigation: Tasks explicitly note no new import is needed, only the `actionFactories` append, avoiding a duplicate-import compile error.
 
 ## Migration Plan
 
-Purely additive; no migration. Rollback = revert the additive files and the `ResourcesMap`/`actionFactories` line changes.
+Purely additive; no migration. New action registered alongside existing framework actions. The vendored SSM SDK bump (`v1.3.164` → `v1.3.199`) is additive for the rest of the provider (no breaking API changes in the vendored `ssm/v20190923` package; `go build ./...` is exercised by the standard CI flow). Rollback = revert the additive files, the single `actionFactories` line, `provider.md` entry, and the SDK bump.
