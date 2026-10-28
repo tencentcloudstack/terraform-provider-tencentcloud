@@ -4,6 +4,8 @@ Provide a resource to create a Mongodb instance.
 
 ~> **NOTE:** The `cpu` parameter takes effect only when the configuration is changed. Changing the `cpu` triggers the `ModifyDBInstanceSpec` API to adjust the CPU specification of the running MongoDB instance in-place. The supported CPU specifications can be obtained through the `DescribeSpecInfo` API.
 
+~> **NOTE:**  Please note that the `key_id` field represents the CMK name, which corresponds to the `alias` field in KMS.
+
 Example Usage
 
 ```hcl
@@ -99,7 +101,7 @@ resource "tencentcloud_mongodb_instance" "example" {
   password              = "Password@2026"
   data_encryption       = "TDE"
   encryption_key_source = "manual"
-  key_id                = "KMS-MONGODB"
+  key_id                = "kms-alias"
   kms_region            = "ap-guangzhou"
 }
 ```
