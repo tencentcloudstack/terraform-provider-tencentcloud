@@ -1,13 +1,13 @@
 ---
-subcategory: "Cloud Firewall Management(FWM)"
+subcategory: "Firewall Manager(FWM)"
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_fwm_member_group"
-sidebar_current: "docs-tencentcloud-resource-fwm_member_group"
+page_title: "TencentCloud: tencentcloud_fwm_member_group_config"
+sidebar_current: "docs-tencentcloud-resource-fwm_member_group_config"
 description: |-
   Provides a resource to manage which FWM (Cloud Firewall Management) organization account group a member belongs to.
 ---
 
-# tencentcloud_fwm_member_group
+# tencentcloud_fwm_member_group_config
 
 Provides a resource to manage which FWM (Cloud Firewall Management) organization account group a member belongs to.
 
@@ -15,34 +15,10 @@ Provides a resource to manage which FWM (Cloud Firewall Management) organization
 
 ## Example Usage
 
-### Move a managed member into an account group
-
 ```hcl
-resource "tencentcloud_fwm_cfw_managed" "example" {
-  member_id   = "mem-xxxx"
-  cfw_managed = 1
-}
-
-resource "tencentcloud_fwm_account_group" "example" {
-  group_name = "tf-example-group"
-}
-
-resource "tencentcloud_fwm_member_group" "example" {
-  member_id = "mem-xxxx"
-  app_id    = "1234567890"
-  group_id  = tencentcloud_fwm_account_group.example.id
-
-  depends_on = [tencentcloud_fwm_cfw_managed.example]
-}
-```
-
-### Move a member out of an account group
-
-```hcl
-resource "tencentcloud_fwm_member_group" "example" {
-  member_id = "mem-xxxx"
-  app_id    = "1234567890"
-  group_id  = ""
+resource "tencentcloud_fwm_member_group_config" "example" {
+  user_member_id = "mem-tencent-26afe1f469a10371"
+  group_id       = "acg-rqjwnsnc"
 }
 ```
 
@@ -50,8 +26,7 @@ resource "tencentcloud_fwm_member_group" "example" {
 
 The following arguments are supported:
 
-* `app_id` - (Required, String, ForceNew) AppId of the FWM organization member (numeric string), used to locate the member because the cloud API filter does not support MemberId.
-* `member_id` - (Required, String) Member ID of the FWM organization member, such as `mem-xxxx`.
+* `user_member_id` - (Required, String, ForceNew) Member ID of the FWM organization member, such as `mem-xxxx`.
 * `group_id` - (Optional, String) Account group ID that the member belongs to. Empty string means the member is not grouped (moved out). A member can belong to at most one group.
 
 ## Attributes Reference
@@ -70,9 +45,9 @@ This resource interacts with the following TencentCloud APIs:
 
 ## Import
 
-FWM member group resource can be imported using the two-segment composite id, e.g. `app_id#member_id`, where the first segment is the member AppId used to locate the member and the second segment is the member MemberId.
+FWM member group resource can be imported using the id, e.g.
 
-```sh
-terraform import tencentcloud_fwm_member_group.example 1234567890#mem-xxxx
+```
+terraform import tencentcloud_fwm_member_group_config.example mem-tencent-26afe1f469a10371
 ```
 
