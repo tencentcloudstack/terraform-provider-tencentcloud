@@ -709,6 +709,7 @@ tencentcloud_kms_external_key
 tencentcloud_kms_white_box_key
 tencentcloud_kms_cloud_resource_attachment
 tencentcloud_kms_overwrite_white_box_device_fingerprints
+tencentcloud_kms_instance_operation
 
 Tencent Kubernetes Engine(TKE)
 Data Source

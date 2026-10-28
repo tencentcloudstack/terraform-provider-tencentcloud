@@ -2088,6 +2088,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_kms_white_box_key":                                                        kms.ResourceTencentCloudKmsWhiteBoxKey(),
 			"tencentcloud_kms_cloud_resource_attachment":                                            kms.ResourceTencentCloudKmsCloudResourceAttachment(),
 			"tencentcloud_kms_overwrite_white_box_device_fingerprints":                              kms.ResourceTencentCloudKmsOverwriteWhiteBoxDeviceFingerprints(),
+			"tencentcloud_kms_instance_operation":                                                   kms.ResourceTencentCloudKmsInstanceOperation(),
 			"tencentcloud_ssm_secret":                                                               ssm.ResourceTencentCloudSsmSecret(),
 			"tencentcloud_ssm_ssh_key_pair_secret":                                                  ssm.ResourceTencentCloudSsmSshKeyPairSecret(),
 			"tencentcloud_ssm_product_secret":                                                       ssm.ResourceTencentCloudSsmProductSecret(),

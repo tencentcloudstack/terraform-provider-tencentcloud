@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_kms_instance_operation
+```
