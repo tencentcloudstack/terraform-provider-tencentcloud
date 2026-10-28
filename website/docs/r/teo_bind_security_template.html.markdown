@@ -24,6 +24,10 @@ resource "tencentcloud_teo_bind_security_template" "example" {
   entity      = "tf.example.com"
   operate     = "unbind-use-default"
 }
+
+output "bind_message" {
+  value = tencentcloud_teo_bind_security_template.example.message
+}
 ```
 
 ## Argument Reference
@@ -50,6 +54,7 @@ Note: When set to `false`, if the passed-in domain name is already bound to a po
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `message` - Instance configuration delivery message. This field provides human-readable information about the delivery status (e.g., failure reasons).
 * `status` - Instance configuration delivery status, the possible values are: `online`: the configuration has taken effect; `fail`: the configuration failed; `process`: the configuration is being delivered.
 
 ## Timeouts
