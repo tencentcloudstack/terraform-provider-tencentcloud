@@ -1,3 +1,3 @@
-```release-note:new-resource
-tencentcloud_teo_increase_plan_quota
+```release-note:enhancement
+action/tencentcloud_teo_increase_plan_quota: add action to increase plan quota for TEO (EdgeOne) plans via the `IncreasePlanQuota` API
 ```
