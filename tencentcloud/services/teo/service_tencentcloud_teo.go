@@ -11,6 +11,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 
@@ -3665,6 +3666,85 @@ func (me *TeoService) DescribeTeoEdgeKvListByFilter(ctx context.Context, param m
 			break
 		}
 	}
+
+	return
+}
+
+func (me *TeoService) ApplyFreeCertificate(ctx context.Context, zoneId, domain, verificationMethod string) (dnsVerification *teo.DnsVerification, fileVerification *teo.FileVerification, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teov20220901.NewApplyFreeCertificateRequest()
+	request.ZoneId = &zoneId
+	request.Domain = &domain
+	request.VerificationMethod = &verificationMethod
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTeoV20220901Client().ApplyFreeCertificateWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("teo apply_free_certificate response is nil"))
+		}
+
+		dnsVerification = result.Response.DnsVerification
+		fileVerification = result.Response.FileVerification
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return nil, nil, err
+	}
+
+	return
+}
+
+func (me *TeoService) CheckFreeCertificateVerification(ctx context.Context, zoneId, domain string, timeout time.Duration) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teov20220901.NewCheckFreeCertificateVerificationRequest()
+	request.ZoneId = &zoneId
+	request.Domain = &domain
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(timeout, func() *resource.RetryError {
+		result, e := me.client.UseTeoV20220901Client().CheckFreeCertificateVerificationWithContext(ctx, request)
+		if e != nil {
+			if sdkErr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				code := sdkErr.GetCode()
+				if code == "UnauthorizedOperation.NoPermission" || code == "UnauthorizedOperation.CamUnauthorized" {
+					return resource.NonRetryableError(e)
+				}
+			}
+			return resource.RetryableError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		if result == nil || result.Response == nil || result.Response.CommonName == nil || *result.Response.CommonName == "" {
+			return resource.RetryableError(fmt.Errorf("teo apply_free_certificate verification for domain (%s) is still pending", domain))
+		}
+
+		return nil
+	})
 
 	return
 }

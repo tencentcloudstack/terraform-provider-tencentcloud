@@ -15,9 +15,9 @@
 package v20220901
 
 import (
-	tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
+    tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+    tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
+    "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
 )
 
 type AICrawlerDetection struct {
@@ -315,19 +315,19 @@ type AclUserRule struct {
 	// <li>hour：小时。</li>默认为 second。
 	PunishTimeUnit *string `json:"PunishTimeUnit,omitnil,omitempty" name:"PunishTimeUnit"`
 
-	// 自定义返回页面的名称。Action 是 page 时必填，且不能为空。
+	// 自定义返回页面的名称。Action 是 page 时必填，且不能为空。	
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 自定义返回页面的实例 Id。默认为0，代表使用系统默认拦截页面。该参数已废弃。
 	PageId *int64 `json:"PageId,omitnil,omitempty" name:"PageId"`
 
-	// 自定义响应 Id。该 Id 可通过查询自定义错误页列表接口获取。默认值为default，使用系统默认页面。Action 是 page 时必填，且不能为空。
+	// 自定义响应 Id。该 Id 可通过查询自定义错误页列表接口获取。默认值为default，使用系统默认页面。Action 是 page 时必填，且不能为空。	
 	CustomResponseId *string `json:"CustomResponseId,omitnil,omitempty" name:"CustomResponseId"`
 
 	// 自定义返回页面的响应码。Action 是 page 时必填，且不能为空，取值: 100~600，不支持 3xx 响应码。默认值：567。
 	ResponseCode *int64 `json:"ResponseCode,omitnil,omitempty" name:"ResponseCode"`
 
-	// 重定向时候的地址。Action 是 redirect 时必填，且不能为空。
+	// 重定向时候的地址。Action 是 redirect 时必填，且不能为空。	
 	RedirectUrl *string `json:"RedirectUrl,omitnil,omitempty" name:"RedirectUrl"`
 }
 
@@ -710,7 +710,7 @@ type ApplyFreeCertificateRequestParams struct {
 
 type ApplyFreeCertificateRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -725,8 +725,8 @@ type ApplyFreeCertificateRequest struct {
 }
 
 func (r *ApplyFreeCertificateRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -763,8 +763,8 @@ type ApplyFreeCertificateResponse struct {
 }
 
 func (r *ApplyFreeCertificateResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -795,7 +795,7 @@ type AudioTemplateInfo struct {
 
 type AuthenticationParameters struct {
 	// 鉴权类型。取值有：
-	//
+	// 
 	// <li>TypeA：鉴权方式 A 类型，具体含义请参考 [鉴权方式 A](https://cloud.tencent.com/document/product/1552/109329)；</li>
 	// <li>TypeB：鉴权方式 B 类型，具体含义请参考 [鉴权方式 B](https://cloud.tencent.com/document/product/1552/109330)；</li>
 	// <li>TypeC：鉴权方式 C 类型，具体含义请参考 [鉴权方式 C](https://cloud.tencent.com/document/product/1552/109331)；</li>
@@ -889,7 +889,7 @@ type BindDomainInfo struct {
 	// 域名所属的站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 绑定状态，取值有:
+	// 绑定状态，取值有: 
 	// <li>process：绑定中；</li>
 	// <li>online：绑定成功；</li>
 	// <li>fail：绑定失败。</li>
@@ -913,7 +913,7 @@ type BindSecurityTemplateToEntityRequestParams struct {
 	// 指定绑定或解绑的策略模板 ID 或站点全局策略
 	// <li>如需绑定至策略模板，或从策略模板解绑，请指定策略模板 ID。</li>
 	// <li>如需绑定至站点全局策略，或从站点全局策略解绑，请使用 @ZoneLevel@domain 参数值。</li>
-	//
+	// 
 	// 注意：解绑后，域名将使用独立策略，并单独计算规则配额，请确保解绑前套餐规则配额充足。
 	TemplateId *string `json:"TemplateId,omitnil,omitempty" name:"TemplateId"`
 
@@ -923,7 +923,7 @@ type BindSecurityTemplateToEntityRequestParams struct {
 
 type BindSecurityTemplateToEntityRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 需要绑定或解绑的策略模板所属站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -939,7 +939,7 @@ type BindSecurityTemplateToEntityRequest struct {
 	// 指定绑定或解绑的策略模板 ID 或站点全局策略
 	// <li>如需绑定至策略模板，或从策略模板解绑，请指定策略模板 ID。</li>
 	// <li>如需绑定至站点全局策略，或从站点全局策略解绑，请使用 @ZoneLevel@domain 参数值。</li>
-	//
+	// 
 	// 注意：解绑后，域名将使用独立策略，并单独计算规则配额，请确保解绑前套餐规则配额充足。
 	TemplateId *string `json:"TemplateId,omitnil,omitempty" name:"TemplateId"`
 
@@ -948,8 +948,8 @@ type BindSecurityTemplateToEntityRequest struct {
 }
 
 func (r *BindSecurityTemplateToEntityRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -982,8 +982,8 @@ type BindSecurityTemplateToEntityResponse struct {
 }
 
 func (r *BindSecurityTemplateToEntityResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1002,7 +1002,7 @@ type BindSharedCNAMEMap struct {
 
 // Predefined struct for user
 type BindSharedCNAMERequestParams struct {
-	// 加速域名所属站点 ID。
+	// 加速域名所属站点 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// 绑定类型，取值有：
@@ -1016,8 +1016,8 @@ type BindSharedCNAMERequestParams struct {
 
 type BindSharedCNAMERequest struct {
 	*tchttp.BaseRequest
-
-	// 加速域名所属站点 ID。
+	
+	// 加速域名所属站点 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// 绑定类型，取值有：
@@ -1030,8 +1030,8 @@ type BindSharedCNAMERequest struct {
 }
 
 func (r *BindSharedCNAMERequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1062,8 +1062,8 @@ type BindSharedCNAMEResponse struct {
 }
 
 func (r *BindSharedCNAMEResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1083,7 +1083,7 @@ type BindZoneToPlanRequestParams struct {
 
 type BindZoneToPlanRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 未绑定套餐的站点ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -1092,8 +1092,8 @@ type BindZoneToPlanRequest struct {
 }
 
 func (r *BindZoneToPlanRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1123,8 +1123,8 @@ type BindZoneToPlanResponse struct {
 }
 
 func (r *BindZoneToPlanResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1180,7 +1180,7 @@ type BotExtendAction struct {
 
 type BotIntelligence struct {
 	// Bot 智能分析的具体配置开关。取值有：
-	//
+	// 
 	// on：开启；
 	// off：关闭。
 	Enabled *string `json:"Enabled,omitnil,omitempty" name:"Enabled"`
@@ -1382,7 +1382,7 @@ type BotUserRule struct {
 	// 自定义返回页面的名称。Action 是 page 时必填，且不能为空。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 自定义响应 Id。该 Id 可通过查询自定义错误页列表接口获取。默认值为default，使用系统默认页面。Action 是 page 时必填，且不能为空。
+	// 自定义响应 Id。该 Id 可通过查询自定义错误页列表接口获取。默认值为default，使用系统默认页面。Action 是 page 时必填，且不能为空。	
 	CustomResponseId *string `json:"CustomResponseId,omitnil,omitempty" name:"CustomResponseId"`
 
 	// 自定义返回页面的响应码。Action 是 page 时必填，且不能为空，取值: 100~600，不支持 3xx 响应码。默认值：567。
@@ -1438,7 +1438,7 @@ type CC struct {
 }
 
 type CLSTopic struct {
-	// 腾讯云 CLS 日志集 ID。
+	// 腾讯云 CLS 日志集 ID。	
 	LogSetId *string `json:"LogSetId,omitnil,omitempty" name:"LogSetId"`
 
 	// 腾讯云 CLS 日志主题 ID。
@@ -1709,7 +1709,7 @@ type CheckCnameStatusRequestParams struct {
 
 type CheckCnameStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -1718,8 +1718,8 @@ type CheckCnameStatusRequest struct {
 }
 
 func (r *CheckCnameStatusRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1752,8 +1752,8 @@ type CheckCnameStatusResponse struct {
 }
 
 func (r *CheckCnameStatusResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1773,7 +1773,7 @@ type CheckFreeCertificateVerificationRequestParams struct {
 
 type CheckFreeCertificateVerificationRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -1782,8 +1782,8 @@ type CheckFreeCertificateVerificationRequest struct {
 }
 
 func (r *CheckFreeCertificateVerificationRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1823,8 +1823,8 @@ type CheckFreeCertificateVerificationResponse struct {
 }
 
 func (r *CheckFreeCertificateVerificationResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1917,10 +1917,10 @@ type ClientBehaviorDetection struct {
 	// 工作量证明校验强度。取值有：<li>low：低；</li><li>medium：中；</li><li>high：高。</li>
 	CryptoChallengeIntensity *string `json:"CryptoChallengeIntensity,omitnil,omitempty" name:"CryptoChallengeIntensity"`
 
-	// 客户端行为校验的执行方式。取值有：<li>0ms：立即执行；</li><li>100ms：延迟 100ms 执行；</li><li>200ms：延迟 200ms 执行；</li><li>300ms：延迟 300ms 执行；</li><li>400ms：延迟 400ms 执行；</li><li>500ms：延迟 500ms 执行；</li><li>600ms：延迟 600ms 执行；</li><li>700ms：延迟 700ms 执行；</li><li>800ms：延迟 800ms 执行；</li><li>900ms：延迟 900ms 执行；</li><li>1000ms：延迟 1000ms 执行。</li>
+	// 客户端行为校验的执行方式。取值有：<li>0ms：立即执行；</li><li>100ms：延迟 100ms 执行；</li><li>200ms：延迟 200ms 执行；</li><li>300ms：延迟 300ms 执行；</li><li>400ms：延迟 400ms 执行；</li><li>500ms：延迟 500ms 执行；</li><li>600ms：延迟 600ms 执行；</li><li>700ms：延迟 700ms 执行；</li><li>800ms：延迟 800ms 执行；</li><li>900ms：延迟 900ms 执行；</li><li>1000ms：延迟 1000ms 执行。</li> 
 	CryptoChallengeDelayBefore *string `json:"CryptoChallengeDelayBefore,omitnil,omitempty" name:"CryptoChallengeDelayBefore"`
 
-	// 触发阈值统计的时间窗口，取值有：<li>5s：5 秒内；</li><li>10s：10 秒内；</li><li>15s：15 秒内；</li><li>30s：30 秒内；</li><li>60s：60 秒内；</li><li>5m：5 分钟内；</li><li>10m：10 分钟内；</li><li>30m：30 分钟内；</li><li>60m：60 分钟内。</li>
+	// 触发阈值统计的时间窗口，取值有：<li>5s：5 秒内；</li><li>10s：10 秒内；</li><li>15s：15 秒内；</li><li>30s：30 秒内；</li><li>60s：60 秒内；</li><li>5m：5 分钟内；</li><li>10m：10 分钟内；</li><li>30m：30 分钟内；</li><li>60m：60 分钟内。</li> 
 	MaxChallengeCountInterval *string `json:"MaxChallengeCountInterval,omitnil,omitempty" name:"MaxChallengeCountInterval"`
 
 	// 触发阈值统计的累计次数，取值范围 1 ~ 100000000。
@@ -2161,7 +2161,7 @@ type ConfirmMultiPathGatewayOriginACLRequestParams struct {
 
 type ConfirmMultiPathGatewayOriginACLRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -2173,8 +2173,8 @@ type ConfirmMultiPathGatewayOriginACLRequest struct {
 }
 
 func (r *ConfirmMultiPathGatewayOriginACLRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2205,8 +2205,8 @@ type ConfirmMultiPathGatewayOriginACLResponse struct {
 }
 
 func (r *ConfirmMultiPathGatewayOriginACLResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2223,14 +2223,14 @@ type ConfirmOriginACLUpdateRequestParams struct {
 
 type ConfirmOriginACLUpdateRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 }
 
 func (r *ConfirmOriginACLUpdateRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2259,8 +2259,8 @@ type ConfirmOriginACLUpdateResponse struct {
 }
 
 func (r *ConfirmOriginACLUpdateResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2345,14 +2345,14 @@ type CreateAccelerationDomainRequestParams struct {
 	// - IPv6 访问：不允许创建域名，请修改 IPv6Status 已保持与共享 CNAME 绑定的其余域名配置一致；
 	// - DDoS 防护：如果选择的共享 CNAME 已启用 DDoS 防护，则创建域名时，将默认为该域名启用 DDoS 防护。
 	// - 中国大陆网络优化（国际加速）：不允许创建域名，请保持当前域名的中国大陆网络优化（国际加速）配置与共享 CNAME 绑定的其余域名一致后重试。
-	//
+	// 
 	// 注：共享 CNAME 当前仍在内测中，如需使用，请联系我们开通。
 	SharedCNAME *string `json:"SharedCNAME,omitnil,omitempty" name:"SharedCNAME"`
 }
 
 type CreateAccelerationDomainRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 加速域名所属站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -2387,14 +2387,14 @@ type CreateAccelerationDomainRequest struct {
 	// - IPv6 访问：不允许创建域名，请修改 IPv6Status 已保持与共享 CNAME 绑定的其余域名配置一致；
 	// - DDoS 防护：如果选择的共享 CNAME 已启用 DDoS 防护，则创建域名时，将默认为该域名启用 DDoS 防护。
 	// - 中国大陆网络优化（国际加速）：不允许创建域名，请保持当前域名的中国大陆网络优化（国际加速）配置与共享 CNAME 绑定的其余域名一致后重试。
-	//
+	// 
 	// 注：共享 CNAME 当前仍在内测中，如需使用，请联系我们开通。
 	SharedCNAME *string `json:"SharedCNAME,omitnil,omitempty" name:"SharedCNAME"`
 }
 
 func (r *CreateAccelerationDomainRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2434,8 +2434,8 @@ type CreateAccelerationDomainResponse struct {
 }
 
 func (r *CreateAccelerationDomainResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2466,7 +2466,7 @@ type CreateAliasDomainRequestParams struct {
 
 type CreateAliasDomainRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -2486,8 +2486,8 @@ type CreateAliasDomainRequest struct {
 }
 
 func (r *CreateAliasDomainRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2520,8 +2520,8 @@ type CreateAliasDomainResponse struct {
 }
 
 func (r *CreateAliasDomainResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2575,7 +2575,7 @@ type CreateApplicationProxyRequestParams struct {
 
 type CreateApplicationProxyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -2618,8 +2618,8 @@ type CreateApplicationProxyRequest struct {
 }
 
 func (r *CreateApplicationProxyRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2660,8 +2660,8 @@ type CreateApplicationProxyResponse struct {
 }
 
 func (r *CreateApplicationProxyResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2726,7 +2726,7 @@ type CreateApplicationProxyRuleRequestParams struct {
 
 type CreateApplicationProxyRuleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -2780,8 +2780,8 @@ type CreateApplicationProxyRuleRequest struct {
 }
 
 func (r *CreateApplicationProxyRuleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2823,8 +2823,8 @@ type CreateApplicationProxyRuleResponse struct {
 }
 
 func (r *CreateApplicationProxyRuleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2844,7 +2844,7 @@ type CreateCLSIndexRequestParams struct {
 
 type CreateCLSIndexRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -2853,8 +2853,8 @@ type CreateCLSIndexRequest struct {
 }
 
 func (r *CreateCLSIndexRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2884,8 +2884,8 @@ type CreateCLSIndexResponse struct {
 }
 
 func (r *CreateCLSIndexResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2914,7 +2914,7 @@ type CreateConfigGroupVersionRequestParams struct {
 
 type CreateConfigGroupVersionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -2932,8 +2932,8 @@ type CreateConfigGroupVersionRequest struct {
 }
 
 func (r *CreateConfigGroupVersionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2969,8 +2969,8 @@ type CreateConfigGroupVersionResponse struct {
 }
 
 func (r *CreateConfigGroupVersionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2993,7 +2993,7 @@ type CreateContentIdentifierRequestParams struct {
 
 type CreateContentIdentifierRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 内容标识符的描述，长度限制不超过 20 个字符。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
@@ -3005,8 +3005,8 @@ type CreateContentIdentifierRequest struct {
 }
 
 func (r *CreateContentIdentifierRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3040,8 +3040,8 @@ type CreateContentIdentifierResponse struct {
 }
 
 func (r *CreateContentIdentifierResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3070,7 +3070,7 @@ type CreateCustomizeErrorPageRequestParams struct {
 
 type CreateCustomizeErrorPageRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -3088,8 +3088,8 @@ type CreateCustomizeErrorPageRequest struct {
 }
 
 func (r *CreateCustomizeErrorPageRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3125,8 +3125,8 @@ type CreateCustomizeErrorPageResponse struct {
 }
 
 func (r *CreateCustomizeErrorPageResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3151,7 +3151,7 @@ type CreateDnsRecordRequestParams struct {
 	Content *string `json:"Content,omitnil,omitempty" name:"Content"`
 
 	// DNS 记录解析线路，不指定默认为 Default，表示默认解析线路，代表全部地域生效。
-	//
+	// 
 	// - 解析线路配置仅适用于当 Type（DNS 记录类型）为 A、AAAA、CNAME 时。
 	// - 解析线路配置仅适用于标准版、企业版套餐使用，取值请参考：[解析线路及对应代码枚举](https://cloud.tencent.com/document/product/1552/112542)。
 	Location *string `json:"Location,omitnil,omitempty" name:"Location"`
@@ -3168,7 +3168,7 @@ type CreateDnsRecordRequestParams struct {
 
 type CreateDnsRecordRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -3183,7 +3183,7 @@ type CreateDnsRecordRequest struct {
 	Content *string `json:"Content,omitnil,omitempty" name:"Content"`
 
 	// DNS 记录解析线路，不指定默认为 Default，表示默认解析线路，代表全部地域生效。
-	//
+	// 
 	// - 解析线路配置仅适用于当 Type（DNS 记录类型）为 A、AAAA、CNAME 时。
 	// - 解析线路配置仅适用于标准版、企业版套餐使用，取值请参考：[解析线路及对应代码枚举](https://cloud.tencent.com/document/product/1552/112542)。
 	Location *string `json:"Location,omitnil,omitempty" name:"Location"`
@@ -3199,8 +3199,8 @@ type CreateDnsRecordRequest struct {
 }
 
 func (r *CreateDnsRecordRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3239,8 +3239,8 @@ type CreateDnsRecordResponse struct {
 }
 
 func (r *CreateDnsRecordResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3263,7 +3263,7 @@ type CreateEdgeKVNamespaceRequestParams struct {
 
 type CreateEdgeKVNamespaceRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -3275,8 +3275,8 @@ type CreateEdgeKVNamespaceRequest struct {
 }
 
 func (r *CreateEdgeKVNamespaceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3307,8 +3307,8 @@ type CreateEdgeKVNamespaceResponse struct {
 }
 
 func (r *CreateEdgeKVNamespaceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3337,7 +3337,7 @@ type CreateFunctionReplicaRequestParams struct {
 
 type CreateFunctionReplicaRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -3355,8 +3355,8 @@ type CreateFunctionReplicaRequest struct {
 }
 
 func (r *CreateFunctionReplicaRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3389,8 +3389,8 @@ type CreateFunctionReplicaResponse struct {
 }
 
 func (r *CreateFunctionReplicaResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3416,7 +3416,7 @@ type CreateFunctionRequestParams struct {
 
 type CreateFunctionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -3431,8 +3431,8 @@ type CreateFunctionRequest struct {
 }
 
 func (r *CreateFunctionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3467,8 +3467,8 @@ type CreateFunctionResponse struct {
 }
 
 func (r *CreateFunctionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3507,7 +3507,7 @@ type CreateFunctionRuleRequestParams struct {
 
 type CreateFunctionRuleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -3535,8 +3535,8 @@ type CreateFunctionRuleRequest struct {
 }
 
 func (r *CreateFunctionRuleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3574,8 +3574,8 @@ type CreateFunctionRuleResponse struct {
 }
 
 func (r *CreateFunctionRuleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3595,7 +3595,7 @@ type CreateInferenceAPITokenRequestParams struct {
 
 type CreateInferenceAPITokenRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -3604,8 +3604,8 @@ type CreateInferenceAPITokenRequest struct {
 }
 
 func (r *CreateInferenceAPITokenRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3641,8 +3641,8 @@ type CreateInferenceAPITokenResponse struct {
 }
 
 func (r *CreateInferenceAPITokenResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3668,7 +3668,7 @@ type CreateInferenceDomainRequestParams struct {
 
 type CreateInferenceDomainRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -3683,8 +3683,8 @@ type CreateInferenceDomainRequest struct {
 }
 
 func (r *CreateInferenceDomainRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3716,8 +3716,8 @@ type CreateInferenceDomainResponse struct {
 }
 
 func (r *CreateInferenceDomainResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3755,7 +3755,7 @@ type CreateInferenceServiceRequestParams struct {
 
 type CreateInferenceServiceRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -3782,8 +3782,8 @@ type CreateInferenceServiceRequest struct {
 }
 
 func (r *CreateInferenceServiceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3822,8 +3822,8 @@ type CreateInferenceServiceResponse struct {
 }
 
 func (r *CreateInferenceServiceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3862,7 +3862,7 @@ type CreateJustInTimeTranscodeTemplateRequestParams struct {
 
 type CreateJustInTimeTranscodeTemplateRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -3890,8 +3890,8 @@ type CreateJustInTimeTranscodeTemplateRequest struct {
 }
 
 func (r *CreateJustInTimeTranscodeTemplateRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3929,8 +3929,8 @@ type CreateJustInTimeTranscodeTemplateResponse struct {
 }
 
 func (r *CreateJustInTimeTranscodeTemplateResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3977,7 +3977,7 @@ type CreateL4ProxyRequestParams struct {
 
 type CreateL4ProxyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -4011,8 +4011,8 @@ type CreateL4ProxyRequest struct {
 }
 
 func (r *CreateL4ProxyRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4050,8 +4050,8 @@ type CreateL4ProxyResponse struct {
 }
 
 func (r *CreateL4ProxyResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4075,7 +4075,7 @@ type CreateL4ProxyRulesRequestParams struct {
 
 type CreateL4ProxyRulesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -4088,8 +4088,8 @@ type CreateL4ProxyRulesRequest struct {
 }
 
 func (r *CreateL4ProxyRulesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4123,8 +4123,8 @@ type CreateL4ProxyRulesResponse struct {
 }
 
 func (r *CreateL4ProxyRulesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4144,7 +4144,7 @@ type CreateL7AccRulesRequestParams struct {
 
 type CreateL7AccRulesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -4153,8 +4153,8 @@ type CreateL7AccRulesRequest struct {
 }
 
 func (r *CreateL7AccRulesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4187,8 +4187,8 @@ type CreateL7AccRulesResponse struct {
 }
 
 func (r *CreateL7AccRulesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4223,7 +4223,7 @@ type CreateLoadBalancerRequestParams struct {
 
 type CreateLoadBalancerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -4247,8 +4247,8 @@ type CreateLoadBalancerRequest struct {
 }
 
 func (r *CreateLoadBalancerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4286,8 +4286,8 @@ type CreateLoadBalancerResponse struct {
 }
 
 func (r *CreateLoadBalancerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4325,7 +4325,7 @@ type CreateLogAnalysisDownloadTaskRequestParams struct {
 
 type CreateLogAnalysisDownloadTaskRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -4352,8 +4352,8 @@ type CreateLogAnalysisDownloadTaskRequest struct {
 }
 
 func (r *CreateLogAnalysisDownloadTaskRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4392,8 +4392,8 @@ type CreateLogAnalysisDownloadTaskResponse struct {
 }
 
 func (r *CreateLogAnalysisDownloadTaskResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4426,7 +4426,7 @@ type CreateMultiPathGatewayLineRequestParams struct {
 
 type CreateMultiPathGatewayLineRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID 。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -4448,8 +4448,8 @@ type CreateMultiPathGatewayLineRequest struct {
 }
 
 func (r *CreateMultiPathGatewayLineRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4488,8 +4488,8 @@ type CreateMultiPathGatewayLineResponse struct {
 }
 
 func (r *CreateMultiPathGatewayLineResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4523,7 +4523,7 @@ type CreateMultiPathGatewayRequestParams struct {
 
 type CreateMultiPathGatewayRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -4546,8 +4546,8 @@ type CreateMultiPathGatewayRequest struct {
 }
 
 func (r *CreateMultiPathGatewayRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4584,8 +4584,8 @@ type CreateMultiPathGatewayResponse struct {
 }
 
 func (r *CreateMultiPathGatewayResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4605,7 +4605,7 @@ type CreateMultiPathGatewaySecretKeyRequestParams struct {
 
 type CreateMultiPathGatewaySecretKeyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -4614,8 +4614,8 @@ type CreateMultiPathGatewaySecretKeyRequest struct {
 }
 
 func (r *CreateMultiPathGatewaySecretKeyRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4645,8 +4645,8 @@ type CreateMultiPathGatewaySecretKeyResponse struct {
 }
 
 func (r *CreateMultiPathGatewaySecretKeyResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4677,7 +4677,7 @@ type CreateOriginGroupRequestParams struct {
 
 type CreateOriginGroupRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -4697,8 +4697,8 @@ type CreateOriginGroupRequest struct {
 }
 
 func (r *CreateOriginGroupRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4734,8 +4734,8 @@ type CreateOriginGroupResponse struct {
 }
 
 func (r *CreateOriginGroupResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4767,7 +4767,7 @@ type CreatePlanForZoneRequestParams struct {
 
 type CreatePlanForZoneRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -4788,8 +4788,8 @@ type CreatePlanForZoneRequest struct {
 }
 
 func (r *CreatePlanForZoneRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4825,8 +4825,8 @@ type CreatePlanForZoneResponse struct {
 }
 
 func (r *CreatePlanForZoneResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4853,7 +4853,7 @@ type CreatePlanRequestParams struct {
 
 type CreatePlanRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 订阅的套餐类型，取值有：<li> personal：个人版套餐，预付费套餐；</li><li> basic：基础版套餐，预付费套餐；</li><li> standard：标准版套餐，预付费套餐；</li><li> enterprise：企业版套餐，后付费套餐。</li>订阅预付费套餐时，请确保账号内有足够余额，余额不足会产生一个待支付的订单。
 	// 计费概述参考 [Edgeone计费概述](https://cloud.tencent.com/document/product/1552/94156)
 	// 不同套餐区别参考 [Edgeone计费套餐选型对比](https://cloud.tencent.com/document/product/1552/94165)
@@ -4869,8 +4869,8 @@ type CreatePlanRequest struct {
 }
 
 func (r *CreatePlanRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4907,8 +4907,8 @@ type CreatePlanResponse struct {
 }
 
 func (r *CreatePlanResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4961,7 +4961,7 @@ type CreatePrefetchTaskRequestParams struct {
 
 type CreatePrefetchTaskRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	// 若您希望快速提交不同站点下的 Targets Url，可以将其填写为 *，但前提是调用该 API 的账号必须具备主账号下全部站点资源的权限。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
@@ -5001,8 +5001,8 @@ type CreatePrefetchTaskRequest struct {
 }
 
 func (r *CreatePrefetchTaskRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5043,8 +5043,8 @@ type CreatePrefetchTaskResponse struct {
 }
 
 func (r *CreatePrefetchTaskResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5085,7 +5085,7 @@ type CreatePurgeTaskRequestParams struct {
 
 type CreatePurgeTaskRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	// 若您希望快速提交不同站点下的 Targets Url，可以将其填写为 *，但前提是调用该 API 的账号必须具备主账号下全部站点资源的权限。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
@@ -5113,8 +5113,8 @@ type CreatePurgeTaskRequest struct {
 }
 
 func (r *CreatePurgeTaskRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5155,8 +5155,8 @@ type CreatePurgeTaskResponse struct {
 }
 
 func (r *CreatePurgeTaskResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5218,7 +5218,7 @@ type CreateRealtimeLogDeliveryTaskRequestParams struct {
 
 type CreateRealtimeLogDeliveryTaskRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -5269,8 +5269,8 @@ type CreateRealtimeLogDeliveryTaskRequest struct {
 }
 
 func (r *CreateRealtimeLogDeliveryTaskRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5317,8 +5317,8 @@ type CreateRealtimeLogDeliveryTaskResponse struct {
 }
 
 func (r *CreateRealtimeLogDeliveryTaskResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5349,7 +5349,7 @@ type CreateRuleRequestParams struct {
 
 type CreateRuleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -5369,8 +5369,8 @@ type CreateRuleRequest struct {
 }
 
 func (r *CreateRuleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5406,8 +5406,8 @@ type CreateRuleResponse struct {
 }
 
 func (r *CreateRuleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5418,7 +5418,7 @@ func (r *CreateRuleResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateSecurityAPIResourceRequestParams struct {
-	// 站点 ID。
+	// 站点 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	//  API 资源列表。
@@ -5427,8 +5427,8 @@ type CreateSecurityAPIResourceRequestParams struct {
 
 type CreateSecurityAPIResourceRequest struct {
 	*tchttp.BaseRequest
-
-	// 站点 ID。
+	
+	// 站点 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	//  API 资源列表。
@@ -5436,8 +5436,8 @@ type CreateSecurityAPIResourceRequest struct {
 }
 
 func (r *CreateSecurityAPIResourceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5470,8 +5470,8 @@ type CreateSecurityAPIResourceResponse struct {
 }
 
 func (r *CreateSecurityAPIResourceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5482,7 +5482,7 @@ func (r *CreateSecurityAPIResourceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateSecurityAPIServiceRequestParams struct {
-	// 站点 ID。
+	// 站点 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	//  API 服务列表。
@@ -5491,8 +5491,8 @@ type CreateSecurityAPIServiceRequestParams struct {
 
 type CreateSecurityAPIServiceRequest struct {
 	*tchttp.BaseRequest
-
-	// 站点 ID。
+	
+	// 站点 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	//  API 服务列表。
@@ -5500,8 +5500,8 @@ type CreateSecurityAPIServiceRequest struct {
 }
 
 func (r *CreateSecurityAPIServiceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5534,8 +5534,8 @@ type CreateSecurityAPIServiceResponse struct {
 }
 
 func (r *CreateSecurityAPIServiceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5555,7 +5555,7 @@ type CreateSecurityClientAttesterRequestParams struct {
 
 type CreateSecurityClientAttesterRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -5564,8 +5564,8 @@ type CreateSecurityClientAttesterRequest struct {
 }
 
 func (r *CreateSecurityClientAttesterRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5598,8 +5598,8 @@ type CreateSecurityClientAttesterResponse struct {
 }
 
 func (r *CreateSecurityClientAttesterResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5619,7 +5619,7 @@ type CreateSecurityIPGroupRequestParams struct {
 
 type CreateSecurityIPGroupRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 Id。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -5628,8 +5628,8 @@ type CreateSecurityIPGroupRequest struct {
 }
 
 func (r *CreateSecurityIPGroupRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5662,8 +5662,8 @@ type CreateSecurityIPGroupResponse struct {
 }
 
 func (r *CreateSecurityIPGroupResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5674,7 +5674,7 @@ func (r *CreateSecurityIPGroupResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateSecurityJSInjectionRuleRequestParams struct {
-	// 站点 ID。
+	// 站点 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// JavaScript 注入规则列表。
@@ -5683,8 +5683,8 @@ type CreateSecurityJSInjectionRuleRequestParams struct {
 
 type CreateSecurityJSInjectionRuleRequest struct {
 	*tchttp.BaseRequest
-
-	// 站点 ID。
+	
+	// 站点 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// JavaScript 注入规则列表。
@@ -5692,8 +5692,8 @@ type CreateSecurityJSInjectionRuleRequest struct {
 }
 
 func (r *CreateSecurityJSInjectionRuleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5726,8 +5726,8 @@ type CreateSecurityJSInjectionRuleResponse struct {
 }
 
 func (r *CreateSecurityJSInjectionRuleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5738,13 +5738,13 @@ func (r *CreateSecurityJSInjectionRuleResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateSharedCNAMERequestParams struct {
-	// 共享 CNAME 所属站点的 ID。
+	// 共享 CNAME 所属站点的 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// 共享 CNAME 前缀。请输入合法的域名前缀，例如"test-api"、"test-api.com"，限制输入 50 个字符。
-	//
+	// 
 	// 共享 CNAME 完整格式为：`<自定义前缀>+<zoneid中的12位随机字符串>+share.dnse[0-5].com`。
-	//
+	// 
 	// 例如前缀传入 example.com，EO 会为您创建共享 CNAME：example.com.sai2ig51kaa5.share.dnse2.com。
 	SharedCNAMEPrefix *string `json:"SharedCNAMEPrefix,omitnil,omitempty" name:"SharedCNAMEPrefix"`
 
@@ -5754,14 +5754,14 @@ type CreateSharedCNAMERequestParams struct {
 
 type CreateSharedCNAMERequest struct {
 	*tchttp.BaseRequest
-
-	// 共享 CNAME 所属站点的 ID。
+	
+	// 共享 CNAME 所属站点的 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// 共享 CNAME 前缀。请输入合法的域名前缀，例如"test-api"、"test-api.com"，限制输入 50 个字符。
-	//
+	// 
 	// 共享 CNAME 完整格式为：`<自定义前缀>+<zoneid中的12位随机字符串>+share.dnse[0-5].com`。
-	//
+	// 
 	// 例如前缀传入 example.com，EO 会为您创建共享 CNAME：example.com.sai2ig51kaa5.share.dnse2.com。
 	SharedCNAMEPrefix *string `json:"SharedCNAMEPrefix,omitnil,omitempty" name:"SharedCNAMEPrefix"`
 
@@ -5770,8 +5770,8 @@ type CreateSharedCNAMERequest struct {
 }
 
 func (r *CreateSharedCNAMERequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5805,8 +5805,8 @@ type CreateSharedCNAMEResponse struct {
 }
 
 func (r *CreateSharedCNAMEResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5829,7 +5829,7 @@ type CreateWebSecurityTemplateRequestParams struct {
 
 type CreateWebSecurityTemplateRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。该参数明确策略模板在访问权限上归属的站点。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -5841,8 +5841,8 @@ type CreateWebSecurityTemplateRequest struct {
 }
 
 func (r *CreateWebSecurityTemplateRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5876,8 +5876,8 @@ type CreateWebSecurityTemplateResponse struct {
 }
 
 func (r *CreateWebSecurityTemplateResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5907,7 +5907,7 @@ type CreateZoneRequestParams struct {
 
 	// 待绑定的目标套餐 ID。当您账号下已存在套餐时，可以填写此参数，直接将站点绑定至该套餐。若您当前没有可绑定的套餐时，可通过 [CreatePlan](https://cloud.tencent.com/document/product/1552/105771) 购买套餐。
 	// 注意：如果不填写此参数，将创建一个处于“init”状态的站点，该站点为未激活状态，并不会显示在控制台上。您可以通过访问 [BindZoneToPlan](https://cloud.tencent.com/document/product/1552/83042) 来绑定套餐并激活站点，激活后站点可以正常提供服务。
-	//
+	// 
 	PlanId *string `json:"PlanId,omitnil,omitempty" name:"PlanId"`
 
 	// 同名站点标识。限制输入数字、英文、"." 、"-" 和 "_"，长度 200 个字符以内。详情参考 [同名站点标识](https://cloud.tencent.com/document/product/1552/70202)，无此使用场景时，该字段保留为空即可。
@@ -5931,7 +5931,7 @@ type CreateZoneRequestParams struct {
 
 type CreateZoneRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点接入类型。该参数取值如下，不填写时默认为 partial：
 	// <li>partial：CNAME 接入；</li>
 	// <li>full：NS 接入；</li>
@@ -5951,7 +5951,7 @@ type CreateZoneRequest struct {
 
 	// 待绑定的目标套餐 ID。当您账号下已存在套餐时，可以填写此参数，直接将站点绑定至该套餐。若您当前没有可绑定的套餐时，可通过 [CreatePlan](https://cloud.tencent.com/document/product/1552/105771) 购买套餐。
 	// 注意：如果不填写此参数，将创建一个处于“init”状态的站点，该站点为未激活状态，并不会显示在控制台上。您可以通过访问 [BindZoneToPlan](https://cloud.tencent.com/document/product/1552/83042) 来绑定套餐并激活站点，激活后站点可以正常提供服务。
-	//
+	// 
 	PlanId *string `json:"PlanId,omitnil,omitempty" name:"PlanId"`
 
 	// 同名站点标识。限制输入数字、英文、"." 、"-" 和 "_"，长度 200 个字符以内。详情参考 [同名站点标识](https://cloud.tencent.com/document/product/1552/70202)，无此使用场景时，该字段保留为空即可。
@@ -5970,8 +5970,8 @@ type CreateZoneRequest struct {
 }
 
 func (r *CreateZoneRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6001,11 +6001,11 @@ type CreateZoneResponseParams struct {
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// 站点归属权验证信息。站点完成创建后，您还需要完成归属权校验，站点才能正常服务。
-	//
+	// 
 	// Type = partial 时，您需要参考 [站点/域名归属权验证](https://cloud.tencent.com/document/product/1552/70789) 前往您的域名解析服务商添加 TXT 记录或者前往根域名服务器添加文件，再调用接口 [VerifyOwnership]() 完成验证；
-	//
+	// 
 	// Type = full 时，您需要参考 [修改 DNS 服务器](https://cloud.tencent.com/document/product/1552/90452) 切换 DNS 服务器即可，可通过接口 [VerifyOwnership]() 查询 DNS 是否切换成功；
-	//
+	// 
 	// Type = noDomainAccess 时，该值为空，不需要进行任何操作。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	OwnershipVerification *OwnershipVerification `json:"OwnershipVerification,omitnil,omitempty" name:"OwnershipVerification"`
@@ -6020,8 +6020,8 @@ type CreateZoneResponse struct {
 }
 
 func (r *CreateZoneResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6105,9 +6105,9 @@ type CustomEndpoint struct {
 	// 数据压缩类型，取值有: <li> gzip：使用 gzip 方式压缩。</li>不填表示不启用压缩。
 	CompressType *string `json:"CompressType,omitnil,omitempty" name:"CompressType"`
 
-	// POST 请求投递日志时，使用的应用层协议类型，取值有：
+	// POST 请求投递日志时，使用的应用层协议类型，取值有： 
 	// <li>http：HTTP 协议；</li>
-	// <li>https：HTTPS 协议。</li>如果不填默认根据填写的 URL 地址解析出协议类型。
+	// <li>https：HTTPS 协议。</li>如果不填默认根据填写的 URL 地址解析出协议类型。	
 	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
 	// 投递日志时携带的自定义请求头。若您填写的头部名称为 Content-Type 等 EdgeOne 日志推送默认携带的头部，那么您填写的头部值将覆盖默认值。头部值引用单个变量${batchSize}，以获取每次 POST 请求中包含的日志条数。
@@ -6432,7 +6432,7 @@ type DeleteAccelerationDomainsRequestParams struct {
 
 type DeleteAccelerationDomainsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 加速域名所属站点ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -6446,8 +6446,8 @@ type DeleteAccelerationDomainsRequest struct {
 }
 
 func (r *DeleteAccelerationDomainsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6478,8 +6478,8 @@ type DeleteAccelerationDomainsResponse struct {
 }
 
 func (r *DeleteAccelerationDomainsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6499,7 +6499,7 @@ type DeleteAliasDomainRequestParams struct {
 
 type DeleteAliasDomainRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -6508,8 +6508,8 @@ type DeleteAliasDomainRequest struct {
 }
 
 func (r *DeleteAliasDomainRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6539,8 +6539,8 @@ type DeleteAliasDomainResponse struct {
 }
 
 func (r *DeleteAliasDomainResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6560,7 +6560,7 @@ type DeleteApplicationProxyRequestParams struct {
 
 type DeleteApplicationProxyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -6569,8 +6569,8 @@ type DeleteApplicationProxyRequest struct {
 }
 
 func (r *DeleteApplicationProxyRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6600,8 +6600,8 @@ type DeleteApplicationProxyResponse struct {
 }
 
 func (r *DeleteApplicationProxyResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6624,7 +6624,7 @@ type DeleteApplicationProxyRuleRequestParams struct {
 
 type DeleteApplicationProxyRuleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -6636,8 +6636,8 @@ type DeleteApplicationProxyRuleRequest struct {
 }
 
 func (r *DeleteApplicationProxyRuleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6668,8 +6668,8 @@ type DeleteApplicationProxyRuleResponse struct {
 }
 
 func (r *DeleteApplicationProxyRuleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6686,14 +6686,14 @@ type DeleteContentIdentifierRequestParams struct {
 
 type DeleteContentIdentifierRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 内容标识符 ID。
 	ContentId *string `json:"ContentId,omitnil,omitempty" name:"ContentId"`
 }
 
 func (r *DeleteContentIdentifierRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6722,8 +6722,8 @@ type DeleteContentIdentifierResponse struct {
 }
 
 func (r *DeleteContentIdentifierResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6743,7 +6743,7 @@ type DeleteCustomErrorPageRequestParams struct {
 
 type DeleteCustomErrorPageRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -6752,8 +6752,8 @@ type DeleteCustomErrorPageRequest struct {
 }
 
 func (r *DeleteCustomErrorPageRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6783,8 +6783,8 @@ type DeleteCustomErrorPageResponse struct {
 }
 
 func (r *DeleteCustomErrorPageResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6804,7 +6804,7 @@ type DeleteDnsRecordsRequestParams struct {
 
 type DeleteDnsRecordsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -6813,8 +6813,8 @@ type DeleteDnsRecordsRequest struct {
 }
 
 func (r *DeleteDnsRecordsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6844,8 +6844,8 @@ type DeleteDnsRecordsResponse struct {
 }
 
 func (r *DeleteDnsRecordsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6865,7 +6865,7 @@ type DeleteEdgeKVNamespaceRequestParams struct {
 
 type DeleteEdgeKVNamespaceRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -6874,8 +6874,8 @@ type DeleteEdgeKVNamespaceRequest struct {
 }
 
 func (r *DeleteEdgeKVNamespaceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6905,8 +6905,8 @@ type DeleteEdgeKVNamespaceResponse struct {
 }
 
 func (r *DeleteEdgeKVNamespaceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6929,7 +6929,7 @@ type DeleteFunctionReplicaRequestParams struct {
 
 type DeleteFunctionReplicaRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -6941,8 +6941,8 @@ type DeleteFunctionReplicaRequest struct {
 }
 
 func (r *DeleteFunctionReplicaRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6973,8 +6973,8 @@ type DeleteFunctionReplicaResponse struct {
 }
 
 func (r *DeleteFunctionReplicaResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6994,7 +6994,7 @@ type DeleteFunctionRequestParams struct {
 
 type DeleteFunctionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -7003,8 +7003,8 @@ type DeleteFunctionRequest struct {
 }
 
 func (r *DeleteFunctionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7034,8 +7034,8 @@ type DeleteFunctionResponse struct {
 }
 
 func (r *DeleteFunctionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7055,7 +7055,7 @@ type DeleteFunctionRulesRequestParams struct {
 
 type DeleteFunctionRulesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -7064,8 +7064,8 @@ type DeleteFunctionRulesRequest struct {
 }
 
 func (r *DeleteFunctionRulesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7095,8 +7095,8 @@ type DeleteFunctionRulesResponse struct {
 }
 
 func (r *DeleteFunctionRulesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7116,7 +7116,7 @@ type DeleteInferenceAPITokenRequestParams struct {
 
 type DeleteInferenceAPITokenRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -7125,8 +7125,8 @@ type DeleteInferenceAPITokenRequest struct {
 }
 
 func (r *DeleteInferenceAPITokenRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7156,8 +7156,8 @@ type DeleteInferenceAPITokenResponse struct {
 }
 
 func (r *DeleteInferenceAPITokenResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7177,7 +7177,7 @@ type DeleteJustInTimeTranscodeTemplatesRequestParams struct {
 
 type DeleteJustInTimeTranscodeTemplatesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -7186,8 +7186,8 @@ type DeleteJustInTimeTranscodeTemplatesRequest struct {
 }
 
 func (r *DeleteJustInTimeTranscodeTemplatesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7217,8 +7217,8 @@ type DeleteJustInTimeTranscodeTemplatesResponse struct {
 }
 
 func (r *DeleteJustInTimeTranscodeTemplatesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7238,7 +7238,7 @@ type DeleteL4ProxyRequestParams struct {
 
 type DeleteL4ProxyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -7247,8 +7247,8 @@ type DeleteL4ProxyRequest struct {
 }
 
 func (r *DeleteL4ProxyRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7278,8 +7278,8 @@ type DeleteL4ProxyResponse struct {
 }
 
 func (r *DeleteL4ProxyResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7302,7 +7302,7 @@ type DeleteL4ProxyRulesRequestParams struct {
 
 type DeleteL4ProxyRulesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -7314,8 +7314,8 @@ type DeleteL4ProxyRulesRequest struct {
 }
 
 func (r *DeleteL4ProxyRulesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7346,8 +7346,8 @@ type DeleteL4ProxyRulesResponse struct {
 }
 
 func (r *DeleteL4ProxyRulesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7367,7 +7367,7 @@ type DeleteL7AccRulesRequestParams struct {
 
 type DeleteL7AccRulesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -7376,8 +7376,8 @@ type DeleteL7AccRulesRequest struct {
 }
 
 func (r *DeleteL7AccRulesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7407,8 +7407,8 @@ type DeleteL7AccRulesResponse struct {
 }
 
 func (r *DeleteL7AccRulesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7428,7 +7428,7 @@ type DeleteLoadBalancerRequestParams struct {
 
 type DeleteLoadBalancerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -7437,8 +7437,8 @@ type DeleteLoadBalancerRequest struct {
 }
 
 func (r *DeleteLoadBalancerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7468,8 +7468,8 @@ type DeleteLoadBalancerResponse struct {
 }
 
 func (r *DeleteLoadBalancerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7492,7 +7492,7 @@ type DeleteMultiPathGatewayLineRequestParams struct {
 
 type DeleteMultiPathGatewayLineRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -7504,8 +7504,8 @@ type DeleteMultiPathGatewayLineRequest struct {
 }
 
 func (r *DeleteMultiPathGatewayLineRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7536,8 +7536,8 @@ type DeleteMultiPathGatewayLineResponse struct {
 }
 
 func (r *DeleteMultiPathGatewayLineResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7557,7 +7557,7 @@ type DeleteMultiPathGatewayRequestParams struct {
 
 type DeleteMultiPathGatewayRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -7566,8 +7566,8 @@ type DeleteMultiPathGatewayRequest struct {
 }
 
 func (r *DeleteMultiPathGatewayRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7597,8 +7597,8 @@ type DeleteMultiPathGatewayResponse struct {
 }
 
 func (r *DeleteMultiPathGatewayResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7618,7 +7618,7 @@ type DeleteOriginGroupRequestParams struct {
 
 type DeleteOriginGroupRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -7627,8 +7627,8 @@ type DeleteOriginGroupRequest struct {
 }
 
 func (r *DeleteOriginGroupRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7658,8 +7658,8 @@ type DeleteOriginGroupResponse struct {
 }
 
 func (r *DeleteOriginGroupResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7670,7 +7670,7 @@ func (r *DeleteOriginGroupResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteRealtimeLogDeliveryTaskRequestParams struct {
-	// 站点 ID。
+	// 站点 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// 实时日志投递任务 ID。
@@ -7679,8 +7679,8 @@ type DeleteRealtimeLogDeliveryTaskRequestParams struct {
 
 type DeleteRealtimeLogDeliveryTaskRequest struct {
 	*tchttp.BaseRequest
-
-	// 站点 ID。
+	
+	// 站点 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// 实时日志投递任务 ID。
@@ -7688,8 +7688,8 @@ type DeleteRealtimeLogDeliveryTaskRequest struct {
 }
 
 func (r *DeleteRealtimeLogDeliveryTaskRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7719,8 +7719,8 @@ type DeleteRealtimeLogDeliveryTaskResponse struct {
 }
 
 func (r *DeleteRealtimeLogDeliveryTaskResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7740,7 +7740,7 @@ type DeleteRulesRequestParams struct {
 
 type DeleteRulesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -7749,8 +7749,8 @@ type DeleteRulesRequest struct {
 }
 
 func (r *DeleteRulesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7780,8 +7780,8 @@ type DeleteRulesResponse struct {
 }
 
 func (r *DeleteRulesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7792,7 +7792,7 @@ func (r *DeleteRulesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteSecurityAPIResourceRequestParams struct {
-	// 站点 ID。
+	// 站点 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// 需要删除的 API 资源 ID 列表。
@@ -7801,8 +7801,8 @@ type DeleteSecurityAPIResourceRequestParams struct {
 
 type DeleteSecurityAPIResourceRequest struct {
 	*tchttp.BaseRequest
-
-	// 站点 ID。
+	
+	// 站点 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// 需要删除的 API 资源 ID 列表。
@@ -7810,8 +7810,8 @@ type DeleteSecurityAPIResourceRequest struct {
 }
 
 func (r *DeleteSecurityAPIResourceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7841,8 +7841,8 @@ type DeleteSecurityAPIResourceResponse struct {
 }
 
 func (r *DeleteSecurityAPIResourceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7853,7 +7853,7 @@ func (r *DeleteSecurityAPIResourceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteSecurityAPIServiceRequestParams struct {
-	// 站点 ID。
+	// 站点 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// API 服务 ID 列表。
@@ -7862,8 +7862,8 @@ type DeleteSecurityAPIServiceRequestParams struct {
 
 type DeleteSecurityAPIServiceRequest struct {
 	*tchttp.BaseRequest
-
-	// 站点 ID。
+	
+	// 站点 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// API 服务 ID 列表。
@@ -7871,8 +7871,8 @@ type DeleteSecurityAPIServiceRequest struct {
 }
 
 func (r *DeleteSecurityAPIServiceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7902,8 +7902,8 @@ type DeleteSecurityAPIServiceResponse struct {
 }
 
 func (r *DeleteSecurityAPIServiceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7923,7 +7923,7 @@ type DeleteSecurityClientAttesterRequestParams struct {
 
 type DeleteSecurityClientAttesterRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -7932,8 +7932,8 @@ type DeleteSecurityClientAttesterRequest struct {
 }
 
 func (r *DeleteSecurityClientAttesterRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7963,8 +7963,8 @@ type DeleteSecurityClientAttesterResponse struct {
 }
 
 func (r *DeleteSecurityClientAttesterResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7984,7 +7984,7 @@ type DeleteSecurityIPGroupRequestParams struct {
 
 type DeleteSecurityIPGroupRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 Id。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -7993,8 +7993,8 @@ type DeleteSecurityIPGroupRequest struct {
 }
 
 func (r *DeleteSecurityIPGroupRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8024,8 +8024,8 @@ type DeleteSecurityIPGroupResponse struct {
 }
 
 func (r *DeleteSecurityIPGroupResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8045,7 +8045,7 @@ type DeleteSecurityJSInjectionRuleRequestParams struct {
 
 type DeleteSecurityJSInjectionRuleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -8054,8 +8054,8 @@ type DeleteSecurityJSInjectionRuleRequest struct {
 }
 
 func (r *DeleteSecurityJSInjectionRuleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8085,8 +8085,8 @@ type DeleteSecurityJSInjectionRuleResponse struct {
 }
 
 func (r *DeleteSecurityJSInjectionRuleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8106,7 +8106,7 @@ type DeleteSharedCNAMERequestParams struct {
 
 type DeleteSharedCNAMERequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 共享 CNAME 所属站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -8115,8 +8115,8 @@ type DeleteSharedCNAMERequest struct {
 }
 
 func (r *DeleteSharedCNAMERequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8146,8 +8146,8 @@ type DeleteSharedCNAMEResponse struct {
 }
 
 func (r *DeleteSharedCNAMEResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8167,7 +8167,7 @@ type DeleteWebSecurityTemplateRequestParams struct {
 
 type DeleteWebSecurityTemplateRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。需要传入目标策略模板在访问权限上归属的站点，可使用 DescribeWebSecurityTemplates 接口查询策略模板归属的站点。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -8176,8 +8176,8 @@ type DeleteWebSecurityTemplateRequest struct {
 }
 
 func (r *DeleteWebSecurityTemplateRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8207,8 +8207,8 @@ type DeleteWebSecurityTemplateResponse struct {
 }
 
 func (r *DeleteWebSecurityTemplateResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8225,14 +8225,14 @@ type DeleteZoneRequestParams struct {
 
 type DeleteZoneRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 }
 
 func (r *DeleteZoneRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8261,8 +8261,8 @@ type DeleteZoneResponse struct {
 }
 
 func (r *DeleteZoneResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8329,7 +8329,7 @@ type DeployConfigGroupVersionRequestParams struct {
 
 type DeployConfigGroupVersionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -8344,8 +8344,8 @@ type DeployConfigGroupVersionRequest struct {
 }
 
 func (r *DeployConfigGroupVersionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8380,8 +8380,8 @@ type DeployConfigGroupVersionResponse struct {
 }
 
 func (r *DeployConfigGroupVersionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8439,7 +8439,7 @@ type DescribeAccelerationDomainsRequestParams struct {
 
 type DescribeAccelerationDomainsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>加速域名所属站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -8463,8 +8463,8 @@ type DescribeAccelerationDomainsRequest struct {
 }
 
 func (r *DescribeAccelerationDomainsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8505,8 +8505,8 @@ type DescribeAccelerationDomainsResponse struct {
 }
 
 func (r *DescribeAccelerationDomainsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8534,7 +8534,7 @@ type DescribeAliasDomainsRequestParams struct {
 
 type DescribeAliasDomainsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -8551,8 +8551,8 @@ type DescribeAliasDomainsRequest struct {
 }
 
 func (r *DescribeAliasDomainsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8590,8 +8590,8 @@ type DescribeAliasDomainsResponse struct {
 }
 
 func (r *DescribeAliasDomainsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8617,7 +8617,7 @@ type DescribeApplicationProxiesRequestParams struct {
 
 type DescribeApplicationProxiesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点ID。该参数必填。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -8632,8 +8632,8 @@ type DescribeApplicationProxiesRequest struct {
 }
 
 func (r *DescribeApplicationProxiesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8671,8 +8671,8 @@ type DescribeApplicationProxiesResponse struct {
 }
 
 func (r *DescribeApplicationProxiesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8704,7 +8704,7 @@ type DescribeAvailableCustomActionsForRuleEngineRequestParams struct {
 
 type DescribeAvailableCustomActionsForRuleEngineRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -8725,8 +8725,8 @@ type DescribeAvailableCustomActionsForRuleEngineRequest struct {
 }
 
 func (r *DescribeAvailableCustomActionsForRuleEngineRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8766,8 +8766,8 @@ type DescribeAvailableCustomActionsForRuleEngineResponse struct {
 }
 
 func (r *DescribeAvailableCustomActionsForRuleEngineResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8793,7 +8793,7 @@ type DescribeAvailableOriginACLFamilyRequestParams struct {
 
 type DescribeAvailableOriginACLFamilyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -8808,8 +8808,8 @@ type DescribeAvailableOriginACLFamilyRequest struct {
 }
 
 func (r *DescribeAvailableOriginACLFamilyRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8847,8 +8847,8 @@ type DescribeAvailableOriginACLFamilyResponse struct {
 }
 
 func (r *DescribeAvailableOriginACLFamilyResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8859,15 +8859,17 @@ func (r *DescribeAvailableOriginACLFamilyResponse) FromJsonString(s string) erro
 
 // Predefined struct for user
 type DescribeAvailablePlansRequestParams struct {
+
 }
 
 type DescribeAvailablePlansRequest struct {
 	*tchttp.BaseRequest
+	
 }
 
 func (r *DescribeAvailablePlansRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8877,7 +8879,7 @@ func (r *DescribeAvailablePlansRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-
+	
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAvailablePlansRequest has unknown keys!", "")
 	}
@@ -8900,8 +8902,8 @@ type DescribeAvailablePlansResponse struct {
 }
 
 func (r *DescribeAvailablePlansResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8939,13 +8941,13 @@ type DescribeBillingDataRequestParams struct {
 	// 说明：相同 `Type` 的 `BillingDataFilter` 之间为“或”关系，不同 `Type` 的 `BillingDataFilter` 之间为“且”关系。
 	Filters []*BillingDataFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 分组聚合维度。最多允许同时按照两种维度进行分组。取值如下：  <li>zone-id：按照站点 ID 进行分组，若使用了内容标识符功能，则优先按照内容标识符分组；<br></li><li>host：按照域名进行分组；<br></li> <li>proxy-id：按照四层代理实例 ID 进行分组；<br></li> <li>region-id：按照计费大区进行分组。</li>
+	// 分组聚合维度。最多允许同时按照两种维度进行分组。取值如下：  <li>zone-id：按照站点 ID 进行分组，若使用了内容标识符功能，则优先按照内容标识符分组；<br></li><li>host：按照域名进行分组；<br></li> <li>proxy-id：按照四层代理实例 ID 进行分组；<br></li> <li>region-id：按照计费大区进行分组。</li> 
 	GroupBy []*string `json:"GroupBy,omitnil,omitempty" name:"GroupBy"`
 }
 
 type DescribeBillingDataRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 起始时间。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
@@ -8973,13 +8975,13 @@ type DescribeBillingDataRequest struct {
 	// 说明：相同 `Type` 的 `BillingDataFilter` 之间为“或”关系，不同 `Type` 的 `BillingDataFilter` 之间为“且”关系。
 	Filters []*BillingDataFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 分组聚合维度。最多允许同时按照两种维度进行分组。取值如下：  <li>zone-id：按照站点 ID 进行分组，若使用了内容标识符功能，则优先按照内容标识符分组；<br></li><li>host：按照域名进行分组；<br></li> <li>proxy-id：按照四层代理实例 ID 进行分组；<br></li> <li>region-id：按照计费大区进行分组。</li>
+	// 分组聚合维度。最多允许同时按照两种维度进行分组。取值如下：  <li>zone-id：按照站点 ID 进行分组，若使用了内容标识符功能，则优先按照内容标识符分组；<br></li><li>host：按照域名进行分组；<br></li> <li>proxy-id：按照四层代理实例 ID 进行分组；<br></li> <li>region-id：按照计费大区进行分组。</li> 
 	GroupBy []*string `json:"GroupBy,omitnil,omitempty" name:"GroupBy"`
 }
 
 func (r *DescribeBillingDataRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9018,8 +9020,8 @@ type DescribeBillingDataResponse struct {
 }
 
 func (r *DescribeBillingDataResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9039,7 +9041,7 @@ type DescribeConfigGroupVersionDetailRequestParams struct {
 
 type DescribeConfigGroupVersionDetailRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -9048,8 +9050,8 @@ type DescribeConfigGroupVersionDetailRequest struct {
 }
 
 func (r *DescribeConfigGroupVersionDetailRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9085,8 +9087,8 @@ type DescribeConfigGroupVersionDetailResponse struct {
 }
 
 func (r *DescribeConfigGroupVersionDetailResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9110,13 +9112,13 @@ type DescribeConfigGroupVersionsRequestParams struct {
 	// 分页查询偏移量。默认值为 0。
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 分页查询限制数目。默认值为 20，最大值为 100。
+	// 分页查询限制数目。默认值为 20，最大值为 100。 
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
 type DescribeConfigGroupVersionsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -9130,13 +9132,13 @@ type DescribeConfigGroupVersionsRequest struct {
 	// 分页查询偏移量。默认值为 0。
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 分页查询限制数目。默认值为 20，最大值为 100。
+	// 分页查询限制数目。默认值为 20，最大值为 100。 
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
 func (r *DescribeConfigGroupVersionsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9175,8 +9177,8 @@ type DescribeConfigGroupVersionsResponse struct {
 }
 
 func (r *DescribeConfigGroupVersionsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9199,7 +9201,7 @@ type DescribeContentIdentifiersRequestParams struct {
 
 type DescribeContentIdentifiersRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 分页查询偏移量。默认值：0。
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
@@ -9211,8 +9213,8 @@ type DescribeContentIdentifiersRequest struct {
 }
 
 func (r *DescribeContentIdentifiersRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9233,7 +9235,7 @@ func (r *DescribeContentIdentifiersRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeContentIdentifiersResponseParams struct {
-	// 符合过滤条件的内容标识符总数。
+	// 符合过滤条件的内容标识符总数。	
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 内容标识符详细内容列表。
@@ -9249,8 +9251,8 @@ type DescribeContentIdentifiersResponse struct {
 }
 
 func (r *DescribeContentIdentifiersResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9267,14 +9269,14 @@ type DescribeContentQuotaRequestParams struct {
 
 type DescribeContentQuotaRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 }
 
 func (r *DescribeContentQuotaRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9311,8 +9313,8 @@ type DescribeContentQuotaResponse struct {
 }
 
 func (r *DescribeContentQuotaResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9338,7 +9340,7 @@ type DescribeCustomErrorPagesRequestParams struct {
 
 type DescribeCustomErrorPagesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -9353,8 +9355,8 @@ type DescribeCustomErrorPagesRequest struct {
 }
 
 func (r *DescribeCustomErrorPagesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9392,8 +9394,8 @@ type DescribeCustomErrorPagesResponse struct {
 }
 
 func (r *DescribeCustomErrorPagesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9431,7 +9433,7 @@ type DescribeDDoSAttackDataRequestParams struct {
 
 type DescribeDDoSAttackDataRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>开始时间。时间为世界标准时间（UTC），遵循 ISO 8601 标准的日期和时间格式。</p>
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
@@ -9458,8 +9460,8 @@ type DescribeDDoSAttackDataRequest struct {
 }
 
 func (r *DescribeDDoSAttackDataRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9502,8 +9504,8 @@ type DescribeDDoSAttackDataResponse struct {
 }
 
 func (r *DescribeDDoSAttackDataResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9554,7 +9556,7 @@ type DescribeDDoSAttackEventRequestParams struct {
 
 type DescribeDDoSAttackEventRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 开始时间，时间范围为 30 天。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
@@ -9594,8 +9596,8 @@ type DescribeDDoSAttackEventRequest struct {
 }
 
 func (r *DescribeDDoSAttackEventRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9640,8 +9642,8 @@ type DescribeDDoSAttackEventResponse struct {
 }
 
 func (r *DescribeDDoSAttackEventResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9699,7 +9701,7 @@ type DescribeDDoSAttackTopDataRequestParams struct {
 
 type DescribeDDoSAttackTopDataRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 开始时间。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
@@ -9746,8 +9748,8 @@ type DescribeDDoSAttackTopDataRequest struct {
 }
 
 func (r *DescribeDDoSAttackTopDataRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9792,8 +9794,8 @@ type DescribeDDoSAttackTopDataResponse struct {
 }
 
 func (r *DescribeDDoSAttackTopDataResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9810,14 +9812,14 @@ type DescribeDDoSProtectionRequestParams struct {
 
 type DescribeDDoSProtectionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 }
 
 func (r *DescribeDDoSProtectionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9849,8 +9851,8 @@ type DescribeDDoSProtectionResponse struct {
 }
 
 func (r *DescribeDDoSProtectionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9877,7 +9879,7 @@ type DescribeDefaultCertificatesRequestParams struct {
 
 type DescribeDefaultCertificatesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -9893,8 +9895,8 @@ type DescribeDefaultCertificatesRequest struct {
 }
 
 func (r *DescribeDefaultCertificatesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9932,8 +9934,8 @@ type DescribeDefaultCertificatesResponse struct {
 }
 
 func (r *DescribeDefaultCertificatesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9957,7 +9959,7 @@ type DescribeDeployHistoryRequestParams struct {
 
 type DescribeDeployHistoryRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -9970,8 +9972,8 @@ type DescribeDeployHistoryRequest struct {
 }
 
 func (r *DescribeDeployHistoryRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10008,8 +10010,8 @@ type DescribeDeployHistoryResponse struct {
 }
 
 func (r *DescribeDeployHistoryResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10044,7 +10046,7 @@ type DescribeDnsRecordsRequestParams struct {
 
 type DescribeDnsRecordsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -10068,8 +10070,8 @@ type DescribeDnsRecordsRequest struct {
 }
 
 func (r *DescribeDnsRecordsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10110,8 +10112,8 @@ type DescribeDnsRecordsResponse struct {
 }
 
 func (r *DescribeDnsRecordsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10151,7 +10153,7 @@ type DescribeEdgeKVNamespacesRequestParams struct {
 
 type DescribeEdgeKVNamespacesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -10180,8 +10182,8 @@ type DescribeEdgeKVNamespacesRequest struct {
 }
 
 func (r *DescribeEdgeKVNamespacesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10221,8 +10223,8 @@ type DescribeEdgeKVNamespacesResponse struct {
 }
 
 func (r *DescribeEdgeKVNamespacesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10239,14 +10241,14 @@ type DescribeEnvironmentsRequestParams struct {
 
 type DescribeEnvironmentsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 }
 
 func (r *DescribeEnvironmentsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10281,8 +10283,8 @@ type DescribeEnvironmentsResponse struct {
 }
 
 func (r *DescribeEnvironmentsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10313,7 +10315,7 @@ type DescribeFunctionComponentBindingsRequestParams struct {
 
 type DescribeFunctionComponentBindingsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -10333,8 +10335,8 @@ type DescribeFunctionComponentBindingsRequest struct {
 }
 
 func (r *DescribeFunctionComponentBindingsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10373,8 +10375,8 @@ type DescribeFunctionComponentBindingsResponse struct {
 }
 
 func (r *DescribeFunctionComponentBindingsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10403,13 +10405,13 @@ type DescribeFunctionReplicasRequestParams struct {
 	// 列表排序方式，取值有：  <li>asc：升序排列；</li>  <li>desc：降序排列。</li>  默认值为 asc。
 	SortOrder *string `json:"SortOrder,omitnil,omitempty" name:"SortOrder"`
 
-	// 过滤条件，Filters.Values 的上限为 20。该参数不填写时，返回函数 ID 下全部函数副本。详细的过滤条件如下：  <li> replica-name：按照函数副本名称进行过滤，支持模糊查询。</li>
+	// 过滤条件，Filters.Values 的上限为 20。该参数不填写时，返回函数 ID 下全部函数副本。详细的过滤条件如下：  <li> replica-name：按照函数副本名称进行过滤，支持模糊查询。</li> 
 	Filters []*AdvancedFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 type DescribeFunctionReplicasRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -10428,13 +10430,13 @@ type DescribeFunctionReplicasRequest struct {
 	// 列表排序方式，取值有：  <li>asc：升序排列；</li>  <li>desc：降序排列。</li>  默认值为 asc。
 	SortOrder *string `json:"SortOrder,omitnil,omitempty" name:"SortOrder"`
 
-	// 过滤条件，Filters.Values 的上限为 20。该参数不填写时，返回函数 ID 下全部函数副本。详细的过滤条件如下：  <li> replica-name：按照函数副本名称进行过滤，支持模糊查询。</li>
+	// 过滤条件，Filters.Values 的上限为 20。该参数不填写时，返回函数 ID 下全部函数副本。详细的过滤条件如下：  <li> replica-name：按照函数副本名称进行过滤，支持模糊查询。</li> 
 	Filters []*AdvancedFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 func (r *DescribeFunctionReplicasRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10475,8 +10477,8 @@ type DescribeFunctionReplicasResponse struct {
 }
 
 func (r *DescribeFunctionReplicasResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10499,7 +10501,7 @@ type DescribeFunctionRulesRequestParams struct {
 
 type DescribeFunctionRulesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -10511,8 +10513,8 @@ type DescribeFunctionRulesRequest struct {
 }
 
 func (r *DescribeFunctionRulesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10545,8 +10547,8 @@ type DescribeFunctionRulesResponse struct {
 }
 
 func (r *DescribeFunctionRulesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10566,7 +10568,7 @@ type DescribeFunctionRuntimeEnvironmentRequestParams struct {
 
 type DescribeFunctionRuntimeEnvironmentRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -10575,8 +10577,8 @@ type DescribeFunctionRuntimeEnvironmentRequest struct {
 }
 
 func (r *DescribeFunctionRuntimeEnvironmentRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10609,8 +10611,8 @@ type DescribeFunctionRuntimeEnvironmentResponse struct {
 }
 
 func (r *DescribeFunctionRuntimeEnvironmentResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10641,7 +10643,7 @@ type DescribeFunctionsRequestParams struct {
 
 type DescribeFunctionsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -10661,8 +10663,8 @@ type DescribeFunctionsRequest struct {
 }
 
 func (r *DescribeFunctionsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10701,8 +10703,8 @@ type DescribeFunctionsResponse struct {
 }
 
 func (r *DescribeFunctionsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10729,7 +10731,7 @@ type DescribeHostsSettingRequestParams struct {
 
 type DescribeHostsSettingRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -10745,8 +10747,8 @@ type DescribeHostsSettingRequest struct {
 }
 
 func (r *DescribeHostsSettingRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10784,8 +10786,8 @@ type DescribeHostsSettingResponse struct {
 }
 
 func (r *DescribeHostsSettingResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10811,7 +10813,7 @@ type DescribeIPGroupReferencesRequestParams struct {
 
 type DescribeIPGroupReferencesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -10826,8 +10828,8 @@ type DescribeIPGroupReferencesRequest struct {
 }
 
 func (r *DescribeIPGroupReferencesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10865,8 +10867,8 @@ type DescribeIPGroupReferencesResponse struct {
 }
 
 func (r *DescribeIPGroupReferencesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10883,14 +10885,14 @@ type DescribeIPRegionRequestParams struct {
 
 type DescribeIPRegionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 待查询的 IP 列表，支持 IPV4 和 IPV6，最大可查询 100 条。
 	IPs []*string `json:"IPs,omitnil,omitempty" name:"IPs"`
 }
 
 func (r *DescribeIPRegionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10922,8 +10924,8 @@ type DescribeIPRegionResponse struct {
 }
 
 func (r *DescribeIPRegionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10947,7 +10949,7 @@ type DescribeIdentificationsRequestParams struct {
 
 type DescribeIdentificationsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 过滤条件，Filters.Values的上限为20。详细的过滤条件如下：
 	// <li>zone-name：按照站点名称进行过滤。</li>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
@@ -10960,8 +10962,8 @@ type DescribeIdentificationsRequest struct {
 }
 
 func (r *DescribeIdentificationsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10998,8 +11000,8 @@ type DescribeIdentificationsResponse struct {
 }
 
 func (r *DescribeIdentificationsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11022,7 +11024,7 @@ type DescribeInferenceAPITokensRequestParams struct {
 
 type DescribeInferenceAPITokensRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -11034,8 +11036,8 @@ type DescribeInferenceAPITokensRequest struct {
 }
 
 func (r *DescribeInferenceAPITokensRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11072,8 +11074,8 @@ type DescribeInferenceAPITokensResponse struct {
 }
 
 func (r *DescribeInferenceAPITokensResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11105,7 +11107,7 @@ type DescribeInferenceDomainsRequestParams struct {
 
 type DescribeInferenceDomainsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -11126,8 +11128,8 @@ type DescribeInferenceDomainsRequest struct {
 }
 
 func (r *DescribeInferenceDomainsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11167,8 +11169,8 @@ type DescribeInferenceDomainsResponse struct {
 }
 
 func (r *DescribeInferenceDomainsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11185,14 +11187,14 @@ type DescribeInferenceHardwareSpecificationsRequestParams struct {
 
 type DescribeInferenceHardwareSpecificationsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 }
 
 func (r *DescribeInferenceHardwareSpecificationsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11224,8 +11226,8 @@ type DescribeInferenceHardwareSpecificationsResponse struct {
 }
 
 func (r *DescribeInferenceHardwareSpecificationsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11266,7 +11268,7 @@ type DescribeInferenceServiceDeploymentLogsRequestParams struct {
 
 type DescribeInferenceServiceDeploymentLogsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -11296,8 +11298,8 @@ type DescribeInferenceServiceDeploymentLogsRequest struct {
 }
 
 func (r *DescribeInferenceServiceDeploymentLogsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11340,8 +11342,8 @@ type DescribeInferenceServiceDeploymentLogsResponse struct {
 }
 
 func (r *DescribeInferenceServiceDeploymentLogsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11373,7 +11375,7 @@ type DescribeInferenceServiceDeploymentRecordsRequestParams struct {
 
 type DescribeInferenceServiceDeploymentRecordsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -11394,8 +11396,8 @@ type DescribeInferenceServiceDeploymentRecordsRequest struct {
 }
 
 func (r *DescribeInferenceServiceDeploymentRecordsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11435,8 +11437,8 @@ type DescribeInferenceServiceDeploymentRecordsResponse struct {
 }
 
 func (r *DescribeInferenceServiceDeploymentRecordsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11468,7 +11470,7 @@ type DescribeInferenceServiceMonitorDataRequestParams struct {
 
 type DescribeInferenceServiceMonitorDataRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -11489,8 +11491,8 @@ type DescribeInferenceServiceMonitorDataRequest struct {
 }
 
 func (r *DescribeInferenceServiceMonitorDataRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11530,8 +11532,8 @@ type DescribeInferenceServiceMonitorDataResponse struct {
 }
 
 func (r *DescribeInferenceServiceMonitorDataResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11563,7 +11565,7 @@ type DescribeInferenceServicesRequestParams struct {
 
 type DescribeInferenceServicesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -11584,8 +11586,8 @@ type DescribeInferenceServicesRequest struct {
 }
 
 func (r *DescribeInferenceServicesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11625,8 +11627,8 @@ type DescribeInferenceServicesResponse struct {
 }
 
 func (r *DescribeInferenceServicesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11658,7 +11660,7 @@ type DescribeJustInTimeTranscodeTemplatesRequestParams struct {
 
 type DescribeJustInTimeTranscodeTemplatesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -11679,8 +11681,8 @@ type DescribeJustInTimeTranscodeTemplatesRequest struct {
 }
 
 func (r *DescribeJustInTimeTranscodeTemplatesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11720,8 +11722,8 @@ type DescribeJustInTimeTranscodeTemplatesResponse struct {
 }
 
 func (r *DescribeJustInTimeTranscodeTemplatesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11738,38 +11740,38 @@ type DescribeL4ProxyRequestParams struct {
 	// 分页查询偏移量，不填写时默认为 0。
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 分页查询限制数目。默认值：20，最大值：1000。
+	// 分页查询限制数目。默认值：20，最大值：1000。	
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 过滤条件，Filters.Values 的上限为 20。该参数不填写时，返回当前 zone-id 下所有四层代理实例信息。详细的过滤条件如下：
 	// <li>proxy-id：按照四层代理实例 ID 进行过滤；</li>
 	// <li>ddos-protection-type：按照安全防护类型进行过滤。</li>
-	//
+	// 
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 type DescribeL4ProxyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 四层代理实例所属站点的 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// 分页查询偏移量，不填写时默认为 0。
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 分页查询限制数目。默认值：20，最大值：1000。
+	// 分页查询限制数目。默认值：20，最大值：1000。	
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 过滤条件，Filters.Values 的上限为 20。该参数不填写时，返回当前 zone-id 下所有四层代理实例信息。详细的过滤条件如下：
 	// <li>proxy-id：按照四层代理实例 ID 进行过滤；</li>
 	// <li>ddos-protection-type：按照安全防护类型进行过滤。</li>
-	//
+	// 
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 func (r *DescribeL4ProxyRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11807,8 +11809,8 @@ type DescribeL4ProxyResponse struct {
 }
 
 func (r *DescribeL4ProxyResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11825,10 +11827,10 @@ type DescribeL4ProxyRulesRequestParams struct {
 	// 四层代理实例 ID。
 	ProxyId *string `json:"ProxyId,omitnil,omitempty" name:"ProxyId"`
 
-	// 分页查询偏移量，不填写时默认为 0。
+	// 分页查询偏移量，不填写时默认为 0。	
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 分页查询限制数目。默认值：20，最大值：1000。
+	// 分页查询限制数目。默认值：20，最大值：1000。	
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 过滤条件，Filters.Values的上限为20。不填写时返回当前四层实例下所有的规则信息，详细的过滤条件如下：  <li>rule-id：按照规则 ID 对四层代理实例下的规则进行过滤。规则 ID 形如：rule-31vv7qig0vjy；</li> <li>rule-tag：按照规则标签对四层代理实例下的规则进行过滤。</li>
@@ -11837,17 +11839,17 @@ type DescribeL4ProxyRulesRequestParams struct {
 
 type DescribeL4ProxyRulesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// 四层代理实例 ID。
 	ProxyId *string `json:"ProxyId,omitnil,omitempty" name:"ProxyId"`
 
-	// 分页查询偏移量，不填写时默认为 0。
+	// 分页查询偏移量，不填写时默认为 0。	
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 分页查询限制数目。默认值：20，最大值：1000。
+	// 分页查询限制数目。默认值：20，最大值：1000。	
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 过滤条件，Filters.Values的上限为20。不填写时返回当前四层实例下所有的规则信息，详细的过滤条件如下：  <li>rule-id：按照规则 ID 对四层代理实例下的规则进行过滤。规则 ID 形如：rule-31vv7qig0vjy；</li> <li>rule-tag：按照规则标签对四层代理实例下的规则进行过滤。</li>
@@ -11855,8 +11857,8 @@ type DescribeL4ProxyRulesRequest struct {
 }
 
 func (r *DescribeL4ProxyRulesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11882,7 +11884,7 @@ type DescribeL4ProxyRulesResponseParams struct {
 	// 转发规则总数。
 	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 转发规则列表。
+	// 转发规则列表。	
 	L4ProxyRules []*L4ProxyRule `json:"L4ProxyRules,omitnil,omitempty" name:"L4ProxyRules"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -11895,8 +11897,8 @@ type DescribeL4ProxyRulesResponse struct {
 }
 
 func (r *DescribeL4ProxyRulesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11923,7 +11925,7 @@ type DescribeL7AccRulesRequestParams struct {
 
 type DescribeL7AccRulesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -11939,8 +11941,8 @@ type DescribeL7AccRulesRequest struct {
 }
 
 func (r *DescribeL7AccRulesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11979,8 +11981,8 @@ type DescribeL7AccRulesResponse struct {
 }
 
 func (r *DescribeL7AccRulesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11997,14 +11999,14 @@ type DescribeL7AccSettingRequestParams struct {
 
 type DescribeL7AccSettingRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 }
 
 func (r *DescribeL7AccSettingRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12037,8 +12039,8 @@ type DescribeL7AccSettingResponse struct {
 }
 
 func (r *DescribeL7AccSettingResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12052,39 +12054,39 @@ type DescribeLoadBalancerListRequestParams struct {
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 分页查询偏移量，默认为 0。
+	// 分页查询偏移量，默认为 0。	
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 分页查询限制数目，默认值：20，最大值：100。
+	// 分页查询限制数目，默认值：20，最大值：100。	
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 过滤条件，Filters.Values 的上限为 20。该参数不填写时，返回当前 zone-id 下所有负载均衡实例信息。详细的过滤条件如下：
 	// <li>InstanceName：按照负载均衡实例名称进行过滤；</li>
-	// <li>InstanceId：按照负载均衡实例 ID 进行过滤。</li>
+	// <li>InstanceId：按照负载均衡实例 ID 进行过滤。</li>  
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 type DescribeLoadBalancerListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 分页查询偏移量，默认为 0。
+	// 分页查询偏移量，默认为 0。	
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 分页查询限制数目，默认值：20，最大值：100。
+	// 分页查询限制数目，默认值：20，最大值：100。	
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 过滤条件，Filters.Values 的上限为 20。该参数不填写时，返回当前 zone-id 下所有负载均衡实例信息。详细的过滤条件如下：
 	// <li>InstanceName：按照负载均衡实例名称进行过滤；</li>
-	// <li>InstanceId：按照负载均衡实例 ID 进行过滤。</li>
+	// <li>InstanceId：按照负载均衡实例 ID 进行过滤。</li>  
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 func (r *DescribeLoadBalancerListRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12122,8 +12124,8 @@ type DescribeLoadBalancerListResponse struct {
 }
 
 func (r *DescribeLoadBalancerListResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12164,7 +12166,7 @@ type DescribeLogAnalysisDetailRequestParams struct {
 
 type DescribeLogAnalysisDetailRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -12194,8 +12196,8 @@ type DescribeLogAnalysisDetailRequest struct {
 }
 
 func (r *DescribeLogAnalysisDetailRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12238,8 +12240,8 @@ type DescribeLogAnalysisDetailResponse struct {
 }
 
 func (r *DescribeLogAnalysisDetailResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12271,7 +12273,7 @@ type DescribeLogAnalysisDownloadTasksRequestParams struct {
 
 type DescribeLogAnalysisDownloadTasksRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -12292,8 +12294,8 @@ type DescribeLogAnalysisDownloadTasksRequest struct {
 }
 
 func (r *DescribeLogAnalysisDownloadTasksRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12333,8 +12335,8 @@ type DescribeLogAnalysisDownloadTasksResponse struct {
 }
 
 func (r *DescribeLogAnalysisDownloadTasksResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12366,7 +12368,7 @@ type DescribeLogAnalysisStatisticsRequestParams struct {
 
 type DescribeLogAnalysisStatisticsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -12387,8 +12389,8 @@ type DescribeLogAnalysisStatisticsRequest struct {
 }
 
 func (r *DescribeLogAnalysisStatisticsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12428,8 +12430,8 @@ type DescribeLogAnalysisStatisticsResponse struct {
 }
 
 func (r *DescribeLogAnalysisStatisticsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12452,7 +12454,7 @@ type DescribeMultiPathGatewayLineRequestParams struct {
 
 type DescribeMultiPathGatewayLineRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -12464,8 +12466,8 @@ type DescribeMultiPathGatewayLineRequest struct {
 }
 
 func (r *DescribeMultiPathGatewayLineRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12499,8 +12501,8 @@ type DescribeMultiPathGatewayLineResponse struct {
 }
 
 func (r *DescribeMultiPathGatewayLineResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12520,7 +12522,7 @@ type DescribeMultiPathGatewayOriginACLRequestParams struct {
 
 type DescribeMultiPathGatewayOriginACLRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -12529,8 +12531,8 @@ type DescribeMultiPathGatewayOriginACLRequest struct {
 }
 
 func (r *DescribeMultiPathGatewayOriginACLRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12563,8 +12565,8 @@ type DescribeMultiPathGatewayOriginACLResponse struct {
 }
 
 func (r *DescribeMultiPathGatewayOriginACLResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12581,14 +12583,14 @@ type DescribeMultiPathGatewayRegionsRequestParams struct {
 
 type DescribeMultiPathGatewayRegionsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 }
 
 func (r *DescribeMultiPathGatewayRegionsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12620,8 +12622,8 @@ type DescribeMultiPathGatewayRegionsResponse struct {
 }
 
 func (r *DescribeMultiPathGatewayRegionsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12641,7 +12643,7 @@ type DescribeMultiPathGatewayRequestParams struct {
 
 type DescribeMultiPathGatewayRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -12650,8 +12652,8 @@ type DescribeMultiPathGatewayRequest struct {
 }
 
 func (r *DescribeMultiPathGatewayRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12684,8 +12686,8 @@ type DescribeMultiPathGatewayResponse struct {
 }
 
 func (r *DescribeMultiPathGatewayResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12702,14 +12704,14 @@ type DescribeMultiPathGatewaySecretKeyRequestParams struct {
 
 type DescribeMultiPathGatewaySecretKeyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 }
 
 func (r *DescribeMultiPathGatewaySecretKeyRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12741,8 +12743,8 @@ type DescribeMultiPathGatewaySecretKeyResponse struct {
 }
 
 func (r *DescribeMultiPathGatewaySecretKeyResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12770,7 +12772,7 @@ type DescribeMultiPathGatewaysRequestParams struct {
 
 type DescribeMultiPathGatewaysRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -12787,8 +12789,8 @@ type DescribeMultiPathGatewaysRequest struct {
 }
 
 func (r *DescribeMultiPathGatewaysRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12826,8 +12828,8 @@ type DescribeMultiPathGatewaysResponse struct {
 }
 
 func (r *DescribeMultiPathGatewaysResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12844,14 +12846,14 @@ type DescribeOriginACLRequestParams struct {
 
 type DescribeOriginACLRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 }
 
 func (r *DescribeOriginACLRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12883,8 +12885,8 @@ type DescribeOriginACLResponse struct {
 }
 
 func (r *DescribeOriginACLResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12907,7 +12909,7 @@ type DescribeOriginGroupHealthStatusRequestParams struct {
 
 type DescribeOriginGroupHealthStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -12919,8 +12921,8 @@ type DescribeOriginGroupHealthStatusRequest struct {
 }
 
 func (r *DescribeOriginGroupHealthStatusRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12954,8 +12956,8 @@ type DescribeOriginGroupHealthStatusResponse struct {
 }
 
 func (r *DescribeOriginGroupHealthStatusResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12982,7 +12984,7 @@ type DescribeOriginGroupRequestParams struct {
 
 type DescribeOriginGroupRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点ID，此参数必填。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -12998,8 +13000,8 @@ type DescribeOriginGroupRequest struct {
 }
 
 func (r *DescribeOriginGroupRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13037,8 +13039,8 @@ type DescribeOriginGroupResponse struct {
 }
 
 func (r *DescribeOriginGroupResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13066,7 +13068,7 @@ type DescribeOriginProtectionRequestParams struct {
 
 type DescribeOriginProtectionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 查询的站点ID集合。该参数必填。
 	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
 
@@ -13083,8 +13085,8 @@ type DescribeOriginProtectionRequest struct {
 }
 
 func (r *DescribeOriginProtectionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13120,8 +13122,8 @@ type DescribeOriginProtectionResponse struct {
 }
 
 func (r *DescribeOriginProtectionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13185,7 +13187,7 @@ type DescribeOverviewL7DataRequestParams struct {
 
 type DescribeOverviewL7DataRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 开始时间。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
@@ -13238,8 +13240,8 @@ type DescribeOverviewL7DataRequest struct {
 }
 
 func (r *DescribeOverviewL7DataRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13283,8 +13285,8 @@ type DescribeOverviewL7DataResponse struct {
 }
 
 func (r *DescribeOverviewL7DataResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13317,7 +13319,7 @@ type DescribePlansRequestParams struct {
 
 type DescribePlansRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 过滤条件，Filters.Values 的上限为 20。详细的过滤条件如下：<li>plan-type<br>  按照【<strong>套餐类型</strong>】进行过滤。<br>  可选的类型有：<br>  plan-trial：试用版套餐；<br>  plan-personal：个人版套餐；<br>  plan-basic：基础版套餐； <br>  plan-standard：标准版套餐； <br>  plan-enterprise：企业版套餐。 </li><li>plan-id<br>  按照【<strong>套餐 ID</strong>】进行过滤。套餐 ID 形如：edgeone-268z103ob0sx。</li><li>area<br>  按照【<strong>套餐加速地域</strong>】进行过滤。</li>  服务区域，可选的类型有：<br>  mainland: 中国大陆；<br>  overseas: 全球（不包括中国大陆)；<br>  global: 全球（包括中国大陆)。<br><li>status<br>  按照【<strong>套餐状态</strong>】进行过滤。<br>  可选的状态有：<br>  normal：正常状态；<br>  expiring-soon：即将过期；<br>  expired：已到期;<br>  isolated：已隔离。</li>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -13339,8 +13341,8 @@ type DescribePlansRequest struct {
 }
 
 func (r *DescribePlansRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13379,8 +13381,8 @@ type DescribePlansResponse struct {
 }
 
 func (r *DescribePlansResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13408,7 +13410,7 @@ type DescribePrefetchOriginLimitRequestParams struct {
 
 type DescribePrefetchOriginLimitRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -13425,8 +13427,8 @@ type DescribePrefetchOriginLimitRequest struct {
 }
 
 func (r *DescribePrefetchOriginLimitRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13464,8 +13466,8 @@ type DescribePrefetchOriginLimitResponse struct {
 }
 
 func (r *DescribePrefetchOriginLimitResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13497,7 +13499,7 @@ type DescribePrefetchTasksRequestParams struct {
 
 type DescribePrefetchTasksRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点ID。此参数将于2024年05月30日后由可选改为必填，详见公告：[【腾讯云 EdgeOne】云 API 变更通知](https://cloud.tencent.com/document/product/1552/104902)。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -13518,8 +13520,8 @@ type DescribePrefetchTasksRequest struct {
 }
 
 func (r *DescribePrefetchTasksRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13559,8 +13561,8 @@ type DescribePrefetchTasksResponse struct {
 }
 
 func (r *DescribePrefetchTasksResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13597,7 +13599,7 @@ type DescribePurgeTasksRequestParams struct {
 
 type DescribePurgeTasksRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。此参数将于2024年05月30日后由可选改为必填，详见公告：[【腾讯云 EdgeOne】云 API 变更通知](https://cloud.tencent.com/document/product/1552/104902)。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -13623,8 +13625,8 @@ type DescribePurgeTasksRequest struct {
 }
 
 func (r *DescribePurgeTasksRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13664,8 +13666,8 @@ type DescribePurgeTasksResponse struct {
 }
 
 func (r *DescribePurgeTasksResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13695,7 +13697,7 @@ type DescribeRealtimeLogDeliveryTasksRequestParams struct {
 
 type DescribeRealtimeLogDeliveryTasksRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -13714,8 +13716,8 @@ type DescribeRealtimeLogDeliveryTasksRequest struct {
 }
 
 func (r *DescribeRealtimeLogDeliveryTasksRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13753,8 +13755,8 @@ type DescribeRealtimeLogDeliveryTasksResponse struct {
 }
 
 func (r *DescribeRealtimeLogDeliveryTasksResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13775,7 +13777,7 @@ type DescribeRulesRequestParams struct {
 
 type DescribeRulesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -13785,8 +13787,8 @@ type DescribeRulesRequest struct {
 }
 
 func (r *DescribeRulesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13822,8 +13824,8 @@ type DescribeRulesResponse struct {
 }
 
 func (r *DescribeRulesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13834,15 +13836,17 @@ func (r *DescribeRulesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeRulesSettingRequestParams struct {
+
 }
 
 type DescribeRulesSettingRequest struct {
 	*tchttp.BaseRequest
+	
 }
 
 func (r *DescribeRulesSettingRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13852,7 +13856,7 @@ func (r *DescribeRulesSettingRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-
+	
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeRulesSettingRequest has unknown keys!", "")
 	}
@@ -13874,8 +13878,8 @@ type DescribeRulesSettingResponse struct {
 }
 
 func (r *DescribeRulesSettingResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13886,7 +13890,7 @@ func (r *DescribeRulesSettingResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeSecurityAPIResourceRequestParams struct {
-	// 站点 ID。
+	// 站点 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// 分页查询限制数目。默认值：20，最大值：100。
@@ -13898,8 +13902,8 @@ type DescribeSecurityAPIResourceRequestParams struct {
 
 type DescribeSecurityAPIResourceRequest struct {
 	*tchttp.BaseRequest
-
-	// 站点 ID。
+	
+	// 站点 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// 分页查询限制数目。默认值：20，最大值：100。
@@ -13910,8 +13914,8 @@ type DescribeSecurityAPIResourceRequest struct {
 }
 
 func (r *DescribeSecurityAPIResourceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13935,7 +13939,7 @@ type DescribeSecurityAPIResourceResponseParams struct {
 	// API 资源总数量。
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// API 资源列表。
+	// API 资源列表。	
 	APIResources []*APIResource `json:"APIResources,omitnil,omitempty" name:"APIResources"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -13948,8 +13952,8 @@ type DescribeSecurityAPIResourceResponse struct {
 }
 
 func (r *DescribeSecurityAPIResourceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13960,7 +13964,7 @@ func (r *DescribeSecurityAPIResourceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeSecurityAPIServiceRequestParams struct {
-	// 站点 ID。
+	// 站点 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// 分页查询限制数目。默认值：20，最大值：100。
@@ -13972,8 +13976,8 @@ type DescribeSecurityAPIServiceRequestParams struct {
 
 type DescribeSecurityAPIServiceRequest struct {
 	*tchttp.BaseRequest
-
-	// 站点 ID。
+	
+	// 站点 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// 分页查询限制数目。默认值：20，最大值：100。
@@ -13984,8 +13988,8 @@ type DescribeSecurityAPIServiceRequest struct {
 }
 
 func (r *DescribeSecurityAPIServiceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14006,10 +14010,10 @@ func (r *DescribeSecurityAPIServiceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeSecurityAPIServiceResponseParams struct {
-	// API 服务总数量。
+	// API 服务总数量。	
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// API 服务列表。
+	// API 服务列表。	
 	APIServices []*APIService `json:"APIServices,omitnil,omitempty" name:"APIServices"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -14022,8 +14026,8 @@ type DescribeSecurityAPIServiceResponse struct {
 }
 
 func (r *DescribeSecurityAPIServiceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14046,7 +14050,7 @@ type DescribeSecurityClientAttesterRequestParams struct {
 
 type DescribeSecurityClientAttesterRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -14058,8 +14062,8 @@ type DescribeSecurityClientAttesterRequest struct {
 }
 
 func (r *DescribeSecurityClientAttesterRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14096,8 +14100,8 @@ type DescribeSecurityClientAttesterResponse struct {
 }
 
 func (r *DescribeSecurityClientAttesterResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14123,7 +14127,7 @@ type DescribeSecurityIPGroupContentRequestParams struct {
 
 type DescribeSecurityIPGroupContentRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -14138,8 +14142,8 @@ type DescribeSecurityIPGroupContentRequest struct {
 }
 
 func (r *DescribeSecurityIPGroupContentRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14177,8 +14181,8 @@ type DescribeSecurityIPGroupContentResponse struct {
 }
 
 func (r *DescribeSecurityIPGroupContentResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14201,7 +14205,7 @@ type DescribeSecurityIPGroupInfoRequestParams struct {
 
 type DescribeSecurityIPGroupInfoRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点的 ID ，用于指定查询的站点范围。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -14213,8 +14217,8 @@ type DescribeSecurityIPGroupInfoRequest struct {
 }
 
 func (r *DescribeSecurityIPGroupInfoRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14251,8 +14255,8 @@ type DescribeSecurityIPGroupInfoResponse struct {
 }
 
 func (r *DescribeSecurityIPGroupInfoResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14272,7 +14276,7 @@ type DescribeSecurityIPGroupRequestParams struct {
 
 type DescribeSecurityIPGroupRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID ，用于指定查询的站点范围。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -14281,8 +14285,8 @@ type DescribeSecurityIPGroupRequest struct {
 }
 
 func (r *DescribeSecurityIPGroupRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14315,8 +14319,8 @@ type DescribeSecurityIPGroupResponse struct {
 }
 
 func (r *DescribeSecurityIPGroupResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14339,7 +14343,7 @@ type DescribeSecurityJSInjectionRuleRequestParams struct {
 
 type DescribeSecurityJSInjectionRuleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -14351,8 +14355,8 @@ type DescribeSecurityJSInjectionRuleRequest struct {
 }
 
 func (r *DescribeSecurityJSInjectionRuleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14389,8 +14393,8 @@ type DescribeSecurityJSInjectionRuleResponse struct {
 }
 
 func (r *DescribeSecurityJSInjectionRuleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14404,7 +14408,7 @@ type DescribeSecurityPolicyRequestParams struct {
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 安全策略类型，可使用以下参数值进行查询： <li>ZoneDefaultPolicy：用于指定查询站点级策略；</li><li>Template：用于指定查询策略模板，需要同时指定 TemplateId 参数；</li><li>Host：用于指定查询域名级策略（注意：当使用域名来指定域名服务策略时，仅支持已经应用了域名级策略的域名服务或者策略模板）。</li>
+	// 安全策略类型，可使用以下参数值进行查询： <li>ZoneDefaultPolicy：用于指定查询站点级策略；</li><li>Template：用于指定查询策略模板，需要同时指定 TemplateId 参数；</li><li>Host：用于指定查询域名级策略（注意：当使用域名来指定域名服务策略时，仅支持已经应用了域名级策略的域名服务或者策略模板）。</li>	
 	Entity *string `json:"Entity,omitnil,omitempty" name:"Entity"`
 
 	// 指定策略模板 ID。当 Entity 参数值为 Template 时，使用本参数指定策略模板的 ID 查询模板配置。
@@ -14416,11 +14420,11 @@ type DescribeSecurityPolicyRequestParams struct {
 
 type DescribeSecurityPolicyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 安全策略类型，可使用以下参数值进行查询： <li>ZoneDefaultPolicy：用于指定查询站点级策略；</li><li>Template：用于指定查询策略模板，需要同时指定 TemplateId 参数；</li><li>Host：用于指定查询域名级策略（注意：当使用域名来指定域名服务策略时，仅支持已经应用了域名级策略的域名服务或者策略模板）。</li>
+	// 安全策略类型，可使用以下参数值进行查询： <li>ZoneDefaultPolicy：用于指定查询站点级策略；</li><li>Template：用于指定查询策略模板，需要同时指定 TemplateId 参数；</li><li>Host：用于指定查询域名级策略（注意：当使用域名来指定域名服务策略时，仅支持已经应用了域名级策略的域名服务或者策略模板）。</li>	
 	Entity *string `json:"Entity,omitnil,omitempty" name:"Entity"`
 
 	// 指定策略模板 ID。当 Entity 参数值为 Template 时，使用本参数指定策略模板的 ID 查询模板配置。
@@ -14431,8 +14435,8 @@ type DescribeSecurityPolicyRequest struct {
 }
 
 func (r *DescribeSecurityPolicyRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14468,8 +14472,8 @@ type DescribeSecurityPolicyResponse struct {
 }
 
 func (r *DescribeSecurityPolicyResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14489,7 +14493,7 @@ type DescribeSecurityTemplateBindingsRequestParams struct {
 
 type DescribeSecurityTemplateBindingsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 要查询的站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -14498,8 +14502,8 @@ type DescribeSecurityTemplateBindingsRequest struct {
 }
 
 func (r *DescribeSecurityTemplateBindingsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14520,11 +14524,11 @@ func (r *DescribeSecurityTemplateBindingsRequest) FromJsonString(s string) error
 // Predefined struct for user
 type DescribeSecurityTemplateBindingsResponseParams struct {
 	// 指定策略模板的绑定关系列表。
-	//
+	// 
 	// 当某个站点中的域名包含在指定策略模板的绑定关系中时，绑定关系列表 `TemplateScope` 中会包含该站点的 `ZoneId`，和该站点下的和该策略模板有关的域名绑定关系。
-	//
+	// 
 	// 注意：当没有任何域名正在绑定或已经绑定到指定策略模板时，绑定关系为空。即：返回结构体中，`TemplateScope` 数组长度为 0。
-	//
+	// 
 	// 绑定关系中，同一域名可能在 `EntityStatus` 列表中重复出现，并标记为不同 `Status` 。例如，正在被绑定到其他策略模板的域名，会同时标记为 `online` 和 `pending` 。
 	SecurityTemplate []*SecurityTemplateBinding `json:"SecurityTemplate,omitnil,omitempty" name:"SecurityTemplate"`
 
@@ -14538,8 +14542,8 @@ type DescribeSecurityTemplateBindingsResponse struct {
 }
 
 func (r *DescribeSecurityTemplateBindingsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14583,7 +14587,7 @@ type DescribeSharedCNAMERequestParams struct {
 
 type DescribeSharedCNAMERequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 共享CNAME所属站点ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -14616,8 +14620,8 @@ type DescribeSharedCNAMERequest struct {
 }
 
 func (r *DescribeSharedCNAMERequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14658,8 +14662,8 @@ type DescribeSharedCNAMEResponse struct {
 }
 
 func (r *DescribeSharedCNAMEResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14714,7 +14718,7 @@ type DescribeTimingL4DataRequestParams struct {
 
 type DescribeTimingL4DataRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 开始时间。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
@@ -14756,8 +14760,8 @@ type DescribeTimingL4DataRequest struct {
 }
 
 func (r *DescribeTimingL4DataRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14801,8 +14805,8 @@ type DescribeTimingL4DataResponse struct {
 }
 
 func (r *DescribeTimingL4DataResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14837,7 +14841,7 @@ type DescribeTimingL7AnalysisDataRequestParams struct {
 
 type DescribeTimingL7AnalysisDataRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>开始时间。</p>
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
@@ -14861,8 +14865,8 @@ type DescribeTimingL7AnalysisDataRequest struct {
 }
 
 func (r *DescribeTimingL7AnalysisDataRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14904,8 +14908,8 @@ type DescribeTimingL7AnalysisDataResponse struct {
 }
 
 func (r *DescribeTimingL7AnalysisDataResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14957,7 +14961,7 @@ type DescribeTimingL7CacheDataRequestParams struct {
 
 type DescribeTimingL7CacheDataRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 开始时间。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
@@ -14998,8 +15002,8 @@ type DescribeTimingL7CacheDataRequest struct {
 }
 
 func (r *DescribeTimingL7CacheDataRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15041,8 +15045,8 @@ type DescribeTimingL7CacheDataResponse struct {
 }
 
 func (r *DescribeTimingL7CacheDataResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15086,7 +15090,7 @@ type DescribeTimingL7OriginPullDataRequestParams struct {
 
 type DescribeTimingL7OriginPullDataRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID 集合，此参数必填。最多传入 100 个站点 ID。若需查询腾讯云主账号下所有站点数据，请用 `*` 代替，查询账号级别数据需具备本接口全部站点资源权限。
 	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
 
@@ -15119,8 +15123,8 @@ type DescribeTimingL7OriginPullDataRequest struct {
 }
 
 func (r *DescribeTimingL7OriginPullDataRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15161,8 +15165,8 @@ type DescribeTimingL7OriginPullDataResponse struct {
 }
 
 func (r *DescribeTimingL7OriginPullDataResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15225,7 +15229,7 @@ type DescribeTopL7AnalysisDataRequestParams struct {
 
 type DescribeTopL7AnalysisDataRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 开始时间。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
@@ -15277,8 +15281,8 @@ type DescribeTopL7AnalysisDataRequest struct {
 }
 
 func (r *DescribeTopL7AnalysisDataRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15321,8 +15325,8 @@ type DescribeTopL7AnalysisDataResponse struct {
 }
 
 func (r *DescribeTopL7AnalysisDataResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15378,7 +15382,7 @@ type DescribeTopL7CacheDataRequestParams struct {
 
 type DescribeTopL7CacheDataRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 开始时间。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
@@ -15423,8 +15427,8 @@ type DescribeTopL7CacheDataRequest struct {
 }
 
 func (r *DescribeTopL7CacheDataRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15467,8 +15471,8 @@ type DescribeTopL7CacheDataResponse struct {
 }
 
 func (r *DescribeTopL7CacheDataResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15488,7 +15492,7 @@ type DescribeWebSecurityTemplateRequestParams struct {
 
 type DescribeWebSecurityTemplateRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。需要传入目标策略模板在访问权限上归属的站点，可使用 DescribeWebSecurityTemplates 接口查询策略模板归属的站点。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -15497,8 +15501,8 @@ type DescribeWebSecurityTemplateRequest struct {
 }
 
 func (r *DescribeWebSecurityTemplateRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15531,8 +15535,8 @@ type DescribeWebSecurityTemplateResponse struct {
 }
 
 func (r *DescribeWebSecurityTemplateResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15549,14 +15553,14 @@ type DescribeWebSecurityTemplatesRequestParams struct {
 
 type DescribeWebSecurityTemplatesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID 列表。单次查询最多传入 100 个站点。
 	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
 }
 
 func (r *DescribeWebSecurityTemplatesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15591,8 +15595,8 @@ type DescribeWebSecurityTemplatesResponse struct {
 }
 
 func (r *DescribeWebSecurityTemplatesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15612,7 +15616,7 @@ type DescribeZoneConfigImportResultRequestParams struct {
 
 type DescribeZoneConfigImportResultRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -15621,8 +15625,8 @@ type DescribeZoneConfigImportResultRequest struct {
 }
 
 func (r *DescribeZoneConfigImportResultRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15667,8 +15671,8 @@ type DescribeZoneConfigImportResultResponse struct {
 }
 
 func (r *DescribeZoneConfigImportResultResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15685,14 +15689,14 @@ type DescribeZoneCustomVariablesRequestParams struct {
 
 type DescribeZoneCustomVariablesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 }
 
 func (r *DescribeZoneCustomVariablesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15727,8 +15731,8 @@ type DescribeZoneCustomVariablesResponse struct {
 }
 
 func (r *DescribeZoneCustomVariablesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15745,14 +15749,14 @@ type DescribeZoneSettingRequestParams struct {
 
 type DescribeZoneSettingRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 }
 
 func (r *DescribeZoneSettingRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15785,8 +15789,8 @@ type DescribeZoneSettingResponse struct {
 }
 
 func (r *DescribeZoneSettingResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15823,7 +15827,7 @@ type DescribeZonesRequestParams struct {
 
 type DescribeZonesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 分页查询偏移量。默认值：0。
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
@@ -15849,8 +15853,8 @@ type DescribeZonesRequest struct {
 }
 
 func (r *DescribeZonesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15889,8 +15893,8 @@ type DescribeZonesResponse struct {
 }
 
 func (r *DescribeZonesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15907,14 +15911,14 @@ type DestroyPlanRequestParams struct {
 
 type DestroyPlanRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 套餐 ID，形如 edgeone-2wdo315m2y4c。
 	PlanId *string `json:"PlanId,omitnil,omitempty" name:"PlanId"`
 }
 
 func (r *DestroyPlanRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15943,8 +15947,8 @@ type DestroyPlanResponse struct {
 }
 
 func (r *DestroyPlanResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16119,14 +16123,14 @@ type DisableOriginACLRequestParams struct {
 
 type DisableOriginACLRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 }
 
 func (r *DisableOriginACLRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16155,8 +16159,8 @@ type DisableOriginACLResponse struct {
 }
 
 func (r *DisableOriginACLResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16255,7 +16259,7 @@ type DownloadL4LogsRequestParams struct {
 
 type DownloadL4LogsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 开始时间。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
@@ -16276,8 +16280,8 @@ type DownloadL4LogsRequest struct {
 }
 
 func (r *DownloadL4LogsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16317,8 +16321,8 @@ type DownloadL4LogsResponse struct {
 }
 
 func (r *DownloadL4LogsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16350,7 +16354,7 @@ type DownloadL7LogsRequestParams struct {
 
 type DownloadL7LogsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 开始时间。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
@@ -16371,8 +16375,8 @@ type DownloadL7LogsRequest struct {
 }
 
 func (r *DownloadL7LogsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16412,8 +16416,8 @@ type DownloadL7LogsResponse struct {
 }
 
 func (r *DownloadL7LogsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16456,15 +16460,17 @@ type DropPageDetail struct {
 
 // Predefined struct for user
 type DummyParseZoneFullConfigRequestParams struct {
+
 }
 
 type DummyParseZoneFullConfigRequest struct {
 	*tchttp.BaseRequest
+	
 }
 
 func (r *DummyParseZoneFullConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16474,7 +16480,7 @@ func (r *DummyParseZoneFullConfigRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-
+	
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DummyParseZoneFullConfigRequest has unknown keys!", "")
 	}
@@ -16496,8 +16502,8 @@ type DummyParseZoneFullConfigResponse struct {
 }
 
 func (r *DummyParseZoneFullConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16520,7 +16526,7 @@ type EdgeKVDeleteRequestParams struct {
 
 type EdgeKVDeleteRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -16532,8 +16538,8 @@ type EdgeKVDeleteRequest struct {
 }
 
 func (r *EdgeKVDeleteRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16564,8 +16570,8 @@ type EdgeKVDeleteResponse struct {
 }
 
 func (r *EdgeKVDeleteResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16588,7 +16594,7 @@ type EdgeKVGetRequestParams struct {
 
 type EdgeKVGetRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -16600,8 +16606,8 @@ type EdgeKVGetRequest struct {
 }
 
 func (r *EdgeKVGetRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16635,8 +16641,8 @@ type EdgeKVGetResponse struct {
 }
 
 func (r *EdgeKVGetResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16665,7 +16671,7 @@ type EdgeKVListRequestParams struct {
 
 type EdgeKVListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -16683,8 +16689,8 @@ type EdgeKVListRequest struct {
 }
 
 func (r *EdgeKVListRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16723,8 +16729,8 @@ type EdgeKVListResponse struct {
 }
 
 func (r *EdgeKVListResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16756,7 +16762,7 @@ type EdgeKVPutRequestParams struct {
 
 type EdgeKVPutRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -16777,8 +16783,8 @@ type EdgeKVPutRequest struct {
 }
 
 func (r *EdgeKVPutRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16812,8 +16818,8 @@ type EdgeKVPutResponse struct {
 }
 
 func (r *EdgeKVPutResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16856,7 +16862,7 @@ type EnableOriginACLRequestParams struct {
 
 type EnableOriginACLRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -16888,8 +16894,8 @@ type EnableOriginACLRequest struct {
 }
 
 func (r *EnableOriginACLRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16923,8 +16929,8 @@ type EnableOriginACLResponse struct {
 }
 
 func (r *EnableOriginACLResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17146,7 +17152,7 @@ type ExportZoneConfigRequestParams struct {
 
 type ExportZoneConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -17155,8 +17161,8 @@ type ExportZoneConfigRequest struct {
 }
 
 func (r *ExportZoneConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17189,8 +17195,8 @@ type ExportZoneConfigResponse struct {
 }
 
 func (r *ExportZoneConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17311,7 +17317,7 @@ type ForceRedirectHTTPSParameters struct {
 }
 
 type FrequentScanningProtection struct {
-	// 高频扫描防护规则是否开启。取值有：<li>on：开启，高频扫描防护规则生效；</li><li>off：关闭，高频扫描防护规则不生效。</li>
+	// 高频扫描防护规则是否开启。取值有：<li>on：开启，高频扫描防护规则生效；</li><li>off：关闭，高频扫描防护规则不生效。</li>	
 	Enabled *string `json:"Enabled,omitnil,omitempty" name:"Enabled"`
 
 	// 高频扫描防护的规则 ID，仅作为出参返回。
@@ -17320,7 +17326,7 @@ type FrequentScanningProtection struct {
 	// 高频扫描防护的处置动作。 当 Enabled 为 on 时，此字段必填。SecurityAction 的 Name 取值支持：<li>Deny：拦截，响应拦截页面；</li><li>Monitor：观察，不处理请求记录安全事件到日志中；</li><li>JSChallenge：JavaScript 挑战，响应 JavaScript 挑战页面。</li>
 	Action *SecurityAction `json:"Action,omitnil,omitempty" name:"Action"`
 
-	// 请求统计的匹配方式，当 Enabled 为 on 时，此字段必填。取值有：<li>http.request.xff_header_ip：客户端 IP（优先匹配 XFF 头部）；</li><li>http.request.ip：客户端 IP。</li>
+	// 请求统计的匹配方式，当 Enabled 为 on 时，此字段必填。取值有：<li>http.request.xff_header_ip：客户端 IP（优先匹配 XFF 头部）；</li><li>http.request.ip：客户端 IP。</li> 
 	CountBy *string `json:"CountBy,omitnil,omitempty" name:"CountBy"`
 
 	// 此参数指定高频扫描防护的阈值，即在 CountingPeriod 所设置时间范围内命中「配置为拦截」的托管规则时的累计拦截次数，取值范围 1 ~ 4294967294，例如 100，当超过此统计值时，后续请求将触发 Action 所设置的处置动作。当 Enabled 为 on 时，此字段必填。
@@ -17372,8 +17378,8 @@ type FunctionComponentBinding struct {
 	VariableName *string `json:"VariableName,omitnil,omitempty" name:"VariableName"`
 
 	// KV 命名空间配置参数。用于指定绑定的 KV 命名空间详情。当 Type 为 kv_namespace 时，此字段必填。
-	//
-	//
+	// 
+	// 
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	KVNamespaceParameters *KVNamespaceParameters `json:"KVNamespaceParameters,omitnil,omitempty" name:"KVNamespaceParameters"`
 }
@@ -17558,7 +17564,7 @@ type HandleFunctionRuntimeEnvironmentRequestParams struct {
 
 type HandleFunctionRuntimeEnvironmentRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -17577,8 +17583,8 @@ type HandleFunctionRuntimeEnvironmentRequest struct {
 }
 
 func (r *HandleFunctionRuntimeEnvironmentRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17610,8 +17616,8 @@ type HandleFunctionRuntimeEnvironmentResponse struct {
 }
 
 func (r *HandleFunctionRuntimeEnvironmentResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17765,8 +17771,8 @@ type HostsCertificate struct {
 
 	// 配置证书的模式，取值有：
 	// <li>disable：不配置证书；</li>
-	// <li>eofreecert：配置 EdgeOne 免费证书；</li>
-	// <li>sslcert：配置 SSL 证书；</li>
+	// <li>eofreecert：配置 EdgeOne 免费证书；</li> 
+	// <li>sslcert：配置 SSL 证书；</li> 
 	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
 
 	// 服务端证书配置。
@@ -18000,7 +18006,7 @@ type IdentifyZoneRequestParams struct {
 
 type IdentifyZoneRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点名称。
 	ZoneName *string `json:"ZoneName,omitnil,omitempty" name:"ZoneName"`
 
@@ -18009,8 +18015,8 @@ type IdentifyZoneRequest struct {
 }
 
 func (r *IdentifyZoneRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18046,8 +18052,8 @@ type IdentifyZoneResponse struct {
 }
 
 func (r *IdentifyZoneResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18074,7 +18080,7 @@ type ImportZoneConfigRequestParams struct {
 
 type ImportZoneConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -18083,8 +18089,8 @@ type ImportZoneConfigRequest struct {
 }
 
 func (r *ImportZoneConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18117,8 +18123,8 @@ type ImportZoneConfigResponse struct {
 }
 
 func (r *ImportZoneConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18141,7 +18147,7 @@ type IncreasePlanQuotaRequestParams struct {
 
 type IncreasePlanQuotaRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 套餐 ID, 形如 edgeone-2unuvzjmmn2q。
 	PlanId *string `json:"PlanId,omitnil,omitempty" name:"PlanId"`
 
@@ -18153,8 +18159,8 @@ type IncreasePlanQuotaRequest struct {
 }
 
 func (r *IncreasePlanQuotaRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18188,8 +18194,8 @@ type IncreasePlanQuotaResponse struct {
 }
 
 func (r *IncreasePlanQuotaResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18437,10 +18443,10 @@ type InferenceScheduledScalingPolicy struct {
 	EffectiveRange *InferenceScheduledScalingEffectiveRange `json:"EffectiveRange,omitnil,omitempty" name:"EffectiveRange"`
 
 	// 时区，使用 [IANA 时区](https://www.iana.org/time-zones) 标识 ScheduledActions 中的触发时间，例如 UTC、Asia/Shanghai、America/New_York、Europe/London、Asia/Kolkata。不传时默认使用 UTC。
-	//
-	//
-	//
-	//
+	// 
+	// 
+	// 
+	// 
 	TimeZone *string `json:"TimeZone,omitnil,omitempty" name:"TimeZone"`
 }
 
@@ -18773,7 +18779,7 @@ type KeyValuePair struct {
 }
 
 type KnownBotCategories struct {
-	// 来自已知商业工具或开源工具的访问请求的处置方式。 SecurityAction 的 Name 取值支持：<li>Deny：拦截；</li><li>Monitor：观察；</li><li>Disabled：未启用，不启用指定规则；</li><li>Challenge：挑战，其中 ChallengeActionParameters 中的 ChallengeOption 支持 JSChallenge 和 ManagedChallenge；</li><li>Allow：放行（待废弃）。</li>
+	// 来自已知商业工具或开源工具的访问请求的处置方式。 SecurityAction 的 Name 取值支持：<li>Deny：拦截；</li><li>Monitor：观察；</li><li>Disabled：未启用，不启用指定规则；</li><li>Challenge：挑战，其中 ChallengeActionParameters 中的 ChallengeOption 支持 JSChallenge 和 ManagedChallenge；</li><li>Allow：放行（待废弃）。</li> 
 	BaseAction *SecurityAction `json:"BaseAction,omitnil,omitempty" name:"BaseAction"`
 
 	// 指定已知商业工具或开源工具的访问请求的处置方式。
@@ -18818,10 +18824,10 @@ type L4Proxy struct {
 	// 四层代理实例名称。
 	ProxyName *string `json:"ProxyName,omitnil,omitempty" name:"ProxyName"`
 
-	// 四层代理实例的加速区域。
+	// 四层代理实例的加速区域。 
 	// <li>mainland：中国大陆可用区；</li>
 	// <li>overseas： 全球可用区（不含中国大陆）；</li>
-	//  <li>global：全球可用区。</li>
+	//  <li>global：全球可用区。</li>	
 	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
 
 	// 接入 CNAME。
@@ -18833,14 +18839,14 @@ type L4Proxy struct {
 	// 四层代理实例状态。
 	// <li>online：已启用；</li>
 	// <li>offline：已停用；</li>
-	// <li>progress：部署中；</li>
+	// <li>progress：部署中；</li>	
 	// <li>stopping：停用中；</li>
 	// <li>banned：已封禁；</li>
-	// <li>fail：部署失败/停用失败。</li>
+	// <li>fail：部署失败/停用失败。</li>	
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 是否开启 IPv6 访问。
-	// <li>on：开启；</li>
+	// 是否开启 IPv6 访问。 
+	// <li>on：开启；</li> 
 	// <li>off：关闭。</li>
 	Ipv6 *string `json:"Ipv6,omitnil,omitempty" name:"Ipv6"`
 
@@ -18919,10 +18925,10 @@ type L4ProxyRule struct {
 	OriginPortRange *string `json:"OriginPortRange,omitnil,omitempty" name:"OriginPortRange"`
 
 	// 传递客户端 IP 的形式，取值有：
-	// <li>TOA：TOA（仅 Protocol = TCP 时可选）；</li>
+	// <li>TOA：TOA（仅 Protocol = TCP 时可选）；</li> 
 	// <li>PPV1：Proxy Protocol 传递，协议版本 V1（仅 Protocol = TCP 时可选）；</li>
-	// <li>PPV2：Proxy Protocol 传递，协议版本 V2；</li>
-	// <li>SPP：Simple Proxy Protocol 传递，（仅 Protocol = UDP 时可选）；</li>
+	// <li>PPV2：Proxy Protocol 传递，协议版本 V2；</li> 
+	// <li>SPP：Simple Proxy Protocol 传递，（仅 Protocol = UDP 时可选）；</li> 
 	// <li>OFF：不传递。</li>
 	// 注意：L4ProxyRule 在 CreateL4ProxyRules 作为入参使用时，该参数选填，不填写时默认为 OFF；在 ModifyL4ProxyRules 作为入参使用时，该参数选填，不填写表示不修改。
 	ClientIPPassThroughMode *string `json:"ClientIPPassThroughMode,omitnil,omitempty" name:"ClientIPPassThroughMode"`
@@ -18968,10 +18974,10 @@ type L7OfflineLog struct {
 	// <li>overseas：全球（不含中国大陆）。</li>
 	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
 
-	// 离线日志数据包名。
+	// 离线日志数据包名。	
 	LogPacketName *string `json:"LogPacketName,omitnil,omitempty" name:"LogPacketName"`
 
-	// 离线日志下载地址。
+	// 离线日志下载地址。	
 	Url *string `json:"Url,omitnil,omitempty" name:"Url"`
 
 	// 日志打包时间，此参数已经废弃。
@@ -19098,7 +19104,7 @@ type LogItem struct {
 }
 
 type ManagedRuleAction struct {
-	// 托管规则组下的具体项，用于改写此单条规则项配置的内容，具体参考产品文档。
+	// 托管规则组下的具体项，用于改写此单条规则项配置的内容，具体参考产品文档。	
 	RuleId *string `json:"RuleId,omitnil,omitempty" name:"RuleId"`
 
 	// RuleId 中指定托管规则项的处置动作。 SecurityAction 的 Name 取值支持：<li>Deny：拦截，响应拦截页面；</li><li>Monitor：观察，不处理请求记录安全事件到日志中；</li><li>Disabled：未启用，不扫描请求跳过该规则。</li>
@@ -19134,7 +19140,7 @@ type ManagedRuleGroup struct {
 	// 托管规则的组名称，未指定配置的规则分组将按照默认配置处理，GroupId 的具体取值参考产品文档。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
-	// 托管规则组的防护级别。取值有：<li>loose：宽松，只包含超高风险规则，此时需配置Action，且RuleActions配置无效；</li><li>normal：正常，包含超高风险和高风险规则，此时需配置Action，且RuleActions配置无效；</li><li>strict：严格，包含超高风险、高风险和中风险规则，此时需配置Action，且RuleActions配置无效；</li><li>extreme：超严格，包含超高风险、高风险、中风险和低风险规则，此时需配置Action，且RuleActions配置无效；</li><li>custom：自定义，精细化策略，按单条规则配置处置方式，此时Action字段无效，使用RuleActions配置单条规则的精细化策略。</li>
+	// 托管规则组的防护级别。取值有：<li>loose：宽松，只包含超高风险规则，此时需配置Action，且RuleActions配置无效；</li><li>normal：正常，包含超高风险和高风险规则，此时需配置Action，且RuleActions配置无效；</li><li>strict：严格，包含超高风险、高风险和中风险规则，此时需配置Action，且RuleActions配置无效；</li><li>extreme：超严格，包含超高风险、高风险、中风险和低风险规则，此时需配置Action，且RuleActions配置无效；</li><li>custom：自定义，精细化策略，按单条规则配置处置方式，此时Action字段无效，使用RuleActions配置单条规则的精细化策略。</li>	
 	SensitivityLevel *string `json:"SensitivityLevel,omitnil,omitempty" name:"SensitivityLevel"`
 
 	// 托管规则组的处置动作。SecurityAction 的 Name 取值支持：<li>Deny：拦截，响应拦截页面；</li><li>Monitor：观察，不处理请求记录安全事件到日志中；</li><li>Disabled：未启用，不扫描请求跳过该规则。</li>
@@ -19143,7 +19149,7 @@ type ManagedRuleGroup struct {
 	// 托管规则组下规则项的具体配置，仅在 SensitivityLevel 为 custom 时配置生效。
 	RuleActions []*ManagedRuleAction `json:"RuleActions,omitnil,omitempty" name:"RuleActions"`
 
-	// 托管规则组信息，仅出参。
+	// 托管规则组信息，仅出参。	
 	MetaData *ManagedRuleGroupMeta `json:"MetaData,omitnil,omitempty" name:"MetaData"`
 }
 
@@ -19200,7 +19206,7 @@ type MaxAgeParameters struct {
 }
 
 type MaxNewSessionTriggerConfig struct {
-	// 触发阈值统计的时间窗口，取值有：<li>5s：5 秒内；</li><li>10s：10 秒内；</li><li>15s：15 秒内；</li><li>30s：30 秒内；</li><li>60s：60 秒内；</li><li>5m：5 分钟内；</li><li>10m：10 分钟内；</li><li>30m：30 分钟内；</li><li>60m：60 分钟内。</li>
+	// 触发阈值统计的时间窗口，取值有：<li>5s：5 秒内；</li><li>10s：10 秒内；</li><li>15s：15 秒内；</li><li>30s：30 秒内；</li><li>60s：60 秒内；</li><li>5m：5 分钟内；</li><li>10m：10 分钟内；</li><li>30m：30 分钟内；</li><li>60m：60 分钟内。</li> 
 	MaxNewSessionCountInterval *string `json:"MaxNewSessionCountInterval,omitnil,omitempty" name:"MaxNewSessionCountInterval"`
 
 	// 触发阈值统计的累计次数，取值范围 1 ~ 100000000。
@@ -19211,7 +19217,7 @@ type MinimalRequestBodyTransferRate struct {
 	// 正文传输最小速率阈值，单位仅支持bps。
 	MinimalAvgTransferRateThreshold *string `json:"MinimalAvgTransferRateThreshold,omitnil,omitempty" name:"MinimalAvgTransferRateThreshold"`
 
-	// 正文传输最小速率统计时间范围，取值有：<li>10s：10秒；</li><li>30s：30秒；</li><li>60s：60秒；</li><li>120s：120秒。</li>
+	// 正文传输最小速率统计时间范围，取值有：<li>10s：10秒；</li><li>30s：30秒；</li><li>60s：60秒；</li><li>120s：120秒。</li> 
 	CountingPeriod *string `json:"CountingPeriod,omitnil,omitempty" name:"CountingPeriod"`
 
 	// 正文传输最小速率阈值是否开启。取值有：<li>on：开启；</li><li>off：关闭。</li>
@@ -19252,7 +19258,7 @@ type ModifyAccelerationDomainRequestParams struct {
 
 type ModifyAccelerationDomainRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 加速域名所属站点ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -19284,8 +19290,8 @@ type ModifyAccelerationDomainRequest struct {
 }
 
 func (r *ModifyAccelerationDomainRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19320,8 +19326,8 @@ type ModifyAccelerationDomainResponse struct {
 }
 
 func (r *ModifyAccelerationDomainResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19351,7 +19357,7 @@ type ModifyAccelerationDomainStatusesRequestParams struct {
 
 type ModifyAccelerationDomainStatusesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 加速域名所属站点ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -19370,8 +19376,8 @@ type ModifyAccelerationDomainStatusesRequest struct {
 }
 
 func (r *ModifyAccelerationDomainStatusesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19403,8 +19409,8 @@ type ModifyAccelerationDomainStatusesResponse struct {
 }
 
 func (r *ModifyAccelerationDomainStatusesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19436,7 +19442,7 @@ type ModifyAliasDomainRequestParams struct {
 
 type ModifyAliasDomainRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -19457,8 +19463,8 @@ type ModifyAliasDomainRequest struct {
 }
 
 func (r *ModifyAliasDomainRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19491,8 +19497,8 @@ type ModifyAliasDomainResponse struct {
 }
 
 func (r *ModifyAliasDomainResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19517,7 +19523,7 @@ type ModifyAliasDomainStatusRequestParams struct {
 
 type ModifyAliasDomainStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -19531,8 +19537,8 @@ type ModifyAliasDomainStatusRequest struct {
 }
 
 func (r *ModifyAliasDomainStatusRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19563,8 +19569,8 @@ type ModifyAliasDomainStatusResponse struct {
 }
 
 func (r *ModifyAliasDomainStatusResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19602,7 +19608,7 @@ type ModifyApplicationProxyRequestParams struct {
 
 type ModifyApplicationProxyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -19629,8 +19635,8 @@ type ModifyApplicationProxyRequest struct {
 }
 
 func (r *ModifyApplicationProxyRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19665,8 +19671,8 @@ type ModifyApplicationProxyResponse struct {
 }
 
 func (r *ModifyApplicationProxyResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19704,7 +19710,7 @@ type ModifyApplicationProxyRuleRequestParams struct {
 	// 源站信息：
 	// <li>当 OriginType 为 custom 时，表示一个或多个源站，如`["8.8.8.8","9.9.9.9"]` 或 `OriginValue=["test.com"]`；</li>
 	// <li>当 OriginType 为 origins 时，要求有且仅有一个元素，表示源站组ID，如`["origin-537f5b41-162a-11ed-abaa-525400c5da15"]`。</li>
-	//
+	// 
 	// 不填保持原有值。
 	OriginValue []*string `json:"OriginValue,omitnil,omitempty" name:"OriginValue"`
 
@@ -19734,7 +19740,7 @@ type ModifyApplicationProxyRuleRequestParams struct {
 
 type ModifyApplicationProxyRuleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -19762,7 +19768,7 @@ type ModifyApplicationProxyRuleRequest struct {
 	// 源站信息：
 	// <li>当 OriginType 为 custom 时，表示一个或多个源站，如`["8.8.8.8","9.9.9.9"]` 或 `OriginValue=["test.com"]`；</li>
 	// <li>当 OriginType 为 origins 时，要求有且仅有一个元素，表示源站组ID，如`["origin-537f5b41-162a-11ed-abaa-525400c5da15"]`。</li>
-	//
+	// 
 	// 不填保持原有值。
 	OriginValue []*string `json:"OriginValue,omitnil,omitempty" name:"OriginValue"`
 
@@ -19791,8 +19797,8 @@ type ModifyApplicationProxyRuleRequest struct {
 }
 
 func (r *ModifyApplicationProxyRuleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19832,8 +19838,8 @@ type ModifyApplicationProxyRuleResponse struct {
 }
 
 func (r *ModifyApplicationProxyRuleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19861,7 +19867,7 @@ type ModifyApplicationProxyRuleStatusRequestParams struct {
 
 type ModifyApplicationProxyRuleStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -19878,8 +19884,8 @@ type ModifyApplicationProxyRuleStatusRequest struct {
 }
 
 func (r *ModifyApplicationProxyRuleStatusRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19911,8 +19917,8 @@ type ModifyApplicationProxyRuleStatusResponse struct {
 }
 
 func (r *ModifyApplicationProxyRuleStatusResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19937,7 +19943,7 @@ type ModifyApplicationProxyStatusRequestParams struct {
 
 type ModifyApplicationProxyStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -19951,8 +19957,8 @@ type ModifyApplicationProxyStatusRequest struct {
 }
 
 func (r *ModifyApplicationProxyStatusRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19983,8 +19989,8 @@ type ModifyApplicationProxyStatusResponse struct {
 }
 
 func (r *ModifyApplicationProxyStatusResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20004,7 +20010,7 @@ type ModifyContentIdentifierRequestParams struct {
 
 type ModifyContentIdentifierRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 内容标识符 ID。
 	ContentId *string `json:"ContentId,omitnil,omitempty" name:"ContentId"`
 
@@ -20013,8 +20019,8 @@ type ModifyContentIdentifierRequest struct {
 }
 
 func (r *ModifyContentIdentifierRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20044,8 +20050,8 @@ type ModifyContentIdentifierResponse struct {
 }
 
 func (r *ModifyContentIdentifierResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20077,7 +20083,7 @@ type ModifyCustomErrorPageRequestParams struct {
 
 type ModifyCustomErrorPageRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>自定义响应页面 ID。</p>
 	PageId *string `json:"PageId,omitnil,omitempty" name:"PageId"`
 
@@ -20098,8 +20104,8 @@ type ModifyCustomErrorPageRequest struct {
 }
 
 func (r *ModifyCustomErrorPageRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20133,8 +20139,8 @@ type ModifyCustomErrorPageResponse struct {
 }
 
 func (r *ModifyCustomErrorPageResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20154,7 +20160,7 @@ type ModifyDDoSProtectionRequestParams struct {
 
 type ModifyDDoSProtectionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -20163,8 +20169,8 @@ type ModifyDDoSProtectionRequest struct {
 }
 
 func (r *ModifyDDoSProtectionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20194,8 +20200,8 @@ type ModifyDDoSProtectionResponse struct {
 }
 
 func (r *ModifyDDoSProtectionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20215,7 +20221,7 @@ type ModifyDnsRecordsRequestParams struct {
 
 type ModifyDnsRecordsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID 。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -20224,8 +20230,8 @@ type ModifyDnsRecordsRequest struct {
 }
 
 func (r *ModifyDnsRecordsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20255,8 +20261,8 @@ type ModifyDnsRecordsResponse struct {
 }
 
 func (r *ModifyDnsRecordsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20279,7 +20285,7 @@ type ModifyDnsRecordsStatusRequestParams struct {
 
 type ModifyDnsRecordsStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -20291,8 +20297,8 @@ type ModifyDnsRecordsStatusRequest struct {
 }
 
 func (r *ModifyDnsRecordsStatusRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20323,8 +20329,8 @@ type ModifyDnsRecordsStatusResponse struct {
 }
 
 func (r *ModifyDnsRecordsStatusResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20347,7 +20353,7 @@ type ModifyEdgeKVNamespaceRequestParams struct {
 
 type ModifyEdgeKVNamespaceRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -20359,8 +20365,8 @@ type ModifyEdgeKVNamespaceRequest struct {
 }
 
 func (r *ModifyEdgeKVNamespaceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20391,8 +20397,8 @@ type ModifyEdgeKVNamespaceResponse struct {
 }
 
 func (r *ModifyEdgeKVNamespaceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20422,7 +20428,7 @@ type ModifyFunctionComponentBindingsRequestParams struct {
 
 type ModifyFunctionComponentBindingsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -20441,8 +20447,8 @@ type ModifyFunctionComponentBindingsRequest struct {
 }
 
 func (r *ModifyFunctionComponentBindingsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20474,8 +20480,8 @@ type ModifyFunctionComponentBindingsResponse struct {
 }
 
 func (r *ModifyFunctionComponentBindingsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20504,7 +20510,7 @@ type ModifyFunctionReplicaRequestParams struct {
 
 type ModifyFunctionReplicaRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -20522,8 +20528,8 @@ type ModifyFunctionReplicaRequest struct {
 }
 
 func (r *ModifyFunctionReplicaRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20556,8 +20562,8 @@ type ModifyFunctionReplicaResponse struct {
 }
 
 func (r *ModifyFunctionReplicaResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20583,7 +20589,7 @@ type ModifyFunctionRequestParams struct {
 
 type ModifyFunctionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -20598,8 +20604,8 @@ type ModifyFunctionRequest struct {
 }
 
 func (r *ModifyFunctionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20631,8 +20637,8 @@ type ModifyFunctionResponse struct {
 }
 
 func (r *ModifyFunctionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20652,7 +20658,7 @@ type ModifyFunctionRulePriorityRequestParams struct {
 
 type ModifyFunctionRulePriorityRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -20661,8 +20667,8 @@ type ModifyFunctionRulePriorityRequest struct {
 }
 
 func (r *ModifyFunctionRulePriorityRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20692,8 +20698,8 @@ type ModifyFunctionRulePriorityResponse struct {
 }
 
 func (r *ModifyFunctionRulePriorityResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20731,7 +20737,7 @@ type ModifyFunctionRuleRequestParams struct {
 
 type ModifyFunctionRuleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -20758,8 +20764,8 @@ type ModifyFunctionRuleRequest struct {
 }
 
 func (r *ModifyFunctionRuleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20795,8 +20801,8 @@ type ModifyFunctionRuleResponse struct {
 }
 
 func (r *ModifyFunctionRuleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20816,7 +20822,7 @@ type ModifyHostsCertificateRequestParams struct {
 	// 配置服务端证书的模式，取值有：
 	// <ul><li>disable：不配置服务端证书；</li>
 	// <li>eofreecert：通过自动验证申请免费证书并部署。验证方式详见：[申请免费证书支持的验证方式](https://cloud.tencent.com/document/product/1552/90437)
-	//
+	// 
 	// - 在 NS 或者 DNSPod 托管接入模式下，仅支持自动验证的方式申请免费证书。
 	// - 当免费证书申请失败时会导致证书部署失败，您可以通过<a href = 'https://cloud.tencent.com/document/product/1552/124806'>检查免费证书申请结果</a>接口获取申请失败原因。</li>
 	// </ul><li>eofreecert_manual：部署 DNS 委派验证或者文件验证申请的免费证书。在部署免费证书前，您需要触发<a href = 'https://cloud.tencent.com/document/product/1552/124807'>申请免费证书</a>接口申请免费证书。在免费证书申请成功后，你可以通过该枚举值对免费证书进行部署；</li>
@@ -20844,7 +20850,7 @@ type ModifyHostsCertificateRequestParams struct {
 
 type ModifyHostsCertificateRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -20854,7 +20860,7 @@ type ModifyHostsCertificateRequest struct {
 	// 配置服务端证书的模式，取值有：
 	// <ul><li>disable：不配置服务端证书；</li>
 	// <li>eofreecert：通过自动验证申请免费证书并部署。验证方式详见：[申请免费证书支持的验证方式](https://cloud.tencent.com/document/product/1552/90437)
-	//
+	// 
 	// - 在 NS 或者 DNSPod 托管接入模式下，仅支持自动验证的方式申请免费证书。
 	// - 当免费证书申请失败时会导致证书部署失败，您可以通过<a href = 'https://cloud.tencent.com/document/product/1552/124806'>检查免费证书申请结果</a>接口获取申请失败原因。</li>
 	// </ul><li>eofreecert_manual：部署 DNS 委派验证或者文件验证申请的免费证书。在部署免费证书前，您需要触发<a href = 'https://cloud.tencent.com/document/product/1552/124807'>申请免费证书</a>接口申请免费证书。在免费证书申请成功后，你可以通过该枚举值对免费证书进行部署；</li>
@@ -20879,8 +20885,8 @@ type ModifyHostsCertificateRequest struct {
 }
 
 func (r *ModifyHostsCertificateRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20915,8 +20921,8 @@ type ModifyHostsCertificateResponse struct {
 }
 
 func (r *ModifyHostsCertificateResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20954,7 +20960,7 @@ type ModifyInferenceServiceRequestParams struct {
 
 type ModifyInferenceServiceRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -20981,8 +20987,8 @@ type ModifyInferenceServiceRequest struct {
 }
 
 func (r *ModifyInferenceServiceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21018,8 +21024,8 @@ type ModifyInferenceServiceResponse struct {
 }
 
 func (r *ModifyInferenceServiceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21037,19 +21043,19 @@ type ModifyL4ProxyRequestParams struct {
 	ProxyId *string `json:"ProxyId,omitnil,omitempty" name:"ProxyId"`
 
 	// 是否开启 IPv6 访问。 不填该参数时，表示不修改该配置。该配置仅在部分加速区域和安全防护配置下支持开启，详情请参考 [新建四层代理实例](https://cloud.tencent.com/document/product/1552/90025) 。取值为：
-	// <li>on：开启；</li>
+	// <li>on：开启；</li> 
 	// <li>off：关闭。</li>
 	Ipv6 *string `json:"Ipv6,omitnil,omitempty" name:"Ipv6"`
 
 	// 是否开启中国大陆网络优化。不填该参数时，表示不修改该配置。该配置仅在部分加速区域和安全防护配置下支持开启，详情请参考 [新建四层代理实例](https://cloud.tencent.com/document/product/1552/90025) 。取值为：
-	// <li>on：开启；</li>
+	// <li>on：开启；</li> 
 	// <li>off：关闭。</li>
 	AccelerateMainland *string `json:"AccelerateMainland,omitnil,omitempty" name:"AccelerateMainland"`
 }
 
 type ModifyL4ProxyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -21057,19 +21063,19 @@ type ModifyL4ProxyRequest struct {
 	ProxyId *string `json:"ProxyId,omitnil,omitempty" name:"ProxyId"`
 
 	// 是否开启 IPv6 访问。 不填该参数时，表示不修改该配置。该配置仅在部分加速区域和安全防护配置下支持开启，详情请参考 [新建四层代理实例](https://cloud.tencent.com/document/product/1552/90025) 。取值为：
-	// <li>on：开启；</li>
+	// <li>on：开启；</li> 
 	// <li>off：关闭。</li>
 	Ipv6 *string `json:"Ipv6,omitnil,omitempty" name:"Ipv6"`
 
 	// 是否开启中国大陆网络优化。不填该参数时，表示不修改该配置。该配置仅在部分加速区域和安全防护配置下支持开启，详情请参考 [新建四层代理实例](https://cloud.tencent.com/document/product/1552/90025) 。取值为：
-	// <li>on：开启；</li>
+	// <li>on：开启；</li> 
 	// <li>off：关闭。</li>
 	AccelerateMainland *string `json:"AccelerateMainland,omitnil,omitempty" name:"AccelerateMainland"`
 }
 
 func (r *ModifyL4ProxyRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21101,8 +21107,8 @@ type ModifyL4ProxyResponse struct {
 }
 
 func (r *ModifyL4ProxyResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21126,7 +21132,7 @@ type ModifyL4ProxyRulesRequestParams struct {
 
 type ModifyL4ProxyRulesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -21139,8 +21145,8 @@ type ModifyL4ProxyRulesRequest struct {
 }
 
 func (r *ModifyL4ProxyRulesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21171,8 +21177,8 @@ type ModifyL4ProxyRulesResponse struct {
 }
 
 func (r *ModifyL4ProxyRulesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21200,7 +21206,7 @@ type ModifyL4ProxyRulesStatusRequestParams struct {
 
 type ModifyL4ProxyRulesStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -21217,8 +21223,8 @@ type ModifyL4ProxyRulesStatusRequest struct {
 }
 
 func (r *ModifyL4ProxyRulesStatusRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21250,8 +21256,8 @@ type ModifyL4ProxyRulesStatusResponse struct {
 }
 
 func (r *ModifyL4ProxyRulesStatusResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21276,7 +21282,7 @@ type ModifyL4ProxyStatusRequestParams struct {
 
 type ModifyL4ProxyStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -21290,8 +21296,8 @@ type ModifyL4ProxyStatusRequest struct {
 }
 
 func (r *ModifyL4ProxyStatusRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21322,8 +21328,8 @@ type ModifyL4ProxyStatusResponse struct {
 }
 
 func (r *ModifyL4ProxyStatusResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21343,7 +21349,7 @@ type ModifyL7AccRulePriorityRequestParams struct {
 
 type ModifyL7AccRulePriorityRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -21352,8 +21358,8 @@ type ModifyL7AccRulePriorityRequest struct {
 }
 
 func (r *ModifyL7AccRulePriorityRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21383,8 +21389,8 @@ type ModifyL7AccRulePriorityResponse struct {
 }
 
 func (r *ModifyL7AccRulePriorityResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21404,7 +21410,7 @@ type ModifyL7AccRuleRequestParams struct {
 
 type ModifyL7AccRuleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -21413,8 +21419,8 @@ type ModifyL7AccRuleRequest struct {
 }
 
 func (r *ModifyL7AccRuleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21444,8 +21450,8 @@ type ModifyL7AccRuleResponse struct {
 }
 
 func (r *ModifyL7AccRuleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21460,24 +21466,24 @@ type ModifyL7AccSettingRequestParams struct {
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// 站点加速全局配置，该参数中的配置会对站点下的所有域名生效。您只需直接修改所需的配置，未传入的其他配置将保持原有状态。
-	//
+	// 
 	ZoneConfig *ZoneConfig `json:"ZoneConfig,omitnil,omitempty" name:"ZoneConfig"`
 }
 
 type ModifyL7AccSettingRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// 站点加速全局配置，该参数中的配置会对站点下的所有域名生效。您只需直接修改所需的配置，未传入的其他配置将保持原有状态。
-	//
+	// 
 	ZoneConfig *ZoneConfig `json:"ZoneConfig,omitnil,omitempty" name:"ZoneConfig"`
 }
 
 func (r *ModifyL7AccSettingRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21507,8 +21513,8 @@ type ModifyL7AccSettingResponse struct {
 }
 
 func (r *ModifyL7AccSettingResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21546,7 +21552,7 @@ type ModifyLoadBalancerRequestParams struct {
 
 type ModifyLoadBalancerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -21573,8 +21579,8 @@ type ModifyLoadBalancerRequest struct {
 }
 
 func (r *ModifyLoadBalancerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21609,8 +21615,8 @@ type ModifyLoadBalancerResponse struct {
 }
 
 func (r *ModifyLoadBalancerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21632,8 +21638,8 @@ type ModifyMultiPathGatewayLineRequestParams struct {
 	// <li> line-2 及以上：EdgeOne 四层代理线路或者自定义线路，支持修改、删除实例和规则。</li>
 	LineId *string `json:"LineId,omitnil,omitempty" name:"LineId"`
 
-	// 线路类型，取值有：
-	// <li>proxy ：EdgeOne 四层代理线路，支持修改实例和规则，不支持删除；</li>
+	// 线路类型，取值有： 
+	// <li>proxy ：EdgeOne 四层代理线路，支持修改实例和规则，不支持删除；</li> 
 	// <li>custom ：自定义线路，支持编辑、删除实例和规则。</li>
 	LineType *string `json:"LineType,omitnil,omitempty" name:"LineType"`
 
@@ -21649,7 +21655,7 @@ type ModifyMultiPathGatewayLineRequestParams struct {
 
 type ModifyMultiPathGatewayLineRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -21661,8 +21667,8 @@ type ModifyMultiPathGatewayLineRequest struct {
 	// <li> line-2 及以上：EdgeOne 四层代理线路或者自定义线路，支持修改、删除实例和规则。</li>
 	LineId *string `json:"LineId,omitnil,omitempty" name:"LineId"`
 
-	// 线路类型，取值有：
-	// <li>proxy ：EdgeOne 四层代理线路，支持修改实例和规则，不支持删除；</li>
+	// 线路类型，取值有： 
+	// <li>proxy ：EdgeOne 四层代理线路，支持修改实例和规则，不支持删除；</li> 
 	// <li>custom ：自定义线路，支持编辑、删除实例和规则。</li>
 	LineType *string `json:"LineType,omitnil,omitempty" name:"LineType"`
 
@@ -21677,8 +21683,8 @@ type ModifyMultiPathGatewayLineRequest struct {
 }
 
 func (r *ModifyMultiPathGatewayLineRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21713,8 +21719,8 @@ type ModifyMultiPathGatewayLineResponse struct {
 }
 
 func (r *ModifyMultiPathGatewayLineResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21743,7 +21749,7 @@ type ModifyMultiPathGatewayRequestParams struct {
 
 type ModifyMultiPathGatewayRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -21761,8 +21767,8 @@ type ModifyMultiPathGatewayRequest struct {
 }
 
 func (r *ModifyMultiPathGatewayRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21795,8 +21801,8 @@ type ModifyMultiPathGatewayResponse struct {
 }
 
 func (r *ModifyMultiPathGatewayResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21816,7 +21822,7 @@ type ModifyMultiPathGatewaySecretKeyRequestParams struct {
 
 type ModifyMultiPathGatewaySecretKeyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -21825,8 +21831,8 @@ type ModifyMultiPathGatewaySecretKeyRequest struct {
 }
 
 func (r *ModifyMultiPathGatewaySecretKeyRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21856,8 +21862,8 @@ type ModifyMultiPathGatewaySecretKeyResponse struct {
 }
 
 func (r *ModifyMultiPathGatewaySecretKeyResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21880,7 +21886,7 @@ type ModifyMultiPathGatewayStatusRequestParams struct {
 
 type ModifyMultiPathGatewayStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 网关 ID。
 	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
@@ -21892,8 +21898,8 @@ type ModifyMultiPathGatewayStatusRequest struct {
 }
 
 func (r *ModifyMultiPathGatewayStatusRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21924,8 +21930,8 @@ type ModifyMultiPathGatewayStatusResponse struct {
 }
 
 func (r *ModifyMultiPathGatewayStatusResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21955,7 +21961,7 @@ type ModifyOriginACLRequestParams struct {
 
 type ModifyOriginACLRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -21974,8 +21980,8 @@ type ModifyOriginACLRequest struct {
 }
 
 func (r *ModifyOriginACLRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22006,8 +22012,8 @@ type ModifyOriginACLResponse struct {
 }
 
 func (r *ModifyOriginACLResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22024,7 +22030,7 @@ type ModifyOriginGroupRequestParams struct {
 	// 源站组 ID，此参数必填。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
-	// 源站组名称，不填保持原有配置，可输入1 - 200个字符，允许的字符为 a - z, A - Z, 0 - 9, _, - 。
+	// 源站组名称，不填保持原有配置，可输入1 - 200个字符，允许的字符为 a - z, A - Z, 0 - 9, _, - 。	
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 源站组类型，取值有：
@@ -22041,14 +22047,14 @@ type ModifyOriginGroupRequestParams struct {
 
 type ModifyOriginGroupRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// 源站组 ID，此参数必填。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
-	// 源站组名称，不填保持原有配置，可输入1 - 200个字符，允许的字符为 a - z, A - Z, 0 - 9, _, - 。
+	// 源站组名称，不填保持原有配置，可输入1 - 200个字符，允许的字符为 a - z, A - Z, 0 - 9, _, - 。	
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 源站组类型，取值有：
@@ -22064,8 +22070,8 @@ type ModifyOriginGroupRequest struct {
 }
 
 func (r *ModifyOriginGroupRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22099,8 +22105,8 @@ type ModifyOriginGroupResponse struct {
 }
 
 func (r *ModifyOriginGroupResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22159,7 +22165,7 @@ type ModifyPlanRequestParams struct {
 
 type ModifyPlanRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 套餐 ID，形如 edgeone-2unuvzjmmn2q。
 	PlanId *string `json:"PlanId,omitnil,omitempty" name:"PlanId"`
 
@@ -22168,8 +22174,8 @@ type ModifyPlanRequest struct {
 }
 
 func (r *ModifyPlanRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22199,8 +22205,8 @@ type ModifyPlanResponse struct {
 }
 
 func (r *ModifyPlanResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22236,7 +22242,7 @@ type ModifyPrefetchOriginLimitRequestParams struct {
 
 type ModifyPrefetchOriginLimitRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -22261,8 +22267,8 @@ type ModifyPrefetchOriginLimitRequest struct {
 }
 
 func (r *ModifyPrefetchOriginLimitRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22295,8 +22301,8 @@ type ModifyPrefetchOriginLimitResponse struct {
 }
 
 func (r *ModifyPrefetchOriginLimitResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22352,7 +22358,7 @@ type ModifyRealtimeLogDeliveryTaskRequestParams struct {
 
 type ModifyRealtimeLogDeliveryTaskRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -22397,8 +22403,8 @@ type ModifyRealtimeLogDeliveryTaskRequest struct {
 }
 
 func (r *ModifyRealtimeLogDeliveryTaskRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22440,8 +22446,8 @@ type ModifyRealtimeLogDeliveryTaskResponse struct {
 }
 
 func (r *ModifyRealtimeLogDeliveryTaskResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22487,7 +22493,7 @@ type ModifyRuleRequestParams struct {
 
 type ModifyRuleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -22510,8 +22516,8 @@ type ModifyRuleRequest struct {
 }
 
 func (r *ModifyRuleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22548,8 +22554,8 @@ type ModifyRuleResponse struct {
 }
 
 func (r *ModifyRuleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22560,7 +22566,7 @@ func (r *ModifyRuleResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifySecurityAPIResourceRequestParams struct {
-	// 站点 ID。
+	// 站点 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// API 资源列表。
@@ -22569,8 +22575,8 @@ type ModifySecurityAPIResourceRequestParams struct {
 
 type ModifySecurityAPIResourceRequest struct {
 	*tchttp.BaseRequest
-
-	// 站点 ID。
+	
+	// 站点 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// API 资源列表。
@@ -22578,8 +22584,8 @@ type ModifySecurityAPIResourceRequest struct {
 }
 
 func (r *ModifySecurityAPIResourceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22609,8 +22615,8 @@ type ModifySecurityAPIResourceResponse struct {
 }
 
 func (r *ModifySecurityAPIResourceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22621,7 +22627,7 @@ func (r *ModifySecurityAPIResourceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifySecurityAPIServiceRequestParams struct {
-	// 站点 ID。
+	// 站点 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// API 服务列表。
@@ -22630,8 +22636,8 @@ type ModifySecurityAPIServiceRequestParams struct {
 
 type ModifySecurityAPIServiceRequest struct {
 	*tchttp.BaseRequest
-
-	// 站点 ID。
+	
+	// 站点 ID。	
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// API 服务列表。
@@ -22639,8 +22645,8 @@ type ModifySecurityAPIServiceRequest struct {
 }
 
 func (r *ModifySecurityAPIServiceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22670,8 +22676,8 @@ type ModifySecurityAPIServiceResponse struct {
 }
 
 func (r *ModifySecurityAPIServiceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22691,7 +22697,7 @@ type ModifySecurityClientAttesterRequestParams struct {
 
 type ModifySecurityClientAttesterRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -22700,8 +22706,8 @@ type ModifySecurityClientAttesterRequest struct {
 }
 
 func (r *ModifySecurityClientAttesterRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22731,8 +22737,8 @@ type ModifySecurityClientAttesterResponse struct {
 }
 
 func (r *ModifySecurityClientAttesterResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22755,7 +22761,7 @@ type ModifySecurityIPGroupRequestParams struct {
 
 type ModifySecurityIPGroupRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 Id。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -22767,8 +22773,8 @@ type ModifySecurityIPGroupRequest struct {
 }
 
 func (r *ModifySecurityIPGroupRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22799,8 +22805,8 @@ type ModifySecurityIPGroupResponse struct {
 }
 
 func (r *ModifySecurityIPGroupResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22820,7 +22826,7 @@ type ModifySecurityJSInjectionRuleRequestParams struct {
 
 type ModifySecurityJSInjectionRuleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -22829,8 +22835,8 @@ type ModifySecurityJSInjectionRuleRequest struct {
 }
 
 func (r *ModifySecurityJSInjectionRuleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22860,8 +22866,8 @@ type ModifySecurityJSInjectionRuleResponse struct {
 }
 
 func (r *ModifySecurityJSInjectionRuleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22893,7 +22899,7 @@ type ModifySecurityPolicyRequestParams struct {
 
 type ModifySecurityPolicyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -22914,8 +22920,8 @@ type ModifySecurityPolicyRequest struct {
 }
 
 func (r *ModifySecurityPolicyRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22949,8 +22955,8 @@ type ModifySecurityPolicyResponse struct {
 }
 
 func (r *ModifySecurityPolicyResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22976,7 +22982,7 @@ type ModifySharedCNAMERequestParams struct {
 
 type ModifySharedCNAMERequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 共享 CNAME 所属站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -22991,8 +22997,8 @@ type ModifySharedCNAMERequest struct {
 }
 
 func (r *ModifySharedCNAMERequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23024,8 +23030,8 @@ type ModifySharedCNAMEResponse struct {
 }
 
 func (r *ModifySharedCNAMEResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23052,7 +23058,7 @@ type ModifyWebSecurityTemplateRequestParams struct {
 
 type ModifyWebSecurityTemplateRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。需要传入目标策略模板在访问权限上归属的站点，可使用 DescribeWebSecurityTemplates 接口查询策略模板归属的站点。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -23068,8 +23074,8 @@ type ModifyWebSecurityTemplateRequest struct {
 }
 
 func (r *ModifyWebSecurityTemplateRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23101,8 +23107,8 @@ type ModifyWebSecurityTemplateResponse struct {
 }
 
 func (r *ModifyWebSecurityTemplateResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23125,7 +23131,7 @@ type ModifyZoneCustomVariablesRequestParams struct {
 
 type ModifyZoneCustomVariablesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -23137,8 +23143,8 @@ type ModifyZoneCustomVariablesRequest struct {
 }
 
 func (r *ModifyZoneCustomVariablesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23169,8 +23175,8 @@ type ModifyZoneCustomVariablesResponse struct {
 }
 
 func (r *ModifyZoneCustomVariablesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23208,7 +23214,7 @@ type ModifyZoneRequestParams struct {
 
 type ModifyZoneRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -23235,8 +23241,8 @@ type ModifyZoneRequest struct {
 }
 
 func (r *ModifyZoneRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23270,8 +23276,8 @@ type ModifyZoneResponse struct {
 }
 
 func (r *ModifyZoneResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23373,7 +23379,7 @@ type ModifyZoneSettingRequestParams struct {
 
 type ModifyZoneSettingRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 待变更的站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -23464,8 +23470,8 @@ type ModifyZoneSettingRequest struct {
 }
 
 func (r *ModifyZoneSettingRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23516,8 +23522,8 @@ type ModifyZoneSettingResponse struct {
 }
 
 func (r *ModifyZoneSettingResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23539,7 +23545,7 @@ type ModifyZoneStatusRequestParams struct {
 
 type ModifyZoneStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -23550,8 +23556,8 @@ type ModifyZoneStatusRequest struct {
 }
 
 func (r *ModifyZoneStatusRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23581,8 +23587,8 @@ type ModifyZoneStatusResponse struct {
 }
 
 func (r *ModifyZoneStatusResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23602,7 +23608,7 @@ type ModifyZoneWorkModeRequestParams struct {
 
 type ModifyZoneWorkModeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -23611,8 +23617,8 @@ type ModifyZoneWorkModeRequest struct {
 }
 
 func (r *ModifyZoneWorkModeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23642,8 +23648,8 @@ type ModifyZoneWorkModeResponse struct {
 }
 
 func (r *ModifyZoneWorkModeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23879,7 +23885,7 @@ type OperateInferenceDomainRequestParams struct {
 
 type OperateInferenceDomainRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -23894,8 +23900,8 @@ type OperateInferenceDomainRequest struct {
 }
 
 func (r *OperateInferenceDomainRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23927,8 +23933,8 @@ type OperateInferenceDomainResponse struct {
 }
 
 func (r *OperateInferenceDomainResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23951,7 +23957,7 @@ type OperateInferenceServiceRequestParams struct {
 
 type OperateInferenceServiceRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
@@ -23963,8 +23969,8 @@ type OperateInferenceServiceRequest struct {
 }
 
 func (r *OperateInferenceServiceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23995,8 +24001,8 @@ type OperateInferenceServiceResponse struct {
 }
 
 func (r *OperateInferenceServiceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -24061,7 +24067,7 @@ type OriginACLFamilyInfo struct {
 	// 版本生效时间，时间是北京时间 UTC+8， 遵循 ISO 8601 标准的日期和时间格式。
 	ActiveTime *string `json:"ActiveTime,omitnil,omitempty" name:"ActiveTime"`
 
-	// 回源 IP 网段详情。
+	// 回源 IP 网段详情。	
 	EntireAddresses *Addresses `json:"EntireAddresses,omitnil,omitempty" name:"EntireAddresses"`
 
 	// 源站防护回源ACL控制域。取值说明如下：
@@ -24120,7 +24126,7 @@ type OriginCertificateVerify struct {
 	VerificationMode *string `json:"VerificationMode,omitnil,omitempty" name:"VerificationMode"`
 
 	// 指定受信任的 CA 证书列表，源站证书需要由该 CA 签发才能校验通过。 注意：仅当 VerificationMode 为 custom_ca 时，需要传入该参数，指定受信任的CA证书信息。
-	// OriginCertificateVerify 在 ModifyHostsCertificate 作为入参使用时，该参数传入对应证书的 CertId 即可。您可以前往 [SSL 证书列表](https://console.cloud.tencent.com/ssl) 查看 CertId。
+	// OriginCertificateVerify 在 ModifyHostsCertificate 作为入参使用时，该参数传入对应证书的 CertId 即可。您可以前往 [SSL 证书列表](https://console.cloud.tencent.com/ssl) 查看 CertId。	
 	CustomCACerts []*CertificateInfo `json:"CustomCACerts,omitnil,omitempty" name:"CustomCACerts"`
 }
 
@@ -24205,7 +24211,7 @@ type OriginGroup struct {
 	// 源站记录信息。
 	Records []*OriginRecord `json:"Records,omitnil,omitempty" name:"Records"`
 
-	// 源站组被引用实例列表。
+	// 源站组被引用实例列表。	
 	References []*OriginGroupReference `json:"References,omitnil,omitempty" name:"References"`
 
 	// 源站组创建时间。
@@ -24337,8 +24343,8 @@ type OriginInfo struct {
 	// Deprecated: VodeoSubAppId is deprecated.
 	VodeoSubAppId *int64 `json:"VodeoSubAppId,omitnil,omitempty" name:"VodeoSubAppId"`
 
-	// VODEO 分发范围，该参数当 OriginType = VODEO 时必填。取值有：
-	// <li>All：当前应用下所有存储桶；</li>
+	// VODEO 分发范围，该参数当 OriginType = VODEO 时必填。取值有： 
+	// <li>All：当前应用下所有存储桶；</li> 
 	// <li>Bucket：指定的某一个存储桶。</li>
 	//
 	// Deprecated: VodeoDistributionRange is deprecated.
@@ -24643,7 +24649,7 @@ type PrefetchOriginLimit struct {
 
 type PrepaidPlanParam struct {
 	// 订阅预付费套餐的周期，单位：月，取值有：1，2，3，4，5，6，7，8，9，10，11，12，24，36。
-	//
+	// 
 	// 不填写使用默认值 1。
 	Period *int64 `json:"Period,omitnil,omitempty" name:"Period"`
 
@@ -24831,7 +24837,7 @@ type RateLimitUserRule struct {
 	// 规则名，只能以英文字符，数字，下划线组合，且不能以下划线开头。
 	RuleName *string `json:"RuleName,omitnil,omitempty" name:"RuleName"`
 
-	// 处置动作，取值有： <li>monitor：观察；</li> <li>drop：拦截；</li><li> redirect：重定向；</li><li> page：指定页面；</li><li>alg：JavaScript 挑战。</li>
+	// 处置动作，取值有： <li>monitor：观察；</li> <li>drop：拦截；</li><li> redirect：重定向；</li><li> page：指定页面；</li><li>alg：JavaScript 挑战。</li>	
 	Action *string `json:"Action,omitnil,omitempty" name:"Action"`
 
 	// 惩罚时长，0-2天。
@@ -24874,7 +24880,7 @@ type RateLimitUserRule struct {
 	// 自定义返回页面的名称。Action 是 page 时必填，且不能为空。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 自定义响应 Id。该 Id 可通过查询自定义错误页列表接口获取。默认值为default，使用系统默认页面。Action 是 page 时必填，且不能为空。
+	// 自定义响应 Id。该 Id 可通过查询自定义错误页列表接口获取。默认值为default，使用系统默认页面。Action 是 page 时必填，且不能为空。	
 	CustomResponseId *string `json:"CustomResponseId,omitnil,omitempty" name:"CustomResponseId"`
 
 	// 自定义返回页面的响应码。Action 是 page 时必填，且不能为空，取值: 100~600，不支持 3xx 响应码。默认值：567。
@@ -25013,14 +25019,14 @@ type RefreshMultiPathGatewaySecretKeyRequestParams struct {
 
 type RefreshMultiPathGatewaySecretKeyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 }
 
 func (r *RefreshMultiPathGatewaySecretKeyRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -25052,8 +25058,8 @@ type RefreshMultiPathGatewaySecretKeyResponse struct {
 }
 
 func (r *RefreshMultiPathGatewaySecretKeyResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -25083,7 +25089,7 @@ type RenewPlanRequestParams struct {
 
 type RenewPlanRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 套餐 ID，形如 edgeone-2unuvzjmmn2q。
 	PlanId *string `json:"PlanId,omitnil,omitempty" name:"PlanId"`
 
@@ -25095,8 +25101,8 @@ type RenewPlanRequest struct {
 }
 
 func (r *RenewPlanRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -25130,8 +25136,8 @@ type RenewPlanResponse struct {
 }
 
 func (r *RenewPlanResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -25241,9 +25247,9 @@ type ResponseSpeedLimitParameters struct {
 	MaxSpeed *string `json:"MaxSpeed,omitnil,omitempty" name:"MaxSpeed"`
 
 	// 限速开始值，可以为下载大小或指定时长，填写含单位的数值或变量，指定下载大小或指定时长。
-	//
+	// 
 	// - 当Mode 取值为 LimitAfterSpecificBytesDownloaded 时，单位取值有： KB；
-	//
+	// 
 	// - 当Mode 取值为 LimitAfterSpecificSecondsDownloaded 时，单位取值有： s。
 	StartAt *string `json:"StartAt,omitnil,omitempty" name:"StartAt"`
 }
@@ -25808,7 +25814,7 @@ type S3 struct {
 }
 
 type SearchEngineBots struct {
-	// 来自搜索引擎爬虫的请求的执行动作。 SecurityAction 的 Name 取值支持：<li>Deny：拦截；</li><li>Monitor：观察；</li><li>Disabled：未启用，不启用指定规则；</li><li>Challenge：挑战，其中 ChallengeActionParameters 中的 ChallengeOption 支持 JSChallenge 和 ManagedChallenge；</li><li>Allow：放行（待废弃）。</li>
+	// 来自搜索引擎爬虫的请求的执行动作。 SecurityAction 的 Name 取值支持：<li>Deny：拦截；</li><li>Monitor：观察；</li><li>Disabled：未启用，不启用指定规则；</li><li>Challenge：挑战，其中 ChallengeActionParameters 中的 ChallengeOption 支持 JSChallenge 和 ManagedChallenge；</li><li>Allow：放行（待废弃）。</li> 
 	BaseAction *SecurityAction `json:"BaseAction,omitnil,omitempty" name:"BaseAction"`
 
 	// 指定搜索引擎爬虫请求的处置方式。
@@ -26530,7 +26536,7 @@ type UpgradePlanRequestParams struct {
 
 type UpgradePlanRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 套餐 ID，形如 edgeone-2unuvzjmmn2q。
 	PlanId *string `json:"PlanId,omitnil,omitempty" name:"PlanId"`
 
@@ -26542,8 +26548,8 @@ type UpgradePlanRequest struct {
 }
 
 func (r *UpgradePlanRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -26577,8 +26583,8 @@ type UpgradePlanResponse struct {
 }
 
 func (r *UpgradePlanResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -26733,14 +26739,14 @@ type VerifyOwnershipRequestParams struct {
 
 type VerifyOwnershipRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 站点域名或者站点下的加速域名。
 	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
 }
 
 func (r *VerifyOwnershipRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -26777,8 +26783,8 @@ type VerifyOwnershipResponse struct {
 }
 
 func (r *VerifyOwnershipResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
