@@ -1,0 +1,47 @@
+---
+subcategory: "TencentCloud EdgeOne(TEO)"
+layout: "tencentcloud"
+page_title: "TencentCloud: tencentcloud_teo_apply_free_certificate"
+sidebar_current: "docs-tencentcloud-action-teo_apply_free_certificate"
+description: |-
+  Provides an action to apply for a TEO (EdgeOne) free certificate for a domain via the ApplyFreeCertificate API. After the apply call succeeds, the action polls CheckFreeCertificateVerification until the certificate application succeeds, fails, or times out. This is a one-time operation; no cloud-side state is persisted after the action completes.
+---
+
+# tencentcloud_teo_apply_free_certificate
+
+Provides an action to apply for a TEO (EdgeOne) free certificate for a domain via the ApplyFreeCertificate API. After the apply call succeeds, the action polls CheckFreeCertificateVerification until the certificate application succeeds, fails, or times out. This is a one-time operation; no cloud-side state is persisted after the action completes.
+
+~> **NOTE:** Actions are supported in HashiCorp Terraform version 1.14 and later.
+
+~> **NOTE:** After invoking this action, you need to configure the verification content (DNS record or verification file) according to the verification information returned by the ApplyFreeCertificate API (available in the Terraform apply logs). Once the verification is configured, the action will poll CheckFreeCertificateVerification to confirm the certificate application result within the timeout period. If the verification is not configured in time, the polling may time out and you can retry the apply after completing the configuration.
+
+~> **NOTE:** When `verification_method` is `dns_challenge`, the `CheckFreeCertificateVerification` API returns the error `FailedOperation.ApplyCertDnsVerificationFailed` with the message `No DNS delegation record detected.` if the DNS delegation record has not been detected yet. The action treats this error as a pending state and keeps polling until the DNS delegation record is detected or the polling times out.
+
+## Example Usage
+
+```hcl
+action "tencentcloud_teo_apply_free_certificate" "example" {
+  config {
+    zone_id             = "zone-3fkff38fyw8s"
+    domain              = "example.com"
+    verification_method = "dns_challenge"
+  }
+}
+```
+
+## Argument Reference
+
+The following arguments are supported:
+
+* `domain` - (Required, String) The target domain for which to apply for a free certificate.
+* `verification_method` - (Required, String) The verification method for the free certificate application. Valid values: `http_challenge` (HTTP file verification), `dns_challenge` (DNS delegation verification).
+* `zone_id` - (Required, String) Zone ID.
+
+## API Reference
+
+This action invokes the following TencentCloud APIs:
+
+* Invoke:
+  - [ApplyFreeCertificate](https://www.tencentcloud.com/document/api/1145/75273)
+  - [CheckFreeCertificateVerification](https://www.tencentcloud.com/document/api/1145/75272)
+
