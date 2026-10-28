@@ -2089,6 +2089,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssm_product_secret":                                                       ssm.ResourceTencentCloudSsmProductSecret(),
 			"tencentcloud_ssm_secret_version":                                                       ssm.ResourceTencentCloudSsmSecretVersion(),
 			"tencentcloud_ssm_rotate_product_secret":                                                ssm.ResourceTencentCloudSsmRotateProductSecret(),
+			"tencentcloud_ssm_service_operation":                                                    ssm.ResourceTencentCloudSsmServiceOperation(),
 			"tencentcloud_cdh_instance":                                                             cdh.ResourceTencentCloudCdhInstance(),
 			"tencentcloud_dnspod_domain_instance":                                                   dnspod.ResourceTencentCloudDnspodDomainInstance(),
 			"tencentcloud_dnspod_domain_alias":                                                      dnspod.ResourceTencentCloudDnspodDomainAlias(),

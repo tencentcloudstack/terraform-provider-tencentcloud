@@ -1202,6 +1202,7 @@ tencentcloud_ssm_secret_version_v2
 tencentcloud_ssm_product_secret
 tencentcloud_ssm_ssh_key_pair_secret
 tencentcloud_ssm_rotate_product_secret
+tencentcloud_ssm_service_operation
 
 Ephemeral Resource
 tencentcloud_ssm_secret_version
