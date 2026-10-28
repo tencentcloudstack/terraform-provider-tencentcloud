@@ -3711,6 +3711,26 @@ func (me *TeoService) ApplyFreeCertificate(ctx context.Context, zoneId, domain, 
 	return
 }
 
+const (
+	// teoFreeCertDnsVerificationFailedCode is the error code returned by CheckFreeCertificateVerification
+	// when the verification content of dns_challenge has not been configured or has not taken effect yet.
+	teoFreeCertDnsVerificationFailedCode = "FailedOperation.ApplyCertDnsVerificationFailed"
+	// teoFreeCertDnsDelegationPendingMessage is the message returned together with
+	// teoFreeCertDnsVerificationFailedCode when no DNS delegation record is detected yet.
+	teoFreeCertDnsDelegationPendingMessage = "No DNS delegation record detected."
+)
+
+// isTeoFreeCertDnsDelegationPending reports whether the error returned by CheckFreeCertificateVerification
+// means that the DNS delegation record used by dns_challenge verification has not been detected yet.
+// This is a transient state (the record may not be configured or not taken effect yet), so the caller
+// should keep polling instead of failing immediately.
+func isTeoFreeCertDnsDelegationPending(sdkErr *sdkErrors.TencentCloudSDKError) bool {
+	if sdkErr.GetCode() != teoFreeCertDnsVerificationFailedCode {
+		return false
+	}
+	return strings.Contains(strings.ToLower(sdkErr.GetMessage()), strings.ToLower(teoFreeCertDnsDelegationPendingMessage))
+}
+
 func (me *TeoService) CheckFreeCertificateVerification(ctx context.Context, zoneId, domain string, timeout time.Duration) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
@@ -3732,6 +3752,13 @@ func (me *TeoService) CheckFreeCertificateVerification(ctx context.Context, zone
 				code := sdkErr.GetCode()
 				if code == "UnauthorizedOperation.NoPermission" || code == "UnauthorizedOperation.CamUnauthorized" {
 					return resource.NonRetryableError(e)
+				}
+				if isTeoFreeCertDnsDelegationPending(sdkErr) {
+					log.Printf("[DEBUG]%s api[%s] dns delegation record not detected yet, keep polling, request body [%s], reason[%s]\n",
+						logId, request.GetAction(), request.ToJsonString(), sdkErr.GetMessage())
+					return resource.RetryableError(fmt.Errorf("teo apply_free_certificate dns delegation record for domain (%s) is not detected yet, "+
+						"please complete the DNS delegation record configuration according to the dns verification content "+
+						"and wait for it to take effect: %w", domain, e))
 				}
 			}
 			return resource.RetryableError(e)

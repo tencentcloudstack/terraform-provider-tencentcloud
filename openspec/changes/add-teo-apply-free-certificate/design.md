@@ -140,6 +140,12 @@ func (me *TeoService) WaitTeoOriginACLById(ctx context.Context, timeout time.Dur
 **理由**：
 - 参考实现 `WaitTeoOriginACLById` 使用 `resource.Retry` + `resource.RetryableError` 模式轮询状态，本次沿用。
 
+**`dns_challenge` 中间态错误处理**：
+- 云 API 在 DNS 委派记录尚未检测到时，会由 `CheckFreeCertificateVerification` 返回 `FailedOperation.ApplyCertDnsVerificationFailed` + `No DNS delegation record detected.`。该错误表示"委派记录还没生效"（可能用户尚未配置或 DNS 尚未传播），并非终态失败，因此必须继续轮询。
+- 实现：新增包级常量 `teoFreeCertDnsVerificationFailedCode = "FailedOperation.ApplyCertDnsVerificationFailed"`、`teoFreeCertDnsDelegationPendingMessage = "No DNS delegation record detected."`，并新增未导出辅助函数 `isTeoFreeCertDnsDelegationPending(sdkErr *sdkErrors.TencentCloudSDKError) bool`（同时匹配错误码与错误信息，错误信息大小写不敏感包含匹配）。
+- 在 retry 闭包的错误分支中，权限类错误（`UnauthorizedOperation.NoPermission` / `UnauthorizedOperation.CamUnauthorized`）仍返回 `resource.NonRetryableError`；命中 `isTeoFreeCertDnsDelegationPending` 时打印 `[DEBUG]` 日志（含 logId、action、request body、message）并返回 `resource.RetryableError`，错误信息中拼接"请按 DNS 验证内容完成委派记录配置并等待生效"的指引（使用 `%w` 保留原始 SDK 错误）；其余错误维持原有 `resource.RetryableError(e)` 行为。
+- 由于 `resource.Retry` 在超时时返回最后一次 retryable error（`vendor/.../helper/retry/wait.go` 中 `RetryContext` 的 `resultErr`），轮询超时后最终上报给用户的诊断信息即包含该 DNS 委派记录指引，便于定位问题。
+
 ### Decision 5: 异步轮询超时取 3 * ReadRetryTimeout
 
 **选择**：在 `Invoke` 中调用 `TeoService.CheckFreeCertificateVerification(ctx, zoneId, domain, 3*tccommon.ReadRetryTimeout)` 轮询证书申请结果，与 `NewMongodbRestoreDbInstance`（3 * ReadRetryTimeout）等异步操作一致。
@@ -151,14 +157,14 @@ func (me *TeoService) WaitTeoOriginACLById(ctx context.Context, timeout time.Dur
 
 ### Decision 6: 不注册到 SDKv2 provider.go，仅在 framework/registry.go 注册
 
-**选择**：仅在 `tencentcloud/framework/registry.go` 的 `actionFactories` 追加 `teo.NewTeoApplyFreeCertificate`（import 块 `services/teo` 已存在）；不修改 `tencentcloud/provider.go`。
+**选择**：仅在 `tencentcloud/framework/registry.go` 的 `actionFactories` 追加 `teo.NewTeoApplyFreeCertificate`（import 块 `services/teo` 已存在）；不修改 `tencentcloud/provider.go`；在 `tencentcloud/provider.md` 的 TEO `Action` 索引段追加 `tencentcloud_teo_apply_free_certificate`（`gendoc` 从 `provider.md` 解析产品/资源索引，框架 action 与 SDKv2 资源共用同一索引段）。
 
 **理由**：
 - framework action 资源通过 `framework/registry.go` 统一注册，与 teo、bdrc action 一致；在 SDKv2 `provider.go` ResourcesMap 注册会导致重复注册与 mux 冲突。
 
 ### Decision 7: 文档命名与格式
 
-**选择**：文档文件 `action_tc_teo_apply_free_certificate.md`，格式为一句话描述（带上云产品名称 TEO）+ Example Usage（action 语法 `action "tencentcloud_teo_apply_free_certificate" "example" { config { ... } }`）+ NOTE 提示 Terraform 1.14+ 支持。无 Import 段、无手动 Argument/Attribute Reference。
+**选择**：文档文件 `action_tc_teo_apply_free_certificate.md`，格式为一句话描述（带上云产品名称 TEO）+ Example Usage（action 语法 `action "tencentcloud_teo_apply_free_certificate" "example" { config { ... } }`）+ NOTE 提示 Terraform 1.14+ 支持 + NOTE 说明 `dns_challenge` 下 `FailedOperation.ApplyCertDnsVerificationFailed`（`No DNS delegation record detected.`）会被视为待验证中间态继续轮询。无 Import 段、无手动 Argument/Attribute Reference。
 
 **理由**：与参考 framework action 文档 `action_tc_teo_confirm_origin_acl_update.md` 格式一致。
 
@@ -167,6 +173,7 @@ func (me *TeoService) WaitTeoOriginACLById(ctx context.Context, timeout time.Dur
 - **Risk**：framework action 功能依赖 Terraform 1.14+ → **Mitigation**：仓库已存在 framework mux 机制，teo action 已注册并通过，本次仅追加一条 factory 条目，风险可控。
 - **Risk**：`CheckFreeCertificateVerification` 轮询需要用户先在域名侧配置好验证（DNS 记录或验证文件），若用户未配置则轮询将超时失败 → **Mitigation**：在文档 NOTE 中提示用户需在调用 action 前或调用后立即配置验证内容（根据 ApplyFreeCertificate 返回的验证信息），验证配置完成后重试 apply 以使轮询成功。
 - **Risk**：`CheckFreeCertificateVerification` API 错误中哪些属于"验证未通过"可重试、哪些属不可重试，SDK 文档未列出全部错误码 → **Mitigation**：采用保守策略，将非 `UnauthorizedOperation.NoPermission`/`UnauthorizedOperation.CamUnauthorized` 等权限类错误视为可重试（转 `resource.RetryableError`），让外层 retry 在超时范围内持续尝试；权限类错误直接 NonRetryableError 上报。
+- **Risk**：`dns_challenge` 场景下 DNS 委派记录未配置/未生效时，`CheckFreeCertificateVerification` 会返回 `FailedOperation.ApplyCertDnsVerificationFailed`（`No DNS delegation record detected.`），若直接失败会让用户在验证尚未生效时就被打断 → **Mitigation**：通过 `isTeoFreeCertDnsDelegationPending` 显式识别该错误并转为 `resource.RetryableError` 继续轮询，同时在错误信息与文档 NOTE 中提示用户按 DNS 验证内容完成委派记录配置；若轮询超时仍未检测到记录，最终诊断信息中保留该指引。
 
 ## Migration Plan
 

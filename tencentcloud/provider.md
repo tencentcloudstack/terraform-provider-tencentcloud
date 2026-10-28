@@ -1682,6 +1682,7 @@ tencentcloud_teo_edge_kv_namespace
 tencentcloud_teo_dns_records_status
 
 Action
+tencentcloud_teo_apply_free_certificate
 tencentcloud_teo_confirm_origin_acl_update
 
 TencentCloud ServiceMesh(TCM)

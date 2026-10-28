@@ -4,6 +4,8 @@ Provides an action to apply for a TEO (EdgeOne) free certificate for a domain vi
 
 ~> **NOTE:** After invoking this action, you need to configure the verification content (DNS record or verification file) according to the verification information returned by the ApplyFreeCertificate API (available in the Terraform apply logs). Once the verification is configured, the action will poll CheckFreeCertificateVerification to confirm the certificate application result within the timeout period. If the verification is not configured in time, the polling may time out and you can retry the apply after completing the configuration.
 
+~> **NOTE:** When `verification_method` is `dns_challenge`, the `CheckFreeCertificateVerification` API returns the error `FailedOperation.ApplyCertDnsVerificationFailed` with the message `No DNS delegation record detected.` if the DNS delegation record has not been detected yet. The action treats this error as a pending state and keeps polling until the DNS delegation record is detected or the polling times out.
+
 Example Usage
 
 ```hcl

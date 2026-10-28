@@ -68,7 +68,7 @@ The TEO service layer SHALL provide an `ApplyFreeCertificate(ctx, zoneId, domain
 - **THEN** a deferred function SHALL log `[CRITAL]` with the log ID, action name, request body, and error reason
 
 ### Requirement: Service Layer CheckFreeCertificateVerification Polling Method
-The TEO service layer SHALL provide a `CheckFreeCertificateVerification(ctx, zoneId, domain string, timeout time.Duration) (errRet error)` method that polls `CheckFreeCertificateVerificationWithContext` via `resource.Retry(timeout, ...)`. The method SHALL return `nil` when the response `CommonName` is non-empty (certificate application succeeded). When the API returns a verification-not-passed error, the method SHALL return `resource.RetryableError` to continue polling. When the API returns a permission/authorization error, the method SHALL return `resource.NonRetryableError`. The method SHALL log success/failure.
+The TEO service layer SHALL provide a `CheckFreeCertificateVerification(ctx, zoneId, domain string, timeout time.Duration) (errRet error)` method that polls `CheckFreeCertificateVerificationWithContext` via `resource.Retry(timeout, ...)`. The method SHALL return `nil` when the response `CommonName` is non-empty (certificate application succeeded). When the API returns a verification-not-passed error, the method SHALL return `resource.RetryableError` to continue polling. When the API returns the `FailedOperation.ApplyCertDnsVerificationFailed` error whose message contains `No DNS delegation record detected.`, the method SHALL treat it as a pending state, log it, and return `resource.RetryableError` carrying a guidance message so polling continues. When the API returns a permission/authorization error, the method SHALL return `resource.NonRetryableError`. The method SHALL log success/failure.
 
 #### Scenario: Polling succeeds when CommonName is non-empty
 - **WHEN** `CheckFreeCertificateVerificationWithContext` returns a response with non-empty `CommonName`
@@ -77,6 +77,20 @@ The TEO service layer SHALL provide a `CheckFreeCertificateVerification(ctx, zon
 #### Scenario: Polling retries on verification-not-passed error
 - **WHEN** `CheckFreeCertificateVerificationWithContext` returns a verification-not-passed error
 - **THEN** the service method SHALL return `resource.RetryableError` to allow the outer retry loop to continue polling
+
+#### Scenario: Polling retries when DNS delegation record is not detected
+- **WHEN** `CheckFreeCertificateVerificationWithContext` returns a `*sdkErrors.TencentCloudSDKError` with code `FailedOperation.ApplyCertDnsVerificationFailed` and message containing `No DNS delegation record detected.`
+- **THEN** `isTeoFreeCertDnsDelegationPending` SHALL report `true` for that error
+- **AND** the service method SHALL log a `[DEBUG]` line containing the log ID, action name, request body, and error message
+- **AND** the service method SHALL return `resource.RetryableError` whose error message contains the DNS delegation record configuration guidance, so the polling continues instead of failing immediately
+
+#### Scenario: DNS delegation record guidance surfaced on polling timeout
+- **WHEN** the DNS delegation record is never detected within the `timeout` duration
+- **THEN** `resource.Retry` SHALL return the last retryable error, so the caller receives an error containing the DNS delegation record guidance
+
+#### Scenario: Non-pending ApplyCertDnsVerificationFailed error keeps default behavior
+- **WHEN** `CheckFreeCertificateVerificationWithContext` returns a `FailedOperation.ApplyCertDnsVerificationFailed` error whose message does not contain `No DNS delegation record detected.`
+- **THEN** the service method SHALL fall back to the default retryable-error handling
 
 #### Scenario: Polling fails on permission error
 - **WHEN** `CheckFreeCertificateVerificationWithContext` returns a permission/authorization error (e.g. `UnauthorizedOperation.NoPermission`, `UnauthorizedOperation.CamUnauthorized`)
@@ -87,11 +101,15 @@ The TEO service layer SHALL provide a `CheckFreeCertificateVerification(ctx, zon
 - **THEN** the service method SHALL return the timeout error and the `Invoke` handler SHALL add it to `resp.Diagnostics`
 
 ### Requirement: Action Registration
-The system SHALL register the `tencentcloud_teo_apply_free_certificate` action factory `teo.NewTeoApplyFreeCertificate` in `tencentcloud/framework/registry.go`'s `actionFactories` slice, and SHALL NOT register it in the SDKv2 `provider.go` `ResourcesMap`.
+The system SHALL register the `tencentcloud_teo_apply_free_certificate` action factory `teo.NewTeoApplyFreeCertificate` in `tencentcloud/framework/registry.go`'s `actionFactories` slice, SHALL list `tencentcloud_teo_apply_free_certificate` under the TEO `Action` index section of `tencentcloud/provider.md`, and SHALL NOT register it in the SDKv2 `provider.go` `ResourcesMap`.
 
 #### Scenario: Action factory registered
 - **WHEN** the framework provider collects action factories
 - **THEN** `frameworkActions()` SHALL include `teo.NewTeoApplyFreeCertificate`
+
+#### Scenario: Action listed in provider index
+- **WHEN** `gendoc` parses the TEO `Action` index section of `tencentcloud/provider.md`
+- **THEN** the section SHALL contain `tencentcloud_teo_apply_free_certificate`
 
 #### Scenario: Not registered in SDKv2 provider
 - **WHEN** the SDKv2 provider resources map is built
@@ -112,6 +130,14 @@ The system SHALL provide unit tests in `tencentcloud/services/teo/action_tc_teo_
 - **WHEN** a test mocks `ApplyFreeCertificateWithContext` to succeed but `CheckFreeCertificateVerificationWithContext` to always return verification-not-passed
 - **THEN** the test SHALL assert an error diagnostic is produced
 
+#### Scenario: DNS delegation record pending test
+- **WHEN** a test mocks `CheckFreeCertificateVerificationWithContext` to return `FailedOperation.ApplyCertDnsVerificationFailed` (`No DNS delegation record detected.`) on the first call and a non-empty `CommonName` on the following call
+- **THEN** the test SHALL assert no error diagnostic is produced and that `CheckFreeCertificateVerificationWithContext` was called at least twice
+
+#### Scenario: DNS delegation record always missing test
+- **WHEN** a test mocks `CheckFreeCertificateVerificationWithContext` to always return `FailedOperation.ApplyCertDnsVerificationFailed` (`No DNS delegation record detected.`)
+- **THEN** the test SHALL assert an error diagnostic is produced whose detail mentions the DNS delegation record
+
 #### Scenario: Missing input test
 - **WHEN** a test invokes the action with `zone_id`, `domain`, or `verification_method` null/empty
 - **THEN** the test SHALL assert an error diagnostic is produced and the API is not called
@@ -125,8 +151,8 @@ The system SHALL provide unit tests in `tencentcloud/services/teo/action_tc_teo_
 - **THEN** the test SHALL assert `TypeName == "tencentcloud_teo_apply_free_certificate"` and that all required attributes exist with correct types
 
 ### Requirement: Action Documentation
-The system SHALL provide a markdown documentation file `action_tc_teo_apply_free_certificate.md` with a one-line description mentioning TEO, an Example Usage section using the framework action `action` block syntax, and a NOTE about Terraform version support. It SHALL NOT contain an Import section or manually-written Argument/Attribute Reference sections.
+The system SHALL provide a markdown documentation file `action_tc_teo_apply_free_certificate.md` with a one-line description mentioning TEO, an Example Usage section using the framework action `action` block syntax, a NOTE about Terraform version support, and a NOTE describing that the `FailedOperation.ApplyCertDnsVerificationFailed` (`No DNS delegation record detected.`) error of `CheckFreeCertificateVerification` is treated as a pending state for `dns_challenge`. It SHALL NOT contain an Import section or manually-written Argument/Attribute Reference sections.
 
 #### Scenario: Documentation file exists with required sections
 - **WHEN** the action is created
-- **THEN** a `.md` file SHALL exist with a one-line description mentioning TEO, an Example Usage block using `action "tencentcloud_teo_apply_free_certificate" "example" { config { ... } }` syntax, and a NOTE about Terraform 1.14+ support
+- **THEN** a `.md` file SHALL exist with a one-line description mentioning TEO, an Example Usage block using `action "tencentcloud_teo_apply_free_certificate" "example" { config { ... } }` syntax, a NOTE about Terraform 1.14+ support, and a NOTE about the `dns_challenge` DNS delegation record pending handling

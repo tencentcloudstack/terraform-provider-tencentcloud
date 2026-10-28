@@ -12,10 +12,11 @@
 - 在 `tencentcloud/services/teo/service_tencentcloud_teo.go` 新增两个 service 层方法：
   - `ApplyFreeCertificate(ctx, zoneId, domain, verificationMethod string) (dnsVerification *teo.DnsVerification, fileVerification *teo.FileVerification, errRet error)`：封装 `ApplyFreeCertificateWithContext` 调用，内部使用 `resource.Retry(tccommon.WriteRetryTimeout, ...)` 包装，失败用 `tccommon.RetryError(e)` 包装；成功后返回 DnsVerification / FileVerification 验证信息。
   - `CheckFreeCertificateVerification(ctx, zoneId, domain string, timeout time.Duration) error`：使用 `resource.Retry` 轮询 `CheckFreeCertificateVerificationWithContext`，当响应返回证书信息（CommonName 非空）时认为申请成功结束轮询；当 API 返回"验证未通过"类错误时继续重试；超时则返回错误。
+    - 其中 `dns_challenge` 场景下 API 返回 `FailedOperation.ApplyCertDnsVerificationFailed` + `No DNS delegation record detected.`（DNS 委派记录尚未检测到）属于验证进行中的中间态：service 层通过 `isTeoFreeCertDnsDelegationPending` 显式识别该错误组合，打印 `[DEBUG]` 日志并返回 `resource.RetryableError`（错误信息中提示用户按 DNS 验证内容完成委派记录配置），继续轮询直至检测到记录或轮询超时，而不是立即失败。
 - 在 `tencentcloud/framework/registry.go` 的 `actionFactories` 末尾注册 `teo.NewTeoApplyFreeCertificate`（import 块中 `services/teo` 已存在，无需新增）。
-- 新增单元测试 `tencentcloud/services/teo/action_tc_teo_apply_free_certificate_test.go`，使用 gomonkey mock 云 API，覆盖 Invoke 成功（含轮询成功）、ApplyFreeCertificate API 错误、CheckFreeCertificateVerification 轮询失败/超时、缺必填输入、client 未配置、Metadata/Schema 校验等路径。
+- 新增单元测试 `tencentcloud/services/teo/action_tc_teo_apply_free_certificate_test.go`，使用 gomonkey mock 云 API，覆盖 Invoke 成功（含轮询成功）、ApplyFreeCertificate API 错误、CheckFreeCertificateVerification 轮询失败/超时、`FailedOperation.ApplyCertDnsVerificationFailed`（`No DNS delegation record detected.`）后继续轮询成功与持续缺失时超时报错、缺必填输入、client 未配置、Metadata/Schema 校验等路径。
 - 新增资源文档 `tencentcloud/services/teo/action_tc_teo_apply_free_certificate.md`（一句话描述带上 TEO 云产品名称；action 语法 Example Usage；NOTE 提示 Terraform 1.14+ 支持；无 Import 段；无手动 Argument/Attribute Reference）。
-- 无需修改 `tencentcloud/provider.go`（framework action 资源通过 `framework/registry.go` 统一注册，不在 SDKv2 ResourcesMap 中注册）。
+- 无需修改 `tencentcloud/provider.go`（framework action 资源通过 `framework/registry.go` 统一注册，不在 SDKv2 ResourcesMap 中注册）；需在 `tencentcloud/provider.md` 的 TEO `Action` 索引段追加 `tencentcloud_teo_apply_free_certificate`，供 `gendoc` 生成文档索引。
 - connectivity 层无需改动：teo 客户端访问方法 `UseTeoV20220901Client()` 已存在。
 
 ## Capabilities
@@ -34,6 +35,7 @@
   - `tencentcloud/services/teo/action_tc_teo_apply_free_certificate_test.go`（新增 — 单元测试）
   - `tencentcloud/services/teo/action_tc_teo_apply_free_certificate.md`（新增 — 文档）
   - `tencentcloud/framework/registry.go`（修改 — 在 `actionFactories` 追加 `teo.NewTeoApplyFreeCertificate`）
+  - `tencentcloud/provider.md`（修改 — 在 TEO `Action` 索引段追加 `tencentcloud_teo_apply_free_certificate`）
 - 依赖：使用已 vendored 的 `tencentcloud-sdk-go` 中 `teo/v20220901` 包（`ApplyFreeCertificateRequest` / `ApplyFreeCertificateResponse` / `DnsVerification` / `FileVerification` / `CheckFreeCertificateVerificationRequest` / `CheckFreeCertificateVerificationResponse`），无需新增 vendor；复用现有 `TeoService` 结构体。
 - 向后兼容：纯新增资源，不影响已有资源配置与 state。
 - 文档：需通过收尾阶段 `make doc` 生成 `website/docs/` 下对应文档（禁止手改 website 目录）。

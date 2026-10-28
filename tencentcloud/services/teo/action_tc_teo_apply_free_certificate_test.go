@@ -234,6 +234,107 @@ func TestTeoApplyFreeCertificate_Invoke_VerificationTimeout(t *testing.T) {
 	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "checking TEO free certificate verification")
 }
 
+// TestTeoApplyFreeCertificate_Invoke_DnsDelegationRecordPending tests that the
+// CheckFreeCertificateVerification error FailedOperation.ApplyCertDnsVerificationFailed
+// ("No DNS delegation record detected.") is treated as a pending state, so the polling
+// keeps going instead of failing immediately.
+func TestTeoApplyFreeCertificate_Invoke_DnsDelegationRecordPending(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	client := &connectivity.TencentCloudClient{}
+	teoClient := &teosdk.Client{}
+	patches.ApplyMethodReturn(client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "ApplyFreeCertificateWithContext", func(_ context.Context, request *teosdk.ApplyFreeCertificateRequest) (*teosdk.ApplyFreeCertificateResponse, error) {
+		resp := teosdk.NewApplyFreeCertificateResponse()
+		resp.Response = &teosdk.ApplyFreeCertificateResponseParams{
+			DnsVerification: &teosdk.DnsVerification{
+				Subdomain:   ptrStringTeoApplyFreeCertificate("_acme-challenge"),
+				RecordType:  ptrStringTeoApplyFreeCertificate("CNAME"),
+				RecordValue: ptrStringTeoApplyFreeCertificate("xxx.teo-validation.com"),
+			},
+		}
+		return resp, nil
+	})
+
+	checkCount := 0
+	patches.ApplyMethodFunc(teoClient, "CheckFreeCertificateVerificationWithContext", func(_ context.Context, request *teosdk.CheckFreeCertificateVerificationRequest) (*teosdk.CheckFreeCertificateVerificationResponse, error) {
+		checkCount++
+		if checkCount == 1 {
+			return nil, &sdkErrors.TencentCloudSDKError{
+				Code:    "FailedOperation.ApplyCertDnsVerificationFailed",
+				Message: "No DNS delegation record detected.",
+			}
+		}
+		resp := teosdk.NewCheckFreeCertificateVerificationResponse()
+		resp.Response = &teosdk.CheckFreeCertificateVerificationResponseParams{
+			CommonName: ptrStringTeoApplyFreeCertificate("example.com"),
+		}
+		return resp, nil
+	})
+
+	aImpl := teo.NewTeoApplyFreeCertificate()
+	a := aImpl.(*teo.TeoApplyFreeCertificate)
+	setTeoApplyFreeCertificateClient(a, client)
+
+	req := newTeoApplyFreeCertificateInvokeRequest(t, "zone-123", "example.com", "dns_challenge")
+	resp := &action.InvokeResponse{}
+	a.Invoke(context.Background(), req, resp)
+
+	assert.False(t, resp.Diagnostics.HasError(), "expected no error diagnostics, got: %v", resp.Diagnostics)
+	assert.GreaterOrEqual(t, checkCount, 2, "expected CheckFreeCertificateVerification to be polled again after the dns delegation record error")
+}
+
+// TestTeoApplyFreeCertificate_Invoke_DnsDelegationRecordAlwaysMissing tests that when
+// CheckFreeCertificateVerification keeps reporting FailedOperation.ApplyCertDnsVerificationFailed
+// ("No DNS delegation record detected."), the polling times out and surfaces a diagnostic
+// telling the user to configure the DNS delegation record.
+func TestTeoApplyFreeCertificate_Invoke_DnsDelegationRecordAlwaysMissing(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	// Patch ReadRetryTimeout to a very small value so that the polling timeout
+	// (3 * ReadRetryTimeout) finishes quickly in the test.
+	patches.ApplyGlobalVar(&tccommon.ReadRetryTimeout, 1*time.Second)
+
+	client := &connectivity.TencentCloudClient{}
+	teoClient := &teosdk.Client{}
+	patches.ApplyMethodReturn(client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "ApplyFreeCertificateWithContext", func(_ context.Context, request *teosdk.ApplyFreeCertificateRequest) (*teosdk.ApplyFreeCertificateResponse, error) {
+		resp := teosdk.NewApplyFreeCertificateResponse()
+		resp.Response = &teosdk.ApplyFreeCertificateResponseParams{
+			DnsVerification: &teosdk.DnsVerification{
+				Subdomain:   ptrStringTeoApplyFreeCertificate("_acme-challenge"),
+				RecordType:  ptrStringTeoApplyFreeCertificate("CNAME"),
+				RecordValue: ptrStringTeoApplyFreeCertificate("xxx.teo-validation.com"),
+			},
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(teoClient, "CheckFreeCertificateVerificationWithContext", func(_ context.Context, request *teosdk.CheckFreeCertificateVerificationRequest) (*teosdk.CheckFreeCertificateVerificationResponse, error) {
+		return nil, &sdkErrors.TencentCloudSDKError{
+			Code:    "FailedOperation.ApplyCertDnsVerificationFailed",
+			Message: "No DNS delegation record detected.",
+		}
+	})
+
+	aImpl := teo.NewTeoApplyFreeCertificate()
+	a := aImpl.(*teo.TeoApplyFreeCertificate)
+	setTeoApplyFreeCertificateClient(a, client)
+
+	req := newTeoApplyFreeCertificateInvokeRequest(t, "zone-123", "example.com", "dns_challenge")
+	resp := &action.InvokeResponse{}
+	a.Invoke(context.Background(), req, resp)
+
+	assert.True(t, resp.Diagnostics.HasError())
+	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "checking TEO free certificate verification")
+	assert.Contains(t, resp.Diagnostics.Errors()[0].Detail(), "DNS delegation record")
+	assert.Contains(t, resp.Diagnostics.Errors()[0].Detail(), "No DNS delegation record detected.")
+}
+
 // TestTeoApplyFreeCertificate_Invoke_MissingInput tests missing required inputs
 // are rejected before any API call
 func TestTeoApplyFreeCertificate_Invoke_MissingInput(t *testing.T) {
