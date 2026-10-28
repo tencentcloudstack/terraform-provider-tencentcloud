@@ -86,11 +86,11 @@ func (a *SslUploadCertificateInstance) Schema(ctx context.Context, _ action.Sche
 				Description: "The resource type that needs to be deployed. Currently, only `clb` is supported.",
 			},
 			"certificate_public_key": schema.StringAttribute{
-				Required:    true,
+				Optional:    true,
 				Description: "Certificate public key. If you upload the certificate public key, CertificateId does not need to be passed.",
 			},
 			"certificate_private_key": schema.StringAttribute{
-				Required:    true,
+				Optional:    true,
 				Description: "Certificate private key. If you upload the certificate public key, CertificateId does not need to be passed.",
 			},
 			"certificate_id": schema.StringAttribute{
@@ -152,22 +152,6 @@ func (a *SslUploadCertificateInstance) Invoke(ctx context.Context, req action.In
 		resp.Diagnostics.AddError(
 			"Missing old_certificate_id",
 			"old_certificate_id is required and cannot be empty.",
-		)
-		return
-	}
-
-	if data.CertificatePublicKey.IsNull() || data.CertificatePublicKey.IsUnknown() || data.CertificatePublicKey.ValueString() == "" {
-		resp.Diagnostics.AddError(
-			"Missing certificate_public_key",
-			"certificate_public_key is required and cannot be empty.",
-		)
-		return
-	}
-
-	if data.CertificatePrivateKey.IsNull() || data.CertificatePrivateKey.IsUnknown() || data.CertificatePrivateKey.ValueString() == "" {
-		resp.Diagnostics.AddError(
-			"Missing certificate_private_key",
-			"certificate_private_key is required and cannot be empty.",
 		)
 		return
 	}
@@ -249,11 +233,19 @@ func (a *SslUploadCertificateInstance) Invoke(ctx context.Context, req action.In
 	request := ssl.NewUploadUpdateCertificateInstanceRequest()
 	request.OldCertificateId = &oldCertificateId
 	request.ResourceTypes = resourceTypes
-	request.CertificatePublicKey = helper.String(data.CertificatePublicKey.ValueString())
-	request.CertificatePrivateKey = helper.String(data.CertificatePrivateKey.ValueString())
+	if !data.CertificatePrivateKey.IsNull() && !data.CertificatePrivateKey.IsUnknown() && data.CertificatePrivateKey.ValueString() != "" {
+		request.CertificatePrivateKey = helper.String(data.CertificatePrivateKey.ValueString())
+	}
+	if !data.CertificatePublicKey.IsNull() && !data.CertificatePublicKey.IsUnknown() && data.CertificatePublicKey.ValueString() != "" {
+		request.CertificatePublicKey = helper.String(data.CertificatePublicKey.ValueString())
+	}
 	if !data.CertificateId.IsNull() && !data.CertificateId.IsUnknown() && data.CertificateId.ValueString() != "" {
 		certificateId := data.CertificateId.ValueString()
 		request.CertificateId = &certificateId
+		// If CertificateId is provided, the public/private key content is not required. Clear them to avoid conflicts.
+		// The SSL R&D team has advised passing an empty string.
+		request.CertificatePublicKey = helper.String("")
+		request.CertificatePrivateKey = helper.String("")
 	}
 	request.ResourceTypesRegions = resourceTypesRegions
 
