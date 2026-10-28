@@ -1788,6 +1788,24 @@ func (me *TencentCloudClient) UseCfwClient(iacExtInfo ...IacExtInfo) *cfw.Client
 	return me.cfwConn
 }
 
+func (me *TencentCloudClient) UseFwmClient(iacExtInfo ...IacExtInfo) *fwmv20250611.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
+	if me.fwmv20250611Conn != nil {
+		me.fwmv20250611Conn.WithHttpTransport(&logRoundTripper)
+		return me.fwmv20250611Conn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.fwmv20250611Conn, _ = fwmv20250611.NewClient(me.Credential, me.Region, cpf)
+	me.fwmv20250611Conn.WithHttpTransport(&logRoundTripper)
+
+	return me.fwmv20250611Conn
+}
+
 func (me *TencentCloudClient) UseOceanusClient() *oceanus.Client {
 	if me.oceanusConn != nil {
 		return me.oceanusConn

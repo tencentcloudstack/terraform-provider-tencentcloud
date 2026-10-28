@@ -1,5 +1,5 @@
 ---
-subcategory: "Tencent Cloud Firewall Manager(FWM)"
+subcategory: "Firewall Manager(FWM)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_fwm_rule_group"
 sidebar_current: "docs-tencentcloud-resource-fwm_rule_group"
@@ -32,27 +32,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `app_id` - Tenant APP ID.
-* `create_by` - Creator sub account UIN.
-* `create_name` - Creator name.
-* `create_time` - Creation time.
-* `direction` - Direction. `1`: inbound, `0`: outbound, `-1`: no direction.
-* `exec_areas` - Execution stages.
 * `group_id` - Rule group ID.
-* `receive_account` - Associated delivery accounts.
-  * `members` - Members of the account group, only returned when `receiver_type` is `1`.
-    * `app_id` - Member APP ID.
-    * `member_id` - Member ID.
-    * `nickname` - Member name.
-    * `node_name` - Member node name.
-    * `uin` - Member UIN.
-  * `nickname` - Tenant name.
-  * `receiver_type` - Receiver type. `0`: account UIN, `1`: account group.
-  * `uin` - Tenant UIN.
-* `rule_count` - Number of rules in the rule group.
-* `update_by` - Updater sub account UIN.
-* `update_name` - Updater name.
-* `update_time` - Update time.
 
 ## API Reference
 
@@ -70,6 +50,6 @@ This resource interacts with the following TencentCloud APIs:
 FWM rule group can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_fwm_rule_group.example fwmrg-wsrrhuvrib
+terraform import tencentcloud_fwm_rule_group.example fwmrg-3r5c8tzb47
 ```
 

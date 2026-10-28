@@ -30,11 +30,10 @@ func ResourceTencentCloudFwmRuleGroup() *schema.Resource {
 			},
 
 			"product": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ForceNew:     true,
-				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"enterprise_sg", "cfw_nat_acl", "cfw_vpc_acl", "cfw_edge_acl"}),
-				Description:  "Product the rule group belongs to. Valid values: `enterprise_sg` (enterprise security group), `cfw_vpc_acl` (VPC border firewall), `cfw_nat_acl` (NAT border firewall), `cfw_edge_acl` (internet border firewall).",
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "Product the rule group belongs to. Valid values: `enterprise_sg` (enterprise security group), `cfw_vpc_acl` (VPC border firewall), `cfw_nat_acl` (NAT border firewall), `cfw_edge_acl` (internet border firewall).",
 			},
 
 			// computed
@@ -42,128 +41,6 @@ func ResourceTencentCloudFwmRuleGroup() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Rule group ID.",
-			},
-
-			"app_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Tenant APP ID.",
-			},
-
-			"rule_count": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Number of rules in the rule group.",
-			},
-
-			"create_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Creation time.",
-			},
-
-			"update_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Update time.",
-			},
-
-			"create_by": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Creator sub account UIN.",
-			},
-
-			"create_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Creator name.",
-			},
-
-			"update_by": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Updater sub account UIN.",
-			},
-
-			"update_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Updater name.",
-			},
-
-			"receive_account": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "Associated delivery accounts.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"uin": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Tenant UIN.",
-						},
-						"nickname": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Tenant name.",
-						},
-						"receiver_type": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Receiver type. `0`: account UIN, `1`: account group.",
-						},
-						"members": {
-							Type:        schema.TypeList,
-							Computed:    true,
-							Description: "Members of the account group, only returned when `receiver_type` is `1`.",
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"app_id": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Member APP ID.",
-									},
-									"uin": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Member UIN.",
-									},
-									"nickname": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Member name.",
-									},
-									"member_id": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Member ID.",
-									},
-									"node_name": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Member node name.",
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-
-			"exec_areas": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "Execution stages.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
-
-			"direction": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Direction. `1`: inbound, `0`: outbound, `-1`: no direction.",
 			},
 		},
 	}
@@ -178,6 +55,7 @@ func resourceTencentCloudFwmRuleGroupCreate(d *schema.ResourceData, meta interfa
 		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 		service = NewFwmService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		request = fwmv20250611.NewCreateRuleGroupRequest()
+		groupId string
 	)
 
 	if v, ok := d.GetOk("group_name"); ok {
@@ -188,7 +66,6 @@ func resourceTencentCloudFwmRuleGroupCreate(d *schema.ResourceData, meta interfa
 		request.Product = helper.String(v.(string))
 	}
 
-	var groupId string
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseFwmV20250611Client().CreateRuleGroupWithContext(ctx, request)
 		if e != nil {
@@ -253,13 +130,9 @@ func resourceTencentCloudFwmRuleGroupRead(d *schema.ResourceData, meta interface
 	}
 
 	if respData == nil {
-		log.Printf("[CRUD] tencentcloud_fwm_rule_group id=%s", d.Id())
+		log.Printf("[WARN]%s resource `tencentcloud_fwm_rule_group` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
-	}
-
-	if respData.GroupId != nil {
-		_ = d.Set("group_id", respData.GroupId)
 	}
 
 	if respData.GroupName != nil {
@@ -267,58 +140,11 @@ func resourceTencentCloudFwmRuleGroupRead(d *schema.ResourceData, meta interface
 	}
 
 	if respData.Product != nil {
-		_ = d.Set("product", fwmRuleGroupProductCodeToName(*respData.Product))
+		_ = d.Set("product", respData.Product)
 	}
 
-	if respData.AppId != nil {
-		_ = d.Set("app_id", respData.AppId)
-	}
-
-	if respData.RuleCount != nil {
-		_ = d.Set("rule_count", respData.RuleCount)
-	}
-
-	if respData.CreateTime != nil {
-		_ = d.Set("create_time", respData.CreateTime)
-	}
-
-	if respData.UpdateTime != nil {
-		_ = d.Set("update_time", respData.UpdateTime)
-	}
-
-	if respData.CreateBy != nil {
-		_ = d.Set("create_by", respData.CreateBy)
-	}
-
-	if respData.CreateName != nil {
-		_ = d.Set("create_name", respData.CreateName)
-	}
-
-	if respData.UpdateBy != nil {
-		_ = d.Set("update_by", respData.UpdateBy)
-	}
-
-	if respData.UpdateName != nil {
-		_ = d.Set("update_name", respData.UpdateName)
-	}
-
-	if respData.ReceiveAccount != nil {
-		_ = d.Set("receive_account", fwmRuleGroupReceiveAccountsToMaps(respData.ReceiveAccount))
-	}
-
-	if respData.ExecAreas != nil {
-		execAreas := make([]string, 0, len(respData.ExecAreas))
-		for _, execArea := range respData.ExecAreas {
-			if execArea == nil {
-				continue
-			}
-			execAreas = append(execAreas, *execArea)
-		}
-		_ = d.Set("exec_areas", execAreas)
-	}
-
-	if respData.Direction != nil {
-		_ = d.Set("direction", respData.Direction)
+	if respData.GroupId != nil {
+		_ = d.Set("group_id", respData.GroupId)
 	}
 
 	return nil
@@ -399,71 +225,4 @@ func resourceTencentCloudFwmRuleGroupDelete(d *schema.ResourceData, meta interfa
 	}
 
 	return nil
-}
-
-func fwmRuleGroupProductCodeToName(v string) string {
-	switch v {
-	case "1":
-		return "enterprise_sg"
-	case "2":
-		return "cfw_nat_acl"
-	case "3":
-		return "cfw_vpc_acl"
-	case "4":
-		return "cfw_edge_acl"
-	default:
-		return v
-	}
-}
-
-func fwmRuleGroupReceiveAccountsToMaps(receiveAccounts []*fwmv20250611.ReceiveAccount) []map[string]interface{} {
-	receiveAccountList := make([]map[string]interface{}, 0, len(receiveAccounts))
-	for _, receiveAccount := range receiveAccounts {
-		if receiveAccount == nil {
-			continue
-		}
-
-		receiveAccountMap := map[string]interface{}{}
-		if receiveAccount.Uin != nil {
-			receiveAccountMap["uin"] = receiveAccount.Uin
-		}
-		if receiveAccount.Nickname != nil {
-			receiveAccountMap["nickname"] = receiveAccount.Nickname
-		}
-		if receiveAccount.ReceiverType != nil {
-			receiveAccountMap["receiver_type"] = receiveAccount.ReceiverType
-		}
-		if receiveAccount.Members != nil {
-			membersList := make([]map[string]interface{}, 0, len(receiveAccount.Members))
-			for _, member := range receiveAccount.Members {
-				if member == nil {
-					continue
-				}
-
-				memberMap := map[string]interface{}{}
-				if member.AppId != nil {
-					memberMap["app_id"] = member.AppId
-				}
-				if member.Uin != nil {
-					memberMap["uin"] = member.Uin
-				}
-				if member.Nickname != nil {
-					memberMap["nickname"] = member.Nickname
-				}
-				if member.MemberId != nil {
-					memberMap["member_id"] = member.MemberId
-				}
-				if member.NodeName != nil {
-					memberMap["node_name"] = member.NodeName
-				}
-				membersList = append(membersList, memberMap)
-			}
-
-			receiveAccountMap["members"] = membersList
-		}
-
-		receiveAccountList = append(receiveAccountList, receiveAccountMap)
-	}
-
-	return receiveAccountList
 }
