@@ -6,9 +6,10 @@ import (
 	"log"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
-	fwm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/fwm/v20250611"
+	fwmv20250611 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/fwm/v20250611"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -19,22 +20,23 @@ type FwmService struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (me *FwmService) DescribeFwmMemberGroup(ctx context.Context, appId, memberId string) (member *fwm.OrganMemberItem, errRet error) {
+func NewFwmService(client *connectivity.TencentCloudClient) *FwmService {
+	return &FwmService{client: client}
+}
+
+func (me *FwmService) DescribeFwmAccountGroupById(ctx context.Context, groupId string) (accountGroup *fwmv20250611.AccountGroup, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	request := fwm.NewDescribeOrganMembersRequest()
-	filterName := "AppId"
-	filterValue := appId
-	operatorType := int64(1)
-	request.Filters = []*fwm.CommonFilter{
+	request := fwmv20250611.NewDescribeAccountGroupsRequest()
+	request.Filters = []*fwmv20250611.CommonFilter{
 		{
-			Name:         &filterName,
-			Values:       []*string{&filterValue},
-			OperatorType: &operatorType,
+			Name:         helper.String("GroupId"),
+			Values:       []*string{helper.String(groupId)},
+			OperatorType: helper.Int64(1),
 		},
 	}
-	limit := int64(100)
-	request.Limit = &limit
+	request.Limit = helper.Int64(20)
+	request.Offset = helper.Int64(0)
 
 	defer func() {
 		if errRet != nil {
@@ -42,46 +44,132 @@ func (me *FwmService) DescribeFwmMemberGroup(ctx context.Context, appId, memberI
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	response := fwmv20250611.NewDescribeAccountGroupsResponse()
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseFwmV20250611Client().DescribeAccountGroupsWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
 
-	var offset int64 = 0
-	request.Offset = &offset
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe fwm account group failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.AccountGroups) < 1 {
+		return
+	}
+
+	accountGroup = response.Response.AccountGroups[0]
+	return
+}
+
+func (me *FwmService) DeleteFwmAccountGroupById(ctx context.Context, groupId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := fwmv20250611.NewDeleteAccountGroupRequest()
+	request.GroupId = helper.String(groupId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseFwmV20250611Client().DeleteAccountGroupWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Delete fwm account group failed, Response is nil."))
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
+func (me *FwmService) DescribeFwmMemberGroup(ctx context.Context, userMemberId string) (member *fwmv20250611.OrganMemberItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := fwmv20250611.NewDescribeOrganMembersRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
 
 	for {
-		response, err := me.client.UseFwmClient().DescribeOrganMembersWithContext(ctx, request)
+		request.Offset = &offset
+		request.Limit = &limit
+		ref := []*fwmv20250611.OrganMemberItem{}
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseFwmV20250611Client().DescribeOrganMembers(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.Members == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe organ members failed, Response is nil."))
+			}
+
+			ref = result.Response.Members
+			return nil
+		})
+
 		if err != nil {
 			errRet = err
 			return
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || response.Response == nil {
-			return
-		}
-
-		for _, item := range response.Response.Members {
-			if item.MemberId != nil && *item.MemberId == memberId {
-				member = item
+		for _, m := range ref {
+			if m != nil && m.MemberId != nil && *m.MemberId == userMemberId {
+				member = m
 				return
 			}
 		}
 
-		total := int64(0)
-		if response.Response.TotalCount != nil {
-			total = *response.Response.TotalCount
+		if len(ref) < int(limit) {
+			break
 		}
+
 		offset += limit
-		request.Offset = &offset
-		if offset >= total {
-			return
-		}
 	}
+
+	return
 }
 
 func (me *FwmService) ModifyFwmMemberGroup(ctx context.Context, userMemberId, groupId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	request := fwm.NewModifyMemberGroupRequest()
+	request := fwmv20250611.NewModifyMemberGroupRequest()
 	request.UserMemberId = helper.String(userMemberId)
 	request.GroupId = helper.String(groupId)
 
@@ -93,7 +181,7 @@ func (me *FwmService) ModifyFwmMemberGroup(ctx context.Context, userMemberId, gr
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseFwmClient().ModifyMemberGroupWithContext(ctx, request)
+	response, err := me.client.UseFwmV20250611Client().ModifyMemberGroupWithContext(ctx, request)
 	if err != nil {
 		errRet = err
 		return

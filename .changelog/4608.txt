@@ -1,0 +1,3 @@
+```release-note:enhancement
+data-source/tencentcloud_dts_sync_jobs: add `schema_mode` computed field in `list.objects.databases` block to expose the schema selection mode (All/Partial) used by PostgreSQL and SQL Server links
+```
