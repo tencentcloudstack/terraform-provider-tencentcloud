@@ -33,7 +33,6 @@ type KmsInstance struct {
 type KmsInstanceModel struct {
 	InstanceChargeType    types.String `tfsdk:"instance_charge_type"`
 	ProductVersion        types.String `tfsdk:"product_version"`
-	ClientToken           types.String `tfsdk:"client_token"`
 	InstanceChargePrepaid types.Object `tfsdk:"instance_charge_prepaid"`
 	Tags                  types.List   `tfsdk:"tags"`
 }
@@ -66,10 +65,6 @@ func (a *KmsInstance) Schema(_ context.Context, _ action.SchemaRequest, resp *ac
 			"product_version": schema.StringAttribute{
 				Optional:    true,
 				Description: "Product version. Valid value: `professional` (professional edition).",
-			},
-			"client_token": schema.StringAttribute{
-				Optional:    true,
-				Description: "Reentrant client id for idempotency.",
 			},
 		},
 		Blocks: map[string]schema.Block{
@@ -130,15 +125,13 @@ func (a *KmsInstance) Invoke(ctx context.Context, req action.InvokeRequest, resp
 	}
 
 	logId := tccommon.GetLogId(ctx)
+	clientToken := helper.BuildToken()
 	request := kms.NewCreateKmsInstanceRequest()
 	request.InstanceChargeType = helper.String(data.InstanceChargeType.ValueString())
+	request.ClientToken = helper.String(clientToken)
 
 	if !data.ProductVersion.IsNull() && !data.ProductVersion.IsUnknown() && data.ProductVersion.ValueString() != "" {
 		request.ProductVersion = helper.String(data.ProductVersion.ValueString())
-	}
-
-	if !data.ClientToken.IsNull() && !data.ClientToken.IsUnknown() && data.ClientToken.ValueString() != "" {
-		request.ClientToken = helper.String(data.ClientToken.ValueString())
 	}
 
 	if !data.InstanceChargePrepaid.IsNull() && !data.InstanceChargePrepaid.IsUnknown() {

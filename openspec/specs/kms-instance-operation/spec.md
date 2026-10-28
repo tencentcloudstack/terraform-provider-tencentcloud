@@ -12,8 +12,13 @@ The provider SHALL provide a terraform-plugin-framework action `tencentcloud_kms
 
 #### Scenario: Invoke with required and optional parameters
 
-- **WHEN** a user invokes `tencentcloud_kms_instance` with `instance_charge_type` set to `PREPAID`, `product_version` set to `professional`, a `client_token`, an `instance_charge_prepaid` block containing `period` and `renew_flag`, and a `tags` list with `tag_key`/`tag_value` entries
+- **WHEN** a user invokes `tencentcloud_kms_instance` with `instance_charge_type` set to `PREPAID`, `product_version` set to `professional`, an `instance_charge_prepaid` block containing `period` and `renew_flag`, and a `tags` list with `tag_key`/`tag_value` entries
 - **THEN** the provider SHALL call `CreateKmsInstance` with the corresponding request fields and SHALL log the returned `instance_id`, `deal_name`, and `bill_id` for observability
+
+#### Scenario: Client token is generated internally
+
+- **WHEN** a user invokes `tencentcloud_kms_instance`
+- **THEN** the action schema SHALL NOT expose a `client_token` input attribute, and the provider SHALL generate the `ClientToken` request field internally via `helper.BuildToken()` and always send it to `CreateKmsInstance`
 
 #### Scenario: Empty response from CreateKmsInstance
 

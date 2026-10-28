@@ -76,7 +76,7 @@ func newTagValue(tagKey, tagValue string) tftypes.Value {
 // the given raw config values.
 func newKmsInstanceInvokeRequest(
 	t *testing.T,
-	instanceChargeType, productVersion, clientToken string,
+	instanceChargeType, productVersion string,
 	prepaidVal tftypes.Value,
 	tags []tftypes.Value,
 ) action.InvokeRequest {
@@ -94,14 +94,12 @@ func newKmsInstanceInvokeRequest(
 		AttributeTypes: map[string]tftypes.Type{
 			"instance_charge_type":    tftypes.String,
 			"product_version":         tftypes.String,
-			"client_token":            tftypes.String,
 			"instance_charge_prepaid": prepaidObjType(),
 			"tags":                    tagsListType,
 		},
 	}, map[string]tftypes.Value{
 		"instance_charge_type":    tftypes.NewValue(tftypes.String, instanceChargeType),
 		"product_version":         tftypes.NewValue(tftypes.String, productVersion),
-		"client_token":            tftypes.NewValue(tftypes.String, clientToken),
 		"instance_charge_prepaid": prepaidVal,
 		"tags":                    tagsVal,
 	})
@@ -137,7 +135,8 @@ func TestKmsInstance_Invoke_Success(t *testing.T) {
 		gotRequest = request
 		assert.Equal(t, "PREPAID", *request.InstanceChargeType)
 		assert.Equal(t, "professional", *request.ProductVersion)
-		assert.Equal(t, "tf-token-xxx", *request.ClientToken)
+		assert.NotNil(t, request.ClientToken)
+		assert.NotEmpty(t, *request.ClientToken)
 		assert.NotNil(t, request.InstanceChargePrepaid)
 		assert.Equal(t, uint64(1), *request.InstanceChargePrepaid.Period)
 		assert.Equal(t, uint64(1), *request.InstanceChargePrepaid.RenewFlag)
@@ -158,7 +157,7 @@ func TestKmsInstance_Invoke_Success(t *testing.T) {
 	a := kms.NewKmsInstance().(*kms.KmsInstance)
 	setKmsInstanceClient(a, client)
 
-	req := newKmsInstanceInvokeRequest(t, "PREPAID", "professional", "tf-token-xxx",
+	req := newKmsInstanceInvokeRequest(t, "PREPAID", "professional",
 		newPrepaidValue(1, 1),
 		[]tftypes.Value{newTagValue("env", "prod")},
 	)
@@ -192,7 +191,7 @@ func TestKmsInstance_Invoke_MinimalInput(t *testing.T) {
 	a := kms.NewKmsInstance().(*kms.KmsInstance)
 	setKmsInstanceClient(a, client)
 
-	req := newKmsInstanceInvokeRequest(t, "PREPAID", "", "",
+	req := newKmsInstanceInvokeRequest(t, "PREPAID", "",
 		nullPrepaidValue(),
 		nil,
 	)
@@ -203,7 +202,8 @@ func TestKmsInstance_Invoke_MinimalInput(t *testing.T) {
 	assert.NotNil(t, gotRequest)
 	assert.Equal(t, "PREPAID", *gotRequest.InstanceChargeType)
 	assert.Nil(t, gotRequest.ProductVersion)
-	assert.Nil(t, gotRequest.ClientToken)
+	assert.NotNil(t, gotRequest.ClientToken)
+	assert.NotEmpty(t, *gotRequest.ClientToken)
 	assert.Nil(t, gotRequest.InstanceChargePrepaid)
 	assert.Empty(t, gotRequest.Tags)
 }
@@ -224,7 +224,7 @@ func TestKmsInstance_Invoke_APIError(t *testing.T) {
 	a := kms.NewKmsInstance().(*kms.KmsInstance)
 	setKmsInstanceClient(a, client)
 
-	req := newKmsInstanceInvokeRequest(t, "PREPAID", "", "",
+	req := newKmsInstanceInvokeRequest(t, "PREPAID", "",
 		nullPrepaidValue(),
 		nil,
 	)
@@ -257,7 +257,7 @@ func TestKmsInstance_Invoke_EmptyResponse(t *testing.T) {
 	a := kms.NewKmsInstance().(*kms.KmsInstance)
 	setKmsInstanceClient(a, client)
 
-	req := newKmsInstanceInvokeRequest(t, "PREPAID", "", "",
+	req := newKmsInstanceInvokeRequest(t, "PREPAID", "",
 		nullPrepaidValue(),
 		nil,
 	)
@@ -287,7 +287,7 @@ func TestKmsInstance_Invoke_MissingInput(t *testing.T) {
 	a := kms.NewKmsInstance().(*kms.KmsInstance)
 	setKmsInstanceClient(a, client)
 
-	req := newKmsInstanceInvokeRequest(t, "", "", "",
+	req := newKmsInstanceInvokeRequest(t, "", "",
 		nullPrepaidValue(),
 		nil,
 	)
@@ -302,7 +302,7 @@ func TestKmsInstance_Invoke_MissingInput(t *testing.T) {
 func TestKmsInstance_Invoke_ClientNotConfigured(t *testing.T) {
 	a := kms.NewKmsInstance().(*kms.KmsInstance)
 
-	req := newKmsInstanceInvokeRequest(t, "PREPAID", "", "",
+	req := newKmsInstanceInvokeRequest(t, "PREPAID", "",
 		nullPrepaidValue(),
 		nil,
 	)
@@ -328,10 +328,9 @@ func TestKmsInstance_MetadataAndSchema(t *testing.T) {
 	attrs := schemaResp.Schema.Attributes
 	assert.Contains(t, attrs, "instance_charge_type")
 	assert.Contains(t, attrs, "product_version")
-	assert.Contains(t, attrs, "client_token")
+	assert.NotContains(t, attrs, "client_token")
 	assert.True(t, attrs["instance_charge_type"].IsRequired())
 	assert.True(t, attrs["product_version"].IsOptional())
-	assert.True(t, attrs["client_token"].IsOptional())
 
 	blocks := schemaResp.Schema.Blocks
 	assert.Contains(t, blocks, "instance_charge_prepaid")

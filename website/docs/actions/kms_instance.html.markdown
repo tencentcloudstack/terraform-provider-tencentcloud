@@ -20,7 +20,6 @@ action "tencentcloud_kms_instance" "example" {
   config {
     instance_charge_type = "PREPAID"
     product_version      = "professional"
-    client_token         = "tf-token-xxx"
 
     instance_charge_prepaid {
       period     = 1
@@ -40,7 +39,6 @@ action "tencentcloud_kms_instance" "example" {
 The following arguments are supported:
 
 * `instance_charge_type` - (Required, String) Instance charge type. Valid value: `PREPAID`.
-* `client_token` - (Optional, String) Reentrant client id for idempotency.
 * `instance_charge_prepaid` - (Optional, Object) Prepaid instance charge info.
 * `product_version` - (Optional, String) Product version. Valid value: `professional` (professional edition).
 * `tags` - (Optional, List of Object) Instance tags.

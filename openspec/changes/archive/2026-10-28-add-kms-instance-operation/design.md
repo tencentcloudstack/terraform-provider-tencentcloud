@@ -78,7 +78,8 @@ KMS client 获取方法定义于 `tencentcloud/connectivity/client.go` `UseKmsCl
 
 **Goals:**
 - 新增 framework action `tencentcloud_kms_instance`，封装 `CreateKmsInstance` 云 API。
-- 支持 instance_charge_type、product_version、client_token 顶层属性。
+- 支持 instance_charge_type、product_version 顶层属性。
+- `client_token` 不作为用户可配置属性暴露，由 provider 内部通过 `helper.BuildToken()` 自动生成后透传给云 API。
 - 支持 instance_charge_prepaid SingleNestedBlock（period、renew_flag）。
 - 支持 tags ListNestedBlock（tag_key、tag_value）。
 - 在 framework/registry.go 中注册 action 工厂。
@@ -103,13 +104,13 @@ KMS client 获取方法定义于 `tencentcloud/connectivity/client.go` `UseKmsCl
 
 - `instance_charge_type`：StringAttribute，Required。云 API 必填。
 - `product_version`：StringAttribute，Optional。
-- `client_token`：StringAttribute，Optional。
+- 不定义 `client_token` 属性。云 API 的 `ClientToken` 由 provider 在 Invoke 中通过 `clientToken := helper.BuildToken()` 内部生成并始终下发，用户无需也无法配置。
 - `instance_charge_prepaid`：SingleNestedBlock，含 period（Int64Attribute Required）、renew_flag（Int64Attribute Required）。对应云 API `InstanceChargePrepaid *InstanceChargePrepaid`。
 - `tags`：ListNestedBlock，含 tag_key（StringAttribute Required）、tag_value（StringAttribute Required）。对应云 API `Tags []*Tag`。
 
 framework action schema 使用 `action/schema` 包（非 resource/schema），SingleNestedBlock 在 model 中映射为 `types.Object`，ListNestedBlock 映射为 `types.List`。
 
-可选字段的赋值规则：`product_version`、`client_token` 仅在非 null、非 unknown 且非空字符串时才写入 request，避免把显式空字符串透传给云 API 触发参数校验失败；`tags` 中 `tag_key` 为空的条目会被跳过并打印 `[WARN]` 日志（`tag_key` 在 schema 中为 Required，此规则仅用于防御异常配置）。
+可选字段的赋值规则：`product_version` 仅在非 null、非 unknown 且非空字符串时才写入 request，避免把显式空字符串透传给云 API 触发参数校验失败；`request.ClientToken` 始终由 `helper.BuildToken()` 的返回值填充，不由用户输入决定；`tags` 中 `tag_key` 为空的条目会被跳过并打印 `[WARN]` 日志（`tag_key` 在 schema 中为 Required，此规则仅用于防御异常配置）。
 
 ### 3. 输出属性处理与空响应校验
 
@@ -138,6 +139,6 @@ service 方法统一放在 `service_tencentcloud_kms.go`，不新增额外的 `s
 ## Risks / Trade-offs
 
 - **[约束] 需 Terraform 1.14+**：action 是较新的 Terraform 特性，低版本用户无法使用。在 .md 文档中已用 NOTE 提示。
-- **[风险] 重复购买**：CreateKmsInstance 为下单操作，若用户重复执行 action 可能重复下单。action 无状态，不会阻止重复调用。提供 client_token 支持幂等重入。
+- **[风险] 重复购买**：CreateKmsInstance 为下单操作，若用户重复执行 action 可能重复下单。action 无状态，不会阻止重复调用。每次 Invoke 都会由 `helper.BuildToken()` 重新生成 ClientToken 以支持云侧幂等重入语义（同一次 Invoke 内 retry 复用同一 token）。
 - **[权衡] 无输出属性**：instance_id 等仅日志输出，用户无法在 HCL 中引用。符合 framework action 设计限制。
 - **[风险] InstanceChargePrepaid 字段类型为 uint64**：period、renew_flag 在云 API 中为 `*uint64`。Schema 中使用 `schema.Int64Attribute`，读取时用 `helper.Int64Uint64(v)` 转换。

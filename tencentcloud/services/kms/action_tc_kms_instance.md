@@ -9,7 +9,6 @@ action "tencentcloud_kms_instance" "example" {
   config {
     instance_charge_type = "PREPAID"
     product_version      = "professional"
-    client_token         = "tf-token-xxx"
 
     instance_charge_prepaid {
       period     = 1

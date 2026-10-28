@@ -5,7 +5,8 @@ Terraform Provider for TencentCloud 目前缺少创建 KMS（Key Management Serv
 ## What Changes
 
 - 新增 framework action `tencentcloud_kms_instance`（terraform-plugin-framework action 类型），封装 KMS 云 API 接口 `CreateKmsInstance`，支持创建预付费 KMS 实例。action 命名沿用 provider 内既有 framework action 规范（`action_tc_<product>_<name>.go` / `tencentcloud_<product>_<name>`，不带 `_operation` 后缀，与 `tencentcloud_antiddos_unblock_resources`、`tencentcloud_mongodb_restore_db_instance` 等保持一致）。
-  - 支持 instance_charge_type（付费类型）、product_version（版本类型）、client_token（可重入客户端 ID）等顶层属性。
+  - 支持 instance_charge_type（付费类型）、product_version（版本类型）等顶层属性。
+  - 不对外暴露 `client_token` 属性：provider 内部使用 `clientToken := helper.BuildToken()` 自动生成可重入客户端 ID 并透传给云 API，用户无需也无法配置该项。
   - 支持 instance_charge_prepaid 嵌套 block（SingleNestedBlock，含 period 购买时长、renew_flag 续费标记）。
   - 支持 tags 标签列表（ListNestedBlock，tag_key / tag_value）。
   - 创建成功后将 instance_id、deal_name、bill_id 通过日志输出（framework action 无法对外暴露输出属性）；若云 API 返回空 Response 或空 InstanceId，则打印现场日志并返回 error diagnostic，不报告成功。
