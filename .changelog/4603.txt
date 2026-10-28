@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_sqlserver_basic_instance: support new params
+```
+
+```release-note:enhancement
+resource/tencentcloud_sqlserver_general_cloud_instance: support new params
+```

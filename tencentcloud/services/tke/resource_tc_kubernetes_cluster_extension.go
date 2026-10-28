@@ -1382,8 +1382,14 @@ func resourceTencentCloudKubernetesClusterUpdateOnStart(ctx context.Context) err
 				exist, addSubnets := helper.CheckElementsExist(oldSubnets, subnets)
 				if !exist {
 					err = fmt.Errorf("the `eni_subnet_ids` parameter does not allow modification of existing subnet ID data %v. "+
+						"the cluster is in pure VPC-CNI mode, which cannot be disabled and then re-enabled. "+
+						"for clusters in Global Router mode, VPC-CNI mode can be enabled or disabled separately as an additional network mode, "+
+						"but all pods in VPC-CNI mode within the cluster must be destroyed: "+
 						"if you want to modify the existing subnet ID, please first set eni_subnet_ids to empty to turn off the VPC-CNI network capability, "+
-						"and then fill in the latest subnet ID", oldSubnets)
+						"and then fill in the latest subnet ID. "+
+						"to remove subnets, be sure to follow the steps in the documentation: "+
+						"VPC-CNI fixed IP mode: https://cloud.tencent.com/document/product/457/126847, "+
+						"VPC-CNI non-fixed IP mode: https://cloud.tencent.com/document/product/457/126848", oldSubnets)
 					return err
 				}
 				if d.HasChange("vpc_cni_type") || d.HasChange("claim_expired_seconds") {

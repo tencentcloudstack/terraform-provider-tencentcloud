@@ -625,6 +625,60 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 											},
 										},
 									},
+									"frequent_scanning_protection": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "High-frequency scan protection configuration option. When a visitor's frequent requests hit the managed rule configured as block within a period of time, all requests from that visitor are blocked.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"enabled": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Computed:    true,
+													Description: "Whether the high-frequency scan protection rule is enabled. Valid values: `on`, `off`.",
+												},
+												"id": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Rule ID of the high-frequency scan protection, output only.",
+												},
+												"action": {
+													Type:        schema.TypeList,
+													MaxItems:    1,
+													Optional:    true,
+													Computed:    true,
+													Description: "The disposal action. Required when `enabled` is `on`. SecurityAction Name supports `Deny`, `Monitor`, `JSChallenge`.",
+													Elem:        securityActionSchema(),
+												},
+												"count_by": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Computed:    true,
+													Description: "Request statistical matching method. Valid values: `http.request.xff_header_ip`, `http.request.ip`.",
+												},
+												"block_threshold": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Computed:    true,
+													Description: "Cumulative block count threshold within the counting period. Range 1-4294967294.",
+												},
+												"counting_period": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Computed:    true,
+													Description: "Statistics time window. Range 5-1800, unit seconds (s), e.g. `5s`.",
+												},
+												"action_duration": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Computed:    true,
+													Description: "Duration of the disposal action. Range 60-86400, unit seconds (s), e.g. `60s`.",
+												},
+											},
+										},
+									},
 								},
 							},
 						},
@@ -3293,6 +3347,35 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 			managedRulesMap["managed_rule_groups"] = managedRuleGroupsList
 		}
 
+		if respData.ManagedRules.FrequentScanningProtection != nil {
+			frequentScanningProtectionMap := map[string]interface{}{}
+			if respData.ManagedRules.FrequentScanningProtection.Enabled != nil {
+				frequentScanningProtectionMap["enabled"] = respData.ManagedRules.FrequentScanningProtection.Enabled
+			}
+			if respData.ManagedRules.FrequentScanningProtection.Id != nil {
+				frequentScanningProtectionMap["id"] = respData.ManagedRules.FrequentScanningProtection.Id
+			}
+			if respData.ManagedRules.FrequentScanningProtection.Action != nil {
+				actionMap := flattenSecurityAction(respData.ManagedRules.FrequentScanningProtection.Action)
+				if len(actionMap) > 0 {
+					frequentScanningProtectionMap["action"] = []interface{}{actionMap}
+				}
+			}
+			if respData.ManagedRules.FrequentScanningProtection.CountBy != nil {
+				frequentScanningProtectionMap["count_by"] = respData.ManagedRules.FrequentScanningProtection.CountBy
+			}
+			if respData.ManagedRules.FrequentScanningProtection.BlockThreshold != nil {
+				frequentScanningProtectionMap["block_threshold"] = respData.ManagedRules.FrequentScanningProtection.BlockThreshold
+			}
+			if respData.ManagedRules.FrequentScanningProtection.CountingPeriod != nil {
+				frequentScanningProtectionMap["counting_period"] = respData.ManagedRules.FrequentScanningProtection.CountingPeriod
+			}
+			if respData.ManagedRules.FrequentScanningProtection.ActionDuration != nil {
+				frequentScanningProtectionMap["action_duration"] = respData.ManagedRules.FrequentScanningProtection.ActionDuration
+			}
+			managedRulesMap["frequent_scanning_protection"] = []interface{}{frequentScanningProtectionMap}
+		}
+
 		securityPolicyMap["managed_rules"] = []interface{}{managedRulesMap}
 	}
 
@@ -4713,6 +4796,29 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 
 					managedRules.ManagedRuleGroups = append(managedRules.ManagedRuleGroups, &managedRuleGroup)
 				}
+			}
+
+			if frequentScanningProtectionMap, ok := helper.ConvertInterfacesHeadToMap(managedRulesMap["frequent_scanning_protection"]); ok {
+				frequentScanningProtection := teov20220901.FrequentScanningProtection{}
+				if v, ok := frequentScanningProtectionMap["enabled"].(string); ok && v != "" {
+					frequentScanningProtection.Enabled = helper.String(v)
+				}
+				if actionMap, ok := helper.ConvertInterfacesHeadToMap(frequentScanningProtectionMap["action"]); ok && len(actionMap) > 0 {
+					frequentScanningProtection.Action = buildSecurityActionFromMap(actionMap)
+				}
+				if v, ok := frequentScanningProtectionMap["count_by"].(string); ok && v != "" {
+					frequentScanningProtection.CountBy = helper.String(v)
+				}
+				if v, ok := frequentScanningProtectionMap["block_threshold"].(int); ok && v != 0 {
+					frequentScanningProtection.BlockThreshold = helper.IntInt64(v)
+				}
+				if v, ok := frequentScanningProtectionMap["counting_period"].(string); ok && v != "" {
+					frequentScanningProtection.CountingPeriod = helper.String(v)
+				}
+				if v, ok := frequentScanningProtectionMap["action_duration"].(string); ok && v != "" {
+					frequentScanningProtection.ActionDuration = helper.String(v)
+				}
+				managedRules.FrequentScanningProtection = &frequentScanningProtection
 			}
 
 			securityPolicy.ManagedRules = &managedRules
