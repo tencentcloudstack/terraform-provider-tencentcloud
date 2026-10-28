@@ -399,6 +399,7 @@ The `actions` object of `branches` supports the following:
 - `AdvancedOriginRouting`: Advanced origin routing optimization.
 - `Shield`: Origin offload (Shield).
 - `SiteFailover`: Origin site failover.
+- `CustomAction`: Custom configuration.
 * `access_url_redirect_parameters` - (Optional, List) The access url redirection configuration parameter. this parameter is required when name is accessurlredirect.
 * `advanced_origin_routing_parameters` - (Optional, List) Advanced origin routing optimization configuration parameter. This parameter is required when Name is set to AdvancedOriginRouting.
 * `authentication_parameters` - (Optional, List) Token authentication configuration parameter. this parameter is required when name is authentication.
@@ -409,6 +410,7 @@ The `actions` object of `branches` supports the following:
 * `client_ip_header_parameters` - (Optional, List) Client ip header configuration for storing client request ip information. this parameter is required when name is clientipheader.
 * `compression_parameters` - (Optional, List) Intelligent compression configuration. this parameter is required when name is set to compression.
 * `content_compression_parameters` - (Optional, List) Content compression configuration parameters. This parameter is required when the `Name` parameter is set to `ContentCompression`. This parameter uses a whitelist function; please contact Tencent Cloud engineers if needed.
+* `custom_action_parameters` - (Optional, List) Custom action configuration parameter. This parameter is required when Name is set to CustomAction.
 * `error_page_parameters` - (Optional, List) Custom error page configuration parameters. this parameter is required when name is errorpage.
 * `force_redirect_https_parameters` - (Optional, List) Force https redirect configuration parameter. this parameter is required when the name is set to forceredirecthttps.
 * `host_header_parameters` - (Optional, List) Host header rewrite configuration parameter. this parameter is required when name is set to hostheader.
@@ -534,6 +536,15 @@ The `cookie` object of `upstream_request_parameters` supports the following:
 * `switch` - (Optional, String) Whether to enable the origin-pull request parameter cookie. Values: on: enable; off: disable.
 * `values` - (Optional, List) Specifies parameter values. Up to 10 parameters are supported.
 
+The `custom_action_parameters` object of `actions` supports the following:
+
+* `custom_actions` - (Optional, List) List of custom actions.
+
+The `custom_actions` object of `custom_action_parameters` supports the following:
+
+* `action_id` - (Optional, String) Custom action configuration item ID.
+* `parameters` - (Optional, List) Parameter values under the custom action configuration item.
+
 The `custom_time` object of `cache_parameters` supports the following:
 
 * `cache_time` - (Optional, Int) Custom cache time value, unit: seconds. value range: 0-315360000.
@@ -650,6 +661,11 @@ The `origin_authentication_parameters` object of `actions` supports the followin
 The `origin_pull_protocol_parameters` object of `actions` supports the following:
 
 * `protocol` - (Optional, String) Back-to-origin protocol configuration. Possible values are: `http`: use HTTP protocol for back-to-origin; `https`: use HTTPS protocol for back-to-origin; `follow`: follow the protocol.
+
+The `parameters` object of `custom_actions` supports the following:
+
+* `name` - (Optional, String) Parameter field name under the custom action configuration item.
+* `value` - (Optional, String) Parameter field value. serialized from the typed value field corresponding to ValueType.
 
 The `post_max_size_parameters` object of `actions` supports the following:
 
