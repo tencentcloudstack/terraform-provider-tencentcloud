@@ -1819,6 +1819,35 @@ func (me *MonitorService) DescribeMonitorGrafanaPluginOverviewsByFilter(ctx cont
 	return
 }
 
+func (me *MonitorService) DescribeMonitorGrafanaVersionsByFilter(ctx context.Context, param map[string]interface{}) (grafanaVersions []*monitor.GrafanaVersion, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = monitor.NewDescribeGrafanaVersionsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DescribeGrafanaVersions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.Versions == nil {
+		return nil, nil
+	}
+
+	grafanaVersions = response.Response.Versions
+
+	return
+}
+
 func (me *MonitorService) DescribeMonitorGrafanaDnsConfigById(ctx context.Context, instanceId string) (grafanaDnsConfig *monitor.DescribeDNSConfigResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
@@ -2561,14 +2590,17 @@ func (me *MonitorService) DeleteMonitorTmpAlertGroupById(ctx context.Context, in
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMonitorClient().DeletePrometheusAlertGroups(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseMonitorClient().DeletePrometheusAlertGroups(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		return nil
+	})
 
 	return
 }

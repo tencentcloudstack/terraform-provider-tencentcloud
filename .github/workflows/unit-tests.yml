@@ -29,3 +29,8 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: unit
         run: go test -v ./tencentcloud -test.run 'TestProvider'
+
+      # Verify SDKv2 + framework provider mux compatibility (no schema clash,
+      # no duplicate resource/data source type names across stacks).
+      - name: mux compatibility
+        run: make check-mux

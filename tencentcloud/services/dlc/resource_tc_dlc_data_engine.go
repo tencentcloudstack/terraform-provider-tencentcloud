@@ -307,6 +307,27 @@ func ResourceTencentCloudDlcDataEngine() *schema.Resource {
 				Description: "Generation of the engine. SuperSQL means the supersql engine while Native means the standard engine. It is SuperSQL by default.",
 			},
 
+			"tags": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Computed:    true,
+				Description: "Tag list. Each tag contains a key-value pair. Changing this parameter will trigger a new resource since the DLC `UpdateDataEngine` API does not support modifying tags.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"tag_key": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Tag key.",
+						},
+						"tag_value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Tag value.",
+						},
+					},
+				},
+			},
+
 			// computed
 			"data_engine_id": {
 				Type:        schema.TypeString,
@@ -513,6 +534,22 @@ func resourceTencentCloudDlcDataEngineCreate(d *schema.ResourceData, meta interf
 
 	if v, ok := d.GetOk("engine_generation"); ok {
 		request.EngineGeneration = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("tags"); ok {
+		for _, item := range v.(*schema.Set).List() {
+			dMap := item.(map[string]interface{})
+			tagInfo := dlc.TagInfo{}
+			if v, ok := dMap["tag_key"]; ok {
+				tagInfo.TagKey = helper.String(v.(string))
+			}
+
+			if v, ok := dMap["tag_value"]; ok {
+				tagInfo.TagValue = helper.String(v.(string))
+			}
+
+			request.Tags = append(request.Tags, &tagInfo)
+		}
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -790,6 +827,24 @@ func resourceTencentCloudDlcDataEngineRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("engine_generation", dataEngine.EngineGeneration)
 	}
 
+	if dataEngine.TagList != nil {
+		tagsList := make([]map[string]interface{}, 0, len(dataEngine.TagList))
+		for _, tagInfo := range dataEngine.TagList {
+			tagMap := make(map[string]interface{})
+			if tagInfo.TagKey != nil {
+				tagMap["tag_key"] = *tagInfo.TagKey
+			}
+
+			if tagInfo.TagValue != nil {
+				tagMap["tag_value"] = *tagInfo.TagValue
+			}
+
+			tagsList = append(tagsList, tagMap)
+		}
+
+		_ = d.Set("tags", tagsList)
+	}
+
 	if dataEngine.DataEngineId != nil {
 		_ = d.Set("data_engine_id", dataEngine.DataEngineId)
 	}
@@ -815,7 +870,7 @@ func resourceTencentCloudDlcDataEngineUpdate(d *schema.ResourceData, meta interf
 	immutableArgs := []string{"engine_type", "data_engine_name", "cluster_type", "mode", "default_data_engine", "cidr_block",
 		"pay_mode", "time_span", "time_unit", "auto_renew", "engine_exec_type", "tolerable_queue_time",
 		"resource_type", "data_engine_config_pairs", "image_version_name", "main_cluster_name", "auto_authorization",
-		"engine_network_id", "engine_generation"}
+		"engine_network_id", "engine_generation", "tags"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)

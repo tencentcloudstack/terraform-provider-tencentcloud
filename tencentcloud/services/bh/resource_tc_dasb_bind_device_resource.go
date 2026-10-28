@@ -15,10 +15,11 @@ import (
 
 func ResourceTencentCloudDasbBindDeviceResource() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudDasbBindDeviceResourceCreate,
-		Read:   resourceTencentCloudDasbBindDeviceResourceRead,
-		Update: resourceTencentCloudDasbBindDeviceResourceUpdate,
-		Delete: resourceTencentCloudDasbBindDeviceResourceDelete,
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.82.101. Please use `tencentcloud_bh_bind_device_resource` instead.",
+		Create:             resourceTencentCloudDasbBindDeviceResourceCreate,
+		Read:               resourceTencentCloudDasbBindDeviceResourceRead,
+		Update:             resourceTencentCloudDasbBindDeviceResourceUpdate,
+		Delete:             resourceTencentCloudDasbBindDeviceResourceDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},

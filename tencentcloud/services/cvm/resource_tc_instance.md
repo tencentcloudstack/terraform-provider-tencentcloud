@@ -60,6 +60,7 @@ resource "tencentcloud_instance" "example" {
   instance_type        = data.tencentcloud_instance_types.types.instance_types.0.instance_type
   system_disk_type     = "CLOUD_PREMIUM"
   system_disk_size     = 50
+  kms_key_id           = "kms-xxxxxxxx"
   hostname             = "user"
   project_id           = 0
   vpc_id               = tencentcloud_vpc.vpc.id
@@ -128,6 +129,8 @@ resource "tencentcloud_instance" "example" {
   instance_charge_type                    = "PREPAID"
   instance_charge_type_prepaid_period     = 1
   instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
+  delete_with_instance                    = false
+  delete_with_instance_prepaid            = true
   force_delete                            = true
   data_disks {
     data_disk_type = "CLOUD_PREMIUM"
@@ -402,6 +405,65 @@ resource "tencentcloud_instance" "example" {
   running_flag                            = false
   stop_type                               = "SOFT_FIRST"
   stopped_mode                            = "KEEP_CHARGING"
+  data_disks {
+    data_disk_type = "CLOUD_HSSD"
+    data_disk_size = 100
+    encrypt        = false
+  }
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+```
+
+Create CVM instance with CPU topology configuration
+
+```hcl
+resource "tencentcloud_instance" "example" {
+  instance_name              = "tf-example"
+  availability_zone          = "ap-guangzhou-6"
+  image_id                   = "img-eb30mz89"
+  instance_type              = "S5.MEDIUM4"
+  system_disk_type           = "CLOUD_HSSD"
+  system_disk_size           = 50
+  hostname                   = "user"
+  project_id                 = 0
+  vpc_id                     = "vpc-i5yyodl9"
+  subnet_id                  = "subnet-hhi88a58"
+  orderly_security_groups    = ["sg-ma82yjwp"]
+
+  cpu_topology {
+    core_count      = 2
+    thread_per_core = 1
+  }
+
+  data_disks {
+    data_disk_type = "CLOUD_HSSD"
+    data_disk_size = 100
+    encrypt        = false
+  }
+
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+```
+
+Create CVM instance with enable_jumbo_frame
+
+```hcl
+resource "tencentcloud_instance" "example" {
+  instance_name        = "tf-example"
+  availability_zone    = "ap-guangzhou-6"
+  image_id             = "img-eb30mz89"
+  instance_type        = "S5.MEDIUM4"
+  system_disk_type     = "CLOUD_HSSD"
+  system_disk_size     = 50
+  hostname             = "user"
+  project_id           = 0
+  vpc_id               = "vpc-i5yyodl9"
+  subnet_id            = "subnet-hhi88a58"
+  enable_jumbo_frame   = true
   data_disks {
     data_disk_type = "CLOUD_HSSD"
     data_disk_size = 100

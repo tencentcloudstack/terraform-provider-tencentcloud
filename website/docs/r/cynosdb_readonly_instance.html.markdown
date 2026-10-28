@@ -40,7 +40,7 @@ resource "tencentcloud_cynosdb_readonly_instance" "foo" {
 The following arguments are supported:
 
 * `cluster_id` - (Required, String, ForceNew) Cluster ID which the readonly instance belongs to.
-* `instance_name` - (Required, String, ForceNew) Name of instance.
+* `instance_name` - (Required, String) Instance name.
 * `force_delete` - (Optional, Bool) Indicate whether to delete readonly instance directly or not. Default is false. If set true, instance will be deleted instead of staying recycle bin. Note: works for both `PREPAID` and `POSTPAID_BY_HOUR` cluster.
 * `instance_cpu_core` - (Optional, Int) The number of CPU cores of read-write type instance in the CynosDB cluster. Required while creating normal cluster. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.
 * `instance_maintain_duration` - (Optional, Int) Duration time for maintenance, unit in second. `3600` by default.
@@ -58,6 +58,29 @@ In addition to all arguments above, the following attributes are exported:
 * `instance_status` - Status of the instance.
 * `instance_storage_size` - Storage size of the instance, unit in GB.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [AddInstances](https://www.tencentcloud.com/document/api/1098/40754)
+  - [DescribeResourcesByDealName](https://www.tencentcloud.com/document/api/1098/40735)
+  - [ModifyMaintainPeriodConfig](https://www.tencentcloud.com/document/api/1098/40743)
+* Read:
+  - [DescribeInstanceDetail](https://www.tencentcloud.com/document/api/1098/40749)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1098/40747)
+  - [DescribeMaintainPeriod](https://www.tencentcloud.com/document/api/1098/40746)
+* Update:
+  - [DescribeInstanceDetail](https://www.tencentcloud.com/document/api/1098/40749)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1098/40747)
+  - [ModifyInstanceName](https://www.tencentcloud.com/document/api/1098/46317)
+  - [ModifyMaintainPeriodConfig](https://www.tencentcloud.com/document/api/1098/40743)
+  - [UpgradeInstance](https://www.tencentcloud.com/document/api/1098/40739)
+* Delete:
+  - [DescribeInstanceDetail](https://www.tencentcloud.com/document/api/1098/40749)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1098/40747)
+  - [IsolateInstance](https://www.tencentcloud.com/document/api/1098/40744)
+  - [OfflineInstance](https://www.tencentcloud.com/document/api/1098/40741)
 
 ## Import
 

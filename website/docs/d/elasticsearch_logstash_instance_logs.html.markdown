@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
   * `node_id` - Cluster node id.
   * `time` - Log time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeLogstashInstanceLogs](https://www.tencentcloud.com/search/?wd=DescribeLogstashInstanceLogs&type=document&lang=en)
 

@@ -84,6 +84,26 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Task status 1:TaskPending, 2:TaskRunning,3:TaskRunException,4:TaskSuspending 5:TaskSuspendException,6:TaskSuspendException,7:TaskSuspended,9:TaskDeleted.
 * `task_id` - Task Id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateProbeTasks](https://www.tencentcloud.com/search/?wd=CreateProbeTasks&type=document&lang=en)
+  - [DescribeProbeTasks](https://www.tencentcloud.com/search/?wd=DescribeProbeTasks&type=document&lang=en)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeProbeTasks](https://www.tencentcloud.com/search/?wd=DescribeProbeTasks&type=document&lang=en)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [ResumeProbeTask](https://www.tencentcloud.com/search/?wd=ResumeProbeTask&type=document&lang=en)
+  - [SuspendProbeTask](https://www.tencentcloud.com/search/?wd=SuspendProbeTask&type=document&lang=en)
+  - [UpdateProbeTaskAttributes](https://www.tencentcloud.com/search/?wd=UpdateProbeTaskAttributes&type=document&lang=en)
+  - [UpdateProbeTaskConfigurationList](https://www.tencentcloud.com/search/?wd=UpdateProbeTaskConfigurationList&type=document&lang=en)
+* Delete:
+  - [DeleteProbeTask](https://www.tencentcloud.com/search/?wd=DeleteProbeTask&type=document&lang=en)
+  - [DescribeProbeTasks](https://www.tencentcloud.com/search/?wd=DescribeProbeTasks&type=document&lang=en)
 
 ## Import
 

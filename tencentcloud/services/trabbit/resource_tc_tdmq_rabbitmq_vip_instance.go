@@ -48,16 +48,19 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 			},
 			"node_spec": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Node specifications. Valid values: rabbit-vip-basic-5 (for 2C4G), rabbit-vip-profession-2c8g (for 2C8G), rabbit-vip-basic-1 (for 4C8G), rabbit-vip-profession-4c16g (for 4C16G), rabbit-vip-basic-2 (for 8C16G), rabbit-vip-profession-8c32g (for 8C32G), rabbit-vip-basic-4 (for 16C32G), rabbit-vip-profession-16c64g (for 16C64G). The default is rabbit-vip-basic-1. NOTE: The above specifications may be sold out or removed from the shelves.",
 			},
 			"node_num": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "The number of nodes, a minimum of 3 nodes for a multi-availability zone. If not passed, the default single availability zone is 1, and the multi-availability zone is 3.",
 			},
 			"storage_size": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Single node storage specification, the default is 200G.",
 			},
@@ -68,11 +71,13 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 			},
 			"auto_renew_flag": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeBool,
 				Description: "Automatic renewal, the default is true.",
 			},
 			"time_span": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Purchase duration, the default is 1 (month).",
 			},
@@ -346,7 +351,16 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 	}
 
 	if rabbitmqVipInstance.ClusterSpecInfo.MaxStorage != nil {
-		_ = d.Set("storage_size", rabbitmqVipInstance.ClusterSpecInfo.MaxStorage)
+		if rabbitmqVipInstance.ClusterSpecInfo.NodeCount != nil {
+			if *rabbitmqVipInstance.ClusterSpecInfo.NodeCount > 1 {
+				tmp := *rabbitmqVipInstance.ClusterSpecInfo.MaxStorage / *rabbitmqVipInstance.ClusterSpecInfo.NodeCount
+				_ = d.Set("storage_size", tmp)
+			} else {
+				_ = d.Set("storage_size", rabbitmqVipInstance.ClusterSpecInfo.MaxStorage)
+			}
+		} else {
+			_ = d.Set("storage_size", rabbitmqVipInstance.ClusterSpecInfo.MaxStorage)
+		}
 	}
 
 	if rabbitmqVipInstance.ClusterSpecInfo.PublicNetworkTps != nil {

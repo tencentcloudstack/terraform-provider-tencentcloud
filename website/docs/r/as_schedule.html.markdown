@@ -91,4 +91,20 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateScheduledAction](https://www.tencentcloud.com/document/api/377/30996)
+* Read: [DescribeScheduledActions](https://www.tencentcloud.com/document/api/377/30994)
+* Update: [ModifyScheduledAction](https://www.tencentcloud.com/document/api/377/30993)
+* Delete: [DeleteScheduledAction](https://www.tencentcloud.com/document/api/377/30995)
+
+## Import
+
+AS schedule can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_as_schedule.example asst-ezsey1r5
+```
 

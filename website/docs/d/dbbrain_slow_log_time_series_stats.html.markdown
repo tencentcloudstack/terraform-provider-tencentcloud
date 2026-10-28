@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
   * `count` - total.
   * `timestamp` - Statistics start time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSlowLogTimeSeriesStats](https://www.tencentcloud.com/document/api/1035/41184)
 

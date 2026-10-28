@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_ccn_instances_accept_attach: support `order_type` parameter to specify billing account for accepted CCN attachment instances
+```

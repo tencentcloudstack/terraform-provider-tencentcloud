@@ -1,5 +1,5 @@
 ---
-subcategory: "Cloud Audit(Audit)"
+subcategory: "Cloud Audit(CloudAudit)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_audits"
 sidebar_current: "docs-tencentcloud-datasource-audits"
@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
   * `log_file_prefix` - Prefix of the log file of the audit.
   * `name` - Name of the audit.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListAudits](https://www.tencentcloud.com/search/?wd=ListAudits&type=document&lang=en)
 

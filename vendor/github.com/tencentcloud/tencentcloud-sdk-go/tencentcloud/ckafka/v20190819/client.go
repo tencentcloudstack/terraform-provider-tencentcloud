@@ -45,6 +45,64 @@ func NewClient(credential common.CredentialIface, region string, clientProfile *
 }
 
 
+func NewAssociateRoutesSecurityGroupRequest() (request *AssociateRoutesSecurityGroupRequest) {
+    request = &AssociateRoutesSecurityGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "AssociateRoutesSecurityGroup")
+    
+    
+    return
+}
+
+func NewAssociateRoutesSecurityGroupResponse() (response *AssociateRoutesSecurityGroupResponse) {
+    response = &AssociateRoutesSecurityGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// AssociateRoutesSecurityGroup
+// 绑定路由安全组
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) AssociateRoutesSecurityGroup(request *AssociateRoutesSecurityGroupRequest) (response *AssociateRoutesSecurityGroupResponse, err error) {
+    return c.AssociateRoutesSecurityGroupWithContext(context.Background(), request)
+}
+
+// AssociateRoutesSecurityGroup
+// 绑定路由安全组
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) AssociateRoutesSecurityGroupWithContext(ctx context.Context, request *AssociateRoutesSecurityGroupRequest) (response *AssociateRoutesSecurityGroupResponse, err error) {
+    if request == nil {
+        request = NewAssociateRoutesSecurityGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "AssociateRoutesSecurityGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AssociateRoutesSecurityGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAssociateRoutesSecurityGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewAuthorizeTokenRequest() (request *AuthorizeTokenRequest) {
     request = &AuthorizeTokenRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -641,7 +699,7 @@ func NewCreateConnectResourceResponse() (response *CreateConnectResourceResponse
 }
 
 // CreateConnectResource
-// 创建Datahub连接源
+// 创建连接器连接
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -657,7 +715,7 @@ func (c *Client) CreateConnectResource(request *CreateConnectResourceRequest) (r
 }
 
 // CreateConnectResource
-// 创建Datahub连接源
+// 创建连接器连接
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -767,7 +825,7 @@ func NewCreateDatahubTaskResponse() (response *CreateDatahubTaskResponse) {
 }
 
 // CreateDatahubTask
-// 创建DIP转储任务
+// 创建连接器任务
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -784,7 +842,7 @@ func (c *Client) CreateDatahubTask(request *CreateDatahubTaskRequest) (response 
 }
 
 // CreateDatahubTask
-// 创建DIP转储任务
+// 创建连接器任务
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -967,6 +1025,198 @@ func (c *Client) CreateInstancePreWithContext(ctx context.Context, request *Crea
     request.SetContext(ctx)
     
     response = NewCreateInstancePreResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateMetaAndDataSyncDatahubTaskRequest() (request *CreateMetaAndDataSyncDatahubTaskRequest) {
+    request = &CreateMetaAndDataSyncDatahubTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "CreateMetaAndDataSyncDatahubTask")
+    
+    
+    return
+}
+
+func NewCreateMetaAndDataSyncDatahubTaskResponse() (response *CreateMetaAndDataSyncDatahubTaskResponse) {
+    response = &CreateMetaAndDataSyncDatahubTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateMetaAndDataSyncDatahubTask
+// 连接器实例同步任务-元数据、消息同步
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateMetaAndDataSyncDatahubTask(request *CreateMetaAndDataSyncDatahubTaskRequest) (response *CreateMetaAndDataSyncDatahubTaskResponse, err error) {
+    return c.CreateMetaAndDataSyncDatahubTaskWithContext(context.Background(), request)
+}
+
+// CreateMetaAndDataSyncDatahubTask
+// 连接器实例同步任务-元数据、消息同步
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateMetaAndDataSyncDatahubTaskWithContext(ctx context.Context, request *CreateMetaAndDataSyncDatahubTaskRequest) (response *CreateMetaAndDataSyncDatahubTaskResponse, err error) {
+    if request == nil {
+        request = NewCreateMetaAndDataSyncDatahubTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CreateMetaAndDataSyncDatahubTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateMetaAndDataSyncDatahubTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateMetaAndDataSyncDatahubTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateMetaDataAndOffsetSyncDatahubTaskRequest() (request *CreateMetaDataAndOffsetSyncDatahubTaskRequest) {
+    request = &CreateMetaDataAndOffsetSyncDatahubTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "CreateMetaDataAndOffsetSyncDatahubTask")
+    
+    
+    return
+}
+
+func NewCreateMetaDataAndOffsetSyncDatahubTaskResponse() (response *CreateMetaDataAndOffsetSyncDatahubTaskResponse) {
+    response = &CreateMetaDataAndOffsetSyncDatahubTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateMetaDataAndOffsetSyncDatahubTask
+// 连接器实例同步任务-同步元数据、消息数据、消费微点
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateMetaDataAndOffsetSyncDatahubTask(request *CreateMetaDataAndOffsetSyncDatahubTaskRequest) (response *CreateMetaDataAndOffsetSyncDatahubTaskResponse, err error) {
+    return c.CreateMetaDataAndOffsetSyncDatahubTaskWithContext(context.Background(), request)
+}
+
+// CreateMetaDataAndOffsetSyncDatahubTask
+// 连接器实例同步任务-同步元数据、消息数据、消费微点
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateMetaDataAndOffsetSyncDatahubTaskWithContext(ctx context.Context, request *CreateMetaDataAndOffsetSyncDatahubTaskRequest) (response *CreateMetaDataAndOffsetSyncDatahubTaskResponse, err error) {
+    if request == nil {
+        request = NewCreateMetaDataAndOffsetSyncDatahubTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CreateMetaDataAndOffsetSyncDatahubTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateMetaDataAndOffsetSyncDatahubTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateMetaDataAndOffsetSyncDatahubTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateMetaSyncDatahubTaskRequest() (request *CreateMetaSyncDatahubTaskRequest) {
+    request = &CreateMetaSyncDatahubTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "CreateMetaSyncDatahubTask")
+    
+    
+    return
+}
+
+func NewCreateMetaSyncDatahubTaskResponse() (response *CreateMetaSyncDatahubTaskResponse) {
+    response = &CreateMetaSyncDatahubTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateMetaSyncDatahubTask
+// 连接器实例同步任务-元数据同步
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateMetaSyncDatahubTask(request *CreateMetaSyncDatahubTaskRequest) (response *CreateMetaSyncDatahubTaskResponse, err error) {
+    return c.CreateMetaSyncDatahubTaskWithContext(context.Background(), request)
+}
+
+// CreateMetaSyncDatahubTask
+// 连接器实例同步任务-元数据同步
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateMetaSyncDatahubTaskWithContext(ctx context.Context, request *CreateMetaSyncDatahubTaskRequest) (response *CreateMetaSyncDatahubTaskResponse, err error) {
+    if request == nil {
+        request = NewCreateMetaSyncDatahubTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CreateMetaSyncDatahubTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateMetaSyncDatahubTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateMetaSyncDatahubTaskResponse()
     err = c.Send(request, response)
     return
 }
@@ -1275,6 +1525,62 @@ func (c *Client) CreateRouteWithContext(ctx context.Context, request *CreateRout
     request.SetContext(ctx)
     
     response = NewCreateRouteResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateThrottleRuleRequest() (request *CreateThrottleRuleRequest) {
+    request = &CreateThrottleRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "CreateThrottleRule")
+    
+    
+    return
+}
+
+func NewCreateThrottleRuleResponse() (response *CreateThrottleRuleResponse) {
+    response = &CreateThrottleRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateThrottleRule
+// 实例限流规则相关接口
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateThrottleRule(request *CreateThrottleRuleRequest) (response *CreateThrottleRuleResponse, err error) {
+    return c.CreateThrottleRuleWithContext(context.Background(), request)
+}
+
+// CreateThrottleRule
+// 实例限流规则相关接口
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateThrottleRuleWithContext(ctx context.Context, request *CreateThrottleRuleRequest) (response *CreateThrottleRuleResponse, err error) {
+    if request == nil {
+        request = NewCreateThrottleRuleRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CreateThrottleRule")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateThrottleRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateThrottleRuleResponse()
     err = c.Send(request, response)
     return
 }
@@ -1745,7 +2051,7 @@ func NewDeleteConnectResourceResponse() (response *DeleteConnectResourceResponse
 }
 
 // DeleteConnectResource
-// 删除Datahub连接源
+// 删除连接器连接
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1761,7 +2067,7 @@ func (c *Client) DeleteConnectResource(request *DeleteConnectResourceRequest) (r
 }
 
 // DeleteConnectResource
-// 删除Datahub连接源
+// 删除连接器连接
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1809,7 +2115,7 @@ func NewDeleteDatahubTaskResponse() (response *DeleteDatahubTaskResponse) {
 }
 
 // DeleteDatahubTask
-// 删除Dip任务
+// 删除连接器任务
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1823,7 +2129,7 @@ func (c *Client) DeleteDatahubTask(request *DeleteDatahubTaskRequest) (response 
 }
 
 // DeleteDatahubTask
-// 删除Dip任务
+// 删除连接器任务
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2321,6 +2627,62 @@ func (c *Client) DeleteRouteTriggerTimeWithContext(ctx context.Context, request 
     return
 }
 
+func NewDeleteThrottleRuleRequest() (request *DeleteThrottleRuleRequest) {
+    request = &DeleteThrottleRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "DeleteThrottleRule")
+    
+    
+    return
+}
+
+func NewDeleteThrottleRuleResponse() (response *DeleteThrottleRuleResponse) {
+    response = &DeleteThrottleRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteThrottleRule
+// 删除实例限流规则
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteThrottleRule(request *DeleteThrottleRuleRequest) (response *DeleteThrottleRuleResponse, err error) {
+    return c.DeleteThrottleRuleWithContext(context.Background(), request)
+}
+
+// DeleteThrottleRule
+// 删除实例限流规则
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteThrottleRuleWithContext(ctx context.Context, request *DeleteThrottleRuleRequest) (response *DeleteThrottleRuleResponse, err error) {
+    if request == nil {
+        request = NewDeleteThrottleRuleRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DeleteThrottleRule")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteThrottleRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteThrottleRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteTopicRequest() (request *DeleteTopicRequest) {
     request = &DeleteTopicRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2399,82 +2761,6 @@ func (c *Client) DeleteTopicWithContext(ctx context.Context, request *DeleteTopi
     request.SetContext(ctx)
     
     response = NewDeleteTopicResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDeleteTopicIpWhiteListRequest() (request *DeleteTopicIpWhiteListRequest) {
-    request = &DeleteTopicIpWhiteListRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ckafka", APIVersion, "DeleteTopicIpWhiteList")
-    
-    
-    return
-}
-
-func NewDeleteTopicIpWhiteListResponse() (response *DeleteTopicIpWhiteListResponse) {
-    response = &DeleteTopicIpWhiteListResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DeleteTopicIpWhiteList
-// 删除主题IP白名单
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
-//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
-//  INVALIDPARAMETERVALUE_SUBNETIDINVALID = "InvalidParameterValue.SubnetIdInvalid"
-//  INVALIDPARAMETERVALUE_SUBNETNOTBELONGTOZONE = "InvalidParameterValue.SubnetNotBelongToZone"
-//  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
-//  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
-//  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNSUPPORTEDOPERATION_BATCHDELINSTANCELIMIT = "UnsupportedOperation.BatchDelInstanceLimit"
-//  UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"
-func (c *Client) DeleteTopicIpWhiteList(request *DeleteTopicIpWhiteListRequest) (response *DeleteTopicIpWhiteListResponse, err error) {
-    return c.DeleteTopicIpWhiteListWithContext(context.Background(), request)
-}
-
-// DeleteTopicIpWhiteList
-// 删除主题IP白名单
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
-//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
-//  INVALIDPARAMETERVALUE_SUBNETIDINVALID = "InvalidParameterValue.SubnetIdInvalid"
-//  INVALIDPARAMETERVALUE_SUBNETNOTBELONGTOZONE = "InvalidParameterValue.SubnetNotBelongToZone"
-//  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
-//  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
-//  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNSUPPORTEDOPERATION_BATCHDELINSTANCELIMIT = "UnsupportedOperation.BatchDelInstanceLimit"
-//  UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"
-func (c *Client) DeleteTopicIpWhiteListWithContext(ctx context.Context, request *DeleteTopicIpWhiteListRequest) (response *DeleteTopicIpWhiteListResponse, err error) {
-    if request == nil {
-        request = NewDeleteTopicIpWhiteListRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DeleteTopicIpWhiteList")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteTopicIpWhiteList require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDeleteTopicIpWhiteListResponse()
     err = c.Send(request, response)
     return
 }
@@ -2627,6 +2913,90 @@ func (c *Client) DescribeACLWithContext(ctx context.Context, request *DescribeAC
     request.SetContext(ctx)
     
     response = NewDescribeACLResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAccessPolicyRequest() (request *DescribeAccessPolicyRequest) {
+    request = &DescribeAccessPolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "DescribeAccessPolicy")
+    
+    
+    return
+}
+
+func NewDescribeAccessPolicyResponse() (response *DescribeAccessPolicyResponse) {
+    response = &DescribeAccessPolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAccessPolicy
+// 查询实例公网IP白名单列表接口
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+//  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REGIONERROR = "RegionError"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeAccessPolicy(request *DescribeAccessPolicyRequest) (response *DescribeAccessPolicyResponse, err error) {
+    return c.DescribeAccessPolicyWithContext(context.Background(), request)
+}
+
+// DescribeAccessPolicy
+// 查询实例公网IP白名单列表接口
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+//  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REGIONERROR = "RegionError"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeAccessPolicyWithContext(ctx context.Context, request *DescribeAccessPolicyRequest) (response *DescribeAccessPolicyResponse, err error) {
+    if request == nil {
+        request = NewDescribeAccessPolicyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeAccessPolicy")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAccessPolicy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAccessPolicyResponse()
     err = c.Send(request, response)
     return
 }
@@ -2855,7 +3225,7 @@ func NewDescribeConnectResourceResponse() (response *DescribeConnectResourceResp
 }
 
 // DescribeConnectResource
-// 查询Datahub连接源
+// 查询连接器连接详情
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2871,7 +3241,7 @@ func (c *Client) DescribeConnectResource(request *DescribeConnectResourceRequest
 }
 
 // DescribeConnectResource
-// 查询Datahub连接源
+// 查询连接器连接详情
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2919,7 +3289,7 @@ func NewDescribeConnectResourcesResponse() (response *DescribeConnectResourcesRe
 }
 
 // DescribeConnectResources
-// 查询Datahub连接源列表
+// 查询连接器连接列表
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2935,7 +3305,7 @@ func (c *Client) DescribeConnectResources(request *DescribeConnectResourcesReque
 }
 
 // DescribeConnectResources
-// 查询Datahub连接源列表
+// 查询连接器连接列表
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3197,7 +3567,7 @@ func NewDescribeDatahubTaskResponse() (response *DescribeDatahubTaskResponse) {
 }
 
 // DescribeDatahubTask
-// 查询Datahub任务信息
+// 查询连接器任务详情
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3210,7 +3580,7 @@ func (c *Client) DescribeDatahubTask(request *DescribeDatahubTaskRequest) (respo
 }
 
 // DescribeDatahubTask
-// 查询Datahub任务信息
+// 查询连接器任务详情
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3255,7 +3625,7 @@ func NewDescribeDatahubTasksResponse() (response *DescribeDatahubTasksResponse) 
 }
 
 // DescribeDatahubTasks
-// 查询Datahub任务列表
+// 查询连接器任务列表
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3270,7 +3640,7 @@ func (c *Client) DescribeDatahubTasks(request *DescribeDatahubTasksRequest) (res
 }
 
 // DescribeDatahubTasks
-// 查询Datahub任务列表
+// 查询连接器任务列表
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -4105,7 +4475,7 @@ func NewDescribeRegionResponse() (response *DescribeRegionResponse) {
 }
 
 // DescribeRegion
-// 枚举地域,只支持广州地域
+// 枚举地域信息
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4127,7 +4497,7 @@ func (c *Client) DescribeRegion(request *DescribeRegionRequest) (response *Descr
 }
 
 // DescribeRegion
-// 枚举地域,只支持广州地域
+// 枚举地域信息
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4373,6 +4743,58 @@ func (c *Client) DescribeTaskStatusWithContext(ctx context.Context, request *Des
     request.SetContext(ctx)
     
     response = NewDescribeTaskStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeThrottleRulesRequest() (request *DescribeThrottleRulesRequest) {
+    request = &DescribeThrottleRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "DescribeThrottleRules")
+    
+    
+    return
+}
+
+func NewDescribeThrottleRulesResponse() (response *DescribeThrottleRulesResponse) {
+    response = &DescribeThrottleRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeThrottleRules
+// 获取实例限流规则列表
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeThrottleRules(request *DescribeThrottleRulesRequest) (response *DescribeThrottleRulesResponse, err error) {
+    return c.DescribeThrottleRulesWithContext(context.Background(), request)
+}
+
+// DescribeThrottleRules
+// 获取实例限流规则列表
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeThrottleRulesWithContext(ctx context.Context, request *DescribeThrottleRulesRequest) (response *DescribeThrottleRulesResponse, err error) {
+    if request == nil {
+        request = NewDescribeThrottleRulesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeThrottleRules")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeThrottleRules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeThrottleRulesResponse()
     err = c.Send(request, response)
     return
 }
@@ -5019,6 +5441,64 @@ func (c *Client) DescribeUserWithContext(ctx context.Context, request *DescribeU
     return
 }
 
+func NewDisassociateRoutesSecurityGroupRequest() (request *DisassociateRoutesSecurityGroupRequest) {
+    request = &DisassociateRoutesSecurityGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "DisassociateRoutesSecurityGroup")
+    
+    
+    return
+}
+
+func NewDisassociateRoutesSecurityGroupResponse() (response *DisassociateRoutesSecurityGroupResponse) {
+    response = &DisassociateRoutesSecurityGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DisassociateRoutesSecurityGroup
+// 解绑路由安全组
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DisassociateRoutesSecurityGroup(request *DisassociateRoutesSecurityGroupRequest) (response *DisassociateRoutesSecurityGroupResponse, err error) {
+    return c.DisassociateRoutesSecurityGroupWithContext(context.Background(), request)
+}
+
+// DisassociateRoutesSecurityGroup
+// 解绑路由安全组
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DisassociateRoutesSecurityGroupWithContext(ctx context.Context, request *DisassociateRoutesSecurityGroupRequest) (response *DisassociateRoutesSecurityGroupResponse, err error) {
+    if request == nil {
+        request = NewDisassociateRoutesSecurityGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DisassociateRoutesSecurityGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DisassociateRoutesSecurityGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDisassociateRoutesSecurityGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewFetchDatahubMessageByOffsetRequest() (request *FetchDatahubMessageByOffsetRequest) {
     request = &FetchDatahubMessageByOffsetRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5395,6 +5875,140 @@ func (c *Client) InstanceScalingDownWithContext(ctx context.Context, request *In
     return
 }
 
+func NewIsolatedInstancePreRequest() (request *IsolatedInstancePreRequest) {
+    request = &IsolatedInstancePreRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "IsolatedInstancePre")
+    
+    
+    return
+}
+
+func NewIsolatedInstancePreResponse() (response *IsolatedInstancePreResponse) {
+    response = &IsolatedInstancePreResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// IsolatedInstancePre
+// 隔离预付费实例，该接口会对实例执行隔离的动作，执行成功后实例会被隔离
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) IsolatedInstancePre(request *IsolatedInstancePreRequest) (response *IsolatedInstancePreResponse, err error) {
+    return c.IsolatedInstancePreWithContext(context.Background(), request)
+}
+
+// IsolatedInstancePre
+// 隔离预付费实例，该接口会对实例执行隔离的动作，执行成功后实例会被隔离
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) IsolatedInstancePreWithContext(ctx context.Context, request *IsolatedInstancePreRequest) (response *IsolatedInstancePreResponse, err error) {
+    if request == nil {
+        request = NewIsolatedInstancePreRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "IsolatedInstancePre")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("IsolatedInstancePre require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewIsolatedInstancePreResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyAccessPolicyRequest() (request *ModifyAccessPolicyRequest) {
+    request = &ModifyAccessPolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "ModifyAccessPolicy")
+    
+    
+    return
+}
+
+func NewModifyAccessPolicyResponse() (response *ModifyAccessPolicyResponse) {
+    response = &ModifyAccessPolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyAccessPolicy
+// 修改实例公网IP白名单列表接口
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+//  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REGIONERROR = "RegionError"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyAccessPolicy(request *ModifyAccessPolicyRequest) (response *ModifyAccessPolicyResponse, err error) {
+    return c.ModifyAccessPolicyWithContext(context.Background(), request)
+}
+
+// ModifyAccessPolicy
+// 修改实例公网IP白名单列表接口
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+//  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REGIONERROR = "RegionError"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyAccessPolicyWithContext(ctx context.Context, request *ModifyAccessPolicyRequest) (response *ModifyAccessPolicyResponse, err error) {
+    if request == nil {
+        request = NewModifyAccessPolicyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "ModifyAccessPolicy")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyAccessPolicy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyAccessPolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyAclRuleRequest() (request *ModifyAclRuleRequest) {
     request = &ModifyAclRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5473,7 +6087,7 @@ func NewModifyConnectResourceResponse() (response *ModifyConnectResourceResponse
 }
 
 // ModifyConnectResource
-// 编辑Datahub连接源
+// 编辑连接器连接
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -5489,7 +6103,7 @@ func (c *Client) ModifyConnectResource(request *ModifyConnectResourceRequest) (r
 }
 
 // ModifyConnectResource
-// 编辑Datahub连接源
+// 编辑连接器连接
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -5537,7 +6151,7 @@ func NewModifyDatahubTaskResponse() (response *ModifyDatahubTaskResponse) {
 }
 
 // ModifyDatahubTask
-// 修改Datahub任务
+// 修改连接器任务
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -5552,7 +6166,7 @@ func (c *Client) ModifyDatahubTask(request *ModifyDatahubTaskRequest) (response 
 }
 
 // ModifyDatahubTask
-// 修改Datahub任务
+// 修改连接器任务
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -5959,6 +6573,66 @@ func (c *Client) ModifyPasswordWithContext(ctx context.Context, request *ModifyP
     return
 }
 
+func NewModifyRouteSecurityGroupsRequest() (request *ModifyRouteSecurityGroupsRequest) {
+    request = &ModifyRouteSecurityGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "ModifyRouteSecurityGroups")
+    
+    
+    return
+}
+
+func NewModifyRouteSecurityGroupsResponse() (response *ModifyRouteSecurityGroupsResponse) {
+    response = &ModifyRouteSecurityGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyRouteSecurityGroups
+// 修改路由安全组关联
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+func (c *Client) ModifyRouteSecurityGroups(request *ModifyRouteSecurityGroupsRequest) (response *ModifyRouteSecurityGroupsResponse, err error) {
+    return c.ModifyRouteSecurityGroupsWithContext(context.Background(), request)
+}
+
+// ModifyRouteSecurityGroups
+// 修改路由安全组关联
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+func (c *Client) ModifyRouteSecurityGroupsWithContext(ctx context.Context, request *ModifyRouteSecurityGroupsRequest) (response *ModifyRouteSecurityGroupsResponse, err error) {
+    if request == nil {
+        request = NewModifyRouteSecurityGroupsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "ModifyRouteSecurityGroups")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyRouteSecurityGroups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyRouteSecurityGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyRoutineMaintenanceTaskRequest() (request *ModifyRoutineMaintenanceTaskRequest) {
     request = &ModifyRoutineMaintenanceTaskRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -6031,6 +6705,62 @@ func (c *Client) ModifyRoutineMaintenanceTaskWithContext(ctx context.Context, re
     request.SetContext(ctx)
     
     response = NewModifyRoutineMaintenanceTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyThrottleRuleRequest() (request *ModifyThrottleRuleRequest) {
+    request = &ModifyThrottleRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "ModifyThrottleRule")
+    
+    
+    return
+}
+
+func NewModifyThrottleRuleResponse() (response *ModifyThrottleRuleResponse) {
+    response = &ModifyThrottleRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyThrottleRule
+// 修改限流规则接口
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyThrottleRule(request *ModifyThrottleRuleRequest) (response *ModifyThrottleRuleResponse, err error) {
+    return c.ModifyThrottleRuleWithContext(context.Background(), request)
+}
+
+// ModifyThrottleRule
+// 修改限流规则接口
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyThrottleRuleWithContext(ctx context.Context, request *ModifyThrottleRuleRequest) (response *ModifyThrottleRuleResponse, err error) {
+    if request == nil {
+        request = NewModifyThrottleRuleRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "ModifyThrottleRule")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyThrottleRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyThrottleRuleResponse()
     err = c.Send(request, response)
     return
 }
@@ -6131,7 +6861,7 @@ func NewPauseDatahubTaskResponse() (response *PauseDatahubTaskResponse) {
 }
 
 // PauseDatahubTask
-// 暂停Dip任务
+// 暂停连接器任务
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -6145,7 +6875,7 @@ func (c *Client) PauseDatahubTask(request *PauseDatahubTaskRequest) (response *P
 }
 
 // PauseDatahubTask
-// 暂停Dip任务
+// 暂停连接器任务
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -6249,7 +6979,7 @@ func NewRestartDatahubTaskResponse() (response *RestartDatahubTaskResponse) {
 }
 
 // RestartDatahubTask
-// Datahub任务异常时，重启Datahub任务
+// 连接器任务异常时，重启连接器任务
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -6263,7 +6993,7 @@ func (c *Client) RestartDatahubTask(request *RestartDatahubTaskRequest) (respons
 }
 
 // RestartDatahubTask
-// Datahub任务异常时，重启Datahub任务
+// 连接器任务异常时，重启连接器任务
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -6309,7 +7039,7 @@ func NewResumeDatahubTaskResponse() (response *ResumeDatahubTaskResponse) {
 }
 
 // ResumeDatahubTask
-// 恢复Dip任务
+// 恢复连接器任务
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -6322,7 +7052,7 @@ func (c *Client) ResumeDatahubTask(request *ResumeDatahubTaskRequest) (response 
 }
 
 // ResumeDatahubTask
-// 恢复Dip任务
+// 恢复连接器任务
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"

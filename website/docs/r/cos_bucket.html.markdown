@@ -281,11 +281,12 @@ locals {
 }
 
 resource "tencentcloud_cos_bucket" "bucket_with_cors" {
-  bucket = "bucket-with-cors-${local.app_id}"
-  acl    = "public-read-write"
+  bucket             = "bucket-with-cors-${local.app_id}"
+  acl                = "public-read-write"
+  cors_response_vary = true
 
   cors_rules {
-    allowed_origins = ["http://*.abc.com"]
+    allowed_origins = ["http://*.example.com"]
     allowed_methods = ["PUT", "POST"]
     allowed_headers = ["*"]
     max_age_seconds = 300
@@ -602,6 +603,7 @@ The following arguments are supported:
 * `acl` - (Optional, String) The canned ACL to apply. Valid values: private, public-read, and public-read-write. Defaults to private.
 * `cdc_id` - (Optional, String, ForceNew) CDC cluster ID.
 * `chdfs_ofs` - (Optional, Bool, ForceNew) Indicates whether to create a bucket of metadata acceleration. For more information, please refer to `https://www.tencentcloud.com/document/product/436/43305`.
+* `cors_response_vary` - (Optional, String) Whether to return the `Vary: Origin` header in the CORS response. Valid values: `true`, `false`.
 * `cors_rules` - (Optional, List) A rule of Cross-Origin Resource Sharing (documented below).
 * `enable_intelligent_tiering` - (Optional, Bool) Enable intelligent tiering. NOTE: When intelligent tiering configuration is enabled, it cannot be turned off or modified.
 * `encryption_algorithm` - (Optional, String) The server-side encryption algorithm to use. Valid values are `AES256`, `KMS` and `SM4`.
@@ -778,8 +780,10 @@ The `transition` object of `lifecycle_rules` supports the following:
 
 The `website` object supports the following:
 
+* `charity_404` - (Optional, String) To configure whether to display the 404 public welfare page when the error code is 404, the optional values are `Enabled` or `Disabled`, with the default set to `Disabled`.
 * `error_document` - (Optional, String) An absolute path to the document to return in case of a 4XX error.
 * `index_document` - (Optional, String) COS returns this index document when requests are made to the root domain or any of the subfolders.
+* `original_http_status` - (Optional, String) The HTTP status code for configuring hit error documents, with optional values of `Enabled` or `Disabled`, defaulting to `Enabled`.
 * `redirect_all_requests_to` - (Optional, String) Redirects all request configurations. Valid values: http, https. Default is `http`.
 * `routing_rules` - (Optional, List) Routing rule configuration. A RoutingRules container can contain up to 100 RoutingRule elements.
 
@@ -789,6 +793,10 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `cos_bucket_url` - The URL of this cos bucket.
+
+The `website` object exports the following:
+
+* `endpoint` - `Endpoint` of the static website.
 
 
 ## Import

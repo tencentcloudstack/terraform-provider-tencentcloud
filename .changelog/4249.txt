@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_ssl_free_certificate: Added retries for read interfaces to alleviate concurrency rate limiting.
+```

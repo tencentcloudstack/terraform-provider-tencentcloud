@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/url"
 	"strings"
@@ -412,6 +412,12 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 					},
 				},
 			},
+			"cors_response_vary": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to return the `Vary: Origin` header in the CORS response. Valid values: `true`, `false`.",
+			},
 			"origin_pull_rules": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -596,6 +602,16 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "An absolute path to the document to return in case of a 4XX error.",
+						},
+						"original_http_status": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The HTTP status code for configuring hit error documents, with optional values of `Enabled` or `Disabled`, defaulting to `Enabled`.",
+						},
+						"charity_404": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "To configure whether to display the 404 public welfare page when the error code is 404, the optional values are `Enabled` or `Disabled`, with the default set to `Disabled`.",
 						},
 						"redirect_all_requests_to": {
 							Type:         schema.TypeString,
@@ -916,6 +932,36 @@ func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{
 	return resourceTencentCloudCosBucketUpdate(d, meta)
 }
 
+// preserveWebsiteFieldsNotReturnedByApi keeps the values of the website fields which can not be
+// queried by the `GetBucketWebsite` API, the value is taken from the configuration or the state,
+// so that the fields will not be reset to empty after apply.
+func preserveWebsiteFieldsNotReturnedByApi(d *schema.ResourceData, website map[string]interface{}) {
+	if website == nil {
+		return
+	}
+
+	websiteList, ok := d.Get("website").([]interface{})
+	if !ok || len(websiteList) == 0 || websiteList[0] == nil {
+		return
+	}
+
+	websiteMap, ok := websiteList[0].(map[string]interface{})
+	if !ok || websiteMap == nil {
+		return
+	}
+
+	for _, key := range []string{"original_http_status", "charity_404"} {
+		// The API returns the value, take precedence over the value in the configuration.
+		if v, ok := website[key].(string); ok && v != "" {
+			continue
+		}
+
+		if v, ok := websiteMap[key].(string); ok && v != "" {
+			website[key] = v
+		}
+	}
+}
+
 func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cos_bucket.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
@@ -1027,6 +1073,12 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 			endPointUrl := fmt.Sprintf("%s.cos-website.%s.myqcloud.com", d.Id(), meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region)
 			website[0]["endpoint"] = endPointUrl
 		}
+		// The `original_http_status` and `charity_404` fields can only be set by the `PutBucketWebsite`
+		// API, but they are not returned by the `GetBucketWebsite` API. Keep the values in the state
+		// when the API does not return them, otherwise it will cause a diff after apply.
+		if len(website) > 0 {
+			preserveWebsiteFieldsNotReturnedByApi(d, website[0])
+		}
 		if err = d.Set("website", website); err != nil {
 			return fmt.Errorf("setting website error: %v", err)
 		}
@@ -1063,12 +1115,15 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	}
 
 	// read the cors
-	corsRules, err := cosService.GetBucketCors(ctx, bucket, cdcId)
+	corsRules, corsResponseVary, err := cosService.GetBucketCorsNew(ctx, bucket, cdcId)
 	if err != nil {
 		return err
 	}
 	if err = d.Set("cors_rules", corsRules); err != nil {
 		return fmt.Errorf("setting cors_rules error: %v", err)
+	}
+	if err = d.Set("cors_response_vary", corsResponseVary); err != nil {
+		return fmt.Errorf("setting cors_response_vary error: %v", err)
 	}
 
 	// read the lifecycle
@@ -1415,7 +1470,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		_ = d.Set("acl_body", body)
 	}
 
-	if d.HasChange("cors_rules") {
+	if d.HasChange("cors_rules") || d.HasChange("cors_response_vary") {
 		err := resourceTencentCloudCosBucketCorsUpdate(ctx, meta, d)
 		if err != nil {
 			return err
@@ -1710,12 +1765,16 @@ func resourceTencentCloudCosBucketAccelerationUpdate(ctx context.Context, meta i
 			logId, "put bucket acceleration", opt.Status, err.Error())
 		return fmt.Errorf("cos put bucket acceleration error: %s, bucket: %s", err.Error(), bucket)
 	}
-	rb, _ := ioutil.ReadAll(response.Body)
-	body, _ := json.Marshal(rb)
+	rb, err := io.ReadAll(response.Body)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, status [%s], read response body fail, reason[%s]\n",
+			logId, "put bucket acceleration", opt.Status, err.Error())
+		return fmt.Errorf("cos put bucket acceleration error: read response body fail: %s, bucket: %s", err.Error(), bucket)
+	}
 	log.Printf("[DEBUG]%s api[%s] success, status [%s], response body [%s]\n",
-		logId, "put bucket acceleration", opt.Status, string(body))
+		logId, "put bucket acceleration", opt.Status, string(rb))
 
-	return err
+	return nil
 }
 
 func resourceTencentCloudCosBucketReplicaUpdate(ctx context.Context, service CosService, d *schema.ResourceData) error {
@@ -1779,64 +1838,62 @@ func resourceTencentCloudCosBucketCorsUpdate(ctx context.Context, meta interface
 	bucket := d.Get("bucket").(string)
 	cors := d.Get("cors_rules").([]interface{})
 	cdcId := d.Get("cdc_id").(string)
+	responseVary := d.Get("cors_response_vary").(string)
 
-	if len(cors) == 0 {
-		request := s3.DeleteBucketCorsInput{
-			Bucket: aws.String(bucket),
-		}
-		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClientNew(cdcId).DeleteBucketCors(&request)
+	cosClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClientNew(bucket, cdcId)
 
+	if len(cors) == 0 && responseVary == "" {
+		response, err := cosClient.Bucket.DeleteCORS(ctx)
 		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "delete bucket cors", request.String(), err.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, bucket [%s], reason[%s]\n",
+				logId, "delete bucket cors", bucket, err.Error())
 			return fmt.Errorf("cos delete bucket cors error: %s, bucket: %s", err.Error(), bucket)
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, "delete bucket cors", request.String(), response.String())
+
+		log.Printf("[DEBUG]%s api[%s] success, bucket [%s], response status [%s]\n",
+			logId, "delete bucket cors", bucket, response.Status)
 	} else {
-		rules := make([]*s3.CORSRule, 0, len(cors))
+		rules := make([]cos.BucketCORSRule, 0, len(cors))
 		for _, item := range cors {
 			corsMap := item.(map[string]interface{})
-			rule := &s3.CORSRule{}
-			for k, v := range corsMap {
-				if k == "max_age_seconds" {
-					rule.MaxAgeSeconds = aws.Int64(int64(v.(int)))
-				} else {
-					vMap := make([]*string, len(v.([]interface{})))
-					for i, value := range v.([]interface{}) {
-						if str, ok := value.(string); ok {
-							vMap[i] = aws.String(str)
-						}
-					}
-					switch k {
-					case "allowed_origins":
-						rule.AllowedOrigins = vMap
-					case "allowed_methods":
-						rule.AllowedMethods = vMap
-					case "allowed_headers":
-						rule.AllowedHeaders = vMap
-					case "expose_headers":
-						rule.ExposeHeaders = vMap
-					}
-				}
+			rule := cos.BucketCORSRule{}
+			if v, ok := corsMap["allowed_origins"]; ok {
+				rule.AllowedOrigins = helper.InterfacesStrings(v.([]interface{}))
 			}
+
+			if v, ok := corsMap["allowed_methods"]; ok {
+				rule.AllowedMethods = helper.InterfacesStrings(v.([]interface{}))
+			}
+
+			if v, ok := corsMap["allowed_headers"]; ok {
+				rule.AllowedHeaders = helper.InterfacesStrings(v.([]interface{}))
+			}
+
+			if v, ok := corsMap["expose_headers"]; ok {
+				rule.ExposeHeaders = helper.InterfacesStrings(v.([]interface{}))
+			}
+
+			if v, ok := corsMap["max_age_seconds"]; ok {
+				rule.MaxAgeSeconds = v.(int)
+			}
+
 			rules = append(rules, rule)
 		}
-		request := s3.PutBucketCorsInput{
-			Bucket: aws.String(bucket),
-			CORSConfiguration: &s3.CORSConfiguration{
-				CORSRules: rules,
-			},
-		}
-		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClientNew(cdcId).PutBucketCors(&request)
 
+		opt := &cos.BucketPutCORSOptions{
+			Rules:        rules,
+			ResponseVary: responseVary,
+		}
+
+		response, err := cosClient.Bucket.PutCORS(ctx, opt)
 		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "put bucket cors", request.String(), err.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, bucket [%s], reason[%s]\n",
+				logId, "put bucket cors", bucket, err.Error())
 			return fmt.Errorf("cos put bucket cors error: %s, bucket: %s", err.Error(), bucket)
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, "put bucket cors", request.String(), response.String())
+
+		log.Printf("[DEBUG]%s api[%s] success, bucket [%s], response status [%s]\n",
+			logId, "put bucket cors", bucket, response.Status)
 	}
 	return nil
 }
@@ -2026,10 +2083,25 @@ func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, meta interf
 			websiteConfiguration.Index = v
 		}
 
+		webSiteConfigurationError := &cos.ErrorDocument{}
+		webSiteFlag := false
 		if v, ok := w["error_document"].(string); ok && v != "" {
-			websiteConfiguration.Error = &cos.ErrorDocument{
-				Key: v,
-			}
+			webSiteConfigurationError.Key = v
+			webSiteFlag = true
+		}
+
+		if v, ok := w["original_http_status"].(string); ok && v != "" {
+			webSiteConfigurationError.OriginalHttpStatus = v
+			webSiteFlag = true
+		}
+
+		if v, ok := w["charity_404"].(string); ok && v != "" {
+			webSiteConfigurationError.Charity404 = v
+			webSiteFlag = true
+		}
+
+		if webSiteFlag {
+			websiteConfiguration.Error = webSiteConfigurationError
 		}
 
 		if v, ok := w["redirect_all_requests_to"].(string); ok && v != "" {

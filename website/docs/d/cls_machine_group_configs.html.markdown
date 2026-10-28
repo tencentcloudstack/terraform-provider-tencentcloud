@@ -83,4 +83,9 @@ In addition to all arguments above, the following attributes are exported:
   * `update_time` - update time.
   * `user_define_rule` - user define rule.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeMachineGroupConfigs](https://www.tencentcloud.com/document/api/614/42808)
 

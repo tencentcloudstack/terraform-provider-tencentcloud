@@ -56,6 +56,14 @@ In addition to all arguments above, the following attributes are exported:
 * `param_template_name` - Parameter template Name. Note: This field may return null, indicating that no valid value can be obtained.
 * `uuid` - The unique id corresponding to the rule.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddVpcAcRule](https://www.tencentcloud.com/search/?wd=AddVpcAcRule&type=document&lang=en)
+* Read: [DescribeVpcAcRule](https://www.tencentcloud.com/document/api/1160/68133)
+* Update: [ModifyVpcAcRule](https://www.tencentcloud.com/search/?wd=ModifyVpcAcRule&type=document&lang=en)
+* Delete: [RemoveVpcAcRule](https://www.tencentcloud.com/search/?wd=RemoveVpcAcRule&type=document&lang=en)
 
 ## Import
 

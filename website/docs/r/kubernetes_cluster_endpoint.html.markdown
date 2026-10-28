@@ -58,6 +58,7 @@ The following arguments are supported:
 * `cluster_intranet_security_group` - (Optional, String, ForceNew) Security group ID for intranet cluster endpoint.
 * `cluster_intranet_subnet_id` - (Optional, String) Subnet id who can access this independent cluster, this field must and can only set  when `cluster_intranet` is true. `cluster_intranet_subnet_id` can not modify once be set.
 * `cluster_intranet` - (Optional, Bool) Open intranet access or not.
+* `existed_load_balancer_id` - (Optional, String, ForceNew) Enable internal or external access using an existing CLB.
 * `extensive_parameters` - (Optional, String, ForceNew) The LB parameter. Only used for public network access.
 * `managed_cluster_internet_security_policies` - (Optional, List: [`String`], **Deprecated**) this argument was deprecated, use `cluster_internet_security_group` instead. Security policies for managed cluster internet, like:'192.168.1.0/24' or '113.116.51.27', '0.0.0.0/0' means all. This field can only set when field `cluster_deploy_type` is 'MANAGED_CLUSTER' and `cluster_internet` is true. `managed_cluster_internet_security_policies` can not delete or empty once be set.
 
@@ -76,4 +77,18 @@ In addition to all arguments above, the following attributes are exported:
 * `pgw_endpoint` - The Intranet address used for access.
 * `user_name` - User name of account.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeAddon](https://www.tencentcloud.com/document/api/457/56953)
+  - [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
+  - [DescribeClusterVirtualNode](https://www.tencentcloud.com/document/api/457/53272)
+* Read:
+  - [DescribeClusterKubeconfig](https://www.tencentcloud.com/document/api/457/38510)
+  - [DescribeClusterSecurity](https://www.tencentcloud.com/search/?wd=DescribeClusterSecurity&type=document&lang=en)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
+* Update: [ModifyClusterEndpointSP](https://www.tencentcloud.com/document/api/457/33864)
+* Delete: [DescribeClusterSecurity](https://www.tencentcloud.com/search/?wd=DescribeClusterSecurity&type=document&lang=en)
 

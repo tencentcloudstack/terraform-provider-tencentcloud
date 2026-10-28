@@ -34,6 +34,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `status` - cc auto status, 1(open), 0(close).
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [UpsertCCAutoStatus](https://www.tencentcloud.com/search/?wd=UpsertCCAutoStatus&type=document&lang=en)
+* Read: [DescribeCCAutoStatus](https://www.tencentcloud.com/search/?wd=DescribeCCAutoStatus&type=document&lang=en)
+* Delete: [UpsertCCAutoStatus](https://www.tencentcloud.com/search/?wd=UpsertCCAutoStatus&type=document&lang=en)
 
 ## Import
 

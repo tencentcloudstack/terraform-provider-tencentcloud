@@ -55,4 +55,9 @@ In addition to all arguments above, the following attributes are exported:
 * `period` - Period.
 * `total_count` - total count.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetAttackHistogram](https://www.tencentcloud.com/document/api/627/66360)
 

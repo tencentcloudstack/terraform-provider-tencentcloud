@@ -41,6 +41,12 @@ In addition to all arguments above, the following attributes are exported:
 * `start_time` - Start time of the RI.
 * `status` - Status of the RI at the time of purchase.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [PurchaseReservedInstancesOffering](https://www.tencentcloud.com/document/api/213/68355)
+* Read: [DescribeReservedInstances](https://www.tencentcloud.com/document/api/213/68457)
 
 ## Import
 

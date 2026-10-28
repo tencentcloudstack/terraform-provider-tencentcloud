@@ -44,6 +44,11 @@ resource "tencentcloud_private_dns_zone" "example" {
 ### Create a Private Dns Zone domain and bind associated accounts'VPC
 
 ```hcl
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-example"
+  cidr_block = "10.0.0.0/16"
+}
+
 resource "tencentcloud_private_dns_zone" "example" {
   domain = "domain.com"
   remark = "remark."
@@ -57,7 +62,6 @@ resource "tencentcloud_private_dns_zone" "example" {
     uin         = "123456789"
     uniq_vpc_id = "vpc-adsebmya"
     region      = "ap-guangzhou"
-    vpc_name    = "vpc-name"
   }
 
   dns_forward_status   = "DISABLED"
@@ -87,7 +91,7 @@ The `account_vpc_set` object supports the following:
 * `region` - (Required, String) Region.
 * `uin` - (Required, String) UIN of the VPC account.
 * `uniq_vpc_id` - (Required, String) VPC ID.
-* `vpc_name` - (Required, String) VPC NAME.
+* `vpc_name` - (Optional, String, **Deprecated**) It has been deprecated from version 1.83.35. Please do not re-enter this field as entering a value will be ignored. VPC NAME.
 
 The `tag_set` object supports the following:
 
@@ -106,12 +110,31 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreatePrivateZone](https://www.tencentcloud.com/document/api/1097/42123)
+  - [DescribePrivateZone](https://www.tencentcloud.com/document/api/1097/42117)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribePrivateZone](https://www.tencentcloud.com/document/api/1097/42117)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [DescribePrivateZone](https://www.tencentcloud.com/document/api/1097/42117)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [ModifyPrivateZone](https://www.tencentcloud.com/document/api/1097/42112)
+  - [ModifyPrivateZoneVpc](https://www.tencentcloud.com/document/api/1097/42110)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeletePrivateZone](https://www.tencentcloud.com/document/api/1097/42121)
 
 ## Import
 
-Private Dns Zone can be imported, e.g.
+Private Dns Zone can be imported by id, e.g.
 
 ```
-$ terraform import tencentcloud_private_dns_zone.example zone-6xg5xgky
+terraform import tencentcloud_private_dns_zone.example zone-6xg5xgky
 ```
 

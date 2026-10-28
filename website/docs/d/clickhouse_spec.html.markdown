@@ -85,4 +85,9 @@ In addition to all arguments above, the following attributes are exported:
     * `min_disk_size` - Minimum disk size, unit G.
   * `type` - Classification tags, STANDARD/BIGDATA/HIGHIO respectively represent standard/big data/high IO.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSpec](https://www.tencentcloud.com/search/?wd=DescribeSpec&type=document&lang=en)
 

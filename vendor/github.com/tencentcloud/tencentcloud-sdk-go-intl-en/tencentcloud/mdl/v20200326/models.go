@@ -30,13 +30,13 @@ type AVTemplate struct {
 	// Video codec. Valid values: `H264`, `H265`. If this parameter is left empty, the original video codec will be used.
 	Vcodec *string `json:"Vcodec,omitnil,omitempty" name:"Vcodec"`
 
-	// Video width. Value range: (0, 4096]. The value must be an integer multiple of 2. If this parameter is left empty, the original video width will be used.
+	// Video width. The input range is (0, 4096] and must be a multiple of 2. If left blank, it represents passthrough.
 	Width *uint64 `json:"Width,omitnil,omitempty" name:"Width"`
 
-	// Video height. Value range: (0, 4096]. The value must be an integer multiple of 2. If this parameter is left empty, the original video height will be used.
+	// Video height. Input range is (0, 4096] and must be a multiple of 2. Leave empty to represent passthrough.
 	Height *uint64 `json:"Height,omitnil,omitempty" name:"Height"`
 
-	// Video frame rate. Value range: [1, 240]. If this parameter is left empty, the original frame rate will be used.
+	// Video frame rate. Valid when you select SPECIFIED_HZ for FrameRateType. Input range is [1, 240]. Leave blank to represent passthrough.
 	Fps *uint64 `json:"Fps,omitnil,omitempty" name:"Fps"`
 
 	// Whether to enable top speed codec transcoding. Valid values: `CLOSE` (disable), `OPEN` (enable). Default value: `CLOSE`
@@ -48,7 +48,7 @@ type AVTemplate struct {
 	// Whether audio is needed. `0`: not needed; `1`: needed
 	NeedAudio *int64 `json:"NeedAudio,omitnil,omitempty" name:"NeedAudio"`
 
-	// Audio encoding format, only `AAC` and `PASSTHROUGH` are available, with `AAC` as the default.
+	// Audio encoding format, can only be `AAC` or `PASSTHROUGH`. Default is AAC.
 	Acodec *string `json:"Acodec,omitnil,omitempty" name:"Acodec"`
 
 	// Audio bitrate. If this parameter is left empty, the original bitrate will be used.
@@ -58,7 +58,7 @@ type AVTemplate struct {
 	// Video bitrate. Value range: [50000, 40000000]. The value must be an integer multiple of 1000. If this parameter is left empty, the original bitrate will be used.
 	VideoBitrate *uint64 `json:"VideoBitrate,omitnil,omitempty" name:"VideoBitrate"`
 
-	// Bitrate control mode. Valid values: `CBR`, `ABR` (default), `VBR`.
+	// Bitrate control mode. Optional values: [CBR|ABR|VBR]. Default: ABR.
 	RateControlMode *string `json:"RateControlMode,omitnil,omitempty" name:"RateControlMode"`
 
 	// Watermark ID
@@ -88,19 +88,19 @@ type AVTemplate struct {
 	// Audio sampling rate, unit HZ.
 	AudioSampleRate *uint64 `json:"AudioSampleRate,omitnil,omitempty" name:"AudioSampleRate"`
 
-	// This field indicates how to specify the output video frame rate. If FOLLOW_SOURCE is selected, the output video frame rate will be set equal to the input video frame rate of the first input. If SPECIFIED_FRACTION is selected, the output video frame rate is determined by the fraction (frame rate numerator and frame rate denominator). If SPECIFIED_HZ is selected, the frame rate of the output video is determined by the HZ you enter.
+	// This field indicates how to specify the output video frame rate. If FOLLOW_SOURCE is selected, the output video frame rate is set to equal the frame rate of the first input video. If SPECIFIED_FRACTION is selected, the output video frame rate is determined by the fraction (frame rate numerator and frame rate denominator). If SPECIFIED_HZ is selected, the frame rate of the output video is confirmed by the HZ you input.	
 	FrameRateType *string `json:"FrameRateType,omitnil,omitempty" name:"FrameRateType"`
 
-	// Valid when the FrameRateType type you select is SPECIFIED_FRACTION, the output frame rate numerator setting.
+	// Valid when you select SPECIFIED_FRACTION as the FrameRateType. Set the output frame rate molecular.	
 	FrameRateNumerator *uint64 `json:"FrameRateNumerator,omitnil,omitempty" name:"FrameRateNumerator"`
 
-	// Valid when the FrameRateType type you select is SPECIFIED_FRACTION, the output frame rate denominator setting.
+	// Valid when you select SPECIFIED_FRACTION for FrameRateType. Output frame rate denominator set.	
 	FrameRateDenominator *uint64 `json:"FrameRateDenominator,omitnil,omitempty" name:"FrameRateDenominator"`
 
-	// The number of B frames can be selected from 1 to 3.
+	// Number of B-frames 1-3.
 	BFramesNum *uint64 `json:"BFramesNum,omitnil,omitempty" name:"BFramesNum"`
 
-	// The number of reference frames can be selected from 1 to 16.
+	// Refer to the number of frames 1-16.
 	RefFramesNum *uint64 `json:"RefFramesNum,omitnil,omitempty" name:"RefFramesNum"`
 
 	// Additional video bitrate configuration.
@@ -112,28 +112,28 @@ type AVTemplate struct {
 	// Audio encoding configuration.
 	AudioCodecDetails *AudioCodecDetail `json:"AudioCodecDetails,omitnil,omitempty" name:"AudioCodecDetails"`
 
-	// Whether to enable multiple audio tracks 0: Not required 1: Required Default value 0.
+	// Whether to enable multiple audio tracks. 0: not required 1: required. Default value: 0.
 	MultiAudioTrackEnabled *uint64 `json:"MultiAudioTrackEnabled,omitnil,omitempty" name:"MultiAudioTrackEnabled"`
 
-	// Quantity limit 0-20 Valid when MultiAudioTrackEnabled is turned on.
+	// Limit on the number 0-20. Valid when MultiAudioTrackEnabled is enabled.
 	AudioTracks []*AudioTrackInfo `json:"AudioTracks,omitnil,omitempty" name:"AudioTracks"`
 
-	// Do you want to enable video enhancement? 1: Enable 0: Do not enable.
+	// Whether to enable video enhancement, 1: enable 0: disable.
 	VideoEnhanceEnabled *uint64 `json:"VideoEnhanceEnabled,omitnil,omitempty" name:"VideoEnhanceEnabled"`
 
 	// Video enhancement configuration array.
 	VideoEnhanceSettings []*VideoEnhanceSetting `json:"VideoEnhanceSettings,omitnil,omitempty" name:"VideoEnhanceSettings"`
 
-	// Key frame interval, 300-10000, optional.
+	// Keyframe interval, 300-10000, optional.
 	GopSize *int64 `json:"GopSize,omitnil,omitempty" name:"GopSize"`
 
-	// Keyframe units, only support MILLISECONDS (milliseconds).
+	// Key frame measurement unit currently only supports MILLISECONDS (ms).
 	GopSizeUnits *string `json:"GopSizeUnits,omitnil,omitempty" name:"GopSizeUnits"`
 
-	// Color space setting.
+	// Colorspace configuration.
 	ColorSpaceSettings *ColorSpaceSetting `json:"ColorSpaceSettings,omitnil,omitempty" name:"ColorSpaceSettings"`
 
-	// Traceability watermark.
+	// Traceable watermark.
 	ForensicWatermarkIds []*string `json:"ForensicWatermarkIds,omitnil,omitempty" name:"ForensicWatermarkIds"`
 }
 
@@ -197,50 +197,56 @@ type AdBreakSetting struct {
 	// Advertising type, currently supports L-SQUEEZE
 	Format *string `json:"Format,omitnil,omitempty" name:"Format"`
 
-	// Duration, in milliseconds, requires 1000<duration<=600000. The current accuracy is seconds, which is a multiple of 1000
+	// Duration, in milliseconds, requires 1000&lt;duration&lt;=600000 The current accuracy is seconds, which is a multiple of 1000
 	Duration *uint64 `json:"Duration,omitnil,omitempty" name:"Duration"`
+
+	// AdSource type, supports UPLOAD_CREATIVES
+	AdSource *string `json:"AdSource,omitnil,omitempty" name:"AdSource"`
 
 	// L-type compression recovery configuration
 	LSqueezeSetting *LSqueezeSetting `json:"LSqueezeSetting,omitnil,omitempty" name:"LSqueezeSetting"`
 
-	// AdSource type, supports UPLOAD_CREATIVES
-	AdSource *string `json:"AdSource,omitnil,omitempty" name:"AdSource"`
+
+	PipSetting *PipSetting `json:"PipSetting,omitnil,omitempty" name:"PipSetting"`
+
+
+	BorderFrameSetting *BorderFrameSetting `json:"BorderFrameSetting,omitnil,omitempty" name:"BorderFrameSetting"`
 }
 
 type AdditionalRateSetting struct {
-	// The maximum bit rate in a VBR scenario must be a multiple of 1000 and between 50000 - 40000000.
+	// The maximum bitrate in the VBR scenario must be a multiple of 1000 and between 50000 and 40000000.
 	VideoMaxBitrate *uint64 `json:"VideoMaxBitrate,omitnil,omitempty" name:"VideoMaxBitrate"`
 
-	// Cache configuration supports configuring a Max Bitrate value of 1-4 times.
+	// Cache configuration supports configuration as 1-4x the Max Bitrate value.
 	BufferSize *uint64 `json:"BufferSize,omitnil,omitempty" name:"BufferSize"`
 
-	// VBR scene is valid, video quality level, only supports user input numbers between 1-51.
+	// Valid in VBR scenarios. Video quality level. Only supports user input of numbers between 1 and 51.
 	QualityLevel *uint64 `json:"QualityLevel,omitnil,omitempty" name:"QualityLevel"`
 }
 
 type AmazonS3Settings struct {
-	// Access key ID of the S3 sub-account.
+	// Access key ID of the S3 sub-user.
 	AccessKeyID *string `json:"AccessKeyID,omitnil,omitempty" name:"AccessKeyID"`
 
-	// Secret access key of the S3 sub-account.
+	// Secret access key of the S3 sub-user.
 	SecretAccessKey *string `json:"SecretAccessKey,omitnil,omitempty" name:"SecretAccessKey"`
 
-	// Region of S3.
+	// S3 region.
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
 	// Bucket name of S3.
 	Bucket *string `json:"Bucket,omitnil,omitempty" name:"Bucket"`
 
-	// File output path, which can be empty. If it is not empty, it starts with / and ends with /.
+	// File output path, can be empty, starts and ends with / if not empty.
 	FilePath *string `json:"FilePath,omitnil,omitempty" name:"FilePath"`
 
-	// User-defined name, supports alphanumeric characters, underscores, and hyphens, with a length between 1 and 32 characters.
+	// User-defined name supports 1 to 32 characters consisting of digits, letters, underscores (_), and hyphens (-).
 	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
 
-	// File suffix, only supports `jpg`.
+	// File suffix only supports jpg.
 	FileExt *string `json:"FileExt,omitnil,omitempty" name:"FileExt"`
 
-	// Support `unix` or `utc0`, default unix.
+	// Support [unix|utc0]. Default is unix.
 	TimeFormat *string `json:"TimeFormat,omitnil,omitempty" name:"TimeFormat"`
 }
 
@@ -260,15 +266,16 @@ type AttachedInput struct {
 	// Note: this field may return `null`, indicating that no valid value was found.
 	FailOverSettings *FailOverSettings `json:"FailOverSettings,omitnil,omitempty" name:"FailOverSettings"`
 
-	// Caption selector for the input. There can be 0 to 1 audio selectors.
+	// Subtitle selector.
+	// Note: This field may return null, indicating that no valid values can be obtained.
 	CaptionSelectors []*CaptionSelector `json:"CaptionSelectors,omitnil,omitempty" name:"CaptionSelectors"`
 }
 
 type AudioCodecDetail struct {
-	// Channel configuration, optional values: MONO (mono), STEREO (two-channel), 5.1 (surround).
+	// Sound track configuration. Available values: MONO, STEREO, 5.1.
 	ChannelMode *string `json:"ChannelMode,omitnil,omitempty" name:"ChannelMode"`
 
-	// Level in aac case, optional values: "LC" "HE-AAC" "HE-AACV2".
+	// Level in aac, available values: "LC", "HE-aac", "HE-AACV2".
 	Profile *string `json:"Profile,omitnil,omitempty" name:"Profile"`
 }
 
@@ -303,7 +310,7 @@ type AudioSelectorInfo struct {
 	// Audio `Pid` selection.
 	AudioPidSelection *AudioPidSelectionInfo `json:"AudioPidSelection,omitnil,omitempty" name:"AudioPidSelection"`
 
-	// Audio input type, optional values: 'PID_SELECTOR' 'TRACK_SELECTOR', default value PID_SELECTOR.
+	// Audio input type. Value range: 'PID_SELECTOR' | 'TRACK_SELECTOR'. Default value: PID_SELECTOR.
 	AudioSelectorType *string `json:"AudioSelectorType,omitnil,omitempty" name:"AudioSelectorType"`
 
 	// AudioTrack configuration.
@@ -317,14 +324,14 @@ type AudioTemplateInfo struct {
 	// Audio transcoding template name, which can contain 1-20 letters and digits.
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// Audio encoding format, only `AAC` and `PASSTHROUGH` are available, with `AAC` as the default.
+	// Audio encoding format, can only be `AAC` or `PASSTHROUGH`. Default is AAC.
 	Acodec *string `json:"Acodec,omitnil,omitempty" name:"Acodec"`
 
 	// Audio bitrate. If this parameter is left empty, the original value will be used.
 	// Valid values: 6000, 7000, 8000, 10000, 12000, 14000, 16000, 20000, 24000, 28000, 32000, 40000, 48000, 56000, 64000, 80000, 96000, 112000, 128000, 160000, 192000, 224000, 256000, 288000, 320000, 384000, 448000, 512000, 576000, 640000, 768000, 896000, 1024000
 	AudioBitrate *uint64 `json:"AudioBitrate,omitnil,omitempty" name:"AudioBitrate"`
 
-	// Audio language code, which length is between 2 and 20.
+	// Audio language Code, length 2-20.
 	LanguageCode *string `json:"LanguageCode,omitnil,omitempty" name:"LanguageCode"`
 
 	// Audio transcoding special configuration information.
@@ -336,15 +343,15 @@ type AudioTemplateInfo struct {
 	// Audio encoding parameters.
 	AudioCodecDetails *AudioCodecDetail `json:"AudioCodecDetails,omitnil,omitempty" name:"AudioCodecDetails"`
 
-	// Audio language description, which maximum length is 100.
+	// Audio language description, maximum length 100
 	LanguageDescription *string `json:"LanguageDescription,omitnil,omitempty" name:"LanguageDescription"`
 }
 
 type AudioTrackInfo struct {
-	// User input is limited to letters and numbers, the length should not exceed 20, and should not be repeated in the same channel.
+	// User input, limited to letters and digits, length not exceeding 20, non-repeating in the same channel.
 	TrackName *string `json:"TrackName,omitnil,omitempty" name:"TrackName"`
 
-	// Audio encoding format, only `AAC` and `PASSTHROUGH` are available, with `AAC` as the default.
+	// Audio encoding format, can only be `AAC` or `PASSTHROUGH`. Default is AAC.
 	AudioCodec *string `json:"AudioCodec,omitnil,omitempty" name:"AudioCodec"`
 
 	// Audio bitrate.
@@ -353,21 +360,29 @@ type AudioTrackInfo struct {
 	// Audio sample rate.
 	AudioSampleRate *uint64 `json:"AudioSampleRate,omitnil,omitempty" name:"AudioSampleRate"`
 
-	// Only values defined by AttachedInputs.$.AudioSelectors.$.audioPidSelection.pid can be entered.
+	// Input Only the value defined in AttachedInputs.$.AudioSelectors.$.audioPidSelection.pid.
 	AudioSelectorName *string `json:"AudioSelectorName,omitnil,omitempty" name:"AudioSelectorName"`
 
 	// Audio loudness configuration.
 	AudioNormalization *AudioNormalizationSettings `json:"AudioNormalization,omitnil,omitempty" name:"AudioNormalization"`
 
-	// Audio encoding configuration.
+	// Additional audio mode and sound channel configuration.
 	AudioCodecDetails *AudioCodecDetail `json:"AudioCodecDetails,omitnil,omitempty" name:"AudioCodecDetails"`
 }
 
+type BorderFrameSetting struct {
+
+	LiveSourceLayout *SourceLayout `json:"LiveSourceLayout,omitnil,omitempty" name:"LiveSourceLayout"`
+
+
+	BackgroundImgUrl *string `json:"BackgroundImgUrl,omitnil,omitempty" name:"BackgroundImgUrl"`
+}
+
 type CaptionSelector struct {
-	// Caption selector name, which can contain 1-32 letters, digits, and underscores.
+	// Digits, uppercase and lowercase letters, underscore, length 1-32.
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// Caption source type, only support `SCTE-128`.
+	// Supports only `SCTE-128`.
 	CaptionSourceType *string `json:"CaptionSourceType,omitnil,omitempty" name:"CaptionSourceType"`
 }
 
@@ -417,7 +432,7 @@ type ChannelPipelineAlerts struct {
 }
 
 type ColorSpaceSetting struct {
-	// Color space, supports `PASSTHROUGH` (transparent transmission, only supports H265); optional.
+	// Colorspace, supports PASSTHROUGH (passthrough, only supports H265). Can be empty.
 	ColorSpace *string `json:"ColorSpace,omitnil,omitempty" name:"ColorSpace"`
 }
 
@@ -428,16 +443,16 @@ type CosSettings struct {
 	// Bucket name of COS.
 	Bucket *string `json:"Bucket,omitnil,omitempty" name:"Bucket"`
 
-	// File output path, which can be empty. If it is not empty, it  ends with /.
+	// COS file output path, can be empty, ends with / if not empty.
 	FilePath *string `json:"FilePath,omitnil,omitempty" name:"FilePath"`
 
-	// User-defined name, supports alphanumeric characters, underscores, and hyphens, with a length between 1 and 32 characters.
+	// User-defined name supports 1 to 32 characters consisting of digits, letters, underscores (_), and hyphens (-).
 	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
 
-	// File suffix, only supports `jpg`.
+	// COS file suffix is only supported for jpg.
 	FileExt *string `json:"FileExt,omitnil,omitempty" name:"FileExt"`
 
-	// Support `unix` or `utc0`, default unix.
+	// Support [unix|utc0]. Default is unix.
 	TimeFormat *string `json:"TimeFormat,omitnil,omitempty" name:"TimeFormat"`
 }
 
@@ -470,31 +485,31 @@ type CreateImageSettings struct {
 
 // Predefined struct for user
 type CreateStreamLiveChannelRequestParams struct {
-	// Channel name, which can contain 1-32 case-sensitive letters, digits, and underscores and must be unique at the region level
+	// Channel name, limited to lowercase letters, digits, and underscores, length [1, 32], unique in each Region.
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// Inputs to attach. You can attach 1 to 5 inputs.
+	// Associated media input, limit on the number [1, 5].
 	AttachedInputs []*AttachedInput `json:"AttachedInputs,omitnil,omitempty" name:"AttachedInputs"`
 
-	// Configuration information of the channel's output groups. Quantity: [1, 10]
+	// Configuration message of the output group for the channel. Limit on the number [1, 10].
 	OutputGroups []*StreamLiveOutputGroupsInfo `json:"OutputGroups,omitnil,omitempty" name:"OutputGroups"`
 
-	// Audio transcoding templates. Quantity: [1, 20]
+	// Audio transcoding template array, with the maximum number of [1, 20].
 	AudioTemplates []*AudioTemplateInfo `json:"AudioTemplates,omitnil,omitempty" name:"AudioTemplates"`
 
-	// Video transcoding templates. Quantity: [1, 10]
+	// Video transcoding template array, with the maximum number of [1, 10].
 	VideoTemplates []*VideoTemplateInfo `json:"VideoTemplates,omitnil,omitempty" name:"VideoTemplates"`
 
-	// Audio/Video transcoding templates. Quantity: [1, 10]
+	// Audio and video transcoding template array, with a limit on the number between 1 and 10.
 	AVTemplates []*AVTemplate `json:"AVTemplates,omitnil,omitempty" name:"AVTemplates"`
 
-	// Subtitle template configuration.
+	// Subtitle template configuration is only valid for joint transcoding template.
 	CaptionTemplates []*SubtitleConf `json:"CaptionTemplates,omitnil,omitempty" name:"CaptionTemplates"`
 
-	// Event settings
+	// Configuration message of the scheduled task.
 	PlanSettings *PlanSettings `json:"PlanSettings,omitnil,omitempty" name:"PlanSettings"`
 
-	// The callback settings.
+	// Callback configuration information.
 	EventNotifySettings *EventNotifySetting `json:"EventNotifySettings,omitnil,omitempty" name:"EventNotifySettings"`
 
 	// Complement the last video frame settings.
@@ -503,47 +518,47 @@ type CreateStreamLiveChannelRequestParams struct {
 	// Pipeline configuration.
 	PipelineInputSettings *PipelineInputSettingsInfo `json:"PipelineInputSettings,omitnil,omitempty" name:"PipelineInputSettings"`
 
-	// Recognition configuration for input content.
+	// Input content identification configuration.
 	InputAnalysisSettings *InputAnalysisInfo `json:"InputAnalysisSettings,omitnil,omitempty" name:"InputAnalysisSettings"`
 
-	// Console tag list.
+	// Console tag list
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// Frame capture templates.
+	// chart template
 	FrameCaptureTemplates []*FrameCaptureTemplate `json:"FrameCaptureTemplates,omitnil,omitempty" name:"FrameCaptureTemplates"`
 
-	// General settings.
+	// Common configuration.
 	GeneralSettings *GeneralSetting `json:"GeneralSettings,omitnil,omitempty" name:"GeneralSettings"`
 }
 
 type CreateStreamLiveChannelRequest struct {
 	*tchttp.BaseRequest
 	
-	// Channel name, which can contain 1-32 case-sensitive letters, digits, and underscores and must be unique at the region level
+	// Channel name, limited to lowercase letters, digits, and underscores, length [1, 32], unique in each Region.
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// Inputs to attach. You can attach 1 to 5 inputs.
+	// Associated media input, limit on the number [1, 5].
 	AttachedInputs []*AttachedInput `json:"AttachedInputs,omitnil,omitempty" name:"AttachedInputs"`
 
-	// Configuration information of the channel's output groups. Quantity: [1, 10]
+	// Configuration message of the output group for the channel. Limit on the number [1, 10].
 	OutputGroups []*StreamLiveOutputGroupsInfo `json:"OutputGroups,omitnil,omitempty" name:"OutputGroups"`
 
-	// Audio transcoding templates. Quantity: [1, 20]
+	// Audio transcoding template array, with the maximum number of [1, 20].
 	AudioTemplates []*AudioTemplateInfo `json:"AudioTemplates,omitnil,omitempty" name:"AudioTemplates"`
 
-	// Video transcoding templates. Quantity: [1, 10]
+	// Video transcoding template array, with the maximum number of [1, 10].
 	VideoTemplates []*VideoTemplateInfo `json:"VideoTemplates,omitnil,omitempty" name:"VideoTemplates"`
 
-	// Audio/Video transcoding templates. Quantity: [1, 10]
+	// Audio and video transcoding template array, with a limit on the number between 1 and 10.
 	AVTemplates []*AVTemplate `json:"AVTemplates,omitnil,omitempty" name:"AVTemplates"`
 
-	// Subtitle template configuration.
+	// Subtitle template configuration is only valid for joint transcoding template.
 	CaptionTemplates []*SubtitleConf `json:"CaptionTemplates,omitnil,omitempty" name:"CaptionTemplates"`
 
-	// Event settings
+	// Configuration message of the scheduled task.
 	PlanSettings *PlanSettings `json:"PlanSettings,omitnil,omitempty" name:"PlanSettings"`
 
-	// The callback settings.
+	// Callback configuration information.
 	EventNotifySettings *EventNotifySetting `json:"EventNotifySettings,omitnil,omitempty" name:"EventNotifySettings"`
 
 	// Complement the last video frame settings.
@@ -552,16 +567,16 @@ type CreateStreamLiveChannelRequest struct {
 	// Pipeline configuration.
 	PipelineInputSettings *PipelineInputSettingsInfo `json:"PipelineInputSettings,omitnil,omitempty" name:"PipelineInputSettings"`
 
-	// Recognition configuration for input content.
+	// Input content identification configuration.
 	InputAnalysisSettings *InputAnalysisInfo `json:"InputAnalysisSettings,omitnil,omitempty" name:"InputAnalysisSettings"`
 
-	// Console tag list.
+	// Console tag list
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// Frame capture templates.
+	// chart template
 	FrameCaptureTemplates []*FrameCaptureTemplate `json:"FrameCaptureTemplates,omitnil,omitempty" name:"FrameCaptureTemplates"`
 
-	// General settings.
+	// Common configuration.
 	GeneralSettings *GeneralSetting `json:"GeneralSettings,omitnil,omitempty" name:"GeneralSettings"`
 }
 
@@ -600,10 +615,10 @@ func (r *CreateStreamLiveChannelRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateStreamLiveChannelResponseParams struct {
-	// Channel ID
+	// Channel ID.
 	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
-	// Tag prompt information, this information will be attached when the tag operation fails.
+	// Tag prompt message. When the operation fails, the information comes with it.
 	TagMsg *string `json:"TagMsg,omitnil,omitempty" name:"TagMsg"`
 
 	// The unique request ID, generated by the server, will be returned for every request (if the request fails to reach the server for other reasons, the request will not obtain a RequestId). RequestId is required for locating a problem.
@@ -782,20 +797,20 @@ func (r *CreateStreamLiveInputSecurityGroupResponse) FromJsonString(s string) er
 
 // Predefined struct for user
 type CreateStreamLivePlanRequestParams struct {
-	// ID of the channel for which you want to configure an event
+	// ID of the channel for which you want to configure an event.
 	ChannelId *string `json:"ChannelId,omitnil,omitempty" name:"ChannelId"`
 
-	// Event configuration
+	// Event configuration.
 	Plan *PlanReq `json:"Plan,omitnil,omitempty" name:"Plan"`
 }
 
 type CreateStreamLivePlanRequest struct {
 	*tchttp.BaseRequest
 	
-	// ID of the channel for which you want to configure an event
+	// ID of the channel for which you want to configure an event.
 	ChannelId *string `json:"ChannelId,omitnil,omitempty" name:"ChannelId"`
 
-	// Event configuration
+	// Event configuration.
 	Plan *PlanReq `json:"Plan,omitnil,omitempty" name:"Plan"`
 }
 
@@ -2531,25 +2546,22 @@ type DestinationInfo struct {
 	// Relay destination address. Length limit: [1,512].
 	OutputUrl *string `json:"OutputUrl,omitnil,omitempty" name:"OutputUrl"`
 
-	// Authentication key. Length limit: [1,128].
-	// Note: this field may return null, indicating that no valid values can be obtained.
+	// Authentication key, length limited to [1, 128].
 	AuthKey *string `json:"AuthKey,omitnil,omitempty" name:"AuthKey"`
 
-	// Authentication username. Length limit: [1,128].
-	// Note: this field may return null, indicating that no valid values can be obtained.
+	// Authentication username, length limited to [1, 128].
 	Username *string `json:"Username,omitnil,omitempty" name:"Username"`
 
-	// Authentication password. Length limit: [1,128].
-	// Note: this field may return null, indicating that no valid values can be obtained.
+	// Authentication password, length limited to [1, 128].
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// The destination type of the retweet. Currently available values are: Standard, AWS_MediaPackageV1, AWS_MediaPackageV2. The default is: Standard. When the output group type is FRAME_CAPTURE, valid values are: AWS_AmazonS3, COS.
+	// The destination type for relay. Available values: Standard, AWS_MediaPackageV1, AWS_MediaPackageV2. Default: Standard. AWS_AmazonS3 or COS is supported when FrameCapture group is selected.
 	DestinationType *string `json:"DestinationType,omitnil,omitempty" name:"DestinationType"`
 
-	// Aws S3 destination setting.
+	// Forward the Aws S3 address information.
 	AmazonS3Settings *AmazonS3Settings `json:"AmazonS3Settings,omitnil,omitempty" name:"AmazonS3Settings"`
 
-	// Cos destination setting.
+	// Forward COS address information.
 	CosSettings *CosSettings `json:"CosSettings,omitnil,omitempty" name:"CosSettings"`
 }
 
@@ -2558,63 +2570,54 @@ type DrmKey struct {
 	// Note: uppercase letters in the string will be automatically converted to lowercase ones.
 	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
 
-	// Required for Widevine encryption. Valid values: SD, HD, UHD1, UHD2, AUDIO, ALL.
-	// ALL refers to all tracks. If this parameter is set to ALL, no other tracks can be added.
-	// Note: this field may return null, indicating that no valid values can be obtained.
+	// Widevine encryption is required. Selectable options: SD/HD/UHD1/UHD2/AUDIO/ALL.
+	// Among them, ALL represents select ALL. If ALL is specified, you cannot add other tracks.
 	Track *string `json:"Track,omitnil,omitempty" name:"Track"`
 
-	// Required for Widevine encryption. It is a 32-bit hexadecimal string.
-	// Note: uppercase letters in the string will be automatically converted to lowercase ones.
-	// Note: this field may return null, indicating that no valid values can be obtained.
+	// KeyId for Widevine encryption, a 32-bit length hexadecimal string.
+	// Note: The string will be modified to lowercase.
 	KeyId *string `json:"KeyId,omitnil,omitempty" name:"KeyId"`
 
-	// Required when FairPlay uses the AES encryption method. It is a 32-bit hexadecimal string.
-	// For more information about this parameter, please see: 
+	// Iv for AES encryption in Fairplay, a 32-bit length hexadecimal string.
+	// Iv parsing reference
 	// https://tools.ietf.org/html/rfc3826
-	// Note: uppercase letters in the string will be automatically converted to lowercase ones.
-	// Note: this field may return null, indicating that no valid values can be obtained.
+	// Note: The string will be modified to lowercase.
 	Iv *string `json:"Iv,omitnil,omitempty" name:"Iv"`
 
-	// The URI of the license server when AES-128 is used. This parameter may be empty.
-	// Note: This field may return `null`, indicating that no valid values can be obtained.
+	// uri of the license server. AES128 is used. Can be empty.
 	KeyUri *string `json:"KeyUri,omitnil,omitempty" name:"KeyUri"`
 }
 
 type DrmSettingsInfo struct {
-	// Whether to enable DRM encryption. Valid values: `CLOSE` (disable), `OPEN` (enable). Default value: `CLOSE`
-	// DRM encryption is supported only for HLS, DASH, HLS_ARCHIVE, DASH_ARCHIVE, HLS_MEDIAPACKAGE, and DASH_MEDIAPACKAGE outputs.
+	// Whether DRM encryption is enabled. Option: CLOSE/OPEN. Default: CLOSE.
+	// Currently only support HLS/DASH/HLS_ARCHIVE/DASH_ARCHIVE/HLS_MEDIAPACKAGE/DASH_MEDIAPACKAGE.
 	State *string `json:"State,omitnil,omitempty" name:"State"`
 
-	// Valid values: `CustomDRMKeys` (default value), `SDMCDRM`
-	// `CustomDRMKeys` means encryption keys customized by users.
-	// `SDMCDRM` means the DRM key management system of SDMC.
+	// Optional [CustomDRMKeys|SDMCDRM], defaults to CustomDRMKeys.
+	// CustomDRMKeys refers to the custom encryption key.
+	// SDMCDRM refers to the DRM key management system using SMDC.
 	Scheme *string `json:"Scheme,omitnil,omitempty" name:"Scheme"`
 
-	// If `Scheme` is set to `CustomDRMKeys`, this parameter is required.
-	// If `Scheme` is set to `SDMCDRM`, this parameter is optional. It supports digits, letters, hyphens, and underscores and must contain 1 to 36 characters. If it is not specified, the value of `ChannelId` will be used.
+	// Scheme is CustomDRMKeys, required, filled in by the user.
+	// Scheme is SDMCDRM, optional, defaults to ChannelId. The format supports digits, upper- and lower-case letters, hyphens, and underscores, with a length of [1, 36].
 	ContentId *string `json:"ContentId,omitnil,omitempty" name:"ContentId"`
 
-	// The key customized by the content user, which is required when `Scheme` is set to CustomDRMKeys.
-	// Note: this field may return null, indicating that no valid values can be obtained.
+	// Required when Scheme is CustomDRMKeys. The content is the key customized by users.
 	Keys []*DrmKey `json:"Keys,omitnil,omitempty" name:"Keys"`
 
-	// SDMC key configuration. This parameter is used when `Scheme` is set to `SDMCDRM`.
-	// Note: This field may return `null`, indicating that no valid value was found.
+	// SDMC key configuration information, used when Scheme is SDMCDRM.
 	SDMCSettings *SDMCSettingsInfo `json:"SDMCSettings,omitnil,omitempty" name:"SDMCSettings"`
 
-	// Optional Types:
-	// `FAIRPLAY`, `WIDEVINE`, `PLAYREADY`, `AES128`
-	// 
+	// Optional type:
+	// `FAIRPLAY` `WIDEVINE` `PLAYREADY` `AES128`
 	// HLS-TS supports `FAIRPLAY` and `AES128`.
-	// 
-	// HLS-FMP4 supports `FAIRPLAY`, `WIDEVINE`, `PLAYREADY`, `AES128`, and combinations of two or three from `FAIRPLAY`, `WIDEVINE`, and `PLAYREADY` (concatenated with commas, e.g., "FAIRPLAY,WIDEVINE,PLAYREADY").
-	// 
-	// DASH supports `WIDEVINE`, `PLAYREADY`, and combinations of `PLAYREADY` and `WIDEVINE` (concatenated with commas, e.g., "PLAYREADY,WIDEVINE").
+	// HLS-FMP4 supports `FAIRPLAY`, `WIDEVINE`, `PLAYREADY`, `AES128`, and permutation and combination of two or three from `FAIRPLAY`, `WIDEVINE`, `PLAYREADY` (use commas to concatenate, such as "FAIRPLAY,WIDEVINE,PLAYREADY").
+	// DASH supports `WIDEVINE`, `PLAYREADY`, and the permutation and combination of `PLAYREADY` and `WIDEVINE` (use commas to concatenate, such as "PLAYREADY,WIDEVINE").
 	DrmType *string `json:"DrmType,omitnil,omitempty" name:"DrmType"`
 }
 
 type EventNotifySetting struct {
-	// The callback configuration for push events.
+	// Inference stream callback configuration. Currently supports rtmp_push, rtmps_push, and rtmp_pull input types.
 	PushEventSettings *PushEventSetting `json:"PushEventSettings,omitnil,omitempty" name:"PushEventSettings"`
 }
 
@@ -2632,7 +2635,7 @@ type EventSettingsReq struct {
 	// Valid values: `INPUT_SWITCH`, `TIMED_RECORD`, `SCTE35_TIME_SIGNAL`, `SCTE35_SPLICE_INSERT`, `SCTE35_RETURN_TO_NETWORK`,`TIMED_METADATA `,`STATIC_IMAGE_ACTIVATE `,`STATIC_IMAGE_DEACTIVATE `. If it is not specified, `INPUT_SWITCH` will be used.
 	EventType *string `json:"EventType,omitnil,omitempty" name:"EventType"`
 
-	// ID of the input to attach, which is required if `EventType` is `INPUT_SWITCH`
+	// ID of the input to attach, which is required if `EventType` is `INPUT_SWITCH`.
 	InputAttachment *string `json:"InputAttachment,omitnil,omitempty" name:"InputAttachment"`
 
 	// When the type is FIXED_PTS, it is mandatory and defaults to 0
@@ -2717,8 +2720,7 @@ type EventSettingsResp struct {
 }
 
 type FailOverSettings struct {
-	// ID of the backup input
-	// Note: this field may return `null`, indicating that no valid value was found.
+	// Input Id of the backup stream.
 	SecondaryInputId *string `json:"SecondaryInputId,omitnil,omitempty" name:"SecondaryInputId"`
 
 	// The wait time (ms) for triggering failover after the primary input becomes unavailable. Value range: [1000, 86400000]. Default value: `3000`
@@ -2729,36 +2731,36 @@ type FailOverSettings struct {
 }
 
 type FrameCaptureTemplate struct {
-	// Name of frame capture template, limited to uppercase and lowercase letters and numbers, with a length between 1 and 20 characters.
+	// Screenshot template name. Limited to uppercase and lowercase letters and digits. Length [1, 20].
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// Width of frame capture, optional, input range is from 0 to 3000, must be a multiple of 2.
+	// Screenshot width. Optional. The input range is [0, 3000] and must be a multiple of 2.
 	Width *uint64 `json:"Width,omitnil,omitempty" name:"Width"`
 
-	// Height of frame capture, optional, input range is from 0 to 3000, must be a multiple of 2.
+	// Screenshot height, optional, input range [0, 3000], must be a multiple of 2
 	Height *uint64 `json:"Height,omitnil,omitempty" name:"Height"`
 
-	// Interval of frame capture, an integer between 1 and 3600.
+	// Screenshot interval, an integer between 1 and 3600.
 	CaptureInterval *uint64 `json:"CaptureInterval,omitnil,omitempty" name:"CaptureInterval"`
 
-	// Interval units of frame capture, only supports SECONDS.
+	// Screenshot measurement unit, supports only SECONDS.
 	CaptureIntervalUnits *string `json:"CaptureIntervalUnits,omitnil,omitempty" name:"CaptureIntervalUnits"`
 
-	// Scaling behavior of frame capture, supports DEFAULT or STRETCH_TO_OUTPUT, with DEFAULT being the default option.
+	// Stretch behavior, supports [DEFAULT|STRETCH_TO_OUTPUT], default is DEFAULT.
 	ScalingBehavior *string `json:"ScalingBehavior,omitnil,omitempty" name:"ScalingBehavior"`
 
-	// Sharpness, an integer between 0 and 100.
+	// Sharpening degree, an integer between 0 and 100.
 	Sharpness *uint64 `json:"Sharpness,omitnil,omitempty" name:"Sharpness"`
 }
 
 type GeneralSetting struct {
-	// Static graphic overlay configuration.
+	// Static image overlay configuration.
 	StaticImageSettings *StaticImageSettings `json:"StaticImageSettings,omitnil,omitempty" name:"StaticImageSettings"`
 
-	// Dynamic graphic overlay configuration.
+	// Real-time graphic overlay configuration.
 	MotionGraphicsSettings *MotionGraphicsSetting `json:"MotionGraphicsSettings,omitnil,omitempty" name:"MotionGraphicsSettings"`
 
-	// Thumbnail Configuration.
+	// Thumbnail configuration
 	ThumbnailSettings *ThumbnailSettings `json:"ThumbnailSettings,omitnil,omitempty" name:"ThumbnailSettings"`
 }
 
@@ -2834,78 +2836,84 @@ func (r *GetAbWatermarkPlayUrlResponse) FromJsonString(s string) error {
 }
 
 type HighlightInfo struct {
-	// Whether to enable input recognition 0: Disable 1 Enable Default value 0 Disable.
+	// Whether to enable input recognition  0: disabled  1: enabled  Default value: 0.
 	HighlightEnabled *uint64 `json:"HighlightEnabled,omitnil,omitempty" name:"HighlightEnabled"`
 
-	// The product where the results are saved, optional: COS. Currently, only Tencent Cloud COS is supported. In the future, it will be connected to AWS S3 and COS will be used by default.
+	// Products to save results. Option: COS.
+	// Currently supports Tencent Cloud COS only. AWS S3 integration will be supported later. Default is COS.
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// Valid when Type is COS, the region where COS is stored.
+	// Valid when Type is COS. Region of COS storage.
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
-	// Valid when Type is COS, the bucket name stored in COS.
+	// Valid when Type is COS. Bucket name of COS storage.
 	Bucket *string `json:"Bucket,omitnil,omitempty" name:"Bucket"`
 
-	// Valid when Type is COS, the path where cos is stored.
+	// Valid when Type is COS. Path of COS storage.
 	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
 
-	// Valid when Type is COS, the file name stored in cos.
+	// Valid when Type is COS. Name of the stored file in COS.
 	Filename *string `json:"Filename,omitnil,omitempty" name:"Filename"`
 
-	// Valid when Type is COS, the file name suffix stored in COS is automatically generated in the time format, optional values: unix, utc. Unix is the second-level timestamp and UTC is the year, month and day represented by the zero time zone.
+	// Valid when Type is COS. The file extension of COS storage is automatically generated in time format. Available values: unix, utc.
+	// unix is a second-level timestamp. utc 0 represents the year, month, day.
 	TimestampFormat *string `json:"TimestampFormat,omitnil,omitempty" name:"TimestampFormat"`
 
-	// Audio selector list is optional and can be empty. If not filled in, an audio will be used as the output of the recognition result by default.
+	// Audio selector list, selectable, can be left blank. By default, an audio is used as the output of the recognition result.
 	AudioSelectorNames []*string `json:"AudioSelectorNames,omitnil,omitempty" name:"AudioSelectorNames"`
 }
 
 type HlsRemuxSettingsInfo struct {
-	// Segment duration in ms. Value range: [1000,30000]. Default value: 4000. The value can only be a multiple of 1,000.
+	// Segment duration in milliseconds. Input range is [1000, 30000], default 4000, can only be a multiple of 1000.
 	SegmentDuration *uint64 `json:"SegmentDuration,omitnil,omitempty" name:"SegmentDuration"`
 
-	// Number of segments. Value range: [3,30]. Default value: 5.
+	// Number of shards. Input range [3, 30]. Default is 5.
 	SegmentNumber *uint64 `json:"SegmentNumber,omitnil,omitempty" name:"SegmentNumber"`
 
-	// Whether to enable PDT insertion. Valid values: CLOSE/OPEN. Default value: CLOSE.
+	// Whether to enable Pdt insertion. CLOSE/OPEN. Default is CLOSE.
 	PdtInsertion *string `json:"PdtInsertion,omitnil,omitempty" name:"PdtInsertion"`
 
-	// PDT duration in seconds. Value range: (0,3000]. Default value: 600.
+	// Pdt duration in seconds. Input range (0, 3000]. Default 600.
 	PdtDuration *uint64 `json:"PdtDuration,omitnil,omitempty" name:"PdtDuration"`
 
-	// Audio/Video packaging scheme. Valid values: `SEPARATE`, `MERGE`. Default value is: SEPARATE.
+	// Video packaging type, selectable SEPARATE|MERGE.
 	Scheme *string `json:"Scheme,omitnil,omitempty" name:"Scheme"`
 
-	// The segment type. Valid values: `ts` (default), `fmp4`.
-	// Currently, fMP4 segments do not support DRM or time shifting.
+	// Segment type, supports [ts|fmp4], default ts.
+	// fmp4 does not currently support DRM and time shifting.
 	SegmentType *string `json:"SegmentType,omitnil,omitempty" name:"SegmentType"`
 
-	// The HLS package type when the H.265 codec is used. Valid values: `hvc1`, `hev1` (default).
+	// When the transcoding type is H265, the HLS H265 encapsulation type is selectable [hvc1|hev1], default is hev1.
 	H265PackageType *string `json:"H265PackageType,omitnil,omitempty" name:"H265PackageType"`
 
-	// Whether to enable low latency 0:CLOSE, 1:OPEN, default value: 0.
+	// Whether to enable low delay. 0:CLOSE. Default is 0. 1:OPEN.
 	LowLatency *uint64 `json:"LowLatency,omitnil,omitempty" name:"LowLatency"`
 
-	// Low latency slice size, unit ms. Value range: integer [200-HlsRemuxSettings.SegmentDuration] Default value: 500ms.
+	// Small slice size in milliseconds. Value ranges from 200 to SegmentDuration (integer). Default value: 500 ms.
 	PartialSegmentDuration *uint64 `json:"PartialSegmentDuration,omitnil,omitempty" name:"PartialSegmentDuration"`
 
-	// Low latency slice playback position, unit ms. Value range: integer [3*HlsRemuxSettings.PartiSegmentDuration - 3*HlsRemuxSettings.SegmentDuration], Default value: 3*HlsRemuxSettings.PartiSegmentDuration.
+	// Small slice playback position in milliseconds. Value ranges from 3*PartiSegmentDuration to 3*SegmentDuration (integer). Default value: 3*PartiSegmentDuration.
 	PartialSegmentPlaySite *uint64 `json:"PartialSegmentPlaySite,omitnil,omitempty" name:"PartialSegmentPlaySite"`
 
-	// Hls main m3u8 file sorting rules by bitrate, optional values: 1: video bitrate ascending order; 2: video bitrate descending order. Default value: 1.
+	// Hls master m3u8 file sorting rule by bitrate. Available values:
+	// 1: Video bitrate ascending 2: Video bitrate descending
+	// Default value: 1
 	StreamOrder *uint64 `json:"StreamOrder,omitnil,omitempty" name:"StreamOrder"`
 
-	// Whether the Hls main m3u8 file contains resolution information, optional values: 1: INCLUDE includes video resolution; 2: EXCLUDE does not include video resolution. Default value: 1.
+	// Whether the Hls master m3u8 file contains resolution information. Available values:
+	// 1: INCLUDE includes video resolution 2: EXCLUDE excludes video resolution.
+	// Default value: 1.
 	VideoResolution *uint64 `json:"VideoResolution,omitnil,omitempty" name:"VideoResolution"`
 
-	// Whether to include the `EXT-X-ENDLIST` tag, 1 includes  `EXT-X-ENDLIST` tag, 2 does not include  `EXT-X-ENDLIST` tag; the default value is 1.
+	// Whether the content contains the `EXT-X-ENDLIST` tag. 1: contains; 2: does not contain. Default: 1.
 	EndListTag *int64 `json:"EndListTag,omitnil,omitempty" name:"EndListTag"`
 
-	// Optional: `ENHANCED_SCTE35`, `DATERANGE`; default value: `ENHANCED_SCTE35`.
+	// Option: `ENHANCED_SCTE35`, `DATERANGE`; default `ENHANCED_SCTE35`.
 	AdMarkupType *string `json:"AdMarkupType,omitnil,omitempty" name:"AdMarkupType"`
 }
 
 type InputAnalysisInfo struct {
-	// Highlight configuration.
+	// Highlights configuration.
 	HighlightSetting *HighlightInfo `json:"HighlightSetting,omitnil,omitempty" name:"HighlightSetting"`
 }
 
@@ -3035,12 +3043,12 @@ type InputStreamInfo struct {
 }
 
 type InputTrack struct {
-	// Audio track index 1-based index mapping to the specified audio track integer starting from 1.
+	// Audio track index  1-based index mapping to the specified audio track  Integer starting from 1.
 	TrackIndex *uint64 `json:"TrackIndex,omitnil,omitempty" name:"TrackIndex"`
 }
 
 type InputTracks struct {
-	// Audio track configuration information.
+	// Audio track configuration message.
 	Tracks []*InputTrack `json:"Tracks,omitnil,omitempty" name:"Tracks"`
 }
 
@@ -3491,7 +3499,8 @@ type MotionGraphicsActivateSetting struct {
 }
 
 type MotionGraphicsSetting struct {
-	// Whether to enable dynamic graphic overlay, '0' not enabled, '1' enabled; Default 0.
+	// Whether to enable dynamic graphic overlay. `0`: not enabled, `1`: enabled. Default: 0.
+	// Note: This field may return null, indicating that no valid values can be obtained.
 	MotionGraphicsOverlayEnabled *int64 `json:"MotionGraphicsOverlayEnabled,omitnil,omitempty" name:"MotionGraphicsOverlayEnabled"`
 }
 
@@ -3500,31 +3509,28 @@ type OutputInfo struct {
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// Audio transcoding template name array.
-	// Quantity limit: [0,1] for RTMP; [0,20] for others.
-	// Note: this field may return null, indicating that no valid values can be obtained.
+	// RTMP limit [0, 1], other limits [0, 20].
 	AudioTemplateNames []*string `json:"AudioTemplateNames,omitnil,omitempty" name:"AudioTemplateNames"`
 
-	// Video transcoding template name array. Quantity limit: [0,1].
-	// Note: this field may return null, indicating that no valid values can be obtained.
+	// Video transcoding template name array, with the maximum number of [0, 1].
 	VideoTemplateNames []*string `json:"VideoTemplateNames,omitnil,omitempty" name:"VideoTemplateNames"`
 
-	// SCTE-35 information configuration.
+	// Scte-35 information configuration.
 	Scte35Settings *Scte35SettingsInfo `json:"Scte35Settings,omitnil,omitempty" name:"Scte35Settings"`
 
-	// Audio/Video transcoding template name. If `HlsRemuxSettings.Scheme` is `MERGE`, there is 1 audio/video transcoding template. Otherwise, this parameter is empty.
-	// Note: this field may return `null`, indicating that no valid value was found.
+	// Audio/video transcoding template name array, with the maximum number of 1.
 	AVTemplateNames []*string `json:"AVTemplateNames,omitnil,omitempty" name:"AVTemplateNames"`
 
-	// For the subtitle template used, only the AVTemplateNames is valid.
+	// The used subtitle template is only valid for merge template.
 	CaptionTemplateNames []*string `json:"CaptionTemplateNames,omitnil,omitempty" name:"CaptionTemplateNames"`
 
-	// Meta information controls configuration.
+	// Meta-information control configuration.
 	TimedMetadataSettings *TimedMetadataSettingInfo `json:"TimedMetadataSettings,omitnil,omitempty" name:"TimedMetadataSettings"`
 
-	// Frame capture template name array. Quantity limit: [0,1].
+	// Screenshot transcode template name array. Limit: 1.
 	FrameCaptureTemplateNames []*string `json:"FrameCaptureTemplateNames,omitnil,omitempty" name:"FrameCaptureTemplateNames"`
 
-	// Name modification for sub m3u8.
+	// Modify the name of the sub-m3u8.
 	NameModifier *string `json:"NameModifier,omitnil,omitempty" name:"NameModifier"`
 }
 
@@ -3536,8 +3542,26 @@ type OutputsStatistics struct {
 	Pipeline1 []*PipelineOutputStatistics `json:"Pipeline1,omitnil,omitempty" name:"Pipeline1"`
 }
 
+type PipSetting struct {
+
+	AudioSelection *string `json:"AudioSelection,omitnil,omitempty" name:"AudioSelection"`
+
+
+	LiveSourceLayout *SourceLayout `json:"LiveSourceLayout,omitnil,omitempty" name:"LiveSourceLayout"`
+
+
+	AdSourceLayout *SourceLayout `json:"AdSourceLayout,omitnil,omitempty" name:"AdSourceLayout"`
+
+
+	BackgroundImgUrl *string `json:"BackgroundImgUrl,omitnil,omitempty" name:"BackgroundImgUrl"`
+
+
+	AdSourceUrl *string `json:"AdSourceUrl,omitnil,omitempty" name:"AdSourceUrl"`
+}
+
 type PipelineInputSettingsInfo struct {
-	// Pipeline failover configuration, the valid value is: 1.PIPELINE_FAILOVER (channels are mutually failover); 2.PIPELINE_FILLING (channels fill in themselves). Default value: PIPELINE_FILLING. The specific content is specified by FaultBehavior.
+	// Pipeline disaster recovery configuration. Value: PIPELINE_FAILOVER (mutual disaster recovery for channels if unable), PIPELINE_FILLING (channel fill automatically).
+	// Default value: PIPELINE_FAILOVER. If failover between channels fails, auto-execute PIPELINE_FILLING. Specific content is specified by InputLossBehavior.
 	FaultBehavior *string `json:"FaultBehavior,omitnil,omitempty" name:"FaultBehavior"`
 }
 
@@ -3613,8 +3637,7 @@ type PlanResp struct {
 }
 
 type PlanSettings struct {
-	// Timed recording settings
-	// Note: This field may return `null`, indicating that no valid value was found.
+	// Configuration message of the scheduled recording task.
 	TimedRecordSettings *TimedRecordSettings `json:"TimedRecordSettings,omitnil,omitempty" name:"TimedRecordSettings"`
 }
 
@@ -3804,6 +3827,17 @@ type SegmentationDescriptorRespInfo struct {
 	SubSegmentsExpected *uint64 `json:"SubSegmentsExpected,omitnil,omitempty" name:"SubSegmentsExpected"`
 }
 
+type SourceLayout struct {
+
+	LeftOffset *uint64 `json:"LeftOffset,omitnil,omitempty" name:"LeftOffset"`
+
+
+	RightOffset *uint64 `json:"RightOffset,omitnil,omitempty" name:"RightOffset"`
+
+
+	BottomOffset *uint64 `json:"BottomOffset,omitnil,omitempty" name:"BottomOffset"`
+}
+
 // Predefined struct for user
 type StartStreamLiveChannelRequestParams struct {
 	// Channel ID
@@ -3899,7 +3933,7 @@ type StaticImageDeactivateSetting struct {
 }
 
 type StaticImageSettings struct {
-	// Whether to enable global static image overlay, 0: Disable, 1: Enable; Default value: 0.
+	// Whether global static image overlay is enabled. 0: not enabled, 1: enabled. Default value: 0.
 	GlobalImageOverlayEnabled *int64 `json:"GlobalImageOverlayEnabled,omitnil,omitempty" name:"GlobalImageOverlayEnabled"`
 }
 
@@ -4055,38 +4089,30 @@ type StreamLiveOutputGroupsInfo struct {
 	// Output group name, which can contain 1-32 case-sensitive letters, digits, and underscores and must be unique at the channel level
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// Output protocol
-	// Valid values: `HLS`, `DASH`, `HLS_ARCHIVE`, 
-	//  `DASH_ARCHIVE`, `HLS_STREAM_PACKAGE`, 
-	//  `DASH_STREAM_PACKAGE`, 
-	//  `FRAME_CAPTURE`, `RTP`, `RTMP`, `M2TS`.
+	// Output protocol type.
+	// Selectable HLS/DASH/HLS_ARCHIVE/DASH_ARCHIVE/HLS_STREAM_PACKAGE/DASH_STREAM_PACKAGE/FRAME_CAPTURE/RTP/RTMP/M2TS.
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// Output information
-	// If the type is RTMP, RTP or FRAME_CAPTURE, only one output is allowed; if it is HLS or DASH, 1-10 outputs are allowed.
+	// Output information.
+	// RTMP/RTP/FRAME_CAPTURE limit [1,1], HLS/DASH limit [1,10].
 	Outputs []*OutputInfo `json:"Outputs,omitnil,omitempty" name:"Outputs"`
 
 	// Relay destinations. Quantity: [1, 2]
 	Destinations []*DestinationInfo `json:"Destinations,omitnil,omitempty" name:"Destinations"`
 
-	// HLS protocol configuration information, which takes effect only for HLS/HLS_ARCHIVE/HLS_STREAM_PACKAGE outputs.
-	// Note: this field may return `null`, indicating that no valid value was found.
+	// HLS protocol configuration info, valid only for HLS/HLS_ARCHIVE.
 	HlsRemuxSettings *HlsRemuxSettingsInfo `json:"HlsRemuxSettings,omitnil,omitempty" name:"HlsRemuxSettings"`
 
-	// DRM configuration information
-	// Note: this field may return `null`, indicating that no valid value was found.
+	// DRM configuration message.
 	DrmSettings *DrmSettingsInfo `json:"DrmSettings,omitnil,omitempty" name:"DrmSettings"`
 
-	// DASH protocol configuration information, which takes effect only for DASH/DASH_ARCHIVE outputs
-	// Note: this field may return `null`, indicating that no valid value was found.
+	// DASH protocol configuration info, valid only for DASH/DSAH_ARCHIVE.
 	DashRemuxSettings *DashRemuxSettingsInfo `json:"DashRemuxSettings,omitnil,omitempty" name:"DashRemuxSettings"`
 
-	// StreamPackage configuration information, which is required if the output type is StreamPackage
-	// Note: this field may return `null`, indicating that no valid value was found.
+	// Configuration message for media encapsulation. Requires filling in when Type is related to StreamPackage.
 	StreamPackageSettings *StreamPackageSettingsInfo `json:"StreamPackageSettings,omitnil,omitempty" name:"StreamPackageSettings"`
 
-	// Time-shift configuration information
-	// Note: This field may return `null`, indicating that no valid value was found.
+	// Time shift configuration information.
 	TimeShiftSettings *TimeShiftSettingsInfo `json:"TimeShiftSettings,omitnil,omitempty" name:"TimeShiftSettings"`
 }
 
@@ -4133,48 +4159,46 @@ type StreamVideoInfo struct {
 }
 
 type SubtitleConf struct {
-	// Template name.
+	// Template Name
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// Name of caption selector. Required when CaptionSource selects `INPUT`.
+	// Name of the subtitle selector. Required when CaptionSource is set to INPUT.
 	CaptionSelectorName *string `json:"CaptionSelectorName,omitnil,omitempty" name:"CaptionSelectorName"`
 
-	// Optional values: INPUT (source subtitle information), ANALYSIS (intelligent speech recognition to subtitles).
+	// Available values: INPUT (source subtitle information), ANALYSIS (intelligent voice recognition to subtitle).
 	CaptionSource *string `json:"CaptionSource,omitnil,omitempty" name:"CaptionSource"`
 
-	// Optional values: 1 Source, 2 Source+Target, 3 Target (original language only, original language + translation language, translation language). Required when CaptionSource selects `ANALYSIS `. When outputting as WebVTT, a single template can only output one language.
+	// Available values: 1 Source, 2 Source+Target, 3 Target (source language only, source language + target language, target language). When the output is WebVTT, it can only output one language.
 	ContentType *uint64 `json:"ContentType,omitnil,omitempty" name:"ContentType"`
 
-	// Output mode: 1 Burn in, 2 Embedded, 3 WebVTT. Support `2` when CaptionSource selects `INPUT`. Support `1` and `3` when CaptionSource selects `ANALYSIS `.
+	// Output mode: 1 Burn in, 2 Embedded, 3 WebVTT. When CaptionSource is INPUT, it supports only 2. When CaptionSource is ANALYSIS, it supports 1, 3.
 	TargetType *uint64 `json:"TargetType,omitnil,omitempty" name:"TargetType"`
 
-	// Original phonetic language.
-	// Optional values: Chinese, English, Japanese, Korean. Required when CaptionSource selects `ANALYSIS `.
+	// Original speech languages: Chinese, English, Japanese, Korean.
 	SourceLanguage *string `json:"SourceLanguage,omitnil,omitempty" name:"SourceLanguage"`
 
-	// Target language.
-	// Optional values: Chinese, English, Japanese, Korean. Required when CaptionSource selects `ANALYSIS `.
+	// Target languages: Chinese, English, Japanese, Korean.
 	TargetLanguage *string `json:"TargetLanguage,omitnil,omitempty" name:"TargetLanguage"`
 
-	// Font style configuration. Required when CaptionSource selects `ANALYSIS `.
+	// Font style configuration. Required for BurnIn.
 	FontStyle *SubtitleFontConf `json:"FontStyle,omitnil,omitempty" name:"FontStyle"`
 
-	// There are two modes: STEADY and DYNAMIC, corresponding to steady state and unstable state respectively; the default is STEADY. Required when CaptionSource selects `ANALYSIS `. When the output is WebVTT, only STEADY can be selected.
+	// STEADY and DYNAMIC modes correspond to steady state and non-steady state respectively. Default is STEADY. Only select STEADY when the output is WebVTT.
 	StateEffectMode *string `json:"StateEffectMode,omitnil,omitempty" name:"StateEffectMode"`
 
-	// Steady-state delay time, unit seconds; optional values: 10, 20, default 10. Required when CaptionSource selects `ANALYSIS `.
+	// Steady-state delay time in seconds. Value range: 10, 20. Default: 10.
 	SteadyStateDelayedTime *uint64 `json:"SteadyStateDelayedTime,omitnil,omitempty" name:"SteadyStateDelayedTime"`
 
-	// Audio selector name, required for generating WebVTT subtitles using speech recognition, can be empty.
+	// Audio selector name, required for speech recognition to generate WebVTT subtitles, can be empty
 	AudioSelectorName *string `json:"AudioSelectorName,omitnil,omitempty" name:"AudioSelectorName"`
 
-	// Format configuration for speech recognition output on WebVTT.
+	// Format configuration for WebVTT output in speech recognition.
 	WebVTTFontStyle *WebVTTFontStyle `json:"WebVTTFontStyle,omitnil,omitempty" name:"WebVTTFontStyle"`
 
-	// Language code, length 2-20. ISO 639-2 three-digit code is recommend.
+	// Language code, length 2-20.
 	LanguageCode *string `json:"LanguageCode,omitnil,omitempty" name:"LanguageCode"`
 
-	// Language description, less than 100 characters in length.
+	// Language description, length less than 100.
 	LanguageDescription *string `json:"LanguageDescription,omitnil,omitempty" name:"LanguageDescription"`
 }
 
@@ -4182,28 +4206,28 @@ type SubtitleFontConf struct {
 	// Line spacing.
 	LineSpacing *uint64 `json:"LineSpacing,omitnil,omitempty" name:"LineSpacing"`
 
-	// Margins.
+	// Margin.
 	Margins *uint64 `json:"Margins,omitnil,omitempty" name:"Margins"`
 
-	// Rows.
+	// Number of rows.
 	Lines *uint64 `json:"Lines,omitnil,omitempty" name:"Lines"`
 
 	// Number of characters per line.
 	CharactersPerLine *uint64 `json:"CharactersPerLine,omitnil,omitempty" name:"CharactersPerLine"`
 
-	// Original font Helvetica: simhei.ttf Song Dynasty: simsun.ttc Dynacw Diamond Black: hkjgh.ttf Helvetica font: helvetica.ttf; Need to be set in Source or Source+Target mode
+	// Original font    Heiti: simhei.ttf    Song Typeface: simsun.ttc    Huakang Diamond Black (Dynacw Diamond Black): hkjgh.ttf    Helvetica: helvetica.ttf; Needs to be set in Source or Source+Target mode.
 	SourceTextFont *string `json:"SourceTextFont,omitnil,omitempty" name:"SourceTextFont"`
 
-	// Font color is represented by 6 RGB hexadecimal characters.
+	// Font color, represented by 6 characters in hexadecimal RGB.
 	TextColor *string `json:"TextColor,omitnil,omitempty" name:"TextColor"`
 
-	// The background color is represented by 6 RGB hexadecimal characters.
+	// Background color, represented by 6 characters in hexadecimal RGB.
 	BackgroundColor *string `json:"BackgroundColor,omitnil,omitempty" name:"BackgroundColor"`
 
-	// Background transparency, a number from 0-100.
+	// Background opacity. A number from 0 to 100.
 	BackgroundAlpha *uint64 `json:"BackgroundAlpha,omitnil,omitempty" name:"BackgroundAlpha"`
 
-	// Preview copy.
+	// Preview the copywriting.
 	PreviewContent *string `json:"PreviewContent,omitnil,omitempty" name:"PreviewContent"`
 
 	// Preview window height.
@@ -4212,18 +4236,18 @@ type SubtitleFontConf struct {
 	// Preview window width.
 	PreviewWindowWidth *uint64 `json:"PreviewWindowWidth,omitnil,omitempty" name:"PreviewWindowWidth"`
 
-	// Translation language font, the enumeration value is the same as Font, the fonts supported by the language need to be distinguished; TextColor needs to be set in Target or Source+Target mode
+	// Font for the target language. The enumeration value is the same as SourceTextFont. Case-sensitive language support for fonts. TextColor needs to be set in Target or Source+Target mode.
 	TranslatedTextFont *string `json:"TranslatedTextFont,omitnil,omitempty" name:"TranslatedTextFont"`
 }
 
 type Tag struct {
-	// Tag key, for restrictions please refer to the tag documentation: https://www.tencentcloud.com/document/product/651/13354.
+	// Tag key. Refer to the tag document (https://www.tencentcloud.com/document/product/651/13354?from_cn_redirect=1) for limits.
 	TagKey *string `json:"TagKey,omitnil,omitempty" name:"TagKey"`
 
-	// Tag value, for restrictions please refer to the tag documentation: https://www.tencentcloud.com/document/product/651/13354.
+	// Tag value. For reference, see the tag document at https://www.tencentcloud.com/document/product/651/13354.?from_cn_redirect=1
 	TagValue *string `json:"TagValue,omitnil,omitempty" name:"TagValue"`
 
-	// Tag type, optional; for documentation please refer to: https://www.tencentcloud.com/document/product/651/33023#tag.
+	// Tag type, optional. See the tag document for reference (https://www.tencentcloud.com/document/product/651/35327?from_cn_redirect=1#Tag).
 	Category *string `json:"Category,omitnil,omitempty" name:"Category"`
 }
 
@@ -4236,37 +4260,38 @@ type TaskNotifyConfig struct {
 }
 
 type ThumbnailSettings struct {
-	// Generate thumbnail ,0: Disabled ,1: Enabled , Default: 0
+	// Whether to generate thumbnails  0: disabled  1: enabled  Default value: 0
 	ThumbnailEnabled *int64 `json:"ThumbnailEnabled,omitnil,omitempty" name:"ThumbnailEnabled"`
 }
 
 type TimeShiftSettingsInfo struct {
-	// Whether to enable time shifting. Valid values: `OPEN`; `CLOSE`
-	// Note: This field may return `null`, indicating that no valid value was found.
+	// Whether to enable time shifting. Option [OPEN|CLOSE].
 	State *string `json:"State,omitnil,omitempty" name:"State"`
 
-	// Domain name bound for time shifting
-	// Note: This field may return `null`, indicating that no valid value was found.
+	// Enable time-shift bound domain name.
 	PlayDomain *string `json:"PlayDomain,omitnil,omitempty" name:"PlayDomain"`
 
-	// Allowable time-shift period (s). Value range: [300, 2592000]. Default value: 300Note: This field may return `null`, indicating that no valid value was found.
+	// The time when time-shift replay starts, in seconds, range [300, 1209600], default value 300.
 	StartoverWindow *int64 `json:"StartoverWindow,omitnil,omitempty" name:"StartoverWindow"`
 }
 
 type TimedMetadataInfo struct {
-	// Base64-encoded id3 metadata information, with a maximum limit of 1024 characters.
+	// Base64-encoded ID3 metadata information, with a maximum limit of 1024 characters. When both ID3 and Tag have values, the ID3 value takes precedence
 	ID3 *string `json:"ID3,omitnil,omitempty" name:"ID3"`
+
+	// Label, the maximum supported length is 1024 characters for the label, 
+	Tag *string `json:"Tag,omitnil,omitempty" name:"Tag"`
 }
 
 type TimedMetadataSettingInfo struct {
-	// Whether to transparently transmit ID3 information, optional values: 0:NO_PASSTHROUGH, 1:PASSTHROUGH, default 0.
+	// Whether to pass through ID3 info. Available values:
+	// 0:NO_PASSTHROUGH, 1:PASSTHROUGH, default 0.
 	Behavior *uint64 `json:"Behavior,omitnil,omitempty" name:"Behavior"`
 }
 
 type TimedRecordSettings struct {
-	// Whether to automatically delete finished recording events. Valid values: `CLOSE`, `OPEN`. If this parameter is left empty, `CLOSE` will be used.
-	// If it is set to `OPEN`, a recording event will be deleted 7 days after it is finished.
-	// Note: This field may return `null`, indicating that no valid value was found.
+	// Whether to automatically clear ended recording tasks. Options: [CLOSE|OPEN]. Default is CLOSE.
+	// If enabled, the task will be cleared 7 days after completion.
 	AutoClear *string `json:"AutoClear,omitnil,omitempty" name:"AutoClear"`
 }
 
@@ -4316,24 +4341,24 @@ type UrlInputInfo struct {
 }
 
 type VideoCodecDetail struct {
-	// The three image quality levels of h264 include: BASELINE, HIGH, and MAIN. The default option is MAIN.
+	// Three image quality levels for H264, options include: BASELINE, HIGH, MAIN. The default option is MAIN.
 	Profile *string `json:"Profile,omitnil,omitempty" name:"Profile"`
 
-	// Profile corresponding codec performance, options include: 1, 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3, 3, 3.1, 3.2, 4, 4.1, 4.2, 5, 5.1, AUTO. The default option is AUTO.
+	// Decoding performance of the profile. Options include 1, 1.1, 1.2, 1.3, 2, 2.1, 2.2, 2.3, 3, 3.1, 3.2, 4, 4.1, 4.2, 5, 5.1, AUTO. The default option is AUTO.
 	Level *string `json:"Level,omitnil,omitempty" name:"Level"`
 
-	// Codecs include entropy coding and lossless coding, and options include: CABAC and CAVLC. The default option is CABAC. .
+	// Encoding/decoding includes entropy encoding and lossless encoding. Options include CABAC and CAVLC. The default option is CABAC.
 	EntropyEncoding *string `json:"EntropyEncoding,omitnil,omitempty" name:"EntropyEncoding"`
 
-	// Mode, options include: AUTO, HIGH, HIGHER, LOW, MAX, MEDIUM, OFF. The default option is: AUTO. .
+	// Mode, options include: AUTO, HIGH, HIGHER, LOW, MAX, MEDIUM, OFF. Default option: AUTO.
 	AdaptiveQuantization *string `json:"AdaptiveQuantization,omitnil,omitempty" name:"AdaptiveQuantization"`
 
-	// Analyze subsequent encoded frames in advance, options include: HIGH, LOW, MEDIUM. The default option is: MEDIUM. .
+	// Analyze subsequent coding frames in advance. Options include HIGH, LOW, and MEDIUM. Default option is MEDIUM.
 	LookAheadRateControl *string `json:"LookAheadRateControl,omitnil,omitempty" name:"LookAheadRateControl"`
 }
 
 type VideoEnhanceSetting struct {
-	// Video enhancement types, optional: "GameEnhance", "ColorEnhance", "Debur", "Comprehensive", "Denoising", "SR", "OutdoorSportsCompetitions", "IndoorSportsCompetitions", "ShowEnhance"
+	// Video enhancement type. Option: "GameEnhance", "ColorEnhance", "Debur", "Comprehensive", "Denoising", "SR", "OutdoorSportsCompetitions", "IndoorSportsCompetitions", "ShowEnhance".
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// Video enhancement intensity, 0-1.0, granularity 0.1
@@ -4361,13 +4386,13 @@ type VideoTemplateInfo struct {
 	// Video bitrate. Value range: [50000,40000000]. The value can only be a multiple of 1,000. If this parameter is left empty, the original value will be used.
 	VideoBitrate *uint64 `json:"VideoBitrate,omitnil,omitempty" name:"VideoBitrate"`
 
-	// Video width. Value range: (0,4096]. The value can only be a multiple of 2. If this parameter is left empty, the original value will be used.
+	// Video width. The input range is (0, 4096] and must be a multiple of 2. If left blank, it represents passthrough.
 	Width *uint64 `json:"Width,omitnil,omitempty" name:"Width"`
 
-	// Video height. Value range: (0,4096]. The value can only be a multiple of 2. If this parameter is left empty, the original value will be used.
+	// Video height. Input range is (0, 4096] and must be a multiple of 2. Leave empty to represent passthrough.
 	Height *uint64 `json:"Height,omitnil,omitempty" name:"Height"`
 
-	// Video frame rate. Value range: [1,240]. If this parameter is left empty, the original value will be used.
+	// Video frame rate. Valid when you select SPECIFIED_HZ for FrameRateType. Input range is [1, 240]. Leave blank to represent passthrough.
 	Fps *uint64 `json:"Fps,omitnil,omitempty" name:"Fps"`
 
 	// Whether to enable top speed codec. Valid value: CLOSE/OPEN. Default value: CLOSE.
@@ -4376,78 +4401,77 @@ type VideoTemplateInfo struct {
 	// Top speed codec compression ratio. Value range: [0,50]. The lower the compression ratio, the higher the image quality.
 	BitrateCompressionRatio *uint64 `json:"BitrateCompressionRatio,omitnil,omitempty" name:"BitrateCompressionRatio"`
 
-	// Bitrate control mode. Valid values: `CBR`, `ABR` (default), `VBR`.
+	// Bitrate control mode. Optional values: [CBR|ABR|VBR]. Default: ABR.
 	RateControlMode *string `json:"RateControlMode,omitnil,omitempty" name:"RateControlMode"`
 
-	// Watermark ID
-	// Note: This field may return `null`, indicating that no valid value was found.
+	// Watermark Id.
 	WatermarkId *string `json:"WatermarkId,omitnil,omitempty" name:"WatermarkId"`
 
 	// Whether to enable the face blur function, 1 is on, 0 is off, and the default is 0.
 	FaceBlurringEnabled *uint64 `json:"FaceBlurringEnabled,omitnil,omitempty" name:"FaceBlurringEnabled"`
 
-	// This field indicates how to specify the output video frame rate. If FOLLOW_SOURCE is selected, the output video frame rate will be set equal to the input video frame rate of the first input. If SPECIFIED_FRACTION is selected, the output video frame rate is determined by the fraction (frame rate numerator and frame rate denominator). If SPECIFIED_HZ is selected, the frame rate of the output video is determined by the HZ you enter.
+	// This field indicates how to specify the output video frame rate. If selected FOLLOW_SOURCE, the output video frame rate is set to equal the frame rate of the first input video. If selected SPECIFIED_FRACTION, the output video frame rate is determined by the fraction (frame rate molecular and frame rate denominator). If selected SPECIFIED_HZ, the frame rate of the output video is determined by the HZ you input.
 	FrameRateType *string `json:"FrameRateType,omitnil,omitempty" name:"FrameRateType"`
 
-	// Valid when the FrameRateType type you select is SPECIFIED_FRACTION, the output frame rate numerator setting.
+	// Valid when you select SPECIFIED_FRACTION as the FrameRateType. Set the output frame rate molecular.
 	FrameRateNumerator *uint64 `json:"FrameRateNumerator,omitnil,omitempty" name:"FrameRateNumerator"`
 
-	// Valid when the FrameRateType type you select is SPECIFIED_FRACTION, the output frame rate denominator setting.
+	// Valid when you select SPECIFIED_FRACTION for FrameRateType. Output frame rate denominator set.
 	FrameRateDenominator *uint64 `json:"FrameRateDenominator,omitnil,omitempty" name:"FrameRateDenominator"`
 
-	// The number of B frames can be selected from 1 to 3.
+	// Number of B-frames 1-3.	
 	BFramesNum *uint64 `json:"BFramesNum,omitnil,omitempty" name:"BFramesNum"`
 
-	// The number of reference frames can be selected from 1 to 16.
+	// Refer to the number of frames 1-16.	
 	RefFramesNum *uint64 `json:"RefFramesNum,omitnil,omitempty" name:"RefFramesNum"`
 
-	// Additional video bitrate configuration.
+	// Additional video bitrate configuration.	
 	AdditionalRateSettings *AdditionalRateSetting `json:"AdditionalRateSettings,omitnil,omitempty" name:"AdditionalRateSettings"`
 
-	// Video encoding configuration.
+	// Video encoding configuration.	
 	VideoCodecDetails *VideoCodecDetail `json:"VideoCodecDetails,omitnil,omitempty" name:"VideoCodecDetails"`
 
-	// Video enhancement switch, 1: on 0: off.
+	// Video enhancement switch, 1: enable 0: disable.
 	VideoEnhanceEnabled *uint64 `json:"VideoEnhanceEnabled,omitnil,omitempty" name:"VideoEnhanceEnabled"`
 
-	// Video enhancement parameter array.
+	// Video enhancement parameters array.
 	VideoEnhanceSettings []*VideoEnhanceSetting `json:"VideoEnhanceSettings,omitnil,omitempty" name:"VideoEnhanceSettings"`
 
-	// Color space setting.
+	// Colorspace configuration.
 	ColorSpaceSettings *ColorSpaceSetting `json:"ColorSpaceSettings,omitnil,omitempty" name:"ColorSpaceSettings"`
 
-	// Traceability watermark.
+	// Traceable watermark.
 	ForensicWatermarkIds []*string `json:"ForensicWatermarkIds,omitnil,omitempty" name:"ForensicWatermarkIds"`
 }
 
 type WebVTTFontStyle struct {
-	// Text color, RGB hexadecimal representation, 6 hexadecimal characters (no # needed).
+	// Text color, 6 hexadecimal characters in RGB (not required #).
 	TextColor *string `json:"TextColor,omitnil,omitempty" name:"TextColor"`
 
-	// Background color, RGB hexadecimal representation, 6 hexadecimal characters (no # needed).
+	// Background color, 6 hexadecimal characters in RGB (not required #)
 	BackgroundColor *string `json:"BackgroundColor,omitnil,omitempty" name:"BackgroundColor"`
 
-	// Background opacity parameter, a number from 0 to 100, with 0 being the default for full transparency.
+	// Background opacity parameter. A number from 0 to 100. The default value is 0 (fully transparent).
 	BackgroundAlpha *int64 `json:"BackgroundAlpha,omitnil,omitempty" name:"BackgroundAlpha"`
 
-	// Font size, in units of vh (1% of height), default value 0 means automatic.
+	// Font size, in vh (1% of height), default value 0 means auto.
 	FontSize *int64 `json:"FontSize,omitnil,omitempty" name:"FontSize"`
 
-	// The position of the text box, default value AUTO, can be empty; represents the percentage of video height, supports integers from 0 to 100.
+	// The position of the text box, default value AUTO, can be empty; it represents the percentage of video height and supports integers from 0 to 100.
 	Line *string `json:"Line,omitnil,omitempty" name:"Line"`
 
-	// The alignment of the text box on the Line. Optional values: START, CENTER, END. Which can be empty.
+	// The alignment mode of the text box on the Line. Available values: START, CENTER, END. Default: START. Can be blank.
 	LineAlignment *string `json:"LineAlignment,omitnil,omitempty" name:"LineAlignment"`
 
-	// The text box is positioned in another direction as a percentage of the video's width. It defaults to AUTO and can be empty.
+	// The position of the text box in another direction is a percentage of the video width or height, defaults to AUTO, and can be empty.
 	Position *string `json:"Position,omitnil,omitempty" name:"Position"`
 
-	// The alignment of the text box on the Position. Optional values are LINE_LEFT, LINE_RIGHT, CENTER, and AUTO. The default value is AUTO, and it can be empty.
+	// The alignment mode of the text box on Position. Available values: LINE_LEFT, LINE_RIGHT, CENTER, AUTO. Default value: AUTO. Can be empty.
 	PositionAlignment *string `json:"PositionAlignment,omitnil,omitempty" name:"PositionAlignment"`
 
-	// Text box size, a percentage of video width/height, with values (0, 100), default AUTO, can be empty.
+	// The size of the text box, a percentage of video width/height, value (0, 100], default AUTO, can be empty.
 	CueSize *string `json:"CueSize,omitnil,omitempty" name:"CueSize"`
 
-	// Text alignment, with possible values  START, CENTER, END, LEFT, and RIGHT; the default value is CENTER, which can be empty.
+	// Text alignment mode, available values START, CENTER, END, LEFT, RIGHT; default value CENTER, can be empty.
 	TextAlignment *string `json:"TextAlignment,omitnil,omitempty" name:"TextAlignment"`
 }

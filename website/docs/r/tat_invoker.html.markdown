@@ -57,6 +57,14 @@ In addition to all arguments above, the following attributes are exported:
 * `invoker_id` - Invoker ID.
 * `updated_time` - Modification time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateInvoker](https://www.tencentcloud.com/document/api/1147/46701)
+* Read: [DescribeInvokers](https://www.tencentcloud.com/document/api/1147/46693)
+* Update: [ModifyInvoker](https://www.tencentcloud.com/document/api/1147/46688)
+* Delete: [DeleteInvoker](https://www.tencentcloud.com/document/api/1147/46699)
 
 ## Import
 

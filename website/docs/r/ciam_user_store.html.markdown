@@ -36,6 +36,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateUserStore](https://www.tencentcloud.com/search/?wd=CreateUserStore&type=document&lang=en)
+* Read: [ListUserStore](https://www.tencentcloud.com/search/?wd=ListUserStore&type=document&lang=en)
+* Update: [UpdateUserStore](https://www.tencentcloud.com/search/?wd=UpdateUserStore&type=document&lang=en)
+* Delete: [DeleteUserStore](https://www.tencentcloud.com/search/?wd=DeleteUserStore&type=document&lang=en)
 
 ## Import
 

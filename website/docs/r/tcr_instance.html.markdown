@@ -139,6 +139,47 @@ In addition to all arguments above, the following attributes are exported:
 * `public_status` - Status of the TCR instance public network access.
 * `status` - Status of the TCR instance.
 
+The `replications` object exports the following:
+
+* `id` - Replication registry ID (readonly).
+
+The `security_policy` object exports the following:
+
+* `index` - Index of policy.
+* `version` - Version of policy.
+
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateInstance](https://www.tencentcloud.com/document/api/1051/50715)
+  - [CreateMultipleSecurityPolicy](https://www.tencentcloud.com/document/api/1051/41108)
+  - [DescribeExternalEndpointStatus](https://www.tencentcloud.com/document/api/1051/50736)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1051/50703)
+  - [ManageExternalEndpoint](https://www.tencentcloud.com/document/api/1051/50733)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeExternalEndpointStatus](https://www.tencentcloud.com/document/api/1051/50736)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1051/50703)
+  - [DescribeReplicationInstances](https://www.tencentcloud.com/document/api/1051/42670)
+  - [DescribeSecurityPolicies](https://www.tencentcloud.com/document/api/1051/50734)
+* Update:
+  - [CreateMultipleSecurityPolicy](https://www.tencentcloud.com/document/api/1051/41108)
+  - [DeleteMultipleSecurityPolicy](https://www.tencentcloud.com/document/api/1051/41107)
+  - [DescribeExternalEndpointStatus](https://www.tencentcloud.com/document/api/1051/50736)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1051/50703)
+  - [ManageExternalEndpoint](https://www.tencentcloud.com/document/api/1051/50733)
+  - [ModifyInstance](https://www.tencentcloud.com/document/api/1051/42536)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [RenewInstance](https://www.tencentcloud.com/document/api/1051/50700)
+* Delete:
+  - [DeleteInstance](https://www.tencentcloud.com/document/api/1051/50711)
+  - [DeleteNamespace](https://www.tencentcloud.com/document/api/1051/50696)
+  - [DeleteReplicationInstance](https://www.tencentcloud.com/document/api/1051/50699)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1051/50703)
+  - [DescribeNamespaces](https://www.tencentcloud.com/document/api/1051/50693)
+  - [DescribeReplicationInstances](https://www.tencentcloud.com/document/api/1051/42670)
 
 ## Import
 

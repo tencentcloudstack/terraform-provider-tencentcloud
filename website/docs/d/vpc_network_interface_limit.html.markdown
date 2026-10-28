@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
 * `sub_eni_private_ip_address_quantity` - The quota of IPs that can be assigned to each relayed ENI.Note: This field may return `null`, indicating that no valid values can be obtained.
 * `sub_eni_quantity` - The quota of relayed ENIsNote: This field may return `null`, indicating that no valid values can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeNetworkInterfaceLimit](https://www.tencentcloud.com/document/api/215/34768)
 

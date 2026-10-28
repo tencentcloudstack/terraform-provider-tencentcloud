@@ -34,6 +34,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `group_id` - Group ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRecordGroup](https://www.tencentcloud.com/document/api/1157/53845)
+* Read: [DescribeRecordGroupList](https://www.tencentcloud.com/document/api/1157/53842)
+* Update: [ModifyRecordGroup](https://www.tencentcloud.com/document/api/1157/53841)
+* Delete: [DeleteRecordGroup](https://www.tencentcloud.com/document/api/1157/53844)
 
 ## Import
 

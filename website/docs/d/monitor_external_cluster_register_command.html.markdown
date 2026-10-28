@@ -52,4 +52,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `command` - Register command, contains YAML configuration for Kubernetes cluster installation.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeExternalClusterRegisterCommand](https://www.tencentcloud.com/search/?wd=DescribeExternalClusterRegisterCommand&type=document&lang=en)
 

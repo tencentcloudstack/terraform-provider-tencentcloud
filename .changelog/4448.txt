@@ -1,0 +1,15 @@
+```release-note:enhancement
+resource/tencentcloud_mongodb_instance: support TDE
+```
+
+```release-note:enhancement
+resource/tencentcloud_mongodb_sharding_instance: support TDE
+```
+
+```release-note:enhancement
+resource/tencentcloud_mongodb_standby_instance: support TDE
+```
+
+```release-note:enhancement
+resource/tencentcloud_mongodb_readonly_instance: support TDE
+```

@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - Describes the downstream dependency details.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListDownstreamTasks](https://www.tencentcloud.com/document/api/1174/73872)
 

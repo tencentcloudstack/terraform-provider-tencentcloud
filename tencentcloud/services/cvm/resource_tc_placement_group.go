@@ -2,6 +2,8 @@ package cvm
 
 import (
 	"context"
+	"fmt"
+	"log"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
@@ -37,6 +39,13 @@ func ResourceTencentCloudPlacementGroup() *schema.Resource {
 				ValidateFunc: tccommon.ValidateAllowedStringValue(CVM_PLACEMENT_GROUP_TYPE),
 				Description:  "Type of the placement group. Valid values: `HOST`, `SW` and `RACK`.",
 			},
+			"strategy": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: tccommon.ValidateAllowedStringValue(CVM_PLACEMENT_GROUP_STRATEGY),
+				Description:  "Strategy of the placement group. Valid values: `SPREAD` and `PARTITION`. `SPREAD` is the default strategy. When strategy is `PARTITION`, `partition_count` must be set. This field cannot be modified after creation.",
+			},
 			"affinity": {
 				Type:         schema.TypeInt,
 				Optional:     true,
@@ -44,6 +53,13 @@ func ResourceTencentCloudPlacementGroup() *schema.Resource {
 				ForceNew:     true,
 				ValidateFunc: tccommon.ValidateIntegerInRange(1, 10),
 				Description:  "Affinity of the placement group.Valid values: 1~10, default is 1.",
+			},
+			"partition_count": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: tccommon.ValidateIntegerInRange(2, 30),
+				Description:  "Partition count of the placement group. Valid values: 2~30. Only valid when `strategy` is set to `PARTITION`.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
@@ -82,9 +98,23 @@ func resourceTencentCloudPlacementGroupCreate(d *schema.ResourceData, meta inter
 	placementName := d.Get("name").(string)
 	placementType := d.Get("type").(string)
 
+	var strategy string
+	if v, ok := d.GetOk("strategy"); ok {
+		strategy = v.(string)
+	}
+
 	var affinity int
 	if v, ok := d.GetOkExists("affinity"); ok {
 		affinity = v.(int)
+	}
+
+	var partitionCount int
+	if v, ok := d.GetOkExists("partition_count"); ok {
+		partitionCount = v.(int)
+	}
+
+	if partitionCount > 0 && strategy != CVM_PLACEMENT_GROUP_STRATEGY_PARTITION {
+		return fmt.Errorf("`partition_count` is only valid when `strategy` is set to `PARTITION`")
 	}
 
 	tags := make([]*cvm.Tag, 0)
@@ -97,10 +127,10 @@ func resourceTencentCloudPlacementGroupCreate(d *schema.ResourceData, meta inter
 			tags = append(tags, &tag)
 		}
 	}
-	var id string
+	var response *cvm.CreateDisasterRecoverGroupResponse
 	var errRet error
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		id, errRet = cvmService.CreatePlacementGroup(ctx, placementName, placementType, affinity, tags)
+		response, errRet = cvmService.CreatePlacementGroup(ctx, placementName, placementType, strategy, affinity, partitionCount, tags)
 		if errRet != nil {
 			return tccommon.RetryError(errRet)
 		}
@@ -109,7 +139,7 @@ func resourceTencentCloudPlacementGroupCreate(d *schema.ResourceData, meta inter
 	if err != nil {
 		return err
 	}
-	d.SetId(id)
+	d.SetId(*response.Response.DisasterRecoverGroupId)
 
 	return resourceTencentCloudPlacementGroupRead(d, meta)
 }
@@ -138,6 +168,7 @@ func resourceTencentCloudPlacementGroupRead(d *schema.ResourceData, meta interfa
 		return err
 	}
 	if placement == nil {
+		log.Printf("[DEBUG] tencentcloud_placement_group read placement is nil, id=%s", d.Id())
 		d.SetId("")
 		return nil
 	}
@@ -148,6 +179,13 @@ func resourceTencentCloudPlacementGroupRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("cvm_quota_total", placement.CvmQuotaTotal)
 	_ = d.Set("current_num", placement.CurrentNum)
 	_ = d.Set("create_time", placement.CreateTime)
+
+	if placement.Strategy != nil {
+		_ = d.Set("strategy", placement.Strategy)
+	}
+	if placement.PartitionCount != nil {
+		_ = d.Set("partition_count", int(*placement.PartitionCount))
+	}
 
 	if len(placement.Tags) > 0 {
 		_ = d.Set("tags", flattenInstanceTagsMapping(placement.Tags))
@@ -165,6 +203,20 @@ func resourceTencentCloudPlacementGroupUpdate(d *schema.ResourceData, meta inter
 	cvmService := CvmService{
 		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
+
+	immutableArgs := []string{
+		"type",
+		"strategy",
+		"affinity",
+		"partition_count",
+	}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	if d.HasChange("name") {
 		placementName := d.Get("name").(string)
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {

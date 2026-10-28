@@ -93,6 +93,7 @@ The following arguments are supported:
 * `charge_type` - (Optional, String, ForceNew) Pay type of instance. Valid values:`PREPAID`, `POSTPAID`. Default is `POSTPAID`.
 * `cluster_topology` - (Optional, List) Cluster Edition node topology configuration. Note: If you purchased a cluster edition instance, this parameter is required. You need to set the RW and RO node topology of the cluster edition instance. The RO node range is 1-5. Please set at least 1 RO node.
 * `cpu` - (Optional, Int) CPU cores.
+* `destroy_protect` - (Optional, String) Instance destroy protection status. Valid values: `on` (enable destroy protection), `off` (disable destroy protection).
 * `device_type` - (Optional, String) Specify device type, available values:
 	- `UNIVERSAL` (default): universal instance,
 	- `EXCLUSIVE`: exclusive instance,
@@ -100,6 +101,7 @@ The following arguments are supported:
 	- `CLOUD_NATIVE_CLUSTER`: cluster version standard type,
 	- `CLOUD_NATIVE_CLUSTER_EXCLUSIVE`: cluster version enhanced type.
 If it is not specified, it defaults to a universal instance.
+* `disk_encryption` - (Optional, String, ForceNew) Whether to enable disk encryption for the CDB instance. Valid value: `on` (enable disk encryption); otherwise disk encryption is not enabled. Only cloud-disk edition instances support this feature. This parameter can only be set at creation time and cannot be modified.
 * `disk_type` - (Optional, String, ForceNew) Disk Type: This parameter can be specified for Single-Node (Cloud Disk) or Cloud Disk Edition instances. `CLOUD_SSD` designates an SSD cloud disk; `CLOUD_HSSD` designates an Enhanced SSD cloud disk; and `CLOUD_PREMIUM` designates a High-Performance cloud disk. Note: The regions that support the disk types for Single-Node (Cloud Disk) and Cloud Disk Edition instances vary slightly; please refer to `Regions and Availability Zones` for specific support details.
 * `fast_upgrade` - (Optional, Int) Specify whether to enable fast upgrade when upgrade instance spec, available value: `1` - enabled, `0` - disabled.
 * `force_delete` - (Optional, Bool) Indicate whether to delete instance directly or not. Default is `false`. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance. When the main mysql instance set true, this para of the readonly mysql instance will not take effect.
@@ -141,9 +143,40 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `intranet_ip` - instance intranet IP.
 * `locked` - Indicates whether the instance is locked. Valid values: `0`, `1`. `0` - No; `1` - Yes.
+* `ro_vip` - VIP-only read access.
+* `ro_vport` - VIP port number (read-only).
 * `status` - Instance status. Valid values: `0`, `1`, `4`, `5`. `0` - Creating; `1` - Running; `4` - Isolating; `5` - Isolated.
 * `task_status` - Indicates which kind of operations is being executed.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateDBInstance](https://www.tencentcloud.com/document/api/236/15871)
+  - [CreateDBInstanceHour](https://www.tencentcloud.com/document/api/236/15865)
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
+  - [DescribeDBSecurityGroups](https://www.tencentcloud.com/document/api/236/15854)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
+  - [DisassociateSecurityGroups](https://www.tencentcloud.com/document/api/236/15851)
+  - [ModifyAutoRenewFlag](https://www.tencentcloud.com/document/api/236/34479)
+  - [ModifyDBInstanceName](https://www.tencentcloud.com/document/api/236/15877)
+  - [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/document/api/236/15853)
+  - [ModifyDBInstanceVipVport](https://www.tencentcloud.com/document/api/236/15867)
+  - [ModifyInstanceDestroyProtect](https://www.tencentcloud.com/search/?wd=ModifyInstanceDestroyProtect&type=document&lang=en)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [UpgradeDBInstance](https://www.tencentcloud.com/document/api/236/15876)
+  - [UpgradeDBInstanceEngineVersion](https://www.tencentcloud.com/document/api/236/15870)
+* Delete:
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
+  - [IsolateDBInstance](https://www.tencentcloud.com/document/api/236/15869)
+  - [OfflineIsolatedInstances](https://www.tencentcloud.com/document/api/236/34475)
 
 ## Import
 

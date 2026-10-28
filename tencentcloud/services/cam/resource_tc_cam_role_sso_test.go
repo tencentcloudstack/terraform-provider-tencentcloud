@@ -6,15 +6,20 @@ import (
 	"log"
 	"testing"
 
-	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-
+	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/stretchr/testify/assert"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	camsvc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cam"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
 
 func init() {
@@ -158,3 +163,293 @@ resource "tencentcloud_cam_role_sso" "foo" {
 	description="this is a description1"
 }
 `
+
+// ---- gomonkey-based unit tests for auto_rotate_key ----
+// Run with: go test ./tencentcloud/services/cam/ -run "TestCamRoleSSOAutoRotateKey" -v -count=1 -gcflags="all=-l"
+
+type mockMetaCamRoleSSO struct {
+	client *connectivity.TencentCloudClient
+}
+
+func (m *mockMetaCamRoleSSO) GetAPIV3Conn() *connectivity.TencentCloudClient {
+	return m.client
+}
+
+var _ tccommon.ProviderMeta = &mockMetaCamRoleSSO{}
+
+func newMockMetaCamRoleSSO() *mockMetaCamRoleSSO {
+	return &mockMetaCamRoleSSO{client: &connectivity.TencentCloudClient{}}
+}
+
+func ptrUint64CamRoleSSO(v uint64) *uint64 {
+	return &v
+}
+
+func ptrStringCamRoleSSO(s string) *string {
+	return &s
+}
+
+// TestCamRoleSSOAutoRotateKey_Create verifies auto_rotate_key is passed to CreateOIDCConfig.
+func TestCamRoleSSOAutoRotateKey_Create(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	camClient := &cam.Client{}
+	patches.ApplyMethodReturn(newMockMetaCamRoleSSO().client, "UseCamClient", camClient)
+
+	var capturedRequest *cam.CreateOIDCConfigRequest
+	patches.ApplyMethodFunc(camClient, "CreateOIDCConfig", func(request *cam.CreateOIDCConfigRequest) (*cam.CreateOIDCConfigResponse, error) {
+		capturedRequest = request
+		resp := cam.NewCreateOIDCConfigResponse()
+		resp.Response = &cam.CreateOIDCConfigResponseParams{
+			RequestId: ptrStringCamRoleSSO("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Mock DescribeOIDCConfig called by the read after create.
+	patches.ApplyMethodFunc(camClient, "DescribeOIDCConfig", func(request *cam.DescribeOIDCConfigRequest) (*cam.DescribeOIDCConfigResponse, error) {
+		resp := cam.NewDescribeOIDCConfigResponse()
+		resp.Response = &cam.DescribeOIDCConfigResponseParams{
+			Name:          ptrStringCamRoleSSO("tf_cam_role_sso"),
+			IdentityUrl:   ptrStringCamRoleSSO("https://login.microsoftonline.com/test/v2.0"),
+			IdentityKey:   ptrStringCamRoleSSO("fake-key"),
+			Description:   ptrStringCamRoleSSO("description"),
+			ClientId:      []*string{ptrStringCamRoleSSO("c2856e29-d344-49a9-88ed-de3a01d99753")},
+			AutoRotateKey: ptrUint64CamRoleSSO(1),
+			RequestId:     ptrStringCamRoleSSO("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaCamRoleSSO()
+	res := camsvc.ResourceTencentCloudCamRoleSSO()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"name":            "tf_cam_role_sso",
+		"identity_url":    "https://login.microsoftonline.com/test/v2.0",
+		"identity_key":    "fake-key",
+		"client_ids":      []interface{}{"c2856e29-d344-49a9-88ed-de3a01d99753"},
+		"description":     "description",
+		"auto_rotate_key": 1,
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "tf_cam_role_sso", d.Id())
+
+	// Verify auto_rotate_key was passed to the create request.
+	assert.NotNil(t, capturedRequest.AutoRotateKey)
+	assert.Equal(t, uint64(1), *capturedRequest.AutoRotateKey)
+
+	// Verify auto_rotate_key was read back into state.
+	assert.Equal(t, 1, d.Get("auto_rotate_key").(int))
+}
+
+// TestCamRoleSSOAutoRotateKey_CreateDefault verifies auto_rotate_key defaults to 0 when not specified.
+func TestCamRoleSSOAutoRotateKey_CreateDefault(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	camClient := &cam.Client{}
+	patches.ApplyMethodReturn(newMockMetaCamRoleSSO().client, "UseCamClient", camClient)
+
+	var capturedRequest *cam.CreateOIDCConfigRequest
+	patches.ApplyMethodFunc(camClient, "CreateOIDCConfig", func(request *cam.CreateOIDCConfigRequest) (*cam.CreateOIDCConfigResponse, error) {
+		capturedRequest = request
+		resp := cam.NewCreateOIDCConfigResponse()
+		resp.Response = &cam.CreateOIDCConfigResponseParams{
+			RequestId: ptrStringCamRoleSSO("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(camClient, "DescribeOIDCConfig", func(request *cam.DescribeOIDCConfigRequest) (*cam.DescribeOIDCConfigResponse, error) {
+		resp := cam.NewDescribeOIDCConfigResponse()
+		resp.Response = &cam.DescribeOIDCConfigResponseParams{
+			Name:          ptrStringCamRoleSSO("tf_cam_role_sso"),
+			IdentityUrl:   ptrStringCamRoleSSO("https://login.microsoftonline.com/test/v2.0"),
+			IdentityKey:   ptrStringCamRoleSSO("fake-key"),
+			Description:   ptrStringCamRoleSSO("description"),
+			ClientId:      []*string{ptrStringCamRoleSSO("c2856e29-d344-49a9-88ed-de3a01d99753")},
+			AutoRotateKey: ptrUint64CamRoleSSO(0),
+			RequestId:     ptrStringCamRoleSSO("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaCamRoleSSO()
+	res := camsvc.ResourceTencentCloudCamRoleSSO()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"name":         "tf_cam_role_sso",
+		"identity_url": "https://login.microsoftonline.com/test/v2.0",
+		"identity_key": "fake-key",
+		"client_ids":   []interface{}{"c2856e29-d344-49a9-88ed-de3a01d99753"},
+		"description":  "description",
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+
+	// Verify auto_rotate_key defaulted to 0 in the create request.
+	assert.NotNil(t, capturedRequest.AutoRotateKey)
+	assert.Equal(t, uint64(0), *capturedRequest.AutoRotateKey)
+	assert.Equal(t, 0, d.Get("auto_rotate_key").(int))
+}
+
+// TestCamRoleSSOAutoRotateKey_Update verifies auto_rotate_key change triggers UpdateOIDCConfig.
+func TestCamRoleSSOAutoRotateKey_Update(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	camClient := &cam.Client{}
+	patches.ApplyMethodReturn(newMockMetaCamRoleSSO().client, "UseCamClient", camClient)
+
+	var capturedRequest *cam.UpdateOIDCConfigRequest
+	patches.ApplyMethodFunc(camClient, "UpdateOIDCConfig", func(request *cam.UpdateOIDCConfigRequest) (*cam.UpdateOIDCConfigResponse, error) {
+		capturedRequest = request
+		resp := cam.NewUpdateOIDCConfigResponse()
+		resp.Response = &cam.UpdateOIDCConfigResponseParams{
+			RequestId: ptrStringCamRoleSSO("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(camClient, "DescribeOIDCConfig", func(request *cam.DescribeOIDCConfigRequest) (*cam.DescribeOIDCConfigResponse, error) {
+		resp := cam.NewDescribeOIDCConfigResponse()
+		resp.Response = &cam.DescribeOIDCConfigResponseParams{
+			Name:          ptrStringCamRoleSSO("tf_cam_role_sso"),
+			IdentityUrl:   ptrStringCamRoleSSO("https://login.microsoftonline.com/test/v2.0"),
+			IdentityKey:   ptrStringCamRoleSSO("fake-key"),
+			Description:   ptrStringCamRoleSSO("description"),
+			ClientId:      []*string{ptrStringCamRoleSSO("c2856e29-d344-49a9-88ed-de3a01d99753")},
+			AutoRotateKey: ptrUint64CamRoleSSO(1),
+			RequestId:     ptrStringCamRoleSSO("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaCamRoleSSO()
+	res := camsvc.ResourceTencentCloudCamRoleSSO()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"name":            "tf_cam_role_sso",
+		"identity_url":    "https://login.microsoftonline.com/test/v2.0",
+		"identity_key":    "fake-key",
+		"client_ids":      []interface{}{"c2856e29-d344-49a9-88ed-de3a01d99753"},
+		"description":     "description",
+		"auto_rotate_key": 1,
+	})
+	d.SetId("tf_cam_role_sso")
+
+	// Patch HasChange to simulate a change in auto_rotate_key only (avoid the
+	// "not support change name" guard, since TestResourceDataRaw treats every
+	// configured key as a change vs. empty state).
+	patches.ApplyMethodFunc(d, "HasChange", func(key string) bool {
+		return key == "auto_rotate_key"
+	})
+
+	err := res.Update(d, meta)
+	assert.NoError(t, err)
+
+	// Verify auto_rotate_key was passed to the update request.
+	assert.NotNil(t, capturedRequest)
+	assert.NotNil(t, capturedRequest.AutoRotateKey)
+	assert.Equal(t, uint64(1), *capturedRequest.AutoRotateKey)
+
+	// Verify auto_rotate_key was read back into state.
+	assert.Equal(t, 1, d.Get("auto_rotate_key").(int))
+}
+
+// TestCamRoleSSOAutoRotateKey_ReadNil verifies Read skips setting auto_rotate_key when API returns nil.
+func TestCamRoleSSOAutoRotateKey_ReadNil(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	camClient := &cam.Client{}
+	patches.ApplyMethodReturn(newMockMetaCamRoleSSO().client, "UseCamClient", camClient)
+
+	patches.ApplyMethodFunc(camClient, "DescribeOIDCConfig", func(request *cam.DescribeOIDCConfigRequest) (*cam.DescribeOIDCConfigResponse, error) {
+		resp := cam.NewDescribeOIDCConfigResponse()
+		resp.Response = &cam.DescribeOIDCConfigResponseParams{
+			Name:        ptrStringCamRoleSSO("tf_cam_role_sso"),
+			IdentityUrl: ptrStringCamRoleSSO("https://login.microsoftonline.com/test/v2.0"),
+			IdentityKey: ptrStringCamRoleSSO("fake-key"),
+			Description: ptrStringCamRoleSSO("description"),
+			ClientId:    []*string{ptrStringCamRoleSSO("c2856e29-d344-49a9-88ed-de3a01d99753")},
+			// AutoRotateKey intentionally left nil to test the nil guard.
+			RequestId: ptrStringCamRoleSSO("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaCamRoleSSO()
+	res := camsvc.ResourceTencentCloudCamRoleSSO()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"name":            "tf_cam_role_sso",
+		"identity_url":    "https://login.microsoftonline.com/test/v2.0",
+		"identity_key":    "fake-key",
+		"client_ids":      []interface{}{"c2856e29-d344-49a9-88ed-de3a01d99753"},
+		"description":     "description",
+		"auto_rotate_key": 1,
+	})
+	d.SetId("tf_cam_role_sso")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+
+	// When API returns nil, d.Set("auto_rotate_key", ...) is skipped (nil guard),
+	// so the existing configured value (1) is preserved rather than overwritten.
+	// This verifies the nil guard does not panic and leaves state untouched.
+	assert.Equal(t, 1, d.Get("auto_rotate_key").(int))
+}
+
+// TestCamRoleSSOAutoRotateKey_ReadValue verifies Read sets auto_rotate_key when API returns a value.
+func TestCamRoleSSOAutoRotateKey_ReadValue(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	camClient := &cam.Client{}
+	patches.ApplyMethodReturn(newMockMetaCamRoleSSO().client, "UseCamClient", camClient)
+
+	patches.ApplyMethodFunc(camClient, "DescribeOIDCConfig", func(request *cam.DescribeOIDCConfigRequest) (*cam.DescribeOIDCConfigResponse, error) {
+		resp := cam.NewDescribeOIDCConfigResponse()
+		resp.Response = &cam.DescribeOIDCConfigResponseParams{
+			Name:          ptrStringCamRoleSSO("tf_cam_role_sso"),
+			IdentityUrl:   ptrStringCamRoleSSO("https://login.microsoftonline.com/test/v2.0"),
+			IdentityKey:   ptrStringCamRoleSSO("fake-key"),
+			Description:   ptrStringCamRoleSSO("description"),
+			ClientId:      []*string{ptrStringCamRoleSSO("c2856e29-d344-49a9-88ed-de3a01d99753")},
+			AutoRotateKey: ptrUint64CamRoleSSO(1),
+			RequestId:     ptrStringCamRoleSSO("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaCamRoleSSO()
+	res := camsvc.ResourceTencentCloudCamRoleSSO()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"name":            "tf_cam_role_sso",
+		"identity_url":    "https://login.microsoftonline.com/test/v2.0",
+		"identity_key":    "fake-key",
+		"client_ids":      []interface{}{"c2856e29-d344-49a9-88ed-de3a01d99753"},
+		"description":     "description",
+		"auto_rotate_key": 0,
+	})
+	d.SetId("tf_cam_role_sso")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+
+	// Verify the API value was read back into state.
+	assert.Equal(t, 1, d.Get("auto_rotate_key").(int))
+}
+
+// TestCamRoleSSOAutoRotateKey_Schema validates the auto_rotate_key schema definition.
+func TestCamRoleSSOAutoRotateKey_Schema(t *testing.T) {
+	res := camsvc.ResourceTencentCloudCamRoleSSO()
+
+	field, ok := res.Schema["auto_rotate_key"]
+	assert.True(t, ok, "auto_rotate_key should exist in schema")
+	assert.Equal(t, schema.TypeInt, field.Type)
+	assert.True(t, field.Optional)
+	assert.False(t, field.ForceNew, "auto_rotate_key should not be ForceNew")
+}

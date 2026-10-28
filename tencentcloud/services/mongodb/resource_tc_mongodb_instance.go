@@ -50,6 +50,12 @@ func ResourceTencentCloudMongodbInstance() *schema.Resource {
 			Computed:    true,
 			Description: "The number of nodes in each replica set. Default value: 3.",
 		},
+		"cpu": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "The CPU core count of the MongoDB instance after the configuration change. Unit: C. When this parameter is empty, the current CPU size of the instance is used by default. The supported CPU specifications can be obtained through the DescribeSpecInfo API.",
+		},
 		"add_node_list": {
 			Type:        schema.TypeList,
 			Optional:    true,
@@ -165,6 +171,7 @@ func mongodbAllInstanceReqSet(requestInter interface{}, d *schema.ResourceData) 
 		nodeNum               = 3
 		goodsNum              = 1
 		clusterType           = MONGODB_CLUSTER_TYPE_REPLSET
+		cpu                   = d.Get("cpu").(int)
 		memoryInterface       = d.Get("memory").(int)
 		volumeInterface       = d.Get("volume").(int)
 		mongoVersionInterface = d.Get("engine_version").(string)
@@ -197,6 +204,7 @@ func mongodbAllInstanceReqSet(requestInter interface{}, d *schema.ResourceData) 
 		"NodeNum":         helper.IntUint64(nodeNum),
 		"GoodsNum":        helper.IntUint64(goodsNum),
 		"ClusterType":     &clusterType,
+		"CpuCore":         helper.IntInt64(cpu),
 		"Memory":          helper.IntUint64(memoryInterface),
 		"Volume":          helper.IntUint64(volumeInterface),
 		"MongoVersion":    &mongoVersionInterface,
@@ -240,6 +248,18 @@ func mongodbAllInstanceReqSet(requestInter interface{}, d *schema.ResourceData) 
 	}
 	if v, ok := d.GetOk("hidden_zone"); ok {
 		value.FieldByName("HiddenZone").Set(reflect.ValueOf(helper.String(v.(string))))
+	}
+	if v, ok := d.GetOk("data_encryption"); ok {
+		value.FieldByName("DataEncryption").Set(reflect.ValueOf(helper.String(v.(string))))
+	}
+	if v, ok := d.GetOk("encryption_key_source"); ok {
+		value.FieldByName("EncryptionKeySource").Set(reflect.ValueOf(helper.String(v.(string))))
+	}
+	if v, ok := d.GetOk("key_id"); ok {
+		value.FieldByName("KeyId").Set(reflect.ValueOf(helper.String(v.(string))))
+	}
+	if v, ok := d.GetOk("kms_region"); ok {
+		value.FieldByName("KmsRegion").Set(reflect.ValueOf(helper.String(v.(string))))
 	}
 	return nil
 }
@@ -463,6 +483,9 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 	_ = d.Set("vport", instance.Vport)
 	_ = d.Set("create_time", instance.CreateTime)
 	_ = d.Set("node_num", *instance.SecondaryNum+1)
+	if instance.CpuNum != nil {
+		_ = d.Set("cpu", int(*instance.CpuNum/(*instance.ReplicationSetNum)))
+	}
 	if instance.MaintenanceStart != nil && len(*instance.MaintenanceStart) == 8 {
 		_ = d.Set("maintenance_start", (*instance.MaintenanceStart)[:5])
 	}
@@ -505,6 +528,35 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 		_ = d.Set("standby_instance_list", standbyInsList)
 	}
 
+	// encryption
+	encryptResp, err := mongodbService.DescribeTransparentDataEncryptionStatusById(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+
+	if encryptResp != nil {
+		if encryptResp.TransparentDataEncryptionStatus != nil {
+			if *encryptResp.TransparentDataEncryptionStatus == "open" {
+				_ = d.Set("data_encryption", "TDE")
+			}
+
+			if *encryptResp.TransparentDataEncryptionStatus == "close" {
+				_ = d.Set("data_encryption", "No_Encryption")
+			}
+		}
+
+		if encryptResp.KeyInfoList != nil && len(encryptResp.KeyInfoList) > 0 {
+			keyInfo := encryptResp.KeyInfoList[0]
+			if keyInfo.KeyName != nil {
+				_ = d.Set("key_id", keyInfo.KeyName)
+			}
+
+			if keyInfo.KmsRegion != nil {
+				_ = d.Set("kms_region", keyInfo.KmsRegion)
+			}
+		}
+	}
+
 	tags, _ := tagService.DescribeResourceTags(ctx, "mongodb", "instance", client.Region, instanceId)
 
 	_ = d.Set("tags", tags)
@@ -525,9 +577,16 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 	tagService := svctag.NewTagService(client)
 	region := client.Region
 
+	immutableArgs := []string{"data_encryption", "encryption_key_source", "key_id", "kms_region"}
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	d.Partial(true)
 
-	if d.HasChange("memory") || d.HasChange("volume") || d.HasChange("node_num") {
+	if d.HasChange("memory") || d.HasChange("volume") || d.HasChange("node_num") || d.HasChange("cpu") {
 		memory := d.Get("memory").(int)
 		volume := d.Get("volume").(int)
 		params := make(map[string]interface{})
@@ -548,6 +607,9 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 		if v, ok := d.GetOkExists("in_maintenance"); ok {
 			inMaintenance = v.(int)
 			params["in_maintenance"] = v.(int)
+		}
+		if v, ok := d.GetOkExists("cpu"); ok {
+			params["cpu"] = v.(int)
 		}
 		dealId, err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume, params)
 		if err != nil {

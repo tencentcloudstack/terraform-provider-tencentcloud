@@ -99,7 +99,7 @@ The following arguments are supported:
 * `oauth` - (Optional, List) OAuth configuration information.
 * `quic` - (Optional, Bool) Whether to enable QUIC. Note: QUIC can be enabled only for HTTPS domain names.
 * `scheduler` - (Optional, String) Scheduling method of the CLB listener rules. Valid values: `WRR`, `IP HASH`, `LEAST_CONN`. The default is `WRR` when `target_type` is not `TARGETGROUP-V2`.  NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
-* `session_expire_time` - (Optional, Int) Time of session persistence within the CLB listener. NOTES: Available when scheduler is specified as `WRR`, and not available when listener protocol is `TCP_SSL`.  NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
+* `session_expire_time` - (Optional, Int) Session Persistence Duration. Setting this to 0 disables session persistence; to enable it, the value must be between 30 and 86,400 (inclusive), in seconds.
 * `target_type` - (Optional, String, ForceNew) Backend target type. Valid values: `NODE`, `TARGETGROUP`, `TARGETGROUP-V2`. `NODE` means to bind ordinary nodes, `TARGETGROUP` means to bind target group.
 
 The `multi_cert_info` object supports the following:
@@ -119,6 +119,21 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `rule_id` - ID of this CLB listener rule.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateRule](https://www.tencentcloud.com/document/api/214/33840)
+  - [DescribeListeners](https://www.tencentcloud.com/document/api/214/33831)
+  - [ModifyDomainAttributes](https://www.tencentcloud.com/document/api/214/33819)
+  - [ModifyRule](https://www.tencentcloud.com/document/api/214/33816)
+* Read: [DescribeListeners](https://www.tencentcloud.com/document/api/214/33831)
+* Update:
+  - [DescribeListeners](https://www.tencentcloud.com/document/api/214/33831)
+  - [ModifyDomainAttributes](https://www.tencentcloud.com/document/api/214/33819)
+  - [ModifyRule](https://www.tencentcloud.com/document/api/214/33816)
+* Delete: [DeleteRule](https://www.tencentcloud.com/document/api/214/33835)
 
 ## Import
 

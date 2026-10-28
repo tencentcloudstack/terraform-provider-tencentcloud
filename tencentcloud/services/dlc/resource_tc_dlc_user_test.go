@@ -39,6 +39,37 @@ func TestAccTencentCloudDlcUserResource_basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudDlcUserResource_accountType(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDlcUserAccountType,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_dlc_user.user", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_user.user", "account_type", "UserAccount"),
+				),
+			},
+			{
+				Config: testAccDlcUserAccountTypeUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_dlc_user.user", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_user.user", "account_type", "RoleAccount"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_dlc_user.user",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 const testAccDlcUser = `
 
 resource "tencentcloud_dlc_user" "user" {
@@ -57,6 +88,30 @@ resource "tencentcloud_dlc_user" "user" {
   user_type        = "COMMON"
   user_alias       = "terraform-test"
   user_description = "for terraform"
+}
+
+`
+
+const testAccDlcUserAccountType = `
+
+resource "tencentcloud_dlc_user" "user" {
+  user_id          = "100027012454"
+  user_type        = "COMMON"
+  user_alias       = "terraform-test-account-type"
+  user_description = "for terraform test account type"
+  account_type     = "UserAccount"
+}
+
+`
+
+const testAccDlcUserAccountTypeUpdate = `
+
+resource "tencentcloud_dlc_user" "user" {
+  user_id          = "100027012454"
+  user_type        = "COMMON"
+  user_alias       = "terraform-test-account-type"
+  user_description = "for terraform test account type"
+  account_type     = "RoleAccount"
 }
 
 `

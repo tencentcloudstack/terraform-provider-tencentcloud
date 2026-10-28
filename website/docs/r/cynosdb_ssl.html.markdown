@@ -14,7 +14,7 @@ Provides a resource to create a cynosdb ssl
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_cynosdb_ssl" "cynosdb_ssl" {
+resource "tencentcloud_cynosdb_ssl" "example" {
   cluster_id  = "cynosdbmysql-1e0nzayx"
   instance_id = "cynosdbmysql-ins-pfsv6q1e"
   status      = "ON"
@@ -36,12 +36,27 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `download_url` - Certificate download address.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CloseSSL](https://www.tencentcloud.com/document/api/1098/69801)
+  - [DescribeSSLStatus](https://www.tencentcloud.com/search/?wd=DescribeSSLStatus&type=document&lang=en)
+  - [DescribeTasks](https://www.tencentcloud.com/document/api/1098/74199)
+  - [OpenSSL](https://www.tencentcloud.com/search/?wd=OpenSSL&type=document&lang=en)
+* Read: [DescribeSSLStatus](https://www.tencentcloud.com/search/?wd=DescribeSSLStatus&type=document&lang=en)
+* Update:
+  - [CloseSSL](https://www.tencentcloud.com/document/api/1098/69801)
+  - [DescribeSSLStatus](https://www.tencentcloud.com/search/?wd=DescribeSSLStatus&type=document&lang=en)
+  - [DescribeTasks](https://www.tencentcloud.com/document/api/1098/74199)
+  - [OpenSSL](https://www.tencentcloud.com/search/?wd=OpenSSL&type=document&lang=en)
 
 ## Import
 
-cynosdb ssl can be imported using the id, e.g.
+cynosdb ssl can be imported using the clusterId#instanceId, e.g.
 
 ```
-terraform import tencentcloud_cynosdb_ssl.cynosdb_ssl ${cluster_id}#${instance_id}
+terraform import tencentcloud_cynosdb_ssl.example cynosdbmysql-1e0nzayx#cynosdbmysql-ins-pfsv6q1e
 ```
 

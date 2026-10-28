@@ -59,7 +59,18 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `policies` object exports the following:
 
+* `add_time` - Role policy add time.
+* `role_policy_type` - Role policy type.
+
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddPermissionPolicyToRoleConfiguration](https://www.tencentcloud.com/document/api/1031/63603)
+* Read: [ListPermissionPoliciesInRoleConfiguration](https://www.tencentcloud.com/document/api/1031/63599)
+* Delete: [RemovePermissionPolicyFromRoleConfiguration](https://www.tencentcloud.com/document/api/1031/63596)
 
 ## Import
 

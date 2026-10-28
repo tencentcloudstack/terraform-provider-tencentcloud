@@ -15,6 +15,20 @@ resource "tencentcloud_cfs_file_system" "foo" {
 }
 ```
 
+Encrypted Nfs CFS
+
+```hcl
+resource "tencentcloud_cfs_file_system" "foo" {
+  name              = "test_file_system"
+  availability_zone = "ap-guangzhou-3"
+  access_group_id   = "pgroup-7nx89k7l"
+  protocol          = "NFS"
+  vpc_id            = "vpc-ah9fbkap"
+  subnet_id         = "subnet-9mu2t9iw"
+  encrypted         = true
+}
+```
+
 High-Performance Nfs CFS
 
 ```hcl

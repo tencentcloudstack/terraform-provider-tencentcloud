@@ -795,6 +795,104 @@ func resourceTencentCloudKubernetesScaleWorkerReadPostHandleResponse0(ctx contex
 	return nil
 }
 
+// modifyKubernetesScaleWorkerInstancesChargeType changes the charge type of the worker instances
+// via the CVM ModifyInstancesChargeType interface, then waits until the operation reaches the
+// terminal state by polling DescribeInstances (LatestOperationState == "SUCCESS").
+func modifyKubernetesScaleWorkerInstancesChargeType(ctx context.Context, meta interface{}, d *schema.ResourceData, instanceIds []string) error {
+	logId := tccommon.GetLogId(ctx)
+
+	chargeType := d.Get("worker_config.0.instance_charge_type").(string)
+	request := cvm.NewModifyInstancesChargeTypeRequest()
+	request.InstanceChargeType = helper.String(chargeType)
+	if chargeType == "PREPAID" {
+		prepaid := &cvm.InstanceChargePrepaid{
+			Period: helper.IntInt64(d.Get("worker_config.0.instance_charge_type_prepaid_period").(int)),
+		}
+
+		if v, ok := d.GetOk("worker_config.0.instance_charge_type_prepaid_renew_flag"); ok {
+			prepaid.RenewFlag = helper.String(v.(string))
+		}
+
+		request.InstanceChargePrepaid = prepaid
+	}
+
+	// The maximum number of instances per ModifyInstancesChargeType request is 20.
+	for _, batch := range spliteInstanceIds(helper.Strings(instanceIds), 20) {
+		request.InstanceIds = batch
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmV20170312Client().ModifyInstancesChargeTypeWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("modify instances charge type failed, Response is nil."))
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s modify kubernetes scale worker instances charge type failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
+	return waitKubernetesScaleWorkerChargeTypeOperationSuccess(ctx, meta, instanceIds)
+}
+
+// waitKubernetesScaleWorkerChargeTypeOperationSuccess polls DescribeInstances until the latest
+// operation state of every target instance becomes "SUCCESS".
+func waitKubernetesScaleWorkerChargeTypeOperationSuccess(ctx context.Context, meta interface{}, instanceIds []string) error {
+	logId := tccommon.GetLogId(ctx)
+	instanceIdPtrs := helper.Strings(instanceIds)
+
+	return resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		successCount := 0
+		// The maximum number of instances per DescribeInstances request is 100.
+		for _, batch := range spliteInstanceIds(instanceIdPtrs, 100) {
+			request := cvm.NewDescribeInstancesRequest()
+			request.InstanceIds = batch
+			request.Limit = helper.Int64(100)
+			request.Offset = helper.Int64(0)
+
+			ratelimit.Check(request.GetAction())
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmV20170312Client().DescribeInstancesWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("describe instances failed, Response is nil."))
+			}
+
+			for _, instance := range result.Response.InstanceSet {
+				if instance == nil || instance.LatestOperationState == nil {
+					continue
+				}
+
+				switch *instance.LatestOperationState {
+				case "SUCCESS":
+					successCount++
+				case "FAILED":
+					return resource.NonRetryableError(fmt.Errorf("instance [%s] modify charge type operation failed", helper.PString(instance.InstanceId)))
+				default:
+					// OPERATING or other transient states, keep polling.
+				}
+			}
+		}
+
+		if successCount == len(instanceIds) {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("modify charge type operation is still in progress, success: %d/%d", successCount, len(instanceIds)))
+	})
+}
+
 func spliteInstanceIds(slice []*string, size int) [][]*string {
 	var result [][]*string
 	for i := 0; i < len(slice); i += size {

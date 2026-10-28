@@ -139,7 +139,7 @@ computed labels. That is the worst case. Had the code noticed (x,y)=(u,v)=(3,3) 
 from the edgegraph. The implementation looks for a number of special cases to try to avoid computing an extra forward path.
 
 If the two-sided algorithm has stop early (because D has become too large) it will have found a forward LCS and a
-backwards LCS. Ideally these go with disjoint prefixes and suffixes of A and B, but disjointness may fail and the two
+backwards LCS. Ideally these go with disjoint prefixes and suffixes of A and B, but disjointedness may fail and the two
 computed LCS may conflict. (An easy example is where A is a suffix of B, and shares a short prefix. The backwards LCS
 is all of A, and the forward LCS is a prefix of A.) The algorithm combines the two
 to form a best-effort LCS. In the worst case the forward partial LCS may have to
@@ -151,6 +151,6 @@ be recomputed.
 and can be found at
 http://www.xmailserver.org/diff2.pdf
 
-(There is a generic implementation of the algorithm the the repository with git hash
+(There is a generic implementation of the algorithm the repository with git hash
 b9ad7e4ade3a686d608e44475390ad428e60e7fc)
 */

@@ -123,4 +123,9 @@ In addition to all arguments above, the following attributes are exported:
     * `tag_id` - Tag ID.
   * `uuid` - Cwp client sole UUID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeMachinesSimple](https://www.tencentcloud.com/document/api/296/64036)
 

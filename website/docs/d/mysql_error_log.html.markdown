@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
   * `content` - error details.
   * `timestamp` - The time the error occurred.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeErrorLogData](https://www.tencentcloud.com/document/api/236/35669)
 

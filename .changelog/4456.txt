@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_teo_web_security_template: support `bot_management_lite` parameter under `security_policy` block, including `captcha_page_challenge` and `ai_crawler_detection` configurations
+```

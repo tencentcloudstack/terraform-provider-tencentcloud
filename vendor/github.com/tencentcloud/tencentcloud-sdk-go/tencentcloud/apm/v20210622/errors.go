@@ -80,6 +80,9 @@ const (
 	// 请勿填写重复的标签名
 	FAILEDOPERATION_DUPLICATETAGFIELD = "FailedOperation.DuplicateTagField"
 
+	// 拓扑图中心节点不存在。
+	FAILEDOPERATION_FOCUSNODENOTFOUND = "FailedOperation.FocusNodeNotFound"
+
 	// 该业务系统不允许修改
 	FAILEDOPERATION_INSTANCECANNOTMODIFY = "FailedOperation.InstanceCannotModify"
 
@@ -124,6 +127,9 @@ const (
 
 	// 接口名不能为空
 	FAILEDOPERATION_OPERATIONNAMEISEMPTY = "FailedOperation.OperationNameIsEmpty"
+
+	// 操作不允许
+	FAILEDOPERATION_OPERATIONNOTALLOWED = "FailedOperation.OperationNotAllowed"
 
 	// 关联产品ID不可用
 	FAILEDOPERATION_PEERIDNOTAVAILABLE = "FailedOperation.PeerIdNotAvailable"

@@ -20,6 +20,13 @@ type DlcService struct {
 	client *connectivity.TencentCloudClient
 }
 
+// NewDlcService constructs a DlcService from a shared TencentCloud client.
+// It mirrors the NewBdrcService factory used by framework actions so that the
+// DLC action implementations can be registered in framework/registry.go.
+func NewDlcService(client *connectivity.TencentCloudClient) DlcService {
+	return DlcService{client: client}
+}
+
 func (me *DlcService) DescribeDlcWorkGroupById(ctx context.Context, workGroupId string) (workGroup *dlc.WorkGroupInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
@@ -94,12 +101,15 @@ func (me *DlcService) DeleteDlcWorkGroupById(ctx context.Context, workGroupId st
 	return
 }
 
-func (me *DlcService) DescribeDlcUserById(ctx context.Context, userId string) (user *dlc.UserInfo, errRet error) {
+func (me *DlcService) DescribeDlcUserById(ctx context.Context, userId string, accountType string) (user *dlc.UserInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := dlc.NewDescribeUsersRequest()
 	response := dlc.NewDescribeUsersResponse()
 	request.UserId = &userId
+	if accountType != "" {
+		request.AccountType = &accountType
+	}
 
 	defer func() {
 		if errRet != nil {
@@ -134,11 +144,14 @@ func (me *DlcService) DescribeDlcUserById(ctx context.Context, userId string) (u
 	return
 }
 
-func (me *DlcService) DeleteDlcUserById(ctx context.Context, userId string) (errRet error) {
+func (me *DlcService) DeleteDlcUserById(ctx context.Context, userId string, accountType string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := dlc.NewDeleteUserRequest()
 	request.UserIds = []*string{&userId}
+	if accountType != "" {
+		request.AccountType = &accountType
+	}
 
 	defer func() {
 		if errRet != nil {
@@ -303,6 +316,34 @@ func (me *DlcService) DescribeDlcDescribeUserTypeByFilter(ctx context.Context, p
 	}
 
 	describeUserType = response.Response.UserType
+	return
+}
+func (me *DlcService) DescribeDlcTCLakeMetaInstance(ctx context.Context) (status *string, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = dlc.NewDescribeTCLakeMetaInstanceRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDlcClient().DescribeTCLakeMetaInstance(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.Status == nil {
+		return
+	}
+
+	status = response.Response.Status
 	return
 }
 func (me *DlcService) DescribeDlcDescribeUserRolesByFilter(ctx context.Context, param map[string]interface{}) (describeUserRoles []*dlc.UserRole, errRet error) {
@@ -1520,5 +1561,168 @@ func (me *DlcService) DescribeDlcDatasourceHouseAttachmentById(ctx context.Conte
 	}
 
 	ret = response.Response.NetworkConnectionSet[0]
+	return
+}
+
+func (me *DlcService) DescribeDlcWorkGroupPolicyAttachmentById(ctx context.Context, workGroupId, policyId, describeType string) (workGroupInfo *dlc.WorkGroupDetailInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	var (
+		request  = dlc.NewDescribeWorkGroupInfoRequest()
+		response = dlc.NewDescribeWorkGroupInfoResponse()
+		limit    = int64(100)
+		offset   = int64(0)
+	)
+
+	request.WorkGroupId = helper.StrToInt64Point(workGroupId)
+	request.PolicyId = helper.String(policyId)
+	request.Type = helper.String(describeType)
+	request.Limit = &limit
+	request.Offset = &offset
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().DescribeWorkGroupInfo(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.WorkGroupInfo == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe dlc work group info failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		log.Printf("[CRITAL]%s describe dlc work group policy attachment failed, reason:%+v", logId, errRet)
+		return
+	}
+
+	workGroupInfo = response.Response.WorkGroupInfo
+	return
+}
+
+func (me *DlcService) DeleteDlcAttachWorkGroupPolicyAttachmentByPolicyId(ctx context.Context, workGroupId, policyId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := dlc.NewDetachWorkGroupPolicyRequest()
+	request.WorkGroupId = helper.StrToInt64Point(workGroupId)
+	request.PolicyIds = []*string{&policyId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().DetachWorkGroupPolicy(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Detach dlc work group policy failed, Response is nil."))
+		}
+
+		return nil
+	})
+
+	if errRet != nil {
+		log.Printf("[CRITAL]%s delete dlc attach work group policy attachment failed, reason:%+v", logId, errRet)
+		return
+	}
+
+	return
+}
+
+// InitializeTCLake activates (opens) the TCLake service for the current
+// account via the DLC InitializeTCLake API. The API takes no request
+// parameters and returns the InstanceId and IsSuccess fields, which are
+// logged for observability. It is a one-time, idempotent initialization step.
+func (me *DlcService) InitializeTCLake(ctx context.Context) (response *dlc.InitializeTCLakeResponse, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := dlc.NewInitializeTCLakeRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().InitializeTCLakeWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		return
+	}
+
+	return
+}
+
+// DescribeDlcMetaDatabaseByName queries the meta database by the datasource
+// connection name and the database name. nil is returned when the meta
+// database does not exist.
+func (me *DlcService) DescribeDlcMetaDatabaseByName(ctx context.Context, datasourceConnectionName, databaseName string) (ret *dlc.DatabaseResponseInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := dlc.NewDescribeDatabaseRequest()
+	response := dlc.NewDescribeDatabaseResponse()
+	request.DatabaseName = helper.String(databaseName)
+	request.DatasourceConnectionName = helper.String(datasourceConnectionName)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().DescribeDatabaseWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe dlc meta database failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		log.Printf("[CRITAL]%s describe dlc meta database failed, reason:%+v", logId, errRet)
+		return
+	}
+
+	ret = response.Response.DatabaseInfo
 	return
 }

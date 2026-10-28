@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -69,51 +69,57 @@ type CosRegionInfo struct {
 
 // Predefined struct for user
 type CreateAuditTrackRequestParams struct {
-	// 跟踪集名称，仅支持大小写字母、数字、-以及_的组合，3-48个字符
+	// <p>跟踪集名称，仅支持大小写字母、数字、-以及_的组合，3-48个字符</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 跟踪事件类型（读：Read；写：Write；全部：*）
-	ActionType *string `json:"ActionType,omitnil,omitempty" name:"ActionType"`
-
-	// 跟踪事件所属产品（支持全部产品或单个产品，如：cos，全部：*）
-	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
-
-	// 跟踪集状态（未开启：0；开启：1）
+	// <p>跟踪集状态（未开启：0；开启：1）</p>
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 跟踪事件接口名列表（ResourceType为 * 时，EventNames必须为全部：["*"]；指定ResourceType时，支持全部接口：["*"]；支持部分接口：["cos", "cls"]，接口列表上限10个）
-	EventNames []*string `json:"EventNames,omitnil,omitempty" name:"EventNames"`
-
-	// 数据投递存储（目前支持 cos、cls）
+	// <p>数据投递存储（目前支持 cos、cls 、ckafka）</p>
 	Storage *Storage `json:"Storage,omitnil,omitempty" name:"Storage"`
 
-	// 是否开启将集团成员操作日志投递到集团管理账号或者可信服务管理账号(0：未开启，1：开启，只能集团管理账号或者可信服务管理账号开启此项功能) 
+	// <p>跟踪事件类型（读：Read；写：Write；全部：*）</p>
+	ActionType *string `json:"ActionType,omitnil,omitempty" name:"ActionType"`
+
+	// <p>跟踪事件所属产品（支持全部产品或单个产品，如：cos，全部：*）</p>
+	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
+
+	// <p>跟踪事件接口名列表（ResourceType为 * 时，EventNames必须为全部：[&quot;*&quot;]；指定ResourceType时，支持全部接口：[&quot;*&quot;]；支持部分接口：[&quot;cos&quot;, &quot;cls&quot;]，接口列表上限10个）</p>
+	EventNames []*string `json:"EventNames,omitnil,omitempty" name:"EventNames"`
+
+	// <p>是否开启将集团成员操作日志投递到集团管理账号或者可信服务管理账号(0：未开启，1：开启，只能集团管理账号或者可信服务管理账号开启此项功能)</p>
 	TrackForAllMembers *uint64 `json:"TrackForAllMembers,omitnil,omitempty" name:"TrackForAllMembers"`
+
+	// <p>任务ID</p>
+	ExportId *string `json:"ExportId,omitnil,omitempty" name:"ExportId"`
 }
 
 type CreateAuditTrackRequest struct {
 	*tchttp.BaseRequest
 	
-	// 跟踪集名称，仅支持大小写字母、数字、-以及_的组合，3-48个字符
+	// <p>跟踪集名称，仅支持大小写字母、数字、-以及_的组合，3-48个字符</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 跟踪事件类型（读：Read；写：Write；全部：*）
-	ActionType *string `json:"ActionType,omitnil,omitempty" name:"ActionType"`
-
-	// 跟踪事件所属产品（支持全部产品或单个产品，如：cos，全部：*）
-	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
-
-	// 跟踪集状态（未开启：0；开启：1）
+	// <p>跟踪集状态（未开启：0；开启：1）</p>
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 跟踪事件接口名列表（ResourceType为 * 时，EventNames必须为全部：["*"]；指定ResourceType时，支持全部接口：["*"]；支持部分接口：["cos", "cls"]，接口列表上限10个）
-	EventNames []*string `json:"EventNames,omitnil,omitempty" name:"EventNames"`
-
-	// 数据投递存储（目前支持 cos、cls）
+	// <p>数据投递存储（目前支持 cos、cls 、ckafka）</p>
 	Storage *Storage `json:"Storage,omitnil,omitempty" name:"Storage"`
 
-	// 是否开启将集团成员操作日志投递到集团管理账号或者可信服务管理账号(0：未开启，1：开启，只能集团管理账号或者可信服务管理账号开启此项功能) 
+	// <p>跟踪事件类型（读：Read；写：Write；全部：*）</p>
+	ActionType *string `json:"ActionType,omitnil,omitempty" name:"ActionType"`
+
+	// <p>跟踪事件所属产品（支持全部产品或单个产品，如：cos，全部：*）</p>
+	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
+
+	// <p>跟踪事件接口名列表（ResourceType为 * 时，EventNames必须为全部：[&quot;*&quot;]；指定ResourceType时，支持全部接口：[&quot;*&quot;]；支持部分接口：[&quot;cos&quot;, &quot;cls&quot;]，接口列表上限10个）</p>
+	EventNames []*string `json:"EventNames,omitnil,omitempty" name:"EventNames"`
+
+	// <p>是否开启将集团成员操作日志投递到集团管理账号或者可信服务管理账号(0：未开启，1：开启，只能集团管理账号或者可信服务管理账号开启此项功能)</p>
 	TrackForAllMembers *uint64 `json:"TrackForAllMembers,omitnil,omitempty" name:"TrackForAllMembers"`
+
+	// <p>任务ID</p>
+	ExportId *string `json:"ExportId,omitnil,omitempty" name:"ExportId"`
 }
 
 func (r *CreateAuditTrackRequest) ToJsonString() string {
@@ -129,12 +135,13 @@ func (r *CreateAuditTrackRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "Name")
+	delete(f, "Status")
+	delete(f, "Storage")
 	delete(f, "ActionType")
 	delete(f, "ResourceType")
-	delete(f, "Status")
 	delete(f, "EventNames")
-	delete(f, "Storage")
 	delete(f, "TrackForAllMembers")
+	delete(f, "ExportId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateAuditTrackRequest has unknown keys!", "")
 	}
@@ -143,7 +150,7 @@ func (r *CreateAuditTrackRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateAuditTrackResponseParams struct {
-	// 跟踪集 ID
+	// <p>跟踪集 ID</p>
 	TrackId *uint64 `json:"TrackId,omitnil,omitempty" name:"TrackId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -168,38 +175,38 @@ func (r *CreateAuditTrackResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateEventsAuditTrackRequestParams struct {
-	// 跟踪集名称，仅支持大小写字母、数字、-以及_的组合，3-48个字符
+	// <p>跟踪集名称，仅支持大小写字母、数字、-以及_的组合，3-48个字符</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 跟踪集状态（未开启：0；开启：1）
+	// <p>跟踪集状态（未开启：0；开启：1）</p>
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 数据投递存储（目前支持 cos、cls）
+	// <p>数据投递存储（目前支持 cos、cls、ckafka）</p>
 	Storage *Storage `json:"Storage,omitnil,omitempty" name:"Storage"`
 
-	// 数据过滤条件
+	// <p>数据过滤条件</p>
 	Filters *Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 是否开启将集团成员操作日志投递到集团管理账号或者可信服务管理账号(0：未开启，1：开启，只能集团管理账号或者可信服务管理账号开启此项功能) 
+	// <p>是否开启将集团成员操作日志投递到集团管理账号或者可信服务管理账号(0：未开启，1：开启，只能集团管理账号或者可信服务管理账号开启此项功能)</p>
 	TrackForAllMembers *uint64 `json:"TrackForAllMembers,omitnil,omitempty" name:"TrackForAllMembers"`
 }
 
 type CreateEventsAuditTrackRequest struct {
 	*tchttp.BaseRequest
 	
-	// 跟踪集名称，仅支持大小写字母、数字、-以及_的组合，3-48个字符
+	// <p>跟踪集名称，仅支持大小写字母、数字、-以及_的组合，3-48个字符</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 跟踪集状态（未开启：0；开启：1）
+	// <p>跟踪集状态（未开启：0；开启：1）</p>
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 数据投递存储（目前支持 cos、cls）
+	// <p>数据投递存储（目前支持 cos、cls、ckafka）</p>
 	Storage *Storage `json:"Storage,omitnil,omitempty" name:"Storage"`
 
-	// 数据过滤条件
+	// <p>数据过滤条件</p>
 	Filters *Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 是否开启将集团成员操作日志投递到集团管理账号或者可信服务管理账号(0：未开启，1：开启，只能集团管理账号或者可信服务管理账号开启此项功能) 
+	// <p>是否开启将集团成员操作日志投递到集团管理账号或者可信服务管理账号(0：未开启，1：开启，只能集团管理账号或者可信服务管理账号开启此项功能)</p>
 	TrackForAllMembers *uint64 `json:"TrackForAllMembers,omitnil,omitempty" name:"TrackForAllMembers"`
 }
 
@@ -228,7 +235,7 @@ func (r *CreateEventsAuditTrackRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateEventsAuditTrackResponseParams struct {
-	// 跟踪集 ID
+	// <p>跟踪集 ID</p>
 	TrackId *uint64 `json:"TrackId,omitnil,omitempty" name:"TrackId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -454,11 +461,9 @@ type DescribeAuditTrackResponseParams struct {
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 是否开启将集团成员操作日志投递到集团管理账号或者可信服务管理账号
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TrackForAllMembers *uint64 `json:"TrackForAllMembers,omitnil,omitempty" name:"TrackForAllMembers"`
 
 	// 数据投递过滤条件
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Filters *Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -562,7 +567,21 @@ type DescribeEventsRequestParams struct {
 	// 返回日志的最大条数（最大 50 条）
 	MaxResults *uint64 `json:"MaxResults,omitnil,omitempty" name:"MaxResults"`
 
-	// 检索条件（目前支持 RequestId：请求 ID、EventName：事件名称、ActionType：操作类型（Write：写；Read：读）、PrincipalId：子账号、ResourceType：资源类型、ResourceId：资源Id、ResourceName：资源名称、AccessKeyId：密钥 ID、SensitiveAction：是否敏感操作、ApiErrorCode：API 错误码、CamErrorCode：CAM 错误码、Tags：标签（AttributeValue格式：[{"key":"*","value":"*"}]）备注:检索的各个条件间是与的关系,EventName传多个值内部是或的关系）
+	// 检索条件（目前支持：
+	// RequestId：请求 ID
+	// EventName：事件名称
+	// ActionType：操作类型（Write：写；Read：读）
+	// PrincipalId：子账号
+	// ResourceType：资源类型
+	// ResourceId：资源Id
+	// ResourceName：资源名称
+	// AccessKeyId：密钥 ID
+	// SensitiveAction：是否敏感操作
+	// ApiErrorCode：API 错误码
+	// CamErrorCode：CAM 错误码
+	// SourceIPAddress：请求IP
+	// Tags：标签（AttributeValue格式：[{"key":"*","value":"*"}]）
+	// 备注:检索的各个条件间是与的关系,EventName传多个值内部是或的关系）
 	LookupAttributes []*LookupAttribute `json:"LookupAttributes,omitnil,omitempty" name:"LookupAttributes"`
 
 	// 是否返回 IP 归属地（1 返回，0 不返回）
@@ -584,7 +603,21 @@ type DescribeEventsRequest struct {
 	// 返回日志的最大条数（最大 50 条）
 	MaxResults *uint64 `json:"MaxResults,omitnil,omitempty" name:"MaxResults"`
 
-	// 检索条件（目前支持 RequestId：请求 ID、EventName：事件名称、ActionType：操作类型（Write：写；Read：读）、PrincipalId：子账号、ResourceType：资源类型、ResourceId：资源Id、ResourceName：资源名称、AccessKeyId：密钥 ID、SensitiveAction：是否敏感操作、ApiErrorCode：API 错误码、CamErrorCode：CAM 错误码、Tags：标签（AttributeValue格式：[{"key":"*","value":"*"}]）备注:检索的各个条件间是与的关系,EventName传多个值内部是或的关系）
+	// 检索条件（目前支持：
+	// RequestId：请求 ID
+	// EventName：事件名称
+	// ActionType：操作类型（Write：写；Read：读）
+	// PrincipalId：子账号
+	// ResourceType：资源类型
+	// ResourceId：资源Id
+	// ResourceName：资源名称
+	// AccessKeyId：密钥 ID
+	// SensitiveAction：是否敏感操作
+	// ApiErrorCode：API 错误码
+	// CamErrorCode：CAM 错误码
+	// SourceIPAddress：请求IP
+	// Tags：标签（AttributeValue格式：[{"key":"*","value":"*"}]）
+	// 备注:检索的各个条件间是与的关系,EventName传多个值内部是或的关系）
 	LookupAttributes []*LookupAttribute `json:"LookupAttributes,omitnil,omitempty" name:"LookupAttributes"`
 
 	// 是否返回 IP 归属地（1 返回，0 不返回）
@@ -624,11 +657,9 @@ type DescribeEventsResponseParams struct {
 	NextToken *uint64 `json:"NextToken,omitnil,omitempty" name:"NextToken"`
 
 	// 日志集合
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Events []*Event `json:"Events,omitnil,omitempty" name:"Events"`
 
 	// 此字段已经废弃。翻页请使用ListOver配合NextToken，在ListOver为false进行下一页数据读取。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -674,7 +705,6 @@ type Event struct {
 	EventName *string `json:"EventName,omitnil,omitempty" name:"EventName"`
 
 	// 证书ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SecretId *string `json:"SecretId,omitnil,omitempty" name:"SecretId"`
 
 	// 请求来源
@@ -690,7 +720,6 @@ type Event struct {
 	AccountID *int64 `json:"AccountID,omitnil,omitempty" name:"AccountID"`
 
 	// 源IP
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	SourceIPAddress *string `json:"SourceIPAddress,omitnil,omitempty" name:"SourceIPAddress"`
 
 	// 事件名称中文描述（此字段请按需使用，如果您是其他语言使用者，可以忽略该字段描述）
@@ -708,7 +737,6 @@ type Event struct {
 
 type Filter struct {
 	// 资源筛选条件
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ResourceFields []*ResourceField `json:"ResourceFields,omitnil,omitempty" name:"ResourceFields"`
 }
 
@@ -863,7 +891,6 @@ func (r *ListAuditsRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type ListAuditsResponseParams struct {
 	// 查询跟踪集概要集合
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	AuditSummarys []*AuditSummary `json:"AuditSummarys,omitnil,omitempty" name:"AuditSummarys"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -920,7 +947,7 @@ func (r *ListCmqEnableRegionRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ListCmqEnableRegionResponseParams struct {
-	// 云审计支持的cmq的可用区
+	// 操作审计支持的cmq的可用区
 	EnableRegions []*CmqRegionInfo `json:"EnableRegions,omitnil,omitempty" name:"EnableRegions"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -977,7 +1004,7 @@ func (r *ListCosEnableRegionRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ListCosEnableRegionResponseParams struct {
-	// 云审计支持的cos可用区
+	// 操作审计支持的cos可用区
 	EnableRegions []*CosRegionInfo `json:"EnableRegions,omitnil,omitempty" name:"EnableRegions"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1091,7 +1118,7 @@ type LookUpEventsRequestParams struct {
 	// 返回日志的最大条数
 	MaxResults *int64 `json:"MaxResults,omitnil,omitempty" name:"MaxResults"`
 
-	// 云审计模式，有效值：standard | quick，其中standard是标准模式，quick是极速模式。默认为标准模式
+	// 操作审计模式，有效值：standard | quick，其中standard是标准模式，quick是极速模式。默认为标准模式
 	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
 }
 
@@ -1113,7 +1140,7 @@ type LookUpEventsRequest struct {
 	// 返回日志的最大条数
 	MaxResults *int64 `json:"MaxResults,omitnil,omitempty" name:"MaxResults"`
 
-	// 云审计模式，有效值：standard | quick，其中standard是标准模式，quick是极速模式。默认为标准模式
+	// 操作审计模式，有效值：standard | quick，其中standard是标准模式，quick是极速模式。默认为标准模式
 	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
 }
 
@@ -1144,16 +1171,16 @@ func (r *LookUpEventsRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type LookUpEventsResponseParams struct {
 	// 查看更多日志的凭证
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	NextToken *string `json:"NextToken,omitnil,omitempty" name:"NextToken"`
 
 	// 日志集合
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Events []*Event `json:"Events,omitnil,omitempty" name:"Events"`
 
 	// 日志集合是否结束
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ListOver *bool `json:"ListOver,omitnil,omitempty" name:"ListOver"`
+
+	// 数量
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -1176,7 +1203,7 @@ func (r *LookUpEventsResponse) FromJsonString(s string) error {
 }
 
 type LookupAttribute struct {
-	// AttributeKey的有效取值范围是:RequestId、EventName、ReadOnly、Username、ResourceType、ResourceName和AccessKeyId，EventId
+	// AttributeKey的有效取值范围是:RequestId、EventName、ActionType、PrincipalId、ResourceId、ResourceName、AccessKeyId、SensitiveAction、ApiErrorCode、CamErrorCode、SourceIPAddress、Tags
 	AttributeKey *string `json:"AttributeKey,omitnil,omitempty" name:"AttributeKey"`
 
 	// AttributeValue的值
@@ -1185,56 +1212,56 @@ type LookupAttribute struct {
 
 // Predefined struct for user
 type ModifyAuditTrackRequestParams struct {
-	// 跟踪集 ID
+	// <p>跟踪集 ID</p>
 	TrackId *uint64 `json:"TrackId,omitnil,omitempty" name:"TrackId"`
 
-	// 跟踪集名称，仅支持大小写字母、数字、-以及_的组合，3-48个字符
+	// <p>跟踪集名称，仅支持大小写字母、数字、-以及_的组合，3-48个字符</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 跟踪事件类型（读：Read；写：Write；全部：*）
+	// <p>跟踪事件类型（读：Read；写：Write；全部：*）</p>
 	ActionType *string `json:"ActionType,omitnil,omitempty" name:"ActionType"`
 
-	// 跟踪事件所属产品（支持全部产品或单个产品，如：cos，全部：*）
+	// <p>跟踪事件所属产品（支持全部产品或单个产品，如：cos，全部：*）</p>
 	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
 
-	// 跟踪集状态（未开启：0；开启：1）
+	// <p>跟踪集状态（未开启：0；开启：1）</p>
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 跟踪事件接口名列表（ResourceType为 * 时，EventNames必须为全部：["*"]；指定ResourceType时，支持全部接口：["*"]；支持部分接口：["cos", "cls"]，接口列表上限10个）
+	// <p>跟踪事件接口名列表（ResourceType为 * 时，EventNames必须为全部：[&quot;*&quot;]；指定ResourceType时，支持全部接口：[&quot;*&quot;]；支持部分接口：[&quot;cos&quot;, &quot;cls&quot;]，接口列表上限10个）</p>
 	EventNames []*string `json:"EventNames,omitnil,omitempty" name:"EventNames"`
 
-	// 数据投递存储（目前支持 cos、cls）
+	// <p>数据投递存储（目前支持 cos、cls、ckafka）</p>
 	Storage *Storage `json:"Storage,omitnil,omitempty" name:"Storage"`
 
-	// 是否开启将集团成员操作日志投递到集团管理账号或者可信服务管理账号(0：未开启，1：开启，只能集团管理账号或者可信服务管理账号开启此项功能)
+	// <p>是否开启将集团成员操作日志投递到集团管理账号或者可信服务管理账号(0：未开启，1：开启，只能集团管理账号或者可信服务管理账号开启此项功能)</p>
 	TrackForAllMembers *uint64 `json:"TrackForAllMembers,omitnil,omitempty" name:"TrackForAllMembers"`
 }
 
 type ModifyAuditTrackRequest struct {
 	*tchttp.BaseRequest
 	
-	// 跟踪集 ID
+	// <p>跟踪集 ID</p>
 	TrackId *uint64 `json:"TrackId,omitnil,omitempty" name:"TrackId"`
 
-	// 跟踪集名称，仅支持大小写字母、数字、-以及_的组合，3-48个字符
+	// <p>跟踪集名称，仅支持大小写字母、数字、-以及_的组合，3-48个字符</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 跟踪事件类型（读：Read；写：Write；全部：*）
+	// <p>跟踪事件类型（读：Read；写：Write；全部：*）</p>
 	ActionType *string `json:"ActionType,omitnil,omitempty" name:"ActionType"`
 
-	// 跟踪事件所属产品（支持全部产品或单个产品，如：cos，全部：*）
+	// <p>跟踪事件所属产品（支持全部产品或单个产品，如：cos，全部：*）</p>
 	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
 
-	// 跟踪集状态（未开启：0；开启：1）
+	// <p>跟踪集状态（未开启：0；开启：1）</p>
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 跟踪事件接口名列表（ResourceType为 * 时，EventNames必须为全部：["*"]；指定ResourceType时，支持全部接口：["*"]；支持部分接口：["cos", "cls"]，接口列表上限10个）
+	// <p>跟踪事件接口名列表（ResourceType为 * 时，EventNames必须为全部：[&quot;*&quot;]；指定ResourceType时，支持全部接口：[&quot;*&quot;]；支持部分接口：[&quot;cos&quot;, &quot;cls&quot;]，接口列表上限10个）</p>
 	EventNames []*string `json:"EventNames,omitnil,omitempty" name:"EventNames"`
 
-	// 数据投递存储（目前支持 cos、cls）
+	// <p>数据投递存储（目前支持 cos、cls、ckafka）</p>
 	Storage *Storage `json:"Storage,omitnil,omitempty" name:"Storage"`
 
-	// 是否开启将集团成员操作日志投递到集团管理账号或者可信服务管理账号(0：未开启，1：开启，只能集团管理账号或者可信服务管理账号开启此项功能)
+	// <p>是否开启将集团成员操作日志投递到集团管理账号或者可信服务管理账号(0：未开启，1：开启，只能集团管理账号或者可信服务管理账号开启此项功能)</p>
 	TrackForAllMembers *uint64 `json:"TrackForAllMembers,omitnil,omitempty" name:"TrackForAllMembers"`
 }
 
@@ -1377,25 +1404,20 @@ func (r *ModifyEventsAuditTrackResponse) FromJsonString(s string) error {
 
 type Resource struct {
 	// 资源类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
 
 	// 资源名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ResourceName *string `json:"ResourceName,omitnil,omitempty" name:"ResourceName"`
 }
 
 type ResourceField struct {
 	// 跟踪事件所属产品（支持全部产品或单个产品，如：cam，全部：*）
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
 
 	// 跟踪事件类型（读：Read；写：Write；全部：*）
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	ActionType *string `json:"ActionType,omitnil,omitempty" name:"ActionType"`
 
 	// 跟踪事件接口名列表（ResourceType为 * 时，EventNames必须为全部：[""]；指定ResourceType时，支持全部接口：[""]；支持部分接口：["cos", "cls"]，接口列表上限10个）
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	EventNames []*string `json:"EventNames,omitnil,omitempty" name:"EventNames"`
 }
 
@@ -1514,25 +1536,26 @@ func (r *StopLoggingResponse) FromJsonString(s string) error {
 }
 
 type Storage struct {
-	// 存储类型（目前支持 cos、cls）
+	// <p>存储类型（目前支持 cos、cls、ckafka）</p>
 	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 
-	// 存储所在地域
+	// <p>存储所在地域</p>
 	StorageRegion *string `json:"StorageRegion,omitnil,omitempty" name:"StorageRegion"`
 
-	// 存储名称(cos：存储名称为用户自定义的存储桶名称，不包含"-APPID"，仅支持小写字母、数字以及中划线"-"的组合，不能超过50字符，且不支持中划线"-"开头或结尾； cls：存储名称为日志主题id，字符长度为1-50个字符)
+	// <p>存储名称(cos：存储名称为用户自定义的存储桶名称，不包含&quot;-APPID&quot;，仅支持小写字母、数字以及中划线&quot;-&quot;的组合，不能超过50字符，且不支持中划线&quot;-&quot;开头或结尾； cls：存储名称为日志主题id，字符长度为1-50个字符； ckafka： ckafka实例ID/topic. 举例：ckafka-xxxxxx/tencent_test_audit_log)</p>
 	StorageName *string `json:"StorageName,omitnil,omitempty" name:"StorageName"`
 
-	// 存储目录前缀，cos日志文件前缀仅支持字母和数字的组合，3-40个字符
+	// <p>存储目录前缀，cos日志文件前缀仅支持字母和数字的组合，3-40个字符</p>
 	StoragePrefix *string `json:"StoragePrefix,omitnil,omitempty" name:"StoragePrefix"`
 
-	// 被指定存储用户ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// <p>被指定存储用户ID</p>
 	StorageAccountId *string `json:"StorageAccountId,omitnil,omitempty" name:"StorageAccountId"`
 
-	// 被指定存储用户appid
-	// 注意：此字段可能返回 null，表示取不到有效值。
+	// <p>被指定存储用户appid</p>
 	StorageAppId *string `json:"StorageAppId,omitnil,omitempty" name:"StorageAppId"`
+
+	// <p>是否压缩。<br>1:压缩  2:不压缩</p>
+	Compress *uint64 `json:"Compress,omitnil,omitempty" name:"Compress"`
 }
 
 type Tracks struct {
@@ -1566,19 +1589,19 @@ type UpdateAuditRequestParams struct {
 	// 跟踪集名称
 	AuditName *string `json:"AuditName,omitnil,omitempty" name:"AuditName"`
 
-	// 是否开启cmq消息通知。1：是，0：否。目前仅支持cmq的队列服务。如果开启cmq消息通知服务，云审计会将您的日志内容实时投递到您指定地域的指定队列中。
+	// 是否开启cmq消息通知。1：是，0：否。目前仅支持cmq的队列服务。如果开启cmq消息通知服务，操作审计会将您的日志内容实时投递到您指定地域的指定队列中。
 	IsEnableCmqNotify *int64 `json:"IsEnableCmqNotify,omitnil,omitempty" name:"IsEnableCmqNotify"`
 
 	// 管理事件的读写属性。1：只读，2：只写，3：全部。
 	ReadWriteAttribute *int64 `json:"ReadWriteAttribute,omitnil,omitempty" name:"ReadWriteAttribute"`
 
-	// CMK的全局唯一标识符，如果不是新创建的kms，该值是必填值。可以通过ListKeyAliasByRegion来获取。云审计不会校验KeyId的合法性，请您谨慎填写，避免给您的数据造成损失。
+	// CMK的全局唯一标识符，如果不是新创建的kms，该值是必填值。可以通过ListKeyAliasByRegion来获取。操作审计不会校验KeyId的合法性，请您谨慎填写，避免给您的数据造成损失。
 	KeyId *string `json:"KeyId,omitnil,omitempty" name:"KeyId"`
 
 	// cos地域。目前支持的地域可以使用ListCosEnableRegion来获取。
 	CosRegion *string `json:"CosRegion,omitnil,omitempty" name:"CosRegion"`
 
-	// 队列名称。队列名称是一个不超过64个字符的字符串，必须以字母为首字符，剩余部分可以包含字母、数字和横划线(-)。如果IsEnableCmqNotify值是1的话，此值属于必填字段。如果不是新创建的队列，云审计不会去校验该队列是否真的存在，请谨慎填写，避免日志通知不成功，导致您的数据丢失。
+	// 队列名称。队列名称是一个不超过64个字符的字符串，必须以字母为首字符，剩余部分可以包含字母、数字和横划线(-)。如果IsEnableCmqNotify值是1的话，此值属于必填字段。如果不是新创建的队列，操作审计不会去校验该队列是否真的存在，请谨慎填写，避免日志通知不成功，导致您的数据丢失。
 	CmqQueueName *string `json:"CmqQueueName,omitnil,omitempty" name:"CmqQueueName"`
 
 	// 是否创建新的cos存储桶。1：是，0：否。
@@ -1590,7 +1613,7 @@ type UpdateAuditRequestParams struct {
 	// 是否开启kms加密。1：是，0：否。如果开启KMS加密，数据在投递到cos时，会将数据加密。
 	IsEnableKmsEncry *int64 `json:"IsEnableKmsEncry,omitnil,omitempty" name:"IsEnableKmsEncry"`
 
-	// cos的存储桶名称。仅支持小写英文字母和数字即[a-z，0-9]、中划线“-”及其组合。用户自定义的字符串支持1 - 40个字符。存储桶命名不能以“-”开头或结尾。如果不是新创建的存储桶，云审计不会去校验该存储桶是否真的存在，请谨慎填写，避免日志投递不成功，导致您的数据丢失。
+	// cos的存储桶名称。仅支持小写英文字母和数字即[a-z，0-9]、中划线“-”及其组合。用户自定义的字符串支持1 - 40个字符。存储桶命名不能以“-”开头或结尾。如果不是新创建的存储桶，操作审计不会去校验该存储桶是否真的存在，请谨慎填写，避免日志投递不成功，导致您的数据丢失。
 	CosBucketName *string `json:"CosBucketName,omitnil,omitempty" name:"CosBucketName"`
 
 	// 队列所在的地域。可以通过ListCmqEnableRegion获取支持的cmq地域。如果IsEnableCmqNotify值是1的话，此值属于必填字段。
@@ -1609,19 +1632,19 @@ type UpdateAuditRequest struct {
 	// 跟踪集名称
 	AuditName *string `json:"AuditName,omitnil,omitempty" name:"AuditName"`
 
-	// 是否开启cmq消息通知。1：是，0：否。目前仅支持cmq的队列服务。如果开启cmq消息通知服务，云审计会将您的日志内容实时投递到您指定地域的指定队列中。
+	// 是否开启cmq消息通知。1：是，0：否。目前仅支持cmq的队列服务。如果开启cmq消息通知服务，操作审计会将您的日志内容实时投递到您指定地域的指定队列中。
 	IsEnableCmqNotify *int64 `json:"IsEnableCmqNotify,omitnil,omitempty" name:"IsEnableCmqNotify"`
 
 	// 管理事件的读写属性。1：只读，2：只写，3：全部。
 	ReadWriteAttribute *int64 `json:"ReadWriteAttribute,omitnil,omitempty" name:"ReadWriteAttribute"`
 
-	// CMK的全局唯一标识符，如果不是新创建的kms，该值是必填值。可以通过ListKeyAliasByRegion来获取。云审计不会校验KeyId的合法性，请您谨慎填写，避免给您的数据造成损失。
+	// CMK的全局唯一标识符，如果不是新创建的kms，该值是必填值。可以通过ListKeyAliasByRegion来获取。操作审计不会校验KeyId的合法性，请您谨慎填写，避免给您的数据造成损失。
 	KeyId *string `json:"KeyId,omitnil,omitempty" name:"KeyId"`
 
 	// cos地域。目前支持的地域可以使用ListCosEnableRegion来获取。
 	CosRegion *string `json:"CosRegion,omitnil,omitempty" name:"CosRegion"`
 
-	// 队列名称。队列名称是一个不超过64个字符的字符串，必须以字母为首字符，剩余部分可以包含字母、数字和横划线(-)。如果IsEnableCmqNotify值是1的话，此值属于必填字段。如果不是新创建的队列，云审计不会去校验该队列是否真的存在，请谨慎填写，避免日志通知不成功，导致您的数据丢失。
+	// 队列名称。队列名称是一个不超过64个字符的字符串，必须以字母为首字符，剩余部分可以包含字母、数字和横划线(-)。如果IsEnableCmqNotify值是1的话，此值属于必填字段。如果不是新创建的队列，操作审计不会去校验该队列是否真的存在，请谨慎填写，避免日志通知不成功，导致您的数据丢失。
 	CmqQueueName *string `json:"CmqQueueName,omitnil,omitempty" name:"CmqQueueName"`
 
 	// 是否创建新的cos存储桶。1：是，0：否。
@@ -1633,7 +1656,7 @@ type UpdateAuditRequest struct {
 	// 是否开启kms加密。1：是，0：否。如果开启KMS加密，数据在投递到cos时，会将数据加密。
 	IsEnableKmsEncry *int64 `json:"IsEnableKmsEncry,omitnil,omitempty" name:"IsEnableKmsEncry"`
 
-	// cos的存储桶名称。仅支持小写英文字母和数字即[a-z，0-9]、中划线“-”及其组合。用户自定义的字符串支持1 - 40个字符。存储桶命名不能以“-”开头或结尾。如果不是新创建的存储桶，云审计不会去校验该存储桶是否真的存在，请谨慎填写，避免日志投递不成功，导致您的数据丢失。
+	// cos的存储桶名称。仅支持小写英文字母和数字即[a-z，0-9]、中划线“-”及其组合。用户自定义的字符串支持1 - 40个字符。存储桶命名不能以“-”开头或结尾。如果不是新创建的存储桶，操作审计不会去校验该存储桶是否真的存在，请谨慎填写，避免日志投递不成功，导致您的数据丢失。
 	CosBucketName *string `json:"CosBucketName,omitnil,omitempty" name:"CosBucketName"`
 
 	// 队列所在的地域。可以通过ListCmqEnableRegion获取支持的cmq地域。如果IsEnableCmqNotify值是1的话，此值属于必填字段。

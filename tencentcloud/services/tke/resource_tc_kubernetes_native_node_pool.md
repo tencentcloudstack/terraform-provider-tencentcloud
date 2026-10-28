@@ -80,7 +80,8 @@ resource "tencentcloud_kubernetes_native_node_pool" "example" {
       auto_format_and_mount = true
     }
 
-    key_ids = ["skey-9pcs2100"]
+    key_ids      = ["skey-9pcs2100"]
+    custom_image = "img-j9tbqlc2"
   }
 
   annotations {

@@ -27,35 +27,54 @@ func ResourceTencentCloudPostgresqlBackupPlanConfig() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"db_instance_id": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "instance id.",
 			},
 
 			"min_backup_start_time": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "The earliest time to start a backup.",
 			},
 
 			"max_backup_start_time": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "The latest time to start a backup.",
 			},
 
 			"base_backup_retention_period": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Backup retention period in days. Value range:7-1830.",
 			},
 
 			"backup_period": {
 				Optional: true,
+				Computed: true,
 				Type:     schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 				Description: "Backup cycle, which means on which days each week the instance will be backed up. The parameter value should be the lowercase names of the days of the week.",
+			},
+
+			"log_backup_retention_period": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Log backup retention period in days. Value range: 7-1830.",
+			},
+
+			"backup_method": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Backup method. Valid values: `physical` (physical backup), `logical` (logical backup), `snapshot` (snapshot backup).",
 			},
 		},
 	}
@@ -93,8 +112,8 @@ func resourceTencentCloudPostgresqlBackupPlanConfigRead(d *schema.ResourceData, 
 	}
 
 	if BackupPlanConfig == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_postgresql_backup_plan_config` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `PostgresBackupPlanConfig` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -122,6 +141,14 @@ func resourceTencentCloudPostgresqlBackupPlanConfigRead(d *schema.ResourceData, 
 
 	}
 
+	if BackupPlanConfig.LogBackupRetentionPeriod != nil {
+		_ = d.Set("log_backup_retention_period", BackupPlanConfig.LogBackupRetentionPeriod)
+	}
+
+	if BackupPlanConfig.BackupMethod != nil {
+		_ = d.Set("backup_method", BackupPlanConfig.BackupMethod)
+	}
+
 	return nil
 }
 
@@ -133,14 +160,10 @@ func resourceTencentCloudPostgresqlBackupPlanConfigUpdate(d *schema.ResourceData
 
 	var (
 		request = postgres.NewModifyBackupPlanRequest()
+		insId   = d.Id()
 	)
 
-	if d.HasChange("db_instance_id") {
-		if v, ok := d.GetOk("db_instance_id"); ok {
-			request.DBInstanceId = helper.String(v.(string))
-		}
-	}
-
+	request.DBInstanceId = &insId
 	if d.HasChange("min_backup_start_time") {
 		if v, ok := d.GetOk("min_backup_start_time"); ok {
 			request.MinBackupStartTime = helper.String(v.(string))
@@ -171,6 +194,18 @@ func resourceTencentCloudPostgresqlBackupPlanConfigUpdate(d *schema.ResourceData
 		}
 	}
 
+	if d.HasChange("log_backup_retention_period") {
+		if v, ok := d.GetOkExists("log_backup_retention_period"); ok {
+			request.LogBackupRetentionPeriod = helper.IntUint64(v.(int))
+		}
+	}
+
+	if d.HasChange("backup_method") {
+		if v, ok := d.GetOk("backup_method"); ok {
+			request.BackupMethod = helper.String(v.(string))
+		}
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().ModifyBackupPlan(request)
 		if e != nil {
@@ -178,10 +213,12 @@ func resourceTencentCloudPostgresqlBackupPlanConfigUpdate(d *schema.ResourceData
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
+
 	if err != nil {
-		log.Printf("[CRITAL]%s update postgres BackupPlanConfig failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update postgres backup plan config failed, reason:%+v", logId, err)
 		return err
 	}
 

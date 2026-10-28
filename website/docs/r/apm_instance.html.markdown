@@ -27,6 +27,19 @@ resource "tencentcloud_apm_instance" "example" {
 }
 ```
 
+### CLS key-value index configuration example
+
+```hcl
+resource "tencentcloud_apm_instance" "example" {
+  name             = "tf-example"
+  description      = "desc."
+  is_related_log   = 1
+  log_index_type   = 1
+  log_trace_id_key = "traceId"
+  log_span_id_key  = "spanId"
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -60,6 +73,7 @@ The following arguments are supported:
 * `log_region` - (Optional, String) Log region, which takes effect after the log feature is enabled.
 * `log_set` - (Optional, String) Logset, which takes effect only after the log feature is enabled.
 * `log_source` - (Optional, String) Log source, which takes effect only after the log feature is enabled.
+* `log_span_id_key` - (Optional, String) Index key of spanId. It is valid when the CLS index type is key-value index.
 * `log_topic_id` - (Optional, String) CLS log topic id, which takes effect after the log feature is enabled.
 * `log_trace_id_key` - (Optional, String) Index key of traceId. It is valid when the CLS index type is key-value index.
 * `open_billing` - (Optional, Bool) Billing switch.
@@ -82,6 +96,20 @@ In addition to all arguments above, the following attributes are exported:
 * `public_collector_url` - External Network Reporting Address.
 * `token` - Business system authentication token.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateApmInstance](https://www.tencentcloud.com/document/api/1166/68215)
+  - [ModifyApmInstance](https://www.tencentcloud.com/document/api/1166/68212)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeApmAgent](https://www.tencentcloud.com/document/api/1166/68214)
+  - [DescribeApmInstances](https://www.tencentcloud.com/document/api/1166/68213)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyApmInstance](https://www.tencentcloud.com/document/api/1166/68212)
+* Delete: [TerminateApmInstance](https://www.tencentcloud.com/document/api/1166/68211)
 
 ## Import
 

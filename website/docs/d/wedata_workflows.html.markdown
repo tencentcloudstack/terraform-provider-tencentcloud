@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - Describes workflow pagination information.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListWorkflows](https://www.tencentcloud.com/document/api/1174/73865)
 

@@ -23,6 +23,11 @@ resource "tencentcloud_dlc_data_engine" "example" {
     executor_nums        = 1
     executor_size        = "medium"
   }
+
+  tags {
+    tag_key   = "createBy"
+    tag_value = "Terraform"
+  }
 }
 ```
 

@@ -68,4 +68,9 @@ In addition to all arguments above, the following attributes are exported:
     * `updated_time` - Update time. Note: This field may return null, indicating that no valid value was found.
   * `total_count` - Total count virtual machine deployment group. Note: This field may return null, indicating that no valid value was found.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeGroups](https://www.tencentcloud.com/search/?wd=DescribeGroups&type=document&lang=en)
 

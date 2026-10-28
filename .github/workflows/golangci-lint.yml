@@ -30,16 +30,21 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version-file: .go-version
-          go-version: '1.21'
-          cache: false 
+          go-version-file: go.mod
+          cache: false
 
       # Runs a set of commands using the runners shell
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v4
+        uses: golangci/golangci-lint-action@v8
         with:
           skip-cache: true
-          version: v1.54
+          # v2.4.0 is the first v2 release built with Go 1.25 toolchain. The v1
+          # series ended at v1.64.8 (Go 1.24-built) and refuses to lint code
+          # whose go.mod declares `go 1.25` with:
+          #   "the Go language version (go1.24) used to build golangci-lint
+          #    is lower than the targeted Go version (1.25.8)"
+          # Configuration file (.golangci.yml) is also v2 schema (version: "2").
+          version: v2.4.0
           working-directory: ./tencentcloud
           args: --new-from-rev=origin/master -v
           #args: --enable-all --max-same-issues=0 --max-issues-per-linter=0 --new-from-rev=origin/master -v

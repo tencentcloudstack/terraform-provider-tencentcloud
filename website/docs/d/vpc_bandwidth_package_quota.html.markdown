@@ -33,4 +33,9 @@ In addition to all arguments above, the following attributes are exported:
   * `quota_id` - Quota type.
   * `quota_limit` - quota amount.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBandwidthPackageQuota](https://www.tencentcloud.com/document/api/215/36920)
 

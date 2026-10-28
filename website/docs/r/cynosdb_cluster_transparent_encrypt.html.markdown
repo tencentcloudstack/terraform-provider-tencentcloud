@@ -44,6 +44,19 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeTasks](https://www.tencentcloud.com/document/api/1098/74199)
+  - [ModifyClusterGlobalEncryption](https://www.tencentcloud.com/document/api/1098/80148)
+  - [OpenClusterTransparentEncrypt](https://www.tencentcloud.com/document/api/1098/69803)
+* Read: [DescribeClusterTransparentEncryptInfo](https://www.tencentcloud.com/document/api/1098/69806)
+* Update:
+  - [DescribeTasks](https://www.tencentcloud.com/document/api/1098/74199)
+  - [ModifyClusterGlobalEncryption](https://www.tencentcloud.com/document/api/1098/80148)
+  - [OpenClusterTransparentEncrypt](https://www.tencentcloud.com/document/api/1098/69803)
 
 ## Import
 

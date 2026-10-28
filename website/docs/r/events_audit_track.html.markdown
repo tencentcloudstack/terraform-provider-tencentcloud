@@ -1,5 +1,5 @@
 ---
-subcategory: "Cloud Audit(Audit)"
+subcategory: "Cloud Audit(CloudAudit)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_events_audit_track"
 sidebar_current: "docs-tencentcloud-resource-events_audit_track"
@@ -83,6 +83,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `track_id` - Whether the log list has come to an end. `true`: Yes. Pagination is not required.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateEventsAuditTrack](https://www.tencentcloud.com/search/?wd=CreateEventsAuditTrack&type=document&lang=en)
+* Read: [DescribeAuditTrack](https://www.tencentcloud.com/document/api/1021/52596)
+* Update: [ModifyEventsAuditTrack](https://www.tencentcloud.com/search/?wd=ModifyEventsAuditTrack&type=document&lang=en)
+* Delete: [DeleteAuditTrack](https://www.tencentcloud.com/document/api/1021/45905)
 
 ## Import
 

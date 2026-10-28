@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_cynosdb_cluster: support `instance_name` modification via ModifyInstanceName API, update field descriptions for `instance_name` and `ro_group_sg`
+```
+
+```release-note:enhancement
+resource/tencentcloud_cynosdb_cluster_v2: support `instance_name` modification via ModifyInstanceName API
+```

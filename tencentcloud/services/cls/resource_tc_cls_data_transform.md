@@ -57,6 +57,48 @@ resource "tencentcloud_cls_data_transform" "example" {
 }
 ```
 
+Cross-account data transform example:
+
+```hcl
+resource "tencentcloud_cls_logset" "logset_src" {
+  logset_name = "tf-example-src"
+  tags = {
+    createdBy = "terraform"
+  }
+}
+
+resource "tencentcloud_cls_topic" "topic_src" {
+  topic_name           = "tf-example_src"
+  logset_id            = tencentcloud_cls_logset.logset_src.id
+  auto_split           = false
+  max_split_partitions = 20
+  partition_count      = 1
+  period               = 10
+  storage_type         = "hot"
+  tags = {
+    createdBy = "terraform"
+  }
+}
+
+resource "tencentcloud_cls_data_transform" "example_cross_account" {
+  func_type    = 1
+  src_topic_id = tencentcloud_cls_topic.topic_src.id
+  name         = "tf-example-cross-account"
+  etl_content  = "ext_sep(\"content\", \"f1, f2, f3\", sep=\",\", quote=\"\", restrict=False, mode=\"overwrite\")fields_drop(\"content\")"
+  task_type    = 3
+  enable_flag  = 1
+  dst_resources {
+    topic_id         = "topic-id-in-target-account"
+    alias            = "cross-account-dst"
+    is_cross_account = true
+    role_arn         = "qcs::cam::uin/123456789:roleName/cls-cross-account-role"
+    external_id      = "external-id-value"
+    topic_name       = "target-topic-name"
+    logset_name      = "target-logset-name"
+  }
+}
+```
+
 Import
 
 CLS data transform can be imported using the id, e.g.

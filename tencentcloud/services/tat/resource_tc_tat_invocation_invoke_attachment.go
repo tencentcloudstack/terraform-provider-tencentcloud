@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -22,6 +23,10 @@ func ResourceTencentCloudTatInvocationInvokeAttachment() *schema.Resource {
 		Delete: resourceTencentCloudTatInvocationInvokeAttachmentDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(20 * time.Minute),
+			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
@@ -80,6 +85,13 @@ func ResourceTencentCloudTatInvocationInvokeAttachment() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Command ID.",
 			},
+
+			// computed
+			"invocation_id": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Invocation ID.",
+			},
 		},
 	}
 }
@@ -88,14 +100,14 @@ func resourceTencentCloudTatInvocationInvokeAttachmentCreate(d *schema.ResourceD
 	defer tccommon.LogElapsed("resource.tencentcloud_tat_invocation_invoke_attachment.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId        = tccommon.GetLogId(tccommon.ContextNil)
 		request      = tat.NewInvokeCommandRequest()
 		response     = tat.NewInvokeCommandResponse()
 		invocationId string
 		instanceId   string
 	)
+
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
 		request.InstanceIds = []*string{helper.String(v.(string))}
@@ -136,16 +148,54 @@ func resourceTencentCloudTatInvocationInvokeAttachmentCreate(d *schema.ResourceD
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("tat InvokeCommand failed, response is nil"))
+		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create tat invocation failed, reason:%+v", logId, err)
 		return err
 	}
 
+	if response.Response.InvocationId == nil {
+		return fmt.Errorf("InvocationId is nil")
+	}
+
 	invocationId = *response.Response.InvocationId
 	d.SetId(invocationId + tccommon.FILED_SP + instanceId)
+
+	// wait
+	waitReq := tat.NewDescribeInvocationsRequest()
+	waitReq.InvocationIds = []*string{&invocationId}
+	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTatClient().DescribeInvocations(waitReq)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.InvocationSet == nil {
+			return resource.NonRetryableError(fmt.Errorf("describe invokes failed, response is nil"))
+		}
+
+		invocation := result.Response.InvocationSet[0]
+		if invocation.InvocationStatus != nil && *invocation.InvocationStatus == "SUCCESS" {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("invocation status is still pending..."))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s create tat invocation failed, reason:%+v", logId, err)
+		return err
+	}
 
 	return resourceTencentCloudTatInvocationInvokeAttachmentRead(d, meta)
 }
@@ -173,8 +223,8 @@ func resourceTencentCloudTatInvocationInvokeAttachmentRead(d *schema.ResourceDat
 	}
 
 	if invocation == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_tat_invocation_invoke_attachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `TatInvocation` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -208,6 +258,10 @@ func resourceTencentCloudTatInvocationInvokeAttachmentRead(d *schema.ResourceDat
 		_ = d.Set("command_id", invocation.CommandId)
 	}
 
+	if invocation.InvocationId != nil {
+		_ = d.Set("invocation_id", invocationId)
+	}
+
 	return nil
 }
 
@@ -227,6 +281,36 @@ func resourceTencentCloudTatInvocationInvokeAttachmentDelete(d *schema.ResourceD
 	instanceId := idSplit[1]
 
 	if err := service.DeleteTatInvocationById(ctx, invocationId, instanceId); err != nil {
+		return err
+	}
+
+	// wait
+	waitReq := tat.NewDescribeInvocationsRequest()
+	waitReq.InvocationIds = []*string{&invocationId}
+	err := resource.Retry(d.Timeout(schema.TimeoutDelete), func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTatClient().DescribeInvocations(waitReq)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.InvocationSet == nil {
+			return resource.NonRetryableError(fmt.Errorf("describe invokes failed, response is nil"))
+		}
+
+		invocation := result.Response.InvocationSet[0]
+		if invocation.InvocationStatus != nil {
+			if *invocation.InvocationStatus == "SUCCESS" || *invocation.InvocationStatus == "CANCELLED" {
+				return nil
+			}
+		}
+
+		return resource.RetryableError(fmt.Errorf("invocation status is still pending..."))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s delete tat invocation failed, reason:%+v", logId, err)
 		return err
 	}
 

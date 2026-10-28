@@ -95,6 +95,23 @@ resource "tencentcloud_cbs_storage" "example" {
 }
 ```
 
+Create a CBS storage with auto-mount instance id
+
+```hcl
+resource "tencentcloud_cbs_storage" "example" {
+  storage_name      = "tf-example"
+  storage_type      = "CLOUD_SSD"
+  storage_size      = 100
+  availability_zone = "ap-guangzhou-3"
+  project_id        = 0
+  instance_id       = "ins-xxxxxxxx"
+
+  tags = {
+    createBy = "Terraform"
+  }
+}
+```
+
 Import
 
 CBS storage can be imported using the id, e.g.

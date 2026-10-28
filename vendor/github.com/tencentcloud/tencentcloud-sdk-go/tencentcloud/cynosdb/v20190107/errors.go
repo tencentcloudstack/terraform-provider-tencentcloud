@@ -20,6 +20,9 @@ const (
 	// CAM签名/鉴权错误。
 	AUTHFAILURE = "AuthFailure"
 
+	// 鉴权失败，无权限操作
+	AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
@@ -34,6 +37,12 @@ const (
 
 	// 鉴权失败，请稍后重试。如果持续不成功，请联系客服进行处理。
 	FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
+
+	// VPC/子网校验失败：{{1}}
+	FAILEDOPERATION_CHECKVPCANDSUBNETERROR = "FailedOperation.CheckVpcAndSubnetError"
+
+	// 创建审计失败
+	FAILEDOPERATION_CREATEAUDITFAILERROR = "FailedOperation.CreateAuditFailError"
 
 	// 创建并支付订单失败。
 	FAILEDOPERATION_CREATEORDER = "FailedOperation.CreateOrder"
@@ -77,6 +86,9 @@ const (
 	// 操作失败，请稍后重试。如果持续不成功，请联系客服进行处理。
 	FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 
+	// Proxy校验失败：{{1}}。
+	FAILEDOPERATION_PROXYCHECKERROR = "FailedOperation.ProxyCheckError"
+
 	// 查询资源包消耗明细失败
 	FAILEDOPERATION_QUERYSOURCEPACKAGEDETAILERROR = "FailedOperation.QuerySourcePackageDetailError"
 
@@ -91,6 +103,9 @@ const (
 
 	// 修改策略失败。
 	FAILEDOPERATION_SERVERLESSSETSTRATEGYERROR = "FailedOperation.ServerlessSetStrategyError"
+
+	// 日志查询失败，请缩小查询范围。如果持续不成功，请联系客服进行处理。
+	FAILEDOPERATION_SERVICEACCESSERROR = "FailedOperation.ServiceAccessError"
 
 	// 规格信息{{1}}搜索失败
 	FAILEDOPERATION_SPECNOTFOUNDERROR = "FailedOperation.SpecNotFoundError"
@@ -212,6 +227,9 @@ const (
 	// 内置账号不允许操作。
 	INVALIDPARAMETERVALUE_INTERNALACCOUNT = "InvalidParameterValue.InternalAccount"
 
+	// 存在内网域名，旧 IP 保留时间需大于 {{1}} 小时
+	INVALIDPARAMETERVALUE_INTERNALDOMAINRESERVETOOSHORTERROR = "InvalidParameterValue.InternalDomainReserveTooShortError"
+
 	// 实例版本非法。
 	INVALIDPARAMETERVALUE_INVALIDDBVERSION = "InvalidParameterValue.InvalidDBVersion"
 
@@ -257,6 +275,9 @@ const (
 	// 找不到所选子网。
 	INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
 
+	// 接入组 {{1}} 所属子网与目标子网一致，无需更换
+	INVALIDPARAMETERVALUE_SUBNETUNCHANGEDERROR = "InvalidParameterValue.SubnetUnchangedError"
+
 	// 未找到该数据。
 	INVALIDPARAMETERVALUE_VALUENOTFOUND = "InvalidParameterValue.ValueNotFound"
 
@@ -274,6 +295,9 @@ const (
 
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
+
+	// 云账号权限不足，不支持该操作。
+	OPERATIONDENIED_ACCOUNTOPERATIONDENIED = "OperationDenied.AccountOperationDenied"
 
 	// 审计日志文件数超过最大限制数
 	OPERATIONDENIED_AUDITFILEOVERQUOTAERROR = "OperationDenied.AuditFileOverQuotaError"
@@ -304,6 +328,9 @@ const (
 
 	// 创建任务失败。{{1}}
 	OPERATIONDENIED_CREATETASKANDFLOWERROR = "OperationDenied.CreateTaskAndFlowError"
+
+	// 实例内核版本不支持{{1}}
+	OPERATIONDENIED_CYNOSDBVERSIONNOTSUPPORTERROR = "OperationDenied.CynosdbVersionNotSupportError"
 
 	// 新存储架构多可用区部署功能暂未开放
 	OPERATIONDENIED_DISABLENEWSTORAGEMULTIZONEDEPLOYMENTERROR = "OperationDenied.DisableNewStorageMultiZoneDeploymentError"
@@ -383,6 +410,9 @@ const (
 	// proxy可用区校验失败
 	OPERATIONDENIED_PROXYZONECHECKERROR = "OperationDenied.ProxyZoneCheckError"
 
+	// 实例不存在
+	OPERATIONDENIED_RESOURCENOTFUNDERROR = "OperationDenied.ResourceNotFundError"
+
 	// 未知异常。请联系客服进行处理。{{1}}
 	OPERATIONDENIED_SECONDARYCACHEUNKNOWNERROR = "OperationDenied.SecondaryCacheUnknownError"
 
@@ -400,6 +430,9 @@ const (
 
 	// 不支持该类型规格售卖
 	OPERATIONDENIED_UNSUPPORTSALESPECERROR = "OperationDenied.UnSupportSaleSpecError"
+
+	// 不支持开启审计
+	OPERATIONDENIED_UNSUPPORTOPENAUDITERROR = "OperationDenied.UnsupportOpenAuditError"
 
 	// 用户未进行实名认证，请先进行实名认证才可购买。
 	OPERATIONDENIED_USERNOTAUTHENTICATEDERROR = "OperationDenied.UserNotAuthenticatedError"
@@ -433,4 +466,7 @@ const (
 
 	// CAM鉴权不通过。
 	UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+
+	// 授权失败或已取消授权
+	UNAUTHORIZEDOPERATION_ROLEUNAUTHORIZED = "UnauthorizedOperation.RoleUnauthorized"
 )

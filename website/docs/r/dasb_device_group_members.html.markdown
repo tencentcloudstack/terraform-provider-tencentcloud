@@ -45,6 +45,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddDeviceGroupMembers](https://www.tencentcloud.com/search/?wd=AddDeviceGroupMembers&type=document&lang=en)
+* Read: [DescribeDeviceGroupMembers](https://www.tencentcloud.com/search/?wd=DescribeDeviceGroupMembers&type=document&lang=en)
+* Delete: [DeleteDeviceGroupMembers](https://www.tencentcloud.com/search/?wd=DeleteDeviceGroupMembers&type=document&lang=en)
 
 ## Import
 

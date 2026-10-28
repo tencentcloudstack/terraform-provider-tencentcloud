@@ -13,6 +13,8 @@ Provide a resource to create a Mongodb instance.
 
 ~> **NOTE:** If `availability_zone_list` needs to be changed, attention should be paid to cascading modifications of `available_zone` or `hidden_zone`.
 
+~> **NOTE:** The `cpu` parameter takes effect only when the configuration is changed. Changing the `cpu` triggers the `ModifyDBInstanceSpec` API to adjust the CPU specification of the running MongoDB instance in-place. The supported CPU specifications can be obtained through the `DescribeSpecInfo` API.
+
 ## Example Usage
 
 ```hcl
@@ -26,7 +28,25 @@ resource "tencentcloud_mongodb_instance" "example" {
   vpc_id         = "vpc-i5yyodl9"
   subnet_id      = "subnet-hhi88a58"
   project_id     = 0
-  password       = "Password@123"
+  password       = "Password@2026"
+}
+```
+
+### Update the CPU specification of the MongoDB instance.
+
+```hcl
+resource "tencentcloud_mongodb_instance" "example" {
+  instance_name  = "tf-example"
+  memory         = 4
+  volume         = 100
+  engine_version = "MONGO_40_WT"
+  machine_type   = "HIO10G"
+  available_zone = "ap-guangzhou-6"
+  vpc_id         = "vpc-i5yyodl9"
+  subnet_id      = "subnet-hhi88a58"
+  project_id     = 0
+  password       = "Password@2026"
+  cpu            = 2
 }
 ```
 
@@ -49,7 +69,49 @@ resource "tencentcloud_mongodb_instance" "example" {
   vpc_id      = "vpc-i5yyodl9"
   subnet_id   = "subnet-hhi88a58"
   project_id  = 0
-  password    = "Password@123"
+  password    = "Password@2026"
+}
+```
+
+### Create instance with auto encryption
+
+```hcl
+resource "tencentcloud_mongodb_instance" "example" {
+  instance_name         = "tf-example"
+  cpu                   = 2
+  memory                = 4
+  volume                = 100
+  engine_version        = "MONGO_80_WT"
+  machine_type          = "GE.LD.T1"
+  available_zone        = "ap-guangzhou-6"
+  vpc_id                = "vpc-i5yyodl9"
+  subnet_id             = "subnet-hhi88a58"
+  project_id            = 0
+  password              = "Password@2026"
+  data_encryption       = "TDE"
+  encryption_key_source = "auto"
+}
+```
+
+### Create instance with custom encryption
+
+```hcl
+resource "tencentcloud_mongodb_instance" "example" {
+  instance_name         = "tf-example"
+  cpu                   = 2
+  memory                = 4
+  volume                = 100
+  engine_version        = "MONGO_80_WT"
+  machine_type          = "GE.LD.T1"
+  available_zone        = "ap-guangzhou-6"
+  vpc_id                = "vpc-i5yyodl9"
+  subnet_id             = "subnet-hhi88a58"
+  project_id            = 0
+  password              = "Password@2026"
+  data_encryption       = "TDE"
+  encryption_key_source = "manual"
+  key_id                = "KMS-MONGODB"
+  kms_region            = "ap-guangzhou"
 }
 ```
 
@@ -77,11 +139,16 @@ The following arguments are supported:
 	- You can obtain availability zone information planned in different regions of the cloud database through the interface DescribeSpecInfo, so as to specify effective availability zones.
 	- Multiple availability zone deployment nodes can only be deployed in 3 different availability zones. Deploying most nodes of a cluster in the same availability zone is not supported. For example, a 3-node cluster does not support 2 nodes deployed in the same zone.
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. Caution that update operation on this field will delete old instances and create new one with new charge type.
+* `cpu` - (Optional, Int) The CPU core count of the MongoDB instance after the configuration change. Unit: C. When this parameter is empty, the current CPU size of the instance is used by default. The supported CPU specifications can be obtained through the DescribeSpecInfo API.
+* `data_encryption` - (Optional, String) Database storage encryption setting. `No_Encryption`: Storage encryption is not used. `TDE`: Enables TDE storage encryption. Note: this field does not support update, please recreate the resource if you need to change it.
+* `encryption_key_source` - (Optional, String) If TDE storage encryption is selected, the key source must be specified. `auto`: Automatically generate the key. `manual`: Manually specify the key. Note: this field does not support update, please recreate the resource if you need to change it.
 * `hidden_zone` - (Optional, String) The availability zone to which the Hidden node belongs. This parameter is required in cross-AZ instance deployment.
 * `in_maintenance` - (Optional, Int) Switch time for instance configuration changes.
 	- 0: When the adjustment is completed, perform the configuration task immediately. Default is 0.
 	- 1: Perform reconfiguration tasks within the maintenance time window.
 Note: Adjusting the number of nodes and slices does not support changes within the maintenance window.
+* `key_id` - (Optional, String) Key ID. If `manual` is selected as the key resource, you must enter the specified key ID. Note: this field does not support update, please recreate the resource if you need to change it.
+* `kms_region` - (Optional, String) Key ID. If `manual` is selected as the key resource, you must enter the specified key region. Note: this field does not support update, please recreate the resource if you need to change it.
 * `maintenance_end` - (Optional, String) Maintenance window end time.
 	- The value range is any full point or half point from `00:00-23:00`, and the maintenance time duration is at least 30 minutes and at most 3 hours.
 	- The end time must be based on the start time backwards.
@@ -130,6 +197,42 @@ In addition to all arguments above, the following attributes are exported:
 * `vip` - IP of the Mongodb instance.
 * `vport` - IP port of the Mongodb instance.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateDBInstance](https://www.tencentcloud.com/search/?wd=CreateDBInstance&type=document&lang=en)
+  - [CreateDBInstanceHour](https://www.tencentcloud.com/document/api/240/34704)
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/240/34702)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [RenameInstance](https://www.tencentcloud.com/document/api/240/34697)
+  - [SetInstanceMaintenance](https://www.tencentcloud.com/document/api/240/74798)
+* Read:
+  - [DescribeDBInstanceNodeProperty](https://www.tencentcloud.com/document/api/240/74083)
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/240/34702)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [DescribeSecurityGroup](https://www.tencentcloud.com/document/api/240/40341)
+  - [DescribeTransparentDataEncryptionStatus](https://www.tencentcloud.com/search/?wd=DescribeTransparentDataEncryptionStatus&type=document&lang=en)
+* Update:
+  - [AssignProject](https://www.tencentcloud.com/document/api/240/34705)
+  - [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/240/37921)
+  - [DescribeDBInstanceDeal](https://www.tencentcloud.com/document/api/240/37330)
+  - [ModifyDBInstanceNetworkAddress](https://www.tencentcloud.com/document/api/240/46544)
+  - [ModifyDBInstanceSecurityGroup](https://www.tencentcloud.com/document/api/240/45894)
+  - [ModifyDBInstanceSpec](https://www.tencentcloud.com/document/api/240/34699)
+  - [ModifyInstanceAz](https://www.tencentcloud.com/document/api/240/79881)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [RenameInstance](https://www.tencentcloud.com/document/api/240/34697)
+  - [RenewDBInstances](https://www.tencentcloud.com/document/api/240/37326)
+  - [ResetDBInstancePassword](https://www.tencentcloud.com/document/api/240/37924)
+  - [SetInstanceMaintenance](https://www.tencentcloud.com/document/api/240/74798)
+  - [UpgradeDbInstanceVersion](https://www.tencentcloud.com/document/api/240/74526)
+* Delete:
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/240/34702)
+  - [IsolateDBInstance](https://www.tencentcloud.com/document/api/240/34700)
+  - [OfflineIsolatedDBInstance](https://www.tencentcloud.com/document/api/240/34698)
+  - [TerminateDBInstances](https://www.tencentcloud.com/document/api/240/74033)
 
 ## Import
 

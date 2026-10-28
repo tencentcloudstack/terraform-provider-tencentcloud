@@ -63,6 +63,16 @@ In addition to all arguments above, the following attributes are exported:
 * `modified_on` - Modify time.
 * `record_id` - DNS record id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDnsRecord](https://www.tencentcloud.com/document/api/1145/50488)
+* Read: [DescribeDnsRecords](https://www.tencentcloud.com/document/api/1145/50484)
+* Update:
+  - [ModifyDnsRecords](https://www.tencentcloud.com/document/api/1145/67541)
+  - [ModifyDnsRecordsStatus](https://www.tencentcloud.com/document/api/1145/67540)
+* Delete: [DeleteDnsRecords](https://www.tencentcloud.com/document/api/1145/50486)
 
 ## Import
 

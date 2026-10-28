@@ -32,6 +32,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `role_granted` - Whether the role has been authorized, false - not authorized, true - authorized.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyAssetSyncFlag](https://www.tencentcloud.com/search/?wd=ModifyAssetSyncFlag&type=document&lang=en)
+* Read: [DescribeAssetSyncFlag](https://www.tencentcloud.com/search/?wd=DescribeAssetSyncFlag&type=document&lang=en)
+* Update: [ModifyAssetSyncFlag](https://www.tencentcloud.com/search/?wd=ModifyAssetSyncFlag&type=document&lang=en)
 
 ## Import
 

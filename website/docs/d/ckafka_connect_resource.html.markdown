@@ -142,4 +142,9 @@ In addition to all arguments above, the following attributes are exported:
     * `type` - Resource type.
   * `total_count` - Number of connection sources.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeConnectResources](https://www.tencentcloud.com/search/?wd=DescribeConnectResources&type=document&lang=en)
 

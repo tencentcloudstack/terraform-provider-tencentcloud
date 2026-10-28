@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_monitor_tmp_instance: support `long_term_storage_retention_time` parameter for configuring archive storage retention duration
+```

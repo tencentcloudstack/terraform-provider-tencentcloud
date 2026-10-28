@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_postgres_audit_service
+```

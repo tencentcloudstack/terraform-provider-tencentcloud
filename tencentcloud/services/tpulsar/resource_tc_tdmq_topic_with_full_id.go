@@ -126,7 +126,7 @@ func resourceTencentCloudTdmqTopicWithFullIdCreate(d *schema.ResourceData, meta 
 		}
 	}
 
-	err := tdmqService.CreateTdmqTopic(ctx, environId, topicName, partitions, topicType, remark, clusterId, pulsarTopicType)
+	err := tdmqService.CreateTdmqTopic(ctx, environId, topicName, partitions, topicType, remark, clusterId, pulsarTopicType, nil)
 	if err != nil {
 		return err
 	}

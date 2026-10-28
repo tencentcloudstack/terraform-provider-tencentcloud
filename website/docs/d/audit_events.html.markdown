@@ -1,5 +1,5 @@
 ---
-subcategory: "Cloud Audit(Audit)"
+subcategory: "Cloud Audit(CloudAudit)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_audit_events"
 sidebar_current: "docs-tencentcloud-datasource-audit_events"
@@ -62,4 +62,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `events` - Logset. Note: `null` may be returned for this field, indicating that no valid values can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeEvents](https://www.tencentcloud.com/search/?wd=DescribeEvents&type=document&lang=en)
 

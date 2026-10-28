@@ -49,4 +49,9 @@ In addition to all arguments above, the following attributes are exported:
 * `properties` - Detailed parameters.
 * `show_topic_name` - The topic name displayed on the details pageNote: This field may return null, indicating that no valid value can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRocketMQMsg](https://www.tencentcloud.com/search/?wd=DescribeRocketMQMsg&type=document&lang=en)
 

@@ -60,6 +60,17 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Creation time.
 * `update_time` - Update time.
 
+The `baseline_config_items` object exports the following:
+
+* `apply_count` - Specifies the number of accounts for baseline applications.
+
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [UpdateAccountFactoryBaseline](https://www.tencentcloud.com/document/api/1220/74849)
+* Read: [GetAccountFactoryBaseline](https://www.tencentcloud.com/document/api/1220/74852)
+* Update: [UpdateAccountFactoryBaseline](https://www.tencentcloud.com/document/api/1220/74849)
 
 ## Import
 

@@ -47,6 +47,9 @@ const (
 	// 操作CH数据库失败
 	FAILEDOPERATION_CLICKHOUSEOPERATIONFAILED = "FailedOperation.ClickHouseOperationFailed"
 
+	// 域名校验有误
+	FAILEDOPERATION_DOMAINNAMEVERIFICATIONERROR = "FailedOperation.DomainNameVerificationError"
+
 	// FailedOperation.InvalidContext
 	FAILEDOPERATION_INVALIDCONTEXT = "FailedOperation.InvalidContext"
 
@@ -73,6 +76,18 @@ const (
 
 	// FailedOperation.TagQpsLimit
 	FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+
+	// 该批量防护规则名称已存在
+	FAILEDOPERATION_THEBATCHPROTECTIONRULENAMEALREADYEXISTS = "FailedOperation.TheBatchProtectionRuleNameAlreadyExists"
+
+	// 以下域名已超过规格上限值
+	FAILEDOPERATION_THEFOLLOWINGDOMAINSHAVEEXCEEDEDTHEUPPERLIMIT = "FailedOperation.TheFollowingDomainsHaveExceededTheUpperLimit"
+
+	// 以下域名有无效规格上限值
+	FAILEDOPERATION_THEFOLLOWINGDOMAINSHAVEINVALIDTHEUPPERLIMIT = "FailedOperation.TheFollowingDomainsHaveInvalidTheUpperLimit"
+
+	// 批量防护规则名称不能为空
+	FAILEDOPERATION_THENAMEOFTHEBATCHPROTECTIONRULECANNOTBEEMPTY = "FailedOperation.TheNameOfTheBatchProtectionRuleCannotBeEmpty"
 
 	// 黑白名单添加数超过上限
 	FAILEDOPERATION_THENUMBEROFADDEDBLACKANDWHITELISTEXCEEDSTHEUPPERLIMIT = "FailedOperation.TheNumberOfAddedBlackAndWhiteListExceedsTheUpperLimit"
@@ -143,6 +158,30 @@ const (
 	// 证书内容非法。
 	INVALIDPARAMETER_INVALIDCERTIFICATE = "InvalidParameter.InvalidCertificate"
 
+	// Content为空
+	INVALIDPARAMETER_LLMCONTENTEMPTY = "InvalidParameter.LLMContentEmpty"
+
+	// 内部服务错误
+	INVALIDPARAMETER_LLMINTERNALERROR = "InvalidParameter.LLMInternalError"
+
+	// Type非法
+	INVALIDPARAMETER_LLMINVALIDTYPE = "InvalidParameter.LLMInvalidType"
+
+	// 大模型调用过程中，serviceid没有配置规则
+	INVALIDPARAMETER_LLMNORULES = "InvalidParameter.LLMNoRules"
+
+	// 请求body解析失败
+	INVALIDPARAMETER_LLMPARSEFAILED = "InvalidParameter.LLMParseFailed"
+
+	// RequestId为空
+	INVALIDPARAMETER_LLMREQUESTIDEMPTY = "InvalidParameter.LLMRequestIdEmpty"
+
+	// ServiceId为空
+	INVALIDPARAMETER_LLMSERVICEIDEMPTY = "InvalidParameter.LLMServiceIdEmpty"
+
+	// 大模型服务未开启开关
+	INVALIDPARAMETER_LLMSWITCHOFF = "InvalidParameter.LLMSwitchOff"
+
 	// 逻辑错误：SQL检索语句中的逻辑错误也可能导致错误。例如，使用错误的运算符、使用错误的条件等
 	INVALIDPARAMETER_LOGICERR = "InvalidParameter.LogicErr"
 
@@ -160,6 +199,45 @@ const (
 
 	// 语法错误：SQL检索语句必须遵循特定的语法规则，如果语法错误，就会导致SQL语句无法执行。例如，缺少关键字、拼写错误、缺少分号等。
 	INVALIDPARAMETER_SQLSYNTAXERR = "InvalidParameter.SQLSyntaxErr"
+
+	// API Key 已被禁用
+	INVALIDPARAMETER_SKILLSCANAPIKEYDISABLED = "InvalidParameter.SkillScanApiKeyDisabled"
+
+	// 创建扫描任务失败（服务内部错误）
+	INVALIDPARAMETER_SKILLSCANCREATESCANFAILED = "InvalidParameter.SkillScanCreateScanFailed"
+
+	// FileData 不是有效的 Base64 编码
+	INVALIDPARAMETER_SKILLSCANINVALIDBASE64 = "InvalidParameter.SkillScanInvalidBase64"
+
+	// 文件不是有效的 ZIP 格式
+	INVALIDPARAMETER_SKILLSCANINVALIDFILEFORMAT = "InvalidParameter.SkillScanInvalidFileFormat"
+
+	// 参数校验失败（如 content_hash 格式不合法、缺少必填字段）
+	INVALIDPARAMETER_SKILLSCANINVALIDPARAM = "InvalidParameter.SkillScanInvalidParam"
+
+	// 请求格式错误（如 Content-Type 不正确、JSON 解析失败）
+	INVALIDPARAMETER_SKILLSCANINVALIDREQUEST = "InvalidParameter.SkillScanInvalidRequest"
+
+	// 未检测到上传文件
+	INVALIDPARAMETER_SKILLSCANNOFILES = "InvalidParameter.SkillScanNoFiles"
+
+	// 查询失败（服务内部错误）
+	INVALIDPARAMETER_SKILLSCANQUERYFAILED = "InvalidParameter.SkillScanQueryFailed"
+
+	// 请求频率超出限制
+	INVALIDPARAMETER_SKILLSCANRATELIMITEXCEEDED = "InvalidParameter.SkillScanRateLimitExceeded"
+
+	// ServiceId 为空
+	INVALIDPARAMETER_SKILLSCANSERVICEIDEMPTY = "InvalidParameter.SkillScanServiceIdEmpty"
+
+	// 防护开关未开启
+	INVALIDPARAMETER_SKILLSCANSWITCHOFF = "InvalidParameter.SkillScanSwitchOff"
+
+	// 触发检测任务失败（服务内部错误）
+	INVALIDPARAMETER_SKILLSCANTRIGGERFAILED = "InvalidParameter.SkillScanTriggerFailed"
+
+	// API Key 缺失或无效
+	INVALIDPARAMETER_SKILLSCANUNAUTHORIZED = "InvalidParameter.SkillScanUnauthorized"
 
 	// 当前实例版本不支持开启TLS自定义，请升级到高级版及以上
 	INVALIDPARAMETER_SUPPORTTLSCONFFAILED = "InvalidParameter.SupportTLSConfFailed"

@@ -43,4 +43,9 @@ In addition to all arguments above, the following attributes are exported:
   * `request` - The number of requests included in the zone plan.
   * `site_number` - The number of zones this zone plan can bind.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAvailablePlans](https://www.tencentcloud.com/document/api/1145/50545)
 

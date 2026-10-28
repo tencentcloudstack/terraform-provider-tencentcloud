@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_as_schedule: Support import.
+```
+
+```release-note:enhancement
+resource/tencentcloud_as_scaling_policy: Support import.
+```

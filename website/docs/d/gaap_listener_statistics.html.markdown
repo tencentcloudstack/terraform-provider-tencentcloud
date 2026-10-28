@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
     * `time` - Time.
   * `metric_name` - Metric Name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeListenerStatistics](https://www.tencentcloud.com/document/api/608/33054)
 

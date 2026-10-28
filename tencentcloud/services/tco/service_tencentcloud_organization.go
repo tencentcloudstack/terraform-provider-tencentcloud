@@ -6,6 +6,7 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -21,6 +22,13 @@ import (
 
 type OrganizationService struct {
 	client *connectivity.TencentCloudClient
+}
+
+// NewOrganizationService returns an OrganizationService backed by the shared
+// provider client. It is used by the terraform-plugin-framework references
+// (e.g. actions) which only have access to *connectivity.TencentCloudClient.
+func NewOrganizationService(client *connectivity.TencentCloudClient) *OrganizationService {
+	return &OrganizationService{client: client}
 }
 
 func (me *OrganizationService) DescribeOrganizationOrgNode(ctx context.Context, nodeId string) (orgNode *organization.OrgNode, errRet error) {
@@ -2076,11 +2084,11 @@ func (me *OrganizationService) DescribeOrganizationNodesByFilter(ctx context.Con
 		limit  int64 = 50
 		offset int64 = 0
 	)
-	request.Limit = &limit
-	request.Offset = &offset
 	nodes = make([]*organization.OrgNode, 0)
 
 	for {
+		request.Limit = &limit
+		request.Offset = &offset
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseOrganizationClient().DescribeOrganizationNodes(request)
 		if err != nil {
@@ -2097,6 +2105,10 @@ func (me *OrganizationService) DescribeOrganizationNodesByFilter(ctx context.Con
 		if len(response.Response.Items) < int(limit) {
 			break
 		}
+		// Advance to the next page: request.Offset already points at the
+		// local `offset` variable, so bumping it here is picked up by the
+		// next request. Without this the loop re-fetches page 0 forever.
+		offset += limit
 	}
 	return
 }
@@ -2898,6 +2910,107 @@ func (me *OrganizationService) DescribeOrganizationIPWhitelistConfigById(ctx con
 
 		ipWhitelist = response.Response.IpWhitelist
 		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
+// ProvisionRoleConfiguration deploys (provisions) a role configuration to a
+// target account of the Tencent Cloud Organization. The API is asynchronous:
+// it returns a task id which must be polled with GetTaskStatus.
+func (me *OrganizationService) ProvisionRoleConfiguration(ctx context.Context, zoneId, roleConfigurationId, targetType string, targetUin int64) (taskId string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewProvisionRoleConfigurationRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.RoleConfigurationId = helper.String(roleConfigurationId)
+	request.TargetType = helper.String(targetType)
+	request.TargetUin = helper.Int64(targetUin)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseOrganizationClient().ProvisionRoleConfigurationWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("api[%s] response is nil", request.GetAction()))
+		}
+
+		if response.Response.Task == nil || response.Response.Task.TaskId == nil {
+			return resource.NonRetryableError(fmt.Errorf("api[%s] response does not contain a task id", request.GetAction()))
+		}
+
+		taskId = *response.Response.Task.TaskId
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
+// GetOrganizationTaskStatusById polls the GetTaskStatus API until the
+// asynchronous task reaches the Success status. It returns an error when the
+// task fails or when the given timeout is exceeded.
+func (me *OrganizationService) GetOrganizationTaskStatusById(ctx context.Context, zoneId, taskId string, timeout time.Duration) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := organization.NewGetTaskStatusRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.TaskId = helper.String(taskId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(timeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseOrganizationClient().GetTaskStatusWithContext(ctx, request)
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.TaskStatus == nil || response.Response.TaskStatus.Status == nil {
+			return resource.RetryableError(fmt.Errorf("api[%s] task status is empty, task id: %s", request.GetAction(), taskId))
+		}
+
+		status := *response.Response.TaskStatus.Status
+		switch status {
+		case TASK_STATUS_SUCCESS:
+			return nil
+		case TASK_STATUS_FAILED:
+			failureReason := ""
+			if response.Response.TaskStatus.FailureReason != nil {
+				failureReason = *response.Response.TaskStatus.FailureReason
+			}
+			return resource.NonRetryableError(fmt.Errorf("task %s failed, reason: %s", taskId, failureReason))
+		default:
+			return resource.RetryableError(fmt.Errorf("task %s is %s, retrying", taskId, status))
+		}
 	})
 
 	if err != nil {

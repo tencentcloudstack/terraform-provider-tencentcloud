@@ -146,3 +146,46 @@ resource "tencentcloud_cls_machine_group" "group" {
   }
 }
 `
+
+const testAccClsMachineGroupOstype = `
+resource "tencentcloud_cls_machine_group" "group_ostype" {
+  group_name        = "tf-ostype-group"
+  service_logging   = true
+  auto_update       = true
+  update_end_time   = "19:05:00"
+  update_start_time = "17:05:00"
+  ostype            = 1
+
+  machine_group_type {
+    type   = "ip"
+    values = [
+      "192.168.1.1",
+      "192.168.1.2",
+    ]
+  }
+}
+`
+
+func TestAccTencentCloudClsMachineGroup_ostype(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClsMachineGroupOstype,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClsMachineGroupExists("tencentcloud_cls_machine_group.group_ostype"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_machine_group.group_ostype", "group_name", "tf-ostype-group"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_machine_group.group_ostype", "ostype", "1"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_cls_machine_group.group_ostype",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}

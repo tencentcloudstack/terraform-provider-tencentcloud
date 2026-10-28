@@ -4,6 +4,7 @@ package tke
 import (
 	"context"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -18,6 +19,10 @@ func ResourceTencentCloudKubernetesEncryptionProtection() *schema.Resource {
 		Create: resourceTencentCloudKubernetesEncryptionProtectionCreate,
 		Read:   resourceTencentCloudKubernetesEncryptionProtectionRead,
 		Delete: resourceTencentCloudKubernetesEncryptionProtectionDelete,
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(30 * time.Minute),
+			Delete: schema.DefaultTimeout(30 * time.Minute),
+		},
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Type:        schema.TypeString,
@@ -116,13 +121,11 @@ func resourceTencentCloudKubernetesEncryptionProtectionCreate(d *schema.Resource
 		return err
 	}
 
-	_ = response
+	d.SetId(clusterId)
 
 	if err := resourceTencentCloudKubernetesEncryptionProtectionCreatePostHandleResponse0(ctx, response); err != nil {
 		return err
 	}
-
-	d.SetId(clusterId)
 
 	return resourceTencentCloudKubernetesEncryptionProtectionRead(d, meta)
 }
@@ -189,7 +192,6 @@ func resourceTencentCloudKubernetesEncryptionProtectionDelete(d *schema.Resource
 		return err
 	}
 
-	_ = response
 	if err := resourceTencentCloudKubernetesEncryptionProtectionDeletePostHandleResponse0(ctx, response); err != nil {
 		return err
 	}

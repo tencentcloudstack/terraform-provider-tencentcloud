@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_lighthouse_share_blueprint_across_account_attachment
+```

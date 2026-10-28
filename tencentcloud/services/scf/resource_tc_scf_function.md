@@ -1,15 +1,17 @@
 Provide a resource to create a SCF function.
 
+~> **NOTE:** The use of `trigger` is no longer recommended; `tencentcloud_scf_trigger` is recommended instead.
+
 Example Usage
 
 ```hcl
-resource "tencentcloud_scf_function" "foo" {
+resource "tencentcloud_scf_function" "example" {
   name    = "ci-test-function"
   handler = "main.do_it"
   runtime = "Python3.6"
 
   cos_bucket_name   = "scf-code-1234567890"
-  cos_object_name   = "code.zip"
+  cos_object_name   = "/path/to/code.zip"
   cos_bucket_region = "ap-guangzhou"
 }
 ```
@@ -17,7 +19,7 @@ resource "tencentcloud_scf_function" "foo" {
 Using Zip file
 
 ```hcl
-resource "tencentcloud_scf_function" "foo" {
+resource "tencentcloud_scf_function" "example" {
   name              = "ci-test-function"
   handler           = "first.do_it_first"
   runtime           = "Python3.6"
@@ -40,7 +42,7 @@ resource "tencentcloud_scf_function" "foo" {
 Using CFS config
 
 ```
-resource "tencentcloud_scf_function" "foo" {
+resource "tencentcloud_scf_function" "example" {
   name    = "ci-test-function"
   handler = "main.do_it"
   runtime = "Python3.6"
@@ -59,7 +61,7 @@ resource "tencentcloud_scf_function" "foo" {
 Using triggers
 
 ```hcl
-resource "tencentcloud_scf_function" "foo" {
+resource "tencentcloud_scf_function" "example" {
   name              = "ci-test-function"
   handler           = "first.do_it_first"
   runtime           = "Python3.6"
@@ -93,12 +95,44 @@ resource "tencentcloud_scf_function" "foo" {
 }
 ```
 
+If func_type is Event
+
+```hcl
+resource "tencentcloud_scf_function" "example" {
+  name              = "test"
+  namespace         = "default"
+  async_run_enable  = "FALSE"
+  description       = "terraform demo"
+  enable_public_net = true
+  func_type         = "Event"
+  l5_enable         = false
+  mem_size          = 128
+  runtime           = "CustomImage"
+  timeout           = 3
+  image_config {
+    container_image_accelerate = false
+    image_port                 = -1
+    image_type                 = "personal"
+    image_uri                  = "ccr.ccs.tencentyun.com/tsf_100023201586/quickstart-gateway-service:v1-20250313124040@sha256:b8821639168*********************d33aadee54d81c"
+  }
+
+  instance_concurrency_config {
+    dynamic_enabled = "FALSE"
+    max_concurrency = 1
+  }
+
+  intranet_config {
+    ip_fixed = "DISABLE"
+  }
+}
+```
+
 Import
 
 SCF function can be imported, e.g.
 
--> **NOTE:** function id is `<function namespace>+<function name>`
+-> **NOTE:** resource id is `<function namespace>+<function name>`
 
 ```
-$ terraform import tencentcloud_scf_function.test default+test
+terraform import tencentcloud_scf_function.example default+test
 ```

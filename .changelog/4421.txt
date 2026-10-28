@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_dlc_data_engine: support binding tags to data engine at creation time
+```

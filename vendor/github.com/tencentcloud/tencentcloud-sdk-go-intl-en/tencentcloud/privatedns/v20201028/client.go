@@ -45,6 +45,116 @@ func NewClient(credential common.CredentialIface, region string, clientProfile *
 }
 
 
+func NewAddSpecifyPrivateZoneVpcRequest() (request *AddSpecifyPrivateZoneVpcRequest) {
+    request = &AddSpecifyPrivateZoneVpcRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("privatedns", APIVersion, "AddSpecifyPrivateZoneVpc")
+    
+    
+    return
+}
+
+func NewAddSpecifyPrivateZoneVpcResponse() (response *AddSpecifyPrivateZoneVpcResponse) {
+    response = &AddSpecifyPrivateZoneVpcResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// AddSpecifyPrivateZoneVpc
+// This API is used to add the VPC associated with the private domain.
+//
+// error code that may be returned:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_TOKENFAILURE = "AuthFailure.TokenFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_BINDZONEVPCFAILED = "FailedOperation.BindZoneVpcFailed"
+//  FAILEDOPERATION_DATAERROR = "FailedOperation.DataError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNDEFIENDERROR = "InternalError.UndefiendError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ILLEGALVPCINFO = "InvalidParameter.IllegalVpcInfo"
+//  INVALIDPARAMETER_VPCBINDED = "InvalidParameter.VpcBinded"
+//  INVALIDPARAMETER_VPCBINDEDMAINDOMAIN = "InvalidParameter.VpcBindedMainDomain"
+//  INVALIDPARAMETER_ZONENOTEXISTS = "InvalidParameter.ZoneNotExists"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_TLDOUTOFLIMIT = "LimitExceeded.TldOutOfLimit"
+//  LIMITEXCEEDED_TLDOUTOFRANGE = "LimitExceeded.TldOutOfRange"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCEUNAVAILABLE_TLDPACKAGEEXPIRED = "ResourceUnavailable.TldPackageExpired"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_ROLEUNAUTHORIZED = "UnauthorizedOperation.RoleUnAuthorized"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDACCOUNT = "UnauthorizedOperation.UnauthorizedAccount"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) AddSpecifyPrivateZoneVpc(request *AddSpecifyPrivateZoneVpcRequest) (response *AddSpecifyPrivateZoneVpcResponse, err error) {
+    return c.AddSpecifyPrivateZoneVpcWithContext(context.Background(), request)
+}
+
+// AddSpecifyPrivateZoneVpc
+// This API is used to add the VPC associated with the private domain.
+//
+// error code that may be returned:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_TOKENFAILURE = "AuthFailure.TokenFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_BINDZONEVPCFAILED = "FailedOperation.BindZoneVpcFailed"
+//  FAILEDOPERATION_DATAERROR = "FailedOperation.DataError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNDEFIENDERROR = "InternalError.UndefiendError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ILLEGALVPCINFO = "InvalidParameter.IllegalVpcInfo"
+//  INVALIDPARAMETER_VPCBINDED = "InvalidParameter.VpcBinded"
+//  INVALIDPARAMETER_VPCBINDEDMAINDOMAIN = "InvalidParameter.VpcBindedMainDomain"
+//  INVALIDPARAMETER_ZONENOTEXISTS = "InvalidParameter.ZoneNotExists"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_TLDOUTOFLIMIT = "LimitExceeded.TldOutOfLimit"
+//  LIMITEXCEEDED_TLDOUTOFRANGE = "LimitExceeded.TldOutOfRange"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCEUNAVAILABLE_TLDPACKAGEEXPIRED = "ResourceUnavailable.TldPackageExpired"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_ROLEUNAUTHORIZED = "UnauthorizedOperation.RoleUnAuthorized"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDACCOUNT = "UnauthorizedOperation.UnauthorizedAccount"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) AddSpecifyPrivateZoneVpcWithContext(ctx context.Context, request *AddSpecifyPrivateZoneVpcRequest) (response *AddSpecifyPrivateZoneVpcResponse, err error) {
+    if request == nil {
+        request = NewAddSpecifyPrivateZoneVpcRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "AddSpecifyPrivateZoneVpc")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AddSpecifyPrivateZoneVpc require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAddSpecifyPrivateZoneVpcResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateEndPointRequest() (request *CreateEndPointRequest) {
     request = &CreateEndPointRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -650,7 +760,7 @@ func NewCreatePrivateZoneRecordResponse() (response *CreatePrivateZoneRecordResp
 //  INVALIDPARAMETER_RECORDCOUNTEXCEED = "InvalidParameter.RecordCountExceed"
 //  INVALIDPARAMETER_RECORDEXIST = "InvalidParameter.RecordExist"
 //  INVALIDPARAMETER_RECORDMXCOUNTEXCEED = "InvalidParameter.RecordMXCountExceed"
-//  INVALIDPARAMETER_RECORDROLLLIMITCOUNTEXCEED = "InvalidParameter.RecordRolllimitCountExceed"
+//  INVALIDPARAMETER_RECORDROLLLIMITCOUNTEXCEED = "InvalidParameter.RecordRollLimitCountExceed"
 //  INVALIDPARAMETER_RECORDTXTCOUNTEXCEED = "InvalidParameter.RecordTXTCountExceed"
 //  INVALIDPARAMETER_RECORDUNSUPPORTWEIGHT = "InvalidParameter.RecordUnsupportWeight"
 //  INVALIDPARAMETER_VPCBINDEDMAINDOMAIN = "InvalidParameter.VpcBindedMainDomain"
@@ -701,7 +811,7 @@ func (c *Client) CreatePrivateZoneRecord(request *CreatePrivateZoneRecordRequest
 //  INVALIDPARAMETER_RECORDCOUNTEXCEED = "InvalidParameter.RecordCountExceed"
 //  INVALIDPARAMETER_RECORDEXIST = "InvalidParameter.RecordExist"
 //  INVALIDPARAMETER_RECORDMXCOUNTEXCEED = "InvalidParameter.RecordMXCountExceed"
-//  INVALIDPARAMETER_RECORDROLLLIMITCOUNTEXCEED = "InvalidParameter.RecordRolllimitCountExceed"
+//  INVALIDPARAMETER_RECORDROLLLIMITCOUNTEXCEED = "InvalidParameter.RecordRollLimitCountExceed"
 //  INVALIDPARAMETER_RECORDTXTCOUNTEXCEED = "InvalidParameter.RecordTXTCountExceed"
 //  INVALIDPARAMETER_RECORDUNSUPPORTWEIGHT = "InvalidParameter.RecordUnsupportWeight"
 //  INVALIDPARAMETER_VPCBINDEDMAINDOMAIN = "InvalidParameter.VpcBindedMainDomain"
@@ -917,7 +1027,7 @@ func NewDeletePrivateZoneRecordResponse() (response *DeletePrivateZoneRecordResp
 }
 
 // DeletePrivateZoneRecord
-// This API is used to delete a DNS record for a private domain.
+// This API is used to delete the private DNS records.
 //
 // error code that may be returned:
 //  AUTHFAILURE = "AuthFailure"
@@ -951,7 +1061,7 @@ func (c *Client) DeletePrivateZoneRecord(request *DeletePrivateZoneRecordRequest
 }
 
 // DeletePrivateZoneRecord
-// This API is used to delete a DNS record for a private domain.
+// This API is used to delete the private DNS records.
 //
 // error code that may be returned:
 //  AUTHFAILURE = "AuthFailure"
@@ -993,6 +1103,116 @@ func (c *Client) DeletePrivateZoneRecordWithContext(ctx context.Context, request
     request.SetContext(ctx)
     
     response = NewDeletePrivateZoneRecordResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteSpecifyPrivateZoneVpcRequest() (request *DeleteSpecifyPrivateZoneVpcRequest) {
+    request = &DeleteSpecifyPrivateZoneVpcRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("privatedns", APIVersion, "DeleteSpecifyPrivateZoneVpc")
+    
+    
+    return
+}
+
+func NewDeleteSpecifyPrivateZoneVpcResponse() (response *DeleteSpecifyPrivateZoneVpcResponse) {
+    response = &DeleteSpecifyPrivateZoneVpcResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteSpecifyPrivateZoneVpc
+// This API is used to delete the VPC associated with the private domain.
+//
+// error code that may be returned:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_TOKENFAILURE = "AuthFailure.TokenFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_BINDZONEVPCFAILED = "FailedOperation.BindZoneVpcFailed"
+//  FAILEDOPERATION_DATAERROR = "FailedOperation.DataError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNDEFIENDERROR = "InternalError.UndefiendError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ILLEGALVPCINFO = "InvalidParameter.IllegalVpcInfo"
+//  INVALIDPARAMETER_VPCBINDED = "InvalidParameter.VpcBinded"
+//  INVALIDPARAMETER_VPCBINDEDMAINDOMAIN = "InvalidParameter.VpcBindedMainDomain"
+//  INVALIDPARAMETER_ZONENOTEXISTS = "InvalidParameter.ZoneNotExists"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_TLDOUTOFLIMIT = "LimitExceeded.TldOutOfLimit"
+//  LIMITEXCEEDED_TLDOUTOFRANGE = "LimitExceeded.TldOutOfRange"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCEUNAVAILABLE_TLDPACKAGEEXPIRED = "ResourceUnavailable.TldPackageExpired"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_ROLEUNAUTHORIZED = "UnauthorizedOperation.RoleUnAuthorized"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDACCOUNT = "UnauthorizedOperation.UnauthorizedAccount"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteSpecifyPrivateZoneVpc(request *DeleteSpecifyPrivateZoneVpcRequest) (response *DeleteSpecifyPrivateZoneVpcResponse, err error) {
+    return c.DeleteSpecifyPrivateZoneVpcWithContext(context.Background(), request)
+}
+
+// DeleteSpecifyPrivateZoneVpc
+// This API is used to delete the VPC associated with the private domain.
+//
+// error code that may be returned:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_TOKENFAILURE = "AuthFailure.TokenFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_BINDZONEVPCFAILED = "FailedOperation.BindZoneVpcFailed"
+//  FAILEDOPERATION_DATAERROR = "FailedOperation.DataError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNDEFIENDERROR = "InternalError.UndefiendError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ILLEGALVPCINFO = "InvalidParameter.IllegalVpcInfo"
+//  INVALIDPARAMETER_VPCBINDED = "InvalidParameter.VpcBinded"
+//  INVALIDPARAMETER_VPCBINDEDMAINDOMAIN = "InvalidParameter.VpcBindedMainDomain"
+//  INVALIDPARAMETER_ZONENOTEXISTS = "InvalidParameter.ZoneNotExists"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_TLDOUTOFLIMIT = "LimitExceeded.TldOutOfLimit"
+//  LIMITEXCEEDED_TLDOUTOFRANGE = "LimitExceeded.TldOutOfRange"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCEUNAVAILABLE_TLDPACKAGEEXPIRED = "ResourceUnavailable.TldPackageExpired"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_ROLEUNAUTHORIZED = "UnauthorizedOperation.RoleUnAuthorized"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDACCOUNT = "UnauthorizedOperation.UnauthorizedAccount"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteSpecifyPrivateZoneVpcWithContext(ctx context.Context, request *DeleteSpecifyPrivateZoneVpcRequest) (response *DeleteSpecifyPrivateZoneVpcResponse, err error) {
+    if request == nil {
+        request = NewDeleteSpecifyPrivateZoneVpcRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "DeleteSpecifyPrivateZoneVpc")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteSpecifyPrivateZoneVpc require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteSpecifyPrivateZoneVpcResponse()
     err = c.Send(request, response)
     return
 }
@@ -1831,7 +2051,7 @@ func NewDescribePrivateZoneRecordListResponse() (response *DescribePrivateZoneRe
 }
 
 // DescribePrivateZoneRecordList
-// This API is used to get the list of records for a private domain.
+// This API is used to obtain the private domain record list.
 //
 // error code that may be returned:
 //  AUTHFAILURE = "AuthFailure"
@@ -1851,7 +2071,7 @@ func (c *Client) DescribePrivateZoneRecordList(request *DescribePrivateZoneRecor
 }
 
 // DescribePrivateZoneRecordList
-// This API is used to get the list of records for a private domain.
+// This API is used to obtain the private domain record list.
 //
 // error code that may be returned:
 //  AUTHFAILURE = "AuthFailure"
@@ -2388,7 +2608,7 @@ func NewModifyPrivateZoneRecordResponse() (response *ModifyPrivateZoneRecordResp
 //  INVALIDPARAMETER_RECORDLEVELEXCEED = "InvalidParameter.RecordLevelExceed"
 //  INVALIDPARAMETER_RECORDMXCOUNTEXCEED = "InvalidParameter.RecordMXCountExceed"
 //  INVALIDPARAMETER_RECORDNOTEXIST = "InvalidParameter.RecordNotExist"
-//  INVALIDPARAMETER_RECORDROLLLIMITCOUNTEXCEED = "InvalidParameter.RecordRolllimitCountExceed"
+//  INVALIDPARAMETER_RECORDROLLLIMITCOUNTEXCEED = "InvalidParameter.RecordRollLimitCountExceed"
 //  INVALIDPARAMETER_RECORDTXTCOUNTEXCEED = "InvalidParameter.RecordTXTCountExceed"
 //  INVALIDPARAMETER_RECORDUNSUPPORTWEIGHT = "InvalidParameter.RecordUnsupportWeight"
 //  INVALIDPARAMETER_VPCBINDEDMAINDOMAIN = "InvalidParameter.VpcBindedMainDomain"
@@ -2442,7 +2662,7 @@ func (c *Client) ModifyPrivateZoneRecord(request *ModifyPrivateZoneRecordRequest
 //  INVALIDPARAMETER_RECORDLEVELEXCEED = "InvalidParameter.RecordLevelExceed"
 //  INVALIDPARAMETER_RECORDMXCOUNTEXCEED = "InvalidParameter.RecordMXCountExceed"
 //  INVALIDPARAMETER_RECORDNOTEXIST = "InvalidParameter.RecordNotExist"
-//  INVALIDPARAMETER_RECORDROLLLIMITCOUNTEXCEED = "InvalidParameter.RecordRolllimitCountExceed"
+//  INVALIDPARAMETER_RECORDROLLLIMITCOUNTEXCEED = "InvalidParameter.RecordRollLimitCountExceed"
 //  INVALIDPARAMETER_RECORDTXTCOUNTEXCEED = "InvalidParameter.RecordTXTCountExceed"
 //  INVALIDPARAMETER_RECORDUNSUPPORTWEIGHT = "InvalidParameter.RecordUnsupportWeight"
 //  INVALIDPARAMETER_VPCBINDEDMAINDOMAIN = "InvalidParameter.VpcBindedMainDomain"
@@ -2657,6 +2877,118 @@ func (c *Client) ModifyRecordsStatusWithContext(ctx context.Context, request *Mo
     request.SetContext(ctx)
     
     response = NewModifyRecordsStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewQueryAsyncBindVpcStatusRequest() (request *QueryAsyncBindVpcStatusRequest) {
+    request = &QueryAsyncBindVpcStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("privatedns", APIVersion, "QueryAsyncBindVpcStatus")
+    
+    
+    return
+}
+
+func NewQueryAsyncBindVpcStatusResponse() (response *QueryAsyncBindVpcStatusResponse) {
+    response = &QueryAsyncBindVpcStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// QueryAsyncBindVpcStatus
+// This API is used to query the asynchronous VPC binding status.
+//
+// error code that may be returned:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_TOKENFAILURE = "AuthFailure.TokenFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_BINDZONEVPCFAILED = "FailedOperation.BindZoneVpcFailed"
+//  FAILEDOPERATION_DATAERROR = "FailedOperation.DataError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNDEFIENDERROR = "InternalError.UndefiendError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ILLEGALVPCINFO = "InvalidParameter.IllegalVpcInfo"
+//  INVALIDPARAMETER_UNIQUEIDNOTEXIST = "InvalidParameter.UniqueIdNotExist"
+//  INVALIDPARAMETER_VPCBINDED = "InvalidParameter.VpcBinded"
+//  INVALIDPARAMETER_VPCBINDEDMAINDOMAIN = "InvalidParameter.VpcBindedMainDomain"
+//  INVALIDPARAMETER_ZONENOTEXISTS = "InvalidParameter.ZoneNotExists"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_TLDOUTOFLIMIT = "LimitExceeded.TldOutOfLimit"
+//  LIMITEXCEEDED_TLDOUTOFRANGE = "LimitExceeded.TldOutOfRange"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCEUNAVAILABLE_TLDPACKAGEEXPIRED = "ResourceUnavailable.TldPackageExpired"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_ROLEUNAUTHORIZED = "UnauthorizedOperation.RoleUnAuthorized"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDACCOUNT = "UnauthorizedOperation.UnauthorizedAccount"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) QueryAsyncBindVpcStatus(request *QueryAsyncBindVpcStatusRequest) (response *QueryAsyncBindVpcStatusResponse, err error) {
+    return c.QueryAsyncBindVpcStatusWithContext(context.Background(), request)
+}
+
+// QueryAsyncBindVpcStatus
+// This API is used to query the asynchronous VPC binding status.
+//
+// error code that may be returned:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_TOKENFAILURE = "AuthFailure.TokenFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_BINDZONEVPCFAILED = "FailedOperation.BindZoneVpcFailed"
+//  FAILEDOPERATION_DATAERROR = "FailedOperation.DataError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNDEFIENDERROR = "InternalError.UndefiendError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ILLEGALVPCINFO = "InvalidParameter.IllegalVpcInfo"
+//  INVALIDPARAMETER_UNIQUEIDNOTEXIST = "InvalidParameter.UniqueIdNotExist"
+//  INVALIDPARAMETER_VPCBINDED = "InvalidParameter.VpcBinded"
+//  INVALIDPARAMETER_VPCBINDEDMAINDOMAIN = "InvalidParameter.VpcBindedMainDomain"
+//  INVALIDPARAMETER_ZONENOTEXISTS = "InvalidParameter.ZoneNotExists"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_TLDOUTOFLIMIT = "LimitExceeded.TldOutOfLimit"
+//  LIMITEXCEEDED_TLDOUTOFRANGE = "LimitExceeded.TldOutOfRange"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCEUNAVAILABLE_TLDPACKAGEEXPIRED = "ResourceUnavailable.TldPackageExpired"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_ROLEUNAUTHORIZED = "UnauthorizedOperation.RoleUnAuthorized"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDACCOUNT = "UnauthorizedOperation.UnauthorizedAccount"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) QueryAsyncBindVpcStatusWithContext(ctx context.Context, request *QueryAsyncBindVpcStatusRequest) (response *QueryAsyncBindVpcStatusResponse, err error) {
+    if request == nil {
+        request = NewQueryAsyncBindVpcStatusRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "privatedns", APIVersion, "QueryAsyncBindVpcStatus")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("QueryAsyncBindVpcStatus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewQueryAsyncBindVpcStatusResponse()
     err = c.Send(request, response)
     return
 }

@@ -158,10 +158,19 @@ func ResourceTencentCloudKubernetesClusterAttachment() *schema.Resource {
 							},
 						},
 						"user_data": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							ForceNew:    true,
-							Description: "Base64-encoded User Data text, the length limit is 16KB.",
+							Type:          schema.TypeString,
+							Optional:      true,
+							ForceNew:      true,
+							Deprecated:    "It has been deprecated from version 1.83.16. Use `user_script` instead.",
+							ConflictsWith: []string{"worker_config.0.user_script"},
+							Description:   "Base64-encoded User Data text, the length limit is 16KB.",
+						},
+						"user_script": {
+							Type:          schema.TypeString,
+							Optional:      true,
+							ForceNew:      true,
+							ConflictsWith: []string{"worker_config.0.user_data"},
+							Description:   "A Base64-encoded user script that executes after Kubernetes components start. Users must ensure the script supports re-entrancy and retry logic. The script and its generated log files can be found in the `/data/ccs_userscript/` directory on the node. If the node should only join the scheduling pool after initialization is complete, the `unschedulable` parameter can be used; in this case, add the command `kubectl uncordon nodename --kubeconfig=/root/.kube/config` at the end of the user script to enable scheduling on the node. Note: This field may return null, indicating that no valid value is available. Example value: `#!/bin/sh echo \"hello world\"`.",
 						},
 						"pre_start_user_script": {
 							Type:        schema.TypeString,
@@ -518,7 +527,13 @@ func resourceTencentCloudKubernetesClusterAttachmentCreate(d *schema.ResourceDat
 				instanceAdvancedSettings.DataDisks = append(instanceAdvancedSettings.DataDisks, &dataDisk)
 			}
 		}
-		if v, ok := instanceAdvancedSettingsMap["user_data"]; ok {
+		// user_script (new) and user_data (deprecated) are mutually exclusive
+		// (ConflictsWith). InterfacesHeadMap returns a map containing every
+		// block attribute (unset ones are ""), so check non-empty to pick the
+		// actually configured one, preferring the new user_script field.
+		if v, ok := instanceAdvancedSettingsMap["user_script"]; ok && v.(string) != "" {
+			instanceAdvancedSettings.UserScript = helper.String(v.(string))
+		} else if v, ok := instanceAdvancedSettingsMap["user_data"]; ok && v.(string) != "" {
 			instanceAdvancedSettings.UserScript = helper.String(v.(string))
 		}
 		if v, ok := instanceAdvancedSettingsMap["pre_start_user_script"]; ok {
@@ -680,8 +695,8 @@ func resourceTencentCloudKubernetesClusterAttachmentRead(d *schema.ResourceData,
 	}
 
 	if respData == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_kubernetes_cluster_attachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `kubernetes_cluster_attachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -691,8 +706,8 @@ func resourceTencentCloudKubernetesClusterAttachmentRead(d *schema.ResourceData,
 	}
 
 	if respData1 == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_kubernetes_cluster_attachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `kubernetes_cluster_attachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 	if respData1.LoginSettings != nil {
@@ -728,8 +743,8 @@ func resourceTencentCloudKubernetesClusterAttachmentRead(d *schema.ResourceData,
 	}
 
 	if respData2 == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_kubernetes_cluster_attachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `kubernetes_cluster_attachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 	if respData2.InstanceAdvancedSettings != nil {

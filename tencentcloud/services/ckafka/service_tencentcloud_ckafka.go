@@ -7,11 +7,10 @@ import (
 	"strconv"
 	"strings"
 
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -340,11 +339,21 @@ func (me *CkafkaService) CreateAcl(ctx context.Context, instanceId, resourceType
 	request.Principal = helper.String(CKAFKA_ACL_PRINCIPAL_STR + principal)
 
 	var response *ckafka.CreateAclResponse
-	var err error
-	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		response, err = me.client.UseCkafkaClient().CreateAcl(request)
-		if err != nil {
-			return tccommon.RetryError(err)
+
+	failedOperationCount := 0
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		var apiErr error
+		response, apiErr = me.client.UseCkafkaClient().CreateAcl(request)
+		if apiErr != nil {
+			sdkErr, ok := apiErr.(*errors.TencentCloudSDKError)
+			if ok && sdkErr.Code == CkafkaFailedOperation {
+				failedOperationCount++
+				if failedOperationCount >= 5 {
+					return resource.NonRetryableError(apiErr)
+				}
+				return resource.RetryableError(apiErr)
+			}
+			return resource.NonRetryableError(apiErr)
 		}
 		return nil
 	})
@@ -568,7 +577,7 @@ func (me *CkafkaService) DescribeCkafkaTopics(ctx context.Context, instanceId st
 	if topicName != "" {
 		request.SearchWord = &topicName
 	}
-	var offset, limit int64 = 0, 20
+	var offset, limit int64 = 0, 200
 	request.Offset = &offset
 	request.Limit = &limit
 	//check ckafka exist
@@ -642,7 +651,7 @@ func (me *CkafkaService) DescribeCkafkaTopicByName(ctx context.Context, instance
 		return
 	}
 	for _, v := range topicList {
-		if *v.TopicName == topicName {
+		if v.TopicName != nil && *v.TopicName == topicName {
 			has = true
 			topic = v
 			break
@@ -738,37 +747,6 @@ func (me *CkafkaService) AddCkafkaTopicPartition(ctx context.Context, instanceId
 	return nil
 }
 
-func (me *CkafkaService) RemoveCkafkaTopicIpWhiteList(ctx context.Context, instaneId string, topicName string, whiteIpList []*string) (errRet error) {
-	logId := tccommon.GetLogId(ctx)
-	request := ckafka.NewDeleteTopicIpWhiteListRequest()
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
-		}
-	}()
-
-	request.TopicName = &topicName
-	request.InstanceId = &instaneId
-	request.IpWhiteList = whiteIpList
-	ratelimit.Check(request.GetAction())
-	var response *ckafka.DeleteTopicIpWhiteListResponse
-	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		resp, e := me.client.UseCkafkaClient().DeleteTopicIpWhiteList(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		}
-		response = resp
-		return nil
-	})
-	if errRet != nil {
-		return
-	}
-	if response == nil || response.Response == nil || response.Response.Result == nil {
-		return fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
-	}
-	return nil
-}
-
 func (me *CkafkaService) DescribeCkafkaById(ctx context.Context, instanceId string) (instance *ckafka.InstanceDetail, has bool, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := ckafka.NewDescribeInstancesDetailRequest()
@@ -843,7 +821,11 @@ func (me *CkafkaService) DeleteCkafkaTopic(ctx context.Context, instanceId strin
 			return tccommon.RetryError(err)
 		}
 		if len(topicList) != 0 {
-			return resource.RetryableError(fmt.Errorf("this Topic %s Delete Failed", name))
+			for _, v := range topicList {
+				if v.TopicName != nil && *v.TopicName == name {
+					return resource.RetryableError(fmt.Errorf("this Topic %s Delete Failed", name))
+				}
+			}
 		}
 		return nil
 	})
@@ -1775,6 +1757,43 @@ func (me *CkafkaService) DescribeCkafkaRouteById(ctx context.Context, instanceId
 		}
 	}()
 
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseCkafkaClient().DescribeRoute(request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Result == nil || len(response.Response.Result.Routers) < 1 {
+			return nil
+		}
+
+		route = response.Response.Result.Routers[0]
+		return nil
+	})
+
+	return
+}
+
+func (me *CkafkaService) DescribeCkafkaRouteByFilter(ctx context.Context, instanceId string, routeId *int64, mainRouteFlag *bool) (routeResponse *ckafka.RouteResponse, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := ckafka.NewDescribeRouteRequest()
+	request.InstanceId = &instanceId
+	if routeId != nil {
+		request.RouteId = routeId
+	}
+	if mainRouteFlag != nil {
+		request.MainRouteFlag = mainRouteFlag
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
 	ratelimit.Check(request.GetAction())
 
 	response, err := me.client.UseCkafkaClient().DescribeRoute(request)
@@ -1784,11 +1803,11 @@ func (me *CkafkaService) DescribeCkafkaRouteById(ctx context.Context, instanceId
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response.Response == nil || response.Response.Result == nil || len(response.Response.Result.Routers) < 1 {
+	if response == nil || response.Response == nil || response.Response.Result == nil {
 		return
 	}
 
-	route = response.Response.Result.Routers[0]
+	routeResponse = response.Response.Result
 	return
 }
 
@@ -1829,6 +1848,80 @@ func (me *CkafkaService) CkafkaRouteStateRefreshFunc(flowId int64, failStates []
 		status := strconv.FormatInt(*object.Response.Result.Status, 10)
 		return object, status, nil
 	}
+}
+
+func (me *CkafkaService) DescribeCkafkaRouteSecurityGroupRoutes(ctx context.Context, instanceId string, routeId int64) (securityGroupRoute *ckafka.SecurityGroupRoute, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := ckafka.NewDescribeSecurityGroupRoutesRequest()
+	request.InstanceRoute = &ckafka.InstanceRoute{
+		InstanceId: &instanceId,
+		RouteId:    &routeId,
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, err := me.client.UseCkafkaClient().DescribeSecurityGroupRoutesWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		if result == nil || result.Response == nil || result.Response.Result == nil || len(result.Response.Result.SecurityGroupRoutes) < 1 {
+			return nil
+		}
+		for _, item := range result.Response.Result.SecurityGroupRoutes {
+			if item.InstanceRoute != nil && item.InstanceRoute.RouteId != nil && *item.InstanceRoute.RouteId == routeId {
+				securityGroupRoute = item
+				break
+			}
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s read ckafka_route security group routes failed, reason: %v", logId, err)
+		errRet = err
+		return
+	}
+
+	return
+}
+
+func (me *CkafkaService) ModifyCkafkaRouteSecurityGroups(ctx context.Context, instanceId string, routeId int64, securityGroupIds []*string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := ckafka.NewModifyRouteSecurityGroupsRequest()
+	request.InstanceRoute = &ckafka.InstanceRoute{
+		InstanceId: &instanceId,
+		RouteId:    &routeId,
+	}
+	request.SecurityGroupIds = securityGroupIds
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, err := me.client.UseCkafkaClient().ModifyRouteSecurityGroupsWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s modify ckafka_route security groups failed, reason: %v", logId, err)
+		errRet = err
+		return
+	}
+
+	return
 }
 
 func (me *CkafkaService) DescribeCkafkaVersionByFilter(ctx context.Context, instanceId string) (instanceVersion *ckafka.InstanceVersion, errRet error) {

@@ -247,6 +247,19 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Computed:    true,
 			Description: "Disk Type: This parameter can be specified for Single-Node (Cloud Disk) or Cloud Disk Edition instances. `CLOUD_SSD` designates an SSD cloud disk; `CLOUD_HSSD` designates an Enhanced SSD cloud disk; and `CLOUD_PREMIUM` designates a High-Performance cloud disk. Note: The regions that support the disk types for Single-Node (Cloud Disk) and Cloud Disk Edition instances vary slightly; please refer to `Regions and Availability Zones` for specific support details.",
 		},
+		"destroy_protect": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Instance destroy protection status. Valid values: `on` (enable destroy protection), `off` (disable destroy protection).",
+		},
+		"disk_encryption": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			ForceNew:    true,
+			Computed:    true,
+			Description: "Whether to enable disk encryption for the CDB instance. Valid value: `on` (enable disk encryption); otherwise disk encryption is not enabled. Only cloud-disk edition instances support this feature. This parameter can only be set at creation time and cannot be modified.",
+		},
 		// Computed values
 		"intranet_ip": {
 			Type:        schema.TypeString,
@@ -409,6 +422,7 @@ func ResourceTencentCloudMysqlInstance() *schema.Resource {
 		},
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(20 * time.Minute),
+			Update: schema.DefaultTimeout(6 * time.Hour),
 			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
 	}
@@ -537,6 +551,24 @@ func mysqlAllInstanceRoleSet(ctx context.Context, requestInter interface{}, d *s
 			requestByMonth.DiskType = diskType
 		} else {
 			requestByUse.DiskType = diskType
+		}
+	}
+
+	if v, ok := d.GetOk("destroy_protect"); ok {
+		destroyProtect := helper.String(v.(string))
+		if okByMonth {
+			requestByMonth.DestroyProtect = destroyProtect
+		} else {
+			requestByUse.DestroyProtect = destroyProtect
+		}
+	}
+
+	if v, ok := d.GetOk("disk_encryption"); ok {
+		diskEncryption := helper.String(v.(string))
+		if okByMonth {
+			requestByMonth.DiskEncryption = diskEncryption
+		} else {
+			requestByUse.DiskEncryption = diskEncryption
 		}
 	}
 
@@ -966,6 +998,12 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 	if mysqlInfo.DiskType != nil {
 		_ = d.Set("disk_type", mysqlInfo.DiskType)
 	}
+	if mysqlInfo.DestroyProtect != nil {
+		_ = d.Set("destroy_protect", mysqlInfo.DestroyProtect)
+	}
+	if mysqlInfo.DiskEncryption != nil {
+		_ = d.Set("disk_encryption", mysqlInfo.DiskEncryption)
+	}
 
 	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())
 	if err != nil {
@@ -1211,6 +1249,24 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 
 	}
 
+	if d.HasChange("destroy_protect") {
+		destroyProtect := d.Get("destroy_protect").(string)
+		err := resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
+			if err := mysqlService.ModifyInstanceDestroyProtect(ctx, d.Id(), destroyProtect); err != nil {
+				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(err)
+				} else {
+					return resource.NonRetryableError(err)
+				}
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s modify mysql destroy_protect fail, reason:%s\n", logId, err.Error())
+			return err
+		}
+	}
+
 	if d.HasChange("intranet_port") || d.HasChange("vpc_id") || d.HasChange("subnet_id") {
 		var (
 			intranetPort = int64(d.Get("intranet_port").(int))
@@ -1263,7 +1319,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 			}
 
 			if waitSwitch != InWindow {
-				err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+				err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 					taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 
 					if err != nil {
@@ -1372,7 +1428,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 			}
 
 			if waitSwitch != InWindow {
-				err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+				err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 					taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 
 					if err != nil {
@@ -1479,7 +1535,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		}
 
 		if waitSwitch != InWindow {
-			err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+			err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 				taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 
 				if err != nil {
@@ -1626,7 +1682,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 
 		asyncRequestId = *response.Response.AsyncRequestId
 		if waitSwitch != InWindow {
-			err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+			err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 				taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 				if err != nil {
 					if _, ok := err.(*errors.TencentCloudSDKError); !ok {

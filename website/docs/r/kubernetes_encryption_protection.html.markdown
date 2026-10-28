@@ -78,4 +78,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `status` - kms encryption status.
 
+## Timeouts
+
+The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
+
+* `create` - (Defaults to `30m`) Used when creating the resource.
+* `delete` - (Defaults to `30m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [EnableEncryptionProtection](https://www.tencentcloud.com/document/api/457/56946)
+* Read: [DescribeEncryptionStatus](https://www.tencentcloud.com/document/api/457/56948)
+* Delete: [DisableEncryptionProtection](https://www.tencentcloud.com/document/api/457/56947)
 

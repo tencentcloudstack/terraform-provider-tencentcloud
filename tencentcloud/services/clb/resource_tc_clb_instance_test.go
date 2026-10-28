@@ -24,6 +24,7 @@ const MultiClbName = "multi-open-clb"
 const OpenClbName = "tf-clb-open"
 const OpenClbNameIpv6 = "tf-clb-open-ipv6"
 const OpenClbNameUpdate = "tf-clb-update-open"
+const OpenClbNameSlaForce = "tf-clb-sla-force"
 
 func init() {
 	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_clb_instance
@@ -377,6 +378,44 @@ func testAccCheckClbInstanceExists(n string) resource.TestCheckFunc {
 	}
 }
 
+func TestAccTencentCloudClbInstanceResource_slaForce(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckClbInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClbInstance_sla_force,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbInstanceExists("tencentcloud_clb_instance.clb_sla_force"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_sla_force", "network_type", "OPEN"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_sla_force", "clb_name", OpenClbNameSlaForce),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_sla_force", "sla_type", "clb.c2.medium"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_sla_force", "force", "true"),
+				),
+			},
+			{
+				Config: testAccClbInstance_sla_force_update,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbInstanceExists("tencentcloud_clb_instance.clb_sla_force"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_sla_force", "network_type", "OPEN"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_sla_force", "clb_name", OpenClbNameSlaForce),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_sla_force", "sla_type", "clb.c3.medium"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_sla_force", "force", "true"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_clb_instance.clb_sla_force",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"dynamic_vip", "force"},
+			},
+		},
+	})
+}
+
 const testAccClbInstance_basic = `
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
@@ -663,5 +702,23 @@ resource "tencentcloud_clb_instance" "clb_open_ipv6" {
 	vpc_id             = "vpc-mvhjjprd"
 	subnet_id          = "subnet-2qfyfvv8"
 	address_ip_version = "IPv6FullChain"
+}
+`
+
+const testAccClbInstance_sla_force = `
+resource "tencentcloud_clb_instance" "clb_sla_force" {
+  network_type = "OPEN"
+  clb_name     = "` + OpenClbNameSlaForce + `"
+  sla_type     = "clb.c2.medium"
+  force        = true
+}
+`
+
+const testAccClbInstance_sla_force_update = `
+resource "tencentcloud_clb_instance" "clb_sla_force" {
+  network_type = "OPEN"
+  clb_name     = "` + OpenClbNameSlaForce + `"
+  sla_type     = "clb.c3.medium"
+  force        = true
 }
 `

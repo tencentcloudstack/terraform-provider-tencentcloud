@@ -111,7 +111,24 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `balanced_service_list` object of `canary_rule` exports the following:
 
+* `upstream_name` - upstream name, meaningless when used as an input parameter.
+
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateCloudNativeAPIGatewayCanaryRule](https://www.tencentcloud.com/document/api/1290/79295)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeCloudNativeAPIGatewayCanaryRules](https://www.tencentcloud.com/document/api/1290/79267)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [ModifyCloudNativeAPIGatewayCanaryRule](https://www.tencentcloud.com/document/api/1290/79243)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteCloudNativeAPIGatewayCanaryRule](https://www.tencentcloud.com/document/api/1290/79281)
 
 ## Import
 

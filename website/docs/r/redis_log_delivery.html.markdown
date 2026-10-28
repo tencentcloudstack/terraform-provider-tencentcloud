@@ -42,12 +42,14 @@ resource "tencentcloud_redis_log_delivery" "example" {
 
 ```hcl
 resource "tencentcloud_redis_log_delivery" "example" {
-  instance_id  = "crs-dmjj8en7"
-  log_region   = "ap-guangzhou"
-  logset_name  = "tf-example"
-  topic_name   = "tf-example"
-  period       = 20
-  create_index = true
+  instance_id      = "crs-dmjj8en7"
+  log_region       = "ap-guangzhou"
+  logset_name      = "tf-example132"
+  topic_name       = "tf-example132"
+  period           = 20
+  create_index     = true
+  is_delete_topic  = true
+  is_delete_logset = true
 }
 ```
 
@@ -57,6 +59,8 @@ The following arguments are supported:
 
 * `instance_id` - (Required, String, ForceNew) Instance ID.
 * `create_index` - (Optional, Bool) Whether to create an index when creating a log topic.
+* `is_delete_logset` - (Optional, Bool) Whether to delete the associated Logset when deleting the log delivery. Default is false.
+* `is_delete_topic` - (Optional, Bool) Whether to delete the associated Topic when deleting the log delivery. Default is false.
 * `log_region` - (Optional, String) The region where the log set is located; if not specified, the region where the instance is located will be used by default.
 * `logset_id` - (Optional, String) The ID of the log set being delivered.
 * `logset_name` - (Optional, String) Log set name. If LogsetId does not specify a specific log set ID, please configure this parameter to set the log set name, and the system will automatically create a new log set with the specified name.
@@ -71,12 +75,26 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyInstanceLogDelivery](https://www.tencentcloud.com/document/api/239/66802)
+* Read:
+  - [DescribeInstanceLogDelivery](https://www.tencentcloud.com/document/api/239/66803)
+  - [DescribeLogsets](https://www.tencentcloud.com/document/api/614/42778)
+  - [DescribeTopics](https://www.tencentcloud.com/document/api/614/42783)
+* Update: [ModifyInstanceLogDelivery](https://www.tencentcloud.com/document/api/239/66802)
+* Delete:
+  - [DeleteLogset](https://www.tencentcloud.com/document/api/614/42779)
+  - [DeleteTopic](https://www.tencentcloud.com/document/api/614/42784)
+  - [ModifyInstanceLogDelivery](https://www.tencentcloud.com/document/api/239/66802)
 
 ## Import
 
-Redis log delivery can be imported, e.g.
+Redis log delivery can be imported using the instanceId, e.g.
 
 ```
-$ terraform import tencentcloud_redis_log_delivery.example crs-dmjj8en7
+terraform import tencentcloud_redis_log_delivery.example crs-dmjj8en7
 ```
 

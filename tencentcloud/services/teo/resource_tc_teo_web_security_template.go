@@ -47,6 +47,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 						"custom_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							MaxItems:    1,
 							Description: "Custom rules. If the parameter is null or not filled, the configuration last set will be used by default. Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
@@ -230,11 +231,13 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 												"rule_type": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Type of custom rule. Values: - `BasicAccessRule`: basic access control; - `PreciseMatchRule`: exact custom rule, default; - `ManagedAccessRule`: expert customized rule, output parameter only.The default value is PreciseMatchRule.",
 												},
 												"priority": {
 													Type:        schema.TypeInt,
 													Optional:    true,
+													Computed:    true,
 													Description: "Customize the priority of custom rule. Range: 0-100, the default value is 0, this parameter only supports PreciseMatchRule.",
 												},
 											},
@@ -246,6 +249,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 						"managed_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							MaxItems:    1,
 							Description: "Managed. If the parameter is null or not filled, the configuration last set will be used by default. Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
@@ -263,11 +267,13 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 									"semantic_analysis": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Managed rule semantic analysis is enabled or not, it is valid only when the `Enabled` parameter is `on`. Values: `on`: enabled, perform semantic analysis before processing requests; `off`: disabled, process requests directly without semantic analysis. The default value is `off`.",
 									},
 									"auto_update": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										MaxItems:    1,
 										Description: "Managed rule automatic update option.",
 										Elem: &schema.Resource{
@@ -280,6 +286,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 												"ruleset_version": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Current version, compliant with ISO 8601 standard format, such as 2023-12-21T12:00:32Z, empty by default, output parameter only.",
 												},
 											},
@@ -677,6 +684,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 									"frequent_scanning_protection": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										MaxItems:    1,
 										Description: "High-Frequency scan protection configuration option. when a visitor's frequent requests hit the managed rule configured as block within a period of time, all requests from that visitor are blocked.",
 										Elem: &schema.Resource{
@@ -865,6 +873,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 						"http_ddos_protection": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							MaxItems:    1,
 							Description: "HTTP DDOS protection configuration.",
 							Elem: &schema.Resource{
@@ -872,6 +881,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 									"adaptive_frequency_control": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										MaxItems:    1,
 										Description: "Specifies the specific configuration of adaptive frequency control.",
 										Elem: &schema.Resource{
@@ -884,11 +894,13 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 												"sensitivity": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "The restriction level of adaptive frequency control. required when Enabled is on. valid values: - Loose: Loose- Moderate: Moderate- Strict: Strict.",
 												},
 												"action": {
 													Type:        schema.TypeList,
 													Optional:    true,
+													Computed:    true,
 													MaxItems:    1,
 													Description: "The handling method of adaptive frequency control. this field is required when Enabled is on. valid values for SecurityAction Name: - Monitor: observation; - Deny: block; - Challenge: Challenge, where ChallengeActionParameters.Name only supports JSChallenge.",
 													Elem: &schema.Resource{
@@ -976,6 +988,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 															"challenge_action_parameters": {
 																Type:        schema.TypeList,
 																Optional:    true,
+																Computed:    true,
 																MaxItems:    1,
 																Description: "Additional parameter when Name is Challenge.",
 																Elem: &schema.Resource{
@@ -1042,6 +1055,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 									"client_filtering": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										MaxItems:    1,
 										Description: "Specifies the intelligent client filter configuration.",
 										Elem: &schema.Resource{
@@ -1054,6 +1068,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 												"action": {
 													Type:        schema.TypeList,
 													Optional:    true,
+													Computed:    true,
 													MaxItems:    1,
 													Description: "The handling method of intelligent client filtering. when Enabled is on, this field is required. the Name parameter of SecurityAction supports: - Monitor: observation; - Deny: block; - Challenge: Challenge, where ChallengeActionParameters.Name only supports JSChallenge.",
 													Elem: &schema.Resource{
@@ -1141,6 +1156,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 															"challenge_action_parameters": {
 																Type:        schema.TypeList,
 																Optional:    true,
+																Computed:    true,
 																MaxItems:    1,
 																Description: "Additional parameter when Name is Challenge.",
 																Elem: &schema.Resource{
@@ -1207,6 +1223,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 									"bandwidth_abuse_defense": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										MaxItems:    1,
 										Description: "Specifies the specific configuration for bandwidth abuse protection.",
 										Elem: &schema.Resource{
@@ -1219,6 +1236,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 												"action": {
 													Type:        schema.TypeList,
 													Optional:    true,
+													Computed:    true,
 													MaxItems:    1,
 													Description: "Bandwidth abuse protection (applicable to chinese mainland) handling method. required when Enabled is on. valid values for SecurityAction Name: - Monitor: observe; - Deny: block; - Challenge: Challenge, where ChallengeActionParameters.Name only supports JSChallenge.",
 													Elem: &schema.Resource{
@@ -1372,6 +1390,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 									"slow_attack_defense": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										MaxItems:    1,
 										Description: "Specifies the configuration of slow attack protection.",
 										Elem: &schema.Resource{
@@ -1384,6 +1403,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 												"action": {
 													Type:        schema.TypeList,
 													Optional:    true,
+													Computed:    true,
 													MaxItems:    1,
 													Description: "Slow attack protection handling method. required when Enabled is on. valid values for SecurityAction Name: - Monitor: observation; - Deny: block;.",
 													Elem: &schema.Resource{
@@ -1534,6 +1554,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 												"minimal_request_body_transfer_rate": {
 													Type:        schema.TypeList,
 													Optional:    true,
+													Computed:    true,
 													MaxItems:    1,
 													Description: "The specific configuration of the minimum body transfer rate threshold is required when Enabled is on.",
 													Elem: &schema.Resource{
@@ -1559,6 +1580,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 												"request_body_transfer_timeout": {
 													Type:        schema.TypeList,
 													Optional:    true,
+													Computed:    true,
 													MaxItems:    1,
 													Description: "Specifies the specific configuration of body transfer timeout duration. required when Enabled is on.",
 													Elem: &schema.Resource{
@@ -1585,6 +1607,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 						"rate_limiting_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							MaxItems:    1,
 							Description: "Configures the rate limiting rule.",
 							Elem: &schema.Resource{
@@ -1804,6 +1827,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 						"exception_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							MaxItems:    1,
 							Description: "Exception rule configuration.",
 							Elem: &schema.Resource{
@@ -1901,6 +1925,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 						"bot_management": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							MaxItems:    1,
 							Description: "Bot management configuration.",
 							Elem: &schema.Resource{
@@ -1908,11 +1933,13 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 									"enabled": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Whether Bot management is enabled. valid values: - on: enabled;- off: disabled.",
 									},
 									"custom_rules": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										MaxItems:    1,
 										Description: "Bot management custom rule combines various crawlers and request behavior characteristics to accurately define bots and configure customized handling methods.",
 										Elem: &schema.Resource{
@@ -2121,6 +2148,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 									"basic_bot_settings": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										MaxItems:    1,
 										Description: "Bot management basic configuration. takes effect on all domains associated with the policy. can be customized through CustomRules.",
 										Elem: &schema.Resource{
@@ -2128,6 +2156,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 												"source_idc": {
 													Type:        schema.TypeList,
 													Optional:    true,
+													Computed:    true,
 													MaxItems:    1,
 													Description: "Client IP source IDC configuration, used for handling access requests from client ips in idcs (data centers). such source requests are not directly accessed by mobile terminals or browser-side.",
 													Elem: &schema.Resource{
@@ -2455,6 +2484,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 												"search_engine_bots": {
 													Type:        schema.TypeList,
 													Optional:    true,
+													Computed:    true,
 													MaxItems:    1,
 													Description: "Search engine crawler configuration, used to handle requests from search engine crawlers. the IP, User-Agent, or rDNS results of such requests match known search engine crawlers.",
 													Elem: &schema.Resource{
@@ -2782,6 +2812,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 												"known_bot_categories": {
 													Type:        schema.TypeList,
 													Optional:    true,
+													Computed:    true,
 													MaxItems:    1,
 													Description: "Commercial or open-source tool UA feature configuration (original UA feature rule), used to handle access requests from known commercial or open-source tools. the User-Agent header of such requests complies with known commercial or open-source tool features.",
 													Elem: &schema.Resource{
@@ -3109,6 +3140,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 												"ip_reputation": {
 													Type:        schema.TypeList,
 													Optional:    true,
+													Computed:    true,
 													MaxItems:    1,
 													Description: "Threat intelligence database (originally client profile analysis) configuration, used for handling client ips with specific risk characteristics in recent access behavior.",
 													Elem: &schema.Resource{
@@ -3116,6 +3148,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 															"enabled": {
 																Type:        schema.TypeString,
 																Optional:    true,
+																Computed:    true,
 																Description: "IP intelligence library (formerly client profile analysis). valid values: - on: enable; - off: disable.",
 															},
 															"ip_reputation_group": {
@@ -3451,6 +3484,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 												"bot_intelligence": {
 													Type:        schema.TypeList,
 													Optional:    true,
+													Computed:    true,
 													MaxItems:    1,
 													Description: "Specifies the configuration for Bot intelligent analysis.",
 													Elem: &schema.Resource{
@@ -3458,6 +3492,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 															"bot_ratings": {
 																Type:        schema.TypeList,
 																Optional:    true,
+																Computed:    true,
 																MaxItems:    1,
 																Description: "Based on client and request features, divides request sources into human requests, legitimate Bot requests, suspected Bot requests, and high-risk Bot requests, and provides request handling options.",
 																Elem: &schema.Resource{
@@ -3465,6 +3500,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 																		"high_risk_bot_requests_action": {
 																			Type:        schema.TypeList,
 																			Optional:    true,
+																			Computed:    true,
 																			MaxItems:    1,
 																			Description: "Execution action for malicious Bot requests. valid values for the Name parameter in SecurityAction: - Deny: block; - Monitor: observe; - Allow: pass; - Challenge: Challenge, where ChallengeOption in ChallengeActionParameters supports JSChallenge and ManagedChallenge.",
 																			Elem: &schema.Resource{
@@ -3615,6 +3651,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 																		"likely_bot_requests_action": {
 																			Type:        schema.TypeList,
 																			Optional:    true,
+																			Computed:    true,
 																			MaxItems:    1,
 																			Description: "The execution action for suspected Bot requests. valid values for the Name parameter in SecurityAction: - Deny: block; - Monitor: observe; - Allow: pass; - Challenge: Challenge, where ChallengeOption in ChallengeActionParameters supports JSChallenge and ManagedChallenge.",
 																			Elem: &schema.Resource{
@@ -3765,6 +3802,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 																		"verified_bot_requests_action": {
 																			Type:        schema.TypeList,
 																			Optional:    true,
+																			Computed:    true,
 																			MaxItems:    1,
 																			Description: "Execution action for friendly Bot request. SecurityAction Name parameter supports: - Deny: block;- Monitor: observe;- Allow: pass;- Challenge: Challenge, where ChallengeOption in ChallengeActionParameters supports JSChallenge and ManagedChallenge.",
 																			Elem: &schema.Resource{
@@ -3915,6 +3953,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 																		"human_requests_action": {
 																			Type:        schema.TypeList,
 																			Optional:    true,
+																			Computed:    true,
 																			MaxItems:    1,
 																			Description: "Execution action for a normal Bot request. valid values for the Name parameter in SecurityAction: - Allow: pass.",
 																			Elem: &schema.Resource{
@@ -4068,6 +4107,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 															"enabled": {
 																Type:        schema.TypeString,
 																Optional:    true,
+																Computed:    true,
 																Description: "Specifies the switch for Bot intelligent analysis configuration. valid values:.  on: enabled. off: disabled.",
 															},
 														},
@@ -4079,6 +4119,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 									"client_attestation_rules": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										MaxItems:    1,
 										Description: "Definition list of client authentication rules. this feature is in beta test. submit a ticket if you need to use it.",
 										Elem: &schema.Resource{
@@ -4602,6 +4643,7 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 									"browser_impersonation_detection": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										MaxItems:    1,
 										Description: "Configures browser spoofing identification rules (formerly active feature detection rule). sets the response page range for JavaScript injection, browser check options, and handling method for non-browser clients.",
 										Elem: &schema.Resource{
@@ -5931,6 +5973,150 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 								},
 							},
 						},
+						"bot_management_lite": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Computed:    true,
+							MaxItems:    1,
+							Description: "Basic Bot management configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"captcha_page_challenge": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "CAPTCHA page challenge configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"enabled": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "Whether CAPTCHA page challenge is enabled. Valid values: `on`, `off`.",
+												},
+											},
+										},
+									},
+									"ai_crawler_detection": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "AI crawler detection configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"enabled": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "Whether AI crawler detection is enabled. Valid values: `on`, `off`.",
+												},
+												"action": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Computed:    true,
+													MaxItems:    1,
+													Description: "Execution action when Enabled is on. When Enabled is on, this field is required. SecurityAction Name value supports: Deny, Monitor, Allow, Challenge.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"name": {
+																Type:        schema.TypeString,
+																Required:    true,
+																Description: "The security action name. Valid values: `Deny`, `Monitor`, `Allow`, `Challenge`.",
+															},
+															"deny_action_parameters": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																MaxItems:    1,
+																Description: "Additional parameters when Name is Deny.",
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"block_ip": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "Whether to extend the blocking of source IP. Valid values: `on`, `off`.",
+																		},
+																		"block_ip_duration": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "When BlockIP is on, the IP blocking duration.",
+																		},
+																		"return_custom_page": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "Whether to use custom pages. Valid values: `on`, `off`.",
+																		},
+																		"response_code": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "Customize the status code of the page.",
+																		},
+																		"error_page_id": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "The PageId of the custom page.",
+																		},
+																		"stall": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "Whether to ignore the request source suspension. Valid values: `on`, `off`.",
+																		},
+																	},
+																},
+															},
+															"allow_action_parameters": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																MaxItems:    1,
+																Description: "Additional parameters when Name is Allow.",
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"min_delay_time": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "Minimum delay response time. Supported unit: seconds, range 0-5.",
+																		},
+																		"max_delay_time": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "Maximum delay response time. Supported unit: seconds, range 5-10.",
+																		},
+																	},
+																},
+															},
+															"challenge_action_parameters": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																MaxItems:    1,
+																Description: "Additional parameters when Name is Challenge.",
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"challenge_option": {
+																			Type:        schema.TypeString,
+																			Required:    true,
+																			Description: "The specific challenge action to be executed safely. Valid values: `JSChallenge`, `ManagedChallenge`.",
+																		},
+																		"interval": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "The time interval for repeating the challenge.",
+																		},
+																		"attester_id": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "Client authentication method ID.",
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
 						"default_deny_security_action_parameters": {
 							Type:        schema.TypeList,
 							Optional:    true,
@@ -5960,16 +6146,19 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 												"return_custom_page": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Specifies whether to use a custom page. valid values:. - `on`: Enable;  - off: Disable.  Enabled, use custom page content to intercept requests. when this option is enabled, ResponseCode and ErrorPageId parameters must be specified simultaneously. Note: this option cannot intersect with the BlockIp or Stall option.",
 												},
 												"response_code": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Status code of the custom page.",
 												},
 												"error_page_id": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Specifies the page id of the custom page.",
 												},
 												"stall": {
@@ -6001,16 +6190,19 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 												"return_custom_page": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Specifies whether to use a custom page. valid values:. - `on`: Enable;  - off: Disable.  Enabled, use custom page content to intercept requests. when this option is enabled, ResponseCode and ErrorPageId parameters must be specified simultaneously. Note: this option cannot intersect with the BlockIp or Stall option.",
 												},
 												"response_code": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Status code of the custom page.",
 												},
 												"error_page_id": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Specifies the page id of the custom page.",
 												},
 												"stall": {
@@ -6026,6 +6218,13 @@ func ResourceTencentCloudTeoWebSecurityTemplate() *schema.Resource {
 						},
 					},
 				},
+			},
+
+			// computed
+			"template_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Template ID.",
 			},
 		},
 	}
@@ -9115,6 +9314,76 @@ func resourceTencentCloudTeoWebSecurityTemplateCreate(d *schema.ResourceData, me
 			}
 			securityPolicy.BotManagement = &botManagement
 		}
+		if botManagementLiteMap, ok := helper.ConvertInterfacesHeadToMap(securityPolicyMap["bot_management_lite"]); ok {
+			botManagementLite := teov20220901.BotManagementLite{}
+			if captchaPageChallengeMap, ok := helper.InterfaceToMap(botManagementLiteMap, "captcha_page_challenge"); ok {
+				captchaPageChallenge := teov20220901.CAPTCHAPageChallenge{}
+				if v, ok := captchaPageChallengeMap["enabled"]; ok {
+					captchaPageChallenge.Enabled = helper.String(v.(string))
+				}
+				botManagementLite.CAPTCHAPageChallenge = &captchaPageChallenge
+			}
+			if aiCrawlerDetectionMap, ok := helper.InterfaceToMap(botManagementLiteMap, "ai_crawler_detection"); ok {
+				aiCrawlerDetection := teov20220901.AICrawlerDetection{}
+				if v, ok := aiCrawlerDetectionMap["enabled"]; ok {
+					aiCrawlerDetection.Enabled = helper.String(v.(string))
+				}
+				if actionMap, ok := helper.InterfaceToMap(aiCrawlerDetectionMap, "action"); ok {
+					securityAction := teov20220901.SecurityAction{}
+					if v, ok := actionMap["name"]; ok {
+						securityAction.Name = helper.String(v.(string))
+					}
+					if denyActionParametersMap, ok := helper.InterfaceToMap(actionMap, "deny_action_parameters"); ok {
+						denyActionParameters := teov20220901.DenyActionParameters{}
+						if v, ok := denyActionParametersMap["block_ip"]; ok {
+							denyActionParameters.BlockIp = helper.String(v.(string))
+						}
+						if v, ok := denyActionParametersMap["block_ip_duration"]; ok {
+							denyActionParameters.BlockIpDuration = helper.String(v.(string))
+						}
+						if v, ok := denyActionParametersMap["return_custom_page"]; ok {
+							denyActionParameters.ReturnCustomPage = helper.String(v.(string))
+						}
+						if v, ok := denyActionParametersMap["response_code"]; ok {
+							denyActionParameters.ResponseCode = helper.String(v.(string))
+						}
+						if v, ok := denyActionParametersMap["error_page_id"]; ok {
+							denyActionParameters.ErrorPageId = helper.String(v.(string))
+						}
+						if v, ok := denyActionParametersMap["stall"]; ok {
+							denyActionParameters.Stall = helper.String(v.(string))
+						}
+						securityAction.DenyActionParameters = &denyActionParameters
+					}
+					if allowActionParametersMap, ok := helper.InterfaceToMap(actionMap, "allow_action_parameters"); ok {
+						allowActionParameters := teov20220901.AllowActionParameters{}
+						if v, ok := allowActionParametersMap["min_delay_time"]; ok {
+							allowActionParameters.MinDelayTime = helper.String(v.(string))
+						}
+						if v, ok := allowActionParametersMap["max_delay_time"]; ok {
+							allowActionParameters.MaxDelayTime = helper.String(v.(string))
+						}
+						securityAction.AllowActionParameters = &allowActionParameters
+					}
+					if challengeActionParametersMap, ok := helper.InterfaceToMap(actionMap, "challenge_action_parameters"); ok {
+						challengeActionParameters := teov20220901.ChallengeActionParameters{}
+						if v, ok := challengeActionParametersMap["challenge_option"]; ok {
+							challengeActionParameters.ChallengeOption = helper.String(v.(string))
+						}
+						if v, ok := challengeActionParametersMap["interval"]; ok {
+							challengeActionParameters.Interval = helper.String(v.(string))
+						}
+						if v, ok := challengeActionParametersMap["attester_id"]; ok {
+							challengeActionParameters.AttesterId = helper.String(v.(string))
+						}
+						securityAction.ChallengeActionParameters = &challengeActionParameters
+					}
+					aiCrawlerDetection.Action = &securityAction
+				}
+				botManagementLite.AICrawlerDetection = &aiCrawlerDetection
+			}
+			securityPolicy.BotManagementLite = &botManagementLite
+		}
 		if defaultDenySecurityActionParametersMap, ok := helper.ConvertInterfacesHeadToMap(securityPolicyMap["default_deny_security_action_parameters"]); ok {
 			defaultDenySecurityActionParameters := teov20220901.DefaultDenySecurityActionParameters{}
 			if managedRulesMap, ok := helper.ConvertInterfacesHeadToMap(defaultDenySecurityActionParametersMap["managed_rules"]); ok {
@@ -9209,6 +9478,7 @@ func resourceTencentCloudTeoWebSecurityTemplateRead(d *schema.ResourceData, meta
 	templateId := idSplit[1]
 
 	_ = d.Set("zone_id", zoneId)
+	_ = d.Set("template_id", templateId)
 
 	respData, err := service.DescribeTeoWebSecurityTemplateById(ctx, zoneId, templateId)
 	if err != nil {
@@ -9216,8 +9486,8 @@ func resourceTencentCloudTeoWebSecurityTemplateRead(d *schema.ResourceData, meta
 	}
 
 	if respData == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_teo_web_security_template` [%s] not found, please check if it has been deleted.", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `teo_web_security_template` [%s] not found, please check if it has been deleted.", logId, d.Id())
 		return nil
 	}
 
@@ -13429,6 +13699,104 @@ func resourceTencentCloudTeoWebSecurityTemplateRead(d *schema.ResourceData, meta
 		securityPolicyMap["bot_management"] = []interface{}{botManagementMap}
 	}
 
+	if respData.BotManagementLite != nil {
+		botManagementLiteMap := map[string]interface{}{}
+
+		if respData.BotManagementLite.CAPTCHAPageChallenge != nil {
+			captchaPageChallengeMap := map[string]interface{}{}
+
+			if respData.BotManagementLite.CAPTCHAPageChallenge.Enabled != nil {
+				captchaPageChallengeMap["enabled"] = respData.BotManagementLite.CAPTCHAPageChallenge.Enabled
+			}
+
+			botManagementLiteMap["captcha_page_challenge"] = []interface{}{captchaPageChallengeMap}
+		}
+
+		if respData.BotManagementLite.AICrawlerDetection != nil {
+			aiCrawlerDetectionMap := map[string]interface{}{}
+
+			if respData.BotManagementLite.AICrawlerDetection.Enabled != nil {
+				aiCrawlerDetectionMap["enabled"] = respData.BotManagementLite.AICrawlerDetection.Enabled
+			}
+
+			if respData.BotManagementLite.AICrawlerDetection.Action != nil {
+				actionMap := map[string]interface{}{}
+
+				if respData.BotManagementLite.AICrawlerDetection.Action.Name != nil {
+					actionMap["name"] = respData.BotManagementLite.AICrawlerDetection.Action.Name
+				}
+
+				if respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters != nil {
+					denyActionParametersMap := map[string]interface{}{}
+
+					if respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.BlockIp != nil {
+						denyActionParametersMap["block_ip"] = respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.BlockIp
+					}
+
+					if respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.BlockIpDuration != nil {
+						denyActionParametersMap["block_ip_duration"] = respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.BlockIpDuration
+					}
+
+					if respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.ReturnCustomPage != nil {
+						denyActionParametersMap["return_custom_page"] = respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.ReturnCustomPage
+					}
+
+					if respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.ResponseCode != nil {
+						denyActionParametersMap["response_code"] = respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.ResponseCode
+					}
+
+					if respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.ErrorPageId != nil {
+						denyActionParametersMap["error_page_id"] = respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.ErrorPageId
+					}
+
+					if respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.Stall != nil {
+						denyActionParametersMap["stall"] = respData.BotManagementLite.AICrawlerDetection.Action.DenyActionParameters.Stall
+					}
+
+					actionMap["deny_action_parameters"] = []interface{}{denyActionParametersMap}
+				}
+
+				if respData.BotManagementLite.AICrawlerDetection.Action.AllowActionParameters != nil {
+					allowActionParametersMap := map[string]interface{}{}
+
+					if respData.BotManagementLite.AICrawlerDetection.Action.AllowActionParameters.MinDelayTime != nil {
+						allowActionParametersMap["min_delay_time"] = respData.BotManagementLite.AICrawlerDetection.Action.AllowActionParameters.MinDelayTime
+					}
+
+					if respData.BotManagementLite.AICrawlerDetection.Action.AllowActionParameters.MaxDelayTime != nil {
+						allowActionParametersMap["max_delay_time"] = respData.BotManagementLite.AICrawlerDetection.Action.AllowActionParameters.MaxDelayTime
+					}
+
+					actionMap["allow_action_parameters"] = []interface{}{allowActionParametersMap}
+				}
+
+				if respData.BotManagementLite.AICrawlerDetection.Action.ChallengeActionParameters != nil {
+					challengeActionParametersMap := map[string]interface{}{}
+
+					if respData.BotManagementLite.AICrawlerDetection.Action.ChallengeActionParameters.ChallengeOption != nil {
+						challengeActionParametersMap["challenge_option"] = respData.BotManagementLite.AICrawlerDetection.Action.ChallengeActionParameters.ChallengeOption
+					}
+
+					if respData.BotManagementLite.AICrawlerDetection.Action.ChallengeActionParameters.Interval != nil {
+						challengeActionParametersMap["interval"] = respData.BotManagementLite.AICrawlerDetection.Action.ChallengeActionParameters.Interval
+					}
+
+					if respData.BotManagementLite.AICrawlerDetection.Action.ChallengeActionParameters.AttesterId != nil {
+						challengeActionParametersMap["attester_id"] = respData.BotManagementLite.AICrawlerDetection.Action.ChallengeActionParameters.AttesterId
+					}
+
+					actionMap["challenge_action_parameters"] = []interface{}{challengeActionParametersMap}
+				}
+
+				aiCrawlerDetectionMap["action"] = []interface{}{actionMap}
+			}
+
+			botManagementLiteMap["ai_crawler_detection"] = []interface{}{aiCrawlerDetectionMap}
+		}
+
+		securityPolicyMap["bot_management_lite"] = []interface{}{botManagementLiteMap}
+	}
+
 	if respData.DefaultDenySecurityActionParameters != nil {
 		defaultDenySecurityActionParametersMap := map[string]interface{}{}
 
@@ -16592,6 +16960,76 @@ func resourceTencentCloudTeoWebSecurityTemplateUpdate(d *schema.ResourceData, me
 					botManagement.BrowserImpersonationDetection = &browserImpersonationDetection
 				}
 				securityPolicy.BotManagement = &botManagement
+			}
+			if botManagementLiteMap, ok := helper.ConvertInterfacesHeadToMap(securityPolicyMap["bot_management_lite"]); ok {
+				botManagementLite := teov20220901.BotManagementLite{}
+				if captchaPageChallengeMap, ok := helper.InterfaceToMap(botManagementLiteMap, "captcha_page_challenge"); ok {
+					captchaPageChallenge := teov20220901.CAPTCHAPageChallenge{}
+					if v, ok := captchaPageChallengeMap["enabled"]; ok {
+						captchaPageChallenge.Enabled = helper.String(v.(string))
+					}
+					botManagementLite.CAPTCHAPageChallenge = &captchaPageChallenge
+				}
+				if aiCrawlerDetectionMap, ok := helper.InterfaceToMap(botManagementLiteMap, "ai_crawler_detection"); ok {
+					aiCrawlerDetection := teov20220901.AICrawlerDetection{}
+					if v, ok := aiCrawlerDetectionMap["enabled"]; ok {
+						aiCrawlerDetection.Enabled = helper.String(v.(string))
+					}
+					if actionMap, ok := helper.InterfaceToMap(aiCrawlerDetectionMap, "action"); ok {
+						securityAction := teov20220901.SecurityAction{}
+						if v, ok := actionMap["name"]; ok {
+							securityAction.Name = helper.String(v.(string))
+						}
+						if denyActionParametersMap, ok := helper.InterfaceToMap(actionMap, "deny_action_parameters"); ok {
+							denyActionParameters := teov20220901.DenyActionParameters{}
+							if v, ok := denyActionParametersMap["block_ip"]; ok {
+								denyActionParameters.BlockIp = helper.String(v.(string))
+							}
+							if v, ok := denyActionParametersMap["block_ip_duration"]; ok {
+								denyActionParameters.BlockIpDuration = helper.String(v.(string))
+							}
+							if v, ok := denyActionParametersMap["return_custom_page"]; ok {
+								denyActionParameters.ReturnCustomPage = helper.String(v.(string))
+							}
+							if v, ok := denyActionParametersMap["response_code"]; ok {
+								denyActionParameters.ResponseCode = helper.String(v.(string))
+							}
+							if v, ok := denyActionParametersMap["error_page_id"]; ok {
+								denyActionParameters.ErrorPageId = helper.String(v.(string))
+							}
+							if v, ok := denyActionParametersMap["stall"]; ok {
+								denyActionParameters.Stall = helper.String(v.(string))
+							}
+							securityAction.DenyActionParameters = &denyActionParameters
+						}
+						if allowActionParametersMap, ok := helper.InterfaceToMap(actionMap, "allow_action_parameters"); ok {
+							allowActionParameters := teov20220901.AllowActionParameters{}
+							if v, ok := allowActionParametersMap["min_delay_time"]; ok {
+								allowActionParameters.MinDelayTime = helper.String(v.(string))
+							}
+							if v, ok := allowActionParametersMap["max_delay_time"]; ok {
+								allowActionParameters.MaxDelayTime = helper.String(v.(string))
+							}
+							securityAction.AllowActionParameters = &allowActionParameters
+						}
+						if challengeActionParametersMap, ok := helper.InterfaceToMap(actionMap, "challenge_action_parameters"); ok {
+							challengeActionParameters := teov20220901.ChallengeActionParameters{}
+							if v, ok := challengeActionParametersMap["challenge_option"]; ok {
+								challengeActionParameters.ChallengeOption = helper.String(v.(string))
+							}
+							if v, ok := challengeActionParametersMap["interval"]; ok {
+								challengeActionParameters.Interval = helper.String(v.(string))
+							}
+							if v, ok := challengeActionParametersMap["attester_id"]; ok {
+								challengeActionParameters.AttesterId = helper.String(v.(string))
+							}
+							securityAction.ChallengeActionParameters = &challengeActionParameters
+						}
+						aiCrawlerDetection.Action = &securityAction
+					}
+					botManagementLite.AICrawlerDetection = &aiCrawlerDetection
+				}
+				securityPolicy.BotManagementLite = &botManagementLite
 			}
 			if defaultDenySecurityActionParametersMap, ok := helper.ConvertInterfacesHeadToMap(securityPolicyMap["default_deny_security_action_parameters"]); ok {
 				defaultDenySecurityActionParameters := teov20220901.DefaultDenySecurityActionParameters{}

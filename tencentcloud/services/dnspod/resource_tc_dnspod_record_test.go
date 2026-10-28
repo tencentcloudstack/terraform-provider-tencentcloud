@@ -36,6 +36,7 @@ func TestAccTencentCloudDnspodRecordResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "record_line", "默认"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "remark", "terraform-test"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "weight", "100"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dnspod_record.demo", "updated_on"),
 				),
 			},
 			{
@@ -95,6 +96,7 @@ func TestAccTencentCloudDnspodRecordResource_MX(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "ttl", "86400"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "status", "ENABLE"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "remark", "terraform-test"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dnspod_record.demo", "updated_on"),
 				),
 			},
 			{

@@ -176,6 +176,44 @@ resource "tencentcloud_clb_instance" "example" {
 }
 ```
 
+### changes.
+
+```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
+// create vpc
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "vpc"
+}
+
+// create subnet
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  name              = "subnet"
+  cidr_block        = "10.0.1.0/24"
+  is_multicast      = false
+}
+
+// create clb and forcibly upgrade sla_type
+resource "tencentcloud_clb_instance" "example" {
+  network_type = "INTERNAL"
+  clb_name     = "tf-example"
+  project_id   = 0
+  sla_type     = "clb.c3.medium"
+  force        = true
+  vpc_id       = tencentcloud_vpc.vpc.id
+  subnet_id    = tencentcloud_subnet.subnet.id
+
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+```
+
 ### Create OPEN CLB
 
 ```hcl
@@ -556,7 +594,11 @@ The following arguments are supported:
 * `dynamic_vip` - (Optional, Bool) If create dynamic vip CLB instance, `true` or `false`.
 * `eip_address_id` - (Optional, String) The unique ID of the EIP, such as eip-1v2rmbwk, is only applicable to the intranet load balancing binding EIP. During the EIP change, there may be a brief network interruption.
 * `exclusive_cluster` - (Optional, List, ForceNew) Information about the dedicated CLB instance. You must specify this parameter when you create a dedicated CLB instance in a private network.
-* `internet_bandwidth_max_out` - (Optional, Int) Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is Mbps.
+* `force` - (Optional, Bool) Whether to forcibly upgrade the CLB instance, default is `false`. This parameter only takes effect when `sla_type` changes.
+* `internet_bandwidth_max_out` - (Optional, Int) Maximum outbound bandwidth, in Mbps. This parameter is valid only for public network shared, LCU-supported, and exclusive CLB instances and private network LCU-supported CLB instances.
+- The range of the maximum outbound bandwidth for public network shared and exclusive CLB instances is 1-2,048 Mbps.
+- The range of the maximum outbound bandwidth for public network and private network LCU-supported CLB instances is 1-61,440 Mbps.
+(Default to 10Mbps when CreateLoadBalancer is call.).
 * `internet_charge_type` - (Optional, String) Internet charge type, only applicable to open CLB. Valid values are `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
 * `load_balancer_pass_to_target` - (Optional, Bool) Whether the target allow flow come from clb. If value is true, only check security group of clb, or check both clb and backend instance security group.
 * `log_set_id` - (Optional, String) The id of log set.
@@ -628,6 +670,33 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `10m`) Used when creating the resource.
 * `update` - (Defaults to `10m`) Used when updating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateLoadBalancer](https://www.tencentcloud.com/document/api/214/33841)
+  - [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
+  - [DescribeLoadBalancers](https://www.tencentcloud.com/document/api/214/33830)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [ModifyLoadBalancerAttributes](https://www.tencentcloud.com/document/api/214/33817)
+  - [SetLoadBalancerClsLog](https://www.tencentcloud.com/document/api/214/35734)
+  - [SetLoadBalancerSecurityGroups](https://www.tencentcloud.com/document/api/214/33798)
+* Read:
+  - [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
+  - [DescribeLoadBalancers](https://www.tencentcloud.com/document/api/214/33830)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [AssociateAddress](https://www.tencentcloud.com/document/api/215/16700)
+  - [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
+  - [DisassociateAddress](https://www.tencentcloud.com/document/api/215/16703)
+  - [ModifyLoadBalancerAttributes](https://www.tencentcloud.com/document/api/214/33817)
+  - [ModifyLoadBalancerSla](https://www.tencentcloud.com/document/api/214/43786)
+  - [ModifyLoadBalancersProject](https://www.tencentcloud.com/document/api/214/57286)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [SetLoadBalancerClsLog](https://www.tencentcloud.com/document/api/214/35734)
+  - [SetLoadBalancerSecurityGroups](https://www.tencentcloud.com/document/api/214/33798)
+* Delete: [DeleteLoadBalancer](https://www.tencentcloud.com/document/api/214/33837)
 
 ## Import
 

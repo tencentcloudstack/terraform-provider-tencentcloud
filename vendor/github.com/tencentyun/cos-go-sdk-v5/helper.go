@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"crypto/md5"
 	"crypto/sha1"
+	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/mozillazg/go-httpheader"
@@ -13,6 +15,7 @@ import (
 	"net/url"
 	"os"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -47,6 +50,83 @@ func calCRC64(fd io.Reader) (uint64, error) {
 	}
 	sum := hash.Sum64()
 	return sum, nil
+}
+
+// CRC64Combine 合并两个 CRC64 值（适用于 CRC64-ECMA 反射算法）
+// crc1 是前一段数据的 CRC64，crc2 是后一段数据的 CRC64，len2 是后一段数据的长度
+func CRC64Combine(crc1, crc2 uint64, len2 int64) uint64 {
+	if len2 == 0 {
+		return crc1
+	}
+	return crc64Combine(crc1, crc2, len2)
+}
+
+func crc64Combine(crc1, crc2 uint64, len2 int64) uint64 {
+	// CRC64-ECMA reflected polynomial (Go's crc64.ECMA uses reflected/LSB-first)
+	const poly uint64 = 0xC96C5795D7870F42
+
+	var even [64]uint64
+	var odd [64]uint64
+
+	if len2 <= 0 {
+		return crc1
+	}
+
+	// put operator for one zero bit in odd (reflected: right-shift based)
+	// For reflected CRC, the operator for appending a zero bit is:
+	// if (crc & 1) then (crc >> 1) ^ poly else (crc >> 1)
+	// This is represented as a matrix where:
+	// - odd[0] = poly (applied when bit 0 is set)
+	// - odd[n] = 1 << (n-1) for n >= 1 (right shift by 1)
+	odd[0] = poly
+	for n := 1; n < 64; n++ {
+		odd[n] = uint64(1) << uint(n-1)
+	}
+
+	// put operator for two zero bits in even
+	gf2MatrixSquare(&even, &odd)
+	// put operator for four zero bits in odd
+	gf2MatrixSquare(&odd, &even)
+
+	// apply len2 zeros to crc1 (first square will put the operator for one
+	// zero byte, eight zero bits, in even)
+	for len2 != 0 {
+		gf2MatrixSquare(&even, &odd)
+		if len2&1 != 0 {
+			crc1 = gf2MatrixTimes(&even, crc1)
+		}
+		len2 >>= 1
+
+		if len2 == 0 {
+			break
+		}
+
+		gf2MatrixSquare(&odd, &even)
+		if len2&1 != 0 {
+			crc1 = gf2MatrixTimes(&odd, crc1)
+		}
+		len2 >>= 1
+	}
+
+	crc1 ^= crc2
+	return crc1
+}
+
+func gf2MatrixTimes(mat *[64]uint64, vec uint64) uint64 {
+	var sum uint64
+	for i := 0; vec != 0; i++ {
+		if vec&1 != 0 {
+			sum ^= mat[i]
+		}
+		vec >>= 1
+	}
+	return sum
+}
+
+func gf2MatrixSquare(square, mat *[64]uint64) {
+	for n := 0; n < 64; n++ {
+		square[n] = gf2MatrixTimes(mat, mat[n])
+	}
 }
 
 // cloneRequest returns a clone of the provided *http.Request. The clone is a
@@ -477,4 +557,48 @@ func GetBucketRegionFromUrl(u *url.URL) (string, string) {
 
 func Bool(v bool) *bool {
 	return &v
+}
+
+// EncodeUserData 将自定义键值对编码为 pm3u8/getplaylist 接口 `user-data` 参数所需的字符串。
+//
+// 编码规则：
+//  1. 按 key 稳定排序，保证结果确定性（相同输入必产生相同输出）
+//  2. 使用 JSON 序列化为字节数组
+//  3. 使用 base64 URL 编码（无 padding, RFC 4648 §5）
+//
+// 当 kv 为 nil 或 encode 过程出错时，返回空字符串。
+// 空 map（非 nil）会被编码为 base64("{}")，即 "e30"。
+func EncodeUserData(kv map[string]string) (string, error) {
+	if kv == nil {
+		return "", nil
+	}
+	// 按 key 稳定排序，确保输出确定
+	keys := make([]string, 0, len(kv))
+	for k := range kv {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	// 借助有序结构手动构造 JSON，避免 map 迭代顺序影响输出
+	var buf bytes.Buffer
+	buf.WriteByte('{')
+	for i, k := range keys {
+		if i > 0 {
+			buf.WriteByte(',')
+		}
+		kb, err := json.Marshal(k)
+		if err != nil {
+			return "", err
+		}
+		vb, err := json.Marshal(kv[k])
+		if err != nil {
+			return "", err
+		}
+		buf.Write(kb)
+		buf.WriteByte(':')
+		buf.Write(vb)
+	}
+	buf.WriteByte('}')
+
+	return base64.RawURLEncoding.EncodeToString(buf.Bytes()), nil
 }

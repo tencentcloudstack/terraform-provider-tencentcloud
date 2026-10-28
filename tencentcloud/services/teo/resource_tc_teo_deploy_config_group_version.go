@@ -81,6 +81,11 @@ func ResourceTencentCloudTeoDeployConfigGroupVersion() *schema.Resource {
 							Computed:    true,
 							Description: "Version creation time. The time format follows the ISO 8601 standard and is represented in Coordinated Universal Time (UTC).",
 						},
+						"source_version": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Source version ID. The version ID from which this version was derived. Read-only.",
+						},
 					},
 				},
 			},
@@ -309,6 +314,10 @@ func resourceTencentCloudTeoDeployConfigGroupVersionRead(d *schema.ResourceData,
 
 			if configGroupVersionInfo.CreateTime != nil {
 				configGroupVersionInfoMap["create_time"] = configGroupVersionInfo.CreateTime
+			}
+
+			if configGroupVersionInfo.SourceVersion != nil {
+				configGroupVersionInfoMap["source_version"] = configGroupVersionInfo.SourceVersion
 			}
 
 			configGroupVersionInfosList = append(configGroupVersionInfosList, configGroupVersionInfoMap)

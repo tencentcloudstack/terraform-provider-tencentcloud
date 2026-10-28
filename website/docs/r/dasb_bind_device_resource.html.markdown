@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a dasb bind device resource
 
+~> **NOTE:** This resource has been deprecated in Terraform TencentCloud provider version 1.82.101. Please use `tencentcloud_bh_bind_device_resource` instead.
+
 ~> **NOTE:** This resource must exclusive in one dasb resource, do not declare additional rule resources of this device elsewhere.
 
 ## Example Usage
@@ -47,4 +49,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [BindDeviceResource](https://www.tencentcloud.com/search/?wd=BindDeviceResource&type=document&lang=en)
+* Read: [DescribeDevices](https://www.tencentcloud.com/search/?wd=DescribeDevices&type=document&lang=en)
+* Update: [BindDeviceResource](https://www.tencentcloud.com/search/?wd=BindDeviceResource&type=document&lang=en)
+* Delete: [BindDeviceResource](https://www.tencentcloud.com/search/?wd=BindDeviceResource&type=document&lang=en)
 

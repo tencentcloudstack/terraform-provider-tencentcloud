@@ -132,6 +132,29 @@ In addition to all arguments above, the following attributes are exported:
 * `state` - State of the connection. Valid value: `PENDING`, `AVAILABLE`, `DELETING`.
 * `vpn_proto` - Vpn proto of the VPN connection.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateVpnConnection](https://www.tencentcloud.com/document/api/215/17522)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [DescribeVpnConnections](https://www.tencentcloud.com/document/api/215/17515)
+  - [DescribeVpnGateways](https://www.tencentcloud.com/document/api/215/17514)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [DescribeVpnConnections](https://www.tencentcloud.com/document/api/215/17515)
+  - [DescribeVpnGateways](https://www.tencentcloud.com/document/api/215/17514)
+* Update:
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [DescribeVpnConnections](https://www.tencentcloud.com/document/api/215/17515)
+  - [DescribeVpnGateways](https://www.tencentcloud.com/document/api/215/17514)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [ModifyVpnConnectionAttribute](https://www.tencentcloud.com/document/api/215/17508)
+* Delete:
+  - [DeleteVpnConnection](https://www.tencentcloud.com/document/api/215/17519)
+  - [DescribeVpnConnections](https://www.tencentcloud.com/document/api/215/17515)
 
 ## Import
 

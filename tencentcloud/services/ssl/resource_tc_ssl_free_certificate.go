@@ -3,12 +3,14 @@ package ssl
 import (
 	"context"
 	"fmt"
+	"log"
 	"strconv"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	ssl2 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -188,11 +190,22 @@ func resourceTencentCloudFreeCertificateRead(d *schema.ResourceData, meta interf
 	request := ssl2.NewDescribeCertificateDetailRequest()
 	request.CertificateId = &id
 
-	response, err := service.DescribeCertificateDetail(ctx, request)
-
-	if err != nil {
+	var response *ssl2.DescribeCertificateDetailResponse
+	outerErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, inErr := service.DescribeCertificateDetail(ctx, request)
+		if inErr != nil {
+			return tccommon.RetryError(inErr)
+		}
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("TencentCloud SDK %s return empty response", request.GetAction()))
+		}
+		response = result
+		return nil
+	})
+	if outerErr != nil {
+		log.Printf("[CRITAL]%s read free certificate failed, reason: %v", logId, outerErr)
 		d.SetId("")
-		return err
+		return outerErr
 	}
 
 	detail := response.Response

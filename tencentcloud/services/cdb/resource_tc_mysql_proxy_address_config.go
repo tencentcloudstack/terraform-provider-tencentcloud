@@ -413,17 +413,17 @@ func resourceTencentCloudMysqlProxyAddressConfigUpdate(d *schema.ResourceData, m
 
 	if v, ok := d.GetOkExists("ap_node_as_ro_node"); ok {
 		if v.(bool) {
-			request.ApNodeAsRoNode = helper.String("true")
+			request.ApNodeAsRoNode = helper.Bool(true)
 		} else {
-			request.ApNodeAsRoNode = helper.String("false")
+			request.ApNodeAsRoNode = helper.Bool(false)
 		}
 	}
 
 	if v, ok := d.GetOkExists("ap_query_to_other_node"); ok {
 		if v.(bool) {
-			request.ApQueryToOtherNode = helper.String("true")
+			request.ApQueryToOtherNode = helper.Bool(true)
 		} else {
-			request.ApQueryToOtherNode = helper.String("false")
+			request.ApQueryToOtherNode = helper.Bool(false)
 		}
 	}
 

@@ -40,4 +40,11 @@ In addition to all arguments above, the following attributes are exported:
   * `subnet_id` - ID of subnet.
   * `vpc_id` - ID of VPC.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read:
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1051/50703)
+  - [DescribeInternalEndpoints](https://www.tencentcloud.com/document/api/1051/50735)
 

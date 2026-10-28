@@ -235,6 +235,64 @@ func (c *Client) CancelRebuildIndexTaskWithContext(ctx context.Context, request 
     return
 }
 
+func NewChatCompletionsRequest() (request *ChatCompletionsRequest) {
+    request = &ChatCompletionsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "ChatCompletions")
+    
+    
+    return
+}
+
+func NewChatCompletionsResponse() (response *ChatCompletionsResponse) {
+    response = &ChatCompletionsResponse{} 
+    return
+
+}
+
+// ChatCompletions
+// 调用接口，发起一次对话请求。
+//
+// 本接口支持智能生成检索分析语句等日志服务AI功能。
+//
+// ⚠️注意：通过SSE流式调用此接口时，请务必设置请求域名（Endpoint）为 cls.ai.tencentcloudapi.com (VPC内网环境可配置 cls.ai.internal.tencentcloudapi.com）。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) ChatCompletions(request *ChatCompletionsRequest) (response *ChatCompletionsResponse, err error) {
+    return c.ChatCompletionsWithContext(context.Background(), request)
+}
+
+// ChatCompletions
+// 调用接口，发起一次对话请求。
+//
+// 本接口支持智能生成检索分析语句等日志服务AI功能。
+//
+// ⚠️注意：通过SSE流式调用此接口时，请务必设置请求域名（Endpoint）为 cls.ai.tencentcloudapi.com (VPC内网环境可配置 cls.ai.internal.tencentcloudapi.com）。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) ChatCompletionsWithContext(ctx context.Context, request *ChatCompletionsRequest) (response *ChatCompletionsResponse, err error) {
+    if request == nil {
+        request = NewChatCompletionsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "ChatCompletions")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ChatCompletions require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewChatCompletionsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCheckFunctionRequest() (request *CheckFunctionRequest) {
     request = &CheckFunctionRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -495,6 +553,76 @@ func (c *Client) CommitConsumerOffsetsWithContext(ctx context.Context, request *
     return
 }
 
+func NewCreateAgentApplicationRequest() (request *CreateAgentApplicationRequest) {
+    request = &CreateAgentApplicationRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "CreateAgentApplication")
+    
+    
+    return
+}
+
+func NewCreateAgentApplicationResponse() (response *CreateAgentApplicationResponse) {
+    response = &CreateAgentApplicationResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateAgentApplication
+// 本接口用于创建Agent应用
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateAgentApplication(request *CreateAgentApplicationRequest) (response *CreateAgentApplicationResponse, err error) {
+    return c.CreateAgentApplicationWithContext(context.Background(), request)
+}
+
+// CreateAgentApplication
+// 本接口用于创建Agent应用
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateAgentApplicationWithContext(ctx context.Context, request *CreateAgentApplicationRequest) (response *CreateAgentApplicationResponse, err error) {
+    if request == nil {
+        request = NewCreateAgentApplicationRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "CreateAgentApplication")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateAgentApplication require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateAgentApplicationResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateAlarmRequest() (request *CreateAlarmRequest) {
     request = &CreateAlarmRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -727,6 +855,80 @@ func (c *Client) CreateAlarmShieldWithContext(ctx context.Context, request *Crea
     return
 }
 
+func NewCreateCLSDeliverTaskRequest() (request *CreateCLSDeliverTaskRequest) {
+    request = &CreateCLSDeliverTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "CreateCLSDeliverTask")
+    
+    
+    return
+}
+
+func NewCreateCLSDeliverTaskResponse() (response *CreateCLSDeliverTaskResponse) {
+    response = &CreateCLSDeliverTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateCLSDeliverTask
+// 新建CLS投递任务
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_LOGSETNOTEXIST = "ResourceNotFound.LogsetNotExist"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) CreateCLSDeliverTask(request *CreateCLSDeliverTaskRequest) (response *CreateCLSDeliverTaskResponse, err error) {
+    return c.CreateCLSDeliverTaskWithContext(context.Background(), request)
+}
+
+// CreateCLSDeliverTask
+// 新建CLS投递任务
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_LOGSETNOTEXIST = "ResourceNotFound.LogsetNotExist"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) CreateCLSDeliverTaskWithContext(ctx context.Context, request *CreateCLSDeliverTaskRequest) (response *CreateCLSDeliverTaskResponse, err error) {
+    if request == nil {
+        request = NewCreateCLSDeliverTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "CreateCLSDeliverTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCLSDeliverTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateCLSDeliverTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateCloudProductLogCollectionRequest() (request *CreateCloudProductLogCollectionRequest) {
     request = &CreateCloudProductLogCollectionRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -943,6 +1145,74 @@ func (c *Client) CreateConfigExtraWithContext(ctx context.Context, request *Crea
     request.SetContext(ctx)
     
     response = NewCreateConfigExtraResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateConsoleRequest() (request *CreateConsoleRequest) {
+    request = &CreateConsoleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "CreateConsole")
+    
+    
+    return
+}
+
+func NewCreateConsoleResponse() (response *CreateConsoleResponse) {
+    response = &CreateConsoleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateConsole
+// 本接口用于创建DataSight控制台
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_SEARCHTIMEOUT = "FailedOperation.SearchTimeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) CreateConsole(request *CreateConsoleRequest) (response *CreateConsoleResponse, err error) {
+    return c.CreateConsoleWithContext(context.Background(), request)
+}
+
+// CreateConsole
+// 本接口用于创建DataSight控制台
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_SEARCHTIMEOUT = "FailedOperation.SearchTimeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) CreateConsoleWithContext(ctx context.Context, request *CreateConsoleRequest) (response *CreateConsoleResponse, err error) {
+    if request == nil {
+        request = NewCreateConsoleRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "CreateConsole")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateConsole require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateConsoleResponse()
     err = c.Send(request, response)
     return
 }
@@ -2513,6 +2783,430 @@ func (c *Client) CreateRebuildIndexTaskWithContext(ctx context.Context, request 
     return
 }
 
+func NewCreateRecordingRuleTaskRequest() (request *CreateRecordingRuleTaskRequest) {
+    request = &CreateRecordingRuleTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "CreateRecordingRuleTask")
+    
+    
+    return
+}
+
+func NewCreateRecordingRuleTaskResponse() (response *CreateRecordingRuleTaskResponse) {
+    response = &CreateRecordingRuleTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateRecordingRuleTask
+// 创建指标预聚合任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) CreateRecordingRuleTask(request *CreateRecordingRuleTaskRequest) (response *CreateRecordingRuleTaskResponse, err error) {
+    return c.CreateRecordingRuleTaskWithContext(context.Background(), request)
+}
+
+// CreateRecordingRuleTask
+// 创建指标预聚合任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) CreateRecordingRuleTaskWithContext(ctx context.Context, request *CreateRecordingRuleTaskRequest) (response *CreateRecordingRuleTaskResponse, err error) {
+    if request == nil {
+        request = NewCreateRecordingRuleTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "CreateRecordingRuleTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateRecordingRuleTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateRecordingRuleTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateRecordingRuleYamlTaskRequest() (request *CreateRecordingRuleYamlTaskRequest) {
+    request = &CreateRecordingRuleYamlTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "CreateRecordingRuleYamlTask")
+    
+    
+    return
+}
+
+func NewCreateRecordingRuleYamlTaskResponse() (response *CreateRecordingRuleYamlTaskResponse) {
+    response = &CreateRecordingRuleYamlTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateRecordingRuleYamlTask
+// 通过yaml文件创建指标预聚合任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) CreateRecordingRuleYamlTask(request *CreateRecordingRuleYamlTaskRequest) (response *CreateRecordingRuleYamlTaskResponse, err error) {
+    return c.CreateRecordingRuleYamlTaskWithContext(context.Background(), request)
+}
+
+// CreateRecordingRuleYamlTask
+// 通过yaml文件创建指标预聚合任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) CreateRecordingRuleYamlTaskWithContext(ctx context.Context, request *CreateRecordingRuleYamlTaskRequest) (response *CreateRecordingRuleYamlTaskResponse, err error) {
+    if request == nil {
+        request = NewCreateRecordingRuleYamlTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "CreateRecordingRuleYamlTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateRecordingRuleYamlTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateRecordingRuleYamlTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateRemoteWriteTaskRequest() (request *CreateRemoteWriteTaskRequest) {
+    request = &CreateRemoteWriteTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "CreateRemoteWriteTask")
+    
+    
+    return
+}
+
+func NewCreateRemoteWriteTaskResponse() (response *CreateRemoteWriteTaskResponse) {
+    response = &CreateRemoteWriteTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateRemoteWriteTask
+// 创建remote write投递任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) CreateRemoteWriteTask(request *CreateRemoteWriteTaskRequest) (response *CreateRemoteWriteTaskResponse, err error) {
+    return c.CreateRemoteWriteTaskWithContext(context.Background(), request)
+}
+
+// CreateRemoteWriteTask
+// 创建remote write投递任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) CreateRemoteWriteTaskWithContext(ctx context.Context, request *CreateRemoteWriteTaskRequest) (response *CreateRemoteWriteTaskResponse, err error) {
+    if request == nil {
+        request = NewCreateRemoteWriteTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "CreateRemoteWriteTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateRemoteWriteTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateRemoteWriteTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateResourceGraphRequest() (request *CreateResourceGraphRequest) {
+    request = &CreateResourceGraphRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "CreateResourceGraph")
+    
+    
+    return
+}
+
+func NewCreateResourceGraphResponse() (response *CreateResourceGraphResponse) {
+    response = &CreateResourceGraphResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateResourceGraph
+// 创建工作区。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TAGCONCURRENTCONFLICT = "FailedOperation.TagConcurrentConflict"
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateResourceGraph(request *CreateResourceGraphRequest) (response *CreateResourceGraphResponse, err error) {
+    return c.CreateResourceGraphWithContext(context.Background(), request)
+}
+
+// CreateResourceGraph
+// 创建工作区。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TAGCONCURRENTCONFLICT = "FailedOperation.TagConcurrentConflict"
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateResourceGraphWithContext(ctx context.Context, request *CreateResourceGraphRequest) (response *CreateResourceGraphResponse, err error) {
+    if request == nil {
+        request = NewCreateResourceGraphRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "CreateResourceGraph")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateResourceGraph require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateResourceGraphResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateResourceGraphProductIngestTaskRequest() (request *CreateResourceGraphProductIngestTaskRequest) {
+    request = &CreateResourceGraphProductIngestTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "CreateResourceGraphProductIngestTask")
+    
+    
+    return
+}
+
+func NewCreateResourceGraphProductIngestTaskResponse() (response *CreateResourceGraphProductIngestTaskResponse) {
+    response = &CreateResourceGraphProductIngestTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateResourceGraphProductIngestTask
+// 接入指定云产品。EBPF 类产品需提供 EBPFCollectRule，API 类产品仅需 Product。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) CreateResourceGraphProductIngestTask(request *CreateResourceGraphProductIngestTaskRequest) (response *CreateResourceGraphProductIngestTaskResponse, err error) {
+    return c.CreateResourceGraphProductIngestTaskWithContext(context.Background(), request)
+}
+
+// CreateResourceGraphProductIngestTask
+// 接入指定云产品。EBPF 类产品需提供 EBPFCollectRule，API 类产品仅需 Product。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) CreateResourceGraphProductIngestTaskWithContext(ctx context.Context, request *CreateResourceGraphProductIngestTaskRequest) (response *CreateResourceGraphProductIngestTaskResponse, err error) {
+    if request == nil {
+        request = NewCreateResourceGraphProductIngestTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "CreateResourceGraphProductIngestTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateResourceGraphProductIngestTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateResourceGraphProductIngestTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateS3RechargeRequest() (request *CreateS3RechargeRequest) {
+    request = &CreateS3RechargeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "CreateS3Recharge")
+    
+    
+    return
+}
+
+func NewCreateS3RechargeResponse() (response *CreateS3RechargeResponse) {
+    response = &CreateS3RechargeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateS3Recharge
+// 本接口用于创建aws导入任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) CreateS3Recharge(request *CreateS3RechargeRequest) (response *CreateS3RechargeResponse, err error) {
+    return c.CreateS3RechargeWithContext(context.Background(), request)
+}
+
+// CreateS3Recharge
+// 本接口用于创建aws导入任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) CreateS3RechargeWithContext(ctx context.Context, request *CreateS3RechargeRequest) (response *CreateS3RechargeResponse, err error) {
+    if request == nil {
+        request = NewCreateS3RechargeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "CreateS3Recharge")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateS3Recharge require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateS3RechargeResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateScheduledSqlRequest() (request *CreateScheduledSqlRequest) {
     request = &CreateScheduledSqlRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2583,6 +3277,80 @@ func (c *Client) CreateScheduledSqlWithContext(ctx context.Context, request *Cre
     request.SetContext(ctx)
     
     response = NewCreateScheduledSqlResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateSearchViewRequest() (request *CreateSearchViewRequest) {
+    request = &CreateSearchViewRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "CreateSearchView")
+    
+    
+    return
+}
+
+func NewCreateSearchViewResponse() (response *CreateSearchViewResponse) {
+    response = &CreateSearchViewResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateSearchView
+// 新建查询视图
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_LOGSETNOTEXIST = "ResourceNotFound.LogsetNotExist"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) CreateSearchView(request *CreateSearchViewRequest) (response *CreateSearchViewResponse, err error) {
+    return c.CreateSearchViewWithContext(context.Background(), request)
+}
+
+// CreateSearchView
+// 新建查询视图
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_LOGSETNOTEXIST = "ResourceNotFound.LogsetNotExist"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) CreateSearchViewWithContext(ctx context.Context, request *CreateSearchViewRequest) (response *CreateSearchViewResponse, err error) {
+    if request == nil {
+        request = NewCreateSearchViewRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "CreateSearchView")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateSearchView require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateSearchViewResponse()
     err = c.Send(request, response)
     return
 }
@@ -2778,6 +3546,7 @@ func NewCreateTopicResponse() (response *CreateTopicResponse) {
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 //  RESOURCENOTFOUND_LOGSETNOTEXIST = "ResourceNotFound.LogsetNotExist"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDREGION = "UnsupportedOperation.UnsupportedRegion"
 func (c *Client) CreateTopic(request *CreateTopicRequest) (response *CreateTopicResponse, err error) {
     return c.CreateTopicWithContext(context.Background(), request)
 }
@@ -2802,6 +3571,7 @@ func (c *Client) CreateTopic(request *CreateTopicRequest) (response *CreateTopic
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 //  RESOURCENOTFOUND_LOGSETNOTEXIST = "ResourceNotFound.LogsetNotExist"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDREGION = "UnsupportedOperation.UnsupportedRegion"
 func (c *Client) CreateTopicWithContext(ctx context.Context, request *CreateTopicRequest) (response *CreateTopicResponse, err error) {
     if request == nil {
         request = NewCreateTopicRequest()
@@ -2881,6 +3651,74 @@ func (c *Client) CreateWebCallbackWithContext(ctx context.Context, request *Crea
     request.SetContext(ctx)
     
     response = NewCreateWebCallbackResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteAgentApplicationRequest() (request *DeleteAgentApplicationRequest) {
+    request = &DeleteAgentApplicationRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DeleteAgentApplication")
+    
+    
+    return
+}
+
+func NewDeleteAgentApplicationResponse() (response *DeleteAgentApplicationResponse) {
+    response = &DeleteAgentApplicationResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteAgentApplication
+// 本接口用于删除Agent应用
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteAgentApplication(request *DeleteAgentApplicationRequest) (response *DeleteAgentApplicationResponse, err error) {
+    return c.DeleteAgentApplicationWithContext(context.Background(), request)
+}
+
+// DeleteAgentApplication
+// 本接口用于删除Agent应用
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteAgentApplicationWithContext(ctx context.Context, request *DeleteAgentApplicationRequest) (response *DeleteAgentApplicationResponse, err error) {
+    if request == nil {
+        request = NewDeleteAgentApplicationRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DeleteAgentApplication")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteAgentApplication require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteAgentApplicationResponse()
     err = c.Send(request, response)
     return
 }
@@ -3079,6 +3917,76 @@ func (c *Client) DeleteAlarmShieldWithContext(ctx context.Context, request *Dele
     request.SetContext(ctx)
     
     response = NewDeleteAlarmShieldResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteCLSDeliverTaskRequest() (request *DeleteCLSDeliverTaskRequest) {
+    request = &DeleteCLSDeliverTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DeleteCLSDeliverTask")
+    
+    
+    return
+}
+
+func NewDeleteCLSDeliverTaskResponse() (response *DeleteCLSDeliverTaskResponse) {
+    response = &DeleteCLSDeliverTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteCLSDeliverTask
+// 删除CLS投递任务
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DeleteCLSDeliverTask(request *DeleteCLSDeliverTaskRequest) (response *DeleteCLSDeliverTaskResponse, err error) {
+    return c.DeleteCLSDeliverTaskWithContext(context.Background(), request)
+}
+
+// DeleteCLSDeliverTask
+// 删除CLS投递任务
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DeleteCLSDeliverTaskWithContext(ctx context.Context, request *DeleteCLSDeliverTaskRequest) (response *DeleteCLSDeliverTaskResponse, err error) {
+    if request == nil {
+        request = NewDeleteCLSDeliverTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DeleteCLSDeliverTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCLSDeliverTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCLSDeliverTaskResponse()
     err = c.Send(request, response)
     return
 }
@@ -3357,6 +4265,76 @@ func (c *Client) DeleteConfigFromMachineGroupWithContext(ctx context.Context, re
     request.SetContext(ctx)
     
     response = NewDeleteConfigFromMachineGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteConsoleRequest() (request *DeleteConsoleRequest) {
+    request = &DeleteConsoleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DeleteConsole")
+    
+    
+    return
+}
+
+func NewDeleteConsoleResponse() (response *DeleteConsoleResponse) {
+    response = &DeleteConsoleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteConsole
+// 本接口用于删除DataSight控制台
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_SEARCHTIMEOUT = "FailedOperation.SearchTimeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteConsole(request *DeleteConsoleRequest) (response *DeleteConsoleResponse, err error) {
+    return c.DeleteConsoleWithContext(context.Background(), request)
+}
+
+// DeleteConsole
+// 本接口用于删除DataSight控制台
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_SEARCHTIMEOUT = "FailedOperation.SearchTimeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteConsoleWithContext(ctx context.Context, request *DeleteConsoleRequest) (response *DeleteConsoleResponse, err error) {
+    if request == nil {
+        request = NewDeleteConsoleRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DeleteConsole")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteConsole require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteConsoleResponse()
     err = c.Send(request, response)
     return
 }
@@ -4269,6 +5247,64 @@ func (c *Client) DeleteKafkaRechargeWithContext(ctx context.Context, request *De
     return
 }
 
+func NewDeleteLogRequest() (request *DeleteLogRequest) {
+    request = &DeleteLogRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DeleteLog")
+    
+    
+    return
+}
+
+func NewDeleteLogResponse() (response *DeleteLogResponse) {
+    response = &DeleteLogResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteLog
+// 修改日志信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INDEXSEGMENTOFFLOADED = "FailedOperation.IndexSegmentOffloaded"
+//  FAILEDOPERATION_MODIFYSYSTEMFIELD = "FailedOperation.ModifySystemField"
+//  FAILEDOPERATION_WRITEBYQUERYREACHLIMIT = "FailedOperation.WriteByQueryReachLimit"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) DeleteLog(request *DeleteLogRequest) (response *DeleteLogResponse, err error) {
+    return c.DeleteLogWithContext(context.Background(), request)
+}
+
+// DeleteLog
+// 修改日志信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INDEXSEGMENTOFFLOADED = "FailedOperation.IndexSegmentOffloaded"
+//  FAILEDOPERATION_MODIFYSYSTEMFIELD = "FailedOperation.ModifySystemField"
+//  FAILEDOPERATION_WRITEBYQUERYREACHLIMIT = "FailedOperation.WriteByQueryReachLimit"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) DeleteLogWithContext(ctx context.Context, request *DeleteLogRequest) (response *DeleteLogResponse, err error) {
+    if request == nil {
+        request = NewDeleteLogRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DeleteLog")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteLog require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteLogResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteLogsetRequest() (request *DeleteLogsetRequest) {
     request = &DeleteLogsetRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4769,6 +5805,422 @@ func (c *Client) DeleteNoticeContentWithContext(ctx context.Context, request *De
     return
 }
 
+func NewDeleteRecordingRuleTaskRequest() (request *DeleteRecordingRuleTaskRequest) {
+    request = &DeleteRecordingRuleTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DeleteRecordingRuleTask")
+    
+    
+    return
+}
+
+func NewDeleteRecordingRuleTaskResponse() (response *DeleteRecordingRuleTaskResponse) {
+    response = &DeleteRecordingRuleTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteRecordingRuleTask
+// 本接口用于删除预聚合分析任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) DeleteRecordingRuleTask(request *DeleteRecordingRuleTaskRequest) (response *DeleteRecordingRuleTaskResponse, err error) {
+    return c.DeleteRecordingRuleTaskWithContext(context.Background(), request)
+}
+
+// DeleteRecordingRuleTask
+// 本接口用于删除预聚合分析任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) DeleteRecordingRuleTaskWithContext(ctx context.Context, request *DeleteRecordingRuleTaskRequest) (response *DeleteRecordingRuleTaskResponse, err error) {
+    if request == nil {
+        request = NewDeleteRecordingRuleTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DeleteRecordingRuleTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteRecordingRuleTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteRecordingRuleTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteRecordingRuleYamlTaskRequest() (request *DeleteRecordingRuleYamlTaskRequest) {
+    request = &DeleteRecordingRuleYamlTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DeleteRecordingRuleYamlTask")
+    
+    
+    return
+}
+
+func NewDeleteRecordingRuleYamlTaskResponse() (response *DeleteRecordingRuleYamlTaskResponse) {
+    response = &DeleteRecordingRuleYamlTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteRecordingRuleYamlTask
+// 本接口用于删除yaml预聚合任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) DeleteRecordingRuleYamlTask(request *DeleteRecordingRuleYamlTaskRequest) (response *DeleteRecordingRuleYamlTaskResponse, err error) {
+    return c.DeleteRecordingRuleYamlTaskWithContext(context.Background(), request)
+}
+
+// DeleteRecordingRuleYamlTask
+// 本接口用于删除yaml预聚合任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) DeleteRecordingRuleYamlTaskWithContext(ctx context.Context, request *DeleteRecordingRuleYamlTaskRequest) (response *DeleteRecordingRuleYamlTaskResponse, err error) {
+    if request == nil {
+        request = NewDeleteRecordingRuleYamlTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DeleteRecordingRuleYamlTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteRecordingRuleYamlTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteRecordingRuleYamlTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteRemoteWriteTaskRequest() (request *DeleteRemoteWriteTaskRequest) {
+    request = &DeleteRemoteWriteTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DeleteRemoteWriteTask")
+    
+    
+    return
+}
+
+func NewDeleteRemoteWriteTaskResponse() (response *DeleteRemoteWriteTaskResponse) {
+    response = &DeleteRemoteWriteTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteRemoteWriteTask
+// 删除RemoteWrite任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) DeleteRemoteWriteTask(request *DeleteRemoteWriteTaskRequest) (response *DeleteRemoteWriteTaskResponse, err error) {
+    return c.DeleteRemoteWriteTaskWithContext(context.Background(), request)
+}
+
+// DeleteRemoteWriteTask
+// 删除RemoteWrite任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) DeleteRemoteWriteTaskWithContext(ctx context.Context, request *DeleteRemoteWriteTaskRequest) (response *DeleteRemoteWriteTaskResponse, err error) {
+    if request == nil {
+        request = NewDeleteRemoteWriteTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DeleteRemoteWriteTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteRemoteWriteTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteRemoteWriteTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteResourceGraphRequest() (request *DeleteResourceGraphRequest) {
+    request = &DeleteResourceGraphRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DeleteResourceGraph")
+    
+    
+    return
+}
+
+func NewDeleteResourceGraphResponse() (response *DeleteResourceGraphResponse) {
+    response = &DeleteResourceGraphResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteResourceGraph
+// 删除工作区。删除前需确认是否级联清理已接入的云产品（待产品确认）。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DeleteResourceGraph(request *DeleteResourceGraphRequest) (response *DeleteResourceGraphResponse, err error) {
+    return c.DeleteResourceGraphWithContext(context.Background(), request)
+}
+
+// DeleteResourceGraph
+// 删除工作区。删除前需确认是否级联清理已接入的云产品（待产品确认）。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DeleteResourceGraphWithContext(ctx context.Context, request *DeleteResourceGraphRequest) (response *DeleteResourceGraphResponse, err error) {
+    if request == nil {
+        request = NewDeleteResourceGraphRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DeleteResourceGraph")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteResourceGraph require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteResourceGraphResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteResourceGraphProductIngestTaskRequest() (request *DeleteResourceGraphProductIngestTaskRequest) {
+    request = &DeleteResourceGraphProductIngestTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DeleteResourceGraphProductIngestTask")
+    
+    
+    return
+}
+
+func NewDeleteResourceGraphProductIngestTaskResponse() (response *DeleteResourceGraphProductIngestTaskResponse) {
+    response = &DeleteResourceGraphProductIngestTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteResourceGraphProductIngestTask
+// 删除产品接入任务
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDFILTER = "InvalidFilter"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DeleteResourceGraphProductIngestTask(request *DeleteResourceGraphProductIngestTaskRequest) (response *DeleteResourceGraphProductIngestTaskResponse, err error) {
+    return c.DeleteResourceGraphProductIngestTaskWithContext(context.Background(), request)
+}
+
+// DeleteResourceGraphProductIngestTask
+// 删除产品接入任务
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDFILTER = "InvalidFilter"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DeleteResourceGraphProductIngestTaskWithContext(ctx context.Context, request *DeleteResourceGraphProductIngestTaskRequest) (response *DeleteResourceGraphProductIngestTaskResponse, err error) {
+    if request == nil {
+        request = NewDeleteResourceGraphProductIngestTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DeleteResourceGraphProductIngestTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteResourceGraphProductIngestTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteResourceGraphProductIngestTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteS3RechargeRequest() (request *DeleteS3RechargeRequest) {
+    request = &DeleteS3RechargeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DeleteS3Recharge")
+    
+    
+    return
+}
+
+func NewDeleteS3RechargeResponse() (response *DeleteS3RechargeResponse) {
+    response = &DeleteS3RechargeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteS3Recharge
+// 本接口用于删除aws导入任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) DeleteS3Recharge(request *DeleteS3RechargeRequest) (response *DeleteS3RechargeResponse, err error) {
+    return c.DeleteS3RechargeWithContext(context.Background(), request)
+}
+
+// DeleteS3Recharge
+// 本接口用于删除aws导入任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) DeleteS3RechargeWithContext(ctx context.Context, request *DeleteS3RechargeRequest) (response *DeleteS3RechargeResponse, err error) {
+    if request == nil {
+        request = NewDeleteS3RechargeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DeleteS3Recharge")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteS3Recharge require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteS3RechargeResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteScheduledSqlRequest() (request *DeleteScheduledSqlRequest) {
     request = &DeleteScheduledSqlRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4839,6 +6291,76 @@ func (c *Client) DeleteScheduledSqlWithContext(ctx context.Context, request *Del
     request.SetContext(ctx)
     
     response = NewDeleteScheduledSqlResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteSearchViewRequest() (request *DeleteSearchViewRequest) {
+    request = &DeleteSearchViewRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DeleteSearchView")
+    
+    
+    return
+}
+
+func NewDeleteSearchViewResponse() (response *DeleteSearchViewResponse) {
+    response = &DeleteSearchViewResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteSearchView
+// 删除查询视图
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DeleteSearchView(request *DeleteSearchViewRequest) (response *DeleteSearchViewResponse, err error) {
+    return c.DeleteSearchViewWithContext(context.Background(), request)
+}
+
+// DeleteSearchView
+// 删除查询视图
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DeleteSearchViewWithContext(ctx context.Context, request *DeleteSearchViewRequest) (response *DeleteSearchViewResponse, err error) {
+    if request == nil {
+        request = NewDeleteSearchViewRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DeleteSearchView")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteSearchView require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteSearchViewResponse()
     err = c.Send(request, response)
     return
 }
@@ -5143,6 +6665,140 @@ func (c *Client) DeleteWebCallbackWithContext(ctx context.Context, request *Dele
     return
 }
 
+func NewDescribeAgentApplicationsRequest() (request *DescribeAgentApplicationsRequest) {
+    request = &DescribeAgentApplicationsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeAgentApplications")
+    
+    
+    return
+}
+
+func NewDescribeAgentApplicationsResponse() (response *DescribeAgentApplicationsResponse) {
+    response = &DescribeAgentApplicationsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAgentApplications
+// 获取Agent应用列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+func (c *Client) DescribeAgentApplications(request *DescribeAgentApplicationsRequest) (response *DescribeAgentApplicationsResponse, err error) {
+    return c.DescribeAgentApplicationsWithContext(context.Background(), request)
+}
+
+// DescribeAgentApplications
+// 获取Agent应用列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+func (c *Client) DescribeAgentApplicationsWithContext(ctx context.Context, request *DescribeAgentApplicationsRequest) (response *DescribeAgentApplicationsResponse, err error) {
+    if request == nil {
+        request = NewDescribeAgentApplicationsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DescribeAgentApplications")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAgentApplications require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAgentApplicationsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAgentConfigsRequest() (request *DescribeAgentConfigsRequest) {
+    request = &DescribeAgentConfigsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeAgentConfigs")
+    
+    
+    return
+}
+
+func NewDescribeAgentConfigsResponse() (response *DescribeAgentConfigsResponse) {
+    response = &DescribeAgentConfigsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAgentConfigs
+// 获取agent对应的采集配置
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeAgentConfigs(request *DescribeAgentConfigsRequest) (response *DescribeAgentConfigsResponse, err error) {
+    return c.DescribeAgentConfigsWithContext(context.Background(), request)
+}
+
+// DescribeAgentConfigs
+// 获取agent对应的采集配置
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeAgentConfigsWithContext(ctx context.Context, request *DescribeAgentConfigsRequest) (response *DescribeAgentConfigsResponse, err error) {
+    if request == nil {
+        request = NewDescribeAgentConfigsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DescribeAgentConfigs")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAgentConfigs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAgentConfigsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeAlarmNoticesRequest() (request *DescribeAlarmNoticesRequest) {
     request = &DescribeAlarmNoticesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5415,6 +7071,76 @@ func (c *Client) DescribeAlertRecordHistoryWithContext(ctx context.Context, requ
     request.SetContext(ctx)
     
     response = NewDescribeAlertRecordHistoryResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCLSDeliverTasksRequest() (request *DescribeCLSDeliverTasksRequest) {
+    request = &DescribeCLSDeliverTasksRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeCLSDeliverTasks")
+    
+    
+    return
+}
+
+func NewDescribeCLSDeliverTasksResponse() (response *DescribeCLSDeliverTasksResponse) {
+    response = &DescribeCLSDeliverTasksResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCLSDeliverTasks
+// 获取CLS投递任务列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_RECORDNOTEXIST = "ResourceNotFound.RecordNotExist"
+func (c *Client) DescribeCLSDeliverTasks(request *DescribeCLSDeliverTasksRequest) (response *DescribeCLSDeliverTasksResponse, err error) {
+    return c.DescribeCLSDeliverTasksWithContext(context.Background(), request)
+}
+
+// DescribeCLSDeliverTasks
+// 获取CLS投递任务列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_RECORDNOTEXIST = "ResourceNotFound.RecordNotExist"
+func (c *Client) DescribeCLSDeliverTasksWithContext(ctx context.Context, request *DescribeCLSDeliverTasksRequest) (response *DescribeCLSDeliverTasksResponse, err error) {
+    if request == nil {
+        request = NewDescribeCLSDeliverTasksRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DescribeCLSDeliverTasks")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCLSDeliverTasks require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCLSDeliverTasksResponse()
     err = c.Send(request, response)
     return
 }
@@ -5885,6 +7611,56 @@ func (c *Client) DescribeConsoleSharingListWithContext(ctx context.Context, requ
     request.SetContext(ctx)
     
     response = NewDescribeConsoleSharingListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeConsolesRequest() (request *DescribeConsolesRequest) {
+    request = &DescribeConsolesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeConsoles")
+    
+    
+    return
+}
+
+func NewDescribeConsolesResponse() (response *DescribeConsolesResponse) {
+    response = &DescribeConsolesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeConsoles
+// 查询DataSight控制台实例列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+func (c *Client) DescribeConsoles(request *DescribeConsolesRequest) (response *DescribeConsolesResponse, err error) {
+    return c.DescribeConsolesWithContext(context.Background(), request)
+}
+
+// DescribeConsoles
+// 查询DataSight控制台实例列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+func (c *Client) DescribeConsolesWithContext(ctx context.Context, request *DescribeConsolesRequest) (response *DescribeConsolesResponse, err error) {
+    if request == nil {
+        request = NewDescribeConsolesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DescribeConsoles")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeConsoles require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeConsolesResponse()
     err = c.Send(request, response)
     return
 }
@@ -7391,9 +9167,13 @@ func NewDescribeLogContextResponse() (response *DescribeLogContextResponse) {
 }
 
 // DescribeLogContext
-// 本接口用于搜索日志上下文附近的内容，详情参考[上下文检索](https://cloud.tencent.com/document/product/614/53248)。
+// 本接口用于搜索日志上下文附近的内容，部分日志采集方式不支持本接口，详情参考[上下文检索](https://cloud.tencent.com/document/product/614/53248)。
 //
-// API返回数据包最大49MB，建议启用 gzip 压缩（HTTP Request Header Accept-Encoding:gzip）。
+// **注意事项**：
+//
+// 1. API返回数据包最大49MB，返回数据量大时，建议启用 gzip 压缩（HTTP Request Header Accept-Encoding:gzip）。
+//
+// 2. 本接口存在频率限制，不适合批量读取海量日志，如需下载或实时读取日志，建议使用[日志下载](https://cloud.tencent.com/document/product/614/52901)或[投递与消费](https://cloud.tencent.com/document/product/614/37908)功能。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -7418,9 +9198,13 @@ func (c *Client) DescribeLogContext(request *DescribeLogContextRequest) (respons
 }
 
 // DescribeLogContext
-// 本接口用于搜索日志上下文附近的内容，详情参考[上下文检索](https://cloud.tencent.com/document/product/614/53248)。
+// 本接口用于搜索日志上下文附近的内容，部分日志采集方式不支持本接口，详情参考[上下文检索](https://cloud.tencent.com/document/product/614/53248)。
 //
-// API返回数据包最大49MB，建议启用 gzip 压缩（HTTP Request Header Accept-Encoding:gzip）。
+// **注意事项**：
+//
+// 1. API返回数据包最大49MB，返回数据量大时，建议启用 gzip 压缩（HTTP Request Header Accept-Encoding:gzip）。
+//
+// 2. 本接口存在频率限制，不适合批量读取海量日志，如需下载或实时读取日志，建议使用[日志下载](https://cloud.tencent.com/document/product/614/52901)或[投递与消费](https://cloud.tencent.com/document/product/614/37908)功能。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -8405,6 +10189,980 @@ func (c *Client) DescribeRebuildIndexTasksWithContext(ctx context.Context, reque
     return
 }
 
+func NewDescribeRecordingRuleTaskRequest() (request *DescribeRecordingRuleTaskRequest) {
+    request = &DescribeRecordingRuleTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeRecordingRuleTask")
+    
+    
+    return
+}
+
+func NewDescribeRecordingRuleTaskResponse() (response *DescribeRecordingRuleTaskResponse) {
+    response = &DescribeRecordingRuleTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRecordingRuleTask
+// 本接口用于获取预聚合任务列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) DescribeRecordingRuleTask(request *DescribeRecordingRuleTaskRequest) (response *DescribeRecordingRuleTaskResponse, err error) {
+    return c.DescribeRecordingRuleTaskWithContext(context.Background(), request)
+}
+
+// DescribeRecordingRuleTask
+// 本接口用于获取预聚合任务列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) DescribeRecordingRuleTaskWithContext(ctx context.Context, request *DescribeRecordingRuleTaskRequest) (response *DescribeRecordingRuleTaskResponse, err error) {
+    if request == nil {
+        request = NewDescribeRecordingRuleTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DescribeRecordingRuleTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRecordingRuleTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRecordingRuleTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRecordingRuleYamlTaskRequest() (request *DescribeRecordingRuleYamlTaskRequest) {
+    request = &DescribeRecordingRuleYamlTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeRecordingRuleYamlTask")
+    
+    
+    return
+}
+
+func NewDescribeRecordingRuleYamlTaskResponse() (response *DescribeRecordingRuleYamlTaskResponse) {
+    response = &DescribeRecordingRuleYamlTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRecordingRuleYamlTask
+// 本接口用于获取yaml预聚合任务列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) DescribeRecordingRuleYamlTask(request *DescribeRecordingRuleYamlTaskRequest) (response *DescribeRecordingRuleYamlTaskResponse, err error) {
+    return c.DescribeRecordingRuleYamlTaskWithContext(context.Background(), request)
+}
+
+// DescribeRecordingRuleYamlTask
+// 本接口用于获取yaml预聚合任务列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) DescribeRecordingRuleYamlTaskWithContext(ctx context.Context, request *DescribeRecordingRuleYamlTaskRequest) (response *DescribeRecordingRuleYamlTaskResponse, err error) {
+    if request == nil {
+        request = NewDescribeRecordingRuleYamlTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DescribeRecordingRuleYamlTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRecordingRuleYamlTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRecordingRuleYamlTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRemoteWriteTasksRequest() (request *DescribeRemoteWriteTasksRequest) {
+    request = &DescribeRemoteWriteTasksRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeRemoteWriteTasks")
+    
+    
+    return
+}
+
+func NewDescribeRemoteWriteTasksResponse() (response *DescribeRemoteWriteTasksResponse) {
+    response = &DescribeRemoteWriteTasksResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRemoteWriteTasks
+// 本接口获取RemoteWrite投递任务列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_TOPICCONFLICT = "InvalidParameter.TopicConflict"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) DescribeRemoteWriteTasks(request *DescribeRemoteWriteTasksRequest) (response *DescribeRemoteWriteTasksResponse, err error) {
+    return c.DescribeRemoteWriteTasksWithContext(context.Background(), request)
+}
+
+// DescribeRemoteWriteTasks
+// 本接口获取RemoteWrite投递任务列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_TOPICCONFLICT = "InvalidParameter.TopicConflict"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) DescribeRemoteWriteTasksWithContext(ctx context.Context, request *DescribeRemoteWriteTasksRequest) (response *DescribeRemoteWriteTasksResponse, err error) {
+    if request == nil {
+        request = NewDescribeRemoteWriteTasksRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DescribeRemoteWriteTasks")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRemoteWriteTasks require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRemoteWriteTasksResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeResourceGraphDetailRequest() (request *DescribeResourceGraphDetailRequest) {
+    request = &DescribeResourceGraphDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeResourceGraphDetail")
+    
+    
+    return
+}
+
+func NewDescribeResourceGraphDetailResponse() (response *DescribeResourceGraphDetailResponse) {
+    response = &DescribeResourceGraphDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeResourceGraphDetail
+// 查询单个云产品接入的详情，包含基本信息、实例选择、eBPF 采集规则和关联的日志主题。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeResourceGraphDetail(request *DescribeResourceGraphDetailRequest) (response *DescribeResourceGraphDetailResponse, err error) {
+    return c.DescribeResourceGraphDetailWithContext(context.Background(), request)
+}
+
+// DescribeResourceGraphDetail
+// 查询单个云产品接入的详情，包含基本信息、实例选择、eBPF 采集规则和关联的日志主题。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeResourceGraphDetailWithContext(ctx context.Context, request *DescribeResourceGraphDetailRequest) (response *DescribeResourceGraphDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeResourceGraphDetailRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DescribeResourceGraphDetail")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeResourceGraphDetail require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeResourceGraphDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeResourceGraphEntitiesRequest() (request *DescribeResourceGraphEntitiesRequest) {
+    request = &DescribeResourceGraphEntitiesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeResourceGraphEntities")
+    
+    
+    return
+}
+
+func NewDescribeResourceGraphEntitiesResponse() (response *DescribeResourceGraphEntitiesResponse) {
+    response = &DescribeResourceGraphEntitiesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeResourceGraphEntities
+// 分页查询资源图谱实体列表。Filters 支持  Product / EntityClassName / Keyword 过滤；TagFilter 由于结构特殊（key 单选 + values 多选）独立成字段。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeResourceGraphEntities(request *DescribeResourceGraphEntitiesRequest) (response *DescribeResourceGraphEntitiesResponse, err error) {
+    return c.DescribeResourceGraphEntitiesWithContext(context.Background(), request)
+}
+
+// DescribeResourceGraphEntities
+// 分页查询资源图谱实体列表。Filters 支持  Product / EntityClassName / Keyword 过滤；TagFilter 由于结构特殊（key 单选 + values 多选）独立成字段。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeResourceGraphEntitiesWithContext(ctx context.Context, request *DescribeResourceGraphEntitiesRequest) (response *DescribeResourceGraphEntitiesResponse, err error) {
+    if request == nil {
+        request = NewDescribeResourceGraphEntitiesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DescribeResourceGraphEntities")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeResourceGraphEntities require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeResourceGraphEntitiesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeResourceGraphEntityDependencyRequest() (request *DescribeResourceGraphEntityDependencyRequest) {
+    request = &DescribeResourceGraphEntityDependencyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeResourceGraphEntityDependency")
+    
+    
+    return
+}
+
+func NewDescribeResourceGraphEntityDependencyResponse() (response *DescribeResourceGraphEntityDependencyResponse) {
+    response = &DescribeResourceGraphEntityDependencyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeResourceGraphEntityDependency
+// 以指定实体为中心，按 Direction（上/下游/全部）+ Hop（跳数）查询依赖拓扑，同时返回拓扑图（节点+边）、4 张卡片汇总、列表区数据、产品 tag 汇总。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeResourceGraphEntityDependency(request *DescribeResourceGraphEntityDependencyRequest) (response *DescribeResourceGraphEntityDependencyResponse, err error) {
+    return c.DescribeResourceGraphEntityDependencyWithContext(context.Background(), request)
+}
+
+// DescribeResourceGraphEntityDependency
+// 以指定实体为中心，按 Direction（上/下游/全部）+ Hop（跳数）查询依赖拓扑，同时返回拓扑图（节点+边）、4 张卡片汇总、列表区数据、产品 tag 汇总。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeResourceGraphEntityDependencyWithContext(ctx context.Context, request *DescribeResourceGraphEntityDependencyRequest) (response *DescribeResourceGraphEntityDependencyResponse, err error) {
+    if request == nil {
+        request = NewDescribeResourceGraphEntityDependencyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DescribeResourceGraphEntityDependency")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeResourceGraphEntityDependency require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeResourceGraphEntityDependencyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeResourceGraphEntityDetailRequest() (request *DescribeResourceGraphEntityDetailRequest) {
+    request = &DescribeResourceGraphEntityDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeResourceGraphEntityDetail")
+    
+    
+    return
+}
+
+func NewDescribeResourceGraphEntityDetailResponse() (response *DescribeResourceGraphEntityDetailResponse) {
+    response = &DescribeResourceGraphEntityDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeResourceGraphEntityDetail
+// 查询单个实体的完整详情，包含基本信息、动态属性、标签、关联主题。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeResourceGraphEntityDetail(request *DescribeResourceGraphEntityDetailRequest) (response *DescribeResourceGraphEntityDetailResponse, err error) {
+    return c.DescribeResourceGraphEntityDetailWithContext(context.Background(), request)
+}
+
+// DescribeResourceGraphEntityDetail
+// 查询单个实体的完整详情，包含基本信息、动态属性、标签、关联主题。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeResourceGraphEntityDetailWithContext(ctx context.Context, request *DescribeResourceGraphEntityDetailRequest) (response *DescribeResourceGraphEntityDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeResourceGraphEntityDetailRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DescribeResourceGraphEntityDetail")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeResourceGraphEntityDetail require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeResourceGraphEntityDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeResourceGraphFailureDetailRequest() (request *DescribeResourceGraphFailureDetailRequest) {
+    request = &DescribeResourceGraphFailureDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeResourceGraphFailureDetail")
+    
+    
+    return
+}
+
+func NewDescribeResourceGraphFailureDetailResponse() (response *DescribeResourceGraphFailureDetailResponse) {
+    response = &DescribeResourceGraphFailureDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeResourceGraphFailureDetail
+// 查询资源图谱失败详情
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDFILTER = "InvalidFilter"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeResourceGraphFailureDetail(request *DescribeResourceGraphFailureDetailRequest) (response *DescribeResourceGraphFailureDetailResponse, err error) {
+    return c.DescribeResourceGraphFailureDetailWithContext(context.Background(), request)
+}
+
+// DescribeResourceGraphFailureDetail
+// 查询资源图谱失败详情
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDFILTER = "InvalidFilter"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeResourceGraphFailureDetailWithContext(ctx context.Context, request *DescribeResourceGraphFailureDetailRequest) (response *DescribeResourceGraphFailureDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeResourceGraphFailureDetailRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DescribeResourceGraphFailureDetail")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeResourceGraphFailureDetail require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeResourceGraphFailureDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeResourceGraphIngestTaskFailureDetailRequest() (request *DescribeResourceGraphIngestTaskFailureDetailRequest) {
+    request = &DescribeResourceGraphIngestTaskFailureDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeResourceGraphIngestTaskFailureDetail")
+    
+    
+    return
+}
+
+func NewDescribeResourceGraphIngestTaskFailureDetailResponse() (response *DescribeResourceGraphIngestTaskFailureDetailResponse) {
+    response = &DescribeResourceGraphIngestTaskFailureDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeResourceGraphIngestTaskFailureDetail
+// 查询资源图谱失败详情
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeResourceGraphIngestTaskFailureDetail(request *DescribeResourceGraphIngestTaskFailureDetailRequest) (response *DescribeResourceGraphIngestTaskFailureDetailResponse, err error) {
+    return c.DescribeResourceGraphIngestTaskFailureDetailWithContext(context.Background(), request)
+}
+
+// DescribeResourceGraphIngestTaskFailureDetail
+// 查询资源图谱失败详情
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeResourceGraphIngestTaskFailureDetailWithContext(ctx context.Context, request *DescribeResourceGraphIngestTaskFailureDetailRequest) (response *DescribeResourceGraphIngestTaskFailureDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeResourceGraphIngestTaskFailureDetailRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DescribeResourceGraphIngestTaskFailureDetail")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeResourceGraphIngestTaskFailureDetail require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeResourceGraphIngestTaskFailureDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeResourceGraphProductIngestTaskDetailRequest() (request *DescribeResourceGraphProductIngestTaskDetailRequest) {
+    request = &DescribeResourceGraphProductIngestTaskDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeResourceGraphProductIngestTaskDetail")
+    
+    
+    return
+}
+
+func NewDescribeResourceGraphProductIngestTaskDetailResponse() (response *DescribeResourceGraphProductIngestTaskDetailResponse) {
+    response = &DescribeResourceGraphProductIngestTaskDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeResourceGraphProductIngestTaskDetail
+// 查询单个云产品接入的详情，包含基本信息、实例选择、eBPF 采集规则和关联的日志主题。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeResourceGraphProductIngestTaskDetail(request *DescribeResourceGraphProductIngestTaskDetailRequest) (response *DescribeResourceGraphProductIngestTaskDetailResponse, err error) {
+    return c.DescribeResourceGraphProductIngestTaskDetailWithContext(context.Background(), request)
+}
+
+// DescribeResourceGraphProductIngestTaskDetail
+// 查询单个云产品接入的详情，包含基本信息、实例选择、eBPF 采集规则和关联的日志主题。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeResourceGraphProductIngestTaskDetailWithContext(ctx context.Context, request *DescribeResourceGraphProductIngestTaskDetailRequest) (response *DescribeResourceGraphProductIngestTaskDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeResourceGraphProductIngestTaskDetailRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DescribeResourceGraphProductIngestTaskDetail")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeResourceGraphProductIngestTaskDetail require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeResourceGraphProductIngestTaskDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeResourceGraphProductIngestTaskListRequest() (request *DescribeResourceGraphProductIngestTaskListRequest) {
+    request = &DescribeResourceGraphProductIngestTaskListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeResourceGraphProductIngestTaskList")
+    
+    
+    return
+}
+
+func NewDescribeResourceGraphProductIngestTaskListResponse() (response *DescribeResourceGraphProductIngestTaskListResponse) {
+    response = &DescribeResourceGraphProductIngestTaskListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeResourceGraphProductIngestTaskList
+// 分页查询云产品接入列表，返回顶部 4 张卡片汇总 + 列表行。支持按 Status / CollectMethod / Product / Name 过滤。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeResourceGraphProductIngestTaskList(request *DescribeResourceGraphProductIngestTaskListRequest) (response *DescribeResourceGraphProductIngestTaskListResponse, err error) {
+    return c.DescribeResourceGraphProductIngestTaskListWithContext(context.Background(), request)
+}
+
+// DescribeResourceGraphProductIngestTaskList
+// 分页查询云产品接入列表，返回顶部 4 张卡片汇总 + 列表行。支持按 Status / CollectMethod / Product / Name 过滤。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeResourceGraphProductIngestTaskListWithContext(ctx context.Context, request *DescribeResourceGraphProductIngestTaskListRequest) (response *DescribeResourceGraphProductIngestTaskListResponse, err error) {
+    if request == nil {
+        request = NewDescribeResourceGraphProductIngestTaskListRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DescribeResourceGraphProductIngestTaskList")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeResourceGraphProductIngestTaskList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeResourceGraphProductIngestTaskListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeResourceGraphTkeClusterStatusRequest() (request *DescribeResourceGraphTkeClusterStatusRequest) {
+    request = &DescribeResourceGraphTkeClusterStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeResourceGraphTkeClusterStatus")
+    
+    
+    return
+}
+
+func NewDescribeResourceGraphTkeClusterStatusResponse() (response *DescribeResourceGraphTkeClusterStatusResponse) {
+    response = &DescribeResourceGraphTkeClusterStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeResourceGraphTkeClusterStatus
+// 资源图谱tke集群接入状态
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeResourceGraphTkeClusterStatus(request *DescribeResourceGraphTkeClusterStatusRequest) (response *DescribeResourceGraphTkeClusterStatusResponse, err error) {
+    return c.DescribeResourceGraphTkeClusterStatusWithContext(context.Background(), request)
+}
+
+// DescribeResourceGraphTkeClusterStatus
+// 资源图谱tke集群接入状态
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeResourceGraphTkeClusterStatusWithContext(ctx context.Context, request *DescribeResourceGraphTkeClusterStatusRequest) (response *DescribeResourceGraphTkeClusterStatusResponse, err error) {
+    if request == nil {
+        request = NewDescribeResourceGraphTkeClusterStatusRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DescribeResourceGraphTkeClusterStatus")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeResourceGraphTkeClusterStatus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeResourceGraphTkeClusterStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeResourceGraphsRequest() (request *DescribeResourceGraphsRequest) {
+    request = &DescribeResourceGraphsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeResourceGraphs")
+    
+    
+    return
+}
+
+func NewDescribeResourceGraphsResponse() (response *DescribeResourceGraphsResponse) {
+    response = &DescribeResourceGraphsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeResourceGraphs
+// 分页查询工作区列表，支持按 WorkAreaId / Name / Region 过滤。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TAGCONCURRENTCONFLICT = "FailedOperation.TagConcurrentConflict"
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeResourceGraphs(request *DescribeResourceGraphsRequest) (response *DescribeResourceGraphsResponse, err error) {
+    return c.DescribeResourceGraphsWithContext(context.Background(), request)
+}
+
+// DescribeResourceGraphs
+// 分页查询工作区列表，支持按 WorkAreaId / Name / Region 过滤。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TAGCONCURRENTCONFLICT = "FailedOperation.TagConcurrentConflict"
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeResourceGraphsWithContext(ctx context.Context, request *DescribeResourceGraphsRequest) (response *DescribeResourceGraphsResponse, err error) {
+    if request == nil {
+        request = NewDescribeResourceGraphsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DescribeResourceGraphs")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeResourceGraphs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeResourceGraphsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeS3RechargesRequest() (request *DescribeS3RechargesRequest) {
+    request = &DescribeS3RechargesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeS3Recharges")
+    
+    
+    return
+}
+
+func NewDescribeS3RechargesResponse() (response *DescribeS3RechargesResponse) {
+    response = &DescribeS3RechargesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeS3Recharges
+// 本接口用于获取cos导入配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_TOPICCONFLICT = "InvalidParameter.TopicConflict"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) DescribeS3Recharges(request *DescribeS3RechargesRequest) (response *DescribeS3RechargesResponse, err error) {
+    return c.DescribeS3RechargesWithContext(context.Background(), request)
+}
+
+// DescribeS3Recharges
+// 本接口用于获取cos导入配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_TOPICCONFLICT = "InvalidParameter.TopicConflict"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) DescribeS3RechargesWithContext(ctx context.Context, request *DescribeS3RechargesRequest) (response *DescribeS3RechargesResponse, err error) {
+    if request == nil {
+        request = NewDescribeS3RechargesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DescribeS3Recharges")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeS3Recharges require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeS3RechargesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeScheduledSqlInfoRequest() (request *DescribeScheduledSqlInfoRequest) {
     request = &DescribeScheduledSqlInfoRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -8473,6 +11231,76 @@ func (c *Client) DescribeScheduledSqlInfoWithContext(ctx context.Context, reques
     request.SetContext(ctx)
     
     response = NewDescribeScheduledSqlInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeSearchViewsRequest() (request *DescribeSearchViewsRequest) {
+    request = &DescribeSearchViewsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeSearchViews")
+    
+    
+    return
+}
+
+func NewDescribeSearchViewsResponse() (response *DescribeSearchViewsResponse) {
+    response = &DescribeSearchViewsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeSearchViews
+// 获取查询视图列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_RECORDNOTEXIST = "ResourceNotFound.RecordNotExist"
+func (c *Client) DescribeSearchViews(request *DescribeSearchViewsRequest) (response *DescribeSearchViewsResponse, err error) {
+    return c.DescribeSearchViewsWithContext(context.Background(), request)
+}
+
+// DescribeSearchViews
+// 获取查询视图列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_RECORDNOTEXIST = "ResourceNotFound.RecordNotExist"
+func (c *Client) DescribeSearchViewsWithContext(ctx context.Context, request *DescribeSearchViewsRequest) (response *DescribeSearchViewsResponse, err error) {
+    if request == nil {
+        request = NewDescribeSearchViewsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "DescribeSearchViews")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSearchViews require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSearchViewsResponse()
     err = c.Send(request, response)
     return
 }
@@ -9231,6 +12059,68 @@ func (c *Client) GetAlarmLogWithContext(ctx context.Context, request *GetAlarmLo
     return
 }
 
+func NewGetClsServiceRequest() (request *GetClsServiceRequest) {
+    request = &GetClsServiceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "GetClsService")
+    
+    
+    return
+}
+
+func NewGetClsServiceResponse() (response *GetClsServiceResponse) {
+    response = &GetClsServiceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// GetClsService
+// 查询日志服务是否开通
+//
+// API 中 Region 填写任意一个地域均可，建议使用广州(ap-guangzhou)
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) GetClsService(request *GetClsServiceRequest) (response *GetClsServiceResponse, err error) {
+    return c.GetClsServiceWithContext(context.Background(), request)
+}
+
+// GetClsService
+// 查询日志服务是否开通
+//
+// API 中 Region 填写任意一个地域均可，建议使用广州(ap-guangzhou)
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) GetClsServiceWithContext(ctx context.Context, request *GetClsServiceRequest) (response *GetClsServiceResponse, err error) {
+    if request == nil {
+        request = NewGetClsServiceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "GetClsService")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("GetClsService require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewGetClsServiceResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewGetMetricLabelValuesRequest() (request *GetMetricLabelValuesRequest) {
     request = &GetMetricLabelValuesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -9367,6 +12257,76 @@ func (c *Client) MergePartitionWithContext(ctx context.Context, request *MergePa
     request.SetContext(ctx)
     
     response = NewMergePartitionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyAgentApplicationRequest() (request *ModifyAgentApplicationRequest) {
+    request = &ModifyAgentApplicationRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "ModifyAgentApplication")
+    
+    
+    return
+}
+
+func NewModifyAgentApplicationResponse() (response *ModifyAgentApplicationResponse) {
+    response = &ModifyAgentApplicationResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyAgentApplication
+// 本接口用于修改Agent应用
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyAgentApplication(request *ModifyAgentApplicationRequest) (response *ModifyAgentApplicationResponse, err error) {
+    return c.ModifyAgentApplicationWithContext(context.Background(), request)
+}
+
+// ModifyAgentApplication
+// 本接口用于修改Agent应用
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyAgentApplicationWithContext(ctx context.Context, request *ModifyAgentApplicationRequest) (response *ModifyAgentApplicationResponse, err error) {
+    if request == nil {
+        request = NewModifyAgentApplicationRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "ModifyAgentApplication")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyAgentApplication require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyAgentApplicationResponse()
     err = c.Send(request, response)
     return
 }
@@ -9585,6 +12545,80 @@ func (c *Client) ModifyAlarmShieldWithContext(ctx context.Context, request *Modi
     return
 }
 
+func NewModifyCLSDeliverTaskRequest() (request *ModifyCLSDeliverTaskRequest) {
+    request = &ModifyCLSDeliverTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "ModifyCLSDeliverTask")
+    
+    
+    return
+}
+
+func NewModifyCLSDeliverTaskResponse() (response *ModifyCLSDeliverTaskResponse) {
+    response = &ModifyCLSDeliverTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyCLSDeliverTask
+// 修改CLS投递任务
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_LOGSETNOTEXIST = "ResourceNotFound.LogsetNotExist"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) ModifyCLSDeliverTask(request *ModifyCLSDeliverTaskRequest) (response *ModifyCLSDeliverTaskResponse, err error) {
+    return c.ModifyCLSDeliverTaskWithContext(context.Background(), request)
+}
+
+// ModifyCLSDeliverTask
+// 修改CLS投递任务
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_LOGSETNOTEXIST = "ResourceNotFound.LogsetNotExist"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) ModifyCLSDeliverTaskWithContext(ctx context.Context, request *ModifyCLSDeliverTaskRequest) (response *ModifyCLSDeliverTaskResponse, err error) {
+    if request == nil {
+        request = NewModifyCLSDeliverTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "ModifyCLSDeliverTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyCLSDeliverTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyCLSDeliverTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyCloudProductLogCollectionRequest() (request *ModifyCloudProductLogCollectionRequest) {
     request = &ModifyCloudProductLogCollectionRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -9797,6 +12831,76 @@ func (c *Client) ModifyConfigExtraWithContext(ctx context.Context, request *Modi
     request.SetContext(ctx)
     
     response = NewModifyConfigExtraResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyConsoleRequest() (request *ModifyConsoleRequest) {
+    request = &ModifyConsoleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "ModifyConsole")
+    
+    
+    return
+}
+
+func NewModifyConsoleResponse() (response *ModifyConsoleResponse) {
+    response = &ModifyConsoleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyConsole
+// 本接口用于编辑DataSight控制台
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_SEARCHTIMEOUT = "FailedOperation.SearchTimeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyConsole(request *ModifyConsoleRequest) (response *ModifyConsoleResponse, err error) {
+    return c.ModifyConsoleWithContext(context.Background(), request)
+}
+
+// ModifyConsole
+// 本接口用于编辑DataSight控制台
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_SEARCHTIMEOUT = "FailedOperation.SearchTimeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyConsoleWithContext(ctx context.Context, request *ModifyConsoleRequest) (response *ModifyConsoleResponse, err error) {
+    if request == nil {
+        request = NewModifyConsoleRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "ModifyConsole")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyConsole require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyConsoleResponse()
     err = c.Send(request, response)
     return
 }
@@ -10821,6 +13925,64 @@ func (c *Client) ModifyKafkaRechargeWithContext(ctx context.Context, request *Mo
     return
 }
 
+func NewModifyLogRequest() (request *ModifyLogRequest) {
+    request = &ModifyLogRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "ModifyLog")
+    
+    
+    return
+}
+
+func NewModifyLogResponse() (response *ModifyLogResponse) {
+    response = &ModifyLogResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyLog
+// 修改日志信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INDEXSEGMENTOFFLOADED = "FailedOperation.IndexSegmentOffloaded"
+//  FAILEDOPERATION_MODIFYSYSTEMFIELD = "FailedOperation.ModifySystemField"
+//  FAILEDOPERATION_WRITEBYQUERYREACHLIMIT = "FailedOperation.WriteByQueryReachLimit"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) ModifyLog(request *ModifyLogRequest) (response *ModifyLogResponse, err error) {
+    return c.ModifyLogWithContext(context.Background(), request)
+}
+
+// ModifyLog
+// 修改日志信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INDEXSEGMENTOFFLOADED = "FailedOperation.IndexSegmentOffloaded"
+//  FAILEDOPERATION_MODIFYSYSTEMFIELD = "FailedOperation.ModifySystemField"
+//  FAILEDOPERATION_WRITEBYQUERYREACHLIMIT = "FailedOperation.WriteByQueryReachLimit"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) ModifyLogWithContext(ctx context.Context, request *ModifyLogRequest) (response *ModifyLogResponse, err error) {
+    if request == nil {
+        request = NewModifyLogRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "ModifyLog")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyLog require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyLogResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyLogsetRequest() (request *ModifyLogsetRequest) {
     request = &ModifyLogsetRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -10846,6 +14008,7 @@ func NewModifyLogsetResponse() (response *ModifyLogsetResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_PERIODMODIFYFORBIDDEN = "FailedOperation.PeriodModifyForbidden"
+//  FAILEDOPERATION_TAGCONCURRENTCONFLICT = "FailedOperation.TagConcurrentConflict"
 //  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -10868,6 +14031,7 @@ func (c *Client) ModifyLogset(request *ModifyLogsetRequest) (response *ModifyLog
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_PERIODMODIFYFORBIDDEN = "FailedOperation.PeriodModifyForbidden"
+//  FAILEDOPERATION_TAGCONCURRENTCONFLICT = "FailedOperation.TagConcurrentConflict"
 //  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -11293,6 +14457,498 @@ func (c *Client) ModifyNoticeContentWithContext(ctx context.Context, request *Mo
     return
 }
 
+func NewModifyRecordingRuleTaskRequest() (request *ModifyRecordingRuleTaskRequest) {
+    request = &ModifyRecordingRuleTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "ModifyRecordingRuleTask")
+    
+    
+    return
+}
+
+func NewModifyRecordingRuleTaskResponse() (response *ModifyRecordingRuleTaskResponse) {
+    response = &ModifyRecordingRuleTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyRecordingRuleTask
+// 本接口用于修改定时预聚合任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) ModifyRecordingRuleTask(request *ModifyRecordingRuleTaskRequest) (response *ModifyRecordingRuleTaskResponse, err error) {
+    return c.ModifyRecordingRuleTaskWithContext(context.Background(), request)
+}
+
+// ModifyRecordingRuleTask
+// 本接口用于修改定时预聚合任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) ModifyRecordingRuleTaskWithContext(ctx context.Context, request *ModifyRecordingRuleTaskRequest) (response *ModifyRecordingRuleTaskResponse, err error) {
+    if request == nil {
+        request = NewModifyRecordingRuleTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "ModifyRecordingRuleTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyRecordingRuleTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyRecordingRuleTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyRecordingRuleYamlTaskRequest() (request *ModifyRecordingRuleYamlTaskRequest) {
+    request = &ModifyRecordingRuleYamlTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "ModifyRecordingRuleYamlTask")
+    
+    
+    return
+}
+
+func NewModifyRecordingRuleYamlTaskResponse() (response *ModifyRecordingRuleYamlTaskResponse) {
+    response = &ModifyRecordingRuleYamlTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyRecordingRuleYamlTask
+// 通过yaml文件修改指标预聚合任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) ModifyRecordingRuleYamlTask(request *ModifyRecordingRuleYamlTaskRequest) (response *ModifyRecordingRuleYamlTaskResponse, err error) {
+    return c.ModifyRecordingRuleYamlTaskWithContext(context.Background(), request)
+}
+
+// ModifyRecordingRuleYamlTask
+// 通过yaml文件修改指标预聚合任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) ModifyRecordingRuleYamlTaskWithContext(ctx context.Context, request *ModifyRecordingRuleYamlTaskRequest) (response *ModifyRecordingRuleYamlTaskResponse, err error) {
+    if request == nil {
+        request = NewModifyRecordingRuleYamlTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "ModifyRecordingRuleYamlTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyRecordingRuleYamlTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyRecordingRuleYamlTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyRemoteWriteTaskRequest() (request *ModifyRemoteWriteTaskRequest) {
+    request = &ModifyRemoteWriteTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "ModifyRemoteWriteTask")
+    
+    
+    return
+}
+
+func NewModifyRemoteWriteTaskResponse() (response *ModifyRemoteWriteTaskResponse) {
+    response = &ModifyRemoteWriteTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyRemoteWriteTask
+// 修改RemoteWrite任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) ModifyRemoteWriteTask(request *ModifyRemoteWriteTaskRequest) (response *ModifyRemoteWriteTaskResponse, err error) {
+    return c.ModifyRemoteWriteTaskWithContext(context.Background(), request)
+}
+
+// ModifyRemoteWriteTask
+// 修改RemoteWrite任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) ModifyRemoteWriteTaskWithContext(ctx context.Context, request *ModifyRemoteWriteTaskRequest) (response *ModifyRemoteWriteTaskResponse, err error) {
+    if request == nil {
+        request = NewModifyRemoteWriteTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "ModifyRemoteWriteTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyRemoteWriteTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyRemoteWriteTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyResourceGraphRequest() (request *ModifyResourceGraphRequest) {
+    request = &ModifyResourceGraphRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "ModifyResourceGraph")
+    
+    
+    return
+}
+
+func NewModifyResourceGraphResponse() (response *ModifyResourceGraphResponse) {
+    response = &ModifyResourceGraphResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyResourceGraph
+// 编辑工作区基本信息。支持改名（仍需保持租户内唯一）和修改描述，主题地域 Region 不可修改。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TAGCONCURRENTCONFLICT = "FailedOperation.TagConcurrentConflict"
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyResourceGraph(request *ModifyResourceGraphRequest) (response *ModifyResourceGraphResponse, err error) {
+    return c.ModifyResourceGraphWithContext(context.Background(), request)
+}
+
+// ModifyResourceGraph
+// 编辑工作区基本信息。支持改名（仍需保持租户内唯一）和修改描述，主题地域 Region 不可修改。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TAGCONCURRENTCONFLICT = "FailedOperation.TagConcurrentConflict"
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyResourceGraphWithContext(ctx context.Context, request *ModifyResourceGraphRequest) (response *ModifyResourceGraphResponse, err error) {
+    if request == nil {
+        request = NewModifyResourceGraphRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "ModifyResourceGraph")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyResourceGraph require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyResourceGraphResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyResourceGraphEntityTopicsRelationRequest() (request *ModifyResourceGraphEntityTopicsRelationRequest) {
+    request = &ModifyResourceGraphEntityTopicsRelationRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "ModifyResourceGraphEntityTopicsRelation")
+    
+    
+    return
+}
+
+func NewModifyResourceGraphEntityTopicsRelationResponse() (response *ModifyResourceGraphEntityTopicsRelationResponse) {
+    response = &ModifyResourceGraphEntityTopicsRelationResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyResourceGraphEntityTopicsRelation
+// 修改资源图谱实体与日志主题关系
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) ModifyResourceGraphEntityTopicsRelation(request *ModifyResourceGraphEntityTopicsRelationRequest) (response *ModifyResourceGraphEntityTopicsRelationResponse, err error) {
+    return c.ModifyResourceGraphEntityTopicsRelationWithContext(context.Background(), request)
+}
+
+// ModifyResourceGraphEntityTopicsRelation
+// 修改资源图谱实体与日志主题关系
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) ModifyResourceGraphEntityTopicsRelationWithContext(ctx context.Context, request *ModifyResourceGraphEntityTopicsRelationRequest) (response *ModifyResourceGraphEntityTopicsRelationResponse, err error) {
+    if request == nil {
+        request = NewModifyResourceGraphEntityTopicsRelationRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "ModifyResourceGraphEntityTopicsRelation")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyResourceGraphEntityTopicsRelation require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyResourceGraphEntityTopicsRelationResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyResourceGraphProductIngestTaskRequest() (request *ModifyResourceGraphProductIngestTaskRequest) {
+    request = &ModifyResourceGraphProductIngestTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "ModifyResourceGraphProductIngestTask")
+    
+    
+    return
+}
+
+func NewModifyResourceGraphProductIngestTaskResponse() (response *ModifyResourceGraphProductIngestTaskResponse) {
+    response = &ModifyResourceGraphProductIngestTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyResourceGraphProductIngestTask
+// 编辑已接入云产品的实例选择、eBPF 规则、日志主题配置。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) ModifyResourceGraphProductIngestTask(request *ModifyResourceGraphProductIngestTaskRequest) (response *ModifyResourceGraphProductIngestTaskResponse, err error) {
+    return c.ModifyResourceGraphProductIngestTaskWithContext(context.Background(), request)
+}
+
+// ModifyResourceGraphProductIngestTask
+// 编辑已接入云产品的实例选择、eBPF 规则、日志主题配置。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) ModifyResourceGraphProductIngestTaskWithContext(ctx context.Context, request *ModifyResourceGraphProductIngestTaskRequest) (response *ModifyResourceGraphProductIngestTaskResponse, err error) {
+    if request == nil {
+        request = NewModifyResourceGraphProductIngestTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "ModifyResourceGraphProductIngestTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyResourceGraphProductIngestTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyResourceGraphProductIngestTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyS3RechargeRequest() (request *ModifyS3RechargeRequest) {
+    request = &ModifyS3RechargeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "ModifyS3Recharge")
+    
+    
+    return
+}
+
+func NewModifyS3RechargeResponse() (response *ModifyS3RechargeResponse) {
+    response = &ModifyS3RechargeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyS3Recharge
+// 本接口用于修改aws导入任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) ModifyS3Recharge(request *ModifyS3RechargeRequest) (response *ModifyS3RechargeResponse, err error) {
+    return c.ModifyS3RechargeWithContext(context.Background(), request)
+}
+
+// ModifyS3Recharge
+// 本接口用于修改aws导入任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) ModifyS3RechargeWithContext(ctx context.Context, request *ModifyS3RechargeRequest) (response *ModifyS3RechargeResponse, err error) {
+    if request == nil {
+        request = NewModifyS3RechargeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "ModifyS3Recharge")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyS3Recharge require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyS3RechargeResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyScheduledSqlRequest() (request *ModifyScheduledSqlRequest) {
     request = &ModifyScheduledSqlRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -11365,6 +15021,80 @@ func (c *Client) ModifyScheduledSqlWithContext(ctx context.Context, request *Mod
     request.SetContext(ctx)
     
     response = NewModifyScheduledSqlResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifySearchViewRequest() (request *ModifySearchViewRequest) {
+    request = &ModifySearchViewRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "ModifySearchView")
+    
+    
+    return
+}
+
+func NewModifySearchViewResponse() (response *ModifySearchViewResponse) {
+    response = &ModifySearchViewResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifySearchView
+// 修改查询视图
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_LOGSETNOTEXIST = "ResourceNotFound.LogsetNotExist"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) ModifySearchView(request *ModifySearchViewRequest) (response *ModifySearchViewResponse, err error) {
+    return c.ModifySearchViewWithContext(context.Background(), request)
+}
+
+// ModifySearchView
+// 修改查询视图
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_LOGSETNOTEXIST = "ResourceNotFound.LogsetNotExist"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) ModifySearchViewWithContext(ctx context.Context, request *ModifySearchViewRequest) (response *ModifySearchViewResponse, err error) {
+    if request == nil {
+        request = NewModifySearchViewRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "ModifySearchView")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifySearchView require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifySearchViewResponse()
     err = c.Send(request, response)
     return
 }
@@ -11542,6 +15272,7 @@ func NewModifyTopicResponse() (response *ModifyTopicResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_INVALIDPERIOD = "FailedOperation.InvalidPeriod"
+//  FAILEDOPERATION_TAGCONCURRENTCONFLICT = "FailedOperation.TagConcurrentConflict"
 //  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
 //  FAILEDOPERATION_TOPICCLOSED = "FailedOperation.TopicClosed"
 //  FAILEDOPERATION_TOPICISOLATED = "FailedOperation.TopicIsolated"
@@ -11557,6 +15288,7 @@ func NewModifyTopicResponse() (response *ModifyTopicResponse) {
 //  OPERATIONDENIED_TOPICHASSCHEDULESQLTASK = "OperationDenied.TopicHasScheduleSqlTask"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDREGION = "UnsupportedOperation.UnsupportedRegion"
 func (c *Client) ModifyTopic(request *ModifyTopicRequest) (response *ModifyTopicResponse, err error) {
     return c.ModifyTopicWithContext(context.Background(), request)
 }
@@ -11567,6 +15299,7 @@ func (c *Client) ModifyTopic(request *ModifyTopicRequest) (response *ModifyTopic
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_INVALIDPERIOD = "FailedOperation.InvalidPeriod"
+//  FAILEDOPERATION_TAGCONCURRENTCONFLICT = "FailedOperation.TagConcurrentConflict"
 //  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
 //  FAILEDOPERATION_TOPICCLOSED = "FailedOperation.TopicClosed"
 //  FAILEDOPERATION_TOPICISOLATED = "FailedOperation.TopicIsolated"
@@ -11582,6 +15315,7 @@ func (c *Client) ModifyTopic(request *ModifyTopicRequest) (response *ModifyTopic
 //  OPERATIONDENIED_TOPICHASSCHEDULESQLTASK = "OperationDenied.TopicHasScheduleSqlTask"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDREGION = "UnsupportedOperation.UnsupportedRegion"
 func (c *Client) ModifyTopicWithContext(ctx context.Context, request *ModifyTopicRequest) (response *ModifyTopicResponse, err error) {
     if request == nil {
         request = NewModifyTopicRequest()
@@ -11669,6 +15403,154 @@ func (c *Client) ModifyWebCallbackWithContext(ctx context.Context, request *Modi
     request.SetContext(ctx)
     
     response = NewModifyWebCallbackResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewOpenClawServiceRequest() (request *OpenClawServiceRequest) {
+    request = &OpenClawServiceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "OpenClawService")
+    
+    
+    return
+}
+
+func NewOpenClawServiceResponse() (response *OpenClawServiceResponse) {
+    response = &OpenClawServiceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// OpenClawService
+// 本接口用于创建OpenClaw依赖的资源与索引
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_INVALIDINDEXRULEFORSEARCHLOW = "FailedOperation.InValidIndexRuleForSearchLow"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  FAILEDOPERATION_TOPICISOLATED = "FailedOperation.TopicIsolated"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDINDEXRULEFORSEARCHLOW = "InvalidParameter.InValidIndexRuleForSearchLow"
+//  INVALIDPARAMETER_INDEXCONFLICT = "InvalidParameter.IndexConflict"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_INDEXKEYOVERLIMIT = "LimitExceeded.IndexKeyOverLimit"
+//  LIMITEXCEEDED_INDEXOPERATING = "LimitExceeded.IndexOperating"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_INDEXNOTEXIST = "ResourceNotFound.IndexNotExist"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) OpenClawService(request *OpenClawServiceRequest) (response *OpenClawServiceResponse, err error) {
+    return c.OpenClawServiceWithContext(context.Background(), request)
+}
+
+// OpenClawService
+// 本接口用于创建OpenClaw依赖的资源与索引
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_INVALIDINDEXRULEFORSEARCHLOW = "FailedOperation.InValidIndexRuleForSearchLow"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  FAILEDOPERATION_TOPICISOLATED = "FailedOperation.TopicIsolated"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDINDEXRULEFORSEARCHLOW = "InvalidParameter.InValidIndexRuleForSearchLow"
+//  INVALIDPARAMETER_INDEXCONFLICT = "InvalidParameter.IndexConflict"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_INDEXKEYOVERLIMIT = "LimitExceeded.IndexKeyOverLimit"
+//  LIMITEXCEEDED_INDEXOPERATING = "LimitExceeded.IndexOperating"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_INDEXNOTEXIST = "ResourceNotFound.IndexNotExist"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) OpenClawServiceWithContext(ctx context.Context, request *OpenClawServiceRequest) (response *OpenClawServiceResponse, err error) {
+    if request == nil {
+        request = NewOpenClawServiceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "OpenClawService")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("OpenClawService require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewOpenClawServiceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewOpenClsServiceRequest() (request *OpenClsServiceRequest) {
+    request = &OpenClsServiceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "OpenClsService")
+    
+    
+    return
+}
+
+func NewOpenClsServiceResponse() (response *OpenClsServiceResponse) {
+    response = &OpenClsServiceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// OpenClsService
+// 开通日志服务
+//
+// API 中 Region 填写任意一个地域均可开通所有地域的 CLS，建议使用广州(ap-guangzhou)
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) OpenClsService(request *OpenClsServiceRequest) (response *OpenClsServiceResponse, err error) {
+    return c.OpenClsServiceWithContext(context.Background(), request)
+}
+
+// OpenClsService
+// 开通日志服务
+//
+// API 中 Region 填写任意一个地域均可开通所有地域的 CLS，建议使用广州(ap-guangzhou)
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) OpenClsServiceWithContext(ctx context.Context, request *OpenClsServiceRequest) (response *OpenClsServiceResponse, err error) {
+    if request == nil {
+        request = NewOpenClsServiceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "OpenClsService")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("OpenClsService require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewOpenClsServiceResponse()
     err = c.Send(request, response)
     return
 }
@@ -11943,6 +15825,142 @@ func (c *Client) QueryRangeMetricWithContext(ctx context.Context, request *Query
     return
 }
 
+func NewRetryResourceGraphRequest() (request *RetryResourceGraphRequest) {
+    request = &RetryResourceGraphRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "RetryResourceGraph")
+    
+    
+    return
+}
+
+func NewRetryResourceGraphResponse() (response *RetryResourceGraphResponse) {
+    response = &RetryResourceGraphResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RetryResourceGraph
+// 重试资源图谱
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) RetryResourceGraph(request *RetryResourceGraphRequest) (response *RetryResourceGraphResponse, err error) {
+    return c.RetryResourceGraphWithContext(context.Background(), request)
+}
+
+// RetryResourceGraph
+// 重试资源图谱
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) RetryResourceGraphWithContext(ctx context.Context, request *RetryResourceGraphRequest) (response *RetryResourceGraphResponse, err error) {
+    if request == nil {
+        request = NewRetryResourceGraphRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "RetryResourceGraph")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RetryResourceGraph require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRetryResourceGraphResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRetryResourceGraphProductIngestTaskRequest() (request *RetryResourceGraphProductIngestTaskRequest) {
+    request = &RetryResourceGraphProductIngestTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "RetryResourceGraphProductIngestTask")
+    
+    
+    return
+}
+
+func NewRetryResourceGraphProductIngestTaskResponse() (response *RetryResourceGraphProductIngestTaskResponse) {
+    response = &RetryResourceGraphProductIngestTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RetryResourceGraphProductIngestTask
+// 重试初始化资源图谱工作区
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) RetryResourceGraphProductIngestTask(request *RetryResourceGraphProductIngestTaskRequest) (response *RetryResourceGraphProductIngestTaskResponse, err error) {
+    return c.RetryResourceGraphProductIngestTaskWithContext(context.Background(), request)
+}
+
+// RetryResourceGraphProductIngestTask
+// 重试初始化资源图谱工作区
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) RetryResourceGraphProductIngestTaskWithContext(ctx context.Context, request *RetryResourceGraphProductIngestTaskRequest) (response *RetryResourceGraphProductIngestTaskResponse, err error) {
+    if request == nil {
+        request = NewRetryResourceGraphProductIngestTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "RetryResourceGraphProductIngestTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RetryResourceGraphProductIngestTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRetryResourceGraphProductIngestTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewRetryShipperTaskRequest() (request *RetryShipperTaskRequest) {
     request = &RetryShipperTaskRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -12199,9 +16217,7 @@ func NewSearchLogResponse() (response *SearchLogResponse) {
 //
 // 1. 该接口除受默认接口请求频率限制外，针对单个日志主题，查询并发数不能超过15。
 //
-// 2. 检索语法建议使用日志服务专用检索语法CQL，请使用SyntaxRule参数，将值设置为1，控制台默认也使用该语法规则。
-//
-// 3. API返回数据包最大49MB，建议启用 gzip 压缩（HTTP Request Header Accept-Encoding:gzip）。
+// 2. API返回数据包最大49MB，建议启用 gzip 压缩（HTTP Request Header Accept-Encoding:gzip）。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -12236,9 +16252,7 @@ func (c *Client) SearchLog(request *SearchLogRequest) (response *SearchLogRespon
 //
 // 1. 该接口除受默认接口请求频率限制外，针对单个日志主题，查询并发数不能超过15。
 //
-// 2. 检索语法建议使用日志服务专用检索语法CQL，请使用SyntaxRule参数，将值设置为1，控制台默认也使用该语法规则。
-//
-// 3. API返回数据包最大49MB，建议启用 gzip 压缩（HTTP Request Header Accept-Encoding:gzip）。
+// 2. API返回数据包最大49MB，建议启用 gzip 压缩（HTTP Request Header Accept-Encoding:gzip）。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -12277,6 +16291,90 @@ func (c *Client) SearchLogWithContext(ctx context.Context, request *SearchLogReq
     request.SetContext(ctx)
     
     response = NewSearchLogResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewSearchS3RechargeInfoRequest() (request *SearchS3RechargeInfoRequest) {
+    request = &SearchS3RechargeInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "SearchS3RechargeInfo")
+    
+    
+    return
+}
+
+func NewSearchS3RechargeInfoResponse() (response *SearchS3RechargeInfoResponse) {
+    response = &SearchS3RechargeInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// SearchS3RechargeInfo
+// 本接口用于预览aws导入信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_BUCKETNOFILE = "FailedOperation.BucketNoFile"
+//  FAILEDOPERATION_DECOMPRESSFILE = "FailedOperation.DecompressFile"
+//  FAILEDOPERATION_DOWNLOADFILE = "FailedOperation.DownLoadFile"
+//  FAILEDOPERATION_GETLISTFILE = "FailedOperation.GetListFile"
+//  FAILEDOPERATION_PREVIEWFILE = "FailedOperation.PreviewFile"
+//  FAILEDOPERATION_READFILE = "FailedOperation.ReadFile"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) SearchS3RechargeInfo(request *SearchS3RechargeInfoRequest) (response *SearchS3RechargeInfoResponse, err error) {
+    return c.SearchS3RechargeInfoWithContext(context.Background(), request)
+}
+
+// SearchS3RechargeInfo
+// 本接口用于预览aws导入信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_BUCKETNOFILE = "FailedOperation.BucketNoFile"
+//  FAILEDOPERATION_DECOMPRESSFILE = "FailedOperation.DecompressFile"
+//  FAILEDOPERATION_DOWNLOADFILE = "FailedOperation.DownLoadFile"
+//  FAILEDOPERATION_GETLISTFILE = "FailedOperation.GetListFile"
+//  FAILEDOPERATION_PREVIEWFILE = "FailedOperation.PreviewFile"
+//  FAILEDOPERATION_READFILE = "FailedOperation.ReadFile"
+//  FAILEDOPERATION_TIMEOUT = "FailedOperation.Timeout"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
+//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+func (c *Client) SearchS3RechargeInfoWithContext(ctx context.Context, request *SearchS3RechargeInfoRequest) (response *SearchS3RechargeInfoResponse, err error) {
+    if request == nil {
+        request = NewSearchS3RechargeInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cls", APIVersion, "SearchS3RechargeInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SearchS3RechargeInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewSearchS3RechargeInfoResponse()
     err = c.Send(request, response)
     return
 }

@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
   * `region` - Region abbreviation.
   * `support_international` - Whether the resource can be purchased in this region. Valid values: `0` (no), `1` (yes).Note: this field may return `null`, indicating that no valid values can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRegions](https://www.tencentcloud.com/document/api/409/16768)
 

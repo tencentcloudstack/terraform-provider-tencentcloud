@@ -45,7 +45,18 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `ip_group` object exports the following:
 
+* `group_id` - Group ID.
+
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSecurityIPGroup](https://www.tencentcloud.com/document/api/1145/56153)
+* Read: [DescribeSecurityIPGroup](https://www.tencentcloud.com/document/api/1145/60598)
+* Update: [ModifySecurityIPGroup](https://www.tencentcloud.com/document/api/1145/56151)
+* Delete: [DeleteSecurityIPGroup](https://www.tencentcloud.com/document/api/1145/56152)
 
 ## Import
 

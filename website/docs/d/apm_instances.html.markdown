@@ -139,4 +139,9 @@ In addition to all arguments above, the following attributes are exported:
   * `url_long_segment_threshold` - URL long segment convergence threshold.
   * `url_number_segment_threshold` - URL number segment convergence threshold.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeApmInstances](https://www.tencentcloud.com/document/api/1166/68213)
 

@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
 * `max_daily_quota` - Maximum daily sending volume for a single domain name.
 * `max_reputation_level` - Maximum credit rating.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListEmailIdentities](https://www.tencentcloud.com/document/api/1084/39411)
 

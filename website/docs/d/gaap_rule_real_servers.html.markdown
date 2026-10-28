@@ -45,4 +45,9 @@ In addition to all arguments above, the following attributes are exported:
   * `real_server_ip` - Real Server IP or domain.
   * `real_server_name` - Real Server Name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRuleRealServers](https://www.tencentcloud.com/document/api/608/33042)
 

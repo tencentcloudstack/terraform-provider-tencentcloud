@@ -397,6 +397,56 @@ func (c *Client) DescribeApmAgentWithContext(ctx context.Context, request *Descr
     return
 }
 
+func NewDescribeApmAllVulCountRequest() (request *DescribeApmAllVulCountRequest) {
+    request = &DescribeApmAllVulCountRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("apm", APIVersion, "DescribeApmAllVulCount")
+    
+    
+    return
+}
+
+func NewDescribeApmAllVulCountResponse() (response *DescribeApmAllVulCountResponse) {
+    response = &DescribeApmAllVulCountResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeApmAllVulCount
+// 查询用户所有漏洞信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeApmAllVulCount(request *DescribeApmAllVulCountRequest) (response *DescribeApmAllVulCountResponse, err error) {
+    return c.DescribeApmAllVulCountWithContext(context.Background(), request)
+}
+
+// DescribeApmAllVulCount
+// 查询用户所有漏洞信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeApmAllVulCountWithContext(ctx context.Context, request *DescribeApmAllVulCountRequest) (response *DescribeApmAllVulCountResponse, err error) {
+    if request == nil {
+        request = NewDescribeApmAllVulCountRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "apm", APIVersion, "DescribeApmAllVulCount")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeApmAllVulCount require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeApmAllVulCountResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeApmApplicationConfigRequest() (request *DescribeApmApplicationConfigRequest) {
     request = &DescribeApmApplicationConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -530,6 +580,7 @@ func NewDescribeApmInstancesResponse() (response *DescribeApmInstancesResponse) 
 //  AUTHFAILURE_UNMARSHALRESPONSE = "AuthFailure.UnmarshalResponse"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_ACCESSTAGFAIL = "FailedOperation.AccessTagFail"
+//  FAILEDOPERATION_OPERATIONNOTALLOWED = "FailedOperation.OperationNotAllowed"
 //  FAILEDOPERATION_SENDREQUEST = "FailedOperation.SendRequest"
 func (c *Client) DescribeApmInstances(request *DescribeApmInstancesRequest) (response *DescribeApmInstancesResponse, err error) {
     return c.DescribeApmInstancesWithContext(context.Background(), request)
@@ -543,6 +594,7 @@ func (c *Client) DescribeApmInstances(request *DescribeApmInstancesRequest) (res
 //  AUTHFAILURE_UNMARSHALRESPONSE = "AuthFailure.UnmarshalResponse"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_ACCESSTAGFAIL = "FailedOperation.AccessTagFail"
+//  FAILEDOPERATION_OPERATIONNOTALLOWED = "FailedOperation.OperationNotAllowed"
 //  FAILEDOPERATION_SENDREQUEST = "FailedOperation.SendRequest"
 func (c *Client) DescribeApmInstancesWithContext(ctx context.Context, request *DescribeApmInstancesRequest) (response *DescribeApmInstancesResponse, err error) {
     if request == nil {
@@ -588,6 +640,7 @@ func NewDescribeApmPrometheusRuleResponse() (response *DescribeApmPrometheusRule
 //  AUTHFAILURE_UNMARSHALRESPONSE = "AuthFailure.UnmarshalResponse"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_ACCESSTAGFAIL = "FailedOperation.AccessTagFail"
+//  FAILEDOPERATION_OPERATIONNOTALLOWED = "FailedOperation.OperationNotAllowed"
 //  FAILEDOPERATION_SENDREQUEST = "FailedOperation.SendRequest"
 func (c *Client) DescribeApmPrometheusRule(request *DescribeApmPrometheusRuleRequest) (response *DescribeApmPrometheusRuleResponse, err error) {
     return c.DescribeApmPrometheusRuleWithContext(context.Background(), request)
@@ -601,6 +654,7 @@ func (c *Client) DescribeApmPrometheusRule(request *DescribeApmPrometheusRuleReq
 //  AUTHFAILURE_UNMARSHALRESPONSE = "AuthFailure.UnmarshalResponse"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_ACCESSTAGFAIL = "FailedOperation.AccessTagFail"
+//  FAILEDOPERATION_OPERATIONNOTALLOWED = "FailedOperation.OperationNotAllowed"
 //  FAILEDOPERATION_SENDREQUEST = "FailedOperation.SendRequest"
 func (c *Client) DescribeApmPrometheusRuleWithContext(ctx context.Context, request *DescribeApmPrometheusRuleRequest) (response *DescribeApmPrometheusRuleResponse, err error) {
     if request == nil {
@@ -615,6 +669,56 @@ func (c *Client) DescribeApmPrometheusRuleWithContext(ctx context.Context, reque
     request.SetContext(ctx)
     
     response = NewDescribeApmPrometheusRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeApmSQLInjectionDetailRequest() (request *DescribeApmSQLInjectionDetailRequest) {
+    request = &DescribeApmSQLInjectionDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("apm", APIVersion, "DescribeApmSQLInjectionDetail")
+    
+    
+    return
+}
+
+func NewDescribeApmSQLInjectionDetailResponse() (response *DescribeApmSQLInjectionDetailResponse) {
+    response = &DescribeApmSQLInjectionDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeApmSQLInjectionDetail
+// 查询SQL注入详情信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeApmSQLInjectionDetail(request *DescribeApmSQLInjectionDetailRequest) (response *DescribeApmSQLInjectionDetailResponse, err error) {
+    return c.DescribeApmSQLInjectionDetailWithContext(context.Background(), request)
+}
+
+// DescribeApmSQLInjectionDetail
+// 查询SQL注入详情信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeApmSQLInjectionDetailWithContext(ctx context.Context, request *DescribeApmSQLInjectionDetailRequest) (response *DescribeApmSQLInjectionDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeApmSQLInjectionDetailRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "apm", APIVersion, "DescribeApmSQLInjectionDetail")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeApmSQLInjectionDetail require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeApmSQLInjectionDetailResponse()
     err = c.Send(request, response)
     return
 }
@@ -731,6 +835,106 @@ func (c *Client) DescribeApmServiceMetricWithContext(ctx context.Context, reques
     return
 }
 
+func NewDescribeApmVulnerabilityCountRequest() (request *DescribeApmVulnerabilityCountRequest) {
+    request = &DescribeApmVulnerabilityCountRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("apm", APIVersion, "DescribeApmVulnerabilityCount")
+    
+    
+    return
+}
+
+func NewDescribeApmVulnerabilityCountResponse() (response *DescribeApmVulnerabilityCountResponse) {
+    response = &DescribeApmVulnerabilityCountResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeApmVulnerabilityCount
+// 查询漏洞指标
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeApmVulnerabilityCount(request *DescribeApmVulnerabilityCountRequest) (response *DescribeApmVulnerabilityCountResponse, err error) {
+    return c.DescribeApmVulnerabilityCountWithContext(context.Background(), request)
+}
+
+// DescribeApmVulnerabilityCount
+// 查询漏洞指标
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeApmVulnerabilityCountWithContext(ctx context.Context, request *DescribeApmVulnerabilityCountRequest) (response *DescribeApmVulnerabilityCountResponse, err error) {
+    if request == nil {
+        request = NewDescribeApmVulnerabilityCountRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "apm", APIVersion, "DescribeApmVulnerabilityCount")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeApmVulnerabilityCount require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeApmVulnerabilityCountResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeApmVulnerabilityDetailRequest() (request *DescribeApmVulnerabilityDetailRequest) {
+    request = &DescribeApmVulnerabilityDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("apm", APIVersion, "DescribeApmVulnerabilityDetail")
+    
+    
+    return
+}
+
+func NewDescribeApmVulnerabilityDetailResponse() (response *DescribeApmVulnerabilityDetailResponse) {
+    response = &DescribeApmVulnerabilityDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeApmVulnerabilityDetail
+// 查询漏洞详情
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeApmVulnerabilityDetail(request *DescribeApmVulnerabilityDetailRequest) (response *DescribeApmVulnerabilityDetailResponse, err error) {
+    return c.DescribeApmVulnerabilityDetailWithContext(context.Background(), request)
+}
+
+// DescribeApmVulnerabilityDetail
+// 查询漏洞详情
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeApmVulnerabilityDetailWithContext(ctx context.Context, request *DescribeApmVulnerabilityDetailRequest) (response *DescribeApmVulnerabilityDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeApmVulnerabilityDetailRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "apm", APIVersion, "DescribeApmVulnerabilityDetail")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeApmVulnerabilityDetail require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeApmVulnerabilityDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeGeneralApmApplicationConfigRequest() (request *DescribeGeneralApmApplicationConfigRequest) {
     request = &DescribeGeneralApmApplicationConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -811,6 +1015,46 @@ func NewDescribeGeneralMetricDataResponse() (response *DescribeGeneralMetricData
 //
 // 接口调用频率限制为：20次/秒，1200次/分钟。单请求的数据点数限制为1440个。
 //
+// 
+//
+// 获取指标数据通用接口用法：DescribeGeneralMetricData 是通用的指标数据查询接口，支持灵活的获取指标数据。该接口的查询方式类似于使用如下 SQL 语句：SELECT {Metrics} FROM {ViewName} WHERE {Filters} GROUP BY {GroupBy}。在发起请求前，请确定如下关键入参：
+//
+// 1. 视图（ViewName）
+//
+// 决定您要查询的数据领域。
+//
+// 例如：service_metric（服务监控视图）、db_metric（数据库视图）等。关于 APM 支持的视图，请参考 [指标视图](https://cloud.tencent.com/document/product/248/101681#069b06a9-2593-49db-b694-dea4200f3b19)。
+//
+// 
+//
+// 2. 指标（Metrics）
+//
+// 用于指定返回结果中包含的一个或多个指标项。
+//
+// 例如：request_count（请求数）、duration_avg（平均耗时）、error_rate（错误率）。关于APM 支持的指标，请参考 [APM 指标协议标准](https://cloud.tencent.com/document/product/248/101681)，每种视图（ViewName）支持专属的指标集。
+//
+// 3. 过滤（Filters）
+//
+// 支持一个或多个键值对（Key-Value）形式的过滤条件。
+//
+// 例如：只查某个特定服务 service.name = "order-service"。通用维度和每种视图（ViewName）支持专属专属维度，可以用作过滤条件中的键（Key），更多详情请参考 [APM 指标协议标准](https://cloud.tencent.com/document/product/248/101681)。
+//
+// 
+//
+// 4. 聚合（GroupBy）
+//
+// 支持一个或多个聚合维度，相当于 SQL 的 GROUP BY。
+//
+// 例如：按接口名称 operation 分组，查看每个接口的性能。通用维度和每种视图（ViewName）支持专属专属维度，可以用作聚合维度，更多详情请参考 [APM 指标协议标准](https://cloud.tencent.com/document/product/248/101681)。
+//
+// 5. 粒度 (Period) 
+//
+// 该参数决定了是否需要以时间切片聚合。
+//
+//     - Period = 1：时间序列模式：返回结果中按时间切片聚合，时间序列（TimeSerial）和数据序列（DataSerial）中包含的多个值一一对应，分别代表特定时间切片上的聚合结果。时间序列模式主要用于展示时间趋势图。
+//
+//     - Period = 0：汇总统计模式：返回结果中，数据序列（DataSerial）中只包含唯一的值，代表整个时间区间内的汇总数据。
+//
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_APPIDNOTMATCHINSTANCEINFO = "FailedOperation.AppIdNotMatchInstanceInfo"
@@ -836,6 +1080,46 @@ func (c *Client) DescribeGeneralMetricData(request *DescribeGeneralMetricDataReq
 // 获取指标数据通用接口。用户根据需要上送请求参数，返回对应的指标数据。
 //
 // 接口调用频率限制为：20次/秒，1200次/分钟。单请求的数据点数限制为1440个。
+//
+// 
+//
+// 获取指标数据通用接口用法：DescribeGeneralMetricData 是通用的指标数据查询接口，支持灵活的获取指标数据。该接口的查询方式类似于使用如下 SQL 语句：SELECT {Metrics} FROM {ViewName} WHERE {Filters} GROUP BY {GroupBy}。在发起请求前，请确定如下关键入参：
+//
+// 1. 视图（ViewName）
+//
+// 决定您要查询的数据领域。
+//
+// 例如：service_metric（服务监控视图）、db_metric（数据库视图）等。关于 APM 支持的视图，请参考 [指标视图](https://cloud.tencent.com/document/product/248/101681#069b06a9-2593-49db-b694-dea4200f3b19)。
+//
+// 
+//
+// 2. 指标（Metrics）
+//
+// 用于指定返回结果中包含的一个或多个指标项。
+//
+// 例如：request_count（请求数）、duration_avg（平均耗时）、error_rate（错误率）。关于APM 支持的指标，请参考 [APM 指标协议标准](https://cloud.tencent.com/document/product/248/101681)，每种视图（ViewName）支持专属的指标集。
+//
+// 3. 过滤（Filters）
+//
+// 支持一个或多个键值对（Key-Value）形式的过滤条件。
+//
+// 例如：只查某个特定服务 service.name = "order-service"。通用维度和每种视图（ViewName）支持专属专属维度，可以用作过滤条件中的键（Key），更多详情请参考 [APM 指标协议标准](https://cloud.tencent.com/document/product/248/101681)。
+//
+// 
+//
+// 4. 聚合（GroupBy）
+//
+// 支持一个或多个聚合维度，相当于 SQL 的 GROUP BY。
+//
+// 例如：按接口名称 operation 分组，查看每个接口的性能。通用维度和每种视图（ViewName）支持专属专属维度，可以用作聚合维度，更多详情请参考 [APM 指标协议标准](https://cloud.tencent.com/document/product/248/101681)。
+//
+// 5. 粒度 (Period) 
+//
+// 该参数决定了是否需要以时间切片聚合。
+//
+//     - Period = 1：时间序列模式：返回结果中按时间切片聚合，时间序列（TimeSerial）和数据序列（DataSerial）中包含的多个值一一对应，分别代表特定时间切片上的聚合结果。时间序列模式主要用于展示时间趋势图。
+//
+//     - Period = 0：汇总统计模式：返回结果中，数据序列（DataSerial）中只包含唯一的值，代表整个时间区间内的汇总数据。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1059,6 +1343,56 @@ func (c *Client) DescribeMetricRecordsWithContext(ctx context.Context, request *
     return
 }
 
+func NewDescribeOPRAllVulCountRequest() (request *DescribeOPRAllVulCountRequest) {
+    request = &DescribeOPRAllVulCountRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("apm", APIVersion, "DescribeOPRAllVulCount")
+    
+    
+    return
+}
+
+func NewDescribeOPRAllVulCountResponse() (response *DescribeOPRAllVulCountResponse) {
+    response = &DescribeOPRAllVulCountResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeOPRAllVulCount
+// 查询用户所有漏洞信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeOPRAllVulCount(request *DescribeOPRAllVulCountRequest) (response *DescribeOPRAllVulCountResponse, err error) {
+    return c.DescribeOPRAllVulCountWithContext(context.Background(), request)
+}
+
+// DescribeOPRAllVulCount
+// 查询用户所有漏洞信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeOPRAllVulCountWithContext(ctx context.Context, request *DescribeOPRAllVulCountRequest) (response *DescribeOPRAllVulCountResponse, err error) {
+    if request == nil {
+        request = NewDescribeOPRAllVulCountRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "apm", APIVersion, "DescribeOPRAllVulCount")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeOPRAllVulCount require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeOPRAllVulCountResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeServiceOverviewRequest() (request *DescribeServiceOverviewRequest) {
     request = &DescribeServiceOverviewRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1177,6 +1511,64 @@ func (c *Client) DescribeTagValuesWithContext(ctx context.Context, request *Desc
     request.SetContext(ctx)
     
     response = NewDescribeTagValuesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeTopologyNewRequest() (request *DescribeTopologyNewRequest) {
+    request = &DescribeTopologyNewRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("apm", APIVersion, "DescribeTopologyNew")
+    
+    
+    return
+}
+
+func NewDescribeTopologyNewResponse() (response *DescribeTopologyNewResponse) {
+    response = &DescribeTopologyNewResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeTopologyNew
+// 根据应用名查询服务拓扑图
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_APPIDNOTMATCHINSTANCEINFO = "FailedOperation.AppIdNotMatchInstanceInfo"
+//  FAILEDOPERATION_FOCUSNODENOTFOUND = "FailedOperation.FocusNodeNotFound"
+//  FAILEDOPERATION_INSTANCEIDISEMPTY = "FailedOperation.InstanceIdIsEmpty"
+//  FAILEDOPERATION_INSTANCENOTFOUND = "FailedOperation.InstanceNotFound"
+func (c *Client) DescribeTopologyNew(request *DescribeTopologyNewRequest) (response *DescribeTopologyNewResponse, err error) {
+    return c.DescribeTopologyNewWithContext(context.Background(), request)
+}
+
+// DescribeTopologyNew
+// 根据应用名查询服务拓扑图
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_APPIDNOTMATCHINSTANCEINFO = "FailedOperation.AppIdNotMatchInstanceInfo"
+//  FAILEDOPERATION_FOCUSNODENOTFOUND = "FailedOperation.FocusNodeNotFound"
+//  FAILEDOPERATION_INSTANCEIDISEMPTY = "FailedOperation.InstanceIdIsEmpty"
+//  FAILEDOPERATION_INSTANCENOTFOUND = "FailedOperation.InstanceNotFound"
+func (c *Client) DescribeTopologyNewWithContext(ctx context.Context, request *DescribeTopologyNewRequest) (response *DescribeTopologyNewResponse, err error) {
+    if request == nil {
+        request = NewDescribeTopologyNewRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "apm", APIVersion, "DescribeTopologyNew")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeTopologyNew require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeTopologyNewResponse()
     err = c.Send(request, response)
     return
 }
@@ -1495,6 +1887,66 @@ func (c *Client) ModifyApmSampleConfigWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewModifyApmSampleConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyApmServiceRequest() (request *ModifyApmServiceRequest) {
+    request = &ModifyApmServiceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("apm", APIVersion, "ModifyApmService")
+    
+    
+    return
+}
+
+func NewModifyApmServiceResponse() (response *ModifyApmServiceResponse) {
+    response = &ModifyApmServiceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyApmService
+// 修改apm应用信息
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_ACCESSCAMFAIL = "AuthFailure.AccessCAMFail"
+//  AUTHFAILURE_UNMARSHALRESPONSE = "AuthFailure.UnmarshalResponse"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DEMOINSTANCENOTALLOWMODIFIED = "FailedOperation.DemoInstanceNotAllowModified"
+//  FAILEDOPERATION_SERVICENOTFOUND = "FailedOperation.ServiceNotFound"
+//  FAILEDOPERATION_SERVICENOTMATCHAPPIDERR = "FailedOperation.ServiceNotMatchAppIdErr"
+func (c *Client) ModifyApmService(request *ModifyApmServiceRequest) (response *ModifyApmServiceResponse, err error) {
+    return c.ModifyApmServiceWithContext(context.Background(), request)
+}
+
+// ModifyApmService
+// 修改apm应用信息
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_ACCESSCAMFAIL = "AuthFailure.AccessCAMFail"
+//  AUTHFAILURE_UNMARSHALRESPONSE = "AuthFailure.UnmarshalResponse"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DEMOINSTANCENOTALLOWMODIFIED = "FailedOperation.DemoInstanceNotAllowModified"
+//  FAILEDOPERATION_SERVICENOTFOUND = "FailedOperation.ServiceNotFound"
+//  FAILEDOPERATION_SERVICENOTMATCHAPPIDERR = "FailedOperation.ServiceNotMatchAppIdErr"
+func (c *Client) ModifyApmServiceWithContext(ctx context.Context, request *ModifyApmServiceRequest) (response *ModifyApmServiceResponse, err error) {
+    if request == nil {
+        request = NewModifyApmServiceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "apm", APIVersion, "ModifyApmService")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyApmService require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyApmServiceResponse()
     err = c.Send(request, response)
     return
 }

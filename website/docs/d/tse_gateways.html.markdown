@@ -75,4 +75,9 @@ In addition to all arguments above, the following attributes are exported:
       * `vpc_id` - subnet ID. Assign an IP address to the engine in the VPC subnet.
   * `total_count` - total count.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCloudNativeAPIGateways](https://www.tencentcloud.com/document/api/1290/79254)
 

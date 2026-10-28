@@ -84,6 +84,12 @@ func ResourceTencentCloudTkeClusterEndpoint() *schema.Resource {
 				Description: "Subnet id who can access this independent cluster, this field must and can only set  when `cluster_intranet` is true." +
 					" `cluster_intranet_subnet_id` can not modify once be set.",
 			},
+			"existed_load_balancer_id": {
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "Enable internal or external access using an existing CLB.",
+			},
 			// Computed
 			"cluster_deploy_type": {
 				Type:        schema.TypeString,
@@ -248,6 +254,7 @@ func resourceTencentCloudTkeClusterEndpointCreate(d *schema.ResourceData, meta i
 		clusterInternetDomain        = d.Get("cluster_internet_domain").(string)
 		clusterIntranetDomain        = d.Get("cluster_intranet_domain").(string)
 		extensiveParameters          = d.Get("extensive_parameters").(string)
+		existedLoadBalancerId        = d.Get("existed_load_balancer_id").(string)
 	)
 
 	if err != nil {
@@ -261,13 +268,20 @@ func resourceTencentCloudTkeClusterEndpointCreate(d *schema.ResourceData, meta i
 		return fmt.Errorf("`cluster_intranet_subnet_id` can only set when `cluster_intranet` is true")
 	}
 
-	if err := service.CheckOneOfClusterNodeReady(ctx, id, true); err != nil {
+	addonResp, err := service.DescribeKubernetesAddonById(ctx, id, "karpenter")
+	if err != nil {
 		return err
+	}
+
+	if addonResp == nil {
+		if err := service.CheckOneOfClusterNodeReady(ctx, id, true); err != nil {
+			return err
+		}
 	}
 
 	// Create Intranet(Private) Network
 	if clusterIntranet {
-		err := tencentCloudClusterIntranetSwitch(ctx, &service, id, intranetSubnetId, clusterIntranetSecurityGroup, true, clusterIntranetDomain)
+		err := tencentCloudClusterIntranetSwitch(ctx, &service, id, intranetSubnetId, clusterIntranetSecurityGroup, true, clusterIntranetDomain, existedLoadBalancerId)
 		if err != nil {
 			return err
 		}
@@ -279,7 +293,7 @@ func resourceTencentCloudTkeClusterEndpointCreate(d *schema.ResourceData, meta i
 
 	//TKE_DEPLOY_TYPE_INDEPENDENT Open the internet
 	if clusterInternet {
-		err := tencentCloudClusterInternetSwitch(ctx, &service, id, true, clusterInternetSecurityGroup, clusterInternetDomain, extensiveParameters)
+		err := tencentCloudClusterInternetSwitch(ctx, &service, id, true, clusterInternetSecurityGroup, clusterInternetDomain, extensiveParameters, existedLoadBalancerId)
 		if err != nil {
 			return err
 		}
@@ -312,6 +326,7 @@ func resourceTencentCloudTkeClusterEndpointUpdate(d *schema.ResourceData, meta i
 		clusterIntranetDomain        = d.Get("cluster_intranet_domain").(string)
 		subnetId                     = d.Get("cluster_intranet_subnet_id").(string)
 		extensiveParameters          = d.Get("extensive_parameters").(string)
+		existedLoadBalancerId        = d.Get("existed_load_balancer_id").(string)
 	)
 
 	var (
@@ -328,7 +343,7 @@ func resourceTencentCloudTkeClusterEndpointUpdate(d *schema.ResourceData, meta i
 	}
 
 	if d.HasChange("cluster_internet") {
-		err = tencentCloudClusterInternetSwitch(ctx, &service, id, clusterInternet, clusterInternetSecurityGroup, clusterInternetDomain, extensiveParameters)
+		err = tencentCloudClusterInternetSwitch(ctx, &service, id, clusterInternet, clusterInternetSecurityGroup, clusterInternetDomain, extensiveParameters, existedLoadBalancerId)
 		if err != nil {
 			return err
 		}
@@ -339,7 +354,7 @@ func resourceTencentCloudTkeClusterEndpointUpdate(d *schema.ResourceData, meta i
 	} else if clusterInternet && d.HasChange("cluster_internet_domain") {
 		// only domain changed, need to close and reopen
 		// close
-		err = tencentCloudClusterInternetSwitch(ctx, &service, id, false, clusterInternetSecurityGroup, clusterInternetDomain, "")
+		err = tencentCloudClusterInternetSwitch(ctx, &service, id, false, clusterInternetSecurityGroup, clusterInternetDomain, "", existedLoadBalancerId)
 		if err != nil {
 			return err
 		}
@@ -348,7 +363,7 @@ func resourceTencentCloudTkeClusterEndpointUpdate(d *schema.ResourceData, meta i
 			return err
 		}
 		// reopen
-		err = tencentCloudClusterInternetSwitch(ctx, &service, id, true, clusterInternetSecurityGroup, clusterInternetDomain, extensiveParameters)
+		err = tencentCloudClusterInternetSwitch(ctx, &service, id, true, clusterInternetSecurityGroup, clusterInternetDomain, extensiveParameters, existedLoadBalancerId)
 		if err != nil {
 			return err
 		}
@@ -359,7 +374,7 @@ func resourceTencentCloudTkeClusterEndpointUpdate(d *schema.ResourceData, meta i
 	}
 
 	if d.HasChange("cluster_intranet") {
-		err = tencentCloudClusterIntranetSwitch(ctx, &service, id, subnetId, "", clusterIntranet, clusterIntranetDomain)
+		err = tencentCloudClusterIntranetSwitch(ctx, &service, id, subnetId, "", clusterIntranet, clusterIntranetDomain, existedLoadBalancerId)
 		if err != nil {
 			return err
 		}
@@ -370,7 +385,7 @@ func resourceTencentCloudTkeClusterEndpointUpdate(d *schema.ResourceData, meta i
 	} else if clusterIntranet && d.HasChange("cluster_intranet_domain") {
 		// only domain changed, need to close and reopen
 		// close
-		err = tencentCloudClusterIntranetSwitch(ctx, &service, id, subnetId, "", false, clusterIntranetDomain)
+		err = tencentCloudClusterIntranetSwitch(ctx, &service, id, subnetId, "", false, clusterIntranetDomain, existedLoadBalancerId)
 		if err != nil {
 			return err
 		}
@@ -379,7 +394,7 @@ func resourceTencentCloudTkeClusterEndpointUpdate(d *schema.ResourceData, meta i
 			return err
 		}
 		// reopen
-		err = tencentCloudClusterIntranetSwitch(ctx, &service, id, subnetId, "", true, clusterIntranetDomain)
+		err = tencentCloudClusterIntranetSwitch(ctx, &service, id, subnetId, "", true, clusterIntranetDomain, existedLoadBalancerId)
 		if err != nil {
 			return err
 		}
@@ -418,7 +433,7 @@ func resourceTencentCloudTkeClusterEndpointDelete(d *schema.ResourceData, meta i
 	)
 
 	if clusterInternet {
-		err = tencentCloudClusterInternetSwitch(ctx, &service, id, false, "", "", "")
+		err = tencentCloudClusterInternetSwitch(ctx, &service, id, false, "", "", "", "")
 		if err != nil {
 			errs = *multierror.Append(err)
 		} else {
@@ -430,7 +445,7 @@ func resourceTencentCloudTkeClusterEndpointDelete(d *schema.ResourceData, meta i
 	}
 
 	if clusterIntranet {
-		err = tencentCloudClusterIntranetSwitch(ctx, &service, id, "", "", false, "")
+		err = tencentCloudClusterIntranetSwitch(ctx, &service, id, "", "", false, "", "")
 		if err != nil {
 			errs = *multierror.Append(err)
 		} else {
@@ -470,10 +485,10 @@ func waitForClusterEndpointFinish(ctx context.Context, service *TkeService, id s
 	})
 }
 
-func tencentCloudClusterInternetSwitch(ctx context.Context, service *TkeService, id string, enable bool, sg string, domain string, extensiveParameters string) (err error) {
+func tencentCloudClusterInternetSwitch(ctx context.Context, service *TkeService, id string, enable bool, sg string, domain string, extensiveParameters string, existedLoadBalancerId string) (err error) {
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		if enable {
-			err = service.CreateClusterEndpoint(ctx, id, "", sg, true, domain, extensiveParameters)
+			err = service.CreateClusterEndpoint(ctx, id, "", sg, true, domain, extensiveParameters, existedLoadBalancerId)
 			if err != nil {
 				return tccommon.RetryError(err, tke.RESOURCEUNAVAILABLE_CLUSTERSTATE)
 			}
@@ -491,10 +506,10 @@ func tencentCloudClusterInternetSwitch(ctx context.Context, service *TkeService,
 	return nil
 }
 
-func tencentCloudClusterIntranetSwitch(ctx context.Context, service *TkeService, id, subnetId, securityGroup string, enable bool, domain string) (err error) {
+func tencentCloudClusterIntranetSwitch(ctx context.Context, service *TkeService, id, subnetId, securityGroup string, enable bool, domain string, existedLoadBalancerId string) (err error) {
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		if enable {
-			err = service.CreateClusterEndpoint(ctx, id, subnetId, securityGroup, false, domain, "")
+			err = service.CreateClusterEndpoint(ctx, id, subnetId, securityGroup, false, domain, "", existedLoadBalancerId)
 			if err != nil {
 				return tccommon.RetryError(err, tke.RESOURCEUNAVAILABLE_CLUSTERSTATE)
 			}

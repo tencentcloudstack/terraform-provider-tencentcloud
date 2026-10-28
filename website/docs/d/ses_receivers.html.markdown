@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
   * `receivers_name` - Recipient group name.
   * `receivers_status` - Group status (`1`: to be uploaded; `2` uploading; `3` uploaded)Note: This field may return `null`, indicating that no valid value can be found.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListReceivers](https://www.tencentcloud.com/document/api/1084/44866)
 

@@ -94,6 +94,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLiveStreamMonitor](https://www.tencentcloud.com/search/?wd=CreateLiveStreamMonitor&type=document&lang=en)
+* Read: [DescribeLiveStreamMonitor](https://www.tencentcloud.com/search/?wd=DescribeLiveStreamMonitor&type=document&lang=en)
+* Update: [ModifyLiveStreamMonitor](https://www.tencentcloud.com/search/?wd=ModifyLiveStreamMonitor&type=document&lang=en)
+* Delete: [DeleteLiveStreamMonitor](https://www.tencentcloud.com/search/?wd=DeleteLiveStreamMonitor&type=document&lang=en)
 
 ## Import
 

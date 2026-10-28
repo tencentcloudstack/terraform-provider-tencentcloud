@@ -47,6 +47,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribePublicNetwork](https://www.tencentcloud.com/document/api/1290/79249)
+  - [ModifyNetworkAccessStrategy](https://www.tencentcloud.com/document/api/1290/79234)
+* Read: [DescribePublicNetwork](https://www.tencentcloud.com/document/api/1290/79249)
+* Update:
+  - [DescribePublicNetwork](https://www.tencentcloud.com/document/api/1290/79249)
+  - [ModifyNetworkAccessStrategy](https://www.tencentcloud.com/document/api/1290/79234)
 
 ## Import
 

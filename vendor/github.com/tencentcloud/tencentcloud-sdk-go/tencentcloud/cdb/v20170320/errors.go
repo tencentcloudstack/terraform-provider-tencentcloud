@@ -26,6 +26,9 @@ const (
 	// 子账号无权限。
 	AUTHFAILURE_SUBACCOUNTDENIED = "AuthFailure.SubAccountDenied"
 
+	// 鉴权失败，没有权限操作。
+	AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+
 	// 后端错误或者流程错误。
 	CDBERROR = "CdbError"
 
@@ -113,6 +116,9 @@ const (
 	// 查询审计任务失败。
 	FAILEDOPERATION_QUERYAUDITTASKFAILERROR = "FailedOperation.QueryAuditTaskFailError"
 
+	// 查询实例{{1}}失败
+	FAILEDOPERATION_QUERYINSTANCEERROR = "FailedOperation.QueryInstanceError"
+
 	// 查询日志失败。
 	FAILEDOPERATION_QUERYLOGERROR = "FailedOperation.QueryLogError"
 
@@ -127,6 +133,9 @@ const (
 
 	// 查询日志结果集超出限制，请缩小查询范围。
 	FAILEDOPERATION_RESULTSETOVERLIMIT = "FailedOperation.ResultSetOverLimit"
+
+	// 日志查询失败，请稍后重试或缩小查询范围。如果持续不成功，请联系客服进行处理。
+	FAILEDOPERATION_SERVICEACCESSERROR = "FailedOperation.ServiceAccessError"
 
 	// 操作发起失败，请稍后重试。如果操作持续不成功，请您联系客服进行处理。
 	FAILEDOPERATION_STARTFLOWERROR = "FailedOperation.StartFlowError"
@@ -479,6 +488,9 @@ const (
 	// root账号禁止被删除。
 	OPERATIONDENIED_DELETEROOTACCOUNTERROR = "OperationDenied.DeleteRootAccountError"
 
+	// 流程冲突，请稍后重试。
+	OPERATIONDENIED_FLOWCONFLICT = "OperationDenied.FlowConflict"
+
 	// 该实例无此功能权限。
 	OPERATIONDENIED_FUNCTIONDENIED = "OperationDenied.FunctionDenied"
 
@@ -487,6 +499,9 @@ const (
 
 	// 实例锁冲突，请稍后重试。
 	OPERATIONDENIED_INSTANCELOCKERCONFLICT = "OperationDenied.InstanceLockerConflict"
+
+	// 实例日志状态异常,稍后重试
+	OPERATIONDENIED_INSTANCELOGSTATUSERROR = "OperationDenied.InstanceLogStatusError"
 
 	// 实例状态异常。
 	OPERATIONDENIED_INSTANCESTATUSERROR = "OperationDenied.InstanceStatusError"

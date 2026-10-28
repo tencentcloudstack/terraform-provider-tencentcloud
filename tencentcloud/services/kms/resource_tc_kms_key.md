@@ -18,6 +18,23 @@ resource "tencentcloud_kms_key" "example" {
 }
 ```
 
+Create kms instance with key rotation and rotate days.
+
+```hcl
+resource "tencentcloud_kms_key" "example" {
+  alias                = "tf-example-kms-key"
+  description          = "example of kms key"
+  key_usage            = "ENCRYPT_DECRYPT"
+  key_rotation_enabled = true
+  rotate_days          = 30
+  is_enabled           = true
+
+  tags = {
+    createdBy = "Terraform"
+  }
+}
+```
+
 Create kms instance with HSM
 
 ```hcl

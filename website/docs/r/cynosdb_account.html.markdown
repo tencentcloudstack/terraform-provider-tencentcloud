@@ -13,14 +13,29 @@ Provides a resource to create a cynosdb account
 
 ## Example Usage
 
+### If host is %
+
 ```hcl
-resource "tencentcloud_cynosdb_account" "account" {
-  cluster_id           = "cynosdbmysql-bws8h88b"
-  account_name         = "terraform_test"
-  account_password     = "Password@1234"
+resource "tencentcloud_cynosdb_account" "example" {
+  cluster_id           = "cynosdbmysql-ddciqx2l"
+  account_name         = "tf_example"
+  account_password     = "Password@123"
   host                 = "%"
-  description          = "terraform test"
-  max_user_connections = 2
+  description          = "remark."
+  max_user_connections = 10
+}
+```
+
+### If host is ip
+
+```hcl
+resource "tencentcloud_cynosdb_account" "example" {
+  cluster_id           = "cynosdbmysql-ddciqx2l"
+  account_name         = "tf_example"
+  account_password     = "Password@123"
+  host                 = "1.1.1.1"
+  description          = "remark."
+  max_user_connections = 0
 }
 ```
 
@@ -42,12 +57,30 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateAccounts](https://www.tencentcloud.com/document/api/1098/46319)
+  - [DescribeTasks](https://www.tencentcloud.com/document/api/1098/74199)
+* Read: [DescribeAccounts](https://www.tencentcloud.com/document/api/1098/40762)
+* Update:
+  - [ModifyAccountDescription](https://www.tencentcloud.com/document/api/1098/55925)
+  - [ModifyAccountHost](https://www.tencentcloud.com/document/api/1098/55924)
+  - [ModifyAccountParams](https://www.tencentcloud.com/search/?wd=ModifyAccountParams&type=document&lang=en)
+  - [ResetAccountPassword](https://www.tencentcloud.com/document/api/1098/52496)
+* Delete: [DeleteAccounts](https://www.tencentcloud.com/document/api/1098/55927)
 
 ## Import
 
-cynosdb account can be imported using the id, e.g.
+cynosdb account can be imported using the clusterId#accountName#host, e.g.
 
 ```
-terraform import tencentcloud_cynosdb_account.account account_id
+terraform import tencentcloud_cynosdb_account.example cynosdbmysql-ddciqx2l#tf_example#%
+
+or
+
+terraform import tencentcloud_cynosdb_account.example cynosdbmysql-ddciqx2l#tf_example#1.1.1.1
 ```
 

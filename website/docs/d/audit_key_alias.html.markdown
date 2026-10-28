@@ -1,5 +1,5 @@
 ---
-subcategory: "Cloud Audit(Audit)"
+subcategory: "Cloud Audit(CloudAudit)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_audit_key_alias"
 sidebar_current: "docs-tencentcloud-datasource-audit_key_alias"
@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
   * `key_alias` - Key alias.
   * `key_id` - Key ID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListKeyAliasByRegion](https://www.tencentcloud.com/search/?wd=ListKeyAliasByRegion&type=document&lang=en)
 

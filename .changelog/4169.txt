@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_teo_origin_acl: optimize code logic for create function
+```

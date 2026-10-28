@@ -93,6 +93,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [BindIPStrategy](https://www.tencentcloud.com/search/?wd=BindIPStrategy&type=document&lang=en)
+  - [DescribeIPStrategy](https://www.tencentcloud.com/search/?wd=DescribeIPStrategy&type=document&lang=en)
+* Read: [DescribeIPStrategy](https://www.tencentcloud.com/search/?wd=DescribeIPStrategy&type=document&lang=en)
+* Delete: [UnBindIPStrategy](https://www.tencentcloud.com/search/?wd=UnBindIPStrategy&type=document&lang=en)
 
 ## Import
 

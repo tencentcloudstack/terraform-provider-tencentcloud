@@ -115,8 +115,14 @@ func ResourceTencentCloudTeoOriginAclCreate(d *schema.ResourceData, meta interfa
 		request.OriginACLFamily = helper.String(v.(string))
 	}
 
-	request.L7EnableMode = helper.String("specific")
-	request.L4EnableMode = helper.String("specific")
+	if len(request.L7Hosts) > 0 {
+		request.L7EnableMode = helper.String("specific")
+	}
+
+	if len(request.L4ProxyIds) > 0 {
+		request.L4EnableMode = helper.String("specific")
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().EnableOriginACLWithContext(ctx, request)
 		if e != nil {

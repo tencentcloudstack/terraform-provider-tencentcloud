@@ -102,8 +102,33 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `dns_pod_domain` - Internet address domain name.
+* `instance_id` - Instance ID.
 * `tgw_wan_vport` - External port number.
+* `uid` - Unique UID of the instance.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateCloudDBInstances](https://www.tencentcloud.com/document/api/238/55674)
+  - [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+  - [DescribeOrders](https://www.tencentcloud.com/document/api/238/32134)
+  - [ModifyDBInstanceName](https://www.tencentcloud.com/document/api/238/32104)
+* Read:
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
+  - [DescribeDBInstancesAttribute](https://www.tencentcloud.com/document/api/238/54811)
+  - [DescribeDBSecurityGroups](https://www.tencentcloud.com/document/api/238/72730)
+  - [DescribeMaintenanceSpan](https://www.tencentcloud.com/document/api/238/69303)
+* Update:
+  - [DescribeFlowStatus](https://www.tencentcloud.com/document/api/238/32113)
+  - [DescribeOrders](https://www.tencentcloud.com/document/api/238/32134)
+  - [ModifyDBInstanceName](https://www.tencentcloud.com/document/api/238/32104)
+  - [UpgradeDBInstance](https://www.tencentcloud.com/document/api/238/32094)
+* Delete:
+  - [DeleteDBInstance](https://www.tencentcloud.com/document/api/238/72759)
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
+  - [TerminateDBInstance](https://www.tencentcloud.com/document/api/238/34685)
 
 ## Import
 

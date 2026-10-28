@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `is_premium` - Whether the domain is premium.
   * `tld` - Domain ltd.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDomainNameList](https://www.tencentcloud.com/search/?wd=DescribeDomainNameList&type=document&lang=en)
 

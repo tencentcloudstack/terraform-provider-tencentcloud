@@ -134,6 +134,70 @@ type Assignment struct {
 }
 
 // Predefined struct for user
+type AssociateRoutesSecurityGroupRequestParams struct {
+	// 绑定路由的列表
+	InstanceRoutes []*InstanceRoute `json:"InstanceRoutes,omitnil,omitempty" name:"InstanceRoutes"`
+
+	// 安全组id
+	SecurityGroupId *string `json:"SecurityGroupId,omitnil,omitempty" name:"SecurityGroupId"`
+}
+
+type AssociateRoutesSecurityGroupRequest struct {
+	*tchttp.BaseRequest
+	
+	// 绑定路由的列表
+	InstanceRoutes []*InstanceRoute `json:"InstanceRoutes,omitnil,omitempty" name:"InstanceRoutes"`
+
+	// 安全组id
+	SecurityGroupId *string `json:"SecurityGroupId,omitnil,omitempty" name:"SecurityGroupId"`
+}
+
+func (r *AssociateRoutesSecurityGroupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AssociateRoutesSecurityGroupRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceRoutes")
+	delete(f, "SecurityGroupId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AssociateRoutesSecurityGroupRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type AssociateRoutesSecurityGroupResponseParams struct {
+	// 返回结果
+	Result *SecurityGroupRouteOperateResp `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type AssociateRoutesSecurityGroupResponse struct {
+	*tchttp.BaseResponse
+	Response *AssociateRoutesSecurityGroupResponseParams `json:"Response"`
+}
+
+func (r *AssociateRoutesSecurityGroupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AssociateRoutesSecurityGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type AuthorizeTokenRequestParams struct {
 	// ckafka集群实例Id, 可通过[DescribeInstances](https://cloud.tencent.com/document/product/597/40835)接口获取
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
@@ -297,32 +361,32 @@ func (r *BatchCreateAclResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type BatchModifyGroupOffsetsRequestParams struct {
-	// 消费分组名称
+	// <p>消费分组名称</p>
 	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
 
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// partition信息
+	// <p>partition信息</p>
 	Partitions []*Partitions `json:"Partitions,omitnil,omitempty" name:"Partitions"`
 
-	// 指定topic，默认所有topic
+	// <p>指定topic，默认所有topic</p>
 	TopicName []*string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
 }
 
 type BatchModifyGroupOffsetsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 消费分组名称
+	// <p>消费分组名称</p>
 	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
 
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// partition信息
+	// <p>partition信息</p>
 	Partitions []*Partitions `json:"Partitions,omitnil,omitempty" name:"Partitions"`
 
-	// 指定topic，默认所有topic
+	// <p>指定topic，默认所有topic</p>
 	TopicName []*string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
 }
 
@@ -350,7 +414,7 @@ func (r *BatchModifyGroupOffsetsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type BatchModifyGroupOffsetsResponseParams struct {
-	// 返回结果
+	// <p>返回结果</p>
 	Result *JgwOperateResponse `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -945,28 +1009,28 @@ type ConsumerRecord struct {
 }
 
 type CosParam struct {
-	// cos 存储桶名称
+	// <p>cos 存储桶名称</p>
 	BucketName *string `json:"BucketName,omitnil,omitempty" name:"BucketName"`
 
-	// 地域代码
+	// <p>地域代码</p>
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
-	// 对象名称
+	// <p>对象名称</p>
 	ObjectKey *string `json:"ObjectKey,omitnil,omitempty" name:"ObjectKey"`
 
-	// 汇聚消息量的大小（单位：MB)
+	// <p>汇聚消息量的大小（单位：MB)</p>
 	AggregateBatchSize *uint64 `json:"AggregateBatchSize,omitnil,omitempty" name:"AggregateBatchSize"`
 
-	// 汇聚的时间间隔（单位：小时）
+	// <p>汇聚的时间间隔（单位：小时）</p>
 	AggregateInterval *uint64 `json:"AggregateInterval,omitnil,omitempty" name:"AggregateInterval"`
 
-	// 消息汇聚后的文件格式（支持csv, json）
+	// <p>消息汇聚后的文件格式（支持csv, json）</p>
 	FormatOutputType *string `json:"FormatOutputType,omitnil,omitempty" name:"FormatOutputType"`
 
-	// 转储的对象目录前缀
+	// <p>转储的对象目录前缀</p>
 	ObjectKeyPrefix *string `json:"ObjectKeyPrefix,omitnil,omitempty" name:"ObjectKeyPrefix"`
 
-	// 根据strptime 时间格式化的分区格式
+	// <p>根据strptime 时间格式化的分区格式</p>
 	DirectoryTimeFormat *string `json:"DirectoryTimeFormat,omitnil,omitempty" name:"DirectoryTimeFormat"`
 }
 
@@ -1290,93 +1354,105 @@ func (r *CreateCdcClusterResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateConnectResourceRequestParams struct {
-	// 连接源名称
+	// <p>连接源名称</p>
 	ResourceName *string `json:"ResourceName,omitnil,omitempty" name:"ResourceName"`
 
-	// 连接源类型
+	// <p>连接源类型</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 连接源描述
+	// <p>连接源描述</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// Dts配置，Type为DTS时必填
+	// <p>Dts配置，Type为DTS时必填</p>
 	DtsConnectParam *DtsConnectParam `json:"DtsConnectParam,omitnil,omitempty" name:"DtsConnectParam"`
 
-	// MongoDB配置，Type为MONGODB时必填
+	// <p>MongoDB配置，Type为MONGODB时必填</p>
 	MongoDBConnectParam *MongoDBConnectParam `json:"MongoDBConnectParam,omitnil,omitempty" name:"MongoDBConnectParam"`
 
-	// Es配置，Type为ES时必填
+	// <p>Es配置，Type为ES时必填</p>
 	EsConnectParam *EsConnectParam `json:"EsConnectParam,omitnil,omitempty" name:"EsConnectParam"`
 
-	// ClickHouse配置，Type为CLICKHOUSE时必填
+	// <p>ClickHouse配置，Type为CLICKHOUSE时必填</p>
 	ClickHouseConnectParam *ClickHouseConnectParam `json:"ClickHouseConnectParam,omitnil,omitempty" name:"ClickHouseConnectParam"`
 
-	// MySQL配置，Type为MYSQL或TDSQL_C_MYSQL时必填
+	// <p>MySQL配置，Type为MYSQL或TDSQL_C_MYSQL时必填</p>
 	MySQLConnectParam *MySQLConnectParam `json:"MySQLConnectParam,omitnil,omitempty" name:"MySQLConnectParam"`
 
-	// PostgreSQL配置，Type为POSTGRESQL或TDSQL_C_POSTGRESQL时必填
+	// <p>PostgreSQL配置，Type为POSTGRESQL或TDSQL_C_POSTGRESQL时必填</p>
 	PostgreSQLConnectParam *PostgreSQLConnectParam `json:"PostgreSQLConnectParam,omitnil,omitempty" name:"PostgreSQLConnectParam"`
 
-	// MariaDB配置，Type为MARIADB时必填
+	// <p>MariaDB配置，Type为MARIADB时必填</p>
 	MariaDBConnectParam *MariaDBConnectParam `json:"MariaDBConnectParam,omitnil,omitempty" name:"MariaDBConnectParam"`
 
-	// SQLServer配置，Type为SQLSERVER时必填
+	// <p>SQLServer配置，Type为SQLSERVER时必填</p>
 	SQLServerConnectParam *SQLServerConnectParam `json:"SQLServerConnectParam,omitnil,omitempty" name:"SQLServerConnectParam"`
 
-	// Doris 配置，Type为 DORIS 时必填
+	// <p>Doris 配置，Type为 DORIS 时必填</p>
 	DorisConnectParam *DorisConnectParam `json:"DorisConnectParam,omitnil,omitempty" name:"DorisConnectParam"`
 
-	// Kafka配置，Type为 KAFKA 时必填
+	// <p>Kafka配置，Type为 KAFKA 时必填</p>
 	KafkaConnectParam *KafkaConnectParam `json:"KafkaConnectParam,omitnil,omitempty" name:"KafkaConnectParam"`
 
-	// MQTT配置，Type为 MQTT 时必填
+	// <p>MQTT配置，Type为 MQTT 时必填</p>
 	MqttConnectParam *MqttConnectParam `json:"MqttConnectParam,omitnil,omitempty" name:"MqttConnectParam"`
+
+	// <p>Iceberg配置，Type为ICEBERG时必填</p>
+	IcebergConnectParam *IcebergConnectParam `json:"IcebergConnectParam,omitnil,omitempty" name:"IcebergConnectParam"`
+
+	// <p>标签列表</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type CreateConnectResourceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 连接源名称
+	// <p>连接源名称</p>
 	ResourceName *string `json:"ResourceName,omitnil,omitempty" name:"ResourceName"`
 
-	// 连接源类型
+	// <p>连接源类型</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 连接源描述
+	// <p>连接源描述</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// Dts配置，Type为DTS时必填
+	// <p>Dts配置，Type为DTS时必填</p>
 	DtsConnectParam *DtsConnectParam `json:"DtsConnectParam,omitnil,omitempty" name:"DtsConnectParam"`
 
-	// MongoDB配置，Type为MONGODB时必填
+	// <p>MongoDB配置，Type为MONGODB时必填</p>
 	MongoDBConnectParam *MongoDBConnectParam `json:"MongoDBConnectParam,omitnil,omitempty" name:"MongoDBConnectParam"`
 
-	// Es配置，Type为ES时必填
+	// <p>Es配置，Type为ES时必填</p>
 	EsConnectParam *EsConnectParam `json:"EsConnectParam,omitnil,omitempty" name:"EsConnectParam"`
 
-	// ClickHouse配置，Type为CLICKHOUSE时必填
+	// <p>ClickHouse配置，Type为CLICKHOUSE时必填</p>
 	ClickHouseConnectParam *ClickHouseConnectParam `json:"ClickHouseConnectParam,omitnil,omitempty" name:"ClickHouseConnectParam"`
 
-	// MySQL配置，Type为MYSQL或TDSQL_C_MYSQL时必填
+	// <p>MySQL配置，Type为MYSQL或TDSQL_C_MYSQL时必填</p>
 	MySQLConnectParam *MySQLConnectParam `json:"MySQLConnectParam,omitnil,omitempty" name:"MySQLConnectParam"`
 
-	// PostgreSQL配置，Type为POSTGRESQL或TDSQL_C_POSTGRESQL时必填
+	// <p>PostgreSQL配置，Type为POSTGRESQL或TDSQL_C_POSTGRESQL时必填</p>
 	PostgreSQLConnectParam *PostgreSQLConnectParam `json:"PostgreSQLConnectParam,omitnil,omitempty" name:"PostgreSQLConnectParam"`
 
-	// MariaDB配置，Type为MARIADB时必填
+	// <p>MariaDB配置，Type为MARIADB时必填</p>
 	MariaDBConnectParam *MariaDBConnectParam `json:"MariaDBConnectParam,omitnil,omitempty" name:"MariaDBConnectParam"`
 
-	// SQLServer配置，Type为SQLSERVER时必填
+	// <p>SQLServer配置，Type为SQLSERVER时必填</p>
 	SQLServerConnectParam *SQLServerConnectParam `json:"SQLServerConnectParam,omitnil,omitempty" name:"SQLServerConnectParam"`
 
-	// Doris 配置，Type为 DORIS 时必填
+	// <p>Doris 配置，Type为 DORIS 时必填</p>
 	DorisConnectParam *DorisConnectParam `json:"DorisConnectParam,omitnil,omitempty" name:"DorisConnectParam"`
 
-	// Kafka配置，Type为 KAFKA 时必填
+	// <p>Kafka配置，Type为 KAFKA 时必填</p>
 	KafkaConnectParam *KafkaConnectParam `json:"KafkaConnectParam,omitnil,omitempty" name:"KafkaConnectParam"`
 
-	// MQTT配置，Type为 MQTT 时必填
+	// <p>MQTT配置，Type为 MQTT 时必填</p>
 	MqttConnectParam *MqttConnectParam `json:"MqttConnectParam,omitnil,omitempty" name:"MqttConnectParam"`
+
+	// <p>Iceberg配置，Type为ICEBERG时必填</p>
+	IcebergConnectParam *IcebergConnectParam `json:"IcebergConnectParam,omitnil,omitempty" name:"IcebergConnectParam"`
+
+	// <p>标签列表</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 func (r *CreateConnectResourceRequest) ToJsonString() string {
@@ -1405,6 +1481,8 @@ func (r *CreateConnectResourceRequest) FromJsonString(s string) error {
 	delete(f, "DorisConnectParam")
 	delete(f, "KafkaConnectParam")
 	delete(f, "MqttConnectParam")
+	delete(f, "IcebergConnectParam")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateConnectResourceRequest has unknown keys!", "")
 	}
@@ -1413,7 +1491,7 @@ func (r *CreateConnectResourceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateConnectResourceResponseParams struct {
-	// 连接源的Id
+	// <p>连接源的Id</p>
 	Result *ConnectResourceResourceIdResp `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1516,76 +1594,76 @@ func (r *CreateConsumerResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateDatahubTaskRequestParams struct {
-	// 任务名称,只能以字母起始,允许包含字母、数字、- 、.  、 下划线且长度不超过64 (、为分割符号规则不包含)
+	// <p>任务名称,只能以字母起始,允许包含字母、数字、- 、.  、 下划线且长度不超过64 (、为分割符号规则不包含)</p>
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
-	// 任务类型，SOURCE数据接入，SINK数据流出
+	// <p>任务类型，SOURCE数据接入，SINK数据流出</p>
 	TaskType *string `json:"TaskType,omitnil,omitempty" name:"TaskType"`
 
-	// 数据源
+	// <p>数据源</p>
 	SourceResource *DatahubResource `json:"SourceResource,omitnil,omitempty" name:"SourceResource"`
 
-	// 数据目标
+	// <p>数据目标</p>
 	TargetResource *DatahubResource `json:"TargetResource,omitnil,omitempty" name:"TargetResource"`
 
-	// 数据处理规则
+	// <p>数据处理规则</p>
 	TransformParam *TransformParam `json:"TransformParam,omitnil,omitempty" name:"TransformParam"`
 
-	// 实例连接参数【已废弃】
+	// <p>实例连接参数【已废弃】</p>
 	//
 	// Deprecated: PrivateLinkParam is deprecated.
 	PrivateLinkParam *PrivateLinkParam `json:"PrivateLinkParam,omitnil,omitempty" name:"PrivateLinkParam"`
 
-	// 选择所要绑定的SchemaId
+	// <p>选择所要绑定的SchemaId</p>
 	SchemaId *string `json:"SchemaId,omitnil,omitempty" name:"SchemaId"`
 
-	// 数据处理规则
+	// <p>数据处理规则</p>
 	TransformsParam *TransformsParam `json:"TransformsParam,omitnil,omitempty" name:"TransformsParam"`
 
-	// 任务Id
+	// <p>任务Id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// 标签列表
+	// <p>标签列表</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 任务描述信息
+	// <p>任务描述信息</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 }
 
 type CreateDatahubTaskRequest struct {
 	*tchttp.BaseRequest
 	
-	// 任务名称,只能以字母起始,允许包含字母、数字、- 、.  、 下划线且长度不超过64 (、为分割符号规则不包含)
+	// <p>任务名称,只能以字母起始,允许包含字母、数字、- 、.  、 下划线且长度不超过64 (、为分割符号规则不包含)</p>
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
-	// 任务类型，SOURCE数据接入，SINK数据流出
+	// <p>任务类型，SOURCE数据接入，SINK数据流出</p>
 	TaskType *string `json:"TaskType,omitnil,omitempty" name:"TaskType"`
 
-	// 数据源
+	// <p>数据源</p>
 	SourceResource *DatahubResource `json:"SourceResource,omitnil,omitempty" name:"SourceResource"`
 
-	// 数据目标
+	// <p>数据目标</p>
 	TargetResource *DatahubResource `json:"TargetResource,omitnil,omitempty" name:"TargetResource"`
 
-	// 数据处理规则
+	// <p>数据处理规则</p>
 	TransformParam *TransformParam `json:"TransformParam,omitnil,omitempty" name:"TransformParam"`
 
-	// 实例连接参数【已废弃】
+	// <p>实例连接参数【已废弃】</p>
 	PrivateLinkParam *PrivateLinkParam `json:"PrivateLinkParam,omitnil,omitempty" name:"PrivateLinkParam"`
 
-	// 选择所要绑定的SchemaId
+	// <p>选择所要绑定的SchemaId</p>
 	SchemaId *string `json:"SchemaId,omitnil,omitempty" name:"SchemaId"`
 
-	// 数据处理规则
+	// <p>数据处理规则</p>
 	TransformsParam *TransformsParam `json:"TransformsParam,omitnil,omitempty" name:"TransformsParam"`
 
-	// 任务Id
+	// <p>任务Id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// 标签列表
+	// <p>标签列表</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 任务描述信息
+	// <p>任务描述信息</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 }
 
@@ -1628,7 +1706,7 @@ type CreateDatahubTaskRes struct {
 
 // Predefined struct for user
 type CreateDatahubTaskResponseParams struct {
-	// 返回结果
+	// <p>返回结果</p>
 	Result *CreateDatahubTaskRes `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1653,38 +1731,38 @@ func (r *CreateDatahubTaskResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateDatahubTopicRequestParams struct {
-	// 名称，是一个不超过 128 个字符的字符串，必须以“AppId-”为首字符，剩余部分可以包含字母、数字和横划线(-)
+	// <p>名称，是一个不超过 128 个字符的字符串，必须以“AppId-”为首字符，剩余部分可以包含字母、数字和横划线(-)，可通过接口DescribeAppInfo获取。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// Partition个数，大于0
+	// <p>Partition个数，最大值为500，大于0</p>
 	PartitionNum *int64 `json:"PartitionNum,omitnil,omitempty" name:"PartitionNum"`
 
-	// 消息保留时间，单位ms，当前最小值为60000ms
+	// <p>消息保留时间，单位ms，当前最小值为60000ms</p>
 	RetentionMs *int64 `json:"RetentionMs,omitnil,omitempty" name:"RetentionMs"`
 
-	// 主题备注，是一个不超过 64 个字符的字符串，必须以字母为首字符，剩余部分可以包含字母、数字和横划线(-)
+	// <p>主题备注，是一个不超过 64 个字符的字符串，可以包含字母、数字和横划线(-)。</p>
 	Note *string `json:"Note,omitnil,omitempty" name:"Note"`
 
-	// 标签列表
+	// <p>标签列表</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type CreateDatahubTopicRequest struct {
 	*tchttp.BaseRequest
 	
-	// 名称，是一个不超过 128 个字符的字符串，必须以“AppId-”为首字符，剩余部分可以包含字母、数字和横划线(-)
+	// <p>名称，是一个不超过 128 个字符的字符串，必须以“AppId-”为首字符，剩余部分可以包含字母、数字和横划线(-)，可通过接口DescribeAppInfo获取。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// Partition个数，大于0
+	// <p>Partition个数，最大值为500，大于0</p>
 	PartitionNum *int64 `json:"PartitionNum,omitnil,omitempty" name:"PartitionNum"`
 
-	// 消息保留时间，单位ms，当前最小值为60000ms
+	// <p>消息保留时间，单位ms，当前最小值为60000ms</p>
 	RetentionMs *int64 `json:"RetentionMs,omitnil,omitempty" name:"RetentionMs"`
 
-	// 主题备注，是一个不超过 64 个字符的字符串，必须以字母为首字符，剩余部分可以包含字母、数字和横划线(-)
+	// <p>主题备注，是一个不超过 64 个字符的字符串，可以包含字母、数字和横划线(-)。</p>
 	Note *string `json:"Note,omitnil,omitempty" name:"Note"`
 
-	// 标签列表
+	// <p>标签列表</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
@@ -1713,7 +1791,7 @@ func (r *CreateDatahubTopicRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateDatahubTopicResponseParams struct {
-	// 返回创建结果
+	// <p>返回创建结果</p>
 	Result *DatahubTopicResp `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1737,17 +1815,20 @@ func (r *CreateDatahubTopicResponse) FromJsonString(s string) error {
 }
 
 type CreateInstancePostData struct {
-	// CreateInstancePre返回固定为0，不能作为CheckTaskStatus的查询条件。只是为了保证和后台数据结构对齐。
+	// <p>CreateInstancePre返回固定为0，不能作为CheckTaskStatus的查询条件。只是为了保证和后台数据结构对齐。</p>
 	FlowId *int64 `json:"FlowId,omitnil,omitempty" name:"FlowId"`
 
-	// 订单号列表
+	// <p>订单号列表</p>
 	DealNames []*string `json:"DealNames,omitnil,omitempty" name:"DealNames"`
 
-	// ckafka集群实例Id，当购买多个实例时，默认返回购买的第一个实例 id
+	// <p>ckafka集群实例Id，当购买多个实例时，默认返回购买的第一个实例 id</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 订单和购买实例对应映射列表
+	// <p>订单和购买实例对应映射列表</p>
 	DealNameInstanceIdMapping []*DealInstanceDTO `json:"DealNameInstanceIdMapping,omitnil,omitempty" name:"DealNameInstanceIdMapping"`
+
+	// <p>CAM鉴权返回的eventId</p>
+	EventId *string `json:"EventId,omitnil,omitempty" name:"EventId"`
 }
 
 type CreateInstancePostResp struct {
@@ -1762,17 +1843,20 @@ type CreateInstancePostResp struct {
 }
 
 type CreateInstancePreData struct {
-	// CreateInstancePre返回固定为0，不能作为CheckTaskStatus的查询条件。只是为了保证和后台数据结构对齐。
+	// <p>CreateInstancePre返回固定为0，不能作为CheckTaskStatus的查询条件。只是为了保证和后台数据结构对齐。</p>
 	FlowId *int64 `json:"FlowId,omitnil,omitempty" name:"FlowId"`
 
-	// 订单号列表
+	// <p>订单号列表</p>
 	DealNames []*string `json:"DealNames,omitnil,omitempty" name:"DealNames"`
 
-	// ckafka集群实例Id，当购买多个实例时，默认返回购买的第一个实例 id
+	// <p>ckafka集群实例Id，当购买多个实例时，默认返回购买的第一个实例 id</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 订单和购买实例对应映射列表
+	// <p>订单和购买实例对应映射列表</p>
 	DealNameInstanceIdMapping []*DealInstanceDTO `json:"DealNameInstanceIdMapping,omitnil,omitempty" name:"DealNameInstanceIdMapping"`
+
+	// <p>CAM鉴权返回的eventId</p>
+	EventId *string `json:"EventId,omitnil,omitempty" name:"EventId"`
 }
 
 // Predefined struct for user
@@ -1783,7 +1867,7 @@ type CreateInstancePreRequestParams struct {
 	// <p>可用区。当购买多可用区实例时，当前参数为主可用区。  <a href="https://cloud.tencent.com/document/product/597/55246">查看可用区</a></p>
 	ZoneId *int64 `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// <p>预付费购买时长，例如 "1m",就是一个月,取值范围 1m~36m</p>
+	// <p>预付费购买时长，例如 &quot;1m&quot;,就是一个月,取值范围 1m~36m</p>
 	Period *string `json:"Period,omitnil,omitempty" name:"Period"`
 
 	// <p>国际站标准版实例规格。目前只有国际站标准版使用当前字段区分规格，国内站标准版使用峰值带宽区分规格。除了国际站标准版外的所有实例填写 1 即可。国际站标准版实例：入门型(general)]填写1；[标准型(standard)]填写2；[进阶型(advanced)]填写3；[容量型(capacity)]填写4；[高阶型1(specialized-1)]填写5；[高阶型2(specialized-2)]填写6；[高阶型3(specialized-3)]填写7；[高阶型4(specialized-4)]填写8。</p>
@@ -1807,7 +1891,7 @@ type CreateInstancePreRequestParams struct {
 	// <p>CKafka版本号[2.4.1, 2.4.2, 2.8.1, 3.2.3], 默认取值是2.4.1。2.4.1 与 2.4.2 属于同一个版本，传任意一个均可。</p>
 	KafkaVersion *string `json:"KafkaVersion,omitnil,omitempty" name:"KafkaVersion"`
 
-	// <p>实例类型: [标准版实例]填写 "standard" (默认), [专业版实例]填写 "profession",[高级版实例]填写"premium"</p>
+	// <p>实例类型: [标准版实例]填写 &quot;standard&quot; (默认), [专业版实例]填写 &quot;profession&quot;,[高级版实例]填写&quot;premium&quot;</p>
 	SpecificationsType *string `json:"SpecificationsType,omitnil,omitempty" name:"SpecificationsType"`
 
 	// <p>磁盘大小，如果跟控制台规格配比不相符，则无法创建成功。默认取值为500，步长设置为100。可以通过以下链接查看计费规格：https://cloud.tencent.com/document/product/597/122562</p>
@@ -1822,7 +1906,7 @@ type CreateInstancePreRequestParams struct {
 	// <p>标签</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// <p>专业版/高级版实例磁盘类型，标准版实例不需要填写。"CLOUD_SSD"：SSD云硬盘；"CLOUD_BASIC"：高性能云硬盘。不传默认为 "CLOUD_BASIC"</p>
+	// <p>专业版/高级版实例磁盘类型，标准版实例不需要填写。</p><p>枚举值：</p><ul><li>CLOUD_SSD： SSD云硬盘</li><li>CLOUD_PREMIUM： 高性能云硬盘</li></ul><p>默认值：CLOUD_PREMIUM</p>
 	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
 
 	// <p>是否创建跨可用区实例，当前参数为 true 时，zoneIds必填</p>
@@ -1845,6 +1929,9 @@ type CreateInstancePreRequestParams struct {
 
 	// <p>自定义证书Id,仅当SpecificationsType为profession时生效,支持自定义证书能力</p><p>可通过<a href="https://cloud.tencent.com/document/product/400/41673">DescribeCertificateDetail</a>接口获取</p>
 	CustomSSLCertId *string `json:"CustomSSLCertId,omitnil,omitempty" name:"CustomSSLCertId"`
+
+	// <p>弹性存储开关</p><p>枚举值：</p><ul><li>0： 关闭</li><li>1： 开启</li></ul><p>默认值：0</p>
+	StoreQuantityType *int64 `json:"StoreQuantityType,omitnil,omitempty" name:"StoreQuantityType"`
 }
 
 type CreateInstancePreRequest struct {
@@ -1856,7 +1943,7 @@ type CreateInstancePreRequest struct {
 	// <p>可用区。当购买多可用区实例时，当前参数为主可用区。  <a href="https://cloud.tencent.com/document/product/597/55246">查看可用区</a></p>
 	ZoneId *int64 `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// <p>预付费购买时长，例如 "1m",就是一个月,取值范围 1m~36m</p>
+	// <p>预付费购买时长，例如 &quot;1m&quot;,就是一个月,取值范围 1m~36m</p>
 	Period *string `json:"Period,omitnil,omitempty" name:"Period"`
 
 	// <p>国际站标准版实例规格。目前只有国际站标准版使用当前字段区分规格，国内站标准版使用峰值带宽区分规格。除了国际站标准版外的所有实例填写 1 即可。国际站标准版实例：入门型(general)]填写1；[标准型(standard)]填写2；[进阶型(advanced)]填写3；[容量型(capacity)]填写4；[高阶型1(specialized-1)]填写5；[高阶型2(specialized-2)]填写6；[高阶型3(specialized-3)]填写7；[高阶型4(specialized-4)]填写8。</p>
@@ -1880,7 +1967,7 @@ type CreateInstancePreRequest struct {
 	// <p>CKafka版本号[2.4.1, 2.4.2, 2.8.1, 3.2.3], 默认取值是2.4.1。2.4.1 与 2.4.2 属于同一个版本，传任意一个均可。</p>
 	KafkaVersion *string `json:"KafkaVersion,omitnil,omitempty" name:"KafkaVersion"`
 
-	// <p>实例类型: [标准版实例]填写 "standard" (默认), [专业版实例]填写 "profession",[高级版实例]填写"premium"</p>
+	// <p>实例类型: [标准版实例]填写 &quot;standard&quot; (默认), [专业版实例]填写 &quot;profession&quot;,[高级版实例]填写&quot;premium&quot;</p>
 	SpecificationsType *string `json:"SpecificationsType,omitnil,omitempty" name:"SpecificationsType"`
 
 	// <p>磁盘大小，如果跟控制台规格配比不相符，则无法创建成功。默认取值为500，步长设置为100。可以通过以下链接查看计费规格：https://cloud.tencent.com/document/product/597/122562</p>
@@ -1895,7 +1982,7 @@ type CreateInstancePreRequest struct {
 	// <p>标签</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// <p>专业版/高级版实例磁盘类型，标准版实例不需要填写。"CLOUD_SSD"：SSD云硬盘；"CLOUD_BASIC"：高性能云硬盘。不传默认为 "CLOUD_BASIC"</p>
+	// <p>专业版/高级版实例磁盘类型，标准版实例不需要填写。</p><p>枚举值：</p><ul><li>CLOUD_SSD： SSD云硬盘</li><li>CLOUD_PREMIUM： 高性能云硬盘</li></ul><p>默认值：CLOUD_PREMIUM</p>
 	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
 
 	// <p>是否创建跨可用区实例，当前参数为 true 时，zoneIds必填</p>
@@ -1918,6 +2005,9 @@ type CreateInstancePreRequest struct {
 
 	// <p>自定义证书Id,仅当SpecificationsType为profession时生效,支持自定义证书能力</p><p>可通过<a href="https://cloud.tencent.com/document/product/400/41673">DescribeCertificateDetail</a>接口获取</p>
 	CustomSSLCertId *string `json:"CustomSSLCertId,omitnil,omitempty" name:"CustomSSLCertId"`
+
+	// <p>弹性存储开关</p><p>枚举值：</p><ul><li>0： 关闭</li><li>1： 开启</li></ul><p>默认值：0</p>
+	StoreQuantityType *int64 `json:"StoreQuantityType,omitnil,omitempty" name:"StoreQuantityType"`
 }
 
 func (r *CreateInstancePreRequest) ToJsonString() string {
@@ -1955,6 +2045,7 @@ func (r *CreateInstancePreRequest) FromJsonString(s string) error {
 	delete(f, "AutoVoucher")
 	delete(f, "ElasticBandwidthSwitch")
 	delete(f, "CustomSSLCertId")
+	delete(f, "StoreQuantityType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateInstancePreRequest has unknown keys!", "")
 	}
@@ -2000,6 +2091,331 @@ func (r *CreateInstancePreResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateInstancePreResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateMetaAndDataSyncDatahubTaskRequestParams struct {
+	// <p>任务名称</p><p>64字符内</p>
+	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
+
+	// <p>同步源连接</p><p>参数格式：resource-test</p>
+	SourceResourceId *string `json:"SourceResourceId,omitnil,omitempty" name:"SourceResourceId"`
+
+	// <p>同步目标连接</p><p>参数格式：resource-test</p>
+	TargetResourceId *string `json:"TargetResourceId,omitnil,omitempty" name:"TargetResourceId"`
+
+	// <p>标签列表</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// <p>Offset类型，最开始位置earliest，最新位置latest，时间点位置timestamp</p><p>枚举值：</p><ul><li>earliest： 最开始位置</li><li>latest： 最新位置</li><li>timestamp： 时间点位置</li></ul>
+	OffsetType *string `json:"OffsetType,omitnil,omitempty" name:"OffsetType"`
+
+	// <p>正则匹配Topic列表</p><p>与TopicList参数二选一</p>
+	TopicRegularExpression *string `json:"TopicRegularExpression,omitnil,omitempty" name:"TopicRegularExpression"`
+
+	// <p>多选topic列表</p><p>与TopicRegularExpression参数二选一</p>
+	TopicList []*string `json:"TopicList,omitnil,omitempty" name:"TopicList"`
+
+	// <p>Topic 前缀</p>
+	Prefix *string `json:"Prefix,omitnil,omitempty" name:"Prefix"`
+
+	// <p>Topic前缀分隔符</p><p>仅支持 &quot;.&quot; / &quot;-&quot; / &quot;_&quot;</p>
+	Separator *string `json:"Separator,omitnil,omitempty" name:"Separator"`
+
+	// <p>连接器任务描述</p><p>128字符内</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+}
+
+type CreateMetaAndDataSyncDatahubTaskRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>任务名称</p><p>64字符内</p>
+	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
+
+	// <p>同步源连接</p><p>参数格式：resource-test</p>
+	SourceResourceId *string `json:"SourceResourceId,omitnil,omitempty" name:"SourceResourceId"`
+
+	// <p>同步目标连接</p><p>参数格式：resource-test</p>
+	TargetResourceId *string `json:"TargetResourceId,omitnil,omitempty" name:"TargetResourceId"`
+
+	// <p>标签列表</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// <p>Offset类型，最开始位置earliest，最新位置latest，时间点位置timestamp</p><p>枚举值：</p><ul><li>earliest： 最开始位置</li><li>latest： 最新位置</li><li>timestamp： 时间点位置</li></ul>
+	OffsetType *string `json:"OffsetType,omitnil,omitempty" name:"OffsetType"`
+
+	// <p>正则匹配Topic列表</p><p>与TopicList参数二选一</p>
+	TopicRegularExpression *string `json:"TopicRegularExpression,omitnil,omitempty" name:"TopicRegularExpression"`
+
+	// <p>多选topic列表</p><p>与TopicRegularExpression参数二选一</p>
+	TopicList []*string `json:"TopicList,omitnil,omitempty" name:"TopicList"`
+
+	// <p>Topic 前缀</p>
+	Prefix *string `json:"Prefix,omitnil,omitempty" name:"Prefix"`
+
+	// <p>Topic前缀分隔符</p><p>仅支持 &quot;.&quot; / &quot;-&quot; / &quot;_&quot;</p>
+	Separator *string `json:"Separator,omitnil,omitempty" name:"Separator"`
+
+	// <p>连接器任务描述</p><p>128字符内</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+}
+
+func (r *CreateMetaAndDataSyncDatahubTaskRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateMetaAndDataSyncDatahubTaskRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TaskName")
+	delete(f, "SourceResourceId")
+	delete(f, "TargetResourceId")
+	delete(f, "Tags")
+	delete(f, "OffsetType")
+	delete(f, "TopicRegularExpression")
+	delete(f, "TopicList")
+	delete(f, "Prefix")
+	delete(f, "Separator")
+	delete(f, "Description")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateMetaAndDataSyncDatahubTaskRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateMetaAndDataSyncDatahubTaskResponseParams struct {
+	// <p>返回结果</p>
+	Result *CreateDatahubTaskRes `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateMetaAndDataSyncDatahubTaskResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateMetaAndDataSyncDatahubTaskResponseParams `json:"Response"`
+}
+
+func (r *CreateMetaAndDataSyncDatahubTaskResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateMetaAndDataSyncDatahubTaskResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateMetaDataAndOffsetSyncDatahubTaskRequestParams struct {
+	// <p>任务名称</p><p>参数格式：task-test</p><p>64字符内</p>
+	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
+
+	// <p>同步源连接</p><p>参数格式：resource-test</p>
+	SourceResourceId *string `json:"SourceResourceId,omitnil,omitempty" name:"SourceResourceId"`
+
+	// <p>同步目标链接</p><p>参数格式：resource-test</p>
+	TargetResourceId *string `json:"TargetResourceId,omitnil,omitempty" name:"TargetResourceId"`
+
+	// <p>连接器任务描述</p><p>128字符内</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>Offset类型，最开始位置earliest，最新位置latest</p><p>枚举值：</p><ul><li>earliest： 最开始位置</li><li>latest： 最新位置</li></ul>
+	OffsetType *string `json:"OffsetType,omitnil,omitempty" name:"OffsetType"`
+
+	// <p>正则匹配Topic列表</p><p>与TopicList参数二选一</p>
+	TopicRegularExpression *string `json:"TopicRegularExpression,omitnil,omitempty" name:"TopicRegularExpression"`
+
+	// <p>多选topic列表</p><p>与TopicRegularExpression参数二选一</p>
+	TopicList []*string `json:"TopicList,omitnil,omitempty" name:"TopicList"`
+
+	// <p>Topic 前缀</p>
+	Prefix *string `json:"Prefix,omitnil,omitempty" name:"Prefix"`
+
+	// <p>Topic前缀分隔符</p><p>仅支持 &quot;.&quot; / &quot;-&quot; / &quot;_&quot;</p>
+	Separator *string `json:"Separator,omitnil,omitempty" name:"Separator"`
+
+	// <p>标签列表</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+}
+
+type CreateMetaDataAndOffsetSyncDatahubTaskRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>任务名称</p><p>参数格式：task-test</p><p>64字符内</p>
+	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
+
+	// <p>同步源连接</p><p>参数格式：resource-test</p>
+	SourceResourceId *string `json:"SourceResourceId,omitnil,omitempty" name:"SourceResourceId"`
+
+	// <p>同步目标链接</p><p>参数格式：resource-test</p>
+	TargetResourceId *string `json:"TargetResourceId,omitnil,omitempty" name:"TargetResourceId"`
+
+	// <p>连接器任务描述</p><p>128字符内</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>Offset类型，最开始位置earliest，最新位置latest</p><p>枚举值：</p><ul><li>earliest： 最开始位置</li><li>latest： 最新位置</li></ul>
+	OffsetType *string `json:"OffsetType,omitnil,omitempty" name:"OffsetType"`
+
+	// <p>正则匹配Topic列表</p><p>与TopicList参数二选一</p>
+	TopicRegularExpression *string `json:"TopicRegularExpression,omitnil,omitempty" name:"TopicRegularExpression"`
+
+	// <p>多选topic列表</p><p>与TopicRegularExpression参数二选一</p>
+	TopicList []*string `json:"TopicList,omitnil,omitempty" name:"TopicList"`
+
+	// <p>Topic 前缀</p>
+	Prefix *string `json:"Prefix,omitnil,omitempty" name:"Prefix"`
+
+	// <p>Topic前缀分隔符</p><p>仅支持 &quot;.&quot; / &quot;-&quot; / &quot;_&quot;</p>
+	Separator *string `json:"Separator,omitnil,omitempty" name:"Separator"`
+
+	// <p>标签列表</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+}
+
+func (r *CreateMetaDataAndOffsetSyncDatahubTaskRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateMetaDataAndOffsetSyncDatahubTaskRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TaskName")
+	delete(f, "SourceResourceId")
+	delete(f, "TargetResourceId")
+	delete(f, "Description")
+	delete(f, "OffsetType")
+	delete(f, "TopicRegularExpression")
+	delete(f, "TopicList")
+	delete(f, "Prefix")
+	delete(f, "Separator")
+	delete(f, "Tags")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateMetaDataAndOffsetSyncDatahubTaskRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateMetaDataAndOffsetSyncDatahubTaskResponseParams struct {
+	// <p>返回结果</p>
+	Result *CreateDatahubTaskRes `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateMetaDataAndOffsetSyncDatahubTaskResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateMetaDataAndOffsetSyncDatahubTaskResponseParams `json:"Response"`
+}
+
+func (r *CreateMetaDataAndOffsetSyncDatahubTaskResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateMetaDataAndOffsetSyncDatahubTaskResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateMetaSyncDatahubTaskRequestParams struct {
+	// <p>连接器任务名称</p><p>64字符内</p>
+	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
+
+	// <p>同步源连接</p><p>参数格式：resource-test</p>
+	SourceResourceId *string `json:"SourceResourceId,omitnil,omitempty" name:"SourceResourceId"`
+
+	// <p>同步目标连接</p><p>参数格式：resource-test</p>
+	TargetResourceId *string `json:"TargetResourceId,omitnil,omitempty" name:"TargetResourceId"`
+
+	// <p>连接器任务描述</p><p>128字符内</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>标签列表</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+}
+
+type CreateMetaSyncDatahubTaskRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>连接器任务名称</p><p>64字符内</p>
+	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
+
+	// <p>同步源连接</p><p>参数格式：resource-test</p>
+	SourceResourceId *string `json:"SourceResourceId,omitnil,omitempty" name:"SourceResourceId"`
+
+	// <p>同步目标连接</p><p>参数格式：resource-test</p>
+	TargetResourceId *string `json:"TargetResourceId,omitnil,omitempty" name:"TargetResourceId"`
+
+	// <p>连接器任务描述</p><p>128字符内</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>标签列表</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+}
+
+func (r *CreateMetaSyncDatahubTaskRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateMetaSyncDatahubTaskRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TaskName")
+	delete(f, "SourceResourceId")
+	delete(f, "TargetResourceId")
+	delete(f, "Description")
+	delete(f, "Tags")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateMetaSyncDatahubTaskRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateMetaSyncDatahubTaskResponseParams struct {
+	// <p>返回结果</p>
+	Result *CreateDatahubTaskRes `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateMetaSyncDatahubTaskResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateMetaSyncDatahubTaskResponseParams `json:"Response"`
+}
+
+func (r *CreateMetaSyncDatahubTaskResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateMetaSyncDatahubTaskResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2094,13 +2510,13 @@ type CreatePostPaidInstanceRequestParams struct {
 	// <p>创建实例时可以选择集群Id, 该入参表示集群Id。不指定实例所在集群则不传入该参数</p>
 	ClusterId *int64 `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// <p>实例版本。目前支持当前支持"2.4.1", "2.4.2","2.8.1", "3.2.3"，默认取值"2.4.1"。"2.4.1" 与 "2.4.2" 属于同一个版本，传任意一个均可。</p>
+	// <p>实例版本。目前支持当前支持&quot;2.4.1&quot;, &quot;2.4.2&quot;,&quot;2.8.1&quot;, &quot;3.2.3&quot;，默认取值&quot;2.4.1&quot;。&quot;2.4.1&quot; 与 &quot;2.4.2&quot; 属于同一个版本，传任意一个均可。</p>
 	KafkaVersion *string `json:"KafkaVersion,omitnil,omitempty" name:"KafkaVersion"`
 
-	// <p>实例类型。"standard"：标准版，"profession"：专业版。  (标准版仅国际站支持，国内站目前支持专业版)</p>
+	// <p>实例类型。&quot;standard&quot;：标准版，&quot;profession&quot;：专业版。  (标准版仅国际站支持，国内站目前支持专业版)</p>
 	SpecificationsType *string `json:"SpecificationsType,omitnil,omitempty" name:"SpecificationsType"`
 
-	// <p>专业版实例磁盘类型，标准版实例不需要填写。"CLOUD_SSD"：SSD云硬盘；"CLOUD_BASIC"：高性能云硬盘。不传默认值为 "CLOUD_BASIC"</p>
+	// <p>专业版实例磁盘类型，标准版实例不需要填写</p><p>枚举值：</p><ul><li>CLOUD_SSD： SSD云硬盘</li><li>CLOUD_PREMIUM： 高性能云硬盘</li></ul><p>默认值：CLOUD_PREMIUM</p>
 	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
 
 	// <p>实例内网峰值带宽，默认值为40。单位 MB/s。标准版需传入当前实例规格所对应的峰值带宽。注意如果创建的实例为专业版实例，峰值带宽，分区数等参数配置需要满足专业版的计费规格，可以通过以下链接查看计费规格：https://cloud.tencent.com/document/product/597/11745</p>
@@ -2127,7 +2543,7 @@ type CreatePostPaidInstanceRequestParams struct {
 	// <p>购买实例数量。非必填，默认值为 1。当传入该参数时，会创建多个 instanceName 加后缀区分的实例</p>
 	InstanceNum *int64 `json:"InstanceNum,omitnil,omitempty" name:"InstanceNum"`
 
-	// <p>公网带宽大小，单位 Mbps。默认是没有加上免费 3Mbps 带宽。例如总共需要 3Mbps 公网带宽，此处传 0；总共需要 6Mbps 公网带宽，此处传 3。需要保证传入参数为 3 的整数倍</p>
+	// <p>公网带宽大小，单位 Mbps。</p><p>单位：Mbps</p>
 	PublicNetworkMonthly *int64 `json:"PublicNetworkMonthly,omitnil,omitempty" name:"PublicNetworkMonthly"`
 
 	// <p>标签</p>
@@ -2138,6 +2554,9 @@ type CreatePostPaidInstanceRequestParams struct {
 
 	// <p>自定义证书Id,仅当SpecificationsType为profession时生效,支持自定义证书能力</p><p>可通过<a href="https://cloud.tencent.com/document/product/400/41673">DescribeCertificateDetail</a>接口获取</p>
 	CustomSSLCertId *string `json:"CustomSSLCertId,omitnil,omitempty" name:"CustomSSLCertId"`
+
+	// <p>弹性存储开关</p><p>枚举值：</p><ul><li>0： 关闭</li><li>1： 开启</li></ul><p>默认值：0</p>
+	StoreQuantityType *int64 `json:"StoreQuantityType,omitnil,omitempty" name:"StoreQuantityType"`
 }
 
 type CreatePostPaidInstanceRequest struct {
@@ -2161,13 +2580,13 @@ type CreatePostPaidInstanceRequest struct {
 	// <p>创建实例时可以选择集群Id, 该入参表示集群Id。不指定实例所在集群则不传入该参数</p>
 	ClusterId *int64 `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// <p>实例版本。目前支持当前支持"2.4.1", "2.4.2","2.8.1", "3.2.3"，默认取值"2.4.1"。"2.4.1" 与 "2.4.2" 属于同一个版本，传任意一个均可。</p>
+	// <p>实例版本。目前支持当前支持&quot;2.4.1&quot;, &quot;2.4.2&quot;,&quot;2.8.1&quot;, &quot;3.2.3&quot;，默认取值&quot;2.4.1&quot;。&quot;2.4.1&quot; 与 &quot;2.4.2&quot; 属于同一个版本，传任意一个均可。</p>
 	KafkaVersion *string `json:"KafkaVersion,omitnil,omitempty" name:"KafkaVersion"`
 
-	// <p>实例类型。"standard"：标准版，"profession"：专业版。  (标准版仅国际站支持，国内站目前支持专业版)</p>
+	// <p>实例类型。&quot;standard&quot;：标准版，&quot;profession&quot;：专业版。  (标准版仅国际站支持，国内站目前支持专业版)</p>
 	SpecificationsType *string `json:"SpecificationsType,omitnil,omitempty" name:"SpecificationsType"`
 
-	// <p>专业版实例磁盘类型，标准版实例不需要填写。"CLOUD_SSD"：SSD云硬盘；"CLOUD_BASIC"：高性能云硬盘。不传默认值为 "CLOUD_BASIC"</p>
+	// <p>专业版实例磁盘类型，标准版实例不需要填写</p><p>枚举值：</p><ul><li>CLOUD_SSD： SSD云硬盘</li><li>CLOUD_PREMIUM： 高性能云硬盘</li></ul><p>默认值：CLOUD_PREMIUM</p>
 	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
 
 	// <p>实例内网峰值带宽，默认值为40。单位 MB/s。标准版需传入当前实例规格所对应的峰值带宽。注意如果创建的实例为专业版实例，峰值带宽，分区数等参数配置需要满足专业版的计费规格，可以通过以下链接查看计费规格：https://cloud.tencent.com/document/product/597/11745</p>
@@ -2194,7 +2613,7 @@ type CreatePostPaidInstanceRequest struct {
 	// <p>购买实例数量。非必填，默认值为 1。当传入该参数时，会创建多个 instanceName 加后缀区分的实例</p>
 	InstanceNum *int64 `json:"InstanceNum,omitnil,omitempty" name:"InstanceNum"`
 
-	// <p>公网带宽大小，单位 Mbps。默认是没有加上免费 3Mbps 带宽。例如总共需要 3Mbps 公网带宽，此处传 0；总共需要 6Mbps 公网带宽，此处传 3。需要保证传入参数为 3 的整数倍</p>
+	// <p>公网带宽大小，单位 Mbps。</p><p>单位：Mbps</p>
 	PublicNetworkMonthly *int64 `json:"PublicNetworkMonthly,omitnil,omitempty" name:"PublicNetworkMonthly"`
 
 	// <p>标签</p>
@@ -2205,6 +2624,9 @@ type CreatePostPaidInstanceRequest struct {
 
 	// <p>自定义证书Id,仅当SpecificationsType为profession时生效,支持自定义证书能力</p><p>可通过<a href="https://cloud.tencent.com/document/product/400/41673">DescribeCertificateDetail</a>接口获取</p>
 	CustomSSLCertId *string `json:"CustomSSLCertId,omitnil,omitempty" name:"CustomSSLCertId"`
+
+	// <p>弹性存储开关</p><p>枚举值：</p><ul><li>0： 关闭</li><li>1： 开启</li></ul><p>默认值：0</p>
+	StoreQuantityType *int64 `json:"StoreQuantityType,omitnil,omitempty" name:"StoreQuantityType"`
 }
 
 func (r *CreatePostPaidInstanceRequest) ToJsonString() string {
@@ -2240,6 +2662,7 @@ func (r *CreatePostPaidInstanceRequest) FromJsonString(s string) error {
 	delete(f, "Tags")
 	delete(f, "ElasticBandwidthSwitch")
 	delete(f, "CustomSSLCertId")
+	delete(f, "StoreQuantityType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreatePostPaidInstanceRequest has unknown keys!", "")
 	}
@@ -2356,7 +2779,7 @@ type CreateRouteRequestParams struct {
 	// <p>vpc子网id,当vipType为3时必填</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// <p>访问类型：0-plaintext；1-sasl_plaintext；3-sasl_ssl; 4-sasl_scram_sha_256; 5-sasl_scram_sha_512  默认为0vipType=3,支持 0,1,3,4,5vipType=7,支持0,1,3vipType=1,支持1,3</p>
+	// <p>访问类型：0-plaintext；1-sasl_plaintext；3-sasl_ssl; 4-sasl_scram_sha_256; 5-sasl_scram_sha_512  默认为0<br>vipType=3,支持 0,1,3,4,5<br>vipType=7,支持0,1,3<br>vipType=1,支持1,3</p>
 	AccessType *int64 `json:"AccessType,omitnil,omitempty" name:"AccessType"`
 
 	// <p>是否需要权限管理,该字段已废弃</p>
@@ -2376,6 +2799,9 @@ type CreateRouteRequestParams struct {
 
 	// <p>关联安全组有序列表</p>
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
+
+	// <p>公网路由IP白名单预设配置</p><p>入参限制：vipType=1</p>
+	IpWhitelist []*IpWhitelistDTO `json:"IpWhitelist,omitnil,omitempty" name:"IpWhitelist"`
 }
 
 type CreateRouteRequest struct {
@@ -2393,7 +2819,7 @@ type CreateRouteRequest struct {
 	// <p>vpc子网id,当vipType为3时必填</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// <p>访问类型：0-plaintext；1-sasl_plaintext；3-sasl_ssl; 4-sasl_scram_sha_256; 5-sasl_scram_sha_512  默认为0vipType=3,支持 0,1,3,4,5vipType=7,支持0,1,3vipType=1,支持1,3</p>
+	// <p>访问类型：0-plaintext；1-sasl_plaintext；3-sasl_ssl; 4-sasl_scram_sha_256; 5-sasl_scram_sha_512  默认为0<br>vipType=3,支持 0,1,3,4,5<br>vipType=7,支持0,1,3<br>vipType=1,支持1,3</p>
 	AccessType *int64 `json:"AccessType,omitnil,omitempty" name:"AccessType"`
 
 	// <p>是否需要权限管理,该字段已废弃</p>
@@ -2413,6 +2839,9 @@ type CreateRouteRequest struct {
 
 	// <p>关联安全组有序列表</p>
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
+
+	// <p>公网路由IP白名单预设配置</p><p>入参限制：vipType=1</p>
+	IpWhitelist []*IpWhitelistDTO `json:"IpWhitelist,omitnil,omitempty" name:"IpWhitelist"`
 }
 
 func (r *CreateRouteRequest) ToJsonString() string {
@@ -2438,6 +2867,7 @@ func (r *CreateRouteRequest) FromJsonString(s string) error {
 	delete(f, "Ip")
 	delete(f, "Note")
 	delete(f, "SecurityGroupIds")
+	delete(f, "IpWhitelist")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateRouteRequest has unknown keys!", "")
 	}
@@ -2466,6 +2896,112 @@ func (r *CreateRouteResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateRouteResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateThrottleRuleRequestParams struct {
+	// <p>实例Id</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>限流类型:</p><p>枚举值：</p><ul><li>1： 用户/客户端限流</li><li>2： 消费组维度限流</li><li>3： Topic限流</li></ul>
+	ThrottleType *int64 `json:"ThrottleType,omitnil,omitempty" name:"ThrottleType"`
+
+	// <p>消费组名</p>
+	GroupNameList []*string `json:"GroupNameList,omitnil,omitempty" name:"GroupNameList"`
+
+	// <p>消费限流值,生产消费限流值,必填一个单位MB/s</p>
+	ConsumeThrottle *uint64 `json:"ConsumeThrottle,omitnil,omitempty" name:"ConsumeThrottle"`
+
+	// <p>生产限流值,生产消费限流值,单位MB/s</p>
+	ProduceThrottle *uint64 `json:"ProduceThrottle,omitnil,omitempty" name:"ProduceThrottle"`
+
+	// <p>用户客户端id</p>
+	ClientIdList []*string `json:"ClientIdList,omitnil,omitempty" name:"ClientIdList"`
+
+	// <p>用户名</p>
+	UserNameList []*string `json:"UserNameList,omitnil,omitempty" name:"UserNameList"`
+
+	// <p>topic名称</p>
+	TopicNameList []*string `json:"TopicNameList,omitnil,omitempty" name:"TopicNameList"`
+}
+
+type CreateThrottleRuleRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实例Id</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>限流类型:</p><p>枚举值：</p><ul><li>1： 用户/客户端限流</li><li>2： 消费组维度限流</li><li>3： Topic限流</li></ul>
+	ThrottleType *int64 `json:"ThrottleType,omitnil,omitempty" name:"ThrottleType"`
+
+	// <p>消费组名</p>
+	GroupNameList []*string `json:"GroupNameList,omitnil,omitempty" name:"GroupNameList"`
+
+	// <p>消费限流值,生产消费限流值,必填一个单位MB/s</p>
+	ConsumeThrottle *uint64 `json:"ConsumeThrottle,omitnil,omitempty" name:"ConsumeThrottle"`
+
+	// <p>生产限流值,生产消费限流值,单位MB/s</p>
+	ProduceThrottle *uint64 `json:"ProduceThrottle,omitnil,omitempty" name:"ProduceThrottle"`
+
+	// <p>用户客户端id</p>
+	ClientIdList []*string `json:"ClientIdList,omitnil,omitempty" name:"ClientIdList"`
+
+	// <p>用户名</p>
+	UserNameList []*string `json:"UserNameList,omitnil,omitempty" name:"UserNameList"`
+
+	// <p>topic名称</p>
+	TopicNameList []*string `json:"TopicNameList,omitnil,omitempty" name:"TopicNameList"`
+}
+
+func (r *CreateThrottleRuleRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateThrottleRuleRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ThrottleType")
+	delete(f, "GroupNameList")
+	delete(f, "ConsumeThrottle")
+	delete(f, "ProduceThrottle")
+	delete(f, "ClientIdList")
+	delete(f, "UserNameList")
+	delete(f, "TopicNameList")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateThrottleRuleRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateThrottleRuleResponseParams struct {
+	// <p>返回信息</p>
+	Result *JgwOperateResponse `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateThrottleRuleResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateThrottleRuleResponseParams `json:"Response"`
+}
+
+func (r *CreateThrottleRuleResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateThrottleRuleResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2606,116 +3142,116 @@ func (r *CreateTopicIpWhiteListResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateTopicRequestParams struct {
-	// 实例Id，可通过DescribeInstances接口获取。
+	// <p>实例Id</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 只能包含字母、数字、下划线、“-”、“.”
+	// <p>只能包含字母、数字、下划线、“-”、“.”</p>
 	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
 
-	// Partition个数，大于0
+	// <p>Partition个数，大于0</p>
 	PartitionNum *int64 `json:"PartitionNum,omitnil,omitempty" name:"PartitionNum"`
 
-	// 副本个数，不能多于 broker 数，最大为3
+	// <p>副本个数，不能多于 broker 数，最大为3</p>
 	ReplicaNum *int64 `json:"ReplicaNum,omitnil,omitempty" name:"ReplicaNum"`
 
-	// ip白名单开关, 1:打开  0:关闭，默认不打开
+	// <p>ip白名单开关, 1:打开  0:关闭，默认不打开</p>
 	EnableWhiteList *int64 `json:"EnableWhiteList,omitnil,omitempty" name:"EnableWhiteList"`
 
-	// Ip白名单列表，配额限制，enableWhileList=1时必选
+	// <p>Ip白名单列表，配额限制，enableWhileList=1时必选</p>
 	IpWhiteList []*string `json:"IpWhiteList,omitnil,omitempty" name:"IpWhiteList"`
 
-	// 清理日志策略，日志清理模式，默认为"delete"。"delete"：日志按保存时间删除，"compact"：日志按 key 压缩，"compact, delete"：日志按 key 压缩且会按保存时间删除。
+	// <p>清理日志策略，日志清理模式，默认为&quot;delete&quot;。&quot;delete&quot;：日志按保存时间删除，&quot;compact&quot;：日志按 key 压缩，&quot;compact, delete&quot;：日志按 key 压缩且会按保存时间删除。</p>
 	CleanUpPolicy *string `json:"CleanUpPolicy,omitnil,omitempty" name:"CleanUpPolicy"`
 
-	// 主题备注，是一个不超过 64 个字符的字符串，可以用字母和数字为首字符，剩余部分可以包含字母、数字和横划线(-)
+	// <p>主题备注</p><p>入参限制：不超过 64 个字符</p>
 	Note *string `json:"Note,omitnil,omitempty" name:"Note"`
 
-	// 最小同步副本数，默认为1
+	// <p>最小同步副本数</p><p>默认值：1</p><p>最小值为1</p>
 	MinInsyncReplicas *int64 `json:"MinInsyncReplicas,omitnil,omitempty" name:"MinInsyncReplicas"`
 
-	// 是否允许未同步的副本选为leader，0:不允许，1:允许，默认不允许
+	// <p>是否允许未同步的副本选为leader，0:不允许，1:允许，默认取实例维度的值</p>
 	UncleanLeaderElectionEnable *int64 `json:"UncleanLeaderElectionEnable,omitnil,omitempty" name:"UncleanLeaderElectionEnable"`
 
-	// 可选参数。消息保留时间，单位ms，当前最小值为60000。默认值为7200000ms（2小时），最大值为7776000000 ms（90天）。
+	// <p>可选参数，消息保留时间</p><p>取值范围：[60000, 7776000000]</p><p>单位：毫秒</p><p>默认值：7200000</p>
 	RetentionMs *int64 `json:"RetentionMs,omitnil,omitempty" name:"RetentionMs"`
 
-	// Segment分片滚动的时长，单位ms，最小值为86400000ms（1天）。
+	// <p>Segment分片滚动的时长</p><p>单位：毫秒</p><p>默认值：86400000</p><p>最小值为86400000ms（1天）</p>
 	SegmentMs *int64 `json:"SegmentMs,omitnil,omitempty" name:"SegmentMs"`
 
-	// 主题消息最大值，单位为 Byte，最小值1024Bytes(即1KB)，最大值为12582912Bytes（即12MB）
+	// <p>主题消息最大值，单位为 Byte，最小值1024Bytes(即1KB)，最大值为12582912Bytes（即12MB）</p>
 	MaxMessageBytes *int64 `json:"MaxMessageBytes,omitnil,omitempty" name:"MaxMessageBytes"`
 
-	// 预设ACL规则, 1:打开  0:关闭，默认不打开
+	// <p>预设ACL规则, 1:打开  0:关闭，默认不打开</p>
 	EnableAclRule *int64 `json:"EnableAclRule,omitnil,omitempty" name:"EnableAclRule"`
 
-	// 预设ACL规则的名称
+	// <p>预设ACL规则的名称</p>
 	AclRuleName *string `json:"AclRuleName,omitnil,omitempty" name:"AclRuleName"`
 
-	// 可选, 保留文件大小. 默认为-1,单位Byte, 当前最小值为1073741824。
+	// <p>可选, 保留文件大小. 默认为-1,单位Byte, 当前最小值为1073741824。</p><p>取值范围：[1073741824, 1099511627776]</p><p>单位：字节</p><p>特殊值：-1表示无限制</p>
 	RetentionBytes *int64 `json:"RetentionBytes,omitnil,omitempty" name:"RetentionBytes"`
 
-	// 标签列表
+	// <p>标签列表</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 消息保存的时间类型:CreateTime/LogAppendTime
+	// <p>消息保存的时间类型:CreateTime/LogAppendTime</p>
 	LogMsgTimestampType *string `json:"LogMsgTimestampType,omitnil,omitempty" name:"LogMsgTimestampType"`
 }
 
 type CreateTopicRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例Id，可通过DescribeInstances接口获取。
+	// <p>实例Id</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 只能包含字母、数字、下划线、“-”、“.”
+	// <p>只能包含字母、数字、下划线、“-”、“.”</p>
 	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
 
-	// Partition个数，大于0
+	// <p>Partition个数，大于0</p>
 	PartitionNum *int64 `json:"PartitionNum,omitnil,omitempty" name:"PartitionNum"`
 
-	// 副本个数，不能多于 broker 数，最大为3
+	// <p>副本个数，不能多于 broker 数，最大为3</p>
 	ReplicaNum *int64 `json:"ReplicaNum,omitnil,omitempty" name:"ReplicaNum"`
 
-	// ip白名单开关, 1:打开  0:关闭，默认不打开
+	// <p>ip白名单开关, 1:打开  0:关闭，默认不打开</p>
 	EnableWhiteList *int64 `json:"EnableWhiteList,omitnil,omitempty" name:"EnableWhiteList"`
 
-	// Ip白名单列表，配额限制，enableWhileList=1时必选
+	// <p>Ip白名单列表，配额限制，enableWhileList=1时必选</p>
 	IpWhiteList []*string `json:"IpWhiteList,omitnil,omitempty" name:"IpWhiteList"`
 
-	// 清理日志策略，日志清理模式，默认为"delete"。"delete"：日志按保存时间删除，"compact"：日志按 key 压缩，"compact, delete"：日志按 key 压缩且会按保存时间删除。
+	// <p>清理日志策略，日志清理模式，默认为&quot;delete&quot;。&quot;delete&quot;：日志按保存时间删除，&quot;compact&quot;：日志按 key 压缩，&quot;compact, delete&quot;：日志按 key 压缩且会按保存时间删除。</p>
 	CleanUpPolicy *string `json:"CleanUpPolicy,omitnil,omitempty" name:"CleanUpPolicy"`
 
-	// 主题备注，是一个不超过 64 个字符的字符串，可以用字母和数字为首字符，剩余部分可以包含字母、数字和横划线(-)
+	// <p>主题备注</p><p>入参限制：不超过 64 个字符</p>
 	Note *string `json:"Note,omitnil,omitempty" name:"Note"`
 
-	// 最小同步副本数，默认为1
+	// <p>最小同步副本数</p><p>默认值：1</p><p>最小值为1</p>
 	MinInsyncReplicas *int64 `json:"MinInsyncReplicas,omitnil,omitempty" name:"MinInsyncReplicas"`
 
-	// 是否允许未同步的副本选为leader，0:不允许，1:允许，默认不允许
+	// <p>是否允许未同步的副本选为leader，0:不允许，1:允许，默认取实例维度的值</p>
 	UncleanLeaderElectionEnable *int64 `json:"UncleanLeaderElectionEnable,omitnil,omitempty" name:"UncleanLeaderElectionEnable"`
 
-	// 可选参数。消息保留时间，单位ms，当前最小值为60000。默认值为7200000ms（2小时），最大值为7776000000 ms（90天）。
+	// <p>可选参数，消息保留时间</p><p>取值范围：[60000, 7776000000]</p><p>单位：毫秒</p><p>默认值：7200000</p>
 	RetentionMs *int64 `json:"RetentionMs,omitnil,omitempty" name:"RetentionMs"`
 
-	// Segment分片滚动的时长，单位ms，最小值为86400000ms（1天）。
+	// <p>Segment分片滚动的时长</p><p>单位：毫秒</p><p>默认值：86400000</p><p>最小值为86400000ms（1天）</p>
 	SegmentMs *int64 `json:"SegmentMs,omitnil,omitempty" name:"SegmentMs"`
 
-	// 主题消息最大值，单位为 Byte，最小值1024Bytes(即1KB)，最大值为12582912Bytes（即12MB）
+	// <p>主题消息最大值，单位为 Byte，最小值1024Bytes(即1KB)，最大值为12582912Bytes（即12MB）</p>
 	MaxMessageBytes *int64 `json:"MaxMessageBytes,omitnil,omitempty" name:"MaxMessageBytes"`
 
-	// 预设ACL规则, 1:打开  0:关闭，默认不打开
+	// <p>预设ACL规则, 1:打开  0:关闭，默认不打开</p>
 	EnableAclRule *int64 `json:"EnableAclRule,omitnil,omitempty" name:"EnableAclRule"`
 
-	// 预设ACL规则的名称
+	// <p>预设ACL规则的名称</p>
 	AclRuleName *string `json:"AclRuleName,omitnil,omitempty" name:"AclRuleName"`
 
-	// 可选, 保留文件大小. 默认为-1,单位Byte, 当前最小值为1073741824。
+	// <p>可选, 保留文件大小. 默认为-1,单位Byte, 当前最小值为1073741824。</p><p>取值范围：[1073741824, 1099511627776]</p><p>单位：字节</p><p>特殊值：-1表示无限制</p>
 	RetentionBytes *int64 `json:"RetentionBytes,omitnil,omitempty" name:"RetentionBytes"`
 
-	// 标签列表
+	// <p>标签列表</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 消息保存的时间类型:CreateTime/LogAppendTime
+	// <p>消息保存的时间类型:CreateTime/LogAppendTime</p>
 	LogMsgTimestampType *string `json:"LogMsgTimestampType,omitnil,omitempty" name:"LogMsgTimestampType"`
 }
 
@@ -2762,7 +3298,7 @@ type CreateTopicResp struct {
 
 // Predefined struct for user
 type CreateTopicResponseParams struct {
-	// 返回创建结果
+	// <p>返回创建结果</p>
 	Result *CreateTopicResp `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -2787,26 +3323,26 @@ func (r *CreateTopicResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateUserRequestParams struct {
-	// ckafka集群实例Id，可通过[DescribeInstances](https://cloud.tencent.com/document/product/597/40835)接口获取
+	// <p>ckafka集群实例Id，可通过<a href="https://cloud.tencent.com/document/product/597/40835">DescribeInstances</a>接口获取</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 用户名称
+	// <p>用户名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 用户密码
+	// <p>用户密码</p>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 }
 
 type CreateUserRequest struct {
 	*tchttp.BaseRequest
 	
-	// ckafka集群实例Id，可通过[DescribeInstances](https://cloud.tencent.com/document/product/597/40835)接口获取
+	// <p>ckafka集群实例Id，可通过<a href="https://cloud.tencent.com/document/product/597/40835">DescribeInstances</a>接口获取</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 用户名称
+	// <p>用户名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 用户密码
+	// <p>用户密码</p>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 }
 
@@ -2833,7 +3369,7 @@ func (r *CreateUserRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateUserResponseParams struct {
-	// 返回结果
+	// <p>返回结果</p>
 	Result *JgwOperateResponse `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -2916,150 +3452,141 @@ type CvmAndIpInfo struct {
 }
 
 type DatahubResource struct {
-	// 资源类型  type类型如下: 
-	// KAFKA,
-	// EB_ES,
-	// EB_COS,
-	// EB_CLS,
-	// EB_,
-	// MONGODB,
-	// HTTP,
-	// TDW,
-	// ES,
-	// CLICKHOUSE,
-	// DTS,
-	// CLS,
-	// COS,
-	// TOPIC,
-	// MYSQL,
-	// MQTT,
-	// MYSQL_DATA,
-	// DORIS,
-	// POSTGRESQL,
-	// TDSQL_C_POSTGRESQL,
-	// TDSQL_POSTGRESQL,
-	// WAREHOUSE_POSTGRESQL,
-	// TDSQL_C_MYSQL,
-	// MARIADB,
-	// SQLSERVER,
-	// CTSDB,
-	// SCF
-	// 
+	// <p>资源类型  type类型如下:<br>KAFKA,<br>EB_ES,<br>EB_COS,<br>EB_CLS,<br>EB_,<br>MONGODB,<br>HTTP,<br>TDW,<br>ES,<br>CLICKHOUSE,<br>DTS,<br>CLS,<br>COS,<br>TOPIC,<br>MYSQL,<br>MQTT,<br>MYSQL_DATA,<br>DORIS,<br>POSTGRESQL,<br>TDSQL_C_POSTGRESQL,<br>TDSQL_POSTGRESQL,<br>WAREHOUSE_POSTGRESQL,<br>TDSQL_C_MYSQL,<br>MARIADB,<br>SQLSERVER,<br>CTSDB,<br>SCF</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// ckafka配置，Type为KAFKA时必填
+	// <p>ckafka配置，Type为KAFKA时必填</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	KafkaParam *KafkaParam `json:"KafkaParam,omitnil,omitempty" name:"KafkaParam"`
 
-	// EB配置，Type为EB时必填
+	// <p>EB配置，Type为EB时必填</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	EventBusParam *EventBusParam `json:"EventBusParam,omitnil,omitempty" name:"EventBusParam"`
 
-	// MongoDB配置，Type为MONGODB时必填
+	// <p>MongoDB配置，Type为MONGODB时必填</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MongoDBParam *MongoDBParam `json:"MongoDBParam,omitnil,omitempty" name:"MongoDBParam"`
 
-	// Es配置，Type为ES时必填
+	// <p>Es配置，Type为ES时必填</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	EsParam *EsParam `json:"EsParam,omitnil,omitempty" name:"EsParam"`
 
-	// Tdw配置，Type为TDW时必填
+	// <p>Tdw配置，Type为TDW时必填</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TdwParam *TdwParam `json:"TdwParam,omitnil,omitempty" name:"TdwParam"`
 
-	// Dts配置，Type为DTS时必填
+	// <p>Dts配置，Type为DTS时必填</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DtsParam *DtsParam `json:"DtsParam,omitnil,omitempty" name:"DtsParam"`
 
-	// ClickHouse配置，Type为CLICKHOUSE时必填
+	// <p>ClickHouse配置，Type为CLICKHOUSE时必填</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClickHouseParam *ClickHouseParam `json:"ClickHouseParam,omitnil,omitempty" name:"ClickHouseParam"`
 
-	// Cls配置，Type为CLS时必填
+	// <p>Cls配置，Type为CLS时必填</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClsParam *ClsParam `json:"ClsParam,omitnil,omitempty" name:"ClsParam"`
 
-	// Cos配置，Type为COS时必填
+	// <p>Cos配置，Type为COS时必填</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CosParam *CosParam `json:"CosParam,omitnil,omitempty" name:"CosParam"`
 
-	// MySQL配置，Type为MYSQL时必填
+	// <p>MySQL配置，Type为MYSQL时必填</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MySQLParam *MySQLParam `json:"MySQLParam,omitnil,omitempty" name:"MySQLParam"`
 
-	// PostgreSQL配置，Type为POSTGRESQL或TDSQL_C_POSTGRESQL时必填
+	// <p>PostgreSQL配置，Type为POSTGRESQL或TDSQL_C_POSTGRESQL时必填</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PostgreSQLParam *PostgreSQLParam `json:"PostgreSQLParam,omitnil,omitempty" name:"PostgreSQLParam"`
 
-	// Topic配置，Type为Topic时必填
+	// <p>Topic配置，Type为Topic时必填</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TopicParam *TopicParam `json:"TopicParam,omitnil,omitempty" name:"TopicParam"`
 
-	// MariaDB配置，Type为MARIADB时必填
+	// <p>MariaDB配置，Type为MARIADB时必填</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MariaDBParam *MariaDBParam `json:"MariaDBParam,omitnil,omitempty" name:"MariaDBParam"`
 
-	// SQLServer配置，Type为SQLSERVER时必填
+	// <p>SQLServer配置，Type为SQLSERVER时必填</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SQLServerParam *SQLServerParam `json:"SQLServerParam,omitnil,omitempty" name:"SQLServerParam"`
 
-	// Ctsdb配置，Type为CTSDB时必填
+	// <p>Ctsdb配置，Type为CTSDB时必填</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CtsdbParam *CtsdbParam `json:"CtsdbParam,omitnil,omitempty" name:"CtsdbParam"`
 
-	// Scf配置，Type为SCF时必填
+	// <p>Scf配置，Type为SCF时必填</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ScfParam *ScfParam `json:"ScfParam,omitnil,omitempty" name:"ScfParam"`
 
-	// MQTT配置，Type为 MQTT 时必填
+	// <p>MQTT配置，Type为 MQTT 时必填</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MqttParam *MqttParam `json:"MqttParam,omitnil,omitempty" name:"MqttParam"`
+
+	// <p>IceBerg配置</p>
+	IcebergParam *IcebergParam `json:"IcebergParam,omitnil,omitempty" name:"IcebergParam"`
 }
 
 type DatahubTaskIdRes struct {
-	// 任务id
+	// <p>任务id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// <p>DatahubId</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DatahubId *string `json:"DatahubId,omitnil,omitempty" name:"DatahubId"`
 }
 
 type DatahubTaskInfo struct {
-	// 任务Id
+	// <p>任务Id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// 任务名称
+	// <p>任务名称</p>
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
-	// 任务类型，SOURCE数据接入，SINK数据流出
+	// <p>任务类型，SOURCE数据接入，SINK数据流出</p>
 	TaskType *string `json:"TaskType,omitnil,omitempty" name:"TaskType"`
 
-	// 状态，-1创建失败，0创建中，1运行中，2删除中，3已删除，4删除失败，5暂停中，6已暂停，7暂停失败，8恢复中，9恢复失败
+	// <p>状态，-1创建失败，0创建中，1运行中，2删除中，3已删除，4删除失败，5暂停中，6已暂停，7暂停失败，8恢复中，9恢复失败</p>
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 数据源
+	// <p>数据源</p>
 	SourceResource *DatahubResource `json:"SourceResource,omitnil,omitempty" name:"SourceResource"`
 
-	// 数据目标
+	// <p>数据目标</p>
 	TargetResource *DatahubResource `json:"TargetResource,omitnil,omitempty" name:"TargetResource"`
 
-	// 任务创建时间
+	// <p>任务创建时间</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 异常信息
+	// <p>异常信息</p>
 	ErrorMessage *string `json:"ErrorMessage,omitnil,omitempty" name:"ErrorMessage"`
 
-	// 创建进度百分比
+	// <p>创建进度百分比</p>
 	TaskProgress *float64 `json:"TaskProgress,omitnil,omitempty" name:"TaskProgress"`
 
-	// 任务当前处于的步骤
+	// <p>任务当前处于的步骤</p>
 	TaskCurrentStep *string `json:"TaskCurrentStep,omitnil,omitempty" name:"TaskCurrentStep"`
 
-	// Datahub转储Id
+	// <p>Datahub转储Id</p>
 	DatahubId *string `json:"DatahubId,omitnil,omitempty" name:"DatahubId"`
 
-	// 步骤列表
+	// <p>步骤列表</p>
 	StepList []*string `json:"StepList,omitnil,omitempty" name:"StepList"`
 
-	// 任务描述信息
+	// <p>任务描述信息</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>任务并发数</p><p>默认值：1</p>
+	TaskMax *int64 `json:"TaskMax,omitnil,omitempty" name:"TaskMax"`
+
+	// <p>任务同步限流值,单位MB/s</p><p>默认值：20MB/s</p>
+	SyncThrottleLimit *int64 `json:"SyncThrottleLimit,omitnil,omitempty" name:"SyncThrottleLimit"`
+
+	// <p>任务是否自动扩容标识</p><p>枚举值：</p><ul><li>true： 自动扩容</li><li>false： 手动扩容</li></ul><p>默认值：true</p>
+	AutoExpandFlag *bool `json:"AutoExpandFlag,omitnil,omitempty" name:"AutoExpandFlag"`
+
+	// <p>不影响任务执行的警告信息</p>
+	WarnMessage *string `json:"WarnMessage,omitnil,omitempty" name:"WarnMessage"`
 }
 
 type DatahubTopicDTO struct {
@@ -3114,50 +3641,50 @@ type DealInstanceDTO struct {
 
 // Predefined struct for user
 type DeleteAclRequestParams struct {
-	// ckafka集群实例Id，可通过[DescribeInstances](https://cloud.tencent.com/document/product/597/40835)接口获取
+	// <p>ckafka集群实例Id，可通过<a href="https://cloud.tencent.com/document/product/597/40835">DescribeInstances</a>接口获取</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// Acl资源类型，(2:TOPIC，3:GROUP，4:CLUSTER)
+	// <p>Acl资源类型，(2:TOPIC，3:GROUP，4:CLUSTER)</p>
 	ResourceType *int64 `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
 
-	// 资源名称，和resourceType相关，如当resourceType为TOPIC时，则该字段表示topic名称，当resourceType为GROUP时，该字段表示group名称，当resourceType为CLUSTER时，该字段可为空。
+	// <p>资源名称，和resourceType相关，如当resourceType为TOPIC时，则该字段表示topic名称，当resourceType为GROUP时，该字段表示group名称，当resourceType为CLUSTER时，该字段可为空。</p>
 	ResourceName *string `json:"ResourceName,omitnil,omitempty" name:"ResourceName"`
 
-	// Acl操作方式，(2:ALL，3:READ，4:WRITE，5:CREATE，6:DELETE，7:ALTER，8:DESCRIBE，9:CLUSTER_ACTION，10:DESCRIBE_CONFIGS，11:ALTER_CONFIGS，12:IDEMPOTENT_WRITE)
+	// <p>Acl操作方式</p><p>枚举值：</p><ul><li>2： ALL</li><li>3： READ</li><li>4： WRITE</li><li>5： CREATE</li><li>6： DELETE</li><li>7： ALTER</li><li>8： DESCRIBE</li><li>9： CLUSTER_ACTION</li><li>10： DESCRIBE_CONFIGS</li><li>11： ALTER_CONFIGS</li><li>12： IDEMPOTENT_WRITE</li></ul><p>合法取值与 ResourceType 相关，传入组合以外的值将返回参数错误。本参数必须与 PermissionType 同时传入</p><ul><li>ResourceType=2（TOPIC）：2、3、4、5、6、7、8、10、11</li><li>ResourceType=3（GROUP）：2、3、6、8</li><li>ResourceType=4（CLUSTER）：2、5、7、8、9、10、11、12</li></ul>
 	Operation *int64 `json:"Operation,omitnil,omitempty" name:"Operation"`
 
-	// 权限类型，(2:DENY，3:ALLOW)，当前ckafka支持ALLOW(相当于白名单)，其它用于后续兼容开源kafka的acl时使用
+	// <p>权限类型，当前ckafka支持ALLOW(相当于白名单)，其它用于后续兼容开源kafka的acl时使用</p><p>枚举值：</p><ul><li>2： DENY</li><li>3： ALLOW</li></ul><p>本参数必须与 Operation 同时传入</p>
 	PermissionType *int64 `json:"PermissionType,omitnil,omitempty" name:"PermissionType"`
 
-	// 默认为\*，表示任何host都可以访问，当前ckafka不支持host为\*，但是后面开源kafka的产品化会直接支持
+	// <p>默认为*，表示任何host都可以访问，当前ckafka不支持host为*，但是后面开源kafka的产品化会直接支持</p><p>删除时与 Principal、Operation、PermissionType 一起参与精确匹配</p>
 	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
 
-	// 用户列表，默认为User:*，表示任何user都可以访问，当前用户只能是用户列表中包含的用户
+	// <p>用户列表，默认为User:*，表示任何user都可以访问，当前用户只能是用户列表中包含的用户</p><p>删除时不校验该用户是否仍存在，允许清理已删除用户的残留策略；该参数与 Host、Operation、PermissionType 一起参与精确匹配</p>
 	Principal *string `json:"Principal,omitnil,omitempty" name:"Principal"`
 }
 
 type DeleteAclRequest struct {
 	*tchttp.BaseRequest
 	
-	// ckafka集群实例Id，可通过[DescribeInstances](https://cloud.tencent.com/document/product/597/40835)接口获取
+	// <p>ckafka集群实例Id，可通过<a href="https://cloud.tencent.com/document/product/597/40835">DescribeInstances</a>接口获取</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// Acl资源类型，(2:TOPIC，3:GROUP，4:CLUSTER)
+	// <p>Acl资源类型，(2:TOPIC，3:GROUP，4:CLUSTER)</p>
 	ResourceType *int64 `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
 
-	// 资源名称，和resourceType相关，如当resourceType为TOPIC时，则该字段表示topic名称，当resourceType为GROUP时，该字段表示group名称，当resourceType为CLUSTER时，该字段可为空。
+	// <p>资源名称，和resourceType相关，如当resourceType为TOPIC时，则该字段表示topic名称，当resourceType为GROUP时，该字段表示group名称，当resourceType为CLUSTER时，该字段可为空。</p>
 	ResourceName *string `json:"ResourceName,omitnil,omitempty" name:"ResourceName"`
 
-	// Acl操作方式，(2:ALL，3:READ，4:WRITE，5:CREATE，6:DELETE，7:ALTER，8:DESCRIBE，9:CLUSTER_ACTION，10:DESCRIBE_CONFIGS，11:ALTER_CONFIGS，12:IDEMPOTENT_WRITE)
+	// <p>Acl操作方式</p><p>枚举值：</p><ul><li>2： ALL</li><li>3： READ</li><li>4： WRITE</li><li>5： CREATE</li><li>6： DELETE</li><li>7： ALTER</li><li>8： DESCRIBE</li><li>9： CLUSTER_ACTION</li><li>10： DESCRIBE_CONFIGS</li><li>11： ALTER_CONFIGS</li><li>12： IDEMPOTENT_WRITE</li></ul><p>合法取值与 ResourceType 相关，传入组合以外的值将返回参数错误。本参数必须与 PermissionType 同时传入</p><ul><li>ResourceType=2（TOPIC）：2、3、4、5、6、7、8、10、11</li><li>ResourceType=3（GROUP）：2、3、6、8</li><li>ResourceType=4（CLUSTER）：2、5、7、8、9、10、11、12</li></ul>
 	Operation *int64 `json:"Operation,omitnil,omitempty" name:"Operation"`
 
-	// 权限类型，(2:DENY，3:ALLOW)，当前ckafka支持ALLOW(相当于白名单)，其它用于后续兼容开源kafka的acl时使用
+	// <p>权限类型，当前ckafka支持ALLOW(相当于白名单)，其它用于后续兼容开源kafka的acl时使用</p><p>枚举值：</p><ul><li>2： DENY</li><li>3： ALLOW</li></ul><p>本参数必须与 Operation 同时传入</p>
 	PermissionType *int64 `json:"PermissionType,omitnil,omitempty" name:"PermissionType"`
 
-	// 默认为\*，表示任何host都可以访问，当前ckafka不支持host为\*，但是后面开源kafka的产品化会直接支持
+	// <p>默认为*，表示任何host都可以访问，当前ckafka不支持host为*，但是后面开源kafka的产品化会直接支持</p><p>删除时与 Principal、Operation、PermissionType 一起参与精确匹配</p>
 	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
 
-	// 用户列表，默认为User:*，表示任何user都可以访问，当前用户只能是用户列表中包含的用户
+	// <p>用户列表，默认为User:*，表示任何user都可以访问，当前用户只能是用户列表中包含的用户</p><p>删除时不校验该用户是否仍存在，允许清理已删除用户的残留策略；该参数与 Host、Operation、PermissionType 一起参与精确匹配</p>
 	Principal *string `json:"Principal,omitnil,omitempty" name:"Principal"`
 }
 
@@ -3188,7 +3715,7 @@ func (r *DeleteAclRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteAclResponseParams struct {
-	// 返回结果
+	// <p>返回结果</p>
 	Result *JgwOperateResponse `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -3277,14 +3804,14 @@ func (r *DeleteAclRuleResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteConnectResourceRequestParams struct {
-	// 连接源的Id
+	// <p>连接源的Id</p>
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 }
 
 type DeleteConnectResourceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 连接源的Id
+	// <p>连接源的Id</p>
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 }
 
@@ -3309,7 +3836,7 @@ func (r *DeleteConnectResourceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteConnectResourceResponseParams struct {
-	// 连接源的Id
+	// <p>连接源的Id</p>
 	Result *ConnectResourceResourceIdResp `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -3334,14 +3861,14 @@ func (r *DeleteConnectResourceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteDatahubTaskRequestParams struct {
-	// 任务id
+	// <p>任务id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 }
 
 type DeleteDatahubTaskRequest struct {
 	*tchttp.BaseRequest
 	
-	// 任务id
+	// <p>任务id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 }
 
@@ -3366,7 +3893,7 @@ func (r *DeleteDatahubTaskRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteDatahubTaskResponseParams struct {
-	// 操作结果
+	// <p>操作结果</p>
 	Result *DatahubTaskIdRes `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -3512,26 +4039,26 @@ func (r *DeleteGroupResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteGroupSubscribeTopicRequestParams struct {
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 消费分组名称
+	// <p>消费分组名称</p>
 	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
 
-	// 主题名
+	// <p>主题名</p>
 	Topic *string `json:"Topic,omitnil,omitempty" name:"Topic"`
 }
 
 type DeleteGroupSubscribeTopicRequest struct {
 	*tchttp.BaseRequest
 	
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 消费分组名称
+	// <p>消费分组名称</p>
 	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
 
-	// 主题名
+	// <p>主题名</p>
 	Topic *string `json:"Topic,omitnil,omitempty" name:"Topic"`
 }
 
@@ -3558,7 +4085,7 @@ func (r *DeleteGroupSubscribeTopicRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteGroupSubscribeTopicResponseParams struct {
-	// 返回结果
+	// <p>返回结果</p>
 	Result *JgwOperateResponse `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -3640,14 +4167,14 @@ func (r *DeleteInstancePostResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteInstancePreRequestParams struct {
-	// ckafka集群实例Id，可通过[DescribeInstances](https://cloud.tencent.com/document/product/597/40835)接口获取
+	// <p>ckafka集群实例Id，可通过<a href="https://cloud.tencent.com/document/product/597/40835">DescribeInstances</a>接口获取</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type DeleteInstancePreRequest struct {
 	*tchttp.BaseRequest
 	
-	// ckafka集群实例Id，可通过[DescribeInstances](https://cloud.tencent.com/document/product/597/40835)接口获取
+	// <p>ckafka集群实例Id，可通过<a href="https://cloud.tencent.com/document/product/597/40835">DescribeInstances</a>接口获取</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -3672,7 +4199,7 @@ func (r *DeleteInstancePreRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteInstancePreResponseParams struct {
-	// 返回结果
+	// <p>返回结果</p>
 	Result *CreateInstancePreResp `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -3835,73 +4362,66 @@ func (r *DeleteRouteTriggerTimeResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
-type DeleteTopicIpWhiteListRequestParams struct {
-	// ckafka集群实例Id，可通过[DescribeInstances](https://cloud.tencent.com/document/product/597/40835)接口获取
+type DeleteThrottleRuleRequestParams struct {
+	// 限流规则Id
+	ThrottleRuleId *string `json:"ThrottleRuleId,omitnil,omitempty" name:"ThrottleRuleId"`
+
+	// 实例标识
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
-
-	// 主题名，可通过[DescribeTopic](https://cloud.tencent.com/document/product/597/40847)接口获取。
-	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
-
-	// ip白名单列表
-	IpWhiteList []*string `json:"IpWhiteList,omitnil,omitempty" name:"IpWhiteList"`
 }
 
-type DeleteTopicIpWhiteListRequest struct {
+type DeleteThrottleRuleRequest struct {
 	*tchttp.BaseRequest
 	
-	// ckafka集群实例Id，可通过[DescribeInstances](https://cloud.tencent.com/document/product/597/40835)接口获取
+	// 限流规则Id
+	ThrottleRuleId *string `json:"ThrottleRuleId,omitnil,omitempty" name:"ThrottleRuleId"`
+
+	// 实例标识
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
-
-	// 主题名，可通过[DescribeTopic](https://cloud.tencent.com/document/product/597/40847)接口获取。
-	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
-
-	// ip白名单列表
-	IpWhiteList []*string `json:"IpWhiteList,omitnil,omitempty" name:"IpWhiteList"`
 }
 
-func (r *DeleteTopicIpWhiteListRequest) ToJsonString() string {
+func (r *DeleteThrottleRuleRequest) ToJsonString() string {
     b, _ := json.Marshal(r)
     return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
-func (r *DeleteTopicIpWhiteListRequest) FromJsonString(s string) error {
+func (r *DeleteThrottleRuleRequest) FromJsonString(s string) error {
 	f := make(map[string]interface{})
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
+	delete(f, "ThrottleRuleId")
 	delete(f, "InstanceId")
-	delete(f, "TopicName")
-	delete(f, "IpWhiteList")
 	if len(f) > 0 {
-		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteTopicIpWhiteListRequest has unknown keys!", "")
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteThrottleRuleRequest has unknown keys!", "")
 	}
 	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
-type DeleteTopicIpWhiteListResponseParams struct {
-	// 删除主题IP白名单结果
+type DeleteThrottleRuleResponseParams struct {
+	// 返回信息
 	Result *JgwOperateResponse `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
-type DeleteTopicIpWhiteListResponse struct {
+type DeleteThrottleRuleResponse struct {
 	*tchttp.BaseResponse
-	Response *DeleteTopicIpWhiteListResponseParams `json:"Response"`
+	Response *DeleteThrottleRuleResponseParams `json:"Response"`
 }
 
-func (r *DeleteTopicIpWhiteListResponse) ToJsonString() string {
+func (r *DeleteThrottleRuleResponse) ToJsonString() string {
     b, _ := json.Marshal(r)
     return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
-func (r *DeleteTopicIpWhiteListResponse) FromJsonString(s string) error {
+func (r *DeleteThrottleRuleResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4039,18 +4559,6 @@ type DescModifyType struct {
 
 	// 是否迁移标志
 	MigrateFlag *bool `json:"MigrateFlag,omitnil,omitempty" name:"MigrateFlag"`
-
-	// 迁移预计耗时(稳定模式)秒
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	MigrateCostTime *int64 `json:"MigrateCostTime,omitnil,omitempty" name:"MigrateCostTime"`
-
-	// 升配模式(1:稳定模式，2:高速模式)
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	UpgradeStrategy *int64 `json:"UpgradeStrategy,omitnil,omitempty" name:"UpgradeStrategy"`
-
-	// 迁移预计耗时(高速模式)秒
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	MigrateCostTimeHighSpeed *int64 `json:"MigrateCostTimeHighSpeed,omitnil,omitempty" name:"MigrateCostTimeHighSpeed"`
 }
 
 // Predefined struct for user
@@ -4071,6 +4579,8 @@ type DescribeACLRequestParams struct {
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 关键字匹配
+	//
+	// Deprecated: SearchWord is deprecated.
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 }
 
@@ -4142,6 +4652,70 @@ func (r *DescribeACLResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeACLResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeAccessPolicyRequestParams struct {
+	// <p>实例ID</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>路由ID</p>
+	RouteId *int64 `json:"RouteId,omitnil,omitempty" name:"RouteId"`
+}
+
+type DescribeAccessPolicyRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实例ID</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>路由ID</p>
+	RouteId *int64 `json:"RouteId,omitnil,omitempty" name:"RouteId"`
+}
+
+func (r *DescribeAccessPolicyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAccessPolicyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "RouteId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAccessPolicyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeAccessPolicyResponseParams struct {
+	// <p>实例公网IP白名单配置列表</p>
+	Result *ExternalAccessInfoWrapper `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeAccessPolicyResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeAccessPolicyResponseParams `json:"Response"`
+}
+
+func (r *DescribeAccessPolicyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAccessPolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4351,98 +4925,104 @@ type DescribeConnectInfoResultDTO struct {
 }
 
 type DescribeConnectResource struct {
-	// 连接源的Id
+	// <p>连接源的Id</p>
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 连接源名称
+	// <p>连接源名称</p>
 	ResourceName *string `json:"ResourceName,omitnil,omitempty" name:"ResourceName"`
 
-	// 连接源描述
+	// <p>连接源描述</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// 连接源类型
+	// <p>连接源类型</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 连接源的状态
+	// <p>连接源的状态</p>
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 连接源的创建时间
+	// <p>连接源的创建时间</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 连接源的异常信息
+	// <p>连接源的异常信息</p>
 	ErrorMessage *string `json:"ErrorMessage,omitnil,omitempty" name:"ErrorMessage"`
 
-	// 该连接源关联的Datahub任务数
+	// <p>该连接源关联的Datahub任务数</p>
 	DatahubTaskCount *int64 `json:"DatahubTaskCount,omitnil,omitempty" name:"DatahubTaskCount"`
 
-	// 连接源的当前所处步骤
+	// <p>连接源的当前所处步骤</p>
 	CurrentStep *string `json:"CurrentStep,omitnil,omitempty" name:"CurrentStep"`
 
-	// 创建进度百分比
+	// <p>创建进度百分比</p>
 	TaskProgress *float64 `json:"TaskProgress,omitnil,omitempty" name:"TaskProgress"`
 
-	// 步骤列表
+	// <p>步骤列表</p>
 	StepList []*string `json:"StepList,omitnil,omitempty" name:"StepList"`
 
-	// Dts配置，Type为DTS时返回
+	// <p>Dts配置，Type为DTS时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DtsConnectParam *DtsConnectParam `json:"DtsConnectParam,omitnil,omitempty" name:"DtsConnectParam"`
 
-	// MongoDB配置，Type为MONGODB时返回
+	// <p>MongoDB配置，Type为MONGODB时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MongoDBConnectParam *MongoDBConnectParam `json:"MongoDBConnectParam,omitnil,omitempty" name:"MongoDBConnectParam"`
 
-	// Es配置，Type为ES时返回
+	// <p>Es配置，Type为ES时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	EsConnectParam *EsConnectParam `json:"EsConnectParam,omitnil,omitempty" name:"EsConnectParam"`
 
-	// ClickHouse配置，Type为CLICKHOUSE时返回
+	// <p>ClickHouse配置，Type为CLICKHOUSE时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClickHouseConnectParam *ClickHouseConnectParam `json:"ClickHouseConnectParam,omitnil,omitempty" name:"ClickHouseConnectParam"`
 
-	// MySQL配置，Type为MYSQL或TDSQL_C_MYSQL时返回
+	// <p>MySQL配置，Type为MYSQL或TDSQL_C_MYSQL时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MySQLConnectParam *MySQLConnectParam `json:"MySQLConnectParam,omitnil,omitempty" name:"MySQLConnectParam"`
 
-	// PostgreSQL配置，Type为POSTGRESQL或TDSQL_C_POSTGRESQL时返回
+	// <p>PostgreSQL配置，Type为POSTGRESQL或TDSQL_C_POSTGRESQL时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PostgreSQLConnectParam *PostgreSQLConnectParam `json:"PostgreSQLConnectParam,omitnil,omitempty" name:"PostgreSQLConnectParam"`
 
-	// MariaDB配置，Type为MARIADB时返回
+	// <p>MariaDB配置，Type为MARIADB时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MariaDBConnectParam *MariaDBConnectParam `json:"MariaDBConnectParam,omitnil,omitempty" name:"MariaDBConnectParam"`
 
-	// SQLServer配置，Type为SQLSERVER时返回
+	// <p>SQLServer配置，Type为SQLSERVER时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SQLServerConnectParam *SQLServerConnectParam `json:"SQLServerConnectParam,omitnil,omitempty" name:"SQLServerConnectParam"`
 
-	// Ctsdb配置，Type为CTSDB时返回
+	// <p>Ctsdb配置，Type为CTSDB时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CtsdbConnectParam *CtsdbConnectParam `json:"CtsdbConnectParam,omitnil,omitempty" name:"CtsdbConnectParam"`
 
-	// Doris 配置，Type 为 DORIS 时返回
+	// <p>Doris 配置，Type 为 DORIS 时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DorisConnectParam *DorisConnectParam `json:"DorisConnectParam,omitnil,omitempty" name:"DorisConnectParam"`
 
-	// Kafka配置，Type 为 KAFKA 时返回
+	// <p>Kafka配置，Type 为 KAFKA 时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	KafkaConnectParam *KafkaConnectParam `json:"KafkaConnectParam,omitnil,omitempty" name:"KafkaConnectParam"`
 
-	// MQTT配置，Type 为 MQTT 时返回
+	// <p>MQTT配置，Type 为 MQTT 时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MqttConnectParam *MqttConnectParam `json:"MqttConnectParam,omitnil,omitempty" name:"MqttConnectParam"`
+
+	// <p>Iceberg配置，Type为ICEBERG时返回</p>
+	IcebergConnectParam *IcebergConnectParam `json:"IcebergConnectParam,omitnil,omitempty" name:"IcebergConnectParam"`
+
+	// <p>标签列表</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 // Predefined struct for user
 type DescribeConnectResourceRequestParams struct {
-	// 连接源的Id
+	// <p>连接源的Id</p>
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 }
 
 type DescribeConnectResourceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 连接源的Id
+	// <p>连接源的Id</p>
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 }
 
@@ -4466,86 +5046,95 @@ func (r *DescribeConnectResourceRequest) FromJsonString(s string) error {
 }
 
 type DescribeConnectResourceResp struct {
-	// 连接源的Id
+	// <p>连接源的Id</p>
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 连接源名称
+	// <p>连接源名称</p>
 	ResourceName *string `json:"ResourceName,omitnil,omitempty" name:"ResourceName"`
 
-	// 连接源描述
+	// <p>连接源描述</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// 连接源类型
+	// <p>连接源类型</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 连接源的状态  枚举值: -1 (创建失败) 、0 (创建中) 、 1 (运行中)、 2 (删除中) 、 4 (删除失败) 、 5 (配置更改中) 、 6 (配置更改失败) 、 7 (异常)
+	// <p>连接源的状态  枚举值: -1 (创建失败) 、0 (创建中) 、 1 (运行中)、 2 (删除中) 、 4 (删除失败) 、 5 (配置更改中) 、 6 (配置更改失败) 、 7 (异常)</p>
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 连接源的创建时间
+	// <p>连接源的创建时间</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 连接源的异常信息
+	// <p>连接源的异常信息</p>
 	ErrorMessage *string `json:"ErrorMessage,omitnil,omitempty" name:"ErrorMessage"`
 
-	// 连接源的当前所处步骤
+	// <p>连接源的当前所处步骤</p>
 	CurrentStep *string `json:"CurrentStep,omitnil,omitempty" name:"CurrentStep"`
 
-	// 步骤列表
+	// <p>步骤列表</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	StepList []*string `json:"StepList,omitnil,omitempty" name:"StepList"`
 
-	// MySQL配置，Type为MYSQL或TDSQL_C_MYSQL时返回
+	// <p>MySQL配置，Type为MYSQL或TDSQL_C_MYSQL时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MySQLConnectParam *MySQLConnectParam `json:"MySQLConnectParam,omitnil,omitempty" name:"MySQLConnectParam"`
 
-	// PostgreSQL配置，Type为POSTGRESQL或TDSQL_C_POSTGRESQL时返回
+	// <p>PostgreSQL配置，Type为POSTGRESQL或TDSQL_C_POSTGRESQL时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PostgreSQLConnectParam *PostgreSQLConnectParam `json:"PostgreSQLConnectParam,omitnil,omitempty" name:"PostgreSQLConnectParam"`
 
-	// Dts配置，Type为DTS时返回
+	// <p>Dts配置，Type为DTS时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DtsConnectParam *DtsConnectParam `json:"DtsConnectParam,omitnil,omitempty" name:"DtsConnectParam"`
 
-	// MongoDB配置，Type为MONGODB时返回
+	// <p>MongoDB配置，Type为MONGODB时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MongoDBConnectParam *MongoDBConnectParam `json:"MongoDBConnectParam,omitnil,omitempty" name:"MongoDBConnectParam"`
 
-	// Es配置，Type为ES时返回
+	// <p>Es配置，Type为ES时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	EsConnectParam *EsConnectParam `json:"EsConnectParam,omitnil,omitempty" name:"EsConnectParam"`
 
-	// ClickHouse配置，Type为CLICKHOUSE时返回
+	// <p>ClickHouse配置，Type为CLICKHOUSE时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClickHouseConnectParam *ClickHouseConnectParam `json:"ClickHouseConnectParam,omitnil,omitempty" name:"ClickHouseConnectParam"`
 
-	// MariaDB配置，Type为MARIADB时返回
+	// <p>MariaDB配置，Type为MARIADB时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MariaDBConnectParam *MariaDBConnectParam `json:"MariaDBConnectParam,omitnil,omitempty" name:"MariaDBConnectParam"`
 
-	// SQLServer配置，Type为SQLSERVER时返回
+	// <p>SQLServer配置，Type为SQLSERVER时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SQLServerConnectParam *SQLServerConnectParam `json:"SQLServerConnectParam,omitnil,omitempty" name:"SQLServerConnectParam"`
 
-	// Ctsdb配置，Type为CTSDB时返回
+	// <p>Ctsdb配置，Type为CTSDB时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CtsdbConnectParam *CtsdbConnectParam `json:"CtsdbConnectParam,omitnil,omitempty" name:"CtsdbConnectParam"`
 
-	// Doris 配置，Type 为 DORIS 时返回
+	// <p>Doris 配置，Type 为 DORIS 时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DorisConnectParam *DorisConnectParam `json:"DorisConnectParam,omitnil,omitempty" name:"DorisConnectParam"`
 
-	// Kafka配置，Type 为 KAFKA 时返回
+	// <p>Kafka配置，Type 为 KAFKA 时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	KafkaConnectParam *KafkaConnectParam `json:"KafkaConnectParam,omitnil,omitempty" name:"KafkaConnectParam"`
 
-	// MQTT配置，Type 为 MQTT 时返回
+	// <p>MQTT配置，Type 为 MQTT 时返回</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MqttConnectParam *MqttConnectParam `json:"MqttConnectParam,omitnil,omitempty" name:"MqttConnectParam"`
+
+	// <p>Iceberg配置，Type为ICEBERG时返回</p>
+	IcebergConnectParam *IcebergConnectParam `json:"IcebergConnectParam,omitnil,omitempty" name:"IcebergConnectParam"`
+
+	// <p>标签列表</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// <p>iceberg数据库和表信息</p>
+	IcebergDatabases []*IcebergDatabaseInfo `json:"IcebergDatabases,omitnil,omitempty" name:"IcebergDatabases"`
 }
 
 // Predefined struct for user
 type DescribeConnectResourceResponseParams struct {
-	// 连接源数据信息
+	// <p>连接源数据信息</p>
 	Result *DescribeConnectResourceResp `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4570,38 +5159,38 @@ func (r *DescribeConnectResourceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeConnectResourcesRequestParams struct {
-	// 连接源类型
+	// <p>连接源类型</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 连接源名称的关键字查询,支持模糊匹配
+	// <p>连接源名称的关键字查询,支持模糊匹配</p>
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 
-	// 分页偏移量，默认为0
+	// <p>分页偏移量，默认为0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，默认为20，最大值为1000 (超过1000,则限制为1000)
+	// <p>返回数量，默认为20，最大值为1000 (超过1000,则限制为1000)</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 连接源的关键字查询, 根据地域查询本地域内连接管理列表中的连接(仅支持包含region输入的连接源)
+	// <p>连接源的关键字查询, 根据地域查询本地域内连接管理列表中的连接(仅支持包含region输入的连接源)</p>
 	ResourceRegion *string `json:"ResourceRegion,omitnil,omitempty" name:"ResourceRegion"`
 }
 
 type DescribeConnectResourcesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 连接源类型
+	// <p>连接源类型</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 连接源名称的关键字查询,支持模糊匹配
+	// <p>连接源名称的关键字查询,支持模糊匹配</p>
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 
-	// 分页偏移量，默认为0
+	// <p>分页偏移量，默认为0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，默认为20，最大值为1000 (超过1000,则限制为1000)
+	// <p>返回数量，默认为20，最大值为1000 (超过1000,则限制为1000)</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 连接源的关键字查询, 根据地域查询本地域内连接管理列表中的连接(仅支持包含region输入的连接源)
+	// <p>连接源的关键字查询, 根据地域查询本地域内连接管理列表中的连接(仅支持包含region输入的连接源)</p>
 	ResourceRegion *string `json:"ResourceRegion,omitnil,omitempty" name:"ResourceRegion"`
 }
 
@@ -4638,7 +5227,7 @@ type DescribeConnectResourcesResp struct {
 
 // Predefined struct for user
 type DescribeConnectResourcesResponseParams struct {
-	// 连接源列表
+	// <p>连接源列表</p>
 	Result *DescribeConnectResourcesResp `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4890,14 +5479,14 @@ func (r *DescribeDatahubGroupOffsetsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDatahubTaskRequestParams struct {
-	// 任务id
+	// <p>任务id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 }
 
 type DescribeDatahubTaskRequest struct {
 	*tchttp.BaseRequest
 	
-	// 任务id
+	// <p>任务id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 }
 
@@ -4921,63 +5510,75 @@ func (r *DescribeDatahubTaskRequest) FromJsonString(s string) error {
 }
 
 type DescribeDatahubTaskRes struct {
-	// 任务ID
+	// <p>任务ID</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// 任务名称
+	// <p>任务名称</p>
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
-	// 任务类型，SOURCE数据接入，SINK数据流出
+	// <p>任务类型，SOURCE数据接入，SINK数据流出</p>
 	TaskType *string `json:"TaskType,omitnil,omitempty" name:"TaskType"`
 
-	// 状态，-1创建失败，0创建中，1运行中，2删除中，3已删除，4删除失败，5暂停中，6已暂停，7暂停失败，8恢复中，9恢复失败
+	// <p>状态，-1创建失败，0创建中，1运行中，2删除中，3已删除，4删除失败，5暂停中，6已暂停，7暂停失败，8恢复中，9恢复失败</p>
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 数据源
+	// <p>数据源</p>
 	SourceResource *DatahubResource `json:"SourceResource,omitnil,omitempty" name:"SourceResource"`
 
-	// 数据目标
+	// <p>数据目标</p>
 	TargetResource *DatahubResource `json:"TargetResource,omitnil,omitempty" name:"TargetResource"`
 
-	// Connection列表
+	// <p>Connection列表</p>
 	Connections []*Connection `json:"Connections,omitnil,omitempty" name:"Connections"`
 
-	// 任务创建时间
+	// <p>任务创建时间</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 消息处理规则
+	// <p>消息处理规则</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TransformParam *TransformParam `json:"TransformParam,omitnil,omitempty" name:"TransformParam"`
 
-	// 数据接入ID
+	// <p>数据接入ID</p>
 	DatahubId *string `json:"DatahubId,omitnil,omitempty" name:"DatahubId"`
 
-	// 绑定的SchemaId
+	// <p>绑定的SchemaId</p>
 	SchemaId *string `json:"SchemaId,omitnil,omitempty" name:"SchemaId"`
 
-	// 绑定的Schema名称
+	// <p>绑定的Schema名称</p>
 	SchemaName *string `json:"SchemaName,omitnil,omitempty" name:"SchemaName"`
 
-	// 数据处理规则
+	// <p>数据处理规则</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TransformsParam *TransformsParam `json:"TransformsParam,omitnil,omitempty" name:"TransformsParam"`
 
-	// 异常信息
+	// <p>异常信息</p>
 	ErrorMessage *string `json:"ErrorMessage,omitnil,omitempty" name:"ErrorMessage"`
 
-	// 任务标签列表
+	// <p>任务标签列表</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 任务描述信息	
+	// <p>任务描述信息</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// 1:正常 2:隔离中
+	// <p>1:正常 2:隔离中</p>
 	IsolateStatus *int64 `json:"IsolateStatus,omitnil,omitempty" name:"IsolateStatus"`
+
+	// <p>并发数</p><p>默认值：1</p>
+	TaskMax *int64 `json:"TaskMax,omitnil,omitempty" name:"TaskMax"`
+
+	// <p>并发流量预估参考上限，MB/s</p>
+	SyncThrottleLimit *int64 `json:"SyncThrottleLimit,omitnil,omitempty" name:"SyncThrottleLimit"`
+
+	// <p>自动扩容 true:自动扩容 false:手动扩容</p><p>默认值：true</p>
+	AutoExpandFlag *bool `json:"AutoExpandFlag,omitnil,omitempty" name:"AutoExpandFlag"`
+
+	// <p>不影响任务执行的警告信息</p>
+	WarnMessage *string `json:"WarnMessage,omitnil,omitempty" name:"WarnMessage"`
 }
 
 // Predefined struct for user
 type DescribeDatahubTaskResponseParams struct {
-	// 返回结果
+	// <p>返回结果</p>
 	Result *DescribeDatahubTaskRes `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5002,50 +5603,50 @@ func (r *DescribeDatahubTaskResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDatahubTasksRequestParams struct {
-	// 返回数量，默认为20，最大值为100 (超过100限制为100)
+	// <p>返回数量，默认为20，最大值为100 (超过100限制为100)</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 分页偏移量，默认为0
+	// <p>分页偏移量，默认为0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 过滤条件，按照 TaskName 过滤，支持模糊查询
+	// <p>过滤条件，按照 TaskName 过滤，支持模糊查询</p>
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 
-	// 转储的目标类型
+	// <p>转储的目标类型</p>
 	TargetType *string `json:"TargetType,omitnil,omitempty" name:"TargetType"`
 
-	// 任务类型，SOURCE数据接入，SINK数据流出
+	// <p>任务类型，SOURCE数据接入，SINK数据流出</p>
 	TaskType *string `json:"TaskType,omitnil,omitempty" name:"TaskType"`
 
-	// 转储的源类型
+	// <p>转储的源类型</p>
 	SourceType *string `json:"SourceType,omitnil,omitempty" name:"SourceType"`
 
-	// 转储的资源
+	// <p>转储的资源</p>
 	Resource *string `json:"Resource,omitnil,omitempty" name:"Resource"`
 }
 
 type DescribeDatahubTasksRequest struct {
 	*tchttp.BaseRequest
 	
-	// 返回数量，默认为20，最大值为100 (超过100限制为100)
+	// <p>返回数量，默认为20，最大值为100 (超过100限制为100)</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 分页偏移量，默认为0
+	// <p>分页偏移量，默认为0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 过滤条件，按照 TaskName 过滤，支持模糊查询
+	// <p>过滤条件，按照 TaskName 过滤，支持模糊查询</p>
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 
-	// 转储的目标类型
+	// <p>转储的目标类型</p>
 	TargetType *string `json:"TargetType,omitnil,omitempty" name:"TargetType"`
 
-	// 任务类型，SOURCE数据接入，SINK数据流出
+	// <p>任务类型，SOURCE数据接入，SINK数据流出</p>
 	TaskType *string `json:"TaskType,omitnil,omitempty" name:"TaskType"`
 
-	// 转储的源类型
+	// <p>转储的源类型</p>
 	SourceType *string `json:"SourceType,omitnil,omitempty" name:"SourceType"`
 
-	// 转储的资源
+	// <p>转储的资源</p>
 	Resource *string `json:"Resource,omitnil,omitempty" name:"Resource"`
 }
 
@@ -5084,7 +5685,7 @@ type DescribeDatahubTasksRes struct {
 
 // Predefined struct for user
 type DescribeDatahubTasksResponseParams struct {
-	// 返回任务查询结果
+	// <p>返回任务查询结果</p>
 	Result *DescribeDatahubTasksRes `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5198,44 +5799,44 @@ func (r *DescribeDatahubTopicResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDatahubTopicsRequestParams struct {
-	// 搜索词
+	// <p>搜索词</p><p>对Name或TopicName或TopicId字段进行模糊匹配</p>
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 
-	// 本次查询的偏移位置，默认为0
+	// <p>本次查询的偏移位置，默认为0</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 本次返回结果的最大个数，默认为50，最大值为50
+	// <p>本次返回结果的最大个数</p><p>取值范围：[1, 100]</p><p>默认值：20</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 是否从连接查询topic列表
+	// <p>是否从连接查询topic列表</p><p>默认值：false</p>
 	QueryFromConnectResource *bool `json:"QueryFromConnectResource,omitnil,omitempty" name:"QueryFromConnectResource"`
 
-	// 连接的ID
+	// <p>连接的ID</p>
 	ConnectResourceId *string `json:"ConnectResourceId,omitnil,omitempty" name:"ConnectResourceId"`
 
-	// topic资源表达式
+	// <p>topic资源表达式</p>
 	TopicRegularExpression *string `json:"TopicRegularExpression,omitnil,omitempty" name:"TopicRegularExpression"`
 }
 
 type DescribeDatahubTopicsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 搜索词
+	// <p>搜索词</p><p>对Name或TopicName或TopicId字段进行模糊匹配</p>
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 
-	// 本次查询的偏移位置，默认为0
+	// <p>本次查询的偏移位置，默认为0</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 本次返回结果的最大个数，默认为50，最大值为50
+	// <p>本次返回结果的最大个数</p><p>取值范围：[1, 100]</p><p>默认值：20</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 是否从连接查询topic列表
+	// <p>是否从连接查询topic列表</p><p>默认值：false</p>
 	QueryFromConnectResource *bool `json:"QueryFromConnectResource,omitnil,omitempty" name:"QueryFromConnectResource"`
 
-	// 连接的ID
+	// <p>连接的ID</p>
 	ConnectResourceId *string `json:"ConnectResourceId,omitnil,omitempty" name:"ConnectResourceId"`
 
-	// topic资源表达式
+	// <p>topic资源表达式</p>
 	TopicRegularExpression *string `json:"TopicRegularExpression,omitnil,omitempty" name:"TopicRegularExpression"`
 }
 
@@ -5273,7 +5874,7 @@ type DescribeDatahubTopicsResp struct {
 
 // Predefined struct for user
 type DescribeDatahubTopicsResponseParams struct {
-	// 主题列表
+	// <p>主题列表</p>
 	Result *DescribeDatahubTopicsResp `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5370,44 +5971,44 @@ func (r *DescribeGroupInfoResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeGroupOffsetsRequestParams struct {
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// Kafka 消费分组
+	// <p>Kafka 消费分组</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40840">DescribeGroup</a></p>
 	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
 
-	// group 订阅的主题名称数组，如果没有该数组，则表示指定的 group 下所有 topic 信息
+	// <p>group 订阅的主题名称数组，如果没有该数组，则表示指定的 group 下所有 topic 信息</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40847">DescribeTopic</a></p>
 	Topics []*string `json:"Topics,omitnil,omitempty" name:"Topics"`
 
-	// 模糊匹配 topicName
+	// <p>模糊匹配 topicName</p>
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 
-	// 本次查询的偏移位置，默认为0
+	// <p>本次查询的偏移位置，默认为0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 本次返回结果的最大个数，默认为50，最大值为50
+	// <p>本次返回结果的最大个数，默认为50，最大值为50</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
 type DescribeGroupOffsetsRequest struct {
 	*tchttp.BaseRequest
 	
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// Kafka 消费分组
+	// <p>Kafka 消费分组</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40840">DescribeGroup</a></p>
 	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
 
-	// group 订阅的主题名称数组，如果没有该数组，则表示指定的 group 下所有 topic 信息
+	// <p>group 订阅的主题名称数组，如果没有该数组，则表示指定的 group 下所有 topic 信息</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40847">DescribeTopic</a></p>
 	Topics []*string `json:"Topics,omitnil,omitempty" name:"Topics"`
 
-	// 模糊匹配 topicName
+	// <p>模糊匹配 topicName</p>
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 
-	// 本次查询的偏移位置，默认为0
+	// <p>本次查询的偏移位置，默认为0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 本次返回结果的最大个数，默认为50，最大值为50
+	// <p>本次返回结果的最大个数，默认为50，最大值为50</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
@@ -5437,7 +6038,7 @@ func (r *DescribeGroupOffsetsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeGroupOffsetsResponseParams struct {
-	// 返回结果
+	// <p>返回结果</p>
 	Result *GroupOffsetResponse `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5462,38 +6063,38 @@ func (r *DescribeGroupOffsetsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeGroupRequestParams struct {
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 搜索关键字
+	// <p>搜索关键字</p>
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 
-	// 偏移量
+	// <p>偏移量</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 最大返回数量
+	// <p>最大返回数量</p><p>默认值：20</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 仅支持 GroupState 筛选,   支持的筛选状态有 Empty/Stable  注意：该参数只能在2.8/3.2 版本生效
+	// <p>仅支持 GroupState 筛选,   支持的筛选状态有 Empty/Stable  注意：该参数只能在2.8/3.2 版本生效</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 type DescribeGroupRequest struct {
 	*tchttp.BaseRequest
 	
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 搜索关键字
+	// <p>搜索关键字</p>
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 
-	// 偏移量
+	// <p>偏移量</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 最大返回数量
+	// <p>最大返回数量</p><p>默认值：20</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 仅支持 GroupState 筛选,   支持的筛选状态有 Empty/Stable  注意：该参数只能在2.8/3.2 版本生效
+	// <p>仅支持 GroupState 筛选,   支持的筛选状态有 Empty/Stable  注意：该参数只能在2.8/3.2 版本生效</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
@@ -5522,7 +6123,7 @@ func (r *DescribeGroupRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeGroupResponseParams struct {
-	// 返回结果
+	// <p>返回结果</p>
 	Result *GroupResponse `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5604,70 +6205,70 @@ func (r *DescribeInstanceAttributesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstancesDetailRequestParams struct {
-	// （过滤条件）按照实例ID过滤
+	// <p>（过滤条件）按照实例ID过滤</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// （过滤条件）按照实例名,实例Id,可用区,私有网络id,子网id 过滤，支持模糊查询
+	// <p>（过滤条件）按照实例名,实例Id,可用区,私有网络id,子网id 过滤，支持模糊查询</p>
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 
-	// （过滤条件）实例的状态。0：创建中，1：运行中，2：删除中，不填默认返回全部
+	// <p>（过滤条件）实例的状态，不填默认返回全部</p><p>枚举值：</p><ul><li>-1： 创建失败</li><li>0： 创建中</li><li>1： 运行中</li><li>2： 删除中</li><li>3： 已删除</li><li>4： 删除失败</li><li>5： 隔离中</li><li>7： 升级中</li></ul>
 	Status []*int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 偏移量，不填默认为0。
+	// <p>偏移量，不填默认为0。</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，不填则默认10，最大值20。
+	// <p>返回数量，不填则默认10，最大值20。</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 匹配标签key值。
+	// <p>匹配标签key值。</p>
 	TagKey *string `json:"TagKey,omitnil,omitempty" name:"TagKey"`
 
-	// 过滤器。filter.Name 支持('Ip', 'VpcId', 'SubNetId', 'InstanceType','InstanceId') ,filter.Values最多传递10个值.
+	// <p>过滤器。filter.Name 支持(&#39;Ip&#39;, &#39;VpcId&#39;, &#39;SubNetId&#39;, &#39;InstanceType&#39;,&#39;InstanceId&#39;) ,filter.Values最多传递10个值.</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 已经废弃， 使用InstanceIdList
+	// <p>已经废弃， 使用InstanceIdList</p>
 	//
 	// Deprecated: InstanceIds is deprecated.
 	InstanceIds *string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
-	// 按照实例ID过滤
+	// <p>按照实例ID过滤</p>
 	InstanceIdList []*string `json:"InstanceIdList,omitnil,omitempty" name:"InstanceIdList"`
 
-	// 根据标签列表过滤实例（取交集）
+	// <p>根据标签列表过滤实例（取交集）</p>
 	TagList []*Tag `json:"TagList,omitnil,omitempty" name:"TagList"`
 }
 
 type DescribeInstancesDetailRequest struct {
 	*tchttp.BaseRequest
 	
-	// （过滤条件）按照实例ID过滤
+	// <p>（过滤条件）按照实例ID过滤</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// （过滤条件）按照实例名,实例Id,可用区,私有网络id,子网id 过滤，支持模糊查询
+	// <p>（过滤条件）按照实例名,实例Id,可用区,私有网络id,子网id 过滤，支持模糊查询</p>
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 
-	// （过滤条件）实例的状态。0：创建中，1：运行中，2：删除中，不填默认返回全部
+	// <p>（过滤条件）实例的状态，不填默认返回全部</p><p>枚举值：</p><ul><li>-1： 创建失败</li><li>0： 创建中</li><li>1： 运行中</li><li>2： 删除中</li><li>3： 已删除</li><li>4： 删除失败</li><li>5： 隔离中</li><li>7： 升级中</li></ul>
 	Status []*int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 偏移量，不填默认为0。
+	// <p>偏移量，不填默认为0。</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，不填则默认10，最大值20。
+	// <p>返回数量，不填则默认10，最大值20。</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 匹配标签key值。
+	// <p>匹配标签key值。</p>
 	TagKey *string `json:"TagKey,omitnil,omitempty" name:"TagKey"`
 
-	// 过滤器。filter.Name 支持('Ip', 'VpcId', 'SubNetId', 'InstanceType','InstanceId') ,filter.Values最多传递10个值.
+	// <p>过滤器。filter.Name 支持(&#39;Ip&#39;, &#39;VpcId&#39;, &#39;SubNetId&#39;, &#39;InstanceType&#39;,&#39;InstanceId&#39;) ,filter.Values最多传递10个值.</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 已经废弃， 使用InstanceIdList
+	// <p>已经废弃， 使用InstanceIdList</p>
 	InstanceIds *string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
-	// 按照实例ID过滤
+	// <p>按照实例ID过滤</p>
 	InstanceIdList []*string `json:"InstanceIdList,omitnil,omitempty" name:"InstanceIdList"`
 
-	// 根据标签列表过滤实例（取交集）
+	// <p>根据标签列表过滤实例（取交集）</p>
 	TagList []*Tag `json:"TagList,omitnil,omitempty" name:"TagList"`
 }
 
@@ -5701,7 +6302,7 @@ func (r *DescribeInstancesDetailRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstancesDetailResponseParams struct {
-	// 返回的实例详情结果对象
+	// <p>返回的实例详情结果对象</p>
 	Result *InstanceDetailResponse `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5726,52 +6327,52 @@ func (r *DescribeInstancesDetailResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstancesRequestParams struct {
-	// （查询条件）按照ckafka集群实例Id过滤
+	// <p>（查询条件）按照ckafka集群实例Id过滤</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 搜索词   ex:（查询条件）按照实例名称过滤，支持模糊查询
+	// <p>搜索词   ex:（查询条件）按照实例名称过滤，支持模糊查询</p>
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 
-	// （查询条件）实例的状态  0：创建中，1：运行中，2：删除中，5: 隔离中,  7:升级中 不填默认返回全部
+	// <p>（查询条件）实例的状态 不填默认返回全部</p><p>枚举值：</p><ul><li>-1： 创建失败</li><li>0： 创建中</li><li>1： 运行中</li><li>2： 删除中</li><li>3： 已删除</li><li>4： 删除失败</li><li>5： 隔离中</li><li>7： 升级中</li></ul>
 	Status []*int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 偏移量，不填默认为0
+	// <p>偏移量，不填默认为0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，不填则默认10，最大值100
+	// <p>返回数量，不填则默认10，最大值100</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 已废弃。匹配标签key值。
+	// <p>已废弃。匹配标签key值。</p>
 	//
 	// Deprecated: TagKey is deprecated.
 	TagKey *string `json:"TagKey,omitnil,omitempty" name:"TagKey"`
 
-	// （查询条件）私有网络Id
+	// <p>（查询条件）私有网络Id</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 }
 
 type DescribeInstancesRequest struct {
 	*tchttp.BaseRequest
 	
-	// （查询条件）按照ckafka集群实例Id过滤
+	// <p>（查询条件）按照ckafka集群实例Id过滤</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 搜索词   ex:（查询条件）按照实例名称过滤，支持模糊查询
+	// <p>搜索词   ex:（查询条件）按照实例名称过滤，支持模糊查询</p>
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 
-	// （查询条件）实例的状态  0：创建中，1：运行中，2：删除中，5: 隔离中,  7:升级中 不填默认返回全部
+	// <p>（查询条件）实例的状态 不填默认返回全部</p><p>枚举值：</p><ul><li>-1： 创建失败</li><li>0： 创建中</li><li>1： 运行中</li><li>2： 删除中</li><li>3： 已删除</li><li>4： 删除失败</li><li>5： 隔离中</li><li>7： 升级中</li></ul>
 	Status []*int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 偏移量，不填默认为0
+	// <p>偏移量，不填默认为0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，不填则默认10，最大值100
+	// <p>返回数量，不填则默认10，最大值100</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 已废弃。匹配标签key值。
+	// <p>已废弃。匹配标签key值。</p>
 	TagKey *string `json:"TagKey,omitnil,omitempty" name:"TagKey"`
 
-	// （查询条件）私有网络Id
+	// <p>（查询条件）私有网络Id</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 }
 
@@ -5802,7 +6403,7 @@ func (r *DescribeInstancesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstancesResponseParams struct {
-	// 返回的结果
+	// <p>返回的结果</p>
 	Result *InstanceResponse `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5827,57 +6428,63 @@ func (r *DescribeInstancesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeModifyTypeRequestParams struct {
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 升配后的带宽，单位mb
+	// <p>升配后的带宽，单位mb</p>
 	BandWidth *int64 `json:"BandWidth,omitnil,omitempty" name:"BandWidth"`
 
-	// 升配后的磁盘，单位G
+	// <p>升配后的磁盘，单位G</p>
 	DiskSize *int64 `json:"DiskSize,omitnil,omitempty" name:"DiskSize"`
 
-	// 磁盘类型，例如 CLOUD_PREMIUM
+	// <p>磁盘类型，例如 CLOUD_PREMIUM</p>
 	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
 
-	// 分区数量
+	// <p>分区数量</p>
 	Partition *int64 `json:"Partition,omitnil,omitempty" name:"Partition"`
 
-	// topic数量
+	// <p>topic数量</p>
 	Topic *int64 `json:"Topic,omitnil,omitempty" name:"Topic"`
 
-	// 实例类型例如 sp_ckafka_profession
+	// <p>实例类型例如 sp_ckafka_profession</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 变配入口
+	// <p>变配入口</p>
 	ModifyEntry *string `json:"ModifyEntry,omitnil,omitempty" name:"ModifyEntry"`
+
+	// <p>是否可用区变更  false: 非可用区变更  true: 可用区变更  默认false</p>
+	ModifyZone *bool `json:"ModifyZone,omitnil,omitempty" name:"ModifyZone"`
 }
 
 type DescribeModifyTypeRequest struct {
 	*tchttp.BaseRequest
 	
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 升配后的带宽，单位mb
+	// <p>升配后的带宽，单位mb</p>
 	BandWidth *int64 `json:"BandWidth,omitnil,omitempty" name:"BandWidth"`
 
-	// 升配后的磁盘，单位G
+	// <p>升配后的磁盘，单位G</p>
 	DiskSize *int64 `json:"DiskSize,omitnil,omitempty" name:"DiskSize"`
 
-	// 磁盘类型，例如 CLOUD_PREMIUM
+	// <p>磁盘类型，例如 CLOUD_PREMIUM</p>
 	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
 
-	// 分区数量
+	// <p>分区数量</p>
 	Partition *int64 `json:"Partition,omitnil,omitempty" name:"Partition"`
 
-	// topic数量
+	// <p>topic数量</p>
 	Topic *int64 `json:"Topic,omitnil,omitempty" name:"Topic"`
 
-	// 实例类型例如 sp_ckafka_profession
+	// <p>实例类型例如 sp_ckafka_profession</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 变配入口
+	// <p>变配入口</p>
 	ModifyEntry *string `json:"ModifyEntry,omitnil,omitempty" name:"ModifyEntry"`
+
+	// <p>是否可用区变更  false: 非可用区变更  true: 可用区变更  默认false</p>
+	ModifyZone *bool `json:"ModifyZone,omitnil,omitempty" name:"ModifyZone"`
 }
 
 func (r *DescribeModifyTypeRequest) ToJsonString() string {
@@ -5900,6 +6507,7 @@ func (r *DescribeModifyTypeRequest) FromJsonString(s string) error {
 	delete(f, "Topic")
 	delete(f, "Type")
 	delete(f, "ModifyEntry")
+	delete(f, "ModifyZone")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeModifyTypeRequest has unknown keys!", "")
 	}
@@ -5908,7 +6516,7 @@ func (r *DescribeModifyTypeRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeModifyTypeResponseParams struct {
-	// 返回的变配类型结构
+	// <p>返回的变配类型结构</p>
 	Result *DescModifyType `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5990,32 +6598,32 @@ func (r *DescribePrometheusResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeRegionRequestParams struct {
-	// 偏移量
+	// <p>偏移量</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回最大结果数
+	// <p>返回最大结果数</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 业务字段，可忽略
+	// <p>业务字段，可忽略</p><p>枚举值：</p><ul><li>ckafka： ckafka业务</li><li>cmq： cmq业务</li></ul><p>默认值：ckafka</p>
 	Business *string `json:"Business,omitnil,omitempty" name:"Business"`
 
-	// cdc专有集群业务字段，可忽略
+	// <p>cdc专有集群业务字段，可忽略</p>
 	CdcId *string `json:"CdcId,omitnil,omitempty" name:"CdcId"`
 }
 
 type DescribeRegionRequest struct {
 	*tchttp.BaseRequest
 	
-	// 偏移量
+	// <p>偏移量</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回最大结果数
+	// <p>返回最大结果数</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 业务字段，可忽略
+	// <p>业务字段，可忽略</p><p>枚举值：</p><ul><li>ckafka： ckafka业务</li><li>cmq： cmq业务</li></ul><p>默认值：ckafka</p>
 	Business *string `json:"Business,omitnil,omitempty" name:"Business"`
 
-	// cdc专有集群业务字段，可忽略
+	// <p>cdc专有集群业务字段，可忽略</p>
 	CdcId *string `json:"CdcId,omitnil,omitempty" name:"CdcId"`
 }
 
@@ -6043,7 +6651,7 @@ func (r *DescribeRegionRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeRegionResponseParams struct {
-	// 返回地域枚举结果列表
+	// <p>返回地域枚举结果列表</p>
 	Result []*Region `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6068,26 +6676,26 @@ func (r *DescribeRegionResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeRouteRequestParams struct {
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 路由Id
+	// <p>路由Id</p>
 	RouteId *int64 `json:"RouteId,omitnil,omitempty" name:"RouteId"`
 
-	// 是否显示主路由，true时会在返回原路由列表的基础上,再额外展示实例创建时的主路由信息(且不被InternalFlag/UsedFor等参数过滤影响)	
+	// <p>是否显示主路由，true时会在返回原路由列表的基础上,再额外展示实例创建时的主路由信息(且不被InternalFlag/UsedFor等参数过滤影响)</p>
 	MainRouteFlag *bool `json:"MainRouteFlag,omitnil,omitempty" name:"MainRouteFlag"`
 }
 
 type DescribeRouteRequest struct {
 	*tchttp.BaseRequest
 	
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 路由Id
+	// <p>路由Id</p>
 	RouteId *int64 `json:"RouteId,omitnil,omitempty" name:"RouteId"`
 
-	// 是否显示主路由，true时会在返回原路由列表的基础上,再额外展示实例创建时的主路由信息(且不被InternalFlag/UsedFor等参数过滤影响)	
+	// <p>是否显示主路由，true时会在返回原路由列表的基础上,再额外展示实例创建时的主路由信息(且不被InternalFlag/UsedFor等参数过滤影响)</p>
 	MainRouteFlag *bool `json:"MainRouteFlag,omitnil,omitempty" name:"MainRouteFlag"`
 }
 
@@ -6114,7 +6722,7 @@ func (r *DescribeRouteRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeRouteResponseParams struct {
-	// 返回的路由信息结果集
+	// <p>返回的路由信息结果集</p>
 	Result *RouteResponse `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6280,6 +6888,91 @@ func (r *DescribeTaskStatusResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeThrottleRulesRequestParams struct {
+	// <p>实例Id</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>关键字</p>
+	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
+
+	// <p>返回数量，不填则默认为20，最大值200</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>偏移数，默认为0</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>限流维度</p><p>枚举值：</p><ul><li>1： 实例维度限流</li><li>2： topic维度限流</li></ul><p>默认值：1</p>
+	ThrottleDimension *int64 `json:"ThrottleDimension,omitnil,omitempty" name:"ThrottleDimension"`
+}
+
+type DescribeThrottleRulesRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实例Id</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>关键字</p>
+	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
+
+	// <p>返回数量，不填则默认为20，最大值200</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>偏移数，默认为0</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>限流维度</p><p>枚举值：</p><ul><li>1： 实例维度限流</li><li>2： topic维度限流</li></ul><p>默认值：1</p>
+	ThrottleDimension *int64 `json:"ThrottleDimension,omitnil,omitempty" name:"ThrottleDimension"`
+}
+
+func (r *DescribeThrottleRulesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeThrottleRulesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "SearchWord")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "ThrottleDimension")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeThrottleRulesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeThrottleRulesResponseParams struct {
+	// <p>返回信息</p>
+	Result *ThrottleRuleResult `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeThrottleRulesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeThrottleRulesResponseParams `json:"Response"`
+}
+
+func (r *DescribeThrottleRulesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeThrottleRulesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeTopicAttributesRequestParams struct {
 	// ckafka集群实例Id，可通过[DescribeInstances](https://cloud.tencent.com/document/product/597/40835)接口获取
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
@@ -6345,57 +7038,63 @@ func (r *DescribeTopicAttributesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTopicDetailRequestParams struct {
-	// ckafka集群实例Id，可通过[DescribeInstances](https://cloud.tencent.com/document/product/597/40835)接口获取
+	// <p>ckafka集群实例Id，可通过<a href="https://cloud.tencent.com/document/product/597/40835">DescribeInstances</a>接口获取</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// （过滤条件）按照topicName过滤，支持模糊查询
+	// <p>（过滤条件）按照topicName过滤，支持模糊查询</p>
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 
-	// 偏移量，不填默认为0
+	// <p>偏移量，不填默认为0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，不填则默认 20，取值要大于0
+	// <p>返回数量，不填则默认 20，取值要大于0</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// Acl预设策略名称
+	// <p>Acl预设策略名称</p>
 	AclRuleName *string `json:"AclRuleName,omitnil,omitempty" name:"AclRuleName"`
 
-	// 根据特定的属性排序(目前支持PartitionNum/CreateTime)，默认值为CreateTime。
+	// <p>根据特定的属性排序(目前支持PartitionNum/CreateTime)，默认值为CreateTime。</p><p>该参数为空时，默认按CreateTime倒序排序</p>
 	OrderBy *string `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
 
-	// 0-顺序、1-倒序，默认值为0。
+	// <p>0-顺序、1-倒序，默认值为0。</p>
 	OrderType *int64 `json:"OrderType,omitnil,omitempty" name:"OrderType"`
 
-	// 目前支持 ReplicaNum （副本数）筛选
+	// <p>目前支持 ReplicaNum （副本数）筛选</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>搜索topic时是否忽略大小写敏感</p>
+	SearchWordIgnoreCaseFlag *bool `json:"SearchWordIgnoreCaseFlag,omitnil,omitempty" name:"SearchWordIgnoreCaseFlag"`
 }
 
 type DescribeTopicDetailRequest struct {
 	*tchttp.BaseRequest
 	
-	// ckafka集群实例Id，可通过[DescribeInstances](https://cloud.tencent.com/document/product/597/40835)接口获取
+	// <p>ckafka集群实例Id，可通过<a href="https://cloud.tencent.com/document/product/597/40835">DescribeInstances</a>接口获取</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// （过滤条件）按照topicName过滤，支持模糊查询
+	// <p>（过滤条件）按照topicName过滤，支持模糊查询</p>
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 
-	// 偏移量，不填默认为0
+	// <p>偏移量，不填默认为0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，不填则默认 20，取值要大于0
+	// <p>返回数量，不填则默认 20，取值要大于0</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// Acl预设策略名称
+	// <p>Acl预设策略名称</p>
 	AclRuleName *string `json:"AclRuleName,omitnil,omitempty" name:"AclRuleName"`
 
-	// 根据特定的属性排序(目前支持PartitionNum/CreateTime)，默认值为CreateTime。
+	// <p>根据特定的属性排序(目前支持PartitionNum/CreateTime)，默认值为CreateTime。</p><p>该参数为空时，默认按CreateTime倒序排序</p>
 	OrderBy *string `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
 
-	// 0-顺序、1-倒序，默认值为0。
+	// <p>0-顺序、1-倒序，默认值为0。</p>
 	OrderType *int64 `json:"OrderType,omitnil,omitempty" name:"OrderType"`
 
-	// 目前支持 ReplicaNum （副本数）筛选
+	// <p>目前支持 ReplicaNum （副本数）筛选</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>搜索topic时是否忽略大小写敏感</p>
+	SearchWordIgnoreCaseFlag *bool `json:"SearchWordIgnoreCaseFlag,omitnil,omitempty" name:"SearchWordIgnoreCaseFlag"`
 }
 
 func (r *DescribeTopicDetailRequest) ToJsonString() string {
@@ -6418,6 +7117,7 @@ func (r *DescribeTopicDetailRequest) FromJsonString(s string) error {
 	delete(f, "OrderBy")
 	delete(f, "OrderType")
 	delete(f, "Filters")
+	delete(f, "SearchWordIgnoreCaseFlag")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTopicDetailRequest has unknown keys!", "")
 	}
@@ -6426,7 +7126,7 @@ func (r *DescribeTopicDetailRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTopicDetailResponseParams struct {
-	// 返回的主题详情实体
+	// <p>返回的主题详情实体</p>
 	Result *TopicDetailResponse `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6600,38 +7300,38 @@ func (r *DescribeTopicProduceConnectionResponse) FromJsonString(s string) error 
 
 // Predefined struct for user
 type DescribeTopicRequestParams struct {
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 过滤条件，按照 topicName 过滤，支持模糊查询
+	// <p>过滤条件，按照 topicName 过滤，支持模糊查询</p>
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 
-	// 偏移量，不填默认为0
+	// <p>偏移量，不填默认为0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，不填则默认为20，最大值为50
+	// <p>返回数量，不填则默认为20，最大值为50</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// Acl预设策略名称
+	// <p>Acl预设策略名称</p>
 	AclRuleName *string `json:"AclRuleName,omitnil,omitempty" name:"AclRuleName"`
 }
 
 type DescribeTopicRequest struct {
 	*tchttp.BaseRequest
 	
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 过滤条件，按照 topicName 过滤，支持模糊查询
+	// <p>过滤条件，按照 topicName 过滤，支持模糊查询</p>
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 
-	// 偏移量，不填默认为0
+	// <p>偏移量，不填默认为0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，不填则默认为20，最大值为50
+	// <p>返回数量，不填则默认为20，最大值为50</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// Acl预设策略名称
+	// <p>Acl预设策略名称</p>
 	AclRuleName *string `json:"AclRuleName,omitnil,omitempty" name:"AclRuleName"`
 }
 
@@ -6660,7 +7360,7 @@ func (r *DescribeTopicRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTopicResponseParams struct {
-	// 返回的结果
+	// <p>返回的结果</p>
 	Result *TopicResult `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6685,32 +7385,32 @@ func (r *DescribeTopicResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTopicSubscribeGroupRequestParams struct {
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 主题名
+	// <p>主题名</p>
 	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
 
-	// 分页时的起始位置
+	// <p>分页时的起始位置</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 分页时的个数
+	// <p>分页时的个数</p><p>默认值：20</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
 type DescribeTopicSubscribeGroupRequest struct {
 	*tchttp.BaseRequest
 	
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 主题名
+	// <p>主题名</p>
 	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
 
-	// 分页时的起始位置
+	// <p>分页时的起始位置</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 分页时的个数
+	// <p>分页时的个数</p><p>默认值：20</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
@@ -6738,7 +7438,7 @@ func (r *DescribeTopicSubscribeGroupRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTopicSubscribeGroupResponseParams struct {
-	// 返回结果
+	// <p>返回结果</p>
 	Result *TopicSubscribeGroup `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6763,38 +7463,38 @@ func (r *DescribeTopicSubscribeGroupResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTopicSyncReplicaRequestParams struct {
-	// 实例ID
+	// <p>实例ID</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 主题名称
+	// <p>主题名称</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40847">DescribeTopic</a></p>
 	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
 
-	// 偏移量，不填默认为0
+	// <p>偏移量，不填默认为0</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，默认值为20，必须大于0。
+	// <p>返回数量，默认值为20，必须大于0。</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 仅筛选未同步副本
+	// <p>仅筛选未同步副本</p>
 	OutOfSyncReplicaOnly *bool `json:"OutOfSyncReplicaOnly,omitnil,omitempty" name:"OutOfSyncReplicaOnly"`
 }
 
 type DescribeTopicSyncReplicaRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// <p>实例ID</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 主题名称
+	// <p>主题名称</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40847">DescribeTopic</a></p>
 	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
 
-	// 偏移量，不填默认为0
+	// <p>偏移量，不填默认为0</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，默认值为20，必须大于0。
+	// <p>返回数量，默认值为20，必须大于0。</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 仅筛选未同步副本
+	// <p>仅筛选未同步副本</p>
 	OutOfSyncReplicaOnly *bool `json:"OutOfSyncReplicaOnly,omitnil,omitempty" name:"OutOfSyncReplicaOnly"`
 }
 
@@ -6823,7 +7523,7 @@ func (r *DescribeTopicSyncReplicaRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTopicSyncReplicaResponseParams struct {
-	// 返回topic 副本详情
+	// <p>返回topic 副本详情</p>
 	Result *TopicInSyncReplicaResult `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6848,44 +7548,44 @@ func (r *DescribeTopicSyncReplicaResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTypeInstancesRequestParams struct {
-	// （过滤条件）按照实例ID过滤
+	// <p>（过滤条件）按照实例ID过滤</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// （过滤条件）按照实例名称过滤，支持模糊查询
+	// <p>（过滤条件）按照实例名称过滤，支持模糊查询</p>
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 
-	// （过滤条件）实例的状态。0：创建中，1：运行中，2：删除中，不填默认返回全部
+	// <p>（过滤条件）实例的状态，不填默认返回全部</p><p>枚举值：</p><ul><li>-1： 创建失败</li><li>0： 创建中</li><li>1： 运行中</li><li>2： 删除中</li><li>3： 已删除</li><li>4： 删除失败</li><li>5： 隔离中</li><li>7： 升级中</li></ul>
 	Status []*int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 偏移量，不填默认为0
+	// <p>偏移量，不填默认为0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，不填则默认10，最大值100
+	// <p>返回数量，不填则默认10，最大值100</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 匹配标签key值。
+	// <p>匹配标签key值。</p>
 	TagKey *string `json:"TagKey,omitnil,omitempty" name:"TagKey"`
 }
 
 type DescribeTypeInstancesRequest struct {
 	*tchttp.BaseRequest
 	
-	// （过滤条件）按照实例ID过滤
+	// <p>（过滤条件）按照实例ID过滤</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// （过滤条件）按照实例名称过滤，支持模糊查询
+	// <p>（过滤条件）按照实例名称过滤，支持模糊查询</p>
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 
-	// （过滤条件）实例的状态。0：创建中，1：运行中，2：删除中，不填默认返回全部
+	// <p>（过滤条件）实例的状态，不填默认返回全部</p><p>枚举值：</p><ul><li>-1： 创建失败</li><li>0： 创建中</li><li>1： 运行中</li><li>2： 删除中</li><li>3： 已删除</li><li>4： 删除失败</li><li>5： 隔离中</li><li>7： 升级中</li></ul>
 	Status []*int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 偏移量，不填默认为0
+	// <p>偏移量，不填默认为0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，不填则默认10，最大值100
+	// <p>返回数量，不填则默认10，最大值100</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 匹配标签key值。
+	// <p>匹配标签key值。</p>
 	TagKey *string `json:"TagKey,omitnil,omitempty" name:"TagKey"`
 }
 
@@ -6915,7 +7615,7 @@ func (r *DescribeTypeInstancesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTypeInstancesResponseParams struct {
-	// 返回的结果
+	// <p>返回的结果</p>
 	Result *InstanceResponse `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6940,32 +7640,32 @@ func (r *DescribeTypeInstancesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeUserRequestParams struct {
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 按照名称过滤
+	// <p>按照名称过滤</p><p>支持模糊匹配</p>
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 
-	// 偏移量
+	// <p>偏移量</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量
+	// <p>返回数量</p><p>默认值：20</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
 type DescribeUserRequest struct {
 	*tchttp.BaseRequest
 	
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 按照名称过滤
+	// <p>按照名称过滤</p><p>支持模糊匹配</p>
 	SearchWord *string `json:"SearchWord,omitnil,omitempty" name:"SearchWord"`
 
-	// 偏移量
+	// <p>偏移量</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量
+	// <p>返回数量</p><p>默认值：20</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
@@ -6993,7 +7693,7 @@ func (r *DescribeUserRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeUserResponseParams struct {
-	// 返回结果
+	// <p>返回结果</p>
 	Result *UserResponse `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -7013,6 +7713,70 @@ func (r *DescribeUserResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeUserResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DisassociateRoutesSecurityGroupRequestParams struct {
+	// 解绑路由的列表
+	InstanceRoutes []*InstanceRoute `json:"InstanceRoutes,omitnil,omitempty" name:"InstanceRoutes"`
+
+	// 安全组id
+	SecurityGroupId *string `json:"SecurityGroupId,omitnil,omitempty" name:"SecurityGroupId"`
+}
+
+type DisassociateRoutesSecurityGroupRequest struct {
+	*tchttp.BaseRequest
+	
+	// 解绑路由的列表
+	InstanceRoutes []*InstanceRoute `json:"InstanceRoutes,omitnil,omitempty" name:"InstanceRoutes"`
+
+	// 安全组id
+	SecurityGroupId *string `json:"SecurityGroupId,omitnil,omitempty" name:"SecurityGroupId"`
+}
+
+func (r *DisassociateRoutesSecurityGroupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DisassociateRoutesSecurityGroupRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceRoutes")
+	delete(f, "SecurityGroupId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DisassociateRoutesSecurityGroupRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DisassociateRoutesSecurityGroupResponseParams struct {
+	// 返回结果
+	Result *SecurityGroupRouteOperateResp `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DisassociateRoutesSecurityGroupResponse struct {
+	*tchttp.BaseResponse
+	Response *DisassociateRoutesSecurityGroupResponseParams `json:"Response"`
+}
+
+func (r *DisassociateRoutesSecurityGroupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DisassociateRoutesSecurityGroupResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -7200,118 +7964,148 @@ type DynamicRetentionTime struct {
 }
 
 type EsConnectParam struct {
-	// Es的连接port
+	// <p>Es的连接port</p>
 	Port *int64 `json:"Port,omitnil,omitempty" name:"Port"`
 
-	// Es连接源的用户名
+	// <p>Es连接源的用户名</p>
 	UserName *string `json:"UserName,omitnil,omitempty" name:"UserName"`
 
-	// Es连接源的密码
+	// <p>Es连接源的密码</p>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// Es连接源的实例资源
+	// <p>Es连接源的实例资源</p>
 	Resource *string `json:"Resource,omitnil,omitempty" name:"Resource"`
 
-	// Es连接源是否为自建集群
+	// <p>Es连接源是否为自建集群</p>
 	SelfBuilt *bool `json:"SelfBuilt,omitnil,omitempty" name:"SelfBuilt"`
 
-	// Es连接源的实例vip，当为腾讯云实例时，必填
+	// <p>Es连接源的实例vip，当为腾讯云实例时，必填</p>
 	ServiceVip *string `json:"ServiceVip,omitnil,omitempty" name:"ServiceVip"`
 
-	// Es连接源的vpcId，当为腾讯云实例时，必填
+	// <p>Es连接源的vpcId，当为腾讯云实例时，必填</p>
 	UniqVpcId *string `json:"UniqVpcId,omitnil,omitempty" name:"UniqVpcId"`
 
-	// 是否更新到关联的Datahub任务
+	// <p>是否更新到关联的Datahub任务</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsUpdate *bool `json:"IsUpdate,omitnil,omitempty" name:"IsUpdate"`
+
+	// <p>es类型</p><p>枚举值：</p><ul><li>CLUSTER： 普通集群es</li><li>SERVERLESS： serverless形态es</li></ul>
+	EsType *string `json:"EsType,omitnil,omitempty" name:"EsType"`
+
+	// <p>es版本</p><p>默认值：7.14.2</p>
+	EsVersion *string `json:"EsVersion,omitnil,omitempty" name:"EsVersion"`
+
+	// <p>endpointUrl，es的serverless版本的访问入口地址</p>
+	EndpointUrl *string `json:"EndpointUrl,omitnil,omitempty" name:"EndpointUrl"`
+
+	// <p>集群版 ES 连接协议，默认http协议</p><p>枚举值：</p><ul><li>http： http协议</li><li>https： https协议</li></ul>
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 }
 
 type EsModifyConnectParam struct {
-	// Es连接源的实例资源【不支持修改】
+	// <p>Es连接源的实例资源【不支持修改】</p>
 	Resource *string `json:"Resource,omitnil,omitempty" name:"Resource"`
 
-	// Es的连接port【不支持修改】
+	// <p>Es的连接port【不支持修改】</p>
 	Port *int64 `json:"Port,omitnil,omitempty" name:"Port"`
 
-	// Es连接源的实例vip【不支持修改】
+	// <p>Es连接源的实例vip【不支持修改】</p>
 	ServiceVip *string `json:"ServiceVip,omitnil,omitempty" name:"ServiceVip"`
 
-	// Es连接源的vpcId【不支持修改】
+	// <p>Es连接源的vpcId【不支持修改】</p>
 	UniqVpcId *string `json:"UniqVpcId,omitnil,omitempty" name:"UniqVpcId"`
 
-	// Es连接源的用户名
+	// <p>Es连接源的用户名</p>
 	UserName *string `json:"UserName,omitnil,omitempty" name:"UserName"`
 
-	// Es连接源的密码
+	// <p>Es连接源的密码</p>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// Es连接源是否为自建集群【不支持修改】
+	// <p>Es连接源是否为自建集群【不支持修改】</p>
 	SelfBuilt *bool `json:"SelfBuilt,omitnil,omitempty" name:"SelfBuilt"`
 
-	// 是否更新到关联的Datahub任务
+	// <p>是否更新到关联的Datahub任务</p>
 	IsUpdate *bool `json:"IsUpdate,omitnil,omitempty" name:"IsUpdate"`
+
+	// <p>es类型</p><p>枚举值：</p><ul><li>CLUSTER： 普通集群es</li><li>SERVERLESS： serverless形态es</li></ul>
+	EsType *string `json:"EsType,omitnil,omitempty" name:"EsType"`
+
+	// <p>es版本，默认7.14.2</p><p>默认值：7.14.2</p>
+	EsVersion *string `json:"EsVersion,omitnil,omitempty" name:"EsVersion"`
+
+	// <p>endpointUrl，es的serverless版本的访问入口地址</p>
+	EndpointUrl *string `json:"EndpointUrl,omitnil,omitempty" name:"EndpointUrl"`
+
+	// <p>集群版 ES 连接协议，默认http协议</p><p>枚举值：</p><ul><li>http： http协议</li><li>https： https协议</li></ul>
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 }
 
 type EsParam struct {
-	// Es实例资源Id
+	// <p>Es实例资源Id</p>
 	Resource *string `json:"Resource,omitnil,omitempty" name:"Resource"`
 
-	// Es的连接port
+	// <p>Es的连接port</p>
 	Port *int64 `json:"Port,omitnil,omitempty" name:"Port"`
 
-	// Es用户名
+	// <p>Es用户名</p>
 	UserName *string `json:"UserName,omitnil,omitempty" name:"UserName"`
 
-	// Es密码
+	// <p>Es密码</p>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// 是否为自建集群
+	// <p>是否为自建集群</p>
 	SelfBuilt *bool `json:"SelfBuilt,omitnil,omitempty" name:"SelfBuilt"`
 
-	// 实例vip
+	// <p>实例vip</p>
 	ServiceVip *string `json:"ServiceVip,omitnil,omitempty" name:"ServiceVip"`
 
-	// 实例的vpcId
+	// <p>实例的vpcId</p>
 	UniqVpcId *string `json:"UniqVpcId,omitnil,omitempty" name:"UniqVpcId"`
 
-	// Es是否抛弃解析失败的消息
+	// <p>Es是否抛弃解析失败的消息</p>
 	DropInvalidMessage *bool `json:"DropInvalidMessage,omitnil,omitempty" name:"DropInvalidMessage"`
 
-	// Es自定义index名称
+	// <p>Es自定义index名称</p>
 	Index *string `json:"Index,omitnil,omitempty" name:"Index"`
 
-	// Es自定义日期后缀
+	// <p>Es自定义日期后缀</p>
 	DateFormat *string `json:"DateFormat,omitnil,omitempty" name:"DateFormat"`
 
-	// 非json格式数据的自定义key
+	// <p>非json格式数据的自定义key</p>
 	ContentKey *string `json:"ContentKey,omitnil,omitempty" name:"ContentKey"`
 
-	// Es是否抛弃非json格式的消息
+	// <p>Es是否抛弃非json格式的消息</p>
 	DropInvalidJsonMessage *bool `json:"DropInvalidJsonMessage,omitnil,omitempty" name:"DropInvalidJsonMessage"`
 
-	// 转储到Es中的文档ID取值字段名
+	// <p>转储到Es中的文档ID取值字段名</p>
 	DocumentIdField *string `json:"DocumentIdField,omitnil,omitempty" name:"DocumentIdField"`
 
-	// Es自定义index名称的类型，STRING，JSONPATH，默认为STRING
+	// <p>Es自定义index名称的类型，STRING，JSONPATH，默认为STRING</p>
 	IndexType *string `json:"IndexType,omitnil,omitempty" name:"IndexType"`
 
-	// 当设置成员参数DropInvalidMessageToCls设置为true时,DropInvalidMessage参数失效
+	// <p>当设置成员参数DropInvalidMessageToCls设置为true时,DropInvalidMessage参数失效</p>
 	DropCls *DropCls `json:"DropCls,omitnil,omitempty" name:"DropCls"`
 
-	// 转储到ES的消息为Database的binlog时，如果需要同步数据库操作，即增删改的操作到ES时填写数据库表主键
+	// <p>转储到ES的消息为Database的binlog时，如果需要同步数据库操作，即增删改的操作到ES时填写数据库表主键</p>
 	DatabasePrimaryKey *string `json:"DatabasePrimaryKey,omitnil,omitempty" name:"DatabasePrimaryKey"`
 
-	// 死信队列
+	// <p>死信队列</p>
 	DropDlq *FailureParam `json:"DropDlq,omitnil,omitempty" name:"DropDlq"`
 
-	// 使用数据订阅格式导入 es 时，消息与 es 索引字段映射关系。不填默认为默认字段匹配
+	// <p>使用数据订阅格式导入 es 时，消息与 es 索引字段映射关系。不填默认为默认字段匹配</p>
 	RecordMappingList []*EsRecordMapping `json:"RecordMappingList,omitnil,omitempty" name:"RecordMappingList"`
 
-	// 消息要映射为 es 索引中 @timestamp 的字段，如果当前配置为空，则使用消息的时间戳进行映射
+	// <p>消息要映射为 es 索引中 @timestamp 的字段，如果当前配置为空，则使用消息的时间戳进行映射</p>
 	DateField *string `json:"DateField,omitnil,omitempty" name:"DateField"`
 
-	// 用来区分当前索引映射，属于新建索引还是存量索引。"EXIST_MAPPING"：从存量索引中选择；"NEW_MAPPING"：新建索引
+	// <p>用来区分当前索引映射，属于新建索引还是存量索引。&quot;EXIST_MAPPING&quot;：从存量索引中选择；&quot;NEW_MAPPING&quot;：新建索引</p>
 	RecordMappingMode *string `json:"RecordMappingMode,omitnil,omitempty" name:"RecordMappingMode"`
+
+	// <p>集群版 ES 连接协议，默认http协议</p><p>枚举值：</p><ul><li>http： http协议</li><li>https： https协议</li></ul>
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// <p>用户选择数据订阅任务的数据（如DTS）时，源数据的格式</p><p>枚举值：</p><ul><li>Debezium： Debezium格式json</li><li>Canal： Canal格式json</li></ul>
+	SourceDataFormat *string `json:"SourceDataFormat,omitnil,omitempty" name:"SourceDataFormat"`
 }
 
 type EsRecordMapping struct {
@@ -7340,6 +8134,14 @@ type EventBusParam struct {
 
 	// SCF云函数版本及别名
 	Qualifier *string `json:"Qualifier,omitnil,omitempty" name:"Qualifier"`
+}
+
+type ExternalAccessInfoWrapper struct {
+	// <p>IP白名单放通规则数</p>
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// <p>IP白名单</p>
+	IpWhitelist []*IpWhitelistDTO `json:"IpWhitelist,omitnil,omitempty" name:"IpWhitelist"`
 }
 
 type FailureParam struct {
@@ -7435,32 +8237,32 @@ func (r *FetchDatahubMessageByOffsetResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type FetchLatestDatahubMessageListRequestParams struct {
-	// 弹性topic名称
+	// <p>弹性topic名称</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/86863">DescribeDatahubTopics</a></p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 分区id
+	// <p>分区id</p>
 	Partition *int64 `json:"Partition,omitnil,omitempty" name:"Partition"`
 
-	// 位点信息
+	// <p>位点信息</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 最大查询条数，最小1，最大100
+	// <p>最大查询条数</p><p>取值范围：[1, 100]</p>
 	MessageCount *int64 `json:"MessageCount,omitnil,omitempty" name:"MessageCount"`
 }
 
 type FetchLatestDatahubMessageListRequest struct {
 	*tchttp.BaseRequest
 	
-	// 弹性topic名称
+	// <p>弹性topic名称</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/86863">DescribeDatahubTopics</a></p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 分区id
+	// <p>分区id</p>
 	Partition *int64 `json:"Partition,omitnil,omitempty" name:"Partition"`
 
-	// 位点信息
+	// <p>位点信息</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 最大查询条数，最小1，最大100
+	// <p>最大查询条数</p><p>取值范围：[1, 100]</p>
 	MessageCount *int64 `json:"MessageCount,omitnil,omitempty" name:"MessageCount"`
 }
 
@@ -7488,7 +8290,7 @@ func (r *FetchLatestDatahubMessageListRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type FetchLatestDatahubMessageListResponseParams struct {
-	// 返回结果。
+	// <p>返回结果。</p>
 	Result []*ConsumerRecord `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -7513,32 +8315,32 @@ func (r *FetchLatestDatahubMessageListResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type FetchMessageByOffsetRequestParams struct {
-	// ckafka集群实例Id，可通过[DescribeInstances](https://cloud.tencent.com/document/product/597/40835)接口获取
+	// <p>ckafka集群实例Id，可通过<a href="https://cloud.tencent.com/document/product/597/40835">DescribeInstances</a>接口获取</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 主题名，可通过[DescribeTopic](https://cloud.tencent.com/document/product/597/40847)接口获取
+	// <p>主题名，可通过<a href="https://cloud.tencent.com/document/product/597/40847">DescribeTopic</a>接口获取</p>
 	Topic *string `json:"Topic,omitnil,omitempty" name:"Topic"`
 
-	// 分区id
+	// <p>分区id</p>
 	Partition *int64 `json:"Partition,omitnil,omitempty" name:"Partition"`
 
-	// 位点信息
+	// <p>位点信息</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 type FetchMessageByOffsetRequest struct {
 	*tchttp.BaseRequest
 	
-	// ckafka集群实例Id，可通过[DescribeInstances](https://cloud.tencent.com/document/product/597/40835)接口获取
+	// <p>ckafka集群实例Id，可通过<a href="https://cloud.tencent.com/document/product/597/40835">DescribeInstances</a>接口获取</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 主题名，可通过[DescribeTopic](https://cloud.tencent.com/document/product/597/40847)接口获取
+	// <p>主题名，可通过<a href="https://cloud.tencent.com/document/product/597/40847">DescribeTopic</a>接口获取</p>
 	Topic *string `json:"Topic,omitnil,omitempty" name:"Topic"`
 
-	// 分区id
+	// <p>分区id</p>
 	Partition *int64 `json:"Partition,omitnil,omitempty" name:"Partition"`
 
-	// 位点信息
+	// <p>位点信息</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
@@ -7566,7 +8368,7 @@ func (r *FetchMessageByOffsetRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type FetchMessageByOffsetResponseParams struct {
-	// 返回结果
+	// <p>返回结果</p>
 	Result *ConsumerRecord `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -7591,38 +8393,38 @@ func (r *FetchMessageByOffsetResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type FetchMessageListByOffsetRequestParams struct {
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 主题名
+	// <p>主题名</p>
 	Topic *string `json:"Topic,omitnil,omitempty" name:"Topic"`
 
-	// 分区id
+	// <p>分区id</p>
 	Partition *int64 `json:"Partition,omitnil,omitempty" name:"Partition"`
 
-	// 位点信息
+	// <p>位点信息</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 最大查询条数，默认20，最大20
+	// <p>最大查询条数，默认20，最大20</p>
 	SinglePartitionRecordNumber *int64 `json:"SinglePartitionRecordNumber,omitnil,omitempty" name:"SinglePartitionRecordNumber"`
 }
 
 type FetchMessageListByOffsetRequest struct {
 	*tchttp.BaseRequest
 	
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 主题名
+	// <p>主题名</p>
 	Topic *string `json:"Topic,omitnil,omitempty" name:"Topic"`
 
-	// 分区id
+	// <p>分区id</p>
 	Partition *int64 `json:"Partition,omitnil,omitempty" name:"Partition"`
 
-	// 位点信息
+	// <p>位点信息</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 最大查询条数，默认20，最大20
+	// <p>最大查询条数，默认20，最大20</p>
 	SinglePartitionRecordNumber *int64 `json:"SinglePartitionRecordNumber,omitnil,omitempty" name:"SinglePartitionRecordNumber"`
 }
 
@@ -7651,7 +8453,7 @@ func (r *FetchMessageListByOffsetRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type FetchMessageListByOffsetResponseParams struct {
-	// 返回结果。注意，列表中不返回具体的消息内容（key、value），如果需要查询具体消息内容，请使用FetchMessageByOffset接口
+	// <p>返回结果。注意，列表中不返回具体的消息内容（key、value），如果需要查询具体消息内容，请使用FetchMessageByOffset接口</p>
 	Result []*ConsumerRecord `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -7904,6 +8706,72 @@ type GroupResponse struct {
 
 	// 消费分组配额
 	GroupCountQuota *uint64 `json:"GroupCountQuota,omitnil,omitempty" name:"GroupCountQuota"`
+}
+
+type IcebergConnectParam struct {
+	// <p>EMR实例的HiveMetaStore节点IP</p><p>参数格式：多个使用英文分号;分隔</p><p>创建连接时必选，编辑连接时不接收该参数</p>
+	ServiceVip *string `json:"ServiceVip,omitnil,omitempty" name:"ServiceVip"`
+
+	// <p>EMR实例ID</p><p>创建连接时必选，编辑连接时不接收该参数</p>
+	Resource *string `json:"Resource,omitnil,omitempty" name:"Resource"`
+
+	// <p>EMR实例的集群网络vpcId</p><p>创建连接时必选，编辑连接时不接收该参数</p>
+	UniqVpcId *string `json:"UniqVpcId,omitnil,omitempty" name:"UniqVpcId"`
+
+	// <p>认证类型</p><p>枚举值：</p><ul><li>NONE： 无认证</li><li>KERBEROS： Kerberos认证</li></ul><p>开启Kerberos认证的EMR实例，此处需传入KERBEROS，创建连接时必选，编辑连接时非必选</p>
+	AuthType *string `json:"AuthType,omitnil,omitempty" name:"AuthType"`
+
+	// <p>EMR实例的HiveMetaStore节点IP绑定的弹性网卡Id列表</p><p>数量和顺序必须与ServiceVip字段中的多个IP对应，创建连接时必选，编辑连接时不接收该参数</p>
+	EniIdList []*string `json:"EniIdList,omitnil,omitempty" name:"EniIdList"`
+
+	// <p>Catalog数据目录类型</p><p>枚举值：</p><ul><li>HIVE： Hive Catalog</li></ul><p>默认值：HIVE</p><p>仅支持Hive Catalog</p>
+	CatalogType *string `json:"CatalogType,omitnil,omitempty" name:"CatalogType"`
+
+	// <p>用于Kerberos认证的user.keytab文件的内容</p><p>入参限制：文件内容需使用Base64编码</p><p>AuthType为KERBEROS时必传</p>
+	KeyTabContent *string `json:"KeyTabContent,omitnil,omitempty" name:"KeyTabContent"`
+
+	// <p>用于Kerberos认证的krb5.conf文件的内容</p><p>入参限制：文件内容需使用Base64编码</p><p>AuthType为KERBEROS时必传</p>
+	KRB5ConfContent *string `json:"KRB5ConfContent,omitnil,omitempty" name:"KRB5ConfContent"`
+
+	// <p>用户的Kerberos身份凭证</p>
+	KerberosUserPrincipal *string `json:"KerberosUserPrincipal,omitnil,omitempty" name:"KerberosUserPrincipal"`
+
+	// <p>HiveMetastore服务端配置的Kerberos Principal</p><p>hive-site.xml中hive.metastore.kerberos.principal的值</p>
+	KerberosPrincipal *string `json:"KerberosPrincipal,omitnil,omitempty" name:"KerberosPrincipal"`
+
+	// <p>是否更新并重启所有关联的连接器任务</p><p>编辑连接时使用，如果不传，则根据认证类型及认证参数是否发生变化，来判断是否更新并重启所有关联的连接器任务</p>
+	IsUpdate *bool `json:"IsUpdate,omitnil,omitempty" name:"IsUpdate"`
+}
+
+type IcebergDatabaseInfo struct {
+	// <p>数据库名</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>表名称</p>
+	Tables []*string `json:"Tables,omitnil,omitempty" name:"Tables"`
+}
+
+type IcebergParam struct {
+	// <p>Iceberg 连接资源 (EMR 实例)</p>
+	Resource *string `json:"Resource,omitnil,omitempty" name:"Resource"`
+
+	// <p>目标数据库名（Hive catalog 下的 namespace），必填</p>
+	Database *string `json:"Database,omitnil,omitempty" name:"Database"`
+
+	// <p>目标表名</p>
+	TableName *string `json:"TableName,omitnil,omitempty" name:"TableName"`
+
+	// <p>消息解析格式，当前仅支持 JSON</p><p>枚举值：</p><ul><li>JSON： JSON解析格式</li></ul>
+	SchemeType *string `json:"SchemeType,omitnil,omitempty" name:"SchemeType"`
+
+	// <p>表字段扩展开关</p><p>枚举值：</p><ul><li>true： 开</li><li>false： 关</li></ul>
+	EnableFieldExtension *bool `json:"EnableFieldExtension,omitnil,omitempty" name:"EnableFieldExtension"`
+
+	// <p>Upset/CDC 模式，默认off</p><p>枚举值：</p><ul><li>Off： Off</li><li>UPSERT： UPSERT</li><li>CDC： CDC</li></ul>
+	UpsertMode *string `json:"UpsertMode,omitnil,omitempty" name:"UpsertMode"`
+
+	// <p>主键字段：UPSERT / CDC 模式必填（多个字段以英文逗号分隔）</p>
+	PrimaryKeys *string `json:"PrimaryKeys,omitnil,omitempty" name:"PrimaryKeys"`
 }
 
 // Predefined struct for user
@@ -8208,7 +9076,7 @@ type InstanceAttributesResponse struct {
 	// <p>虚拟端口</p>
 	Vport *string `json:"Vport,omitnil,omitempty" name:"Vport"`
 
-	// <p>实例的状态。0: 创建中，1: 运行中，2: 删除中,  3: 已删除,  5: 隔离中,  7: 升级中,  -1: 创建失败 </p>
+	// <p>实例的状态。0: 创建中，1: 运行中，2: 删除中,  3: 已删除,  5: 隔离中,  7: 升级中,  -1: 创建失败</p>
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// <p>实例带宽，单位：Mbps</p>
@@ -8271,7 +9139,7 @@ type InstanceAttributesResponse struct {
 	// <p>售卖类型,0:标准版,1:专业版</p>
 	Cvm *int64 `json:"Cvm,omitnil,omitempty" name:"Cvm"`
 
-	// <p>实例类型  枚举列表: profession  :专业版  <br />standards2  :标准版premium   :高级版serverless  :serverless版</p>
+	// <p>实例类型</p><p>枚举值：</p><ul><li>profession： 专业版</li><li>premium： 高级版</li><li>serverless： serverless版</li><li>其他： 标准版（如:standards2/standard，该版本已停售）</li></ul>
 	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
 	// <p>表示该实例支持的特性。FEATURE_SUBNET_ACL:表示acl策略支持设置子网。</p>
@@ -8307,13 +9175,13 @@ type InstanceAttributesResponse struct {
 	// <p>实例计费类型  POSTPAID_BY_HOUR 按小时付费; PREPAID 包年包月</p>
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
-	// <p>是否开启弹性带宽白名单 <br />1:已开启弹性带宽白名单;0:未开启弹性带宽白名单;</p>
+	// <p>是否开启弹性带宽白名单<br>1:已开启弹性带宽白名单;<br>0:未开启弹性带宽白名单;</p>
 	ElasticBandwidthSwitch *int64 `json:"ElasticBandwidthSwitch,omitnil,omitempty" name:"ElasticBandwidthSwitch"`
 
-	// <p>弹性带宽开通状态1:未开启弹性带宽;16: 开启弹性带宽中;32:开启弹性带宽成功;33:关闭弹性带宽中;34:关闭弹性带宽成功;64:开启弹性带宽失败;65:关闭弹性带宽失败;</p>
+	// <p>弹性带宽开通状态<br>1:未开启弹性带宽;<br>16: 开启弹性带宽中;<br>32:开启弹性带宽成功;<br>33:关闭弹性带宽中;<br>34:关闭弹性带宽成功;<br>64:开启弹性带宽失败;<br>65:关闭弹性带宽失败;</p>
 	ElasticBandwidthOpenStatus *int64 `json:"ElasticBandwidthOpenStatus,omitnil,omitempty" name:"ElasticBandwidthOpenStatus"`
 
-	// <p>集群类型<br />CLOUD_IDC IDC集群CLOUD_CVM_SHARE CVM共享集群CLOUD_CVM_YUNTI 云梯CVM集群CLOUD_CVM    CVM集群CLOUD_CDC CDC集群CLOUD_EKS_TSE EKS集群</p>
+	// <p>集群类型<br>CLOUD_IDC IDC集群<br>CLOUD_CVM_SHARE CVM共享集群<br>CLOUD_CVM_YUNTI 云梯CVM集群<br>CLOUD_CVM    CVM集群<br>CLOUD_CDC CDC集群<br>CLOUD_EKS_TSE EKS集群</p>
 	ClusterType *string `json:"ClusterType,omitnil,omitempty" name:"ClusterType"`
 
 	// <p>免费分区数量</p>
@@ -8330,6 +9198,12 @@ type InstanceAttributesResponse struct {
 
 	// <p>实例删除保护开关: 1 开启 0 关闭</p>
 	DeleteProtectionEnable *int64 `json:"DeleteProtectionEnable,omitnil,omitempty" name:"DeleteProtectionEnable"`
+
+	// <p>实例级别消息保留大小</p><p>单位：bytes</p><p>默认值：-1</p>
+	RetentionBytes *int64 `json:"RetentionBytes,omitnil,omitempty" name:"RetentionBytes"`
+
+	// <p>事务ID最大空闲时间，超时未提交的事务将被标记为过期</p><p>单位：ms</p>
+	TransactionalIdExpirationMs *int64 `json:"TransactionalIdExpirationMs,omitnil,omitempty" name:"TransactionalIdExpirationMs"`
 }
 
 type InstanceChargeParam struct {
@@ -8372,7 +9246,7 @@ type InstanceDetail struct {
 	// <p>虚拟IP列表</p>
 	VipList []*VipEntity `json:"VipList,omitnil,omitempty" name:"VipList"`
 
-	// <p>实例的状态。0: 创建中，1: 运行中，2: 删除中,  3: 已删除,  5: 隔离中,  7: 升级中,  -1: 创建失败 </p>
+	// <p>实例的状态。0: 创建中，1: 运行中，2: 删除中,  3: 已删除,  5: 隔离中,  7: 升级中,  -1: 创建失败</p>
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// <p>实例带宽，单位Mbps</p>
@@ -8452,6 +9326,9 @@ type InstanceDetail struct {
 
 	// <p>实例功能列表</p>
 	Features []*string `json:"Features,omitnil,omitempty" name:"Features"`
+
+	// <p>实例级别消息保留大小</p><p>单位：byte</p><p>默认值：-1</p><p>实例级别消息保留大小</p>
+	RetentionBytes *int64 `json:"RetentionBytes,omitnil,omitempty" name:"RetentionBytes"`
 }
 
 type InstanceDetailResponse struct {
@@ -8584,33 +9461,101 @@ func (r *InstanceScalingDownResponse) FromJsonString(s string) error {
 }
 
 type InstanceVersion struct {
-	// ckafka集群实例版本
+	// <p>ckafka集群实例版本</p>
 	KafkaVersion *string `json:"KafkaVersion,omitnil,omitempty" name:"KafkaVersion"`
 
-	// broker版本信息
+	// <p>broker版本信息</p>
 	CurBrokerVersion *string `json:"CurBrokerVersion,omitnil,omitempty" name:"CurBrokerVersion"`
 
-	// 最新版本信息
+	// <p>最新版本信息</p>
 	LatestBrokerVersion []*LatestBrokerVersion `json:"LatestBrokerVersion,omitnil,omitempty" name:"LatestBrokerVersion"`
 
-	// 允许跨大版本内核升级
+	// <p>允许跨大版本内核升级</p>
 	AllowUpgradeHighVersion *bool `json:"AllowUpgradeHighVersion,omitnil,omitempty" name:"AllowUpgradeHighVersion"`
 
-	// 允许升级的大版本
+	// <p>允许升级的大版本</p>
 	HighVersionSet []*string `json:"HighVersionSet,omitnil,omitempty" name:"HighVersionSet"`
 
-	// 允许小版本号配置自动删除消费者组
+	// <p>允许小版本号配置自动删除消费者组</p>
 	AllowAutoDeleteTimestamp *bool `json:"AllowAutoDeleteTimestamp,omitnil,omitempty" name:"AllowAutoDeleteTimestamp"`
+
+	// <p>允许修改事务ID过期时间配置</p>
+	AllowModifyTxnIdExpiration *bool `json:"AllowModifyTxnIdExpiration,omitnil,omitempty" name:"AllowModifyTxnIdExpiration"`
+}
+
+type IpWhitelistDTO struct {
+	// <p>放通IP或网段</p>
+	CidrBlock *string `json:"CidrBlock,omitnil,omitempty" name:"CidrBlock"`
+
+	// <p>描述</p>
+	PolicyDescription *string `json:"PolicyDescription,omitnil,omitempty" name:"PolicyDescription"`
+}
+
+// Predefined struct for user
+type IsolatedInstancePreRequestParams struct {
+	// ckafka集群实例Id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+type IsolatedInstancePreRequest struct {
+	*tchttp.BaseRequest
+	
+	// ckafka集群实例Id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+func (r *IsolatedInstancePreRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *IsolatedInstancePreRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "IsolatedInstancePreRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type IsolatedInstancePreResponseParams struct {
+	// 返回结果
+	Result *CreateInstancePreResp `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type IsolatedInstancePreResponse struct {
+	*tchttp.BaseResponse
+	Response *IsolatedInstancePreResponseParams `json:"Response"`
+}
+
+func (r *IsolatedInstancePreResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *IsolatedInstancePreResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type JgwOperateResponse struct {
-	// 返回的code，0为正常，非0为错误
+	// <p>返回的code，0为正常，非0为错误</p>
 	ReturnCode *string `json:"ReturnCode,omitnil,omitempty" name:"ReturnCode"`
 
-	// 成功消息
+	// <p>成功消息</p>
 	ReturnMessage *string `json:"ReturnMessage,omitnil,omitempty" name:"ReturnMessage"`
 
-	// 操作型返回的Data数据,可能有flowId等
+	// <p>操作型返回的Data数据,可能有flowId等</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Data *OperateResponseData `json:"Data,omitnil,omitempty" name:"Data"`
 }
@@ -8671,76 +9616,79 @@ type KafkaConnectParam struct {
 }
 
 type KafkaParam struct {
-	// 是否为自建集群
+	// <p>是否为自建集群</p>
 	SelfBuilt *bool `json:"SelfBuilt,omitnil,omitempty" name:"SelfBuilt"`
 
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p>
 	Resource *string `json:"Resource,omitnil,omitempty" name:"Resource"`
 
-	// 主题名，多个以“,”分隔
+	// <p>主题名，多个以“,”分隔</p>
 	Topic *string `json:"Topic,omitnil,omitempty" name:"Topic"`
 
-	// Offset类型，最开始位置earliest，最新位置latest，时间点位置timestamp
+	// <p>Offset类型，最开始位置earliest，最新位置latest，时间点位置timestamp</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	OffsetType *string `json:"OffsetType,omitnil,omitempty" name:"OffsetType"`
 
-	// Offset类型为timestamp时必传，传时间戳，精确到秒
+	// <p>Offset类型为timestamp时必传，传时间戳，精确到秒</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	StartTime *uint64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 实例资源名称
+	// <p>实例资源名称</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ResourceName *string `json:"ResourceName,omitnil,omitempty" name:"ResourceName"`
 
-	// 可用区
+	// <p>可用区</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ZoneId *int64 `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 主题Id
+	// <p>主题Id</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
-	// Topic的分区数
+	// <p>Topic的分区数</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PartitionNum *int64 `json:"PartitionNum,omitnil,omitempty" name:"PartitionNum"`
 
-	// 启用容错实例/开启死信队列
+	// <p>启用容错实例/开启死信队列</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	EnableToleration *bool `json:"EnableToleration,omitnil,omitempty" name:"EnableToleration"`
 
-	// Qps 限制
+	// <p>Qps 限制</p>
 	QpsLimit *uint64 `json:"QpsLimit,omitnil,omitempty" name:"QpsLimit"`
 
-	// Table到Topic的路由，「分发到多个topic」开关打开时必传
+	// <p>Table到Topic的路由，「分发到多个topic」开关打开时必传</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TableMappings []*TableMapping `json:"TableMappings,omitnil,omitempty" name:"TableMappings"`
 
-	// 「分发到多个topic」开关，默认为false
+	// <p>「分发到多个topic」开关，默认为false</p>
 	UseTableMapping *bool `json:"UseTableMapping,omitnil,omitempty" name:"UseTableMapping"`
 
-	// 使用的Topic是否需要自动创建（目前只支持SOURCE流入任务，如果不使用分发到多个topic，需要在Topic字段填写需要自动创建的topic名）
+	// <p>使用的Topic是否需要自动创建（目前只支持SOURCE流入任务，如果不使用分发到多个topic，需要在Topic字段填写需要自动创建的topic名）</p>
 	UseAutoCreateTopic *bool `json:"UseAutoCreateTopic,omitnil,omitempty" name:"UseAutoCreateTopic"`
 
-	// 写入Topic时是否进行压缩，不开启填"none"，开启的话，填写"open"。
+	// <p>写入Topic时是否进行压缩，不开启填&quot;none&quot;，开启的话，填写&quot;open&quot;。</p>
 	CompressionType *string `json:"CompressionType,omitnil,omitempty" name:"CompressionType"`
 
-	// 源topic消息1条扩增成msgMultiple条写入目标topic(该参数目前只有ckafka流入ckafka适用)
+	// <p>源topic消息1条扩增成msgMultiple条写入目标topic(该参数目前只有ckafka流入ckafka适用)</p>
 	MsgMultiple *int64 `json:"MsgMultiple,omitnil,omitempty" name:"MsgMultiple"`
 
-	// 数据同步专用参数, 正常数据处理可为空, 实例级别同步: 仅同步元数据填写"META_SYNC_INSTANCE_TYPE", 同步元数据及全部topic内消息的填写"META_AND_DATA_SYNC_INSTANCE_TYPE"; topic级别同步: 选中的源和目标topic中的消息(需要目标实例也包含该topic)填写"DATA_SYNC_TYPE"
+	// <p>数据同步专用参数, 正常数据处理可为空, 实例级别同步: 仅同步元数据填写&quot;META_SYNC_INSTANCE_TYPE&quot;, 同步元数据及全部topic内消息的填写&quot;META_AND_DATA_SYNC_INSTANCE_TYPE&quot;; topic级别同步: 选中的源和目标topic中的消息(需要目标实例也包含该topic)填写&quot;DATA_SYNC_TYPE&quot;</p>
 	ConnectorSyncType *string `json:"ConnectorSyncType,omitnil,omitempty" name:"ConnectorSyncType"`
 
-	// 数据同步专用参数, 当通过时,希望下游的消息写入分区与上游的一致,则填true,但下游分区小于上游时,会报错; 不需要一致则为false, 默认为false
+	// <p>数据同步专用参数, 当通过时,希望下游的消息写入分区与上游的一致,则填true,但下游分区小于上游时,会报错; 不需要一致则为false, 默认为false</p>
 	KeepPartition *bool `json:"KeepPartition,omitnil,omitempty" name:"KeepPartition"`
 
-	// 正则匹配Topic列表
+	// <p>正则匹配Topic列表</p>
 	TopicRegularExpression *string `json:"TopicRegularExpression,omitnil,omitempty" name:"TopicRegularExpression"`
 
-	// Topic 前缀
+	// <p>Topic 前缀</p>
 	Prefix *string `json:"Prefix,omitnil,omitempty" name:"Prefix"`
 
-	// Topic前缀分隔符
+	// <p>Topic前缀分隔符</p>
 	Separator *string `json:"Separator,omitnil,omitempty" name:"Separator"`
+
+	// <p>多选topic列表</p>
+	TopicList []*string `json:"TopicList,omitnil,omitempty" name:"TopicList"`
 }
 
 type LatestBrokerVersion struct {
@@ -8853,27 +9801,98 @@ type MariaDBParam struct {
 }
 
 // Predefined struct for user
-type ModifyAclRuleRequestParams struct {
-	// ckafka集群实例Id
+type ModifyAccessPolicyRequestParams struct {
+	// <p>实例ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// ACL规则名
+	// <p>路由ID</p>
+	RouteId *int64 `json:"RouteId,omitnil,omitempty" name:"RouteId"`
+
+	// <p>公网IP白名单配置</p><p>不传默认删除全部配置</p>
+	IpWhitelist []*IpWhitelistDTO `json:"IpWhitelist,omitnil,omitempty" name:"IpWhitelist"`
+}
+
+type ModifyAccessPolicyRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实例ID</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>路由ID</p>
+	RouteId *int64 `json:"RouteId,omitnil,omitempty" name:"RouteId"`
+
+	// <p>公网IP白名单配置</p><p>不传默认删除全部配置</p>
+	IpWhitelist []*IpWhitelistDTO `json:"IpWhitelist,omitnil,omitempty" name:"IpWhitelist"`
+}
+
+func (r *ModifyAccessPolicyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyAccessPolicyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "RouteId")
+	delete(f, "IpWhitelist")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyAccessPolicyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyAccessPolicyResponseParams struct {
+	// <p>修改公网IP白名单结果</p>
+	Result *string `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyAccessPolicyResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyAccessPolicyResponseParams `json:"Response"`
+}
+
+func (r *ModifyAccessPolicyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyAccessPolicyResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyAclRuleRequestParams struct {
+	// <p>ckafka集群实例Id</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>ACL规则名</p>
 	RuleName *string `json:"RuleName,omitnil,omitempty" name:"RuleName"`
 
-	// 修改预设规则时传入,是否应用到新增的Topic
+	// <p>修改预设规则时传入,是否应用到新增的Topic</p><p>枚举值：</p><ul><li>0： 不允许应用到新增的topic</li><li>1： 允许应用到新增的topic</li></ul><p>默认值：0</p>
 	IsApplied *int64 `json:"IsApplied,omitnil,omitempty" name:"IsApplied"`
 }
 
 type ModifyAclRuleRequest struct {
 	*tchttp.BaseRequest
 	
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// ACL规则名
+	// <p>ACL规则名</p>
 	RuleName *string `json:"RuleName,omitnil,omitempty" name:"RuleName"`
 
-	// 修改预设规则时传入,是否应用到新增的Topic
+	// <p>修改预设规则时传入,是否应用到新增的Topic</p><p>枚举值：</p><ul><li>0： 不允许应用到新增的topic</li><li>1： 允许应用到新增的topic</li></ul><p>默认值：0</p>
 	IsApplied *int64 `json:"IsApplied,omitnil,omitempty" name:"IsApplied"`
 }
 
@@ -8900,7 +9919,7 @@ func (r *ModifyAclRuleRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyAclRuleResponseParams struct {
-	// 规则的唯一表示Key
+	// <p>规则的唯一表示Key</p>
 	Result *int64 `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -8925,105 +9944,111 @@ func (r *ModifyAclRuleResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyConnectResourceRequestParams struct {
-	// 连接源的Id
+	// <p>连接源的Id</p>
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 连接源名称，为空时不修改
+	// <p>连接源名称，为空时不修改</p>
 	ResourceName *string `json:"ResourceName,omitnil,omitempty" name:"ResourceName"`
 
-	// 连接源描述，为空时不修改
+	// <p>连接源描述，为空时不修改</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// 连接源类型，修改数据源参数时，需要与原Type相同，否则编辑数据源无效
+	// <p>连接源类型，修改数据源参数时，需要与原Type相同，否则编辑数据源无效</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// Dts配置，Type为DTS时必填
+	// <p>Dts配置，Type为DTS时必填</p>
 	DtsConnectParam *DtsModifyConnectParam `json:"DtsConnectParam,omitnil,omitempty" name:"DtsConnectParam"`
 
-	// MongoDB配置，Type为MONGODB时必填
+	// <p>MongoDB配置，Type为MONGODB时必填</p>
 	MongoDBConnectParam *MongoDBModifyConnectParam `json:"MongoDBConnectParam,omitnil,omitempty" name:"MongoDBConnectParam"`
 
-	// Es配置，Type为ES时必填
+	// <p>Es配置，Type为ES时必填</p>
 	EsConnectParam *EsModifyConnectParam `json:"EsConnectParam,omitnil,omitempty" name:"EsConnectParam"`
 
-	// ClickHouse配置，Type为CLICKHOUSE时必填
+	// <p>ClickHouse配置，Type为CLICKHOUSE时必填</p>
 	ClickHouseConnectParam *ClickHouseModifyConnectParam `json:"ClickHouseConnectParam,omitnil,omitempty" name:"ClickHouseConnectParam"`
 
-	// MySQL配置，Type为MYSQL或TDSQL_C_MYSQL时必填
+	// <p>MySQL配置，Type为MYSQL或TDSQL_C_MYSQL时必填</p>
 	MySQLConnectParam *MySQLModifyConnectParam `json:"MySQLConnectParam,omitnil,omitempty" name:"MySQLConnectParam"`
 
-	// PostgreSQL配置，Type为POSTGRESQL或TDSQL_C_POSTGRESQL时必填
+	// <p>PostgreSQL配置，Type为POSTGRESQL或TDSQL_C_POSTGRESQL时必填</p>
 	PostgreSQLConnectParam *PostgreSQLModifyConnectParam `json:"PostgreSQLConnectParam,omitnil,omitempty" name:"PostgreSQLConnectParam"`
 
-	// MariaDB配置，Type为MARIADB时必填
+	// <p>MariaDB配置，Type为MARIADB时必填</p>
 	MariaDBConnectParam *MariaDBModifyConnectParam `json:"MariaDBConnectParam,omitnil,omitempty" name:"MariaDBConnectParam"`
 
-	// SQLServer配置，Type为SQLSERVER时必填
+	// <p>SQLServer配置，Type为SQLSERVER时必填</p>
 	SQLServerConnectParam *SQLServerModifyConnectParam `json:"SQLServerConnectParam,omitnil,omitempty" name:"SQLServerConnectParam"`
 
-	// Ctsdb配置，Type为CTSDB
+	// <p>Ctsdb配置，Type为CTSDB</p>
 	CtsdbConnectParam *CtsdbModifyConnectParam `json:"CtsdbConnectParam,omitnil,omitempty" name:"CtsdbConnectParam"`
 
-	// Doris配置，Type为DORIS
+	// <p>Doris配置，Type为DORIS</p>
 	DorisConnectParam *DorisModifyConnectParam `json:"DorisConnectParam,omitnil,omitempty" name:"DorisConnectParam"`
 
-	// Kafka配置，Type为 KAFKA 时必填
+	// <p>Kafka配置，Type为 KAFKA 时必填</p>
 	KafkaConnectParam *KafkaConnectParam `json:"KafkaConnectParam,omitnil,omitempty" name:"KafkaConnectParam"`
 
-	// MQTT配置，Type为 MQTT 时必填
+	// <p>MQTT配置，Type为 MQTT 时必填</p>
 	MqttConnectParam *MqttConnectParam `json:"MqttConnectParam,omitnil,omitempty" name:"MqttConnectParam"`
+
+	// <p>Iceberg配置，Type为ICEBERG时必填</p>
+	IcebergConnectParam *IcebergConnectParam `json:"IcebergConnectParam,omitnil,omitempty" name:"IcebergConnectParam"`
 }
 
 type ModifyConnectResourceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 连接源的Id
+	// <p>连接源的Id</p>
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 连接源名称，为空时不修改
+	// <p>连接源名称，为空时不修改</p>
 	ResourceName *string `json:"ResourceName,omitnil,omitempty" name:"ResourceName"`
 
-	// 连接源描述，为空时不修改
+	// <p>连接源描述，为空时不修改</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// 连接源类型，修改数据源参数时，需要与原Type相同，否则编辑数据源无效
+	// <p>连接源类型，修改数据源参数时，需要与原Type相同，否则编辑数据源无效</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// Dts配置，Type为DTS时必填
+	// <p>Dts配置，Type为DTS时必填</p>
 	DtsConnectParam *DtsModifyConnectParam `json:"DtsConnectParam,omitnil,omitempty" name:"DtsConnectParam"`
 
-	// MongoDB配置，Type为MONGODB时必填
+	// <p>MongoDB配置，Type为MONGODB时必填</p>
 	MongoDBConnectParam *MongoDBModifyConnectParam `json:"MongoDBConnectParam,omitnil,omitempty" name:"MongoDBConnectParam"`
 
-	// Es配置，Type为ES时必填
+	// <p>Es配置，Type为ES时必填</p>
 	EsConnectParam *EsModifyConnectParam `json:"EsConnectParam,omitnil,omitempty" name:"EsConnectParam"`
 
-	// ClickHouse配置，Type为CLICKHOUSE时必填
+	// <p>ClickHouse配置，Type为CLICKHOUSE时必填</p>
 	ClickHouseConnectParam *ClickHouseModifyConnectParam `json:"ClickHouseConnectParam,omitnil,omitempty" name:"ClickHouseConnectParam"`
 
-	// MySQL配置，Type为MYSQL或TDSQL_C_MYSQL时必填
+	// <p>MySQL配置，Type为MYSQL或TDSQL_C_MYSQL时必填</p>
 	MySQLConnectParam *MySQLModifyConnectParam `json:"MySQLConnectParam,omitnil,omitempty" name:"MySQLConnectParam"`
 
-	// PostgreSQL配置，Type为POSTGRESQL或TDSQL_C_POSTGRESQL时必填
+	// <p>PostgreSQL配置，Type为POSTGRESQL或TDSQL_C_POSTGRESQL时必填</p>
 	PostgreSQLConnectParam *PostgreSQLModifyConnectParam `json:"PostgreSQLConnectParam,omitnil,omitempty" name:"PostgreSQLConnectParam"`
 
-	// MariaDB配置，Type为MARIADB时必填
+	// <p>MariaDB配置，Type为MARIADB时必填</p>
 	MariaDBConnectParam *MariaDBModifyConnectParam `json:"MariaDBConnectParam,omitnil,omitempty" name:"MariaDBConnectParam"`
 
-	// SQLServer配置，Type为SQLSERVER时必填
+	// <p>SQLServer配置，Type为SQLSERVER时必填</p>
 	SQLServerConnectParam *SQLServerModifyConnectParam `json:"SQLServerConnectParam,omitnil,omitempty" name:"SQLServerConnectParam"`
 
-	// Ctsdb配置，Type为CTSDB
+	// <p>Ctsdb配置，Type为CTSDB</p>
 	CtsdbConnectParam *CtsdbModifyConnectParam `json:"CtsdbConnectParam,omitnil,omitempty" name:"CtsdbConnectParam"`
 
-	// Doris配置，Type为DORIS
+	// <p>Doris配置，Type为DORIS</p>
 	DorisConnectParam *DorisModifyConnectParam `json:"DorisConnectParam,omitnil,omitempty" name:"DorisConnectParam"`
 
-	// Kafka配置，Type为 KAFKA 时必填
+	// <p>Kafka配置，Type为 KAFKA 时必填</p>
 	KafkaConnectParam *KafkaConnectParam `json:"KafkaConnectParam,omitnil,omitempty" name:"KafkaConnectParam"`
 
-	// MQTT配置，Type为 MQTT 时必填
+	// <p>MQTT配置，Type为 MQTT 时必填</p>
 	MqttConnectParam *MqttConnectParam `json:"MqttConnectParam,omitnil,omitempty" name:"MqttConnectParam"`
+
+	// <p>Iceberg配置，Type为ICEBERG时必填</p>
+	IcebergConnectParam *IcebergConnectParam `json:"IcebergConnectParam,omitnil,omitempty" name:"IcebergConnectParam"`
 }
 
 func (r *ModifyConnectResourceRequest) ToJsonString() string {
@@ -9054,6 +10079,7 @@ func (r *ModifyConnectResourceRequest) FromJsonString(s string) error {
 	delete(f, "DorisConnectParam")
 	delete(f, "KafkaConnectParam")
 	delete(f, "MqttConnectParam")
+	delete(f, "IcebergConnectParam")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyConnectResourceRequest has unknown keys!", "")
 	}
@@ -9062,7 +10088,7 @@ func (r *ModifyConnectResourceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyConnectResourceResponseParams struct {
-	// 连接源的Id
+	// <p>连接源的Id</p>
 	Result *ConnectResourceResourceIdResp `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -9087,27 +10113,45 @@ func (r *ModifyConnectResourceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyDatahubTaskRequestParams struct {
-	// 任务id
+	// <p>任务id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// 任务名称
+	// <p>任务名称</p>
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
-	// 任务描述信息
+	// <p>任务描述信息</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>任务并发上限</p>
+	TasksMax *int64 `json:"TasksMax,omitnil,omitempty" name:"TasksMax"`
+
+	// <p>数据同步限流值上限</p>单位：MB/s
+	SyncThrottleLimit *int64 `json:"SyncThrottleLimit,omitnil,omitempty" name:"SyncThrottleLimit"`
+
+	// <p>开启自动扩容</p>枚举值：<ul><li> true： 自动扩容</li><li> false： 手动扩容</li></ul>
+	AutoExpandFlag *bool `json:"AutoExpandFlag,omitnil,omitempty" name:"AutoExpandFlag"`
 }
 
 type ModifyDatahubTaskRequest struct {
 	*tchttp.BaseRequest
 	
-	// 任务id
+	// <p>任务id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// 任务名称
+	// <p>任务名称</p>
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
-	// 任务描述信息
+	// <p>任务描述信息</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>任务并发上限</p>
+	TasksMax *int64 `json:"TasksMax,omitnil,omitempty" name:"TasksMax"`
+
+	// <p>数据同步限流值上限</p>单位：MB/s
+	SyncThrottleLimit *int64 `json:"SyncThrottleLimit,omitnil,omitempty" name:"SyncThrottleLimit"`
+
+	// <p>开启自动扩容</p>枚举值：<ul><li> true： 自动扩容</li><li> false： 手动扩容</li></ul>
+	AutoExpandFlag *bool `json:"AutoExpandFlag,omitnil,omitempty" name:"AutoExpandFlag"`
 }
 
 func (r *ModifyDatahubTaskRequest) ToJsonString() string {
@@ -9125,6 +10169,9 @@ func (r *ModifyDatahubTaskRequest) FromJsonString(s string) error {
 	delete(f, "TaskId")
 	delete(f, "TaskName")
 	delete(f, "Description")
+	delete(f, "TasksMax")
+	delete(f, "SyncThrottleLimit")
+	delete(f, "AutoExpandFlag")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyDatahubTaskRequest has unknown keys!", "")
 	}
@@ -9133,7 +10180,7 @@ func (r *ModifyDatahubTaskRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyDatahubTaskResponseParams struct {
-	// 任务id
+	// <p>任务id</p>
 	Result *DatahubTaskIdRes `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -9158,32 +10205,32 @@ func (r *ModifyDatahubTaskResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyDatahubTopicRequestParams struct {
-	// 弹性topic名称
+	// <p>弹性topic名称</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/86863">DescribeDatahubTopics</a></p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 消息保留时间，单位：ms，当前最小值为60000ms。
+	// <p>消息保留时间，单位：ms，当前最小值为60000ms。</p>
 	RetentionMs *int64 `json:"RetentionMs,omitnil,omitempty" name:"RetentionMs"`
 
-	// 主题备注，是一个不超过64个字符的字符串，必须以字母为首字符，剩余部分可以包含字母、数字和横划线-。
+	// <p>主题备注</p><p>入参限制：不超过64个字符</p>
 	Note *string `json:"Note,omitnil,omitempty" name:"Note"`
 
-	// 标签列表
+	// <p>标签列表</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type ModifyDatahubTopicRequest struct {
 	*tchttp.BaseRequest
 	
-	// 弹性topic名称
+	// <p>弹性topic名称</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/86863">DescribeDatahubTopics</a></p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 消息保留时间，单位：ms，当前最小值为60000ms。
+	// <p>消息保留时间，单位：ms，当前最小值为60000ms。</p>
 	RetentionMs *int64 `json:"RetentionMs,omitnil,omitempty" name:"RetentionMs"`
 
-	// 主题备注，是一个不超过64个字符的字符串，必须以字母为首字符，剩余部分可以包含字母、数字和横划线-。
+	// <p>主题备注</p><p>入参限制：不超过64个字符</p>
 	Note *string `json:"Note,omitnil,omitempty" name:"Note"`
 
-	// 标签列表
+	// <p>标签列表</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
@@ -9211,7 +10258,7 @@ func (r *ModifyDatahubTopicRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyDatahubTopicResponseParams struct {
-	// 返回结果集
+	// <p>返回结果集</p>
 	Result *JgwOperateResponse `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -9353,77 +10400,95 @@ type ModifyInstanceAttributesConfig struct {
 
 // Predefined struct for user
 type ModifyInstanceAttributesRequestParams struct {
-	// ckafka集群实例Id,可通过[DescribeInstances](https://cloud.tencent.com/document/product/597/40835)接口获取
+	// <p>ckafka集群实例Id,可通过<a href="https://cloud.tencent.com/document/product/597/40835">DescribeInstances</a>接口获取</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 实例日志的最长保留时间，单位分钟，最大90天，最小为1min
+	// <p>实例日志的最长保留时间，单位分钟，最大90天，最小为1min</p>
 	MsgRetentionTime *int64 `json:"MsgRetentionTime,omitnil,omitempty" name:"MsgRetentionTime"`
 
-	// ckafka集群实例Name
+	// <p>ckafka集群实例Name</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 实例配置
+	// <p>实例配置</p>
 	Config *ModifyInstanceAttributesConfig `json:"Config,omitnil,omitempty" name:"Config"`
 
-	// 动态消息保留策略配置
+	// <p>动态消息保留策略配置</p>
 	DynamicRetentionConfig *DynamicRetentionTime `json:"DynamicRetentionConfig,omitnil,omitempty" name:"DynamicRetentionConfig"`
 
-	// 用于修改升级版本或升配定时任务的执行时间，Unix时间戳，精确到秒
+	// <p>用于修改升级版本或升配定时任务的执行时间，Unix时间戳，精确到秒</p>
 	RebalanceTime *int64 `json:"RebalanceTime,omitnil,omitempty" name:"RebalanceTime"`
 
-	// 公网带宽 最小3Mbps  最大999Mbps 仅专业版支持填写
+	// <p>公网带宽 最小3Mbps  最大999Mbps 仅专业版支持填写</p>
 	PublicNetwork *int64 `json:"PublicNetwork,omitnil,omitempty" name:"PublicNetwork"`
 
-	// 动态硬盘扩容策略配置
+	// <p>动态硬盘扩容策略配置</p>
 	//
 	// Deprecated: DynamicDiskConfig is deprecated.
 	DynamicDiskConfig *DynamicDiskConfig `json:"DynamicDiskConfig,omitnil,omitempty" name:"DynamicDiskConfig"`
 
-	// 实例级别单条消息大小（单位byte)  最大 12582912(不包含)  最小1024(不包含)
+	// <p>实例级别单条消息大小（单位byte)  最大 12582912(不包含)  最小1024(不包含)</p>
 	MaxMessageByte *uint64 `json:"MaxMessageByte,omitnil,omitempty" name:"MaxMessageByte"`
 
-	// 是否允许未同步的副本选为 leader: 1 开启  0 关闭
+	// <p>是否允许未同步的副本选为 leader: 1 开启  0 关闭</p>
 	UncleanLeaderElectionEnable *int64 `json:"UncleanLeaderElectionEnable,omitnil,omitempty" name:"UncleanLeaderElectionEnable"`
 
-	// 实例删除保护开关: 1 开启  0 关闭
+	// <p>实例删除保护开关: 1 开启  0 关闭</p>
 	DeleteProtectionEnable *int64 `json:"DeleteProtectionEnable,omitnil,omitempty" name:"DeleteProtectionEnable"`
+
+	// <p>实例级别消息保留大小</p><p>单位：byte</p><p>默认值：-1</p><p>实例级别消息保留大小</p>
+	RetentionBytes *int64 `json:"RetentionBytes,omitnil,omitempty" name:"RetentionBytes"`
+
+	// <p>是否封禁高风险admin接口; true则封禁高风险adminApi; 关闭后不支持打开,仅专业版支持; 默认是false 对高风险admin接口不做处理</p>
+	AdminSecurity *bool `json:"AdminSecurity,omitnil,omitempty" name:"AdminSecurity"`
+
+	// <p>事务ID最大空闲时间，超时未提交的事务将被标记为过期</p><p>取值范围：[3600000, 604800000]</p><p>单位：ms</p>
+	TransactionalIdExpirationMs *int64 `json:"TransactionalIdExpirationMs,omitnil,omitempty" name:"TransactionalIdExpirationMs"`
 }
 
 type ModifyInstanceAttributesRequest struct {
 	*tchttp.BaseRequest
 	
-	// ckafka集群实例Id,可通过[DescribeInstances](https://cloud.tencent.com/document/product/597/40835)接口获取
+	// <p>ckafka集群实例Id,可通过<a href="https://cloud.tencent.com/document/product/597/40835">DescribeInstances</a>接口获取</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 实例日志的最长保留时间，单位分钟，最大90天，最小为1min
+	// <p>实例日志的最长保留时间，单位分钟，最大90天，最小为1min</p>
 	MsgRetentionTime *int64 `json:"MsgRetentionTime,omitnil,omitempty" name:"MsgRetentionTime"`
 
-	// ckafka集群实例Name
+	// <p>ckafka集群实例Name</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 实例配置
+	// <p>实例配置</p>
 	Config *ModifyInstanceAttributesConfig `json:"Config,omitnil,omitempty" name:"Config"`
 
-	// 动态消息保留策略配置
+	// <p>动态消息保留策略配置</p>
 	DynamicRetentionConfig *DynamicRetentionTime `json:"DynamicRetentionConfig,omitnil,omitempty" name:"DynamicRetentionConfig"`
 
-	// 用于修改升级版本或升配定时任务的执行时间，Unix时间戳，精确到秒
+	// <p>用于修改升级版本或升配定时任务的执行时间，Unix时间戳，精确到秒</p>
 	RebalanceTime *int64 `json:"RebalanceTime,omitnil,omitempty" name:"RebalanceTime"`
 
-	// 公网带宽 最小3Mbps  最大999Mbps 仅专业版支持填写
+	// <p>公网带宽 最小3Mbps  最大999Mbps 仅专业版支持填写</p>
 	PublicNetwork *int64 `json:"PublicNetwork,omitnil,omitempty" name:"PublicNetwork"`
 
-	// 动态硬盘扩容策略配置
+	// <p>动态硬盘扩容策略配置</p>
 	DynamicDiskConfig *DynamicDiskConfig `json:"DynamicDiskConfig,omitnil,omitempty" name:"DynamicDiskConfig"`
 
-	// 实例级别单条消息大小（单位byte)  最大 12582912(不包含)  最小1024(不包含)
+	// <p>实例级别单条消息大小（单位byte)  最大 12582912(不包含)  最小1024(不包含)</p>
 	MaxMessageByte *uint64 `json:"MaxMessageByte,omitnil,omitempty" name:"MaxMessageByte"`
 
-	// 是否允许未同步的副本选为 leader: 1 开启  0 关闭
+	// <p>是否允许未同步的副本选为 leader: 1 开启  0 关闭</p>
 	UncleanLeaderElectionEnable *int64 `json:"UncleanLeaderElectionEnable,omitnil,omitempty" name:"UncleanLeaderElectionEnable"`
 
-	// 实例删除保护开关: 1 开启  0 关闭
+	// <p>实例删除保护开关: 1 开启  0 关闭</p>
 	DeleteProtectionEnable *int64 `json:"DeleteProtectionEnable,omitnil,omitempty" name:"DeleteProtectionEnable"`
+
+	// <p>实例级别消息保留大小</p><p>单位：byte</p><p>默认值：-1</p><p>实例级别消息保留大小</p>
+	RetentionBytes *int64 `json:"RetentionBytes,omitnil,omitempty" name:"RetentionBytes"`
+
+	// <p>是否封禁高风险admin接口; true则封禁高风险adminApi; 关闭后不支持打开,仅专业版支持; 默认是false 对高风险admin接口不做处理</p>
+	AdminSecurity *bool `json:"AdminSecurity,omitnil,omitempty" name:"AdminSecurity"`
+
+	// <p>事务ID最大空闲时间，超时未提交的事务将被标记为过期</p><p>取值范围：[3600000, 604800000]</p><p>单位：ms</p>
+	TransactionalIdExpirationMs *int64 `json:"TransactionalIdExpirationMs,omitnil,omitempty" name:"TransactionalIdExpirationMs"`
 }
 
 func (r *ModifyInstanceAttributesRequest) ToJsonString() string {
@@ -9449,6 +10514,9 @@ func (r *ModifyInstanceAttributesRequest) FromJsonString(s string) error {
 	delete(f, "MaxMessageByte")
 	delete(f, "UncleanLeaderElectionEnable")
 	delete(f, "DeleteProtectionEnable")
+	delete(f, "RetentionBytes")
+	delete(f, "AdminSecurity")
+	delete(f, "TransactionalIdExpirationMs")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyInstanceAttributesRequest has unknown keys!", "")
 	}
@@ -9457,7 +10525,7 @@ func (r *ModifyInstanceAttributesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyInstanceAttributesResponseParams struct {
-	// 返回结果
+	// <p>返回结果</p>
 	Result *JgwOperateResponse `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -9482,38 +10550,32 @@ func (r *ModifyInstanceAttributesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyInstancePreRequestParams struct {
-	// ckafka集群实例Id,可通过[DescribeInstances](https://cloud.tencent.com/document/product/597/40835)接口获取
+	// <p>ckafka集群实例Id,可通过<a href="https://cloud.tencent.com/document/product/597/40835">DescribeInstances</a>接口获取</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 磁盘大小 单位 GB     最大值为500000,步长100
-	// 可以通过以下链接查看规格限制：https://cloud.tencent.com/document/product/597/122562
+	// <p>磁盘大小 单位 GB     最大值为500000,步长100可以通过以下链接查看规格限制：https://cloud.tencent.com/document/product/597/122562</p>
 	DiskSize *int64 `json:"DiskSize,omitnil,omitempty" name:"DiskSize"`
 
-	// 峰值带宽 单位 MB/s
-	// 可以通过以下链接查看规格限制及对应步长: https://cloud.tencent.com/document/product/597/11745
+	// <p>峰值带宽 单位 MB/s可以通过以下链接查看规格限制及对应步长: https://cloud.tencent.com/document/product/597/11745</p>
 	BandWidth *int64 `json:"BandWidth,omitnil,omitempty" name:"BandWidth"`
 
-	// 分区上限 最大值: 40000, 步长: 100
-	// 可以通过以下链接查看规格限制: https://cloud.tencent.com/document/product/597/122563
+	// <p>分区上限 最大值: 40000, 步长: 100可以通过以下链接查看规格限制: https://cloud.tencent.com/document/product/597/122563</p>
 	Partition *int64 `json:"Partition,omitnil,omitempty" name:"Partition"`
 }
 
 type ModifyInstancePreRequest struct {
 	*tchttp.BaseRequest
 	
-	// ckafka集群实例Id,可通过[DescribeInstances](https://cloud.tencent.com/document/product/597/40835)接口获取
+	// <p>ckafka集群实例Id,可通过<a href="https://cloud.tencent.com/document/product/597/40835">DescribeInstances</a>接口获取</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 磁盘大小 单位 GB     最大值为500000,步长100
-	// 可以通过以下链接查看规格限制：https://cloud.tencent.com/document/product/597/122562
+	// <p>磁盘大小 单位 GB     最大值为500000,步长100可以通过以下链接查看规格限制：https://cloud.tencent.com/document/product/597/122562</p>
 	DiskSize *int64 `json:"DiskSize,omitnil,omitempty" name:"DiskSize"`
 
-	// 峰值带宽 单位 MB/s
-	// 可以通过以下链接查看规格限制及对应步长: https://cloud.tencent.com/document/product/597/11745
+	// <p>峰值带宽 单位 MB/s可以通过以下链接查看规格限制及对应步长: https://cloud.tencent.com/document/product/597/11745</p>
 	BandWidth *int64 `json:"BandWidth,omitnil,omitempty" name:"BandWidth"`
 
-	// 分区上限 最大值: 40000, 步长: 100
-	// 可以通过以下链接查看规格限制: https://cloud.tencent.com/document/product/597/122563
+	// <p>分区上限 最大值: 40000, 步长: 100可以通过以下链接查看规格限制: https://cloud.tencent.com/document/product/597/122563</p>
 	Partition *int64 `json:"Partition,omitnil,omitempty" name:"Partition"`
 }
 
@@ -9541,7 +10603,7 @@ func (r *ModifyInstancePreRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyInstancePreResponseParams struct {
-	// 变更预付费实例配置返回结构
+	// <p>变更预付费实例配置返回结构</p>
 	Result *CreateInstancePreResp `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -9639,6 +10701,72 @@ func (r *ModifyPasswordResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyPasswordResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyRouteSecurityGroupsRequestParams struct {
+	// 实例路由
+	InstanceRoute *InstanceRoute `json:"InstanceRoute,omitnil,omitempty" name:"InstanceRoute"`
+
+	// 修改后的安全组有序列表。
+	// 注意:不指定此参数或传空列表则代表解绑所有关联的安全组。
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
+}
+
+type ModifyRouteSecurityGroupsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例路由
+	InstanceRoute *InstanceRoute `json:"InstanceRoute,omitnil,omitempty" name:"InstanceRoute"`
+
+	// 修改后的安全组有序列表。
+	// 注意:不指定此参数或传空列表则代表解绑所有关联的安全组。
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
+}
+
+func (r *ModifyRouteSecurityGroupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyRouteSecurityGroupsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceRoute")
+	delete(f, "SecurityGroupIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyRouteSecurityGroupsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyRouteSecurityGroupsResponseParams struct {
+	// 	返回结果
+	Result *SecurityGroupRouteOperateResp `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyRouteSecurityGroupsResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyRouteSecurityGroupsResponseParams `json:"Response"`
+}
+
+func (r *ModifyRouteSecurityGroupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyRouteSecurityGroupsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -9770,123 +10898,194 @@ func (r *ModifyRoutineMaintenanceTaskResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
-type ModifyTopicAttributesRequestParams struct {
-	// ckafka集群实例Id
+type ModifyThrottleRuleRequestParams struct {
+	// 规则标识
+	ThrottleRuleId *uint64 `json:"ThrottleRuleId,omitnil,omitempty" name:"ThrottleRuleId"`
+
+	// 实例Id
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 主题名
+	// 消费限流值单位MB/s
+	ConsumeThrottle *uint64 `json:"ConsumeThrottle,omitnil,omitempty" name:"ConsumeThrottle"`
+}
+
+type ModifyThrottleRuleRequest struct {
+	*tchttp.BaseRequest
+	
+	// 规则标识
+	ThrottleRuleId *uint64 `json:"ThrottleRuleId,omitnil,omitempty" name:"ThrottleRuleId"`
+
+	// 实例Id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 消费限流值单位MB/s
+	ConsumeThrottle *uint64 `json:"ConsumeThrottle,omitnil,omitempty" name:"ConsumeThrottle"`
+}
+
+func (r *ModifyThrottleRuleRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyThrottleRuleRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ThrottleRuleId")
+	delete(f, "InstanceId")
+	delete(f, "ConsumeThrottle")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyThrottleRuleRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyThrottleRuleResponseParams struct {
+	// 返回信息
+	Result *JgwOperateResponse `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyThrottleRuleResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyThrottleRuleResponseParams `json:"Response"`
+}
+
+func (r *ModifyThrottleRuleResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyThrottleRuleResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyTopicAttributesRequestParams struct {
+	// <p>ckafka集群实例Id</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>主题名</p>
 	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
 
-	// 主题备注，是一个不超过64个字符的字符串，必须以字母为首字符，剩余部分可以包含字母、数字和横划线-。
+	// <p>主题备注</p><p>入参限制：不超过64个字符</p><p>默认值：&quot;&quot;</p>
 	Note *string `json:"Note,omitnil,omitempty" name:"Note"`
 
-	// IP 白名单开关，1：打开；0：关闭。
+	// <p>IP 白名单开关，1：打开；0：关闭。</p>
 	EnableWhiteList *int64 `json:"EnableWhiteList,omitnil,omitempty" name:"EnableWhiteList"`
 
-	// 默认为1。
+	// <p>最小同步副本数</p><p>默认值：1</p><p>最小值为1</p>
 	MinInsyncReplicas *int64 `json:"MinInsyncReplicas,omitnil,omitempty" name:"MinInsyncReplicas"`
 
-	// 默认为 0，0：false；1：true。
+	// <p>是否允许未同步的副本选为leader</p><p>枚举值：</p><ul><li>0： 不允许</li><li>1： 允许</li></ul><p>默认值：0</p>
 	UncleanLeaderElectionEnable *int64 `json:"UncleanLeaderElectionEnable,omitnil,omitempty" name:"UncleanLeaderElectionEnable"`
 
-	// 消息保留时间，单位：ms，当前最小值为60000ms。
+	// <p>Segment分片滚动的时长</p><p>单位：毫秒</p><p>默认值：86400000</p><p>最小值为86400000ms（1天）</p>
 	RetentionMs *int64 `json:"RetentionMs,omitnil,omitempty" name:"RetentionMs"`
 
-	// 主题消息最大值，单位为 Byte，最大值为12582912Byte（即12MB）。
+	// <p>主题消息最大值</p><p>取值范围：[1024, 12582912]</p><p>单位：Bytes</p>
 	MaxMessageBytes *int64 `json:"MaxMessageBytes,omitnil,omitempty" name:"MaxMessageBytes"`
 
-	// Segment 分片滚动的时长，单位：ms，当前最小值86400000ms。
+	// <p>Segment 分片滚动的时长</p><p>单位：毫秒</p><p>最小值为86400000ms（1天）</p>
 	SegmentMs *int64 `json:"SegmentMs,omitnil,omitempty" name:"SegmentMs"`
 
-	// 消息删除策略，可以选择delete 或者compact
+	// <p>消息删除策略，可以选择delete 或者compact</p>
 	CleanUpPolicy *string `json:"CleanUpPolicy,omitnil,omitempty" name:"CleanUpPolicy"`
 
-	// Ip白名单列表，配额限制，enableWhileList=1时必选
+	// <p>Ip白名单列表，配额限制，enableWhileList=1时必选</p>
 	IpWhiteList []*string `json:"IpWhiteList,omitnil,omitempty" name:"IpWhiteList"`
 
-	// 预设ACL规则, 1:打开  0:关闭，默认不打开
+	// <p>预设ACL规则, 1:打开  0:关闭，默认不打开</p>
 	EnableAclRule *int64 `json:"EnableAclRule,omitnil,omitempty" name:"EnableAclRule"`
 
-	// ACL规则名
+	// <p>ACL规则名</p>
 	AclRuleName *string `json:"AclRuleName,omitnil,omitempty" name:"AclRuleName"`
 
-	// 可选, 保留文件大小. 默认为-1,单位bytes, 当前最小值为1048576B
+	// <p>可选, 保留文件大小</p><p>取值范围：[1073741824, 1099511627776]</p><p>单位：Bytes</p><p>默认值：-1</p><p>特殊值：-1表示无限制</p>
 	RetentionBytes *int64 `json:"RetentionBytes,omitnil,omitempty" name:"RetentionBytes"`
 
-	// 标签列表
+	// <p>标签列表</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 生产限流，单位 MB/s；设置为-1，则生产不限流
+	// <p>生产限流，单位 MB/s；设置为-1，则生产不限流</p>
 	QuotaProducerByteRate *int64 `json:"QuotaProducerByteRate,omitnil,omitempty" name:"QuotaProducerByteRate"`
 
-	// 消费限流，单位 MB/s；设置为-1，则消费不限流
+	// <p>消费限流，单位 MB/s；设置为-1，则消费不限流</p>
 	QuotaConsumerByteRate *int64 `json:"QuotaConsumerByteRate,omitnil,omitempty" name:"QuotaConsumerByteRate"`
 
-	// topic副本数  最小值 1,最大值 3
+	// <p>topic副本数  最小值 1,最大值 3</p>
 	ReplicaNum *int64 `json:"ReplicaNum,omitnil,omitempty" name:"ReplicaNum"`
 
-	// 消息保存的时间类型：CreateTime/LogAppendTime
+	// <p>消息保存的时间类型：CreateTime/LogAppendTime</p>
 	LogMsgTimestampType *string `json:"LogMsgTimestampType,omitnil,omitempty" name:"LogMsgTimestampType"`
 }
 
 type ModifyTopicAttributesRequest struct {
 	*tchttp.BaseRequest
 	
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p><p>取值参考：<a href="https://cloud.tencent.com/document/api/597/40835">DescribeInstances</a></p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 主题名
+	// <p>主题名</p>
 	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
 
-	// 主题备注，是一个不超过64个字符的字符串，必须以字母为首字符，剩余部分可以包含字母、数字和横划线-。
+	// <p>主题备注</p><p>入参限制：不超过64个字符</p><p>默认值：&quot;&quot;</p>
 	Note *string `json:"Note,omitnil,omitempty" name:"Note"`
 
-	// IP 白名单开关，1：打开；0：关闭。
+	// <p>IP 白名单开关，1：打开；0：关闭。</p>
 	EnableWhiteList *int64 `json:"EnableWhiteList,omitnil,omitempty" name:"EnableWhiteList"`
 
-	// 默认为1。
+	// <p>最小同步副本数</p><p>默认值：1</p><p>最小值为1</p>
 	MinInsyncReplicas *int64 `json:"MinInsyncReplicas,omitnil,omitempty" name:"MinInsyncReplicas"`
 
-	// 默认为 0，0：false；1：true。
+	// <p>是否允许未同步的副本选为leader</p><p>枚举值：</p><ul><li>0： 不允许</li><li>1： 允许</li></ul><p>默认值：0</p>
 	UncleanLeaderElectionEnable *int64 `json:"UncleanLeaderElectionEnable,omitnil,omitempty" name:"UncleanLeaderElectionEnable"`
 
-	// 消息保留时间，单位：ms，当前最小值为60000ms。
+	// <p>Segment分片滚动的时长</p><p>单位：毫秒</p><p>默认值：86400000</p><p>最小值为86400000ms（1天）</p>
 	RetentionMs *int64 `json:"RetentionMs,omitnil,omitempty" name:"RetentionMs"`
 
-	// 主题消息最大值，单位为 Byte，最大值为12582912Byte（即12MB）。
+	// <p>主题消息最大值</p><p>取值范围：[1024, 12582912]</p><p>单位：Bytes</p>
 	MaxMessageBytes *int64 `json:"MaxMessageBytes,omitnil,omitempty" name:"MaxMessageBytes"`
 
-	// Segment 分片滚动的时长，单位：ms，当前最小值86400000ms。
+	// <p>Segment 分片滚动的时长</p><p>单位：毫秒</p><p>最小值为86400000ms（1天）</p>
 	SegmentMs *int64 `json:"SegmentMs,omitnil,omitempty" name:"SegmentMs"`
 
-	// 消息删除策略，可以选择delete 或者compact
+	// <p>消息删除策略，可以选择delete 或者compact</p>
 	CleanUpPolicy *string `json:"CleanUpPolicy,omitnil,omitempty" name:"CleanUpPolicy"`
 
-	// Ip白名单列表，配额限制，enableWhileList=1时必选
+	// <p>Ip白名单列表，配额限制，enableWhileList=1时必选</p>
 	IpWhiteList []*string `json:"IpWhiteList,omitnil,omitempty" name:"IpWhiteList"`
 
-	// 预设ACL规则, 1:打开  0:关闭，默认不打开
+	// <p>预设ACL规则, 1:打开  0:关闭，默认不打开</p>
 	EnableAclRule *int64 `json:"EnableAclRule,omitnil,omitempty" name:"EnableAclRule"`
 
-	// ACL规则名
+	// <p>ACL规则名</p>
 	AclRuleName *string `json:"AclRuleName,omitnil,omitempty" name:"AclRuleName"`
 
-	// 可选, 保留文件大小. 默认为-1,单位bytes, 当前最小值为1048576B
+	// <p>可选, 保留文件大小</p><p>取值范围：[1073741824, 1099511627776]</p><p>单位：Bytes</p><p>默认值：-1</p><p>特殊值：-1表示无限制</p>
 	RetentionBytes *int64 `json:"RetentionBytes,omitnil,omitempty" name:"RetentionBytes"`
 
-	// 标签列表
+	// <p>标签列表</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 生产限流，单位 MB/s；设置为-1，则生产不限流
+	// <p>生产限流，单位 MB/s；设置为-1，则生产不限流</p>
 	QuotaProducerByteRate *int64 `json:"QuotaProducerByteRate,omitnil,omitempty" name:"QuotaProducerByteRate"`
 
-	// 消费限流，单位 MB/s；设置为-1，则消费不限流
+	// <p>消费限流，单位 MB/s；设置为-1，则消费不限流</p>
 	QuotaConsumerByteRate *int64 `json:"QuotaConsumerByteRate,omitnil,omitempty" name:"QuotaConsumerByteRate"`
 
-	// topic副本数  最小值 1,最大值 3
+	// <p>topic副本数  最小值 1,最大值 3</p>
 	ReplicaNum *int64 `json:"ReplicaNum,omitnil,omitempty" name:"ReplicaNum"`
 
-	// 消息保存的时间类型：CreateTime/LogAppendTime
+	// <p>消息保存的时间类型：CreateTime/LogAppendTime</p>
 	LogMsgTimestampType *string `json:"LogMsgTimestampType,omitnil,omitempty" name:"LogMsgTimestampType"`
 }
 
@@ -9929,7 +11128,7 @@ func (r *ModifyTopicAttributesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyTopicAttributesResponseParams struct {
-	// 返回结果
+	// <p>返回结果</p>
 	Result *JgwOperateResponse `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -10076,41 +11275,44 @@ type MqttConnectParam struct {
 }
 
 type MqttParam struct {
-	// 需要同步的MQTT Topic列表, CSV格式
+	// <p>需要同步的MQTT Topic列表, CSV格式</p>
 	Topics *string `json:"Topics,omitnil,omitempty" name:"Topics"`
 
-	// 用于控制会话的持久性。cleanSession 为true时，连接时会创建一个全新的会话。 cleanSession = false时，连接时会恢复之前的会话。
+	// <p>用于控制会话的持久性。cleanSession 为true时，连接时会创建一个全新的会话。 cleanSession = false时，连接时会恢复之前的会话。</p>
 	CleanSession *bool `json:"CleanSession,omitnil,omitempty" name:"CleanSession"`
 
-	// MQTT instance-id
+	// <p>MQTT instance-id</p>
 	Resource *string `json:"Resource,omitnil,omitempty" name:"Resource"`
 
-	// MQTT实例VIP
+	// <p>MQTT实例VIP</p>
 	Ip *string `json:"Ip,omitnil,omitempty" name:"Ip"`
 
-	// MQTT VIP 端口
+	// <p>MQTT VIP 端口</p>
 	Port *int64 `json:"Port,omitnil,omitempty" name:"Port"`
 
-	// MQTT实例用户名
+	// <p>MQTT实例用户名</p>
 	UserName *string `json:"UserName,omitnil,omitempty" name:"UserName"`
 
-	// MQTT实例内账户密码
+	// <p>MQTT实例内账户密码</p>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// QoS
+	// <p>QoS</p>
 	Qos *int64 `json:"Qos,omitnil,omitempty" name:"Qos"`
 
-	// tasks.max 订阅Topic的并发Task个数, 默认为1; 当设置大于1时, 使用Shared Subscription
+	// <p>tasks.max 订阅Topic的并发Task个数, 默认为1; 当设置大于1时, 使用Shared Subscription</p>
 	MaxTasks *int64 `json:"MaxTasks,omitnil,omitempty" name:"MaxTasks"`
 
-	// MQTT 实例的Service VIP
+	// <p>MQTT 实例的Service VIP</p>
 	ServiceVip *string `json:"ServiceVip,omitnil,omitempty" name:"ServiceVip"`
 
-	// MQTT实例的VPC ID
+	// <p>MQTT实例的VPC ID</p>
 	UniqVpcId *string `json:"UniqVpcId,omitnil,omitempty" name:"UniqVpcId"`
 
-	// 是否为自建集群, MQTT只支持非自建集群
+	// <p>是否为自建集群, MQTT只支持非自建集群</p>
 	SelfBuilt *bool `json:"SelfBuilt,omitnil,omitempty" name:"SelfBuilt"`
+
+	// <p>MQTT消息过滤sql语句</p>
+	SqlFilter *string `json:"SqlFilter,omitnil,omitempty" name:"SqlFilter"`
 }
 
 type MySQLConnectParam struct {
@@ -10290,14 +11492,14 @@ type Partitions struct {
 
 // Predefined struct for user
 type PauseDatahubTaskRequestParams struct {
-	// 任务id
+	// <p>任务id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 }
 
 type PauseDatahubTaskRequest struct {
 	*tchttp.BaseRequest
 	
-	// 任务id
+	// <p>任务id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 }
 
@@ -10322,7 +11524,7 @@ func (r *PauseDatahubTaskRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type PauseDatahubTaskResponseParams struct {
-	// 任务id
+	// <p>任务id</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Result *DatahubTaskIdRes `json:"Result,omitnil,omitempty" name:"Result"`
 
@@ -10565,20 +11767,20 @@ type Region struct {
 
 // Predefined struct for user
 type RenewCkafkaInstanceRequestParams struct {
-	// ckafka集群实例Id,可通过[DescribeInstances](https://cloud.tencent.com/document/product/597/40835)接口获取
+	// <p>ckafka集群实例Id,可通过<a href="https://cloud.tencent.com/document/product/597/40835">DescribeInstances</a>接口获取</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 续费时长, 默认为1, 单位是月
+	// <p>续费时长, 默认为1, 单位是月</p>
 	TimeSpan *int64 `json:"TimeSpan,omitnil,omitempty" name:"TimeSpan"`
 }
 
 type RenewCkafkaInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// ckafka集群实例Id,可通过[DescribeInstances](https://cloud.tencent.com/document/product/597/40835)接口获取
+	// <p>ckafka集群实例Id,可通过<a href="https://cloud.tencent.com/document/product/597/40835">DescribeInstances</a>接口获取</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 续费时长, 默认为1, 单位是月
+	// <p>续费时长, 默认为1, 单位是月</p>
 	TimeSpan *int64 `json:"TimeSpan,omitnil,omitempty" name:"TimeSpan"`
 }
 
@@ -10612,7 +11814,7 @@ type RenewCkafkaInstanceResp struct {
 
 // Predefined struct for user
 type RenewCkafkaInstanceResponseParams struct {
-	// 返回值
+	// <p>返回值</p>
 	Result *RenewCkafkaInstanceResp `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -10645,14 +11847,14 @@ type ReplaceParam struct {
 
 // Predefined struct for user
 type RestartDatahubTaskRequestParams struct {
-	// 任务id
+	// <p>任务id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 }
 
 type RestartDatahubTaskRequest struct {
 	*tchttp.BaseRequest
 	
-	// 任务id
+	// <p>任务id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 }
 
@@ -10677,7 +11879,7 @@ func (r *RestartDatahubTaskRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type RestartDatahubTaskResponseParams struct {
-	// 任务id
+	// <p>任务id</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Result *DatahubTaskIdRes `json:"Result,omitnil,omitempty" name:"Result"`
 
@@ -10703,14 +11905,14 @@ func (r *RestartDatahubTaskResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ResumeDatahubTaskRequestParams struct {
-	// 任务id
+	// <p>任务id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 }
 
 type ResumeDatahubTaskRequest struct {
 	*tchttp.BaseRequest
 	
-	// 任务id
+	// <p>任务id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 }
 
@@ -10735,7 +11937,7 @@ func (r *ResumeDatahubTaskRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ResumeDatahubTaskResponseParams struct {
-	// 任务id
+	// <p>任务id</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Result *DatahubTaskIdRes `json:"Result,omitnil,omitempty" name:"Result"`
 
@@ -10760,49 +11962,45 @@ func (r *ResumeDatahubTaskResponse) FromJsonString(s string) error {
 }
 
 type Route struct {
-	// 实例接入方式
-	// 0：PLAINTEXT (明文方式，没有带用户信息老版本及社区版本都支持)
-	// 1：SASL_PLAINTEXT（明文方式，不过在数据开始时，会通过SASL方式登录鉴权，仅社区版本支持）
-	// 2：SSL（SSL加密通信，没有带用户信息，老版本及社区版本都支持）
-	// 3：SASL_SSL（SSL加密通信，在数据开始时，会通过SASL方式登录鉴权，仅社区版本支持）
+	// <p>实例接入方式<br>0：PLAINTEXT (明文方式，没有带用户信息老版本及社区版本都支持)<br>1：SASL_PLAINTEXT（明文方式，不过在数据开始时，会通过SASL方式登录鉴权，仅社区版本支持）<br>2：SSL（SSL加密通信，没有带用户信息，老版本及社区版本都支持）<br>3：SASL_SSL（SSL加密通信，在数据开始时，会通过SASL方式登录鉴权，仅社区版本支持）</p>
 	AccessType *int64 `json:"AccessType,omitnil,omitempty" name:"AccessType"`
 
-	// 路由Id
+	// <p>路由Id</p>
 	RouteId *int64 `json:"RouteId,omitnil,omitempty" name:"RouteId"`
 
-	// 路由网络类型(3:vpc路由;7:内部支撑路由;1:公网路由)
+	// <p>路由网络类型(3:vpc路由;7:内部支撑路由;1:公网路由)</p>
 	VipType *int64 `json:"VipType,omitnil,omitempty" name:"VipType"`
 
-	// 虚拟IP列表
+	// <p>虚拟IP列表</p>
 	VipList []*VipEntity `json:"VipList,omitnil,omitempty" name:"VipList"`
 
-	// 域名
+	// <p>域名</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
 
-	// 域名port
+	// <p>域名port</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DomainPort *int64 `json:"DomainPort,omitnil,omitempty" name:"DomainPort"`
 
-	// 时间戳
+	// <p>时间戳</p>
 	DeleteTimestamp *string `json:"DeleteTimestamp,omitnil,omitempty" name:"DeleteTimestamp"`
 
-	// 子网Id
+	// <p>子网Id</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Subnet *string `json:"Subnet,omitnil,omitempty" name:"Subnet"`
 
-	// 虚拟IP列表(1对1 broker节点)
+	// <p>虚拟IP列表(1对1 broker节点)</p>
 	BrokerVipList []*VipEntity `json:"BrokerVipList,omitnil,omitempty" name:"BrokerVipList"`
 
-	// 私有网络Id
+	// <p>私有网络Id</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 备注信息
+	// <p>备注信息</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Note *string `json:"Note,omitnil,omitempty" name:"Note"`
 
-	// 路由的状态。1: 创建中，2: 创建成功，3: 创建失败，4: 删除中，6: 删除失败
+	// <p>路由的状态。1: 创建中，2: 创建成功，3: 创建失败，4: 删除中，6: 删除失败</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 }
@@ -10923,16 +12121,16 @@ type SQLServerParam struct {
 }
 
 type SaleInfo struct {
-	// 手动设置的flag标志，true表示售罄，false表示可售。
+	// <p>手动设置的flag标志，true表示售罄，false表示可售。</p>
 	Flag *bool `json:"Flag,omitnil,omitempty" name:"Flag"`
 
-	// ckafka版本号(1.1.1/2.4.2/0.10.2)
+	// <p>ckafka版本号(1.1.1/2.4.2/0.10.2)</p>
 	Version *string `json:"Version,omitnil,omitempty" name:"Version"`
 
-	// 专业版、标准版标志
+	// <p>专业版、标准版标志</p>
 	Platform *string `json:"Platform,omitnil,omitempty" name:"Platform"`
 
-	// 售罄标志：true售罄
+	// <p>售罄标志：true售罄</p>
 	SoldOut *bool `json:"SoldOut,omitnil,omitempty" name:"SoldOut"`
 }
 
@@ -10978,6 +12176,16 @@ type SecurityGroupRoute struct {
 
 	// 路由vip
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
+}
+
+type SecurityGroupRouteOperateResp struct {
+	// 操作返回的code，0为正常，非0为错误
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ReturnCode *string `json:"ReturnCode,omitnil,omitempty" name:"ReturnCode"`
+
+	// 操作返回的信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ReturnMessage *string `json:"ReturnMessage,omitnil,omitempty" name:"ReturnMessage"`
 }
 
 type SecurityGroupRouteResp struct {
@@ -11113,20 +12321,54 @@ type TaskStatusResponse struct {
 }
 
 type TdwParam struct {
-	// Tdw的bid
+	// <p>Tdw的bid</p>
 	Bid *string `json:"Bid,omitnil,omitempty" name:"Bid"`
 
-	// Tdw的tid
+	// <p>Tdw的tid</p>
 	Tid *string `json:"Tid,omitnil,omitempty" name:"Tid"`
 
-	// 默认true
+	// <p>默认true</p>
 	IsDomestic *bool `json:"IsDomestic,omitnil,omitempty" name:"IsDomestic"`
 
-	// TDW地址，默认tl-tdbank-tdmanager.tencent-distribute.com
+	// <p>TDW地址，默认tl-tdbank-tdmanager.tencent-distribute.com</p>
 	TdwHost *string `json:"TdwHost,omitnil,omitempty" name:"TdwHost"`
 
-	// TDW端口，默认8099
+	// <p>TDW端口，默认8099</p>
 	TdwPort *int64 `json:"TdwPort,omitnil,omitempty" name:"TdwPort"`
+}
+
+type ThrottleRuleDetail struct {
+	// <p>限流规则标识</p>
+	ThrottleRuleId *uint64 `json:"ThrottleRuleId,omitnil,omitempty" name:"ThrottleRuleId"`
+
+	// <p>限流类型</p><p>枚举值：</p><ul><li>1： 用户/客户端限流</li><li>2： 消费组限流</li><li>3： topic限流</li></ul>
+	ThrottleType *int64 `json:"ThrottleType,omitnil,omitempty" name:"ThrottleType"`
+
+	// <p>客户端id</p>
+	ClientId *string `json:"ClientId,omitnil,omitempty" name:"ClientId"`
+
+	// <p>用户名</p>
+	UserName *string `json:"UserName,omitnil,omitempty" name:"UserName"`
+
+	// <p>消费限流值,单位MB/s</p>
+	ConsumeThrottle *uint64 `json:"ConsumeThrottle,omitnil,omitempty" name:"ConsumeThrottle"`
+
+	// <p>更新时间</p>
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+
+	// <p>topic名称</p>
+	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
+
+	// <p>topicId</p>
+	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
+}
+
+type ThrottleRuleResult struct {
+	// 总数量
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 规则列表
+	ThrottleRuleList []*ThrottleRuleDetail `json:"ThrottleRuleList,omitnil,omitempty" name:"ThrottleRuleList"`
 }
 
 type Topic struct {
@@ -11330,27 +12572,27 @@ type TopicMessageHeapRanking struct {
 }
 
 type TopicParam struct {
-	// 单独售卖Topic的Topic名称
+	// <p>单独售卖Topic的Topic名称</p>
 	Resource *string `json:"Resource,omitnil,omitempty" name:"Resource"`
 
-	// Offset类型，最开始位置earliest，最新位置latest，时间点位置timestamp
+	// <p>Offset类型，最开始位置earliest，最新位置latest，时间点位置timestamp</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	OffsetType *string `json:"OffsetType,omitnil,omitempty" name:"OffsetType"`
 
-	// Offset类型为timestamp时必传，传时间戳，精确到秒
+	// <p>Offset类型为timestamp时必传，传时间戳，精确到秒</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	StartTime *uint64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// Topic的TopicId【出参】
+	// <p>Topic的TopicId【出参】</p>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
-	// 写入Topic时是否进行压缩，不开启填"none"，开启的话，可选择"gzip", "snappy", "lz4"中的一个进行填写。
+	// <p>写入Topic时是否进行压缩，不开启填&quot;none&quot;，开启的话，可选择&quot;gzip&quot;, &quot;snappy&quot;, &quot;lz4&quot;中的一个进行填写。</p>
 	CompressionType *string `json:"CompressionType,omitnil,omitempty" name:"CompressionType"`
 
-	// 使用的Topic是否需要自动创建（目前只支持SOURCE流入任务）
+	// <p>使用的Topic是否需要自动创建（目前只支持SOURCE流入任务）</p>
 	UseAutoCreateTopic *bool `json:"UseAutoCreateTopic,omitnil,omitempty" name:"UseAutoCreateTopic"`
 
-	// 源topic消息1条扩增成msgMultiple条写入目标topic(该参数目前只有ckafka流入ckafka适用)
+	// <p>源topic消息1条扩增成msgMultiple条写入目标topic(该参数目前只有ckafka流入ckafka适用)</p>
 	MsgMultiple *int64 `json:"MsgMultiple,omitnil,omitempty" name:"MsgMultiple"`
 }
 
@@ -11470,38 +12712,38 @@ type TransformsParam struct {
 
 // Predefined struct for user
 type UpgradeBrokerVersionRequestParams struct {
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 1.平滑升配.2.垂直升配
+	// <p>版本升级类型</p><p>枚举值：</p><ul><li>1： 小版本迁移升级(推荐)</li><li>5： 小版原地升级</li></ul>
 	Type *int64 `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 版本号
+	// <p>版本号</p>
 	SourceVersion *string `json:"SourceVersion,omitnil,omitempty" name:"SourceVersion"`
 
-	// 版本号
+	// <p>版本号</p>
 	TargetVersion *string `json:"TargetVersion,omitnil,omitempty" name:"TargetVersion"`
 
-	// 延迟时间
+	// <p>延迟时间</p>
 	DelayTimeStamp *string `json:"DelayTimeStamp,omitnil,omitempty" name:"DelayTimeStamp"`
 }
 
 type UpgradeBrokerVersionRequest struct {
 	*tchttp.BaseRequest
 	
-	// ckafka集群实例Id
+	// <p>ckafka集群实例Id</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 1.平滑升配.2.垂直升配
+	// <p>版本升级类型</p><p>枚举值：</p><ul><li>1： 小版本迁移升级(推荐)</li><li>5： 小版原地升级</li></ul>
 	Type *int64 `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 版本号
+	// <p>版本号</p>
 	SourceVersion *string `json:"SourceVersion,omitnil,omitempty" name:"SourceVersion"`
 
-	// 版本号
+	// <p>版本号</p>
 	TargetVersion *string `json:"TargetVersion,omitnil,omitempty" name:"TargetVersion"`
 
-	// 延迟时间
+	// <p>延迟时间</p>
 	DelayTimeStamp *string `json:"DelayTimeStamp,omitnil,omitempty" name:"DelayTimeStamp"`
 }
 
@@ -11530,7 +12772,7 @@ func (r *UpgradeBrokerVersionRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type UpgradeBrokerVersionResponseParams struct {
-	// 升配结果
+	// <p>升配结果</p>
 	Result *JgwOperateResponse `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -11559,16 +12801,16 @@ type UrlDecodeParam struct {
 }
 
 type User struct {
-	// 用户id
+	// <p>用户id</p>
 	UserId *int64 `json:"UserId,omitnil,omitempty" name:"UserId"`
 
-	// 用户名称
+	// <p>用户名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 创建时间
+	// <p>创建时间</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 最后更新时间
+	// <p>最后更新时间</p>
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 }
 
@@ -11634,36 +12876,36 @@ type VipEntity struct {
 }
 
 type ZoneInfo struct {
-	// 可用区
+	// <p>可用区</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 是否内部APP
+	// <p>是否内部APP</p><p>枚举值：</p><ul><li>0： 外部</li><li>1： 内部</li></ul><p>默认值：0</p>
 	IsInternalApp *int64 `json:"IsInternalApp,omitnil,omitempty" name:"IsInternalApp"`
 
-	// 应用标识
+	// <p>应用标识</p>
 	AppId *int64 `json:"AppId,omitnil,omitempty" name:"AppId"`
 
-	// 可用区是否售罄标识，true表示已售罄，false表示未售罄。
+	// <p>可用区是否售罄标识，true表示已售罄，false表示未售罄。</p>
 	Flag *bool `json:"Flag,omitnil,omitempty" name:"Flag"`
 
-	// 可用区名称
+	// <p>可用区名称</p>
 	ZoneName *string `json:"ZoneName,omitnil,omitempty" name:"ZoneName"`
 
-	// 可用区状态  枚举示例:  3: 开启，4: 关闭;  可用区状态以SoldOut为准
+	// <p>可用区状态</p><p>枚举值：</p><ul><li>3： 开启</li><li>4： 关闭</li></ul><p>可用区状态以SoldOut为准</p>
 	ZoneStatus *int64 `json:"ZoneStatus,omitnil,omitempty" name:"ZoneStatus"`
 
-	// 额外标识
+	// <p>额外标识</p>
 	//
 	// Deprecated: Exflag is deprecated.
 	Exflag *string `json:"Exflag,omitnil,omitempty" name:"Exflag"`
 
-	// true为售罄，false为未售罄
+	// <p>true为售罄，false为未售罄</p>
 	SoldOut *string `json:"SoldOut,omitnil,omitempty" name:"SoldOut"`
 
-	// 标准版售罄信息
+	// <p>标准版售罄信息</p>
 	SalesInfo []*SaleInfo `json:"SalesInfo,omitnil,omitempty" name:"SalesInfo"`
 
-	// 额外标识
+	// <p>额外标识</p>
 	ExtraFlag *string `json:"ExtraFlag,omitnil,omitempty" name:"ExtraFlag"`
 }
 

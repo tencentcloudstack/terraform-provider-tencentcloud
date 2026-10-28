@@ -1,5 +1,5 @@
 ---
-subcategory: "Cloud Audit(Audit)"
+subcategory: "Cloud Audit(CloudAudit)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_audit_cos_regions"
 sidebar_current: "docs-tencentcloud-datasource-audit_cos_regions"
@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
   * `cos_region_name` - Cos region chinese name.
   * `cos_region` - Cos region.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListCosEnableRegion](https://www.tencentcloud.com/search/?wd=ListCosEnableRegion&type=document&lang=en)
 

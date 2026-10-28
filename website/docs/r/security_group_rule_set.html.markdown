@@ -143,6 +143,24 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `version` - Security policies version, auto increment for every update.
 
+The `egress` object exports the following:
+
+* `policy_index` - The security group rule index number, whose value dynamically changes with changes in security group rules.
+
+The `ingress` object exports the following:
+
+* `policy_index` - The security group rule index number, whose value dynamically changes with changes in security group rules.
+
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifySecurityGroupPolicies](https://www.tencentcloud.com/document/api/215/15810)
+* Read: [DescribeSecurityGroupPolicies](https://www.tencentcloud.com/document/api/215/15804)
+* Update:
+  - [DeleteSecurityGroupPolicies](https://www.tencentcloud.com/document/api/215/15809)
+  - [ModifySecurityGroupPolicies](https://www.tencentcloud.com/document/api/215/15810)
+* Delete: [ModifySecurityGroupPolicies](https://www.tencentcloud.com/document/api/215/15810)
 
 ## Import
 

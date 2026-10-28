@@ -31,6 +31,10 @@ resource "tencentcloud_tdmq_namespace" "example" {
     size_in_mb      = 10
   }
   remark = "remark."
+  tags {
+    tag_key   = "createdBy"
+    tag_value = "terraform"
+  }
 }
 ```
 
@@ -43,11 +47,17 @@ The following arguments are supported:
 * `msg_ttl` - (Required, Int) The expiration time of unconsumed message.
 * `remark` - (Optional, String) Description of the namespace.
 * `retention_policy` - (Optional, List) The Policy of message to retain. Format like: `{time_in_minutes: Int, size_in_mb: Int}`. `time_in_minutes`: the time of message to retain; `size_in_mb`: the size of message to retain.
+* `tags` - (Optional, List) The tags of the tencentcloud_tdmq_namespace.
 
 The `retention_policy` object supports the following:
 
 * `size_in_mb` - (Optional, Int) the size of message to retain.
 * `time_in_minutes` - (Optional, Int) the time of message to retain.
+
+The `tags` object supports the following:
+
+* `tag_key` - (Required, String) Tag key.
+* `tag_value` - (Required, String) Tag value.
 
 ## Attributes Reference
 
@@ -56,6 +66,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateEnvironment](https://www.tencentcloud.com/search/?wd=CreateEnvironment&type=document&lang=en)
+* Read: [DescribeEnvironments](https://www.tencentcloud.com/search/?wd=DescribeEnvironments&type=document&lang=en)
+* Update:
+  - [ModifyEnvironmentAttributes](https://www.tencentcloud.com/search/?wd=ModifyEnvironmentAttributes&type=document&lang=en)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteEnvironments](https://www.tencentcloud.com/search/?wd=DeleteEnvironments&type=document&lang=en)
 
 ## Import
 

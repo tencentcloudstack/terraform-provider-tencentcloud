@@ -218,5 +218,21 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `data_disks` object exports the following:
 
+* `disk_id` - Data disk ID.
+
+The `system_disk` object exports the following:
+
+* `disk_id` - System disk ID.
+
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLaunchTemplate](https://www.tencentcloud.com/document/api/213/45362)
+* Read:
+  - [DescribeLaunchTemplateVersions](https://www.tencentcloud.com/document/api/213/45358)
+  - [DescribeLaunchTemplates](https://www.tencentcloud.com/document/api/213/45357)
+* Delete: [DeleteLaunchTemplate](https://www.tencentcloud.com/document/api/213/45360)
 

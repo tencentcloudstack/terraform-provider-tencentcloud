@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -30,7 +31,7 @@ func resourceTencentCloudKubernetesEncryptionProtectionCreatePostHandleResponse0
 	conf := tccommon.BuildStateChangeConf(
 		[]string{},
 		[]string{"Opened"},
-		5*tccommon.ReadRetryTimeout,
+		d.Timeout(schema.TimeoutCreate),
 		time.Second,
 		service.TkeEncryptionProtectionStateRefreshFunc(clusterId, []string{}),
 	)
@@ -55,7 +56,7 @@ func resourceTencentCloudKubernetesEncryptionProtectionDeletePostHandleResponse0
 	conf := tccommon.BuildStateChangeConf(
 		[]string{},
 		[]string{"Closed"},
-		5*tccommon.ReadRetryTimeout,
+		d.Timeout(schema.TimeoutDelete),
 		time.Second,
 		service.TkeEncryptionProtectionStateRefreshFunc(d.Id(), []string{}),
 	)

@@ -41,7 +41,7 @@ func TestAccTencentCloudLiteHbaseInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_lite_hbase_instance.lite_hbase_instance", "instance_name", "tf-test"),
 					resource.TestCheckResourceAttr("tencentcloud_lite_hbase_instance.lite_hbase_instance", "pay_mode", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_lite_hbase_instance.lite_hbase_instance", "disk_type", "CLOUD_HSSD"),
-					resource.TestCheckResourceAttr("tencentcloud_lite_hbase_instance.lite_hbase_instance", "disk_size", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_lite_hbase_instance.lite_hbase_instance", "disk_size", "200"),
 					resource.TestCheckResourceAttr("tencentcloud_lite_hbase_instance.lite_hbase_instance", "node_type", "4C16G"),
 					resource.TestCheckResourceAttr("tencentcloud_lite_hbase_instance.lite_hbase_instance", "zone_settings.0.zone", "ap-shanghai-2"),
 					resource.TestCheckResourceAttr("tencentcloud_lite_hbase_instance.lite_hbase_instance", "zone_settings.0.vpc_settings.0.vpc_id", "vpc-muytmxhk"),
@@ -156,7 +156,7 @@ resource "tencentcloud_lite_hbase_instance" "lite_hbase_instance" {
   instance_name = "tf-test"
   pay_mode = 0
   disk_type = "CLOUD_HSSD"
-  disk_size = 100
+  disk_size = 200
   node_type = "4C16G"
   zone_settings {
     zone = "ap-shanghai-2"

@@ -193,6 +193,9 @@ func (me *MongodbService) UpgradeInstance(ctx context.Context, instanceId string
 	if v, ok := params["in_maintenance"]; ok {
 		request.InMaintenance = helper.IntUint64(v.(int))
 	}
+	if v, ok := params["cpu"]; ok {
+		request.Cpu = helper.IntInt64(v.(int))
+	}
 	var response *mongodb.ModifyDBInstanceSpecResponse
 	tradeError := false
 	err := resource.Retry(6*tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -1291,5 +1294,117 @@ func (me *MongodbService) DisableSRVConnectionUrl(ctx context.Context, instanceI
 		}
 	}
 
+	return
+}
+
+func (me *MongodbService) DescribeTransparentDataEncryptionStatusById(ctx context.Context, instanceId string) (ret *mongodb.DescribeTransparentDataEncryptionStatusResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := mongodb.NewDescribeTransparentDataEncryptionStatusRequest()
+	response := mongodb.NewDescribeTransparentDataEncryptionStatusResponse()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMongodbClient().DescribeTransparentDataEncryptionStatusWithContext(ctx, request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), e.Error())
+			return resource.RetryableError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe transparent data encryption status failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *MongodbService) RestoreDBInstance(ctx context.Context, instanceId, restoreTime string, databases []*mongodb.RestoreDatabases) (flowId int64, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := mongodb.NewRestoreDBInstanceRequest()
+	request.InstanceId = &instanceId
+	request.RestoreTime = &restoreTime
+	request.Databases = databases
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *mongodb.RestoreDBInstanceResponse
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMongodbClient().RestoreDBInstanceWithContext(ctx, request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), e.Error())
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.FlowId == nil {
+		errRet = fmt.Errorf("[CRITAL]%s api[%s] fail, response is nil or FlowId is nil", logId, request.GetAction())
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	flowId = *response.Response.FlowId
+	return
+}
+
+func (me *MongodbService) DescribeMongodbScaleUpDbInstanceCpuById(ctx context.Context, instanceId string) (respData *mongodb.CheckDBInstanceElasticCpuScalableResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := mongodb.NewCheckDBInstanceElasticCpuScalableRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *mongodb.CheckDBInstanceElasticCpuScalableResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMongodbClient().CheckDBInstanceElasticCpuScalable(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	respData = response.Response
 	return
 }

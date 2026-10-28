@@ -228,180 +228,88 @@ resource "tencentcloud_teo_zone_setting" "basic" {
 }
 `
 
-// mockMetaForZoneSetting implements tccommon.ProviderMeta
-type mockMetaForZoneSetting struct {
+// mockMetaZoneSetting implements tccommon.ProviderMeta
+type mockMetaZoneSetting struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (m *mockMetaForZoneSetting) GetAPIV3Conn() *connectivity.TencentCloudClient {
+func (m *mockMetaZoneSetting) GetAPIV3Conn() *connectivity.TencentCloudClient {
 	return m.client
 }
 
-var _ tccommon.ProviderMeta = &mockMetaForZoneSetting{}
+var _ tccommon.ProviderMeta = &mockMetaZoneSetting{}
 
-func newMockMetaForZoneSetting() *mockMetaForZoneSetting {
-	return &mockMetaForZoneSetting{client: &connectivity.TencentCloudClient{}}
+func newMockMetaZoneSetting() *mockMetaZoneSetting {
+	return &mockMetaZoneSetting{client: &connectivity.TencentCloudClient{}}
 }
 
-func ptrStrZoneSetting(s string) *string {
+func ptrStringZoneSetting(s string) *string {
 	return &s
 }
 
-// go test ./tencentcloud/services/teo/ -run "TestZoneSettingJITVideoProcess" -v -count=1 -gcflags="all=-l"
+// go test ./tencentcloud/services/teo/ -run "TestTeoZoneSetting_ReadZoneName" -v -count=1 -gcflags="all=-l"
 
-// TestZoneSettingJITVideoProcess_Read_SwitchOn tests Read populates jit_video_process with switch=on
-func TestZoneSettingJITVideoProcess_Read_SwitchOn(t *testing.T) {
+// TestTeoZoneSetting_ReadZoneName tests that zone_name is correctly set from DescribeZoneSetting response
+func TestTeoZoneSetting_ReadZoneName(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaForZoneSetting().client, "UseTeoClient", teoClient)
+	patches.ApplyMethodReturn(newMockMetaZoneSetting().client, "UseTeoClient", teoClient)
 
-	patches.ApplyMethodFunc(teoClient, "DescribeZoneSetting", func(request *teov20220901.DescribeZoneSettingRequest) (*teov20220901.DescribeZoneSettingResponse, error) {
+	expectedZoneName := "example.com"
+	patches.ApplyMethodFunc(teoClient, "DescribeZoneSetting", func(_ *teov20220901.DescribeZoneSettingRequest) (*teov20220901.DescribeZoneSettingResponse, error) {
 		resp := teov20220901.NewDescribeZoneSettingResponse()
 		resp.Response = &teov20220901.DescribeZoneSettingResponseParams{
 			ZoneSetting: &teov20220901.ZoneSetting{
-				JITVideoProcess: &teov20220901.JITVideoProcess{
-					Switch: ptrStrZoneSetting("on"),
-				},
+				ZoneName: ptrStringZoneSetting(expectedZoneName),
+				Area:     ptrStringZoneSetting("overseas"),
 			},
-			RequestId: ptrStrZoneSetting("fake-request-id"),
 		}
 		return resp, nil
 	})
 
-	meta := newMockMetaForZoneSetting()
+	meta := newMockMetaZoneSetting()
 	res := svcteo.ResourceTencentCloudTeoZoneSetting()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
-		"zone_id": "zone-test123",
+		"zone_id": "zone-test12345",
 	})
-	d.SetId("zone-test123")
+	d.SetId("zone-test12345")
 
 	err := res.Read(d, meta)
 	assert.NoError(t, err)
-
-	jitVideoProcess := d.Get("jit_video_process").([]interface{})
-	assert.Equal(t, 1, len(jitVideoProcess))
-	jitMap := jitVideoProcess[0].(map[string]interface{})
-	assert.Equal(t, "on", jitMap["switch"])
+	assert.Equal(t, expectedZoneName, d.Get("zone_name"))
+	assert.Equal(t, "overseas", d.Get("area"))
 }
 
-// TestZoneSettingJITVideoProcess_Read_SwitchOff tests Read populates jit_video_process with switch=off
-func TestZoneSettingJITVideoProcess_Read_SwitchOff(t *testing.T) {
+// TestTeoZoneSetting_ReadZoneNameNil tests that zone_name is not set when API returns nil
+func TestTeoZoneSetting_ReadZoneNameNil(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaForZoneSetting().client, "UseTeoClient", teoClient)
+	patches.ApplyMethodReturn(newMockMetaZoneSetting().client, "UseTeoClient", teoClient)
 
-	patches.ApplyMethodFunc(teoClient, "DescribeZoneSetting", func(request *teov20220901.DescribeZoneSettingRequest) (*teov20220901.DescribeZoneSettingResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "DescribeZoneSetting", func(_ *teov20220901.DescribeZoneSettingRequest) (*teov20220901.DescribeZoneSettingResponse, error) {
 		resp := teov20220901.NewDescribeZoneSettingResponse()
 		resp.Response = &teov20220901.DescribeZoneSettingResponseParams{
 			ZoneSetting: &teov20220901.ZoneSetting{
-				JITVideoProcess: &teov20220901.JITVideoProcess{
-					Switch: ptrStrZoneSetting("off"),
-				},
+				ZoneName: nil,
+				Area:     ptrStringZoneSetting("mainland"),
 			},
-			RequestId: ptrStrZoneSetting("fake-request-id"),
 		}
 		return resp, nil
 	})
 
-	meta := newMockMetaForZoneSetting()
+	meta := newMockMetaZoneSetting()
 	res := svcteo.ResourceTencentCloudTeoZoneSetting()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
-		"zone_id": "zone-test123",
+		"zone_id": "zone-test12345",
 	})
-	d.SetId("zone-test123")
+	d.SetId("zone-test12345")
 
 	err := res.Read(d, meta)
 	assert.NoError(t, err)
-
-	jitVideoProcess := d.Get("jit_video_process").([]interface{})
-	assert.Equal(t, 1, len(jitVideoProcess))
-	jitMap := jitVideoProcess[0].(map[string]interface{})
-	assert.Equal(t, "off", jitMap["switch"])
-}
-
-// TestZoneSettingJITVideoProcess_Read_Nil tests Read handles nil JITVideoProcess
-func TestZoneSettingJITVideoProcess_Read_Nil(t *testing.T) {
-	patches := gomonkey.NewPatches()
-	defer patches.Reset()
-
-	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaForZoneSetting().client, "UseTeoClient", teoClient)
-
-	patches.ApplyMethodFunc(teoClient, "DescribeZoneSetting", func(request *teov20220901.DescribeZoneSettingRequest) (*teov20220901.DescribeZoneSettingResponse, error) {
-		resp := teov20220901.NewDescribeZoneSettingResponse()
-		resp.Response = &teov20220901.DescribeZoneSettingResponseParams{
-			ZoneSetting: &teov20220901.ZoneSetting{
-				JITVideoProcess: nil,
-			},
-			RequestId: ptrStrZoneSetting("fake-request-id"),
-		}
-		return resp, nil
-	})
-
-	meta := newMockMetaForZoneSetting()
-	res := svcteo.ResourceTencentCloudTeoZoneSetting()
-	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
-		"zone_id": "zone-test123",
-	})
-	d.SetId("zone-test123")
-
-	err := res.Read(d, meta)
-	assert.NoError(t, err)
-
-	jitVideoProcess := d.Get("jit_video_process").([]interface{})
-	assert.Equal(t, 0, len(jitVideoProcess))
-}
-
-// TestZoneSettingJITVideoProcess_Update tests Update sends JITVideoProcess in request
-func TestZoneSettingJITVideoProcess_Update(t *testing.T) {
-	patches := gomonkey.NewPatches()
-	defer patches.Reset()
-
-	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaForZoneSetting().client, "UseTeoClient", teoClient)
-
-	var capturedRequest *teov20220901.ModifyZoneSettingRequest
-	patches.ApplyMethodFunc(teoClient, "ModifyZoneSettingWithContext", func(ctx context.Context, request *teov20220901.ModifyZoneSettingRequest) (*teov20220901.ModifyZoneSettingResponse, error) {
-		capturedRequest = request
-		resp := teov20220901.NewModifyZoneSettingResponse()
-		resp.Response = &teov20220901.ModifyZoneSettingResponseParams{
-			RequestId: ptrStrZoneSetting("fake-request-id"),
-		}
-		return resp, nil
-	})
-
-	patches.ApplyMethodFunc(teoClient, "DescribeZoneSetting", func(request *teov20220901.DescribeZoneSettingRequest) (*teov20220901.DescribeZoneSettingResponse, error) {
-		resp := teov20220901.NewDescribeZoneSettingResponse()
-		resp.Response = &teov20220901.DescribeZoneSettingResponseParams{
-			ZoneSetting: &teov20220901.ZoneSetting{
-				JITVideoProcess: &teov20220901.JITVideoProcess{
-					Switch: ptrStrZoneSetting("on"),
-				},
-			},
-			RequestId: ptrStrZoneSetting("fake-request-id"),
-		}
-		return resp, nil
-	})
-
-	meta := newMockMetaForZoneSetting()
-	res := svcteo.ResourceTencentCloudTeoZoneSetting()
-	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
-		"zone_id": "zone-test123",
-		"jit_video_process": []interface{}{
-			map[string]interface{}{
-				"switch": "on",
-			},
-		},
-	})
-	d.SetId("zone-test123")
-
-	err := res.Update(d, meta)
-	assert.NoError(t, err)
-	assert.NotNil(t, capturedRequest)
-	assert.NotNil(t, capturedRequest.JITVideoProcess)
-	assert.Equal(t, "on", *capturedRequest.JITVideoProcess.Switch)
+	assert.Equal(t, "", d.Get("zone_name"))
+	assert.Equal(t, "mainland", d.Get("area"))
 }

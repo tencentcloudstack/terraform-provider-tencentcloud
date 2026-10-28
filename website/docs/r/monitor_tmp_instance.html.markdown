@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_monitor_tmp_instance"
 sidebar_current: "docs-tencentcloud-resource-monitor_tmp_instance"
 description: |-
-  Provides a resource to create a monitor tmpInstance
+  Provides a resource to create a monitor (Cloud Monitor) tmpInstance
 ---
 
 # tencentcloud_monitor_tmp_instance
 
-Provides a resource to create a monitor tmpInstance
+Provides a resource to create a monitor (Cloud Monitor) tmpInstance
 
 ## Example Usage
 
@@ -31,11 +31,12 @@ resource "tencentcloud_subnet" "subnet" {
 }
 
 resource "tencentcloud_monitor_tmp_instance" "example" {
-  instance_name       = "tf-tmp-instance"
-  vpc_id              = tencentcloud_vpc.vpc.id
-  subnet_id           = tencentcloud_subnet.subnet.id
-  data_retention_time = 30
-  zone                = var.availability_zone
+  instance_name                    = "tf-tmp-instance"
+  vpc_id                           = tencentcloud_vpc.vpc.id
+  subnet_id                        = tencentcloud_subnet.subnet.id
+  data_retention_time              = 30
+  zone                             = var.availability_zone
+  long_term_storage_retention_time = 90
   tags = {
     "createdBy" = "terraform"
   }
@@ -51,6 +52,7 @@ The following arguments are supported:
 * `subnet_id` - (Required, String) Subnet Id.
 * `vpc_id` - (Required, String) Vpc Id.
 * `zone` - (Required, String) Available zone.
+* `long_term_storage_retention_time` - (Optional, Int) Long-term storage retention time(in days). Value range: 60-730.
 * `tags` - (Optional, Map) Tag description list.
 
 ## Attributes Reference
@@ -63,6 +65,24 @@ In addition to all arguments above, the following attributes are exported:
 * `proxy_address` - Proxy address.
 * `remote_write` - Prometheus remote write address.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreatePrometheusMultiTenantInstancePostPayMode](https://www.tencentcloud.com/document/api/248/48764)
+  - [DescribePrometheusInstances](https://www.tencentcloud.com/document/api/248/48753)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribePrometheusInstances](https://www.tencentcloud.com/document/api/248/48753)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [ModifyPrometheusInstanceAttributes](https://www.tencentcloud.com/document/api/248/48747)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete:
+  - [DescribePrometheusInstances](https://www.tencentcloud.com/document/api/248/48753)
+  - [DestroyPrometheusInstance](https://www.tencentcloud.com/document/api/248/48749)
+  - [TerminatePrometheusInstances](https://www.tencentcloud.com/document/api/248/48746)
 
 ## Import
 

@@ -62,4 +62,9 @@ In addition to all arguments above, the following attributes are exported:
   * `update_time` - update time.
   * `user_account_id` - user account id.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCrossBorderCcnRegionBandwidthLimits](https://www.tencentcloud.com/search/?wd=DescribeCrossBorderCcnRegionBandwidthLimits&type=document&lang=en)
 

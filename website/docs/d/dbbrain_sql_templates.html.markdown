@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 * `sql_template` - SQL template content.
 * `sql_type` - sql type.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSqlTemplate](https://www.tencentcloud.com/search/?wd=DescribeSqlTemplate&type=document&lang=en)
 

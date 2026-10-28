@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -44,6 +44,190 @@ func NewClient(credential common.CredentialIface, region string, clientProfile *
     return
 }
 
+
+func NewAddCloudNativeAPIGatewayConsumerGroupAuthRequest() (request *AddCloudNativeAPIGatewayConsumerGroupAuthRequest) {
+    request = &AddCloudNativeAPIGatewayConsumerGroupAuthRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "AddCloudNativeAPIGatewayConsumerGroupAuth")
+    
+    
+    return
+}
+
+func NewAddCloudNativeAPIGatewayConsumerGroupAuthResponse() (response *AddCloudNativeAPIGatewayConsumerGroupAuthResponse) {
+    response = &AddCloudNativeAPIGatewayConsumerGroupAuthResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// AddCloudNativeAPIGatewayConsumerGroupAuth
+// 为资源（模型 API / MCP Server）添加消费者组授权。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) AddCloudNativeAPIGatewayConsumerGroupAuth(request *AddCloudNativeAPIGatewayConsumerGroupAuthRequest) (response *AddCloudNativeAPIGatewayConsumerGroupAuthResponse, err error) {
+    return c.AddCloudNativeAPIGatewayConsumerGroupAuthWithContext(context.Background(), request)
+}
+
+// AddCloudNativeAPIGatewayConsumerGroupAuth
+// 为资源（模型 API / MCP Server）添加消费者组授权。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) AddCloudNativeAPIGatewayConsumerGroupAuthWithContext(ctx context.Context, request *AddCloudNativeAPIGatewayConsumerGroupAuthRequest) (response *AddCloudNativeAPIGatewayConsumerGroupAuthResponse, err error) {
+    if request == nil {
+        request = NewAddCloudNativeAPIGatewayConsumerGroupAuthRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "AddCloudNativeAPIGatewayConsumerGroupAuth")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AddCloudNativeAPIGatewayConsumerGroupAuth require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAddCloudNativeAPIGatewayConsumerGroupAuthResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewAddCloudNativeAPIGatewayConsumerInGroupRequest() (request *AddCloudNativeAPIGatewayConsumerInGroupRequest) {
+    request = &AddCloudNativeAPIGatewayConsumerInGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "AddCloudNativeAPIGatewayConsumerInGroup")
+    
+    
+    return
+}
+
+func NewAddCloudNativeAPIGatewayConsumerInGroupResponse() (response *AddCloudNativeAPIGatewayConsumerInGroupResponse) {
+    response = &AddCloudNativeAPIGatewayConsumerInGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// AddCloudNativeAPIGatewayConsumerInGroup
+// 将消费者添加到消费者组。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) AddCloudNativeAPIGatewayConsumerInGroup(request *AddCloudNativeAPIGatewayConsumerInGroupRequest) (response *AddCloudNativeAPIGatewayConsumerInGroupResponse, err error) {
+    return c.AddCloudNativeAPIGatewayConsumerInGroupWithContext(context.Background(), request)
+}
+
+// AddCloudNativeAPIGatewayConsumerInGroup
+// 将消费者添加到消费者组。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) AddCloudNativeAPIGatewayConsumerInGroupWithContext(ctx context.Context, request *AddCloudNativeAPIGatewayConsumerInGroupRequest) (response *AddCloudNativeAPIGatewayConsumerInGroupResponse, err error) {
+    if request == nil {
+        request = NewAddCloudNativeAPIGatewayConsumerInGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "AddCloudNativeAPIGatewayConsumerInGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AddCloudNativeAPIGatewayConsumerInGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAddCloudNativeAPIGatewayConsumerInGroupResponse()
+    err = c.Send(request, response)
+    return
+}
 
 func NewBindAutoScalerResourceStrategyToGroupsRequest() (request *BindAutoScalerResourceStrategyToGroupsRequest) {
     request = &BindAutoScalerResourceStrategyToGroupsRequest{
@@ -128,6 +312,7 @@ func (c *Client) BindAutoScalerResourceStrategyToGroupsWithContext(ctx context.C
     if request == nil {
         request = NewBindAutoScalerResourceStrategyToGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "BindAutoScalerResourceStrategyToGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("BindAutoScalerResourceStrategyToGroups require credential")
@@ -219,6 +404,7 @@ func (c *Client) CloseWafProtectionWithContext(ctx context.Context, request *Clo
     if request == nil {
         request = NewCloseWafProtectionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CloseWafProtection")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CloseWafProtection require credential")
@@ -304,6 +490,7 @@ func (c *Client) CreateAutoScalerResourceStrategyWithContext(ctx context.Context
     if request == nil {
         request = NewCreateAutoScalerResourceStrategyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateAutoScalerResourceStrategy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateAutoScalerResourceStrategy require credential")
@@ -399,6 +586,7 @@ func (c *Client) CreateCloudNativeAPIGatewayWithContext(ctx context.Context, req
     if request == nil {
         request = NewCreateCloudNativeAPIGatewayRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateCloudNativeAPIGateway")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateCloudNativeAPIGateway require credential")
@@ -492,6 +680,7 @@ func (c *Client) CreateCloudNativeAPIGatewayCanaryRuleWithContext(ctx context.Co
     if request == nil {
         request = NewCreateCloudNativeAPIGatewayCanaryRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateCloudNativeAPIGatewayCanaryRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateCloudNativeAPIGatewayCanaryRule require credential")
@@ -587,6 +776,7 @@ func (c *Client) CreateCloudNativeAPIGatewayCertificateWithContext(ctx context.C
     if request == nil {
         request = NewCreateCloudNativeAPIGatewayCertificateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateCloudNativeAPIGatewayCertificate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateCloudNativeAPIGatewayCertificate require credential")
@@ -595,6 +785,338 @@ func (c *Client) CreateCloudNativeAPIGatewayCertificateWithContext(ctx context.C
     request.SetContext(ctx)
     
     response = NewCreateCloudNativeAPIGatewayCertificateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateCloudNativeAPIGatewayConsumerRequest() (request *CreateCloudNativeAPIGatewayConsumerRequest) {
+    request = &CreateCloudNativeAPIGatewayConsumerRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "CreateCloudNativeAPIGatewayConsumer")
+    
+    
+    return
+}
+
+func NewCreateCloudNativeAPIGatewayConsumerResponse() (response *CreateCloudNativeAPIGatewayConsumerResponse) {
+    response = &CreateCloudNativeAPIGatewayConsumerResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateCloudNativeAPIGatewayConsumer
+// 创建消费者。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) CreateCloudNativeAPIGatewayConsumer(request *CreateCloudNativeAPIGatewayConsumerRequest) (response *CreateCloudNativeAPIGatewayConsumerResponse, err error) {
+    return c.CreateCloudNativeAPIGatewayConsumerWithContext(context.Background(), request)
+}
+
+// CreateCloudNativeAPIGatewayConsumer
+// 创建消费者。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) CreateCloudNativeAPIGatewayConsumerWithContext(ctx context.Context, request *CreateCloudNativeAPIGatewayConsumerRequest) (response *CreateCloudNativeAPIGatewayConsumerResponse, err error) {
+    if request == nil {
+        request = NewCreateCloudNativeAPIGatewayConsumerRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateCloudNativeAPIGatewayConsumer")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCloudNativeAPIGatewayConsumer require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateCloudNativeAPIGatewayConsumerResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateCloudNativeAPIGatewayConsumerGroupRequest() (request *CreateCloudNativeAPIGatewayConsumerGroupRequest) {
+    request = &CreateCloudNativeAPIGatewayConsumerGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "CreateCloudNativeAPIGatewayConsumerGroup")
+    
+    
+    return
+}
+
+func NewCreateCloudNativeAPIGatewayConsumerGroupResponse() (response *CreateCloudNativeAPIGatewayConsumerGroupResponse) {
+    response = &CreateCloudNativeAPIGatewayConsumerGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateCloudNativeAPIGatewayConsumerGroup
+// 创建消费者组。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) CreateCloudNativeAPIGatewayConsumerGroup(request *CreateCloudNativeAPIGatewayConsumerGroupRequest) (response *CreateCloudNativeAPIGatewayConsumerGroupResponse, err error) {
+    return c.CreateCloudNativeAPIGatewayConsumerGroupWithContext(context.Background(), request)
+}
+
+// CreateCloudNativeAPIGatewayConsumerGroup
+// 创建消费者组。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) CreateCloudNativeAPIGatewayConsumerGroupWithContext(ctx context.Context, request *CreateCloudNativeAPIGatewayConsumerGroupRequest) (response *CreateCloudNativeAPIGatewayConsumerGroupResponse, err error) {
+    if request == nil {
+        request = NewCreateCloudNativeAPIGatewayConsumerGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateCloudNativeAPIGatewayConsumerGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCloudNativeAPIGatewayConsumerGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateCloudNativeAPIGatewayConsumerGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateCloudNativeAPIGatewayLLMModelAPIRequest() (request *CreateCloudNativeAPIGatewayLLMModelAPIRequest) {
+    request = &CreateCloudNativeAPIGatewayLLMModelAPIRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "CreateCloudNativeAPIGatewayLLMModelAPI")
+    
+    
+    return
+}
+
+func NewCreateCloudNativeAPIGatewayLLMModelAPIResponse() (response *CreateCloudNativeAPIGatewayLLMModelAPIResponse) {
+    response = &CreateCloudNativeAPIGatewayLLMModelAPIResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateCloudNativeAPIGatewayLLMModelAPI
+// 创建 LLM 模型 API。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) CreateCloudNativeAPIGatewayLLMModelAPI(request *CreateCloudNativeAPIGatewayLLMModelAPIRequest) (response *CreateCloudNativeAPIGatewayLLMModelAPIResponse, err error) {
+    return c.CreateCloudNativeAPIGatewayLLMModelAPIWithContext(context.Background(), request)
+}
+
+// CreateCloudNativeAPIGatewayLLMModelAPI
+// 创建 LLM 模型 API。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) CreateCloudNativeAPIGatewayLLMModelAPIWithContext(ctx context.Context, request *CreateCloudNativeAPIGatewayLLMModelAPIRequest) (response *CreateCloudNativeAPIGatewayLLMModelAPIResponse, err error) {
+    if request == nil {
+        request = NewCreateCloudNativeAPIGatewayLLMModelAPIRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateCloudNativeAPIGatewayLLMModelAPI")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCloudNativeAPIGatewayLLMModelAPI require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateCloudNativeAPIGatewayLLMModelAPIResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateCloudNativeAPIGatewayLLMModelServiceRequest() (request *CreateCloudNativeAPIGatewayLLMModelServiceRequest) {
+    request = &CreateCloudNativeAPIGatewayLLMModelServiceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "CreateCloudNativeAPIGatewayLLMModelService")
+    
+    
+    return
+}
+
+func NewCreateCloudNativeAPIGatewayLLMModelServiceResponse() (response *CreateCloudNativeAPIGatewayLLMModelServiceResponse) {
+    response = &CreateCloudNativeAPIGatewayLLMModelServiceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateCloudNativeAPIGatewayLLMModelService
+// 创建 LLM 模型服务。同一网关下 Name 唯一。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) CreateCloudNativeAPIGatewayLLMModelService(request *CreateCloudNativeAPIGatewayLLMModelServiceRequest) (response *CreateCloudNativeAPIGatewayLLMModelServiceResponse, err error) {
+    return c.CreateCloudNativeAPIGatewayLLMModelServiceWithContext(context.Background(), request)
+}
+
+// CreateCloudNativeAPIGatewayLLMModelService
+// 创建 LLM 模型服务。同一网关下 Name 唯一。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) CreateCloudNativeAPIGatewayLLMModelServiceWithContext(ctx context.Context, request *CreateCloudNativeAPIGatewayLLMModelServiceRequest) (response *CreateCloudNativeAPIGatewayLLMModelServiceResponse, err error) {
+    if request == nil {
+        request = NewCreateCloudNativeAPIGatewayLLMModelServiceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateCloudNativeAPIGatewayLLMModelService")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCloudNativeAPIGatewayLLMModelService require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateCloudNativeAPIGatewayLLMModelServiceResponse()
     err = c.Send(request, response)
     return
 }
@@ -644,6 +1166,7 @@ func (c *Client) CreateCloudNativeAPIGatewayPublicNetworkWithContext(ctx context
     if request == nil {
         request = NewCreateCloudNativeAPIGatewayPublicNetworkRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateCloudNativeAPIGatewayPublicNetwork")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateCloudNativeAPIGatewayPublicNetwork require credential")
@@ -735,6 +1258,7 @@ func (c *Client) CreateCloudNativeAPIGatewayRouteWithContext(ctx context.Context
     if request == nil {
         request = NewCreateCloudNativeAPIGatewayRouteRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateCloudNativeAPIGatewayRoute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateCloudNativeAPIGatewayRoute require credential")
@@ -826,6 +1350,7 @@ func (c *Client) CreateCloudNativeAPIGatewayRouteRateLimitWithContext(ctx contex
     if request == nil {
         request = NewCreateCloudNativeAPIGatewayRouteRateLimitRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateCloudNativeAPIGatewayRouteRateLimit")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateCloudNativeAPIGatewayRouteRateLimit require credential")
@@ -834,6 +1359,100 @@ func (c *Client) CreateCloudNativeAPIGatewayRouteRateLimitWithContext(ctx contex
     request.SetContext(ctx)
     
     response = NewCreateCloudNativeAPIGatewayRouteRateLimitResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateCloudNativeAPIGatewaySecretKeyRequest() (request *CreateCloudNativeAPIGatewaySecretKeyRequest) {
+    request = &CreateCloudNativeAPIGatewaySecretKeyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "CreateCloudNativeAPIGatewaySecretKey")
+    
+    
+    return
+}
+
+func NewCreateCloudNativeAPIGatewaySecretKeyResponse() (response *CreateCloudNativeAPIGatewaySecretKeyResponse) {
+    response = &CreateCloudNativeAPIGatewaySecretKeyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateCloudNativeAPIGatewaySecretKey
+// 创建消费者密钥。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  RESOURCEUNAVAILABLE_NOTPURCHASED = "ResourceUnavailable.NotPurchased"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) CreateCloudNativeAPIGatewaySecretKey(request *CreateCloudNativeAPIGatewaySecretKeyRequest) (response *CreateCloudNativeAPIGatewaySecretKeyResponse, err error) {
+    return c.CreateCloudNativeAPIGatewaySecretKeyWithContext(context.Background(), request)
+}
+
+// CreateCloudNativeAPIGatewaySecretKey
+// 创建消费者密钥。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  RESOURCEUNAVAILABLE_NOTPURCHASED = "ResourceUnavailable.NotPurchased"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) CreateCloudNativeAPIGatewaySecretKeyWithContext(ctx context.Context, request *CreateCloudNativeAPIGatewaySecretKeyRequest) (response *CreateCloudNativeAPIGatewaySecretKeyResponse, err error) {
+    if request == nil {
+        request = NewCreateCloudNativeAPIGatewaySecretKeyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateCloudNativeAPIGatewaySecretKey")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCloudNativeAPIGatewaySecretKey require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateCloudNativeAPIGatewaySecretKeyResponse()
     err = c.Send(request, response)
     return
 }
@@ -917,6 +1536,7 @@ func (c *Client) CreateCloudNativeAPIGatewayServiceWithContext(ctx context.Conte
     if request == nil {
         request = NewCreateCloudNativeAPIGatewayServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateCloudNativeAPIGatewayService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateCloudNativeAPIGatewayService require credential")
@@ -1010,6 +1630,7 @@ func (c *Client) CreateCloudNativeAPIGatewayServiceRateLimitWithContext(ctx cont
     if request == nil {
         request = NewCreateCloudNativeAPIGatewayServiceRateLimitRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateCloudNativeAPIGatewayServiceRateLimit")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateCloudNativeAPIGatewayServiceRateLimit require credential")
@@ -1018,6 +1639,136 @@ func (c *Client) CreateCloudNativeAPIGatewayServiceRateLimitWithContext(ctx cont
     request.SetContext(ctx)
     
     response = NewCreateCloudNativeAPIGatewayServiceRateLimitResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateConfigFileRequest() (request *CreateConfigFileRequest) {
+    request = &CreateConfigFileRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "CreateConfigFile")
+    
+    
+    return
+}
+
+func NewCreateConfigFileResponse() (response *CreateConfigFileResponse) {
+    response = &CreateConfigFileResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateConfigFile
+// 创建配置文件
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_CREATEERROR = "InvalidParameterValue.CreateError"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+func (c *Client) CreateConfigFile(request *CreateConfigFileRequest) (response *CreateConfigFileResponse, err error) {
+    return c.CreateConfigFileWithContext(context.Background(), request)
+}
+
+// CreateConfigFile
+// 创建配置文件
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_CREATEERROR = "InvalidParameterValue.CreateError"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+func (c *Client) CreateConfigFileWithContext(ctx context.Context, request *CreateConfigFileRequest) (response *CreateConfigFileResponse, err error) {
+    if request == nil {
+        request = NewCreateConfigFileRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateConfigFile")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateConfigFile require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateConfigFileResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateConfigFileGroupRequest() (request *CreateConfigFileGroupRequest) {
+    request = &CreateConfigFileGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "CreateConfigFileGroup")
+    
+    
+    return
+}
+
+func NewCreateConfigFileGroupResponse() (response *CreateConfigFileGroupResponse) {
+    response = &CreateConfigFileGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateConfigFileGroup
+// 创建服务治理中心配置文件组
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CREATEERROR = "InternalError.CreateError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_OPERATIONFAILED = "InternalError.OperationFailed"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  MISSINGPARAMETER = "MissingParameter"
+//  MISSINGPARAMETER_CREATEERROR = "MissingParameter.CreateError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateConfigFileGroup(request *CreateConfigFileGroupRequest) (response *CreateConfigFileGroupResponse, err error) {
+    return c.CreateConfigFileGroupWithContext(context.Background(), request)
+}
+
+// CreateConfigFileGroup
+// 创建服务治理中心配置文件组
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CREATEERROR = "InternalError.CreateError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_OPERATIONFAILED = "InternalError.OperationFailed"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  MISSINGPARAMETER = "MissingParameter"
+//  MISSINGPARAMETER_CREATEERROR = "MissingParameter.CreateError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateConfigFileGroupWithContext(ctx context.Context, request *CreateConfigFileGroupRequest) (response *CreateConfigFileGroupResponse, err error) {
+    if request == nil {
+        request = NewCreateConfigFileGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateConfigFileGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateConfigFileGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateConfigFileGroupResponse()
     err = c.Send(request, response)
     return
 }
@@ -1087,6 +1838,7 @@ func (c *Client) CreateEngineWithContext(ctx context.Context, request *CreateEng
     if request == nil {
         request = NewCreateEngineRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateEngine")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateEngine require credential")
@@ -1095,6 +1847,306 @@ func (c *Client) CreateEngineWithContext(ctx context.Context, request *CreateEng
     request.SetContext(ctx)
     
     response = NewCreateEngineResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateGovernanceAliasRequest() (request *CreateGovernanceAliasRequest) {
+    request = &CreateGovernanceAliasRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "CreateGovernanceAlias")
+    
+    
+    return
+}
+
+func NewCreateGovernanceAliasResponse() (response *CreateGovernanceAliasResponse) {
+    response = &CreateGovernanceAliasResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateGovernanceAlias
+// 创建治理中心服务别名
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_CREATEERROR = "InvalidParameterValue.CreateError"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateGovernanceAlias(request *CreateGovernanceAliasRequest) (response *CreateGovernanceAliasResponse, err error) {
+    return c.CreateGovernanceAliasWithContext(context.Background(), request)
+}
+
+// CreateGovernanceAlias
+// 创建治理中心服务别名
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_CREATEERROR = "InvalidParameterValue.CreateError"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateGovernanceAliasWithContext(ctx context.Context, request *CreateGovernanceAliasRequest) (response *CreateGovernanceAliasResponse, err error) {
+    if request == nil {
+        request = NewCreateGovernanceAliasRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateGovernanceAlias")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateGovernanceAlias require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateGovernanceAliasResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateGovernanceInstancesRequest() (request *CreateGovernanceInstancesRequest) {
+    request = &CreateGovernanceInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "CreateGovernanceInstances")
+    
+    
+    return
+}
+
+func NewCreateGovernanceInstancesResponse() (response *CreateGovernanceInstancesResponse) {
+    response = &CreateGovernanceInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateGovernanceInstances
+// 创建服务实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_CREATEERROR = "InvalidParameterValue.CreateError"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateGovernanceInstances(request *CreateGovernanceInstancesRequest) (response *CreateGovernanceInstancesResponse, err error) {
+    return c.CreateGovernanceInstancesWithContext(context.Background(), request)
+}
+
+// CreateGovernanceInstances
+// 创建服务实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_CREATEERROR = "InvalidParameterValue.CreateError"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateGovernanceInstancesWithContext(ctx context.Context, request *CreateGovernanceInstancesRequest) (response *CreateGovernanceInstancesResponse, err error) {
+    if request == nil {
+        request = NewCreateGovernanceInstancesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateGovernanceInstances")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateGovernanceInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateGovernanceInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateGovernanceLaneGroupsRequest() (request *CreateGovernanceLaneGroupsRequest) {
+    request = &CreateGovernanceLaneGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "CreateGovernanceLaneGroups")
+    
+    
+    return
+}
+
+func NewCreateGovernanceLaneGroupsResponse() (response *CreateGovernanceLaneGroupsResponse) {
+    response = &CreateGovernanceLaneGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateGovernanceLaneGroups
+// 创建泳道组
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_CREATEERROR = "InvalidParameterValue.CreateError"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateGovernanceLaneGroups(request *CreateGovernanceLaneGroupsRequest) (response *CreateGovernanceLaneGroupsResponse, err error) {
+    return c.CreateGovernanceLaneGroupsWithContext(context.Background(), request)
+}
+
+// CreateGovernanceLaneGroups
+// 创建泳道组
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_CREATEERROR = "InvalidParameterValue.CreateError"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateGovernanceLaneGroupsWithContext(ctx context.Context, request *CreateGovernanceLaneGroupsRequest) (response *CreateGovernanceLaneGroupsResponse, err error) {
+    if request == nil {
+        request = NewCreateGovernanceLaneGroupsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateGovernanceLaneGroups")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateGovernanceLaneGroups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateGovernanceLaneGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateGovernanceNamespacesRequest() (request *CreateGovernanceNamespacesRequest) {
+    request = &CreateGovernanceNamespacesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "CreateGovernanceNamespaces")
+    
+    
+    return
+}
+
+func NewCreateGovernanceNamespacesResponse() (response *CreateGovernanceNamespacesResponse) {
+    response = &CreateGovernanceNamespacesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateGovernanceNamespaces
+// 创建治理中心命名空间
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_CREATEERROR = "InvalidParameterValue.CreateError"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateGovernanceNamespaces(request *CreateGovernanceNamespacesRequest) (response *CreateGovernanceNamespacesResponse, err error) {
+    return c.CreateGovernanceNamespacesWithContext(context.Background(), request)
+}
+
+// CreateGovernanceNamespaces
+// 创建治理中心命名空间
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_CREATEERROR = "InvalidParameterValue.CreateError"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateGovernanceNamespacesWithContext(ctx context.Context, request *CreateGovernanceNamespacesRequest) (response *CreateGovernanceNamespacesResponse, err error) {
+    if request == nil {
+        request = NewCreateGovernanceNamespacesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateGovernanceNamespaces")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateGovernanceNamespaces require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateGovernanceNamespacesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateGovernanceServicesRequest() (request *CreateGovernanceServicesRequest) {
+    request = &CreateGovernanceServicesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "CreateGovernanceServices")
+    
+    
+    return
+}
+
+func NewCreateGovernanceServicesResponse() (response *CreateGovernanceServicesResponse) {
+    response = &CreateGovernanceServicesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateGovernanceServices
+// 创建治理中心服务
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_CREATEERROR = "InvalidParameterValue.CreateError"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateGovernanceServices(request *CreateGovernanceServicesRequest) (response *CreateGovernanceServicesResponse, err error) {
+    return c.CreateGovernanceServicesWithContext(context.Background(), request)
+}
+
+// CreateGovernanceServices
+// 创建治理中心服务
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_CREATEERROR = "InvalidParameterValue.CreateError"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateGovernanceServicesWithContext(ctx context.Context, request *CreateGovernanceServicesRequest) (response *CreateGovernanceServicesResponse, err error) {
+    if request == nil {
+        request = NewCreateGovernanceServicesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateGovernanceServices")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateGovernanceServices require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateGovernanceServicesResponse()
     err = c.Send(request, response)
     return
 }
@@ -1144,6 +2196,7 @@ func (c *Client) CreateNativeGatewayServerGroupWithContext(ctx context.Context, 
     if request == nil {
         request = NewCreateNativeGatewayServerGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateNativeGatewayServerGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateNativeGatewayServerGroup require credential")
@@ -1152,6 +2205,312 @@ func (c *Client) CreateNativeGatewayServerGroupWithContext(ctx context.Context, 
     request.SetContext(ctx)
     
     response = NewCreateNativeGatewayServerGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateNativeGatewayServiceSourceRequest() (request *CreateNativeGatewayServiceSourceRequest) {
+    request = &CreateNativeGatewayServiceSourceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "CreateNativeGatewayServiceSource")
+    
+    
+    return
+}
+
+func NewCreateNativeGatewayServiceSourceResponse() (response *CreateNativeGatewayServiceSourceResponse) {
+    response = &CreateNativeGatewayServiceSourceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateNativeGatewayServiceSource
+// 创建网关服务来源
+//
+// 可能返回的错误码:
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INVALIDPARAMETERVALUE_CREATEERROR = "InvalidParameterValue.CreateError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+func (c *Client) CreateNativeGatewayServiceSource(request *CreateNativeGatewayServiceSourceRequest) (response *CreateNativeGatewayServiceSourceResponse, err error) {
+    return c.CreateNativeGatewayServiceSourceWithContext(context.Background(), request)
+}
+
+// CreateNativeGatewayServiceSource
+// 创建网关服务来源
+//
+// 可能返回的错误码:
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INVALIDPARAMETERVALUE_CREATEERROR = "InvalidParameterValue.CreateError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+func (c *Client) CreateNativeGatewayServiceSourceWithContext(ctx context.Context, request *CreateNativeGatewayServiceSourceRequest) (response *CreateNativeGatewayServiceSourceResponse, err error) {
+    if request == nil {
+        request = NewCreateNativeGatewayServiceSourceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateNativeGatewayServiceSource")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateNativeGatewayServiceSource require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateNativeGatewayServiceSourceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateOrModifyCloudNativeAPIGatewayCORSRequest() (request *CreateOrModifyCloudNativeAPIGatewayCORSRequest) {
+    request = &CreateOrModifyCloudNativeAPIGatewayCORSRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "CreateOrModifyCloudNativeAPIGatewayCORS")
+    
+    
+    return
+}
+
+func NewCreateOrModifyCloudNativeAPIGatewayCORSResponse() (response *CreateOrModifyCloudNativeAPIGatewayCORSResponse) {
+    response = &CreateOrModifyCloudNativeAPIGatewayCORSResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateOrModifyCloudNativeAPIGatewayCORS
+// 创建或编辑云原生网关跨域配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) CreateOrModifyCloudNativeAPIGatewayCORS(request *CreateOrModifyCloudNativeAPIGatewayCORSRequest) (response *CreateOrModifyCloudNativeAPIGatewayCORSResponse, err error) {
+    return c.CreateOrModifyCloudNativeAPIGatewayCORSWithContext(context.Background(), request)
+}
+
+// CreateOrModifyCloudNativeAPIGatewayCORS
+// 创建或编辑云原生网关跨域配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) CreateOrModifyCloudNativeAPIGatewayCORSWithContext(ctx context.Context, request *CreateOrModifyCloudNativeAPIGatewayCORSRequest) (response *CreateOrModifyCloudNativeAPIGatewayCORSResponse, err error) {
+    if request == nil {
+        request = NewCreateOrModifyCloudNativeAPIGatewayCORSRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateOrModifyCloudNativeAPIGatewayCORS")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateOrModifyCloudNativeAPIGatewayCORS require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateOrModifyCloudNativeAPIGatewayCORSResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateOrModifyCloudNativeAPIGatewayIPRestrictionRequest() (request *CreateOrModifyCloudNativeAPIGatewayIPRestrictionRequest) {
+    request = &CreateOrModifyCloudNativeAPIGatewayIPRestrictionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "CreateOrModifyCloudNativeAPIGatewayIPRestriction")
+    
+    
+    return
+}
+
+func NewCreateOrModifyCloudNativeAPIGatewayIPRestrictionResponse() (response *CreateOrModifyCloudNativeAPIGatewayIPRestrictionResponse) {
+    response = &CreateOrModifyCloudNativeAPIGatewayIPRestrictionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateOrModifyCloudNativeAPIGatewayIPRestriction
+// 创建或编辑云原生网关访问控制
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) CreateOrModifyCloudNativeAPIGatewayIPRestriction(request *CreateOrModifyCloudNativeAPIGatewayIPRestrictionRequest) (response *CreateOrModifyCloudNativeAPIGatewayIPRestrictionResponse, err error) {
+    return c.CreateOrModifyCloudNativeAPIGatewayIPRestrictionWithContext(context.Background(), request)
+}
+
+// CreateOrModifyCloudNativeAPIGatewayIPRestriction
+// 创建或编辑云原生网关访问控制
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) CreateOrModifyCloudNativeAPIGatewayIPRestrictionWithContext(ctx context.Context, request *CreateOrModifyCloudNativeAPIGatewayIPRestrictionRequest) (response *CreateOrModifyCloudNativeAPIGatewayIPRestrictionResponse, err error) {
+    if request == nil {
+        request = NewCreateOrModifyCloudNativeAPIGatewayIPRestrictionRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateOrModifyCloudNativeAPIGatewayIPRestriction")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateOrModifyCloudNativeAPIGatewayIPRestriction require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateOrModifyCloudNativeAPIGatewayIPRestrictionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateOrUpdateConfigFileAndReleaseRequest() (request *CreateOrUpdateConfigFileAndReleaseRequest) {
+    request = &CreateOrUpdateConfigFileAndReleaseRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "CreateOrUpdateConfigFileAndRelease")
+    
+    
+    return
+}
+
+func NewCreateOrUpdateConfigFileAndReleaseResponse() (response *CreateOrUpdateConfigFileAndReleaseResponse) {
+    response = &CreateOrUpdateConfigFileAndReleaseResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateOrUpdateConfigFileAndRelease
+// 创建或更新配置文件并发布配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+func (c *Client) CreateOrUpdateConfigFileAndRelease(request *CreateOrUpdateConfigFileAndReleaseRequest) (response *CreateOrUpdateConfigFileAndReleaseResponse, err error) {
+    return c.CreateOrUpdateConfigFileAndReleaseWithContext(context.Background(), request)
+}
+
+// CreateOrUpdateConfigFileAndRelease
+// 创建或更新配置文件并发布配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+func (c *Client) CreateOrUpdateConfigFileAndReleaseWithContext(ctx context.Context, request *CreateOrUpdateConfigFileAndReleaseRequest) (response *CreateOrUpdateConfigFileAndReleaseResponse, err error) {
+    if request == nil {
+        request = NewCreateOrUpdateConfigFileAndReleaseRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateOrUpdateConfigFileAndRelease")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateOrUpdateConfigFileAndRelease require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateOrUpdateConfigFileAndReleaseResponse()
     err = c.Send(request, response)
     return
 }
@@ -1239,6 +2598,7 @@ func (c *Client) CreateWafDomainsWithContext(ctx context.Context, request *Creat
     if request == nil {
         request = NewCreateWafDomainsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "CreateWafDomains")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateWafDomains require credential")
@@ -1314,6 +2674,7 @@ func (c *Client) DeleteAutoScalerResourceStrategyWithContext(ctx context.Context
     if request == nil {
         request = NewDeleteAutoScalerResourceStrategyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteAutoScalerResourceStrategy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteAutoScalerResourceStrategy require credential")
@@ -1393,6 +2754,7 @@ func (c *Client) DeleteCloudNativeAPIGatewayWithContext(ctx context.Context, req
     if request == nil {
         request = NewDeleteCloudNativeAPIGatewayRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteCloudNativeAPIGateway")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteCloudNativeAPIGateway require credential")
@@ -1401,6 +2763,100 @@ func (c *Client) DeleteCloudNativeAPIGatewayWithContext(ctx context.Context, req
     request.SetContext(ctx)
     
     response = NewDeleteCloudNativeAPIGatewayResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteCloudNativeAPIGatewayCORSRequest() (request *DeleteCloudNativeAPIGatewayCORSRequest) {
+    request = &DeleteCloudNativeAPIGatewayCORSRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DeleteCloudNativeAPIGatewayCORS")
+    
+    
+    return
+}
+
+func NewDeleteCloudNativeAPIGatewayCORSResponse() (response *DeleteCloudNativeAPIGatewayCORSResponse) {
+    response = &DeleteCloudNativeAPIGatewayCORSResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteCloudNativeAPIGatewayCORS
+// 删除云原生网关跨域插件
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DeleteCloudNativeAPIGatewayCORS(request *DeleteCloudNativeAPIGatewayCORSRequest) (response *DeleteCloudNativeAPIGatewayCORSResponse, err error) {
+    return c.DeleteCloudNativeAPIGatewayCORSWithContext(context.Background(), request)
+}
+
+// DeleteCloudNativeAPIGatewayCORS
+// 删除云原生网关跨域插件
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DeleteCloudNativeAPIGatewayCORSWithContext(ctx context.Context, request *DeleteCloudNativeAPIGatewayCORSRequest) (response *DeleteCloudNativeAPIGatewayCORSResponse, err error) {
+    if request == nil {
+        request = NewDeleteCloudNativeAPIGatewayCORSRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteCloudNativeAPIGatewayCORS")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCloudNativeAPIGatewayCORS require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCloudNativeAPIGatewayCORSResponse()
     err = c.Send(request, response)
     return
 }
@@ -1484,6 +2940,7 @@ func (c *Client) DeleteCloudNativeAPIGatewayCanaryRuleWithContext(ctx context.Co
     if request == nil {
         request = NewDeleteCloudNativeAPIGatewayCanaryRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteCloudNativeAPIGatewayCanaryRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteCloudNativeAPIGatewayCanaryRule require credential")
@@ -1575,6 +3032,7 @@ func (c *Client) DeleteCloudNativeAPIGatewayCertificateWithContext(ctx context.C
     if request == nil {
         request = NewDeleteCloudNativeAPIGatewayCertificateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteCloudNativeAPIGatewayCertificate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteCloudNativeAPIGatewayCertificate require credential")
@@ -1583,6 +3041,432 @@ func (c *Client) DeleteCloudNativeAPIGatewayCertificateWithContext(ctx context.C
     request.SetContext(ctx)
     
     response = NewDeleteCloudNativeAPIGatewayCertificateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteCloudNativeAPIGatewayConsumerRequest() (request *DeleteCloudNativeAPIGatewayConsumerRequest) {
+    request = &DeleteCloudNativeAPIGatewayConsumerRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DeleteCloudNativeAPIGatewayConsumer")
+    
+    
+    return
+}
+
+func NewDeleteCloudNativeAPIGatewayConsumerResponse() (response *DeleteCloudNativeAPIGatewayConsumerResponse) {
+    response = &DeleteCloudNativeAPIGatewayConsumerResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteCloudNativeAPIGatewayConsumer
+// 删除消费者（被绑定到消费者组/密钥时需先解绑）。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DeleteCloudNativeAPIGatewayConsumer(request *DeleteCloudNativeAPIGatewayConsumerRequest) (response *DeleteCloudNativeAPIGatewayConsumerResponse, err error) {
+    return c.DeleteCloudNativeAPIGatewayConsumerWithContext(context.Background(), request)
+}
+
+// DeleteCloudNativeAPIGatewayConsumer
+// 删除消费者（被绑定到消费者组/密钥时需先解绑）。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DeleteCloudNativeAPIGatewayConsumerWithContext(ctx context.Context, request *DeleteCloudNativeAPIGatewayConsumerRequest) (response *DeleteCloudNativeAPIGatewayConsumerResponse, err error) {
+    if request == nil {
+        request = NewDeleteCloudNativeAPIGatewayConsumerRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteCloudNativeAPIGatewayConsumer")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCloudNativeAPIGatewayConsumer require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCloudNativeAPIGatewayConsumerResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteCloudNativeAPIGatewayConsumerGroupRequest() (request *DeleteCloudNativeAPIGatewayConsumerGroupRequest) {
+    request = &DeleteCloudNativeAPIGatewayConsumerGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DeleteCloudNativeAPIGatewayConsumerGroup")
+    
+    
+    return
+}
+
+func NewDeleteCloudNativeAPIGatewayConsumerGroupResponse() (response *DeleteCloudNativeAPIGatewayConsumerGroupResponse) {
+    response = &DeleteCloudNativeAPIGatewayConsumerGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteCloudNativeAPIGatewayConsumerGroup
+// 删除消费者组（被授权资源占用时返回 CheckItems）。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DeleteCloudNativeAPIGatewayConsumerGroup(request *DeleteCloudNativeAPIGatewayConsumerGroupRequest) (response *DeleteCloudNativeAPIGatewayConsumerGroupResponse, err error) {
+    return c.DeleteCloudNativeAPIGatewayConsumerGroupWithContext(context.Background(), request)
+}
+
+// DeleteCloudNativeAPIGatewayConsumerGroup
+// 删除消费者组（被授权资源占用时返回 CheckItems）。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DeleteCloudNativeAPIGatewayConsumerGroupWithContext(ctx context.Context, request *DeleteCloudNativeAPIGatewayConsumerGroupRequest) (response *DeleteCloudNativeAPIGatewayConsumerGroupResponse, err error) {
+    if request == nil {
+        request = NewDeleteCloudNativeAPIGatewayConsumerGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteCloudNativeAPIGatewayConsumerGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCloudNativeAPIGatewayConsumerGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCloudNativeAPIGatewayConsumerGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteCloudNativeAPIGatewayIPRestrictionRequest() (request *DeleteCloudNativeAPIGatewayIPRestrictionRequest) {
+    request = &DeleteCloudNativeAPIGatewayIPRestrictionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DeleteCloudNativeAPIGatewayIPRestriction")
+    
+    
+    return
+}
+
+func NewDeleteCloudNativeAPIGatewayIPRestrictionResponse() (response *DeleteCloudNativeAPIGatewayIPRestrictionResponse) {
+    response = &DeleteCloudNativeAPIGatewayIPRestrictionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteCloudNativeAPIGatewayIPRestriction
+// 删除云原生网关访问控制
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DeleteCloudNativeAPIGatewayIPRestriction(request *DeleteCloudNativeAPIGatewayIPRestrictionRequest) (response *DeleteCloudNativeAPIGatewayIPRestrictionResponse, err error) {
+    return c.DeleteCloudNativeAPIGatewayIPRestrictionWithContext(context.Background(), request)
+}
+
+// DeleteCloudNativeAPIGatewayIPRestriction
+// 删除云原生网关访问控制
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DeleteCloudNativeAPIGatewayIPRestrictionWithContext(ctx context.Context, request *DeleteCloudNativeAPIGatewayIPRestrictionRequest) (response *DeleteCloudNativeAPIGatewayIPRestrictionResponse, err error) {
+    if request == nil {
+        request = NewDeleteCloudNativeAPIGatewayIPRestrictionRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteCloudNativeAPIGatewayIPRestriction")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCloudNativeAPIGatewayIPRestriction require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCloudNativeAPIGatewayIPRestrictionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteCloudNativeAPIGatewayLLMModelAPIRequest() (request *DeleteCloudNativeAPIGatewayLLMModelAPIRequest) {
+    request = &DeleteCloudNativeAPIGatewayLLMModelAPIRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DeleteCloudNativeAPIGatewayLLMModelAPI")
+    
+    
+    return
+}
+
+func NewDeleteCloudNativeAPIGatewayLLMModelAPIResponse() (response *DeleteCloudNativeAPIGatewayLLMModelAPIResponse) {
+    response = &DeleteCloudNativeAPIGatewayLLMModelAPIResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteCloudNativeAPIGatewayLLMModelAPI
+// 删除 LLM 模型 API。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DeleteCloudNativeAPIGatewayLLMModelAPI(request *DeleteCloudNativeAPIGatewayLLMModelAPIRequest) (response *DeleteCloudNativeAPIGatewayLLMModelAPIResponse, err error) {
+    return c.DeleteCloudNativeAPIGatewayLLMModelAPIWithContext(context.Background(), request)
+}
+
+// DeleteCloudNativeAPIGatewayLLMModelAPI
+// 删除 LLM 模型 API。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DeleteCloudNativeAPIGatewayLLMModelAPIWithContext(ctx context.Context, request *DeleteCloudNativeAPIGatewayLLMModelAPIRequest) (response *DeleteCloudNativeAPIGatewayLLMModelAPIResponse, err error) {
+    if request == nil {
+        request = NewDeleteCloudNativeAPIGatewayLLMModelAPIRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteCloudNativeAPIGatewayLLMModelAPI")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCloudNativeAPIGatewayLLMModelAPI require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCloudNativeAPIGatewayLLMModelAPIResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteCloudNativeAPIGatewayLLMModelServiceRequest() (request *DeleteCloudNativeAPIGatewayLLMModelServiceRequest) {
+    request = &DeleteCloudNativeAPIGatewayLLMModelServiceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DeleteCloudNativeAPIGatewayLLMModelService")
+    
+    
+    return
+}
+
+func NewDeleteCloudNativeAPIGatewayLLMModelServiceResponse() (response *DeleteCloudNativeAPIGatewayLLMModelServiceResponse) {
+    response = &DeleteCloudNativeAPIGatewayLLMModelServiceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteCloudNativeAPIGatewayLLMModelService
+// 删除 LLM 模型服务（被模型 API 绑定时需先解绑）。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DeleteCloudNativeAPIGatewayLLMModelService(request *DeleteCloudNativeAPIGatewayLLMModelServiceRequest) (response *DeleteCloudNativeAPIGatewayLLMModelServiceResponse, err error) {
+    return c.DeleteCloudNativeAPIGatewayLLMModelServiceWithContext(context.Background(), request)
+}
+
+// DeleteCloudNativeAPIGatewayLLMModelService
+// 删除 LLM 模型服务（被模型 API 绑定时需先解绑）。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DeleteCloudNativeAPIGatewayLLMModelServiceWithContext(ctx context.Context, request *DeleteCloudNativeAPIGatewayLLMModelServiceRequest) (response *DeleteCloudNativeAPIGatewayLLMModelServiceResponse, err error) {
+    if request == nil {
+        request = NewDeleteCloudNativeAPIGatewayLLMModelServiceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteCloudNativeAPIGatewayLLMModelService")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCloudNativeAPIGatewayLLMModelService require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCloudNativeAPIGatewayLLMModelServiceResponse()
     err = c.Send(request, response)
     return
 }
@@ -1628,6 +3512,7 @@ func (c *Client) DeleteCloudNativeAPIGatewayPublicNetworkWithContext(ctx context
     if request == nil {
         request = NewDeleteCloudNativeAPIGatewayPublicNetworkRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteCloudNativeAPIGatewayPublicNetwork")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteCloudNativeAPIGatewayPublicNetwork require credential")
@@ -1719,6 +3604,7 @@ func (c *Client) DeleteCloudNativeAPIGatewayRouteWithContext(ctx context.Context
     if request == nil {
         request = NewDeleteCloudNativeAPIGatewayRouteRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteCloudNativeAPIGatewayRoute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteCloudNativeAPIGatewayRoute require credential")
@@ -1810,6 +3696,7 @@ func (c *Client) DeleteCloudNativeAPIGatewayRouteRateLimitWithContext(ctx contex
     if request == nil {
         request = NewDeleteCloudNativeAPIGatewayRouteRateLimitRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteCloudNativeAPIGatewayRouteRateLimit")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteCloudNativeAPIGatewayRouteRateLimit require credential")
@@ -1818,6 +3705,98 @@ func (c *Client) DeleteCloudNativeAPIGatewayRouteRateLimitWithContext(ctx contex
     request.SetContext(ctx)
     
     response = NewDeleteCloudNativeAPIGatewayRouteRateLimitResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteCloudNativeAPIGatewaySecretKeyRequest() (request *DeleteCloudNativeAPIGatewaySecretKeyRequest) {
+    request = &DeleteCloudNativeAPIGatewaySecretKeyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DeleteCloudNativeAPIGatewaySecretKey")
+    
+    
+    return
+}
+
+func NewDeleteCloudNativeAPIGatewaySecretKeyResponse() (response *DeleteCloudNativeAPIGatewaySecretKeyResponse) {
+    response = &DeleteCloudNativeAPIGatewaySecretKeyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteCloudNativeAPIGatewaySecretKey
+// 删除消费者密钥（被绑定时需先解绑）。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DeleteCloudNativeAPIGatewaySecretKey(request *DeleteCloudNativeAPIGatewaySecretKeyRequest) (response *DeleteCloudNativeAPIGatewaySecretKeyResponse, err error) {
+    return c.DeleteCloudNativeAPIGatewaySecretKeyWithContext(context.Background(), request)
+}
+
+// DeleteCloudNativeAPIGatewaySecretKey
+// 删除消费者密钥（被绑定时需先解绑）。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DeleteCloudNativeAPIGatewaySecretKeyWithContext(ctx context.Context, request *DeleteCloudNativeAPIGatewaySecretKeyRequest) (response *DeleteCloudNativeAPIGatewaySecretKeyResponse, err error) {
+    if request == nil {
+        request = NewDeleteCloudNativeAPIGatewaySecretKeyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteCloudNativeAPIGatewaySecretKey")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCloudNativeAPIGatewaySecretKey require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCloudNativeAPIGatewaySecretKeyResponse()
     err = c.Send(request, response)
     return
 }
@@ -1901,6 +3880,7 @@ func (c *Client) DeleteCloudNativeAPIGatewayServiceWithContext(ctx context.Conte
     if request == nil {
         request = NewDeleteCloudNativeAPIGatewayServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteCloudNativeAPIGatewayService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteCloudNativeAPIGatewayService require credential")
@@ -1992,6 +3972,7 @@ func (c *Client) DeleteCloudNativeAPIGatewayServiceRateLimitWithContext(ctx cont
     if request == nil {
         request = NewDeleteCloudNativeAPIGatewayServiceRateLimitRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteCloudNativeAPIGatewayServiceRateLimit")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteCloudNativeAPIGatewayServiceRateLimit require credential")
@@ -2000,6 +3981,190 @@ func (c *Client) DeleteCloudNativeAPIGatewayServiceRateLimitWithContext(ctx cont
     request.SetContext(ctx)
     
     response = NewDeleteCloudNativeAPIGatewayServiceRateLimitResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteConfigFileGroupRequest() (request *DeleteConfigFileGroupRequest) {
+    request = &DeleteConfigFileGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DeleteConfigFileGroup")
+    
+    
+    return
+}
+
+func NewDeleteConfigFileGroupResponse() (response *DeleteConfigFileGroupResponse) {
+    response = &DeleteConfigFileGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteConfigFileGroup
+// 删除配置文件分组
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCEINUSE_SERVICESEXISTEDINNAMESPACE = "ResourceInUse.ServicesExistedInNamespace"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteConfigFileGroup(request *DeleteConfigFileGroupRequest) (response *DeleteConfigFileGroupResponse, err error) {
+    return c.DeleteConfigFileGroupWithContext(context.Background(), request)
+}
+
+// DeleteConfigFileGroup
+// 删除配置文件分组
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCEINUSE_SERVICESEXISTEDINNAMESPACE = "ResourceInUse.ServicesExistedInNamespace"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteConfigFileGroupWithContext(ctx context.Context, request *DeleteConfigFileGroupRequest) (response *DeleteConfigFileGroupResponse, err error) {
+    if request == nil {
+        request = NewDeleteConfigFileGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteConfigFileGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteConfigFileGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteConfigFileGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteConfigFileReleasesRequest() (request *DeleteConfigFileReleasesRequest) {
+    request = &DeleteConfigFileReleasesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DeleteConfigFileReleases")
+    
+    
+    return
+}
+
+func NewDeleteConfigFileReleasesResponse() (response *DeleteConfigFileReleasesResponse) {
+    response = &DeleteConfigFileReleasesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteConfigFileReleases
+// 删除配置发布
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteConfigFileReleases(request *DeleteConfigFileReleasesRequest) (response *DeleteConfigFileReleasesResponse, err error) {
+    return c.DeleteConfigFileReleasesWithContext(context.Background(), request)
+}
+
+// DeleteConfigFileReleases
+// 删除配置发布
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteConfigFileReleasesWithContext(ctx context.Context, request *DeleteConfigFileReleasesRequest) (response *DeleteConfigFileReleasesResponse, err error) {
+    if request == nil {
+        request = NewDeleteConfigFileReleasesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteConfigFileReleases")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteConfigFileReleases require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteConfigFileReleasesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteConfigFilesRequest() (request *DeleteConfigFilesRequest) {
+    request = &DeleteConfigFilesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DeleteConfigFiles")
+    
+    
+    return
+}
+
+func NewDeleteConfigFilesResponse() (response *DeleteConfigFilesResponse) {
+    response = &DeleteConfigFilesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteConfigFiles
+// 删除配置文件
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteConfigFiles(request *DeleteConfigFilesRequest) (response *DeleteConfigFilesResponse, err error) {
+    return c.DeleteConfigFilesWithContext(context.Background(), request)
+}
+
+// DeleteConfigFiles
+// 删除配置文件
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteConfigFilesWithContext(ctx context.Context, request *DeleteConfigFilesRequest) (response *DeleteConfigFilesResponse, err error) {
+    if request == nil {
+        request = NewDeleteConfigFilesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteConfigFiles")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteConfigFiles require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteConfigFilesResponse()
     err = c.Send(request, response)
     return
 }
@@ -2053,6 +4218,7 @@ func (c *Client) DeleteEngineWithContext(ctx context.Context, request *DeleteEng
     if request == nil {
         request = NewDeleteEngineRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteEngine")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteEngine require credential")
@@ -2061,6 +4227,362 @@ func (c *Client) DeleteEngineWithContext(ctx context.Context, request *DeleteEng
     request.SetContext(ctx)
     
     response = NewDeleteEngineResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteGovernanceAliasesRequest() (request *DeleteGovernanceAliasesRequest) {
+    request = &DeleteGovernanceAliasesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DeleteGovernanceAliases")
+    
+    
+    return
+}
+
+func NewDeleteGovernanceAliasesResponse() (response *DeleteGovernanceAliasesResponse) {
+    response = &DeleteGovernanceAliasesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteGovernanceAliases
+// 删除治理中心服务别名
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_CREATEERROR = "InvalidParameterValue.CreateError"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteGovernanceAliases(request *DeleteGovernanceAliasesRequest) (response *DeleteGovernanceAliasesResponse, err error) {
+    return c.DeleteGovernanceAliasesWithContext(context.Background(), request)
+}
+
+// DeleteGovernanceAliases
+// 删除治理中心服务别名
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_CREATEERROR = "InvalidParameterValue.CreateError"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteGovernanceAliasesWithContext(ctx context.Context, request *DeleteGovernanceAliasesRequest) (response *DeleteGovernanceAliasesResponse, err error) {
+    if request == nil {
+        request = NewDeleteGovernanceAliasesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteGovernanceAliases")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteGovernanceAliases require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteGovernanceAliasesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteGovernanceInstancesRequest() (request *DeleteGovernanceInstancesRequest) {
+    request = &DeleteGovernanceInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DeleteGovernanceInstances")
+    
+    
+    return
+}
+
+func NewDeleteGovernanceInstancesResponse() (response *DeleteGovernanceInstancesResponse) {
+    response = &DeleteGovernanceInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteGovernanceInstances
+// 删除服务实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteGovernanceInstances(request *DeleteGovernanceInstancesRequest) (response *DeleteGovernanceInstancesResponse, err error) {
+    return c.DeleteGovernanceInstancesWithContext(context.Background(), request)
+}
+
+// DeleteGovernanceInstances
+// 删除服务实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteGovernanceInstancesWithContext(ctx context.Context, request *DeleteGovernanceInstancesRequest) (response *DeleteGovernanceInstancesResponse, err error) {
+    if request == nil {
+        request = NewDeleteGovernanceInstancesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteGovernanceInstances")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteGovernanceInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteGovernanceInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteGovernanceInstancesByHostRequest() (request *DeleteGovernanceInstancesByHostRequest) {
+    request = &DeleteGovernanceInstancesByHostRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DeleteGovernanceInstancesByHost")
+    
+    
+    return
+}
+
+func NewDeleteGovernanceInstancesByHostResponse() (response *DeleteGovernanceInstancesByHostResponse) {
+    response = &DeleteGovernanceInstancesByHostResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteGovernanceInstancesByHost
+// 删除治理中心服务实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteGovernanceInstancesByHost(request *DeleteGovernanceInstancesByHostRequest) (response *DeleteGovernanceInstancesByHostResponse, err error) {
+    return c.DeleteGovernanceInstancesByHostWithContext(context.Background(), request)
+}
+
+// DeleteGovernanceInstancesByHost
+// 删除治理中心服务实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteGovernanceInstancesByHostWithContext(ctx context.Context, request *DeleteGovernanceInstancesByHostRequest) (response *DeleteGovernanceInstancesByHostResponse, err error) {
+    if request == nil {
+        request = NewDeleteGovernanceInstancesByHostRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteGovernanceInstancesByHost")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteGovernanceInstancesByHost require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteGovernanceInstancesByHostResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteGovernanceLaneGroupsRequest() (request *DeleteGovernanceLaneGroupsRequest) {
+    request = &DeleteGovernanceLaneGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DeleteGovernanceLaneGroups")
+    
+    
+    return
+}
+
+func NewDeleteGovernanceLaneGroupsResponse() (response *DeleteGovernanceLaneGroupsResponse) {
+    response = &DeleteGovernanceLaneGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteGovernanceLaneGroups
+// 删除泳道组
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteGovernanceLaneGroups(request *DeleteGovernanceLaneGroupsRequest) (response *DeleteGovernanceLaneGroupsResponse, err error) {
+    return c.DeleteGovernanceLaneGroupsWithContext(context.Background(), request)
+}
+
+// DeleteGovernanceLaneGroups
+// 删除泳道组
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteGovernanceLaneGroupsWithContext(ctx context.Context, request *DeleteGovernanceLaneGroupsRequest) (response *DeleteGovernanceLaneGroupsResponse, err error) {
+    if request == nil {
+        request = NewDeleteGovernanceLaneGroupsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteGovernanceLaneGroups")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteGovernanceLaneGroups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteGovernanceLaneGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteGovernanceNamespacesRequest() (request *DeleteGovernanceNamespacesRequest) {
+    request = &DeleteGovernanceNamespacesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DeleteGovernanceNamespaces")
+    
+    
+    return
+}
+
+func NewDeleteGovernanceNamespacesResponse() (response *DeleteGovernanceNamespacesResponse) {
+    response = &DeleteGovernanceNamespacesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteGovernanceNamespaces
+// 删除治理中心命名空间
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCEINUSE_SERVICESEXISTEDINNAMESPACE = "ResourceInUse.ServicesExistedInNamespace"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteGovernanceNamespaces(request *DeleteGovernanceNamespacesRequest) (response *DeleteGovernanceNamespacesResponse, err error) {
+    return c.DeleteGovernanceNamespacesWithContext(context.Background(), request)
+}
+
+// DeleteGovernanceNamespaces
+// 删除治理中心命名空间
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCEINUSE_SERVICESEXISTEDINNAMESPACE = "ResourceInUse.ServicesExistedInNamespace"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteGovernanceNamespacesWithContext(ctx context.Context, request *DeleteGovernanceNamespacesRequest) (response *DeleteGovernanceNamespacesResponse, err error) {
+    if request == nil {
+        request = NewDeleteGovernanceNamespacesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteGovernanceNamespaces")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteGovernanceNamespaces require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteGovernanceNamespacesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteGovernanceServicesRequest() (request *DeleteGovernanceServicesRequest) {
+    request = &DeleteGovernanceServicesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DeleteGovernanceServices")
+    
+    
+    return
+}
+
+func NewDeleteGovernanceServicesResponse() (response *DeleteGovernanceServicesResponse) {
+    response = &DeleteGovernanceServicesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteGovernanceServices
+// 删除治理中心服务
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCEINUSE_INSTANCESEXISTEDINSERVICE = "ResourceInUse.InstancesExistedInService"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteGovernanceServices(request *DeleteGovernanceServicesRequest) (response *DeleteGovernanceServicesResponse, err error) {
+    return c.DeleteGovernanceServicesWithContext(context.Background(), request)
+}
+
+// DeleteGovernanceServices
+// 删除治理中心服务
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCEINUSE_INSTANCESEXISTEDINSERVICE = "ResourceInUse.InstancesExistedInService"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteGovernanceServicesWithContext(ctx context.Context, request *DeleteGovernanceServicesRequest) (response *DeleteGovernanceServicesResponse, err error) {
+    if request == nil {
+        request = NewDeleteGovernanceServicesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteGovernanceServices")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteGovernanceServices require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteGovernanceServicesResponse()
     err = c.Send(request, response)
     return
 }
@@ -2088,12 +4610,12 @@ func NewDeleteNativeGatewayServerGroupResponse() (response *DeleteNativeGatewayS
 // 删除网关实例分组
 //
 // 可能返回的错误码:
-//  INTERNALERROR_OPERATIONFAILED = "InternalError.OperationFailed"
-//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
-//  INTERNALERROR_UPDATEERROR = "InternalError.UpdateError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
 //  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
 //  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
-//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCEINUSE_INSTANCESEXISTEDINSERVICE = "ResourceInUse.InstancesExistedInService"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeleteNativeGatewayServerGroup(request *DeleteNativeGatewayServerGroupRequest) (response *DeleteNativeGatewayServerGroupResponse, err error) {
     return c.DeleteNativeGatewayServerGroupWithContext(context.Background(), request)
@@ -2103,17 +4625,18 @@ func (c *Client) DeleteNativeGatewayServerGroup(request *DeleteNativeGatewayServ
 // 删除网关实例分组
 //
 // 可能返回的错误码:
-//  INTERNALERROR_OPERATIONFAILED = "InternalError.OperationFailed"
-//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
-//  INTERNALERROR_UPDATEERROR = "InternalError.UpdateError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
 //  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
 //  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
-//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCEINUSE_INSTANCESEXISTEDINSERVICE = "ResourceInUse.InstancesExistedInService"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeleteNativeGatewayServerGroupWithContext(ctx context.Context, request *DeleteNativeGatewayServerGroupRequest) (response *DeleteNativeGatewayServerGroupResponse, err error) {
     if request == nil {
         request = NewDeleteNativeGatewayServerGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteNativeGatewayServerGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteNativeGatewayServerGroup require credential")
@@ -2122,6 +4645,72 @@ func (c *Client) DeleteNativeGatewayServerGroupWithContext(ctx context.Context, 
     request.SetContext(ctx)
     
     response = NewDeleteNativeGatewayServerGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteNativeGatewayServiceSourceRequest() (request *DeleteNativeGatewayServiceSourceRequest) {
+    request = &DeleteNativeGatewayServiceSourceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DeleteNativeGatewayServiceSource")
+    
+    
+    return
+}
+
+func NewDeleteNativeGatewayServiceSourceResponse() (response *DeleteNativeGatewayServiceSourceResponse) {
+    response = &DeleteNativeGatewayServiceSourceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteNativeGatewayServiceSource
+// 删除网关服务来源实例
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CREATEERROR = "InternalError.CreateError"
+//  INTERNALERROR_DECODEERROR = "InternalError.DecodeError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCEINUSE_GATEWAYSERVICESOURCEEXISTSERVICE = "ResourceInUse.GatewayServiceSourceExistService"
+func (c *Client) DeleteNativeGatewayServiceSource(request *DeleteNativeGatewayServiceSourceRequest) (response *DeleteNativeGatewayServiceSourceResponse, err error) {
+    return c.DeleteNativeGatewayServiceSourceWithContext(context.Background(), request)
+}
+
+// DeleteNativeGatewayServiceSource
+// 删除网关服务来源实例
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CREATEERROR = "InternalError.CreateError"
+//  INTERNALERROR_DECODEERROR = "InternalError.DecodeError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCEINUSE_GATEWAYSERVICESOURCEEXISTSERVICE = "ResourceInUse.GatewayServiceSourceExistService"
+func (c *Client) DeleteNativeGatewayServiceSourceWithContext(ctx context.Context, request *DeleteNativeGatewayServiceSourceRequest) (response *DeleteNativeGatewayServiceSourceResponse, err error) {
+    if request == nil {
+        request = NewDeleteNativeGatewayServiceSourceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteNativeGatewayServiceSource")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteNativeGatewayServiceSource require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteNativeGatewayServiceSourceResponse()
     err = c.Send(request, response)
     return
 }
@@ -2205,6 +4794,7 @@ func (c *Client) DeleteWafDomainsWithContext(ctx context.Context, request *Delet
     if request == nil {
         request = NewDeleteWafDomainsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DeleteWafDomains")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteWafDomains require credential")
@@ -2213,6 +4803,60 @@ func (c *Client) DeleteWafDomainsWithContext(ctx context.Context, request *Delet
     request.SetContext(ctx)
     
     response = NewDeleteWafDomainsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAllConfigFileTemplatesRequest() (request *DescribeAllConfigFileTemplatesRequest) {
+    request = &DescribeAllConfigFileTemplatesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeAllConfigFileTemplates")
+    
+    
+    return
+}
+
+func NewDescribeAllConfigFileTemplatesResponse() (response *DescribeAllConfigFileTemplatesResponse) {
+    response = &DescribeAllConfigFileTemplatesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAllConfigFileTemplates
+// 获取全量配置文件模板列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeAllConfigFileTemplates(request *DescribeAllConfigFileTemplatesRequest) (response *DescribeAllConfigFileTemplatesResponse, err error) {
+    return c.DescribeAllConfigFileTemplatesWithContext(context.Background(), request)
+}
+
+// DescribeAllConfigFileTemplates
+// 获取全量配置文件模板列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeAllConfigFileTemplatesWithContext(ctx context.Context, request *DescribeAllConfigFileTemplatesRequest) (response *DescribeAllConfigFileTemplatesResponse, err error) {
+    if request == nil {
+        request = NewDescribeAllConfigFileTemplatesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeAllConfigFileTemplates")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAllConfigFileTemplates require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAllConfigFileTemplatesResponse()
     err = c.Send(request, response)
     return
 }
@@ -2288,6 +4932,7 @@ func (c *Client) DescribeAutoScalerResourceStrategiesWithContext(ctx context.Con
     if request == nil {
         request = NewDescribeAutoScalerResourceStrategiesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeAutoScalerResourceStrategies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAutoScalerResourceStrategies require credential")
@@ -2387,6 +5032,7 @@ func (c *Client) DescribeAutoScalerResourceStrategyBindingGroupsWithContext(ctx 
     if request == nil {
         request = NewDescribeAutoScalerResourceStrategyBindingGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeAutoScalerResourceStrategyBindingGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAutoScalerResourceStrategyBindingGroups require credential")
@@ -2395,6 +5041,100 @@ func (c *Client) DescribeAutoScalerResourceStrategyBindingGroupsWithContext(ctx 
     request.SetContext(ctx)
     
     response = NewDescribeAutoScalerResourceStrategyBindingGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCNGWServicesWithRoutesRequest() (request *DescribeCNGWServicesWithRoutesRequest) {
+    request = &DescribeCNGWServicesWithRoutesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeCNGWServicesWithRoutes")
+    
+    
+    return
+}
+
+func NewDescribeCNGWServicesWithRoutesResponse() (response *DescribeCNGWServicesWithRoutesResponse) {
+    response = &DescribeCNGWServicesWithRoutesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCNGWServicesWithRoutes
+// 查询云原生网关服务和路由列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCNGWServicesWithRoutes(request *DescribeCNGWServicesWithRoutesRequest) (response *DescribeCNGWServicesWithRoutesResponse, err error) {
+    return c.DescribeCNGWServicesWithRoutesWithContext(context.Background(), request)
+}
+
+// DescribeCNGWServicesWithRoutes
+// 查询云原生网关服务和路由列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCNGWServicesWithRoutesWithContext(ctx context.Context, request *DescribeCNGWServicesWithRoutesRequest) (response *DescribeCNGWServicesWithRoutesResponse, err error) {
+    if request == nil {
+        request = NewDescribeCNGWServicesWithRoutesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCNGWServicesWithRoutes")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCNGWServicesWithRoutes require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCNGWServicesWithRoutesResponse()
     err = c.Send(request, response)
     return
 }
@@ -2464,6 +5204,7 @@ func (c *Client) DescribeCloudNativeAPIGatewayWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeCloudNativeAPIGatewayRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGateway")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCloudNativeAPIGateway require credential")
@@ -2472,6 +5213,100 @@ func (c *Client) DescribeCloudNativeAPIGatewayWithContext(ctx context.Context, r
     request.SetContext(ctx)
     
     response = NewDescribeCloudNativeAPIGatewayResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayCORSRequest() (request *DescribeCloudNativeAPIGatewayCORSRequest) {
+    request = &DescribeCloudNativeAPIGatewayCORSRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeCloudNativeAPIGatewayCORS")
+    
+    
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayCORSResponse() (response *DescribeCloudNativeAPIGatewayCORSResponse) {
+    response = &DescribeCloudNativeAPIGatewayCORSResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCloudNativeAPIGatewayCORS
+// 查询云原生网关跨域配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewayCORS(request *DescribeCloudNativeAPIGatewayCORSRequest) (response *DescribeCloudNativeAPIGatewayCORSResponse, err error) {
+    return c.DescribeCloudNativeAPIGatewayCORSWithContext(context.Background(), request)
+}
+
+// DescribeCloudNativeAPIGatewayCORS
+// 查询云原生网关跨域配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewayCORSWithContext(ctx context.Context, request *DescribeCloudNativeAPIGatewayCORSRequest) (response *DescribeCloudNativeAPIGatewayCORSResponse, err error) {
+    if request == nil {
+        request = NewDescribeCloudNativeAPIGatewayCORSRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayCORS")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCloudNativeAPIGatewayCORS require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCloudNativeAPIGatewayCORSResponse()
     err = c.Send(request, response)
     return
 }
@@ -2555,6 +5390,7 @@ func (c *Client) DescribeCloudNativeAPIGatewayCanaryRulesWithContext(ctx context
     if request == nil {
         request = NewDescribeCloudNativeAPIGatewayCanaryRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayCanaryRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCloudNativeAPIGatewayCanaryRules require credential")
@@ -2646,6 +5482,7 @@ func (c *Client) DescribeCloudNativeAPIGatewayCertificateDetailsWithContext(ctx 
     if request == nil {
         request = NewDescribeCloudNativeAPIGatewayCertificateDetailsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayCertificateDetails")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCloudNativeAPIGatewayCertificateDetails require credential")
@@ -2737,6 +5574,7 @@ func (c *Client) DescribeCloudNativeAPIGatewayCertificatesWithContext(ctx contex
     if request == nil {
         request = NewDescribeCloudNativeAPIGatewayCertificatesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayCertificates")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCloudNativeAPIGatewayCertificates require credential")
@@ -2812,6 +5650,7 @@ func (c *Client) DescribeCloudNativeAPIGatewayConfigWithContext(ctx context.Cont
     if request == nil {
         request = NewDescribeCloudNativeAPIGatewayConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCloudNativeAPIGatewayConfig require credential")
@@ -2820,6 +5659,816 @@ func (c *Client) DescribeCloudNativeAPIGatewayConfigWithContext(ctx context.Cont
     request.SetContext(ctx)
     
     response = NewDescribeCloudNativeAPIGatewayConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayConsumerRequest() (request *DescribeCloudNativeAPIGatewayConsumerRequest) {
+    request = &DescribeCloudNativeAPIGatewayConsumerRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeCloudNativeAPIGatewayConsumer")
+    
+    
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayConsumerResponse() (response *DescribeCloudNativeAPIGatewayConsumerResponse) {
+    response = &DescribeCloudNativeAPIGatewayConsumerResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCloudNativeAPIGatewayConsumer
+// 查询消费者详情。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewayConsumer(request *DescribeCloudNativeAPIGatewayConsumerRequest) (response *DescribeCloudNativeAPIGatewayConsumerResponse, err error) {
+    return c.DescribeCloudNativeAPIGatewayConsumerWithContext(context.Background(), request)
+}
+
+// DescribeCloudNativeAPIGatewayConsumer
+// 查询消费者详情。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewayConsumerWithContext(ctx context.Context, request *DescribeCloudNativeAPIGatewayConsumerRequest) (response *DescribeCloudNativeAPIGatewayConsumerResponse, err error) {
+    if request == nil {
+        request = NewDescribeCloudNativeAPIGatewayConsumerRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayConsumer")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCloudNativeAPIGatewayConsumer require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCloudNativeAPIGatewayConsumerResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayConsumerGroupRequest() (request *DescribeCloudNativeAPIGatewayConsumerGroupRequest) {
+    request = &DescribeCloudNativeAPIGatewayConsumerGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeCloudNativeAPIGatewayConsumerGroup")
+    
+    
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayConsumerGroupResponse() (response *DescribeCloudNativeAPIGatewayConsumerGroupResponse) {
+    response = &DescribeCloudNativeAPIGatewayConsumerGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCloudNativeAPIGatewayConsumerGroup
+// 查询消费者组详情。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewayConsumerGroup(request *DescribeCloudNativeAPIGatewayConsumerGroupRequest) (response *DescribeCloudNativeAPIGatewayConsumerGroupResponse, err error) {
+    return c.DescribeCloudNativeAPIGatewayConsumerGroupWithContext(context.Background(), request)
+}
+
+// DescribeCloudNativeAPIGatewayConsumerGroup
+// 查询消费者组详情。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewayConsumerGroupWithContext(ctx context.Context, request *DescribeCloudNativeAPIGatewayConsumerGroupRequest) (response *DescribeCloudNativeAPIGatewayConsumerGroupResponse, err error) {
+    if request == nil {
+        request = NewDescribeCloudNativeAPIGatewayConsumerGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayConsumerGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCloudNativeAPIGatewayConsumerGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCloudNativeAPIGatewayConsumerGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayConsumerGroupListRequest() (request *DescribeCloudNativeAPIGatewayConsumerGroupListRequest) {
+    request = &DescribeCloudNativeAPIGatewayConsumerGroupListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeCloudNativeAPIGatewayConsumerGroupList")
+    
+    
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayConsumerGroupListResponse() (response *DescribeCloudNativeAPIGatewayConsumerGroupListResponse) {
+    response = &DescribeCloudNativeAPIGatewayConsumerGroupListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCloudNativeAPIGatewayConsumerGroupList
+// 查询消费者组列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewayConsumerGroupList(request *DescribeCloudNativeAPIGatewayConsumerGroupListRequest) (response *DescribeCloudNativeAPIGatewayConsumerGroupListResponse, err error) {
+    return c.DescribeCloudNativeAPIGatewayConsumerGroupListWithContext(context.Background(), request)
+}
+
+// DescribeCloudNativeAPIGatewayConsumerGroupList
+// 查询消费者组列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewayConsumerGroupListWithContext(ctx context.Context, request *DescribeCloudNativeAPIGatewayConsumerGroupListRequest) (response *DescribeCloudNativeAPIGatewayConsumerGroupListResponse, err error) {
+    if request == nil {
+        request = NewDescribeCloudNativeAPIGatewayConsumerGroupListRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayConsumerGroupList")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCloudNativeAPIGatewayConsumerGroupList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCloudNativeAPIGatewayConsumerGroupListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayConsumerListRequest() (request *DescribeCloudNativeAPIGatewayConsumerListRequest) {
+    request = &DescribeCloudNativeAPIGatewayConsumerListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeCloudNativeAPIGatewayConsumerList")
+    
+    
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayConsumerListResponse() (response *DescribeCloudNativeAPIGatewayConsumerListResponse) {
+    response = &DescribeCloudNativeAPIGatewayConsumerListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCloudNativeAPIGatewayConsumerList
+// 查询消费者列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewayConsumerList(request *DescribeCloudNativeAPIGatewayConsumerListRequest) (response *DescribeCloudNativeAPIGatewayConsumerListResponse, err error) {
+    return c.DescribeCloudNativeAPIGatewayConsumerListWithContext(context.Background(), request)
+}
+
+// DescribeCloudNativeAPIGatewayConsumerList
+// 查询消费者列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewayConsumerListWithContext(ctx context.Context, request *DescribeCloudNativeAPIGatewayConsumerListRequest) (response *DescribeCloudNativeAPIGatewayConsumerListResponse, err error) {
+    if request == nil {
+        request = NewDescribeCloudNativeAPIGatewayConsumerListRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayConsumerList")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCloudNativeAPIGatewayConsumerList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCloudNativeAPIGatewayConsumerListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayIPRestrictionRequest() (request *DescribeCloudNativeAPIGatewayIPRestrictionRequest) {
+    request = &DescribeCloudNativeAPIGatewayIPRestrictionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeCloudNativeAPIGatewayIPRestriction")
+    
+    
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayIPRestrictionResponse() (response *DescribeCloudNativeAPIGatewayIPRestrictionResponse) {
+    response = &DescribeCloudNativeAPIGatewayIPRestrictionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCloudNativeAPIGatewayIPRestriction
+// 查询云原生网关访问控制
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewayIPRestriction(request *DescribeCloudNativeAPIGatewayIPRestrictionRequest) (response *DescribeCloudNativeAPIGatewayIPRestrictionResponse, err error) {
+    return c.DescribeCloudNativeAPIGatewayIPRestrictionWithContext(context.Background(), request)
+}
+
+// DescribeCloudNativeAPIGatewayIPRestriction
+// 查询云原生网关访问控制
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewayIPRestrictionWithContext(ctx context.Context, request *DescribeCloudNativeAPIGatewayIPRestrictionRequest) (response *DescribeCloudNativeAPIGatewayIPRestrictionResponse, err error) {
+    if request == nil {
+        request = NewDescribeCloudNativeAPIGatewayIPRestrictionRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayIPRestriction")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCloudNativeAPIGatewayIPRestriction require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCloudNativeAPIGatewayIPRestrictionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayInfoByIpRequest() (request *DescribeCloudNativeAPIGatewayInfoByIpRequest) {
+    request = &DescribeCloudNativeAPIGatewayInfoByIpRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeCloudNativeAPIGatewayInfoByIp")
+    
+    
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayInfoByIpResponse() (response *DescribeCloudNativeAPIGatewayInfoByIpResponse) {
+    response = &DescribeCloudNativeAPIGatewayInfoByIpResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCloudNativeAPIGatewayInfoByIp
+// 根据公网IP查询云原生网关实例信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+func (c *Client) DescribeCloudNativeAPIGatewayInfoByIp(request *DescribeCloudNativeAPIGatewayInfoByIpRequest) (response *DescribeCloudNativeAPIGatewayInfoByIpResponse, err error) {
+    return c.DescribeCloudNativeAPIGatewayInfoByIpWithContext(context.Background(), request)
+}
+
+// DescribeCloudNativeAPIGatewayInfoByIp
+// 根据公网IP查询云原生网关实例信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+func (c *Client) DescribeCloudNativeAPIGatewayInfoByIpWithContext(ctx context.Context, request *DescribeCloudNativeAPIGatewayInfoByIpRequest) (response *DescribeCloudNativeAPIGatewayInfoByIpResponse, err error) {
+    if request == nil {
+        request = NewDescribeCloudNativeAPIGatewayInfoByIpRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayInfoByIp")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCloudNativeAPIGatewayInfoByIp require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCloudNativeAPIGatewayInfoByIpResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayLLMModelAPIRequest() (request *DescribeCloudNativeAPIGatewayLLMModelAPIRequest) {
+    request = &DescribeCloudNativeAPIGatewayLLMModelAPIRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeCloudNativeAPIGatewayLLMModelAPI")
+    
+    
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayLLMModelAPIResponse() (response *DescribeCloudNativeAPIGatewayLLMModelAPIResponse) {
+    response = &DescribeCloudNativeAPIGatewayLLMModelAPIResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCloudNativeAPIGatewayLLMModelAPI
+// 查询单个 LLM 模型 API 详情。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewayLLMModelAPI(request *DescribeCloudNativeAPIGatewayLLMModelAPIRequest) (response *DescribeCloudNativeAPIGatewayLLMModelAPIResponse, err error) {
+    return c.DescribeCloudNativeAPIGatewayLLMModelAPIWithContext(context.Background(), request)
+}
+
+// DescribeCloudNativeAPIGatewayLLMModelAPI
+// 查询单个 LLM 模型 API 详情。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewayLLMModelAPIWithContext(ctx context.Context, request *DescribeCloudNativeAPIGatewayLLMModelAPIRequest) (response *DescribeCloudNativeAPIGatewayLLMModelAPIResponse, err error) {
+    if request == nil {
+        request = NewDescribeCloudNativeAPIGatewayLLMModelAPIRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayLLMModelAPI")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCloudNativeAPIGatewayLLMModelAPI require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCloudNativeAPIGatewayLLMModelAPIResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayLLMModelAPIsRequest() (request *DescribeCloudNativeAPIGatewayLLMModelAPIsRequest) {
+    request = &DescribeCloudNativeAPIGatewayLLMModelAPIsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeCloudNativeAPIGatewayLLMModelAPIs")
+    
+    
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayLLMModelAPIsResponse() (response *DescribeCloudNativeAPIGatewayLLMModelAPIsResponse) {
+    response = &DescribeCloudNativeAPIGatewayLLMModelAPIsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCloudNativeAPIGatewayLLMModelAPIs
+// 查询 LLM 模型 API 列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewayLLMModelAPIs(request *DescribeCloudNativeAPIGatewayLLMModelAPIsRequest) (response *DescribeCloudNativeAPIGatewayLLMModelAPIsResponse, err error) {
+    return c.DescribeCloudNativeAPIGatewayLLMModelAPIsWithContext(context.Background(), request)
+}
+
+// DescribeCloudNativeAPIGatewayLLMModelAPIs
+// 查询 LLM 模型 API 列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewayLLMModelAPIsWithContext(ctx context.Context, request *DescribeCloudNativeAPIGatewayLLMModelAPIsRequest) (response *DescribeCloudNativeAPIGatewayLLMModelAPIsResponse, err error) {
+    if request == nil {
+        request = NewDescribeCloudNativeAPIGatewayLLMModelAPIsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayLLMModelAPIs")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCloudNativeAPIGatewayLLMModelAPIs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCloudNativeAPIGatewayLLMModelAPIsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayLLMModelServiceRequest() (request *DescribeCloudNativeAPIGatewayLLMModelServiceRequest) {
+    request = &DescribeCloudNativeAPIGatewayLLMModelServiceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeCloudNativeAPIGatewayLLMModelService")
+    
+    
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayLLMModelServiceResponse() (response *DescribeCloudNativeAPIGatewayLLMModelServiceResponse) {
+    response = &DescribeCloudNativeAPIGatewayLLMModelServiceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCloudNativeAPIGatewayLLMModelService
+// 查询单个 LLM 模型服务详情。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewayLLMModelService(request *DescribeCloudNativeAPIGatewayLLMModelServiceRequest) (response *DescribeCloudNativeAPIGatewayLLMModelServiceResponse, err error) {
+    return c.DescribeCloudNativeAPIGatewayLLMModelServiceWithContext(context.Background(), request)
+}
+
+// DescribeCloudNativeAPIGatewayLLMModelService
+// 查询单个 LLM 模型服务详情。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewayLLMModelServiceWithContext(ctx context.Context, request *DescribeCloudNativeAPIGatewayLLMModelServiceRequest) (response *DescribeCloudNativeAPIGatewayLLMModelServiceResponse, err error) {
+    if request == nil {
+        request = NewDescribeCloudNativeAPIGatewayLLMModelServiceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayLLMModelService")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCloudNativeAPIGatewayLLMModelService require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCloudNativeAPIGatewayLLMModelServiceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayLLMModelServicesRequest() (request *DescribeCloudNativeAPIGatewayLLMModelServicesRequest) {
+    request = &DescribeCloudNativeAPIGatewayLLMModelServicesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeCloudNativeAPIGatewayLLMModelServices")
+    
+    
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayLLMModelServicesResponse() (response *DescribeCloudNativeAPIGatewayLLMModelServicesResponse) {
+    response = &DescribeCloudNativeAPIGatewayLLMModelServicesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCloudNativeAPIGatewayLLMModelServices
+// 查询 LLM 模型服务列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewayLLMModelServices(request *DescribeCloudNativeAPIGatewayLLMModelServicesRequest) (response *DescribeCloudNativeAPIGatewayLLMModelServicesResponse, err error) {
+    return c.DescribeCloudNativeAPIGatewayLLMModelServicesWithContext(context.Background(), request)
+}
+
+// DescribeCloudNativeAPIGatewayLLMModelServices
+// 查询 LLM 模型服务列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewayLLMModelServicesWithContext(ctx context.Context, request *DescribeCloudNativeAPIGatewayLLMModelServicesRequest) (response *DescribeCloudNativeAPIGatewayLLMModelServicesResponse, err error) {
+    if request == nil {
+        request = NewDescribeCloudNativeAPIGatewayLLMModelServicesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayLLMModelServices")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCloudNativeAPIGatewayLLMModelServices require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCloudNativeAPIGatewayLLMModelServicesResponse()
     err = c.Send(request, response)
     return
 }
@@ -2873,6 +6522,7 @@ func (c *Client) DescribeCloudNativeAPIGatewayNodesWithContext(ctx context.Conte
     if request == nil {
         request = NewDescribeCloudNativeAPIGatewayNodesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayNodes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCloudNativeAPIGatewayNodes require credential")
@@ -2932,6 +6582,7 @@ func (c *Client) DescribeCloudNativeAPIGatewayPortsWithContext(ctx context.Conte
     if request == nil {
         request = NewDescribeCloudNativeAPIGatewayPortsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayPorts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCloudNativeAPIGatewayPorts require credential")
@@ -3023,6 +6674,7 @@ func (c *Client) DescribeCloudNativeAPIGatewayRouteRateLimitWithContext(ctx cont
     if request == nil {
         request = NewDescribeCloudNativeAPIGatewayRouteRateLimitRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayRouteRateLimit")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCloudNativeAPIGatewayRouteRateLimit require credential")
@@ -3114,6 +6766,7 @@ func (c *Client) DescribeCloudNativeAPIGatewayRoutesWithContext(ctx context.Cont
     if request == nil {
         request = NewDescribeCloudNativeAPIGatewayRoutesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayRoutes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCloudNativeAPIGatewayRoutes require credential")
@@ -3122,6 +6775,282 @@ func (c *Client) DescribeCloudNativeAPIGatewayRoutesWithContext(ctx context.Cont
     request.SetContext(ctx)
     
     response = NewDescribeCloudNativeAPIGatewayRoutesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewaySecretKeyRequest() (request *DescribeCloudNativeAPIGatewaySecretKeyRequest) {
+    request = &DescribeCloudNativeAPIGatewaySecretKeyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeCloudNativeAPIGatewaySecretKey")
+    
+    
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewaySecretKeyResponse() (response *DescribeCloudNativeAPIGatewaySecretKeyResponse) {
+    response = &DescribeCloudNativeAPIGatewaySecretKeyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCloudNativeAPIGatewaySecretKey
+// 查询密钥详情（SecretValue 字段会被掩码）。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewaySecretKey(request *DescribeCloudNativeAPIGatewaySecretKeyRequest) (response *DescribeCloudNativeAPIGatewaySecretKeyResponse, err error) {
+    return c.DescribeCloudNativeAPIGatewaySecretKeyWithContext(context.Background(), request)
+}
+
+// DescribeCloudNativeAPIGatewaySecretKey
+// 查询密钥详情（SecretValue 字段会被掩码）。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewaySecretKeyWithContext(ctx context.Context, request *DescribeCloudNativeAPIGatewaySecretKeyRequest) (response *DescribeCloudNativeAPIGatewaySecretKeyResponse, err error) {
+    if request == nil {
+        request = NewDescribeCloudNativeAPIGatewaySecretKeyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewaySecretKey")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCloudNativeAPIGatewaySecretKey require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCloudNativeAPIGatewaySecretKeyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewaySecretKeyListRequest() (request *DescribeCloudNativeAPIGatewaySecretKeyListRequest) {
+    request = &DescribeCloudNativeAPIGatewaySecretKeyListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeCloudNativeAPIGatewaySecretKeyList")
+    
+    
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewaySecretKeyListResponse() (response *DescribeCloudNativeAPIGatewaySecretKeyListResponse) {
+    response = &DescribeCloudNativeAPIGatewaySecretKeyListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCloudNativeAPIGatewaySecretKeyList
+// 查询密钥列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewaySecretKeyList(request *DescribeCloudNativeAPIGatewaySecretKeyListRequest) (response *DescribeCloudNativeAPIGatewaySecretKeyListResponse, err error) {
+    return c.DescribeCloudNativeAPIGatewaySecretKeyListWithContext(context.Background(), request)
+}
+
+// DescribeCloudNativeAPIGatewaySecretKeyList
+// 查询密钥列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewaySecretKeyListWithContext(ctx context.Context, request *DescribeCloudNativeAPIGatewaySecretKeyListRequest) (response *DescribeCloudNativeAPIGatewaySecretKeyListResponse, err error) {
+    if request == nil {
+        request = NewDescribeCloudNativeAPIGatewaySecretKeyListRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewaySecretKeyList")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCloudNativeAPIGatewaySecretKeyList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCloudNativeAPIGatewaySecretKeyListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewaySecretKeyValueRequest() (request *DescribeCloudNativeAPIGatewaySecretKeyValueRequest) {
+    request = &DescribeCloudNativeAPIGatewaySecretKeyValueRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeCloudNativeAPIGatewaySecretKeyValue")
+    
+    
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewaySecretKeyValueResponse() (response *DescribeCloudNativeAPIGatewaySecretKeyValueResponse) {
+    response = &DescribeCloudNativeAPIGatewaySecretKeyValueResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCloudNativeAPIGatewaySecretKeyValue
+// 查询密钥明文值（KMS 类型密钥不可获取）。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewaySecretKeyValue(request *DescribeCloudNativeAPIGatewaySecretKeyValueRequest) (response *DescribeCloudNativeAPIGatewaySecretKeyValueResponse, err error) {
+    return c.DescribeCloudNativeAPIGatewaySecretKeyValueWithContext(context.Background(), request)
+}
+
+// DescribeCloudNativeAPIGatewaySecretKeyValue
+// 查询密钥明文值（KMS 类型密钥不可获取）。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewaySecretKeyValueWithContext(ctx context.Context, request *DescribeCloudNativeAPIGatewaySecretKeyValueRequest) (response *DescribeCloudNativeAPIGatewaySecretKeyValueResponse, err error) {
+    if request == nil {
+        request = NewDescribeCloudNativeAPIGatewaySecretKeyValueRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewaySecretKeyValue")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCloudNativeAPIGatewaySecretKeyValue require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCloudNativeAPIGatewaySecretKeyValueResponse()
     err = c.Send(request, response)
     return
 }
@@ -3205,6 +7134,7 @@ func (c *Client) DescribeCloudNativeAPIGatewayServiceRateLimitWithContext(ctx co
     if request == nil {
         request = NewDescribeCloudNativeAPIGatewayServiceRateLimitRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayServiceRateLimit")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCloudNativeAPIGatewayServiceRateLimit require credential")
@@ -3298,6 +7228,7 @@ func (c *Client) DescribeCloudNativeAPIGatewayServicesWithContext(ctx context.Co
     if request == nil {
         request = NewDescribeCloudNativeAPIGatewayServicesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayServices")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCloudNativeAPIGatewayServices require credential")
@@ -3306,6 +7237,100 @@ func (c *Client) DescribeCloudNativeAPIGatewayServicesWithContext(ctx context.Co
     request.SetContext(ctx)
     
     response = NewDescribeCloudNativeAPIGatewayServicesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayServicesLightRequest() (request *DescribeCloudNativeAPIGatewayServicesLightRequest) {
+    request = &DescribeCloudNativeAPIGatewayServicesLightRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeCloudNativeAPIGatewayServicesLight")
+    
+    
+    return
+}
+
+func NewDescribeCloudNativeAPIGatewayServicesLightResponse() (response *DescribeCloudNativeAPIGatewayServicesLightResponse) {
+    response = &DescribeCloudNativeAPIGatewayServicesLightResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCloudNativeAPIGatewayServicesLight
+// 轻量查询云原生网关服务列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewayServicesLight(request *DescribeCloudNativeAPIGatewayServicesLightRequest) (response *DescribeCloudNativeAPIGatewayServicesLightResponse, err error) {
+    return c.DescribeCloudNativeAPIGatewayServicesLightWithContext(context.Background(), request)
+}
+
+// DescribeCloudNativeAPIGatewayServicesLight
+// 轻量查询云原生网关服务列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) DescribeCloudNativeAPIGatewayServicesLightWithContext(ctx context.Context, request *DescribeCloudNativeAPIGatewayServicesLightRequest) (response *DescribeCloudNativeAPIGatewayServicesLightResponse, err error) {
+    if request == nil {
+        request = NewDescribeCloudNativeAPIGatewayServicesLightRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayServicesLight")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCloudNativeAPIGatewayServicesLight require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCloudNativeAPIGatewayServicesLightResponse()
     err = c.Send(request, response)
     return
 }
@@ -3389,6 +7414,7 @@ func (c *Client) DescribeCloudNativeAPIGatewayUpstreamWithContext(ctx context.Co
     if request == nil {
         request = NewDescribeCloudNativeAPIGatewayUpstreamRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGatewayUpstream")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCloudNativeAPIGatewayUpstream require credential")
@@ -3478,6 +7504,7 @@ func (c *Client) DescribeCloudNativeAPIGatewaysWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeCloudNativeAPIGatewaysRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeCloudNativeAPIGateways")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCloudNativeAPIGateways require credential")
@@ -3486,6 +7513,962 @@ func (c *Client) DescribeCloudNativeAPIGatewaysWithContext(ctx context.Context, 
     request.SetContext(ctx)
     
     response = NewDescribeCloudNativeAPIGatewaysResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeConfigFileRequest() (request *DescribeConfigFileRequest) {
+    request = &DescribeConfigFileRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeConfigFile")
+    
+    
+    return
+}
+
+func NewDescribeConfigFileResponse() (response *DescribeConfigFileResponse) {
+    response = &DescribeConfigFileResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeConfigFile
+// 根据命名空间、组、名字查找配置文件
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeConfigFile(request *DescribeConfigFileRequest) (response *DescribeConfigFileResponse, err error) {
+    return c.DescribeConfigFileWithContext(context.Background(), request)
+}
+
+// DescribeConfigFile
+// 根据命名空间、组、名字查找配置文件
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeConfigFileWithContext(ctx context.Context, request *DescribeConfigFileRequest) (response *DescribeConfigFileResponse, err error) {
+    if request == nil {
+        request = NewDescribeConfigFileRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeConfigFile")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeConfigFile require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeConfigFileResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeConfigFileGroupsRequest() (request *DescribeConfigFileGroupsRequest) {
+    request = &DescribeConfigFileGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeConfigFileGroups")
+    
+    
+    return
+}
+
+func NewDescribeConfigFileGroupsResponse() (response *DescribeConfigFileGroupsResponse) {
+    response = &DescribeConfigFileGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeConfigFileGroups
+// 根据条件分页查询配置文件组
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeConfigFileGroups(request *DescribeConfigFileGroupsRequest) (response *DescribeConfigFileGroupsResponse, err error) {
+    return c.DescribeConfigFileGroupsWithContext(context.Background(), request)
+}
+
+// DescribeConfigFileGroups
+// 根据条件分页查询配置文件组
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeConfigFileGroupsWithContext(ctx context.Context, request *DescribeConfigFileGroupsRequest) (response *DescribeConfigFileGroupsResponse, err error) {
+    if request == nil {
+        request = NewDescribeConfigFileGroupsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeConfigFileGroups")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeConfigFileGroups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeConfigFileGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeConfigFileReleaseRequest() (request *DescribeConfigFileReleaseRequest) {
+    request = &DescribeConfigFileReleaseRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeConfigFileRelease")
+    
+    
+    return
+}
+
+func NewDescribeConfigFileReleaseResponse() (response *DescribeConfigFileReleaseResponse) {
+    response = &DescribeConfigFileReleaseResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeConfigFileRelease
+// 获取配置文件发布
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeConfigFileRelease(request *DescribeConfigFileReleaseRequest) (response *DescribeConfigFileReleaseResponse, err error) {
+    return c.DescribeConfigFileReleaseWithContext(context.Background(), request)
+}
+
+// DescribeConfigFileRelease
+// 获取配置文件发布
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeConfigFileReleaseWithContext(ctx context.Context, request *DescribeConfigFileReleaseRequest) (response *DescribeConfigFileReleaseResponse, err error) {
+    if request == nil {
+        request = NewDescribeConfigFileReleaseRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeConfigFileRelease")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeConfigFileRelease require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeConfigFileReleaseResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeConfigFileReleaseHistoriesRequest() (request *DescribeConfigFileReleaseHistoriesRequest) {
+    request = &DescribeConfigFileReleaseHistoriesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeConfigFileReleaseHistories")
+    
+    
+    return
+}
+
+func NewDescribeConfigFileReleaseHistoriesResponse() (response *DescribeConfigFileReleaseHistoriesResponse) {
+    response = &DescribeConfigFileReleaseHistoriesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeConfigFileReleaseHistories
+// 获取配置文件发布历史列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeConfigFileReleaseHistories(request *DescribeConfigFileReleaseHistoriesRequest) (response *DescribeConfigFileReleaseHistoriesResponse, err error) {
+    return c.DescribeConfigFileReleaseHistoriesWithContext(context.Background(), request)
+}
+
+// DescribeConfigFileReleaseHistories
+// 获取配置文件发布历史列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeConfigFileReleaseHistoriesWithContext(ctx context.Context, request *DescribeConfigFileReleaseHistoriesRequest) (response *DescribeConfigFileReleaseHistoriesResponse, err error) {
+    if request == nil {
+        request = NewDescribeConfigFileReleaseHistoriesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeConfigFileReleaseHistories")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeConfigFileReleaseHistories require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeConfigFileReleaseHistoriesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeConfigFileReleaseVersionsRequest() (request *DescribeConfigFileReleaseVersionsRequest) {
+    request = &DescribeConfigFileReleaseVersionsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeConfigFileReleaseVersions")
+    
+    
+    return
+}
+
+func NewDescribeConfigFileReleaseVersionsResponse() (response *DescribeConfigFileReleaseVersionsResponse) {
+    response = &DescribeConfigFileReleaseVersionsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeConfigFileReleaseVersions
+// 查询某个配置所有版本信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeConfigFileReleaseVersions(request *DescribeConfigFileReleaseVersionsRequest) (response *DescribeConfigFileReleaseVersionsResponse, err error) {
+    return c.DescribeConfigFileReleaseVersionsWithContext(context.Background(), request)
+}
+
+// DescribeConfigFileReleaseVersions
+// 查询某个配置所有版本信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeConfigFileReleaseVersionsWithContext(ctx context.Context, request *DescribeConfigFileReleaseVersionsRequest) (response *DescribeConfigFileReleaseVersionsResponse, err error) {
+    if request == nil {
+        request = NewDescribeConfigFileReleaseVersionsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeConfigFileReleaseVersions")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeConfigFileReleaseVersions require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeConfigFileReleaseVersionsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeConfigFileReleasesRequest() (request *DescribeConfigFileReleasesRequest) {
+    request = &DescribeConfigFileReleasesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeConfigFileReleases")
+    
+    
+    return
+}
+
+func NewDescribeConfigFileReleasesResponse() (response *DescribeConfigFileReleasesResponse) {
+    response = &DescribeConfigFileReleasesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeConfigFileReleases
+// 查询配置版本列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+func (c *Client) DescribeConfigFileReleases(request *DescribeConfigFileReleasesRequest) (response *DescribeConfigFileReleasesResponse, err error) {
+    return c.DescribeConfigFileReleasesWithContext(context.Background(), request)
+}
+
+// DescribeConfigFileReleases
+// 查询配置版本列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+func (c *Client) DescribeConfigFileReleasesWithContext(ctx context.Context, request *DescribeConfigFileReleasesRequest) (response *DescribeConfigFileReleasesResponse, err error) {
+    if request == nil {
+        request = NewDescribeConfigFileReleasesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeConfigFileReleases")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeConfigFileReleases require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeConfigFileReleasesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeConfigFilesRequest() (request *DescribeConfigFilesRequest) {
+    request = &DescribeConfigFilesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeConfigFiles")
+    
+    
+    return
+}
+
+func NewDescribeConfigFilesResponse() (response *DescribeConfigFilesResponse) {
+    response = &DescribeConfigFilesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeConfigFiles
+// 根据命名空间、组名、名称、标签查询配置文件列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeConfigFiles(request *DescribeConfigFilesRequest) (response *DescribeConfigFilesResponse, err error) {
+    return c.DescribeConfigFilesWithContext(context.Background(), request)
+}
+
+// DescribeConfigFiles
+// 根据命名空间、组名、名称、标签查询配置文件列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeConfigFilesWithContext(ctx context.Context, request *DescribeConfigFilesRequest) (response *DescribeConfigFilesResponse, err error) {
+    if request == nil {
+        request = NewDescribeConfigFilesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeConfigFiles")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeConfigFiles require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeConfigFilesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeConfigFilesByGroupRequest() (request *DescribeConfigFilesByGroupRequest) {
+    request = &DescribeConfigFilesByGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeConfigFilesByGroup")
+    
+    
+    return
+}
+
+func NewDescribeConfigFilesByGroupResponse() (response *DescribeConfigFilesByGroupResponse) {
+    response = &DescribeConfigFilesByGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeConfigFilesByGroup
+// 根据group查询配置文件列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeConfigFilesByGroup(request *DescribeConfigFilesByGroupRequest) (response *DescribeConfigFilesByGroupResponse, err error) {
+    return c.DescribeConfigFilesByGroupWithContext(context.Background(), request)
+}
+
+// DescribeConfigFilesByGroup
+// 根据group查询配置文件列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeConfigFilesByGroupWithContext(ctx context.Context, request *DescribeConfigFilesByGroupRequest) (response *DescribeConfigFilesByGroupResponse, err error) {
+    if request == nil {
+        request = NewDescribeConfigFilesByGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeConfigFilesByGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeConfigFilesByGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeConfigFilesByGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeGovernanceAliasesRequest() (request *DescribeGovernanceAliasesRequest) {
+    request = &DescribeGovernanceAliasesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeGovernanceAliases")
+    
+    
+    return
+}
+
+func NewDescribeGovernanceAliasesResponse() (response *DescribeGovernanceAliasesResponse) {
+    response = &DescribeGovernanceAliasesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeGovernanceAliases
+// 查询治理中心服务别名列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeGovernanceAliases(request *DescribeGovernanceAliasesRequest) (response *DescribeGovernanceAliasesResponse, err error) {
+    return c.DescribeGovernanceAliasesWithContext(context.Background(), request)
+}
+
+// DescribeGovernanceAliases
+// 查询治理中心服务别名列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeGovernanceAliasesWithContext(ctx context.Context, request *DescribeGovernanceAliasesRequest) (response *DescribeGovernanceAliasesResponse, err error) {
+    if request == nil {
+        request = NewDescribeGovernanceAliasesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeGovernanceAliases")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGovernanceAliases require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGovernanceAliasesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeGovernanceInstancesRequest() (request *DescribeGovernanceInstancesRequest) {
+    request = &DescribeGovernanceInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeGovernanceInstances")
+    
+    
+    return
+}
+
+func NewDescribeGovernanceInstancesResponse() (response *DescribeGovernanceInstancesResponse) {
+    response = &DescribeGovernanceInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeGovernanceInstances
+// 查询服务实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeGovernanceInstances(request *DescribeGovernanceInstancesRequest) (response *DescribeGovernanceInstancesResponse, err error) {
+    return c.DescribeGovernanceInstancesWithContext(context.Background(), request)
+}
+
+// DescribeGovernanceInstances
+// 查询服务实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeGovernanceInstancesWithContext(ctx context.Context, request *DescribeGovernanceInstancesRequest) (response *DescribeGovernanceInstancesResponse, err error) {
+    if request == nil {
+        request = NewDescribeGovernanceInstancesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeGovernanceInstances")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGovernanceInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGovernanceInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeGovernanceLaneGroupsRequest() (request *DescribeGovernanceLaneGroupsRequest) {
+    request = &DescribeGovernanceLaneGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeGovernanceLaneGroups")
+    
+    
+    return
+}
+
+func NewDescribeGovernanceLaneGroupsResponse() (response *DescribeGovernanceLaneGroupsResponse) {
+    response = &DescribeGovernanceLaneGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeGovernanceLaneGroups
+// 查询泳道组列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeGovernanceLaneGroups(request *DescribeGovernanceLaneGroupsRequest) (response *DescribeGovernanceLaneGroupsResponse, err error) {
+    return c.DescribeGovernanceLaneGroupsWithContext(context.Background(), request)
+}
+
+// DescribeGovernanceLaneGroups
+// 查询泳道组列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeGovernanceLaneGroupsWithContext(ctx context.Context, request *DescribeGovernanceLaneGroupsRequest) (response *DescribeGovernanceLaneGroupsResponse, err error) {
+    if request == nil {
+        request = NewDescribeGovernanceLaneGroupsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeGovernanceLaneGroups")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGovernanceLaneGroups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGovernanceLaneGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeGovernanceNamespacesRequest() (request *DescribeGovernanceNamespacesRequest) {
+    request = &DescribeGovernanceNamespacesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeGovernanceNamespaces")
+    
+    
+    return
+}
+
+func NewDescribeGovernanceNamespacesResponse() (response *DescribeGovernanceNamespacesResponse) {
+    response = &DescribeGovernanceNamespacesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeGovernanceNamespaces
+// 查询服务治理中心命名空间列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeGovernanceNamespaces(request *DescribeGovernanceNamespacesRequest) (response *DescribeGovernanceNamespacesResponse, err error) {
+    return c.DescribeGovernanceNamespacesWithContext(context.Background(), request)
+}
+
+// DescribeGovernanceNamespaces
+// 查询服务治理中心命名空间列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeGovernanceNamespacesWithContext(ctx context.Context, request *DescribeGovernanceNamespacesRequest) (response *DescribeGovernanceNamespacesResponse, err error) {
+    if request == nil {
+        request = NewDescribeGovernanceNamespacesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeGovernanceNamespaces")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGovernanceNamespaces require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGovernanceNamespacesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeGovernanceServiceContractVersionsRequest() (request *DescribeGovernanceServiceContractVersionsRequest) {
+    request = &DescribeGovernanceServiceContractVersionsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeGovernanceServiceContractVersions")
+    
+    
+    return
+}
+
+func NewDescribeGovernanceServiceContractVersionsResponse() (response *DescribeGovernanceServiceContractVersionsResponse) {
+    response = &DescribeGovernanceServiceContractVersionsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeGovernanceServiceContractVersions
+// 查询服务下契约版本列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeGovernanceServiceContractVersions(request *DescribeGovernanceServiceContractVersionsRequest) (response *DescribeGovernanceServiceContractVersionsResponse, err error) {
+    return c.DescribeGovernanceServiceContractVersionsWithContext(context.Background(), request)
+}
+
+// DescribeGovernanceServiceContractVersions
+// 查询服务下契约版本列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeGovernanceServiceContractVersionsWithContext(ctx context.Context, request *DescribeGovernanceServiceContractVersionsRequest) (response *DescribeGovernanceServiceContractVersionsResponse, err error) {
+    if request == nil {
+        request = NewDescribeGovernanceServiceContractVersionsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeGovernanceServiceContractVersions")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGovernanceServiceContractVersions require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGovernanceServiceContractVersionsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeGovernanceServiceContractsRequest() (request *DescribeGovernanceServiceContractsRequest) {
+    request = &DescribeGovernanceServiceContractsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeGovernanceServiceContracts")
+    
+    
+    return
+}
+
+func NewDescribeGovernanceServiceContractsResponse() (response *DescribeGovernanceServiceContractsResponse) {
+    response = &DescribeGovernanceServiceContractsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeGovernanceServiceContracts
+// 查询服务契约定义列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeGovernanceServiceContracts(request *DescribeGovernanceServiceContractsRequest) (response *DescribeGovernanceServiceContractsResponse, err error) {
+    return c.DescribeGovernanceServiceContractsWithContext(context.Background(), request)
+}
+
+// DescribeGovernanceServiceContracts
+// 查询服务契约定义列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeGovernanceServiceContractsWithContext(ctx context.Context, request *DescribeGovernanceServiceContractsRequest) (response *DescribeGovernanceServiceContractsResponse, err error) {
+    if request == nil {
+        request = NewDescribeGovernanceServiceContractsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeGovernanceServiceContracts")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGovernanceServiceContracts require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGovernanceServiceContractsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeGovernanceServicesRequest() (request *DescribeGovernanceServicesRequest) {
+    request = &DescribeGovernanceServicesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeGovernanceServices")
+    
+    
+    return
+}
+
+func NewDescribeGovernanceServicesResponse() (response *DescribeGovernanceServicesResponse) {
+    response = &DescribeGovernanceServicesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeGovernanceServices
+// 查询治理中心服务列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeGovernanceServices(request *DescribeGovernanceServicesRequest) (response *DescribeGovernanceServicesResponse, err error) {
+    return c.DescribeGovernanceServicesWithContext(context.Background(), request)
+}
+
+// DescribeGovernanceServices
+// 查询治理中心服务列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeGovernanceServicesWithContext(ctx context.Context, request *DescribeGovernanceServicesRequest) (response *DescribeGovernanceServicesResponse, err error) {
+    if request == nil {
+        request = NewDescribeGovernanceServicesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeGovernanceServices")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGovernanceServices require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGovernanceServicesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeInstanceTagInfosRequest() (request *DescribeInstanceTagInfosRequest) {
+    request = &DescribeInstanceTagInfosRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeInstanceTagInfos")
+    
+    
+    return
+}
+
+func NewDescribeInstanceTagInfosResponse() (response *DescribeInstanceTagInfosResponse) {
+    response = &DescribeInstanceTagInfosResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeInstanceTagInfos
+// 查看实例的标签信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_TAGFAILURE = "InternalError.TagFailure"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeInstanceTagInfos(request *DescribeInstanceTagInfosRequest) (response *DescribeInstanceTagInfosResponse, err error) {
+    return c.DescribeInstanceTagInfosWithContext(context.Background(), request)
+}
+
+// DescribeInstanceTagInfos
+// 查看实例的标签信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_TAGFAILURE = "InternalError.TagFailure"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeInstanceTagInfosWithContext(ctx context.Context, request *DescribeInstanceTagInfosRequest) (response *DescribeInstanceTagInfosResponse, err error) {
+    if request == nil {
+        request = NewDescribeInstanceTagInfosRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeInstanceTagInfos")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstanceTagInfos require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInstanceTagInfosResponse()
     err = c.Send(request, response)
     return
 }
@@ -3535,6 +8518,7 @@ func (c *Client) DescribeNacosReplicasWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeNacosReplicasRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeNacosReplicas")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeNacosReplicas require credential")
@@ -3590,6 +8574,7 @@ func (c *Client) DescribeNacosServerInterfacesWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeNacosServerInterfacesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeNacosServerInterfaces")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeNacosServerInterfaces require credential")
@@ -3643,6 +8628,7 @@ func (c *Client) DescribeNativeGatewayServerGroupsWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeNativeGatewayServerGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeNativeGatewayServerGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeNativeGatewayServerGroups require credential")
@@ -3651,6 +8637,62 @@ func (c *Client) DescribeNativeGatewayServerGroupsWithContext(ctx context.Contex
     request.SetContext(ctx)
     
     response = NewDescribeNativeGatewayServerGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeNativeGatewayServiceSourcesRequest() (request *DescribeNativeGatewayServiceSourcesRequest) {
+    request = &DescribeNativeGatewayServiceSourcesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribeNativeGatewayServiceSources")
+    
+    
+    return
+}
+
+func NewDescribeNativeGatewayServiceSourcesResponse() (response *DescribeNativeGatewayServiceSourcesResponse) {
+    response = &DescribeNativeGatewayServiceSourcesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeNativeGatewayServiceSources
+// 查询网关服务来源实例列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+func (c *Client) DescribeNativeGatewayServiceSources(request *DescribeNativeGatewayServiceSourcesRequest) (response *DescribeNativeGatewayServiceSourcesResponse, err error) {
+    return c.DescribeNativeGatewayServiceSourcesWithContext(context.Background(), request)
+}
+
+// DescribeNativeGatewayServiceSources
+// 查询网关服务来源实例列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+func (c *Client) DescribeNativeGatewayServiceSourcesWithContext(ctx context.Context, request *DescribeNativeGatewayServiceSourcesRequest) (response *DescribeNativeGatewayServiceSourcesResponse, err error) {
+    if request == nil {
+        request = NewDescribeNativeGatewayServiceSourcesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeNativeGatewayServiceSources")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeNativeGatewayServiceSources require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeNativeGatewayServiceSourcesResponse()
     err = c.Send(request, response)
     return
 }
@@ -3734,6 +8776,7 @@ func (c *Client) DescribeOneCloudNativeAPIGatewayServiceWithContext(ctx context.
     if request == nil {
         request = NewDescribeOneCloudNativeAPIGatewayServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeOneCloudNativeAPIGatewayService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeOneCloudNativeAPIGatewayService require credential")
@@ -3742,6 +8785,60 @@ func (c *Client) DescribeOneCloudNativeAPIGatewayServiceWithContext(ctx context.
     request.SetContext(ctx)
     
     response = NewDescribeOneCloudNativeAPIGatewayServiceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribePublicAddressConfigRequest() (request *DescribePublicAddressConfigRequest) {
+    request = &DescribePublicAddressConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "DescribePublicAddressConfig")
+    
+    
+    return
+}
+
+func NewDescribePublicAddressConfigResponse() (response *DescribePublicAddressConfigResponse) {
+    response = &DescribePublicAddressConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribePublicAddressConfig
+// 查询公网地址信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+func (c *Client) DescribePublicAddressConfig(request *DescribePublicAddressConfigRequest) (response *DescribePublicAddressConfigResponse, err error) {
+    return c.DescribePublicAddressConfigWithContext(context.Background(), request)
+}
+
+// DescribePublicAddressConfig
+// 查询公网地址信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+func (c *Client) DescribePublicAddressConfigWithContext(ctx context.Context, request *DescribePublicAddressConfigRequest) (response *DescribePublicAddressConfigResponse, err error) {
+    if request == nil {
+        request = NewDescribePublicAddressConfigRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribePublicAddressConfig")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribePublicAddressConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribePublicAddressConfigResponse()
     err = c.Send(request, response)
     return
 }
@@ -3809,6 +8906,7 @@ func (c *Client) DescribePublicNetworkWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribePublicNetworkRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribePublicNetwork")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePublicNetwork require credential")
@@ -3866,6 +8964,7 @@ func (c *Client) DescribeSREInstanceAccessAddressWithContext(ctx context.Context
     if request == nil {
         request = NewDescribeSREInstanceAccessAddressRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeSREInstanceAccessAddress")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSREInstanceAccessAddress require credential")
@@ -3905,9 +9004,11 @@ func NewDescribeSREInstancesResponse() (response *DescribeSREInstancesResponse) 
 //  INTERNALERROR_GETROLEERROR = "InternalError.GetRoleError"
 //  INTERNALERROR_HTTPSTATUSCODEERROR = "InternalError.HttpStatusCodeError"
 //  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
 //  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
 //  INTERNALERROR_TAGFAILURE = "InternalError.TagFailure"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_PARSEJSONERROR = "InvalidParameter.ParseJsonError"
 //  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
 //  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -3924,9 +9025,11 @@ func (c *Client) DescribeSREInstances(request *DescribeSREInstancesRequest) (res
 //  INTERNALERROR_GETROLEERROR = "InternalError.GetRoleError"
 //  INTERNALERROR_HTTPSTATUSCODEERROR = "InternalError.HttpStatusCodeError"
 //  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
 //  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
 //  INTERNALERROR_TAGFAILURE = "InternalError.TagFailure"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_PARSEJSONERROR = "InvalidParameter.ParseJsonError"
 //  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
 //  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -3935,6 +9038,7 @@ func (c *Client) DescribeSREInstancesWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeSREInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeSREInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSREInstances require credential")
@@ -3986,6 +9090,7 @@ func (c *Client) DescribeUpstreamHealthCheckConfigWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeUpstreamHealthCheckConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeUpstreamHealthCheckConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeUpstreamHealthCheckConfig require credential")
@@ -4077,6 +9182,7 @@ func (c *Client) DescribeWafDomainsWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeWafDomainsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeWafDomains")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWafDomains require credential")
@@ -4168,6 +9274,7 @@ func (c *Client) DescribeWafProtectionWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeWafProtectionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeWafProtection")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWafProtection require credential")
@@ -4227,6 +9334,7 @@ func (c *Client) DescribeZookeeperReplicasWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeZookeeperReplicasRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeZookeeperReplicas")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeZookeeperReplicas require credential")
@@ -4284,6 +9392,7 @@ func (c *Client) DescribeZookeeperServerInterfacesWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeZookeeperServerInterfacesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "DescribeZookeeperServerInterfaces")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeZookeeperServerInterfaces require credential")
@@ -4363,6 +9472,7 @@ func (c *Client) ModifyAutoScalerResourceStrategyWithContext(ctx context.Context
     if request == nil {
         request = NewModifyAutoScalerResourceStrategyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyAutoScalerResourceStrategy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyAutoScalerResourceStrategy require credential")
@@ -4438,6 +9548,7 @@ func (c *Client) ModifyCloudNativeAPIGatewayWithContext(ctx context.Context, req
     if request == nil {
         request = NewModifyCloudNativeAPIGatewayRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyCloudNativeAPIGateway")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyCloudNativeAPIGateway require credential")
@@ -4531,6 +9642,7 @@ func (c *Client) ModifyCloudNativeAPIGatewayCanaryRuleWithContext(ctx context.Co
     if request == nil {
         request = NewModifyCloudNativeAPIGatewayCanaryRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyCloudNativeAPIGatewayCanaryRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyCloudNativeAPIGatewayCanaryRule require credential")
@@ -4626,6 +9738,7 @@ func (c *Client) ModifyCloudNativeAPIGatewayCertificateWithContext(ctx context.C
     if request == nil {
         request = NewModifyCloudNativeAPIGatewayCertificateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyCloudNativeAPIGatewayCertificate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyCloudNativeAPIGatewayCertificate require credential")
@@ -4634,6 +9747,338 @@ func (c *Client) ModifyCloudNativeAPIGatewayCertificateWithContext(ctx context.C
     request.SetContext(ctx)
     
     response = NewModifyCloudNativeAPIGatewayCertificateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyCloudNativeAPIGatewayConsumerRequest() (request *ModifyCloudNativeAPIGatewayConsumerRequest) {
+    request = &ModifyCloudNativeAPIGatewayConsumerRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "ModifyCloudNativeAPIGatewayConsumer")
+    
+    
+    return
+}
+
+func NewModifyCloudNativeAPIGatewayConsumerResponse() (response *ModifyCloudNativeAPIGatewayConsumerResponse) {
+    response = &ModifyCloudNativeAPIGatewayConsumerResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyCloudNativeAPIGatewayConsumer
+// 修改消费者。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) ModifyCloudNativeAPIGatewayConsumer(request *ModifyCloudNativeAPIGatewayConsumerRequest) (response *ModifyCloudNativeAPIGatewayConsumerResponse, err error) {
+    return c.ModifyCloudNativeAPIGatewayConsumerWithContext(context.Background(), request)
+}
+
+// ModifyCloudNativeAPIGatewayConsumer
+// 修改消费者。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) ModifyCloudNativeAPIGatewayConsumerWithContext(ctx context.Context, request *ModifyCloudNativeAPIGatewayConsumerRequest) (response *ModifyCloudNativeAPIGatewayConsumerResponse, err error) {
+    if request == nil {
+        request = NewModifyCloudNativeAPIGatewayConsumerRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyCloudNativeAPIGatewayConsumer")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyCloudNativeAPIGatewayConsumer require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyCloudNativeAPIGatewayConsumerResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyCloudNativeAPIGatewayConsumerGroupRequest() (request *ModifyCloudNativeAPIGatewayConsumerGroupRequest) {
+    request = &ModifyCloudNativeAPIGatewayConsumerGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "ModifyCloudNativeAPIGatewayConsumerGroup")
+    
+    
+    return
+}
+
+func NewModifyCloudNativeAPIGatewayConsumerGroupResponse() (response *ModifyCloudNativeAPIGatewayConsumerGroupResponse) {
+    response = &ModifyCloudNativeAPIGatewayConsumerGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyCloudNativeAPIGatewayConsumerGroup
+// 修改消费者组。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) ModifyCloudNativeAPIGatewayConsumerGroup(request *ModifyCloudNativeAPIGatewayConsumerGroupRequest) (response *ModifyCloudNativeAPIGatewayConsumerGroupResponse, err error) {
+    return c.ModifyCloudNativeAPIGatewayConsumerGroupWithContext(context.Background(), request)
+}
+
+// ModifyCloudNativeAPIGatewayConsumerGroup
+// 修改消费者组。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) ModifyCloudNativeAPIGatewayConsumerGroupWithContext(ctx context.Context, request *ModifyCloudNativeAPIGatewayConsumerGroupRequest) (response *ModifyCloudNativeAPIGatewayConsumerGroupResponse, err error) {
+    if request == nil {
+        request = NewModifyCloudNativeAPIGatewayConsumerGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyCloudNativeAPIGatewayConsumerGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyCloudNativeAPIGatewayConsumerGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyCloudNativeAPIGatewayConsumerGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyCloudNativeAPIGatewayLLMModelAPIRequest() (request *ModifyCloudNativeAPIGatewayLLMModelAPIRequest) {
+    request = &ModifyCloudNativeAPIGatewayLLMModelAPIRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "ModifyCloudNativeAPIGatewayLLMModelAPI")
+    
+    
+    return
+}
+
+func NewModifyCloudNativeAPIGatewayLLMModelAPIResponse() (response *ModifyCloudNativeAPIGatewayLLMModelAPIResponse) {
+    response = &ModifyCloudNativeAPIGatewayLLMModelAPIResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyCloudNativeAPIGatewayLLMModelAPI
+// 修改 LLM 模型 API。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) ModifyCloudNativeAPIGatewayLLMModelAPI(request *ModifyCloudNativeAPIGatewayLLMModelAPIRequest) (response *ModifyCloudNativeAPIGatewayLLMModelAPIResponse, err error) {
+    return c.ModifyCloudNativeAPIGatewayLLMModelAPIWithContext(context.Background(), request)
+}
+
+// ModifyCloudNativeAPIGatewayLLMModelAPI
+// 修改 LLM 模型 API。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) ModifyCloudNativeAPIGatewayLLMModelAPIWithContext(ctx context.Context, request *ModifyCloudNativeAPIGatewayLLMModelAPIRequest) (response *ModifyCloudNativeAPIGatewayLLMModelAPIResponse, err error) {
+    if request == nil {
+        request = NewModifyCloudNativeAPIGatewayLLMModelAPIRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyCloudNativeAPIGatewayLLMModelAPI")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyCloudNativeAPIGatewayLLMModelAPI require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyCloudNativeAPIGatewayLLMModelAPIResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyCloudNativeAPIGatewayLLMModelServiceRequest() (request *ModifyCloudNativeAPIGatewayLLMModelServiceRequest) {
+    request = &ModifyCloudNativeAPIGatewayLLMModelServiceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "ModifyCloudNativeAPIGatewayLLMModelService")
+    
+    
+    return
+}
+
+func NewModifyCloudNativeAPIGatewayLLMModelServiceResponse() (response *ModifyCloudNativeAPIGatewayLLMModelServiceResponse) {
+    response = &ModifyCloudNativeAPIGatewayLLMModelServiceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyCloudNativeAPIGatewayLLMModelService
+// 修改 LLM 模型服务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) ModifyCloudNativeAPIGatewayLLMModelService(request *ModifyCloudNativeAPIGatewayLLMModelServiceRequest) (response *ModifyCloudNativeAPIGatewayLLMModelServiceResponse, err error) {
+    return c.ModifyCloudNativeAPIGatewayLLMModelServiceWithContext(context.Background(), request)
+}
+
+// ModifyCloudNativeAPIGatewayLLMModelService
+// 修改 LLM 模型服务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  LIMITEXCEEDED_LIMITEXCEEDED = "LimitExceeded.LimitExceeded"
+//  MISSINGPARAMETER_MISSPARAMETER = "MissingParameter.MissParameter"
+//  OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) ModifyCloudNativeAPIGatewayLLMModelServiceWithContext(ctx context.Context, request *ModifyCloudNativeAPIGatewayLLMModelServiceRequest) (response *ModifyCloudNativeAPIGatewayLLMModelServiceResponse, err error) {
+    if request == nil {
+        request = NewModifyCloudNativeAPIGatewayLLMModelServiceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyCloudNativeAPIGatewayLLMModelService")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyCloudNativeAPIGatewayLLMModelService require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyCloudNativeAPIGatewayLLMModelServiceResponse()
     err = c.Send(request, response)
     return
 }
@@ -4719,6 +10164,7 @@ func (c *Client) ModifyCloudNativeAPIGatewayRouteWithContext(ctx context.Context
     if request == nil {
         request = NewModifyCloudNativeAPIGatewayRouteRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyCloudNativeAPIGatewayRoute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyCloudNativeAPIGatewayRoute require credential")
@@ -4810,6 +10256,7 @@ func (c *Client) ModifyCloudNativeAPIGatewayRouteRateLimitWithContext(ctx contex
     if request == nil {
         request = NewModifyCloudNativeAPIGatewayRouteRateLimitRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyCloudNativeAPIGatewayRouteRateLimit")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyCloudNativeAPIGatewayRouteRateLimit require credential")
@@ -4818,6 +10265,98 @@ func (c *Client) ModifyCloudNativeAPIGatewayRouteRateLimitWithContext(ctx contex
     request.SetContext(ctx)
     
     response = NewModifyCloudNativeAPIGatewayRouteRateLimitResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyCloudNativeAPIGatewaySecretKeyStatusRequest() (request *ModifyCloudNativeAPIGatewaySecretKeyStatusRequest) {
+    request = &ModifyCloudNativeAPIGatewaySecretKeyStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "ModifyCloudNativeAPIGatewaySecretKeyStatus")
+    
+    
+    return
+}
+
+func NewModifyCloudNativeAPIGatewaySecretKeyStatusResponse() (response *ModifyCloudNativeAPIGatewaySecretKeyStatusResponse) {
+    response = &ModifyCloudNativeAPIGatewaySecretKeyStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyCloudNativeAPIGatewaySecretKeyStatus
+// 修改密钥启用状态。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) ModifyCloudNativeAPIGatewaySecretKeyStatus(request *ModifyCloudNativeAPIGatewaySecretKeyStatusRequest) (response *ModifyCloudNativeAPIGatewaySecretKeyStatusResponse, err error) {
+    return c.ModifyCloudNativeAPIGatewaySecretKeyStatusWithContext(context.Background(), request)
+}
+
+// ModifyCloudNativeAPIGatewaySecretKeyStatus
+// 修改密钥启用状态。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) ModifyCloudNativeAPIGatewaySecretKeyStatusWithContext(ctx context.Context, request *ModifyCloudNativeAPIGatewaySecretKeyStatusRequest) (response *ModifyCloudNativeAPIGatewaySecretKeyStatusResponse, err error) {
+    if request == nil {
+        request = NewModifyCloudNativeAPIGatewaySecretKeyStatusRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyCloudNativeAPIGatewaySecretKeyStatus")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyCloudNativeAPIGatewaySecretKeyStatus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyCloudNativeAPIGatewaySecretKeyStatusResponse()
     err = c.Send(request, response)
     return
 }
@@ -4901,6 +10440,7 @@ func (c *Client) ModifyCloudNativeAPIGatewayServiceWithContext(ctx context.Conte
     if request == nil {
         request = NewModifyCloudNativeAPIGatewayServiceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyCloudNativeAPIGatewayService")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyCloudNativeAPIGatewayService require credential")
@@ -4992,6 +10532,7 @@ func (c *Client) ModifyCloudNativeAPIGatewayServiceRateLimitWithContext(ctx cont
     if request == nil {
         request = NewModifyCloudNativeAPIGatewayServiceRateLimitRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyCloudNativeAPIGatewayServiceRateLimit")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyCloudNativeAPIGatewayServiceRateLimit require credential")
@@ -5000,6 +10541,126 @@ func (c *Client) ModifyCloudNativeAPIGatewayServiceRateLimitWithContext(ctx cont
     request.SetContext(ctx)
     
     response = NewModifyCloudNativeAPIGatewayServiceRateLimitResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyConfigFileGroupRequest() (request *ModifyConfigFileGroupRequest) {
+    request = &ModifyConfigFileGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "ModifyConfigFileGroup")
+    
+    
+    return
+}
+
+func NewModifyConfigFileGroupResponse() (response *ModifyConfigFileGroupResponse) {
+    response = &ModifyConfigFileGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyConfigFileGroup
+// 批量修改配置文件组
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyConfigFileGroup(request *ModifyConfigFileGroupRequest) (response *ModifyConfigFileGroupResponse, err error) {
+    return c.ModifyConfigFileGroupWithContext(context.Background(), request)
+}
+
+// ModifyConfigFileGroup
+// 批量修改配置文件组
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyConfigFileGroupWithContext(ctx context.Context, request *ModifyConfigFileGroupRequest) (response *ModifyConfigFileGroupResponse, err error) {
+    if request == nil {
+        request = NewModifyConfigFileGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyConfigFileGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyConfigFileGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyConfigFileGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyConfigFilesRequest() (request *ModifyConfigFilesRequest) {
+    request = &ModifyConfigFilesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "ModifyConfigFiles")
+    
+    
+    return
+}
+
+func NewModifyConfigFilesResponse() (response *ModifyConfigFilesResponse) {
+    response = &ModifyConfigFilesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyConfigFiles
+// 修改配置文件
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyConfigFiles(request *ModifyConfigFilesRequest) (response *ModifyConfigFilesResponse, err error) {
+    return c.ModifyConfigFilesWithContext(context.Background(), request)
+}
+
+// ModifyConfigFiles
+// 修改配置文件
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyConfigFilesWithContext(ctx context.Context, request *ModifyConfigFilesRequest) (response *ModifyConfigFilesResponse, err error) {
+    if request == nil {
+        request = NewModifyConfigFilesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyConfigFiles")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyConfigFiles require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyConfigFilesResponse()
     err = c.Send(request, response)
     return
 }
@@ -5063,6 +10724,7 @@ func (c *Client) ModifyConsoleNetworkWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyConsoleNetworkRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyConsoleNetwork")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyConsoleNetwork require credential")
@@ -5071,6 +10733,298 @@ func (c *Client) ModifyConsoleNetworkWithContext(ctx context.Context, request *M
     request.SetContext(ctx)
     
     response = NewModifyConsoleNetworkResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyGovernanceAliasRequest() (request *ModifyGovernanceAliasRequest) {
+    request = &ModifyGovernanceAliasRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "ModifyGovernanceAlias")
+    
+    
+    return
+}
+
+func NewModifyGovernanceAliasResponse() (response *ModifyGovernanceAliasResponse) {
+    response = &ModifyGovernanceAliasResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyGovernanceAlias
+// 修改治理中心服务别名
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_CREATEERROR = "InvalidParameterValue.CreateError"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyGovernanceAlias(request *ModifyGovernanceAliasRequest) (response *ModifyGovernanceAliasResponse, err error) {
+    return c.ModifyGovernanceAliasWithContext(context.Background(), request)
+}
+
+// ModifyGovernanceAlias
+// 修改治理中心服务别名
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_CREATEERROR = "InvalidParameterValue.CreateError"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyGovernanceAliasWithContext(ctx context.Context, request *ModifyGovernanceAliasRequest) (response *ModifyGovernanceAliasResponse, err error) {
+    if request == nil {
+        request = NewModifyGovernanceAliasRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyGovernanceAlias")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyGovernanceAlias require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyGovernanceAliasResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyGovernanceInstancesRequest() (request *ModifyGovernanceInstancesRequest) {
+    request = &ModifyGovernanceInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "ModifyGovernanceInstances")
+    
+    
+    return
+}
+
+func NewModifyGovernanceInstancesResponse() (response *ModifyGovernanceInstancesResponse) {
+    response = &ModifyGovernanceInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyGovernanceInstances
+// 修改治理中心服务实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyGovernanceInstances(request *ModifyGovernanceInstancesRequest) (response *ModifyGovernanceInstancesResponse, err error) {
+    return c.ModifyGovernanceInstancesWithContext(context.Background(), request)
+}
+
+// ModifyGovernanceInstances
+// 修改治理中心服务实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyGovernanceInstancesWithContext(ctx context.Context, request *ModifyGovernanceInstancesRequest) (response *ModifyGovernanceInstancesResponse, err error) {
+    if request == nil {
+        request = NewModifyGovernanceInstancesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyGovernanceInstances")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyGovernanceInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyGovernanceInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyGovernanceLaneGroupsRequest() (request *ModifyGovernanceLaneGroupsRequest) {
+    request = &ModifyGovernanceLaneGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "ModifyGovernanceLaneGroups")
+    
+    
+    return
+}
+
+func NewModifyGovernanceLaneGroupsResponse() (response *ModifyGovernanceLaneGroupsResponse) {
+    response = &ModifyGovernanceLaneGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyGovernanceLaneGroups
+// 创建泳道组
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyGovernanceLaneGroups(request *ModifyGovernanceLaneGroupsRequest) (response *ModifyGovernanceLaneGroupsResponse, err error) {
+    return c.ModifyGovernanceLaneGroupsWithContext(context.Background(), request)
+}
+
+// ModifyGovernanceLaneGroups
+// 创建泳道组
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyGovernanceLaneGroupsWithContext(ctx context.Context, request *ModifyGovernanceLaneGroupsRequest) (response *ModifyGovernanceLaneGroupsResponse, err error) {
+    if request == nil {
+        request = NewModifyGovernanceLaneGroupsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyGovernanceLaneGroups")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyGovernanceLaneGroups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyGovernanceLaneGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyGovernanceNamespacesRequest() (request *ModifyGovernanceNamespacesRequest) {
+    request = &ModifyGovernanceNamespacesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "ModifyGovernanceNamespaces")
+    
+    
+    return
+}
+
+func NewModifyGovernanceNamespacesResponse() (response *ModifyGovernanceNamespacesResponse) {
+    response = &ModifyGovernanceNamespacesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyGovernanceNamespaces
+// 修改治理中心命名空间
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyGovernanceNamespaces(request *ModifyGovernanceNamespacesRequest) (response *ModifyGovernanceNamespacesResponse, err error) {
+    return c.ModifyGovernanceNamespacesWithContext(context.Background(), request)
+}
+
+// ModifyGovernanceNamespaces
+// 修改治理中心命名空间
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyGovernanceNamespacesWithContext(ctx context.Context, request *ModifyGovernanceNamespacesRequest) (response *ModifyGovernanceNamespacesResponse, err error) {
+    if request == nil {
+        request = NewModifyGovernanceNamespacesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyGovernanceNamespaces")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyGovernanceNamespaces require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyGovernanceNamespacesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyGovernanceServicesRequest() (request *ModifyGovernanceServicesRequest) {
+    request = &ModifyGovernanceServicesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "ModifyGovernanceServices")
+    
+    
+    return
+}
+
+func NewModifyGovernanceServicesResponse() (response *ModifyGovernanceServicesResponse) {
+    response = &ModifyGovernanceServicesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyGovernanceServices
+// 修改治理中心服务
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyGovernanceServices(request *ModifyGovernanceServicesRequest) (response *ModifyGovernanceServicesResponse, err error) {
+    return c.ModifyGovernanceServicesWithContext(context.Background(), request)
+}
+
+// ModifyGovernanceServices
+// 修改治理中心服务
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_UPDATEERROR = "InvalidParameterValue.UpdateError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyGovernanceServicesWithContext(ctx context.Context, request *ModifyGovernanceServicesRequest) (response *ModifyGovernanceServicesResponse, err error) {
+    if request == nil {
+        request = NewModifyGovernanceServicesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyGovernanceServices")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyGovernanceServices require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyGovernanceServicesResponse()
     err = c.Send(request, response)
     return
 }
@@ -5138,6 +11092,7 @@ func (c *Client) ModifyNativeGatewayServerGroupWithContext(ctx context.Context, 
     if request == nil {
         request = NewModifyNativeGatewayServerGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyNativeGatewayServerGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyNativeGatewayServerGroup require credential")
@@ -5146,6 +11101,66 @@ func (c *Client) ModifyNativeGatewayServerGroupWithContext(ctx context.Context, 
     request.SetContext(ctx)
     
     response = NewModifyNativeGatewayServerGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyNativeGatewayServiceSourceRequest() (request *ModifyNativeGatewayServiceSourceRequest) {
+    request = &ModifyNativeGatewayServiceSourceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "ModifyNativeGatewayServiceSource")
+    
+    
+    return
+}
+
+func NewModifyNativeGatewayServiceSourceResponse() (response *ModifyNativeGatewayServiceSourceResponse) {
+    response = &ModifyNativeGatewayServiceSourceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyNativeGatewayServiceSource
+// 修改网关服务来源
+//
+// 可能返回的错误码:
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INVALIDPARAMETERVALUE_CREATEERROR = "InvalidParameterValue.CreateError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+func (c *Client) ModifyNativeGatewayServiceSource(request *ModifyNativeGatewayServiceSourceRequest) (response *ModifyNativeGatewayServiceSourceResponse, err error) {
+    return c.ModifyNativeGatewayServiceSourceWithContext(context.Background(), request)
+}
+
+// ModifyNativeGatewayServiceSource
+// 修改网关服务来源
+//
+// 可能返回的错误码:
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INVALIDPARAMETERVALUE_CREATEERROR = "InvalidParameterValue.CreateError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+func (c *Client) ModifyNativeGatewayServiceSourceWithContext(ctx context.Context, request *ModifyNativeGatewayServiceSourceRequest) (response *ModifyNativeGatewayServiceSourceResponse, err error) {
+    if request == nil {
+        request = NewModifyNativeGatewayServiceSourceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyNativeGatewayServiceSource")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyNativeGatewayServiceSource require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyNativeGatewayServiceSourceResponse()
     err = c.Send(request, response)
     return
 }
@@ -5209,6 +11224,7 @@ func (c *Client) ModifyNetworkAccessStrategyWithContext(ctx context.Context, req
     if request == nil {
         request = NewModifyNetworkAccessStrategyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyNetworkAccessStrategy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyNetworkAccessStrategy require credential")
@@ -5241,7 +11257,7 @@ func NewModifyNetworkBasicInfoResponse() (response *ModifyNetworkBasicInfoRespon
 }
 
 // ModifyNetworkBasicInfo
-// 修改云原生API网关实例网络基本信息，例如带宽以及描述，只支持修改客户端公网/内网的信息。
+// 修改云原生API网关实例网络基本信息，例如带宽以及描述、规格升级，只支持修改客户端公网/内网的信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
@@ -5261,7 +11277,7 @@ func (c *Client) ModifyNetworkBasicInfo(request *ModifyNetworkBasicInfoRequest) 
 }
 
 // ModifyNetworkBasicInfo
-// 修改云原生API网关实例网络基本信息，例如带宽以及描述，只支持修改客户端公网/内网的信息。
+// 修改云原生API网关实例网络基本信息，例如带宽以及描述、规格升级，只支持修改客户端公网/内网的信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
@@ -5280,6 +11296,7 @@ func (c *Client) ModifyNetworkBasicInfoWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyNetworkBasicInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyNetworkBasicInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyNetworkBasicInfo require credential")
@@ -5351,6 +11368,7 @@ func (c *Client) ModifyUpstreamNodeStatusWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyUpstreamNodeStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "ModifyUpstreamNodeStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyUpstreamNodeStatus require credential")
@@ -5444,6 +11462,7 @@ func (c *Client) OpenWafProtectionWithContext(ctx context.Context, request *Open
     if request == nil {
         request = NewOpenWafProtectionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "OpenWafProtection")
     
     if c.GetCredential() == nil {
         return nil, errors.New("OpenWafProtection require credential")
@@ -5452,6 +11471,368 @@ func (c *Client) OpenWafProtectionWithContext(ctx context.Context, request *Open
     request.SetContext(ctx)
     
     response = NewOpenWafProtectionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewPublishConfigFilesRequest() (request *PublishConfigFilesRequest) {
+    request = &PublishConfigFilesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "PublishConfigFiles")
+    
+    
+    return
+}
+
+func NewPublishConfigFilesResponse() (response *PublishConfigFilesResponse) {
+    response = &PublishConfigFilesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// PublishConfigFiles
+// 发布配置文件
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+func (c *Client) PublishConfigFiles(request *PublishConfigFilesRequest) (response *PublishConfigFilesResponse, err error) {
+    return c.PublishConfigFilesWithContext(context.Background(), request)
+}
+
+// PublishConfigFiles
+// 发布配置文件
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+func (c *Client) PublishConfigFilesWithContext(ctx context.Context, request *PublishConfigFilesRequest) (response *PublishConfigFilesResponse, err error) {
+    if request == nil {
+        request = NewPublishConfigFilesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "PublishConfigFiles")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("PublishConfigFiles require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewPublishConfigFilesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRemoveCloudNativeAPIGatewayConsumerGroupAuthRequest() (request *RemoveCloudNativeAPIGatewayConsumerGroupAuthRequest) {
+    request = &RemoveCloudNativeAPIGatewayConsumerGroupAuthRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "RemoveCloudNativeAPIGatewayConsumerGroupAuth")
+    
+    
+    return
+}
+
+func NewRemoveCloudNativeAPIGatewayConsumerGroupAuthResponse() (response *RemoveCloudNativeAPIGatewayConsumerGroupAuthResponse) {
+    response = &RemoveCloudNativeAPIGatewayConsumerGroupAuthResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RemoveCloudNativeAPIGatewayConsumerGroupAuth
+// 从资源（模型 API / MCP Server）移除消费者组授权。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) RemoveCloudNativeAPIGatewayConsumerGroupAuth(request *RemoveCloudNativeAPIGatewayConsumerGroupAuthRequest) (response *RemoveCloudNativeAPIGatewayConsumerGroupAuthResponse, err error) {
+    return c.RemoveCloudNativeAPIGatewayConsumerGroupAuthWithContext(context.Background(), request)
+}
+
+// RemoveCloudNativeAPIGatewayConsumerGroupAuth
+// 从资源（模型 API / MCP Server）移除消费者组授权。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) RemoveCloudNativeAPIGatewayConsumerGroupAuthWithContext(ctx context.Context, request *RemoveCloudNativeAPIGatewayConsumerGroupAuthRequest) (response *RemoveCloudNativeAPIGatewayConsumerGroupAuthResponse, err error) {
+    if request == nil {
+        request = NewRemoveCloudNativeAPIGatewayConsumerGroupAuthRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "RemoveCloudNativeAPIGatewayConsumerGroupAuth")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RemoveCloudNativeAPIGatewayConsumerGroupAuth require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRemoveCloudNativeAPIGatewayConsumerGroupAuthResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRemoveCloudNativeAPIGatewayConsumerInGroupRequest() (request *RemoveCloudNativeAPIGatewayConsumerInGroupRequest) {
+    request = &RemoveCloudNativeAPIGatewayConsumerInGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "RemoveCloudNativeAPIGatewayConsumerInGroup")
+    
+    
+    return
+}
+
+func NewRemoveCloudNativeAPIGatewayConsumerInGroupResponse() (response *RemoveCloudNativeAPIGatewayConsumerInGroupResponse) {
+    response = &RemoveCloudNativeAPIGatewayConsumerInGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RemoveCloudNativeAPIGatewayConsumerInGroup
+// 将消费者从消费者组移除。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) RemoveCloudNativeAPIGatewayConsumerInGroup(request *RemoveCloudNativeAPIGatewayConsumerInGroupRequest) (response *RemoveCloudNativeAPIGatewayConsumerInGroupResponse, err error) {
+    return c.RemoveCloudNativeAPIGatewayConsumerInGroupWithContext(context.Background(), request)
+}
+
+// RemoveCloudNativeAPIGatewayConsumerInGroup
+// 将消费者从消费者组移除。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FAILEDOPERATION = "FailedOperation.FailedOperation"
+//  FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+//  FAILEDOPERATION_ROLE = "FailedOperation.Role"
+//  FAILEDOPERATION_VPC = "FailedOperation.Vpc"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_OPERATIONFAILED = "InvalidParameterValue.OperationFailed"
+//  INVALIDPARAMETERVALUE_REGION = "InvalidParameterValue.Region"
+//  INVALIDPARAMETERVALUE_RESOURCEALREADYEXIST = "InvalidParameterValue.ResourceAlreadyExist"
+//  INVALIDPARAMETERVALUE_SPECIFICATION = "InvalidParameterValue.Specification"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNAUTHORIZEDOPERATION_CAMPASSROLENOTEXIST = "UnauthorizedOperation.CamPassRoleNotExist"
+//  UNAUTHORIZEDOPERATION_UIN = "UnauthorizedOperation.Uin"
+//  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+func (c *Client) RemoveCloudNativeAPIGatewayConsumerInGroupWithContext(ctx context.Context, request *RemoveCloudNativeAPIGatewayConsumerInGroupRequest) (response *RemoveCloudNativeAPIGatewayConsumerInGroupResponse, err error) {
+    if request == nil {
+        request = NewRemoveCloudNativeAPIGatewayConsumerInGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "RemoveCloudNativeAPIGatewayConsumerInGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RemoveCloudNativeAPIGatewayConsumerInGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRemoveCloudNativeAPIGatewayConsumerInGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRestartSREInstanceRequest() (request *RestartSREInstanceRequest) {
+    request = &RestartSREInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "RestartSREInstance")
+    
+    
+    return
+}
+
+func NewRestartSREInstanceResponse() (response *RestartSREInstanceResponse) {
+    response = &RestartSREInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RestartSREInstance
+// 重启微服务引擎实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR_OPERATIONFAILED = "InternalError.OperationFailed"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) RestartSREInstance(request *RestartSREInstanceRequest) (response *RestartSREInstanceResponse, err error) {
+    return c.RestartSREInstanceWithContext(context.Background(), request)
+}
+
+// RestartSREInstance
+// 重启微服务引擎实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR_OPERATIONFAILED = "InternalError.OperationFailed"
+//  INTERNALERROR_QUERYERROR = "InternalError.QueryError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) RestartSREInstanceWithContext(ctx context.Context, request *RestartSREInstanceRequest) (response *RestartSREInstanceResponse, err error) {
+    if request == nil {
+        request = NewRestartSREInstanceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "RestartSREInstance")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RestartSREInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRestartSREInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRollbackConfigFileReleasesRequest() (request *RollbackConfigFileReleasesRequest) {
+    request = &RollbackConfigFileReleasesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tse", APIVersion, "RollbackConfigFileReleases")
+    
+    
+    return
+}
+
+func NewRollbackConfigFileReleasesResponse() (response *RollbackConfigFileReleasesResponse) {
+    response = &RollbackConfigFileReleasesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RollbackConfigFileReleases
+// 回滚配置发布
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) RollbackConfigFileReleases(request *RollbackConfigFileReleasesRequest) (response *RollbackConfigFileReleasesResponse, err error) {
+    return c.RollbackConfigFileReleasesWithContext(context.Background(), request)
+}
+
+// RollbackConfigFileReleases
+// 回滚配置发布
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+//  INTERNALERROR_IOERROR = "InternalError.IOError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_BADREQUESTFORMAT = "InvalidParameterValue.BadRequestFormat"
+//  INVALIDPARAMETERVALUE_QUERYERROR = "InvalidParameterValue.QueryError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) RollbackConfigFileReleasesWithContext(ctx context.Context, request *RollbackConfigFileReleasesRequest) (response *RollbackConfigFileReleasesResponse, err error) {
+    if request == nil {
+        request = NewRollbackConfigFileReleasesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "RollbackConfigFileReleases")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RollbackConfigFileReleases require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRollbackConfigFileReleasesResponse()
     err = c.Send(request, response)
     return
 }
@@ -5541,6 +11922,7 @@ func (c *Client) UnbindAutoScalerResourceStrategyFromGroupsWithContext(ctx conte
     if request == nil {
         request = NewUnbindAutoScalerResourceStrategyFromGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "UnbindAutoScalerResourceStrategyFromGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UnbindAutoScalerResourceStrategyFromGroups require credential")
@@ -5634,6 +12016,7 @@ func (c *Client) UpdateCloudNativeAPIGatewayCertificateInfoWithContext(ctx conte
     if request == nil {
         request = NewUpdateCloudNativeAPIGatewayCertificateInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "UpdateCloudNativeAPIGatewayCertificateInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateCloudNativeAPIGatewayCertificateInfo require credential")
@@ -5703,6 +12086,7 @@ func (c *Client) UpdateCloudNativeAPIGatewaySpecWithContext(ctx context.Context,
     if request == nil {
         request = NewUpdateCloudNativeAPIGatewaySpecRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "UpdateCloudNativeAPIGatewaySpec")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateCloudNativeAPIGatewaySpec require credential")
@@ -5760,6 +12144,7 @@ func (c *Client) UpdateEngineInternetAccessWithContext(ctx context.Context, requ
     if request == nil {
         request = NewUpdateEngineInternetAccessRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "UpdateEngineInternetAccess")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateEngineInternetAccess require credential")
@@ -5811,6 +12196,7 @@ func (c *Client) UpdateUpstreamHealthCheckConfigWithContext(ctx context.Context,
     if request == nil {
         request = NewUpdateUpstreamHealthCheckConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "UpdateUpstreamHealthCheckConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateUpstreamHealthCheckConfig require credential")
@@ -5862,6 +12248,7 @@ func (c *Client) UpdateUpstreamTargetsWithContext(ctx context.Context, request *
     if request == nil {
         request = NewUpdateUpstreamTargetsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "tse", APIVersion, "UpdateUpstreamTargets")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateUpstreamTargets require credential")

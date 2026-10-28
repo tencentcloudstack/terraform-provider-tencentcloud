@@ -37,6 +37,7 @@ resource "tencentcloud_key_pair" "foo1" {
 The following arguments are supported:
 
 * `key_name` - (Required, String) The key pair's name. It is the only in one TencentCloud account.
+* `force_stop` - (Optional, Bool) Whether to forcibly shut down a running instance. Default is false. Forcing a shutdown is equivalent to switching off the power button on a physical computer. Forcing a shutdown may result in data loss or file system corruption; therefore, please use this option only when the server cannot be shut down normally.
 * `project_id` - (Optional, Int, ForceNew) Specifys to which project the key pair belongs.
 * `public_key` - (Optional, String, ForceNew) You can import an existing public key and using TencentCloud key pair to manage it.
 * `tags` - (Optional, Map) Tags of the key pair.
@@ -49,6 +50,24 @@ In addition to all arguments above, the following attributes are exported:
 * `created_time` - Creation time, which follows the `ISO8601` standard and uses `UTC` time in the format of `YYYY-MM-DDThh:mm:ssZ`.
 * `private_key` - Content of private key in a key pair. Tencent Cloud do not keep private keys. Please keep it properly.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateKeyPair](https://www.tencentcloud.com/document/api/213/33231)
+  - [ImportKeyPair](https://www.tencentcloud.com/document/api/213/33227)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeKeyPairs](https://www.tencentcloud.com/document/api/213/33229)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [ModifyKeyPairAttribute](https://www.tencentcloud.com/document/api/213/33226)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete:
+  - [DeleteKeyPairs](https://www.tencentcloud.com/document/api/213/33230)
+  - [DescribeKeyPairs](https://www.tencentcloud.com/document/api/213/33229)
+  - [DisassociateInstancesKeyPairs](https://www.tencentcloud.com/document/api/213/33228)
 
 ## Import
 

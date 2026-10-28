@@ -929,3 +929,48 @@ func (me *DnspodService) DescribeDnspodPackageOrderById(ctx context.Context, dom
 	ret = response.Response.DomainInfo
 	return
 }
+
+func (me *DnspodService) DescribeDnspodPackageDomainById(ctx context.Context, resourceId string) (ret *dnspod.PackageListItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := dnspod.NewDescribeDomainVipListRequest()
+	response := dnspod.NewDescribeDomainVipListResponse()
+	request.ResourceIdList = []*string{helper.String(resourceId)}
+	request.Offset = helper.IntUint64(0)
+	request.Limit = helper.IntUint64(100)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDnsPodClient().DescribeDomainVipListWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe dnspod package domain failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	for _, item := range response.Response.PackageList {
+		if item != nil && item.ResourceId != nil && *item.ResourceId == resourceId {
+			ret = item
+			break
+		}
+	}
+
+	return
+}

@@ -411,7 +411,6 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Description: "A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.",
-				// ValidateFunc: clusterCidrValidateFunc,
 			},
 
 			"ignore_cluster_cidr_conflict": {
@@ -451,7 +450,6 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Description: "A network address block of the service. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.",
-				// ValidateFunc: serviceCidrValidateFunc,
 			},
 
 			"eni_subnet_ids": {
@@ -1284,12 +1282,14 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 						"jwks_uri": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Specify service-account-jwks-uri. If use_tke_default is set to `true`, please do not set this field, it will be ignored anyway.",
+							Computed:    true,
+							Description: "Specify service-account-jwks-uri. If use_tke_default is set to `true`, please do not set this field, it will be ignored anyway. This field is also computed: when use_tke_default is `true`, TKE will auto-generate the value and it will be read back into state.",
 						},
 						"issuer": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Specify service-account-issuer. If use_tke_default is set to `true`, please do not set this field, it will be ignored anyway.",
+							Computed:    true,
+							Description: "Specify service-account-issuer. If use_tke_default is set to `true`, please do not set this field, it will be ignored anyway. This field is also computed: when use_tke_default is `true`, TKE will auto-generate the value and it will be read back into state.",
 						},
 						"auto_create_discovery_anonymous_auth": {
 							Type:        schema.TypeBool,

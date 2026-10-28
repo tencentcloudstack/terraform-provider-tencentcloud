@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `instance_nodes` - Node list.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstanceNodes](https://www.tencentcloud.com/document/api/1138/69316)
 

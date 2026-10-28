@@ -164,6 +164,32 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `cert_infos` object of `client_cert_info` exports the following:
+
+* `alias` - Alias of the certificate.
+* `deploy_time` - Time when the certificate is deployed.
+* `expire_time` - The certificate expiration time.
+* `sign_algo` - Signature algorithm.
+* `status` - Certificate status.
+* `type` - Type of the certificate. Values: `default`: Default certificate; `upload`: Specified certificate; `managed`: Tencent Cloud-managed certificate.
+
+The `cert_infos` object of `upstream_mutual_tls` exports the following:
+
+* `alias` - Alias of the certificate.
+* `deploy_time` - Time when the certificate is deployed.
+* `expire_time` - The certificate expiration time.
+* `sign_algo` - Signature algorithm.
+* `status` - Certificate status.
+* `type` - Type of the certificate. Values: `default`: Default certificate `upload`: Specified certificate `managed`: Tencent Cloud-managed certificate.
+
+The `custom_ca_certs` object of `upstream_certificate_verify` exports the following:
+
+* `alias` - Alias of the certificate.
+* `deploy_time` - Time when the certificate is deployed.
+* `expire_time` - The certificate expiration time.
+* `sign_algo` - Signature algorithm.
+* `status` - Certificate status.
+* `type` - Type of the certificate.
 
 ## Timeouts
 
@@ -171,6 +197,12 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `20m`) Used when creating the resource.
 * `update` - (Defaults to `20m`) Used when updating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Read: [DescribeAccelerationDomains](https://www.tencentcloud.com/document/api/1145/54132)
+* Update: [ModifyHostsCertificate](https://www.tencentcloud.com/document/api/1145/50539)
 
 ## Import
 

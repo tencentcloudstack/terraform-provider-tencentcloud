@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cdn_domain: add `path_rules` field to `origin` block to support origin path rewrite rules
+```

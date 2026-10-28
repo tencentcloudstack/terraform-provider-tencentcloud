@@ -79,8 +79,8 @@ The following arguments are supported:
 
 The `work_mode_infos` object supports the following:
 
-* `config_group_type` - (Required, String) Configuration group type. Valid values: `l7_acceleration`: L7 acceleration configuration group; `edge_functions`: Edge functions configuration group.
-* `work_mode` - (Required, String) Work mode. Valid values: `immediate_effect`: Immediate effect mode; `version_control`: Version control mode.
+* `config_group_type` - (Required, String) Configuration group type. Options are as follows:`l7_acceleration`: layer-7 acceleration configuration group;`edge_functions`: edge function configuration group;`web_security`: web protection configuration group.
+* `work_mode` - (Required, String) Working mode. options are as follows:`immediate_effect`: immediate effect mode;`version_control`: version control mode.
 
 ## Attributes Reference
 
@@ -96,6 +96,22 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Site status. Valid values: `active`: NS is switched; `pending`: NS is not switched; `moved`: NS is moved; `deactivated`: this site is blocked.
 * `zone_id` - Site ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateZone](https://www.tencentcloud.com/document/api/1145/50487)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [DescribeZones](https://www.tencentcloud.com/document/api/1145/50481)
+* Update:
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [ModifyZone](https://www.tencentcloud.com/document/api/1145/50477)
+  - [ModifyZoneStatus](https://www.tencentcloud.com/document/api/1145/50475)
+  - [ModifyZoneWorkMode](https://www.tencentcloud.com/document/api/1145/78821)
+* Delete: [DeleteZone](https://www.tencentcloud.com/document/api/1145/50485)
 
 ## Import
 

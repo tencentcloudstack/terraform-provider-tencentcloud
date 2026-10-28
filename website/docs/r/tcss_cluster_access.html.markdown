@@ -48,6 +48,21 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `20m`) Used when creating the resource.
 * `update` - (Defaults to `20m`) Used when updating the resource.
 * `delete` - (Defaults to `20m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateClusterAccess](https://www.tencentcloud.com/document/api/1163/80608)
+  - [DescribeUserCluster](https://www.tencentcloud.com/document/api/1163/53195)
+  - [ModifyDefendStatus](https://www.tencentcloud.com/document/api/1163/80609)
+* Read: [DescribeUserCluster](https://www.tencentcloud.com/document/api/1163/53195)
+* Update:
+  - [DescribeUserCluster](https://www.tencentcloud.com/document/api/1163/53195)
+  - [ModifyDefendStatus](https://www.tencentcloud.com/document/api/1163/80609)
+* Delete:
+  - [DescribeUserCluster](https://www.tencentcloud.com/document/api/1163/53195)
+  - [UninstallClusterContainerSecurity](https://www.tencentcloud.com/document/api/1163/80607)
 
 ## Import
 

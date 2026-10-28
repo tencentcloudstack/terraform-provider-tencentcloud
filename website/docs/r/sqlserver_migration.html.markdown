@@ -188,6 +188,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateMigration](https://www.tencentcloud.com/document/api/238/32129)
+* Read: [DescribeMigrationDetail](https://www.tencentcloud.com/document/api/238/32126)
+* Update: [ModifyMigration](https://www.tencentcloud.com/document/api/238/32124)
+* Delete: [DeleteMigration](https://www.tencentcloud.com/document/api/238/32128)
 
 ## Import
 

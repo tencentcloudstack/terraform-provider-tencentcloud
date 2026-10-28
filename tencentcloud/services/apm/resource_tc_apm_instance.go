@@ -207,6 +207,12 @@ func ResourceTencentCloudApmInstance() *schema.Resource {
 				Description: "Index key of traceId. It is valid when the CLS index type is key-value index.",
 			},
 
+			"log_span_id_key": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Index key of spanId. It is valid when the CLS index type is key-value index.",
+			},
+
 			"is_delete_any_file_analysis": {
 				Type:        schema.TypeInt,
 				Optional:    true,
@@ -519,6 +525,10 @@ func resourceTencentCloudApmInstanceCreate(d *schema.ResourceData, meta interfac
 		configRequest.LogTraceIdKey = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("log_span_id_key"); ok {
+		configRequest.LogSpanIdKey = helper.String(v.(string))
+	}
+
 	if v, ok := d.GetOkExists("is_delete_any_file_analysis"); ok {
 		configRequest.IsDeleteAnyFileAnalysis = helper.IntInt64(v.(int))
 	}
@@ -733,6 +743,10 @@ func resourceTencentCloudApmInstanceRead(d *schema.ResourceData, meta interface{
 
 	if instance.LogTraceIdKey != nil {
 		_ = d.Set("log_trace_id_key", instance.LogTraceIdKey)
+	}
+
+	if instance.LogSpanIdKey != nil {
+		_ = d.Set("log_span_id_key", instance.LogSpanIdKey)
 	}
 
 	if instance.IsDeleteAnyFileAnalysis != nil {
@@ -957,6 +971,10 @@ func resourceTencentCloudApmInstanceUpdate(d *schema.ResourceData, meta interfac
 
 	if v, ok := d.GetOk("log_trace_id_key"); ok {
 		request.LogTraceIdKey = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("log_span_id_key"); ok {
+		request.LogSpanIdKey = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOkExists("is_delete_any_file_analysis"); ok {

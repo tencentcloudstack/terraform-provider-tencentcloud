@@ -1,21 +1,23 @@
-Provides a resource to create a postgres backup_plan_config
+Provides a resource to create a postgres backup plan config
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_postgresql_backup_plan_config" "backup_plan_config" {
-  db_instance_id = local.pgsql_id
-  min_backup_start_time = "01:00:00"
-  max_backup_start_time = "02:00:00"
+resource "tencentcloud_postgresql_backup_plan_config" "example" {
+  db_instance_id               = "postgres-ckwcgdf1"
+  min_backup_start_time        = "01:00:00"
+  max_backup_start_time        = "03:00:00"
+  backup_period                = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
   base_backup_retention_period = 7
-  backup_period = ["monday","wednesday","friday"]
+  log_backup_retention_period  = 7
+  backup_method                = "physical"
 }
 ```
 
 Import
 
-postgres backup_plan_config can be imported using the id, e.g.
+postgres backup plan config can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_postgresql_backup_plan_config.backup_plan_config backup_plan_config_id
+terraform import tencentcloud_postgresql_backup_plan_config.example postgres-ckwcgdf1
 ```

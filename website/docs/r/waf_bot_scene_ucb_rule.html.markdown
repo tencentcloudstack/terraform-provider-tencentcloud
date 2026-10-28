@@ -254,6 +254,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `rule_id` - Rule ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyBotSceneUCBRule](https://www.tencentcloud.com/search/?wd=ModifyBotSceneUCBRule&type=document&lang=en)
+* Read: [DescribeBotSceneUCBRule](https://www.tencentcloud.com/search/?wd=DescribeBotSceneUCBRule&type=document&lang=en)
+* Update: [ModifyBotSceneUCBRule](https://www.tencentcloud.com/search/?wd=ModifyBotSceneUCBRule&type=document&lang=en)
+* Delete: [DeleteBotSceneUCBRule](https://www.tencentcloud.com/search/?wd=DeleteBotSceneUCBRule&type=document&lang=en)
 
 ## Import
 

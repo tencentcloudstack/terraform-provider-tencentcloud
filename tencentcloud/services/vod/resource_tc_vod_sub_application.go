@@ -53,6 +53,11 @@ func ResourceTencentCloudVodSubApplication() *schema.Resource {
 				Description: "Tag key-value pairs for resource management. Maximum 10 tags.",
 			},
 			//computed
+			"sub_app_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Sub application ID.",
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -212,6 +217,9 @@ func resourceTencentCloudVodSubApplicationRead(d *schema.ResourceData, meta inte
 	//_ = d.Set("status", appInfo.Status)
 	_ = d.Set("status", helper.String(d.Get("status").(string)))
 	_ = d.Set("create_time", appInfo.CreateTime)
+	if appInfo.SubAppId != nil {
+		_ = d.Set("sub_app_id", helper.UInt64ToStr(*appInfo.SubAppId))
+	}
 
 	// Set tags if returned by API
 	if appInfo.Tags != nil {

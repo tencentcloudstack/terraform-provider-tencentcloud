@@ -23,10 +23,7 @@ import (
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 )
 
-var importFlag = false
-
 func nodePoolCustomResourceImporter(ctx context.Context, d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
-	importFlag = true
 	err := resourceTencentCloudKubernetesNodePoolRead(d, m)
 	if err != nil {
 		return nil, fmt.Errorf("failed to import resource")
@@ -194,7 +191,7 @@ func resourceTencentCloudKubernetesNodePoolReadPostHandleResponse1(ctx context.C
 	AutoscalingAddedTotal := *nodePool.NodeCountSummary.AutoscalingAdded.Total
 	ManuallyAddedTotal := *nodePool.NodeCountSummary.ManuallyAdded.Total
 	_ = d.Set("node_count", AutoscalingAddedTotal+ManuallyAddedTotal)
-	if _, ok := d.GetOkExists("unschedulable"); !ok && importFlag {
+	if nodePool.Unschedulable != nil {
 		_ = d.Set("unschedulable", nodePool.Unschedulable)
 	}
 	if nodePool.AutoscalingGroupStatus != nil {
@@ -389,74 +386,72 @@ func resourceTencentCloudKubernetesNodePoolReadPostHandleResponse1(ctx context.C
 		nodeConfig["pre_start_user_script"] = helper.PString(nodePool.PreStartUserScript)
 	}
 
-	if importFlag {
-		if nodePool.ExtraArgs != nil && len(nodePool.ExtraArgs.Kubelet) > 0 {
-			extraArgs := make([]string, 0)
-			for i := range nodePool.ExtraArgs.Kubelet {
-				extraArgs = append(extraArgs, helper.PString(nodePool.ExtraArgs.Kubelet[i]))
-			}
-			nodeConfig["extra_args"] = extraArgs
+	if nodePool.ExtraArgs != nil && len(nodePool.ExtraArgs.Kubelet) > 0 {
+		extraArgs := make([]string, 0)
+		for i := range nodePool.ExtraArgs.Kubelet {
+			extraArgs = append(extraArgs, helper.PString(nodePool.ExtraArgs.Kubelet[i]))
 		}
-
-		if helper.PString(nodePool.UserScript) != "" {
-			nodeConfig["user_data"] = helper.PString(nodePool.UserScript)
-		}
-
-		if helper.PString(nodePool.PreStartUserScript) != "" {
-			nodeConfig["pre_start_user_script"] = helper.PString(nodePool.PreStartUserScript)
-		}
-
-		if nodePool.GPUArgs != nil {
-			setting := nodePool.GPUArgs
-			var driverEmptyFlag, cudaEmptyFlag, cudnnEmptyFlag, customDriverEmptyFlag bool
-			gpuArgs := map[string]interface{}{
-				"mig_enable": helper.PBool(setting.MIGEnable),
-			}
-
-			if !isDriverEmpty(setting.Driver) {
-				driverEmptyFlag = true
-				driver := map[string]interface{}{
-					"version": helper.PString(setting.Driver.Version),
-					"name":    helper.PString(setting.Driver.Name),
-				}
-				gpuArgs["driver"] = driver
-			}
-
-			if !isCUDAEmpty(setting.CUDA) {
-				cudaEmptyFlag = true
-				cuda := map[string]interface{}{
-					"version": helper.PString(setting.CUDA.Version),
-					"name":    helper.PString(setting.CUDA.Name),
-				}
-				gpuArgs["cuda"] = cuda
-			}
-
-			if !isCUDNNEmpty(setting.CUDNN) {
-				cudnnEmptyFlag = true
-				cudnn := map[string]interface{}{
-					"version":  helper.PString(setting.CUDNN.Version),
-					"name":     helper.PString(setting.CUDNN.Name),
-					"doc_name": helper.PString(setting.CUDNN.DocName),
-					"dev_name": helper.PString(setting.CUDNN.DevName),
-				}
-				gpuArgs["cudnn"] = cudnn
-			}
-
-			if !isCustomDriverEmpty(setting.CustomDriver) {
-				customDriverEmptyFlag = true
-				customDriver := map[string]interface{}{
-					"address": helper.PString(setting.CustomDriver.Address),
-				}
-				gpuArgs["custom_driver"] = customDriver
-			}
-			if driverEmptyFlag || cudaEmptyFlag || cudnnEmptyFlag || customDriverEmptyFlag {
-				nodeConfig["gpu_args"] = []map[string]interface{}{gpuArgs}
-			}
-		}
-		nodeConfigs = append(nodeConfigs, nodeConfig)
-		_ = d.Set("node_config", nodeConfigs)
-		importFlag = false
+		nodeConfig["extra_args"] = extraArgs
 	}
+
+	if helper.PString(nodePool.UserScript) != "" {
+		nodeConfig["user_data"] = helper.PString(nodePool.UserScript)
+	}
+
+	if helper.PString(nodePool.PreStartUserScript) != "" {
+		nodeConfig["pre_start_user_script"] = helper.PString(nodePool.PreStartUserScript)
+	}
+
+	if nodePool.GPUArgs != nil {
+		setting := nodePool.GPUArgs
+		var driverEmptyFlag, cudaEmptyFlag, cudnnEmptyFlag, customDriverEmptyFlag bool
+		gpuArgs := map[string]interface{}{
+			"mig_enable": helper.PBool(setting.MIGEnable),
+		}
+
+		if !isDriverEmpty(setting.Driver) {
+			driverEmptyFlag = true
+			driver := map[string]interface{}{
+				"version": helper.PString(setting.Driver.Version),
+				"name":    helper.PString(setting.Driver.Name),
+			}
+			gpuArgs["driver"] = driver
+		}
+
+		if !isCUDAEmpty(setting.CUDA) {
+			cudaEmptyFlag = true
+			cuda := map[string]interface{}{
+				"version": helper.PString(setting.CUDA.Version),
+				"name":    helper.PString(setting.CUDA.Name),
+			}
+			gpuArgs["cuda"] = cuda
+		}
+
+		if !isCUDNNEmpty(setting.CUDNN) {
+			cudnnEmptyFlag = true
+			cudnn := map[string]interface{}{
+				"version":  helper.PString(setting.CUDNN.Version),
+				"name":     helper.PString(setting.CUDNN.Name),
+				"doc_name": helper.PString(setting.CUDNN.DocName),
+				"dev_name": helper.PString(setting.CUDNN.DevName),
+			}
+			gpuArgs["cudnn"] = cudnn
+		}
+
+		if !isCustomDriverEmpty(setting.CustomDriver) {
+			customDriverEmptyFlag = true
+			customDriver := map[string]interface{}{
+				"address": helper.PString(setting.CustomDriver.Address),
+			}
+			gpuArgs["custom_driver"] = customDriver
+		}
+		if driverEmptyFlag || cudaEmptyFlag || cudnnEmptyFlag || customDriverEmptyFlag {
+			nodeConfig["gpu_args"] = []map[string]interface{}{gpuArgs}
+		}
+	}
+
+	nodeConfigs = append(nodeConfigs, nodeConfig)
+	_ = d.Set("node_config", nodeConfigs)
 
 	// Relative scaling group status
 	asg, hasAsg, err := asService.DescribeAutoScalingGroupById(ctx, *nodePool.AutoscalingGroupId)
@@ -495,8 +490,7 @@ func resourceTencentCloudKubernetesNodePoolReadPostHandleResponse1(ctx context.C
 			_ = d.Set("auto_update_instance_tags", asg.ServiceSettings.AutoUpdateInstanceTags)
 		}
 
-		// If not check, the diff between computed and default empty value leads to force replacement
-		if _, ok := d.GetOk("multi_zone_subnet_policy"); ok {
+		if asg.MultiZoneSubnetPolicy != nil {
 			_ = d.Set("multi_zone_subnet_policy", asg.MultiZoneSubnetPolicy)
 		}
 	}
@@ -846,6 +840,24 @@ func resourceTencentCloudKubernetesNodePoolUpdateOnExit(ctx context.Context) err
 		preStartUserScript := d.Get("node_config.0.pre_start_user_script").(string)
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			errRet := service.ModifyClusterNodePoolPreStartUserScript(ctx, clusterId, nodePoolId, userData, preStartUserScript)
+			if errRet != nil {
+				return tccommon.RetryError(errRet)
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("node_config.0.extra_args") {
+		// `node_config.0.extra_args` is a flat list of "key=value" strings that
+		// maps to InstanceExtraArgs.Kubelet.
+		extraArgs := helper.InterfacesStringsPoint(d.Get("node_config.0.extra_args").([]interface{}))
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			errRet := service.ModifyClusterNodePoolExtraArgs(ctx, clusterId, nodePoolId, extraArgs)
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}

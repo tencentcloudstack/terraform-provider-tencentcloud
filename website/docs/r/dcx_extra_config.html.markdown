@@ -89,6 +89,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyDirectConnectTunnelExtra](https://www.tencentcloud.com/search/?wd=ModifyDirectConnectTunnelExtra&type=document&lang=en)
+* Read: [DescribeDirectConnectTunnelExtra](https://www.tencentcloud.com/search/?wd=DescribeDirectConnectTunnelExtra&type=document&lang=en)
+* Update: [ModifyDirectConnectTunnelExtra](https://www.tencentcloud.com/search/?wd=ModifyDirectConnectTunnelExtra&type=document&lang=en)
 
 ## Import
 

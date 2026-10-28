@@ -21,7 +21,7 @@ resource "tencentcloud_teo_function" "teo_function" {
           e.respondWith(response);
         });
     EOT
-  name    = "aaa-zone-2qtuhspy7cr6-1310708577"
+  name    = "aaa"
   remark  = "test"
   zone_id = "zone-2qtuhspy7cr6"
 }
@@ -46,6 +46,16 @@ In addition to all arguments above, the following attributes are exported:
 * `function_id` - ID of the Function.
 * `update_time` - Modification time. The time is in Coordinated Universal Time (UTC) and follows the date and time format specified by the ISO 8601 standard.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateFunction](https://www.tencentcloud.com/document/api/1145/64815)
+  - [DescribeFunctions](https://www.tencentcloud.com/document/api/1145/64809)
+* Read: [DescribeFunctions](https://www.tencentcloud.com/document/api/1145/64809)
+* Update: [ModifyFunction](https://www.tencentcloud.com/document/api/1145/64807)
+* Delete: [DeleteFunction](https://www.tencentcloud.com/document/api/1145/64813)
 
 ## Import
 

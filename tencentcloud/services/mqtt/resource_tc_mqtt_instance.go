@@ -95,6 +95,7 @@ func ResourceTencentCloudMqttInstance() *schema.Resource {
 
 			"device_certificate_provision_type": {
 				Type:        schema.TypeString,
+				Optional:    true,
 				Computed:    true,
 				Description: "Client certificate registration method: JITP: Automatic registration; API: Manually register through the API.",
 			},
@@ -118,6 +119,27 @@ func ResourceTencentCloudMqttInstance() *schema.Resource {
 				Optional:    true,
 				Default:     false,
 				Description: "Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.",
+			},
+
+			"x509_mode": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "X509 certificate mode. Valid values: `TLS` (one-way authentication), `mTLS` (two-way authentication), `BYOC` (one device one certificate).",
+			},
+
+			"message_rate": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Single client message send/receive rate limit, unit: messages/second. Set to 0 to indicate no limit.",
+			},
+
+			"use_default_server_cert": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to use the default server certificate.",
 			},
 		},
 	}
@@ -235,8 +257,14 @@ func ResourceTencentCloudMqttInstanceCreate(d *schema.ResourceData, meta interfa
 	}
 
 	var (
-		isAutomaticActivation bool
-		isAuthorizationPolicy bool
+		isAutomaticActivation          bool
+		isAuthorizationPolicy          bool
+		x509Mode                       string
+		deviceCertificateProvisionType string
+		messageRate                    int64
+		hasMessageRate                 bool
+		useDefaultServerCert           bool
+		hasUseDefaultServerCert        bool
 	)
 
 	if v, ok := d.GetOkExists("automatic_activation"); ok {
@@ -247,12 +275,46 @@ func ResourceTencentCloudMqttInstanceCreate(d *schema.ResourceData, meta interfa
 		isAuthorizationPolicy = v.(bool)
 	}
 
-	// open automatic_activation or authorization_policy
-	if isAutomaticActivation || isAuthorizationPolicy {
+	if v, ok := d.GetOk("x509_mode"); ok {
+		x509Mode = v.(string)
+	}
+
+	if v, ok := d.GetOk("device_certificate_provision_type"); ok {
+		deviceCertificateProvisionType = v.(string)
+	}
+
+	if v, ok := d.GetOkExists("message_rate"); ok {
+		messageRate = int64(v.(int))
+		hasMessageRate = true
+	}
+
+	if v, ok := d.GetOkExists("use_default_server_cert"); ok {
+		useDefaultServerCert = v.(bool)
+		hasUseDefaultServerCert = true
+	}
+
+	// open automatic_activation or authorization_policy or set x509_mode or set device_certificate_provision_type or set message_rate or set use_default_server_cert
+	if isAutomaticActivation || isAuthorizationPolicy || x509Mode != "" || deviceCertificateProvisionType != "" || hasMessageRate || hasUseDefaultServerCert {
 		modifyRequest := mqttv20240516.NewModifyInstanceRequest()
 		modifyRequest.InstanceId = &instanceId
 		modifyRequest.AutomaticActivation = helper.Bool(isAutomaticActivation)
 		modifyRequest.AuthorizationPolicy = helper.Bool(isAuthorizationPolicy)
+		if x509Mode != "" {
+			modifyRequest.X509Mode = helper.String(x509Mode)
+		}
+
+		if deviceCertificateProvisionType != "" {
+			modifyRequest.DeviceCertificateProvisionType = helper.String(deviceCertificateProvisionType)
+		}
+
+		if hasMessageRate {
+			modifyRequest.MessageRate = helper.Int64(messageRate)
+		}
+
+		if hasUseDefaultServerCert {
+			modifyRequest.UseDefaultServerCert = helper.Bool(useDefaultServerCert)
+		}
+
 		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMqttV20240516Client().ModifyInstanceWithContext(ctx, modifyRequest)
 			if e != nil {
@@ -346,6 +408,18 @@ func ResourceTencentCloudMqttInstanceRead(d *schema.ResourceData, meta interface
 		_ = d.Set("authorization_policy", respData.AuthorizationPolicy)
 	}
 
+	if respData.X509Mode != nil {
+		_ = d.Set("x509_mode", respData.X509Mode)
+	}
+
+	if respData.MessageRate != nil {
+		_ = d.Set("message_rate", respData.MessageRate)
+	}
+
+	if respData.UseDefaultServerCert != nil {
+		_ = d.Set("use_default_server_cert", respData.UseDefaultServerCert)
+	}
+
 	forceDelete := false
 	if v, ok := d.GetOkExists("force_delete"); ok {
 		forceDelete = v.(bool)
@@ -380,7 +454,7 @@ func ResourceTencentCloudMqttInstanceUpdate(d *schema.ResourceData, meta interfa
 	}
 
 	needChange := false
-	mutableArgs := []string{"name", "remark", "sku_code", "device_certificate_provision_type", "automatic_activation", "authorization_policy"}
+	mutableArgs := []string{"name", "remark", "sku_code", "device_certificate_provision_type", "automatic_activation", "authorization_policy", "x509_mode", "message_rate", "use_default_server_cert"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -409,6 +483,22 @@ func ResourceTencentCloudMqttInstanceUpdate(d *schema.ResourceData, meta interfa
 
 		if v, ok := d.GetOkExists("authorization_policy"); ok {
 			request.AuthorizationPolicy = helper.Bool(v.(bool))
+		}
+
+		if v, ok := d.GetOk("device_certificate_provision_type"); ok {
+			request.DeviceCertificateProvisionType = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("x509_mode"); ok {
+			request.X509Mode = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOkExists("message_rate"); ok {
+			request.MessageRate = helper.Int64(int64(v.(int)))
+		}
+
+		if v, ok := d.GetOkExists("use_default_server_cert"); ok {
+			request.UseDefaultServerCert = helper.Bool(v.(bool))
 		}
 
 		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {

@@ -19,8 +19,8 @@ Use exist cls logset and create new topic
 
 ```hcl
 resource "tencentcloud_redis_log_delivery" "example" {
-  instance_id = "crs-dmjj8en7"
-  logset_id   = "cc31d9d6-74c0-4888-8b2f-b8148c3bcc5c"
+  instance_id  = "crs-dmjj8en7"
+  logset_id    = "cc31d9d6-74c0-4888-8b2f-b8148c3bcc5c"
   topic_name   = "tf-example"
   period       = 20
   create_index = true
@@ -31,19 +31,21 @@ Create new cls logset and topic
 
 ```hcl
 resource "tencentcloud_redis_log_delivery" "example" {
-  instance_id  = "crs-dmjj8en7"
-  log_region   = "ap-guangzhou"
-  logset_name  = "tf-example"
-  topic_name   = "tf-example"
-  period       = 20
-  create_index = true
+  instance_id      = "crs-dmjj8en7"
+  log_region       = "ap-guangzhou"
+  logset_name      = "tf-example132"
+  topic_name       = "tf-example132"
+  period           = 20
+  create_index     = true
+  is_delete_topic  = true
+  is_delete_logset = true
 }
 ```
 
 Import
 
-Redis log delivery can be imported, e.g.
+Redis log delivery can be imported using the instanceId, e.g.
 
 ```
-$ terraform import tencentcloud_redis_log_delivery.example crs-dmjj8en7
+terraform import tencentcloud_redis_log_delivery.example crs-dmjj8en7
 ```

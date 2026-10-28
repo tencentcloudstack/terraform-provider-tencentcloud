@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `node_role` - Node role.
   * `zone_id` - Zone ID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstanceNodeInfo](https://www.tencentcloud.com/document/api/239/38627)
 

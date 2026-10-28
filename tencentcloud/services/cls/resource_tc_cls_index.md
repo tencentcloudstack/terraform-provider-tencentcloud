@@ -26,11 +26,13 @@ resource "tencentcloud_cls_topic" "example" {
 }
 
 locals {
-  tokenizer_value = "@&?|#()='\",;:<>[]{}"
+  tokenizer_value = <<-EOT
+    @&?|#()='\",;:<>[]{}/ \n\t\r\\
+  EOT
 }
 
 resource "tencentcloud_cls_index" "example" {
-  topic_id = tencentcloud_cls_topic.example.id
+  topic_id = "abc97756-e620-47a4-aa2b-08561e79f086"
 
   rule {
     full_text {
@@ -42,22 +44,64 @@ resource "tencentcloud_cls_index" "example" {
     key_value {
       case_sensitive = true
       key_values {
-        key = "hello"
+        key = "key1"
         value {
           contain_z_h = true
           sql_flag    = true
           tokenizer   = local.tokenizer_value
           type        = "text"
+          alias       = "alias1"
         }
       }
 
       key_values {
-        key = "world"
+        key = "key2"
         value {
           contain_z_h = true
           sql_flag    = true
           tokenizer   = local.tokenizer_value
-          type        = "text"
+          type        = "json"
+          alias       = "alias2"
+          child_node {
+            key = "key3"
+            value {
+              contain_z_h = true
+              sql_flag    = true
+              tokenizer   = local.tokenizer_value
+              type        = "json"
+              alias       = "alias3"
+              child_node {
+                key = "key4"
+                value {
+                  contain_z_h = true
+                  sql_flag    = true
+                  tokenizer   = local.tokenizer_value
+                  type        = "text"
+                  alias       = "alias4"
+                }
+              }
+              child_node {
+                key = "key5"
+                value {
+                  contain_z_h = true
+                  sql_flag    = true
+                  tokenizer   = local.tokenizer_value
+                  type        = "text"
+                  alias       = "name5"
+                }
+              }
+            }
+          }
+          child_node {
+            key = "key6"
+            value {
+              contain_z_h = true
+              sql_flag    = true
+              tokenizer   = local.tokenizer_value
+              type        = "text"
+              alias       = "name6"
+            }
+          }
         }
       }
     }

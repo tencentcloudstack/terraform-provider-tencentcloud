@@ -1,7 +1,5 @@
 Provides a resource to create a Trocket rocketmq instance
 
-~> **NOTE:** It only supports create postpaid rocketmq 5.x instance.
-
 Example Usage
 
 Create Basic Instance
@@ -77,6 +75,44 @@ resource "tencentcloud_trocket_rocketmq_instance" "example" {
     remark = "remark message."
   }
 
+  tags = {
+    tag_key   = "rocketmq"
+    tag_value = "5.x"
+  }
+}
+```
+
+Create Instance with Billing and Deployment Params
+
+```hcl
+# create vpc
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+# create vpc subnet
+resource "tencentcloud_subnet" "subnet" {
+  name              = "subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = "ap-guangzhou-6"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+# create rocketmq instance with billing and deployment params
+resource "tencentcloud_trocket_rocketmq_instance" "example" {
+  name          = "tf-example"
+  instance_type = "PRO"
+  sku_code      = "pro_4k"
+  remark        = "remark"
+  vpc_id        = tencentcloud_vpc.vpc.id
+  subnet_id     = tencentcloud_subnet.subnet.id
+  pay_mode      = 1
+  renew_flag    = 1
+  time_span     = 12
+  max_topic_num = 1000
+  zone_ids      = [100006, 100007]
   tags = {
     tag_key   = "rocketmq"
     tag_value = "5.x"

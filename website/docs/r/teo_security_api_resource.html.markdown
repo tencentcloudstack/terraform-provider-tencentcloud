@@ -57,7 +57,18 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `api_resources` object exports the following:
 
+* `id` - API resource ID, e.g. `apires-xxxxxxxx`.
+
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSecurityAPIResource](https://www.tencentcloud.com/document/api/1145/72319)
+* Read: [DescribeSecurityAPIResource](https://www.tencentcloud.com/document/api/1145/72315)
+* Update: [ModifySecurityAPIResource](https://www.tencentcloud.com/document/api/1145/72313)
+* Delete: [DeleteSecurityAPIResource](https://www.tencentcloud.com/document/api/1145/72317)
 
 ## Import
 

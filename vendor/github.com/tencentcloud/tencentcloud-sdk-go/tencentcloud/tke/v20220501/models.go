@@ -158,144 +158,156 @@ func (r *CreateHealthCheckPolicyResponse) FromJsonString(s string) error {
 }
 
 type CreateNativeNodePoolParam struct {
-	// 节点池伸缩配置
+	// <p>节点池伸缩配置</p>
 	Scaling *MachineSetScaling `json:"Scaling,omitnil,omitempty" name:"Scaling"`
 
-	// 子网列表
+	// <p>子网列表</p>
 	SubnetIds []*string `json:"SubnetIds,omitnil,omitempty" name:"SubnetIds"`
 
-	// 节点计费类型。PREPAID：包年包月；POSTPAID_BY_HOUR：按量计费（默认）；
+	// <p>节点计费类型。PREPAID：包年包月；POSTPAID_BY_HOUR：按量计费（默认）；</p>
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
-	// 系统盘配置
+	// <p>系统盘配置</p>
 	SystemDisk *Disk `json:"SystemDisk,omitnil,omitempty" name:"SystemDisk"`
 
-	// 机型列表
+	// <p>机型列表</p>
 	InstanceTypes []*string `json:"InstanceTypes,omitnil,omitempty" name:"InstanceTypes"`
 
-	// 安全组列表
+	// <p>安全组列表</p>
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 自动升级配置
+	// <p>自动升级配置</p>
 	UpgradeSettings *MachineUpgradeSettings `json:"UpgradeSettings,omitnil,omitempty" name:"UpgradeSettings"`
 
-	// 是否开启自愈能力
+	// <p>是否开启自愈能力</p>
 	AutoRepair *bool `json:"AutoRepair,omitnil,omitempty" name:"AutoRepair"`
 
-	// 包年包月机型计费配置
+	// <p>包年包月机型计费配置</p>
 	InstanceChargePrepaid *InstanceChargePrepaid `json:"InstanceChargePrepaid,omitnil,omitempty" name:"InstanceChargePrepaid"`
 
-	// 节点池 Management 参数设置
+	// <p>节点池 Management 参数设置</p>
 	Management *ManagementConfig `json:"Management,omitnil,omitempty" name:"Management"`
 
-	// 故障自愈规则名称
+	// <p>故障自愈规则名称</p>
 	HealthCheckPolicyName *string `json:"HealthCheckPolicyName,omitnil,omitempty" name:"HealthCheckPolicyName"`
 
-	// 原生节点池hostName模式串
+	// <p>原生节点池hostName模式串</p>
 	HostNamePattern *string `json:"HostNamePattern,omitnil,omitempty" name:"HostNamePattern"`
 
-	// kubelet 自定义参数
+	// <p>kubelet 自定义参数</p>
 	KubeletArgs []*string `json:"KubeletArgs,omitnil,omitempty" name:"KubeletArgs"`
 
-	// 预定义脚本
+	// <p>预定义脚本</p>
 	Lifecycle *LifecycleConfig `json:"Lifecycle,omitnil,omitempty" name:"Lifecycle"`
 
-	// 运行时根目录
+	// <p>运行时根目录</p>
 	RuntimeRootDir *string `json:"RuntimeRootDir,omitnil,omitempty" name:"RuntimeRootDir"`
 
-	// 是否开启弹性伸缩
+	// <p>是否开启弹性伸缩</p>
 	EnableAutoscaling *bool `json:"EnableAutoscaling,omitnil,omitempty" name:"EnableAutoscaling"`
 
-	// 期望节点数
+	// <p>期望节点数</p>
 	Replicas *int64 `json:"Replicas,omitnil,omitempty" name:"Replicas"`
 
-	// 公网带宽设置
+	// <p>机型和GPU配置相关信息</p>
+	GPUConfigs []*GPUConfig `json:"GPUConfigs,omitnil,omitempty" name:"GPUConfigs"`
+
+	// <p>公网带宽设置</p>
 	InternetAccessible *InternetAccessible `json:"InternetAccessible,omitnil,omitempty" name:"InternetAccessible"`
 
-	// 原生节点池数据盘列表
+	// <p>原生节点池数据盘列表</p>
 	DataDisks []*DataDisk `json:"DataDisks,omitnil,omitempty" name:"DataDisks"`
 
-	// qgpu开关
+	// <p>qgpu开关</p>
 	QGPUEnable *bool `json:"QGPUEnable,omitnil,omitempty" name:"QGPUEnable"`
 
-	// 节点池ssh公钥id数组
+	// <p>节点池ssh公钥id数组</p>
 	KeyIds []*string `json:"KeyIds,omitnil,omitempty" name:"KeyIds"`
 
-	// 节点池类型
+	// <p>节点池类型</p>
 	MachineType *string `json:"MachineType,omitnil,omitempty" name:"MachineType"`
 
-	// 原生节点池安装节点自动化助手开关
+	// <p>原生节点池安装节点自动化助手开关</p>
 	AutomationService *bool `json:"AutomationService,omitnil,omitempty" name:"AutomationService"`
 
-	// 原生节点池密码
+	// <p>原生节点池密码</p>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
+
+	// <p>自定义镜像 ID</p>
+	CustomImage *string `json:"CustomImage,omitnil,omitempty" name:"CustomImage"`
 }
 
 // Predefined struct for user
 type CreateNodePoolRequestParams struct {
-	// 集群 ID
+	// <p>集群 ID</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 节点池名称
+	// <p>节点池名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 节点池类型
+	// <p>节点池类型</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 节点  Labels
+	// <p>节点  Labels</p>
 	Labels []*Label `json:"Labels,omitnil,omitempty" name:"Labels"`
 
-	// 节点污点
+	// <p>节点污点</p>
 	Taints []*Taint `json:"Taints,omitnil,omitempty" name:"Taints"`
 
-	// 节点标签
+	// <p>节点标签</p>
 	Tags []*TagSpecification `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 是否开启删除保护
+	// <p>是否开启删除保护</p>
 	DeletionProtection *bool `json:"DeletionProtection,omitnil,omitempty" name:"DeletionProtection"`
 
-	// 节点是否默认不可调度
+	// <p>节点是否默认不可调度</p>
 	Unschedulable *bool `json:"Unschedulable,omitnil,omitempty" name:"Unschedulable"`
 
-	// 原生节点池创建参数（Type字段设置为Native时需填写）
+	// <p>原生节点池创建参数（Type字段设置为Native时需填写）</p>
 	Native *CreateNativeNodePoolParam `json:"Native,omitnil,omitempty" name:"Native"`
 
-	// 节点 Annotation 列表
+	// <p>节点 Annotation 列表</p>
 	Annotations []*Annotation `json:"Annotations,omitnil,omitempty" name:"Annotations"`
+
+	// <p>跳过校验选项，支持 &quot;VpcDnsCheck&quot;</p>
+	SkipValidateOptions []*string `json:"SkipValidateOptions,omitnil,omitempty" name:"SkipValidateOptions"`
 }
 
 type CreateNodePoolRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群 ID
+	// <p>集群 ID</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 节点池名称
+	// <p>节点池名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 节点池类型
+	// <p>节点池类型</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 节点  Labels
+	// <p>节点  Labels</p>
 	Labels []*Label `json:"Labels,omitnil,omitempty" name:"Labels"`
 
-	// 节点污点
+	// <p>节点污点</p>
 	Taints []*Taint `json:"Taints,omitnil,omitempty" name:"Taints"`
 
-	// 节点标签
+	// <p>节点标签</p>
 	Tags []*TagSpecification `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 是否开启删除保护
+	// <p>是否开启删除保护</p>
 	DeletionProtection *bool `json:"DeletionProtection,omitnil,omitempty" name:"DeletionProtection"`
 
-	// 节点是否默认不可调度
+	// <p>节点是否默认不可调度</p>
 	Unschedulable *bool `json:"Unschedulable,omitnil,omitempty" name:"Unschedulable"`
 
-	// 原生节点池创建参数（Type字段设置为Native时需填写）
+	// <p>原生节点池创建参数（Type字段设置为Native时需填写）</p>
 	Native *CreateNativeNodePoolParam `json:"Native,omitnil,omitempty" name:"Native"`
 
-	// 节点 Annotation 列表
+	// <p>节点 Annotation 列表</p>
 	Annotations []*Annotation `json:"Annotations,omitnil,omitempty" name:"Annotations"`
+
+	// <p>跳过校验选项，支持 &quot;VpcDnsCheck&quot;</p>
+	SkipValidateOptions []*string `json:"SkipValidateOptions,omitnil,omitempty" name:"SkipValidateOptions"`
 }
 
 func (r *CreateNodePoolRequest) ToJsonString() string {
@@ -320,6 +332,7 @@ func (r *CreateNodePoolRequest) FromJsonString(s string) error {
 	delete(f, "Unschedulable")
 	delete(f, "Native")
 	delete(f, "Annotations")
+	delete(f, "SkipValidateOptions")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateNodePoolRequest has unknown keys!", "")
 	}
@@ -328,7 +341,7 @@ func (r *CreateNodePoolRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateNodePoolResponseParams struct {
-	// 节点池 ID
+	// <p>节点池 ID</p>
 	NodePoolId *string `json:"NodePoolId,omitnil,omitempty" name:"NodePoolId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -352,43 +365,43 @@ func (r *CreateNodePoolResponse) FromJsonString(s string) error {
 }
 
 type DataDisk struct {
-	// 云盘类型
+	// <p>云盘类型</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
 
-	// 文件系统(ext3/ext4/xfs)
+	// <p>文件系统(ext3/ext4/xfs)</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	FileSystem *string `json:"FileSystem,omitnil,omitempty" name:"FileSystem"`
 
-	// 云盘大小(G）
+	// <p>云盘大小(G）</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DiskSize *int64 `json:"DiskSize,omitnil,omitempty" name:"DiskSize"`
 
-	// 是否自动化格式盘并挂载
+	// <p>是否自动化格式盘并挂载</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AutoFormatAndMount *bool `json:"AutoFormatAndMount,omitnil,omitempty" name:"AutoFormatAndMount"`
 
-	// 挂载设备名或分区名
+	// <p>挂载设备名或分区名</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DiskPartition *string `json:"DiskPartition,omitnil,omitempty" name:"DiskPartition"`
 
-	// 挂载目录
+	// <p>挂载目录</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MountTarget *string `json:"MountTarget,omitnil,omitempty" name:"MountTarget"`
 
-	// 传入该参数用于创建加密云盘，取值固定为ENCRYPT
+	// <p>传入该参数用于创建加密云盘，取值固定为ENCRYPT</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Encrypt *string `json:"Encrypt,omitnil,omitempty" name:"Encrypt"`
 
-	// 购买加密盘时自定义密钥，当传入该参数时, Encrypt入参不为空
+	// <p>购买加密盘时自定义密钥，当传入该参数时, Encrypt入参不为空</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	KmsKeyId *string `json:"KmsKeyId,omitnil,omitempty" name:"KmsKeyId"`
 
-	// 快照ID，如果传入则根据此快照创建云硬盘，快照类型必须为数据盘快照
+	// <p>快照ID，如果传入则根据此快照创建云硬盘，快照类型必须为数据盘快照</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SnapshotId *string `json:"SnapshotId,omitnil,omitempty" name:"SnapshotId"`
 
-	// 云硬盘性能，单位：MB/s。使用此参数可给云硬盘购买额外的性能
+	// <p>云硬盘性能，单位：MB/s。使用此参数可给云硬盘购买额外的性能</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ThroughputPerformance *uint64 `json:"ThroughputPerformance,omitnil,omitempty" name:"ThroughputPerformance"`
 }
@@ -1275,6 +1288,57 @@ func (r *DescribeHealthCheckTemplateResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeNodePoolsElasticityStrengthRequestParams struct {
+
+}
+
+type DescribeNodePoolsElasticityStrengthRequest struct {
+	*tchttp.BaseRequest
+	
+}
+
+func (r *DescribeNodePoolsElasticityStrengthRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeNodePoolsElasticityStrengthRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeNodePoolsElasticityStrengthRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeNodePoolsElasticityStrengthResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeNodePoolsElasticityStrengthResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeNodePoolsElasticityStrengthResponseParams `json:"Response"`
+}
+
+func (r *DescribeNodePoolsElasticityStrengthResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeNodePoolsElasticityStrengthResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeNodePoolsRequestParams struct {
 	// 集群 ID
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
@@ -1444,6 +1508,67 @@ func (r *DescribeZoneInstanceConfigInfosResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeZoneInstanceConfigInfosResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DetachApplicationRoleRequestParams struct {
+	// <p>集群 ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>解绑的 CVM 实例列表</p>
+	Instances []*string `json:"Instances,omitnil,omitempty" name:"Instances"`
+}
+
+type DetachApplicationRoleRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>集群 ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>解绑的 CVM 实例列表</p>
+	Instances []*string `json:"Instances,omitnil,omitempty" name:"Instances"`
+}
+
+func (r *DetachApplicationRoleRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DetachApplicationRoleRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "Instances")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DetachApplicationRoleRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DetachApplicationRoleResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DetachApplicationRoleResponse struct {
+	*tchttp.BaseResponse
+	Response *DetachApplicationRoleResponseParams `json:"Response"`
+}
+
+func (r *DetachApplicationRoleResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DetachApplicationRoleResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1804,15 +1929,18 @@ type Machine struct {
 }
 
 type MachineSetScaling struct {
-	// 节点池最小副本数
+	// <p>节点池最小副本数</p>
 	MinReplicas *int64 `json:"MinReplicas,omitnil,omitempty" name:"MinReplicas"`
 
-	// 节点池最大副本数
+	// <p>节点池最大副本数</p>
 	MaxReplicas *int64 `json:"MaxReplicas,omitnil,omitempty" name:"MaxReplicas"`
 
-	// 节点池扩容策略。ZoneEquality：多可用区打散；ZonePriority：首选可用区优先；
+	// <p>节点池扩容策略。ZoneEquality：多可用区打散；ZonePriority：首选可用区优先；</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreatePolicy *string `json:"CreatePolicy,omitnil,omitempty" name:"CreatePolicy"`
+
+	// <p>扩缩容模式</p><p>枚举值：</p><ul><li>ShutdownAndDelete： 释放模式，默认</li><li>Shutdown： 停机模式，关机不计费</li></ul><p>默认值：ShutdownAndDelete</p>
+	ScaleDownMode *string `json:"ScaleDownMode,omitnil,omitempty" name:"ScaleDownMode"`
 }
 
 type MachineUpgradeSettings struct {
@@ -1860,45 +1988,57 @@ type ManuallyAdded struct {
 
 // Predefined struct for user
 type ModifyClusterMachineRequestParams struct {
-	// 集群 ID
+	// <p>集群 ID</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 节点名列表
+	// <p>节点名列表</p>
 	MachineNames []*string `json:"MachineNames,omitnil,omitempty" name:"MachineNames"`
 
-	// machine的display name
+	// <p>machine的display name</p>
 	DisplayName *string `json:"DisplayName,omitnil,omitempty" name:"DisplayName"`
 
-	// 系统盘的信息
+	// <p>系统盘的信息</p>
 	SystemDisk *Disk `json:"SystemDisk,omitnil,omitempty" name:"SystemDisk"`
 
-	// 安全组列表
+	// <p>安全组列表</p>
 	SecurityGroupIDs []*string `json:"SecurityGroupIDs,omitnil,omitempty" name:"SecurityGroupIDs"`
 
-	// 节点预付费信息
+	// <p>节点预付费信息</p>
 	InstanceChargePrepaid *InstanceChargePrepaid `json:"InstanceChargePrepaid,omitnil,omitempty" name:"InstanceChargePrepaid"`
+
+	// <p>节点计费类型变更</p><p>枚举值：</p><ul><li>POSTPAID_BY_HOUR： 目标计费类型为按量计费</li><li>PREPAID： 目标计费类型为包年包月计费</li></ul>
+	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
+
+	// <p>是否同时切换弹性数据云盘计费模式。取值范围：  true：表示切换弹性数据云盘计费模式 false：表示不切换弹性数据云盘计费模式 默认取值：true。</p><p>默认值：true</p>
+	ModifyPortableDataDisk *bool `json:"ModifyPortableDataDisk,omitnil,omitempty" name:"ModifyPortableDataDisk"`
 }
 
 type ModifyClusterMachineRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群 ID
+	// <p>集群 ID</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 节点名列表
+	// <p>节点名列表</p>
 	MachineNames []*string `json:"MachineNames,omitnil,omitempty" name:"MachineNames"`
 
-	// machine的display name
+	// <p>machine的display name</p>
 	DisplayName *string `json:"DisplayName,omitnil,omitempty" name:"DisplayName"`
 
-	// 系统盘的信息
+	// <p>系统盘的信息</p>
 	SystemDisk *Disk `json:"SystemDisk,omitnil,omitempty" name:"SystemDisk"`
 
-	// 安全组列表
+	// <p>安全组列表</p>
 	SecurityGroupIDs []*string `json:"SecurityGroupIDs,omitnil,omitempty" name:"SecurityGroupIDs"`
 
-	// 节点预付费信息
+	// <p>节点预付费信息</p>
 	InstanceChargePrepaid *InstanceChargePrepaid `json:"InstanceChargePrepaid,omitnil,omitempty" name:"InstanceChargePrepaid"`
+
+	// <p>节点计费类型变更</p><p>枚举值：</p><ul><li>POSTPAID_BY_HOUR： 目标计费类型为按量计费</li><li>PREPAID： 目标计费类型为包年包月计费</li></ul>
+	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
+
+	// <p>是否同时切换弹性数据云盘计费模式。取值范围：  true：表示切换弹性数据云盘计费模式 false：表示不切换弹性数据云盘计费模式 默认取值：true。</p><p>默认值：true</p>
+	ModifyPortableDataDisk *bool `json:"ModifyPortableDataDisk,omitnil,omitempty" name:"ModifyPortableDataDisk"`
 }
 
 func (r *ModifyClusterMachineRequest) ToJsonString() string {
@@ -1919,6 +2059,8 @@ func (r *ModifyClusterMachineRequest) FromJsonString(s string) error {
 	delete(f, "SystemDisk")
 	delete(f, "SecurityGroupIDs")
 	delete(f, "InstanceChargePrepaid")
+	delete(f, "InstanceChargeType")
+	delete(f, "ModifyPortableDataDisk")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyClusterMachineRequest has unknown keys!", "")
 	}
@@ -2126,189 +2268,187 @@ func (r *ModifyNodePoolResponse) FromJsonString(s string) error {
 }
 
 type NativeNodeInfo struct {
-	// 节点名称
+	// <p>节点名称</p>
 	MachineName *string `json:"MachineName,omitnil,omitempty" name:"MachineName"`
 
-	// Machine 状态
+	// <p>Machine 状态</p>
 	MachineState *string `json:"MachineState,omitnil,omitempty" name:"MachineState"`
 
-	// Machine 所在可用区
+	// <p>Machine 所在可用区</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 节点计费类型。PREPAID：包年包月；POSTPAID_BY_HOUR：按量计费（默认）；
+	// <p>节点计费类型。PREPAID：包年包月；POSTPAID_BY_HOUR：按量计费（默认）；</p>
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
-	// 创建时间
+	// <p>创建时间</p>
 	CreatedAt *string `json:"CreatedAt,omitnil,omitempty" name:"CreatedAt"`
 
-	// Machine 登录状态
+	// <p>Machine 登录状态</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	LoginStatus *string `json:"LoginStatus,omitnil,omitempty" name:"LoginStatus"`
 
-	// 是否开启缩容保护
+	// <p>是否开启缩容保护</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsProtectedFromScaleIn *bool `json:"IsProtectedFromScaleIn,omitnil,omitempty" name:"IsProtectedFromScaleIn"`
 
-	// Machine 名字
+	// <p>Machine 名字</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DisplayName *string `json:"DisplayName,omitnil,omitempty" name:"DisplayName"`
 
-	// CPU核数，单位：核
+	// <p>CPU核数，单位：核</p>
 	CPU *uint64 `json:"CPU,omitnil,omitempty" name:"CPU"`
 
-	// GPU核数，单位：核
+	// <p>GPU核数，单位：核</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	GPU *uint64 `json:"GPU,omitnil,omitempty" name:"GPU"`
 
-	// 自动续费标识
+	// <p>自动续费标识</p>
 	RenewFlag *string `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`
 
-	// 节点计费模式
+	// <p>节点计费模式</p>
 	PayMode *string `json:"PayMode,omitnil,omitempty" name:"PayMode"`
 
-	// 节点内存容量，单位：`GB`
+	// <p>节点内存容量，单位：<code>GB</code></p>
 	Memory *uint64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// 节点系统盘配置信息
+	// <p>节点系统盘配置信息</p>
 	SystemDisk *Disk `json:"SystemDisk,omitnil,omitempty" name:"SystemDisk"`
 
-	// 公网带宽相关信息设置
+	// <p>公网带宽相关信息设置</p>
 	InternetAccessible *InternetAccessible `json:"InternetAccessible,omitnil,omitempty" name:"InternetAccessible"`
 
-	// 机型所属机型族
+	// <p>机型所属机型族</p>
 	InstanceFamily *string `json:"InstanceFamily,omitnil,omitempty" name:"InstanceFamily"`
 
-	// 节点内网 IP
+	// <p>节点内网 IP</p>
 	LanIp *string `json:"LanIp,omitnil,omitempty" name:"LanIp"`
 
-	// 机型
+	// <p>机型</p>
 	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
-	// 包年包月节点计费过期时间
+	// <p>包年包月节点计费过期时间</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExpiredTime *string `json:"ExpiredTime,omitnil,omitempty" name:"ExpiredTime"`
 
-	// 节点外网 IP
+	// <p>节点外网 IP</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	WanIp *string `json:"WanIp,omitnil,omitempty" name:"WanIp"`
 
-	// 节点密钥 ID 列表
+	// <p>节点密钥 ID 列表</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	KeyIds []*string `json:"KeyIds,omitnil,omitempty" name:"KeyIds"`
 
-	// 节点GPU相关配置
+	// <p>节点GPU相关配置</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	GPUParams *GPUParams `json:"GPUParams,omitnil,omitempty" name:"GPUParams"`
 
-	// 数据盘列表
+	// <p>数据盘列表</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DataDisks []*DataDisk `json:"DataDisks,omitnil,omitempty" name:"DataDisks"`
 
-	// 安全组列表
+	// <p>安全组列表</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SecurityGroupIDs []*string `json:"SecurityGroupIDs,omitnil,omitempty" name:"SecurityGroupIDs"`
 
-	// VPC 唯一 ID
+	// <p>VPC 唯一 ID</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 子网唯一 ID
+	// <p>子网唯一 ID</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// OS的名称
+	// <p>OS的名称</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	OsImage *string `json:"OsImage,omitnil,omitempty" name:"OsImage"`
 
-	// **原生节点的 Machine 类型**
-	// 
-	// - Native 表示 CXM 类型的原生节点
-	// - NativeCVM 表示 CVM 类型的原生节点
+	// <p><strong>原生节点的 Machine 类型</strong></p><ul><li>Native 表示 CXM 类型的原生节点</li><li>NativeCVM 表示 CVM 类型的原生节点</li></ul>
 	MachineType *string `json:"MachineType,omitnil,omitempty" name:"MachineType"`
 
-	// **原生节点对应的实例 ID**
-	// 
-	// - ins-q47ofw6 表示这个实例是一个 CVM 的实例
-	// - eks-f8mvyaep 表示这个实例是一个 CXM 的实例
+	// <p><strong>原生节点对应的实例 ID</strong></p><ul><li>ins-q47ofw6 表示这个实例是一个 CVM 的实例</li><li>eks-f8mvyaep 表示这个实例是一个 CXM 的实例</li></ul>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 原生节点云标签
+	// <p>原生节点云标签</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type NativeNodePoolInfo struct {
-	// 伸缩配置
+	// <p>伸缩配置</p>
 	Scaling *MachineSetScaling `json:"Scaling,omitnil,omitempty" name:"Scaling"`
 
-	// 子网列表
+	// <p>子网列表</p>
 	SubnetIds []*string `json:"SubnetIds,omitnil,omitempty" name:"SubnetIds"`
 
-	// 安全组列表
+	// <p>安全组列表</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 自动升级配置
+	// <p>自动升级配置</p>
 	UpgradeSettings *MachineUpgradeSettings `json:"UpgradeSettings,omitnil,omitempty" name:"UpgradeSettings"`
 
-	// 是否开启自愈能力
+	// <p>是否开启自愈能力</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AutoRepair *bool `json:"AutoRepair,omitnil,omitempty" name:"AutoRepair"`
 
-	// 节点计费类型
+	// <p>节点计费类型</p>
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
-	// 包年包月机型计费配置
+	// <p>包年包月机型计费配置</p>
 	InstanceChargePrepaid *InstanceChargePrepaid `json:"InstanceChargePrepaid,omitnil,omitempty" name:"InstanceChargePrepaid"`
 
-	// 系统盘配置
+	// <p>系统盘配置</p>
 	SystemDisk *Disk `json:"SystemDisk,omitnil,omitempty" name:"SystemDisk"`
 
-	// 密钥 ID 列表
+	// <p>密钥 ID 列表</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	KeyIds []*string `json:"KeyIds,omitnil,omitempty" name:"KeyIds"`
 
-	// Machine 系统配置
+	// <p>Machine 系统配置</p>
 	Management *ManagementConfig `json:"Management,omitnil,omitempty" name:"Management"`
 
-	// 故障自愈规则名称
+	// <p>故障自愈规则名称</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HealthCheckPolicyName *string `json:"HealthCheckPolicyName,omitnil,omitempty" name:"HealthCheckPolicyName"`
 
-	// 原生节点池hostName模式串
+	// <p>原生节点池hostName模式串</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HostNamePattern *string `json:"HostNamePattern,omitnil,omitempty" name:"HostNamePattern"`
 
-	// kubelet 自定义参数
+	// <p>kubelet 自定义参数</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	KubeletArgs []*string `json:"KubeletArgs,omitnil,omitempty" name:"KubeletArgs"`
 
-	// 预定义脚本
+	// <p>预定义脚本</p>
 	Lifecycle *LifecycleConfig `json:"Lifecycle,omitnil,omitempty" name:"Lifecycle"`
 
-	// 运行时根目录
+	// <p>运行时根目录</p>
 	RuntimeRootDir *string `json:"RuntimeRootDir,omitnil,omitempty" name:"RuntimeRootDir"`
 
-	// 是否开启弹性伸缩
+	// <p>是否开启弹性伸缩</p>
 	EnableAutoscaling *bool `json:"EnableAutoscaling,omitnil,omitempty" name:"EnableAutoscaling"`
 
-	// 机型列表
+	// <p>机型列表</p>
 	InstanceTypes []*string `json:"InstanceTypes,omitnil,omitempty" name:"InstanceTypes"`
 
-	// 期望节点数
+	// <p>期望节点数</p>
 	Replicas *int64 `json:"Replicas,omitnil,omitempty" name:"Replicas"`
 
-	// 就绪 Machine 个数
+	// <p>就绪 Machine 个数</p>
 	ReadyReplicas *int64 `json:"ReadyReplicas,omitnil,omitempty" name:"ReadyReplicas"`
 
-	// 公网带宽设置
+	// <p>公网带宽设置</p>
 	InternetAccessible *InternetAccessible `json:"InternetAccessible,omitnil,omitempty" name:"InternetAccessible"`
 
-	// 原生节点池数据盘
+	// <p>原生节点池数据盘</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DataDisks []*DataDisk `json:"DataDisks,omitnil,omitempty" name:"DataDisks"`
 
-	// 原生节点机型 Native, NativeCVM
+	// <p>原生节点机型 Native, NativeCVM</p>
 	MachineType *string `json:"MachineType,omitnil,omitempty" name:"MachineType"`
+
+	// <p>自定义镜像 ID</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CustomImage *string `json:"CustomImage,omitnil,omitempty" name:"CustomImage"`
 }
 
 type NodeCountSummary struct {
@@ -2505,15 +2645,15 @@ type RegularNodePoolInfo struct {
 }
 
 type RuntimeConfig struct {
-	// 运行时类型
+	// <p>运行时类型</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuntimeType *string `json:"RuntimeType,omitnil,omitempty" name:"RuntimeType"`
 
-	// 运行时版本
+	// <p>运行时版本</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuntimeVersion *string `json:"RuntimeVersion,omitnil,omitempty" name:"RuntimeVersion"`
 
-	// 运行时根目录
+	// <p>运行时根目录</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RuntimeRootDir *string `json:"RuntimeRootDir,omitnil,omitempty" name:"RuntimeRootDir"`
 }
@@ -2895,93 +3035,92 @@ type TagSpecification struct {
 }
 
 type Taint struct {
+	// Taint的Effect
+	Effect *string `json:"Effect,omitnil,omitempty" name:"Effect"`
+
 	// Taint的Key
 	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
 
 	// Taint的Value
 	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
-
-	// Taint的Effect
-	Effect *string `json:"Effect,omitnil,omitempty" name:"Effect"`
 }
 
 type UpdateNativeNodePoolParam struct {
-	// 伸缩配置
+	// <p>伸缩配置</p>
 	Scaling *MachineSetScaling `json:"Scaling,omitnil,omitempty" name:"Scaling"`
 
-	// 子网列表
+	// <p>子网列表</p>
 	SubnetIds []*string `json:"SubnetIds,omitnil,omitempty" name:"SubnetIds"`
 
-	// 安全组列表
+	// <p>安全组列表</p>
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 自动升级配置
+	// <p>自动升级配置</p>
 	UpgradeSettings *MachineUpgradeSettings `json:"UpgradeSettings,omitnil,omitempty" name:"UpgradeSettings"`
 
-	// 是否开启自愈能力
+	// <p>是否开启自愈能力</p>
 	AutoRepair *bool `json:"AutoRepair,omitnil,omitempty" name:"AutoRepair"`
 
-	// 节点计费类型变更
-	// 当前仅支持按量计费转包年包月：
-	// - PREPAID
+	// <p>计费类型</p><p>枚举值：</p><ul><li>POSTPAID_BY_HOUR： 目标计费类型为按量计费</li><li>PREPAID： 目标计费类型为包年包月计费</li><li>UNDERWRITE： 目标计费类型为包销计费</li></ul>
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
-	// 包年包月机型计费配置
+	// <p>包年包月机型计费配置</p>
 	InstanceChargePrepaid *InstanceChargePrepaid `json:"InstanceChargePrepaid,omitnil,omitempty" name:"InstanceChargePrepaid"`
 
-	// 系统盘配置
+	// <p>系统盘配置</p>
 	SystemDisk *Disk `json:"SystemDisk,omitnil,omitempty" name:"SystemDisk"`
 
-	// Machine 系统配置
+	// <p>Machine 系统配置</p>
 	Management *ManagementConfig `json:"Management,omitnil,omitempty" name:"Management"`
 
-	// 故障自愈规则名称
+	// <p>故障自愈规则名称</p>
 	HealthCheckPolicyName *string `json:"HealthCheckPolicyName,omitnil,omitempty" name:"HealthCheckPolicyName"`
 
-	// 原生节点池hostName模式串
+	// <p>原生节点池hostName模式串</p>
 	HostNamePattern *string `json:"HostNamePattern,omitnil,omitempty" name:"HostNamePattern"`
 
-	// kubelet 自定义参数
+	// <p>kubelet 自定义参数</p>
 	KubeletArgs []*string `json:"KubeletArgs,omitnil,omitempty" name:"KubeletArgs"`
 
-	// 预定义脚本
+	// <p>预定义脚本</p>
 	Lifecycle *LifecycleConfig `json:"Lifecycle,omitnil,omitempty" name:"Lifecycle"`
 
-	// 运行时根目录
+	// <p>运行时根目录</p>
 	RuntimeRootDir *string `json:"RuntimeRootDir,omitnil,omitempty" name:"RuntimeRootDir"`
 
-	// 是否开启弹性伸缩
+	// <p>是否开启弹性伸缩</p>
 	EnableAutoscaling *bool `json:"EnableAutoscaling,omitnil,omitempty" name:"EnableAutoscaling"`
 
-	// 机型列表
+	// <p>机型列表</p>
 	InstanceTypes []*string `json:"InstanceTypes,omitnil,omitempty" name:"InstanceTypes"`
 
-	// 期望节点数
+	// <p>期望节点数</p>
 	Replicas *int64 `json:"Replicas,omitnil,omitempty" name:"Replicas"`
 
-	// 是否更新存量节点MetaData(包括： metadata、annotation、label)
+	// <p>是否更新存量节点MetaData(包括： metadata、annotation、label)</p>
 	UpdateExistedNode *bool `json:"UpdateExistedNode,omitnil,omitempty" name:"UpdateExistedNode"`
 
-	// 数据盘列表
+	// <p>数据盘列表</p>
 	DataDisks []*DataDisk `json:"DataDisks,omitnil,omitempty" name:"DataDisks"`
 
-	// 节点management参数存量更新开关，有enable（打开）、disable（关闭）两个状态可选
-	// 
-	// management包括：nameserver、host、kubelet、kernel参数
+	// <p>节点management参数存量更新开关，有enable（打开）、disable（关闭）两个状态可选</p><p>management包括：nameserver、host、kubelet、kernel参数</p>
 	UpdateMachineManagement *string `json:"UpdateMachineManagement,omitnil,omitempty" name:"UpdateMachineManagement"`
 
-	// ssh公钥id数组
+	// <p>ssh公钥id数组</p>
 	KeyIds []*string `json:"KeyIds,omitnil,omitempty" name:"KeyIds"`
 
-	// 节点移出策略，有Random（随机）、Newest（优先移出最新实例）、Oldest（优先移出最旧实例）三种可选，默认是Newest
+	// <p>节点移出策略，有Random（随机）、Newest（优先移出最新实例）、Oldest（优先移出最旧实例）三种可选，默认是Newest</p>
 	DeletePolicy *string `json:"DeletePolicy,omitnil,omitempty" name:"DeletePolicy"`
 
-	// 节点池 GPU 配置
+	// <p>节点池 GPU 配置</p>
 	GPUConfigs []*GPUConfig `json:"GPUConfigs,omitnil,omitempty" name:"GPUConfigs"`
 
-	// 原生节点池安装自动化助手开关状态
+	// <p>原生节点池安装自动化助手开关状态</p>
 	AutomationService *bool `json:"AutomationService,omitnil,omitempty" name:"AutomationService"`
 
-	// 原生节点池密码
+	// <p>原生节点池密码</p>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
+
+	// <p>自定义镜像 ID</p>
+	CustomImage *string `json:"CustomImage,omitnil,omitempty" name:"CustomImage"`
 }

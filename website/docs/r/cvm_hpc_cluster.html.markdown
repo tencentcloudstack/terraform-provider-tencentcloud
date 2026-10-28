@@ -36,6 +36,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateHpcCluster](https://www.tencentcloud.com/search/?wd=CreateHpcCluster&type=document&lang=en)
+* Read: [DescribeHpcClusters](https://www.tencentcloud.com/search/?wd=DescribeHpcClusters&type=document&lang=en)
+* Update: [ModifyHpcClusterAttribute](https://www.tencentcloud.com/search/?wd=ModifyHpcClusterAttribute&type=document&lang=en)
+* Delete: [DeleteHpcClusters](https://www.tencentcloud.com/search/?wd=DeleteHpcClusters&type=document&lang=en)
 
 ## Import
 

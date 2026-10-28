@@ -74,8 +74,8 @@ func resourceTencentCloudCfwEdgeFirewallSwitchRead(d *schema.ResourceData, meta 
 	}
 
 	if edgeFirewallSwitch == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_cfw_edge_firewall_switch` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `CfwEdgeFirewallSwitch` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -135,7 +135,7 @@ func resourceTencentCloudCfwEdgeFirewallSwitchUpdate(d *schema.ResourceData, met
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s update cfw edgeFirewallSwitch failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update cfw edge firewall switch failed, reason:%+v", logId, err)
 		return err
 	}
 

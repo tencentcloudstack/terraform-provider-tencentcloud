@@ -45,6 +45,13 @@ In addition to all arguments above, the following attributes are exported:
 * `namespace_name` - namespace name.
 * `release_time` - release time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ReleaseConfigWithDetailResp](https://www.tencentcloud.com/search/?wd=ReleaseConfigWithDetailResp&type=document&lang=en)
+* Read: [DescribeConfigReleases](https://www.tencentcloud.com/search/?wd=DescribeConfigReleases&type=document&lang=en)
+* Delete: [RevocationConfig](https://www.tencentcloud.com/search/?wd=RevocationConfig&type=document&lang=en)
 
 ## Import
 

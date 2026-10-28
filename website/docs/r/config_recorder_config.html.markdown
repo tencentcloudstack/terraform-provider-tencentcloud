@@ -54,6 +54,19 @@ In addition to all arguments above, the following attributes are exported:
 * `trigger_count` - Number of snapshots taken today.
 * `update_count` - Number of monitoring range updates today.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CloseConfigRecorder](https://www.tencentcloud.com/document/api/1164/84983)
+  - [OpenConfigRecorder](https://www.tencentcloud.com/document/api/1164/84985)
+  - [UpdateConfigRecorder](https://www.tencentcloud.com/document/api/1164/84978)
+* Read: [DescribeConfigRecorder](https://www.tencentcloud.com/document/api/1164/84981)
+* Update:
+  - [CloseConfigRecorder](https://www.tencentcloud.com/document/api/1164/84983)
+  - [OpenConfigRecorder](https://www.tencentcloud.com/document/api/1164/84985)
+  - [UpdateConfigRecorder](https://www.tencentcloud.com/document/api/1164/84978)
 
 ## Import
 

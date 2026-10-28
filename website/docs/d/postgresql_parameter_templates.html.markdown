@@ -53,4 +53,9 @@ In addition to all arguments above, the following attributes are exported:
   * `template_id` - parameter template ID.
   * `template_name` - parameter template name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeParameterTemplates](https://www.tencentcloud.com/document/api/409/52651)
 

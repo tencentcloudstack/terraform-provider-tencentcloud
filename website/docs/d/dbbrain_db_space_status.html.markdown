@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
 * `remain` - Disk remaining (MB).
 * `total` - Total disk size (MB).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBSpaceStatus](https://www.tencentcloud.com/document/api/1035/41196)
 
