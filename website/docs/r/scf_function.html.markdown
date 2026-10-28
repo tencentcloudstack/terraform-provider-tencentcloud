@@ -106,6 +106,38 @@ resource "tencentcloud_scf_function" "example" {
 }
 ```
 
+### If func_type is Event
+
+```hcl
+resource "tencentcloud_scf_function" "example" {
+  name              = "test"
+  namespace         = "default"
+  async_run_enable  = "FALSE"
+  description       = "terraform demo"
+  enable_public_net = true
+  func_type         = "Event"
+  l5_enable         = false
+  mem_size          = 128
+  runtime           = "CustomImage"
+  timeout           = 3
+  image_config {
+    container_image_accelerate = false
+    image_port                 = -1
+    image_type                 = "personal"
+    image_uri                  = "ccr.ccs.tencentyun.com/tsf_100023201586/quickstart-gateway-service:v1-20250313124040@sha256:b8821639168*********************d33aadee54d81c"
+  }
+
+  instance_concurrency_config {
+    dynamic_enabled = "FALSE"
+    max_concurrency = 1
+  }
+
+  intranet_config {
+    ip_fixed = "DISABLE"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -133,7 +165,7 @@ The following arguments are supported:
 * `mem_size` - (Optional, Int) Memory size of the SCF function, unit is MB. The default is `128`MB. The ladder is 128M.
 * `namespace` - (Optional, String, ForceNew) Namespace of the SCF function, default is `default`.
 * `role` - (Optional, String) Role of the SCF function.
-* `runtime` - (Optional, String) Runtime of the SCF function, only supports `Python2.7`, `Python3.6`, `Nodejs6.10`, `Nodejs8.9`, `Nodejs10.15`, `Nodejs12.16`, `Php5.2`, `Php7.4`, `Go1`, `Java8`, and `CustomRuntime`, default is `Python2.7`.
+* `runtime` - (Optional, String) Runtime of the SCF function, only supports `Python2.7`, `Python3.6`, `Nodejs6.10`, `Nodejs8.9`, `Nodejs10.15`, `Nodejs12.16`, `Php5.2`, `Php7.4`, `Go1`, `Java8`, `CustomRuntime` and `CustomImage`, default is `Python2.7`. When deploying images using `image_comfig`, please explicitly specify the runtime as `CustomImage`. After creating a mirror function, it is not supported to modify the `runtime`.
 * `subnet_id` - (Optional, String) Subnet ID of the SCF function.
 * `tags` - (Optional, Map) Tags of the SCF function.
 * `timeout` - (Optional, Int) Timeout of the SCF function, unit is second. Default `3`. Available value is 1-900.
@@ -268,9 +300,9 @@ This resource interacts with the following TencentCloud APIs:
 
 SCF function can be imported, e.g.
 
--> **NOTE:** function id is `<function namespace>+<function name>`
+-> **NOTE:** resource id is `<function namespace>+<function name>`
 
 ```
-$ terraform import tencentcloud_scf_function.example default+test
+terraform import tencentcloud_scf_function.example default+test
 ```
 

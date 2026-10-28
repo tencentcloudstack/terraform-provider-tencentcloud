@@ -4,8 +4,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_fwm_account_group" "example" {
-  group_name  = "test-account-group"
-  description = "test account group"
+  group_name  = "tf-example"
+  description = "remark."
 }
 ```
 
@@ -14,5 +14,5 @@ Import
 FWM account group can be imported using the GroupId, e.g.
 
 ```
-terraform import tencentcloud_fwm_account_group.example acg-1a2b3c4d
+terraform import tencentcloud_fwm_account_group.example acg-nyalbmbi
 ```
