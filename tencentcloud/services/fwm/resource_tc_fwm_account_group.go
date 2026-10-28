@@ -131,7 +131,7 @@ func resourceTencentCloudFwmAccountGroupRead(d *schema.ResourceData, meta interf
 	}
 
 	if respData == nil {
-		log.Printf("[CRUD] fwm_account_group id=%s", d.Id())
+		log.Printf("[WARN]%s resource `tencentcloud_fwm_account_group` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
