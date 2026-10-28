@@ -1,6 +1,7 @@
 package common
 
 import (
+	"fmt"
 	"net"
 	"net/http"
 	"reflect"
@@ -49,7 +50,8 @@ func (c *Client) sendWithNetworkFailureRetry(req *http.Request, retryable bool) 
 		}
 
 		if err != nil {
-			err = errors.NewTencentCloudSDKErrorWithCause("ClientError.NetworkError", "Fail to get response", "", err)
+			msg := fmt.Sprintf("Fail to get response because %s", err)
+			err = errors.NewTencentCloudSDKError("ClientError.NetworkError", msg, "")
 		}
 
 		return resp, err

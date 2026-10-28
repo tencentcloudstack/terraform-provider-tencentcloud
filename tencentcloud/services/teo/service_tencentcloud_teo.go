@@ -3669,6 +3669,45 @@ func (me *TeoService) DescribeTeoEdgeKvListByFilter(ctx context.Context, param m
 	return
 }
 
+func (me *TeoService) CreateTeoLogAnalysisDownloadTask(ctx context.Context, request *teo.CreateLogAnalysisDownloadTaskRequest) (taskId string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	response := teo.NewCreateLogAnalysisDownloadTaskResponse()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTeoV20220901Client().CreateLogAnalysisDownloadTaskWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("create teo log analysis download task failed, response is nil"))
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
+		return nil
+	})
+	if errRet != nil {
+		return
+	}
+
+	if response.Response.TaskId == nil || *response.Response.TaskId == "" {
+		errRet = fmt.Errorf("create teo log analysis download task failed, task id is empty")
+		return
+	}
+
+	taskId = *response.Response.TaskId
+	return
+}
+
 func (me *TeoService) DescribeTeoLogAnalysisDownloadTaskById(ctx context.Context, zoneId, area, taskId string) (ret *teov20220901.LogAnalysisDownloadTask, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
@@ -3687,55 +3726,87 @@ func (me *TeoService) DescribeTeoLogAnalysisDownloadTaskById(ctx context.Context
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-
 	var (
 		offset int64 = 0
 		limit  int64 = 100
 	)
-	var instances []*teov20220901.LogAnalysisDownloadTask
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
+
 		response := teo.NewDescribeLogAnalysisDownloadTasksResponse()
-		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			result, e := me.client.UseTeoV20220901Client().DescribeLogAnalysisDownloadTasks(request)
+		errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseTeoV20220901Client().DescribeLogAnalysisDownloadTasksWithContext(ctx, request)
 			if e != nil {
 				return tccommon.RetryError(e)
 			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("describe teo log analysis download tasks failed, response is nil"))
+			}
+
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			response = result
 			return nil
 		})
-		if err != nil {
-			errRet = err
+		if errRet != nil {
 			return
-		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-		if response == nil || response.Response == nil || len(response.Response.Tasks) < 1 {
-			break
 		}
 
 		for _, task := range response.Response.Tasks {
 			if task.TaskId != nil && *task.TaskId == taskId {
-				instances = append(instances, task)
+				ret = task
+				return
 			}
 		}
 
-		if response.Response.TotalCount != nil && int64(len(instances)) >= *response.Response.TotalCount {
-			break
-		}
-		if int64(len(response.Response.Tasks)) < limit {
-			break
+		if len(response.Response.Tasks) < int(limit) {
+			return
 		}
 
-		offset = offset + limit
-	}
+		if response.Response.TotalCount != nil && offset+limit >= *response.Response.TotalCount {
+			return
+		}
 
-	if len(instances) < 1 {
-		return
+		offset += limit
 	}
+}
 
-	ret = instances[0]
-	return
+func (me *TeoService) WaitTeoLogAnalysisDownloadTaskById(ctx context.Context, timeout time.Duration, zoneId, area, taskId string) (ret *teov20220901.LogAnalysisDownloadTask, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	deadline := time.Now().Add(timeout)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s wait teo log analysis download task[%s] finished failed, reason[%s]\n", logId, taskId, errRet.Error())
+		}
+	}()
+
+	for {
+		task, e := me.DescribeTeoLogAnalysisDownloadTaskById(ctx, zoneId, area, taskId)
+		if e != nil {
+			errRet = e
+			return
+		}
+
+		if task != nil && task.Status != nil && *task.Status != "loading" {
+			log.Printf("[DEBUG]%s teo log analysis download task[%s] finished with status[%s]\n", logId, taskId, *task.Status)
+			ret = task
+			return
+		}
+
+		if time.Now().After(deadline) {
+			errRet = fmt.Errorf("waiting for teo log analysis download task[%s] to be finished timed out after %s", taskId, timeout)
+			return
+		}
+
+		select {
+		case <-ctx.Done():
+			errRet = ctx.Err()
+			return
+		case <-time.After(3 * time.Second):
+		}
+	}
 }
