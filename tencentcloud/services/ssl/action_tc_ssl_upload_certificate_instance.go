@@ -71,8 +71,10 @@ func (a *SslUploadCertificateInstance) Metadata(_ context.Context, _ action.Meta
 
 func (a *SslUploadCertificateInstance) Schema(ctx context.Context, _ action.SchemaRequest, resp *action.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Provides an action to upload new certificate public/private key content and update the associated cloud " +
+		Description: "Provides an action to upload new certificate content and update the associated cloud " +
 			"resources without changing the certificate ID via the UploadUpdateCertificateInstance API. " +
+			"The new certificate is given either by an existing `certificate_id` or by a pair of " +
+			"`certificate_public_key`/`certificate_private_key`. " +
 			"Currently, only the `clb` resource type is supported. " +
 			"The action waits for the asynchronous deploy task to complete. This is a one-time operation; no cloud-side state is persisted.",
 		Attributes: map[string]schema.Attribute{
@@ -87,15 +89,15 @@ func (a *SslUploadCertificateInstance) Schema(ctx context.Context, _ action.Sche
 			},
 			"certificate_public_key": schema.StringAttribute{
 				Optional:    true,
-				Description: "Certificate public key. If you upload the certificate public key, CertificateId does not need to be passed.",
+				Description: "Certificate public key content. Either specify `certificate_id`, or specify both `certificate_public_key` and `certificate_private_key`. Ignored if `certificate_id` is set. This is a write-only attribute: the value is only used when the action runs and is never persisted or shown in the plan output.",
 			},
 			"certificate_private_key": schema.StringAttribute{
 				Optional:    true,
-				Description: "Certificate private key. If you upload the certificate public key, CertificateId does not need to be passed.",
+				Description: "Certificate private key content. Either specify `certificate_id`, or specify both `certificate_public_key` and `certificate_private_key`. Ignored if `certificate_id` is set. This is a write-only attribute: the value is only used when the action runs and is never persisted or shown in the plan output.",
 			},
 			"certificate_id": schema.StringAttribute{
 				Optional:    true,
-				Description: "Certificate ID.",
+				Description: "New certificate ID. Either specify `certificate_id`, or specify both `certificate_public_key` and `certificate_private_key`. If set, it takes precedence over the key content.",
 			},
 		},
 		Blocks: map[string]schema.Block{
@@ -152,6 +154,28 @@ func (a *SslUploadCertificateInstance) Invoke(ctx context.Context, req action.In
 		resp.Diagnostics.AddError(
 			"Missing old_certificate_id",
 			"old_certificate_id is required and cannot be empty.",
+		)
+		return
+	}
+
+	// The API requires the new certificate to be given either by an existing
+	// certificate ID or by a pair of certificate public/private keys.
+	certificateId := ""
+	if !data.CertificateId.IsNull() && !data.CertificateId.IsUnknown() {
+		certificateId = data.CertificateId.ValueString()
+	}
+	certificatePublicKey := ""
+	if !data.CertificatePublicKey.IsNull() && !data.CertificatePublicKey.IsUnknown() {
+		certificatePublicKey = data.CertificatePublicKey.ValueString()
+	}
+	certificatePrivateKey := ""
+	if !data.CertificatePrivateKey.IsNull() && !data.CertificatePrivateKey.IsUnknown() {
+		certificatePrivateKey = data.CertificatePrivateKey.ValueString()
+	}
+	if certificateId == "" && (certificatePublicKey == "" || certificatePrivateKey == "") {
+		resp.Diagnostics.AddError(
+			"Missing certificate",
+			"Either `certificate_id` or both `certificate_public_key` and `certificate_private_key` must be specified.",
 		)
 		return
 	}
@@ -221,8 +245,9 @@ func (a *SslUploadCertificateInstance) Invoke(ctx context.Context, req action.In
 	// An unset/null timeouts block falls back to the built-in default, and a
 	// malformed duration is reported as an error diagnostic. The schema
 	// validator normally rejects malformed values at plan time; this is the
-	// runtime safety net.
-	_, timeoutDiags := data.Timeouts.Invoke(ctx, defaultSslUploadCertificateInstanceInvokeTimeout)
+	// runtime safety net. The resolved timeout bounds the polling loop that
+	// waits for the asynchronous deploy task to complete.
+	timeout, timeoutDiags := data.Timeouts.Invoke(ctx, defaultSslUploadCertificateInstanceInvokeTimeout)
 	resp.Diagnostics.Append(timeoutDiags...)
 	if resp.Diagnostics.HasError() {
 		return
@@ -233,19 +258,15 @@ func (a *SslUploadCertificateInstance) Invoke(ctx context.Context, req action.In
 	request := ssl.NewUploadUpdateCertificateInstanceRequest()
 	request.OldCertificateId = &oldCertificateId
 	request.ResourceTypes = resourceTypes
-	if !data.CertificatePrivateKey.IsNull() && !data.CertificatePrivateKey.IsUnknown() && data.CertificatePrivateKey.ValueString() != "" {
-		request.CertificatePrivateKey = helper.String(data.CertificatePrivateKey.ValueString())
-	}
-	if !data.CertificatePublicKey.IsNull() && !data.CertificatePublicKey.IsUnknown() && data.CertificatePublicKey.ValueString() != "" {
-		request.CertificatePublicKey = helper.String(data.CertificatePublicKey.ValueString())
-	}
-	if !data.CertificateId.IsNull() && !data.CertificateId.IsUnknown() && data.CertificateId.ValueString() != "" {
-		certificateId := data.CertificateId.ValueString()
+	if certificateId != "" {
 		request.CertificateId = &certificateId
 		// If CertificateId is provided, the public/private key content is not required. Clear them to avoid conflicts.
 		// The SSL R&D team has advised passing an empty string.
 		request.CertificatePublicKey = helper.String("")
 		request.CertificatePrivateKey = helper.String("")
+	} else {
+		request.CertificatePublicKey = helper.String(certificatePublicKey)
+		request.CertificatePrivateKey = helper.String(certificatePrivateKey)
 	}
 	request.ResourceTypesRegions = resourceTypesRegions
 
@@ -260,7 +281,7 @@ func (a *SslUploadCertificateInstance) Invoke(ctx context.Context, req action.In
 		return
 	}
 
-	if err := service.DescribeHostUploadUpdateRecordStatus(ctx, oldCertificateId, deployRecordId); err != nil {
+	if err := service.DescribeHostUploadUpdateRecordStatus(ctx, oldCertificateId, deployRecordId, timeout); err != nil {
 		resp.Diagnostics.AddError(
 			fmt.Sprintf("waiting for ssl upload certificate instance deploy record (%d) to complete", deployRecordId),
 			err.Error(),

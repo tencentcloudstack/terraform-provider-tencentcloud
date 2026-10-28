@@ -221,12 +221,75 @@ func TestSslUploadCertificateInstance_Invoke_Success(t *testing.T) {
 	assert.NotNil(t, gotRequest)
 	assert.Equal(t, "f8xnynbd", *gotRequest.OldCertificateId)
 	assert.Equal(t, []*string{ptrStringSslUploadCertInstance("clb")}, gotRequest.ResourceTypes)
-	assert.Equal(t, "public-key-content", *gotRequest.CertificatePublicKey)
-	assert.Equal(t, "private-key-content", *gotRequest.CertificatePrivateKey)
+	// when certificate_id is set together with key content, certificate_id
+	// takes precedence and the key content is cleared
+	assert.Equal(t, "", *gotRequest.CertificatePublicKey)
+	assert.Equal(t, "", *gotRequest.CertificatePrivateKey)
 	assert.Equal(t, "new-cert-id", *gotRequest.CertificateId)
 	assert.Len(t, gotRequest.ResourceTypesRegions, 1)
 	assert.Equal(t, "clb", *gotRequest.ResourceTypesRegions[0].ResourceType)
 	assert.Equal(t, []*string{ptrStringSslUploadCertInstance("ap-guangzhou")}, gotRequest.ResourceTypesRegions[0].Regions)
+}
+
+// TestSslUploadCertificateInstance_Invoke_SuccessWithCertificateId tests a
+// successful invoke where the new certificate is given by certificate_id only
+func TestSslUploadCertificateInstance_Invoke_SuccessWithCertificateId(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	client := &connectivity.TencentCloudClient{}
+	sslClient := &sslSdk.Client{}
+	patches.ApplyMethodReturn(client, "UseSSLCertificateClient", sslClient)
+
+	var gotRequest *sslSdk.UploadUpdateCertificateInstanceRequest
+	patches.ApplyMethodFunc(sslClient, "UploadUpdateCertificateInstanceWithContext", func(_ context.Context, request *sslSdk.UploadUpdateCertificateInstanceRequest) (*sslSdk.UploadUpdateCertificateInstanceResponse, error) {
+		gotRequest = request
+		resp := sslSdk.NewUploadUpdateCertificateInstanceResponse()
+		resp.Response = &sslSdk.UploadUpdateCertificateInstanceResponseParams{
+			DeployRecordId: ptrUint64SslUploadCertInstance(12345),
+			DeployStatus:   ptrInt64SslUploadCertInstance(1),
+			RequestId:      ptrStringSslUploadCertInstance("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(sslClient, "DescribeHostUploadUpdateRecordWithContext", func(_ context.Context, request *sslSdk.DescribeHostUploadUpdateRecordRequest) (*sslSdk.DescribeHostUploadUpdateRecordResponse, error) {
+		resp := sslSdk.NewDescribeHostUploadUpdateRecordResponse()
+		resp.Response = &sslSdk.DescribeHostUploadUpdateRecordResponseParams{
+			TotalCount: ptrUint64SslUploadCertInstance(1),
+			DeployRecordList: []*sslSdk.UploadUpdateRecordInfo{
+				{
+					Id:     ptrUint64SslUploadCertInstance(12345),
+					Status: ptrUint64SslUploadCertInstance(1),
+				},
+			},
+			RequestId: ptrStringSslUploadCertInstance("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	a := providerSsl.NewSslUploadCertificateInstance()
+	setSslUploadCertificateInstanceClient(a.(*providerSsl.SslUploadCertificateInstance), client)
+
+	certificateId := "new-cert-id"
+	req := newSslUploadCertificateInstanceInvokeRequestFull(t,
+		"f8xnynbd",
+		[]string{"clb"},
+		"",
+		"",
+		&certificateId,
+		nil,
+		sslUploadNullTimeoutsValue())
+	resp := &action.InvokeResponse{}
+	a.Invoke(context.Background(), req, resp)
+
+	assert.False(t, resp.Diagnostics.HasError(), "expected no error diagnostics, got: %v", resp.Diagnostics)
+
+	assert.NotNil(t, gotRequest)
+	assert.Equal(t, "new-cert-id", *gotRequest.CertificateId)
+	// key content must be cleared when certificate_id is set
+	assert.Equal(t, "", *gotRequest.CertificatePublicKey)
+	assert.Equal(t, "", *gotRequest.CertificatePrivateKey)
 }
 
 // TestSslUploadCertificateInstance_Invoke_CreateRetry tests that a zero
@@ -346,6 +409,118 @@ func TestSslUploadCertificateInstance_Invoke_DeployTimeout(t *testing.T) {
 	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "waiting for ssl upload certificate instance deploy record")
 }
 
+// TestSslUploadCertificateInstance_Invoke_DeployInProgressThenDone tests that
+// the action polls the deploy record until it completes instead of failing on
+// the first in-progress response
+func TestSslUploadCertificateInstance_Invoke_DeployInProgressThenDone(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	client := &connectivity.TencentCloudClient{}
+	sslClient := &sslSdk.Client{}
+	patches.ApplyMethodReturn(client, "UseSSLCertificateClient", sslClient)
+
+	patches.ApplyMethodFunc(sslClient, "UploadUpdateCertificateInstanceWithContext", func(_ context.Context, request *sslSdk.UploadUpdateCertificateInstanceRequest) (*sslSdk.UploadUpdateCertificateInstanceResponse, error) {
+		resp := sslSdk.NewUploadUpdateCertificateInstanceResponse()
+		resp.Response = &sslSdk.UploadUpdateCertificateInstanceResponseParams{
+			DeployRecordId: ptrUint64SslUploadCertInstance(12345),
+			DeployStatus:   ptrInt64SslUploadCertInstance(1),
+			RequestId:      ptrStringSslUploadCertInstance("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	statusCallCount := 0
+	patches.ApplyMethodFunc(sslClient, "DescribeHostUploadUpdateRecordWithContext", func(_ context.Context, request *sslSdk.DescribeHostUploadUpdateRecordRequest) (*sslSdk.DescribeHostUploadUpdateRecordResponse, error) {
+		statusCallCount++
+		status := uint64(0)
+		if statusCallCount >= 2 {
+			status = 1
+		}
+		resp := sslSdk.NewDescribeHostUploadUpdateRecordResponse()
+		resp.Response = &sslSdk.DescribeHostUploadUpdateRecordResponseParams{
+			TotalCount: ptrUint64SslUploadCertInstance(1),
+			DeployRecordList: []*sslSdk.UploadUpdateRecordInfo{
+				{
+					Id:     ptrUint64SslUploadCertInstance(12345),
+					Status: &status,
+				},
+			},
+			RequestId: ptrStringSslUploadCertInstance("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	a := providerSsl.NewSslUploadCertificateInstance()
+	setSslUploadCertificateInstanceClient(a.(*providerSsl.SslUploadCertificateInstance), client)
+
+	req := newSslUploadCertificateInstanceInvokeRequestFull(t,
+		"f8xnynbd",
+		[]string{"clb"},
+		"public-key-content",
+		"private-key-content",
+		nil,
+		nil,
+		tftypes.NewValue(sslUploadTimeoutsObjType(), map[string]tftypes.Value{
+			"invoke": tftypes.NewValue(tftypes.String, "30s"),
+		}))
+	resp := &action.InvokeResponse{}
+	a.Invoke(context.Background(), req, resp)
+
+	assert.False(t, resp.Diagnostics.HasError(), "expected no error diagnostics, got: %v", resp.Diagnostics)
+	assert.GreaterOrEqual(t, statusCallCount, 2, "the deploy record should be polled more than once")
+}
+
+// TestSslUploadCertificateInstance_Invoke_DeployFailedStatus tests that an
+// unexpected deploy record status (e.g. 2) is treated as a failure
+func TestSslUploadCertificateInstance_Invoke_DeployFailedStatus(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	client := &connectivity.TencentCloudClient{}
+	sslClient := &sslSdk.Client{}
+	patches.ApplyMethodReturn(client, "UseSSLCertificateClient", sslClient)
+
+	patches.ApplyMethodFunc(sslClient, "UploadUpdateCertificateInstanceWithContext", func(_ context.Context, request *sslSdk.UploadUpdateCertificateInstanceRequest) (*sslSdk.UploadUpdateCertificateInstanceResponse, error) {
+		resp := sslSdk.NewUploadUpdateCertificateInstanceResponse()
+		resp.Response = &sslSdk.UploadUpdateCertificateInstanceResponseParams{
+			DeployRecordId: ptrUint64SslUploadCertInstance(12345),
+			DeployStatus:   ptrInt64SslUploadCertInstance(1),
+			RequestId:      ptrStringSslUploadCertInstance("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(sslClient, "DescribeHostUploadUpdateRecordWithContext", func(_ context.Context, request *sslSdk.DescribeHostUploadUpdateRecordRequest) (*sslSdk.DescribeHostUploadUpdateRecordResponse, error) {
+		resp := sslSdk.NewDescribeHostUploadUpdateRecordResponse()
+		resp.Response = &sslSdk.DescribeHostUploadUpdateRecordResponseParams{
+			TotalCount: ptrUint64SslUploadCertInstance(1),
+			DeployRecordList: []*sslSdk.UploadUpdateRecordInfo{
+				{
+					Id:     ptrUint64SslUploadCertInstance(12345),
+					Status: ptrUint64SslUploadCertInstance(2),
+				},
+			},
+			RequestId: ptrStringSslUploadCertInstance("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	a := providerSsl.NewSslUploadCertificateInstance()
+	setSslUploadCertificateInstanceClient(a.(*providerSsl.SslUploadCertificateInstance), client)
+
+	req := newSslUploadCertificateInstanceInvokeRequest(t,
+		"f8xnynbd",
+		[]string{"clb"},
+		"public-key-content",
+		"private-key-content")
+	resp := &action.InvokeResponse{}
+	a.Invoke(context.Background(), req, resp)
+
+	assert.True(t, resp.Diagnostics.HasError())
+	assert.Contains(t, resp.Diagnostics.Errors()[0].Detail(), "unexpected status 2")
+}
+
 // TestSslUploadCertificateInstance_Invoke_APIError tests API error handling
 func TestSslUploadCertificateInstance_Invoke_APIError(t *testing.T) {
 	patches := gomonkey.NewPatches()
@@ -406,19 +581,7 @@ func TestSslUploadCertificateInstance_Invoke_MissingInput(t *testing.T) {
 	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "Missing old_certificate_id")
 	assert.False(t, apiCalled)
 
-	// empty certificate_public_key
-	req = newSslUploadCertificateInstanceInvokeRequest(t,
-		"f8xnynbd",
-		[]string{"clb"},
-		"",
-		"private-key-content")
-	resp = &action.InvokeResponse{}
-	a.Invoke(context.Background(), req, resp)
-	assert.True(t, resp.Diagnostics.HasError())
-	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "Missing certificate_public_key")
-	assert.False(t, apiCalled)
-
-	// empty certificate_private_key
+	// public key only, without private key or certificate_id
 	req = newSslUploadCertificateInstanceInvokeRequest(t,
 		"f8xnynbd",
 		[]string{"clb"},
@@ -427,7 +590,31 @@ func TestSslUploadCertificateInstance_Invoke_MissingInput(t *testing.T) {
 	resp = &action.InvokeResponse{}
 	a.Invoke(context.Background(), req, resp)
 	assert.True(t, resp.Diagnostics.HasError())
-	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "Missing certificate_private_key")
+	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "Missing certificate")
+	assert.False(t, apiCalled)
+
+	// private key only, without public key or certificate_id
+	req = newSslUploadCertificateInstanceInvokeRequest(t,
+		"f8xnynbd",
+		[]string{"clb"},
+		"",
+		"private-key-content")
+	resp = &action.InvokeResponse{}
+	a.Invoke(context.Background(), req, resp)
+	assert.True(t, resp.Diagnostics.HasError())
+	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "Missing certificate")
+	assert.False(t, apiCalled)
+
+	// neither certificate_id nor key content
+	req = newSslUploadCertificateInstanceInvokeRequest(t,
+		"f8xnynbd",
+		[]string{"clb"},
+		"",
+		"")
+	resp = &action.InvokeResponse{}
+	a.Invoke(context.Background(), req, resp)
+	assert.True(t, resp.Diagnostics.HasError())
+	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "Missing certificate")
 	assert.False(t, apiCalled)
 
 	// null resource_types
@@ -482,8 +669,8 @@ func TestSslUploadCertificateInstance_MetadataAndSchema(t *testing.T) {
 
 	assert.True(t, attrs["old_certificate_id"].IsRequired())
 	assert.True(t, attrs["resource_types"].IsRequired())
-	assert.True(t, attrs["certificate_public_key"].IsRequired())
-	assert.True(t, attrs["certificate_private_key"].IsRequired())
+	assert.True(t, attrs["certificate_public_key"].IsOptional())
+	assert.True(t, attrs["certificate_private_key"].IsOptional())
 	assert.True(t, attrs["certificate_id"].IsOptional())
 
 	resourceTypesAttr, ok := attrs["resource_types"].(action_schema.SetAttribute)
@@ -492,11 +679,16 @@ func TestSslUploadCertificateInstance_MetadataAndSchema(t *testing.T) {
 
 	publicKeyAttr, ok := attrs["certificate_public_key"].(action_schema.StringAttribute)
 	assert.True(t, ok)
-	assert.True(t, publicKeyAttr.Required)
+	assert.False(t, publicKeyAttr.Required)
+	// WriteOnly must NOT be set on action attributes: the framework
+	// hard-codes the write-only client capability to false for action
+	// schemas, so a non-null write-only value always fails validation.
+	assert.False(t, publicKeyAttr.WriteOnly)
 
 	privateKeyAttr, ok := attrs["certificate_private_key"].(action_schema.StringAttribute)
 	assert.True(t, ok)
-	assert.True(t, privateKeyAttr.Required)
+	assert.False(t, privateKeyAttr.Required)
+	assert.False(t, privateKeyAttr.WriteOnly)
 
 	blocks := schemaResp.Schema.Blocks
 	assert.Contains(t, blocks, "resource_types_regions")
