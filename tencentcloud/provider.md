@@ -711,7 +711,7 @@ tencentcloud_kms_cloud_resource_attachment
 tencentcloud_kms_overwrite_white_box_device_fingerprints
 
 Action
-tencentcloud_kms_instance_operation
+tencentcloud_kms_instance
 
 Tencent Kubernetes Engine(TKE)
 Data Source

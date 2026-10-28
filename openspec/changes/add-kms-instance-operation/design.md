@@ -2,13 +2,13 @@
 
 Terraform Provider for TencentCloud 需要新增 KMS 托管实例的购买开通能力。云 API `CreateKmsInstance`（位于 `github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118`）支持购买预付费 KMS 实例，但当前 provider 未封装该接口。
 
-本实现为 terraform-plugin-framework **action** 类型：一次性操作，操作完成后不需要记录任何状态。仅实现 Invoke 接口，无 Read/Update/Delete。资源代码文件命名为 `action_tc_kms_instance_operation.go`，符合 framework action 命名规范（`action_tc_<product>_<name>.go`）。
+本实现为 terraform-plugin-framework **action** 类型：一次性操作，操作完成后不需要记录任何状态。仅实现 Invoke 接口，无 Read/Update/Delete。资源代码文件命名为 `action_tc_kms_instance.go`，符合 framework action 命名规范（`action_tc_<product>_<name>.go`）。
 
 ### 平台参考
 
 - terraform-plugin-framework 的 `action.Action` 接口，参考现有 action 实现：`tencentcloud/services/antiddos/action_tc_antiddos_unblock_resources.go`、`tencentcloud/services/mongodb/action_tc_mongodb_restore_db_instance.go`、`tencentcloud/services/teo/action_tc_teo_confirm_origin_acl_update.go`、`tencentcloud/services/dlc/action_tc_dlc_initialize_tc_lake.go`。
 - action 工厂在 `tencentcloud/framework/registry.go` 的 `actionFactories` 切片中注册。
-- action 文档文件命名 `action_tc_kms_instance_operation.md`，由 `make doc` 生成到 `website/docs/actions/`。
+- action 文档文件命名 `action_tc_kms_instance.md`，由 `make doc` 生成到 `website/docs/actions/`。
 
 ### vendor 云 API 关键 struct 定义（已从 models.go 摘录，实施阶段无需回读大文件）
 
@@ -69,14 +69,15 @@ type CreateKmsInstanceResponse struct {
 
 **Client 调用方式**（client.go:637）:
 ```go
-meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseKmsClient().CreateKmsInstanceWithContext(ctx, request)
+// 在 service_tencentcloud_kms.go 的 KmsService 方法中通过已注入的 client 获取 KMS client
+result, e := me.client.UseKmsClient().CreateKmsInstanceWithContext(ctx, request)
 ```
 KMS client 获取方法定义于 `tencentcloud/connectivity/client.go` `UseKmsClient()`。
 
 ## Goals / Non-Goals
 
 **Goals:**
-- 新增 framework action `tencentcloud_kms_instance_operation`，封装 `CreateKmsInstance` 云 API。
+- 新增 framework action `tencentcloud_kms_instance`，封装 `CreateKmsInstance` 云 API。
 - 支持 instance_charge_type、product_version、client_token 顶层属性。
 - 支持 instance_charge_prepaid SingleNestedBlock（period、renew_flag）。
 - 支持 tags ListNestedBlock（tag_key、tag_value）。
@@ -108,17 +109,24 @@ KMS client 获取方法定义于 `tencentcloud/connectivity/client.go` `UseKmsCl
 
 framework action schema 使用 `action/schema` 包（非 resource/schema），SingleNestedBlock 在 model 中映射为 `types.Object`，ListNestedBlock 映射为 `types.List`。
 
-### 3. 输出属性处理
+可选字段的赋值规则：`product_version`、`client_token` 仅在非 null、非 unknown 且非空字符串时才写入 request，避免把显式空字符串透传给云 API 触发参数校验失败；`tags` 中 `tag_key` 为空的条目会被跳过并打印 `[WARN]` 日志（`tag_key` 在 schema 中为 Required，此规则仅用于防御异常配置）。
+
+### 3. 输出属性处理与空响应校验
 
 framework action 无法对外暴露输出属性（与 SDKv2 resource 的 Computed 字段不同）。CreateKmsInstance 返回的 InstanceId、DealName、BillId 通过 `log.Printf("[DEBUG]...")` 记录到日志，便于用户排障。
 
+Invoke 中会对云 API 返回做空值校验：`response == nil`、`response.Response == nil`、`InstanceId` 为 nil 或空字符串三种情况均先打印 `[CRUD]` 现场日志（便于定位是哪一次调用），再返回 error diagnostic，避免把"下单失败"误报为成功。
+
 ### 4. Retry 与错误处理
 
-在 service 方法 `KmsService.CreateKmsInstance` 中使用 `resource.Retry(tccommon.WriteRetryTimeout, ...)` 包装云 API 调用，失败时用 `tccommon.RetryError(e)` 包装返回。retry 块内只调用接口。空响应在 service 方法中返回 error。
+在 service 方法 `KmsService.CreateKmsInstance`（位于既有 `tencentcloud/services/kms/service_tencentcloud_kms.go`）中使用 `resource.Retry(tccommon.WriteRetryTimeout, ...)` 包装云 API 调用，失败时用 `tccommon.RetryError(e)` 包装返回。retry 块内只调用接口，设置返回值等成功操作放在 retry 块外。空响应在 service 方法中返回 error。
 
 ### 5. 文件命名
 
-遵循 framework README 的命名规范：`action_tc_<product>_<name>.go`。由于该 action 明确属于 KMS 产品，文件命名为 `action_tc_kms_instance_operation.go`，Go package 为 `kms`。
+遵循 framework README 的命名规范：`action_tc_<product>_<name>.go`，与 Terraform 侧 action 名 `tencentcloud_<product>_<name>` 一一对应，且与仓库内既有 framework action（`action_tc_antiddos_unblock_resources.go`、`action_tc_mongodb_restore_db_instance.go`、`action_tc_dlc_initialize_tc_lake.go`）保持一致，即不带 `_operation` 后缀。因此该 action 命名为 `tencentcloud_kms_instance`，实现文件为 `action_tc_kms_instance.go`、文档为 `action_tc_kms_instance.md`、单测为 `action_tc_kms_instance_test.go`，Go package 为 `kms`。
+
+service 方法统一放在 `service_tencentcloud_kms.go`，不新增额外的 `service_tc_*.go` 文件。
+
 
 ### 6. 参考代码风格
 
@@ -132,4 +140,4 @@ framework action 无法对外暴露输出属性（与 SDKv2 resource 的 Compute
 - **[约束] 需 Terraform 1.14+**：action 是较新的 Terraform 特性，低版本用户无法使用。在 .md 文档中已用 NOTE 提示。
 - **[风险] 重复购买**：CreateKmsInstance 为下单操作，若用户重复执行 action 可能重复下单。action 无状态，不会阻止重复调用。提供 client_token 支持幂等重入。
 - **[权衡] 无输出属性**：instance_id 等仅日志输出，用户无法在 HCL 中引用。符合 framework action 设计限制。
-- **[风险] InstanceChargePrepaid 字段类型为 uint64**：period、renew_flag 在云 API 中为 `*uint64`。Schema 中使用 `schema.Int64Attribute`，读取时用 `helper.IntUint64(v)` 转换。
+- **[风险] InstanceChargePrepaid 字段类型为 uint64**：period、renew_flag 在云 API 中为 `*uint64`。Schema 中使用 `schema.Int64Attribute`，读取时用 `helper.Int64Uint64(v)` 转换。

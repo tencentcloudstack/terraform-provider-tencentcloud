@@ -21,8 +21,8 @@ func ptrStringKmsInstanceOp(s string) *string {
 	return &s
 }
 
-func kmsInstanceOperationSchema(t *testing.T) action_schema.Schema {
-	a := kms.NewKmsInstanceOperation()
+func kmsInstanceSchema(t *testing.T) action_schema.Schema {
+	a := kms.NewKmsInstance()
 	schemaResp := &action.SchemaResponse{}
 	a.Schema(context.Background(), action.SchemaRequest{}, schemaResp)
 	if schemaResp.Diagnostics.HasError() {
@@ -72,15 +72,15 @@ func newTagValue(tagKey, tagValue string) tftypes.Value {
 	})
 }
 
-// newKmsInstanceOperationInvokeRequest builds an action.InvokeRequest carrying
+// newKmsInstanceInvokeRequest builds an action.InvokeRequest carrying
 // the given raw config values.
-func newKmsInstanceOperationInvokeRequest(
+func newKmsInstanceInvokeRequest(
 	t *testing.T,
 	instanceChargeType, productVersion, clientToken string,
 	prepaidVal tftypes.Value,
 	tags []tftypes.Value,
 ) action.InvokeRequest {
-	s := kmsInstanceOperationSchema(t)
+	s := kmsInstanceSchema(t)
 
 	tagsListType := tftypes.List{ElementType: tagObjType()}
 	var tagsVal tftypes.Value
@@ -112,19 +112,19 @@ func newKmsInstanceOperationInvokeRequest(
 	return req
 }
 
-// setKmsInstanceOperationClient injects a mock connectivity client into the
+// setKmsInstanceClient injects a mock connectivity client into the
 // action instance via the Configure method.
-func setKmsInstanceOperationClient(a *kms.KmsInstanceOperation, client *connectivity.TencentCloudClient) {
+func setKmsInstanceClient(a *kms.KmsInstance, client *connectivity.TencentCloudClient) {
 	meta := &sharedmeta.ProviderMeta{Client: client}
 	configureReq := action.ConfigureRequest{ProviderData: meta}
 	configureResp := &action.ConfigureResponse{}
 	a.Configure(context.Background(), configureReq, configureResp)
 }
 
-// go test ./tencentcloud/services/kms/ -run "TestKmsInstanceOperation" -v -count=1 -gcflags="all=-l"
+// go test ./tencentcloud/services/kms/ -run "TestKmsInstance" -v -count=1 -gcflags="all=-l"
 
-// TestKmsInstanceOperation_Invoke_Success tests a successful invoke
-func TestKmsInstanceOperation_Invoke_Success(t *testing.T) {
+// TestKmsInstance_Invoke_Success tests a successful invoke
+func TestKmsInstance_Invoke_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -155,10 +155,10 @@ func TestKmsInstanceOperation_Invoke_Success(t *testing.T) {
 		return resp, nil
 	})
 
-	a := kms.NewKmsInstanceOperation().(*kms.KmsInstanceOperation)
-	setKmsInstanceOperationClient(a, client)
+	a := kms.NewKmsInstance().(*kms.KmsInstance)
+	setKmsInstanceClient(a, client)
 
-	req := newKmsInstanceOperationInvokeRequest(t, "PREPAID", "professional", "tf-token-xxx",
+	req := newKmsInstanceInvokeRequest(t, "PREPAID", "professional", "tf-token-xxx",
 		newPrepaidValue(1, 1),
 		[]tftypes.Value{newTagValue("env", "prod")},
 	)
@@ -169,8 +169,47 @@ func TestKmsInstanceOperation_Invoke_Success(t *testing.T) {
 	assert.NotNil(t, gotRequest)
 }
 
-// TestKmsInstanceOperation_Invoke_APIError tests API error handling
-func TestKmsInstanceOperation_Invoke_APIError(t *testing.T) {
+// TestKmsInstance_Invoke_MinimalInput tests that optional fields are left
+// unset (nil) on the request when they are not configured.
+func TestKmsInstance_Invoke_MinimalInput(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	client := &connectivity.TencentCloudClient{}
+	kmsClient := &kms_sdk.Client{}
+	patches.ApplyMethodReturn(client, "UseKmsClient", kmsClient)
+
+	var gotRequest *kms_sdk.CreateKmsInstanceRequest
+	patches.ApplyMethodFunc(kmsClient, "CreateKmsInstanceWithContext", func(_ context.Context, request *kms_sdk.CreateKmsInstanceRequest) (*kms_sdk.CreateKmsInstanceResponse, error) {
+		gotRequest = request
+		resp := kms_sdk.NewCreateKmsInstanceResponse()
+		resp.Response = &kms_sdk.CreateKmsInstanceResponseParams{
+			InstanceId: ptrStringKmsInstanceOp("kms-min001"),
+		}
+		return resp, nil
+	})
+
+	a := kms.NewKmsInstance().(*kms.KmsInstance)
+	setKmsInstanceClient(a, client)
+
+	req := newKmsInstanceInvokeRequest(t, "PREPAID", "", "",
+		nullPrepaidValue(),
+		nil,
+	)
+	resp := &action.InvokeResponse{}
+	a.Invoke(context.Background(), req, resp)
+
+	assert.False(t, resp.Diagnostics.HasError(), "expected no error diagnostics, got: %v", resp.Diagnostics)
+	assert.NotNil(t, gotRequest)
+	assert.Equal(t, "PREPAID", *gotRequest.InstanceChargeType)
+	assert.Nil(t, gotRequest.ProductVersion)
+	assert.Nil(t, gotRequest.ClientToken)
+	assert.Nil(t, gotRequest.InstanceChargePrepaid)
+	assert.Empty(t, gotRequest.Tags)
+}
+
+// TestKmsInstance_Invoke_APIError tests API error handling
+func TestKmsInstance_Invoke_APIError(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -182,10 +221,10 @@ func TestKmsInstanceOperation_Invoke_APIError(t *testing.T) {
 		return nil, fmt.Errorf("[TencentCloudSDKError] Code=LimitExceeded, Message=instance quota exceeded")
 	})
 
-	a := kms.NewKmsInstanceOperation().(*kms.KmsInstanceOperation)
-	setKmsInstanceOperationClient(a, client)
+	a := kms.NewKmsInstance().(*kms.KmsInstance)
+	setKmsInstanceClient(a, client)
 
-	req := newKmsInstanceOperationInvokeRequest(t, "PREPAID", "", "",
+	req := newKmsInstanceInvokeRequest(t, "PREPAID", "", "",
 		nullPrepaidValue(),
 		nil,
 	)
@@ -193,13 +232,13 @@ func TestKmsInstanceOperation_Invoke_APIError(t *testing.T) {
 	a.Invoke(context.Background(), req, resp)
 
 	assert.True(t, resp.Diagnostics.HasError())
-	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "creating kms instance_operation")
+	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "creating kms_instance")
 	assert.Contains(t, resp.Diagnostics.Errors()[0].Detail(), "LimitExceeded")
 }
 
-// TestKmsInstanceOperation_Invoke_EmptyResponse tests that an empty response
+// TestKmsInstance_Invoke_EmptyResponse tests that an empty response
 // returns an error diagnostic.
-func TestKmsInstanceOperation_Invoke_EmptyResponse(t *testing.T) {
+func TestKmsInstance_Invoke_EmptyResponse(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -215,10 +254,10 @@ func TestKmsInstanceOperation_Invoke_EmptyResponse(t *testing.T) {
 		return resp, nil
 	})
 
-	a := kms.NewKmsInstanceOperation().(*kms.KmsInstanceOperation)
-	setKmsInstanceOperationClient(a, client)
+	a := kms.NewKmsInstance().(*kms.KmsInstance)
+	setKmsInstanceClient(a, client)
 
-	req := newKmsInstanceOperationInvokeRequest(t, "PREPAID", "", "",
+	req := newKmsInstanceInvokeRequest(t, "PREPAID", "", "",
 		nullPrepaidValue(),
 		nil,
 	)
@@ -226,12 +265,12 @@ func TestKmsInstanceOperation_Invoke_EmptyResponse(t *testing.T) {
 	a.Invoke(context.Background(), req, resp)
 
 	assert.True(t, resp.Diagnostics.HasError())
-	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "creating kms instance_operation")
+	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "creating kms_instance")
 }
 
-// TestKmsInstanceOperation_Invoke_MissingInput tests missing required input
+// TestKmsInstance_Invoke_MissingInput tests missing required input
 // is rejected before any API call
-func TestKmsInstanceOperation_Invoke_MissingInput(t *testing.T) {
+func TestKmsInstance_Invoke_MissingInput(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -245,10 +284,10 @@ func TestKmsInstanceOperation_Invoke_MissingInput(t *testing.T) {
 		return kms_sdk.NewCreateKmsInstanceResponse(), nil
 	})
 
-	a := kms.NewKmsInstanceOperation().(*kms.KmsInstanceOperation)
-	setKmsInstanceOperationClient(a, client)
+	a := kms.NewKmsInstance().(*kms.KmsInstance)
+	setKmsInstanceClient(a, client)
 
-	req := newKmsInstanceOperationInvokeRequest(t, "", "", "",
+	req := newKmsInstanceInvokeRequest(t, "", "", "",
 		nullPrepaidValue(),
 		nil,
 	)
@@ -259,11 +298,11 @@ func TestKmsInstanceOperation_Invoke_MissingInput(t *testing.T) {
 	assert.False(t, apiCalled)
 }
 
-// TestKmsInstanceOperation_Invoke_ClientNotConfigured tests the nil-client guard
-func TestKmsInstanceOperation_Invoke_ClientNotConfigured(t *testing.T) {
-	a := kms.NewKmsInstanceOperation().(*kms.KmsInstanceOperation)
+// TestKmsInstance_Invoke_ClientNotConfigured tests the nil-client guard
+func TestKmsInstance_Invoke_ClientNotConfigured(t *testing.T) {
+	a := kms.NewKmsInstance().(*kms.KmsInstance)
 
-	req := newKmsInstanceOperationInvokeRequest(t, "PREPAID", "", "",
+	req := newKmsInstanceInvokeRequest(t, "PREPAID", "", "",
 		nullPrepaidValue(),
 		nil,
 	)
@@ -274,13 +313,13 @@ func TestKmsInstanceOperation_Invoke_ClientNotConfigured(t *testing.T) {
 	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "Provider not configured")
 }
 
-// TestKmsInstanceOperation_MetadataAndSchema validates metadata and schema definition
-func TestKmsInstanceOperation_MetadataAndSchema(t *testing.T) {
-	a := kms.NewKmsInstanceOperation().(*kms.KmsInstanceOperation)
+// TestKmsInstance_MetadataAndSchema validates metadata and schema definition
+func TestKmsInstance_MetadataAndSchema(t *testing.T) {
+	a := kms.NewKmsInstance().(*kms.KmsInstance)
 
 	metaResp := &action.MetadataResponse{}
 	a.Metadata(context.Background(), action.MetadataRequest{}, metaResp)
-	assert.Equal(t, "tencentcloud_kms_instance_operation", metaResp.TypeName)
+	assert.Equal(t, "tencentcloud_kms_instance", metaResp.TypeName)
 
 	schemaResp := &action.SchemaResponse{}
 	a.Schema(context.Background(), action.SchemaRequest{}, schemaResp)

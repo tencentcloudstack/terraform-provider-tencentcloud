@@ -2,7 +2,6 @@ package kms
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-framework/action"
@@ -17,22 +16,21 @@ import (
 	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
 )
 
-var _ action.ActionWithConfigure = &KmsInstanceOperation{}
+var _ action.ActionWithConfigure = &KmsInstance{}
 
-// NewKmsInstanceOperation is the factory referenced by
+// NewKmsInstance is the factory referenced by
 // tencentcloud/framework/registry.go to register this action.
-func NewKmsInstanceOperation() action.Action {
-	return &KmsInstanceOperation{}
+func NewKmsInstance() action.Action {
+	return &KmsInstance{}
 }
 
-// KmsInstanceOperation implements action.Action for
-// tencentcloud_kms_instance_operation.
-type KmsInstanceOperation struct {
+// KmsInstance implements action.Action for tencentcloud_kms_instance.
+type KmsInstance struct {
 	fw.ActionWithConfigure
 }
 
-// KmsInstanceOperationModel maps the schema attributes.
-type KmsInstanceOperationModel struct {
+// KmsInstanceModel maps the schema attributes.
+type KmsInstanceModel struct {
 	InstanceChargeType    types.String `tfsdk:"instance_charge_type"`
 	ProductVersion        types.String `tfsdk:"product_version"`
 	ClientToken           types.String `tfsdk:"client_token"`
@@ -52,11 +50,11 @@ type KmsTagModel struct {
 	TagValue types.String `tfsdk:"tag_value"`
 }
 
-func (a *KmsInstanceOperation) Metadata(_ context.Context, _ action.MetadataRequest, resp *action.MetadataResponse) {
-	resp.TypeName = "tencentcloud_kms_instance_operation"
+func (a *KmsInstance) Metadata(_ context.Context, _ action.MetadataRequest, resp *action.MetadataResponse) {
+	resp.TypeName = "tencentcloud_kms_instance"
 }
 
-func (a *KmsInstanceOperation) Schema(_ context.Context, _ action.SchemaRequest, resp *action.SchemaResponse) {
+func (a *KmsInstance) Schema(_ context.Context, _ action.SchemaRequest, resp *action.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Description: "Provides an action to purchase and activate a prepaid KMS (Key Management Service) instance " +
 			"via the CreateKmsInstance API. This is a one-time operation; no cloud-side state is persisted after the action completes.",
@@ -98,7 +96,7 @@ func (a *KmsInstanceOperation) Schema(_ context.Context, _ action.SchemaRequest,
 						},
 						"tag_value": schema.StringAttribute{
 							Required:    true,
-							Description: "tag value.",
+							Description: "Tag value.",
 						},
 					},
 				},
@@ -108,8 +106,8 @@ func (a *KmsInstanceOperation) Schema(_ context.Context, _ action.SchemaRequest,
 }
 
 // Invoke is called to run the logic of the action.
-func (a *KmsInstanceOperation) Invoke(ctx context.Context, req action.InvokeRequest, resp *action.InvokeResponse) {
-	var data KmsInstanceOperationModel
+func (a *KmsInstance) Invoke(ctx context.Context, req action.InvokeRequest, resp *action.InvokeResponse) {
+	var data KmsInstanceModel
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 	if resp.Diagnostics.HasError() {
 		return
@@ -135,11 +133,11 @@ func (a *KmsInstanceOperation) Invoke(ctx context.Context, req action.InvokeRequ
 	request := kms.NewCreateKmsInstanceRequest()
 	request.InstanceChargeType = helper.String(data.InstanceChargeType.ValueString())
 
-	if !data.ProductVersion.IsNull() && !data.ProductVersion.IsUnknown() {
+	if !data.ProductVersion.IsNull() && !data.ProductVersion.IsUnknown() && data.ProductVersion.ValueString() != "" {
 		request.ProductVersion = helper.String(data.ProductVersion.ValueString())
 	}
 
-	if !data.ClientToken.IsNull() && !data.ClientToken.IsUnknown() {
+	if !data.ClientToken.IsNull() && !data.ClientToken.IsUnknown() && data.ClientToken.ValueString() != "" {
 		request.ClientToken = helper.String(data.ClientToken.ValueString())
 	}
 
@@ -166,9 +164,12 @@ func (a *KmsInstanceOperation) Invoke(ctx context.Context, req action.InvokeRequ
 			return
 		}
 		for _, tag := range tagModels {
-			t := &kms.Tag{}
-			if !tag.TagKey.IsNull() && !tag.TagKey.IsUnknown() {
-				t.TagKey = helper.String(tag.TagKey.ValueString())
+			if tag.TagKey.IsNull() || tag.TagKey.IsUnknown() || tag.TagKey.ValueString() == "" {
+				log.Printf("[WARN]%s tencentcloud_kms_instance skip a tag entry without tag_key", logId)
+				continue
+			}
+			t := &kms.Tag{
+				TagKey: helper.String(tag.TagKey.ValueString()),
 			}
 			if !tag.TagValue.IsNull() && !tag.TagValue.IsUnknown() {
 				t.TagValue = helper.String(tag.TagValue.ValueString())
@@ -180,28 +181,41 @@ func (a *KmsInstanceOperation) Invoke(ctx context.Context, req action.InvokeRequ
 	service := NewKmsService(a.Client())
 	response, err := service.CreateKmsInstance(ctx, request)
 	if err != nil {
+		resp.Diagnostics.AddError("creating kms_instance", err.Error())
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		log.Printf("[CRUD]%s tencentcloud_kms_instance invoke returned empty response", logId)
 		resp.Diagnostics.AddError(
-			fmt.Sprintf("creating kms instance_operation"),
-			err.Error(),
+			"creating kms_instance",
+			"CreateKmsInstance returned an empty response.",
+		)
+		return
+	}
+
+	instanceId := ""
+	if response.Response.InstanceId != nil {
+		instanceId = *response.Response.InstanceId
+	}
+	if instanceId == "" {
+		log.Printf("[CRUD]%s tencentcloud_kms_instance invoke returned empty instance_id", logId)
+		resp.Diagnostics.AddError(
+			"creating kms_instance",
+			"CreateKmsInstance returned an empty instance_id.",
 		)
 		return
 	}
 
 	// Framework actions cannot expose output attributes, so the API response
 	// fields are logged for observability only.
-	if response != nil && response.Response != nil {
-		instanceId := ""
-		if response.Response.InstanceId != nil {
-			instanceId = *response.Response.InstanceId
-		}
-		dealName := ""
-		if response.Response.DealName != nil {
-			dealName = *response.Response.DealName
-		}
-		billId := ""
-		if response.Response.BillId != nil {
-			billId = *response.Response.BillId
-		}
-		log.Printf("[DEBUG]%s kms instance_operation invoked, instance_id=%s, deal_name=%s, bill_id=%s", logId, instanceId, dealName, billId)
+	dealName := ""
+	if response.Response.DealName != nil {
+		dealName = *response.Response.DealName
 	}
+	billId := ""
+	if response.Response.BillId != nil {
+		billId = *response.Response.BillId
+	}
+	log.Printf("[DEBUG]%s tencentcloud_kms_instance invoked, instance_id=%s, deal_name=%s, bill_id=%s", logId, instanceId, dealName, billId)
 }

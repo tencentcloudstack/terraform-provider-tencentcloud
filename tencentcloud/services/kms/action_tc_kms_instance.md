@@ -5,7 +5,7 @@ Provides an action to purchase and activate a prepaid KMS (Key Management Servic
 Example Usage
 
 ```hcl
-action "tencentcloud_kms_instance_operation" "example" {
+action "tencentcloud_kms_instance" "example" {
   config {
     instance_charge_type = "PREPAID"
     product_version      = "professional"
