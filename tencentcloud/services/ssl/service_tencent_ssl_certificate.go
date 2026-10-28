@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"math"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
@@ -1592,55 +1591,59 @@ func (me *SSLService) UploadUpdateCertificateInstance(ctx context.Context, reque
 	return
 }
 
-// DescribeHostUploadUpdateRecordStatus polls DescribeHostUploadUpdateRecord
-// until the deploy record of the given old certificate reaches the completed
-// status (or the timeout is reached).
-func (me *SSLService) DescribeHostUploadUpdateRecordStatus(ctx context.Context, oldCertificateId string, deployRecordId uint64, timeout time.Duration) (errRet error) {
+// DescribeHostUploadUpdateRecordStatus queries DescribeHostUploadUpdateRecord
+// once and checks whether the deploy record of the given old certificate has
+// reached the completed status.
+func (me *SSLService) DescribeHostUploadUpdateRecordStatus(ctx context.Context, oldCertificateId string, deployRecordId uint64) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	err := resource.Retry(timeout, func() *resource.RetryError {
-		var recordList []*ssl.UploadUpdateRecordInfo
-		limit, offset := uint64(200), uint64(0)
-		for {
-			request := ssl.NewDescribeHostUploadUpdateRecordRequest()
-			request.Limit = &limit
-			request.Offset = &offset
-			request.OldCertificateId = helper.String(oldCertificateId)
+	var recordList []*ssl.UploadUpdateRecordInfo
+	limit, offset := uint64(200), uint64(0)
 
-			ratelimit.Check(request.GetAction())
-			result, e := me.client.UseSSLCertificateClient().DescribeHostUploadUpdateRecordWithContext(ctx, request)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			if result == nil || result.Response == nil || len(result.Response.DeployRecordList) == 0 {
-				break
-			}
-			recordList = append(recordList, result.Response.DeployRecordList...)
-			if result.Response.TotalCount == nil || uint64(len(recordList)) >= *result.Response.TotalCount {
-				break
-			}
-			offset += limit
+	// 分页拉取部署记录，根据查询返回数退出：返回不足一页即为最后一页。
+	for {
+		request := ssl.NewDescribeHostUploadUpdateRecordRequest()
+		request.Limit = &limit
+		request.Offset = &offset
+		request.OldCertificateId = helper.String(oldCertificateId)
+
+		ratelimit.Check(request.GetAction())
+
+		result, e := me.client.UseSSLCertificateClient().DescribeHostUploadUpdateRecordWithContext(ctx, request)
+		if e != nil {
+			errRet = e
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		if result == nil || result.Response == nil {
+			errRet = fmt.Errorf("DescribeHostUploadUpdateRecord response is empty")
+			return
 		}
 
-		for _, record := range recordList {
-			if record.Id != nil && *record.Id == deployRecordId {
-				if record.Status == nil {
-					return resource.RetryableError(fmt.Errorf("ssl uploadCertificateInstance deploy record %d status is nil", deployRecordId))
-				}
-				if *record.Status == SSLUploadUpdateRecordStatusInProgress {
-					return resource.RetryableError(fmt.Errorf("ssl uploadCertificateInstance deploy record %d is still in progress", deployRecordId))
-				}
-				return nil
-			}
+		recordList = append(recordList, result.Response.DeployRecordList...)
+		if uint64(len(result.Response.DeployRecordList)) < limit {
+			break
 		}
-		return resource.RetryableError(fmt.Errorf("ssl uploadCertificateInstance deploy record %d not found", deployRecordId))
-	})
-
-	if err != nil {
-		errRet = err
+		offset += limit
 	}
 
+	// 检查目标记录状态。
+	for _, record := range recordList {
+		if record == nil || record.Id == nil || *record.Id != deployRecordId {
+			continue
+		}
+		if record.Status == nil {
+			errRet = fmt.Errorf("ssl uploadCertificateInstance deploy record %d status is nil", deployRecordId)
+			return
+		}
+		if *record.Status == SSLUploadUpdateRecordStatusInProgress {
+			errRet = fmt.Errorf("ssl uploadCertificateInstance deploy record %d is still in progress", deployRecordId)
+			return
+		}
+		return nil
+	}
+
+	errRet = fmt.Errorf("ssl uploadCertificateInstance deploy record %d not found", deployRecordId)
 	return
 }

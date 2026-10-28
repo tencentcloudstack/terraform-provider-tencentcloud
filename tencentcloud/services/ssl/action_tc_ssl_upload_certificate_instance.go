@@ -238,7 +238,7 @@ func (a *SslUploadCertificateInstance) Invoke(ctx context.Context, req action.In
 	// malformed duration is reported as an error diagnostic. The schema
 	// validator normally rejects malformed values at plan time; this is the
 	// runtime safety net.
-	timeout, timeoutDiags := data.Timeouts.Invoke(ctx, defaultSslUploadCertificateInstanceInvokeTimeout)
+	_, timeoutDiags := data.Timeouts.Invoke(ctx, defaultSslUploadCertificateInstanceInvokeTimeout)
 	resp.Diagnostics.Append(timeoutDiags...)
 	if resp.Diagnostics.HasError() {
 		return
@@ -268,7 +268,7 @@ func (a *SslUploadCertificateInstance) Invoke(ctx context.Context, req action.In
 		return
 	}
 
-	if err := service.DescribeHostUploadUpdateRecordStatus(ctx, oldCertificateId, deployRecordId, timeout); err != nil {
+	if err := service.DescribeHostUploadUpdateRecordStatus(ctx, oldCertificateId, deployRecordId); err != nil {
 		resp.Diagnostics.AddError(
 			fmt.Sprintf("waiting for ssl upload certificate instance deploy record (%d) to complete", deployRecordId),
 			err.Error(),
