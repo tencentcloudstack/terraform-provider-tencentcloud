@@ -21,7 +21,9 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bdrc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dlc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mongodb"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssl"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssm"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tco"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 )
 
@@ -51,6 +53,8 @@ var actionFactories = []func() action.Action{
 	dlc.NewDlcInitializeTCLake,
 	mongodb.NewMongodbRestoreDbInstance,
 	antiddos.NewAntiddosUnblockResources,
+	tco.NewTcoProvisionRoleConfiguration,
+	ssl.NewSslUploadCertificateInstance,
 	ssm.NewSsmServiceAction,
 }
 

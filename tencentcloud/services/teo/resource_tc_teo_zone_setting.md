@@ -74,6 +74,10 @@ resource "tencentcloud_teo_zone_setting" "zone_setting" {
     switch = "off"
   }
 
+  jit_video_process {
+    switch = "off"
+  }
+
   max_age {
     follow_origin = "on"
     max_age_time  = 0
