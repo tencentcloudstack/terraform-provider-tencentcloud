@@ -57,6 +57,7 @@ var actionFactories = []func() action.Action{
 	tco.NewTcoProvisionRoleConfiguration,
 	ssl.NewSslUploadCertificateInstance,
 	kms.NewKmsInstance,
+	ssm.NewSsmServiceAction,
 }
 
 // frameworkResources returns every framework Resource factory.
