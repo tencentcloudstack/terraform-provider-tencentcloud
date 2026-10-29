@@ -2,7 +2,7 @@ Provides a resource to create a fwm cfw_share_role, used to manage the cloud fir
 
 Example Usage
 
-Configure the share role as `user`
+Configure the share role as user
 
 ```hcl
 resource "tencentcloud_fwm_cfw_share_role_config" "example" {
@@ -12,7 +12,7 @@ resource "tencentcloud_fwm_cfw_share_role_config" "example" {
 }
 ```
 
-Configure the share role as `none`
+Configure the share role as none
 
 ```hcl
 resource "tencentcloud_fwm_cfw_share_role_config" "example" {
