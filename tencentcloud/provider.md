@@ -710,6 +710,9 @@ tencentcloud_kms_white_box_key
 tencentcloud_kms_cloud_resource_attachment
 tencentcloud_kms_overwrite_white_box_device_fingerprints
 
+Action
+tencentcloud_kms_instance
+
 Tencent Kubernetes Engine(TKE)
 Data Source
 tencentcloud_kubernetes_clusters
