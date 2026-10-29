@@ -267,6 +267,7 @@ type TencentCloudClient struct {
 	billingv20180709Conn        *billing.Client
 	bdrcv20260330Conn           *bdrcv20260330.Client
 	igtmv20231024Conn           *igtmv20231024.Client
+	fwmv20250611Conn            *fwmv20250611.Client
 	ga2v20250115Conn            *ga2v20250115.Client
 	gsv20191118Conn             *gsv20191118.Client
 	keewidbv20220308Conn        *keewidbv20220308.Client
@@ -275,7 +276,6 @@ type TencentCloudClient struct {
 	dbdcv20201029Conn           *dbdcv20201029.Client
 	vcubev20220410Conn          *vcubev20220410.Client
 	advisorv20200721Conn        *advisorv20200721.Client
-	fwmv20250611Conn            *fwmv20250611.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1788,6 +1788,24 @@ func (me *TencentCloudClient) UseCfwClient(iacExtInfo ...IacExtInfo) *cfw.Client
 	return me.cfwConn
 }
 
+func (me *TencentCloudClient) UseFwmClient(iacExtInfo ...IacExtInfo) *fwmv20250611.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
+	if me.fwmv20250611Conn != nil {
+		me.fwmv20250611Conn.WithHttpTransport(&logRoundTripper)
+		return me.fwmv20250611Conn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.fwmv20250611Conn, _ = fwmv20250611.NewClient(me.Credential, me.Region, cpf)
+	me.fwmv20250611Conn.WithHttpTransport(&logRoundTripper)
+
+	return me.fwmv20250611Conn
+}
+
 func (me *TencentCloudClient) UseOceanusClient() *oceanus.Client {
 	if me.oceanusConn != nil {
 		return me.oceanusConn
@@ -2258,7 +2276,7 @@ func (me *TencentCloudClient) UseIgtmV20231024Client() *igtmv20231024.Client {
 	return me.igtmv20231024Conn
 }
 
-// UseFwmV20250611Client return FWM (Cloud Firewall) client for service
+// UseFwmV20250611Client return FWM client for service
 func (me *TencentCloudClient) UseFwmV20250611Client() *fwmv20250611.Client {
 	if me.fwmv20250611Conn != nil {
 		return me.fwmv20250611Conn

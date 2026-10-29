@@ -21,6 +21,7 @@ func TestAccTencentCloudTeoConfigGroupVersionDetailDataSource_basic(t *testing.T
 				resource.TestCheckResourceAttr("data.tencentcloud_teo_config_group_version_detail.teo_config_group_version_detail", "zone_id", "zone-2xkazzl8yf6k"),
 				resource.TestCheckResourceAttr("data.tencentcloud_teo_config_group_version_detail.teo_config_group_version_detail", "version_id", "ver-3lchxizh2mqn"),
 				resource.TestCheckResourceAttrSet("data.tencentcloud_teo_config_group_version_detail.teo_config_group_version_detail", "config_group_version_info.#"),
+				resource.TestCheckResourceAttrSet("data.tencentcloud_teo_config_group_version_detail.teo_config_group_version_detail", "config_group_version_info.0.source_version"),
 				resource.TestCheckResourceAttrSet("data.tencentcloud_teo_config_group_version_detail.teo_config_group_version_detail", "content"),
 			),
 		}},

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -27,13 +28,8 @@ func ResourceTencentCloudFwmEdgeAclRule() *schema.Resource {
 			"group_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Edge ACL rule group ID. The rule group is the parent container and must already exist before creating the rule.",
-			},
-
-			"order_index": {
-				Type:        schema.TypeInt,
-				Required:    true,
-				Description: "Rule execution order. The smaller the number, the higher the priority. It must start from 1 and increase strictly.",
 			},
 
 			"direction": {
@@ -111,6 +107,7 @@ func ResourceTencentCloudFwmEdgeAclRule() *schema.Resource {
 				Description: "Parameter template ID.",
 			},
 
+			// computed
 			"rule_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -122,54 +119,6 @@ func ResourceTencentCloudFwmEdgeAclRule() *schema.Resource {
 				Computed:    true,
 				Description: "Rule execution sequence returned by the server.",
 			},
-
-			"create_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Rule creation time.",
-			},
-
-			"update_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Rule last update time.",
-			},
-
-			"source_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Source address name (returned when type is template/instance/tag).",
-			},
-
-			"target_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Target address name (returned when type is template/instance/tag).",
-			},
-
-			"param_template_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Parameter template name (returned when type is template).",
-			},
-
-			"country_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Country name.",
-			},
-
-			"city_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "City name.",
-			},
-
-			"instance_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Instance name.",
-			},
 		},
 	}
 }
@@ -179,12 +128,13 @@ func resourceTencentCloudFwmEdgeAclRuleCreate(d *schema.ResourceData, meta inter
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId    = tccommon.GetLogId(tccommon.ContextNil)
-		ctx      = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		request  = fwmv20250611.NewCreateEdgeAclRuleRequest()
-		response = fwmv20250611.NewCreateEdgeAclRuleResponse()
-		groupId  string
-		ruleId   string
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		ctx       = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request   = fwmv20250611.NewCreateEdgeAclRuleRequest()
+		response  = fwmv20250611.NewCreateEdgeAclRuleResponse()
+		groupId   string
+		ruleId    string
+		direction int64
 	)
 
 	if v, ok := d.GetOk("group_id"); ok {
@@ -193,12 +143,8 @@ func resourceTencentCloudFwmEdgeAclRuleCreate(d *schema.ResourceData, meta inter
 	}
 
 	rule := fwmv20250611.EdgeAclRuleInfo{}
-
-	if v, ok := d.GetOkExists("order_index"); ok {
-		rule.OrderIndex = helper.IntInt64(v.(int))
-	}
-
 	if v, ok := d.GetOkExists("direction"); ok {
+		direction = int64(v.(int))
 		rule.Direction = helper.IntInt64(v.(int))
 	}
 
@@ -246,8 +192,8 @@ func resourceTencentCloudFwmEdgeAclRuleCreate(d *schema.ResourceData, meta inter
 		rule.ParamTemplateId = helper.String(v.(string))
 	}
 
+	rule.OrderIndex = helper.IntInt64(1)
 	request.Rules = []*fwmv20250611.EdgeAclRuleInfo{&rule}
-
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseFwmV20250611Client().CreateEdgeAclRuleWithContext(ctx, request)
 		if e != nil {
@@ -276,7 +222,7 @@ func resourceTencentCloudFwmEdgeAclRuleCreate(d *schema.ResourceData, meta inter
 	}
 
 	ruleId = *response.Response.RuleIds[0]
-	d.SetId(strings.Join([]string{groupId, ruleId}, tccommon.FILED_SP))
+	d.SetId(strings.Join([]string{groupId, ruleId, strconv.FormatInt(direction, 10)}, tccommon.FILED_SP))
 	return resourceTencentCloudFwmEdgeAclRuleRead(d, meta)
 }
 
@@ -290,17 +236,9 @@ func resourceTencentCloudFwmEdgeAclRuleRead(d *schema.ResourceData, meta interfa
 		service = NewFwmService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	)
 
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-
-	groupId := idSplit[0]
-	ruleId := idSplit[1]
-
-	var direction int64
-	if v, ok := d.GetOkExists("direction"); ok {
-		direction = int64(v.(int))
+	groupId, ruleId, direction, err := parseFwmEdgeAclRuleId(d.Id())
+	if err != nil {
+		return err
 	}
 
 	respData, err := service.DescribeFwmEdgeAclRuleById(ctx, groupId, ruleId, direction)
@@ -309,16 +247,12 @@ func resourceTencentCloudFwmEdgeAclRuleRead(d *schema.ResourceData, meta interfa
 	}
 
 	if respData == nil {
-		log.Printf("[CRUD] fwm_edge_acl_rule id=%s", d.Id())
+		log.Printf("[WARN]%s resource `tencentcloud_fwm_edge_acl_rule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
 
 	_ = d.Set("group_id", groupId)
-
-	if respData.Sequence != nil {
-		_ = d.Set("order_index", respData.Sequence)
-	}
 
 	if respData.Direction != nil {
 		_ = d.Set("direction", respData.Direction)
@@ -372,36 +306,8 @@ func resourceTencentCloudFwmEdgeAclRuleRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("rule_id", respData.RuleId)
 	}
 
-	if respData.CreateTime != nil {
-		_ = d.Set("create_time", respData.CreateTime)
-	}
-
-	if respData.UpdateTime != nil {
-		_ = d.Set("update_time", respData.UpdateTime)
-	}
-
-	if respData.SourceName != nil {
-		_ = d.Set("source_name", respData.SourceName)
-	}
-
-	if respData.TargetName != nil {
-		_ = d.Set("target_name", respData.TargetName)
-	}
-
-	if respData.ParamTemplateName != nil {
-		_ = d.Set("param_template_name", respData.ParamTemplateName)
-	}
-
-	if respData.CountryName != nil {
-		_ = d.Set("country_name", respData.CountryName)
-	}
-
-	if respData.CityName != nil {
-		_ = d.Set("city_name", respData.CityName)
-	}
-
-	if respData.InstanceName != nil {
-		_ = d.Set("instance_name", respData.InstanceName)
+	if respData.Sequence != nil {
+		_ = d.Set("sequence", respData.Sequence)
 	}
 
 	return nil
@@ -416,16 +322,13 @@ func resourceTencentCloudFwmEdgeAclRuleUpdate(d *schema.ResourceData, meta inter
 		ctx   = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 	)
 
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
+	groupId, ruleId, direction, err := parseFwmEdgeAclRuleId(d.Id())
+	if err != nil {
+		return err
 	}
 
-	groupId := idSplit[0]
-	ruleId := idSplit[1]
-
 	needChange := false
-	mutableArgs := []string{"order_index", "source_content", "target_content", "port", "protocol", "rule_action", "description", "scope", "belong_member_id", "param_template_id"}
+	mutableArgs := []string{"source_content", "target_content", "port", "protocol", "rule_action", "description", "scope", "belong_member_id", "param_template_id"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -436,18 +339,20 @@ func resourceTencentCloudFwmEdgeAclRuleUpdate(d *schema.ResourceData, meta inter
 	if needChange {
 		request := fwmv20250611.NewModifyEdgeAclRuleRequest()
 		rule := fwmv20250611.EdgeAclRuleInfo{}
-		rule.RuleId = helper.String(ruleId)
-
-		if v, ok := d.GetOkExists("order_index"); ok {
-			rule.OrderIndex = helper.IntInt64(v.(int))
-		}
-
 		if v, ok := d.GetOk("source_content"); ok {
 			rule.SourceContent = helper.String(v.(string))
 		}
 
+		if v, ok := d.GetOk("source_type"); ok {
+			rule.SourceType = helper.String(v.(string))
+		}
+
 		if v, ok := d.GetOk("target_content"); ok {
 			rule.TargetContent = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("target_type"); ok {
+			rule.TargetType = helper.String(v.(string))
 		}
 
 		if v, ok := d.GetOk("port"); ok {
@@ -478,9 +383,11 @@ func resourceTencentCloudFwmEdgeAclRuleUpdate(d *schema.ResourceData, meta inter
 			rule.ParamTemplateId = helper.String(v.(string))
 		}
 
-		request.GroupId = helper.String(groupId)
+		rule.RuleId = helper.String(ruleId)
+		rule.Direction = helper.Int64(direction)
+		rule.OrderIndex = helper.IntInt64(1)
 		request.Rule = &rule
-
+		request.GroupId = helper.String(groupId)
 		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseFwmV20250611Client().ModifyEdgeAclRuleWithContext(ctx, request)
 			if e != nil {
@@ -515,13 +422,10 @@ func resourceTencentCloudFwmEdgeAclRuleDelete(d *schema.ResourceData, meta inter
 		request = fwmv20250611.NewDeleteEdgeAclRuleRequest()
 	)
 
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
+	groupId, ruleId, _, err := parseFwmEdgeAclRuleId(d.Id())
+	if err != nil {
+		return err
 	}
-
-	groupId := idSplit[0]
-	ruleId := idSplit[1]
 
 	request.GroupId = helper.String(groupId)
 	request.RuleIds = []*string{helper.String(ruleId)}
@@ -551,4 +455,19 @@ func resourceTencentCloudFwmEdgeAclRuleDelete(d *schema.ResourceData, meta inter
 	}
 
 	return nil
+}
+
+// parseFwmEdgeAclRuleId splits the resource id <groupId>#<ruleId>#<direction>.
+func parseFwmEdgeAclRuleId(id string) (groupId, ruleId string, direction int64, err error) {
+	parts := strings.Split(id, tccommon.FILED_SP)
+	if len(parts) != 3 {
+		return "", "", 0, fmt.Errorf("id is broken, %s", id)
+	}
+
+	direction, err = strconv.ParseInt(parts[2], 10, 64)
+	if err != nil {
+		return "", "", 0, fmt.Errorf("id is broken, invalid direction in %s: %s", id, err.Error())
+	}
+
+	return parts[0], parts[1], direction, nil
 }
