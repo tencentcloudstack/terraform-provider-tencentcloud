@@ -1774,6 +1774,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_fwm_account_group":                                                        fwm.ResourceTencentCloudFwmAccountGroup(),
 			"tencentcloud_fwm_member_group_config":                                                  fwm.ResourceTencentCloudFwmMemberGroupConfig(),
 			"tencentcloud_fwm_cfw_managed_config":                                                   fwm.ResourceTencentCloudFwmCfwManagedConfig(),
+			"tencentcloud_fwm_cfw_share_role_config":                                                fwm.ResourceTencentCloudFwmCfwShareRoleConfig(),
 			"tencentcloud_fwm_rule_group":                                                           fwm.ResourceTencentCloudFwmRuleGroup(),
 			"tencentcloud_fwm_strategy":                                                             fwm.ResourceTencentCloudFwmStrategy(),
 			"tencentcloud_ga2_global_accelerator":                                                   ga2.ResourceTencentCloudGa2GlobalAccelerator(),

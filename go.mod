@@ -46,7 +46,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.3.173
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.3.40
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.186
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.199
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.202
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config v1.3.176
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.3.183
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.3.30
@@ -65,7 +65,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.970
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gs v1.3.58
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/keewidb v1.3.32
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.3.168
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.3.202
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.3.108
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.3.95
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb v1.3.102

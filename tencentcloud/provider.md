@@ -710,6 +710,9 @@ tencentcloud_kms_white_box_key
 tencentcloud_kms_cloud_resource_attachment
 tencentcloud_kms_overwrite_white_box_device_fingerprints
 
+Action
+tencentcloud_kms_instance
+
 Tencent Kubernetes Engine(TKE)
 Data Source
 tencentcloud_kubernetes_clusters
@@ -2822,5 +2825,6 @@ Resource
 tencentcloud_fwm_account_group
 tencentcloud_fwm_member_group_config
 tencentcloud_fwm_cfw_managed_config
+tencentcloud_fwm_cfw_share_role_config
 tencentcloud_fwm_rule_group
 tencentcloud_fwm_strategy
