@@ -71,7 +71,7 @@ import (
 	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
-	fwm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/fwm/v20250611"
+	fwmv20250611 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/fwm/v20250611"
 	ga2v20250115 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ga2/v20250115"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	gsv20191118 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gs/v20191118"
@@ -229,7 +229,6 @@ type TencentCloudClient struct {
 	wedatav20250806Conn   *wedatav20250806.Client
 	wafConn               *waf.Client
 	cfwConn               *cfw.Client
-	fwmConn               *fwm.Client
 	oceanusConn           *oceanus.Client
 	dasbConn              *dasb.Client
 	trocketConn           *trocket.Client
@@ -268,6 +267,7 @@ type TencentCloudClient struct {
 	billingv20180709Conn        *billing.Client
 	bdrcv20260330Conn           *bdrcv20260330.Client
 	igtmv20231024Conn           *igtmv20231024.Client
+	fwmv20250611Conn            *fwmv20250611.Client
 	ga2v20250115Conn            *ga2v20250115.Client
 	gsv20191118Conn             *gsv20191118.Client
 	keewidbv20220308Conn        *keewidbv20220308.Client
@@ -1788,22 +1788,22 @@ func (me *TencentCloudClient) UseCfwClient(iacExtInfo ...IacExtInfo) *cfw.Client
 	return me.cfwConn
 }
 
-func (me *TencentCloudClient) UseFwmClient(iacExtInfo ...IacExtInfo) *fwm.Client {
+func (me *TencentCloudClient) UseFwmClient(iacExtInfo ...IacExtInfo) *fwmv20250611.Client {
 	var logRoundTripper LogRoundTripper
 	if len(iacExtInfo) != 0 {
 		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
 	}
 
-	if me.fwmConn != nil {
-		me.fwmConn.WithHttpTransport(&logRoundTripper)
-		return me.fwmConn
+	if me.fwmv20250611Conn != nil {
+		me.fwmv20250611Conn.WithHttpTransport(&logRoundTripper)
+		return me.fwmv20250611Conn
 	}
 
 	cpf := me.NewClientProfile(300)
-	me.fwmConn, _ = fwm.NewClient(me.Credential, me.Region, cpf)
-	me.fwmConn.WithHttpTransport(&logRoundTripper)
+	me.fwmv20250611Conn, _ = fwmv20250611.NewClient(me.Credential, me.Region, cpf)
+	me.fwmv20250611Conn.WithHttpTransport(&logRoundTripper)
 
-	return me.fwmConn
+	return me.fwmv20250611Conn
 }
 
 func (me *TencentCloudClient) UseOceanusClient() *oceanus.Client {
@@ -2274,6 +2274,18 @@ func (me *TencentCloudClient) UseIgtmV20231024Client() *igtmv20231024.Client {
 	me.igtmv20231024Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.igtmv20231024Conn
+}
+
+// UseFwmV20250611Client return FWM client for service
+func (me *TencentCloudClient) UseFwmV20250611Client() *fwmv20250611.Client {
+	if me.fwmv20250611Conn != nil {
+		return me.fwmv20250611Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.fwmv20250611Conn, _ = fwmv20250611.NewClient(me.Credential, me.Region, cpf)
+	me.fwmv20250611Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.fwmv20250611Conn
 }
 
 // UseGa2V20250115Client return GA2 (Global Accelerator 2) client for service

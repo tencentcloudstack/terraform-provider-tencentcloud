@@ -922,6 +922,14 @@ The `action` object of `custom_rules` supports the following:
 * `action` - (Required, List) Security action configuration.
 * `weight` - (Required, Int) Action weight (10-100, must be multiples of 10). Sum of all weights must equal 100.
 
+The `action` object of `frequent_scanning_protection` supports the following:
+
+* `allow_action_parameters` - (Optional, List) Additional parameters when Name is Allow.
+* `challenge_action_parameters` - (Optional, List) Additional parameters when Name is Challenge.
+* `deny_action_parameters` - (Optional, List) Additional parameters when Name is Deny.
+* `name` - (Optional, String) Action name. Valid values: `Deny`, `Monitor`, `Allow`, `Challenge`, `Disabled`.
+* `redirect_action_parameters` - (Optional, List) Additional parameters when Name is Redirect.
+
 The `action` object of `managed_rule_groups` supports the following:
 
 * `name` - (Required, String) Specific actions for safe execution. valid values:.
@@ -1742,6 +1750,15 @@ The `first_part_config` object of `slow_post_config` supports the following:
 * `stat_time` - (Optional, Int) First segment statistical duration in seconds (default 5).
 * `switch` - (Optional, String) Switch. Valid values: `on`, `off`.
 
+The `frequent_scanning_protection` object of `managed_rules` supports the following:
+
+* `action_duration` - (Optional, String) Duration of the disposal action. Range 60-86400, unit seconds (s), e.g. `60s`.
+* `action` - (Optional, List) The disposal action. Required when `enabled` is `on`. SecurityAction Name supports `Deny`, `Monitor`, `JSChallenge`.
+* `block_threshold` - (Optional, Int) Cumulative block count threshold within the counting period. Range 1-4294967294.
+* `count_by` - (Optional, String) Request statistical matching method. Valid values: `http.request.xff_header_ip`, `http.request.ip`.
+* `counting_period` - (Optional, String) Statistics time window. Range 5-1800, unit seconds (s), e.g. `5s`.
+* `enabled` - (Optional, String) Whether the high-frequency scan protection rule is enabled. Valid values: `on`, `off`.
+
 The `high_rate_session_action` object of `session_rate_control` supports the following:
 
 * `allow_action_parameters` - (Optional, List) Additional parameters when Name is Allow.
@@ -1865,6 +1882,7 @@ The `managed_rules` object of `security_policy` supports the following:
 * `detection_only` - (Required, String) Indicates whether the evaluation mode is Enabled. it is valid only when the Enabled parameter is set to on. valid values: <li>on: Enabled. all managed rules take effect in observation mode.</li> <li>off: disabled. all managed rules take effect according to the actual configuration.</li>.
 * `enabled` - (Required, String) Indicates whether the managed rule is enabled. valid values: <li>on: enabled. all managed rules take effect as configured;</li> <li>off: disabled. all managed rules do not take effect.</li>.
 * `auto_update` - (Optional, List) Managed rule automatic update option.
+* `frequent_scanning_protection` - (Optional, List) High-frequency scan protection configuration option. When a visitor's frequent requests hit the managed rule configured as block within a period of time, all requests from that visitor are blocked.
 * `managed_rule_groups` - (Optional, Set) Configuration of the managed rule group. if this structure is passed as an empty array or the GroupId is not included in the list, it will be processed based on the default method.
 * `semantic_analysis` - (Optional, String) Whether the managed rule semantic analysis option is Enabled is valid only when the Enabled parameter is on. valid values: <li>on: enable. perform semantic analysis on requests before processing them;</li> <li>off: disable. process requests directly without semantic analysis.</li> <br/>default off.
 
@@ -2311,6 +2329,10 @@ The `except_user_rules` object of `except_config` exports the following:
 
 * `rule_id` - Rule ID. Output-only.
 * `update_time` - Update time.
+
+The `frequent_scanning_protection` object of `managed_rules` exports the following:
+
+* `id` - Rule ID of the high-frequency scan protection, output only.
 
 The `ip_table_rules` object of `ip_table_config` exports the following:
 
