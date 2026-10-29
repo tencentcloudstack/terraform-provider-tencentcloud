@@ -24,6 +24,65 @@ func NewFwmService(client *connectivity.TencentCloudClient) *FwmService {
 	return &FwmService{client: client}
 }
 
+func (me *FwmService) DescribeFwmOrganMemberById(ctx context.Context, appId, memberId string) (organMember *fwmv20250611.OrganMemberItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := fwmv20250611.NewDescribeOrganMembersRequest()
+	response := fwmv20250611.NewDescribeOrganMembersResponse()
+
+	operatorType := int64(1)
+	request.Filters = []*fwmv20250611.CommonFilter{
+		{
+			Name:         helper.String("AppId"),
+			Values:       helper.Strings([]string{appId}),
+			OperatorType: helper.Int64(operatorType),
+		},
+	}
+	request.Limit = helper.Int64(100)
+	request.Offset = helper.Int64(0)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = memberId
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseFwmClient(iacExtInfo).DescribeOrganMembersWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil || result.Response.Members == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe fwm organ members failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.Members) < 1 {
+		return
+	}
+
+	for _, member := range response.Response.Members {
+		if member.MemberId != nil && *member.MemberId == memberId {
+			organMember = member
+			return
+		}
+	}
+
+	return
+}
+
 func (me *FwmService) DescribeFwmAccountGroupById(ctx context.Context, groupId string) (accountGroup *fwmv20250611.AccountGroup, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
