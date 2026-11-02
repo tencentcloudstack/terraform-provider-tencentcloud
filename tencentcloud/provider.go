@@ -1778,6 +1778,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_fwm_rule_group":                                                           fwm.ResourceTencentCloudFwmRuleGroup(),
 			"tencentcloud_fwm_strategy":                                                             fwm.ResourceTencentCloudFwmStrategy(),
 			"tencentcloud_fwm_edge_acl_rule":                                                        fwm.ResourceTencentCloudFwmEdgeAclRule(),
+			"tencentcloud_fwm_security_group_rule":                                                  fwm.ResourceTencentCloudFwmSecurityGroupRule(),
+			"tencentcloud_fwm_nat_acl_rule":                                                         fwm.ResourceTencentCloudFwmNatAclRule(),
 			"tencentcloud_fwm_vpc_acl_rule":                                                         fwm.ResourceTencentCloudFwmVpcAclRule(),
 			"tencentcloud_ga2_global_accelerator":                                                   ga2.ResourceTencentCloudGa2GlobalAccelerator(),
 			"tencentcloud_ga2_global_accelerator_acl_policy":                                        ga2.ResourceTencentCloudGa2GlobalAcceleratorAclPolicy(),

@@ -250,6 +250,7 @@ type TencentCloudClient struct {
 	sslv20191205Conn            *sslCertificate.Client
 	postgresv20170312Conn       *postgre.Client
 	cfwv20190904Conn            *cfw.Client
+	fwmv20250611Conn            *fwmv20250611.Client
 	ccnv20170312Conn            *vpc.Client
 	tcssv20201101Conn           *tcss.Client
 	cloudauditv20190319Conn     *audit.Client
@@ -267,7 +268,6 @@ type TencentCloudClient struct {
 	billingv20180709Conn        *billing.Client
 	bdrcv20260330Conn           *bdrcv20260330.Client
 	igtmv20231024Conn           *igtmv20231024.Client
-	fwmv20250611Conn            *fwmv20250611.Client
 	ga2v20250115Conn            *ga2v20250115.Client
 	gsv20191118Conn             *gsv20191118.Client
 	keewidbv20220308Conn        *keewidbv20220308.Client
@@ -2083,6 +2083,18 @@ func (me *TencentCloudClient) UseCfwV20190904Client() *cfw.Client {
 	return me.cfwv20190904Conn
 }
 
+// UseFwmV20250611Client return FWM client for service
+func (me *TencentCloudClient) UseFwmV20250611Client() *fwmv20250611.Client {
+	if me.fwmv20250611Conn != nil {
+		return me.fwmv20250611Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.fwmv20250611Conn, _ = fwmv20250611.NewClient(me.Credential, me.Region, cpf)
+	me.fwmv20250611Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.fwmv20250611Conn
+}
+
 // UseCcnV20170312Client return CCN client for service
 func (me *TencentCloudClient) UseCcnV20170312Client() *vpc.Client {
 	if me.ccnv20170312Conn != nil {
@@ -2274,18 +2286,6 @@ func (me *TencentCloudClient) UseIgtmV20231024Client() *igtmv20231024.Client {
 	me.igtmv20231024Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.igtmv20231024Conn
-}
-
-// UseFwmV20250611Client return FWM client for service
-func (me *TencentCloudClient) UseFwmV20250611Client() *fwmv20250611.Client {
-	if me.fwmv20250611Conn != nil {
-		return me.fwmv20250611Conn
-	}
-	cpf := me.NewClientProfile(300)
-	me.fwmv20250611Conn, _ = fwmv20250611.NewClient(me.Credential, me.Region, cpf)
-	me.fwmv20250611Conn.WithHttpTransport(&LogRoundTripper{})
-
-	return me.fwmv20250611Conn
 }
 
 // UseGa2V20250115Client return GA2 (Global Accelerator 2) client for service
