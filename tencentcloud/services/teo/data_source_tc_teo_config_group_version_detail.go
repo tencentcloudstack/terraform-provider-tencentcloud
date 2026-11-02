@@ -36,37 +36,42 @@ func DataSourceTencentCloudTeoConfigGroupVersionDetail() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"version_id": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Computed:    true,
 							Description: "Version ID.",
 						},
 						"version_number": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "Version No.",
+						},
+						"source_version": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The source version ID that the config group version was derived from.",
 						},
 						"group_id": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "Configuraration group ID.",
 						},
 						"group_type": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "Configuration group type. Valid values: l7_acceleration: L7 acceleration configuration group. edge_functions: Edge function configuration group.",
 						},
 						"description": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "Version description.",
 						},
 						"status": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "Version status. Valid values: creating: Being created.inactive: Not effective.active: Effective.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "Version creation time. The time format follows the ISO 8601 standard and is represented in Coordinated Universal Time (UTC).",
 						},
 					},
@@ -134,6 +139,10 @@ func dataSourceTencentCloudTeoConfigGroupVersionDetailRead(d *schema.ResourceDat
 
 		if respData.ConfigGroupVersionInfo.VersionNumber != nil {
 			configGroupVersionInfoMap["version_number"] = respData.ConfigGroupVersionInfo.VersionNumber
+		}
+
+		if respData.ConfigGroupVersionInfo.SourceVersion != nil {
+			configGroupVersionInfoMap["source_version"] = respData.ConfigGroupVersionInfo.SourceVersion
 		}
 
 		if respData.ConfigGroupVersionInfo.GroupId != nil {

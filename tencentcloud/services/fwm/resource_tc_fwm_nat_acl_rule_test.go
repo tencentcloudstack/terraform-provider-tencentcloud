@@ -29,11 +29,11 @@ func newMockMetaFwmNatAclRule() *mockMetaFwmNatAclRule {
 	return &mockMetaFwmNatAclRule{client: &connectivity.TencentCloudClient{}}
 }
 
-func ptrStringFwm(s string) *string {
+func ptrStringFwmNatAcl(s string) *string {
 	return &s
 }
 
-func ptrInt64Fwm(i int64) *int64 {
+func ptrInt64FwmNatAcl(i int64) *int64 {
 	return &i
 }
 
@@ -56,19 +56,19 @@ func baseFwmNatAclRuleInput() map[string]interface{} {
 
 func newFwmNatAclRuleResp() *fwmv20250611.NatAclRuleResp {
 	return &fwmv20250611.NatAclRuleResp{
-		RuleId:        ptrStringFwm("fwmrule-xyz"),
-		Sequence:      ptrInt64Fwm(1),
-		Direction:     ptrInt64Fwm(0),
-		SourceContent: ptrStringFwm("1.1.1.1"),
-		SourceType:    ptrStringFwm("ip"),
-		TargetContent: ptrStringFwm("0.0.0.0/0"),
-		TargetType:    ptrStringFwm("ip"),
-		Port:          ptrStringFwm("80"),
-		Protocol:      ptrStringFwm("TCP"),
-		RuleAction:    ptrStringFwm("accept"),
-		Description:   ptrStringFwm("tf example nat acl rule"),
-		Scope:         ptrStringFwm("ALL"),
-		ScopeDesc:     ptrStringFwm("all scope"),
+		RuleId:        ptrStringFwmNatAcl("fwmrule-xyz"),
+		Sequence:      ptrInt64FwmNatAcl(1),
+		Direction:     ptrInt64FwmNatAcl(0),
+		SourceContent: ptrStringFwmNatAcl("1.1.1.1"),
+		SourceType:    ptrStringFwmNatAcl("ip"),
+		TargetContent: ptrStringFwmNatAcl("0.0.0.0/0"),
+		TargetType:    ptrStringFwmNatAcl("ip"),
+		Port:          ptrStringFwmNatAcl("80"),
+		Protocol:      ptrStringFwmNatAcl("TCP"),
+		RuleAction:    ptrStringFwmNatAcl("accept"),
+		Description:   ptrStringFwmNatAcl("tf example nat acl rule"),
+		Scope:         ptrStringFwmNatAcl("ALL"),
+		ScopeDesc:     ptrStringFwmNatAcl("all scope"),
 	}
 }
 
@@ -91,8 +91,8 @@ func TestFwmNatAclRule_Create(t *testing.T) {
 
 		resp := fwmv20250611.NewCreateNatAclRuleResponse()
 		resp.Response = &fwmv20250611.CreateNatAclRuleResponseParams{
-			RuleIds:   []*string{ptrStringFwm("fwmrule-xyz")},
-			RequestId: ptrStringFwm("fake-request-id"),
+			RuleIds:   []*string{ptrStringFwmNatAcl("fwmrule-xyz")},
+			RequestId: ptrStringFwmNatAcl("fake-request-id"),
 		}
 		return resp, nil
 	})
@@ -191,14 +191,14 @@ func TestFwmNatAclRule_Update(t *testing.T) {
 
 		resp := fwmv20250611.NewModifyNatAclRuleResponse()
 		resp.Response = &fwmv20250611.ModifyNatAclRuleResponseParams{
-			RequestId: ptrStringFwm("fake-request-id-update"),
+			RequestId: ptrStringFwmNatAcl("fake-request-id-update"),
 		}
 		return resp, nil
 	})
 
 	patches.ApplyMethodFunc(fwmClient, "DescribeNatAclRulesWithContext", func(_ context.Context, request *fwmv20250611.DescribeNatAclRulesRequest) (*fwmv20250611.DescribeNatAclRulesResponse, error) {
 		respRule := newFwmNatAclRuleResp()
-		respRule.Scope = ptrStringFwm("ap-guangzhou")
+		respRule.Scope = ptrStringFwmNatAcl("ap-guangzhou")
 		resp := fwmv20250611.NewDescribeNatAclRulesResponse()
 		resp.Response = &fwmv20250611.DescribeNatAclRulesResponseParams{
 			Rules: []*fwmv20250611.NatAclRuleResp{respRule},
@@ -234,7 +234,7 @@ func TestFwmNatAclRule_Delete(t *testing.T) {
 
 		resp := fwmv20250611.NewDeleteNatAclRuleResponse()
 		resp.Response = &fwmv20250611.DeleteNatAclRuleResponseParams{
-			RequestId: ptrStringFwm("fake-request-id-delete"),
+			RequestId: ptrStringFwmNatAcl("fake-request-id-delete"),
 		}
 		return resp, nil
 	})

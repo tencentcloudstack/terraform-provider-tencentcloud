@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_fwm_cfw_share_role_config
+```

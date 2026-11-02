@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_postgresql_instance: fix the wrong error variable passed to `RetryError` when `CreateBackupPlan` fails during creation, which swallowed the real API error and reported `empty non-retryable error received`
+```
