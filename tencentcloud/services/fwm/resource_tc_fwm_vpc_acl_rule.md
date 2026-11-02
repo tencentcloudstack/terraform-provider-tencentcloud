@@ -4,19 +4,18 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_fwm_vpc_acl_rule" "example" {
-  group_id          = "group-xxxx"
-  edge_id           = "ALL"
-  fw_group_id      = "ALL"
-  ip_version        = "ipv4"
-  source_type        = "ip"
-  source_content     = "10.0.0.0/24"
-  dest_type          = "ip"
-  dest_content       = "192.168.1.0/24"
-  protocol           = "TCP"
-  port               = "80"
-  rule_action        = "accept"
-  order_index        = 1
-  description        = "test rule"
+  group_id       = "fwmrg-y53zyyg7da"
+  edge_id        = "all"
+  fw_group_id    = "all"
+  ip_version     = "ipv4"
+  source_type    = "net"
+  source_content = "0.0.0.0/0"
+  dest_type      = "net"
+  dest_content   = "0.0.0.0/0"
+  protocol       = "ANY"
+  port           = "-1/-1"
+  rule_action    = "accept"
+  description    = "remark."
 }
 ```
 
@@ -25,5 +24,5 @@ Import
 FWM VPC ACL rule can be imported using the groupId#ruleId, e.g.
 
 ```
-terraform import tencentcloud_fwm_vpc_acl_rule.example group-xxxx#rule-xxxx
+terraform import tencentcloud_fwm_vpc_acl_rule.example fwmrg-y53zyyg7da#e42a7669-cf0c-42bb-b563-7cbf399a1f0f
 ```

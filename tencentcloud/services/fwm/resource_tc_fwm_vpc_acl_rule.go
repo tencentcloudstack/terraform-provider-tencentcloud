@@ -92,12 +92,6 @@ func ResourceTencentCloudFwmVpcAclRule() *schema.Resource {
 				Description: "Action: accept/drop/log (lowercase).",
 			},
 
-			"order_index": {
-				Type:        schema.TypeInt,
-				Required:    true,
-				Description: "Priority (starting from 1).",
-			},
-
 			"description": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -122,6 +116,7 @@ func ResourceTencentCloudFwmVpcAclRule() *schema.Resource {
 				Description: "Rule owner member account ID.",
 			},
 
+			// computed
 			"rule_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -132,102 +127,6 @@ func ResourceTencentCloudFwmVpcAclRule() *schema.Resource {
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "Priority (read-only, same source as order_index).",
-			},
-
-			"source_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Source asset name.",
-			},
-
-			"dest_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Destination asset name.",
-			},
-
-			"param_template_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Port template name.",
-			},
-
-			"fw_group_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Firewall group name.",
-			},
-
-			"invalid": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Whether the rule is invalid: 0 valid, 1 invalid.",
-			},
-
-			"app_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Member AppId.",
-			},
-
-			"uin": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Member Uin.",
-			},
-
-			"nickname": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Member nickname.",
-			},
-
-			"member_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Member ID.",
-			},
-
-			"node_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Department.",
-			},
-
-			"create_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Rule creation time.",
-			},
-
-			"update_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Rule modification time.",
-			},
-
-			"dns_parse_cnt": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Domain count.",
-			},
-
-			"hit_count": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Hit count.",
-			},
-
-			"last_hit_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Last hit time.",
-			},
-
-			"all_total_count": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Total count without filtering.",
 			},
 		},
 	}
@@ -276,10 +175,6 @@ func resourceTencentCloudFwmVpcAclRuleCreate(d *schema.ResourceData, meta interf
 		rule.RuleAction = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("order_index"); ok {
-		rule.OrderIndex = helper.Int64(int64(v.(int)))
-	}
-
 	if v, ok := d.GetOk("edge_id"); ok {
 		rule.EdgeId = helper.String(v.(string))
 	}
@@ -287,6 +182,10 @@ func resourceTencentCloudFwmVpcAclRuleCreate(d *schema.ResourceData, meta interf
 	if v, ok := d.GetOk("fw_group_id"); ok {
 		rule.FwGroupId = helper.String(v.(string))
 	}
+
+	// if v, ok := d.GetOk("ip_version"); ok {
+	// 	rule.IpVersion = helper.String(v.(string))
+	// }
 
 	if v, ok := d.GetOk("description"); ok {
 		rule.Description = helper.String(v.(string))
@@ -304,8 +203,8 @@ func resourceTencentCloudFwmVpcAclRuleCreate(d *schema.ResourceData, meta interf
 		rule.BelongMemberId = helper.String(v.(string))
 	}
 
+	rule.OrderIndex = helper.Int64(int64(1))
 	request.Rules = append(request.Rules, &rule)
-
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseFwmV20250611Client().CreateVpcAclRuleWithContext(ctx, request)
 		if e != nil {
@@ -327,7 +226,6 @@ func resourceTencentCloudFwmVpcAclRuleCreate(d *schema.ResourceData, meta interf
 		return reqErr
 	}
 
-	log.Printf("[DEBUG]%s create fwm vpc_acl_rule, d.Id()=%s", logId, d.Id())
 	if response.Response.RuleIds == nil || len(response.Response.RuleIds) == 0 {
 		return fmt.Errorf("create fwm vpc_acl_rule failed, RuleIds is empty")
 	}
@@ -355,13 +253,13 @@ func resourceTencentCloudFwmVpcAclRuleRead(d *schema.ResourceData, meta interfac
 	groupId := idSplit[0]
 	ruleId := idSplit[1]
 
-	respData, allTotalCount, err := service.DescribeFwmVpcAclRuleById(ctx, groupId, ruleId)
+	respData, err := service.DescribeFwmVpcAclRuleById(ctx, groupId, ruleId)
 	if err != nil {
 		return err
 	}
 
 	if respData == nil {
-		log.Printf("[CRUD] fwm_vpc_acl_rule id=%s", d.Id())
+		log.Printf("[WARN]%s resource `tencentcloud_fwm_vpc_acl_rule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
@@ -402,10 +300,6 @@ func resourceTencentCloudFwmVpcAclRuleRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("rule_action", respData.RuleAction)
 	}
 
-	if respData.Sequence != nil {
-		_ = d.Set("order_index", respData.Sequence)
-	}
-
 	if respData.Description != nil {
 		_ = d.Set("description", respData.Description)
 	}
@@ -424,73 +318,6 @@ func resourceTencentCloudFwmVpcAclRuleRead(d *schema.ResourceData, meta interfac
 
 	if respData.Sequence != nil {
 		_ = d.Set("sequence", respData.Sequence)
-	}
-
-	if respData.SourceName != nil {
-		_ = d.Set("source_name", respData.SourceName)
-	}
-
-	if respData.DestName != nil {
-		_ = d.Set("dest_name", respData.DestName)
-	}
-
-	if respData.ParamTemplateName != nil {
-		_ = d.Set("param_template_name", respData.ParamTemplateName)
-	}
-
-	if respData.FwGroupName != nil {
-		_ = d.Set("fw_group_name", respData.FwGroupName)
-	}
-
-	if respData.Invalid != nil {
-		_ = d.Set("invalid", respData.Invalid)
-	}
-
-	if respData.CreateTime != nil {
-		_ = d.Set("create_time", respData.CreateTime)
-	}
-
-	if respData.UpdateTime != nil {
-		_ = d.Set("update_time", respData.UpdateTime)
-	}
-
-	if respData.DnsParseCnt != nil {
-		_ = d.Set("dns_parse_cnt", respData.DnsParseCnt)
-	}
-
-	if respData.HitCount != nil {
-		_ = d.Set("hit_count", respData.HitCount)
-	}
-
-	if respData.LastHitTime != nil {
-		_ = d.Set("last_hit_time", respData.LastHitTime)
-	}
-
-	if respData.BelongMember != nil {
-		if respData.BelongMember.AppId != nil {
-			_ = d.Set("app_id", respData.BelongMember.AppId)
-		}
-
-		if respData.BelongMember.Uin != nil {
-			_ = d.Set("uin", respData.BelongMember.Uin)
-		}
-
-		if respData.BelongMember.Nickname != nil {
-			_ = d.Set("nickname", respData.BelongMember.Nickname)
-		}
-
-		if respData.BelongMember.MemberId != nil {
-			_ = d.Set("member_id", respData.BelongMember.MemberId)
-			_ = d.Set("belong_member_id", respData.BelongMember.MemberId)
-		}
-
-		if respData.BelongMember.NodeName != nil {
-			_ = d.Set("node_name", respData.BelongMember.NodeName)
-		}
-	}
-
-	if allTotalCount != nil {
-		_ = d.Set("all_total_count", allTotalCount)
 	}
 
 	return nil
@@ -514,7 +341,7 @@ func resourceTencentCloudFwmVpcAclRuleUpdate(d *schema.ResourceData, meta interf
 	ruleId := idSplit[1]
 
 	needChange := false
-	mutableArgs := []string{"protocol", "rule_action", "order_index", "description", "port", "param_template_id", "belong_member_id"}
+	mutableArgs := []string{"protocol", "rule_action", "description", "port", "param_template_id", "belong_member_id"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -551,10 +378,6 @@ func resourceTencentCloudFwmVpcAclRuleUpdate(d *schema.ResourceData, meta interf
 			rule.RuleAction = helper.String(v.(string))
 		}
 
-		if v, ok := d.GetOk("order_index"); ok {
-			rule.OrderIndex = helper.Int64(int64(v.(int)))
-		}
-
 		if v, ok := d.GetOk("edge_id"); ok {
 			rule.EdgeId = helper.String(v.(string))
 		}
@@ -579,6 +402,7 @@ func resourceTencentCloudFwmVpcAclRuleUpdate(d *schema.ResourceData, meta interf
 			rule.BelongMemberId = helper.String(v.(string))
 		}
 
+		rule.OrderIndex = helper.Int64(int64(1))
 		request.Rule = &rule
 		request.GroupId = helper.String(groupId)
 
