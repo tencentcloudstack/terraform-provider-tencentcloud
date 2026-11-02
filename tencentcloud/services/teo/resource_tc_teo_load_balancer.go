@@ -46,7 +46,7 @@ func ResourceTencentCloudTeoLoadBalancer() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Instance type. Valid values: `HTTP` (HTTP-specific, supports HTTP-specific and general origin groups, only referenced by site acceleration services); `GENERAL` (general, only supports general origin groups, can be referenced by site acceleration and Layer-4 proxy).",
+				Description: "Instance type. Valid values: `HTTP_V2` (HTTP-specific V2, supports adding HTTP-specific and general origin groups, only referenced by site acceleration services, supports selecting probe region with lower probe volume but lower sensitivity); `HTTP` (HTTP-specific V1, supports adding HTTP-specific and general origin groups, only referenced by site acceleration services, does not support selecting probe region, higher probe volume but higher sensitivity); `GENERAL` (general, only supports general origin groups, can be referenced by site acceleration and Layer-4 proxy, does not support selecting probe region, higher sensitivity).",
 			},
 
 			"origin_groups": {
@@ -155,6 +155,11 @@ func ResourceTencentCloudTeoLoadBalancer() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "Expected response content from origin, valid when `type` is `UDP`. Only ASCII visible characters allowed, max length 500.",
+						},
+						"probe_cluster": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Probe cluster region scope for health checks. Valid values: `global`, `mainland_china`, `overseas`. Default: `global`. Only supported when load balancer instance type is `HTTP_V2`.",
 						},
 					},
 				},
@@ -551,6 +556,9 @@ func buildTeoHealthChecker(v []interface{}) *teo.HealthChecker {
 	if val, ok := m["recv_context"].(string); ok && val != "" {
 		hc.RecvContext = helper.String(val)
 	}
+	if val, ok := m["probe_cluster"].(string); ok && val != "" {
+		hc.ProbeCluster = helper.String(val)
+	}
 	return hc
 }
 
@@ -618,6 +626,9 @@ func flattenTeoHealthChecker(hc *teo.HealthChecker) []map[string]interface{} {
 	}
 	if hc.RecvContext != nil {
 		m["recv_context"] = hc.RecvContext
+	}
+	if hc.ProbeCluster != nil {
+		m["probe_cluster"] = hc.ProbeCluster
 	}
 	return []map[string]interface{}{m}
 }
