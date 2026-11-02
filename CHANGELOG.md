@@ -1,3 +1,20 @@
+## 1.83.40(November‌ 2, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_fwm_cfw_share_role_config` ([#4593](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4593))
+* **New Resource:** `tencentcloud_fwm_edge_acl_rule` ([#4587](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4587))
+* **New Resource:** `tencentcloud_fwm_nat_acl_rule` ([#4588](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4588))
+* **New Resource:** `tencentcloud_fwm_security_group_rule` ([#4589](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4589))
+* **New Resource:** `tencentcloud_kms_instance` ([#4616](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4616))
+* **New Resource:** `tencentcloud_ssm_service` ([#4611](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4611))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_mongodb_instance: modify doc. ([#4619](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4619))
+* resource/tencentcloud_monitor_tmp_exporter_integration_v2: optimize code logic. ([#4622](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4622))
+* resource/tencentcloud_teo_load_balancer: add probe_cluster parameter to health_checker block and support HTTP_V2 type ([#4621](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4621))
+
 ## 1.83.39(October 28, 2026)
 
 FEATURES:
