@@ -42,13 +42,45 @@ resource "tencentcloud_teo_load_balancer" "example" {
 }
 ```
 
+### Example Usage - HTTP_V2 with probe_cluster
+
+```hcl
+resource "tencentcloud_teo_load_balancer" "example" {
+  zone_id = "zone-3fkff38fyw8s"
+  name    = "tf-example-v2"
+  type    = "HTTP_V2"
+
+  origin_groups {
+    priority        = "priority_1"
+    origin_group_id = "og-3w0nrwiw4c6v"
+  }
+
+  health_checker {
+    type               = "HTTP"
+    path               = "www.example.com/test"
+    port               = 80
+    interval           = 30
+    timeout            = 5
+    health_threshold   = 3
+    critical_threshold = 2
+    method             = "HEAD"
+    expected_codes     = ["200"]
+    follow_redirect    = "false"
+    probe_cluster      = "global"
+  }
+
+  steering_policy = "Pritory"
+  failover_policy = "OtherOriginGroup"
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
 
 * `name` - (Required, String) Load balancer instance name, 1-200 characters, allowed characters: `a-z`, `A-Z`, `0-9`, `_`, `-`.
 * `origin_groups` - (Required, List) Source origin group list with failover priority.
-* `type` - (Required, String, ForceNew) Instance type. Valid values: `HTTP` (HTTP-specific, supports HTTP-specific and general origin groups, only referenced by site acceleration services); `GENERAL` (general, only supports general origin groups, can be referenced by site acceleration and Layer-4 proxy).
+* `type` - (Required, String, ForceNew) Instance type. Valid values: `HTTP_V2` (HTTP-specific V2, supports adding HTTP-specific and general origin groups, only referenced by site acceleration services, supports selecting probe region with lower probe volume but lower sensitivity); `HTTP` (HTTP-specific V1, supports adding HTTP-specific and general origin groups, only referenced by site acceleration services, does not support selecting probe region, higher probe volume but higher sensitivity); `GENERAL` (general, only supports general origin groups, can be referenced by site acceleration and Layer-4 proxy, does not support selecting probe region, higher sensitivity).
 * `zone_id` - (Required, String, ForceNew) Site ID.
 * `failover_policy` - (Optional, String) Retry policy on request failure. Valid values: `OtherOriginGroup` (retry next priority origin group); `OtherRecordInOriginGroup` (retry another origin in the same group). Default: `OtherRecordInOriginGroup`.
 * `health_checker` - (Optional, List) Health check policy. If not set, health check is disabled by default.
@@ -71,6 +103,7 @@ The `health_checker` object supports the following:
 * `method` - (Optional, String) Request method, valid when `type` is `HTTP` or `HTTPS`. Valid values: `GET`, `HEAD`.
 * `path` - (Optional, String) Probe path, valid when `type` is `HTTP` or `HTTPS`. Full host/path without protocol, e.g., `www.example.com/test`.
 * `port` - (Optional, Int) Check port. Required when `type` is `HTTP`, `HTTPS`, `TCP`, or `UDP`.
+* `probe_cluster` - (Optional, String) Probe cluster region scope for health checks. Valid values: `global`, `mainland_china`, `overseas`. Default: `global`. Only supported when load balancer instance type is `HTTP_V2`.
 * `recv_context` - (Optional, String) Expected response content from origin, valid when `type` is `UDP`. Only ASCII visible characters allowed, max length 500.
 * `send_context` - (Optional, String) Content to send during health check, valid when `type` is `UDP`. Only ASCII visible characters allowed, max length 500.
 * `timeout` - (Optional, Int) Timeout in seconds for each health check. Must be less than `interval`. Default: 5.

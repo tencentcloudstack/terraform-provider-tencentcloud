@@ -31,12 +31,38 @@ func TestAccTencentCloudTeoLoadBalancerResource_basic(t *testing.T) {
 				Config: testAccTeoLoadBalancerUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_teo_load_balancer.example", "name", "tf-example-lb-updated"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_load_balancer.example", "health_checker.0.probe_cluster", "mainland_china"),
 				),
 			},
 			{
 				ResourceName:      "tencentcloud_teo_load_balancer.example",
 				ImportState:       true,
 				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudTeoLoadBalancerResource_probeCluster(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTeoLoadBalancerProbeCluster,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_teo_load_balancer.example", "type", "HTTP_V2"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_load_balancer.example", "health_checker.0.probe_cluster", "mainland_china"),
+				),
+			},
+			{
+				Config: testAccTeoLoadBalancerProbeClusterNotSet,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_teo_load_balancer.example", "health_checker.0.probe_cluster", ""),
+				),
 			},
 		},
 	})
@@ -103,9 +129,69 @@ resource "tencentcloud_teo_load_balancer" "example" {
     method             = "HEAD"
     expected_codes     = ["200", "301"]
     follow_redirect    = "true"
+    probe_cluster      = "mainland_china"
   }
 
   steering_policy = "Pritory"
   failover_policy = "OtherOriginGroup"
+}
+`
+
+const testAccTeoLoadBalancerProbeCluster = testAccTeoLoadBalancerBase + `
+resource "tencentcloud_teo_load_balancer" "example" {
+  zone_id = var.zone_id
+  name    = "tf-example-lb-probe-cluster"
+  type    = "HTTP_V2"
+
+  origin_groups {
+    priority        = "priority_1"
+    origin_group_id = var.origin_group_id
+  }
+
+  health_checker {
+    type               = "HTTP"
+    port               = 80
+    interval           = 60
+    timeout            = 5
+    health_threshold   = 3
+    critical_threshold = 2
+    path               = "example.com/health"
+    method             = "HEAD"
+    expected_codes     = ["200"]
+    follow_redirect    = "false"
+    probe_cluster      = "mainland_china"
+  }
+
+  steering_policy = "Pritory"
+  failover_policy = "OtherRecordInOriginGroup"
+}
+`
+
+const testAccTeoLoadBalancerProbeClusterNotSet = testAccTeoLoadBalancerBase + `
+resource "tencentcloud_teo_load_balancer" "example" {
+  zone_id = var.zone_id
+  name    = "tf-example-lb-probe-cluster"
+  type    = "HTTP_V2"
+
+  origin_groups {
+    priority        = "priority_1"
+    origin_group_id = var.origin_group_id
+  }
+
+  health_checker {
+    type               = "HTTP"
+    port               = 80
+    interval           = 60
+    timeout            = 5
+    health_threshold   = 3
+    critical_threshold = 2
+    path               = "example.com/health"
+    method             = "HEAD"
+    expected_codes     = ["200"]
+    follow_redirect    = "false"
+  }
+
+  steering_policy = "Pritory"
+  failover_policy = "OtherRecordInOriginGroup"
 }
 `
