@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -36,7 +37,7 @@ func ResourceTencentCloudFwmNatAclRule() *schema.Resource {
 				Type:        schema.TypeInt,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Rule direction: 0-outbound, 1-inbound.",
+				Description: "Rule direction: 0-outbound, 1-inbound. It is also part of the resource id, so changing it will recreate the rule.",
 			},
 
 			"source_content": {
@@ -77,12 +78,6 @@ func ResourceTencentCloudFwmNatAclRule() *schema.Resource {
 				Description: "Action: accept/drop/log (lowercase).",
 			},
 
-			"order_index": {
-				Type:        schema.TypeInt,
-				Required:    true,
-				Description: "Priority, >=1, per-direction numbering.",
-			},
-
 			"scope": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -113,166 +108,17 @@ func ResourceTencentCloudFwmNatAclRule() *schema.Resource {
 				Description: "Member account ID (required when source/target type in instance/tag/template/addressbook).",
 			},
 
+			// computed
 			"rule_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Rule ID, part of composite id.",
+				Description: "Rule ID, it is part of the resource id `group_id#rule_id#direction`.",
 			},
 
 			"sequence": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Sequence, display mirror of order_index.",
-			},
-
-			"scope_desc": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Effective range description (language-dependent display).",
-			},
-
-			"create_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Create time.",
-			},
-
-			"update_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Update time.",
-			},
-
-			"source_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Source asset name (display only).",
-			},
-
-			"target_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Target asset name (display only).",
-			},
-
-			"param_template_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Port template name (display only).",
-			},
-
-			"fw_ins_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Firewall instance ID.",
-			},
-
-			"country_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Country name.",
-			},
-
-			"city_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "City name.",
-			},
-
-			"country_code": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Country code.",
-			},
-
-			"city_code": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "City code.",
-			},
-
-			"country_key": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Country key.",
-			},
-
-			"city_key": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "City key.",
-			},
-
-			"is_region": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Whether region rule: 0-no, 1-yes.",
-			},
-
-			"cloud_code": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Cloud vendor code.",
-			},
-
-			"is_cloud": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Whether cloud vendor rule: 0-no, 1-yes.",
-			},
-
-			"invalid": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Whether rule is invalid: 0-valid, 1-invalid.",
-			},
-
-			"app_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Member AppId (from BelongMember).",
-			},
-
-			"uin": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Member Uin (from BelongMember).",
-			},
-
-			"nickname": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Member nickname (from BelongMember).",
-			},
-
-			"member_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Member ID (from BelongMember).",
-			},
-
-			"node_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Member department (from BelongMember).",
-			},
-
-			"dns_parse_cnt": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Domain count.",
-			},
-
-			"hit_count": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Hit count.",
-			},
-
-			"last_hit_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Last hit time.",
+				Description: "Rule priority sequence returned by the server.",
 			},
 		},
 	}
@@ -283,12 +129,13 @@ func resourceTencentCloudFwmNatAclRuleCreate(d *schema.ResourceData, meta interf
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId    = tccommon.GetLogId(tccommon.ContextNil)
-		ctx      = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		request  = fwmv20250611.NewCreateNatAclRuleRequest()
-		response = fwmv20250611.NewCreateNatAclRuleResponse()
-		groupId  string
-		ruleId   string
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		ctx       = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request   = fwmv20250611.NewCreateNatAclRuleRequest()
+		response  = fwmv20250611.NewCreateNatAclRuleResponse()
+		groupId   string
+		ruleId    string
+		direction int64
 	)
 
 	if v, ok := d.GetOk("group_id"); ok {
@@ -315,14 +162,12 @@ func resourceTencentCloudFwmNatAclRuleCreate(d *schema.ResourceData, meta interf
 	if v, ok := d.GetOk("rule_action"); ok {
 		rule.RuleAction = helper.String(v.(string))
 	}
-	if v, ok := d.GetOkExists("order_index"); ok {
-		rule.OrderIndex = helper.Int64(int64(v.(int)))
-	}
 	if v, ok := d.GetOk("scope"); ok {
 		rule.Scope = helper.String(v.(string))
 	}
 	if v, ok := d.GetOkExists("direction"); ok {
-		rule.Direction = helper.Int64(int64(v.(int)))
+		direction = int64(v.(int))
+		rule.Direction = helper.Int64(direction)
 	}
 	if v, ok := d.GetOk("port"); ok {
 		rule.Port = helper.String(v.(string))
@@ -336,6 +181,8 @@ func resourceTencentCloudFwmNatAclRuleCreate(d *schema.ResourceData, meta interf
 	if v, ok := d.GetOk("belong_member_id"); ok {
 		rule.BelongMemberId = helper.String(v.(string))
 	}
+
+	rule.OrderIndex = helper.Int64(int64(1))
 	request.Rules = []*fwmv20250611.NatAclRule{&rule}
 
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -364,7 +211,7 @@ func resourceTencentCloudFwmNatAclRuleCreate(d *schema.ResourceData, meta interf
 		return fmt.Errorf("Create fwm nat acl rule failed, RuleIds is empty.")
 	}
 	ruleId = *response.Response.RuleIds[0]
-	d.SetId(strings.Join([]string{groupId, ruleId}, tccommon.FILED_SP))
+	d.SetId(strings.Join([]string{groupId, ruleId, strconv.FormatInt(direction, 10)}, tccommon.FILED_SP))
 	return resourceTencentCloudFwmNatAclRuleRead(d, meta)
 }
 
@@ -378,15 +225,10 @@ func resourceTencentCloudFwmNatAclRuleRead(d *schema.ResourceData, meta interfac
 		service = FwmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
+	groupId, ruleId, direction, err := parseFwmNatAclRuleId(d.Id())
+	if err != nil {
+		return err
 	}
-
-	groupId := idSplit[0]
-	ruleId := idSplit[1]
-
-	direction := int64(d.Get("direction").(int))
 
 	respData, err := service.DescribeFwmNatAclRuleById(ctx, groupId, ruleId, direction)
 	if err != nil {
@@ -401,11 +243,11 @@ func resourceTencentCloudFwmNatAclRuleRead(d *schema.ResourceData, meta interfac
 	}
 
 	if respData == nil {
-		log.Printf("[CRUD] fwm_nat_acl_rule id=%s", d.Id())
+		log.Printf("[WARN]%s resource `tencentcloud_fwm_nat_acl_rule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
-
+	_ = d.Set("group_id", groupId)
 	if respData.RuleId != nil {
 		_ = d.Set("rule_id", respData.RuleId)
 	}
@@ -431,7 +273,6 @@ func resourceTencentCloudFwmNatAclRuleRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("rule_action", respData.RuleAction)
 	}
 	if respData.Sequence != nil {
-		_ = d.Set("order_index", respData.Sequence)
 		_ = d.Set("sequence", respData.Sequence)
 	}
 	if respData.Scope != nil {
@@ -446,83 +287,8 @@ func resourceTencentCloudFwmNatAclRuleRead(d *schema.ResourceData, meta interfac
 	if respData.ParamTemplateId != nil {
 		_ = d.Set("param_template_id", respData.ParamTemplateId)
 	}
-	if respData.BelongMember != nil {
-		if respData.BelongMember.MemberId != nil {
-			_ = d.Set("belong_member_id", respData.BelongMember.MemberId)
-			_ = d.Set("member_id", respData.BelongMember.MemberId)
-		}
-		if respData.BelongMember.AppId != nil {
-			_ = d.Set("app_id", respData.BelongMember.AppId)
-		}
-		if respData.BelongMember.Uin != nil {
-			_ = d.Set("uin", respData.BelongMember.Uin)
-		}
-		if respData.BelongMember.Nickname != nil {
-			_ = d.Set("nickname", respData.BelongMember.Nickname)
-		}
-		if respData.BelongMember.NodeName != nil {
-			_ = d.Set("node_name", respData.BelongMember.NodeName)
-		}
-	}
-	if respData.ScopeDesc != nil {
-		_ = d.Set("scope_desc", respData.ScopeDesc)
-	}
-	if respData.CreateTime != nil {
-		_ = d.Set("create_time", respData.CreateTime)
-	}
-	if respData.UpdateTime != nil {
-		_ = d.Set("update_time", respData.UpdateTime)
-	}
-	if respData.SourceName != nil {
-		_ = d.Set("source_name", respData.SourceName)
-	}
-	if respData.TargetName != nil {
-		_ = d.Set("target_name", respData.TargetName)
-	}
-	if respData.ParamTemplateName != nil {
-		_ = d.Set("param_template_name", respData.ParamTemplateName)
-	}
-	if respData.FwInsId != nil {
-		_ = d.Set("fw_ins_id", respData.FwInsId)
-	}
-	if respData.CountryName != nil {
-		_ = d.Set("country_name", respData.CountryName)
-	}
-	if respData.CityName != nil {
-		_ = d.Set("city_name", respData.CityName)
-	}
-	if respData.CountryCode != nil {
-		_ = d.Set("country_code", respData.CountryCode)
-	}
-	if respData.CityCode != nil {
-		_ = d.Set("city_code", respData.CityCode)
-	}
-	if respData.CountryKey != nil {
-		_ = d.Set("country_key", respData.CountryKey)
-	}
-	if respData.CityKey != nil {
-		_ = d.Set("city_key", respData.CityKey)
-	}
-	if respData.IsRegion != nil {
-		_ = d.Set("is_region", respData.IsRegion)
-	}
-	if respData.CloudCode != nil {
-		_ = d.Set("cloud_code", respData.CloudCode)
-	}
-	if respData.IsCloud != nil {
-		_ = d.Set("is_cloud", respData.IsCloud)
-	}
-	if respData.Invalid != nil {
-		_ = d.Set("invalid", respData.Invalid)
-	}
-	if respData.DnsParseCnt != nil {
-		_ = d.Set("dns_parse_cnt", respData.DnsParseCnt)
-	}
-	if respData.HitCount != nil {
-		_ = d.Set("hit_count", respData.HitCount)
-	}
-	if respData.LastHitTime != nil {
-		_ = d.Set("last_hit_time", respData.LastHitTime)
+	if respData.BelongMember != nil && respData.BelongMember.MemberId != nil {
+		_ = d.Set("belong_member_id", respData.BelongMember.MemberId)
 	}
 
 	return nil
@@ -538,18 +304,16 @@ func resourceTencentCloudFwmNatAclRuleUpdate(d *schema.ResourceData, meta interf
 		request = fwmv20250611.NewModifyNatAclRuleRequest()
 	)
 
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
+	groupId, ruleId, direction, err := parseFwmNatAclRuleId(d.Id())
+	if err != nil {
+		return err
 	}
-
-	groupId := idSplit[0]
-	ruleId := idSplit[1]
 
 	request.GroupId = helper.String(groupId)
 
 	rule := fwmv20250611.NatAclRule{}
 	rule.RuleId = helper.String(ruleId)
+	rule.Direction = helper.Int64(direction)
 	if v, ok := d.GetOk("source_content"); ok {
 		rule.SourceContent = helper.String(v.(string))
 	}
@@ -568,14 +332,11 @@ func resourceTencentCloudFwmNatAclRuleUpdate(d *schema.ResourceData, meta interf
 	if v, ok := d.GetOk("rule_action"); ok {
 		rule.RuleAction = helper.String(v.(string))
 	}
-	if v, ok := d.GetOkExists("order_index"); ok {
+	if v, ok := d.GetOkExists("sequence"); ok {
 		rule.OrderIndex = helper.Int64(int64(v.(int)))
 	}
 	if v, ok := d.GetOk("scope"); ok {
 		rule.Scope = helper.String(v.(string))
-	}
-	if v, ok := d.GetOkExists("direction"); ok {
-		rule.Direction = helper.Int64(int64(v.(int)))
 	}
 	if v, ok := d.GetOk("port"); ok {
 		rule.Port = helper.String(v.(string))
@@ -624,13 +385,10 @@ func resourceTencentCloudFwmNatAclRuleDelete(d *schema.ResourceData, meta interf
 		request = fwmv20250611.NewDeleteNatAclRuleRequest()
 	)
 
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
+	groupId, ruleId, _, err := parseFwmNatAclRuleId(d.Id())
+	if err != nil {
+		return err
 	}
-
-	groupId := idSplit[0]
-	ruleId := idSplit[1]
 
 	request.GroupId = helper.String(groupId)
 	request.RuleIds = []*string{helper.String(ruleId)}
@@ -661,4 +419,19 @@ func resourceTencentCloudFwmNatAclRuleDelete(d *schema.ResourceData, meta interf
 	}
 
 	return nil
+}
+
+// parseFwmNatAclRuleId splits the resource id <groupId>#<ruleId>#<direction>.
+func parseFwmNatAclRuleId(id string) (groupId, ruleId string, direction int64, err error) {
+	parts := strings.Split(id, tccommon.FILED_SP)
+	if len(parts) != 3 {
+		return "", "", 0, fmt.Errorf("id is broken, %s", id)
+	}
+
+	direction, err = strconv.ParseInt(parts[2], 10, 64)
+	if err != nil {
+		return "", "", 0, fmt.Errorf("id is broken, invalid direction in %s: %s", id, err.Error())
+	}
+
+	return parts[0], parts[1], direction, nil
 }

@@ -4,25 +4,24 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_fwm_nat_acl_rule" "example" {
-  group_id        = "fwmrg-abc"
-  direction       = 0
-  source_content  = "1.1.1.1"
-  source_type     = "ip"
-  target_content  = "0.0.0.0/0"
-  target_type     = "ip"
-  protocol        = "TCP"
-  rule_action     = "accept"
-  order_index     = 1
-  scope           = "ALL"
-  port            = "80"
-  description     = "tf example nat acl rule"
+  group_id       = "fwmrg-in3q0qkq0n"
+  direction      = 0
+  source_content = "0.0.0.0/0"
+  source_type    = "net"
+  target_content = "0.0.0.0/0"
+  target_type    = "net"
+  protocol       = "ANY"
+  rule_action    = "accept"
+  scope          = "ALL"
+  port           = "-1/-1"
+  description    = "remark."
 }
 ```
 
 Import
 
-FWM NAT ACL rule can be imported using the groupId#ruleId, e.g.
+FWM NAT ACL rule can be imported using the groupId#ruleId#direction, e.g.
 
 ```
-terraform import tencentcloud_fwm_nat_acl_rule.example fwmrg-abc#fwmrule-xyz
+terraform import tencentcloud_fwm_nat_acl_rule.example fwmrg-in3q0qkq0n#7520b898-30ba-415d-ab27-ff4542071ea9#0
 ```

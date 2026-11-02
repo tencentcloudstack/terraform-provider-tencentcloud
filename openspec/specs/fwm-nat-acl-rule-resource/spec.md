@@ -87,21 +87,27 @@ The input struct `NatAclRule` and output struct `NatAclRuleResp` use different n
 - **WHEN** Read runs
 - **THEN** state `belong_member_id = "mem-123"`.
 
-### Requirement: Resource ID MUST be composite GroupId + RuleId
+### Requirement: Resource ID MUST be composite GroupId + RuleId + Direction
 
-After Create, the Terraform resource ID SHALL be `strings.Join([]string{groupId, ruleId}, tccommon.FILED_SP)` (`FILED_SP = "#"`). Read, Update, and Delete SHALL split `d.Id()` by `tccommon.FILED_SP` into `groupId` (index 0) and `ruleId` (index 1), erroring if the split length is not 2.
+After Create, the Terraform resource ID SHALL be `strings.Join([]string{groupId, ruleId, strconv.FormatInt(direction, 10)}, tccommon.FILED_SP)` (`FILED_SP = "#"`). Read, Update, and Delete SHALL split `d.Id()` by `tccommon.FILED_SP` into `groupId` (index 0), `ruleId` (index 1) and `direction` (index 2, parsed as int64), erroring if the split length is not 3 or if `direction` is not a valid integer. Read MUST use the `direction` parsed from the ID (instead of the state value) when calling `DescribeNatAclRuleById`.
 
-#### Scenario: ID encodes both GroupId and RuleId
+#### Scenario: ID encodes GroupId, RuleId and Direction
 
-- **GIVEN** Create succeeded with `GroupId = "fwmrg-abc"` and returned `RuleIds[0] = "fwmrule-xyz"`
+- **GIVEN** Create succeeded with `GroupId = "fwmrg-abc"`, `Direction = 0` and returned `RuleIds[0] = "fwmrule-xyz"`
 - **WHEN** Create completes
-- **THEN** `d.Id()` returns `"fwmrg-abc#fwmrule-xyz"`.
+- **THEN** `d.Id()` returns `"fwmrg-abc#fwmrule-xyz#0"`.
 
-#### Scenario: Import supports GroupId:RuleId
+#### Scenario: Import supports GroupId#RuleId#Direction
 
-- **GIVEN** the user runs `terraform import tencentcloud_fwm_nat_acl_rule.my fwmrg-abc:fwmrule-xyz`
+- **GIVEN** the user runs `terraform import tencentcloud_fwm_nat_acl_rule.my fwmrg-abc#fwmrule-xyz#1`
 - **WHEN** import runs
-- **THEN** the resource ID is normalized to `"fwmrg-abc#fwmrule-xyz"` and Read populates state.
+- **THEN** Read parses `direction = 1` from the ID, issues `DescribeNatAclRules` with `Direction = 1`, and populates state.
+
+#### Scenario: Broken ID is rejected
+
+- **GIVEN** `d.Id()` is `"fwmrg-abc#fwmrule-xyz"` (2 segments) or `"fwmrg-abc#fwmrule-xyz#inbound"` (invalid direction)
+- **WHEN** Read, Update or Delete runs
+- **THEN** the handler returns an `id is broken` error without calling the API.
 
 ### Requirement: Create MUST pass a single-element Rules array and bind RuleIds[0]
 
@@ -110,7 +116,7 @@ The Create callback SHALL build a `CreateNatAclRuleRequest` with `Rules` contain
 #### Scenario: Create issues a single-element Rules request
 
 - **WHEN** the user runs `terraform apply` with a valid resource config
-- **THEN** exactly one `CreateNatAclRule` request is issued with `Rules` of length 1, and `d.Id()` is set to `GroupId#RuleId` from `RuleIds[0]`.
+- **THEN** exactly one `CreateNatAclRule` request is issued with `Rules` of length 1, and `d.Id()` is set to `GroupId#RuleId#Direction` from `RuleIds[0]` and the configured `direction`.
 
 #### Scenario: Empty RuleIds returns NonRetryableError
 
@@ -161,7 +167,7 @@ The Delete callback SHALL build a `DeleteNatAclRuleRequest` with `GroupId` and `
 
 ### Requirement: Documentation and unit test MUST follow project conventions
 
-- The HCL example markdown SHALL live at `tencentcloud/services/fwm/resource_tc_fwm_nat_acl_rule.md` containing a one-line description mentioning FWM, an Example Usage (with `jsonencode` if JSON string fields involved), and an Import section documenting `GroupId:RuleId`.
+- The HCL example markdown SHALL live at `tencentcloud/services/fwm/resource_tc_fwm_nat_acl_rule.md` containing a one-line description mentioning FWM, an Example Usage (with `jsonencode` if JSON string fields involved), and an Import section documenting `GroupId#RuleId#Direction`.
 - A unit test SHALL live at `tencentcloud/services/fwm/resource_tc_fwm_nat_acl_rule_test.go` using gomonkey to mock the cloud APIs (NOT the terraform test suite), covering Create, Read, Update, and Delete (including the `ResourceNotFound` idempotent case).
 - Running `make doc` SHALL regenerate `website/docs/r/fwm_nat_acl_rule.html.markdown`.
 

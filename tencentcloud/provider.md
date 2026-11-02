@@ -2579,9 +2579,6 @@ tencentcloud_cfw_cluster_vpc_fw_switch
 tencentcloud_cfw_ips_mode_switch
 tencentcloud_cfw_cluster_nat_fw_switch
 tencentcloud_cfw_cluster_fw_bypass_config
-Firewall Managed(FWM)
-Resource
-tencentcloud_fwm_nat_acl_rule
 
 Bastion Host(BH)
 Data Source
@@ -2833,3 +2830,4 @@ tencentcloud_fwm_rule_group
 tencentcloud_fwm_strategy
 tencentcloud_fwm_edge_acl_rule
 tencentcloud_fwm_security_group_rule
+tencentcloud_fwm_nat_acl_rule
