@@ -502,3 +502,54 @@ func (me *FwmService) DeleteFwmSecurityGroupRuleById(ctx context.Context, groupI
 
 	return nil
 }
+
+func (me *FwmService) DescribeFwmNatAclRuleById(ctx context.Context, groupId, ruleId string, direction int64) (rule *fwmv20250611.NatAclRuleResp, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := fwmv20250611.NewDescribeNatAclRulesRequest()
+	request.GroupId = helper.String(groupId)
+	request.Direction = helper.Int64(direction)
+	request.Limit = helper.Int64(100)
+	request.Offset = helper.Int64(0)
+	request.Filters = []*fwmv20250611.CommonFilter{
+		{
+			Name:         helper.String("RuleId"),
+			Values:       []*string{helper.String(ruleId)},
+			OperatorType: helper.Int64(1),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseFwmV20250611Client().DescribeNatAclRulesWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe fwm_nat_acl_rule failed, Response is nil."))
+		}
+
+		if len(response.Response.Rules) == 0 {
+			return nil
+		}
+
+		rule = response.Response.Rules[0]
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
