@@ -14,7 +14,7 @@ Use this data source to query detailed information of teo config group version d
 ## Example Usage
 
 ```hcl
-data "tencentcloud_teo_config_group_version_detail" "teo_config_group_version_detail" {
+data "tencentcloud_teo_config_group_version_detail" "example" {
   zone_id    = "zone-2qtuhspy7cr6"
   version_id = "sv-2quhspyeq8r6"
 }
@@ -33,6 +33,14 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `config_group_version_info` - Version information.
+  * `create_time` - Version creation time. The time format follows the ISO 8601 standard and is represented in Coordinated Universal Time (UTC).
+  * `description` - Version description.
+  * `group_id` - Configuraration group ID.
+  * `group_type` - Configuration group type. Valid values: l7_acceleration: L7 acceleration configuration group. edge_functions: Edge function configuration group.
+  * `source_version` - The source version ID that the config group version was derived from.
+  * `status` - Version status. Valid values: creating: Being created.inactive: Not effective.active: Effective.
+  * `version_id` - Version ID.
+  * `version_number` - Version No.
 * `content` - Version file content. It is returned in JSON format.
 
 ## API Reference

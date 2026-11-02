@@ -67,7 +67,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccessKey](https://www.tencentcloud.com/document/api/598/52594)
+* Create:
+  - [CreateAccessKey](https://www.tencentcloud.com/document/api/598/52594)
+  - [UpdateAccessKey](https://www.tencentcloud.com/document/api/598/52592)
 * Read: [ListAccessKeys](https://www.tencentcloud.com/document/api/598/37088)
 * Update: [UpdateAccessKey](https://www.tencentcloud.com/document/api/598/52592)
 * Delete: [DeleteAccessKey](https://www.tencentcloud.com/document/api/598/52593)
@@ -77,6 +79,6 @@ This resource interacts with the following TencentCloud APIs:
 cam access key can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cam_access_key.example 100037718101#AKID7F******************
+terraform import tencentcloud_cam_access_key.example 10003****101#AKID7F******************
 ```
 

@@ -13,6 +13,10 @@ resource "tencentcloud_teo_bind_security_template" "example" {
   entity      = "tf.example.com"
   operate     = "unbind-use-default"
 }
+
+output "bind_message" {
+  value = tencentcloud_teo_bind_security_template.example.message
+}
 ```
 Import
 

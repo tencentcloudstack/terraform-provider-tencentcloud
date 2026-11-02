@@ -15,6 +15,8 @@ Provide a resource to create a Mongodb instance.
 
 ~> **NOTE:** The `cpu` parameter takes effect only when the configuration is changed. Changing the `cpu` triggers the `ModifyDBInstanceSpec` API to adjust the CPU specification of the running MongoDB instance in-place. The supported CPU specifications can be obtained through the `DescribeSpecInfo` API.
 
+~> **NOTE:**  Please note that the `key_id` field represents the CMK name, which corresponds to the `alias` field in KMS.
+
 ## Example Usage
 
 ```hcl
@@ -110,7 +112,7 @@ resource "tencentcloud_mongodb_instance" "example" {
   password              = "Password@2026"
   data_encryption       = "TDE"
   encryption_key_source = "manual"
-  key_id                = "KMS-MONGODB"
+  key_id                = "kms-alias"
   kms_region            = "ap-guangzhou"
 }
 ```
@@ -147,7 +149,7 @@ The following arguments are supported:
 	- 0: When the adjustment is completed, perform the configuration task immediately. Default is 0.
 	- 1: Perform reconfiguration tasks within the maintenance time window.
 Note: Adjusting the number of nodes and slices does not support changes within the maintenance window.
-* `key_id` - (Optional, String) Key ID. If `manual` is selected as the key resource, you must enter the specified key ID. Note: this field does not support update, please recreate the resource if you need to change it.
+* `key_id` - (Optional, String) Please note that this field is the CMK name, corresponding to the `alias` field in KMS. Key ID. If `manual` is selected as the key resource, you must enter the specified key ID. Note: this field does not support update, please recreate the resource if you need to change it.
 * `kms_region` - (Optional, String) Key ID. If `manual` is selected as the key resource, you must enter the specified key region. Note: this field does not support update, please recreate the resource if you need to change it.
 * `maintenance_end` - (Optional, String) Maintenance window end time.
 	- The value range is any full point or half point from `00:00-23:00`, and the maintenance time duration is at least 30 minutes and at most 3 hours.
