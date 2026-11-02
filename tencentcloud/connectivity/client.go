@@ -23,6 +23,7 @@ import (
 	privatednsIntl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/privatedns/v20201028"
 	advisorv20200721 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor/v20200721"
 	v20200721 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor/v20200721"
+	agsv20250920 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ags/v20250920"
 	antiddos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309"
 	antiddosv20250903 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20250903"
 	api "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api/v20201106"
@@ -267,6 +268,7 @@ type TencentCloudClient struct {
 	gwlbv20240906Conn           *gwlb.Client
 	billingv20180709Conn        *billing.Client
 	bdrcv20260330Conn           *bdrcv20260330.Client
+	agsv20250920Conn            *agsv20250920.Client
 	igtmv20231024Conn           *igtmv20231024.Client
 	ga2v20250115Conn            *ga2v20250115.Client
 	gsv20191118Conn             *gsv20191118.Client
@@ -2274,6 +2276,18 @@ func (me *TencentCloudClient) UseBillingV20180709Client() *billing.Client {
 	me.billingv20180709Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.billingv20180709Conn
+}
+
+// UseAgsV20250920Client returns AGS client for service
+func (me *TencentCloudClient) UseAgsV20250920Client() *agsv20250920.Client {
+	if me.agsv20250920Conn != nil {
+		return me.agsv20250920Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.agsv20250920Conn, _ = agsv20250920.NewClient(me.Credential, me.Region, cpf)
+	me.agsv20250920Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.agsv20250920Conn
 }
 
 // UseIgtmV20231024Client return IGTM client for service

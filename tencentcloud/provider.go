@@ -23,6 +23,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/sharedmeta"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/advisor"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ags"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/apigateway"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/apm"
@@ -2790,6 +2791,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_billing_allocation_tag":                                                   billing.ResourceTencentCloudBillingAllocationTag(),
 			"tencentcloud_billing_budget":                                                           billing.ResourceTencentCloudBillingBudget(),
 			"tencentcloud_billing_instance":                                                         billing.ResourceTencentCloudBillingInstance(),
+			"tencentcloud_ags_sandbox_tool":                                                         ags.ResourceTencentCloudAgsSandboxTool(),
 			"tencentcloud_igtm_instance":                                                            igtm.ResourceTencentCloudIgtmInstance(),
 			"tencentcloud_igtm_address_pool":                                                        igtm.ResourceTencentCloudIgtmAddressPool(),
 			"tencentcloud_igtm_monitor":                                                             igtm.ResourceTencentCloudIgtmMonitor(),
