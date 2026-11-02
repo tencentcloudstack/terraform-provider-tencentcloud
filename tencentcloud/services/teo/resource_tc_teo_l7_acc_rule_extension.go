@@ -2,6 +2,8 @@ package teo
 
 import (
 	"encoding/json"
+	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
@@ -26,7 +28,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 					"name": {
 						Type:        schema.TypeString,
 						Required:    true,
-						Description: "Operation name. The name needs to correspond to the parameter structure, for example, if Name=Cache, CacheParameters is required.\n- `Cache`: Node cache TTL;\n- `CacheKey`: Custom Cache Key;\n- `CachePrefresh`: Cache pre-refresh;\n- `AccessURLRedirect`: Access URL redirection;\n- `UpstreamURLRewrite`: Back-to-origin URL rewrite;\n- `QUIC`: QUIC;\n- `WebSocket`: WebSocket;\n- `Authentication`: Token authentication;\n- `MaxAge`: Browser cache TTL;\n- `StatusCodeCache`: Status code cache TTL;\n- `OfflineCache`: Offline cache;\n- `SmartRouting`: Smart acceleration;\n- `RangeOriginPull`: Segment back-to-origin;\n- `UpstreamHTTP2`: HTTP2 back-to-origin;\n- `HostHeader`: Host Header rewrite;\n- `ForceRedirectHTTPS`: Access protocol forced HTTPS jump configuration;\n- `OriginPullProtocol`: Back-to-origin HTTPS;\n- `Compression`: Smart compression configuration;\n- `HSTS`: HSTS;\n- `ClientIPHeader`: Header information configuration for storing client request IP;\n- `OCSPStapling`: OCSP stapling;\n- `HTTP2`: HTTP2 Access;\n- `PostMaxSize`: POST request upload file streaming maximum limit configuration;\n- `ClientIPCountry`: Carry client IP region information when returning to the source;\n- `UpstreamFollowRedirect`: Return to the source follow redirection parameter configuration;\n- `UpstreamRequest`: Return to the source request parameters;\n- `TLSConfig`: SSL/TLS security;\n- `ModifyOrigin`: Modify the source station;\n- `HTTPUpstreamTimeout`: Seven-layer return to the source timeout configuration;\n- `HttpResponse`: HTTP response;\n- `ErrorPage`: Custom error page;\n- `ModifyResponseHeader`: Modify HTTP node response header;\n- `ModifyRequestHeader`: Modify HTTP node request header;\n- `ResponseSpeedLimit`: Single connection download speed limit.\n- `SetContentIdentifier`: Set content identifier.\n- `Vary`: Vary feature configuration.\n- `ContentCompression`: Content compression configuration.\n- `OriginAuthentication`: Origin authentication configuration.\n- `AdvancedOriginRouting`: Advanced origin routing optimization.\n- `Shield`: Origin offload (Shield).\n- `SiteFailover`: Origin site failover.",
+						Description: "Operation name. The name needs to correspond to the parameter structure, for example, if Name=Cache, CacheParameters is required.\n- `Cache`: Node cache TTL;\n- `CacheKey`: Custom Cache Key;\n- `CachePrefresh`: Cache pre-refresh;\n- `AccessURLRedirect`: Access URL redirection;\n- `UpstreamURLRewrite`: Back-to-origin URL rewrite;\n- `QUIC`: QUIC;\n- `WebSocket`: WebSocket;\n- `Authentication`: Token authentication;\n- `MaxAge`: Browser cache TTL;\n- `StatusCodeCache`: Status code cache TTL;\n- `OfflineCache`: Offline cache;\n- `SmartRouting`: Smart acceleration;\n- `RangeOriginPull`: Segment back-to-origin;\n- `UpstreamHTTP2`: HTTP2 back-to-origin;\n- `HostHeader`: Host Header rewrite;\n- `ForceRedirectHTTPS`: Access protocol forced HTTPS jump configuration;\n- `OriginPullProtocol`: Back-to-origin HTTPS;\n- `Compression`: Smart compression configuration;\n- `HSTS`: HSTS;\n- `ClientIPHeader`: Header information configuration for storing client request IP;\n- `OCSPStapling`: OCSP stapling;\n- `HTTP2`: HTTP2 Access;\n- `PostMaxSize`: POST request upload file streaming maximum limit configuration;\n- `ClientIPCountry`: Carry client IP region information when returning to the source;\n- `UpstreamFollowRedirect`: Return to the source follow redirection parameter configuration;\n- `UpstreamRequest`: Return to the source request parameters;\n- `TLSConfig`: SSL/TLS security;\n- `ModifyOrigin`: Modify the source station;\n- `HTTPUpstreamTimeout`: Seven-layer return to the source timeout configuration;\n- `HttpResponse`: HTTP response;\n- `ErrorPage`: Custom error page;\n- `ModifyResponseHeader`: Modify HTTP node response header;\n- `ModifyRequestHeader`: Modify HTTP node request header;\n- `ResponseSpeedLimit`: Single connection download speed limit.\n- `SetContentIdentifier`: Set content identifier.\n- `Vary`: Vary feature configuration.\n- `ContentCompression`: Content compression configuration.\n- `OriginAuthentication`: Origin authentication configuration.\n- `AdvancedOriginRouting`: Advanced origin routing optimization.\n- `Shield`: Origin offload (Shield).\n- `SiteFailover`: Origin site failover.\n- `CustomAction`: Custom configuration.",
 					},
 					"cache_parameters": {
 						Type:        schema.TypeList,
@@ -1411,6 +1413,49 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 							},
 						},
 					},
+					"custom_action_parameters": {
+						Type:        schema.TypeList,
+						Optional:    true,
+						MaxItems:    1,
+						Description: "Custom action configuration parameter. This parameter is required when Name is set to CustomAction.",
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"custom_actions": {
+									Type:        schema.TypeList,
+									Optional:    true,
+									Description: "List of custom actions.",
+									Elem: &schema.Resource{
+										Schema: map[string]*schema.Schema{
+											"action_id": {
+												Type:        schema.TypeString,
+												Optional:    true,
+												Description: "Custom action configuration item ID.",
+											},
+											"parameters": {
+												Type:        schema.TypeList,
+												Optional:    true,
+												Description: "Parameter values under the custom action configuration item.",
+												Elem: &schema.Resource{
+													Schema: map[string]*schema.Schema{
+														"name": {
+															Type:        schema.TypeString,
+															Optional:    true,
+															Description: "Parameter field name under the custom action configuration item.",
+														},
+														"value": {
+															Type:        schema.TypeString,
+															Optional:    true,
+															Description: "Parameter field value. serialized from the typed value field corresponding to ValueType.",
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
@@ -2199,6 +2244,34 @@ func resourceTencentCloudTeoL7AccRuleGetBranchs(rulesMap map[string]interface{})
 							}
 						}
 						ruleEngineAction.SiteFailoverParameters = &siteFailoverParameters
+					}
+					if customActionParametersMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["custom_action_parameters"]); ok {
+						customActionParameters := teov20220901.CustomActionParameters{}
+						if v, ok := customActionParametersMap["custom_actions"]; ok {
+							for _, item := range v.([]interface{}) {
+								customActionsMap := item.(map[string]interface{})
+								customAction := teov20220901.CustomAction{}
+								if v, ok := customActionsMap["action_id"].(string); ok && v != "" {
+									customAction.ActionId = helper.String(v)
+								}
+								if v, ok := customActionsMap["parameters"]; ok {
+									for _, paramItem := range v.([]interface{}) {
+										paramMap := paramItem.(map[string]interface{})
+										customActionParameter := teov20220901.CustomActionParameter{}
+										if v, ok := paramMap["name"].(string); ok && v != "" {
+											customActionParameter.Name = helper.String(v)
+										}
+										if v, ok := paramMap["value"].(string); ok && v != "" {
+											customActionParameter.ValueType = helper.String("String")
+											customActionParameter.StringValue = helper.String(v)
+										}
+										customAction.Parameters = append(customAction.Parameters, &customActionParameter)
+									}
+								}
+								customActionParameters.CustomActions = append(customActionParameters.CustomActions, &customAction)
+							}
+						}
+						ruleEngineAction.CustomActionParameters = &customActionParameters
 					}
 					ruleBranch.Actions = append(ruleBranch.Actions, &ruleEngineAction)
 				}
@@ -3174,6 +3247,34 @@ func resourceTencentCloudTeoL7AccRuleSetBranchs(ruleBranches []*teo.RuleBranch) 
 						actionsMap["site_failover_parameters"] = []interface{}{siteFailoverParametersMap}
 					}
 
+					customActionParametersMap := map[string]interface{}{}
+					if actions.CustomActionParameters != nil {
+						if actions.CustomActionParameters.CustomActions != nil {
+							customActionsList := make([]map[string]interface{}, 0, len(actions.CustomActionParameters.CustomActions))
+							for _, customAction := range actions.CustomActionParameters.CustomActions {
+								customActionMap := map[string]interface{}{}
+								if customAction.ActionId != nil {
+									customActionMap["action_id"] = customAction.ActionId
+								}
+								if customAction.Parameters != nil {
+									parametersList := make([]map[string]interface{}, 0, len(customAction.Parameters))
+									for _, param := range customAction.Parameters {
+										paramMap := map[string]interface{}{}
+										if param.Name != nil {
+											paramMap["name"] = param.Name
+										}
+										paramMap["value"] = flattenCustomActionParameterValue(param)
+										parametersList = append(parametersList, paramMap)
+									}
+									customActionMap["parameters"] = parametersList
+								}
+								customActionsList = append(customActionsList, customActionMap)
+							}
+							customActionParametersMap["custom_actions"] = customActionsList
+						}
+						actionsMap["custom_action_parameters"] = []interface{}{customActionParametersMap}
+					}
+
 					actionsList = append(actionsList, actionsMap)
 				}
 
@@ -3203,6 +3304,224 @@ func resourceTencentCloudTeoL7AccRuleSetBranchs(ruleBranches []*teo.RuleBranch) 
 		}
 	}
 	return branchesList
+}
+
+// flattenCustomActionParameterValue serializes the populated typed value field of a CustomActionParameter into a single string.
+func flattenCustomActionParameterValue(param *teov20220901.CustomActionParameter) string {
+	if param == nil {
+		return ""
+	}
+	if param.StringValue != nil {
+		return *param.StringValue
+	}
+	if param.IntegerValue != nil {
+		return fmt.Sprintf("%d", *param.IntegerValue)
+	}
+	if param.FloatValue != nil {
+		return fmt.Sprintf("%v", *param.FloatValue)
+	}
+	if param.BooleanValue != nil {
+		return fmt.Sprintf("%v", *param.BooleanValue)
+	}
+	if param.StringArrayValue != nil {
+		strs := make([]string, 0, len(param.StringArrayValue))
+		for _, s := range param.StringArrayValue {
+			if s != nil {
+				strs = append(strs, *s)
+			}
+		}
+		return fmt.Sprintf("[%s]", strings.Join(strs, ","))
+	}
+	if param.IntegerArrayValue != nil {
+		strs := make([]string, 0, len(param.IntegerArrayValue))
+		for _, i := range param.IntegerArrayValue {
+			if i != nil {
+				strs = append(strs, fmt.Sprintf("%d", *i))
+			}
+		}
+		return fmt.Sprintf("[%s]", strings.Join(strs, ","))
+	}
+	if param.FloatArrayValue != nil {
+		strs := make([]string, 0, len(param.FloatArrayValue))
+		for _, f := range param.FloatArrayValue {
+			if f != nil {
+				strs = append(strs, fmt.Sprintf("%v", *f))
+			}
+		}
+		return fmt.Sprintf("[%s]", strings.Join(strs, ","))
+	}
+	return ""
+}
+
+// expandTeoL7AccRuleCustomVariableOperations expands Terraform custom_variable_operations list into []*CustomVariableOperation.
+func expandTeoL7AccRuleCustomVariableOperations(operationsList []interface{}) []*teov20220901.CustomVariableOperation {
+	operations := make([]*teov20220901.CustomVariableOperation, 0, len(operationsList))
+	for _, item := range operationsList {
+		operationsMap, ok := item.(map[string]interface{})
+		if !ok {
+			continue
+		}
+		operation := teov20220901.CustomVariableOperation{}
+		if v, ok := operationsMap["branches"]; ok {
+			for _, branchItem := range v.([]interface{}) {
+				branchesMap, ok := branchItem.(map[string]interface{})
+				if !ok {
+					continue
+				}
+				operationBranch := expandTeoL7AccRuleCustomVariableOperationBranch(branchesMap)
+				operation.Branches = append(operation.Branches, operationBranch)
+			}
+		}
+		if v, ok := operationsMap["description"]; ok {
+			descriptionSet := v.([]interface{})
+			for i := range descriptionSet {
+				description := descriptionSet[i].(string)
+				operation.Description = append(operation.Description, helper.String(description))
+			}
+		}
+		operations = append(operations, &operation)
+	}
+	return operations
+}
+
+func expandTeoL7AccRuleCustomVariableOperationBranch(branchesMap map[string]interface{}) *teov20220901.CustomVariableOperationRuleBranch {
+	operationBranch := teov20220901.CustomVariableOperationRuleBranch{}
+	if v, ok := branchesMap["condition"].(string); ok && v != "" {
+		operationBranch.Condition = helper.String(v)
+	}
+	if v, ok := branchesMap["actions"]; ok {
+		for _, actionItem := range v.([]interface{}) {
+			actionsMap, ok := actionItem.(map[string]interface{})
+			if !ok {
+				continue
+			}
+			operationAction := teov20220901.CustomVariableOperationRuleAction{}
+			if v, ok := actionsMap["name"].(string); ok && v != "" {
+				operationAction.Name = helper.String(v)
+			}
+			if setParametersMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["set_parameters"]); ok {
+				setParameters := teov20220901.SetParameters{}
+				if v, ok := setParametersMap["name"].(string); ok && v != "" {
+					setParameters.Name = helper.String(v)
+				}
+				if v, ok := setParametersMap["value"].(string); ok && v != "" {
+					setParameters.Value = helper.String(v)
+				}
+				operationAction.SetParameters = &setParameters
+			}
+			operationBranch.Actions = append(operationBranch.Actions, &operationAction)
+		}
+	}
+	if v, ok := branchesMap["sub_rules"]; ok {
+		for _, subRuleItem := range v.([]interface{}) {
+			subRulesMap, ok := subRuleItem.(map[string]interface{})
+			if !ok {
+				continue
+			}
+			subRule := teov20220901.CustomVariableOperationSubRule{}
+			if v, ok := subRulesMap["branches"]; ok {
+				for _, subBranchItem := range v.([]interface{}) {
+					subBranchesMap, ok := subBranchItem.(map[string]interface{})
+					if !ok {
+						continue
+					}
+					subRuleBranch := expandTeoL7AccRuleCustomVariableOperationBranch(subBranchesMap)
+					subRule.Branches = append(subRule.Branches, subRuleBranch)
+				}
+			}
+			if v, ok := subRulesMap["description"]; ok {
+				descriptionSet := v.([]interface{})
+				for i := range descriptionSet {
+					description := descriptionSet[i].(string)
+					subRule.Description = append(subRule.Description, helper.String(description))
+				}
+			}
+			operationBranch.SubRules = append(operationBranch.SubRules, &subRule)
+		}
+	}
+	return &operationBranch
+}
+
+// flattenTeoL7AccRuleCustomVariableOperations flattens []*CustomVariableOperation into Terraform list.
+func flattenTeoL7AccRuleCustomVariableOperations(operations []*teov20220901.CustomVariableOperation) []map[string]interface{} {
+	operationsList := make([]map[string]interface{}, 0, len(operations))
+	for _, operation := range operations {
+		if operation == nil {
+			continue
+		}
+		operationMap := map[string]interface{}{}
+		if operation.Branches != nil {
+			branchesList := make([]map[string]interface{}, 0, len(operation.Branches))
+			for _, branch := range operation.Branches {
+				if branch == nil {
+					continue
+				}
+				branchesList = append(branchesList, flattenTeoL7AccRuleCustomVariableOperationBranch(branch))
+			}
+			operationMap["branches"] = branchesList
+		}
+		if operation.Description != nil {
+			operationMap["description"] = operation.Description
+		}
+		operationsList = append(operationsList, operationMap)
+	}
+	return operationsList
+}
+
+func flattenTeoL7AccRuleCustomVariableOperationBranch(branch *teov20220901.CustomVariableOperationRuleBranch) map[string]interface{} {
+	branchMap := map[string]interface{}{}
+	if branch.Condition != nil {
+		branchMap["condition"] = branch.Condition
+	}
+	if branch.Actions != nil {
+		actionsList := make([]map[string]interface{}, 0, len(branch.Actions))
+		for _, action := range branch.Actions {
+			if action == nil {
+				continue
+			}
+			actionMap := map[string]interface{}{}
+			if action.Name != nil {
+				actionMap["name"] = action.Name
+			}
+			if action.SetParameters != nil {
+				setParametersMap := map[string]interface{}{}
+				if action.SetParameters.Name != nil {
+					setParametersMap["name"] = action.SetParameters.Name
+				}
+				if action.SetParameters.Value != nil {
+					setParametersMap["value"] = action.SetParameters.Value
+				}
+				actionMap["set_parameters"] = []interface{}{setParametersMap}
+			}
+			actionsList = append(actionsList, actionMap)
+		}
+		branchMap["actions"] = actionsList
+	}
+	if branch.SubRules != nil {
+		subRulesList := make([]map[string]interface{}, 0, len(branch.SubRules))
+		for _, subRule := range branch.SubRules {
+			if subRule == nil {
+				continue
+			}
+			subRuleMap := map[string]interface{}{}
+			if subRule.Branches != nil {
+				subBranchesList := make([]map[string]interface{}, 0, len(subRule.Branches))
+				for _, subBranch := range subRule.Branches {
+					if subBranch == nil {
+						continue
+					}
+					subBranchesList = append(subBranchesList, flattenTeoL7AccRuleCustomVariableOperationBranch(subBranch))
+				}
+				subRuleMap["branches"] = subBranchesList
+			}
+			if subRule.Description != nil {
+				subRuleMap["description"] = subRule.Description
+			}
+			subRulesList = append(subRulesList, subRuleMap)
+		}
+		branchMap["sub_rules"] = subRulesList
+	}
+	return branchMap
 }
 
 func resourceTencentCloudTeoL7AccRuleContent(rules []*teo.RuleEngineItem) (string, error) {

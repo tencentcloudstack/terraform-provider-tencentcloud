@@ -55,6 +55,217 @@ func ResourceTencentCloudTeoL7AccRuleV2() *schema.Resource {
 					Schema: TencentTeoL7RuleBranchBasicInfo(1),
 				},
 			},
+			"custom_variables": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Rule-level custom variable list. maps to the SDK RuleEngineItem.CustomVariables field.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Variable name. must use the user.rule.* prefix.",
+						},
+						"initial_value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Variable initial value. supports constant strings, variables, and formulas.",
+						},
+						"description": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Variable description.",
+						},
+					},
+				},
+			},
+			"custom_variable_operations": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: "Rule-level custom variable operations. maps to the SDK RuleEngineItem.CustomVariableOperations field.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"branches": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Sub-rule branch of custom variable operation. this list currently supports filling in only one rule.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"condition": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Match condition.",
+									},
+									"actions": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "Actions of custom variable operation.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"name": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Operation name. only supports Set.",
+												},
+												"set_parameters": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													MaxItems:    1,
+													Description: "Custom variable set parameters, maps to the SetParameters struct.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"name": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: "Custom variable name.",
+															},
+															"value": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: "Custom variable value. supports constant strings, variables, and formulas.",
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+									"sub_rules": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "Sub-rule list of custom variable operation. only one layer of sub_rules is supported.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"branches": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: "Sub-rule branch of custom variable operation sub-rule.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"condition": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: "Match condition.",
+															},
+															"actions": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: "Actions of custom variable operation.",
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"name": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "Operation name. only supports Set.",
+																		},
+																		"set_parameters": {
+																			Type:        schema.TypeList,
+																			Optional:    true,
+																			MaxItems:    1,
+																			Description: "Custom variable set parameters, maps to the SetParameters struct.",
+																			Elem: &schema.Resource{
+																				Schema: map[string]*schema.Schema{
+																					"name": {
+																						Type:        schema.TypeString,
+																						Optional:    true,
+																						Description: "Custom variable name.",
+																					},
+																					"value": {
+																						Type:        schema.TypeString,
+																						Optional:    true,
+																						Description: "Custom variable value. supports constant strings, variables, and formulas.",
+																					},
+																				},
+																			},
+																		},
+																	},
+																},
+															},
+															"sub_rules": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: "Sub-rule list of custom variable operation sub-rule. only one layer is supported, no further recursion.",
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"condition": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "Match condition.",
+																		},
+																		"actions": {
+																			Type:        schema.TypeList,
+																			Optional:    true,
+																			Description: "Actions of custom variable operation.",
+																			Elem: &schema.Resource{
+																				Schema: map[string]*schema.Schema{
+																					"name": {
+																						Type:        schema.TypeString,
+																						Optional:    true,
+																						Description: "Operation name. only supports Set.",
+																					},
+																					"set_parameters": {
+																						Type:        schema.TypeList,
+																						Optional:    true,
+																						MaxItems:    1,
+																						Description: "Custom variable set parameters, maps to the SetParameters struct.",
+																						Elem: &schema.Resource{
+																							Schema: map[string]*schema.Schema{
+																								"name": {
+																									Type:        schema.TypeString,
+																									Optional:    true,
+																									Description: "Custom variable name.",
+																								},
+																								"value": {
+																									Type:        schema.TypeString,
+																									Optional:    true,
+																									Description: "Custom variable value. supports constant strings, variables, and formulas.",
+																								},
+																							},
+																						},
+																					},
+																				},
+																			},
+																		},
+																		"description": {
+																			Type:        schema.TypeList,
+																			Optional:    true,
+																			Description: "Rule annotation.",
+																			Elem:        &schema.Schema{Type: schema.TypeString},
+																		},
+																	},
+																},
+															},
+															"description": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: "Rule annotation.",
+																Elem:        &schema.Schema{Type: schema.TypeString},
+															},
+														},
+													},
+												},
+												"description": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: "Rule annotation.",
+													Elem:        &schema.Schema{Type: schema.TypeString},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						"description": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Rule annotation.",
+							Elem:        &schema.Schema{Type: schema.TypeString},
+						},
+					},
+				},
+			},
 			"rule_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -99,6 +310,28 @@ func ResourceTencentCloudTeoL7AccRuleV2Create(d *schema.ResourceData, meta inter
 
 	if v, ok := d.GetOk("branches"); ok {
 		rule.Branches = resourceTencentCloudTeoL7AccRuleGetBranchs(map[string]interface{}{"branches": v})
+	}
+
+	if v, ok := d.GetOk("custom_variables"); ok {
+		customVariablesSet := v.([]interface{})
+		for i := range customVariablesSet {
+			customVariableMap := customVariablesSet[i].(map[string]interface{})
+			customVariable := teov20220901.CustomVariable{}
+			if v, ok := customVariableMap["name"].(string); ok && v != "" {
+				customVariable.Name = helper.String(v)
+			}
+			if v, ok := customVariableMap["initial_value"].(string); ok && v != "" {
+				customVariable.InitialValue = helper.String(v)
+			}
+			if v, ok := customVariableMap["description"].(string); ok && v != "" {
+				customVariable.Description = helper.String(v)
+			}
+			rule.CustomVariables = append(rule.CustomVariables, &customVariable)
+		}
+	}
+
+	if v, ok := d.GetOk("custom_variable_operations"); ok {
+		rule.CustomVariableOperations = expandTeoL7AccRuleCustomVariableOperations(v.([]interface{}))
 	}
 
 	request.Rules = []*teov20220901.RuleEngineItem{rule}
@@ -160,6 +393,32 @@ func ResourceTencentCloudTeoL7AccRuleV2Read(d *schema.ResourceData, meta interfa
 		_ = d.Set("description", rule.Description)
 		_ = d.Set("rule_priority", rule.RulePriority)
 		_ = d.Set("branches", resourceTencentCloudTeoL7AccRuleSetBranchs(rule.Branches))
+
+		if rule.CustomVariables != nil {
+			customVariablesList := make([]map[string]interface{}, 0, len(rule.CustomVariables))
+			for _, customVariable := range rule.CustomVariables {
+				if customVariable == nil {
+					continue
+				}
+				customVariableMap := map[string]interface{}{}
+				if customVariable.Name != nil {
+					customVariableMap["name"] = customVariable.Name
+				}
+				if customVariable.InitialValue != nil {
+					customVariableMap["initial_value"] = customVariable.InitialValue
+				}
+				if customVariable.Description != nil {
+					customVariableMap["description"] = customVariable.Description
+				}
+				customVariablesList = append(customVariablesList, customVariableMap)
+			}
+			_ = d.Set("custom_variables", customVariablesList)
+		}
+
+		if rule.CustomVariableOperations != nil {
+			customVariableOperationsList := flattenTeoL7AccRuleCustomVariableOperations(rule.CustomVariableOperations)
+			_ = d.Set("custom_variable_operations", customVariableOperationsList)
+		}
 	}
 
 	return nil
@@ -183,7 +442,7 @@ func ResourceTencentCloudTeoL7AccRuleV2Update(d *schema.ResourceData, meta inter
 	rule := &teov20220901.RuleEngineItem{}
 	rule.RuleId = &ruleId
 
-	if d.HasChange("status") || d.HasChange("rule_name") || d.HasChange("description") || d.HasChange("branches") {
+	if d.HasChange("status") || d.HasChange("rule_name") || d.HasChange("description") || d.HasChange("branches") || d.HasChange("custom_variables") || d.HasChange("custom_variable_operations") {
 		if v, ok := d.GetOk("status"); ok {
 			rule.Status = helper.String(v.(string))
 		}
@@ -199,6 +458,26 @@ func ResourceTencentCloudTeoL7AccRuleV2Update(d *schema.ResourceData, meta inter
 		}
 		if v, ok := d.GetOk("branches"); ok {
 			rule.Branches = resourceTencentCloudTeoL7AccRuleGetBranchs(map[string]interface{}{"branches": v})
+		}
+		if v, ok := d.GetOk("custom_variables"); ok {
+			customVariablesSet := v.([]interface{})
+			for i := range customVariablesSet {
+				customVariableMap := customVariablesSet[i].(map[string]interface{})
+				customVariable := teov20220901.CustomVariable{}
+				if v, ok := customVariableMap["name"].(string); ok && v != "" {
+					customVariable.Name = helper.String(v)
+				}
+				if v, ok := customVariableMap["initial_value"].(string); ok && v != "" {
+					customVariable.InitialValue = helper.String(v)
+				}
+				if v, ok := customVariableMap["description"].(string); ok && v != "" {
+					customVariable.Description = helper.String(v)
+				}
+				rule.CustomVariables = append(rule.CustomVariables, &customVariable)
+			}
+		}
+		if v, ok := d.GetOk("custom_variable_operations"); ok {
+			rule.CustomVariableOperations = expandTeoL7AccRuleCustomVariableOperations(v.([]interface{}))
 		}
 
 		request.Rule = rule
