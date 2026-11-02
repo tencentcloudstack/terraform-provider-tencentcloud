@@ -52,21 +52,25 @@ resource "tencentcloud_teo_load_balancer" "example" {
 
   origin_groups {
     priority        = "priority_1"
-    origin_group_id = "og-3pfz5626nmbb"
+    origin_group_id = "og-3w0nrwiw4c6v"
   }
 
   health_checker {
-    type           = "HTTP"
-    port           = 80
-    interval       = 60
-    timeout        = 5
-    method         = "HEAD"
-    expected_codes = ["200"]
-    probe_cluster  = "mainland_china"
+    type               = "HTTP"
+    path               = "www.example.com/test"
+    port               = 80
+    interval           = 30
+    timeout            = 5
+    health_threshold   = 3
+    critical_threshold = 2
+    method             = "HEAD"
+    expected_codes     = ["200"]
+    follow_redirect    = "false"
+    probe_cluster      = "global"
   }
 
   steering_policy = "Pritory"
-  failover_policy = "OtherRecordInOriginGroup"
+  failover_policy = "OtherOriginGroup"
 }
 ```
 
