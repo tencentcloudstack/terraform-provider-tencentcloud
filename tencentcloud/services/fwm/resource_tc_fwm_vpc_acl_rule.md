@@ -7,7 +7,6 @@ resource "tencentcloud_fwm_vpc_acl_rule" "example" {
   group_id       = "fwmrg-y53zyyg7da"
   edge_id        = "all"
   fw_group_id    = "all"
-  ip_version     = "ipv4"
   source_type    = "net"
   source_content = "0.0.0.0/0"
   dest_type      = "net"

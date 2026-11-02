@@ -45,13 +45,6 @@ func ResourceTencentCloudFwmVpcAclRule() *schema.Resource {
 				Description: "Firewall instance ID: ALL, cfwg-xxx or ccn-xxx.",
 			},
 
-			"ip_version": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: "IP version: ipv4 or ipv6. Not a Create input parameter, only returned by Describe.",
-			},
-
 			"source_type": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -183,10 +176,6 @@ func resourceTencentCloudFwmVpcAclRuleCreate(d *schema.ResourceData, meta interf
 		rule.FwGroupId = helper.String(v.(string))
 	}
 
-	// if v, ok := d.GetOk("ip_version"); ok {
-	// 	rule.IpVersion = helper.String(v.(string))
-	// }
-
 	if v, ok := d.GetOk("description"); ok {
 		rule.Description = helper.String(v.(string))
 	}
@@ -264,16 +253,13 @@ func resourceTencentCloudFwmVpcAclRuleRead(d *schema.ResourceData, meta interfac
 		return nil
 	}
 
+	_ = d.Set("group_id", groupId)
 	if respData.EdgeId != nil {
 		_ = d.Set("edge_id", respData.EdgeId)
 	}
 
 	if respData.FwGroupId != nil {
 		_ = d.Set("fw_group_id", respData.FwGroupId)
-	}
-
-	if respData.IpVersion != nil {
-		_ = d.Set("ip_version", respData.IpVersion)
 	}
 
 	if respData.SourceType != nil {

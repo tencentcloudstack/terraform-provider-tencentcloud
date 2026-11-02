@@ -18,7 +18,6 @@ resource "tencentcloud_fwm_vpc_acl_rule" "example" {
   group_id       = "fwmrg-y53zyyg7da"
   edge_id        = "all"
   fw_group_id    = "all"
-  ip_version     = "ipv4"
   source_type    = "net"
   source_content = "0.0.0.0/0"
   dest_type      = "net"
@@ -40,7 +39,6 @@ The following arguments are supported:
 * `edge_id` - (Required, String, ForceNew) Edge firewall ID: ALL or CFWS-xxx.
 * `fw_group_id` - (Required, String, ForceNew) Firewall instance ID: ALL, cfwg-xxx or ccn-xxx.
 * `group_id` - (Required, String, ForceNew) Rule group ID, the parent resource reference, required by all four interfaces, immutable.
-* `ip_version` - (Required, String, ForceNew) IP version: ipv4 or ipv6. Not a Create input parameter, only returned by Describe.
 * `protocol` - (Required, String) Protocol: TCP/UDP/ICMP/ANY etc.
 * `rule_action` - (Required, String) Action: accept/drop/log (lowercase).
 * `source_content` - (Required, String, ForceNew) Source address content.
