@@ -628,10 +628,6 @@ tencentcloud_elasticsearch_diagnose
 tencentcloud_elasticsearch_diagnose_instance
 tencentcloud_elasticsearch_update_plugins_operation
 
-Cloud Firewall(FWM)
-Resource
-tencentcloud_fwm_security_group_rule
-
 Global Accelerator(GA2)
 Resource
 tencentcloud_ga2_global_accelerator
@@ -2833,3 +2829,4 @@ tencentcloud_fwm_cfw_share_role_config
 tencentcloud_fwm_rule_group
 tencentcloud_fwm_strategy
 tencentcloud_fwm_edge_acl_rule
+tencentcloud_fwm_security_group_rule

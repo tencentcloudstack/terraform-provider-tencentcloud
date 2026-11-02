@@ -64,6 +64,7 @@ func ResourceTencentCloudFwmSecurityGroupRule() *schema.Resource {
 			"group_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Rule group ID, the parent rule group (Product=enterprise_sg) to which the rule belongs.",
 			},
 
@@ -71,71 +72,65 @@ func ResourceTencentCloudFwmSecurityGroupRule() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "IP version, optional values: ipv4, ipv6.",
-			},
-
-			"order_index": {
-				Type:        schema.TypeInt,
-				Required:    true,
-				Description: "Rule priority order index, global single sequence within the group, >=1.",
+				Description: "IP version: ipv4, ipv6.",
 			},
 
 			"source_type": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Source type, optional values: net, vpc, subnet, cvm, clb, eni, cdb, template, tag, region, resourcegroup, addressbook, instance.",
+				Description: "Source type: net, vpc, subnet, cvm, clb, eni, cdb, template, tag, region, resourcegroup, addressbook, instance.",
 			},
 
 			"source_content": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Source content, such as IP/CIDR or instance id.",
+				Description: "Source content, such as IP, CIDR or instance ID.",
 			},
 
 			"dest_type": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Destination type, optional values: net, vpc, subnet, cvm, clb, eni, cdb, template, tag, region, resourcegroup, addressbook, instance.",
+				Description: "Destination type: net, vpc, subnet, cvm, clb, eni, cdb, template, tag, region, resourcegroup, addressbook, instance.",
 			},
 
 			"dest_content": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Destination content, such as IP/CIDR or instance id.",
+				Description: "Destination content, such as IP, CIDR or instance ID.",
 			},
 
 			"protocol": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Protocol, optional values: TCP, ANY, ICMP, UDP. ANY means all.",
+				Description: "Protocol: TCP, UDP, ICMP, ANY. ANY means all protocols.",
 			},
 
 			"port": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Port, such as 80 or ALL.",
+				Description: "Port, such as 80, 1-65535 or ALL.",
 			},
 
 			"rule_action": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Rule action, optional values: accept, drop, log.",
+				Description: "Rule action: accept, drop, log.",
 			},
 
 			"scope": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Rule effective scope, optional values: SG, LH.",
+				Description: "Rule effective scope: SG, LH.",
 			},
 
 			"service_template_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "Service template id.",
+				Description: "Service template ID.",
 			},
 
 			"description": {
@@ -153,147 +148,32 @@ func ResourceTencentCloudFwmSecurityGroupRule() *schema.Resource {
 			"belong_member_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Member id to which the rule belongs.",
+				Description: "ID of the member account that the rule belongs to.",
 			},
 
+			// computed
 			"rule_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Rule id.",
+				Description: "Rule ID.",
 			},
 
 			"source_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Source id (read-only display).",
+				Description: "Source ID.",
 			},
 
 			"target_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Target id (read-only display).",
+				Description: "Destination ID.",
 			},
 
-			"strategy": {
+			"sequence": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Rule strategy int value (read-only display).",
-			},
-
-			"detail": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Rule detail (read-only display).",
-			},
-
-			"region": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Region (read-only display).",
-			},
-
-			"protocol_port_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Protocol port name (read-only display).",
-			},
-
-			"sou_instance_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Source instance name (read-only display).",
-			},
-
-			"sou_public_ip": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Source public ip (read-only display).",
-			},
-
-			"sou_private_ip": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Source private ip (read-only display).",
-			},
-
-			"sou_cidr": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Source cidr (read-only display).",
-			},
-
-			"sou_parameter_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Source parameter name (read-only display).",
-			},
-
-			"instance_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Destination instance name (read-only display).",
-			},
-
-			"public_ip": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Destination public ip (read-only display).",
-			},
-
-			"private_ip": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Destination private ip (read-only display).",
-			},
-
-			"cidr": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Destination cidr (read-only display).",
-			},
-
-			"parameter_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Destination parameter name (read-only display).",
-			},
-
-			"dns_parse_count": {
-				Type:     schema.TypeList,
-				Computed: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"valid_count": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Valid ip count.",
-						},
-						"invalid_count": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Invalid ip count.",
-						},
-					},
-				},
-				Description: "Dns parse count (read-only display).",
-			},
-
-			"is_new": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Whether the rule has been changed recently (read-only display).",
-			},
-
-			"id": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Internal primary key id (read-only display).",
-			},
-
-			"all_total_count": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "All total count (read-only display).",
+				Description: "Priority (read-only, same source as order_index).",
 			},
 		},
 	}
@@ -308,22 +188,48 @@ func resourceTencentCloudFwmSecurityGroupRuleCreate(d *schema.ResourceData, meta
 		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 		request = fwmv20250611.NewCreateSecurityGroupRuleRequest()
 		rule    = fwmv20250611.SecurityGroupRule{}
+		ruleId  string
 	)
 
 	if v, ok := d.GetOk("group_id"); ok {
 		request.GroupId = helper.String(v.(string))
 	}
 
-	rule.IpVersion = helper.String(d.Get("ip_version").(string))
-	rule.OrderIndex = helper.Int64(int64(d.Get("order_index").(int)))
-	rule.SourceType = helper.String(d.Get("source_type").(string))
-	rule.SourceContent = helper.String(d.Get("source_content").(string))
-	rule.DestType = helper.String(d.Get("dest_type").(string))
-	rule.DestContent = helper.String(d.Get("dest_content").(string))
-	rule.Protocol = helper.String(d.Get("protocol").(string))
-	rule.Port = helper.String(d.Get("port").(string))
-	rule.RuleAction = helper.String(d.Get("rule_action").(string))
-	rule.Scope = helper.String(d.Get("scope").(string))
+	if v, ok := d.GetOk("ip_version"); ok {
+		rule.IpVersion = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("source_type"); ok {
+		rule.SourceType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("source_content"); ok {
+		rule.SourceContent = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("dest_type"); ok {
+		rule.DestType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("dest_content"); ok {
+		rule.DestContent = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("protocol"); ok {
+		rule.Protocol = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("port"); ok {
+		rule.Port = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("rule_action"); ok {
+		rule.RuleAction = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("scope"); ok {
+		rule.Scope = helper.String(v.(string))
+	}
 
 	if v, ok := d.GetOk("service_template_id"); ok {
 		rule.ServiceTemplateId = helper.String(v.(string))
@@ -341,9 +247,9 @@ func resourceTencentCloudFwmSecurityGroupRuleCreate(d *schema.ResourceData, meta
 		rule.BelongMemberId = helper.String(v.(string))
 	}
 
+	rule.OrderIndex = helper.Int64(int64(1))
 	request.Rules = []*fwmv20250611.SecurityGroupRule{&rule}
 
-	var ruleId string
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseFwmV20250611Client().CreateSecurityGroupRuleWithContext(ctx, request)
 		if e != nil {
@@ -396,10 +302,12 @@ func resourceTencentCloudFwmSecurityGroupRuleRead(d *schema.ResourceData, meta i
 	}
 
 	if respData == nil {
-		log.Printf("[CRUD] fwm_security_group_rule id=%s", d.Id())
+		log.Printf("[WARN]%s resource `tencentcloud_fwm_security_group_rule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
+
+	_ = d.Set("group_id", groupId)
 
 	if respData.RuleId != nil {
 		_ = d.Set("rule_id", respData.RuleId)
@@ -410,7 +318,7 @@ func resourceTencentCloudFwmSecurityGroupRuleRead(d *schema.ResourceData, meta i
 	}
 
 	if respData.OrderIndex != nil {
-		_ = d.Set("order_index", respData.OrderIndex)
+		_ = d.Set("sequence", respData.OrderIndex)
 	}
 
 	if respData.SourceType != nil {
@@ -441,12 +349,10 @@ func resourceTencentCloudFwmSecurityGroupRuleRead(d *schema.ResourceData, meta i
 
 	if respData.Strategy != nil {
 		_ = d.Set("rule_action", reverseRuleAction(*respData.Strategy))
-		_ = d.Set("strategy", respData.Strategy)
 	}
 
 	if respData.Detail != nil {
 		_ = d.Set("description", respData.Detail)
-		_ = d.Set("detail", respData.Detail)
 	}
 
 	if respData.Scope != nil {
@@ -459,74 +365,6 @@ func resourceTencentCloudFwmSecurityGroupRuleRead(d *schema.ResourceData, meta i
 
 	if respData.BelongMember != nil && respData.BelongMember.MemberId != nil && *respData.BelongMember.MemberId != "" {
 		_ = d.Set("belong_member_id", respData.BelongMember.MemberId)
-	}
-
-	if respData.Region != nil {
-		_ = d.Set("region", respData.Region)
-	}
-
-	if respData.ProtocolPortName != nil {
-		_ = d.Set("protocol_port_name", respData.ProtocolPortName)
-	}
-
-	if respData.SouInstanceName != nil {
-		_ = d.Set("sou_instance_name", respData.SouInstanceName)
-	}
-
-	if respData.SouPublicIp != nil {
-		_ = d.Set("sou_public_ip", respData.SouPublicIp)
-	}
-
-	if respData.SouPrivateIp != nil {
-		_ = d.Set("sou_private_ip", respData.SouPrivateIp)
-	}
-
-	if respData.SouCidr != nil {
-		_ = d.Set("sou_cidr", respData.SouCidr)
-	}
-
-	if respData.SouParameterName != nil {
-		_ = d.Set("sou_parameter_name", respData.SouParameterName)
-	}
-
-	if respData.InstanceName != nil {
-		_ = d.Set("instance_name", respData.InstanceName)
-	}
-
-	if respData.PublicIp != nil {
-		_ = d.Set("public_ip", respData.PublicIp)
-	}
-
-	if respData.PrivateIp != nil {
-		_ = d.Set("private_ip", respData.PrivateIp)
-	}
-
-	if respData.Cidr != nil {
-		_ = d.Set("cidr", respData.Cidr)
-	}
-
-	if respData.ParameterName != nil {
-		_ = d.Set("parameter_name", respData.ParameterName)
-	}
-
-	if respData.IsNew != nil {
-		_ = d.Set("is_new", respData.IsNew)
-	}
-
-	if respData.Id != nil {
-		_ = d.Set("id", respData.Id)
-	}
-
-	if respData.DnsParseCount != nil {
-		dnsParseCountMap := map[string]interface{}{}
-		if respData.DnsParseCount.ValidCount != nil {
-			dnsParseCountMap["valid_count"] = respData.DnsParseCount.ValidCount
-		}
-
-		if respData.DnsParseCount.InvalidCount != nil {
-			dnsParseCountMap["invalid_count"] = respData.DnsParseCount.InvalidCount
-		}
-		_ = d.Set("dns_parse_count", []interface{}{dnsParseCountMap})
 	}
 
 	return nil
@@ -549,7 +387,7 @@ func resourceTencentCloudFwmSecurityGroupRuleUpdate(d *schema.ResourceData, meta
 	groupId := idSplit[0]
 	ruleId := idSplit[1]
 
-	mutableArgs := []string{"order_index", "source_content", "dest_content", "protocol", "port", "service_template_id", "rule_action", "description", "protocol_port_type", "belong_member_id"}
+	mutableArgs := []string{"source_content", "dest_content", "protocol", "port", "service_template_id", "rule_action", "description", "protocol_port_type", "belong_member_id"}
 	needChange := false
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
@@ -560,20 +398,49 @@ func resourceTencentCloudFwmSecurityGroupRuleUpdate(d *schema.ResourceData, meta
 
 	if needChange {
 		request := fwmv20250611.NewModifySecurityGroupRuleRequest()
-		request.GroupId = helper.String(groupId)
-
 		rule := fwmv20250611.SecurityGroupRule{}
-		rule.RuleId = helper.String(ruleId)
-		rule.IpVersion = helper.String(d.Get("ip_version").(string))
-		rule.OrderIndex = helper.Int64(int64(d.Get("order_index").(int)))
-		rule.SourceType = helper.String(d.Get("source_type").(string))
-		rule.SourceContent = helper.String(d.Get("source_content").(string))
-		rule.DestType = helper.String(d.Get("dest_type").(string))
-		rule.DestContent = helper.String(d.Get("dest_content").(string))
-		rule.Protocol = helper.String(d.Get("protocol").(string))
-		rule.Port = helper.String(d.Get("port").(string))
-		rule.RuleAction = helper.String(d.Get("rule_action").(string))
-		rule.Scope = helper.String(d.Get("scope").(string))
+
+		if v, ok := d.GetOk("ip_version"); ok {
+			rule.IpVersion = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOkExists("sequence"); ok {
+			rule.OrderIndex = helper.Int64(int64(v.(int)))
+		} else {
+			rule.OrderIndex = helper.Int64(1)
+		}
+
+		if v, ok := d.GetOk("source_type"); ok {
+			rule.SourceType = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("source_content"); ok {
+			rule.SourceContent = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("dest_type"); ok {
+			rule.DestType = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("dest_content"); ok {
+			rule.DestContent = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("protocol"); ok {
+			rule.Protocol = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("port"); ok {
+			rule.Port = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("rule_action"); ok {
+			rule.RuleAction = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("scope"); ok {
+			rule.Scope = helper.String(v.(string))
+		}
 
 		if v, ok := d.GetOk("service_template_id"); ok {
 			rule.ServiceTemplateId = helper.String(v.(string))
@@ -591,8 +458,9 @@ func resourceTencentCloudFwmSecurityGroupRuleUpdate(d *schema.ResourceData, meta
 			rule.BelongMemberId = helper.String(v.(string))
 		}
 
+		rule.RuleId = helper.String(ruleId)
 		request.Rule = &rule
-
+		request.GroupId = helper.String(groupId)
 		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseFwmV20250611Client().ModifySecurityGroupRuleWithContext(ctx, request)
 			if e != nil {

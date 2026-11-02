@@ -432,6 +432,7 @@ func (me *FwmService) DescribeFwmSecurityGroupRuleById(ctx context.Context, grou
 			OperatorType: helper.Int64(1),
 		},
 	}
+	request.Offset = helper.Int64(0)
 	request.Limit = helper.Int64(100)
 
 	defer func() {
