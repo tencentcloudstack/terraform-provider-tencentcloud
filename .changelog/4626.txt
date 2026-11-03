@@ -1,0 +1,3 @@
+```release-note:enhancement
+tencentcloud_teo_security_policy_config: add `security_headers_to_origin` block with `bot_identification_headers`, `bot_management_headers` and `client_fingerprint_headers` fields
+```

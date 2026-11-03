@@ -1706,3 +1706,175 @@ func TestFrequentScanningProtection_UpdateExpand(t *testing.T) {
 	// The output-only Id field MUST NOT be sent in the expand/update request.
 	assert.Nil(t, fsp.Id)
 }
+
+// TestSecurityHeadersToOrigin_ReadFlatten tests Read flattens
+// security_headers_to_origin from the API response.
+func TestSecurityHeadersToOrigin_ReadFlatten(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+		resp := teov20220901.NewDescribeSecurityPolicyResponse()
+		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
+			SecurityPolicy: &teov20220901.SecurityPolicy{
+				SecurityHeadersToOrigin: &teov20220901.SecurityHeadersToOrigin{
+					BotIdentificationHeaders: []*string{ptrStringSecurityPolicy("EO-Bot-Botnet-ID")},
+					BotManagementHeaders: []*string{
+						ptrStringSecurityPolicy("EO-Bot-Client-Attestation"),
+						ptrStringSecurityPolicy("EO-Bot-Intelligence"),
+					},
+					ClientFingerprintHeaders: []*string{ptrStringSecurityPolicy("EO-Bot-Fingerprint")},
+				},
+			},
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaSecurityPolicy()
+	res := teo.ResourceTencentCloudTeoSecurityPolicyConfig()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-12345678",
+		"entity":  "ZoneDefaultPolicy",
+	})
+	d.SetId("zone-12345678#ZoneDefaultPolicy")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+
+	securityPolicy := d.Get("security_policy").([]interface{})
+	assert.Len(t, securityPolicy, 1)
+	spMap := securityPolicy[0].(map[string]interface{})
+
+	securityHeadersToOrigin := spMap["security_headers_to_origin"].([]interface{})
+	assert.Len(t, securityHeadersToOrigin, 1)
+	shtoMap := securityHeadersToOrigin[0].(map[string]interface{})
+
+	botIdentificationHeaders := shtoMap["bot_identification_headers"].([]interface{})
+	assert.Len(t, botIdentificationHeaders, 1)
+	assert.Equal(t, "EO-Bot-Botnet-ID", botIdentificationHeaders[0])
+
+	botManagementHeaders := shtoMap["bot_management_headers"].([]interface{})
+	assert.Len(t, botManagementHeaders, 2)
+	assert.Equal(t, "EO-Bot-Client-Attestation", botManagementHeaders[0])
+	assert.Equal(t, "EO-Bot-Intelligence", botManagementHeaders[1])
+
+	clientFingerprintHeaders := shtoMap["client_fingerprint_headers"].([]interface{})
+	assert.Len(t, clientFingerprintHeaders, 1)
+	assert.Equal(t, "EO-Bot-Fingerprint", clientFingerprintHeaders[0])
+}
+
+// TestSecurityHeadersToOrigin_ReadNil tests Read leaves
+// security_headers_to_origin empty when the API response has a nil SecurityHeadersToOrigin.
+func TestSecurityHeadersToOrigin_ReadNil(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+		resp := teov20220901.NewDescribeSecurityPolicyResponse()
+		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
+			SecurityPolicy: &teov20220901.SecurityPolicy{
+				ManagedRules: &teov20220901.ManagedRules{
+					Enabled: ptrStringSecurityPolicy("on"),
+				},
+			},
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaSecurityPolicy()
+	res := teo.ResourceTencentCloudTeoSecurityPolicyConfig()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-12345678",
+		"entity":  "ZoneDefaultPolicy",
+	})
+	d.SetId("zone-12345678#ZoneDefaultPolicy")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+
+	securityPolicy := d.Get("security_policy").([]interface{})
+	assert.Len(t, securityPolicy, 1)
+	spMap := securityPolicy[0].(map[string]interface{})
+
+	_, ok := spMap["security_headers_to_origin"]
+	assert.True(t, ok)
+	securityHeadersToOrigin := spMap["security_headers_to_origin"].([]interface{})
+	assert.Len(t, securityHeadersToOrigin, 0)
+}
+
+// TestSecurityHeadersToOrigin_UpdateExpand tests Update expands
+// security_headers_to_origin into the ModifySecurityPolicy request.
+func TestSecurityHeadersToOrigin_UpdateExpand(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
+
+	var capturedRequest *teov20220901.ModifySecurityPolicyRequest
+	patches.ApplyMethodFunc(teoClient, "ModifySecurityPolicyWithContext", func(_ context.Context, request *teov20220901.ModifySecurityPolicyRequest) (*teov20220901.ModifySecurityPolicyResponse, error) {
+		capturedRequest = request
+		resp := teov20220901.NewModifySecurityPolicyResponse()
+		resp.Response = &teov20220901.ModifySecurityPolicyResponseParams{
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Mock DescribeSecurityPolicy for the Read call after Update
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+		resp := teov20220901.NewDescribeSecurityPolicyResponse()
+		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
+			SecurityPolicy: &teov20220901.SecurityPolicy{
+				SecurityHeadersToOrigin: &teov20220901.SecurityHeadersToOrigin{
+					BotIdentificationHeaders: []*string{ptrStringSecurityPolicy("EO-Bot-Botnet-ID")},
+					BotManagementHeaders:     []*string{ptrStringSecurityPolicy("EO-Bot-Intelligence")},
+					ClientFingerprintHeaders: []*string{ptrStringSecurityPolicy("EO-Bot-Fingerprint")},
+				},
+			},
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaSecurityPolicy()
+	res := teo.ResourceTencentCloudTeoSecurityPolicyConfig()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-12345678",
+		"entity":  "ZoneDefaultPolicy",
+		"security_policy": []interface{}{
+			map[string]interface{}{
+				"security_headers_to_origin": []interface{}{
+					map[string]interface{}{
+						"bot_identification_headers": []interface{}{"EO-Bot-Botnet-ID"},
+						"bot_management_headers":     []interface{}{"EO-Bot-Intelligence"},
+						"client_fingerprint_headers": []interface{}{"EO-Bot-Fingerprint"},
+					},
+				},
+			},
+		},
+	})
+	d.SetId("zone-12345678#ZoneDefaultPolicy")
+
+	err := res.Update(d, meta)
+	assert.NoError(t, err)
+	assert.NotNil(t, capturedRequest)
+	assert.NotNil(t, capturedRequest.SecurityPolicy)
+	assert.NotNil(t, capturedRequest.SecurityPolicy.SecurityHeadersToOrigin)
+
+	shto := capturedRequest.SecurityPolicy.SecurityHeadersToOrigin
+	assert.Len(t, shto.BotIdentificationHeaders, 1)
+	assert.Equal(t, "EO-Bot-Botnet-ID", *shto.BotIdentificationHeaders[0])
+	assert.Len(t, shto.BotManagementHeaders, 1)
+	assert.Equal(t, "EO-Bot-Intelligence", *shto.BotManagementHeaders[0])
+	assert.Len(t, shto.ClientFingerprintHeaders, 1)
+	assert.Equal(t, "EO-Bot-Fingerprint", *shto.ClientFingerprintHeaders[0])
+}
