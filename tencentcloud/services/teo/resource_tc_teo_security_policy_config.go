@@ -2286,38 +2286,70 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 								},
 							},
 						},
-						"default_deny_security_action_parameters": {
-							Type:        schema.TypeList,
-							Optional:    true,
-							Computed:    true,
-							MaxItems:    1,
-							Description: "Default deny action configuration. If not specified, the existing configuration is kept.",
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"managed_rules": {
-										Type:        schema.TypeList,
-										Optional:    true,
-										Computed:    true,
-										MaxItems:    1,
-										Description: "Managed rules default deny action configuration. Supported parameters: `return_custom_page`, `response_code`, `error_page_id`.",
-										Elem:        defaultDenyActionParametersSchema(),
-									},
-									"other_modules": {
-										Type:        schema.TypeList,
-										Optional:    true,
-										Computed:    true,
-										MaxItems:    1,
-										Description: "Default deny action configuration for security protection rules other than managed rules (custom rules, rate limiting and Bot management). Supported parameters: `return_custom_page`, `response_code`, `error_page_id`.",
-										Elem:        defaultDenyActionParametersSchema(),
-									},
+"default_deny_security_action_parameters": {
+						Type:        schema.TypeList,
+						Optional:    true,
+						Computed:    true,
+						MaxItems:    1,
+						Description: "Default deny action configuration. If not specified, the existing configuration is kept.",
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"managed_rules": {
+									Type:        schema.TypeList,
+									Optional:    true,
+									Computed:    true,
+									MaxItems:    1,
+									Description: "Managed rules default deny action configuration. Supported parameters: `return_custom_page`, `response_code`, `error_page_id`.",
+									Elem:        defaultDenyActionParametersSchema(),
+								},
+								"other_modules": {
+									Type:        schema.TypeList,
+									Optional:    true,
+									Computed:    true,
+									MaxItems:    1,
+									Description: "Default deny action configuration for security protection rules other than managed rules (custom rules, rate limiting and Bot management). Supported parameters: `return_custom_page`, `response_code`, `error_page_id`.",
+									Elem:        defaultDenyActionParametersSchema(),
+								},
+							},
+						},
+					},
+					"security_headers_to_origin": {
+						Type:        schema.TypeList,
+						Optional:    true,
+						Computed:    true,
+						MaxItems:    1,
+						Description: "Security headers passed to origin configuration. When enabled, the corresponding keyname request headers are passed to the origin.",
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"bot_identification_headers": {
+									Type:        schema.TypeList,
+									Optional:    true,
+									Computed:    true,
+									Elem:        &schema.Schema{Type: schema.TypeString},
+									Description: "Bot identification headers passed to origin. Valid value: `EO-Bot-Botnet-ID`.",
+								},
+								"bot_management_headers": {
+									Type:        schema.TypeList,
+									Optional:    true,
+									Computed:    true,
+									Elem:        &schema.Schema{Type: schema.TypeString},
+									Description: "Advanced bot management module recognition result headers passed to origin. Valid values: `EO-Bot-Client-Attestation`, `EO-Bot-Client-Risk`, `EO-Bot-Intelligence`, `EO-Bot-IP-Reputation`, `EO-Bot-Known-Tool`, `EO-Bot-Search-Engine`, `EO-Bot-Source-IDC`, `EO-Bot-User-Risk`.",
+								},
+								"client_fingerprint_headers": {
+									Type:        schema.TypeList,
+									Optional:    true,
+									Computed:    true,
+									Elem:        &schema.Schema{Type: schema.TypeString},
+									Description: "Client fingerprint headers passed to origin. Valid value: `EO-Bot-Fingerprint`.",
 								},
 							},
 						},
 					},
 				},
 			},
+		},
 
-			"security_config": {
+		"security_config": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Computed:    true,
@@ -4468,6 +4500,20 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 		securityPolicyMap["default_deny_security_action_parameters"] = []interface{}{defaultDenyMap}
 	}
 
+	if respData.SecurityHeadersToOrigin != nil {
+		securityHeadersToOriginMap := map[string]interface{}{}
+		if respData.SecurityHeadersToOrigin.BotIdentificationHeaders != nil {
+			securityHeadersToOriginMap["bot_identification_headers"] = respData.SecurityHeadersToOrigin.BotIdentificationHeaders
+		}
+		if respData.SecurityHeadersToOrigin.BotManagementHeaders != nil {
+			securityHeadersToOriginMap["bot_management_headers"] = respData.SecurityHeadersToOrigin.BotManagementHeaders
+		}
+		if respData.SecurityHeadersToOrigin.ClientFingerprintHeaders != nil {
+			securityHeadersToOriginMap["client_fingerprint_headers"] = respData.SecurityHeadersToOrigin.ClientFingerprintHeaders
+		}
+		securityPolicyMap["security_headers_to_origin"] = []interface{}{securityHeadersToOriginMap}
+	}
+
 	securityPolicyList = append(securityPolicyList, securityPolicyMap)
 	_ = d.Set("security_policy", securityPolicyList)
 
@@ -5936,6 +5982,29 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 				defaultDeny.OtherModules = buildDenyActionParametersFromMap(otherModulesMap)
 			}
 			securityPolicy.DefaultDenySecurityActionParameters = &defaultDeny
+		}
+
+		if shtoMap, ok := helper.ConvertInterfacesHeadToMap(securityPolicyMap["security_headers_to_origin"]); ok {
+			securityHeadersToOrigin := teov20220901.SecurityHeadersToOrigin{}
+			if v, ok := shtoMap["bot_identification_headers"]; ok {
+				headers := helper.InterfacesStringsPoint(v.([]interface{}))
+				if len(headers) > 0 {
+					securityHeadersToOrigin.BotIdentificationHeaders = headers
+				}
+			}
+			if v, ok := shtoMap["bot_management_headers"]; ok {
+				headers := helper.InterfacesStringsPoint(v.([]interface{}))
+				if len(headers) > 0 {
+					securityHeadersToOrigin.BotManagementHeaders = headers
+				}
+			}
+			if v, ok := shtoMap["client_fingerprint_headers"]; ok {
+				headers := helper.InterfacesStringsPoint(v.([]interface{}))
+				if len(headers) > 0 {
+					securityHeadersToOrigin.ClientFingerprintHeaders = headers
+				}
+			}
+			securityPolicy.SecurityHeadersToOrigin = &securityHeadersToOrigin
 		}
 
 		request.SecurityPolicy = &securityPolicy
