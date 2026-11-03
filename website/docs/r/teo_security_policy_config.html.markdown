@@ -2168,6 +2168,12 @@ The `security_config` object supports the following:
 * `switch_config` - (Optional, List) Layer-7 protection master switch.
 * `waf_config` - (Optional, List) Managed rules configuration.
 
+The `security_headers_to_origin` object of `security_policy` supports the following:
+
+* `bot_identification_headers` - (Optional, List) Bot identification headers passed to origin. Valid value: `EO-Bot-Botnet-ID`.
+* `bot_management_headers` - (Optional, List) Advanced bot management module recognition result headers passed to origin. Valid values: `EO-Bot-Client-Attestation`, `EO-Bot-Client-Risk`, `EO-Bot-Intelligence`, `EO-Bot-IP-Reputation`, `EO-Bot-Known-Tool`, `EO-Bot-Search-Engine`, `EO-Bot-Source-IDC`, `EO-Bot-User-Risk`.
+* `client_fingerprint_headers` - (Optional, List) Client fingerprint headers passed to origin. Valid value: `EO-Bot-Fingerprint`.
+
 The `security_policy` object supports the following:
 
 * `bot_management_lite` - (Optional, List) Basic Bot management configuration.
@@ -2178,6 +2184,7 @@ The `security_policy` object supports the following:
 * `http_ddos_protection` - (Optional, List) HTTP DDOS protection configuration.
 * `managed_rules` - (Optional, List) Managed rule configuration.
 * `rate_limiting_rules` - (Optional, List) Rate limiting rule configuration.
+* `security_headers_to_origin` - (Optional, List) Security headers passed to origin configuration. When enabled, the corresponding keyname request headers are passed to the origin.
 
 The `session_expired_action` object of `bot_session_validation` supports the following:
 

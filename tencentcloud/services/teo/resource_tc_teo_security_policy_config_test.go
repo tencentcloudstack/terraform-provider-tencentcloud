@@ -1835,9 +1835,9 @@ func TestSecurityHeadersToOrigin_UpdateExpand(t *testing.T) {
 		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
 			SecurityPolicy: &teov20220901.SecurityPolicy{
 				SecurityHeadersToOrigin: &teov20220901.SecurityHeadersToOrigin{
-					BotIdentificationHeaders:  []*string{ptrStringSecurityPolicy("EO-Bot-Botnet-ID")},
-					BotManagementHeaders:      []*string{ptrStringSecurityPolicy("EO-Bot-Intelligence")},
-					ClientFingerprintHeaders:  []*string{ptrStringSecurityPolicy("EO-Bot-Fingerprint")},
+					BotIdentificationHeaders: []*string{ptrStringSecurityPolicy("EO-Bot-Botnet-ID")},
+					BotManagementHeaders:     []*string{ptrStringSecurityPolicy("EO-Bot-Intelligence")},
+					ClientFingerprintHeaders: []*string{ptrStringSecurityPolicy("EO-Bot-Fingerprint")},
 				},
 			},
 			RequestId: ptrStringSecurityPolicy("fake-request-id"),
