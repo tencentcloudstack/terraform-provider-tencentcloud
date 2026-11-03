@@ -553,3 +553,86 @@ func (me *FwmService) DescribeFwmNatAclRuleById(ctx context.Context, groupId, ru
 
 	return
 }
+
+func (me *FwmService) DescribeFwmVpcAclRuleById(ctx context.Context, groupId, ruleId string) (ret *fwmv20250611.VpcAclRuleResp, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := fwmv20250611.NewDescribeVpcAclRulesRequest()
+	request.GroupId = helper.String(groupId)
+	request.Limit = helper.Int64(100)
+	request.Offset = helper.Int64(0)
+	request.Filters = []*fwmv20250611.CommonFilter{
+		{
+			Name:         helper.String("RuleId"),
+			Values:       []*string{helper.String(ruleId)},
+			OperatorType: helper.Int64(1),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseFwmV20250611Client().DescribeVpcAclRulesWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe fwm vpc_acl_rule failed, Response is nil."))
+		}
+
+		if len(result.Response.Rules) == 0 {
+			return nil
+		}
+
+		ret = result.Response.Rules[0]
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
+func (me *FwmService) DeleteFwmVpcAclRuleById(ctx context.Context, groupId, ruleId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := fwmv20250611.NewDeleteVpcAclRuleRequest()
+	request.GroupId = helper.String(groupId)
+	request.RuleIds = []*string{helper.String(ruleId)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseFwmV20250611Client().DeleteVpcAclRuleWithContext(ctx, request)
+		if e != nil {
+			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok && ee.GetCode() == "ResourceNotFound" {
+				return nil
+			}
+			return tccommon.RetryError(e)
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+	}
+
+	return
+}
