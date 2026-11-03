@@ -5,8 +5,8 @@ Example Usage
 ```hcl
 resource "tencentcloud_fwm_vpc_acl_rule" "example" {
   group_id       = "fwmrg-y53zyyg7da"
-  edge_id        = "all"
-  fw_group_id    = "all"
+  edge_id        = "ALL"
+  fw_group_id    = "ALL"
   source_type    = "net"
   source_content = "0.0.0.0/0"
   dest_type      = "net"
