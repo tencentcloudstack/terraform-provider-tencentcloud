@@ -648,10 +648,10 @@ const fwmDispatchStrategyStatusBegin int64 = 1
 // 0=no change / pending, 1=dispatching, 2=succeeded, 3=failed. The provider
 // treats 0 and 1 as in-progress and waits, 2 as success, 3 as failure.
 const (
-	fwmDispatchStatusNoChange  int64 = 0
+	fwmDispatchStatusNoChange    int64 = 0
 	fwmDispatchStatusDispatching int64 = 1
-	fwmDispatchStatusSucceeded    int64 = 2
-	fwmDispatchStatusFailed     int64 = 3
+	fwmDispatchStatusSucceeded   int64 = 2
+	fwmDispatchStatusFailed      int64 = 3
 )
 
 // DispatchFwmStrategy triggers a one-time strategy dispatch for the given

@@ -44,10 +44,10 @@ var fwmDispatchStrategyPollInterval = 5 * time.Second
 // DispatchStrategy API. `all` is intentionally excluded: dispatch operates on a
 // single product line at a time.
 var allowedFwmDispatchProducts = map[string]bool{
-	"enterprise_sg":  true,
-	"cfw_vpc_acl":  true,
-	"cfw_nat_acl": true,
-	"cfw_edge_acl":   true,
+	"enterprise_sg": true,
+	"cfw_vpc_acl":   true,
+	"cfw_nat_acl":   true,
+	"cfw_edge_acl":  true,
 }
 
 // DispatchStatus exports the DescribeStrategyDispatchStatus.Response.Status
@@ -57,7 +57,7 @@ const (
 	DispatchStatusNoChange    = fwmDispatchStatusNoChange
 	DispatchStatusDispatching = fwmDispatchStatusDispatching
 	DispatchStatusSucceeded   = fwmDispatchStatusSucceeded
-	DispatchStatusFailed   = fwmDispatchStatusFailed
+	DispatchStatusFailed      = fwmDispatchStatusFailed
 )
 
 // FwmDispatchStrategyPollIntervalForTest exposes the poll interval for tests
@@ -89,8 +89,8 @@ type FwmDispatchStrategy struct {
 // operator UIN / SubAccountUin are injected by the API gateway, so they are
 // accepted on the Terraform side for clarity/auditability but not forwarded.
 type FwmDispatchStrategyModel struct {
-	Product     types.String `tfsdk:"product"`
-	Uin         types.String `tfsdk:"uin"`
+	Product       types.String `tfsdk:"product"`
+	Uin           types.String `tfsdk:"uin"`
 	SubAccountUin types.String `tfsdk:"sub_account_uin"`
 
 	// Timeouts is the value type defined by the official
@@ -111,7 +111,7 @@ func (a *FwmDispatchStrategy) Schema(ctx context.Context, _ action.SchemaRequest
 			"The dispatch dispatches every pending (new / pending-dispatch) strategy of the current account x product; " +
 			"it cannot target a single rule. The cloud API has no idempotency key and does not block a running task, " +
 			"so the provider first checks the latest task status and, if a dispatch is already in progress, reuses it " +
-		"instead of triggering another one; dispatches of the same product should still be serialized. " +
+			"instead of triggering another one; dispatches of the same product should still be serialized. " +
 			"Create success does NOT mean dispatch success: the action polls DescribeStrategyDispatchStatus to a " +
 			"terminal state (succeeded / failed) before returning. Re-running the dispatch should be done by tainting " +
 			"the action or changing a trigger field; destroy does not roll back the dispatched rules and the far-side " +
