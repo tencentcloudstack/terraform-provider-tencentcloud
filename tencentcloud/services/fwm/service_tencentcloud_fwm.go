@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -635,4 +636,130 @@ func (me *FwmService) DeleteFwmVpcAclRuleById(ctx context.Context, groupId, rule
 	}
 
 	return
+}
+
+// fwmDispatchStrategyStatusBegin marks "start dispatch". The DispatchStrategy
+// API carries an inverse pair in its Status field (1=start, 2=abort), but the
+// server only implements the start case; any other value falls through to
+// InvalidParameter, so the provider pins it to 1.
+const fwmDispatchStrategyStatusBegin int64 = 1
+
+// FwmDispatchStrategyStatus enum from DescribeStrategyDispatchStatus.Response.Status:
+// 0=no change / pending, 1=dispatching, 2=succeeded, 3=failed. The provider
+// treats 0 and 1 as in-progress and waits, 2 as success, 3 as failure.
+const (
+	fwmDispatchStatusNoChange  int64 = 0
+	fwmDispatchStatusDispatching int64 = 1
+	fwmDispatchStatusSucceeded    int64 = 2
+	fwmDispatchStatusFailed     int64 = 3
+)
+
+// DispatchFwmStrategy triggers a one-time strategy dispatch for the given
+// product via the DispatchStrategy API. The cloud-side operator Uin /
+// SubAccountUin are injected by the API gateway rather than carried in the
+// request body, so they are validated on the Terraform side but not passed
+// here. The response carries no business fields (only RequestId); dispatch
+// completion is verified separately through DescribeStrategyDispatchStatus.
+func (me *FwmService) DispatchFwmStrategy(ctx context.Context, product string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := fwmv20250611.NewDispatchStrategyRequest()
+	request.Status = helper.Int64(fwmDispatchStrategyStatusBegin)
+	request.Product = helper.String(product)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseFwmV20250611Client().DispatchStrategyWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+	}
+
+	return
+}
+
+// DescribeFwmStrategyDispatchStatus queries the latest dispatch task status for
+// the given product (app id / uin are injected by the gateway). The response is
+// the latest task of that account x product, so a nil status means no task has
+// been started yet.
+func (me *FwmService) DescribeFwmStrategyDispatchStatus(ctx context.Context, product string) (status *fwmv20250611.DescribeStrategyDispatchStatusResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := fwmv20250611.NewDescribeStrategyDispatchStatusRequest()
+	request.Product = helper.String(product)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseFwmV20250611Client().DescribeStrategyDispatchStatusWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("DescribeStrategyDispatchStatus returned an empty response."))
+		}
+
+		status = result.Response
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+	}
+
+	return
+}
+
+// WaitFwmStrategyDispatchComplete polls DescribeStrategyDispatchStatus until the
+// dispatch task reaches a terminal state (succeeded=2 / failed=3), or the
+// timeout budget is exhausted. It returns the last observed status snapshot so
+// callers can attach it to a timeout/failure diagnostic.
+func (me *FwmService) WaitFwmStrategyDispatchComplete(ctx context.Context, product string, timeout time.Duration, pollInterval time.Duration) (last *fwmv20250611.DescribeStrategyDispatchStatusResponseParams, err error) {
+	deadline := time.Now().Add(timeout)
+	for {
+		latest, e := me.DescribeFwmStrategyDispatchStatus(ctx, product)
+		if e != nil {
+			err = e
+			return
+		}
+		last = latest
+		if latest != nil && latest.Status != nil {
+			switch *latest.Status {
+			case fwmDispatchStatusSucceeded:
+				return
+			case fwmDispatchStatusFailed:
+				errMsg := "unknown"
+				if latest.ErrorMsg != nil {
+					errMsg = *latest.ErrorMsg
+				}
+				err = fmt.Errorf("dispatch strategy failed, ErrorMsg: %s", errMsg)
+				return
+			}
+		}
+
+		if time.Now().After(deadline) {
+			err = fmt.Errorf("dispatch strategy did not converge within %s", timeout)
+			return
+		}
+		time.Sleep(pollInterval)
+	}
 }
