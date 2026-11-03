@@ -2723,6 +2723,10 @@ Resource
 tencentcloud_tcss_cluster_access
 tencentcloud_tcss_refresh_task_operation
 
+Agent Sandbox(AGS)
+Resource
+tencentcloud_ags_sandbox_tool
+
 Intelligent Global Traffic Manager(IGTM)
 Data Source
 tencentcloud_igtm_instance_list
