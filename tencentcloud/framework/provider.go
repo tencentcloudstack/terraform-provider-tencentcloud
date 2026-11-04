@@ -142,6 +142,10 @@ func (p *Provider) Schema(_ context.Context, _ provider.SchemaRequest, resp *pro
 				Optional:    true,
 				Description: "The root domain of the API request, Default is `tencentcloudapi.com`.",
 			},
+			"endpoint": schema.StringAttribute{
+				Optional:    true,
+				Description: "The endpoint of the API request. If set, all API requests will be sent to this endpoint instead of the default one. It is mainly used for testing, e.g. `127.0.0.1:8080`. It can also be sourced from the `TENCENTCLOUD_ENDPOINT` environment variable.",
+			},
 			"cos_domain": schema.StringAttribute{
 				Optional:    true,
 				Description: "The cos domain of the API request, Default is `https://cos.{region}.myqcloud.com`, Other Examples: `https://cluster-123456.cos-cdc.ap-guangzhou.myqcloud.com`.",

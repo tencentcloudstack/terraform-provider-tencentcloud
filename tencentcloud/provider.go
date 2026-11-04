@@ -143,6 +143,7 @@ const (
 	PROVIDER_REGION         = "TENCENTCLOUD_REGION"
 	PROVIDER_PROTOCOL       = "TENCENTCLOUD_PROTOCOL"
 	PROVIDER_DOMAIN         = "TENCENTCLOUD_DOMAIN"
+	PROVIDER_ENDPOINT       = "TENCENTCLOUD_ENDPOINT"
 	PROVIDER_COS_DOMAIN     = "TENCENTCLOUD_COS_DOMAIN"
 	//internal version: replace envYunti begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace envYunti end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
@@ -232,6 +233,12 @@ func Provider() *schema.Provider {
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_DOMAIN, nil),
 				Description: "The root domain of the API request, Default is `tencentcloudapi.com`.",
+			},
+			"endpoint": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ENDPOINT, nil),
+				Description: "The endpoint of the API request. If set, all API requests will be sent to this endpoint instead of the default one. It is mainly used for testing, e.g. `127.0.0.1:8080`. It can also be sourced from the `TENCENTCLOUD_ENDPOINT` environment variable.",
 			},
 			"cos_domain": {
 				Type:        schema.TypeString,
@@ -2835,6 +2842,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		region              string
 		protocol            string
 		domain              string
+		endpoint            string
 		cosDomain           string
 		camRoleName         string
 		allowedAccountIds   []string
@@ -2881,6 +2889,10 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		domain = v.(string)
 	}
 
+	if v, ok := d.GetOk("endpoint"); ok {
+		endpoint = v.(string)
+	}
+
 	if v, ok := d.GetOk("cos_domain"); ok {
 		cosDomain = v.(string)
 	}
@@ -2900,6 +2912,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		Region:    region,
 		Protocol:  protocol,
 		Domain:    domain,
+		Endpoint:  endpoint,
 		CosDomain: cosDomain,
 	}
 

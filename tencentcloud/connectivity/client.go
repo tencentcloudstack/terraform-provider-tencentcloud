@@ -143,6 +143,7 @@ type TencentCloudClient struct {
 	Region     string
 	Protocol   string
 	Domain     string
+	Endpoint   string
 	CosDomain  string
 
 	cosConn               *s3.S3
@@ -290,6 +291,8 @@ func (me *TencentCloudClient) NewClientProfile(timeout int) *profile.ClientProfi
 	cpf.HttpProfile.Scheme = me.Protocol
 	// request domain
 	cpf.HttpProfile.RootDomain = me.Domain
+	// request endpoint, mainly for testing
+	cpf.HttpProfile.Endpoint = me.Endpoint
 	// default language
 	cpf.Language = "en-US"
 
@@ -308,6 +311,8 @@ func (me *TencentCloudClient) NewClientIntlProfile(timeout int) *intlProfile.Cli
 	cpf.HttpProfile.Scheme = me.Protocol
 	// request domain
 	cpf.HttpProfile.RootDomain = me.Domain
+	// request endpoint, mainly for testing
+	cpf.HttpProfile.Endpoint = me.Endpoint
 	// default language
 	cpf.Language = "en-US"
 
