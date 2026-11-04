@@ -20,6 +20,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bdrc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dlc"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fwm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/kms"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mongodb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssl"
@@ -58,6 +59,7 @@ var actionFactories = []func() action.Action{
 	ssl.NewSslUploadCertificateInstance,
 	kms.NewKmsInstance,
 	ssm.NewSsmServiceAction,
+	fwm.NewFwmDispatchStrategy,
 }
 
 // frameworkResources returns every framework Resource factory.
