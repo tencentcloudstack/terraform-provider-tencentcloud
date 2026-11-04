@@ -54,25 +54,23 @@ func nullFwmDispatchStrategyTimeoutsValue() tftypes.Value {
 	return tftypes.NewValue(fwmDispatchStrategyTimeoutsObjType(), nil)
 }
 
-func newFwmDispatchStrategyInvokeRequest(t *testing.T, product, uin, subAccountUin string) action.InvokeRequest {
-	return newFwmDispatchStrategyInvokeRequestWithTimeouts(t, product, uin, subAccountUin, nullFwmDispatchStrategyTimeoutsValue())
+func newFwmDispatchStrategyInvokeRequest(t *testing.T, product string, status int64) action.InvokeRequest {
+	return newFwmDispatchStrategyInvokeRequestWithTimeouts(t, product, status, nullFwmDispatchStrategyTimeoutsValue())
 }
 
-func newFwmDispatchStrategyInvokeRequestWithTimeouts(t *testing.T, product, uin, subAccountUin string, timeoutsVal tftypes.Value) action.InvokeRequest {
+func newFwmDispatchStrategyInvokeRequestWithTimeouts(t *testing.T, product string, status int64, timeoutsVal tftypes.Value) action.InvokeRequest {
 	s := fwmDispatchStrategySchema(t)
 
 	raw := tftypes.NewValue(tftypes.Object{
 		AttributeTypes: map[string]tftypes.Type{
-			"product":         tftypes.String,
-			"uin":             tftypes.String,
-			"sub_account_uin": tftypes.String,
-			"timeouts":        fwmDispatchStrategyTimeoutsObjType(),
+			"product":  tftypes.String,
+			"status":   tftypes.Number,
+			"timeouts": fwmDispatchStrategyTimeoutsObjType(),
 		},
 	}, map[string]tftypes.Value{
-		"product":         tftypes.NewValue(tftypes.String, product),
-		"uin":             tftypes.NewValue(tftypes.String, uin),
-		"sub_account_uin": tftypes.NewValue(tftypes.String, subAccountUin),
-		"timeouts":        timeoutsVal,
+		"product":  tftypes.NewValue(tftypes.String, product),
+		"status":   tftypes.NewValue(tftypes.Number, status),
+		"timeouts": timeoutsVal,
 	})
 
 	req := action.InvokeRequest{}
@@ -160,7 +158,7 @@ func TestFwmDispatchStrategy_Invoke_Success(t *testing.T) {
 	a := aImpl.(*fwm.FwmDispatchStrategy)
 	setFwmDispatchStrategyClient(a, client)
 
-	req := newFwmDispatchStrategyInvokeRequest(t, "enterprise_sg", "100011949846", "")
+	req := newFwmDispatchStrategyInvokeRequest(t, "enterprise_sg", 1)
 	resp := &action.InvokeResponse{}
 	a.Invoke(context.Background(), req, resp)
 
@@ -171,6 +169,46 @@ func TestFwmDispatchStrategy_Invoke_Success(t *testing.T) {
 	assert.Equal(t, int64(1), *gotReq.Status)
 	assert.NotNil(t, gotReq.Product)
 	assert.Equal(t, "enterprise_sg", *gotReq.Product)
+}
+
+// TestFwmDispatchStrategy_Invoke_StatusPassthrough verifies the user-provided
+// status is forwarded to DispatchStrategy as-is, without provider-side
+// interpretation or rewriting.
+func TestFwmDispatchStrategy_Invoke_StatusPassthrough(t *testing.T) {
+	defer shortenPollInterval(t)()
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	client := &connectivity.TencentCloudClient{}
+	patchFwmClient(patches, client)
+
+	var gotReq *fwmv20250611.DispatchStrategyRequest
+	patchDispatch(patches, func(_ context.Context, req *fwmv20250611.DispatchStrategyRequest) (*fwmv20250611.DispatchStrategyResponse, error) {
+		gotReq = req
+		resp := fwmv20250611.NewDispatchStrategyResponse()
+		resp.Response = &fwmv20250611.DispatchStrategyResponseParams{RequestId: ptrStringFwmDispatch("fake-request-id")}
+		return resp, nil
+	})
+
+	patchStatus(patches, func(_ context.Context, req *fwmv20250611.DescribeStrategyDispatchStatusRequest) (*fwmv20250611.DescribeStrategyDispatchStatusResponse, error) {
+		resp := fwmv20250611.NewDescribeStrategyDispatchStatusResponse()
+		resp.Response = dispatchStatus(fwm.DispatchStatusSucceeded, 100, "")
+		return resp, nil
+	})
+
+	aImpl := fwm.NewFwmDispatchStrategy()
+	a := aImpl.(*fwm.FwmDispatchStrategy)
+	setFwmDispatchStrategyClient(a, client)
+
+	// status=2 (abort) must reach the API untouched.
+	req := newFwmDispatchStrategyInvokeRequest(t, "enterprise_sg", 2)
+	resp := &action.InvokeResponse{}
+	a.Invoke(context.Background(), req, resp)
+
+	assert.False(t, resp.Diagnostics.HasError(), "expected no error diagnostics, got: %v", resp.Diagnostics)
+	assert.NotNil(t, gotReq)
+	assert.NotNil(t, gotReq.Status)
+	assert.Equal(t, int64(2), *gotReq.Status)
 }
 
 // TestFwmDispatchStrategy_Invoke_ReuseInProgress tests that an in-progress task
@@ -208,7 +246,7 @@ func TestFwmDispatchStrategy_Invoke_ReuseInProgress(t *testing.T) {
 	a := aImpl.(*fwm.FwmDispatchStrategy)
 	setFwmDispatchStrategyClient(a, client)
 
-	req := newFwmDispatchStrategyInvokeRequest(t, "cfw_vpc_acl", "100011949846", "")
+	req := newFwmDispatchStrategyInvokeRequest(t, "cfw_vpc_acl", 1)
 	resp := &action.InvokeResponse{}
 	a.Invoke(context.Background(), req, resp)
 
@@ -240,7 +278,7 @@ func TestFwmDispatchStrategy_Invoke_DispatchError(t *testing.T) {
 	a := aImpl.(*fwm.FwmDispatchStrategy)
 	setFwmDispatchStrategyClient(a, client)
 
-	req := newFwmDispatchStrategyInvokeRequest(t, "cfw_nat_acl", "100011949846", "")
+	req := newFwmDispatchStrategyInvokeRequest(t, "cfw_nat_acl", 1)
 	resp := &action.InvokeResponse{}
 	a.Invoke(context.Background(), req, resp)
 
@@ -266,7 +304,7 @@ func TestFwmDispatchStrategy_Invoke_StatusQueryError(t *testing.T) {
 	a := aImpl.(*fwm.FwmDispatchStrategy)
 	setFwmDispatchStrategyClient(a, client)
 
-	req := newFwmDispatchStrategyInvokeRequest(t, "cfw_edge_acl", "100011949846", "")
+	req := newFwmDispatchStrategyInvokeRequest(t, "cfw_edge_acl", 1)
 	resp := &action.InvokeResponse{}
 	a.Invoke(context.Background(), req, resp)
 
@@ -304,7 +342,7 @@ func TestFwmDispatchStrategy_Invoke_PollFailed(t *testing.T) {
 	a := aImpl.(*fwm.FwmDispatchStrategy)
 	setFwmDispatchStrategyClient(a, client)
 
-	req := newFwmDispatchStrategyInvokeRequest(t, "enterprise_sg", "100011949846", "")
+	req := newFwmDispatchStrategyInvokeRequest(t, "enterprise_sg", 1)
 	resp := &action.InvokeResponse{}
 	a.Invoke(context.Background(), req, resp)
 
@@ -349,7 +387,7 @@ func TestFwmDispatchStrategy_Invoke_PollTimeout(t *testing.T) {
 	timeoutVal := tftypes.NewValue(fwmDispatchStrategyTimeoutsObjType(), map[string]tftypes.Value{
 		"invoke": tftypes.NewValue(tftypes.String, "50ms"),
 	})
-	req := newFwmDispatchStrategyInvokeRequestWithTimeouts(t, "cfw_vpc_acl", "100011949846", "", timeoutVal)
+	req := newFwmDispatchStrategyInvokeRequestWithTimeouts(t, "cfw_vpc_acl", 1, timeoutVal)
 	resp := &action.InvokeResponse{}
 	a.Invoke(context.Background(), req, resp)
 
@@ -358,72 +396,44 @@ func TestFwmDispatchStrategy_Invoke_PollTimeout(t *testing.T) {
 	assert.Contains(t, resp.Diagnostics.Errors()[0].Detail(), "did not converge")
 }
 
-// TestFwmDispatchStrategy_Invoke_InvalidProduct tests invalid product rejection
-// before any API call.
-func TestFwmDispatchStrategy_Invoke_InvalidProduct(t *testing.T) {
+// TestFwmDispatchStrategy_Invoke_ProductPassthrough tests the product value is
+// forwarded to the API as-is, without any provider-side enum validation.
+func TestFwmDispatchStrategy_Invoke_ProductPassthrough(t *testing.T) {
+	defer shortenPollInterval(t)()
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	client := &connectivity.TencentCloudClient{}
 	patchFwmClient(patches, client)
 
-	apiCalled := false
-	patchStatus(patches, func(_ context.Context, req *fwmv20250611.DescribeStrategyDispatchStatusRequest) (*fwmv20250611.DescribeStrategyDispatchStatusResponse, error) {
-		apiCalled = true
-		return fwmv20250611.NewDescribeStrategyDispatchStatusResponse(), nil
-	})
+	var gotReq *fwmv20250611.DispatchStrategyRequest
 	patchDispatch(patches, func(_ context.Context, req *fwmv20250611.DispatchStrategyRequest) (*fwmv20250611.DispatchStrategyResponse, error) {
-		apiCalled = true
-		return fwmv20250611.NewDispatchStrategyResponse(), nil
+		gotReq = req
+		resp := fwmv20250611.NewDispatchStrategyResponse()
+		resp.Response = &fwmv20250611.DispatchStrategyResponseParams{RequestId: ptrStringFwmDispatch("fake-request-id")}
+		return resp, nil
 	})
 
-	aImpl := fwm.NewFwmDispatchStrategy()
-	a := aImpl.(*fwm.FwmDispatchStrategy)
-	setFwmDispatchStrategyClient(a, client)
-
-	req := newFwmDispatchStrategyInvokeRequest(t, "all", "100011949846", "")
-	resp := &action.InvokeResponse{}
-	a.Invoke(context.Background(), req, resp)
-
-	assert.True(t, resp.Diagnostics.HasError())
-	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "Invalid product")
-	assert.False(t, apiCalled)
-}
-
-// TestFwmDispatchStrategy_Invoke_MissingInput tests missing required inputs are
-// rejected before any API call.
-func TestFwmDispatchStrategy_Invoke_MissingInput(t *testing.T) {
-	patches := gomonkey.NewPatches()
-	defer patches.Reset()
-
-	client := &connectivity.TencentCloudClient{}
-	patchFwmClient(patches, client)
-
-	apiCalled := false
 	patchStatus(patches, func(_ context.Context, req *fwmv20250611.DescribeStrategyDispatchStatusRequest) (*fwmv20250611.DescribeStrategyDispatchStatusResponse, error) {
-		apiCalled = true
-		return fwmv20250611.NewDescribeStrategyDispatchStatusResponse(), nil
+		resp := fwmv20250611.NewDescribeStrategyDispatchStatusResponse()
+		resp.Response = dispatchStatus(fwm.DispatchStatusSucceeded, 100, "")
+		return resp, nil
 	})
 
 	aImpl := fwm.NewFwmDispatchStrategy()
 	a := aImpl.(*fwm.FwmDispatchStrategy)
 	setFwmDispatchStrategyClient(a, client)
 
-	// empty product
-	req := newFwmDispatchStrategyInvokeRequest(t, "", "100011949846", "")
+	// "secgroup" is used by the API reference sample but is not in any provider
+	// allow-list; it must still reach the API untouched.
+	req := newFwmDispatchStrategyInvokeRequest(t, "secgroup", 1)
 	resp := &action.InvokeResponse{}
 	a.Invoke(context.Background(), req, resp)
-	assert.True(t, resp.Diagnostics.HasError())
-	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "Missing product")
-	assert.False(t, apiCalled)
 
-	// empty uin
-	req = newFwmDispatchStrategyInvokeRequest(t, "enterprise_sg", "", "")
-	resp = &action.InvokeResponse{}
-	a.Invoke(context.Background(), req, resp)
-	assert.True(t, resp.Diagnostics.HasError())
-	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "Missing uin")
-	assert.False(t, apiCalled)
+	assert.False(t, resp.Diagnostics.HasError(), "expected no error diagnostics, got: %v", resp.Diagnostics)
+	assert.NotNil(t, gotReq)
+	assert.NotNil(t, gotReq.Product)
+	assert.Equal(t, "secgroup", *gotReq.Product)
 }
 
 // TestFwmDispatchStrategy_Invoke_ClientNotConfigured tests the nil-client guard.
@@ -431,7 +441,7 @@ func TestFwmDispatchStrategy_Invoke_ClientNotConfigured(t *testing.T) {
 	aImpl := fwm.NewFwmDispatchStrategy()
 	a := aImpl.(*fwm.FwmDispatchStrategy)
 
-	req := newFwmDispatchStrategyInvokeRequest(t, "enterprise_sg", "100011949846", "")
+	req := newFwmDispatchStrategyInvokeRequest(t, "enterprise_sg", 1)
 	resp := &action.InvokeResponse{}
 	a.Invoke(context.Background(), req, resp)
 
@@ -455,13 +465,14 @@ func TestFwmDispatchStrategy_MetadataAndSchema(t *testing.T) {
 
 	attrs := schemaResp.Schema.Attributes
 	assert.Contains(t, attrs, "product")
-	assert.Contains(t, attrs, "uin")
-	assert.Contains(t, attrs, "sub_account_uin")
 	assert.True(t, attrs["product"].IsRequired())
-	assert.True(t, attrs["uin"].IsRequired())
-	assert.True(t, attrs["sub_account_uin"].IsOptional())
-	// Operation has no Computed / status output attribute.
-	assert.NotContains(t, attrs, "status")
+	// The DispatchStrategy API only carries Product and Status, so no other
+	// business attribute is allowed to leak into the schema.
+	assert.Len(t, attrs, 2)
+	assert.Contains(t, attrs, "status")
+	assert.True(t, attrs["status"].IsRequired())
+	assert.NotContains(t, attrs, "uin")
+	assert.NotContains(t, attrs, "sub_account_uin")
 
 	blocks := schemaResp.Schema.Blocks
 	assert.Contains(t, blocks, "timeouts")

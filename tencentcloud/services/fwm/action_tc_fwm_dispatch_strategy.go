@@ -40,16 +40,6 @@ var defaultFwmDispatchStrategyInvokeTimeout = tccommon.WriteRetryTimeout
 // so unit tests can shorten it.
 var fwmDispatchStrategyPollInterval = 5 * time.Second
 
-// allowedFwmDispatchProducts lists the valid Product values accepted by the
-// DispatchStrategy API. `all` is intentionally excluded: dispatch operates on a
-// single product line at a time.
-var allowedFwmDispatchProducts = map[string]bool{
-	"enterprise_sg": true,
-	"cfw_vpc_acl":   true,
-	"cfw_nat_acl":   true,
-	"cfw_edge_acl":  true,
-}
-
 // DispatchStatus exports the DescribeStrategyDispatchStatus.Response.Status
 // enum for tests: DispatchStatusNoChange (0), DispatchStatusDispatching (1),
 // DispatchStatusSucceeded (2), DispatchStatusFailed (3).
@@ -84,14 +74,14 @@ type FwmDispatchStrategy struct {
 //
 // Action schemas cannot be Computed or Sensitive: the only marks available are
 // Required / Optional / WriteOnly (WriteOnly needs framework v1.17.0+).
-// `product` and `uin` are required; `sub_account_uin` is optional. The cloud
-// API only carries `product` (status is pinned to start=1 server-side); the
-// operator UIN / SubAccountUin are injected by the API gateway, so they are
-// accepted on the Terraform side for clarity/auditability but not forwarded.
+// `product` and `status` are the only business inputs of the DispatchStrategy
+// API (see https://cloud.tencent.com/document/api/1812/133554); both are
+// forwarded to the cloud as-is, without any provider-side rewriting. The
+// operator identity is implied by the provider credential, so no account UIN
+// is passed. `timeouts` is a provider-side block, not an API field.
 type FwmDispatchStrategyModel struct {
-	Product       types.String `tfsdk:"product"`
-	Uin           types.String `tfsdk:"uin"`
-	SubAccountUin types.String `tfsdk:"sub_account_uin"`
+	Product types.String `tfsdk:"product"`
+	Status  types.Int64  `tfsdk:"status"`
 
 	// Timeouts is the value type defined by the official
 	// terraform-plugin-framework-timeouts module. Only the `invoke` stage
@@ -106,28 +96,27 @@ func (a *FwmDispatchStrategy) Metadata(_ context.Context, _ action.MetadataReque
 func (a *FwmDispatchStrategy) Schema(ctx context.Context, _ action.SchemaRequest, resp *action.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Description: "Provides an action to dispatch FWM (Firewall Manager) pending strategies for a product " +
-			"via the DispatchStrategy API (下发规则). This is a one-time invocation; it does not create, update or " +
+			"via the DispatchStrategy API. This is a one-time invocation; it does not create, update or " +
 			"destroy any Terraform-managed resource, and it exposes no attributes referenceable from other resources. " +
+			"It maps to DispatchStrategy with `Product` and `Status` taken from the configuration and forwarded as-is " +
+			"(`status` = 1, 2); the operator identity is implied by the provider credential, so no account UIN is passed. " +
 			"The dispatch dispatches every pending (new / pending-dispatch) strategy of the current account x product; " +
 			"it cannot target a single rule. The cloud API has no idempotency key and does not block a running task, " +
 			"so the provider first checks the latest task status and, if a dispatch is already in progress, reuses it " +
 			"instead of triggering another one; dispatches of the same product should still be serialized. " +
 			"Create success does NOT mean dispatch success: the action polls DescribeStrategyDispatchStatus to a " +
-			"terminal state (succeeded / failed) before returning. Re-running the dispatch should be done by tainting " +
-			"the action or changing a trigger field; destroy does not roll back the dispatched rules and the far-side " +
+			"terminal state (succeeded / failed) before returning. Re-running the dispatch should be done by replacing " +
+			"the action (`terraform apply -replace=action.tencentcloud_fwm_dispatch_strategy.example`) or by using a " +
+			"`lifecycle.action_trigger`; destroy does not roll back the dispatched rules and the far-side " +
 			"effect persists.",
 		Attributes: map[string]schema.Attribute{
 			"product": schema.StringAttribute{
 				Required:    true,
-				Description: "Product line to dispatch. Valid values: `enterprise_sg`, `cfw_vpc_acl`, `cfw_nat_acl`, `cfw_edge_acl`.",
+				Description: "Product line to dispatch, e.g. `enterprise_sg` (enterprise security group), `cfw_vpc_acl` (VPC border firewall), `cfw_nat_acl` (NAT border firewall), `cfw_edge_acl` (internet border firewall). The value is forwarded to the cloud as-is.",
 			},
-			"uin": schema.StringAttribute{
+			"status": schema.Int64Attribute{
 				Required:    true,
-				Description: "Operator UIN. It is injected by the API gateway on the cloud side and not carried in the request body, but recorded here for clarity.",
-			},
-			"sub_account_uin": schema.StringAttribute{
-				Optional:    true,
-				Description: "Sub-account UIN of the operator. Optional; injected by the API gateway on the cloud side.",
+				Description: "Dispatch status of the DispatchStrategy API: `1` - dispatch, `2` - abort. The value is forwarded to the cloud as-is.",
 			},
 		},
 		Blocks: map[string]schema.Block{
@@ -161,30 +150,8 @@ func (a *FwmDispatchStrategy) Invoke(ctx context.Context, req action.InvokeReque
 		return
 	}
 
-	if data.Product.IsNull() || data.Product.IsUnknown() || data.Product.ValueString() == "" {
-		resp.Diagnostics.AddError(
-			"Missing product",
-			"product is required and cannot be empty.",
-		)
-		return
-	}
-
-	if data.Uin.IsNull() || data.Uin.IsUnknown() || data.Uin.ValueString() == "" {
-		resp.Diagnostics.AddError(
-			"Missing uin",
-			"uin is required and cannot be empty.",
-		)
-		return
-	}
-
-	if !allowedFwmDispatchProducts[data.Product.ValueString()] {
-		resp.Diagnostics.AddError(
-			"Invalid product",
-			fmt.Sprintf("product %q is not one of the allowed values (enterprise_sg, cfw_vpc_acl, cfw_nat_acl, cfw_edge_acl).", data.Product.ValueString()),
-		)
-		return
-	}
-
+	// product and status are practitioner inputs forwarded to the API as-is:
+	// the provider performs no enum check, no defaulting and no rewriting.
 	if a.Client() == nil {
 		resp.Diagnostics.AddError(
 			"Provider not configured",
@@ -210,6 +177,9 @@ func (a *FwmDispatchStrategy) Invoke(ctx context.Context, req action.InvokeReque
 	}
 
 	product := data.Product.ValueString()
+	// status is user-provided and forwarded to the API as-is: the provider does
+	// not interpret, default or validate it.
+	status := data.Status.ValueInt64()
 	service := NewFwmService(a.Client())
 
 	// Dedup guard: the API has no ClientToken and does not block a running
@@ -231,8 +201,8 @@ func (a *FwmDispatchStrategy) Invoke(ctx context.Context, req action.InvokeReque
 		log.Printf("[DEBUG] reuse in-progress dispatch task for product %s, current status %d", product, *latest.Status)
 		progress(fmt.Sprintf("an in-progress dispatch task exists for product %s, waiting for it to finish", product))
 	} else {
-		progress(fmt.Sprintf("dispatching FWM strategy for product %s", product))
-		if err := service.DispatchFwmStrategy(ctx, product); err != nil {
+		progress(fmt.Sprintf("calling DispatchStrategy for product %s with status %d", product, status))
+		if err := service.DispatchFwmStrategy(ctx, product, status); err != nil {
 			resp.Diagnostics.AddError(
 				fmt.Sprintf("dispatching FWM strategy for product (%s)", product),
 				err.Error(),

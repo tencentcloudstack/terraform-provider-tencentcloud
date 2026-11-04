@@ -638,12 +638,6 @@ func (me *FwmService) DeleteFwmVpcAclRuleById(ctx context.Context, groupId, rule
 	return
 }
 
-// fwmDispatchStrategyStatusBegin marks "start dispatch". The DispatchStrategy
-// API carries an inverse pair in its Status field (1=start, 2=abort), but the
-// server only implements the start case; any other value falls through to
-// InvalidParameter, so the provider pins it to 1.
-const fwmDispatchStrategyStatusBegin int64 = 1
-
 // FwmDispatchStrategyStatus enum from DescribeStrategyDispatchStatus.Response.Status:
 // 0=no change / pending, 1=dispatching, 2=succeeded, 3=failed. The provider
 // treats 0 and 1 as in-progress and waits, 2 as success, 3 as failure.
@@ -655,16 +649,17 @@ const (
 )
 
 // DispatchFwmStrategy triggers a one-time strategy dispatch for the given
-// product via the DispatchStrategy API. The cloud-side operator Uin /
-// SubAccountUin are injected by the API gateway rather than carried in the
-// request body, so they are validated on the Terraform side but not passed
-// here. The response carries no business fields (only RequestId); dispatch
-// completion is verified separately through DescribeStrategyDispatchStatus.
-func (me *FwmService) DispatchFwmStrategy(ctx context.Context, product string) (errRet error) {
+// product via the DispatchStrategy API. Per the API reference the request only
+// carries Status (1=dispatch, 2=abort) and Product; both are forwarded as
+// provided, and the operator identity is implied by the credential, so no
+// Uin/SubAccountUin is passed. The response carries no business fields (only
+// RequestId); dispatch completion is verified separately through
+// DescribeStrategyDispatchStatus.
+func (me *FwmService) DispatchFwmStrategy(ctx context.Context, product string, status int64) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := fwmv20250611.NewDispatchStrategyRequest()
-	request.Status = helper.Int64(fwmDispatchStrategyStatusBegin)
+	request.Status = helper.Int64(status)
 	request.Product = helper.String(product)
 
 	defer func() {
