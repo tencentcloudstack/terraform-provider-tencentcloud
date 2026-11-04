@@ -43,7 +43,7 @@ resource "tencentcloud_cls_config_extra" "extra" {
   name        = "helloworld-test"
   topic_id    = tencentcloud_cls_topic.topic.id
   type        = "container_file"
-  log_type    = "json_log"
+  log_type    = "fullregex_log"
   config_flag = "label_k8s"
   logset_id   = tencentcloud_cls_logset.logset.id
   logset_name = tencentcloud_cls_logset.logset.logset_name
@@ -59,6 +59,10 @@ resource "tencentcloud_cls_config_extra" "extra" {
       name      = "nginx"
       namespace = "default"
     }
+  }
+  extract_rule {
+    log_regex = "^(first) (second)$"
+    keys      = ["first", "second"]
   }
   group_id = tencentcloud_cls_machine_group.group.id
 }
