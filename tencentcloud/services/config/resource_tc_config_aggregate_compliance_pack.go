@@ -55,7 +55,7 @@ type ConfigAggregateCompliancePackResourceModel struct {
 	Description        types.String `tfsdk:"description"`
 	ConfigRules        types.List   `tfsdk:"config_rules"`
 	Status             types.String `tfsdk:"status"`
-	CompliancePackId  types.String `tfsdk:"compliance_pack_id"`
+	CompliancePackId   types.String `tfsdk:"compliance_pack_id"`
 	CreateTime         types.String `tfsdk:"create_time"`
 }
 
@@ -74,8 +74,8 @@ type aggregateCompliancePackRuleModel struct {
 // aggregateCompliancePackInputParameterModel maps the input_parameter nested object.
 type aggregateCompliancePackInputParameterModel struct {
 	ParameterKey types.String `tfsdk:"parameter_key"`
-	Type          types.String `tfsdk:"type"`
-	Value         types.String `tfsdk:"value"`
+	Type         types.String `tfsdk:"type"`
+	Value        types.String `tfsdk:"value"`
 }
 
 func (r *ConfigAggregateCompliancePackResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -99,7 +99,7 @@ func (r *ConfigAggregateCompliancePackResource) Schema(_ context.Context, _ reso
 			},
 			"account_group_id": schema.StringAttribute{
 				Required:    true,
-				Description:  "Account group id. Immutable: changing it forces resource replacement.",
+				Description: "Account group id. Immutable: changing it forces resource replacement.",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
@@ -162,7 +162,7 @@ func (r *ConfigAggregateCompliancePackResource) Schema(_ context.Context, _ reso
 						},
 						"config_rule_id": schema.StringAttribute{
 							Optional:    true,
-							Computed: true,
+							Computed:    true,
 							Description: "Config rule id.",
 						},
 						"compliance_pack_id": schema.StringAttribute{
@@ -514,15 +514,15 @@ func configRulesAttrTypes() map[string]attr.Type {
 		"managed_rule_identifier": types.StringType,
 		"config_rule_id":          types.StringType,
 		"compliance_pack_id":      types.StringType,
-		"input_parameter":        types.ListType{ElemType: types.ObjectType{AttrTypes: inputParameterAttrTypes()}},
+		"input_parameter":         types.ListType{ElemType: types.ObjectType{AttrTypes: inputParameterAttrTypes()}},
 	}
 }
 
 func inputParameterAttrTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"parameter_key": types.StringType,
-		"type":           types.StringType,
-		"value":          types.StringType,
+		"type":          types.StringType,
+		"value":         types.StringType,
 	}
 }
 
@@ -612,8 +612,8 @@ func flattenAggregateInputParameters(ctx context.Context, params []*configv20220
 	for _, p := range params {
 		pm := aggregateCompliancePackInputParameterModel{
 			ParameterKey: types.StringPointerValue(p.ParameterKey),
-			Type:           types.StringPointerValue(p.Type),
-			Value:          types.StringPointerValue(p.Value),
+			Type:         types.StringPointerValue(p.Type),
+			Value:        types.StringPointerValue(p.Value),
 		}
 		out = append(out, pm)
 	}

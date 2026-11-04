@@ -10,8 +10,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	configv20220802 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config/v20220802"
 	sdkerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	configv20220802 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config/v20220802"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -49,15 +49,15 @@ func TestConfigAggregateCompliancePackResource_Schema(t *testing.T) {
 		required, optional, computed bool
 	}
 	cases := map[string]expect{
-		"id":                  {computed: true},
+		"id":                   {computed: true},
 		"compliance_pack_name": {required: true},
-		"account_group_id":    {required: true},
-		"risk_level":          {required: true},
-		"description":         {optional: true},
-		"config_rules":        {required: true},
-		"status":              {computed: true},
-		"compliance_pack_id": {computed: true},
-		"create_time":         {computed: true},
+		"account_group_id":     {required: true},
+		"risk_level":           {required: true},
+		"description":          {optional: true},
+		"config_rules":         {required: true},
+		"status":               {computed: true},
+		"compliance_pack_id":   {computed: true},
+		"create_time":          {computed: true},
 	}
 
 	for name, want := range cases {
@@ -183,8 +183,8 @@ func buildRulesList(ctx context.Context, t *testing.T) types.List {
 	}
 	param := aggregateCompliancePackInputParameterModel{
 		ParameterKey: types.StringValue("param1"),
-		Type:          types.StringValue("Require"),
-		Value:         types.StringValue("value1"),
+		Type:         types.StringValue("Require"),
+		Value:        types.StringValue("value1"),
 	}
 	paramList, diags := types.ListValueFrom(ctx, types.ObjectType{AttrTypes: inputParameterAttrTypes()}, []aggregateCompliancePackInputParameterModel{param})
 	if diags.HasError() {
@@ -269,16 +269,16 @@ func TestFlattenAggregateComplianceConfigRules(t *testing.T) {
 	riskLevel := uint64(1)
 	rules := []*configv20220802.ComplianceConfigRule{
 		{
-			RuleName:       helper.String("rule-1"),
-			RiskLevel:      &riskLevel,
-			Identifier:      helper.String("conformance-pack-1"),
-			Description:    helper.String("rule description"),
-			ConfigRuleId:   helper.String("cr-aaaa"),
+			RuleName:     helper.String("rule-1"),
+			RiskLevel:    &riskLevel,
+			Identifier:   helper.String("conformance-pack-1"),
+			Description:  helper.String("rule description"),
+			ConfigRuleId: helper.String("cr-aaaa"),
 			InputParameter: []*configv20220802.InputParameter{
 				{
 					ParameterKey: helper.String("param1"),
-					Type:          helper.String("Require"),
-					Value:         helper.String("value1"),
+					Type:         helper.String("Require"),
+					Value:        helper.String("value1"),
 				},
 			},
 		},
