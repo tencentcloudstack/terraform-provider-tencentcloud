@@ -39,14 +39,14 @@ func configListAggregateCompliancePacksSchema(t *testing.T) schema.Schema {
 func configListAggregateCompliancePacksRootType() tftypes.Object {
 	return tftypes.Object{
 		AttributeTypes: map[string]tftypes.Type{
-			"account_group_id":                   tftypes.String,
+			"account_group_id":                    tftypes.String,
 			"compliance_pack_name":                tftypes.String,
 			"risk_level":                          tftypes.List{ElementType: tftypes.Number},
 			"status":                              tftypes.String,
 			"compliance_result":                   tftypes.List{ElementType: tftypes.String},
 			"order_type":                          tftypes.String,
 			"include_compliance_pack_rule_result": tftypes.String,
-			"total":                             tftypes.Number,
+			"total":                               tftypes.Number,
 			"items":                               tftypes.List{ElementType: configAggregateCompliancePackItemType()},
 		},
 	}
@@ -58,14 +58,14 @@ func configAggregateCompliancePackItemType() tftypes.Object {
 	return tftypes.Object{
 		AttributeTypes: map[string]tftypes.Type{
 			"status":               tftypes.String,
-			"compliance_pack_id":    tftypes.String,
-			"description":            tftypes.String,
-			"compliance_pack_name":  tftypes.String,
-			"risk_level":            tftypes.Number,
-			"compliance_result":      tftypes.String,
-			"create_time":           tftypes.String,
-			"no_compliant_names": tftypes.List{ElementType: tftypes.String},
-			"rule_count":            tftypes.Number,
+			"compliance_pack_id":   tftypes.String,
+			"description":          tftypes.String,
+			"compliance_pack_name": tftypes.String,
+			"risk_level":           tftypes.Number,
+			"compliance_result":    tftypes.String,
+			"create_time":          tftypes.String,
+			"no_compliant_names":   tftypes.List{ElementType: tftypes.String},
+			"rule_count":           tftypes.Number,
 		},
 	}
 }
@@ -74,12 +74,12 @@ func configAggregateCompliancePackItemType() tftypes.Object {
 // given query inputs (only the required account_group_id must be set).
 func buildAggregateCompliancePacksRawValue(accountGroupId string, riskLevels []float64, status, orderType, complianceResult string) tftypes.Value {
 	attrs := map[string]tftypes.Value{
-		"account_group_id":                   tftypes.NewValue(tftypes.String, accountGroupId),
-		"compliance_pack_name":               tftypes.NewValue(tftypes.String, nil),
+		"account_group_id":                    tftypes.NewValue(tftypes.String, accountGroupId),
+		"compliance_pack_name":                tftypes.NewValue(tftypes.String, nil),
 		"status":                              tftypes.NewValue(tftypes.String, nil),
-		"order_type":                         tftypes.NewValue(tftypes.String, nil),
+		"order_type":                          tftypes.NewValue(tftypes.String, nil),
 		"include_compliance_pack_rule_result": tftypes.NewValue(tftypes.String, nil),
-		"total":                              tftypes.NewValue(tftypes.Number, nil),
+		"total":                               tftypes.NewValue(tftypes.Number, nil),
 	}
 
 	// risk_level is a list of int64 (tftypes.Number for the protocol layer)
@@ -209,8 +209,8 @@ func TestConfigListAggregateCompliancePacks_ReadBasic(t *testing.T) {
 					CompliancePackName: ptrStrDSAggregate("tf-aggregate-pack"),
 					RiskLevel:          ptrUint64DSAggregate(1),
 					ComplianceResult:   ptrStrDSAggregate("NON_COMPLIANT"),
-					CreateTime:        ptrStrDSAggregate("2024-01-01 00:00:00"),
-					NoCompliantNames: []*string{ptrStrDSAggregate("rule-a"), ptrStrDSAggregate("rule-b")},
+					CreateTime:         ptrStrDSAggregate("2024-01-01 00:00:00"),
+					NoCompliantNames:   []*string{ptrStrDSAggregate("rule-a"), ptrStrDSAggregate("rule-b")},
 					RuleCount:          ptrUint64DSAggregate(2),
 				},
 			},
@@ -363,7 +363,7 @@ func TestConfigListAggregateCompliancePacks_ReadNullFields(t *testing.T) {
 			Total: ptrUint64DSAggregate(1),
 			Items: []*configv20220802.ConfigCompliancePack{
 				{
-					Status:             ptrStrDSAggregate("ACTIVE"),
+					Status:           ptrStrDSAggregate("ACTIVE"),
 					CompliancePackId: ptrStrDSAggregate("cp-nullfields"),
 					// Description nil
 					CompliancePackName: ptrStrDSAggregate("tf-null-pack"),

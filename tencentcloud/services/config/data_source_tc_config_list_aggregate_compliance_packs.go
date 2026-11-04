@@ -33,12 +33,12 @@ type ConfigListAggregateCompliancePacksDataSourceModel struct {
 	CompliancePackName              types.String `tfsdk:"compliance_pack_name"`
 	RiskLevel                       types.List   `tfsdk:"risk_level"`
 	Status                          types.String `tfsdk:"status"`
-	ComplianceResult               types.List   `tfsdk:"compliance_result"`
+	ComplianceResult                types.List   `tfsdk:"compliance_result"`
 	OrderType                       types.String `tfsdk:"order_type"`
 	IncludeCompliancePackRuleResult types.String `tfsdk:"include_compliance_pack_rule_result"`
 
 	Total types.Int64 `tfsdk:"total"`
-	Items types.List   `tfsdk:"items"`
+	Items types.List  `tfsdk:"items"`
 }
 
 // ConfigAggregateCompliancePackItemModel is the element type of items.
