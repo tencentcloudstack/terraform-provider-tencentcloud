@@ -1,0 +1,337 @@
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+package v20250920
+
+const (
+	// 此产品的特有错误码
+
+	// CAM签名/鉴权错误。
+	AUTHFAILURE = "AuthFailure"
+
+	// 镜像仓库认证失败
+	AUTHFAILURE_REGISTRY = "AuthFailure.Registry"
+
+	// 请求未CAM授权
+	AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+
+	// 操作失败。
+	FAILEDOPERATION = "FailedOperation"
+
+	// 依赖服务不可用或超时
+	FAILEDOPERATION_DEPENDENCYUNAVAILABLE = "FailedOperation.DependencyUnavailable"
+
+	// 重复请求（幂等性检查）
+	FAILEDOPERATION_DUPLICATEREQUEST = "FailedOperation.DuplicateRequest"
+
+	// 预热任务执行失败
+	FAILEDOPERATION_PRECACHEFAILED = "FailedOperation.PrecacheFailed"
+
+	// 请求正在处理中（幂等性检查）
+	FAILEDOPERATION_REQUESTINPROGRESS = "FailedOperation.RequestInProgress"
+
+	// 沙箱实例存储配置挂载失败
+	FAILEDOPERATION_STORAGEMOUNT = "FailedOperation.StorageMount"
+
+	// 内部错误。
+	INTERNALERROR = "InternalError"
+
+	// InternalError.InternalError
+	INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+
+	// 网络初始化失败
+	INTERNALERROR_NETWORKSETUPFAILED = "InternalError.NetworkSetupFailed"
+
+	// 未分类内部错误
+	INTERNALERROR_UNKNOWN = "InternalError.Unknown"
+
+	// VPC服务不可用
+	INTERNALERROR_VPCSERVICEUNAVAILABLE = "InternalError.VPCServiceUnavailable"
+
+	// 参数错误。
+	INVALIDPARAMETER = "InvalidParameter"
+
+	// InvalidParameter.AffinityConfiguration
+	INVALIDPARAMETER_AFFINITYCONFIGURATION = "InvalidParameter.AffinityConfiguration"
+
+	// InvalidParameter.AgentSource
+	INVALIDPARAMETER_AGENTSOURCE = "InvalidParameter.AgentSource"
+
+	// InvalidParameter.CustomDescriptors
+	INVALIDPARAMETER_CUSTOMDESCRIPTORS = "InvalidParameter.CustomDescriptors"
+
+	// 指定的会话空间为系统默认会话空间，不允许删除。
+	INVALIDPARAMETER_DEFAULTSESSIONSPACEPROTECTED = "InvalidParameter.DefaultSessionSpaceProtected"
+
+	// InvalidParameter.DeploymentId
+	INVALIDPARAMETER_DEPLOYMENTID = "InvalidParameter.DeploymentId"
+
+	// InvalidParameter.DeploymentName
+	INVALIDPARAMETER_DEPLOYMENTNAME = "InvalidParameter.DeploymentName"
+
+	// InvalidParameter.Description
+	INVALIDPARAMETER_DESCRIPTION = "InvalidParameter.Description"
+
+	// InvalidParameter.EndTime
+	INVALIDPARAMETER_ENDTIME = "InvalidParameter.EndTime"
+
+	// InvalidParameter.EventIdDuplicate
+	INVALIDPARAMETER_EVENTIDDUPLICATE = "InvalidParameter.EventIdDuplicate"
+
+	// InvalidParameter.Filters
+	INVALIDPARAMETER_FILTERS = "InvalidParameter.Filters"
+
+	// InvalidParameter.InvalidParameter
+	INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+
+	// InvalidParameter.LifecycleConfiguration
+	INVALIDPARAMETER_LIFECYCLECONFIGURATION = "InvalidParameter.LifecycleConfiguration"
+
+	// InvalidParameter.Limit
+	INVALIDPARAMETER_LIMIT = "InvalidParameter.Limit"
+
+	// InvalidParameter.MCPSource
+	INVALIDPARAMETER_MCPSOURCE = "InvalidParameter.MCPSource"
+
+	// InvalidParameter.Name
+	INVALIDPARAMETER_NAME = "InvalidParameter.Name"
+
+	// InvalidParameter.Offset
+	INVALIDPARAMETER_OFFSET = "InvalidParameter.Offset"
+
+	// InvalidParameter.RecordId
+	INVALIDPARAMETER_RECORDID = "InvalidParameter.RecordId"
+
+	// InvalidParameter.RecordSelector
+	INVALIDPARAMETER_RECORDSELECTOR = "InvalidParameter.RecordSelector"
+
+	// InvalidParameter.RecordSource
+	INVALIDPARAMETER_RECORDSOURCE = "InvalidParameter.RecordSource"
+
+	// InvalidParameter.RegistryId
+	INVALIDPARAMETER_REGISTRYID = "InvalidParameter.RegistryId"
+
+	// InvalidParameter.ScalingConfiguration
+	INVALIDPARAMETER_SCALINGCONFIGURATION = "InvalidParameter.ScalingConfiguration"
+
+	// InvalidParameter.SessionIdDuplicate
+	INVALIDPARAMETER_SESSIONIDDUPLICATE = "InvalidParameter.SessionIdDuplicate"
+
+	// InvalidParameter.SkillSource
+	INVALIDPARAMETER_SKILLSOURCE = "InvalidParameter.SkillSource"
+
+	// InvalidParameter.StartTime
+	INVALIDPARAMETER_STARTTIME = "InvalidParameter.StartTime"
+
+	// InvalidParameter.Tags
+	INVALIDPARAMETER_TAGS = "InvalidParameter.Tags"
+
+	// InvalidParameter.ToolId
+	INVALIDPARAMETER_TOOLID = "InvalidParameter.ToolId"
+
+	// InvalidParameter.VersionId
+	INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
+
+	// 参数取值错误。
+	INVALIDPARAMETERVALUE = "InvalidParameterValue"
+
+	// InvalidParameterValue.AgentSourceType
+	INVALIDPARAMETERVALUE_AGENTSOURCETYPE = "InvalidParameterValue.AgentSourceType"
+
+	// InvalidParameterValue.ApprovalMode
+	INVALIDPARAMETERVALUE_APPROVALMODE = "InvalidParameterValue.ApprovalMode"
+
+	// 用户不在自动暂停白名单中
+	INVALIDPARAMETERVALUE_AUTOPAUSENOTALLOWED = "InvalidParameterValue.AutoPauseNotAllowed"
+
+	// 用户不在自动恢复白名单中
+	INVALIDPARAMETERVALUE_AUTORESUMENOTALLOWED = "InvalidParameterValue.AutoResumeNotAllowed"
+
+	// InvalidParameterValue.DescriptorType
+	INVALIDPARAMETERVALUE_DESCRIPTORTYPE = "InvalidParameterValue.DescriptorType"
+
+	// 镜像地址无效
+	INVALIDPARAMETERVALUE_IMAGE = "InvalidParameterValue.Image"
+
+	// 镜像仓库类型无效
+	INVALIDPARAMETERVALUE_IMAGEREGISTRY = "InvalidParameterValue.ImageRegistry"
+
+	// InstanceIds 参数格式错误或 ID 列表超过最大数量限制
+	INVALIDPARAMETERVALUE_INSTANCEIDS = "InvalidParameterValue.InstanceIds"
+
+	// InvalidParameterValue.MCPSourceType
+	INVALIDPARAMETERVALUE_MCPSOURCETYPE = "InvalidParameterValue.MCPSourceType"
+
+	// MountOption部分参数填写错误
+	INVALIDPARAMETERVALUE_MOUNTOPTION = "InvalidParameterValue.MountOption"
+
+	// Offset must be at most 10000
+	INVALIDPARAMETERVALUE_OFFSETTOOLARGE = "InvalidParameterValue.OffsetTooLarge"
+
+	// Role Arn格式不满足腾讯云规范
+	INVALIDPARAMETERVALUE_ROLEARN = "InvalidParameterValue.RoleArn"
+
+	// 沙箱工具名称不可用，可能是已经存在
+	INVALIDPARAMETERVALUE_SANDBOXTOOL = "InvalidParameterValue.SandboxTool"
+
+	// 参数 Scopes 取值无效，或当前地域不支持指定的镜像预热范围。
+	INVALIDPARAMETERVALUE_SCOPE = "InvalidParameterValue.Scope"
+
+	// 参数 SecurityContext 取值无效
+	INVALIDPARAMETERVALUE_SECURITYCONTEXT = "InvalidParameterValue.SecurityContext"
+
+	// 安全组ID格式错误
+	INVALIDPARAMETERVALUE_SECURITYGROUPID = "InvalidParameterValue.SecurityGroupId"
+
+	// InvalidParameterValue.SkillSourceType
+	INVALIDPARAMETERVALUE_SKILLSOURCETYPE = "InvalidParameterValue.SkillSourceType"
+
+	// StorageMount部分参数错误
+	INVALIDPARAMETERVALUE_STORAGEMOUNT = "InvalidParameterValue.StorageMount"
+
+	// 子网ID格式错误
+	INVALIDPARAMETERVALUE_SUBNETID = "InvalidParameterValue.SubnetId"
+
+	// 超时时间格式错误或超过最大限制
+	INVALIDPARAMETERVALUE_TIMEOUT = "InvalidParameterValue.Timeout"
+
+	// ToolIds 参数格式错误或 ID 列表超过最大数量限制
+	INVALIDPARAMETERVALUE_TOOLIDS = "InvalidParameterValue.ToolIds"
+
+	// 不支持的沙箱工具类型
+	INVALIDPARAMETERVALUE_TOOLTYPE = "InvalidParameterValue.ToolType"
+
+	// 超过配额限制。
+	LIMITEXCEEDED = "LimitExceeded"
+
+	// 账号下 API 密钥数量达到上限
+	LIMITEXCEEDED_APIKEYQUOTA = "LimitExceeded.APIKeyQuota"
+
+	// LimitExceeded.Deployment
+	LIMITEXCEEDED_DEPLOYMENT = "LimitExceeded.Deployment"
+
+	// LimitExceeded.RecordLabelCount
+	LIMITEXCEEDED_RECORDLABELCOUNT = "LimitExceeded.RecordLabelCount"
+
+	// 沙箱实例配额超限
+	LIMITEXCEEDED_SANDBOXINSTANCE = "LimitExceeded.SandboxInstance"
+
+	// 缺少参数错误。
+	MISSINGPARAMETER = "MissingParameter"
+
+	// MissingParameter.AgentSourceEndpointURL
+	MISSINGPARAMETER_AGENTSOURCEENDPOINTURL = "MissingParameter.AgentSourceEndpointURL"
+
+	// MissingParameter.MCPSourceDescriptors
+	MISSINGPARAMETER_MCPSOURCEDESCRIPTORS = "MissingParameter.MCPSourceDescriptors"
+
+	// MissingParameter.MissingParameter
+	MISSINGPARAMETER_MISSINGPARAMETER = "MissingParameter.MissingParameter"
+
+	// MissingParameter.Reason
+	MISSINGPARAMETER_REASON = "MissingParameter.Reason"
+
+	// MissingParameter.RecordSource
+	MISSINGPARAMETER_RECORDSOURCE = "MissingParameter.RecordSource"
+
+	// 缺少角色Arn
+	MISSINGPARAMETER_ROLEARN = "MissingParameter.RoleArn"
+
+	// MissingParameter.SkillSourceSkillMd
+	MISSINGPARAMETER_SKILLSOURCESKILLMD = "MissingParameter.SkillSourceSkillMd"
+
+	// VPC网络模式缺少必需参数
+	MISSINGPARAMETER_VPCPARAMETERS = "MissingParameter.VPCParameters"
+
+	// 请求的次数超过了频率限制。
+	REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+
+	// 资源被占用。
+	RESOURCEINUSE = "ResourceInUse"
+
+	// ResourceInUse.Deployment
+	RESOURCEINUSE_DEPLOYMENT = "ResourceInUse.Deployment"
+
+	// ResourceInUse.DeploymentName
+	RESOURCEINUSE_DEPLOYMENTNAME = "ResourceInUse.DeploymentName"
+
+	// 沙箱工具正在使用中
+	RESOURCEINUSE_SANDBOXTOOL = "ResourceInUse.SandboxTool"
+
+	// 指定的会话空间中仍存在会话、事件或用户状态数据，不能删除。
+	RESOURCEINUSE_SESSIONSPACENOTEMPTY = "ResourceInUse.SessionSpaceNotEmpty"
+
+	// 资源不存在。
+	RESOURCENOTFOUND = "ResourceNotFound"
+
+	// ResourceNotFound.Deployment
+	RESOURCENOTFOUND_DEPLOYMENT = "ResourceNotFound.Deployment"
+
+	// 镜像不存在
+	RESOURCENOTFOUND_IMAGE = "ResourceNotFound.Image"
+
+	// ResourceNotFound.RegistryRecord
+	RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
+
+	// 沙箱实例不存在
+	RESOURCENOTFOUND_SANDBOXINSTANCE = "ResourceNotFound.SandboxInstance"
+
+	// 沙箱工具不存在
+	RESOURCENOTFOUND_SANDBOXTOOL = "ResourceNotFound.SandboxTool"
+
+	// 安全组不存在或不属于用户
+	RESOURCENOTFOUND_SECURITYGROUP = "ResourceNotFound.SecurityGroup"
+
+	// ResourceNotFound.Session
+	RESOURCENOTFOUND_SESSION = "ResourceNotFound.Session"
+
+	// Session 不存在，或 UserId 无权限访问该 Session
+	RESOURCENOTFOUND_SESSIONNOTEXIST = "ResourceNotFound.SessionNotExist"
+
+	// 指定的会话空间不存在，或不属于当前应用及地域。
+	RESOURCENOTFOUND_SESSIONSPACENOTEXIST = "ResourceNotFound.SessionSpaceNotExist"
+
+	// 指定的StorageMount不存在
+	RESOURCENOTFOUND_STORAGEMOUNT = "ResourceNotFound.StorageMount"
+
+	// 子网不存在或不属于用户
+	RESOURCENOTFOUND_SUBNET = "ResourceNotFound.Subnet"
+
+	// 资源不可用。
+	RESOURCEUNAVAILABLE = "ResourceUnavailable"
+
+	// ResourceUnavailable.Deployment
+	RESOURCEUNAVAILABLE_DEPLOYMENT = "ResourceUnavailable.Deployment"
+
+	// 镜像预热仍在处理中
+	RESOURCEUNAVAILABLE_IMAGEPREHEATING = "ResourceUnavailable.ImagePreheating"
+
+	// 沙箱工具不可用
+	RESOURCEUNAVAILABLE_SANDBOXTOOL = "ResourceUnavailable.SandboxTool"
+
+	// 未授权操作。
+	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+
+	// UnauthorizedOperation.UnauthorizedOperation
+	UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
+
+	// 未知参数错误。
+	UNKNOWNPARAMETER = "UnknownParameter"
+
+	// 操作不支持。
+	UNSUPPORTEDOPERATION = "UnsupportedOperation"
+
+	// 实例状态不允许修改（只有RUNNING状态的实例可以修改）
+	UNSUPPORTEDOPERATION_SANDBOXINSTANCE = "UnsupportedOperation.SandboxInstance"
+)
