@@ -2799,6 +2799,7 @@ tencentcloud_config_deliver_config
 tencentcloud_config_update_config_deliver
 tencentcloud_config_update_aggregate_config_deliver
 tencentcloud_config_recorder_config
+tencentcloud_config_alarm_policy
 tencentcloud_config_aggregator
 
 GS
