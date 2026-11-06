@@ -2,6 +2,7 @@ package tke
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"log"
 	"strings"
@@ -383,7 +384,7 @@ func resourceTencentCloudKubernetesNodePoolReadPostHandleResponse1(ctx context.C
 	}
 
 	if helper.PString(nodePool.PreStartUserScript) != "" {
-		nodeConfig["pre_start_user_script"] = helper.PString(nodePool.PreStartUserScript)
+		nodeConfig["pre_start_user_script"] = base64.StdEncoding.EncodeToString([]byte(helper.PString(nodePool.PreStartUserScript)))
 	}
 
 	if nodePool.ExtraArgs != nil && len(nodePool.ExtraArgs.Kubelet) > 0 {
@@ -395,11 +396,7 @@ func resourceTencentCloudKubernetesNodePoolReadPostHandleResponse1(ctx context.C
 	}
 
 	if helper.PString(nodePool.UserScript) != "" {
-		nodeConfig["user_data"] = helper.PString(nodePool.UserScript)
-	}
-
-	if helper.PString(nodePool.PreStartUserScript) != "" {
-		nodeConfig["pre_start_user_script"] = helper.PString(nodePool.PreStartUserScript)
+		nodeConfig["user_data"] = base64.StdEncoding.EncodeToString([]byte(helper.PString(nodePool.UserScript)))
 	}
 
 	if nodePool.GPUArgs != nil {
