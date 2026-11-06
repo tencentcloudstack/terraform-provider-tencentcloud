@@ -157,6 +157,14 @@ func (me *TkeService) DescribeAddonValuesList(ctx context.Context, clusterId, ad
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := me.client.UseTkeClient().DescribeAddonValues(request)
 		if e != nil {
+			// DescribeAddonValues reports deterministic failures (a chart that does
+			// not exist, an empty addon name, ...) with the generic
+			// `ResourceUnavailable` code, which tccommon.RetryError treats as
+			// retryable. Retrying those wastes the whole ReadRetryTimeout without
+			// any chance of success, so surface them immediately.
+			if tccommon.IsDeterministicError(e) {
+				return resource.NonRetryableError(e)
+			}
 			return tccommon.RetryError(e)
 		}
 

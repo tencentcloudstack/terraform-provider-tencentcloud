@@ -103,6 +103,44 @@ var retryableErrorCode = []string{
 	"FailedOperation.ListenerHasTask",
 }
 
+// deterministicErrorMessages lists cloud API messages that describe a failure which
+// can never succeed on retry (e.g. the chart does not exist, a required name is
+// empty). They are returned with codes that are usually retryable
+// (`ResourceUnavailable`), so callers can use IsDeterministicError to fail fast
+// instead of retrying until the timeout expires.
+var deterministicErrorMessages = []string{
+	"not found chart",
+	"resource name may not be empty",
+}
+
+// IsDeterministicError reports whether the given error is a deterministic
+// (non-retryable) failure based on a well-known cloud API message.
+func IsDeterministicError(err error) bool {
+	if err == nil {
+		return false
+	}
+
+	switch realErr := errors.Cause(err).(type) {
+	case *sdkErrors.TencentCloudSDKError:
+		return isDeterministicMessage(realErr.Message)
+	case *sdkErrorsIntlEn.TencentCloudSDKError:
+		return isDeterministicMessage(realErr.Message)
+	}
+
+	// The error may be wrapped (retry helper, fmt.Errorf("%w")), fall back to a
+	// plain message match.
+	return isDeterministicMessage(err.Error())
+}
+
+func isDeterministicMessage(msg string) bool {
+	for _, m := range deterministicErrorMessages {
+		if strings.Contains(msg, m) {
+			return true
+		}
+	}
+	return false
+}
+
 // retryableCosErrorCode is retryable error code for COS/CI SDK
 var retryableCosErrorCode = []string{
 	"RequestTimeout",
