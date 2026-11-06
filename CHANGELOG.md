@@ -1,3 +1,14 @@
+## 1.83.41(November‌ 6, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_fwm_vpc_acl_rule` ([#4583](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4583))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_kubernetes_node_pool: Optimize script field handling. ([#4634](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4634))
+* tencentcloud_teo_load_balancer ([#4633](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4633))
+
 ## 1.83.40(November‌ 2, 2026)
 
 FEATURES:
