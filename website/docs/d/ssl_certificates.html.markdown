@@ -33,15 +33,30 @@ data "tencentcloud_ssl_certificates" "example" {
 data "tencentcloud_ssl_certificates" "example" {
   id = "LCYouprI"
 }
+
+data "tencentcloud_ssl_certificates" "example" {
+  domain = "example.com"
+}
+```
+
+### Query the latest SSL certificate of a domain
+
+```hcl
+data "tencentcloud_ssl_certificates" "example" {
+  domain  = "example.com"
+  sort_by = "end_time"
+}
 ```
 
 ## Argument Reference
 
 The following arguments are supported:
 
+* `domain` - (Optional, String) Domain of the SSL certificate to be queried. Matches the primary domain or any domain in the subject alternative names exactly.
 * `id` - (Optional, String) ID of the SSL certificate to be queried.
 * `name` - (Optional, String) Name of the SSL certificate to be queried.
 * `result_output_file` - (Optional, String) Used to save results.
+* `sort_by` - (Optional, String) Field used to sort the returned certificates. Currently only `end_time` is supported. If omitted, the API default order (creation time descending) is used.
 * `type` - (Optional, String) Type of the SSL certificate to be queried. Available values includes: `CA` and `SVR`.
 
 ## Attributes Reference

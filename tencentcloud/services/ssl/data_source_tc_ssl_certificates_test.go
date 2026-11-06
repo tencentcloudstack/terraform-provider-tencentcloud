@@ -130,3 +130,35 @@ data "tencentcloud_ssl_certificates" "foo" {
   id = tencentcloud_ssl_certificate.foo.id
 }
 `, testAccSslCertificateCA)
+
+func TestAccTencentCloudSslCertificatesDataSource_sortByEndTime(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: TestAccDataSourceTencentCloudSslCertificatesSortByEndTime,
+				Check: resource.ComposeTestCheckFunc(
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_certificates.foo"),
+					resource.TestMatchResourceAttr("data.tencentcloud_ssl_certificates.foo", "certificates.#", regexp.MustCompile(`^[1-9]\d*$`)),
+					resource.TestCheckResourceAttr("data.tencentcloud_ssl_certificates.foo", "certificates.0.name", "keep-ssl-ca"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_ssl_certificates.foo", "certificates.0.end_time"),
+				),
+			},
+		},
+	})
+}
+
+var TestAccDataSourceTencentCloudSslCertificatesSortByEndTime = fmt.Sprintf(`
+resource "tencentcloud_ssl_certificate" "foo" {
+  type = "CA"
+  cert = "%s"
+  name = "keep-ssl-ca"
+}
+
+data "tencentcloud_ssl_certificates" "foo" {
+  name    = tencentcloud_ssl_certificate.foo.name
+  sort_by = "end_time"
+}
+`, testAccSslCertificateCA)
