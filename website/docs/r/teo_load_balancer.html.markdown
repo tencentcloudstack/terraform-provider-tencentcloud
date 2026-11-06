@@ -99,6 +99,7 @@ The `health_checker` object supports the following:
 * `follow_redirect` - (Optional, String) Whether to follow 301/302 redirects, valid when `type` is `HTTP` or `HTTPS`. Valid values: `true`, `false`.
 * `headers` - (Optional, List) Custom HTTP request headers (up to 10), valid when `type` is `HTTP` or `HTTPS`.
 * `health_threshold` - (Optional, Int) Number of consecutive healthy results to mark the origin as healthy. Default: 3, minimum: 1.
+* `host_header_policy` - (Optional, String) Probe request Host Header policy, valid when `type` is `HTTP` or `HTTPS` and the instance type is HTTP-specific (V2). Valid values: `FollowCheckURL` (follow the Host specified by the probe URL, i.e., the Host part of `path`); `FollowOriginGroup` (follow the origin group configured origin Host Header); `FollowOrigin` (follow the origin address). Default: `FollowCheckURL`.
 * `interval` - (Optional, Int) Check interval in seconds. Valid values: `30`, `60`, `180`, `300`, `600`.
 * `method` - (Optional, String) Request method, valid when `type` is `HTTP` or `HTTPS`. Valid values: `GET`, `HEAD`.
 * `path` - (Optional, String) Probe path, valid when `type` is `HTTP` or `HTTPS`. Full host/path without protocol, e.g., `www.example.com/test`.

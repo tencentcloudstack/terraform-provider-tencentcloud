@@ -111,6 +111,11 @@ func ResourceTencentCloudTeoLoadBalancer() *schema.Resource {
 							Optional:    true,
 							Description: "Probe path, valid when `type` is `HTTP` or `HTTPS`. Full host/path without protocol, e.g., `www.example.com/test`.",
 						},
+						"host_header_policy": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Probe request Host Header policy, valid when `type` is `HTTP` or `HTTPS` and the instance type is HTTP-specific (V2). Valid values: `FollowCheckURL` (follow the Host specified by the probe URL, i.e., the Host part of `path`); `FollowOriginGroup` (follow the origin group configured origin Host Header); `FollowOrigin` (follow the origin address). Default: `FollowCheckURL`.",
+						},
 						"method": {
 							Type:        schema.TypeString,
 							Optional:    true,
@@ -526,6 +531,9 @@ func buildTeoHealthChecker(v []interface{}) *teo.HealthChecker {
 	if val, ok := m["path"].(string); ok && val != "" {
 		hc.Path = helper.String(val)
 	}
+	if val, ok := m["host_header_policy"].(string); ok && val != "" {
+		hc.HostHeaderPolicy = helper.String(val)
+	}
 	if val, ok := m["method"].(string); ok && val != "" {
 		hc.Method = helper.String(val)
 	}
@@ -588,6 +596,9 @@ func flattenTeoHealthChecker(hc *teo.HealthChecker) []map[string]interface{} {
 	}
 	if hc.Path != nil {
 		m["path"] = hc.Path
+	}
+	if hc.HostHeaderPolicy != nil {
+		m["host_header_policy"] = hc.HostHeaderPolicy
 	}
 	if hc.Method != nil {
 		m["method"] = hc.Method
