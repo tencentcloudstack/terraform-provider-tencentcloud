@@ -1,6 +1,6 @@
 Provides a resource to create and manage an AGS sandbox tool.
 
-## Example Usage
+Example Usage
 
 ```hcl
 resource "tencentcloud_ags_sandbox_tool" "example" {
