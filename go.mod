@@ -46,7 +46,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.3.173
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.3.40
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.186
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.206
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.209
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config v1.3.176
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.3.183
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.3.30
@@ -116,6 +116,7 @@ require (
 	github.com/hashicorp/terraform-plugin-go v0.31.0
 	github.com/hashicorp/terraform-plugin-mux v0.23.1
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor v1.3.37
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ags v1.3.209
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bdrc v1.3.169
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bh v1.3.193
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.3.39
