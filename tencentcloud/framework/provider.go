@@ -28,8 +28,8 @@
 //
 // Design notes:
 //   - Credentials, SDK client, UA and retry are constructed exclusively by
-//     the SDKv2 provider; this provider reuses the same
-//     *connectivity.TencentCloudClient via sharedmeta.GetSharedMeta().
+//     the SDKv2 provider; this provider captures that instance's returned
+//     *connectivity.TencentCloudClient during configuration.
 //   - Schema fields must mirror SDKv2 (same names, same semantics, same
 //     nesting). Otherwise mux will reject user-written fields when merging
 //     the two schemas.
@@ -41,6 +41,8 @@ package framework
 
 import (
 	"context"
+	"fmt"
+	"sync/atomic"
 
 	"github.com/hashicorp/terraform-plugin-framework/action"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
@@ -61,20 +63,41 @@ import (
 
 // NewProvider constructs a framework provider instance to be registered as a
 // secondary server inside mux. The primary parameter is the SDKv2 provider
-// instance and is currently used only for metadata (such as version
-// reflection); the framework provider does not invoke any runtime logic of
-// the SDKv2 provider.
+// instance. Its configuration callback is wrapped to capture the returned
+// client without re-parsing credentials or relying on process-global state.
 func NewProvider(primary *sdk_schema.Provider) provider.ProviderWithMetaSchema {
-	return &Provider{
+	p := &Provider{
 		Version: connectivity.GetReqClientVersion(),
 		Primary: primary,
 	}
+	// Capture the client returned by this SDKv2 instance, never the last
+	// process-global configuration. Mux calls SDKv2 before Framework.
+	if primary != nil && primary.ConfigureFunc != nil {
+		configure := primary.ConfigureFunc
+		primary.ConfigureFunc = func(d *sdk_schema.ResourceData) (interface{}, error) {
+			p.client.Store(nil)
+			meta, err := configure(d)
+			if err != nil {
+				return meta, err
+			}
+			owner, ok := meta.(interface {
+				GetAPIV3Conn() *connectivity.TencentCloudClient
+			})
+			if !ok || owner.GetAPIV3Conn() == nil {
+				return nil, fmt.Errorf("configured SDKv2 metadata omitted its connectivity client")
+			}
+			p.client.Store(owner.GetAPIV3Conn())
+			return meta, nil
+		}
+	}
+	return p
 }
 
 // Provider is the terraform-plugin-framework Provider implementation.
 type Provider struct {
 	Version string
 	Primary *sdk_schema.Provider
+	client  atomic.Pointer[connectivity.TencentCloudClient]
 }
 
 // Metadata exposes the provider's type name and version, used by the
@@ -323,16 +346,15 @@ func (p *Provider) Schema(_ context.Context, _ provider.SchemaRequest, resp *pro
 //   - Credentials are never re-parsed here; credential logic must live in
 //     the single SDKv2 providerConfigure function.
 //   - Inside mux, SDKv2 is Configure-d before framework (see registration
-//     order in main.go); sharedmeta.GetSharedMeta() should therefore return
-//     non-nil at this point.
+//     order in main.go); this instance's captured client must be non-nil.
 //   - As a defensive measure, nil only adds an Error diagnostic instead of
 //     panicking, to make troubleshooting easier.
 func (p *Provider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
-	client := sharedmeta.GetSharedMeta()
+	client := p.client.Load()
 	if client == nil {
 		resp.Diagnostics.AddError(
 			"TencentCloud provider not configured",
-			"The framework provider was Configure-d before the SDKv2 provider populated the shared client. "+
+			"The framework provider was Configure-d before its SDKv2 provider populated the instance client. "+
 				"This is unexpected because the muxer registers SDKv2 first. "+
 				"Please file an issue if you see this in production.",
 		)

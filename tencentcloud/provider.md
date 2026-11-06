@@ -54,6 +54,13 @@ tencentcloud_projects
 Resource
 tencentcloud_project
 
+Agent Sandbox(AGS)
+Data Source
+tencentcloud_ags_sandbox_tool
+
+Resource
+tencentcloud_ags_sandbox_tool
+
 Anti-DDoS(antiddos)
 Data Source
 tencentcloud_antiddos_basic_device_status

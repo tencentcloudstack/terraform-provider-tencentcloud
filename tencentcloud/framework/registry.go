@@ -17,6 +17,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/list"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ags"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bdrc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dlc"
@@ -31,11 +32,14 @@ import (
 
 // resourceFactories lists every framework Resource factory.
 var resourceFactories = []func() resource.Resource{
+	ags.NewAgsSandboxToolResource,
 	ssm.NewSsmSecretVersionV2Resource,
 }
 
 // dataSourceFactories lists every framework DataSource factory.
-var dataSourceFactories = []func() datasource.DataSource{}
+var dataSourceFactories = []func() datasource.DataSource{
+	ags.NewAgsSandboxToolDataSource,
+}
 
 // functionFactories lists every framework Function factory.
 var functionFactories = []func() function.Function{}

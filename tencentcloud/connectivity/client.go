@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"os"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -23,6 +24,7 @@ import (
 	privatednsIntl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/privatedns/v20201028"
 	advisorv20200721 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor/v20200721"
 	v20200721 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor/v20200721"
+	agsv20250920 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ags/v20250920"
 	antiddos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309"
 	antiddosv20250903 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20250903"
 	api "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api/v20201106"
@@ -144,6 +146,8 @@ type TencentCloudClient struct {
 	Protocol   string
 	Domain     string
 	CosDomain  string
+	agsMu      sync.Mutex
+	agsConn    *agsv20250920.Client
 
 	cosConn               *s3.S3
 	tencentCosConn        *cos.Client
@@ -276,6 +280,26 @@ type TencentCloudClient struct {
 	dbdcv20201029Conn           *dbdcv20201029.Client
 	vcubev20220410Conn          *vcubev20220410.Client
 	advisorv20200721Conn        *advisorv20200721.Client
+}
+
+// UseAgsClient returns the AGS client for this provider configuration. Unlike
+// older factories it preserves initialization errors and serializes first use.
+func (me *TencentCloudClient) UseAgsClient() (*agsv20250920.Client, error) {
+	if me == nil || me.Credential == nil {
+		return nil, fmt.Errorf("TencentCloud provider credentials are not configured")
+	}
+	me.agsMu.Lock()
+	defer me.agsMu.Unlock()
+	if me.agsConn != nil {
+		return me.agsConn, nil
+	}
+	client, err := agsv20250920.NewClient(me.Credential, me.Region, me.NewClientProfile(30))
+	if err != nil {
+		return nil, fmt.Errorf("initialize AGS client: %w", err)
+	}
+	client.WithHttpTransport(&LogRoundTripper{})
+	me.agsConn = client
+	return client, nil
 }
 
 // NewClientProfile returns a new ClientProfile

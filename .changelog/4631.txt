@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_ags_sandbox_tool: add Framework-based AGS Tool configuration management with verified readback, import, bounded waits and runtime ownership separation (pre-release; API contract gates remain open).
+```
+
+```release-note:new-data-source
+tencentcloud_ags_sandbox_tool: query a visible Tool by ID or exact name without runtime operations.
+```
+
+```release-note:bug
+framework: capture each SDKv2 Provider instance's returned client so interleaved alias configuration cannot reuse another instance's global client.
+```
