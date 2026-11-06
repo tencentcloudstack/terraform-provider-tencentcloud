@@ -7,7 +7,7 @@ FEATURES:
 ENHANCEMENTS:
 
 * resource/tencentcloud_kubernetes_node_pool: Optimize script field handling. ([#4634](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4634))
-* tencentcloud_teo_load_balancer ([#4633](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4633))
+* resource/tencentcloud_teo_load_balancer: add new parameter. ([#4633](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4633))
 
 ## 1.83.40(November‌ 2, 2026)
 
