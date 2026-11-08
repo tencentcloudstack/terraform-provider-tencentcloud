@@ -547,14 +547,14 @@ var agsCustomConfigurationAttributes = map[string]schema.Attribute{
 		Description: "Startup arguments.",
 	},
 	"env": schema.ListNestedAttribute{
-		Optional:    true,
+		Optional:     true,
 		NestedObject: schema.NestedAttributeObject{Attributes: agsEnvVarAttributes},
-		Description: "Environment variables.",
+		Description:  "Environment variables.",
 	},
 	"ports": schema.ListNestedAttribute{
-		Optional:    true,
+		Optional:     true,
 		NestedObject: schema.NestedAttributeObject{Attributes: agsPortAttributes},
-		Description: "Port configuration.",
+		Description:  "Port configuration.",
 	},
 	"resources": schema.SingleNestedAttribute{
 		Optional:    true,
