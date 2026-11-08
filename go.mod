@@ -116,6 +116,7 @@ require (
 	github.com/hashicorp/terraform-plugin-go v0.31.0
 	github.com/hashicorp/terraform-plugin-mux v0.23.1
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor v1.3.37
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ags v1.3.209
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bdrc v1.3.169
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bh v1.3.193
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.3.39
