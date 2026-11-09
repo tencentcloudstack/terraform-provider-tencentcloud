@@ -3,6 +3,7 @@ package ags
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -1543,6 +1544,14 @@ func flattenTags(ctx context.Context, items []*agsv20250920.Tag) (types.List, di
 		if item == nil {
 			continue
 		}
+		// System tags automatically attached by the cloud side (e.g. the CAM
+		// cost allocation tags with the "qcs:" key prefix) are not managed by
+		// this resource. Writing them back to state breaks Terraform's
+		// post-apply consistency check and produces permanent diffs, so they
+		// are skipped here.
+		if item.Key != nil && strings.HasPrefix(*item.Key, "qcs:") {
+			continue
+		}
 		models = append(models, agsTagModel{
 			Key:   stringPointerValue(item.Key),
 			Value: stringPointerValue(item.Value),
@@ -2250,6 +2259,13 @@ func flattenResources(ctx context.Context, item *agsv20250920.ResourceConfigurat
 		Cpu:     stringPointerValue(item.CPU),
 		Memory:  stringPointerValue(item.Memory),
 		Storage: stringPointerValue(item.Storage),
+	}
+	// The cloud side reports an unset storage as an empty string instead of
+	// omitting the field. A null configuration then ends up as "" in state,
+	// which fails Terraform's post-apply consistency check. Normalize an
+	// empty string back to null so "unset" stays null end to end.
+	if !model.Storage.IsNull() && model.Storage.ValueString() == "" {
+		model.Storage = types.StringNull()
 	}
 	return types.ObjectValueFrom(ctx, agsResourceAttrTypes, model)
 }
