@@ -2800,6 +2800,7 @@ tencentcloud_config_update_config_deliver
 tencentcloud_config_update_aggregate_config_deliver
 tencentcloud_config_recorder_config
 tencentcloud_config_aggregator
+tencentcloud_config_aggregate_config_rule
 
 GS
 Data Source
