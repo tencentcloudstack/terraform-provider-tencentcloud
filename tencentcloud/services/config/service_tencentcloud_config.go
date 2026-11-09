@@ -828,3 +828,64 @@ func (me *ConfigService) DescribeConfigAggregatorById(ctx context.Context, accou
 	ret = response.Response
 	return
 }
+
+// DescribeConfigListAggregateConfigRuleResourceEvaluationResultsByFilter
+// queries the aggregate config rule resource evaluation results with
+// pagination. An empty result set is a legitimate business state and is
+// returned as an empty slice rather than an error.
+func (me *ConfigService) DescribeConfigListAggregateConfigRuleResourceEvaluationResultsByFilter(ctx context.Context, paramMap map[string]interface{}) (items []*configv20220802.ConfigRuleResourceEvaluationResult, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := configv20220802.NewListAggregateConfigRuleResourceEvaluationResultsRequest()
+	request.Limit = helper.Uint64(100)
+	request.Offset = helper.Uint64(0)
+
+	if v, ok := paramMap["AccountGroupId"]; ok {
+		request.AccountGroupId = helper.String(v.(string))
+	}
+
+	items = make([]*configv20220802.ConfigRuleResourceEvaluationResult, 0)
+
+	for {
+		var (
+			total     uint64
+			pageItems []*configv20220802.ConfigRuleResourceEvaluationResult
+		)
+
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseConfigV20220802Client().ListAggregateConfigRuleResourceEvaluationResultsWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("list aggregate config rule resource evaluation results failed, Response is nil"))
+			}
+
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+			if result.Response.TotalCount != nil {
+				total = *result.Response.TotalCount
+			}
+
+			pageItems = result.Response.Items
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		items = append(items, pageItems...)
+
+		if uint64(len(items)) >= total {
+			break
+		}
+
+		*request.Offset += *request.Limit
+	}
+
+	return
+}
