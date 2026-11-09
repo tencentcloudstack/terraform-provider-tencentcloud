@@ -131,3 +131,86 @@ func TestBoolPointerFromValue(t *testing.T) {
 		t.Fatalf("expected pointer to true, got %v", got)
 	}
 }
+
+func TestUint64PointerFromValue(t *testing.T) {
+	zero := uint64(0)
+	three := uint64(3)
+	maxInt64 := uint64(1<<63 - 1)
+
+	cases := []struct {
+		name string
+		in   types.Int64
+		want *uint64
+	}{
+		{"null becomes nil", types.Int64Null(), nil},
+		{"unknown becomes nil", types.Int64Unknown(), nil},
+		{"negative becomes nil", types.Int64Value(-1), nil},
+		{"zero is kept", types.Int64Value(0), &zero},
+		{"positive is kept", types.Int64Value(3), &three},
+		{"int64 max fits uint64", types.Int64Value(1<<63 - 1), &maxInt64},
+	}
+
+	for _, c := range cases {
+		c := c
+		t.Run(c.name, func(t *testing.T) {
+			got := Uint64PointerFromValue(c.in)
+			if (got == nil) != (c.want == nil) {
+				t.Fatalf("got %v, want %v", got, c.want)
+			}
+			if got != nil && *got != *c.want {
+				t.Fatalf("got %d, want %d", *got, *c.want)
+			}
+		})
+	}
+}
+
+func TestStringValueOrPrev(t *testing.T) {
+	cloud := "from-cloud"
+
+	cases := []struct {
+		name string
+		in   *string
+		prev types.String
+		want types.String
+	}{
+		{"cloud wins", &cloud, types.StringValue("from-prev"), types.StringValue("from-cloud")},
+		{"cloud wins over null prev", &cloud, types.StringNull(), types.StringValue("from-cloud")},
+		{"nil keeps prev", nil, types.StringValue("from-prev"), types.StringValue("from-prev")},
+		{"nil and null prev becomes null", nil, types.StringNull(), types.StringNull()},
+		{"unknown prev becomes null", nil, types.StringUnknown(), types.StringNull()},
+	}
+
+	for _, c := range cases {
+		c := c
+		t.Run(c.name, func(t *testing.T) {
+			if got := StringValueOrPrev(c.in, c.prev); !got.Equal(c.want) {
+				t.Fatalf("got %s, want %s", got, c.want)
+			}
+		})
+	}
+}
+
+func TestInt64ValueOrPrev(t *testing.T) {
+	cloud := uint64(2)
+
+	cases := []struct {
+		name string
+		in   *uint64
+		prev types.Int64
+		want types.Int64
+	}{
+		{"cloud wins", &cloud, types.Int64Value(1), types.Int64Value(2)},
+		{"nil keeps prev", nil, types.Int64Value(1), types.Int64Value(1)},
+		{"nil and null prev becomes null", nil, types.Int64Null(), types.Int64Null()},
+		{"unknown prev becomes null", nil, types.Int64Unknown(), types.Int64Null()},
+	}
+
+	for _, c := range cases {
+		c := c
+		t.Run(c.name, func(t *testing.T) {
+			if got := Int64ValueOrPrev(c.in, c.prev); !got.Equal(c.want) {
+				t.Fatalf("got %s, want %s", got, c.want)
+			}
+		})
+	}
+}

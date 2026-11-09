@@ -1,12 +1,25 @@
 // registry.go is the central, SDKv2-style manifest of every
 // terraform-plugin-framework reference shipped by this provider.
 //
-// Layout mirrors tencentcloud/provider.go's ResourcesMap / DataSourcesMap:
-// each framework reference type has its own append-only block of one
-// entry per line. To add a new reference, edit ONLY this file by adding
-// the corresponding services subpackage import (if not already present)
-// and a single new entry in the matching block. No edit to provider.go
-// is required.
+// Every reference is declared as a `map[name]factory` literal, mirroring
+// tencentcloud/provider.go's ResourcesMap / DataSourcesMap:
+//
+//	"tencentcloud_config_aggregate_compliance_pack": config.NewConfigAggregateCompliancePackResource,
+//
+// Why a map instead of a slice:
+//   - the name Terraform reports for the reference (the type name users write
+//     in HCL, or the bare function name) sits next to the constructor, so the
+//     file can be searched by name instead of by Go symbol;
+//   - duplicate registrations become a compile error, because Go rejects
+//     duplicate map keys, instead of the runtime "Duplicate Resource Type
+//     Defined" diagnostic raised when the provider schema is first requested;
+//   - the key doubles as the expected Metadata TypeName (the Metadata Name for
+//     provider-defined functions), which registry_test.go verifies for every
+//     entry.
+//
+// To add a reference: add the services subpackage import (if not already
+// present) and exactly one entry in the matching map. No edit to provider.go is
+// required.
 package framework
 
 import (
@@ -19,8 +32,8 @@ import (
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bdrc"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/config"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dlc"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fwm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/kms"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mongodb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssl"
@@ -29,55 +42,81 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 )
 
-// resourceFactories lists every framework Resource factory.
-var resourceFactories = []func() resource.Resource{
-	ssm.NewSsmSecretVersionV2Resource,
+// resourcesMap maps every framework managed resource type name to its factory.
+var resourcesMap = map[string]func() resource.Resource{
+	"tencentcloud_config_aggregate_compliance_pack": config.NewConfigAggregateCompliancePackResource,
+	"tencentcloud_ssm_secret_version_v2":            ssm.NewSsmSecretVersionV2Resource,
 }
 
-// dataSourceFactories lists every framework DataSource factory.
-var dataSourceFactories = []func() datasource.DataSource{}
+// dataSourcesMap maps every framework data source type name to its factory.
+var dataSourcesMap = map[string]func() datasource.DataSource{}
 
-// functionFactories lists every framework Function factory.
-var functionFactories = []func() function.Function{}
+// functionsMap maps every framework function name to its factory. Function
+// names carry no provider prefix (calls already read
+// `provider::tencentcloud::<name>`), so the key is the bare name reported by
+// Metadata, for example "parse_resource_id".
+var functionsMap = map[string]func() function.Function{}
 
-// ephemeralResourceFactories lists every framework EphemeralResource factory.
-var ephemeralResourceFactories = []func() ephemeral.EphemeralResource{
-	ssm.NewSsmSecretVersionEphemeralResource,
+// ephemeralResourcesMap maps every framework ephemeral resource type name to its
+// factory.
+var ephemeralResourcesMap = map[string]func() ephemeral.EphemeralResource{
+	"tencentcloud_ssm_secret_version": ssm.NewSsmSecretVersionEphemeralResource,
 }
 
-// listResourceFactories lists every framework ListResource factory.
-var listResourceFactories = []func() list.ListResource{}
+// listResourcesMap maps every framework list resource type name to its factory.
+var listResourcesMap = map[string]func() list.ListResource{}
 
-// actionFactories lists every framework Action factory.
-var actionFactories = []func() action.Action{
-	teo.NewTeoConfirmOriginAclUpdate,
-	bdrc.NewBdrcRunCopyPairTasks,
-	dlc.NewDlcInitializeTCLake,
-	mongodb.NewMongodbRestoreDbInstance,
-	antiddos.NewAntiddosUnblockResources,
-	tco.NewTcoProvisionRoleConfiguration,
-	ssl.NewSslUploadCertificateInstance,
-	kms.NewKmsInstance,
-	ssm.NewSsmServiceAction,
-	fwm.NewFwmDispatchStrategy,
+// actionsMap maps every framework action type name to its factory.
+var actionsMap = map[string]func() action.Action{
+	"tencentcloud_antiddos_unblock_resources":                antiddos.NewAntiddosUnblockResources,
+	"tencentcloud_bdrc_run_copy_pair_tasks":                  bdrc.NewBdrcRunCopyPairTasks,
+	"tencentcloud_dlc_initialize_tc_lake":                    dlc.NewDlcInitializeTCLake,
+	"tencentcloud_kms_instance":                              kms.NewKmsInstance,
+	"tencentcloud_mongodb_restore_db_instance":               mongodb.NewMongodbRestoreDbInstance,
+	"tencentcloud_organization_provision_role_configuration": tco.NewTcoProvisionRoleConfiguration,
+	"tencentcloud_ssl_upload_certificate_instance":           ssl.NewSslUploadCertificateInstance,
+	"tencentcloud_ssm_service":                               ssm.NewSsmServiceAction,
+	"tencentcloud_teo_confirm_origin_acl_update":             teo.NewTeoConfirmOriginAclUpdate,
+}
+
+// factoriesOf converts a name → factory registry map into the factory slice the
+// framework provider callbacks expect. The order is whatever Go's map iteration
+// yields: the framework stores these factories in maps keyed by type name, so
+// registration order has no effect on the provider.
+func factoriesOf[T any](factoriesMap map[string]func() T) []func() T {
+	factories := make([]func() T, 0, len(factoriesMap))
+	for _, factory := range factoriesMap {
+		factories = append(factories, factory)
+	}
+	return factories
 }
 
 // frameworkResources returns every framework Resource factory.
-func frameworkResources() []func() resource.Resource { return resourceFactories }
+func frameworkResources() []func() resource.Resource {
+	return factoriesOf(resourcesMap)
+}
 
 // frameworkDataSources returns every framework DataSource factory.
-func frameworkDataSources() []func() datasource.DataSource { return dataSourceFactories }
+func frameworkDataSources() []func() datasource.DataSource {
+	return factoriesOf(dataSourcesMap)
+}
 
 // frameworkFunctions returns every framework Function factory.
-func frameworkFunctions() []func() function.Function { return functionFactories }
+func frameworkFunctions() []func() function.Function {
+	return factoriesOf(functionsMap)
+}
 
 // frameworkEphemeralResources returns every framework EphemeralResource factory.
 func frameworkEphemeralResources() []func() ephemeral.EphemeralResource {
-	return ephemeralResourceFactories
+	return factoriesOf(ephemeralResourcesMap)
 }
 
 // frameworkListResources returns every framework ListResource factory.
-func frameworkListResources() []func() list.ListResource { return listResourceFactories }
+func frameworkListResources() []func() list.ListResource {
+	return factoriesOf(listResourcesMap)
+}
 
 // frameworkActions returns every framework Action factory.
-func frameworkActions() []func() action.Action { return actionFactories }
+func frameworkActions() []func() action.Action {
+	return factoriesOf(actionsMap)
+}
