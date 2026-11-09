@@ -6,7 +6,7 @@ Query all aggregate compliance packs of an account group
 
 ```hcl
 data "tencentcloud_config_list_aggregate_compliance_packs" "example" {
-  account_group_id = "ca-aggregator-abcdefg"
+  account_group_id = "ca-Zp9EiU7Pa4Vy0lFFm8XM"
 }
 ```
 
@@ -14,11 +14,11 @@ Query aggregate compliance packs with filters
 
 ```hcl
 data "tencentcloud_config_list_aggregate_compliance_packs" "example" {
-  account_group_id  = "ca-aggregator-abcdefg"
+  account_group_id     = "ca-Zp9EiU7Pa4Vy0lFFm8XM"
   compliance_pack_name = "tf-example"
-  risk_level        = [1, 2]
-  status            = "ACTIVE"
-  compliance_result = ["NON_COMPLIANT"]
-  order_type        = "desc"
+  risk_level           = [1, 2]
+  status               = "UN_ACTIVE"
+  compliance_result    = ["NON_COMPLIANT"]
+  order_type           = "desc"
 }
 ```

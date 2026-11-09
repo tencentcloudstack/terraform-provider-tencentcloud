@@ -2801,6 +2801,7 @@ tencentcloud_config_update_config_deliver
 tencentcloud_config_update_aggregate_config_deliver
 tencentcloud_config_recorder_config
 tencentcloud_config_aggregator
+tencentcloud_config_aggregate_compliance_pack
 
 GS
 Data Source
@@ -2833,3 +2834,6 @@ tencentcloud_fwm_edge_acl_rule
 tencentcloud_fwm_security_group_rule
 tencentcloud_fwm_nat_acl_rule
 tencentcloud_fwm_vpc_acl_rule
+
+Action
+tencentcloud_fwm_dispatch_strategy

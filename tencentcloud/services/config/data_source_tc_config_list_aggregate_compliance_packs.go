@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	fwhelper "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/helper"
 )
 
 var _ datasource.DataSourceWithConfigure = &ConfigListAggregateCompliancePacksDataSource{}
@@ -183,10 +183,9 @@ func (d *ConfigListAggregateCompliancePacksDataSource) Read(ctx context.Context,
 		}
 		levels := make([]*uint64, 0, len(riskLevels))
 		for _, v := range riskLevels {
-			if v.IsNull() || v.IsUnknown() {
-				continue
+			if u := fwhelper.Uint64PointerFromValue(v); u != nil {
+				levels = append(levels, u)
 			}
-			levels = append(levels, helper.Uint64(uint64(v.ValueInt64())))
 		}
 		paramMap["RiskLevel"] = levels
 	}
@@ -249,11 +248,11 @@ func (d *ConfigListAggregateCompliancePacksDataSource) Read(ctx context.Context,
 			CompliancePackId:   types.StringPointerValue(pack.CompliancePackId),
 			Description:        types.StringPointerValue(pack.Description),
 			CompliancePackName: types.StringPointerValue(pack.CompliancePackName),
-			RiskLevel:          types.Int64PointerValue(uint64ToInt64Ptr(pack.RiskLevel)),
+			RiskLevel:          fwhelper.Int64ValueFromUint(pack.RiskLevel),
 			ComplianceResult:   types.StringPointerValue(pack.ComplianceResult),
 			CreateTime:         types.StringPointerValue(pack.CreateTime),
 			NoCompliantNames:   noCompliantNames,
-			RuleCount:          types.Int64PointerValue(uint64ToInt64Ptr(pack.RuleCount)),
+			RuleCount:          fwhelper.Int64ValueFromUint(pack.RuleCount),
 		})
 	}
 
@@ -269,15 +268,4 @@ func (d *ConfigListAggregateCompliancePacksDataSource) Read(ctx context.Context,
 	config.Total = types.Int64Value(int64(total))
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &config)...)
-}
-
-// uint64ToInt64Ptr converts a *uint64 to a *int64 preserving the nil state.
-// It is needed because the cloud SDK returns risk level / rule count as
-// *uint64 while the Terraform schema models them as Int64.
-func uint64ToInt64Ptr(v *uint64) *int64 {
-	if v == nil {
-		return nil
-	}
-	i := int64(*v)
-	return &i
 }
