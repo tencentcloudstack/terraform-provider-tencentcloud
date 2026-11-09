@@ -4,6 +4,8 @@ Provides an elasticsearch instance resource.
 
 ~> **NOTE:** Currently, Once the `enable_cerebro` field is `true`, it cannot be `false`.
 
+~> **NOTE:** `sub_product_code` specifies the sub-product of the instance (e.g. `sp_es_enterprise` for enterprise edition). It can only be set at creation time. If omitted, the backend maps it from `license_type`.
+
 Example Usage
 
 Create a basic version of elasticsearch instance paid by the hour
