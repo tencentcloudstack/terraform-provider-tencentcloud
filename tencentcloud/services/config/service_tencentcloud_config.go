@@ -899,6 +899,38 @@ func (me *ConfigService) UpdateAggregateCompliancePack(ctx context.Context, requ
 	return
 }
 
+func (me *ConfigService) UpdateAggregateCompliancePackStatus(ctx context.Context, request *configv20220802.UpdateAggregateCompliancePackStatusRequest) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseConfigV20220802Client().UpdateAggregateCompliancePackStatusWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("update aggregate compliance pack status failed, Response is nil"))
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
 func (me *ConfigService) DeleteAggregateCompliancePack(ctx context.Context, request *configv20220802.DeleteAggregateCompliancePackRequest) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
