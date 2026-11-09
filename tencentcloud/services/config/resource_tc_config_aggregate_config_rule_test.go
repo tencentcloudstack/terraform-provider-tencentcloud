@@ -10,8 +10,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/stretchr/testify/assert"
 
-	config_sdk "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config/v20220802"
 	sdkerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	config_sdk "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config/v20220802"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -46,20 +46,20 @@ func buildAggregateConfigRuleDescribeResponse() *config_sdk.DescribeAggregateCon
 	ruleOwnerId := uint64(100012345678)
 	resp.Response = &config_sdk.DescribeAggregateConfigRuleResponseParams{
 		ConfigRule: &config_sdk.ConfigRule{
-			Identifier:             helper.String("cam-user-group-bound"),
-			IdentifierType:         helper.String("SYSTEM"),
-			RuleName:               helper.String("tf-example-aggregate-rule"),
-			RiskLevel:              &riskLevel,
-			ConfigRuleId:           helper.String("cr-xxxxxxxx"),
-			Description:            helper.String("tf example aggregate rule"),
-			Status:                 helper.String("ACTIVE"),
-			ComplianceResult:       helper.String("COMPLIANT"),
-			ResourceType:           helper.Strings([]string{"QCS::CAM::User"}),
-			RegionsScope:           helper.Strings([]string{"ap-guangzhou"}),
+			Identifier:              helper.String("cam-user-group-bound"),
+			IdentifierType:          helper.String("SYSTEM"),
+			RuleName:                helper.String("tf-example-aggregate-rule"),
+			RiskLevel:               &riskLevel,
+			ConfigRuleId:            helper.String("cr-xxxxxxxx"),
+			Description:             helper.String("tf example aggregate rule"),
+			Status:                  helper.String("ACTIVE"),
+			ComplianceResult:        helper.String("COMPLIANT"),
+			ResourceType:            helper.Strings([]string{"QCS::CAM::User"}),
+			RegionsScope:            helper.Strings([]string{"ap-guangzhou"}),
 			ExcludeResourceIdsScope: helper.Strings([]string{"ins-keep"}),
-			AccountGroupId:         helper.String("ca-aaaaaaaa"),
-			AccountGroupName:       helper.String("tf-example-aggregator"),
-			RuleOwnerId:            &ruleOwnerId,
+			AccountGroupId:          helper.String("ca-aaaaaaaa"),
+			AccountGroupName:        helper.String("tf-example-aggregator"),
+			RuleOwnerId:             &ruleOwnerId,
 			TriggerType: []*config_sdk.TriggerType{
 				{
 					MessageType:               helper.String("ScheduledNotification"),
@@ -103,21 +103,21 @@ func TestConfigAggregateConfigRuleResource_Schema(t *testing.T) {
 		required, optional, computed bool
 	}
 	cases := map[string]expect{
-		"identifier":                {required: true},
-		"identifier_type":           {required: true},
-		"rule_name":                 {required: true},
-		"resource_type":             {required: true},
-		"trigger_type":              {required: true},
-		"risk_level":                {required: true},
-		"account_group_id":          {required: true},
-		"input_parameter":           {optional: true},
-		"description":               {optional: true},
-		"region_scope":              {optional: true},
-		"tags_scope":                {optional: true},
+		"identifier":                 {required: true},
+		"identifier_type":            {required: true},
+		"rule_name":                  {required: true},
+		"resource_type":              {required: true},
+		"trigger_type":               {required: true},
+		"risk_level":                 {required: true},
+		"account_group_id":           {required: true},
+		"input_parameter":            {optional: true},
+		"description":                {optional: true},
+		"region_scope":               {optional: true},
+		"tags_scope":                 {optional: true},
 		"exclude_resource_ids_scope": {optional: true},
-		"id":                        {computed: true},
-		"rule_id":                   {computed: true},
-		"config_rule":               {computed: true},
+		"id":                         {computed: true},
+		"rule_id":                    {computed: true},
+		"config_rule":                {computed: true},
 	}
 	for name, want := range cases {
 		attr, ok := attrs[name]

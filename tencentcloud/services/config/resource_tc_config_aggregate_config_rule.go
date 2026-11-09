@@ -44,19 +44,19 @@ type ConfigAggregateConfigRuleResource struct {
 
 // ConfigAggregateConfigRuleResourceModel maps the schema attributes.
 type ConfigAggregateConfigRuleResourceModel struct {
-	Identifier               types.String `tfsdk:"identifier"`
-	IdentifierType           types.String `tfsdk:"identifier_type"`
+	Identifier              types.String `tfsdk:"identifier"`
+	IdentifierType          types.String `tfsdk:"identifier_type"`
 	RuleName                types.String `tfsdk:"rule_name"`
 	ResourceType            types.Set    `tfsdk:"resource_type"`
-	TriggerType             types.List    `tfsdk:"trigger_type"`
-	RiskLevel               types.Int64   `tfsdk:"risk_level"`
-	AccountGroupId           types.String `tfsdk:"account_group_id"`
-	InputParameter           types.List    `tfsdk:"input_parameter"`
-	Description              types.String `tfsdk:"description"`
-	RegionScope            types.Set    `tfsdk:"region_scope"`
-	TagsScope               types.List    `tfsdk:"tags_scope"`
+	TriggerType             types.List   `tfsdk:"trigger_type"`
+	RiskLevel               types.Int64  `tfsdk:"risk_level"`
+	AccountGroupId          types.String `tfsdk:"account_group_id"`
+	InputParameter          types.List   `tfsdk:"input_parameter"`
+	Description             types.String `tfsdk:"description"`
+	RegionScope             types.Set    `tfsdk:"region_scope"`
+	TagsScope               types.List   `tfsdk:"tags_scope"`
 	ExcludeResourceIdsScope types.Set    `tfsdk:"exclude_resource_ids_scope"`
-	Id                       types.String `tfsdk:"id"`
+	Id                      types.String `tfsdk:"id"`
 	RuleId                  types.String `tfsdk:"rule_id"`
 	ConfigRule              types.Object `tfsdk:"config_rule"`
 }
@@ -91,7 +91,7 @@ type ConfigRuleModel struct {
 	RiskLevel               types.Int64  `tfsdk:"risk_level"`
 	ServiceFunction         types.String `tfsdk:"service_function"`
 	CreateTime              types.String `tfsdk:"create_time"`
-	Description            types.String `tfsdk:"description"`
+	Description             types.String `tfsdk:"description"`
 	Status                  types.String `tfsdk:"status"`
 	ComplianceResult        types.String `tfsdk:"compliance_result"`
 	Annotation              types.List   `tfsdk:"annotation"`
@@ -99,12 +99,12 @@ type ConfigRuleModel struct {
 	ConfigRuleId            types.String `tfsdk:"config_rule_id"`
 	IdentifierType          types.String `tfsdk:"identifier_type"`
 	CompliancePackId        types.String `tfsdk:"compliance_pack_id"`
-	TriggerType            types.List   `tfsdk:"trigger_type"`
+	TriggerType             types.List   `tfsdk:"trigger_type"`
 	ManageInputParameter    types.List   `tfsdk:"manage_input_parameter"`
 	CompliancePackName      types.String `tfsdk:"compliance_pack_name"`
-	RegionsScope           types.Set    `tfsdk:"regions_scope"`
+	RegionsScope            types.Set    `tfsdk:"regions_scope"`
 	TagsScope               types.List   `tfsdk:"tags_scope"`
-	ExcludeResourceIdsScope types.Set   `tfsdk:"exclude_resource_ids_scope"`
+	ExcludeResourceIdsScope types.Set    `tfsdk:"exclude_resource_ids_scope"`
 	AccountGroupId          types.String `tfsdk:"account_group_id"`
 	AccountGroupName        types.String `tfsdk:"account_group_name"`
 	RuleOwnerId             types.Int64  `tfsdk:"rule_owner_id"`
@@ -139,33 +139,33 @@ type ManageInputParameterModel struct {
 
 func configRuleAttrTypes() map[string]attr.Type {
 	return map[string]attr.Type{
-		"identifier":                  types.StringType,
-		"rule_name":                   types.StringType,
-		"input_parameter":             types.ListType{ElemType: types.ObjectType{AttrTypes: inputParameterAttrTypes()}},
-		"source_condition":            types.ListType{ElemType: types.ObjectType{AttrTypes: sourceConditionAttrTypes()}},
-		"resource_type":               types.SetType{ElemType: types.StringType},
-		"labels":                      types.SetType{ElemType: types.StringType},
-		"risk_level":                  types.Int64Type,
-		"service_function":            types.StringType,
-		"create_time":                 types.StringType,
-		"description":                 types.StringType,
-		"status":                      types.StringType,
-		"compliance_result":           types.StringType,
-		"annotation":                  types.ListType{ElemType: types.ObjectType{AttrTypes: annotationAttrTypes()}},
-		"config_rule_invoked_time":    types.StringType,
-		"config_rule_id":              types.StringType,
-		"identifier_type":             types.StringType,
-		"compliance_pack_id":          types.StringType,
-		"trigger_type":                types.ListType{ElemType: types.ObjectType{AttrTypes: triggerTypeAttrTypes()}},
-		"manage_input_parameter":      types.ListType{ElemType: types.ObjectType{AttrTypes: manageInputParameterAttrTypes()}},
-		"compliance_pack_name":        types.StringType,
-		"regions_scope":               types.SetType{ElemType: types.StringType},
-		"tags_scope":                  types.ListType{ElemType: types.ObjectType{AttrTypes: tagsScopeAttrTypes()}},
-		"exclude_resource_ids_scope":  types.SetType{ElemType: types.StringType},
-		"account_group_id":            types.StringType,
-		"account_group_name":          types.StringType,
-		"rule_owner_id":               types.Int64Type,
-		"manage_trigger_type":         types.SetType{ElemType: types.StringType},
+		"identifier":                 types.StringType,
+		"rule_name":                  types.StringType,
+		"input_parameter":            types.ListType{ElemType: types.ObjectType{AttrTypes: inputParameterAttrTypes()}},
+		"source_condition":           types.ListType{ElemType: types.ObjectType{AttrTypes: sourceConditionAttrTypes()}},
+		"resource_type":              types.SetType{ElemType: types.StringType},
+		"labels":                     types.SetType{ElemType: types.StringType},
+		"risk_level":                 types.Int64Type,
+		"service_function":           types.StringType,
+		"create_time":                types.StringType,
+		"description":                types.StringType,
+		"status":                     types.StringType,
+		"compliance_result":          types.StringType,
+		"annotation":                 types.ListType{ElemType: types.ObjectType{AttrTypes: annotationAttrTypes()}},
+		"config_rule_invoked_time":   types.StringType,
+		"config_rule_id":             types.StringType,
+		"identifier_type":            types.StringType,
+		"compliance_pack_id":         types.StringType,
+		"trigger_type":               types.ListType{ElemType: types.ObjectType{AttrTypes: triggerTypeAttrTypes()}},
+		"manage_input_parameter":     types.ListType{ElemType: types.ObjectType{AttrTypes: manageInputParameterAttrTypes()}},
+		"compliance_pack_name":       types.StringType,
+		"regions_scope":              types.SetType{ElemType: types.StringType},
+		"tags_scope":                 types.ListType{ElemType: types.ObjectType{AttrTypes: tagsScopeAttrTypes()}},
+		"exclude_resource_ids_scope": types.SetType{ElemType: types.StringType},
+		"account_group_id":           types.StringType,
+		"account_group_name":         types.StringType,
+		"rule_owner_id":              types.Int64Type,
+		"manage_trigger_type":        types.SetType{ElemType: types.StringType},
 	}
 }
 
@@ -357,33 +357,33 @@ func (r *ConfigAggregateConfigRuleResource) Schema(_ context.Context, _ resource
 // configRuleAttributes returns the schema attributes for the computed config_rule block.
 func configRuleAttributes() map[string]schema.Attribute {
 	return map[string]schema.Attribute{
-		"identifier":                schema.StringAttribute{Computed: true, Description: "Rule identifier."},
-		"rule_name":                 schema.StringAttribute{Computed: true, Description: "Rule name."},
-		"input_parameter":           schema.ListNestedAttribute{Computed: true, Description: "Rule parameters.", NestedObject: schema.NestedAttributeObject{Attributes: map[string]schema.Attribute{"parameter_key": schema.StringAttribute{Computed: true, Description: "Parameter key."}, "type": schema.StringAttribute{Computed: true, Description: "Parameter type."}, "value": schema.StringAttribute{Computed: true, Description: "Parameter value."}}}},
-		"source_condition":          schema.ListNestedAttribute{Computed: true, Description: "Rule trigger conditions.", NestedObject: schema.NestedAttributeObject{Attributes: sourceConditionSchemaAttrs()}},
-		"resource_type":             schema.SetAttribute{Computed: true, ElementType: types.StringType, Description: "Supported resource types."},
-		"labels":                    schema.SetAttribute{Computed: true, ElementType: types.StringType, Description: "Rule labels."},
-		"risk_level":                schema.Int64Attribute{Computed: true, Description: "Risk level. 1:low, 2:medium, 3:high."},
-		"service_function":          schema.StringAttribute{Computed: true, Description: "Corresponding cloud function."},
-		"create_time":               schema.StringAttribute{Computed: true, Description: "Creation time."},
-		"description":               schema.StringAttribute{Computed: true, Description: "Rule description."},
-		"status":                    schema.StringAttribute{Computed: true, Description: "Rule status. ACTIVE: enabled, NO_ACTIVE: stopped."},
-		"compliance_result":         schema.StringAttribute{Computed: true, Description: "Compliance result."},
-		"annotation":                schema.ListNestedAttribute{Computed: true, Description: "Non-compliance annotation.", NestedObject: schema.NestedAttributeObject{Attributes: map[string]schema.Attribute{"configuration": schema.StringAttribute{Computed: true, Description: "Current resource configuration."}, "desired_value": schema.StringAttribute{Computed: true, Description: "Expected resource configuration."}, "operator": schema.StringAttribute{Computed: true, Description: "Comparison operator."}, "property": schema.StringAttribute{Computed: true, Description: "JSON path of the configuration property."}}}},
-		"config_rule_invoked_time":  schema.StringAttribute{Computed: true, Description: "Last rule evaluation time."},
-		"config_rule_id":            schema.StringAttribute{Computed: true, Description: "Rule ID."},
-		"identifier_type":           schema.StringAttribute{Computed: true, Description: "CUSTOMIZE: custom rule, SYSTEM: managed rule."},
-		"compliance_pack_id":        schema.StringAttribute{Computed: true, Description: "Compliance pack ID."},
-		"trigger_type":              schema.ListNestedAttribute{Computed: true, Description: "Trigger types.", NestedObject: schema.NestedAttributeObject{Attributes: map[string]schema.Attribute{"message_type": schema.StringAttribute{Computed: true, Description: "Trigger type."}, "maximum_execution_frequency": schema.StringAttribute{Computed: true, Description: "Trigger time period."}}}},
-		"manage_input_parameter":    schema.ListNestedAttribute{Computed: true, Description: "Managed parameter detail.", NestedObject: schema.NestedAttributeObject{Attributes: map[string]schema.Attribute{"value_type": schema.StringAttribute{Computed: true, Description: "Value type."}, "parameter_key": schema.StringAttribute{Computed: true, Description: "Parameter key."}, "type": schema.StringAttribute{Computed: true, Description: "Parameter type."}, "default_value": schema.StringAttribute{Computed: true, Description: "Default value."}, "description": schema.StringAttribute{Computed: true, Description: "Description."}}}},
-		"compliance_pack_name":      schema.StringAttribute{Computed: true, Description: "Compliance pack name."},
-		"regions_scope":             schema.SetAttribute{Computed: true, ElementType: types.StringType, Description: "Region scope."},
-		"tags_scope":                schema.ListNestedAttribute{Computed: true, Description: "Tag scope.", NestedObject: schema.NestedAttributeObject{Attributes: map[string]schema.Attribute{"tag_key": schema.StringAttribute{Computed: true, Description: "Tag key."}, "tag_value": schema.StringAttribute{Computed: true, Description: "Tag value."}}}},
+		"identifier":                 schema.StringAttribute{Computed: true, Description: "Rule identifier."},
+		"rule_name":                  schema.StringAttribute{Computed: true, Description: "Rule name."},
+		"input_parameter":            schema.ListNestedAttribute{Computed: true, Description: "Rule parameters.", NestedObject: schema.NestedAttributeObject{Attributes: map[string]schema.Attribute{"parameter_key": schema.StringAttribute{Computed: true, Description: "Parameter key."}, "type": schema.StringAttribute{Computed: true, Description: "Parameter type."}, "value": schema.StringAttribute{Computed: true, Description: "Parameter value."}}}},
+		"source_condition":           schema.ListNestedAttribute{Computed: true, Description: "Rule trigger conditions.", NestedObject: schema.NestedAttributeObject{Attributes: sourceConditionSchemaAttrs()}},
+		"resource_type":              schema.SetAttribute{Computed: true, ElementType: types.StringType, Description: "Supported resource types."},
+		"labels":                     schema.SetAttribute{Computed: true, ElementType: types.StringType, Description: "Rule labels."},
+		"risk_level":                 schema.Int64Attribute{Computed: true, Description: "Risk level. 1:low, 2:medium, 3:high."},
+		"service_function":           schema.StringAttribute{Computed: true, Description: "Corresponding cloud function."},
+		"create_time":                schema.StringAttribute{Computed: true, Description: "Creation time."},
+		"description":                schema.StringAttribute{Computed: true, Description: "Rule description."},
+		"status":                     schema.StringAttribute{Computed: true, Description: "Rule status. ACTIVE: enabled, NO_ACTIVE: stopped."},
+		"compliance_result":          schema.StringAttribute{Computed: true, Description: "Compliance result."},
+		"annotation":                 schema.ListNestedAttribute{Computed: true, Description: "Non-compliance annotation.", NestedObject: schema.NestedAttributeObject{Attributes: map[string]schema.Attribute{"configuration": schema.StringAttribute{Computed: true, Description: "Current resource configuration."}, "desired_value": schema.StringAttribute{Computed: true, Description: "Expected resource configuration."}, "operator": schema.StringAttribute{Computed: true, Description: "Comparison operator."}, "property": schema.StringAttribute{Computed: true, Description: "JSON path of the configuration property."}}}},
+		"config_rule_invoked_time":   schema.StringAttribute{Computed: true, Description: "Last rule evaluation time."},
+		"config_rule_id":             schema.StringAttribute{Computed: true, Description: "Rule ID."},
+		"identifier_type":            schema.StringAttribute{Computed: true, Description: "CUSTOMIZE: custom rule, SYSTEM: managed rule."},
+		"compliance_pack_id":         schema.StringAttribute{Computed: true, Description: "Compliance pack ID."},
+		"trigger_type":               schema.ListNestedAttribute{Computed: true, Description: "Trigger types.", NestedObject: schema.NestedAttributeObject{Attributes: map[string]schema.Attribute{"message_type": schema.StringAttribute{Computed: true, Description: "Trigger type."}, "maximum_execution_frequency": schema.StringAttribute{Computed: true, Description: "Trigger time period."}}}},
+		"manage_input_parameter":     schema.ListNestedAttribute{Computed: true, Description: "Managed parameter detail.", NestedObject: schema.NestedAttributeObject{Attributes: map[string]schema.Attribute{"value_type": schema.StringAttribute{Computed: true, Description: "Value type."}, "parameter_key": schema.StringAttribute{Computed: true, Description: "Parameter key."}, "type": schema.StringAttribute{Computed: true, Description: "Parameter type."}, "default_value": schema.StringAttribute{Computed: true, Description: "Default value."}, "description": schema.StringAttribute{Computed: true, Description: "Description."}}}},
+		"compliance_pack_name":       schema.StringAttribute{Computed: true, Description: "Compliance pack name."},
+		"regions_scope":              schema.SetAttribute{Computed: true, ElementType: types.StringType, Description: "Region scope."},
+		"tags_scope":                 schema.ListNestedAttribute{Computed: true, Description: "Tag scope.", NestedObject: schema.NestedAttributeObject{Attributes: map[string]schema.Attribute{"tag_key": schema.StringAttribute{Computed: true, Description: "Tag key."}, "tag_value": schema.StringAttribute{Computed: true, Description: "Tag value."}}}},
 		"exclude_resource_ids_scope": schema.SetAttribute{Computed: true, ElementType: types.StringType, Description: "Excluded resource IDs."},
-		"account_group_id":          schema.StringAttribute{Computed: true, Description: "Account group ID."},
-		"account_group_name":        schema.StringAttribute{Computed: true, Description: "Account group name."},
-		"rule_owner_id":             schema.Int64Attribute{Computed: true, Description: "Rule owner user ID."},
-		"manage_trigger_type":       schema.SetAttribute{Computed: true, ElementType: types.StringType, Description: "Trigger types supported by preset rules."},
+		"account_group_id":           schema.StringAttribute{Computed: true, Description: "Account group ID."},
+		"account_group_name":         schema.StringAttribute{Computed: true, Description: "Account group name."},
+		"rule_owner_id":              schema.Int64Attribute{Computed: true, Description: "Rule owner user ID."},
+		"manage_trigger_type":        schema.SetAttribute{Computed: true, ElementType: types.StringType, Description: "Trigger types supported by preset rules."},
 	}
 }
 
@@ -892,11 +892,11 @@ func buildConfigRuleObject(ctx context.Context, item *configv20220802.ConfigRule
 		mipModels := make([]ManageInputParameterModel, 0, len(item.ManageInputParameter))
 		for _, mip := range item.ManageInputParameter {
 			mipModels = append(mipModels, ManageInputParameterModel{
-				ValueType:     types.StringPointerValue(mip.ValueType),
-				ParameterKey:  types.StringPointerValue(mip.ParameterKey),
-				Type:          types.StringPointerValue(mip.Type),
-				DefaultValue:  types.StringPointerValue(mip.DefaultValue),
-				Description:   types.StringPointerValue(mip.Description),
+				ValueType:    types.StringPointerValue(mip.ValueType),
+				ParameterKey: types.StringPointerValue(mip.ParameterKey),
+				Type:         types.StringPointerValue(mip.Type),
+				DefaultValue: types.StringPointerValue(mip.DefaultValue),
+				Description:  types.StringPointerValue(mip.Description),
 			})
 		}
 		mipList, _ := types.ListValueFrom(ctx, types.ObjectType{AttrTypes: manageInputParameterAttrTypes()}, mipModels)

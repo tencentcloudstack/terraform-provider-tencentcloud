@@ -18,8 +18,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/config"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bdrc"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/config"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dlc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fwm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/kms"
