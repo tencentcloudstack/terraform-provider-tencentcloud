@@ -45,7 +45,7 @@ import (
 
 // resourcesMap maps every framework managed resource type name to its factory.
 var resourcesMap = map[string]func() resource.Resource{
-	ags.NewAgsSandboxToolResource,
+	"tencentcloud_ags_sandbox_tool":                 ags.NewAgsSandboxToolResource,
 	"tencentcloud_config_aggregate_compliance_pack": config.NewConfigAggregateCompliancePackResource,
 	"tencentcloud_ssm_secret_version_v2":            ssm.NewSsmSecretVersionV2Resource,
 }
