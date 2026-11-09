@@ -828,3 +828,83 @@ func (me *ConfigService) DescribeConfigAggregatorById(ctx context.Context, accou
 	ret = response.Response
 	return
 }
+
+// DescribeAggregateConfigRuleEvaluationResultsByFilter lists aggregate config
+// rule evaluation results (rule dimension) for an account group. It paginates
+// until the accumulated item count reaches the reported Total. The returned
+// total mirrors the last page's Response.Total so the caller can persist it.
+func (me *ConfigService) DescribeAggregateConfigRuleEvaluationResultsByFilter(ctx context.Context, paramMap map[string]interface{}) (items []*configv20220802.AggregateEvaluationResult, total uint64, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := configv20220802.NewListAggregateConfigRuleEvaluationResultsRequest()
+	request.Limit = helper.Uint64(100)
+	request.Offset = helper.Uint64(0)
+
+	if v, ok := paramMap["ConfigRuleId"]; ok {
+		request.ConfigRuleId = helper.String(v.(string))
+	}
+
+	if v, ok := paramMap["AccountGroupId"]; ok {
+		request.AccountGroupId = helper.String(v.(string))
+	}
+
+	if v, ok := paramMap["ResourceType"]; ok {
+		request.ResourceType = v.([]*string)
+	}
+
+	if v, ok := paramMap["ComplianceType"]; ok {
+		request.ComplianceType = v.([]*string)
+	}
+
+	if v, ok := paramMap["ResourceOwnerId"]; ok {
+		request.ResourceOwnerId = helper.Uint64(v.(uint64))
+	}
+
+	if v, ok := paramMap["ResourceOwnerIds"]; ok {
+		request.ResourceOwnerIds = v.([]*uint64)
+	}
+
+	items = make([]*configv20220802.AggregateEvaluationResult, 0)
+
+	for {
+		var (
+			pageItems []*configv20220802.AggregateEvaluationResult
+		)
+
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseConfigV20220802Client().ListAggregateConfigRuleEvaluationResultsWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("list aggregate config rule evaluation results failed, Response is nil"))
+			}
+
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+			if result.Response.Total != nil {
+				total = *result.Response.Total
+			}
+
+			pageItems = result.Response.Items
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		items = append(items, pageItems...)
+
+		if uint64(len(items)) >= total {
+			break
+		}
+
+		*request.Offset += *request.Limit
+	}
+
+	return
+}
