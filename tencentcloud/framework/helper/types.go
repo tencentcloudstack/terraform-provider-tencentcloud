@@ -4,12 +4,13 @@
 // declaration so that individual resources do not re-implement them and
 // drift apart in behaviour.
 //
-// This package lives under `tencentcloud/framework/internal/`, where Go's
-// `internal/` visibility rule limits imports to the `tencentcloud/framework/...`
-// subtree. It is path-isolated from the project's existing SDKv2-facing
-// `tencentcloud/internal/helper` (which depends on many SDKv2 types) so that
-// neither symbols nor semantics can collide. The package depends only on
-// framework standard types and the TencentCloud SDK error types.
+// The package lives next to the framework provider plumbing
+// (`tencentcloud/framework/fw`) and is deliberately not placed under
+// `internal/`, so that resources and data sources living in
+// `tencentcloud/services/...` can import it as well. It is kept apart from the
+// SDKv2-facing `tencentcloud/internal/helper` (which depends on many SDKv2
+// types) so that neither symbols nor semantics can collide. The package depends
+// only on framework standard types and the TencentCloud SDK error types.
 package helper
 
 import (
@@ -72,6 +73,39 @@ func Int64ValueFromUint(p *uint64) types.Int64 {
 	return types.Int64Value(int64(*p))
 }
 
+// StringValueOrPrev returns the value reported by the cloud and, when the API
+// omitted it (nil), falls back to the previous plan/state value.
+//
+// It is meant for attributes read back from a Describe API that the
+// practitioner may configure (Required, or Optional+Computed): writing null for
+// a configured value makes Terraform report "provider produced inconsistent
+// result after apply". An unknown previous value becomes null, because state
+// must never hold unknown values. Do not use it for attributes whose truthful
+// refreshed value is null — call StringPointerValueOrNull for those.
+func StringValueOrPrev(cloud *string, prev types.String) types.String {
+	switch {
+	case cloud != nil:
+		return types.StringValue(*cloud)
+	case !prev.IsNull() && !prev.IsUnknown():
+		return prev
+	default:
+		return types.StringNull()
+	}
+}
+
+// Int64ValueOrPrev is StringValueOrPrev for the *uint64 integer fields that are
+// common in the TencentCloud SDK.
+func Int64ValueOrPrev(cloud *uint64, prev types.Int64) types.Int64 {
+	switch {
+	case cloud != nil:
+		return types.Int64Value(int64(*cloud))
+	case !prev.IsNull() && !prev.IsUnknown():
+		return prev
+	default:
+		return types.Int64Null()
+	}
+}
+
 // BoolValueOrNull converts a *bool to types.Bool.
 func BoolValueOrNull(p *bool) types.Bool {
 	if p == nil {
@@ -101,6 +135,22 @@ func Int64PointerFromValue(v types.Int64) *int64 {
 		return nil
 	}
 	n := v.ValueInt64()
+	return &n
+}
+
+// Uint64PointerFromValue converts a types.Int64 back to the *uint64 that the
+// TencentCloud SDK expects for unsigned integer fields.
+//
+// Every value that cannot be represented is reported as nil ("do not send this
+// field") instead of being wrapped around:
+//   - null/unknown: the practitioner did not set the field;
+//   - negative: uint64 cannot represent it, and casting it would send a
+//     meaningless number to the API.
+func Uint64PointerFromValue(v types.Int64) *uint64 {
+	if v.IsNull() || v.IsUnknown() || v.ValueInt64() < 0 {
+		return nil
+	}
+	n := uint64(v.ValueInt64())
 	return &n
 }
 

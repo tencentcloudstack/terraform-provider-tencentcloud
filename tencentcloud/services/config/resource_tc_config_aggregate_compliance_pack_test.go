@@ -53,9 +53,9 @@ func TestConfigAggregateCompliancePackResource_Schema(t *testing.T) {
 		"compliance_pack_name": {required: true},
 		"account_group_id":     {required: true},
 		"risk_level":           {required: true},
-		"description":          {optional: true},
+		"description":          {optional: true, computed: true},
 		"config_rules":         {required: true},
-		"status":               {computed: true},
+		"status":               {optional: true, computed: true},
 		"compliance_pack_id":   {computed: true},
 		"create_time":          {computed: true},
 	}
@@ -109,6 +109,42 @@ func TestConfigAggregateCompliancePackResource_Schema(t *testing.T) {
 	}
 	if len(cr.PlanModifiers) == 0 {
 		t.Error("account_group_id should have a RequiresReplace plan modifier")
+	}
+}
+
+// TestAggregateCompliancePackStatusChanged verifies the status API is only
+// called for a real change with a usable value.
+func TestAggregateCompliancePackStatusChanged(t *testing.T) {
+	cases := []struct {
+		name  string
+		plan  types.String
+		state types.String
+		want  bool
+	}{
+		{"null plan is ignored", types.StringNull(), types.StringValue("ACTIVE"), false},
+		{"unknown plan is ignored", types.StringUnknown(), types.StringValue("ACTIVE"), false},
+		{"same value is ignored", types.StringValue("ACTIVE"), types.StringValue("ACTIVE"), false},
+		{"changed to UN_ACTIVE", types.StringValue("UN_ACTIVE"), types.StringValue("ACTIVE"), true},
+		{"changed to ACTIVE", types.StringValue("ACTIVE"), types.StringValue("UN_ACTIVE"), true},
+		{"no state yet", types.StringValue("UN_ACTIVE"), types.StringNull(), true},
+	}
+
+	for _, c := range cases {
+		c := c
+		t.Run(c.name, func(t *testing.T) {
+			if got := aggregateCompliancePackStatusChanged(c.plan, c.state); got != c.want {
+				t.Fatalf("got %v, want %v", got, c.want)
+			}
+		})
+	}
+}
+
+// TestUpdateAggregateCompliancePackStatus_InvalidStatus verifies an unsupported
+// status is rejected before any API call (so it can be tested without a client).
+func TestUpdateAggregateCompliancePackStatus_InvalidStatus(t *testing.T) {
+	err := updateAggregateCompliancePackStatus(context.Background(), ConfigService{}, "ca-1", "cp-1", "DISABLED")
+	if err == nil {
+		t.Fatal("expected an error for an unsupported status")
 	}
 }
 
@@ -284,7 +320,10 @@ func TestFlattenAggregateComplianceConfigRules(t *testing.T) {
 		},
 	}
 
-	list := flattenAggregateComplianceConfigRules(ctx, rules, prevList)
+	list, flattenDiags := flattenAggregateComplianceConfigRules(ctx, rules, prevList)
+	if flattenDiags.HasError() {
+		t.Fatalf("flattenAggregateComplianceConfigRules returned diagnostics: %v", flattenDiags)
+	}
 	if list.IsNull() {
 		t.Fatal("flattened list is null")
 	}
@@ -342,11 +381,86 @@ func TestFlattenAggregateComplianceConfigRules(t *testing.T) {
 }
 
 // TestFlattenAggregateComplianceConfigRules_Empty verifies an empty cloud list
-// yields a null list (not an error).
+// yields a known empty list: config_rules is Required, so null would be an
+// invalid state value.
 func TestFlattenAggregateComplianceConfigRules_Empty(t *testing.T) {
-	list := flattenAggregateComplianceConfigRules(context.Background(), nil, types.ListNull(types.ObjectType{AttrTypes: configRulesAttrTypes()}))
-	if !list.IsNull() {
-		t.Errorf("expected null list for empty rules, got %v", list)
+	list, diags := flattenAggregateComplianceConfigRules(context.Background(), nil, types.ListNull(types.ObjectType{AttrTypes: configRulesAttrTypes()}))
+	if diags.HasError() {
+		t.Fatalf("unexpected diagnostics: %v", diags)
+	}
+	if list.IsNull() || len(list.Elements()) != 0 {
+		t.Errorf("expected an empty known list, got %v", list)
+	}
+}
+
+// TestFlattenAggregateComplianceConfigRules_NilElement verifies a null entry in
+// the cloud response is skipped instead of panicking the provider.
+func TestFlattenAggregateComplianceConfigRules_NilElement(t *testing.T) {
+	list, diags := flattenAggregateComplianceConfigRules(
+		context.Background(),
+		[]*configv20220802.ComplianceConfigRule{nil},
+		types.ListNull(types.ObjectType{AttrTypes: configRulesAttrTypes()}),
+	)
+	if diags.HasError() {
+		t.Fatalf("unexpected diagnostics: %v", diags)
+	}
+	if list.IsNull() || len(list.Elements()) != 0 {
+		t.Errorf("expected an empty known list, got %v", list)
+	}
+}
+
+// TestFlattenAggregateComplianceConfigRules_PrefersPrevWhenCloudOmits verifies
+// the attributes the Describe API does not echo back keep their configured
+// value, so Optional+Computed attributes never flip to null after apply.
+func TestFlattenAggregateComplianceConfigRules_PrefersPrevWhenCloudOmits(t *testing.T) {
+	ctx := context.Background()
+	prevList := buildRulesList(ctx, t)
+
+	// The cloud only echoes the rule name; every other attribute is missing.
+	rules := []*configv20220802.ComplianceConfigRule{{RuleName: helper.String("rule-1")}}
+
+	list, diags := flattenAggregateComplianceConfigRules(ctx, rules, prevList)
+	if diags.HasError() {
+		t.Fatalf("unexpected diagnostics: %v", diags)
+	}
+
+	var out []aggregateCompliancePackRuleModel
+	if d := list.ElementsAs(ctx, &out, false); d.HasError() {
+		t.Fatalf("elements as failed: %v", d)
+	}
+	if len(out) != 1 {
+		t.Fatalf("expected 1 rule, got %d", len(out))
+	}
+
+	r := out[0]
+	if r.RiskLevel.ValueInt64() != 1 {
+		t.Errorf("RiskLevel = %d, want the previous value 1", r.RiskLevel.ValueInt64())
+	}
+	if r.Identifier.ValueString() != "conformance-pack-1" {
+		t.Errorf("Identifier = %q, want the previous value", r.Identifier.ValueString())
+	}
+	if r.Description.ValueString() != "rule description" {
+		t.Errorf("Description = %q, want the previous value", r.Description.ValueString())
+	}
+	if r.ConfigRuleId.ValueString() != "cr-aaaa" {
+		t.Errorf("ConfigRuleId = %q, want the previous value", r.ConfigRuleId.ValueString())
+	}
+	if r.InputParameter.IsNull() {
+		t.Fatal("InputParameter is null, want the previous value")
+	}
+}
+
+// TestFlattenAggregateComplianceConfigRules_MissingRequiredField verifies a
+// rule without rule_name or risk_level is reported instead of producing an
+// invalid state value.
+func TestFlattenAggregateComplianceConfigRules_MissingRequiredField(t *testing.T) {
+	_, diags := flattenAggregateComplianceConfigRules(
+		context.Background(),
+		[]*configv20220802.ComplianceConfigRule{{ConfigRuleId: helper.String("cr-aaaa")}},
+		types.ListNull(types.ObjectType{AttrTypes: configRulesAttrTypes()}),
+	)
+	if !diags.HasError() {
+		t.Fatal("expected an error diagnostic for a rule without rule_name or risk_level")
 	}
 }
 
@@ -366,7 +480,9 @@ func TestRefreshAggregateCompliancePackModel(t *testing.T) {
 		ConfigRules:        nil,
 	}
 
-	refreshAggregateCompliancePackModel(ctx, m, "ca-aaa", "cp-zzz", item)
+	if diags := refreshAggregateCompliancePackModel(ctx, m, "ca-aaa", "cp-zzz", item); diags.HasError() {
+		t.Fatalf("refreshAggregateCompliancePackModel returned diagnostics: %v", diags)
+	}
 
 	if m.CompliancePackId.ValueString() != "cp-zzz" {
 		t.Errorf("CompliancePackId = %q, want cp-zzz", m.CompliancePackId.ValueString())
@@ -393,8 +509,8 @@ func TestRefreshAggregateCompliancePackModel(t *testing.T) {
 	if m.RiskLevel.ValueInt64() != 2 {
 		t.Errorf("RiskLevel = %d, want 2", m.RiskLevel.ValueInt64())
 	}
-	if !m.ConfigRules.IsNull() {
-		t.Errorf("ConfigRules should be null for empty cloud rules, got %v", m.ConfigRules)
+	if m.ConfigRules.IsNull() || len(m.ConfigRules.Elements()) != 0 {
+		t.Errorf("ConfigRules should be a known empty list for empty cloud rules, got %v", m.ConfigRules)
 	}
 }
 
