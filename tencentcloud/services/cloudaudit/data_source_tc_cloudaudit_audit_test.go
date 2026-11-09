@@ -19,7 +19,7 @@ import (
 )
 
 func ptrStr(s string) *string { return &s }
-func ptrI64(i int64) *int64    { return &i }
+func ptrI64(i int64) *int64   { return &i }
 
 func cloudauditAuditSchema(t *testing.T) schema.Schema {
 	d := svcaudit.NewCloudauditAuditDataSource()
@@ -35,34 +35,34 @@ func newCloudauditAuditReadRequest(t *testing.T, auditName string) datasource.Re
 	s := cloudauditAuditSchema(t)
 
 	attrTypes := map[string]tftypes.Type{
-		"audit_name":          tftypes.String,
+		"audit_name":           tftypes.String,
 		"is_enable_cmq_notify": tftypes.Number,
 		"read_write_attribute": tftypes.Number,
-		"key_id":              tftypes.String,
-		"audit_status":        tftypes.Number,
-		"cos_region":          tftypes.String,
-		"cmq_queue_name":      tftypes.String,
-		"kms_alias":           tftypes.String,
-		"kms_region":          tftypes.String,
-		"is_enable_kms_encry": tftypes.Number,
-		"cos_bucket_name":     tftypes.String,
-		"cmq_region":          tftypes.String,
-		"log_file_prefix":     tftypes.String,
+		"key_id":               tftypes.String,
+		"audit_status":         tftypes.Number,
+		"cos_region":           tftypes.String,
+		"cmq_queue_name":       tftypes.String,
+		"kms_alias":            tftypes.String,
+		"kms_region":           tftypes.String,
+		"is_enable_kms_encry":  tftypes.Number,
+		"cos_bucket_name":      tftypes.String,
+		"cmq_region":           tftypes.String,
+		"log_file_prefix":      tftypes.String,
 	}
 	rawValues := map[string]tftypes.Value{
-		"audit_name":          tftypes.NewValue(tftypes.String, auditName),
+		"audit_name":           tftypes.NewValue(tftypes.String, auditName),
 		"is_enable_cmq_notify": tftypes.NewValue(tftypes.Number, nil),
 		"read_write_attribute": tftypes.NewValue(tftypes.Number, nil),
-		"key_id":              tftypes.NewValue(tftypes.String, nil),
-		"audit_status":        tftypes.NewValue(tftypes.Number, nil),
-		"cos_region":          tftypes.NewValue(tftypes.String, nil),
-		"cmq_queue_name":      tftypes.NewValue(tftypes.String, nil),
-		"kms_alias":           tftypes.NewValue(tftypes.String, nil),
-		"kms_region":          tftypes.NewValue(tftypes.String, nil),
-		"is_enable_kms_encry": tftypes.NewValue(tftypes.Number, nil),
-		"cos_bucket_name":     tftypes.NewValue(tftypes.String, nil),
-		"cmq_region":          tftypes.NewValue(tftypes.String, nil),
-		"log_file_prefix":     tftypes.NewValue(tftypes.String, nil),
+		"key_id":               tftypes.NewValue(tftypes.String, nil),
+		"audit_status":         tftypes.NewValue(tftypes.Number, nil),
+		"cos_region":           tftypes.NewValue(tftypes.String, nil),
+		"cmq_queue_name":       tftypes.NewValue(tftypes.String, nil),
+		"kms_alias":            tftypes.NewValue(tftypes.String, nil),
+		"kms_region":           tftypes.NewValue(tftypes.String, nil),
+		"is_enable_kms_encry":  tftypes.NewValue(tftypes.Number, nil),
+		"cos_bucket_name":      tftypes.NewValue(tftypes.String, nil),
+		"cmq_region":           tftypes.NewValue(tftypes.String, nil),
+		"log_file_prefix":      tftypes.NewValue(tftypes.String, nil),
 	}
 	raw := tftypes.NewValue(tftypes.Object{AttributeTypes: attrTypes}, rawValues)
 
@@ -115,19 +115,19 @@ func TestCloudauditAuditDataSource_Read_Success(t *testing.T) {
 		gotRequest = request
 		resp := &audit.DescribeAuditResponse{
 			Response: &audit.DescribeAuditResponseParams{
-				IsEnableCmqNotify:   ptrI64(1),
+				IsEnableCmqNotify:  ptrI64(1),
 				ReadWriteAttribute: ptrI64(3),
-				KeyId:               ptrStr("key-xxxx"),
-				AuditStatus:         ptrI64(1),
-				AuditName:           ptrStr("my-audit"),
-				CosRegion:           ptrStr("ap-guangzhou"),
-				CmqQueueName:        ptrStr("cmq-queue"),
-				KmsAlias:            ptrStr("kms-alias"),
-				KmsRegion:           ptrStr("ap-guangzhou"),
-				IsEnableKmsEncry:    ptrI64(0),
-				CosBucketName:       ptrStr("bucket-1234567890"),
-				CmqRegion:           ptrStr("ap-guangzhou"),
-				LogFilePrefix:       ptrStr("logs"),
+				KeyId:              ptrStr("key-xxxx"),
+				AuditStatus:        ptrI64(1),
+				AuditName:          ptrStr("my-audit"),
+				CosRegion:          ptrStr("ap-guangzhou"),
+				CmqQueueName:       ptrStr("cmq-queue"),
+				KmsAlias:           ptrStr("kms-alias"),
+				KmsRegion:          ptrStr("ap-guangzhou"),
+				IsEnableKmsEncry:   ptrI64(0),
+				CosBucketName:      ptrStr("bucket-1234567890"),
+				CmqRegion:          ptrStr("ap-guangzhou"),
+				LogFilePrefix:      ptrStr("logs"),
 			},
 		}
 		return resp, nil
