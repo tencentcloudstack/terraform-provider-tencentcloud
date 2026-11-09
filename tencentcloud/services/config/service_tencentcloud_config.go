@@ -399,6 +399,86 @@ func (me *ConfigService) DescribeConfigRulesByFilter(ctx context.Context, paramM
 	return
 }
 
+func (me *ConfigService) DescribeConfigAggregateConfigRulesByFilter(ctx context.Context, paramMap map[string]interface{}) (items []*configv20220802.ConfigRule, total uint64, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := configv20220802.NewListAggregateConfigRulesRequest()
+	request.Limit = helper.Int64(200)
+	request.Offset = helper.Int64(0)
+
+	if v, ok := paramMap["AccountGroupId"]; ok {
+		request.AccountGroupId = helper.String(v.(string))
+	}
+
+	if v, ok := paramMap["OrderType"]; ok {
+		request.OrderType = helper.String(v.(string))
+	}
+
+	if v, ok := paramMap["RiskLevel"]; ok {
+		request.RiskLevel = v.([]*uint64)
+	}
+
+	if v, ok := paramMap["State"]; ok {
+		request.State = helper.String(v.(string))
+	}
+
+	if v, ok := paramMap["ComplianceResult"]; ok {
+		request.ComplianceResult = v.([]*string)
+	}
+
+	if v, ok := paramMap["RuleName"]; ok {
+		request.RuleName = helper.String(v.(string))
+	}
+
+	if v, ok := paramMap["RuleOwnerId"]; ok {
+		request.RuleOwnerId = helper.Uint64(v.(uint64))
+	}
+
+	items = make([]*configv20220802.ConfigRule, 0)
+
+	for {
+		var (
+			pageItems []*configv20220802.ConfigRule
+		)
+
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseConfigV20220802Client().ListAggregateConfigRulesWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("list aggregate config rules failed, Response is nil"))
+			}
+
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+			if result.Response.Total != nil {
+				total = *result.Response.Total
+			}
+
+			pageItems = result.Response.Items
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		items = append(items, pageItems...)
+
+		if uint64(len(items)) >= total {
+			break
+		}
+
+		*request.Offset += *request.Limit
+	}
+
+	return
+}
+
 func (me *ConfigService) DescribeConfigRuleById(ctx context.Context, ruleId string) (ret *configv20220802.ConfigRule, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 

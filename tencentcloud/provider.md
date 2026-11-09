@@ -2790,6 +2790,7 @@ tencentcloud_config_rules
 tencentcloud_config_discovered_resources
 tencentcloud_config_resource_types
 tencentcloud_config_list_aggregators
+tencentcloud_config_list_aggregate_config_rules
 
 Resource
 tencentcloud_config_compliance_pack
