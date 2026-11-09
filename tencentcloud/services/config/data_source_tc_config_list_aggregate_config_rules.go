@@ -28,46 +28,46 @@ type ConfigListAggregateConfigRulesDataSource struct {
 
 // ConfigListAggregateConfigRulesDataSourceModel maps the schema attributes.
 type ConfigListAggregateConfigRulesDataSourceModel struct {
-	AccountGroupId    types.String `tfsdk:"account_group_id"`
+	AccountGroupId   types.String `tfsdk:"account_group_id"`
 	OrderType        types.String `tfsdk:"order_type"`
 	RiskLevel        types.List   `tfsdk:"risk_level"`
 	State            types.String `tfsdk:"state"`
 	ComplianceResult types.List   `tfsdk:"compliance_result"`
 	RuleName         types.String `tfsdk:"rule_name"`
-	RuleOwnerId     types.Int64  `tfsdk:"rule_owner_id"`
+	RuleOwnerId      types.Int64  `tfsdk:"rule_owner_id"`
 	Total            types.Int64  `tfsdk:"total"`
 	Items            types.List   `tfsdk:"items"`
 }
 
 // aggregateConfigRuleItemModel is the element type of items.
 type aggregateConfigRuleItemModel struct {
-	Identifier            types.String `tfsdk:"identifier"`
-	RuleName              types.String `tfsdk:"rule_name"`
-	InputParameter        types.List   `tfsdk:"input_parameter"`
-	SourceCondition       types.List   `tfsdk:"source_condition"`
-	ResourceType          types.List   `tfsdk:"resource_type"`
-	Labels                types.List   `tfsdk:"labels"`
-	RiskLevel             types.Int64  `tfsdk:"risk_level"`
-	ServiceFunction       types.String `tfsdk:"service_function"`
-	CreateTime           types.String `tfsdk:"create_time"`
-	Description         types.String `tfsdk:"description"`
-	Status              types.String `tfsdk:"status"`
-	ComplianceResult     types.String `tfsdk:"compliance_result"`
-	Annotation            types.List   `tfsdk:"annotation"`
-	ConfigRuleInvokedTime  types.String `tfsdk:"config_rule_invoked_time"`
-	ConfigRuleId         types.String `tfsdk:"config_rule_id"`
-	IdentifierType       types.String `tfsdk:"identifier_type"`
-	CompliancePackId     types.String `tfsdk:"compliance_pack_id"`
-	TriggerType           types.List   `tfsdk:"trigger_type"`
-	ManageInputParameter  types.List   `tfsdk:"manage_input_parameter"`
-	CompliancePackName    types.String `tfsdk:"compliance_pack_name"`
-	RegionsScope          types.List   `tfsdk:"regions_scope"`
-	TagsScope             types.List   `tfsdk:"tags_scope"`
-	ExcludeResourceIdsScope types.List  `tfsdk:"exclude_resource_ids_scope"`
-	AccountGroupId       types.String `tfsdk:"account_group_id"`
-	AccountGroupName     types.String `tfsdk:"account_group_name"`
-	RuleOwnerId          types.Int64  `tfsdk:"rule_owner_id"`
-	ManageTriggerType      types.List   `tfsdk:"manage_trigger_type"`
+	Identifier              types.String `tfsdk:"identifier"`
+	RuleName                types.String `tfsdk:"rule_name"`
+	InputParameter          types.List   `tfsdk:"input_parameter"`
+	SourceCondition         types.List   `tfsdk:"source_condition"`
+	ResourceType            types.List   `tfsdk:"resource_type"`
+	Labels                  types.List   `tfsdk:"labels"`
+	RiskLevel               types.Int64  `tfsdk:"risk_level"`
+	ServiceFunction         types.String `tfsdk:"service_function"`
+	CreateTime              types.String `tfsdk:"create_time"`
+	Description             types.String `tfsdk:"description"`
+	Status                  types.String `tfsdk:"status"`
+	ComplianceResult        types.String `tfsdk:"compliance_result"`
+	Annotation              types.List   `tfsdk:"annotation"`
+	ConfigRuleInvokedTime   types.String `tfsdk:"config_rule_invoked_time"`
+	ConfigRuleId            types.String `tfsdk:"config_rule_id"`
+	IdentifierType          types.String `tfsdk:"identifier_type"`
+	CompliancePackId        types.String `tfsdk:"compliance_pack_id"`
+	TriggerType             types.List   `tfsdk:"trigger_type"`
+	ManageInputParameter    types.List   `tfsdk:"manage_input_parameter"`
+	CompliancePackName      types.String `tfsdk:"compliance_pack_name"`
+	RegionsScope            types.List   `tfsdk:"regions_scope"`
+	TagsScope               types.List   `tfsdk:"tags_scope"`
+	ExcludeResourceIdsScope types.List   `tfsdk:"exclude_resource_ids_scope"`
+	AccountGroupId          types.String `tfsdk:"account_group_id"`
+	AccountGroupName        types.String `tfsdk:"account_group_name"`
+	RuleOwnerId             types.Int64  `tfsdk:"rule_owner_id"`
+	ManageTriggerType       types.List   `tfsdk:"manage_trigger_type"`
 }
 
 // aggregateInputParameterModel is the element type of input_parameter.
@@ -80,7 +80,7 @@ type aggregateInputParameterModel struct {
 // aggregateSourceConditionModel is the element type of source_condition.
 type aggregateSourceConditionModel struct {
 	EmptyAs      types.String `tfsdk:"empty_as"`
-	SelectPath  types.String `tfsdk:"select_path"`
+	SelectPath   types.String `tfsdk:"select_path"`
 	Operator     types.String `tfsdk:"operator"`
 	Required     types.Bool   `tfsdk:"required"`
 	DesiredValue types.String `tfsdk:"desired_value"`
@@ -91,12 +91,12 @@ type aggregateAnnotationModel struct {
 	Configuration types.String `tfsdk:"configuration"`
 	DesiredValue  types.String `tfsdk:"desired_value"`
 	Operator      types.String `tfsdk:"operator"`
-	Property       types.String `tfsdk:"property"`
+	Property      types.String `tfsdk:"property"`
 }
 
 // aggregateTriggerTypeModel is the element type of trigger_type.
 type aggregateTriggerTypeModel struct {
-	MessageType             types.String `tfsdk:"message_type"`
+	MessageType               types.String `tfsdk:"message_type"`
 	MaximumExecutionFrequency types.String `tfsdk:"maximum_execution_frequency"`
 }
 

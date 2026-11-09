@@ -13,33 +13,33 @@ import (
 // aggregateConfigRuleItemAttrTypes returns the attribute types of the items element object.
 func aggregateConfigRuleItemAttrTypes() map[string]attr.Type {
 	return map[string]attr.Type{
-		"identifier":               types.StringType,
-		"rule_name":               types.StringType,
-		"input_parameter":         types.ListType{ElemType: types.ObjectType{AttrTypes: aggregateInputParameterAttrTypes()}},
-		"source_condition":       types.ListType{ElemType: types.ObjectType{AttrTypes: aggregateSourceConditionAttrTypes()}},
-		"resource_type":           types.ListType{ElemType: types.StringType},
-		"labels":                   types.ListType{ElemType: types.StringType},
-		"risk_level":               types.Int64Type,
-		"service_function":        types.StringType,
-		"create_time":              types.StringType,
-		"description":              types.StringType,
-		"status":                   types.StringType,
-		"compliance_result":      types.StringType,
-		"annotation":             types.ListType{ElemType: types.ObjectType{AttrTypes: aggregateAnnotationAttrTypes()}},
-		"config_rule_invoked_time": types.StringType,
-		"config_rule_id":           types.StringType,
-		"identifier_type":          types.StringType,
-		"compliance_pack_id":       types.StringType,
-		"trigger_type":              types.ListType{ElemType: types.ObjectType{AttrTypes: aggregateTriggerTypeAttrTypes()}},
-		"manage_input_parameter":    types.ListType{ElemType: types.ObjectType{AttrTypes: aggregateManageInputParameterAttrTypes()}},
-		"compliance_pack_name":      types.StringType,
-		"regions_scope":             types.ListType{ElemType: types.StringType},
-		"tags_scope":                types.ListType{ElemType: types.ObjectType{AttrTypes: aggregateTagsScopeAttrTypes()}},
+		"identifier":                 types.StringType,
+		"rule_name":                  types.StringType,
+		"input_parameter":            types.ListType{ElemType: types.ObjectType{AttrTypes: aggregateInputParameterAttrTypes()}},
+		"source_condition":           types.ListType{ElemType: types.ObjectType{AttrTypes: aggregateSourceConditionAttrTypes()}},
+		"resource_type":              types.ListType{ElemType: types.StringType},
+		"labels":                     types.ListType{ElemType: types.StringType},
+		"risk_level":                 types.Int64Type,
+		"service_function":           types.StringType,
+		"create_time":                types.StringType,
+		"description":                types.StringType,
+		"status":                     types.StringType,
+		"compliance_result":          types.StringType,
+		"annotation":                 types.ListType{ElemType: types.ObjectType{AttrTypes: aggregateAnnotationAttrTypes()}},
+		"config_rule_invoked_time":   types.StringType,
+		"config_rule_id":             types.StringType,
+		"identifier_type":            types.StringType,
+		"compliance_pack_id":         types.StringType,
+		"trigger_type":               types.ListType{ElemType: types.ObjectType{AttrTypes: aggregateTriggerTypeAttrTypes()}},
+		"manage_input_parameter":     types.ListType{ElemType: types.ObjectType{AttrTypes: aggregateManageInputParameterAttrTypes()}},
+		"compliance_pack_name":       types.StringType,
+		"regions_scope":              types.ListType{ElemType: types.StringType},
+		"tags_scope":                 types.ListType{ElemType: types.ObjectType{AttrTypes: aggregateTagsScopeAttrTypes()}},
 		"exclude_resource_ids_scope": types.ListType{ElemType: types.StringType},
-		"account_group_id":        types.StringType,
-		"account_group_name":     types.StringType,
-		"rule_owner_id":           types.Int64Type,
-		"manage_trigger_type":    types.ListType{ElemType: types.StringType},
+		"account_group_id":           types.StringType,
+		"account_group_name":         types.StringType,
+		"rule_owner_id":              types.Int64Type,
+		"manage_trigger_type":        types.ListType{ElemType: types.StringType},
 	}
 }
 
@@ -55,7 +55,7 @@ func aggregateSourceConditionAttrTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"empty_as":      types.StringType,
 		"select_path":   types.StringType,
-		"operator":     types.StringType,
+		"operator":      types.StringType,
 		"required":      types.BoolType,
 		"desired_value": types.StringType,
 	}
@@ -72,7 +72,7 @@ func aggregateAnnotationAttrTypes() map[string]attr.Type {
 
 func aggregateTriggerTypeAttrTypes() map[string]attr.Type {
 	return map[string]attr.Type{
-		"message_type":              types.StringType,
+		"message_type":                types.StringType,
 		"maximum_execution_frequency": types.StringType,
 	}
 }
@@ -101,22 +101,22 @@ func flattenAggregateConfigRule(ctx context.Context, resp *datasource.ReadRespon
 	}
 
 	out := aggregateConfigRuleItemModel{
-		Identifier:           types.StringPointerValue(item.Identifier),
-		RuleName:             types.StringPointerValue(item.RuleName),
-		RiskLevel:            types.Int64PointerValue(item.RiskLevel),
-		ServiceFunction:     types.StringPointerValue(item.ServiceFunction),
-		CreateTime:          types.StringPointerValue(item.CreateTime),
-		Description:         types.StringPointerValue(item.Description),
-		Status:               types.StringPointerValue(item.Status),
-		ComplianceResult:     types.StringPointerValue(item.ComplianceResult),
+		Identifier:            types.StringPointerValue(item.Identifier),
+		RuleName:              types.StringPointerValue(item.RuleName),
+		RiskLevel:             types.Int64PointerValue(item.RiskLevel),
+		ServiceFunction:       types.StringPointerValue(item.ServiceFunction),
+		CreateTime:            types.StringPointerValue(item.CreateTime),
+		Description:           types.StringPointerValue(item.Description),
+		Status:                types.StringPointerValue(item.Status),
+		ComplianceResult:      types.StringPointerValue(item.ComplianceResult),
 		ConfigRuleInvokedTime: types.StringPointerValue(item.ConfigRuleInvokedTime),
-		ConfigRuleId:         types.StringPointerValue(item.ConfigRuleId),
-		IdentifierType:       types.StringPointerValue(item.IdentifierType),
-		CompliancePackId:     types.StringPointerValue(item.CompliancePackId),
-		CompliancePackName:   types.StringPointerValue(item.CompliancePackName),
-		AccountGroupId:      types.StringPointerValue(item.AccountGroupId),
-		AccountGroupName:    types.StringPointerValue(item.AccountGroupName),
-		RuleOwnerId:          types.Int64PointerValue(int64PtrFromUint64(item.RuleOwnerId)),
+		ConfigRuleId:          types.StringPointerValue(item.ConfigRuleId),
+		IdentifierType:        types.StringPointerValue(item.IdentifierType),
+		CompliancePackId:      types.StringPointerValue(item.CompliancePackId),
+		CompliancePackName:    types.StringPointerValue(item.CompliancePackName),
+		AccountGroupId:        types.StringPointerValue(item.AccountGroupId),
+		AccountGroupName:      types.StringPointerValue(item.AccountGroupName),
+		RuleOwnerId:           types.Int64PointerValue(int64PtrFromUint64(item.RuleOwnerId)),
 	}
 
 	out.InputParameter = flattenAggregateInputParameter(ctx, resp, item.InputParameter)
@@ -172,7 +172,7 @@ func flattenAggregateInputParameter(ctx context.Context, resp *datasource.ReadRe
 		}
 		out = append(out, aggregateInputParameterModel{
 			ParameterKey: types.StringPointerValue(it.ParameterKey),
-			Type:       types.StringPointerValue(it.Type),
+			Type:         types.StringPointerValue(it.Type),
 			Value:        types.StringPointerValue(it.Value),
 		})
 	}
@@ -188,10 +188,10 @@ func flattenAggregateSourceCondition(ctx context.Context, resp *datasource.ReadR
 			continue
 		}
 		out = append(out, aggregateSourceConditionModel{
-			EmptyAs:     types.StringPointerValue(it.EmptyAs),
-			SelectPath:  types.StringPointerValue(it.SelectPath),
-			Operator:    types.StringPointerValue(it.Operator),
-			Required:   types.BoolPointerValue(it.Required),
+			EmptyAs:      types.StringPointerValue(it.EmptyAs),
+			SelectPath:   types.StringPointerValue(it.SelectPath),
+			Operator:     types.StringPointerValue(it.Operator),
+			Required:     types.BoolPointerValue(it.Required),
 			DesiredValue: types.StringPointerValue(it.DesiredValue),
 		})
 	}
@@ -209,8 +209,8 @@ func flattenAggregateAnnotation(ctx context.Context, resp *datasource.ReadRespon
 	out := []aggregateAnnotationModel{{
 		Configuration: types.StringPointerValue(annotation.Configuration),
 		DesiredValue:  types.StringPointerValue(annotation.DesiredValue),
-		Operator:       types.StringPointerValue(annotation.Operator),
-		Property:       types.StringPointerValue(annotation.Property),
+		Operator:      types.StringPointerValue(annotation.Operator),
+		Property:      types.StringPointerValue(annotation.Property),
 	}}
 	list, diags := types.ListValueFrom(ctx, types.ObjectType{AttrTypes: aggregateAnnotationAttrTypes()}, out)
 	resp.Diagnostics.Append(diags...)
@@ -224,7 +224,7 @@ func flattenAggregateTriggerType(ctx context.Context, resp *datasource.ReadRespo
 			continue
 		}
 		out = append(out, aggregateTriggerTypeModel{
-			MessageType:              types.StringPointerValue(it.MessageType),
+			MessageType:               types.StringPointerValue(it.MessageType),
 			MaximumExecutionFrequency: types.StringPointerValue(it.MaximumExecutionFrequency),
 		})
 	}
@@ -242,9 +242,9 @@ func flattenAggregateManageInputParameter(ctx context.Context, resp *datasource.
 		out = append(out, aggregateManageInputParameterModel{
 			ValueType:    types.StringPointerValue(it.ValueType),
 			ParameterKey: types.StringPointerValue(it.ParameterKey),
-			Type:        types.StringPointerValue(it.Type),
+			Type:         types.StringPointerValue(it.Type),
 			DefaultValue: types.StringPointerValue(it.DefaultValue),
-			Description:   types.StringPointerValue(it.Description),
+			Description:  types.StringPointerValue(it.Description),
 		})
 	}
 	list, diags := types.ListValueFrom(ctx, types.ObjectType{AttrTypes: aggregateManageInputParameterAttrTypes()}, out)

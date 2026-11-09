@@ -8,8 +8,8 @@ import (
 	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-go/tftypes"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-go/tftypes"
 	"github.com/stretchr/testify/assert"
 	configv20220802 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config/v20220802"
 
@@ -79,37 +79,37 @@ func newConfigListAggregateConfigRulesReadRequest(t *testing.T, accountGroupId s
 
 func buildAggregateConfigRule() *configv20220802.ConfigRule {
 	return &configv20220802.ConfigRule{
-		Identifier:           ptrStrLACR("cam-user-mfa-check"),
-		RuleName:             ptrStrLACR("cam-user-mfa-check"),
-		RiskLevel:            ptrInt64LACR(1),
-		ServiceFunction:      ptrStrLACR("cam-user-mfa-check"),
-		CreateTime:           ptrStrLACR("2024-01-01 00:00:00"),
-		Description:          ptrStrLACR("check cam user mfa"),
-		Status:               ptrStrLACR("ACTIVE"),
-		ComplianceResult:     ptrStrLACR("COMPLIANT"),
+		Identifier:            ptrStrLACR("cam-user-mfa-check"),
+		RuleName:              ptrStrLACR("cam-user-mfa-check"),
+		RiskLevel:             ptrInt64LACR(1),
+		ServiceFunction:       ptrStrLACR("cam-user-mfa-check"),
+		CreateTime:            ptrStrLACR("2024-01-01 00:00:00"),
+		Description:           ptrStrLACR("check cam user mfa"),
+		Status:                ptrStrLACR("ACTIVE"),
+		ComplianceResult:      ptrStrLACR("COMPLIANT"),
 		ConfigRuleInvokedTime: ptrStrLACR("2024-01-02 00:00:00"),
-		ConfigRuleId:         ptrStrLACR("cr-abcdefg"),
-		IdentifierType:       ptrStrLACR("SYSTEM"),
-		CompliancePackId:     ptrStrLACR(""),
-		CompliancePackName:   ptrStrLACR(""),
-		AccountGroupId:       ptrStrLACR("ca-aggregator-abcdefg"),
-		AccountGroupName:     ptrStrLACR("tf-aggregator"),
-		RuleOwnerId:          ptrUint64LACR(100000000000),
+		ConfigRuleId:          ptrStrLACR("cr-abcdefg"),
+		IdentifierType:        ptrStrLACR("SYSTEM"),
+		CompliancePackId:      ptrStrLACR(""),
+		CompliancePackName:    ptrStrLACR(""),
+		AccountGroupId:        ptrStrLACR("ca-aggregator-abcdefg"),
+		AccountGroupName:      ptrStrLACR("tf-aggregator"),
+		RuleOwnerId:           ptrUint64LACR(100000000000),
 		InputParameter: []*configv20220802.InputParameter{
 			{ParameterKey: ptrStrLACR("maxIdle"), Type: ptrStrLACR("Optional"), Value: ptrStrLACR("30")},
 		},
 		SourceCondition: []*configv20220802.SourceConditionForManage{
 			{EmptyAs: ptrStrLACR("NON_COMPLIANT"), SelectPath: ptrStrLACR("$.maxIdle"), Operator: ptrStrLACR("lt"), Required: ptrBoolLACR(true), DesiredValue: ptrStrLACR("30")},
 		},
-		ResourceType:           []*string{ptrStrLACR("Qcloud::CAM::User")},
-		Labels:                 []*string{ptrStrLACR("security")},
-		Annotation:             &configv20220802.Annotation{Configuration: ptrStrLACR("idle=60"), DesiredValue: ptrStrLACR("30"), Operator: ptrStrLACR("lt"), Property: ptrStrLACR("$.maxIdle")},
-		TriggerType:            []*configv20220802.TriggerType{{MessageType: ptrStrLACR("ScheduledNotification"), MaximumExecutionFrequency: ptrStrLACR("One_Hour")}},
-		ManageInputParameter:   []*configv20220802.InputParameterForManage{{ValueType: ptrStrLACR("Integer"), ParameterKey: ptrStrLACR("maxIdle"), Type: ptrStrLACR("Optional"), DefaultValue: ptrStrLACR("30"), Description: ptrStrLACR("max idle days")}},
-		RegionsScope:           []*string{ptrStrLACR("ap-guangzhou")},
-		TagsScope:              []*configv20220802.Tag{{TagKey: ptrStrLACR("env"), TagValue: ptrStrLACR("prod")}},
+		ResourceType:            []*string{ptrStrLACR("Qcloud::CAM::User")},
+		Labels:                  []*string{ptrStrLACR("security")},
+		Annotation:              &configv20220802.Annotation{Configuration: ptrStrLACR("idle=60"), DesiredValue: ptrStrLACR("30"), Operator: ptrStrLACR("lt"), Property: ptrStrLACR("$.maxIdle")},
+		TriggerType:             []*configv20220802.TriggerType{{MessageType: ptrStrLACR("ScheduledNotification"), MaximumExecutionFrequency: ptrStrLACR("One_Hour")}},
+		ManageInputParameter:    []*configv20220802.InputParameterForManage{{ValueType: ptrStrLACR("Integer"), ParameterKey: ptrStrLACR("maxIdle"), Type: ptrStrLACR("Optional"), DefaultValue: ptrStrLACR("30"), Description: ptrStrLACR("max idle days")}},
+		RegionsScope:            []*string{ptrStrLACR("ap-guangzhou")},
+		TagsScope:               []*configv20220802.Tag{{TagKey: ptrStrLACR("env"), TagValue: ptrStrLACR("prod")}},
 		ExcludeResourceIdsScope: []*string{ptrStrLACR("usr-123")},
-		ManageTriggerType:      []*string{ptrStrLACR("ScheduledNotification")},
+		ManageTriggerType:       []*string{ptrStrLACR("ScheduledNotification")},
 	}
 }
 
