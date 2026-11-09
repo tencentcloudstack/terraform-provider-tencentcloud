@@ -164,6 +164,7 @@ tencentcloud_audit_cos_regions
 tencentcloud_audit_key_alias
 tencentcloud_audits
 tencentcloud_audit_events
+tencentcloud_cloudaudit_audit
 
 Resource
 tencentcloud_audit_track
