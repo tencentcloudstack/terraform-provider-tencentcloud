@@ -19,7 +19,8 @@ test: fmtcheck
 	go test $(TEST) -timeout=30s -parallel=4
 
 # check-mux validates SDKv2 + framework dual-stack mux compatibility without
-# making any remote calls. It boots tf5muxserver to merge schemas (including
+# making any remote calls. It boots tf6muxserver (with the SDKv2 half upgraded
+# to protocol 6 by tf5to6server) to merge schemas (including
 # an actual GetProviderSchema call so byte-level schema drift that
 # NewMuxServer cannot detect is caught here), and asserts that the resource /
 # data source type-name sets across the two stacks are disjoint. Any PR that
