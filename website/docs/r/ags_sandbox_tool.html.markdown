@@ -21,90 +21,54 @@ Provides a resource to create an AGS sandbox tool.
 
 ## Example Usage
 
-### Create a custom sandbox tool with a public network
-
 ```hcl
-resource "tencentcloud_ags_sandbox_tool" "example" {
-  tool_name = "tf-example-tool"
-  tool_type = "custom"
-
-  network_configuration {
-    network_mode = "PUBLIC"
-  }
-
-  description = "sandbox tool created by terraform"
-
-  custom_configuration {
-    image               = "ccr.ccs.tencentyun.com/tf-example/agent:latest"
+resource "tencentcloud_ags_sandbox_tool" "custom" {
+  client_token = null
+  custom_configuration = {
+    args                = ["-port", "8080"]
+    command             = ["/bin/go-httpbin"]
+    dns_config          = null
+    env                 = null
+    image               = "ccr.ccs.tencentyun.com/test/go-httpbin:v2.16.1"
     image_registry_type = "personal"
-    command             = ["/bin/sh", "-c"]
-    args                = ["python3 -m http.server 8080"]
-
-    resources {
-      cpu     = "1"
-      memory  = "2Gi"
-      storage = "5Gi"
-    }
-
-    ports {
-      name     = "http"
-      port     = 8080
-      protocol = "TCP"
-    }
-
-    env {
-      name  = "LOG_LEVEL"
-      value = "info"
-    }
-  }
-}
-```
-
-### Create a sandbox tool in a VPC with a storage mount and log push
-
-```hcl
-resource "tencentcloud_ags_sandbox_tool" "vpc" {
-  tool_name  = "tf-example-vpc-tool"
-  tool_type  = "browser"
-  persistent = true
-
-  network_configuration {
-    network_mode = "VPC"
-
-    vpc_config {
-      subnet_ids         = ["subnet-xxxxxxxx"]
-      security_group_ids = ["sg-xxxxxxxx"]
-    }
-  }
-
-  storage_mounts {
-    name       = "workspace"
-    mount_path = "/workspace"
-    read_only  = false
-
-    storage_source {
-      cos {
-        endpoint    = "cos.ap-guangzhou.myqcloud.com"
-        bucket_name = "tf-example-bucket"
-        bucket_path = "/workspace"
+    ports = [
+      {
+        name     = "http"
+        port     = 8080
+        protocol = "TCP"
+      },
+    ]
+    probe = {
+      failure_threshold = 60
+      http_get = {
+        path   = "/status/200"
+        port   = 8080
+        scheme = "HTTP"
       }
+      probe_period_ms   = 1000
+      probe_timeout_ms  = 1000
+      ready_timeout_ms  = 30000
+      success_threshold = 1
     }
-  }
-
-  log_configuration {
-    cls_config {
-      topic_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+    resources = {
+      cpu     = "1"
+      memory  = "1Gi"
+      storage = null
     }
-
-    log_sources {
-      files = ["/logs/app.log"]
-    }
+    security_context = null
   }
-
-  tags {
-    key   = "created_by"
-    value = "terraform"
+  default_timeout   = null
+  description       = "Guoning standard web sandbox: intranet TCR go-httpbin v2.16.1, 1C1Gi, HTTP /status/200:8080"
+  log_configuration = null
+  network_configuration = {
+    network_mode = "PUBLIC"
+    vpc_config   = null
   }
+  persistent     = false
+  role_arn       = "qcs::cam::uin/xxxxxx:roleName/cos-tcr-full-ags"
+  storage_mounts = null
+  tool_name      = var.tool_name
+  tool_type      = "custom"
 }
 ```
 
