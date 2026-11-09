@@ -867,7 +867,9 @@ func resourceTencentCloudElasticsearchInstanceRead(d *schema.ResourceData, meta 
 	_ = d.Set("renew_flag", instance.RenewFlag)
 	_ = d.Set("deploy_mode", instance.DeployMode)
 	_ = d.Set("license_type", instance.LicenseType)
-	_ = d.Set("sub_product_code", instance.SubProductCode)
+	if instance.SubProductCode != nil {
+		_ = d.Set("sub_product_code", instance.SubProductCode)
+	}
 	licenseType := instance.LicenseType
 	if licenseType != nil && *licenseType == ES_LICENSE_TYPE_BASIC { // this field is only valid for the basic edition
 		_ = d.Set("basic_security_type", instance.SecurityType)
