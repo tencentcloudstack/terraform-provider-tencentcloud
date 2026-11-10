@@ -1,0 +1,28 @@
+Provides a resource to manage the CAM password rules configuration (UpdatePasswordRules / GetPasswordRules).
+
+This is a singleton, account-wide configuration resource built on the terraform-plugin-framework implementation. Create and update both call the `UpdatePasswordRules` API; read calls `GetPasswordRules`. Destroying this resource only removes it from state, the cloud-side password rules are left unchanged.
+
+-> **Note:** The CAM password rules are a single account-wide configuration. If the rules have already been changed outside of Terraform, the create fails and the existing configuration must be imported first, otherwise two configurations would silently overwrite each other. Every attribute inside `rules` is optional; a value that is left unset keeps its current cloud-side setting.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_cam_update_password_rules" "example" {
+  rules {
+    minimum_length                   = 8
+    must_contain                     = "char&num"
+    force_password_change            = 90
+    reuse_password_limit             = 5
+    retry_password_limit             = 10
+    password_expiration_invalidation = 1
+  }
+}
+```
+
+Import
+
+CAM password rules can be imported using the constant id `cam-password-rules`, e.g.
+
+```
+terraform import tencentcloud_cam_update_password_rules.example cam-password-rules
+```
