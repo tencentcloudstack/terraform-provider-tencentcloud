@@ -70,6 +70,8 @@ The following arguments are supported:
 
 * `cluster_id` - (Required, String) The ID of cluster.
 * `slave_zone` - (Required, String) Slave zone.
+* `binlog_sync_way` - (Optional, String) Binlog sync way. Default value: `async`. Valid values: `sync`, `semisync`, `async`.
+* `semi_sync_timeout` - (Optional, Int) Semisync timeout in ms. The semisync replication degrades to async replication if the timeout is exceeded. Minimum: 1000, maximum: 4294967295, default: 10000.
 
 ## Attributes Reference
 
