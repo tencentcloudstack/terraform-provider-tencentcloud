@@ -29,6 +29,10 @@ The following arguments are supported:
 * `repeat_hours` - (Required, List: [`Int`]) Trigger times of periodic snapshot. Valid value ranges: (0~23). The 0 means 00:00, and so on.
 * `repeat_weekdays` - (Required, List: [`Int`]) Periodic snapshot is enabled. Valid values: [0, 1, 2, 3, 4, 5, 6]. 0 means Sunday, 1-6 means Monday to Saturday.
 * `snapshot_policy_name` - (Required, String) Name of snapshot policy. The maximum length can not exceed 60 bytes.
+* `day_of_month` - (Optional, List: [`Int`]) Specifies the days of the month on which scheduled snapshots are triggered. Valid value ranges: [1, 31]. For example, 5 means triggering snapshots on the 5th day of each month. Note: if a date such as 29, 30 or 31 does not exist in some months, those months will be skipped.
+* `interval_days` - (Optional, Int) Specifies the interval in days for creating scheduled snapshots. Valid value ranges: [1, 365]. For example, setting it to 5 means a scheduled snapshot is created every 5 days. Note: when backing up by days, theoretically the first backup is on the day the policy is created; if the policy creation time is later than the configured backup time on that day, the first backup will be in the next backup cycle.
+* `is_activated` - (Optional, Bool) Whether the snapshot policy is activated. Default is true.
+* `is_permanent` - (Optional, Bool) Whether snapshots created by this policy are retained permanently. Default is false. Note: if this parameter is set to true, retention_days must not be specified, otherwise a conflict error will be returned by the API.
 * `retention_days` - (Optional, Int) Retention days of the snapshot, and the default value is 7.
 
 ## Attributes Reference
