@@ -52,5 +52,5 @@ The `tags` object supports the following:
 
 This action invokes the following TencentCloud APIs:
 
-* Invoke: [CreateKmsInstance](https://www.tencentcloud.com/search/?wd=CreateKmsInstance&type=document&lang=en)
+* Invoke: [CreateKmsInstance](https://www.tencentcloud.com/document/api/1030/85831)
 

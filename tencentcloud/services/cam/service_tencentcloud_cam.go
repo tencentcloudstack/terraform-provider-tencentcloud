@@ -3,6 +3,7 @@ package cam
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"reflect"
@@ -2174,6 +2175,66 @@ func (me *CamService) DescribeCamAccountsByFilter(ctx context.Context, paramMap 
 		}
 
 		request.Marker = response.Response.Marker
+	}
+	return
+}
+
+func (me *CamService) GetPasswordRules(ctx context.Context) (passwordRules *cam.GetPasswordRulesResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cam.NewGetPasswordRulesRequest()
+	)
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseCamClient().GetPasswordRulesWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if response == nil || response.Response == nil || response.Response.Rules == nil {
+			return resource.NonRetryableError(errPasswordRulesNotFound)
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		passwordRules = response.Response
+		return nil
+	})
+	if errRet != nil {
+		if errors.Is(errRet, errPasswordRulesNotFound) {
+			return nil, errRet
+		}
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		return
+	}
+	return
+}
+
+func (me *CamService) UpdatePasswordRules(ctx context.Context, rules *cam.PassWordRule) (errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cam.NewUpdatePasswordRulesRequest()
+	)
+
+	request.Rules = rules
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseCamClient().UpdatePasswordRulesWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if response == nil || response.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("UpdatePasswordRules returned an empty response"))
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		return nil
+	})
+	if errRet != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		return
 	}
 	return
 }

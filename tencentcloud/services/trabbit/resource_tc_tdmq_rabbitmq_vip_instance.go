@@ -95,7 +95,7 @@ func ResourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 			},
 			"resource_tags": {
 				Optional:    true,
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Description: "Instance resource tags. Each tag is a key-value pair for resource identification and management.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -227,7 +227,7 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceCreate(d *schema.ResourceData, m
 	}
 
 	if v, ok := d.GetOk("resource_tags"); ok {
-		for _, item := range v.([]interface{}) {
+		for _, item := range v.(*schema.Set).List() {
 			dMap := item.(map[string]interface{})
 			tag := tdmq.Tag{}
 			if v, ok := dMap["tag_key"]; ok {
@@ -496,7 +496,7 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceUpdate(d *schema.ResourceData, m
 
 	if d.HasChange("resource_tags") {
 		if v, ok := d.GetOk("resource_tags"); ok {
-			for _, item := range v.([]interface{}) {
+			for _, item := range v.(*schema.Set).List() {
 				dMap := item.(map[string]interface{})
 				tag := tdmq.Tag{}
 				if v, ok := dMap["tag_key"]; ok {
