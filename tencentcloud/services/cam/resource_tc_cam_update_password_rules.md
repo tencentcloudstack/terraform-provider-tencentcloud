@@ -13,10 +13,10 @@ resource "tencentcloud_cam_update_password_rules" "example" {
   rules {
     minimum_length                   = 8
     must_contain                     = "Aa1!"
-    force_password_change            = 90
-    reuse_password_limit             = 5
+    force_password_change            = 0
+    reuse_password_limit             = 1
     retry_password_limit             = 10
-    password_expiration_invalidation = 1
+    password_expiration_invalidation = 2
   }
 }
 ```
