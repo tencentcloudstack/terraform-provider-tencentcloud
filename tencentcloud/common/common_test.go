@@ -379,7 +379,12 @@ func TestStringListDiffSuppressIgnoreOrder_SubElements(t *testing.T) {
 	}
 }
 
-func TestIsDeterministicError(t *testing.T) {
+func TestIsDeterministicErrorByMessage(t *testing.T) {
+	deterministicMessages := []string{
+		"not found chart",
+		"resource name may not be empty",
+	}
+
 	cases := []struct {
 		name     string
 		err      error
@@ -396,9 +401,16 @@ func TestIsDeterministicError(t *testing.T) {
 
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			if got := IsDeterministicError(c.err); got != c.expected {
-				t.Errorf("IsDeterministicError(%v) = %v, want %v", c.err, got, c.expected)
+			if got := IsDeterministicErrorByMessage(c.err, deterministicMessages); got != c.expected {
+				t.Errorf("IsDeterministicErrorByMessage(%v) = %v, want %v", c.err, got, c.expected)
 			}
 		})
+	}
+}
+
+func TestIsDeterministicErrorByMessage_EmptyList(t *testing.T) {
+	err := sdkErrors.NewTencentCloudSDKError("ResourceUnavailable", "not found chart", "req")
+	if IsDeterministicErrorByMessage(err, nil) {
+		t.Errorf("empty message list must never match")
 	}
 }

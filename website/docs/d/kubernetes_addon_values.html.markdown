@@ -1,13 +1,13 @@
 ---
 subcategory: "Tencent Kubernetes Engine(TKE)"
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_tke_addon_values"
-sidebar_current: "docs-tencentcloud-datasource-tke_addon_values"
+page_title: "TencentCloud: tencentcloud_kubernetes_addon_values"
+sidebar_current: "docs-tencentcloud-datasource-kubernetes_addon_values"
 description: |-
   Use this data source to query detailed information of TKE addon values.
 ---
 
-# tencentcloud_tke_addon_values
+# tencentcloud_kubernetes_addon_values
 
 Use this data source to query detailed information of TKE addon values.
 
@@ -21,14 +21,14 @@ is an empty string). To check whether an addon is actually installed, use the
 ## Example Usage
 
 ```hcl
-data "tencentcloud_tke_addon_values" "example" {
+data "tencentcloud_kubernetes_addon_values" "example" {
   cluster_id = "cls-5yezvaxo"
   addon_name = "ip-masq-agent"
 }
 
 locals {
-  current_values   = jsondecode(data.tencentcloud_tke_addon_values.example.values)
-  available_values = jsondecode(data.tencentcloud_tke_addon_values.example.default_values)
+  current_values   = jsondecode(data.tencentcloud_kubernetes_addon_values.example.values)
+  available_values = jsondecode(data.tencentcloud_kubernetes_addon_values.example.default_values)
 }
 
 output "addon_current_values" {
@@ -43,13 +43,13 @@ output "addon_available_values" {
 ### Example Usage of tuning an installed addon
 
 ```hcl
-data "tencentcloud_tke_addon_values" "rdma_agent" {
+data "tencentcloud_kubernetes_addon_values" "rdma_agent" {
   cluster_id = tencentcloud_kubernetes_cluster.example.id
   addon_name = "rdma-agent"
 }
 
 locals {
-  rdma_values = jsondecode(data.tencentcloud_tke_addon_values.rdma_agent.values)
+  rdma_values = jsondecode(data.tencentcloud_kubernetes_addon_values.rdma_agent.values)
 }
 
 # Read the effective memory limit of the agent container (default of the chart is 500Mi).

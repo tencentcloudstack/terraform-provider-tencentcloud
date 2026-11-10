@@ -14,9 +14,9 @@ import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 )
 
-func DataSourceTencentCloudTkeAddonValues() *schema.Resource {
+func DataSourceTencentCloudKubernetesAddonValues() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudTkeAddonValuesRead,
+		Read: dataSourceTencentCloudKubernetesAddonValuesRead,
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Type:         schema.TypeString,
@@ -56,8 +56,8 @@ func DataSourceTencentCloudTkeAddonValues() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudTkeAddonValuesRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("data_source.tencentcloud_tke_addon_values.read")()
+func dataSourceTencentCloudKubernetesAddonValuesRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("data_source.tencentcloud_kubernetes_addon_values.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -80,12 +80,12 @@ func dataSourceTencentCloudTkeAddonValuesRead(d *schema.ResourceData, meta inter
 	reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeAddonValuesList(ctx, clusterId, addonName)
 		if e != nil {
-			// `not found chart` / `resource name may not be empty` are wrapped into
-			// `ResourceUnavailable`, which is a *generic* retryable code (common.go:93).
-			// They are deterministic failures (the chart does not exist, retrying will
-			// never help), so they must NOT be retried - otherwise a simple typo in
-			// `addon_name` wastes the whole 3-minute read timeout.
-			if tccommon.IsDeterministicError(e) {
+			// DescribeAddonValues reports deterministic failures (a chart that does not
+			// exist, an empty addon name, ...) with the generic `ResourceUnavailable`
+			// code, which tccommon.RetryError treats as retryable. Retrying those wastes
+			// the whole read timeout without any chance of success, so fail fast. This is
+			// the single retry owner - the service call is a plain one-shot request.
+			if tccommon.IsDeterministicErrorByMessage(e, addonValuesDeterministicErrorMessages) {
 				log.Printf("[CRITAL] NonRetryable addon values error: %v", e)
 				return resource.NonRetryableError(e)
 			}
@@ -94,7 +94,7 @@ func dataSourceTencentCloudTkeAddonValuesRead(d *schema.ResourceData, meta inter
 
 		if result == nil {
 			log.Printf("[DATASOURCE] DescribeAddonValues returned empty result")
-			return resource.NonRetryableError(fmt.Errorf("tencentcloud_tke_addon_values DescribeAddonValuesResponse is nil"))
+			return resource.NonRetryableError(fmt.Errorf("tencentcloud_kubernetes_addon_values DescribeAddonValuesResponse is nil"))
 		}
 
 		resp = result

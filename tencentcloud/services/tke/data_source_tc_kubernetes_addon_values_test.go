@@ -20,27 +20,27 @@ import (
 	tkesvc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tke"
 )
 
-// go test ./tencentcloud/services/tke/ -run "TestTkeAddonValuesDataSource" -v -count=1 -gcflags="all=-l"
+// go test ./tencentcloud/services/tke/ -run "TestKubernetesAddonValuesDataSource" -v -count=1 -gcflags="all=-l"
 
-type mockMetaForTkeAddonValuesDS struct {
+type mockMetaForKubernetesAddonValuesDS struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (m *mockMetaForTkeAddonValuesDS) GetAPIV3Conn() *connectivity.TencentCloudClient {
+func (m *mockMetaForKubernetesAddonValuesDS) GetAPIV3Conn() *connectivity.TencentCloudClient {
 	return m.client
 }
 
-var _ tccommon.ProviderMeta = &mockMetaForTkeAddonValuesDS{}
+var _ tccommon.ProviderMeta = &mockMetaForKubernetesAddonValuesDS{}
 
-func newMockMetaForTkeAddonValuesDS() *mockMetaForTkeAddonValuesDS {
-	return &mockMetaForTkeAddonValuesDS{client: &connectivity.TencentCloudClient{}}
+func newMockMetaForKubernetesAddonValuesDS() *mockMetaForKubernetesAddonValuesDS {
+	return &mockMetaForKubernetesAddonValuesDS{client: &connectivity.TencentCloudClient{}}
 }
 
-func ptrStrTkeAddonValuesDS(s string) *string { return &s }
+func ptrStrKubernetesAddonValuesDS(s string) *string { return &s }
 
-// TestTkeAddonValuesDataSource_ReadBasic verifies that a populated response is
+// TestKubernetesAddonValuesDataSource_ReadBasic verifies that a populated response is
 // flattened into values/default_values and that the id is cluster_id#addon_name.
-func TestTkeAddonValuesDataSource_ReadBasic(t *testing.T) {
+func TestKubernetesAddonValuesDataSource_ReadBasic(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -48,13 +48,13 @@ func TestTkeAddonValuesDataSource_ReadBasic(t *testing.T) {
 		assert.Equal(t, "cls-5yezvaxo", clusterId)
 		assert.Equal(t, "ip-masq-agent", addonName)
 		return &tkev20180525.DescribeAddonValuesResponseParams{
-			Values:        ptrStrTkeAddonValuesDS(`{"nonMasqueradeCIDRs":["10.0.0.0/8"]}`),
-			DefaultValues: ptrStrTkeAddonValuesDS(`{"nonMasqueradeCIDRs":["10.0.0.0/8"],"masqLinkLocal":false}`),
+			Values:        ptrStrKubernetesAddonValuesDS(`{"nonMasqueradeCIDRs":["10.0.0.0/8"]}`),
+			DefaultValues: ptrStrKubernetesAddonValuesDS(`{"nonMasqueradeCIDRs":["10.0.0.0/8"],"masqLinkLocal":false}`),
 		}, nil
 	})
 
-	meta := newMockMetaForTkeAddonValuesDS()
-	res := tkesvc.DataSourceTencentCloudTkeAddonValues()
+	meta := newMockMetaForKubernetesAddonValuesDS()
+	res := tkesvc.DataSourceTencentCloudKubernetesAddonValues()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"cluster_id": "cls-5yezvaxo",
 		"addon_name": "ip-masq-agent",
@@ -67,20 +67,20 @@ func TestTkeAddonValuesDataSource_ReadBasic(t *testing.T) {
 	assert.Equal(t, "cls-5yezvaxo#ip-masq-agent", d.Id())
 }
 
-// TestTkeAddonValuesDataSource_ReadWithNilValues verifies that a nil Values field
+// TestKubernetesAddonValuesDataSource_ReadWithNilValues verifies that a nil Values field
 // (addon not installed) is skipped without error while default_values is still set.
-func TestTkeAddonValuesDataSource_ReadWithNilValues(t *testing.T) {
+func TestKubernetesAddonValuesDataSource_ReadWithNilValues(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	patches.ApplyMethodFunc(&tkesvc.TkeService{}, "DescribeAddonValuesList", func(_ context.Context, _ string, _ string) (*tkev20180525.DescribeAddonValuesResponseParams, error) {
 		return &tkev20180525.DescribeAddonValuesResponseParams{
-			DefaultValues: ptrStrTkeAddonValuesDS(`{"replicas":1}`),
+			DefaultValues: ptrStrKubernetesAddonValuesDS(`{"replicas":1}`),
 		}, nil
 	})
 
-	meta := newMockMetaForTkeAddonValuesDS()
-	res := tkesvc.DataSourceTencentCloudTkeAddonValues()
+	meta := newMockMetaForKubernetesAddonValuesDS()
+	res := tkesvc.DataSourceTencentCloudKubernetesAddonValues()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"cluster_id": "cls-5yezvaxo",
 		"addon_name": "ip-masq-agent",
@@ -93,20 +93,20 @@ func TestTkeAddonValuesDataSource_ReadWithNilValues(t *testing.T) {
 	assert.Equal(t, "cls-5yezvaxo#ip-masq-agent", d.Id())
 }
 
-// TestTkeAddonValuesDataSource_ReadWithNilDefaultValues verifies that a nil
+// TestKubernetesAddonValuesDataSource_ReadWithNilDefaultValues verifies that a nil
 // DefaultValues field is skipped without error.
-func TestTkeAddonValuesDataSource_ReadWithNilDefaultValues(t *testing.T) {
+func TestKubernetesAddonValuesDataSource_ReadWithNilDefaultValues(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	patches.ApplyMethodFunc(&tkesvc.TkeService{}, "DescribeAddonValuesList", func(_ context.Context, _ string, _ string) (*tkev20180525.DescribeAddonValuesResponseParams, error) {
 		return &tkev20180525.DescribeAddonValuesResponseParams{
-			Values: ptrStrTkeAddonValuesDS(`{"replicas":2}`),
+			Values: ptrStrKubernetesAddonValuesDS(`{"replicas":2}`),
 		}, nil
 	})
 
-	meta := newMockMetaForTkeAddonValuesDS()
-	res := tkesvc.DataSourceTencentCloudTkeAddonValues()
+	meta := newMockMetaForKubernetesAddonValuesDS()
+	res := tkesvc.DataSourceTencentCloudKubernetesAddonValues()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"cluster_id": "cls-5yezvaxo",
 		"addon_name": "ip-masq-agent",
@@ -119,8 +119,8 @@ func TestTkeAddonValuesDataSource_ReadWithNilDefaultValues(t *testing.T) {
 	assert.Equal(t, "cls-5yezvaxo#ip-masq-agent", d.Id())
 }
 
-// TestTkeAddonValuesDataSource_ReadError verifies that a service layer error is propagated.
-func TestTkeAddonValuesDataSource_ReadError(t *testing.T) {
+// TestKubernetesAddonValuesDataSource_ReadError verifies that a service layer error is propagated.
+func TestKubernetesAddonValuesDataSource_ReadError(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -128,8 +128,8 @@ func TestTkeAddonValuesDataSource_ReadError(t *testing.T) {
 		return nil, errors.New("ResourceUnavailable")
 	})
 
-	meta := newMockMetaForTkeAddonValuesDS()
-	res := tkesvc.DataSourceTencentCloudTkeAddonValues()
+	meta := newMockMetaForKubernetesAddonValuesDS()
+	res := tkesvc.DataSourceTencentCloudKubernetesAddonValues()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"cluster_id": "cls-5yezvaxo",
 		"addon_name": "ip-masq-agent",
@@ -140,25 +140,25 @@ func TestTkeAddonValuesDataSource_ReadError(t *testing.T) {
 	assert.Contains(t, err.Error(), "ResourceUnavailable")
 }
 
-// TestTkeAddonValuesDataSource_ReadNotInstalled verifies the real-world semantics of
+// TestKubernetesAddonValuesDataSource_ReadNotInstalled verifies the real-world semantics of
 // an addon whose chart exists but which is not installed in the cluster: the cloud API
 // still returns a rendered (chart default) payload, so `values` is NOT empty and is
 // exactly equal to `default_values`. The data source must pass both through unchanged
 // and must still set the id.
-func TestTkeAddonValuesDataSource_ReadNotInstalled(t *testing.T) {
+func TestKubernetesAddonValuesDataSource_ReadNotInstalled(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	rendered := `{"global":{"cluster":{"id":"","uin":""}},"agent":{"resources":{"limits":{"memory":"500Mi"}}}}`
 	patches.ApplyMethodFunc(&tkesvc.TkeService{}, "DescribeAddonValuesList", func(_ context.Context, _ string, _ string) (*tkev20180525.DescribeAddonValuesResponseParams, error) {
 		return &tkev20180525.DescribeAddonValuesResponseParams{
-			Values:        ptrStrTkeAddonValuesDS(rendered),
-			DefaultValues: ptrStrTkeAddonValuesDS(rendered),
+			Values:        ptrStrKubernetesAddonValuesDS(rendered),
+			DefaultValues: ptrStrKubernetesAddonValuesDS(rendered),
 		}, nil
 	})
 
-	meta := newMockMetaForTkeAddonValuesDS()
-	res := tkesvc.DataSourceTencentCloudTkeAddonValues()
+	meta := newMockMetaForKubernetesAddonValuesDS()
+	res := tkesvc.DataSourceTencentCloudKubernetesAddonValues()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"cluster_id": "cls-dhhfi9n8",
 		"addon_name": "tke-log-agent",
@@ -185,11 +185,11 @@ func TestTkeAddonValuesDataSource_ReadNotInstalled(t *testing.T) {
 	assert.Equal(t, "cls-dhhfi9n8#tke-log-agent", d.Id())
 }
 
-// TestTkeAddonValuesDataSource_ReadNotFoundChartNonRetryable verifies that a
+// TestKubernetesAddonValuesDataSource_ReadNotFoundChartNonRetryable verifies that a
 // deterministic cloud error ("not found chart") fails fast instead of exhausting the
 // 3-minute read timeout. `ResourceUnavailable` is a generic retryable code, so the
 // data source must special-case these messages.
-func TestTkeAddonValuesDataSource_ReadNotFoundChartNonRetryable(t *testing.T) {
+func TestKubernetesAddonValuesDataSource_ReadNotFoundChartNonRetryable(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -199,8 +199,8 @@ func TestTkeAddonValuesDataSource_ReadNotFoundChartNonRetryable(t *testing.T) {
 		return nil, sdkErrors.NewTencentCloudSDKError("ResourceUnavailable", "not found chart", "req-1")
 	})
 
-	meta := newMockMetaForTkeAddonValuesDS()
-	res := tkesvc.DataSourceTencentCloudTkeAddonValues()
+	meta := newMockMetaForKubernetesAddonValuesDS()
+	res := tkesvc.DataSourceTencentCloudKubernetesAddonValues()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"cluster_id": "cls-dhhfi9n8",
 		"addon_name": "no-such-addon",
@@ -213,10 +213,10 @@ func TestTkeAddonValuesDataSource_ReadNotFoundChartNonRetryable(t *testing.T) {
 	assert.Equal(t, "", d.Id())
 }
 
-// TestTkeAddonValuesDataSource_ReadEmptyResourceNameNonRetryable covers the other
+// TestKubernetesAddonValuesDataSource_ReadEmptyResourceNameNonRetryable covers the other
 // deterministic message: an empty addon name is rejected by the cloud API with
 // `resource name may not be empty`, which must also fail fast.
-func TestTkeAddonValuesDataSource_ReadEmptyResourceNameNonRetryable(t *testing.T) {
+func TestKubernetesAddonValuesDataSource_ReadEmptyResourceNameNonRetryable(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -226,8 +226,8 @@ func TestTkeAddonValuesDataSource_ReadEmptyResourceNameNonRetryable(t *testing.T
 		return nil, sdkErrors.NewTencentCloudSDKError("ResourceUnavailable", "resource name may not be empty", "req-2")
 	})
 
-	meta := newMockMetaForTkeAddonValuesDS()
-	res := tkesvc.DataSourceTencentCloudTkeAddonValues()
+	meta := newMockMetaForKubernetesAddonValuesDS()
+	res := tkesvc.DataSourceTencentCloudKubernetesAddonValues()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"cluster_id": "cls-dhhfi9n8",
 		"addon_name": "x",
@@ -239,10 +239,10 @@ func TestTkeAddonValuesDataSource_ReadEmptyResourceNameNonRetryable(t *testing.T
 	assert.Equal(t, 1, calls, "deterministic error must not be retried")
 }
 
-// TestTkeAddonValuesDataSource_ReadRetryableErrorStillRetried makes sure the
+// TestKubernetesAddonValuesDataSource_ReadRetryableErrorStillRetried makes sure the
 // deterministic-error special case does not swallow genuinely retryable errors
 // (e.g. throttling): they must still be retried rather than failing immediately.
-func TestTkeAddonValuesDataSource_ReadRetryableErrorStillRetried(t *testing.T) {
+func TestKubernetesAddonValuesDataSource_ReadRetryableErrorStillRetried(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -253,13 +253,13 @@ func TestTkeAddonValuesDataSource_ReadRetryableErrorStillRetried(t *testing.T) {
 			return nil, sdkErrors.NewTencentCloudSDKError("RequestLimitExceeded", "too many requests", "req-3")
 		}
 		return &tkev20180525.DescribeAddonValuesResponseParams{
-			Values:        ptrStrTkeAddonValuesDS(`{"a":1}`),
-			DefaultValues: ptrStrTkeAddonValuesDS(`{"a":1}`),
+			Values:        ptrStrKubernetesAddonValuesDS(`{"a":1}`),
+			DefaultValues: ptrStrKubernetesAddonValuesDS(`{"a":1}`),
 		}, nil
 	})
 
-	meta := newMockMetaForTkeAddonValuesDS()
-	res := tkesvc.DataSourceTencentCloudTkeAddonValues()
+	meta := newMockMetaForKubernetesAddonValuesDS()
+	res := tkesvc.DataSourceTencentCloudKubernetesAddonValues()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"cluster_id": "cls-dhhfi9n8",
 		"addon_name": "ip-masq-agent",
@@ -272,22 +272,22 @@ func TestTkeAddonValuesDataSource_ReadRetryableErrorStillRetried(t *testing.T) {
 	assert.Equal(t, "cls-dhhfi9n8#ip-masq-agent", d.Id())
 }
 
-// TestTkeAddonValuesDataSource_ResultOutputFile verifies that `result_output_file`
+// TestKubernetesAddonValuesDataSource_ResultOutputFile verifies that `result_output_file`
 // contains the real payload. Passing ResourceData to WriteToFile used to produce `{}`.
-func TestTkeAddonValuesDataSource_ResultOutputFile(t *testing.T) {
+func TestKubernetesAddonValuesDataSource_ResultOutputFile(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	patches.ApplyMethodFunc(&tkesvc.TkeService{}, "DescribeAddonValuesList", func(_ context.Context, _ string, _ string) (*tkev20180525.DescribeAddonValuesResponseParams, error) {
 		return &tkev20180525.DescribeAddonValuesResponseParams{
-			Values:        ptrStrTkeAddonValuesDS(`{"limits":{"memory":"500Mi"}}`),
-			DefaultValues: ptrStrTkeAddonValuesDS(`{"limits":{"memory":"500Mi"}}`),
+			Values:        ptrStrKubernetesAddonValuesDS(`{"limits":{"memory":"500Mi"}}`),
+			DefaultValues: ptrStrKubernetesAddonValuesDS(`{"limits":{"memory":"500Mi"}}`),
 		}, nil
 	})
 
 	outFile := filepath.Join(t.TempDir(), "addon-values.json")
-	meta := newMockMetaForTkeAddonValuesDS()
-	res := tkesvc.DataSourceTencentCloudTkeAddonValues()
+	meta := newMockMetaForKubernetesAddonValuesDS()
+	res := tkesvc.DataSourceTencentCloudKubernetesAddonValues()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"cluster_id":         "cls-dhhfi9n8",
 		"addon_name":         "rdma-agent",
@@ -307,11 +307,11 @@ func TestTkeAddonValuesDataSource_ResultOutputFile(t *testing.T) {
 	assert.Equal(t, `{"limits":{"memory":"500Mi"}}`, payload["default_values"])
 }
 
-// TestTkeAddonValuesDataSource_EmptyArgumentsRejected verifies that empty
+// TestKubernetesAddonValuesDataSource_EmptyArgumentsRejected verifies that empty
 // `cluster_id` / `addon_name` are rejected at plan time, so the request never
 // reaches the cloud API (where it would be retried for 3 minutes).
-func TestTkeAddonValuesDataSource_EmptyArgumentsRejected(t *testing.T) {
-	res := tkesvc.DataSourceTencentCloudTkeAddonValues()
+func TestKubernetesAddonValuesDataSource_EmptyArgumentsRejected(t *testing.T) {
+	res := tkesvc.DataSourceTencentCloudKubernetesAddonValues()
 
 	for _, field := range []string{"cluster_id", "addon_name"} {
 		s := res.Schema[field]
@@ -326,9 +326,9 @@ func TestTkeAddonValuesDataSource_EmptyArgumentsRejected(t *testing.T) {
 	}
 }
 
-// TestTkeAddonValuesDataSource_ReadNilResponse verifies that a nil response from
+// TestKubernetesAddonValuesDataSource_ReadNilResponse verifies that a nil response from
 // the service layer is reported as an error instead of silently clearing the id.
-func TestTkeAddonValuesDataSource_ReadNilResponse(t *testing.T) {
+func TestKubernetesAddonValuesDataSource_ReadNilResponse(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -336,8 +336,8 @@ func TestTkeAddonValuesDataSource_ReadNilResponse(t *testing.T) {
 		return nil, nil
 	})
 
-	meta := newMockMetaForTkeAddonValuesDS()
-	res := tkesvc.DataSourceTencentCloudTkeAddonValues()
+	meta := newMockMetaForKubernetesAddonValuesDS()
+	res := tkesvc.DataSourceTencentCloudKubernetesAddonValues()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"cluster_id": "cls-5yezvaxo",
 		"addon_name": "ip-masq-agent",
@@ -349,9 +349,9 @@ func TestTkeAddonValuesDataSource_ReadNilResponse(t *testing.T) {
 	assert.Equal(t, "", d.Id())
 }
 
-// TestTkeAddonValuesDataSource_Schema verifies the schema definition of the data source.
-func TestTkeAddonValuesDataSource_Schema(t *testing.T) {
-	res := tkesvc.DataSourceTencentCloudTkeAddonValues()
+// TestKubernetesAddonValuesDataSource_Schema verifies the schema definition of the data source.
+func TestKubernetesAddonValuesDataSource_Schema(t *testing.T) {
+	res := tkesvc.DataSourceTencentCloudKubernetesAddonValues()
 	assert.NotNil(t, res)
 	assert.NotNil(t, res.Read)
 

@@ -10,14 +10,14 @@ is an empty string). To check whether an addon is actually installed, use the
 Example Usage
 
 ```hcl
-data "tencentcloud_tke_addon_values" "example" {
+data "tencentcloud_kubernetes_addon_values" "example" {
   cluster_id = "cls-5yezvaxo"
   addon_name = "ip-masq-agent"
 }
 
 locals {
-  current_values   = jsondecode(data.tencentcloud_tke_addon_values.example.values)
-  available_values = jsondecode(data.tencentcloud_tke_addon_values.example.default_values)
+  current_values   = jsondecode(data.tencentcloud_kubernetes_addon_values.example.values)
+  available_values = jsondecode(data.tencentcloud_kubernetes_addon_values.example.default_values)
 }
 
 output "addon_current_values" {
@@ -32,13 +32,13 @@ output "addon_available_values" {
 Example Usage of tuning an installed addon
 
 ```hcl
-data "tencentcloud_tke_addon_values" "rdma_agent" {
+data "tencentcloud_kubernetes_addon_values" "rdma_agent" {
   cluster_id = tencentcloud_kubernetes_cluster.example.id
   addon_name = "rdma-agent"
 }
 
 locals {
-  rdma_values = jsondecode(data.tencentcloud_tke_addon_values.rdma_agent.values)
+  rdma_values = jsondecode(data.tencentcloud_kubernetes_addon_values.rdma_agent.values)
 }
 
 # Read the effective memory limit of the agent container (default of the chart is 500Mi).
