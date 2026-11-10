@@ -59,8 +59,10 @@ resource "tencentcloud_cynosdb_cluster" "example" {
 }
 
 resource "tencentcloud_cynosdb_cluster_slave_zone" "example" {
-  cluster_id = tencentcloud_cynosdb_cluster.example.id
-  slave_zone = "ap-guangzhou-7"
+  cluster_id        = tencentcloud_cynosdb_cluster.example.id
+  slave_zone        = "ap-guangzhou-7"
+  binlog_sync_way   = "async"
+  semi_sync_timeout = 10000
 }
 ```
 
