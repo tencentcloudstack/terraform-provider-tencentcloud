@@ -448,6 +448,16 @@ func ResourceTencentCloudKubernetesClusterAttachment() *schema.Resource {
 				},
 			},
 
+			"skip_validate_options": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Validation rule related options, which can be configured to skip certain validation rules. Currently supported values: `GlobalRouteCIDRCheck` (skip GlobalRouter related validations), `VpcCniCIDRCheck` (skip VpcCni related validations).",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+
 			"state": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -635,6 +645,13 @@ func resourceTencentCloudKubernetesClusterAttachmentCreate(d *schema.ResourceDat
 				instanceAdvancedSettings.GPUArgs = &gPUArgs2
 			}
 			request.InstanceAdvancedSettingsOverrides = append(request.InstanceAdvancedSettingsOverrides, &instanceAdvancedSettings)
+		}
+	}
+
+	if v, ok := d.GetOk("skip_validate_options"); ok {
+		skipValidateOptions := v.([]interface{})
+		for i := range skipValidateOptions {
+			request.SkipValidateOptions = append(request.SkipValidateOptions, helper.String(skipValidateOptions[i].(string)))
 		}
 	}
 
