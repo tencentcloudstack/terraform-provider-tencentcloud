@@ -43,15 +43,15 @@ type ConfigListAggregateCompliancePacksDataSource struct {
 // ConfigListAggregateCompliancePacksDataSourceModel maps the schema attributes.
 // Every schema attribute appears here exactly once.
 type ConfigListAggregateCompliancePacksDataSourceModel struct {
-	AccountGroupId                   types.String `tfsdk:"account_group_id"`
-	CompliancePackName               types.String `tfsdk:"compliance_pack_name"`
-	RiskLevel                        types.Set    `tfsdk:"risk_level"`
-	Status                           types.String `tfsdk:"status"`
-	ComplianceResult                 types.Set    `tfsdk:"compliance_result"`
-	OrderType                        types.String `tfsdk:"order_type"`
-	IncludeCompliancePackRuleResult  types.String `tfsdk:"include_compliance_pack_rule_result"`
-	Total                            types.Int64  `tfsdk:"total"`
-	Items                            types.List   `tfsdk:"items"`
+	AccountGroupId                  types.String `tfsdk:"account_group_id"`
+	CompliancePackName              types.String `tfsdk:"compliance_pack_name"`
+	RiskLevel                       types.Set    `tfsdk:"risk_level"`
+	Status                          types.String `tfsdk:"status"`
+	ComplianceResult                types.Set    `tfsdk:"compliance_result"`
+	OrderType                       types.String `tfsdk:"order_type"`
+	IncludeCompliancePackRuleResult types.String `tfsdk:"include_compliance_pack_rule_result"`
+	Total                           types.Int64  `tfsdk:"total"`
+	Items                           types.List   `tfsdk:"items"`
 }
 
 // configListAggregateCompliancePacksItemModel is the element type of items.
@@ -271,15 +271,15 @@ func (d *ConfigListAggregateCompliancePacksDataSource) Read(ctx context.Context,
 
 	itemsList, diags := types.ListValueFrom(ctx, types.ObjectType{
 		AttrTypes: map[string]attr.Type{
-			"status":              types.StringType,
-			"compliance_pack_id":  types.StringType,
-			"description":         types.StringType,
+			"status":               types.StringType,
+			"compliance_pack_id":   types.StringType,
+			"description":          types.StringType,
 			"compliance_pack_name": types.StringType,
-			"risk_level":          types.Int64Type,
-			"compliance_result":   types.StringType,
-			"create_time":         types.StringType,
-			"no_compliant_names":  types.SetType{ElemType: types.StringType},
-			"rule_count":          types.Int64Type,
+			"risk_level":           types.Int64Type,
+			"compliance_result":    types.StringType,
+			"create_time":          types.StringType,
+			"no_compliant_names":   types.SetType{ElemType: types.StringType},
+			"rule_count":           types.Int64Type,
 		},
 	}, items)
 	resp.Diagnostics.Append(diags...)

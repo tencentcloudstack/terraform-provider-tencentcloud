@@ -169,13 +169,13 @@ func TestConfigListAggregateCompliancePacksDataSource_Read_Success(t *testing.T)
 	setConfigListAggregateCompliancePacksClient(d, client)
 
 	req := newConfigListAggregateCompliancePacksReadRequest(t, map[string]tftypes.Value{
-		"account_group_id":      tftypes.NewValue(tftypes.String, "aggr-123"),
-		"compliance_pack_name":  tftypes.NewValue(tftypes.String, "Best-Practices"),
+		"account_group_id":     tftypes.NewValue(tftypes.String, "aggr-123"),
+		"compliance_pack_name": tftypes.NewValue(tftypes.String, "Best-Practices"),
 		"risk_level": tftypes.NewValue(tftypes.Set{ElementType: tftypes.Number}, []tftypes.Value{
 			tftypes.NewValue(tftypes.Number, 1),
 		}),
-		"status":              tftypes.NewValue(tftypes.String, "ACTIVE"),
-		"order_type":          tftypes.NewValue(tftypes.String, "desc"),
+		"status":                              tftypes.NewValue(tftypes.String, "ACTIVE"),
+		"order_type":                          tftypes.NewValue(tftypes.String, "desc"),
 		"include_compliance_pack_rule_result": tftypes.NewValue(tftypes.String, "NO"),
 	})
 	resp := &datasource.ReadResponse{}
@@ -389,11 +389,11 @@ func TestDescribeConfigListAggregateCompliancePacksByFilter_SinglePage(t *testin
 
 	service := NewConfigService(client)
 	paramMap := map[string]interface{}{
-		"AccountGroupId":                   "aggr-123",
-		"CompliancePackName":               "Best-Practices",
-		"Status":                           "ACTIVE",
-		"OrderType":                        "asc",
-		"IncludeCompliancePackRuleResult":  "NO",
+		"AccountGroupId":                  "aggr-123",
+		"CompliancePackName":              "Best-Practices",
+		"Status":                          "ACTIVE",
+		"OrderType":                       "asc",
+		"IncludeCompliancePackRuleResult": "NO",
 	}
 	items, total, err := service.DescribeConfigListAggregateCompliancePacksByFilter(context.Background(), paramMap)
 
