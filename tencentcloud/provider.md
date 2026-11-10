@@ -710,6 +710,9 @@ tencentcloud_kms_white_box_key
 tencentcloud_kms_cloud_resource_attachment
 tencentcloud_kms_overwrite_white_box_device_fingerprints
 
+Action
+tencentcloud_kms_instance
+
 Tencent Kubernetes Engine(TKE)
 Data Source
 tencentcloud_kubernetes_clusters
@@ -1178,6 +1181,7 @@ tencentcloud_ssl_update_certificate_instance_operation
 tencentcloud_ssl_update_certificate_record_retry_operation
 tencentcloud_ssl_update_certificate_record_rollback_operation
 tencentcloud_ssl_upload_revoke_letter_operation
+tencentcloud_ssl_upload_certificate_instance
 tencentcloud_ssl_complete_certificate_operation
 tencentcloud_ssl_check_certificate_chain_operation
 tencentcloud_ssl_deploy_certificate_instance_operation
@@ -1206,6 +1210,9 @@ tencentcloud_ssm_rotate_product_secret
 
 Ephemeral Resource
 tencentcloud_ssm_secret_version
+
+Action
+tencentcloud_ssm_service
 
 TcaplusDB
 Data Source
@@ -1944,6 +1951,7 @@ tencentcloud_organization_org_share_unit_members
 tencentcloud_organization_org_share_unit_nodes
 tencentcloud_role_configuration_provisionings
 tencentcloud_organization_resource_to_share_member
+
 Resource
 tencentcloud_organization_instance
 tencentcloud_organization_org_node
@@ -1984,6 +1992,9 @@ tencentcloud_provision_role_configuration_operation
 tencentcloud_organization_member_auth_policy_attachment
 tencentcloud_organization_external_saml_identity_provider
 tencentcloud_organization_ip_whitelist_config
+
+Action
+tencentcloud_organization_provision_role_configuration
 
 TDSQL-C for PostgreSQL(TDCPG)
 Data Source
@@ -2036,6 +2047,7 @@ tencentcloud_dts_migrate_db_instances
 Resource
 tencentcloud_dts_sync_job
 tencentcloud_dts_sync_config
+tencentcloud_dts_sync_job_config
 tencentcloud_dts_sync_check_job_operation
 tencentcloud_dts_sync_job_resume_operation
 tencentcloud_dts_sync_job_start_operation
@@ -2371,6 +2383,7 @@ tencentcloud_dlc_attach_data_mask_policy
 tencentcloud_dlc_standard_engine_resource_group_config_info
 tencentcloud_dlc_datasource_house_attachment
 tencentcloud_dlc_attach_user_policy_attachment
+tencentcloud_dlc_meta_database
 
 Web Application Firewall(WAF)
 Data Source
@@ -2778,6 +2791,7 @@ tencentcloud_config_rules
 tencentcloud_config_discovered_resources
 tencentcloud_config_resource_types
 tencentcloud_config_list_aggregators
+tencentcloud_config_list_aggregate_compliance_packs
 
 Resource
 tencentcloud_config_compliance_pack
@@ -2788,6 +2802,7 @@ tencentcloud_config_update_config_deliver
 tencentcloud_config_update_aggregate_config_deliver
 tencentcloud_config_recorder_config
 tencentcloud_config_aggregator
+tencentcloud_config_aggregate_compliance_pack
 
 GS
 Data Source
@@ -2807,3 +2822,19 @@ tencentcloud_bdrc_instance_copy_pair
 
 Action
 tencentcloud_bdrc_run_copy_pair_tasks
+
+Firewall Manager(FWM)
+Resource
+tencentcloud_fwm_account_group
+tencentcloud_fwm_member_group_config
+tencentcloud_fwm_cfw_managed_config
+tencentcloud_fwm_cfw_share_role_config
+tencentcloud_fwm_rule_group
+tencentcloud_fwm_strategy
+tencentcloud_fwm_edge_acl_rule
+tencentcloud_fwm_security_group_rule
+tencentcloud_fwm_nat_acl_rule
+tencentcloud_fwm_vpc_acl_rule
+
+Action
+tencentcloud_fwm_dispatch_strategy

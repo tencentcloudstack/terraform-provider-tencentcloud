@@ -39,7 +39,7 @@ func NatGatewaySnatPara() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Required:    true,
 			ForceNew:    true,
-			Description: "Resource type. Valid values: " + NAT_GATEWAY_TYPE_SUBNET + ", " + NAT_GATEWAY_TYPE_NETWORK_INTERFACE + ".",
+			Description: "Resource type. Valid values: " + NAT_GATEWAY_TYPE_SUBNET + ", " + NAT_GATEWAY_TYPE_NETWORK_INTERFACE + ", " + NAT_GATEWAY_TYPE_USERDEFINED + ".",
 		},
 		"subnet_id": {
 			Type:        schema.TypeString,

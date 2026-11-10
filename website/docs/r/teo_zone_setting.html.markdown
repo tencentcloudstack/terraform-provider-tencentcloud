@@ -85,6 +85,10 @@ resource "tencentcloud_teo_zone_setting" "zone_setting" {
     switch = "off"
   }
 
+  jit_video_process {
+    switch = "off"
+  }
+
   max_age {
     follow_origin = "on"
     max_age_time  = 0
@@ -137,6 +141,7 @@ The following arguments are supported:
 * `force_redirect` - (Optional, List) Force HTTPS redirect configuration.
 * `https` - (Optional, List) HTTPS acceleration configuration.
 * `ipv6` - (Optional, List) IPv6 access configuration.
+* `jit_video_process` - (Optional, List) JIT video process configuration.
 * `max_age` - (Optional, List) Browser cache configuration.
 * `offline_cache` - (Optional, List) Offline cache configuration.
 * `origin` - (Optional, List) Origin server configuration.
@@ -228,6 +233,12 @@ Only consecutive versions can be enabled at the same time. Note: This field may 
 The `ipv6` object supports the following:
 
 * `switch` - (Required, String) - `on`: Enable.
+- `off`: Disable.
+
+The `jit_video_process` object supports the following:
+
+* `switch` - (Required, String) Whether to enable JIT video process.
+- `on`: Enable.
 - `off`: Disable.
 
 The `max_age` object supports the following:

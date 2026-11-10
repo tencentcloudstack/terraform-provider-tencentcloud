@@ -69,6 +69,12 @@ func ResourceTencentCloudTeoBindSecurityTemplate() *schema.Resource {
 				Computed:    true,
 				Description: "Instance configuration delivery status, the possible values are: `online`: the configuration has taken effect; `fail`: the configuration failed; `process`: the configuration is being delivered.",
 			},
+
+			"message": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Instance configuration delivery message. This field provides human-readable information about the delivery status (e.g., failure reasons).",
+			},
 		},
 	}
 }
@@ -177,6 +183,10 @@ func resourceTencentCloudTeoBindSecurityTemplateRead(d *schema.ResourceData, met
 
 	if respData.Status != nil {
 		_ = d.Set("status", respData.Status)
+	}
+
+	if respData.Message != nil {
+		_ = d.Set("message", respData.Message)
 	}
 
 	if v, ok := d.GetOk("operate"); ok {

@@ -148,6 +148,8 @@ func TestTeoBindSecurityTemplate_ReadSuccess(t *testing.T) {
 	assert.Equal(t, "temp-7dr7dm78", d.Get("template_id"))
 	assert.Equal(t, "aaa.makn.cn", d.Get("entity"))
 	assert.Equal(t, "online", d.Get("status"))
+	// message remains empty because the service layer does not populate it
+	assert.Equal(t, "", d.Get("message"))
 }
 
 // TestTeoBindSecurityTemplate_ReadNotFound tests Read clears id when binding not found.
@@ -375,10 +377,12 @@ func TestTeoBindSecurityTemplate_Schema(t *testing.T) {
 	assert.Contains(t, res.Schema, "operate")
 	assert.Contains(t, res.Schema, "over_write")
 	assert.Contains(t, res.Schema, "status")
+	assert.Contains(t, res.Schema, "message")
 
 	assert.True(t, res.Schema["zone_id"].Required)
 	assert.True(t, res.Schema["entity"].Required)
 	assert.True(t, res.Schema["template_id"].Required)
 
 	assert.True(t, res.Schema["status"].Computed)
+	assert.True(t, res.Schema["message"].Computed)
 }

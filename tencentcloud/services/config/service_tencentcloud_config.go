@@ -147,6 +147,86 @@ func (me *ConfigService) DescribeConfigListAggregatorsByFilter(ctx context.Conte
 	return
 }
 
+func (me *ConfigService) DescribeConfigListAggregateCompliancePacksByFilter(ctx context.Context, paramMap map[string]interface{}) (items []*configv20220802.ConfigCompliancePack, total uint64, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := configv20220802.NewListAggregateCompliancePacksRequest()
+	request.Limit = helper.Uint64(100)
+	request.Offset = helper.Uint64(0)
+
+	if v, ok := paramMap["AccountGroupId"]; ok {
+		request.AccountGroupId = helper.String(v.(string))
+	}
+
+	if v, ok := paramMap["CompliancePackName"]; ok {
+		request.CompliancePackName = helper.String(v.(string))
+	}
+
+	if v, ok := paramMap["RiskLevel"]; ok {
+		request.RiskLevel = v.([]*uint64)
+	}
+
+	if v, ok := paramMap["Status"]; ok {
+		request.Status = helper.String(v.(string))
+	}
+
+	if v, ok := paramMap["ComplianceResult"]; ok {
+		request.ComplianceResult = v.([]*string)
+	}
+
+	if v, ok := paramMap["OrderType"]; ok {
+		request.OrderType = helper.String(v.(string))
+	}
+
+	if v, ok := paramMap["IncludeCompliancePackRuleResult"]; ok {
+		request.IncludeCompliancePackRuleResult = helper.String(v.(string))
+	}
+
+	items = make([]*configv20220802.ConfigCompliancePack, 0)
+
+	for {
+		var (
+			pageItems []*configv20220802.ConfigCompliancePack
+		)
+
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseConfigV20220802Client().ListAggregateCompliancePacksWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("list config aggregate compliance packs failed, Response is nil"))
+			}
+
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+			if result.Response.Total != nil {
+				total = *result.Response.Total
+			}
+
+			pageItems = result.Response.Items
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		items = append(items, pageItems...)
+
+		if uint64(len(items)) >= total {
+			break
+		}
+
+		*request.Offset += *request.Limit
+	}
+
+	return
+}
+
 func (me *ConfigService) DescribeSystemConfigCompliancePacks(ctx context.Context) (items []*configv20220802.SystemCompliancePack, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
@@ -786,6 +866,180 @@ func (me *ConfigService) DescribeConfigCompliancePackById(ctx context.Context, c
 	}
 
 	ret = response.Response
+	return
+}
+
+func (me *ConfigService) DescribeAggregateCompliancePackById(ctx context.Context, accountGroupId, compliancePackId string) (ret *configv20220802.DescribeAggregateCompliancePackResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := configv20220802.NewDescribeAggregateCompliancePackRequest()
+	response := configv20220802.NewDescribeAggregateCompliancePackResponse()
+	request.AccountGroupId = helper.String(accountGroupId)
+	request.CompliancePackId = helper.String(compliancePackId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseConfigV20220802Client().DescribeAggregateCompliancePackWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("describe aggregate compliance pack failed, Response is nil"))
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *ConfigService) AddAggregateCompliancePack(ctx context.Context, request *configv20220802.AddAggregateCompliancePackRequest) (compliancePackId string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseConfigV20220802Client().AddAggregateCompliancePackWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("add aggregate compliance pack failed, Response is nil"))
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		if result.Response.CompliancePackId == nil || *result.Response.CompliancePackId == "" {
+			return resource.NonRetryableError(fmt.Errorf("add aggregate compliance pack failed, CompliancePackId is empty"))
+		}
+
+		compliancePackId = *result.Response.CompliancePackId
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
+func (me *ConfigService) UpdateAggregateCompliancePack(ctx context.Context, request *configv20220802.UpdateAggregateCompliancePackRequest) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseConfigV20220802Client().UpdateAggregateCompliancePackWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("update aggregate compliance pack failed, Response is nil"))
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
+func (me *ConfigService) UpdateAggregateCompliancePackStatus(ctx context.Context, request *configv20220802.UpdateAggregateCompliancePackStatusRequest) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseConfigV20220802Client().UpdateAggregateCompliancePackStatusWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("update aggregate compliance pack status failed, Response is nil"))
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
+func (me *ConfigService) DeleteAggregateCompliancePack(ctx context.Context, request *configv20220802.DeleteAggregateCompliancePackRequest) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseConfigV20220802Client().DeleteAggregateCompliancePackWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("delete aggregate compliance pack failed, Response is nil"))
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
 	return
 }
 
