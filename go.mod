@@ -32,7 +32,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm v1.3.124
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.3.16
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi v1.0.824
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.3.157
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.3.186
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.3.136
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.3.165
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.3.194
@@ -46,7 +46,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.3.173
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.3.40
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.186
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.209
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.211
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config v1.3.176
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.3.183
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.3.30
@@ -98,7 +98,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.3.129
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.3.157
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.674
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.3.127
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.3.211
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.3.188
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.3.144
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata v1.3.170
