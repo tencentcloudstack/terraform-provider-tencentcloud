@@ -151,36 +151,45 @@ func (me *TkeService) DescribeAddonList(ctx context.Context, clusterId, addonNam
 // addonValuesDeterministicErrorMessages lists DescribeAddonValues messages that
 // describe a permanent failure which can never succeed on retry (the chart does not
 // exist, a required name is empty). They are returned with the generic retryable
-// code `ResourceUnavailable`, so the caller uses
-// tccommon.IsDeterministicErrorByMessage to fail fast instead of retrying until the
-// read timeout expires.
+// code `ResourceUnavailable`, so they are turned into a NonRetryableError below to
+// fail fast instead of retrying until the read timeout expires.
 var addonValuesDeterministicErrorMessages = []string{
 	"not found chart",
 	"resource name may not be empty",
 }
 
-// DescribeAddonValuesList performs a single DescribeAddonValues call and returns its
-// response. Retry (and the deterministic-error short circuit) is owned by the caller
-// via resource.Retry + tccommon.IsDeterministicErrorByMessage, so this method does not
-// retry internally - keeping a single retry owner avoids stacking two retry loops for
-// one request.
 func (me *TkeService) DescribeAddonValuesList(ctx context.Context, clusterId, addonName string) (ret *tke.DescribeAddonValuesResponseParams, errRet error) {
 	request := tke.NewDescribeAddonValuesRequest()
+	response := tke.NewDescribeAddonValuesResponse()
 	request.ClusterId = &clusterId
 	request.AddonName = &addonName
 
-	result, e := me.client.UseTkeClient().DescribeAddonValues(request)
-	if e != nil {
-		errRet = e
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseTkeClient().DescribeAddonValues(request)
+		if e != nil {
+			// DescribeAddonValues reports deterministic failures (a chart that does not
+			// exist, an empty addon name, ...) with the generic `ResourceUnavailable` code,
+			// which RetryError treats as retryable. Surface them immediately instead.
+			if tccommon.IsDeterministicErrorByMessage(e, addonValuesDeterministicErrorMessages) {
+				return resource.NonRetryableError(e)
+			}
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
 		return
 	}
 
-	if result == nil || result.Response == nil {
-		errRet = fmt.Errorf("Response is nil.")
-		return
-	}
-
-	ret = result.Response
+	ret = response.Response
 	return
 }
 

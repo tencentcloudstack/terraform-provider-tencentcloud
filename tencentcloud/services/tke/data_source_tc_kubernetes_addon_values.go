@@ -2,14 +2,10 @@ package tke
 
 import (
 	"context"
-	"fmt"
-	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 )
@@ -76,33 +72,11 @@ func dataSourceTencentCloudKubernetesAddonValuesRead(d *schema.ResourceData, met
 		addonName = v.(string)
 	}
 
-	var resp *tke.DescribeAddonValuesResponseParams
-	reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeAddonValuesList(ctx, clusterId, addonName)
-		if e != nil {
-			// DescribeAddonValues reports deterministic failures (a chart that does not
-			// exist, an empty addon name, ...) with the generic `ResourceUnavailable`
-			// code, which tccommon.RetryError treats as retryable. Retrying those wastes
-			// the whole read timeout without any chance of success, so fail fast. This is
-			// the single retry owner - the service call is a plain one-shot request.
-			if tccommon.IsDeterministicErrorByMessage(e, addonValuesDeterministicErrorMessages) {
-				log.Printf("[CRITAL] NonRetryable addon values error: %v", e)
-				return resource.NonRetryableError(e)
-			}
-			return tccommon.RetryError(e)
-		}
-
-		if result == nil {
-			log.Printf("[DATASOURCE] DescribeAddonValues returned empty result")
-			return resource.NonRetryableError(fmt.Errorf("tencentcloud_kubernetes_addon_values DescribeAddonValuesResponse is nil"))
-		}
-
-		resp = result
-		return nil
-	})
-
-	if reqErr != nil {
-		return reqErr
+	// DescribeAddonValuesList owns the retry + deterministic-error handling (mirroring
+	// DescribeAddonList); call it directly and propagate any failure.
+	resp, e := service.DescribeAddonValuesList(ctx, clusterId, addonName)
+	if e != nil {
+		return e
 	}
 
 	// A not-installed addon whose chart exists still yields a rendered payload here
