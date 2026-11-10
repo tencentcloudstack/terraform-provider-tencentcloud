@@ -998,7 +998,6 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.176/go.mod 
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.180/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.182/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.183/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.185/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.186/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.188/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.193/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
@@ -1020,8 +1019,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.3.183 h1:p9dLY3j
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.3.183/go.mod h1:6tbUnw0D33C4ULpureBSG/Wmx4IE0xOltvCwHA2cJvc=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.3.30 h1:evU6/8eA7nay2ZZl/WcmRO/E1eEjPC5zAX5dNAMCoko=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.3.30/go.mod h1:1zyxbBDx3OeAJa8Tmp0UJu4iJ0eTYQvhZzIYpXRuF/c=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.3.185 h1:fTN49Bgqyx7U2X6fCaWKAFsHt5aHVSMgbA7sCyVmQXw=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.3.185/go.mod h1:QBqRjyjgU193iDgsbrxrsz+NIH6jMpzSR7z18k80ZfM=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.3.209 h1:ZrRzuo30HYGdaEHrR8CYS5Z3HQ73xgVnShpsbpQqcoo=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.3.209/go.mod h1:Hh5VeKvhju9ph6i4OY85e/jk/F3WQ3VR7/txzkC4AQ4=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb v1.0.970 h1:qVIRHgG1twsqF4aVN/x2T2yMRfPpsZBTNefDkqzM06M=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb v1.0.970/go.mod h1:NJuuQD4z6vcnsZnC7Tvz2U9hElNS1wroc34UQbZvP2U=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335 h1:D8qrelkK5udv8RzJJIABMzItGIyaZoYnxEVeIsYqiNw=
