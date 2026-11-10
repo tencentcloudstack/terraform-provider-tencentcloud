@@ -42,7 +42,7 @@ The `rules` object supports the following:
 
 * `force_password_change` - (Optional, Int) Forced password change period.
 * `minimum_length` - (Optional, Int) Minimum password length.
-* `must_contain` - (Optional, String) Characters that the password must contain.
+* `must_contain` - (Optional, String) Characters that the password must contain, as a literal character set (e.g. `Aa1!` for upper, lower, digit and special characters). Note that the CAM console re-orders this value (e.g. `Aa1!` is stored and read back as `1!aA`); invalid literals are rejected with `InvalidParameter.PasswordRuleError`.
 * `password_expiration_invalidation` - (Optional, Int) Whether an expired password becomes invalid. Valid values: `1` (the sub-user cannot log in and an administrator must reset the password), `2` (the sub-user can log in and is forced to change the password).
 * `retry_password_limit` - (Optional, Int) Number of allowed password retries.
 * `reuse_password_limit` - (Optional, Int) Number of previous passwords that cannot be reused.
