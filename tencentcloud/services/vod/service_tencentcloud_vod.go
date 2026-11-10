@@ -910,6 +910,110 @@ func (me *VodService) DeleteVodAigcApiToken(ctx context.Context, subAppId uint64
 	return
 }
 
+// UpdateVodAigcApiToken updates the ExtInfo of the given AIGC API Token.
+// extInfo is a JSON string passed through to the cloud API. actionType must be
+// `Merge` (default, merge the ExtInfo JSON by top-level key) or `Overwrite`
+// (overwrite directly); an empty actionType means the cloud default (Merge).
+func (me *VodService) UpdateVodAigcApiToken(ctx context.Context, subAppId uint64, apiToken, actionType, extInfo string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := vod.NewUpdateAigcApiTokenRequest()
+	request.SubAppId = helper.Uint64(subAppId)
+	request.ApiToken = helper.String(apiToken)
+	request.ExtInfo = helper.String(extInfo)
+	if actionType != "" {
+		request.ActionType = helper.String(actionType)
+	}
+
+	var requestId string
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseVodClient().UpdateAigcApiToken(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		if response == nil || response.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("api[%s] response is nil", request.GetAction()))
+		}
+		if response.Response.RequestId != nil {
+			requestId = *response.Response.RequestId
+		}
+		return nil
+	})
+	if err != nil {
+		errRet = fmt.Errorf("[CRITAL]%s api[%s] fail, sub_app_id [%d], reason[%s]", logId, request.GetAction(), subAppId, err.Error())
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, sub_app_id [%d], api_token [***], request_id [%s]\n",
+		logId, request.GetAction(), subAppId, requestId)
+	return
+}
+
+// DescribeVodAigcApiTokenExtInfos returns all AIGC API Tokens and their ExtInfo
+// JSON strings under the specified sub application. The two slices are paired
+// by index: ExtInfos[i] is the ExtInfo of ApiTokens[i].
+func (me *VodService) DescribeVodAigcApiTokenExtInfos(ctx context.Context, subAppId uint64) (apiTokens []string, extInfos []string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := vod.NewDescribeAigcApiTokensRequest()
+	request.SubAppId = helper.Uint64(subAppId)
+
+	var requestId string
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseVodClient().DescribeAigcApiTokens(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		if response == nil || response.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("api[%s] response is nil", request.GetAction()))
+		}
+		apiTokens = apiTokens[:0]
+		extInfos = extInfos[:0]
+		for _, t := range response.Response.ApiTokens {
+			if t != nil {
+				apiTokens = append(apiTokens, *t)
+			}
+		}
+		for _, info := range response.Response.ExtInfos {
+			if info != nil {
+				extInfos = append(extInfos, *info)
+			}
+		}
+		if response.Response.RequestId != nil {
+			requestId = *response.Response.RequestId
+		}
+		return nil
+	})
+	if err != nil {
+		errRet = fmt.Errorf("[CRITAL]%s api[%s] fail, sub_app_id [%d], reason[%s]", logId, request.GetAction(), subAppId, err.Error())
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, sub_app_id [%d], token_count [%d], request_id [%s]\n",
+		logId, request.GetAction(), subAppId, len(apiTokens), requestId)
+	return
+}
+
+// DescribeVodAigcApiTokenExtInfoById returns whether the given apiToken currently
+// exists under the specified sub application, together with its ExtInfo JSON string.
+func (me *VodService) DescribeVodAigcApiTokenExtInfoById(ctx context.Context, subAppId uint64, apiToken string) (exists bool, extInfo string, errRet error) {
+	tokens, infos, err := me.DescribeVodAigcApiTokenExtInfos(ctx, subAppId)
+	if err != nil {
+		errRet = err
+		return
+	}
+	for i, t := range tokens {
+		if t == apiToken {
+			exists = true
+			if i < len(infos) {
+				extInfo = infos[i]
+			}
+			return
+		}
+	}
+	return
+}
+
 func (me *VodService) CreateVodAigcQuota(ctx context.Context, subAppId uint64, quotaType string, quotaLimit uint64, apiToken string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := vod.NewCreateAigcQuotaRequest()
