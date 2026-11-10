@@ -19,23 +19,23 @@ import (
 
 // --- Schema / Metadata / Factory ---
 
-// TestCamUpdatePasswordRulesConfigResource_Metadata validates the type name.
-func TestCamUpdatePasswordRulesConfigResource_Metadata(t *testing.T) {
-	r := &CamUpdatePasswordRulesConfigResource{}
+// TestCamUpdatePasswordRuleConfigResource_Metadata validates the type name.
+func TestCamUpdatePasswordRuleConfigResource_Metadata(t *testing.T) {
+	r := &CamUpdatePasswordRuleConfigResource{}
 	req := resource.MetadataRequest{}
 	resp := &resource.MetadataResponse{}
 
 	r.Metadata(context.Background(), req, resp)
 
-	if resp.TypeName != "tencentcloud_cam_update_password_rules" {
-		t.Errorf("Metadata.TypeName = %q, want %q", resp.TypeName, "tencentcloud_cam_update_password_rules")
+	if resp.TypeName != "tencentcloud_cam_update_password_rule_config" {
+		t.Errorf("Metadata.TypeName = %q, want %q", resp.TypeName, "tencentcloud_cam_update_password_rule_config")
 	}
 }
 
-// TestCamUpdatePasswordRulesConfigResource_Schema validates required/optional/computed
+// TestCamUpdatePasswordRuleConfigResource_Schema validates required/optional/computed
 // flags on every top-level attribute and on the nested rules attributes.
-func TestCamUpdatePasswordRulesConfigResource_Schema(t *testing.T) {
-	r := &CamUpdatePasswordRulesConfigResource{}
+func TestCamUpdatePasswordRuleConfigResource_Schema(t *testing.T) {
+	r := &CamUpdatePasswordRuleConfigResource{}
 	req := resource.SchemaRequest{}
 	resp := &resource.SchemaResponse{}
 
@@ -106,28 +106,28 @@ func TestCamUpdatePasswordRulesConfigResource_Schema(t *testing.T) {
 	}
 }
 
-// TestCamUpdatePasswordRulesConfigResource_ImplementsInterfaces verifies the
+// TestCamUpdatePasswordRuleConfigResource_ImplementsInterfaces verifies the
 // resource satisfies the framework interfaces advertised by the var _ asserts.
-func TestCamUpdatePasswordRulesConfigResource_ImplementsInterfaces(t *testing.T) {
-	var _ resource.ResourceWithConfigure = &CamUpdatePasswordRulesConfigResource{}
-	var _ resource.ResourceWithImportState = &CamUpdatePasswordRulesConfigResource{}
+func TestCamUpdatePasswordRuleConfigResource_ImplementsInterfaces(t *testing.T) {
+	var _ resource.ResourceWithConfigure = &CamUpdatePasswordRuleConfigResource{}
+	var _ resource.ResourceWithImportState = &CamUpdatePasswordRuleConfigResource{}
 }
 
-// TestCamUpdatePasswordRulesConfigResource_Factory validates the registry factory.
-func TestCamUpdatePasswordRulesConfigResource_Factory(t *testing.T) {
-	got := NewCamUpdatePasswordRulesConfigResource()
+// TestCamUpdatePasswordRuleConfigResource_Factory validates the registry factory.
+func TestCamUpdatePasswordRuleConfigResource_Factory(t *testing.T) {
+	got := NewCamUpdatePasswordRuleConfigResource()
 	if got == nil {
-		t.Fatal("NewCamUpdatePasswordRulesConfigResource returned nil")
+		t.Fatal("NewCamUpdatePasswordRuleConfigResource returned nil")
 	}
-	if _, ok := got.(*CamUpdatePasswordRulesConfigResource); !ok {
-		t.Fatalf("factory returned %T, want *CamUpdatePasswordRulesConfigResource", got)
+	if _, ok := got.(*CamUpdatePasswordRuleConfigResource); !ok {
+		t.Fatalf("factory returned %T, want *CamUpdatePasswordRuleConfigResource", got)
 	}
 }
 
-// TestCamUpdatePasswordRulesConfigResource_ConfigureNilProviderData ensures the
+// TestCamUpdatePasswordRuleConfigResource_ConfigureNilProviderData ensures the
 // pre-Configure invocation pattern (nil ProviderData) is a silent no-op.
-func TestCamUpdatePasswordRulesConfigResource_ConfigureNilProviderData(t *testing.T) {
-	r := &CamUpdatePasswordRulesConfigResource{}
+func TestCamUpdatePasswordRuleConfigResource_ConfigureNilProviderData(t *testing.T) {
+	r := &CamUpdatePasswordRuleConfigResource{}
 	req := resource.ConfigureRequest{}
 	resp := &resource.ConfigureResponse{}
 
@@ -206,7 +206,7 @@ func TestPasswordRulesTouched(t *testing.T) {
 // buildRulesObject constructs a types.Object rules value for tests.
 func buildRulesObject(ctx context.Context, t *testing.T) types.Object {
 	t.Helper()
-	model := CamUpdatePasswordRulesConfigRuleModel{
+	model := CamUpdatePasswordRuleConfigRuleModel{
 		MinimumLength:                  types.Int64Value(8),
 		MustContain:                    types.StringValue("char&num"),
 		ForcePasswordChange:            types.Int64Value(90),
@@ -284,7 +284,7 @@ func TestFlattenPasswordRules(t *testing.T) {
 	}
 
 	obj := flattenPasswordRules(ctx, rules, prev, &diag.Diagnostics{})
-	var out CamUpdatePasswordRulesConfigRuleModel
+	var out CamUpdatePasswordRuleConfigRuleModel
 	if diags := obj.As(ctx, &out, basetypes.ObjectAsOptions{}); diags.HasError() {
 		t.Fatalf("object as failed: %v", diags)
 	}
@@ -316,7 +316,7 @@ func TestFlattenPasswordRules_NilRules(t *testing.T) {
 	if obj.IsNull() {
 		t.Fatal("expected a non-null object with null attributes")
 	}
-	var out CamUpdatePasswordRulesConfigRuleModel
+	var out CamUpdatePasswordRuleConfigRuleModel
 	if diags := obj.As(ctx, &out, basetypes.ObjectAsOptions{}); diags.HasError() {
 		t.Fatalf("object as failed: %v", diags)
 	}
@@ -335,7 +335,7 @@ func TestFlattenPasswordRules_PreservesPrevious(t *testing.T) {
 	rules := &camv20190116.PassWordRule{MinimumLength: helper.Int64(12)}
 
 	obj := flattenPasswordRules(ctx, rules, prev, &diag.Diagnostics{})
-	var out CamUpdatePasswordRulesConfigRuleModel
+	var out CamUpdatePasswordRuleConfigRuleModel
 	if diags := obj.As(ctx, &out, basetypes.ObjectAsOptions{}); diags.HasError() {
 		t.Fatalf("object as failed: %v", diags)
 	}

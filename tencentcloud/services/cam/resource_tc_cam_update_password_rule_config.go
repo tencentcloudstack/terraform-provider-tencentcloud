@@ -20,8 +20,8 @@ import (
 // Compile-time interface assertions. The base resource.Resource interface is
 // checked implicitly by the factory return value.
 var (
-	_ resource.ResourceWithConfigure   = &CamUpdatePasswordRulesConfigResource{}
-	_ resource.ResourceWithImportState = &CamUpdatePasswordRulesConfigResource{}
+	_ resource.ResourceWithConfigure   = &CamUpdatePasswordRuleConfigResource{}
+	_ resource.ResourceWithImportState = &CamUpdatePasswordRuleConfigResource{}
 )
 
 // passwordRulesConfigId is the constant state id of this singleton resource:
@@ -43,26 +43,26 @@ var errPasswordRulesNotFound = errors.New("GetPasswordRules returned no password
 // this resource) fills in a timestamp and the modifier UIN.
 const passwordRulesZeroSentinel = "0000-00-00 00:00:00"
 
-// NewCamUpdatePasswordRulesConfigResource is the factory referenced by
+// NewCamUpdatePasswordRuleConfigResource is the factory referenced by
 // tencentcloud/framework/registry.go to register this resource.
-func NewCamUpdatePasswordRulesConfigResource() resource.Resource {
-	return &CamUpdatePasswordRulesConfigResource{}
+func NewCamUpdatePasswordRuleConfigResource() resource.Resource {
+	return &CamUpdatePasswordRuleConfigResource{}
 }
 
-// CamUpdatePasswordRulesConfigResource implements resource.Resource for
-// tencentcloud_cam_update_password_rules.
+// CamUpdatePasswordRuleConfigResource implements resource.Resource for
+// tencentcloud_cam_update_password_rule_config.
 //
 // This is a configuration resource: it never creates or deletes anything on the
 // cloud side. Create and Update both call UpdatePasswordRules, Read calls
 // GetPasswordRules, and Delete only drops the resource from state so that the
 // cloud-side password rules stay untouched.
-type CamUpdatePasswordRulesConfigResource struct {
+type CamUpdatePasswordRuleConfigResource struct {
 	fw.ResourceWithConfigure
 	fw.WithImportByID
 }
 
-// CamUpdatePasswordRulesConfigRuleModel maps the rules nested attribute.
-type CamUpdatePasswordRulesConfigRuleModel struct {
+// CamUpdatePasswordRuleConfigRuleModel maps the rules nested attribute.
+type CamUpdatePasswordRuleConfigRuleModel struct {
 	MinimumLength                  types.Int64  `tfsdk:"minimum_length"`
 	MustContain                    types.String `tfsdk:"must_contain"`
 	ForcePasswordChange            types.Int64  `tfsdk:"force_password_change"`
@@ -71,9 +71,9 @@ type CamUpdatePasswordRulesConfigRuleModel struct {
 	PasswordExpirationInvalidation types.Int64  `tfsdk:"password_expiration_invalidation"`
 }
 
-// CamUpdatePasswordRulesConfigResourceModel maps every top-level schema
+// CamUpdatePasswordRuleConfigResourceModel maps every top-level schema
 // attribute; each one appears here exactly once.
-type CamUpdatePasswordRulesConfigResourceModel struct {
+type CamUpdatePasswordRuleConfigResourceModel struct {
 	Id         types.String `tfsdk:"id"`
 	Rules      types.Object `tfsdk:"rules"`
 	UpdateTime types.String `tfsdk:"update_time"`
@@ -94,12 +94,12 @@ func passwordRulesAttrTypes() map[string]attr.Type {
 }
 
 // Metadata reports the Terraform type name.
-func (r *CamUpdatePasswordRulesConfigResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = "tencentcloud_cam_update_password_rules"
+func (r *CamUpdatePasswordRuleConfigResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = "tencentcloud_cam_update_password_rule_config"
 }
 
 // Schema declares the password rules configuration.
-func (r *CamUpdatePasswordRulesConfigResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *CamUpdatePasswordRuleConfigResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Description: "Provides a resource to manage the CAM password rules configuration. " +
 			"Create and update both call the UpdatePasswordRules API, read calls GetPasswordRules. " +
@@ -159,8 +159,8 @@ func (r *CamUpdatePasswordRulesConfigResource) Schema(_ context.Context, _ resou
 
 // Create sets the password rules for the first time. It shares the write path
 // with Update because the cloud API exposes a single write operation.
-func (r *CamUpdatePasswordRulesConfigResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan CamUpdatePasswordRulesConfigResourceModel
+func (r *CamUpdatePasswordRuleConfigResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan CamUpdatePasswordRuleConfigResourceModel
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
 		return
@@ -188,7 +188,7 @@ func (r *CamUpdatePasswordRulesConfigResource) Create(ctx context.Context, req r
 		resp.Diagnostics.AddWarning(
 			"Existing CAM password rules detected",
 			fmt.Sprintf("The CAM password rules look like they have already been modified (last modifier %q, last update time %q). "+
-				"Applying this configuration will overwrite them. Run `terraform import tencentcloud_cam_update_password_rules.example %s` "+
+				"Applying this configuration will overwrite them. Run `terraform import tencentcloud_cam_update_password_rule_config.example %s` "+
 				"and inspect the plan first if the existing values should be kept.",
 				stringOrEmpty(current.Modifier), stringOrEmpty(current.UpdateTime), passwordRulesConfigId),
 		)
@@ -204,8 +204,8 @@ func (r *CamUpdatePasswordRulesConfigResource) Create(ctx context.Context, req r
 }
 
 // Read refreshes the password rules from the cloud.
-func (r *CamUpdatePasswordRulesConfigResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state CamUpdatePasswordRulesConfigResourceModel
+func (r *CamUpdatePasswordRuleConfigResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state CamUpdatePasswordRuleConfigResourceModel
 	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
 	if resp.Diagnostics.HasError() {
 		return
@@ -234,8 +234,8 @@ func (r *CamUpdatePasswordRulesConfigResource) Read(ctx context.Context, req res
 }
 
 // Update applies the planned password rules.
-func (r *CamUpdatePasswordRulesConfigResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan CamUpdatePasswordRulesConfigResourceModel
+func (r *CamUpdatePasswordRuleConfigResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan CamUpdatePasswordRuleConfigResourceModel
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
 		return
@@ -259,14 +259,14 @@ func (r *CamUpdatePasswordRulesConfigResource) Update(ctx context.Context, req r
 // are an account-wide configuration that always exists, so destroying the
 // resource only removes it from state and leaves the cloud-side rules
 // unchanged.
-func (r *CamUpdatePasswordRulesConfigResource) Delete(_ context.Context, _ resource.DeleteRequest, _ *resource.DeleteResponse) {
+func (r *CamUpdatePasswordRuleConfigResource) Delete(_ context.Context, _ resource.DeleteRequest, _ *resource.DeleteResponse) {
 	return
 }
 
 // service returns the CAM service bound to the shared client. When the provider
 // has not been configured it records a diagnostic and reports false, so the
 // lifecycle callbacks never dereference a nil SDK client.
-func (r *CamUpdatePasswordRulesConfigResource) service(diags *diag.Diagnostics) (CamService, bool) {
+func (r *CamUpdatePasswordRuleConfigResource) service(diags *diag.Diagnostics) (CamService, bool) {
 	if r.Client() == nil {
 		diags.AddError(
 			"Provider not configured",
@@ -284,7 +284,7 @@ func (r *CamUpdatePasswordRulesConfigResource) service(diags *diag.Diagnostics) 
 // such differences are surfaced by the next plan as a regular diff instead of
 // being second-guessed here. Values the cloud rejects outright fail at the
 // UpdatePasswordRules call with the API's own InvalidParameter error.
-func (r *CamUpdatePasswordRulesConfigResource) applyPasswordRules(ctx context.Context, service CamService, plan *CamUpdatePasswordRulesConfigResourceModel, diags *diag.Diagnostics) {
+func (r *CamUpdatePasswordRuleConfigResource) applyPasswordRules(ctx context.Context, service CamService, plan *CamUpdatePasswordRuleConfigResourceModel, diags *diag.Diagnostics) {
 	rule := expandPasswordRules(ctx, plan.Rules, diags)
 	if diags.HasError() {
 		return
@@ -337,7 +337,7 @@ func expandPasswordRules(ctx context.Context, value types.Object, diags *diag.Di
 		return rule
 	}
 
-	var model CamUpdatePasswordRulesConfigRuleModel
+	var model CamUpdatePasswordRuleConfigRuleModel
 	diags.Append(value.As(ctx, &model, basetypes.ObjectAsOptions{})...)
 	if diags.HasError() {
 		return nil
@@ -368,14 +368,14 @@ func expandPasswordRules(ctx context.Context, value types.Object, diags *diag.Di
 // The cloud may omit a field; the previously configured value is then kept so an
 // Optional+Computed attribute never flips to null after apply.
 func flattenPasswordRules(ctx context.Context, rules *cam.PassWordRule, prev types.Object, diags *diag.Diagnostics) types.Object {
-	var previous CamUpdatePasswordRulesConfigRuleModel
+	var previous CamUpdatePasswordRuleConfigRuleModel
 	if !prev.IsNull() && !prev.IsUnknown() {
 		diags.Append(prev.As(ctx, &previous, basetypes.ObjectAsOptions{})...)
 		if diags.HasError() {
 			return types.ObjectNull(passwordRulesAttrTypes())
 		}
 	} else {
-		previous = CamUpdatePasswordRulesConfigRuleModel{
+		previous = CamUpdatePasswordRuleConfigRuleModel{
 			MinimumLength:                  types.Int64Null(),
 			MustContain:                    types.StringNull(),
 			ForcePasswordChange:            types.Int64Null(),
@@ -385,7 +385,7 @@ func flattenPasswordRules(ctx context.Context, rules *cam.PassWordRule, prev typ
 		}
 	}
 
-	current := CamUpdatePasswordRulesConfigRuleModel{
+	current := CamUpdatePasswordRuleConfigRuleModel{
 		MinimumLength:                  types.Int64Null(),
 		MustContain:                    types.StringNull(),
 		ForcePasswordChange:            types.Int64Null(),
@@ -402,7 +402,7 @@ func flattenPasswordRules(ctx context.Context, rules *cam.PassWordRule, prev typ
 		current.PasswordExpirationInvalidation = int64PointerValue(rules.PasswordExpirationInvalidation)
 	}
 
-	merged := CamUpdatePasswordRulesConfigRuleModel{
+	merged := CamUpdatePasswordRuleConfigRuleModel{
 		MinimumLength:                  preferKnownInt64(current.MinimumLength, previous.MinimumLength),
 		MustContain:                    preferKnownString(current.MustContain, previous.MustContain),
 		ForcePasswordChange:            preferKnownInt64(current.ForcePasswordChange, previous.ForcePasswordChange),
