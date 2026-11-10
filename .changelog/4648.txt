@@ -1,3 +1,3 @@
 ```release-note:enhancement
-tencentcloud_vod_aigc_api_token: support ext_info and action_type fields with an Update flow
+resource/tencentcloud_vod_aigc_api_token: support ext_info and action_type fields with an Update flow
 ```
