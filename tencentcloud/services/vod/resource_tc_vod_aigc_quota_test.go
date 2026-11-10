@@ -306,6 +306,150 @@ func TestUnitVodAigcQuotaDelete(t *testing.T) {
 	assert.True(t, deleteCalled)
 }
 
+func TestUnitVodAigcQuotaCreateWithPeriodAndModelQuotas(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	meta := newMockMetaVodAigcQuota()
+	vodClient := &vod.Client{}
+	patches.ApplyMethodReturn(meta.client, "UseVodClient", vodClient)
+
+	createCalled := false
+	patches.ApplyMethodFunc(vodClient, "CreateAigcQuotaWithContext", func(ctx context.Context, request *vod.CreateAigcQuotaRequest) (*vod.CreateAigcQuotaResponse, error) {
+		createCalled = true
+		assert.Equal(t, uint64(251006666), *request.SubAppId)
+		assert.Equal(t, "Video", *request.QuotaType)
+		assert.Equal(t, "Month", *request.QuotaPeriod)
+		assert.Equal(t, uint64(15), *request.ResetDay)
+		assert.Equal(t, "ON", *request.ModelQuotaSwitch)
+		if assert.Equal(t, 1, len(request.ModelQuotas)) {
+			assert.Equal(t, "hunyuan-video", *request.ModelQuotas[0].ModelName)
+			assert.Equal(t, "1.0", *request.ModelQuotas[0].ModelVersion)
+			assert.Equal(t, uint64(1000), *request.ModelQuotas[0].QuotaLimit)
+		}
+		resp := &vod.CreateAigcQuotaResponse{}
+		resp.Response = &vod.CreateAigcQuotaResponseParams{
+			RequestId: ptrStringVod("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(vodClient, "DescribeAigcQuotasWithContext", func(ctx context.Context, request *vod.DescribeAigcQuotasRequest) (*vod.DescribeAigcQuotasResponse, error) {
+		resp := &vod.DescribeAigcQuotasResponse{}
+		resp.Response = &vod.DescribeAigcQuotasResponseParams{
+			QuotaSet: []*vod.AigcQuotaItem{
+				{
+					QuotaType:        ptrStringVod("Video"),
+					QuotaLimit:       ptrUint64Vod(1000),
+					Usage:            ptrUint64Vod(20),
+					QuotaPeriod:      ptrStringVod("Month"),
+					ResetDay:         ptrUint64Vod(15),
+					ModelQuotaSwitch: ptrStringVod("ON"),
+					ModelQuotas: []*vod.AigcModelQuotaWithUsage{
+						{
+							ModelName:    ptrStringVod("hunyuan-video"),
+							ModelVersion: ptrStringVod("1.0"),
+							QuotaLimit:   ptrUint64Vod(1000),
+							Usage:        ptrUint64Vod(20),
+						},
+					},
+				},
+			},
+			RequestId: ptrStringVod("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	res := svcvod.ResourceTencentCloudVodAigcQuota()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"sub_app_id":         251006666,
+		"quota_type":         "Video",
+		"quota_limit":        1000,
+		"quota_period":       "Month",
+		"reset_day":          15,
+		"model_quota_switch": "ON",
+		"model_quotas": []interface{}{
+			map[string]interface{}{
+				"model_name":    "hunyuan-video",
+				"model_version": "1.0",
+				"quota_limit":   1000,
+			},
+		},
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+	assert.True(t, createCalled)
+	assert.Equal(t, "251006666#Video", d.Id())
+	assert.Equal(t, "Month", d.Get("quota_period"))
+	assert.Equal(t, 15, d.Get("reset_day"))
+	assert.Equal(t, "ON", d.Get("model_quota_switch"))
+	modelQuotas := d.Get("model_quotas").([]interface{})
+	if assert.Equal(t, 1, len(modelQuotas)) {
+		m := modelQuotas[0].(map[string]interface{})
+		assert.Equal(t, "hunyuan-video", m["model_name"])
+		assert.Equal(t, "1.0", m["model_version"])
+		assert.Equal(t, 1000, m["quota_limit"])
+		assert.Equal(t, 20, m["usage"])
+	}
+}
+
+func TestUnitVodAigcQuotaUpdatePeriodAndModelQuotas(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	meta := newMockMetaVodAigcQuota()
+	vodClient := &vod.Client{}
+	patches.ApplyMethodReturn(meta.client, "UseVodClient", vodClient)
+
+	modifyCalled := false
+	patches.ApplyMethodFunc(vodClient, "ModifyAigcQuotaWithContext", func(ctx context.Context, request *vod.ModifyAigcQuotaRequest) (*vod.ModifyAigcQuotaResponse, error) {
+		modifyCalled = true
+		assert.Equal(t, uint64(251006666), *request.SubAppId)
+		assert.Equal(t, "Video", *request.QuotaType)
+		assert.Equal(t, "Total", *request.QuotaPeriod)
+		assert.Equal(t, "OFF", *request.ModelQuotaSwitch)
+		resp := &vod.ModifyAigcQuotaResponse{}
+		resp.Response = &vod.ModifyAigcQuotaResponseParams{
+			RequestId: ptrStringVod("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(vodClient, "DescribeAigcQuotasWithContext", func(ctx context.Context, request *vod.DescribeAigcQuotasRequest) (*vod.DescribeAigcQuotasResponse, error) {
+		resp := &vod.DescribeAigcQuotasResponse{}
+		resp.Response = &vod.DescribeAigcQuotasResponseParams{
+			QuotaSet: []*vod.AigcQuotaItem{
+				{
+					QuotaType:        ptrStringVod("Video"),
+					QuotaLimit:       ptrUint64Vod(300),
+					Usage:            ptrUint64Vod(0),
+					QuotaPeriod:      ptrStringVod("Total"),
+					ModelQuotaSwitch: ptrStringVod("OFF"),
+				},
+			},
+			RequestId: ptrStringVod("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	res := svcvod.ResourceTencentCloudVodAigcQuota()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"sub_app_id":         251006666,
+		"quota_type":         "Video",
+		"quota_limit":        300,
+		"quota_period":       "Total",
+		"model_quota_switch": "OFF",
+	})
+	d.SetId("251006666#Video")
+
+	err := res.Update(d, meta)
+	assert.NoError(t, err)
+	assert.True(t, modifyCalled)
+	assert.Equal(t, "Total", d.Get("quota_period"))
+	assert.Equal(t, "OFF", d.Get("model_quota_switch"))
+}
+
 func TestUnitVodAigcQuotaParseId(t *testing.T) {
 	// two-part id (Image/Video, no api_token)
 	subAppId, quotaType, apiToken, err := svcvod.ParseVodAigcQuotaId("251006666#Image")
