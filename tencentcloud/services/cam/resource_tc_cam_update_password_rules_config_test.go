@@ -350,40 +350,6 @@ func TestFlattenPasswordRules_PreservesPrevious(t *testing.T) {
 	}
 }
 
-// --- passwordRulesMismatch ---
-
-// TestPasswordRulesMismatch verifies the configured-vs-observed comparison
-// ignores unset values and reports the first real difference.
-func TestPasswordRulesMismatch(t *testing.T) {
-	ctx := context.Background()
-
-	configured := buildRulesObject(ctx, t)
-	observed := buildRulesObject(ctx, t)
-	if got := passwordRulesMismatch(ctx, configured, observed); got != "" {
-		t.Errorf("identical objects mismatch reported: %s", got)
-	}
-
-	// Change one observed field.
-	var o CamUpdatePasswordRulesConfigRuleModel
-	if diags := observed.As(ctx, &o, basetypes.ObjectAsOptions{}); diags.HasError() {
-		t.Fatalf("object as failed: %v", diags)
-	}
-	o.RetryPasswordLimit = types.Int64Value(7)
-	changed, diagsObj := types.ObjectValueFrom(ctx, passwordRulesAttrTypes(), o)
-	if diagsObj.HasError() {
-		t.Fatalf("object value from failed: %v", diagsObj)
-	}
-	got := passwordRulesMismatch(ctx, configured, changed)
-	if got == "" {
-		t.Error("expected a mismatch to be reported")
-	}
-
-	// A null configured object is never compared.
-	if got := passwordRulesMismatch(ctx, types.ObjectNull(passwordRulesAttrTypes()), changed); got != "" {
-		t.Errorf("null configured object should not mismatch, got %q", got)
-	}
-}
-
 // --- service layer ---
 
 // mockPasswordRulesClient patches the CAM client accessor so service calls hit

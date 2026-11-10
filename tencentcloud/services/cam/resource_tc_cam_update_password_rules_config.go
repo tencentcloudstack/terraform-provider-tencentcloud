@@ -171,26 +171,27 @@ func (r *CamUpdatePasswordRulesConfigResource) Create(ctx context.Context, req r
 		return
 	}
 
-	// Refuse to take over a configuration that somebody already changed: the
-	// rules are account-wide, so two configurations would silently overwrite
-	// each other instead of showing up as a plan diff.
-	// An unmodified account reports the zero-sentinel UpdateTime (see
-	// passwordRulesZeroSentinel); any real timestamp means the rules were
-	// changed outside this resource and must be imported first.
+	// Warn instead of error when the cloud-side rules look like they are
+	// already managed: the rules are account-wide, so two configurations
+	// would silently overwrite each other instead of showing up as a plan
+	// diff. The detection relies on the zero-sentinel UpdateTime (see
+	// passwordRulesZeroSentinel), which is a heuristic; an unmodified
+	// account must never be blocked from adopting the configuration, so the
+	// signal is surfaced as a warning and the real values can always be
+	// checked with `terraform import` + `terraform plan` first.
 	current, err := service.GetPasswordRules(ctx)
 	if err != nil && !errors.Is(err, errPasswordRulesNotFound) {
 		resp.Diagnostics.AddError("Error reading CAM password rules before create", err.Error())
 		return
 	}
 	if err == nil && passwordRulesTouched(current) {
-		resp.Diagnostics.AddError(
+		resp.Diagnostics.AddWarning(
 			"Existing CAM password rules detected",
-			fmt.Sprintf("The CAM password rules have already been modified (last modifier %q, last update time %q). "+
-				"Import the existing configuration with `terraform import tencentcloud_cam_update_password_rules.example %s` before managing it, "+
-				"otherwise two configurations would overwrite each other.",
+			fmt.Sprintf("The CAM password rules look like they have already been modified (last modifier %q, last update time %q). "+
+				"Applying this configuration will overwrite them. Run `terraform import tencentcloud_cam_update_password_rules.example %s` "+
+				"and inspect the plan first if the existing values should be kept.",
 				stringOrEmpty(current.Modifier), stringOrEmpty(current.UpdateTime), passwordRulesConfigId),
 		)
-		return
 	}
 
 	r.applyPasswordRules(ctx, service, &plan, &resp.Diagnostics)
@@ -278,8 +279,11 @@ func (r *CamUpdatePasswordRulesConfigResource) service(diags *diag.Diagnostics) 
 
 // applyPasswordRules writes the planned rules through UpdatePasswordRules and
 // then reads the configuration back, so every Optional+Computed value is known
-// when the state is saved. A configured value that the cloud reports differently
-// is an error rather than a silent rewrite.
+// when the state is saved. The state always records the cloud-reported values:
+// the CAM API accepts a write and may normalize it (e.g. must_contain), and
+// such differences are surfaced by the next plan as a regular diff instead of
+// being second-guessed here. Values the cloud rejects outright fail at the
+// UpdatePasswordRules call with the API's own InvalidParameter error.
 func (r *CamUpdatePasswordRulesConfigResource) applyPasswordRules(ctx context.Context, service CamService, plan *CamUpdatePasswordRulesConfigResourceModel, diags *diag.Diagnostics) {
 	rule := expandPasswordRules(ctx, plan.Rules, diags)
 	if diags.HasError() {
@@ -299,14 +303,6 @@ func (r *CamUpdatePasswordRulesConfigResource) applyPasswordRules(ctx context.Co
 
 	observed := flattenPasswordRules(ctx, params.Rules, plan.Rules, diags)
 	if diags.HasError() {
-		return
-	}
-
-	if mismatch := passwordRulesMismatch(ctx, plan.Rules, observed); mismatch != "" {
-		diags.AddError(
-			"Unexpected CAM password rules after update",
-			fmt.Sprintf("GetPasswordRules reports a value different from the configured one: %s.", mismatch),
-		)
 		return
 	}
 
@@ -418,48 +414,6 @@ func flattenPasswordRules(ctx context.Context, rules *cam.PassWordRule, prev typ
 	result, objectDiags := types.ObjectValueFrom(ctx, passwordRulesAttrTypes(), merged)
 	diags.Append(objectDiags...)
 	return result
-}
-
-// passwordRulesMismatch compares a configured rules object with the one read
-// back from the cloud and returns a description of the first difference, or an
-// empty string when they agree. Values the plan left unset are not compared.
-func passwordRulesMismatch(ctx context.Context, configured, observed types.Object) string {
-	if configured.IsNull() || configured.IsUnknown() {
-		return ""
-	}
-
-	var c, o CamUpdatePasswordRulesConfigRuleModel
-	if diags := configured.As(ctx, &c, basetypes.ObjectAsOptions{}); diags.HasError() {
-		return "the configured rules object could not be decoded"
-	}
-	if diags := observed.As(ctx, &o, basetypes.ObjectAsOptions{}); diags.HasError() {
-		return "the rules object read back from the cloud could not be decoded"
-	}
-
-	int64Fields := []struct {
-		name     string
-		planned  types.Int64
-		observed types.Int64
-	}{
-		{"minimum_length", c.MinimumLength, o.MinimumLength},
-		{"force_password_change", c.ForcePasswordChange, o.ForcePasswordChange},
-		{"reuse_password_limit", c.ReusePasswordLimit, o.ReusePasswordLimit},
-		{"retry_password_limit", c.RetryPasswordLimit, o.RetryPasswordLimit},
-		{"password_expiration_invalidation", c.PasswordExpirationInvalidation, o.PasswordExpirationInvalidation},
-	}
-	for _, f := range int64Fields {
-		if f.planned.IsNull() || f.planned.IsUnknown() {
-			continue
-		}
-		if !f.planned.Equal(f.observed) {
-			return fmt.Sprintf("`%s` was configured as %d but the cloud reports %s", f.name, f.planned.ValueInt64(), f.observed.String())
-		}
-	}
-
-	if !c.MustContain.IsNull() && !c.MustContain.IsUnknown() && !c.MustContain.Equal(o.MustContain) {
-		return fmt.Sprintf("`must_contain` was configured as %q but the cloud reports %s", c.MustContain.ValueString(), o.MustContain.String())
-	}
-	return ""
 }
 
 // preferKnownInt64 keeps the cloud value when it is known and falls back to the
