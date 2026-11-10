@@ -148,25 +148,47 @@ func TestPasswordRulesTouched(t *testing.T) {
 		want   bool
 	}{
 		{"nil params", nil, false},
-		{"nil rules", &camv20190116.GetPasswordRulesResponseParams{}, false},
-		{"all defaults", &camv20190116.GetPasswordRulesResponseParams{Rules: &camv20190116.PassWordRule{}}, false},
+		{"nil update time", &camv20190116.GetPasswordRulesResponseParams{Rules: &camv20190116.PassWordRule{MinimumLength: helper.Int64(8)}}, false},
 		{
-			"minimum length set",
-			&camv20190116.GetPasswordRulesResponseParams{Rules: &camv20190116.PassWordRule{MinimumLength: helper.Int64(8)}},
-			true,
-		},
-		{
-			"must contain set",
-			&camv20190116.GetPasswordRulesResponseParams{Rules: &camv20190116.PassWordRule{MustContain: helper.String("char&num")}},
-			true,
-		},
-		{
-			"zero-valued pointers",
-			&camv20190116.GetPasswordRulesResponseParams{Rules: &camv20190116.PassWordRule{
-				MinimumLength:       helper.Int64(0),
-				ForcePasswordChange: helper.Int64(0),
-			}},
+			"empty update time",
+			&camv20190116.GetPasswordRulesResponseParams{
+				Rules:      &camv20190116.PassWordRule{MinimumLength: helper.Int64(8), MustContain: helper.String("Aa1!")},
+				UpdateTime: helper.String(""),
+			},
 			false,
+		},
+		{
+			// A live unmodified account reports non-zero rule defaults with the
+			// zero-sentinel timestamp; this must NOT be treated as touched.
+			"zero sentinel update time with non-zero defaults",
+			&camv20190116.GetPasswordRulesResponseParams{
+				Rules: &camv20190116.PassWordRule{
+					MinimumLength:       helper.Int64(8),
+					MustContain:         helper.String("Aa1!"),
+					RetryPasswordLimit:  helper.Int64(10),
+					ReusePasswordLimit:  helper.Int64(1),
+					ForcePasswordChange: helper.Int64(0),
+				},
+				UpdateTime: helper.String("0000-00-00 00:00:00"),
+			},
+			false,
+		},
+		{
+			"real update time",
+			&camv20190116.GetPasswordRulesResponseParams{
+				Rules:      &camv20190116.PassWordRule{MinimumLength: helper.Int64(8)},
+				UpdateTime: helper.String("2026-11-10 15:37:23"),
+				Modifier:   helper.String("100053131847"),
+			},
+			true,
+		},
+		{
+			"real update time with zero rules",
+			&camv20190116.GetPasswordRulesResponseParams{
+				Rules:      &camv20190116.PassWordRule{},
+				UpdateTime: helper.String("2026-11-10 15:37:23"),
+			},
+			true,
 		},
 	}
 	for _, c := range cases {

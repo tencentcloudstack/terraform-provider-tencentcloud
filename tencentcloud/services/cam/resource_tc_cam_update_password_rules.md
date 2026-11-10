@@ -4,13 +4,15 @@ This is a singleton, account-wide configuration resource built on the terraform-
 
 -> **Note:** The CAM password rules are a single account-wide configuration. If the rules have already been changed outside of Terraform, the create fails and the existing configuration must be imported first, otherwise two configurations would silently overwrite each other. Every attribute inside `rules` is optional; a value that is left unset keeps its current cloud-side setting.
 
+-> **Note:** `must_contain` is a literal character set, not an enum: write the characters the password must contain, e.g. `"Aa1!"` (upper, lower, digit, special). The console re-orders and normalizes this value (e.g. `"Aa1!"` is stored and read back as `"1!aA"`), and invalid literals are rejected by the API with `InvalidParameter.PasswordRuleError`.
+
 Example Usage
 
 ```hcl
 resource "tencentcloud_cam_update_password_rules" "example" {
   rules {
     minimum_length                   = 8
-    must_contain                     = "char&num"
+    must_contain                     = "Aa1!"
     force_password_change            = 90
     reuse_password_limit             = 5
     retry_password_limit             = 10

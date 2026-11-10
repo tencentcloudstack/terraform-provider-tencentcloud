@@ -34,6 +34,15 @@ const passwordRulesConfigId = "cam-password-rules"
 // caller can describe the situation precisely.
 var errPasswordRulesNotFound = errors.New("GetPasswordRules returned no password rules")
 
+// passwordRulesZeroSentinel is the UpdateTime value CAM reports for a password
+// rules configuration that has never been modified. Live-account testing
+// (2026-11) showed that unmodified accounts do NOT report all-zero rules:
+// a fresh account answers GetPasswordRules with e.g. MinimumLength=8,
+// MustContain="Aa1!", RetryPasswordLimit=10 while UpdateTime is still the zero
+// sentinel and Modifier is empty. Only a real modification (console, API or
+// this resource) fills in a timestamp and the modifier UIN.
+const passwordRulesZeroSentinel = "0000-00-00 00:00:00"
+
 // NewCamUpdatePasswordRulesConfigResource is the factory referenced by
 // tencentcloud/framework/registry.go to register this resource.
 func NewCamUpdatePasswordRulesConfigResource() resource.Resource {
@@ -112,7 +121,7 @@ func (r *CamUpdatePasswordRulesConfigResource) Schema(_ context.Context, _ resou
 					"must_contain": schema.StringAttribute{
 						Optional:    true,
 						Computed:    true,
-						Description: "Characters that the password must contain.",
+						Description: "Characters that the password must contain, as a literal character set (e.g. `Aa1!` for upper, lower, digit and special characters). Note that the CAM console re-orders this value (e.g. `Aa1!` is stored and read back as `1!aA`); invalid literals are rejected with `InvalidParameter.PasswordRuleError`.",
 					},
 					"force_password_change": schema.Int64Attribute{
 						Optional:    true,
@@ -165,6 +174,9 @@ func (r *CamUpdatePasswordRulesConfigResource) Create(ctx context.Context, req r
 	// Refuse to take over a configuration that somebody already changed: the
 	// rules are account-wide, so two configurations would silently overwrite
 	// each other instead of showing up as a plan diff.
+	// An unmodified account reports the zero-sentinel UpdateTime (see
+	// passwordRulesZeroSentinel); any real timestamp means the rules were
+	// changed outside this resource and must be imported first.
 	current, err := service.GetPasswordRules(ctx)
 	if err != nil && !errors.Is(err, errPasswordRulesNotFound) {
 		resp.Diagnostics.AddError("Error reading CAM password rules before create", err.Error())
@@ -304,26 +316,20 @@ func (r *CamUpdatePasswordRulesConfigResource) applyPasswordRules(ctx context.Co
 	plan.Modifier = stringPointerValue(params.Modifier)
 }
 
-// passwordRulesTouched reports whether the cloud-side rules differ from the
-// untouched CAM defaults. CAM answers with 0 for a rule that has never been
-// configured, so any non-zero value means somebody already changed it.
+// passwordRulesTouched reports whether the cloud-side rules have ever been
+// modified. CAM reports UpdateTime "0000-00-00 00:00:00" and an empty Modifier
+// for a configuration that was never changed, even though the rule values
+// themselves are non-zero defaults (e.g. MinimumLength=8, MustContain="Aa1!").
+// A real timestamp is therefore the only reliable signal that somebody already
+// manages the rules and a create would silently overwrite their configuration.
 func passwordRulesTouched(params *cam.GetPasswordRulesResponseParams) bool {
-	if params == nil || params.Rules == nil {
+	if params == nil {
 		return false
 	}
-	rules := params.Rules
-	for _, v := range []*int64{
-		rules.MinimumLength,
-		rules.ForcePasswordChange,
-		rules.ReusePasswordLimit,
-		rules.RetryPasswordLimit,
-		rules.PasswordExpirationInvalidation,
-	} {
-		if v != nil && *v != 0 {
-			return true
-		}
+	if params.UpdateTime == nil || *params.UpdateTime == "" || *params.UpdateTime == passwordRulesZeroSentinel {
+		return false
 	}
-	return rules.MustContain != nil && *rules.MustContain != ""
+	return true
 }
 
 // expandPasswordRules converts the rules object into the SDK request struct.
