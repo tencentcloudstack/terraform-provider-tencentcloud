@@ -55,6 +55,31 @@ func ResourceTencentCloudCbsSnapshotPolicy() *schema.Resource {
 				Default:     7,
 				Description: "Retention days of the snapshot, and the default value is 7.",
 			},
+			"day_of_month": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeInt,
+				},
+				Description: "Specifies the days of the month on which scheduled snapshots are triggered. Valid value ranges: [1, 31]. For example, 5 means triggering snapshots on the 5th day of each month. Note: if a date such as 29, 30 or 31 does not exist in some months, those months will be skipped.",
+			},
+			"interval_days": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Specifies the interval in days for creating scheduled snapshots. Valid value ranges: [1, 365]. For example, setting it to 5 means a scheduled snapshot is created every 5 days. Note: when backing up by days, theoretically the first backup is on the day the policy is created; if the policy creation time is later than the configured backup time on that day, the first backup will be in the next backup cycle.",
+			},
+			"is_activated": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "Whether the snapshot policy is activated. Default is true.",
+			},
+			"is_permanent": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Whether snapshots created by this policy are retained permanently. Default is false. Note: if this parameter is set to true, retention_days must not be specified, otherwise a conflict error will be returned by the API.",
+			},
 		},
 	}
 }
@@ -79,11 +104,23 @@ func resourceTencentCloudCbsSnapshotPolicyCreate(d *schema.ResourceData, meta in
 	for _, v := range repeatHours {
 		policy.Hour = append(policy.Hour, helper.IntUint64(v.(int)))
 	}
+	dayOfMonth := d.Get("day_of_month").([]interface{})
+	if len(dayOfMonth) > 0 {
+		policy.DayOfMonth = make([]*uint64, 0, len(dayOfMonth))
+		for _, v := range dayOfMonth {
+			policy.DayOfMonth = append(policy.DayOfMonth, helper.IntUint64(v.(int)))
+		}
+	}
+	if v, ok := d.GetOk("interval_days"); ok {
+		policy.IntervalDays = helper.IntUint64(v.(int))
+	}
 	request.Policy = append(request.Policy, policy)
 
 	if v, ok := d.GetOk("retention_days"); ok {
 		request.RetentionDays = helper.IntUint64(v.(int))
 	}
+	request.IsActivated = helper.Bool(d.Get("is_activated").(bool))
+	request.IsPermanent = helper.Bool(d.Get("is_permanent").(bool))
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCbsClient().CreateAutoSnapshotPolicy(request)
@@ -140,8 +177,20 @@ func resourceTencentCloudCbsSnapshotPolicyRead(d *schema.ResourceData, meta inte
 	if len(policy.Policy) > 0 {
 		_ = d.Set("repeat_weekdays", helper.Uint64sInterfaces(policy.Policy[0].DayOfWeek))
 		_ = d.Set("repeat_hours", helper.Uint64sInterfaces(policy.Policy[0].Hour))
+		if policy.Policy[0].DayOfMonth != nil {
+			_ = d.Set("day_of_month", helper.Uint64sInterfaces(policy.Policy[0].DayOfMonth))
+		}
+		if policy.Policy[0].IntervalDays != nil {
+			_ = d.Set("interval_days", policy.Policy[0].IntervalDays)
+		}
 	}
 	_ = d.Set("retention_days", policy.RetentionDays)
+	if policy.IsActivated != nil {
+		_ = d.Set("is_activated", policy.IsActivated)
+	}
+	if policy.IsPermanent != nil {
+		_ = d.Set("is_permanent", policy.IsPermanent)
+	}
 
 	return nil
 }
@@ -160,7 +209,13 @@ func resourceTencentCloudCbsSnapshotPolicyUpdate(d *schema.ResourceData, meta in
 	if d.HasChange("retention_days") {
 		request.RetentionDays = helper.IntUint64(d.Get("retention_days").(int))
 	}
-	if d.HasChange("repeat_weekdays") || d.HasChange("repeat_hours") {
+	if d.HasChange("is_activated") {
+		request.IsActivated = helper.Bool(d.Get("is_activated").(bool))
+	}
+	if d.HasChange("is_permanent") {
+		request.IsPermanent = helper.Bool(d.Get("is_permanent").(bool))
+	}
+	if d.HasChange("repeat_weekdays") || d.HasChange("repeat_hours") || d.HasChange("day_of_month") || d.HasChange("interval_days") {
 		request.Policy = make([]*cbs.Policy, 0, 1)
 		policy := &cbs.Policy{}
 		repeatWeekdays := d.Get("repeat_weekdays").([]interface{})
@@ -172,6 +227,16 @@ func resourceTencentCloudCbsSnapshotPolicyUpdate(d *schema.ResourceData, meta in
 		policy.Hour = make([]*uint64, 0, len(repeatHours))
 		for _, v := range repeatHours {
 			policy.Hour = append(policy.Hour, helper.IntUint64(v.(int)))
+		}
+		dayOfMonth := d.Get("day_of_month").([]interface{})
+		if len(dayOfMonth) > 0 {
+			policy.DayOfMonth = make([]*uint64, 0, len(dayOfMonth))
+			for _, v := range dayOfMonth {
+				policy.DayOfMonth = append(policy.DayOfMonth, helper.IntUint64(v.(int)))
+			}
+		}
+		if v, ok := d.GetOk("interval_days"); ok {
+			policy.IntervalDays = helper.IntUint64(v.(int))
 		}
 		request.Policy = append(request.Policy, policy)
 	}
