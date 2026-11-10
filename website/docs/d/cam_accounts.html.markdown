@@ -50,5 +50,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListAccounts](https://www.tencentcloud.com/search/?wd=ListAccounts&type=document&lang=en)
+* Read: [ListAccounts](https://www.tencentcloud.com/document/api/598/85638)
 
