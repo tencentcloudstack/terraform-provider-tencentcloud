@@ -44,6 +44,12 @@ const (
 	// FailedOperation.AuthNoStrategy
 	FAILEDOPERATION_AUTHNOSTRATEGY = "FailedOperation.AuthNoStrategy"
 
+	// 计费调用错误。
+	FAILEDOPERATION_BILLINGERROR = "FailedOperation.BillingError"
+
+	// FailedOperation.CheckSpecError
+	FAILEDOPERATION_CHECKSPECERROR = "FailedOperation.CheckSpecError"
+
 	// 当前实例版本不支持该接口。
 	FAILEDOPERATION_CHECKSUPPORTACTIONERROR = "FailedOperation.CheckSupportActionError"
 
@@ -119,6 +125,12 @@ const (
 	// FailedOperation.SetRuleLocationFailed
 	FAILEDOPERATION_SETRULELOCATIONFAILED = "FailedOperation.SetRuleLocationFailed"
 
+	// 灾备关系检查错误
+	FAILEDOPERATION_STANDBYRELATIONCHECKERROR = "FailedOperation.StandbyRelationCheckError"
+
+	// 灾备参数错误
+	FAILEDOPERATION_STANDBYRELATIONPARAMERROR = "FailedOperation.StandbyRelationParamError"
+
 	// table数量超出限制。
 	FAILEDOPERATION_TABLECOUNTLIMITERROR = "FailedOperation.TableCountLimitError"
 
@@ -127,6 +139,9 @@ const (
 
 	// 更新权限错误。
 	FAILEDOPERATION_UPDATEPRIVILEGESERROR = "FailedOperation.UpdatePrivilegesError"
+
+	// 实例纵向扩容失败。
+	FAILEDOPERATION_UPGRADEINSTANCEERROR = "FailedOperation.UpgradeInstanceError"
 
 	// FailedOperation.WanStatusAbnormal
 	FAILEDOPERATION_WANSTATUSABNORMAL = "FailedOperation.WanStatusAbnormal"
@@ -203,6 +218,9 @@ const (
 	// 参数校验失败
 	INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 
+	// 密码复杂度参数校验失败。
+	INVALIDPARAMETER_PASSWORDCOMPLEXITYPARAMERROR = "InvalidParameter.PasswordComplexityParamError"
+
 	// InvalidParameter.PermissionDenied
 	INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 
@@ -235,6 +253,9 @@ const (
 
 	// 名称校验失败。
 	INVALIDPARAMETERVALUE_CHECKNAMEERROR = "InvalidParameterValue.CheckNameError"
+
+	// 密码校验失败。
+	INVALIDPARAMETERVALUE_CHECKPASSWDERROR = "InvalidParameterValue.CheckPasswdError"
 
 	// 实例规格校验错误。
 	INVALIDPARAMETERVALUE_CHECKSPECERROR = "InvalidParameterValue.CheckSpecError"
@@ -295,6 +316,9 @@ const (
 
 	// 实例状态错误。
 	OPERATIONDENIED_INSTANCESTATUSERROR = "OperationDenied.InstanceStatusError"
+
+	// OperationDenied.InstanceTypeCheckError
+	OPERATIONDENIED_INSTANCETYPECHECKERROR = "OperationDenied.InstanceTypeCheckError"
 
 	// 单个实例每天最多进行手动备份的配额
 	OPERATIONDENIED_MANUALBACKUPQUOTAPERDAYEXCEEDEDERR = "OperationDenied.ManualBackupQuotaPerDayExceededErr"

@@ -915,7 +915,6 @@ func resourceTencentCloudTdmysqlDbInstanceUpdate(d *schema.ResourceData, meta in
 		}
 
 		// wait
-		time.Sleep(10 * time.Second)
 		waitReq := tdmysqlv20211122.NewDescribeDBInstanceDetailRequest()
 		waitReq.InstanceId = helper.String(instanceId)
 		err := resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
