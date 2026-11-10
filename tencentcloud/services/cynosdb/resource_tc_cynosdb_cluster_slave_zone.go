@@ -43,6 +43,18 @@ func ResourceTencentCloudCynosdbClusterSlaveZone() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Slave zone.",
 			},
+
+			"binlog_sync_way": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Binlog sync way. Default value: `async`. Valid values: `sync`, `semisync`, `async`.",
+			},
+
+			"semi_sync_timeout": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Semisync timeout in ms. The semisync replication degrades to async replication if the timeout is exceeded. Minimum: 1000, maximum: 4294967295, default: 10000.",
+			},
 		},
 	}
 }
@@ -70,6 +82,14 @@ func resourceTencentCloudCynosdbClusterSlaveZoneCreate(d *schema.ResourceData, m
 	if v, ok := d.GetOk("slave_zone"); ok {
 		request.SlaveZone = helper.String(v.(string))
 		slaveZone = v.(string)
+	}
+
+	if v, ok := d.GetOk("binlog_sync_way"); ok {
+		request.BinlogSyncWay = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("semi_sync_timeout"); ok {
+		request.SemiSyncTimeout = helper.IntInt64(v.(int))
 	}
 
 	err := resource.Retry(timeout, func() *resource.RetryError {
@@ -151,6 +171,23 @@ func resourceTencentCloudCynosdbClusterSlaveZoneRead(d *schema.ResourceData, met
 		}
 	}
 
+	if len(clusterSlaveZone.SlaveZoneAttr) > 0 {
+		for _, zoneAttr := range clusterSlaveZone.SlaveZoneAttr {
+			if zoneAttr == nil {
+				continue
+			}
+			if zoneAttr.Zone != nil && *zoneAttr.Zone == slaveZone {
+				if zoneAttr.BinlogSyncWay != nil {
+					_ = d.Set("binlog_sync_way", zoneAttr.BinlogSyncWay)
+				}
+				if zoneAttr.SemiSyncTimeout != nil {
+					_ = d.Set("semi_sync_timeout", zoneAttr.SemiSyncTimeout)
+				}
+				break
+			}
+		}
+	}
+
 	return nil
 }
 
@@ -189,6 +226,18 @@ func resourceTencentCloudCynosdbClusterSlaveZoneUpdate(d *schema.ResourceData, m
 	request.ClusterId = &clusterId
 	request.NewSlaveZone = helper.String(newSlaveZone)
 	request.OldSlaveZone = helper.String(slaveZone)
+
+	if d.HasChange("binlog_sync_way") {
+		if v, ok := d.GetOk("binlog_sync_way"); ok {
+			request.BinlogSyncWay = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("semi_sync_timeout") {
+		if v, ok := d.GetOkExists("semi_sync_timeout"); ok {
+			request.SemiSyncTimeout = helper.IntInt64(v.(int))
+		}
+	}
 
 	var flowId *int64
 	err := resource.Retry(timeout, func() *resource.RetryError {

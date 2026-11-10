@@ -115,3 +115,34 @@ resource "tencentcloud_cynosdb_cluster_slave_zone" "cluster_slave_zone" {
 }
 
 `
+
+func TestAccTencentCloudCynosdbClusterSlaveZoneResource_binlogSyncWay(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCynosdbClusterSlaveZone_binlog,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster_slave_zone.cluster_slave_zone", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster_slave_zone.cluster_slave_zone", "binlog_sync_way", "async"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster_slave_zone.cluster_slave_zone", "semi_sync_timeout", "10000"),
+				),
+			},
+		},
+	})
+}
+
+const testAccCynosdbClusterSlaveZone_binlog = testAccCynosdbClusterSlaveZone_instance + `
+
+resource "tencentcloud_cynosdb_cluster_slave_zone" "cluster_slave_zone" {
+  cluster_id        = tencentcloud_cynosdb_cluster.instance.id
+  slave_zone        = var.new_availability_zone
+  binlog_sync_way   = "async"
+  semi_sync_timeout = 10000
+}
+
+`
