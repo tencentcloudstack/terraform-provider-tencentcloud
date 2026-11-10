@@ -32,6 +32,13 @@ func TestAccTencentCloudVodAigcApiTokenResource_basic(t *testing.T) {
 				),
 			},
 			{
+				Config: testAccVodAigcApiTokenUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckVodAigcApiTokenExists("tencentcloud_vod_aigc_api_token.example"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vod_aigc_api_token.example", "ext_info"),
+				),
+			},
+			{
 				ResourceName:      "tencentcloud_vod_aigc_api_token.example",
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -107,5 +114,23 @@ resource "tencentcloud_vod_sub_application" "sub_application" {
 
 resource "tencentcloud_vod_aigc_api_token" "example" {
   sub_app_id = tonumber(split("#", tencentcloud_vod_sub_application.sub_application.id)[1])
+}
+`
+
+const testAccVodAigcApiTokenUpdate = `
+resource "tencentcloud_vod_sub_application" "sub_application" {
+  name        = "aigc-api-token-subapp"
+  status      = "On"
+  description = "sub application for tencentcloud_vod_aigc_api_token acceptance test"
+}
+
+resource "tencentcloud_vod_aigc_api_token" "example" {
+  sub_app_id  = tonumber(split("#", tencentcloud_vod_sub_application.sub_application.id)[1])
+  action_type = "Overwrite"
+  ext_info = jsonencode({
+    name  = "tf-aigc-token"
+    ip    = { "11.12.112.90" : true, "15.12.112.90" : true }
+    model = { "deepseek-v4-pro" : true }
+  })
 }
 `
