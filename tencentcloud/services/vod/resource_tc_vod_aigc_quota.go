@@ -56,18 +56,21 @@ func ResourceTencentCloudVodAigcQuota() *schema.Resource {
 			"quota_period": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Quota reset period. Valid values: `Day` (reset every day), `Month` (reset on the specified day of each month), `Total` (never reset, `quota_limit` is the total quota).",
 			},
 
 			"reset_day": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "Reset day of the month, only valid when `quota_period` is `Month`. If the specified day does not exist in the current month, the quota resets at 00:00 on the 1st day of the next month.",
 			},
 
 			"model_quota_switch": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Whether to enable per-model quota settings. Valid values: `ON`, `OFF`. Default value: `OFF`.",
 			},
 
@@ -134,7 +137,7 @@ func resourceTencentCloudVodAigcQuotaCreate(d *schema.ResourceData, meta interfa
 		apiToken  string
 	)
 
-	if v, ok := d.GetOk("sub_app_id"); ok {
+	if v, ok := d.GetOkExists("sub_app_id"); ok {
 		request.SubAppId = helper.IntUint64(v.(int))
 		subAppId = helper.IntToStr(v.(int))
 	}
@@ -144,7 +147,7 @@ func resourceTencentCloudVodAigcQuotaCreate(d *schema.ResourceData, meta interfa
 		quotaType = v.(string)
 	}
 
-	if v, ok := d.GetOk("quota_limit"); ok {
+	if v, ok := d.GetOkExists("quota_limit"); ok {
 		request.QuotaLimit = helper.IntUint64(v.(int))
 	}
 
@@ -157,7 +160,7 @@ func resourceTencentCloudVodAigcQuotaCreate(d *schema.ResourceData, meta interfa
 		request.QuotaPeriod = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("reset_day"); ok {
+	if v, ok := d.GetOkExists("reset_day"); ok {
 		request.ResetDay = helper.IntUint64(v.(int))
 	}
 
@@ -258,10 +261,6 @@ func resourceTencentCloudVodAigcQuotaRead(d *schema.ResourceData, meta interface
 		_ = d.Set("quota_limit", int(*item.QuotaLimit))
 	}
 
-	if item.Usage != nil {
-		_ = d.Set("usage", int(*item.Usage))
-	}
-
 	if item.QuotaPeriod != nil {
 		_ = d.Set("quota_period", item.QuotaPeriod)
 	}
@@ -304,6 +303,10 @@ func resourceTencentCloudVodAigcQuotaRead(d *schema.ResourceData, meta interface
 		if len(modelQuotas) > 0 {
 			_ = d.Set("model_quotas", modelQuotas)
 		}
+	}
+
+	if item.Usage != nil {
+		_ = d.Set("usage", int(*item.Usage))
 	}
 
 	return nil
