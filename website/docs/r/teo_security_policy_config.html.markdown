@@ -941,9 +941,16 @@ The `action` object of `managed_rule_groups` supports the following:
 The `action` object of `precise_match_rules` supports the following:
 
 * `name` - (Required, String) Specific actions for safe execution. valid values:.
-<li>Deny: block</li> <li>Monitor: Monitor</li> <li>ReturnCustomPage: use specified page to block</li> <li>Redirect: Redirect to URL</li> <li>BlockIP: IP block</li> <li>JSChallenge: JavaScript challenge</li> <li>ManagedChallenge: managed challenge</li> <li>Disabled: Disabled</li> <li>Allow: Allow</li>.
+<li>Deny: block, prevent requests from accessing site resources;</li> <li>Monitor: observe, only record logs; </li> <li>Redirect: redirect to URL;</li> <li>Disabled: not enabled, disable the specified rule;</li> <li>Allow: allow, skip the remaining rules of the current security module. Delay response when the AllowActionParameters parameter is configured;</li> <li>Challenge: challenge, respond with challenge content;</li> <li>BlockIP: to be deprecated, IP block;</li> <li>ReturnCustomPage: to be deprecated, use a specified page for interception;</li> <li>JSChallenge: to be deprecated, JavaScript challenge;</li><li>ManagedChallenge: to be deprecated, managed challenge.</li>.
 * `block_ip_action_parameters` - (Optional, List) Additional parameter when Name is BlockIP.
-* `redirect_action_parameters` - (Optional, List) Additional parameter when Name is Redirect.
+* `redirect_action_parameters` - (Optional, List) Additional parameter for safe execution when the action is set to redirect.
+
+This parameter is used to specify the extra handling action taken by the system when a security rule is hit and a redirection action is executed.
+Different handling actions are configured with different fixed parameter combinations. The system will determine the effective handling action type according to the configured parameter combination.
+Only one handling action can be configured and made effective during the same redirection. Parameter composites corresponding to multiple handling actions cannot appear at the same time. Otherwise, it is deemed as an invalid configuration.
+RedirectActionParameters supports the following extra handling actions:
+
+<li>Redirect: redirect client requests to the specified destination URL. Corresponding parameter: URL.</li>.
 * `return_custom_page_action_parameters` - (Optional, List) Additional parameter when Name is ReturnCustomPage.
 
 The `action` object of `rule_actions` supports the following:
@@ -957,29 +964,46 @@ The `action` object of `rule_actions` supports the following:
 The `action` object of `rules` supports the following:
 
 * `name` - (Required, String) Specific actions for safe execution. valid values:.
+<li>Deny: block, prevent requests from accessing site resources;</li> <li>Monitor: observe, only record logs; </li> <li>Redirect: redirect to URL;</li> <li>Disabled: not enabled, disable the specified rule;</li> <li>Allow: allow, skip the remaining rules of the current security module. Delay response when the AllowActionParameters parameter is configured;</li> <li>Challenge: challenge, respond with challenge content;</li> <li>BlockIP: to be deprecated, IP block;</li> <li>ReturnCustomPage: to be deprecated, use a specified page for interception;</li> <li>JSChallenge: to be deprecated, JavaScript challenge;</li><li>ManagedChallenge: to be deprecated, managed challenge.</li>.
+* `block_ip_action_parameters` - (Optional, List) To be deprecated, additional parameter when Name is BlockIP.
+* `challenge_action_parameters` - (Optional, List) Additional parameter for the safe execution action when it is a challenge.
+
+This parameter is used to specify the extra handling action taken by the system when a security rule is hit and a challenge action is executed.
+Challenge disposal actions are segmented through ChallengeOption. Different challenge types correspond to different interaction forms and parameter requirements. The system will bring the corresponding parameter configuration into effect according to the selected challenge type.
+ChallengeActionParameters supports the following challenge disposition types:
+
+<li>Interstitial challenge: responds with a new page and runs the authentication mechanism within the new page. The corresponding ChallengeOption value is InterstitialChallenge.</li>
+<li>Inline challenge: responds with an SDK challenge. The corresponding ChallengeOption value is InlineChallenge.</li>
+<li>JavaScript challenge: invisible verification in the browser. The browser automatically performs verification and shows the requested resource. The corresponding ChallengeOption value is JSChallenge.</li>
+<li>Managed challenge: responds with a redirect page containing a JavaScript program, used for verification of the browser runtime environment. The corresponding ChallengeOption value is ManagedChallenge.</li>.
+* `deny_action_parameters` - (Optional, List) Additional parameter for the safe execution action when it is interception.
+
+This parameter is used to specify the extra handling action taken by the system when a security rule is hit and an intercept action is executed.
+Different handling actions are configured with different fixed parameter combinations. The system will determine the actually effective handling action type according to the configured parameter combination.
+Only one handling action can be configured and made effective during the same block execution. Parameters corresponding to multiple handling actions cannot appear simultaneously, otherwise the configuration is deemed invalid. If empty, the default block handling action is used.
+DenyActionParameters supports the following extra handling actions:
+
+<li>Default: When DenyActionParameters is empty or no extra handling action is enabled, the system will perform the default block, responding with an interception page.</li>
+<li>IP blocking: Continuously block the client source IP that triggers the rule. Corresponding parameters: BlockIp, BlockIpDuration.</li>
+<li>Custom page interception: Use the specified custom page content to respond to requests. Corresponding parameters: ReturnCustomPage, ResponseCode, ErrorPageId.</li>
+<li>Silence: Accept client requests but do not return. Corresponding parameter: Stall.</li>.
+* `redirect_action_parameters` - (Optional, List) Additional parameter for safe execution when the action is set to redirect.
+
+This parameter is used to specify the extra handling action taken by the system when a security rule is hit and a redirection action is executed.
+Different handling actions are configured with different fixed parameter combinations. The system will determine the effective handling action type according to the configured parameter combination.
+Only one handling action can be configured and made effective during the same redirection. Parameter composites corresponding to multiple handling actions cannot appear at the same time. Otherwise, it is deemed as an invalid configuration.
+RedirectActionParameters supports the following extra handling actions:
+
+<li>Redirect: redirect client requests to the specified destination URL. Corresponding parameter: URL.</li>.
+* `return_custom_page_action_parameters` - (Optional, List) To be deprecated, additional parameter when Name is ReturnCustomPage.
+
+The `action` object of `rules` supports the following:
+
+* `name` - (Required, String) Specific actions for safe execution. valid values:.
 <li>Deny: block</li> <li>Monitor: Monitor</li> <li>ReturnCustomPage: use specified page to block</li> <li>Redirect: Redirect to URL</li> <li>BlockIP: IP block</li> <li>JSChallenge: JavaScript challenge</li> <li>ManagedChallenge: managed challenge</li> <li>Disabled: Disabled</li> <li>Allow: Allow</li>.
 * `block_ip_action_parameters` - (Optional, List) Additional parameter when Name is BlockIP.
 * `redirect_action_parameters` - (Optional, List) Additional parameter when Name is Redirect.
 * `return_custom_page_action_parameters` - (Optional, List) Additional parameter when Name is ReturnCustomPage.
-
-The `action` object of `rules` supports the following:
-
-* `name` - (Required, String) The specific action of security execution. The values are:
-<li>Deny: intercept, block the request to access site resources;</li>
-<li>Monitor: observe, only record logs;</li>
-<li>Redirect: redirect to URL;</li>
-<li>Disabled: disabled, do not enable the specified rule;</li>
-<li>Allow: allow access, but delay processing requests;</li>
-<li>Challenge: challenge, respond to challenge content;</li>
-<li>BlockIP: to be abandoned, IP ban;</li>
-<li>ReturnCustomPage: to be abandoned, use the specified page to intercept;</li>
-<li>JSChallenge: to be abandoned, JavaScript challenge;</li>
-<li>ManagedChallenge: to be abandoned, managed challenge.</li>.
-* `block_ip_action_parameters` - (Optional, List) To be deprecated, additional parameter when Name is BlockIP.
-* `challenge_action_parameters` - (Optional, List) Additional parameters when Name is Challenge.
-* `deny_action_parameters` - (Optional, List) Additional parameters when Name is Deny.
-* `redirect_action_parameters` - (Optional, List) Additional parameters when Name is Redirect.
-* `return_custom_page_action_parameters` - (Optional, List) To be deprecated, additional parameter when Name is ReturnCustomPage.
 
 The `action` object of `slow_attack_defense` supports the following:
 
@@ -1932,7 +1956,7 @@ The `partial_modules` object of `except_user_rule_scope` supports the following:
 
 The `precise_match_rules` object of `custom_rules` supports the following:
 
-* `action` - (Required, List) Execution actions for custom rules. the Name parameter value of SecurityAction supports: <li>Deny: block;</li> <li>Monitor: observe;</li> <li>ReturnCustomPage: block using a specified page;</li> <li>Redirect: Redirect to URL;</li> <li>BlockIP: IP blocking;</li> <li>JSChallenge: JavaScript challenge;</li> <li>ManagedChallenge: managed challenge;</li> <li>Allow: Allow.</li>.
+* `action` - (Required, List) Execution actions for custom rules. the Name parameter value of SecurityAction supports: <li>Allow: allow, where AllowActionParameters supports MinDelayTime and MaxDelayTime configuration;</li> <li>Deny: block, where DenyActionParameters supports BlockIp, ReturnCustomPage, and Stall configuration;</li> <li>Monitor: observe;</li> <li>Challenge: challenge, where ChallengeActionParameters.ChallengeOption supports JSChallenge and ManagedChallenge;</li> <li>Redirect: redirect to a URL.</li>.
 * `condition` - (Required, String) The specific content of the custom rule must comply with the expression grammar. please refer to the product document for detailed specifications.
 * `enabled` - (Required, String) Indicates whether the custom rule is enabled. valid values: <li>on: enabled</li> <li>off: disabled</li>.
 * `name` - (Required, String) The name of the custom rule.
@@ -2141,7 +2165,7 @@ The `rules` object of `exception_rules` supports the following:
 The `rules` object of `rate_limiting_rules` supports the following:
 
 * `action_duration` - (Optional, String) Action The duration of the action. The supported units are: <li>s: seconds, with a value of 1 to 120; </li><li>m: minutes, with a value of 1 to 120; </li><li>h: hours, with a value of 1 to 48; </li><li>d: days, with a value of 1 to 30. </li>.
-* `action` - (Optional, List) The precise rate limit handling method. The values are: <li>Monitor: Observe; </li><li>Deny: Intercept, where DenyActionParameters.Name supports Deny and ReturnCustomPage; </li><li>Challenge: Challenge, where ChallengeActionParameters.Name supports JSChallenge and ManagedChallenge; </li><li>Redirect: Redirect to URL; </li>.
+* `action` - (Optional, List) The precise rate limit handling method. The values are: <li>Allow: allow, where AllowActionParameters supports MinDelayTime and MaxDelayTime configuration; </li><li>Deny: block, where DenyActionParameters supports ReturnCustomPage and Stall configuration; </li><li>Monitor: observe; </li><li>Challenge: challenge, where ChallengeActionParameters.ChallengeOption supports JSChallenge and ManagedChallenge; </li><li>Redirect: redirect to a URL.</li>.
 * `condition` - (Optional, String) The specific content of the precise rate limit must conform to the expression syntax. For detailed specifications, see the product documentation.
 * `count_by` - (Optional, Set) The matching method of the rate threshold request feature. When Enabled is on, this field is required. <br /><br />When there are multiple conditions, multiple conditions will be combined for statistical calculation. The number of conditions cannot exceed 5. The possible values are: <br/><li><b>http.request.ip</b>: client IP; </li><li><b>http.request.xff_header_ip</b>: client IP (matching XFF header first); </li><li><b>http.request.uri.path</b>: requested access path; </li><li><b>http.request.cookies['session']</b>: cookie named session, where session can be replaced by the parameter you specify; </li><li><b>http.request.headers['user-agent']</b>: HTTP header named user-agent, where user-agent can be replaced by the parameter you specify; </li><li><b>http.request.ja3</b>: requested JA3 fingerprint; </li><li><b>http.request.uri.query['test']</b>: URL query parameter named test, where test can be replaced by the parameter you specify. </li>.
 * `counting_period` - (Optional, String) The statistical time window, the possible values are: <li>1s: 1 second; </li><li>5s: 5 seconds; </li><li>10s: 10 seconds; </li><li>20s: 20 seconds; </li><li>30s: 30 seconds; </li><li>40s: 40 seconds; </li><li>50s: 50 seconds; </li><li>1m: 1 minute; </li><li>2m: 2 minutes; </li><li>5m: 5 minutes; </li><li>10m: 10 minutes; </li><li>1h: 1 hour. </li>.
@@ -2161,11 +2185,11 @@ The `security_config` object supports the following:
 * `acl_config` - (Optional, List) Custom rule configuration.
 * `bot_config` - (Optional, List) Bot configuration.
 * `drop_page_config` - (Optional, List) Drop page configuration.
-* `except_config` - (Optional, List) Exception rules configuration.
+* `except_config` - (Optional, List) Exception rule configuration.
 * `ip_table_config` - (Optional, List) Basic access control.
 * `rate_limit_config` - (Optional, List) Rate limit configuration.
 * `slow_post_config` - (Optional, List) Slow attack configuration.
-* `switch_config` - (Optional, List) Layer-7 protection master switch.
+* `switch_config` - (Optional, List) Security switch configuration.
 * `waf_config` - (Optional, List) Managed rules configuration.
 
 The `security_policy` object supports the following:
