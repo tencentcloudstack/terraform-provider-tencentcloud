@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_ags_sandbox_tool
+```

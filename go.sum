@@ -875,6 +875,8 @@ github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.1486+incompatible h1:mp
 github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.1486+incompatible/go.mod h1:72Wo6Gt6F8d8V+njrAmduVoT9QjPwCyXktpqCWr7PUc=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor v1.3.37 h1:vywXw9k0AkKYKvsNSvcrhrsphh5zntrNXtIrjmxUosw=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor v1.3.37/go.mod h1:aUkwCIWA45p5MBiJXVp9xb9lxYAi8UFYkwgBFS45QSo=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ags v1.3.209 h1:BGqC30XeVozaxxi/ztLY5PqocdHrzgvBch/MDQfYTHg=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ags v1.3.209/go.mod h1:e9e8pQGmsTE1c4EQ+vji96dlpmTq7kb2qCG3jXnttDs=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.3.131 h1:rfaTxEAxIaVWHLIu9IzvBUKTW1PHBU3GWgYwj63pqFc=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.3.131/go.mod h1:cLvVHLUt/aoJ3TLNQlNDFj2E1XWTcC+7ck7Lt+nA8pA=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api v1.0.285 h1:gFmukRGLtYiXVBVvg/5DP/0fM1+dKpwDjT+khtDVLmc=
