@@ -226,8 +226,7 @@ func (c *agsSandboxToolTestContext) sampleModel(t *testing.T) svcags.AgsSandboxT
 			"key":   types.StringValue("k1"),
 			"value": types.StringValue("v1"),
 		}),
-		ClientToken: types.StringValue("token-1"),
-		RoleArn:     types.StringValue(agsTestRoleArn),
+		RoleArn: types.StringValue(agsTestRoleArn),
 		StorageMounts: mustList(t, storageMountTypes, map[string]attr.Value{
 			"name": types.StringValue("workspace"),
 			"storage_source": mustObject(t, storageSourceTypes, map[string]attr.Value{
@@ -705,8 +704,9 @@ func TestAgsSandboxToolCreate(t *testing.T) {
 	if capturedRequest.DefaultTimeout == nil || *capturedRequest.DefaultTimeout != "10m" {
 		t.Fatalf("CreateSandboxTool DefaultTimeout is not 10m")
 	}
-	if capturedRequest.ClientToken == nil || *capturedRequest.ClientToken != "token-1" {
-		t.Fatalf("CreateSandboxTool ClientToken is not token-1")
+	// client_token is generated internally as an idempotency key.
+	if capturedRequest.ClientToken == nil || *capturedRequest.ClientToken == "" {
+		t.Fatalf("CreateSandboxTool ClientToken is empty")
 	}
 	if capturedRequest.RoleArn == nil || *capturedRequest.RoleArn != agsTestRoleArn {
 		t.Fatalf("CreateSandboxTool RoleArn is not %q", agsTestRoleArn)
@@ -858,9 +858,6 @@ func TestAgsSandboxToolCreate(t *testing.T) {
 	if state.DefaultTimeout.ValueString() != "10m" {
 		t.Fatalf("state default_timeout is %q, want 10m", state.DefaultTimeout.ValueString())
 	}
-	if state.ClientToken.ValueString() != "token-1" {
-		t.Fatalf("state client_token is %q, want token-1", state.ClientToken.ValueString())
-	}
 
 	top := map[string]attr.Value{
 		"id":                     state.Id,
@@ -871,7 +868,6 @@ func TestAgsSandboxToolCreate(t *testing.T) {
 		"description":            state.Description,
 		"default_timeout":        state.DefaultTimeout,
 		"tags":                   state.Tags,
-		"client_token":           state.ClientToken,
 		"role_arn":               state.RoleArn,
 		"storage_mounts":         state.StorageMounts,
 		"custom_configuration":   state.CustomConfiguration,
@@ -1129,9 +1125,6 @@ func TestAgsSandboxToolRead(t *testing.T) {
 	// create only inputs keep the value stored in state.
 	if state.DefaultTimeout.ValueString() != "10m" {
 		t.Fatalf("default_timeout is %q, want 10m", state.DefaultTimeout.ValueString())
-	}
-	if state.ClientToken.ValueString() != "token-1" {
-		t.Fatalf("client_token is %q, want token-1", state.ClientToken.ValueString())
 	}
 
 	top := map[string]attr.Value{

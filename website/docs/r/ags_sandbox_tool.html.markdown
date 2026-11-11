@@ -11,9 +11,9 @@ description: |-
 
 Provides a resource to create an AGS sandbox tool.
 
--> **Note:** `tool_name`, `tool_type`, `default_timeout`, `client_token`, `role_arn`, `storage_mounts`, `log_configuration` and `persistent` are create-only: the update API does not accept them, so changing any of them destroys the existing sandbox tool and creates a new one.
+-> **Note:** `tool_name`, `tool_type`, `default_timeout`, `role_arn`, `storage_mounts`, `log_configuration` and `persistent` are create-only: the update API does not accept them, so changing any of them destroys the existing sandbox tool and creates a new one.
 
--> **Note:** `default_timeout` and `client_token` are only accepted by the create API. The describe API reports the timeout in seconds (`DefaultTimeoutSeconds`) instead of the original duration string, so the values configured here are kept as they are and drift on them cannot be detected.
+-> **Note:** `default_timeout` is only accepted by the create API. The describe API reports the timeout in seconds (`DefaultTimeoutSeconds`) instead of the original duration string, so the value configured here is kept as it is and drift on it cannot be detected.
 
 -> **Note:** Removing `description`, `tags`, `custom_configuration`, `computer_configuration` or `persistent` from the configuration keeps the value that currently exists on the cloud side, because the update API does not transmit empty values. To clear those attributes, delete and recreate the sandbox tool.
 
@@ -23,7 +23,6 @@ Provides a resource to create an AGS sandbox tool.
 
 ```hcl
 resource "tencentcloud_ags_sandbox_tool" "custom" {
-  client_token = null
   custom_configuration = {
     args                = ["-port", "8080"]
     command             = ["/bin/go-httpbin"]
@@ -79,7 +78,6 @@ The following arguments are supported:
 * `network_configuration` - (Required, Object) Network configuration of the sandbox tool.
 * `tool_name` - (Required, String) Name of the sandbox tool. Length 1-50 characters and it must be unique under the same AppId. It cannot be changed after creation.
 * `tool_type` - (Required, String) Type of the sandbox tool. Valid values: `browser`, `code-interpreter`, `mobile`, `osworld`, `custom`, `swebench`, `aio`, `android-world`, `waa`. It cannot be changed after creation.
-* `client_token` - (Optional, String) Idempotency token used by the create API. Maximum length 64 characters. It cannot be changed after creation.
 * `computer_configuration` - (Optional, Object) Configuration of desktop-like sandbox tools.
 * `custom_configuration` - (Optional, Object) Custom configuration of the sandbox tool.
 * `default_timeout` - (Optional, String) Default timeout of sandbox instances created from this tool, for example `5m`, `300s` or `1h`. Maximum 24 hours. When it is not specified, the system default of 5 minutes is used. It cannot be changed after creation and it is not reported by the describe API.

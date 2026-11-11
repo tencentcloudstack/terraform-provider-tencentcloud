@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	agsv20250920 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ags/v20250920"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -45,8 +46,16 @@ func (me *AgsService) CreateSandboxTool(ctx context.Context, request *agsv202509
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseAgsClient().CreateSandboxToolWithContext(ctx, request)
+	var response *agsv20250920.CreateSandboxToolResponse
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseAgsClient().CreateSandboxToolWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		response = result
+		return nil
+	})
 	if err != nil {
 		errRet = err
 		return
@@ -87,8 +96,16 @@ func (me *AgsService) DescribeSandboxToolById(ctx context.Context, toolId string
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseAgsClient().DescribeSandboxToolListWithContext(ctx, request)
+	var response *agsv20250920.DescribeSandboxToolListResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseAgsClient().DescribeSandboxToolListWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		response = result
+		return nil
+	})
 	if err != nil {
 		errRet = err
 		return
@@ -121,8 +138,16 @@ func (me *AgsService) UpdateSandboxTool(ctx context.Context, request *agsv202509
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseAgsClient().UpdateSandboxToolWithContext(ctx, request)
+	var response *agsv20250920.UpdateSandboxToolResponse
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseAgsClient().UpdateSandboxToolWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		response = result
+		return nil
+	})
 	if err != nil {
 		errRet = err
 		return
@@ -152,8 +177,16 @@ func (me *AgsService) DeleteSandboxTool(ctx context.Context, toolId string) (err
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseAgsClient().DeleteSandboxToolWithContext(ctx, request)
+	var response *agsv20250920.DeleteSandboxToolResponse
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseAgsClient().DeleteSandboxToolWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		response = result
+		return nil
+	})
 	if err != nil {
 		errRet = err
 		return

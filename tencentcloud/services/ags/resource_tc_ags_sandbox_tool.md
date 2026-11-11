@@ -1,8 +1,8 @@
 Provides a resource to create an AGS sandbox tool.
 
--> **Note:** `tool_name`, `tool_type`, `default_timeout`, `client_token`, `role_arn`, `storage_mounts`, `log_configuration` and `persistent` are create-only: the update API does not accept them, so changing any of them destroys the existing sandbox tool and creates a new one.
+-> **Note:** `tool_name`, `tool_type`, `default_timeout`, `role_arn`, `storage_mounts`, `log_configuration` and `persistent` are create-only: the update API does not accept them, so changing any of them destroys the existing sandbox tool and creates a new one.
 
--> **Note:** `default_timeout` and `client_token` are only accepted by the create API. The describe API reports the timeout in seconds (`DefaultTimeoutSeconds`) instead of the original duration string, so the values configured here are kept as they are and drift on them cannot be detected.
+-> **Note:** `default_timeout` is only accepted by the create API. The describe API reports the timeout in seconds (`DefaultTimeoutSeconds`) instead of the original duration string, so the value configured here is kept as it is and drift on it cannot be detected.
 
 -> **Note:** Removing `description`, `tags`, `custom_configuration`, `computer_configuration` or `persistent` from the configuration keeps the value that currently exists on the cloud side, because the update API does not transmit empty values. To clear those attributes, delete and recreate the sandbox tool.
 
@@ -13,7 +13,6 @@ Example Usage
 ```hcl
 
 resource "tencentcloud_ags_sandbox_tool" "custom" {
-  client_token = null
   custom_configuration = {
     args                = ["-port", "8080"]
     command             = ["/bin/go-httpbin"]

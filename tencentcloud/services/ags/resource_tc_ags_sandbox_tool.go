@@ -23,6 +23,7 @@ import (
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 // agsSandboxToolPollInterval is the interval used while waiting for a sandbox
@@ -49,8 +50,8 @@ type AgsSandboxToolResource struct {
 
 // AgsSandboxToolResourceModel maps the schema attributes.
 //
-// DefaultTimeout and ClientToken are create-only inputs: DescribeSandboxToolList
-// does not return them (it only returns DefaultTimeoutSeconds, which cannot be
+// DefaultTimeout is a create-only input: DescribeSandboxToolList
+// does not return it (it only returns DefaultTimeoutSeconds, which cannot be
 // converted back into the "5m"/"300s" form without guessing the original unit),
 // so Read keeps whatever value is already stored in state.
 type AgsSandboxToolResourceModel struct {
@@ -62,7 +63,6 @@ type AgsSandboxToolResourceModel struct {
 	Description           types.String `tfsdk:"description"`
 	DefaultTimeout        types.String `tfsdk:"default_timeout"`
 	Tags                  types.List   `tfsdk:"tags"`
-	ClientToken           types.String `tfsdk:"client_token"`
 	RoleArn               types.String `tfsdk:"role_arn"`
 	StorageMounts         types.List   `tfsdk:"storage_mounts"`
 	CustomConfiguration   types.Object `tfsdk:"custom_configuration"`
@@ -749,14 +749,6 @@ func (r *AgsSandboxToolResource) Schema(_ context.Context, _ resource.SchemaRequ
 					listplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"client_token": schema.StringAttribute{
-				Optional: true,
-				Description: "Idempotency token used by the create API. Maximum length 64 characters. " +
-					"It cannot be changed after creation.",
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-			},
 			"role_arn": schema.StringAttribute{
 				Optional:    true,
 				Description: "Arn of the role bound to the sandbox tool. It cannot be changed after creation.",
@@ -1057,9 +1049,11 @@ func (r *AgsSandboxToolResource) buildCreateRequest(ctx context.Context, plan *A
 	if !plan.DefaultTimeout.IsNull() && !plan.DefaultTimeout.IsUnknown() {
 		request.DefaultTimeout = plan.DefaultTimeout.ValueStringPointer()
 	}
-	if !plan.ClientToken.IsNull() && !plan.ClientToken.IsUnknown() {
-		request.ClientToken = plan.ClientToken.ValueStringPointer()
-	}
+	// client_token is generated internally as an idempotency key for create:
+	// the value is fixed once per apply, so a retried CreateSandboxTool call
+	// (see the retry loop in the service layer) cannot create the same tool
+	// twice.
+	request.ClientToken = helper.String(helper.BuildUUID())
 	if !plan.RoleArn.IsNull() && !plan.RoleArn.IsUnknown() {
 		request.RoleArn = plan.RoleArn.ValueStringPointer()
 	}
@@ -1166,7 +1160,7 @@ func (r *AgsSandboxToolResource) buildUpdateRequest(ctx context.Context, plan *A
 
 // refreshModel copies the cloud state into the model. Only fields reported by
 // the cloud are overwritten, so create-only attributes that cannot be read back
-// (default_timeout, client_token) keep the value already stored in the model.
+// (default_timeout) keep the value already stored in the model.
 func (r *AgsSandboxToolResource) refreshModel(ctx context.Context, model *AgsSandboxToolResourceModel, item *agsv20250920.SandboxTool) diag.Diagnostics {
 	var diags diag.Diagnostics
 
