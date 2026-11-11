@@ -11,11 +11,11 @@ description: |-
 
 Provides a resource to manage a VOD AIGC API Token for a specific sub application.
 
-An AIGC API Token is an independent credential used when calling VOD AIGC-related APIs. One sub application can hold multiple tokens. The token value is returned by the cloud on creation and is treated as a sensitive value.
-
 ~> **NOTE:** The cloud side has an approximately 30-second data-sync delay before a newly created or deleted token becomes visible via `DescribeAigcApiTokens`. The provider polls the list internally, so `terraform apply` may take up to a few minutes.
 
 ~> **NOTE:** `api_token` is marked `Sensitive` and is still stored in state in plain text. Protect your Terraform state accordingly (remote state encryption, restricted access, etc.).
+
+~> **NOTE:** The `ext_info` value is passed through to the cloud API as a JSON string. The cloud side may normalize the JSON (key order, whitespace), which can cause a persistent diff on the immediately following plan. Use `jsonencode()` to build the value in a stable form.
 
 ## Example Usage
 
@@ -29,7 +29,13 @@ resource "tencentcloud_vod_sub_application" "example" {
 
 # create api token
 resource "tencentcloud_vod_aigc_api_token" "example" {
-  sub_app_id = tencentcloud_vod_sub_application.example.sub_app_id
+  sub_app_id  = tencentcloud_vod_sub_application.example.sub_app_id
+  action_type = "Overwrite"
+  ext_info = jsonencode({
+    name  = "tf-aigc-token"
+    ip    = { "11.12.112.90" : true, "15.12.112.90" : true }
+    model = { "deepseek-v4-pro" : true }
+  })
 }
 
 output "aigc_api_token" {
@@ -43,6 +49,8 @@ output "aigc_api_token" {
 The following arguments are supported:
 
 * `sub_app_id` - (Required, Int, ForceNew) The VOD [sub application](https://intl.cloud.tencent.com/document/product/266/14574) ID. Users who activated VOD service after December 25, 2023 must specify the application ID.
+* `action_type` - (Optional, String) Action of the ExtInfo update. Valid values: `Merge` (default, merge the ExtInfo JSON by top-level key), `Overwrite` (overwrite directly).
+* `ext_info` - (Optional, String) ExtInfo JSON string of the API Token. Top-level keys: `ip` (IP whitelist object, e.g. `{"127.0.0.1":true}`, empty object to disable), `model` (model whitelist object, e.g. `{"deepseek-v4-pro":true}`) and `name` (token name). Build the value with `jsonencode()`.
 
 ## Attributes Reference
 
@@ -59,6 +67,7 @@ This resource interacts with the following TencentCloud APIs:
   - [CreateAigcApiToken](https://www.tencentcloud.com/document/api/266/78287)
   - [DescribeAigcApiTokens](https://www.tencentcloud.com/document/api/266/78285)
 * Read: [DescribeAigcApiTokens](https://www.tencentcloud.com/document/api/266/78285)
+* Update: [UpdateAigcApiToken](https://www.tencentcloud.com/document/api/266/81658)
 * Delete:
   - [DeleteAigcApiToken](https://www.tencentcloud.com/document/api/266/78286)
   - [DescribeAigcApiTokens](https://www.tencentcloud.com/document/api/266/78285)
@@ -68,6 +77,6 @@ This resource interacts with the following TencentCloud APIs:
 VOD AIGC API Token can be imported using the composite id `sub_app_id#api_token`, e.g.
 
 ```
-terraform import tencentcloud_vod_aigc_api_token.example 1500066380#<YOUR TOKEN>
+terraform import tencentcloud_vod_aigc_api_token.example 1500071041#5sTlqejmWnx2h8obg0hnQB09GY6A48yC
 ```
 

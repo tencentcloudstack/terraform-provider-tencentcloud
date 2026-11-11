@@ -44,6 +44,10 @@ func TestAccTencentCloudCbsSnapshotPolicy(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cbs_snapshot_policy.snapshot_policy", "repeat_hours.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_snapshot_policy.snapshot_policy", "repeat_hours.0", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_snapshot_policy.snapshot_policy", "retention_days", "7"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_snapshot_policy.snapshot_policy", "day_of_month.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_snapshot_policy.snapshot_policy", "day_of_month.0", "5"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_snapshot_policy.snapshot_policy", "is_activated", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_snapshot_policy.snapshot_policy", "is_permanent", "false"),
 				),
 			},
 			{
@@ -114,6 +118,9 @@ resource "tencentcloud_cbs_snapshot_policy" "snapshot_policy" {
   snapshot_policy_name = "tf-snapshot-policy-update"
   repeat_weekdays      = [1, 4]
   repeat_hours         = [1]
+  day_of_month         = [5]
   retention_days       = 7
+  is_activated         = false
+  is_permanent         = false
 }
 `

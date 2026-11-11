@@ -850,10 +850,27 @@ func resourceTencentCloudKubernetesNodePoolUpdateOnExit(ctx context.Context) err
 	}
 
 	if d.HasChange("node_config.0.extra_args") {
+		// wait for status ok, the node pool must stay "normal" before the
+		// ModifyClusterNodePool call below, otherwise the modification may be
+		// rejected while the pool is initializing.
+		err := resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
+			nodePool, _, errRet := service.DescribeNodePool(ctx, clusterId, nodePoolId)
+			if errRet != nil {
+				return tccommon.RetryError(errRet, tccommon.InternalError)
+			}
+			if nodePool != nil && *nodePool.LifeState == "normal" {
+				return nil
+			}
+			return resource.RetryableError(fmt.Errorf("node pool status is %s, retry...", *nodePool.LifeState))
+		})
+		if err != nil {
+			return err
+		}
+
 		// `node_config.0.extra_args` is a flat list of "key=value" strings that
 		// maps to InstanceExtraArgs.Kubelet.
 		extraArgs := helper.InterfacesStringsPoint(d.Get("node_config.0.extra_args").([]interface{}))
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			errRet := service.ModifyClusterNodePoolExtraArgs(ctx, clusterId, nodePoolId, extraArgs)
 			if errRet != nil {
 				return tccommon.RetryError(errRet)

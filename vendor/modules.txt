@@ -1250,13 +1250,13 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi/v20220105
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.3.39
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.3.157
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.3.186
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.3.136
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.3.165
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.3.179
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.3.194
@@ -1301,7 +1301,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.186
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.209
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.211
 ## explicit; go 1.11
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
@@ -1324,7 +1324,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.3.30
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp/v20180228
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.3.185
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.3.209
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb v1.0.970
@@ -1490,7 +1490,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/thpc v1.0.998
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/thpc/v20230321
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.3.178
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.3.209
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20220501
@@ -1509,7 +1509,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vcube/v20220410
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vdb v1.3.121
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vdb/v20230616
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.3.127
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.3.211
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.3.188
