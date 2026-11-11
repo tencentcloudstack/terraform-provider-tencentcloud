@@ -165,6 +165,13 @@ func ResourceTencentCloudTdmysqlDbInstance() *schema.Resource {
 				Description: "Storage node memory.",
 			},
 
+			"reserved_space_gb": {
+				Type:        schema.TypeFloat,
+				Optional:    true,
+				Computed:    true,
+				Description: "Data reserved space of each storage node, unit GB.",
+			},
+
 			"pay_mode": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -667,6 +674,70 @@ func resourceTencentCloudTdmysqlDbInstanceCreate(d *schema.ResourceData, meta in
 		}
 	}
 
+	// modify data reserved space
+	if v, ok := d.GetOkExists("reserved_space_gb"); ok {
+		request := tdmysqlv20211122.NewModifyInstanceDataReservedSpaceRequest()
+		response := tdmysqlv20211122.NewModifyInstanceDataReservedSpaceResponse()
+		request.InstanceId = helper.String(instanceId)
+		request.ReservedSpaceGB = helper.Float64(v.(float64))
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmysqlV20211122Client().ModifyInstanceDataReservedSpaceWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Modify tdmysql db instance data reserved space failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if reqErr != nil {
+			log.Printf("[CRITAL]%s modify tdmysql db instance data reserved space failed, reason:%+v", logId, reqErr)
+			return reqErr
+		}
+
+		if response.Response.TaskId == nil {
+			return fmt.Errorf("Modify tdmysql db instance data reserved space failed, TaskId is nil.")
+		}
+
+		// wait
+		flowId := *response.Response.TaskId
+		flowRequest := tdmysqlv20211122.NewDescribeFlowRequest()
+		flowRequest.FlowId = helper.Int64(flowId)
+		flowErr := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
+			flowResult, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmysqlV20211122Client().DescribeFlowWithContext(ctx, flowRequest)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, flowRequest.GetAction(), flowRequest.ToJsonString(), flowResult.ToJsonString())
+			if flowResult == nil || flowResult.Response == nil || flowResult.Response.Status == nil {
+				return resource.NonRetryableError(fmt.Errorf("DescribeFlow failed, Response is nil."))
+			}
+
+			status := *flowResult.Response.Status
+			if status == FLOW_STATUS_SUCCESS {
+				return nil
+			}
+
+			if status == FLOW_STATUS_FAILED || status == FLOW_STATUS_PAUSED {
+				return resource.NonRetryableError(fmt.Errorf("Modify tdmysql db instance data reserved space failed, status is %s.", status))
+			}
+
+			return resource.RetryableError(fmt.Errorf("Modify tdmysql db instance data reserved space is running, status is %s.", status))
+		})
+
+		if flowErr != nil {
+			log.Printf("[CRITAL]%s modify tdmysql db instance data reserved space polling failed, reason:%+v", logId, flowErr)
+			return flowErr
+		}
+	}
+
 	return resourceTencentCloudTdmysqlDbInstanceRead(d, meta)
 }
 
@@ -831,6 +902,29 @@ func resourceTencentCloudTdmysqlDbInstanceRead(d *schema.ResourceData, meta inte
 		_ = d.Set("encryption_enable", respData.EncryptionEnable)
 	}
 
+	if respData.RenewFlag != nil {
+		_ = d.Set("auto_renew_flag", respData.RenewFlag)
+	}
+
+	rsResp, err := service.DescribeTdmysqlDBInstanceDataReservedSpaceById(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+
+	if rsResp != nil && rsResp.ReservedSpaceGB != nil {
+		_ = d.Set("reserved_space_gb", rsResp.ReservedSpaceGB)
+	}
+
+	sslResp, err := service.DescribeTdmysqlDBInstanceSSLStatusById(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+
+	if sslResp != nil && sslResp.SSLStatus != nil {
+		// SSLStatus: Enabled / Disabled / Enabling / Disabling
+		_ = d.Set("enable_ssl", *sslResp.SSLStatus == "Enabled")
+	}
+
 	sgResp, err := service.DescribeTdmysqlDBSecurityGroupsById(ctx, instanceId)
 	if err == nil && sgResp != nil {
 		if sgResp.Groups != nil && len(sgResp.Groups) > 0 {
@@ -947,9 +1041,10 @@ func resourceTencentCloudTdmysqlDbInstanceUpdate(d *schema.ResourceData, meta in
 	if d.HasChange("spec_code") || d.HasChange("disk") ||
 		d.HasChange("storage_node_cpu") || d.HasChange("storage_node_mem") ||
 		d.HasChange("storage_type") {
-		request := tdmysqlv20211122.NewUpgradeInstanceRequest()
-		response := tdmysqlv20211122.NewUpgradeInstanceResponse()
+		request := tdmysqlv20211122.NewModifyDBInstanceRequest()
+		response := tdmysqlv20211122.NewModifyDBInstanceResponse()
 		request.InstanceId = helper.String(instanceId)
+		request.DryRun = helper.Bool(false)
 		if v, ok := d.GetOk("spec_code"); ok {
 			request.SpecCode = helper.String(v.(string))
 		}
@@ -959,11 +1054,11 @@ func resourceTencentCloudTdmysqlDbInstanceUpdate(d *schema.ResourceData, meta in
 		}
 
 		if v, ok := d.GetOkExists("storage_node_cpu"); ok {
-			request.StorageNodeCpu = helper.Int64(int64(v.(int)))
+			request.HybridNodeCpu = helper.Int64(int64(v.(int)))
 		}
 
 		if v, ok := d.GetOkExists("storage_node_mem"); ok {
-			request.StorageNodeMem = helper.Int64(int64(v.(int)))
+			request.HybridNodeMem = helper.Int64(int64(v.(int)))
 		}
 
 		if v, ok := d.GetOk("storage_type"); ok {
@@ -971,7 +1066,7 @@ func resourceTencentCloudTdmysqlDbInstanceUpdate(d *schema.ResourceData, meta in
 		}
 
 		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmysqlV20211122Client().UpgradeInstanceWithContext(ctx, request)
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmysqlV20211122Client().ModifyDBInstanceWithContext(ctx, request)
 			if e != nil {
 				return tccommon.RetryError(e)
 			} else {
@@ -1227,6 +1322,72 @@ func resourceTencentCloudTdmysqlDbInstanceUpdate(d *schema.ResourceData, meta in
 
 		if flowErr != nil {
 			log.Printf("[CRITAL]%s update tdmysql db instance params polling failed, reason:%+v", logId, flowErr)
+			return flowErr
+		}
+	}
+
+	if d.HasChange("reserved_space_gb") {
+		request := tdmysqlv20211122.NewModifyInstanceDataReservedSpaceRequest()
+		response := tdmysqlv20211122.NewModifyInstanceDataReservedSpaceResponse()
+		request.InstanceId = helper.String(instanceId)
+		if v, ok := d.GetOkExists("reserved_space_gb"); ok {
+			request.ReservedSpaceGB = helper.Float64(v.(float64))
+		}
+
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmysqlV20211122Client().ModifyInstanceDataReservedSpaceWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Modify tdmysql db instance data reserved space failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if reqErr != nil {
+			log.Printf("[CRITAL]%s update tdmysql db instance data reserved space failed, reason:%+v", logId, reqErr)
+			return reqErr
+		}
+
+		if response.Response.TaskId == nil {
+			return fmt.Errorf("Update tdmysql db instance data reserved space failed, TaskId is nil.")
+		}
+
+		// wait
+		flowId := *response.Response.TaskId
+		flowRequest := tdmysqlv20211122.NewDescribeFlowRequest()
+		flowRequest.FlowId = helper.Int64(flowId)
+		flowErr := resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
+			flowResult, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmysqlV20211122Client().DescribeFlowWithContext(ctx, flowRequest)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, flowRequest.GetAction(), flowRequest.ToJsonString(), flowResult.ToJsonString())
+			if flowResult == nil || flowResult.Response == nil || flowResult.Response.Status == nil {
+				return resource.NonRetryableError(fmt.Errorf("DescribeFlow failed, Response is nil."))
+			}
+
+			status := *flowResult.Response.Status
+			if status == FLOW_STATUS_SUCCESS {
+				return nil
+			}
+
+			if status == FLOW_STATUS_FAILED || status == FLOW_STATUS_PAUSED {
+				return resource.NonRetryableError(fmt.Errorf("Update tdmysql db instance data reserved space failed, status is %s.", status))
+			}
+
+			return resource.RetryableError(fmt.Errorf("Update tdmysql db instance data reserved space is running, status is %s.", status))
+		})
+
+		if flowErr != nil {
+			log.Printf("[CRITAL]%s update tdmysql db instance data reserved space polling failed, reason:%+v", logId, flowErr)
 			return flowErr
 		}
 	}
