@@ -85,6 +85,7 @@ func ResourceTencentCloudTdmysqlDbInstance() *schema.Resource {
 			"create_version": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				Description: "Create version, defaults to latest.",
 			},
@@ -175,6 +176,7 @@ func ResourceTencentCloudTdmysqlDbInstance() *schema.Resource {
 			"pay_mode": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				Description: "Pay mode, 0: postpaid, 1: prepaid.",
 			},
@@ -189,12 +191,14 @@ func ResourceTencentCloudTdmysqlDbInstance() *schema.Resource {
 			"vport": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "Custom port.",
 			},
 
 			"zones": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Description: "Multi AZ zone list.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -219,6 +223,7 @@ func ResourceTencentCloudTdmysqlDbInstance() *schema.Resource {
 			"instance_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				Description: "Instance architecture type, separate or hybrid.",
 			},
@@ -226,6 +231,7 @@ func ResourceTencentCloudTdmysqlDbInstance() *schema.Resource {
 			"storage_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Disk type, CLOUD_HSSD or CLOUD_TCS.",
 			},
 
@@ -239,6 +245,7 @@ func ResourceTencentCloudTdmysqlDbInstance() *schema.Resource {
 			"instance_mode": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				Description: "Instance mode.",
 			},
@@ -253,6 +260,7 @@ func ResourceTencentCloudTdmysqlDbInstance() *schema.Resource {
 			"sql_mode": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				Description: "Compatible mode, MySQL or HBase.",
 			},
