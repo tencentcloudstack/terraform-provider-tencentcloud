@@ -37,6 +37,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `status` - Tag type, 0 normal tag, 1 account tag.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAllocationTag](https://www.tencentcloud.com/search/?wd=CreateAllocationTag&type=document&lang=en)
+* Read: [DescribeTagList](https://www.tencentcloud.com/search/?wd=DescribeTagList&type=document&lang=en)
+* Delete: [DeleteAllocationTag](https://www.tencentcloud.com/search/?wd=DeleteAllocationTag&type=document&lang=en)
 
 ## Import
 

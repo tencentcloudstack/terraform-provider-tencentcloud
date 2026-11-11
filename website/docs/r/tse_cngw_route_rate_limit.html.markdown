@@ -176,6 +176,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCloudNativeAPIGatewayRouteRateLimit](https://www.tencentcloud.com/document/api/1290/79291)
+* Read: [DescribeCloudNativeAPIGatewayRouteRateLimit](https://www.tencentcloud.com/document/api/1290/79260)
+* Update: [ModifyCloudNativeAPIGatewayRouteRateLimit](https://www.tencentcloud.com/document/api/1290/79240)
+* Delete: [DeleteCloudNativeAPIGatewayRouteRateLimit](https://www.tencentcloud.com/document/api/1290/79277)
 
 ## Import
 

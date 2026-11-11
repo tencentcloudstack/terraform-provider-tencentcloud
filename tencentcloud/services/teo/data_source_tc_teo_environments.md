@@ -1,4 +1,4 @@
-Use this data source to query detailed information of teo environments
+Use this data source to query detailed information of TEO environments, including the environment list and the source version (`source_version`) of each effective config group version.
 
 Example Usage
 

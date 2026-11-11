@@ -117,8 +117,8 @@ resource "tencentcloud_as_scaling_group" "example" {
 
 Import
 
-AutoScaling Groups can be imported using the id, e.g.
+Auto scaling Group can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_as_scaling_group.example asg-n32ymck2
+terraform import tencentcloud_as_scaling_group.example asg-n32ymck2
 ```

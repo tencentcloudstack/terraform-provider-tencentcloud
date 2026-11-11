@@ -34,6 +34,7 @@ type SecretInfo struct {
 	deleteTime       uint64
 	createTime       uint64
 	resourceId       string
+	encryptType      uint64
 }
 
 func (info SecretInfo) Status() string {
@@ -125,6 +126,9 @@ func (me *SsmService) DescribeSecretByName(ctx context.Context, secretName strin
 		deleteTime:       *response.Response.DeleteTime,
 		createTime:       *response.Response.CreateTime,
 		resourceId:       fmt.Sprintf("creatorUin/%d/%s", *response.Response.CreateUin, *response.Response.SecretName),
+	}
+	if response.Response.EncryptType != nil {
+		secret.encryptType = *response.Response.EncryptType
 	}
 	return
 }
@@ -702,5 +706,69 @@ func (me *SsmService) DescribeSsmSshKeyPairValueByFilter(ctx context.Context, pa
 	}
 
 	sshKeyPairValue = response.Response
+	return
+}
+
+// CreateService opens the SSM service (PostPay). The CreateService API is
+// asynchronous (the returned resource may still be provisioning), so callers
+// should poll GetServiceStatus afterwards to confirm the service is enabled.
+// The CreateService response (ResourceId / OrderId) is returned so the action
+// can log it for observability.
+func (me *SsmService) CreateService(ctx context.Context, payMode, clientToken string) (response *ssm.CreateServiceResponse, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := ssm.NewCreateServiceRequest()
+	request.PayMode = helper.String(payMode)
+	request.ClientToken = helper.String(clientToken)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseSsmClient().CreateServiceWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("CreateService failed, Response is nil"))
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
+		return nil
+	})
+
+	return
+}
+
+// GetServiceStatus returns the current SSM service activation status. It is
+// retry-wrapped with ReadRetryTimeout and is intended for the action's
+// activation polling loop.
+func (me *SsmService) GetServiceStatus(ctx context.Context) (response *ssm.GetServiceStatusResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := ssm.NewGetServiceStatusRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseSsmClient().GetServiceStatusWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("GetServiceStatus failed, Response is nil"))
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result.Response
+		return nil
+	})
+
 	return
 }

@@ -60,4 +60,9 @@ In addition to all arguments above, the following attributes are exported:
   * `end_date` - End time of the current statistical period.
   * `start_date` - Start time of the current statistical period.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDomainAnalytics](https://www.tencentcloud.com/search/?wd=DescribeDomainAnalytics&type=document&lang=en)
 

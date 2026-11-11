@@ -54,4 +54,9 @@ In addition to all arguments above, the following attributes are exported:
   * `ips` - Domain ip.
   * `is_waf_domain` - Whether access to waf or not.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeFindDomainList](https://www.tencentcloud.com/document/api/627/64548)
 

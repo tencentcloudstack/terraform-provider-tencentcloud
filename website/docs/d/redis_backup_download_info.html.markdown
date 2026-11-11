@@ -56,4 +56,9 @@ In addition to all arguments above, the following attributes are exported:
   * `file_size` - The backup file size is in unit B, if it is 0, it is invalid.
   * `inner_download_url` - Backup file intranet download address (6 hours).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBackupUrl](https://www.tencentcloud.com/document/api/239/32075)
 

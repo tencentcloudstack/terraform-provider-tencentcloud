@@ -36,6 +36,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateMountPoint](https://www.tencentcloud.com/document/api/1106/42434)
+* Read: [DescribeMountPoint](https://www.tencentcloud.com/document/api/1106/42432)
+* Update: [ModifyMountPoint](https://www.tencentcloud.com/document/api/1106/42429)
+* Delete: [DeleteMountPoint](https://www.tencentcloud.com/document/api/1106/42433)
 
 ## Import
 

@@ -65,4 +65,9 @@ In addition to all arguments above, the following attributes are exported:
   * `service_id` - The service ID.
   * `service_name` - The service name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeUsagePlanEnvironments](https://www.tencentcloud.com/search/?wd=DescribeUsagePlanEnvironments&type=document&lang=en)
 

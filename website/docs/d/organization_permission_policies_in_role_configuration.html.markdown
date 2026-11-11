@@ -63,4 +63,9 @@ In addition to all arguments above, the following attributes are exported:
   * `role_policy_name` - Permission policy name.
   * `role_policy_type` - Permission policy type.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListPermissionPoliciesInRoleConfiguration](https://www.tencentcloud.com/document/api/1031/63599)
 

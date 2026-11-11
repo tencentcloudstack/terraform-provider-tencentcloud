@@ -85,6 +85,10 @@ resource "tencentcloud_teo_zone_setting" "zone_setting" {
     switch = "off"
   }
 
+  jit_video_process {
+    switch = "off"
+  }
+
   max_age {
     follow_origin = "on"
     max_age_time  = 0
@@ -137,6 +141,7 @@ The following arguments are supported:
 * `force_redirect` - (Optional, List) Force HTTPS redirect configuration.
 * `https` - (Optional, List) HTTPS acceleration configuration.
 * `ipv6` - (Optional, List) IPv6 access configuration.
+* `jit_video_process` - (Optional, List) JIT video process configuration.
 * `max_age` - (Optional, List) Browser cache configuration.
 * `offline_cache` - (Optional, List) Offline cache configuration.
 * `origin` - (Optional, List) Origin server configuration.
@@ -230,6 +235,12 @@ The `ipv6` object supports the following:
 * `switch` - (Required, String) - `on`: Enable.
 - `off`: Disable.
 
+The `jit_video_process` object supports the following:
+
+* `switch` - (Required, String) Whether to enable JIT video process.
+- `on`: Enable.
+- `off`: Disable.
+
 The `max_age` object supports the following:
 
 * `follow_origin` - (Optional, String) Specifies whether to follow the max cache age of the origin server.
@@ -304,7 +315,15 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `area` - Acceleration area of the zone. Valid values: `mainland`, `overseas`.
+* `zone_name` - Zone name.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyZoneSetting](https://www.tencentcloud.com/document/api/1145/50463)
+* Read: [DescribeZoneSetting](https://www.tencentcloud.com/document/api/1145/50466)
+* Update: [ModifyZoneSetting](https://www.tencentcloud.com/document/api/1145/50463)
 
 ## Import
 

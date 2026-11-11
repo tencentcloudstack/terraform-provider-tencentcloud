@@ -205,6 +205,7 @@ func resourceTencentCloudMonitorTmpExporterIntegrationV2Create(d *schema.Resourc
 	waitReq.KubeType = request.KubeType
 	waitReq.ClusterId = request.ClusterId
 	waitReq.Kind = request.Kind
+	waitReq.Name = &tmpExporterIntegrationId
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().DescribeExporterIntegrations(waitReq)
 		if e != nil {
@@ -283,6 +284,7 @@ func resourceTencentCloudMonitorTmpExporterIntegrationV2Create(d *schema.Resourc
 			waitReq.KubeType = request.KubeType
 			waitReq.ClusterId = request.ClusterId
 			waitReq.Kind = request.Kind
+			waitReq.Name = &tmpExporterIntegrationId
 			err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().DescribeExporterIntegrations(waitReq)
 				if e != nil {
@@ -386,6 +388,7 @@ func resourceTencentCloudMonitorTmpExporterIntegrationV2Update(d *schema.Resourc
 	var (
 		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		request = monitor.NewUpdateExporterIntegrationRequest()
+		name    string
 	)
 
 	immutableArgs := []string{"instance_id", "kind", "kube_type", "cluster_id"}
@@ -393,6 +396,15 @@ func resourceTencentCloudMonitorTmpExporterIntegrationV2Update(d *schema.Resourc
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed.", v)
 		}
+	}
+
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) == 3 {
+		name = idSplit[0]
+	} else if len(idSplit) == 5 {
+		name = idSplit[0]
+	} else {
+		return fmt.Errorf("id is broken,%s", idSplit)
 	}
 
 	var disableFlag bool
@@ -443,6 +455,7 @@ func resourceTencentCloudMonitorTmpExporterIntegrationV2Update(d *schema.Resourc
 	waitReq.KubeType = request.KubeType
 	waitReq.ClusterId = request.ClusterId
 	waitReq.Kind = request.Kind
+	waitReq.Name = &name
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().DescribeExporterIntegrations(waitReq)
 		if e != nil {

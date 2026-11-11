@@ -38,6 +38,14 @@ In addition to all arguments above, the following attributes are exported:
   * `job_zh_name` - Chinese name of intelligent operation and maintenance diagnosis item.
 * `max_count` - The maximum number of manual triggers per day for intelligent operation and maintenance staff.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [UpdateDiagnoseSettings](https://www.tencentcloud.com/search/?wd=UpdateDiagnoseSettings&type=document&lang=en)
+* Read: [GetDiagnoseSettings](https://www.tencentcloud.com/search/?wd=GetDiagnoseSettings&type=document&lang=en)
+* Update: [UpdateDiagnoseSettings](https://www.tencentcloud.com/search/?wd=UpdateDiagnoseSettings&type=document&lang=en)
+* Delete: [UpdateDiagnoseSettings](https://www.tencentcloud.com/search/?wd=UpdateDiagnoseSettings&type=document&lang=en)
 
 ## Import
 

@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_monitor_alarm_policy: add `hierarchical_notices` and `notice_content_tmpl_bind_infos` parameters
+```

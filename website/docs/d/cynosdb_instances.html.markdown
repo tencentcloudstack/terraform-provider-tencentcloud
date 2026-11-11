@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
   * `instance_storage_size` - Storage size of the Cynosdb instance, unit in GB.
   * `instance_type` - Instance type. `ro` for readonly instance, `rw` for read and write instance.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/1098/40747)
 

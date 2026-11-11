@@ -117,7 +117,8 @@ func ResourceTencentCloudPrivateDnsZone() *schema.Resource {
 						},
 						"vpc_name": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Optional:    true,
+							Deprecated:  "It has been deprecated from version 1.83.35. Please do not re-enter this field as entering a value will be ignored.",
 							Description: "VPC NAME.",
 						},
 					},
@@ -196,7 +197,6 @@ func resourceTencentCloudDPrivateDnsZoneCreate(d *schema.ResourceData, meta inte
 				Uin:       helper.String(m["uin"].(string)),
 				UniqVpcId: helper.String(m["uniq_vpc_id"].(string)),
 				Region:    helper.String(m["region"].(string)),
-				VpcName:   helper.String(m["vpc_name"].(string)),
 			}
 
 			accountVpcSet = append(accountVpcSet, &accountVpcInfo)
@@ -436,7 +436,6 @@ func resourceTencentCloudDPrivateDnsZoneUpdate(d *schema.ResourceData, meta inte
 					UniqVpcId: helper.String(value["uniq_vpc_id"].(string)),
 					Region:    helper.String(value["region"].(string)),
 					Uin:       helper.String(value["uin"].(string)),
-					VpcName:   helper.String(value["vpc_name"].(string)),
 				}
 
 				accVpcSets = append(accVpcSets, accVpcInfo)

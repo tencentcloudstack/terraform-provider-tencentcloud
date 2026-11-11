@@ -144,6 +144,25 @@ In addition to all arguments above, the following attributes are exported:
 * `private_addresses` - Private addresses.
 * `public_addresses` - Public addresses.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateInstances](https://www.tencentcloud.com/document/api/1103/45859)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1103/42498)
+* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/1103/42498)
+* Update:
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1103/42498)
+  - [ModifyInstancesAttribute](https://www.tencentcloud.com/document/api/1103/42492)
+  - [ModifyInstancesBundle](https://www.tencentcloud.com/document/api/1103/55090)
+  - [ModifyInstancesRenewFlag](https://www.tencentcloud.com/document/api/1103/44053)
+  - [ResetInstance](https://www.tencentcloud.com/document/api/1103/42490)
+  - [ResetInstancesPassword](https://www.tencentcloud.com/document/api/1103/42489)
+* Delete:
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1103/42498)
+  - [IsolateInstances](https://www.tencentcloud.com/document/api/1103/55091)
+  - [TerminateInstances](https://www.tencentcloud.com/document/api/1103/42486)
 
 ## Import
 

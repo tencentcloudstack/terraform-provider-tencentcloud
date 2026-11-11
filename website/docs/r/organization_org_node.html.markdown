@@ -38,6 +38,16 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Node creation time.
 * `update_time` - Node update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddOrganizationNode](https://www.tencentcloud.com/document/api/1031/52066)
+* Read: [DescribeOrganizationNodes](https://www.tencentcloud.com/document/api/1031/52061)
+* Update:
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [UpdateOrganizationNode](https://www.tencentcloud.com/document/api/1031/52059)
+* Delete: [DeleteOrganizationNodes](https://www.tencentcloud.com/document/api/1031/52063)
 
 ## Import
 

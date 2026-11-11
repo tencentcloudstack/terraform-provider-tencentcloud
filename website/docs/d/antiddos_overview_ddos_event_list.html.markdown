@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
   * `start_time` - StartTime.
   * `vip` - ip.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeOverviewDDoSEventList](https://www.tencentcloud.com/document/api/1213/61338)
 

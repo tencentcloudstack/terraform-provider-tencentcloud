@@ -131,6 +131,19 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `10m`) Used when creating the resource.
 * `delete` - (Defaults to `10m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [AddLibraDBInstances](https://www.tencentcloud.com/document/api/1098/80035)
+  - [DescribeLibraDBInstanceDetail](https://www.tencentcloud.com/document/api/1098/80143)
+* Read: [DescribeLibraDBInstanceDetail](https://www.tencentcloud.com/document/api/1098/80143)
+* Update: [DescribeLibraDBInstanceDetail](https://www.tencentcloud.com/document/api/1098/80143)
+* Delete:
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+  - [IsolateLibraDBInstance](https://www.tencentcloud.com/document/api/1098/80139)
+  - [OfflineLibraDBInstance](https://www.tencentcloud.com/document/api/1098/80137)
 
 ## Import
 

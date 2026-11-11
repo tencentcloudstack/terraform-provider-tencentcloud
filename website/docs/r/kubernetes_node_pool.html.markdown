@@ -437,7 +437,7 @@ The `node_config` object supports the following:
 * `data_disk` - (Optional, List, ForceNew) Configurations of data disk.
 * `desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in node. valid when the cluster is podCIDR.
 * `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
-* `extra_args` - (Optional, List, ForceNew) Custom parameter information related to the node. This is a white-list parameter.
+* `extra_args` - (Optional, List) Custom parameter information related to the node. This is a white-list parameter. It can be modified via the `ModifyClusterNodePool` API.
 * `gpu_args` - (Optional, List, ForceNew) GPU driver parameters.
 * `is_schedule` - (Optional, Bool, ForceNew) Indicate to schedule the adding node or not. Default is true.
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
@@ -468,6 +468,28 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `30m`) Used when creating the resource.
 * `update` - (Defaults to `30m`) Used when updating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateClusterNodePool](https://www.tencentcloud.com/document/api/457/38781)
+* Read:
+  - [DescribeClusterNodePoolDetail](https://www.tencentcloud.com/document/api/457/38778)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
+* Update:
+  - [DeleteMachine](https://www.tencentcloud.com/document/api/296/30907)
+  - [DescribeAutoScalingActivities](https://www.tencentcloud.com/document/api/377/31014)
+  - [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
+  - [DescribeClusterNodePoolDetail](https://www.tencentcloud.com/document/api/457/38778)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+  - [InvokeCommand](https://www.tencentcloud.com/document/api/1147/46690)
+  - [ModifyClusterNodePool](https://www.tencentcloud.com/document/api/457/38776)
+  - [ModifyLaunchConfigurationAttributes](https://www.tencentcloud.com/document/api/377/30998)
+  - [ModifyNodePoolDesiredCapacityAboutAsg](https://www.tencentcloud.com/search/?wd=ModifyNodePoolDesiredCapacityAboutAsg&type=document&lang=en)
+  - [Send](https://www.tencentcloud.com/search/?wd=Send&type=document&lang=en)
+  - [UseAsClient](https://www.tencentcloud.com/search/?wd=UseAsClient&type=document&lang=en)
+* Delete: [DeleteClusterNodePool](https://www.tencentcloud.com/document/api/457/38779)
 
 ## Import
 

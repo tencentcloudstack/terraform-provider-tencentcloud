@@ -63,4 +63,9 @@ In addition to all arguments above, the following attributes are exported:
     * `name` - Software name.
     * `version` - Software version.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBlueprintInstances](https://www.tencentcloud.com/document/api/1103/42504)
 

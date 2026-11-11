@@ -24,9 +24,29 @@ resource "tencentcloud_vod_sub_application" "example" {
 }
 
 resource "tencentcloud_vod_aigc_quota" "example" {
-  sub_app_id  = tencentcloud_vod_sub_application.example.sub_app_id
-  quota_type  = "Image"
-  quota_limit = 100
+  sub_app_id         = tencentcloud_vod_sub_application.example.sub_app_id
+  quota_type         = "Image"
+  quota_limit        = 100
+  quota_period       = "Month"
+  reset_day          = 1
+  model_quota_switch = "ON"
+  model_quotas {
+    model_name    = "model1"
+    model_version = "v1"
+    quota_limit   = 100
+  }
+
+  model_quotas {
+    model_name    = "model2"
+    model_version = "v2"
+    quota_limit   = 50
+  }
+
+  model_quotas {
+    model_name    = "model3"
+    model_version = "v3"
+    quota_limit   = 80
+  }
 }
 ```
 
@@ -78,6 +98,16 @@ The following arguments are supported:
 * `quota_type` - (Required, String, ForceNew) Quota type. Valid values: `Image` (AIGC image generation), `Video` (AIGC video generation), `Text` (AIGC text generation).
 * `sub_app_id` - (Required, Int, ForceNew) The VOD [sub application](https://intl.cloud.tencent.com/document/product/266/14574) ID. Users who activated VOD service after December 25, 2023 must specify the application ID.
 * `api_token` - (Optional, String, ForceNew) API token for quota restriction. Only meaningful when `quota_type` is `Text`.
+* `model_quota_switch` - (Optional, String) Whether to enable per-model quota settings. Valid values: `ON`, `OFF`. Default value: `OFF`.
+* `model_quotas` - (Optional, List) Per-model quotas, only valid when `model_quota_switch` is `ON`.
+* `quota_period` - (Optional, String) Quota reset period. Valid values: `Day` (reset every day), `Month` (reset on the specified day of each month), `Total` (never reset, `quota_limit` is the total quota).
+* `reset_day` - (Optional, Int) Reset day of the month, only valid when `quota_period` is `Month`. If the specified day does not exist in the current month, the quota resets at 00:00 on the 1st day of the next month.
+
+The `model_quotas` object supports the following:
+
+* `model_name` - (Optional, String) Model name.
+* `model_version` - (Optional, String) Model version.
+* `quota_limit` - (Optional, Int) Model quota limit value. Unit: when `quota_type` is `Image`, count by images; when `quota_type` is `Video`, count by seconds.
 
 ## Attributes Reference
 
@@ -86,6 +116,18 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `usage` - Current usage amount. Unit: when `quota_type` is `Image`, count by images; when `quota_type` is `Video`, count by seconds; when `quota_type` is `Text`, count by tokens.
 
+The `model_quotas` object exports the following:
+
+* `usage` - Current usage amount of the model quota. Unit: when `quota_type` is `Image`, count by images; when `quota_type` is `Video`, count by seconds.
+
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAigcQuota](https://www.tencentcloud.com/document/api/266/81192)
+* Read: [DescribeAigcQuotas](https://www.tencentcloud.com/document/api/266/81190)
+* Update: [ModifyAigcQuota](https://www.tencentcloud.com/document/api/266/81189)
+* Delete: [DeleteAigcQuota](https://www.tencentcloud.com/document/api/266/81191)
 
 ## Import
 

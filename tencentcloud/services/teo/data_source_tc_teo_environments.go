@@ -3,6 +3,7 @@ package teo
 
 import (
 	"context"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -29,22 +30,22 @@ func DataSourceTencentCloudTeoEnvironments() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"env_id": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Computed:    true,
 							Description: "Environment ID.",
 						},
 						"env_type": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Computed:    true,
 							Description: "Environment type. Valid values: production (Production environment), staging (Test environment).",
 						},
 						"status": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Computed:    true,
 							Description: "Environment status. Valid values: creating (Being created), running (The environment is stable, with version changes allowed), version_deploying (The version is currently being deployed, with no more changes allowed).",
 						},
 						"scope": {
 							Type:        schema.TypeSet,
-							Required:    true,
+							Computed:    true,
 							Description: "Effective scope of the configuration in the current environment. Valid values: ALL (It takes effect on the entire network when EnvType is set to production), It returns the IP address of the test node for host binding during testing when EnvType is set to staging.",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
@@ -52,43 +53,48 @@ func DataSourceTencentCloudTeoEnvironments() *schema.Resource {
 						},
 						"current_config_group_version_infos": {
 							Type:        schema.TypeList,
-							Required:    true,
+							Computed:    true,
 							Description: "For the effective versions of each configuration group in the current environment, there are two possible scenarios based on the value of Status: When Status is set to version_deploying, the returned value of this field represents the previously effective version. In other words, during the deployment of the new version, the effective version is the one that was in effect before any changes were made. When Status is set to running, the value returned by this field is the currently effective version.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"version_id": {
 										Type:        schema.TypeString,
-										Required:    true,
+										Computed:    true,
 										Description: "Version ID.",
 									},
 									"version_number": {
 										Type:        schema.TypeString,
-										Optional:    true,
+										Computed:    true,
 										Description: "Version No.",
 									},
 									"group_id": {
 										Type:        schema.TypeString,
-										Optional:    true,
+										Computed:    true,
 										Description: "Configuraration group ID.",
 									},
 									"group_type": {
 										Type:        schema.TypeString,
-										Optional:    true,
+										Computed:    true,
 										Description: "Configuration group type. Valid values: l7_acceleration (L7 acceleration configuration group), edge_functions (Edge function configuration group).",
 									},
 									"description": {
 										Type:        schema.TypeString,
-										Optional:    true,
+										Computed:    true,
 										Description: "Version description.",
 									},
 									"status": {
 										Type:        schema.TypeString,
-										Optional:    true,
+										Computed:    true,
 										Description: "Version status. Valid values: creating (Being created), inactive (Not effective), active (Effective).",
+									},
+									"source_version": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "The source version ID that the config group version was derived from.",
 									},
 									"create_time": {
 										Type:        schema.TypeString,
-										Optional:    true,
+										Computed:    true,
 										Description: "Version creation time. The time format follows the ISO 8601 standard and is represented in Coordinated Universal Time (UTC).",
 									},
 								},
@@ -137,10 +143,15 @@ func dataSourceTencentCloudTeoEnvironmentsRead(d *schema.ResourceData, meta inte
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+		if result == nil {
+			log.Printf("[DATASOURCE] read empty, skip SetId, teo_environments paramMap=%v", paramMap)
+			return nil
+		}
 		respData = result
 		return nil
 	})
 	if reqErr != nil {
+		log.Printf("[CRUD] teo_environments read empty, paramMap=%v", paramMap)
 		return reqErr
 	}
 
@@ -194,6 +205,10 @@ func dataSourceTencentCloudTeoEnvironmentsRead(d *schema.ResourceData, meta inte
 
 					if currentConfigGroupVersionInfos.Status != nil {
 						currentConfigGroupVersionInfosMap["status"] = currentConfigGroupVersionInfos.Status
+					}
+
+					if currentConfigGroupVersionInfos.SourceVersion != nil {
+						currentConfigGroupVersionInfosMap["source_version"] = currentConfigGroupVersionInfos.SourceVersion
 					}
 
 					if currentConfigGroupVersionInfos.CreateTime != nil {

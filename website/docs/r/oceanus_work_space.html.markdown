@@ -43,6 +43,14 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - Update time.
 * `work_space_id` - Workspace ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateWorkSpace](https://www.tencentcloud.com/search/?wd=CreateWorkSpace&type=document&lang=en)
+* Read: [DescribeWorkSpaces](https://www.tencentcloud.com/search/?wd=DescribeWorkSpaces&type=document&lang=en)
+* Update: [ModifyWorkSpace](https://www.tencentcloud.com/search/?wd=ModifyWorkSpace&type=document&lang=en)
+* Delete: [DeleteWorkSpace](https://www.tencentcloud.com/search/?wd=DeleteWorkSpace&type=document&lang=en)
 
 ## Import
 

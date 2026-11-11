@@ -19,3 +19,11 @@ resource "tencentcloud_dts_sync_job" "example" {
   }
 }
 ```
+
+Import
+
+DTS sync job can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_dts_sync_job.example sync-hpb214ua
+```

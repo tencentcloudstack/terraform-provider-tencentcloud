@@ -24,6 +24,7 @@ resource "tencentcloud_waf_cc_session" "example" {
   end_offset       = "-1"
   edition          = "sparta-waf"
   session_name     = "terraformDemo"
+  key              = "sessionId"
 }
 ```
 
@@ -40,6 +41,7 @@ The following arguments are supported:
 * `session_name` - (Required, String) Session Name.
 * `source` - (Required, String) Session matching position, Optional locations are get, post, header, cookie.
 * `start_offset` - (Required, String) Starting offset position, when Category is location.
+* `key` - (Optional, String) Precise-match session key, configured when Category is precise matching.
 
 ## Attributes Reference
 
@@ -48,6 +50,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `session_id` - Session ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [UpsertSession](https://www.tencentcloud.com/document/api/627/64534)
+* Read: [DescribeSession](https://www.tencentcloud.com/document/api/627/64519)
+* Update: [UpsertSession](https://www.tencentcloud.com/document/api/627/64534)
+* Delete: [DeleteSession](https://www.tencentcloud.com/document/api/627/64760)
 
 ## Import
 

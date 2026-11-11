@@ -33,4 +33,9 @@ In addition to all arguments above, the following attributes are exported:
 * `health_check_local_ip` - local ip of health check.
 * `health_check_remote_ip` - remote ip for health check.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GenerateVpnConnectionDefaultHealthCheckIp](https://www.tencentcloud.com/document/api/215/56575)
 

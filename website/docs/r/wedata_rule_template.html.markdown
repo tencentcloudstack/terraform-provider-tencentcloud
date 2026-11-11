@@ -50,6 +50,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRuleTemplate](https://www.tencentcloud.com/document/api/1174/61130)
+* Read: [DescribeRuleTemplate](https://www.tencentcloud.com/document/api/1174/61111)
+* Update: [ModifyRuleTemplate](https://www.tencentcloud.com/document/api/1174/61097)
+* Delete: [DeleteRuleTemplate](https://www.tencentcloud.com/document/api/1174/61128)
 
 ## Import
 

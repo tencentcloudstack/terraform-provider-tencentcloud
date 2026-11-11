@@ -246,7 +246,7 @@ func TestBotManagementLite_ReadWithBotManagementLite(t *testing.T) {
 	teoClient := &teov20220901.Client{}
 	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
 
-	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
 		resp := teov20220901.NewDescribeSecurityPolicyResponse()
 		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
 			SecurityPolicy: &teov20220901.SecurityPolicy{
@@ -320,7 +320,7 @@ func TestBotManagementLite_ReadWithNilBotManagementLite(t *testing.T) {
 	teoClient := &teov20220901.Client{}
 	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
 
-	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
 		resp := teov20220901.NewDescribeSecurityPolicyResponse()
 		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
 			SecurityPolicy: &teov20220901.SecurityPolicy{},
@@ -356,7 +356,7 @@ func TestBotManagementLite_ReadWithPartialBotManagementLite(t *testing.T) {
 	teoClient := &teov20220901.Client{}
 	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
 
-	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
 		resp := teov20220901.NewDescribeSecurityPolicyResponse()
 		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
 			SecurityPolicy: &teov20220901.SecurityPolicy{
@@ -407,7 +407,7 @@ func TestBotManagementLite_ReadWithAllowAction(t *testing.T) {
 	teoClient := &teov20220901.Client{}
 	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
 
-	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
 		resp := teov20220901.NewDescribeSecurityPolicyResponse()
 		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
 			SecurityPolicy: &teov20220901.SecurityPolicy{
@@ -473,7 +473,7 @@ func TestBotManagementLite_ReadWithChallengeAction(t *testing.T) {
 	teoClient := &teov20220901.Client{}
 	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
 
-	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
 		resp := teov20220901.NewDescribeSecurityPolicyResponse()
 		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
 			SecurityPolicy: &teov20220901.SecurityPolicy{
@@ -550,7 +550,7 @@ func TestBotManagementLite_UpdateExpand(t *testing.T) {
 	})
 
 	// Also mock DescribeSecurityPolicy for the Read call after Update
-	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
 		resp := teov20220901.NewDescribeSecurityPolicyResponse()
 		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
 			SecurityPolicy: &teov20220901.SecurityPolicy{
@@ -701,4 +701,1008 @@ func TestBotManagementLite_Schema(t *testing.T) {
 	assert.Contains(t, challengeRes.Schema, "challenge_option")
 	assert.Contains(t, challengeRes.Schema, "interval")
 	assert.Contains(t, challengeRes.Schema, "attester_id")
+}
+
+// ptrUint64SecurityPolicy returns a pointer to a uint64 for test data construction.
+func ptrUint64SecurityPolicy(u uint64) *uint64 {
+	return &u
+}
+
+func ptrInt64SecurityPolicy(i int64) *int64 {
+	return &i
+}
+
+// TestClientAttestationRules_ReadWithDeviceProfiles tests Read flattens
+// DeviceProfiles from the DescribeSecurityPolicy response into state.
+func TestClientAttestationRules_ReadWithDeviceProfiles(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+		resp := teov20220901.NewDescribeSecurityPolicyResponse()
+		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
+			SecurityPolicy: &teov20220901.SecurityPolicy{
+				BotManagement: &teov20220901.BotManagement{
+					ClientAttestationRules: &teov20220901.ClientAttestationRules{
+						Rules: []*teov20220901.ClientAttestationRule{
+							{
+								Id:         ptrStringSecurityPolicy("rule-001"),
+								Name:       ptrStringSecurityPolicy("attestation-rule-1"),
+								Enabled:    ptrStringSecurityPolicy("on"),
+								Priority:   ptrUint64SecurityPolicy(10),
+								Condition:  ptrStringSecurityPolicy("$${http.request.host} contain ['abc']"),
+								AttesterId: ptrStringSecurityPolicy("attester-xxxx"),
+								InvalidAttestationAction: &teov20220901.SecurityAction{
+									Name: ptrStringSecurityPolicy("Monitor"),
+								},
+								DeviceProfiles: []*teov20220901.DeviceProfile{
+									{
+										ClientType:         ptrStringSecurityPolicy("iOS"),
+										HighRiskMinScore:   ptrUint64SecurityPolicy(60),
+										MediumRiskMinScore: ptrUint64SecurityPolicy(20),
+										HighRiskRequestAction: &teov20220901.SecurityAction{
+											Name: ptrStringSecurityPolicy("Deny"),
+											DenyActionParameters: &teov20220901.DenyActionParameters{
+												BlockIp:         ptrStringSecurityPolicy("on"),
+												BlockIpDuration: ptrStringSecurityPolicy("120s"),
+											},
+										},
+										MediumRiskRequestAction: &teov20220901.SecurityAction{
+											Name: ptrStringSecurityPolicy("Monitor"),
+										},
+									},
+									{
+										ClientType:         ptrStringSecurityPolicy("Android"),
+										HighRiskMinScore:   ptrUint64SecurityPolicy(50),
+										MediumRiskMinScore: ptrUint64SecurityPolicy(15),
+										HighRiskRequestAction: &teov20220901.SecurityAction{
+											Name: ptrStringSecurityPolicy("Challenge"),
+											ChallengeActionParameters: &teov20220901.ChallengeActionParameters{
+												ChallengeOption: ptrStringSecurityPolicy("JSChallenge"),
+											},
+										},
+										MediumRiskRequestAction: &teov20220901.SecurityAction{
+											Name: ptrStringSecurityPolicy("Monitor"),
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaSecurityPolicy()
+	res := teo.ResourceTencentCloudTeoSecurityPolicyConfig()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-12345678",
+		"entity":  "ZoneDefaultPolicy",
+	})
+	d.SetId("zone-12345678#ZoneDefaultPolicy")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+
+	securityPolicy := d.Get("security_policy").([]interface{})
+	assert.Len(t, securityPolicy, 1)
+	spMap := securityPolicy[0].(map[string]interface{})
+
+	botManagement := spMap["bot_management"].([]interface{})
+	assert.Len(t, botManagement, 1)
+	bmMap := botManagement[0].(map[string]interface{})
+
+	clientAttestationRules := bmMap["client_attestation_rules"].([]interface{})
+	assert.Len(t, clientAttestationRules, 1)
+	ruleMap := clientAttestationRules[0].(map[string]interface{})
+	assert.Equal(t, "rule-001", ruleMap["id"])
+	assert.Equal(t, "attestation-rule-1", ruleMap["name"])
+
+	deviceProfiles := ruleMap["device_profiles"].([]interface{})
+	assert.Len(t, deviceProfiles, 2)
+
+	dp0 := deviceProfiles[0].(map[string]interface{})
+	assert.Equal(t, "iOS", dp0["client_type"])
+	assert.Equal(t, 60, dp0["high_risk_min_score"])
+	assert.Equal(t, 20, dp0["medium_risk_min_score"])
+
+	highAction0 := dp0["high_risk_request_action"].([]interface{})
+	assert.Len(t, highAction0, 1)
+	highActionMap0 := highAction0[0].(map[string]interface{})
+	assert.Equal(t, "Deny", highActionMap0["name"])
+	denyParams0 := highActionMap0["deny_action_parameters"].([]interface{})
+	assert.Len(t, denyParams0, 1)
+	denyMap0 := denyParams0[0].(map[string]interface{})
+	assert.Equal(t, "on", denyMap0["block_ip"])
+	assert.Equal(t, "120s", denyMap0["block_ip_duration"])
+
+	mediumAction0 := dp0["medium_risk_request_action"].([]interface{})
+	assert.Len(t, mediumAction0, 1)
+	mediumActionMap0 := mediumAction0[0].(map[string]interface{})
+	assert.Equal(t, "Monitor", mediumActionMap0["name"])
+
+	dp1 := deviceProfiles[1].(map[string]interface{})
+	assert.Equal(t, "Android", dp1["client_type"])
+	assert.Equal(t, 50, dp1["high_risk_min_score"])
+	assert.Equal(t, 15, dp1["medium_risk_min_score"])
+
+	highAction1 := dp1["high_risk_request_action"].([]interface{})
+	assert.Len(t, highAction1, 1)
+	highActionMap1 := highAction1[0].(map[string]interface{})
+	assert.Equal(t, "Challenge", highActionMap1["name"])
+	challengeParams1 := highActionMap1["challenge_action_parameters"].([]interface{})
+	assert.Len(t, challengeParams1, 1)
+	challengeMap1 := challengeParams1[0].(map[string]interface{})
+	assert.Equal(t, "JSChallenge", challengeMap1["challenge_option"])
+}
+
+// TestClientAttestationRules_ReadWithNilDeviceProfiles tests Read when the
+// DeviceProfiles field on a ClientAttestationRule is nil (state stays empty).
+func TestClientAttestationRules_ReadWithNilDeviceProfiles(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+		resp := teov20220901.NewDescribeSecurityPolicyResponse()
+		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
+			SecurityPolicy: &teov20220901.SecurityPolicy{
+				BotManagement: &teov20220901.BotManagement{
+					ClientAttestationRules: &teov20220901.ClientAttestationRules{
+						Rules: []*teov20220901.ClientAttestationRule{
+							{
+								Id:        ptrStringSecurityPolicy("rule-002"),
+								Name:      ptrStringSecurityPolicy("attestation-rule-2"),
+								Enabled:   ptrStringSecurityPolicy("on"),
+								Priority:  ptrUint64SecurityPolicy(20),
+								Condition: ptrStringSecurityPolicy("$${http.request.host} contain ['def']"),
+								// DeviceProfiles intentionally nil
+								InvalidAttestationAction: &teov20220901.SecurityAction{
+									Name: ptrStringSecurityPolicy("Monitor"),
+								},
+							},
+						},
+					},
+				},
+			},
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaSecurityPolicy()
+	res := teo.ResourceTencentCloudTeoSecurityPolicyConfig()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-12345678",
+		"entity":  "ZoneDefaultPolicy",
+	})
+	d.SetId("zone-12345678#ZoneDefaultPolicy")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+
+	securityPolicy := d.Get("security_policy").([]interface{})
+	assert.Len(t, securityPolicy, 1)
+	spMap := securityPolicy[0].(map[string]interface{})
+
+	botManagement := spMap["bot_management"].([]interface{})
+	assert.Len(t, botManagement, 1)
+	bmMap := botManagement[0].(map[string]interface{})
+
+	clientAttestationRules := bmMap["client_attestation_rules"].([]interface{})
+	assert.Len(t, clientAttestationRules, 1)
+	ruleMap := clientAttestationRules[0].(map[string]interface{})
+
+	// device_profiles must be an empty list since the API returned nil
+	deviceProfiles, ok := ruleMap["device_profiles"].([]interface{})
+	assert.True(t, ok)
+	assert.Len(t, deviceProfiles, 0)
+}
+
+// TestClientAttestationRules_UpdateExpandDeviceProfiles tests that the Update
+// operation expands the device_profiles configuration into the
+// ModifySecurityPolicy request's ClientAttestationRule.DeviceProfiles field.
+func TestClientAttestationRules_UpdateExpandDeviceProfiles(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
+
+	var capturedRequest *teov20220901.ModifySecurityPolicyRequest
+	patches.ApplyMethodFunc(teoClient, "ModifySecurityPolicyWithContext", func(_ context.Context, request *teov20220901.ModifySecurityPolicyRequest) (*teov20220901.ModifySecurityPolicyResponse, error) {
+		capturedRequest = request
+		resp := teov20220901.NewModifySecurityPolicyResponse()
+		resp.Response = &teov20220901.ModifySecurityPolicyResponseParams{
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Mock DescribeSecurityPolicy for the Read call after Update
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+		resp := teov20220901.NewDescribeSecurityPolicyResponse()
+		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
+			SecurityPolicy: &teov20220901.SecurityPolicy{
+				BotManagement: &teov20220901.BotManagement{
+					ClientAttestationRules: &teov20220901.ClientAttestationRules{
+						Rules: []*teov20220901.ClientAttestationRule{
+							{
+								Id:         ptrStringSecurityPolicy("rule-001"),
+								Name:       ptrStringSecurityPolicy("attestation-rule-1"),
+								Enabled:    ptrStringSecurityPolicy("on"),
+								Priority:   ptrUint64SecurityPolicy(10),
+								Condition:  ptrStringSecurityPolicy("$${http.request.host} contain ['abc']"),
+								AttesterId: ptrStringSecurityPolicy("attester-xxxx"),
+								InvalidAttestationAction: &teov20220901.SecurityAction{
+									Name: ptrStringSecurityPolicy("Monitor"),
+								},
+								DeviceProfiles: []*teov20220901.DeviceProfile{
+									{
+										ClientType:         ptrStringSecurityPolicy("iOS"),
+										HighRiskMinScore:   ptrUint64SecurityPolicy(60),
+										MediumRiskMinScore: ptrUint64SecurityPolicy(20),
+										HighRiskRequestAction: &teov20220901.SecurityAction{
+											Name: ptrStringSecurityPolicy("Deny"),
+											DenyActionParameters: &teov20220901.DenyActionParameters{
+												BlockIp:         ptrStringSecurityPolicy("on"),
+												BlockIpDuration: ptrStringSecurityPolicy("120s"),
+											},
+										},
+										MediumRiskRequestAction: &teov20220901.SecurityAction{
+											Name: ptrStringSecurityPolicy("Monitor"),
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaSecurityPolicy()
+	res := teo.ResourceTencentCloudTeoSecurityPolicyConfig()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-12345678",
+		"entity":  "ZoneDefaultPolicy",
+		"security_policy": []interface{}{
+			map[string]interface{}{
+				"bot_management": []interface{}{
+					map[string]interface{}{
+						"client_attestation_rules": []interface{}{
+							map[string]interface{}{
+								"name":        "attestation-rule-1",
+								"enabled":     "on",
+								"priority":    10,
+								"condition":   "$${http.request.host} contain ['abc']",
+								"attester_id": "attester-xxxx",
+								"invalid_attestation_action": []interface{}{
+									map[string]interface{}{
+										"name": "Monitor",
+									},
+								},
+								"device_profiles": []interface{}{
+									map[string]interface{}{
+										"client_type":           "iOS",
+										"high_risk_min_score":   60,
+										"medium_risk_min_score": 20,
+										"high_risk_request_action": []interface{}{
+											map[string]interface{}{
+												"name": "Deny",
+												"deny_action_parameters": []interface{}{
+													map[string]interface{}{
+														"block_ip":          "on",
+														"block_ip_duration": "120s",
+													},
+												},
+											},
+										},
+										"medium_risk_request_action": []interface{}{
+											map[string]interface{}{
+												"name": "Monitor",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	})
+	d.SetId("zone-12345678#ZoneDefaultPolicy")
+
+	err := res.Update(d, meta)
+	assert.NoError(t, err)
+	assert.NotNil(t, capturedRequest)
+	assert.NotNil(t, capturedRequest.SecurityPolicy)
+	assert.NotNil(t, capturedRequest.SecurityPolicy.BotManagement)
+	assert.NotNil(t, capturedRequest.SecurityPolicy.BotManagement.ClientAttestationRules)
+
+	rules := capturedRequest.SecurityPolicy.BotManagement.ClientAttestationRules.Rules
+	assert.Len(t, rules, 1)
+	rule := rules[0]
+	assert.NotNil(t, rule)
+	assert.Equal(t, "attestation-rule-1", *rule.Name)
+	assert.Equal(t, "on", *rule.Enabled)
+	assert.Equal(t, uint64(10), *rule.Priority)
+	assert.Equal(t, "attester-xxxx", *rule.AttesterId)
+
+	assert.NotNil(t, rule.DeviceProfiles)
+	assert.Len(t, rule.DeviceProfiles, 1)
+
+	dp := rule.DeviceProfiles[0]
+	assert.Equal(t, "iOS", *dp.ClientType)
+	assert.Equal(t, uint64(60), *dp.HighRiskMinScore)
+	assert.Equal(t, uint64(20), *dp.MediumRiskMinScore)
+	assert.NotNil(t, dp.HighRiskRequestAction)
+	assert.Equal(t, "Deny", *dp.HighRiskRequestAction.Name)
+	assert.NotNil(t, dp.HighRiskRequestAction.DenyActionParameters)
+	assert.Equal(t, "on", *dp.HighRiskRequestAction.DenyActionParameters.BlockIp)
+	assert.Equal(t, "120s", *dp.HighRiskRequestAction.DenyActionParameters.BlockIpDuration)
+	assert.NotNil(t, dp.MediumRiskRequestAction)
+	assert.Equal(t, "Monitor", *dp.MediumRiskRequestAction.Name)
+}
+
+// go test ./tencentcloud/services/teo/ -run "TestExceptionRuleSubmodules" -v -count=1 -gcflags="all=-l"
+
+// TestExceptionRuleSubmodules_UpdateExpand tests that Update expands
+// web_security_submodules_for_exception into the ModifySecurityPolicy request.
+func TestExceptionRuleSubmodules_UpdateExpand(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
+
+	var capturedRequest *teov20220901.ModifySecurityPolicyRequest
+	patches.ApplyMethodFunc(teoClient, "ModifySecurityPolicyWithContext", func(_ context.Context, request *teov20220901.ModifySecurityPolicyRequest) (*teov20220901.ModifySecurityPolicyResponse, error) {
+		capturedRequest = request
+		resp := teov20220901.NewModifySecurityPolicyResponse()
+		resp.Response = &teov20220901.ModifySecurityPolicyResponseParams{
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Also mock DescribeSecurityPolicy for the Read call after Update
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+		resp := teov20220901.NewDescribeSecurityPolicyResponse()
+		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
+			SecurityPolicy: &teov20220901.SecurityPolicy{
+				ExceptionRules: &teov20220901.ExceptionRules{
+					Rules: []*teov20220901.ExceptionRule{
+						{
+							Name:      ptrStringSecurityPolicy("exception-rule-1"),
+							Condition: ptrStringSecurityPolicy("$${http.request.host} contain ['abc']"),
+							SkipScope: ptrStringSecurityPolicy("WebSecuritySubmodules"),
+							WebSecuritySubmodulesForException: []*string{
+								ptrStringSecurityPolicy("websec-mod-managed-rules/managed-rule-groups"),
+								ptrStringSecurityPolicy("websec-mod-rate-limiting-rules"),
+							},
+							Enabled: ptrStringSecurityPolicy("on"),
+						},
+					},
+				},
+			},
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaSecurityPolicy()
+	res := teo.ResourceTencentCloudTeoSecurityPolicyConfig()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-12345678",
+		"entity":  "ZoneDefaultPolicy",
+		"security_policy": []interface{}{
+			map[string]interface{}{
+				"exception_rules": []interface{}{
+					map[string]interface{}{
+						"rules": []interface{}{
+							map[string]interface{}{
+								"name":       "exception-rule-1",
+								"condition":  "$${http.request.host} contain ['abc']",
+								"skip_scope": "WebSecuritySubmodules",
+								"web_security_submodules_for_exception": []interface{}{
+									"websec-mod-managed-rules/managed-rule-groups",
+									"websec-mod-rate-limiting-rules",
+								},
+								"enabled": "on",
+							},
+						},
+					},
+				},
+			},
+		},
+	})
+	d.SetId("zone-12345678#ZoneDefaultPolicy")
+
+	err := res.Update(d, meta)
+	assert.NoError(t, err)
+	assert.NotNil(t, capturedRequest)
+	assert.NotNil(t, capturedRequest.SecurityPolicy)
+	assert.NotNil(t, capturedRequest.SecurityPolicy.ExceptionRules)
+	assert.Len(t, capturedRequest.SecurityPolicy.ExceptionRules.Rules, 1)
+	rule := capturedRequest.SecurityPolicy.ExceptionRules.Rules[0]
+	assert.NotNil(t, rule.WebSecuritySubmodulesForException)
+	assert.Len(t, rule.WebSecuritySubmodulesForException, 2)
+	// TypeSet is order-insensitive, so collect values into a map for comparison
+	got := map[string]bool{}
+	for _, v := range rule.WebSecuritySubmodulesForException {
+		if v != nil {
+			got[*v] = true
+		}
+	}
+	assert.True(t, got["websec-mod-managed-rules/managed-rule-groups"])
+	assert.True(t, got["websec-mod-rate-limiting-rules"])
+}
+
+// TestExceptionRuleSubmodules_ReadWithSubmodules tests that Read flattens
+// WebSecuritySubmodulesForException from the DescribeSecurityPolicy response.
+func TestExceptionRuleSubmodules_ReadWithSubmodules(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+		resp := teov20220901.NewDescribeSecurityPolicyResponse()
+		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
+			SecurityPolicy: &teov20220901.SecurityPolicy{
+				ExceptionRules: &teov20220901.ExceptionRules{
+					Rules: []*teov20220901.ExceptionRule{
+						{
+							Name:      ptrStringSecurityPolicy("exception-rule-1"),
+							Condition: ptrStringSecurityPolicy("$${http.request.host} contain ['abc']"),
+							SkipScope: ptrStringSecurityPolicy("WebSecuritySubmodules"),
+							WebSecuritySubmodulesForException: []*string{
+								ptrStringSecurityPolicy("websec-mod-managed-rules/managed-rule-groups"),
+								ptrStringSecurityPolicy("websec-mod-rate-limiting-rules"),
+							},
+							Enabled: ptrStringSecurityPolicy("on"),
+						},
+					},
+				},
+			},
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaSecurityPolicy()
+	res := teo.ResourceTencentCloudTeoSecurityPolicyConfig()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-12345678",
+		"entity":  "ZoneDefaultPolicy",
+	})
+	d.SetId("zone-12345678#ZoneDefaultPolicy")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+
+	securityPolicy := d.Get("security_policy").([]interface{})
+	assert.Len(t, securityPolicy, 1)
+	spMap := securityPolicy[0].(map[string]interface{})
+
+	exceptionRules := spMap["exception_rules"].([]interface{})
+	assert.Len(t, exceptionRules, 1)
+	erMap := exceptionRules[0].(map[string]interface{})
+
+	rules := erMap["rules"].([]interface{})
+	assert.Len(t, rules, 1)
+	ruleMap := rules[0].(map[string]interface{})
+
+	submodulesSet := ruleMap["web_security_submodules_for_exception"].(*schema.Set)
+	assert.Equal(t, 2, submodulesSet.Len())
+	got := map[string]bool{}
+	for _, v := range submodulesSet.List() {
+		got[v.(string)] = true
+	}
+	assert.True(t, got["websec-mod-managed-rules/managed-rule-groups"])
+	assert.True(t, got["websec-mod-rate-limiting-rules"])
+}
+
+// TestExceptionRuleSubmodules_ReadWithNilSubmodules tests that Read does not
+// populate web_security_submodules_for_exception when the API returns nil.
+func TestExceptionRuleSubmodules_ReadWithNilSubmodules(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+		resp := teov20220901.NewDescribeSecurityPolicyResponse()
+		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
+			SecurityPolicy: &teov20220901.SecurityPolicy{
+				ExceptionRules: &teov20220901.ExceptionRules{
+					Rules: []*teov20220901.ExceptionRule{
+						{
+							Name:      ptrStringSecurityPolicy("exception-rule-1"),
+							Condition: ptrStringSecurityPolicy("$${http.request.host} contain ['abc']"),
+							SkipScope: ptrStringSecurityPolicy("WebSecuritySubmodules"),
+							Enabled:   ptrStringSecurityPolicy("on"),
+						},
+					},
+				},
+			},
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaSecurityPolicy()
+	res := teo.ResourceTencentCloudTeoSecurityPolicyConfig()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-12345678",
+		"entity":  "ZoneDefaultPolicy",
+	})
+	d.SetId("zone-12345678#ZoneDefaultPolicy")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+
+	securityPolicy := d.Get("security_policy").([]interface{})
+	assert.Len(t, securityPolicy, 1)
+	spMap := securityPolicy[0].(map[string]interface{})
+
+	exceptionRules := spMap["exception_rules"].([]interface{})
+	assert.Len(t, exceptionRules, 1)
+	erMap := exceptionRules[0].(map[string]interface{})
+
+	rules := erMap["rules"].([]interface{})
+	assert.Len(t, rules, 1)
+	ruleMap := rules[0].(map[string]interface{})
+
+	submodulesSet := ruleMap["web_security_submodules_for_exception"].(*schema.Set)
+	assert.Equal(t, 0, submodulesSet.Len())
+}
+
+// TestExceptionRuleSubmodules_UpdateChange tests that Update reflects changes
+// to web_security_submodules_for_exception in the ModifySecurityPolicy request.
+func TestExceptionRuleSubmodules_UpdateChange(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
+
+	var capturedRequest *teov20220901.ModifySecurityPolicyRequest
+	patches.ApplyMethodFunc(teoClient, "ModifySecurityPolicyWithContext", func(_ context.Context, request *teov20220901.ModifySecurityPolicyRequest) (*teov20220901.ModifySecurityPolicyResponse, error) {
+		capturedRequest = request
+		resp := teov20220901.NewModifySecurityPolicyResponse()
+		resp.Response = &teov20220901.ModifySecurityPolicyResponseParams{
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Also mock DescribeSecurityPolicy for the Read call after Update
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+		resp := teov20220901.NewDescribeSecurityPolicyResponse()
+		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
+			SecurityPolicy: &teov20220901.SecurityPolicy{
+				ExceptionRules: &teov20220901.ExceptionRules{
+					Rules: []*teov20220901.ExceptionRule{
+						{
+							Name:      ptrStringSecurityPolicy("exception-rule-1"),
+							Condition: ptrStringSecurityPolicy("$${http.request.host} contain ['abc']"),
+							SkipScope: ptrStringSecurityPolicy("WebSecuritySubmodules"),
+							WebSecuritySubmodulesForException: []*string{
+								ptrStringSecurityPolicy("websec-mod-custom-rules"),
+							},
+							Enabled: ptrStringSecurityPolicy("on"),
+						},
+					},
+				},
+			},
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaSecurityPolicy()
+	res := teo.ResourceTencentCloudTeoSecurityPolicyConfig()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-12345678",
+		"entity":  "ZoneDefaultPolicy",
+		"security_policy": []interface{}{
+			map[string]interface{}{
+				"exception_rules": []interface{}{
+					map[string]interface{}{
+						"rules": []interface{}{
+							map[string]interface{}{
+								"name":       "exception-rule-1",
+								"condition":  "$${http.request.host} contain ['abc']",
+								"skip_scope": "WebSecuritySubmodules",
+								"web_security_submodules_for_exception": []interface{}{
+									"websec-mod-custom-rules",
+								},
+								"enabled": "on",
+							},
+						},
+					},
+				},
+			},
+		},
+	})
+	d.SetId("zone-12345678#ZoneDefaultPolicy")
+
+	err := res.Update(d, meta)
+	assert.NoError(t, err)
+	assert.NotNil(t, capturedRequest)
+	assert.NotNil(t, capturedRequest.SecurityPolicy)
+	assert.NotNil(t, capturedRequest.SecurityPolicy.ExceptionRules)
+	assert.Len(t, capturedRequest.SecurityPolicy.ExceptionRules.Rules, 1)
+	rule := capturedRequest.SecurityPolicy.ExceptionRules.Rules[0]
+	assert.NotNil(t, rule.WebSecuritySubmodulesForException)
+	assert.Len(t, rule.WebSecuritySubmodulesForException, 1)
+	assert.Equal(t, "websec-mod-custom-rules", *rule.WebSecuritySubmodulesForException[0])
+}
+
+// TestBuildBotManagementActionOverrideFromMap_MultipleRuleIDs tests build path with multiple rule_ids
+func TestBuildBotManagementActionOverrideFromMap_MultipleRuleIDs(t *testing.T) {
+	m := map[string]interface{}{
+		"rule_ids": []interface{}{"rule-a", "rule-b"},
+	}
+	override := teo.BuildBotManagementActionOverrideFromMap(m)
+	assert.NotNil(t, override)
+	assert.Len(t, override.Ids, 2)
+	assert.Equal(t, "rule-a", *override.Ids[0])
+	assert.Equal(t, "rule-b", *override.Ids[1])
+}
+
+// TestBuildBotManagementActionOverrideFromMap_SingleRuleID tests build path with single rule_id
+func TestBuildBotManagementActionOverrideFromMap_SingleRuleID(t *testing.T) {
+	m := map[string]interface{}{
+		"rule_ids": []interface{}{"rule-a"},
+	}
+	override := teo.BuildBotManagementActionOverrideFromMap(m)
+	assert.NotNil(t, override)
+	assert.Len(t, override.Ids, 1)
+	assert.Equal(t, "rule-a", *override.Ids[0])
+}
+
+// TestBuildBotManagementActionOverrideFromMap_EmptyRuleIDs tests build path with empty rule_ids
+func TestBuildBotManagementActionOverrideFromMap_EmptyRuleIDs(t *testing.T) {
+	m := map[string]interface{}{
+		"rule_ids": []interface{}{},
+	}
+	override := teo.BuildBotManagementActionOverrideFromMap(m)
+	assert.NotNil(t, override)
+	assert.Nil(t, override.Ids)
+}
+
+// TestBuildBotManagementActionOverrideFromMap_DeprecatedRuleIDFallback tests build path
+// where only the deprecated rule_id is set; it is used as a fallback single-element Ids.
+func TestBuildBotManagementActionOverrideFromMap_DeprecatedRuleIDFallback(t *testing.T) {
+	m := map[string]interface{}{
+		"rule_id": "rule-legacy",
+	}
+	override := teo.BuildBotManagementActionOverrideFromMap(m)
+	assert.NotNil(t, override)
+	assert.Len(t, override.Ids, 1)
+	assert.Equal(t, "rule-legacy", *override.Ids[0])
+}
+
+// TestBuildBotManagementActionOverrideFromMap_RuleIDsPrecedenceOverRuleID tests that when both
+// rule_ids and the deprecated rule_id are set, rule_ids takes precedence.
+func TestBuildBotManagementActionOverrideFromMap_RuleIDsPrecedenceOverRuleID(t *testing.T) {
+	m := map[string]interface{}{
+		"rule_id":  "rule-legacy",
+		"rule_ids": []interface{}{"rule-a", "rule-b"},
+	}
+	override := teo.BuildBotManagementActionOverrideFromMap(m)
+	assert.NotNil(t, override)
+	assert.Len(t, override.Ids, 2)
+	assert.Equal(t, "rule-a", *override.Ids[0])
+	assert.Equal(t, "rule-b", *override.Ids[1])
+}
+
+// TestBuildBotManagementActionOverrideFromMap_NeitherFieldSet tests that when neither
+// rule_ids nor rule_id is set, Ids remains nil.
+func TestBuildBotManagementActionOverrideFromMap_NeitherFieldSet(t *testing.T) {
+	m := map[string]interface{}{
+		"action": []interface{}{
+			map[string]interface{}{
+				"name": "Deny",
+			},
+		},
+	}
+	override := teo.BuildBotManagementActionOverrideFromMap(m)
+	assert.NotNil(t, override)
+	assert.Nil(t, override.Ids)
+	assert.NotNil(t, override.Action)
+}
+
+// TestFlattenBotManagementActionOverride_MultipleIDs tests flatten path with multiple IDs
+func TestFlattenBotManagementActionOverride_MultipleIDs(t *testing.T) {
+	override := &teov20220901.BotManagementActionOverrides{
+		Ids: []*string{
+			ptrStringSecurityPolicy("rule-a"),
+			ptrStringSecurityPolicy("rule-b"),
+		},
+	}
+	m := teo.FlattenBotManagementActionOverride(override)
+	ruleIds, ok := m["rule_ids"].([]interface{})
+	assert.True(t, ok)
+	assert.Len(t, ruleIds, 2)
+	assert.Equal(t, "rule-a", ruleIds[0])
+	assert.Equal(t, "rule-b", ruleIds[1])
+}
+
+// TestFlattenBotManagementActionOverride_SingleID tests flatten path with single ID
+func TestFlattenBotManagementActionOverride_SingleID(t *testing.T) {
+	override := &teov20220901.BotManagementActionOverrides{
+		Ids: []*string{
+			ptrStringSecurityPolicy("rule-a"),
+		},
+	}
+	m := teo.FlattenBotManagementActionOverride(override)
+	ruleIds, ok := m["rule_ids"].([]interface{})
+	assert.True(t, ok)
+	assert.Len(t, ruleIds, 1)
+	assert.Equal(t, "rule-a", ruleIds[0])
+}
+
+// TestFlattenBotManagementActionOverride_NilIDs tests flatten path with nil Ids
+func TestFlattenBotManagementActionOverride_NilIDs(t *testing.T) {
+	override := &teov20220901.BotManagementActionOverrides{
+		Ids: nil,
+	}
+	m := teo.FlattenBotManagementActionOverride(override)
+	_, ok := m["rule_ids"]
+	assert.False(t, ok)
+}
+
+// TestFrequentScanningProtection_ReadFlatten tests Read flattens
+// FrequentScanningProtection from the DescribeSecurityPolicy response into state.
+func TestFrequentScanningProtection_ReadFlatten(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+		resp := teov20220901.NewDescribeSecurityPolicyResponse()
+		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
+			SecurityPolicy: &teov20220901.SecurityPolicy{
+				ManagedRules: &teov20220901.ManagedRules{
+					Enabled:       ptrStringSecurityPolicy("on"),
+					DetectionOnly: ptrStringSecurityPolicy("off"),
+					FrequentScanningProtection: &teov20220901.FrequentScanningProtection{
+						Enabled: ptrStringSecurityPolicy("on"),
+						Id:      ptrStringSecurityPolicy("rule-fsp-001"),
+						Action: &teov20220901.SecurityAction{
+							Name: ptrStringSecurityPolicy("Deny"),
+							DenyActionParameters: &teov20220901.DenyActionParameters{
+								BlockIp:         ptrStringSecurityPolicy("on"),
+								BlockIpDuration: ptrStringSecurityPolicy("120s"),
+							},
+						},
+						CountBy:        ptrStringSecurityPolicy("http.request.ip"),
+						BlockThreshold: ptrInt64SecurityPolicy(100),
+						CountingPeriod: ptrStringSecurityPolicy("60s"),
+						ActionDuration: ptrStringSecurityPolicy("600s"),
+					},
+				},
+			},
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaSecurityPolicy()
+	res := teo.ResourceTencentCloudTeoSecurityPolicyConfig()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-12345678",
+		"entity":  "ZoneDefaultPolicy",
+	})
+	d.SetId("zone-12345678#ZoneDefaultPolicy")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+
+	securityPolicy := d.Get("security_policy").([]interface{})
+	assert.Len(t, securityPolicy, 1)
+	spMap := securityPolicy[0].(map[string]interface{})
+
+	managedRules := spMap["managed_rules"].([]interface{})
+	assert.Len(t, managedRules, 1)
+	mrMap := managedRules[0].(map[string]interface{})
+
+	fsp := mrMap["frequent_scanning_protection"].([]interface{})
+	assert.Len(t, fsp, 1)
+	fspMap := fsp[0].(map[string]interface{})
+	assert.Equal(t, "on", fspMap["enabled"])
+	assert.Equal(t, "rule-fsp-001", fspMap["id"])
+	assert.Equal(t, "http.request.ip", fspMap["count_by"])
+	assert.Equal(t, 100, fspMap["block_threshold"])
+	assert.Equal(t, "60s", fspMap["counting_period"])
+	assert.Equal(t, "600s", fspMap["action_duration"])
+
+	action := fspMap["action"].([]interface{})
+	assert.Len(t, action, 1)
+	actionMap := action[0].(map[string]interface{})
+	assert.Equal(t, "Deny", actionMap["name"])
+
+	denyParams := actionMap["deny_action_parameters"].([]interface{})
+	assert.Len(t, denyParams, 1)
+	denyMap := denyParams[0].(map[string]interface{})
+	assert.Equal(t, "on", denyMap["block_ip"])
+	assert.Equal(t, "120s", denyMap["block_ip_duration"])
+}
+
+// TestFrequentScanningProtection_ReadNil tests Read leaves
+// frequent_scanning_protection empty when the API response has a nil FrequentScanningProtection.
+func TestFrequentScanningProtection_ReadNil(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+		resp := teov20220901.NewDescribeSecurityPolicyResponse()
+		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
+			SecurityPolicy: &teov20220901.SecurityPolicy{
+				ManagedRules: &teov20220901.ManagedRules{
+					Enabled:       ptrStringSecurityPolicy("on"),
+					DetectionOnly: ptrStringSecurityPolicy("off"),
+				},
+			},
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaSecurityPolicy()
+	res := teo.ResourceTencentCloudTeoSecurityPolicyConfig()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-12345678",
+		"entity":  "ZoneDefaultPolicy",
+	})
+	d.SetId("zone-12345678#ZoneDefaultPolicy")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+
+	securityPolicy := d.Get("security_policy").([]interface{})
+	assert.Len(t, securityPolicy, 1)
+	spMap := securityPolicy[0].(map[string]interface{})
+
+	managedRules := spMap["managed_rules"].([]interface{})
+	assert.Len(t, managedRules, 1)
+	mrMap := managedRules[0].(map[string]interface{})
+
+	fsp, ok := mrMap["frequent_scanning_protection"].([]interface{})
+	assert.True(t, ok)
+	assert.Empty(t, fsp)
+}
+
+// TestFrequentScanningProtection_UpdateExpand tests Update expands
+// frequent_scanning_protection into the ModifySecurityPolicy request.
+func TestFrequentScanningProtection_UpdateExpand(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
+
+	var capturedRequest *teov20220901.ModifySecurityPolicyRequest
+	patches.ApplyMethodFunc(teoClient, "ModifySecurityPolicyWithContext", func(_ context.Context, request *teov20220901.ModifySecurityPolicyRequest) (*teov20220901.ModifySecurityPolicyResponse, error) {
+		capturedRequest = request
+		resp := teov20220901.NewModifySecurityPolicyResponse()
+		resp.Response = &teov20220901.ModifySecurityPolicyResponseParams{
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Mock DescribeSecurityPolicy for the Read call after Update
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+		resp := teov20220901.NewDescribeSecurityPolicyResponse()
+		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
+			SecurityPolicy: &teov20220901.SecurityPolicy{
+				ManagedRules: &teov20220901.ManagedRules{
+					Enabled:       ptrStringSecurityPolicy("on"),
+					DetectionOnly: ptrStringSecurityPolicy("off"),
+					FrequentScanningProtection: &teov20220901.FrequentScanningProtection{
+						Enabled: ptrStringSecurityPolicy("on"),
+						Id:      ptrStringSecurityPolicy("rule-fsp-001"),
+						Action: &teov20220901.SecurityAction{
+							Name: ptrStringSecurityPolicy("Deny"),
+							DenyActionParameters: &teov20220901.DenyActionParameters{
+								BlockIp:         ptrStringSecurityPolicy("on"),
+								BlockIpDuration: ptrStringSecurityPolicy("120s"),
+							},
+						},
+						CountBy:        ptrStringSecurityPolicy("http.request.ip"),
+						BlockThreshold: ptrInt64SecurityPolicy(100),
+						CountingPeriod: ptrStringSecurityPolicy("60s"),
+						ActionDuration: ptrStringSecurityPolicy("600s"),
+					},
+				},
+			},
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaSecurityPolicy()
+	res := teo.ResourceTencentCloudTeoSecurityPolicyConfig()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-12345678",
+		"entity":  "ZoneDefaultPolicy",
+		"security_policy": []interface{}{
+			map[string]interface{}{
+				"managed_rules": []interface{}{
+					map[string]interface{}{
+						"enabled":        "on",
+						"detection_only": "off",
+						"frequent_scanning_protection": []interface{}{
+							map[string]interface{}{
+								"enabled": "on",
+								"action": []interface{}{
+									map[string]interface{}{
+										"name": "Deny",
+										"deny_action_parameters": []interface{}{
+											map[string]interface{}{
+												"block_ip":          "on",
+												"block_ip_duration": "120s",
+											},
+										},
+									},
+								},
+								"count_by":        "http.request.ip",
+								"block_threshold": 100,
+								"counting_period": "60s",
+								"action_duration": "600s",
+							},
+						},
+					},
+				},
+			},
+		},
+	})
+	d.SetId("zone-12345678#ZoneDefaultPolicy")
+
+	err := res.Update(d, meta)
+	assert.NoError(t, err)
+	assert.NotNil(t, capturedRequest)
+	assert.NotNil(t, capturedRequest.SecurityPolicy)
+	assert.NotNil(t, capturedRequest.SecurityPolicy.ManagedRules)
+	assert.NotNil(t, capturedRequest.SecurityPolicy.ManagedRules.FrequentScanningProtection)
+
+	fsp := capturedRequest.SecurityPolicy.ManagedRules.FrequentScanningProtection
+	assert.Equal(t, "on", *fsp.Enabled)
+	assert.Equal(t, "http.request.ip", *fsp.CountBy)
+	assert.Equal(t, int64(100), *fsp.BlockThreshold)
+	assert.Equal(t, "60s", *fsp.CountingPeriod)
+	assert.Equal(t, "600s", *fsp.ActionDuration)
+
+	assert.NotNil(t, fsp.Action)
+	assert.Equal(t, "Deny", *fsp.Action.Name)
+	assert.NotNil(t, fsp.Action.DenyActionParameters)
+	assert.Equal(t, "on", *fsp.Action.DenyActionParameters.BlockIp)
+	assert.Equal(t, "120s", *fsp.Action.DenyActionParameters.BlockIpDuration)
+
+	// The output-only Id field MUST NOT be sent in the expand/update request.
+	assert.Nil(t, fsp.Id)
 }

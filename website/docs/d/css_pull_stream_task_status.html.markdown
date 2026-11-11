@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
   * `report_time` - The latest heartbeat reporting time in UTC format, for example: 2022-02-11T10:00:00Z.Note: UTC time is 8 hours ahead of Beijing time.
   * `run_status` - Real run status:active,inactive.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeLivePullStreamTaskStatus](https://www.tencentcloud.com/search/?wd=DescribeLivePullStreamTaskStatus&type=document&lang=en)
 

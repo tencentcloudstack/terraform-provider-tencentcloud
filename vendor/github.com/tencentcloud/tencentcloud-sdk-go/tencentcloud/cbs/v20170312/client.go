@@ -1088,6 +1088,7 @@ func NewCreateSnapshotResponse() (response *CreateSnapshotResponse) {
 //  INVALIDPARAMETER_PROJECTIDNOTEXIST = "InvalidParameter.ProjectIdNotExist"
 //  LIMITEXCEEDED_INSTANCEATTACHEDDISK = "LimitExceeded.InstanceAttachedDisk"
 //  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED_ACCOUNTSECURITYRISK = "OperationDenied.AccountSecurityRisk"
 //  RESOURCEBUSY = "ResourceBusy"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINUSE_DISKMIGRATING = "ResourceInUse.DiskMigrating"
@@ -1096,10 +1097,12 @@ func NewCreateSnapshotResponse() (response *CreateSnapshotResponse) {
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCEUNAVAILABLE_DISKBACKUPCREATING = "ResourceUnavailable.DiskBackupCreating"
 //  RESOURCEUNAVAILABLE_DISKSNAPSHOTCHAINTOOLARGE = "ResourceUnavailable.DiskSnapshotChainTooLarge"
+//  RESOURCEUNAVAILABLE_NOTSUPPORTSNAPSHOT = "ResourceUnavailable.NotSupportSnapshot"
 //  RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
 //  RESOURCEUNAVAILABLE_SNAPSHOTCREATING = "ResourceUnavailable.SnapshotCreating"
 //  RESOURCEUNAVAILABLE_TOOMANYCREATINGSNAPSHOT = "ResourceUnavailable.TooManyCreatingSnapshot"
 //  UNSUPPORTEDOPERATION_DISKENCRYPT = "UnsupportedOperation.DiskEncrypt"
+//  UNSUPPORTEDOPERATION_SHAREDISKNOTSUPPORTSNAP = "UnsupportedOperation.ShareDiskNotSupportSnap"
 func (c *Client) CreateSnapshot(request *CreateSnapshotRequest) (response *CreateSnapshotResponse, err error) {
     return c.CreateSnapshotWithContext(context.Background(), request)
 }
@@ -1130,6 +1133,7 @@ func (c *Client) CreateSnapshot(request *CreateSnapshotRequest) (response *Creat
 //  INVALIDPARAMETER_PROJECTIDNOTEXIST = "InvalidParameter.ProjectIdNotExist"
 //  LIMITEXCEEDED_INSTANCEATTACHEDDISK = "LimitExceeded.InstanceAttachedDisk"
 //  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED_ACCOUNTSECURITYRISK = "OperationDenied.AccountSecurityRisk"
 //  RESOURCEBUSY = "ResourceBusy"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINUSE_DISKMIGRATING = "ResourceInUse.DiskMigrating"
@@ -1138,10 +1142,12 @@ func (c *Client) CreateSnapshot(request *CreateSnapshotRequest) (response *Creat
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCEUNAVAILABLE_DISKBACKUPCREATING = "ResourceUnavailable.DiskBackupCreating"
 //  RESOURCEUNAVAILABLE_DISKSNAPSHOTCHAINTOOLARGE = "ResourceUnavailable.DiskSnapshotChainTooLarge"
+//  RESOURCEUNAVAILABLE_NOTSUPPORTSNAPSHOT = "ResourceUnavailable.NotSupportSnapshot"
 //  RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
 //  RESOURCEUNAVAILABLE_SNAPSHOTCREATING = "ResourceUnavailable.SnapshotCreating"
 //  RESOURCEUNAVAILABLE_TOOMANYCREATINGSNAPSHOT = "ResourceUnavailable.TooManyCreatingSnapshot"
 //  UNSUPPORTEDOPERATION_DISKENCRYPT = "UnsupportedOperation.DiskEncrypt"
+//  UNSUPPORTEDOPERATION_SHAREDISKNOTSUPPORTSNAP = "UnsupportedOperation.ShareDiskNotSupportSnap"
 func (c *Client) CreateSnapshotWithContext(ctx context.Context, request *CreateSnapshotRequest) (response *CreateSnapshotResponse, err error) {
     if request == nil {
         request = NewCreateSnapshotRequest()
@@ -1579,6 +1585,56 @@ func (c *Client) DescribeAutoSnapshotPoliciesWithContext(ctx context.Context, re
     request.SetContext(ctx)
     
     response = NewDescribeAutoSnapshotPoliciesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDedicatedClusterDiskStatisticsRequest() (request *DescribeDedicatedClusterDiskStatisticsRequest) {
+    request = &DescribeDedicatedClusterDiskStatisticsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cbs", APIVersion, "DescribeDedicatedClusterDiskStatistics")
+    
+    
+    return
+}
+
+func NewDescribeDedicatedClusterDiskStatisticsResponse() (response *DescribeDedicatedClusterDiskStatisticsResponse) {
+    response = &DescribeDedicatedClusterDiskStatisticsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDedicatedClusterDiskStatistics
+// 查询云服务器独享集群云硬盘统计信息。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeDedicatedClusterDiskStatistics(request *DescribeDedicatedClusterDiskStatisticsRequest) (response *DescribeDedicatedClusterDiskStatisticsResponse, err error) {
+    return c.DescribeDedicatedClusterDiskStatisticsWithContext(context.Background(), request)
+}
+
+// DescribeDedicatedClusterDiskStatistics
+// 查询云服务器独享集群云硬盘统计信息。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeDedicatedClusterDiskStatisticsWithContext(ctx context.Context, request *DescribeDedicatedClusterDiskStatisticsRequest) (response *DescribeDedicatedClusterDiskStatisticsResponse, err error) {
+    if request == nil {
+        request = NewDescribeDedicatedClusterDiskStatisticsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cbs", APIVersion, "DescribeDedicatedClusterDiskStatistics")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDedicatedClusterDiskStatistics require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDedicatedClusterDiskStatisticsResponse()
     err = c.Send(request, response)
     return
 }

@@ -16,8 +16,8 @@ Provides a resource to create a CDN domain.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_cdn_domain" "foo" {
-  domain         = "xxxx.com"
+resource "tencentcloud_cdn_domain" "example" {
+  domain         = "example.com"
   service_type   = "web"
   area           = "mainland"
   full_url_cache = false
@@ -51,8 +51,8 @@ resource "tencentcloud_cdn_domain" "foo" {
 ### Example Usage of cdn uses cache and request headers
 
 ```hcl
-resource "tencentcloud_cdn_domain" "foo" {
-  domain       = "xxxx.com"
+resource "tencentcloud_cdn_domain" "example" {
+  domain       = "example.com"
   service_type = "web"
   area         = "mainland"
   cache_key {
@@ -114,8 +114,8 @@ resource "tencentcloud_cos_bucket" "bucket" {
 }
 
 # Create cdn domain
-resource "tencentcloud_cdn_domain" "cdn" {
-  domain       = "abc.com"
+resource "tencentcloud_cdn_domain" "example" {
+  domain       = "example.com"
   service_type = "web"
   area         = "mainland"
   # full_url_cache = false # Deprecated
@@ -137,6 +137,94 @@ resource "tencentcloud_cdn_domain" "cdn" {
     ocsp_stapling_switch = "off"
     spdy_switch          = "off"
     verify_client        = "off"
+  }
+}
+```
+
+### Example Usage of CDN domain with advanced fields
+
+```hcl
+resource "tencentcloud_cdn_domain" "example" {
+  domain       = "example.com"
+  service_type = "web"
+  area         = "mainland"
+
+  origin {
+    origin_type          = "ip"
+    origin_list          = ["127.0.0.1"]
+    origin_pull_protocol = "follow"
+  }
+
+  https_config {
+    https_switch         = "off"
+    http2_switch         = "off"
+    ocsp_stapling_switch = "off"
+    spdy_switch          = "off"
+    verify_client        = "off"
+
+    hsts {
+      switch              = "on"
+      max_age             = 31536000
+      include_sub_domains = "on"
+    }
+  }
+
+  user_agent_filter {
+    switch = "on"
+
+    filter_rules {
+      rule_type   = "all"
+      rule_paths  = ["*"]
+      user_agents = ["Mozilla/5.0"]
+      filter_type = "blacklist"
+    }
+  }
+
+  url_redirect {
+    switch = "on"
+
+    path_rules {
+      redirect_status_code = 302
+      pattern              = "/old/*"
+      redirect_url         = "/new/$1"
+    }
+  }
+
+  origin_combine {
+    switch = "on"
+  }
+
+  range_origin_pull {
+    switch = "on"
+
+    range_rules {
+      switch     = "on"
+      rule_type  = "file"
+      rule_paths = ["jpg", "png"]
+    }
+  }
+}
+```
+
+### Example Usage of CDN domain with origin path rewrite rules
+
+```hcl
+resource "tencentcloud_cdn_domain" "example" {
+  domain       = "example.com"
+  service_type = "web"
+  area         = "mainland"
+
+  origin {
+    origin_type          = "ip"
+    origin_list          = ["127.0.0.1"]
+    origin_pull_protocol = "follow"
+
+    path_rules {
+      full_match  = false
+      path        = "/api/*"
+      server_name = "origin.example.com"
+      forward_uri = "/v2/$1"
+    }
   }
 }
 ```
@@ -416,6 +504,7 @@ The `origin` object supports the following:
 * `cos_private_access` - (Optional, String) When OriginType is COS, you can specify if access to private buckets is allowed. Valid values are `on` and `off`. and default value is `off`.
 * `origin_company` - (Optional, String) Object storage back to the source vendor. Required when the source station type is a third-party storage source station (third_party). Optional values include the following: `aws_s3`: AWS S3; `ali_oss`: Alibaba Cloud OSS; `hw_obs`: Huawei OBS; `qiniu_kodo`: Qiniu Cloud kodo; `others`: other vendors' object storage, only supports object storage compatible with AWS signature algorithm, such as Tencent Cloud Financial Zone COS. Example value: `hw_obs`.
 * `origin_pull_protocol` - (Optional, String) Origin-pull protocol configuration. `http`: forced HTTP origin-pull, `follow`: protocol follow origin-pull, `https`: forced HTTPS origin-pull. This only supports origin server port 443 for origin-pull.
+* `path_rules` - (Optional, List) Origin path rewrite rules. Each element configures a path-based origin routing rule.
 * `server_name` - (Optional, String) Host header used when accessing the master origin server. If left empty, the acceleration domain name will be used by default.
 
 The `oss_private_access` object supports the following:
@@ -439,6 +528,13 @@ The `page_rules` object of `error_page` supports the following:
 * `redirect_code` - (Required, Int) Redirect code of error page rules.
 * `redirect_url` - (Required, String) Redirect url of error page rules.
 * `status_code` - (Required, Int) Status code of error page rules.
+
+The `path_rules` object of `origin` supports the following:
+
+* `forward_uri` - (Optional, String) URI path for origin on path match. Must start with `/` and does not include the parameter part. Maximum length is 1024 characters. `$1`-`$5` can be used to capture wildcard `*` in the matched path, up to 10 capture values.
+* `full_match` - (Optional, Bool) Whether to enable full matching of the matched path. `false`: disable, `true`: enable.
+* `path` - (Optional, String) Matched URL path. Only URL path is supported, not parameters. Default is full match. When wildcard `*` matching is enabled, up to 5 wildcards are supported, with a maximum length of 1024 characters.
+* `server_name` - (Optional, String) Host header used when accessing the origin server on path match. If left empty, the default ServerName is used.
 
 The `path_rules` object of `url_redirect` supports the following:
 
@@ -602,77 +698,49 @@ In addition to all arguments above, the following attributes are exported:
 * `dry_run_update_result` - Used for store `dry_run` update request json.
 * `status` - Acceleration service status.
 
+The `band_width_alert` object exports the following:
+
+* `last_trigger_time_overseas` - Last trigger time of overseas.
+* `last_trigger_time` - Last trigger time.
+
+The `client_certificate_config` object of `https_config` exports the following:
+
+* `certificate_name` - Client certificate name.
+* `deploy_time` - Deploy time of client certificate.
+* `expire_time` - Expire time of client certificate.
+
+The `server_certificate_config` object of `https_config` exports the following:
+
+* `certificate_name` - Server certificate name.
+* `deploy_time` - Deploy time of server certificate.
+* `expire_time` - Expire time of server certificate.
+
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [AddCdnDomain](https://www.tencentcloud.com/document/api/228/34015)
+  - [DescribeDomainsConfig](https://www.tencentcloud.com/document/api/228/34019)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeDomainsConfig](https://www.tencentcloud.com/document/api/228/34019)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [DescribeDomainsConfig](https://www.tencentcloud.com/document/api/228/34019)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [UpdateDomainConfig](https://www.tencentcloud.com/document/api/228/34018)
+* Delete:
+  - [DeleteCdnDomain](https://www.tencentcloud.com/document/api/228/34014)
+  - [DescribeDomainsConfig](https://www.tencentcloud.com/document/api/228/34019)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [StopCdnDomain](https://www.tencentcloud.com/document/api/228/34012)
 
 ## Import
 
 CDN domain can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_cdn_domain.foo xxxx.com
-```
-
-Example Usage of CDN domain with advanced fields
-
-```hcl
-resource "tencentcloud_cdn_domain" "advanced" {
-  domain       = "xxxx.com"
-  service_type = "web"
-  area         = "mainland"
-
-  origin {
-    origin_type          = "ip"
-    origin_list          = ["127.0.0.1"]
-    origin_pull_protocol = "follow"
-  }
-
-  https_config {
-    https_switch         = "off"
-    http2_switch         = "off"
-    ocsp_stapling_switch = "off"
-    spdy_switch          = "off"
-    verify_client        = "off"
-
-    hsts {
-      switch               = "on"
-      max_age              = 31536000
-      include_sub_domains  = "on"
-    }
-  }
-
-  user_agent_filter {
-    switch = "on"
-
-    filter_rules {
-      rule_type   = "all"
-      rule_paths  = ["*"]
-      user_agents = ["Mozilla/5.0"]
-      filter_type = "blacklist"
-    }
-  }
-
-  url_redirect {
-    switch = "on"
-
-    path_rules {
-      redirect_status_code = 302
-      pattern              = "/old/*"
-      redirect_url         = "/new/$1"
-    }
-  }
-
-  origin_combine {
-    switch = "on"
-  }
-
-  range_origin_pull {
-    switch = "on"
-
-    range_rules {
-      switch    = "on"
-      rule_type = "file"
-      rule_paths = ["jpg", "png"]
-    }
-  }
-}
+terraform import tencentcloud_cdn_domain.example example.com
 ```
 

@@ -40,6 +40,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyLiveDomainReferer](https://www.tencentcloud.com/document/api/267/40610)
+* Read: [DescribeLiveDomainReferer](https://www.tencentcloud.com/document/api/267/40611)
+* Update: [ModifyLiveDomainReferer](https://www.tencentcloud.com/document/api/267/40610)
 
 ## Import
 

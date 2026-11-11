@@ -51,4 +51,9 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Backup task status. Possible values are `SUCCESS`: backup succeeded, `FAILED`: backup failed, `RUNNING`: backup in progress.
   * `type` - Specific log type, possible values are: binlog - binary log.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBinlogs](https://www.tencentcloud.com/document/api/236/15843)
 

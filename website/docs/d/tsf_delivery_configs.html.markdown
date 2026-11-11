@@ -61,4 +61,9 @@ In addition to all arguments above, the following attributes are exported:
     * `username` - user Name. Note: This field may return null, which means that no valid value was obtained.
   * `total_count` - total count. Note: This field may return null, which means that no valid value was obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDeliveryConfigs](https://www.tencentcloud.com/search/?wd=DescribeDeliveryConfigs&type=document&lang=en)
 

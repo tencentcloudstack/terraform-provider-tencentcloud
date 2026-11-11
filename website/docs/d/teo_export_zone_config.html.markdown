@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `content` - Exported zone configuration content in JSON format.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ExportZoneConfig](https://www.tencentcloud.com/document/api/1145/67242)
 

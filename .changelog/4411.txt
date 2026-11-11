@@ -1,0 +1,3 @@
+```release-note:enhancement
+data-source/tencentcloud_teo_zones: add work_mode_infos attribute
+```

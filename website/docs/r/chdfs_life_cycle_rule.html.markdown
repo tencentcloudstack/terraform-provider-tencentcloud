@@ -55,7 +55,21 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `life_cycle_rule` object exports the following:
 
+* `create_time` - rule create time.
+* `life_cycle_rule_id` - single rule id.
+
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateLifeCycleRules](https://www.tencentcloud.com/document/api/1106/42440)
+  - [DescribeLifeCycleRules](https://www.tencentcloud.com/document/api/1106/42438)
+* Read: [DescribeLifeCycleRules](https://www.tencentcloud.com/document/api/1106/42438)
+* Update: [ModifyLifeCycleRules](https://www.tencentcloud.com/document/api/1106/42437)
+* Delete: [DeleteLifeCycleRules](https://www.tencentcloud.com/document/api/1106/42439)
 
 ## Import
 

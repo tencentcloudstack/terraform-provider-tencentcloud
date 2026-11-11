@@ -109,7 +109,7 @@ The following arguments are supported:
 * `node_num` - (Optional, Int) The number of nodes, a minimum of 3 nodes for a multi-availability zone. If not passed, the default single availability zone is 1, and the multi-availability zone is 3.
 * `node_spec` - (Optional, String) Node specifications. Valid values: rabbit-vip-basic-5 (for 2C4G), rabbit-vip-profession-2c8g (for 2C8G), rabbit-vip-basic-1 (for 4C8G), rabbit-vip-profession-4c16g (for 4C16G), rabbit-vip-basic-2 (for 8C16G), rabbit-vip-profession-8c32g (for 8C32G), rabbit-vip-basic-4 (for 16C32G), rabbit-vip-profession-16c64g (for 16C64G). The default is rabbit-vip-basic-1. NOTE: The above specifications may be sold out or removed from the shelves.
 * `pay_mode` - (Optional, Int) Payment method: 0 indicates postpaid; 1 indicates prepaid. Default: prepaid.
-* `resource_tags` - (Optional, List) Instance resource tags. Each tag is a key-value pair for resource identification and management.
+* `resource_tags` - (Optional, Set) Instance resource tags. Each tag is a key-value pair for resource identification and management.
 * `storage_size` - (Optional, Int) Single node storage specification, the default is 200G.
 * `time_span` - (Optional, Int) Purchase duration, the default is 1 (month).
 
@@ -130,6 +130,18 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_endpoint` - VPC Endpoint.
   * `vpc_id` - VPC ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateRabbitMQVipInstance](https://www.tencentcloud.com/search/?wd=CreateRabbitMQVipInstance&type=document&lang=en)
+  - [DescribeRabbitMQVipInstances](https://www.tencentcloud.com/search/?wd=DescribeRabbitMQVipInstances&type=document&lang=en)
+* Read:
+  - [DescribeRabbitMQVipInstance](https://www.tencentcloud.com/search/?wd=DescribeRabbitMQVipInstance&type=document&lang=en)
+  - [DescribeRabbitMQVipInstances](https://www.tencentcloud.com/search/?wd=DescribeRabbitMQVipInstances&type=document&lang=en)
+* Update: [ModifyRabbitMQVipInstance](https://www.tencentcloud.com/search/?wd=ModifyRabbitMQVipInstance&type=document&lang=en)
+* Delete: [DeleteRabbitMQVipInstance](https://www.tencentcloud.com/search/?wd=DeleteRabbitMQVipInstance&type=document&lang=en)
 
 ## Import
 

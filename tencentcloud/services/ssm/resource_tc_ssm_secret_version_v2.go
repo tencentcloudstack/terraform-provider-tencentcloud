@@ -12,11 +12,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/sharedmeta"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
 )
 
+// _ resource.Resource is intentionally omitted: the factory function
+// NewSsmSecretVersionV2Resource returns resource.Resource, which already
+// performs the implicit compile-time check at the return statement. Only the
+// extended-interface assertions are kept here.
 var (
-	_ resource.Resource                = &SsmSecretVersionV2Resource{}
 	_ resource.ResourceWithConfigure   = &SsmSecretVersionV2Resource{}
 	_ resource.ResourceWithImportState = &SsmSecretVersionV2Resource{}
 )
@@ -30,7 +33,7 @@ func NewSsmSecretVersionV2Resource() resource.Resource {
 // SsmSecretVersionV2Resource implements resource.Resource for
 // tencentcloud_ssm_secret_version_v2.
 type SsmSecretVersionV2Resource struct {
-	client SsmService
+	fw.ResourceWithConfigure
 }
 
 // SsmSecretVersionV2ResourceModel maps the schema attributes.
@@ -101,27 +104,6 @@ func (r *SsmSecretVersionV2Resource) Schema(_ context.Context, _ resource.Schema
 	}
 }
 
-// Configure receives the *sharedmeta.ProviderMeta populated by
-// framework.Provider.Configure and constructs the SDKv2-style SsmService
-// from the shared *connectivity.TencentCloudClient.
-func (r *SsmSecretVersionV2Resource) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	if req.ProviderData == nil {
-		return
-	}
-
-	meta, ok := req.ProviderData.(*sharedmeta.ProviderMeta)
-	if !ok {
-		resp.Diagnostics.AddError(
-			"Unexpected ProviderData type",
-			fmt.Sprintf("Expected *sharedmeta.ProviderMeta, got: %T. "+
-				"This is a bug in the provider; please report it.", req.ProviderData),
-		)
-		return
-	}
-
-	r.client = NewSsmService(meta.Client)
-}
-
 // Create handles `terraform apply` for new resources.
 func (r *SsmSecretVersionV2Resource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan SsmSecretVersionV2ResourceModel
@@ -146,7 +128,8 @@ func (r *SsmSecretVersionV2Resource) Create(ctx context.Context, req resource.Cr
 		return
 	}
 
-	gotName, gotVersion, err := r.client.PutSecretValue(ctx, param)
+	service := NewSsmService(r.Client())
+	gotName, gotVersion, err := service.PutSecretValue(ctx, param)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error creating SSM secret version",
@@ -169,6 +152,13 @@ func (r *SsmSecretVersionV2Resource) Read(ctx context.Context, req resource.Read
 		return
 	}
 
+	// writeOnlyManaged reports whether this secret version is managed through
+	// the write-only attribute: secret_string_wo is set in state only as null,
+	// so both secret_binary and secret_string stay null. Back-filling them
+	// from GetSecretValue would reintroduce the secret into state and create a
+	// permanent in-place diff (config has no secret_string, refreshed state
+	// would), so the value must not be back-filled in that case.
+	writeOnlyManaged := state.SecretBinary.IsNull() && state.SecretString.IsNull()
 	secretName, versionId, ok := splitSsmVersionV2Id(state.Id.ValueString())
 	if !ok {
 		resp.Diagnostics.AddError(
@@ -178,7 +168,8 @@ func (r *SsmSecretVersionV2Resource) Read(ctx context.Context, req resource.Read
 		return
 	}
 
-	secretInfo, err := r.client.DescribeSecretByName(ctx, secretName)
+	service := NewSsmService(r.Client())
+	secretInfo, err := service.DescribeSecretByName(ctx, secretName)
 	if err != nil {
 		if strings.Contains(err.Error(), "ResourceNotFound") {
 			resp.State.RemoveResource(ctx)
@@ -191,7 +182,7 @@ func (r *SsmSecretVersionV2Resource) Read(ctx context.Context, req resource.Read
 		return
 	}
 
-	versionIds, err := r.client.DescribeSecretVersionIdsByName(ctx, secretName)
+	versionIds, err := service.DescribeSecretVersionIdsByName(ctx, secretName)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error listing SSM secret versions",
@@ -216,7 +207,7 @@ func (r *SsmSecretVersionV2Resource) Read(ctx context.Context, req resource.Read
 	state.VersionId = types.StringValue(versionId)
 
 	if secretInfo.Status() == SSM_STATUS_ENABLED {
-		secretVersion, err := r.client.DescribeSecretVersion(ctx, secretName, versionId)
+		secretVersion, err := service.DescribeSecretVersion(ctx, secretName, versionId)
 		if err != nil {
 			if strings.Contains(err.Error(), "ResourceNotFound") {
 				resp.State.RemoveResource(ctx)
@@ -229,8 +220,14 @@ func (r *SsmSecretVersionV2Resource) Read(ctx context.Context, req resource.Read
 			return
 		}
 
-		state.SecretBinary = stringValueOrNull(secretVersion.secretBinary)
-		state.SecretString = stringValueOrNull(secretVersion.secretString)
+		// Skip back-filling for write-only managed versions: the secret value
+		// must never re-enter state, otherwise every plan shows a permanent
+		// in-place diff (config null vs refreshed value) and apply rewrites the
+		// same value forever (never converges to "No changes").
+		if !writeOnlyManaged {
+			state.SecretBinary = stringValueOrNull(secretVersion.secretBinary)
+			state.SecretString = stringValueOrNull(secretVersion.secretString)
+		}
 	}
 
 	// secret_string_wo is write-only — never refresh it from API into state.
@@ -269,7 +266,8 @@ func (r *SsmSecretVersionV2Resource) Update(ctx context.Context, req resource.Up
 		return
 	}
 
-	secretInfo, err := r.client.DescribeSecretByName(ctx, secretName)
+	service := NewSsmService(r.Client())
+	secretInfo, err := service.DescribeSecretByName(ctx, secretName)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading SSM secret",
@@ -292,7 +290,7 @@ func (r *SsmSecretVersionV2Resource) Update(ctx context.Context, req resource.Up
 				return
 			}
 
-			if err := r.client.UpdateSecret(ctx, param); err != nil {
+			if err := service.UpdateSecret(ctx, param); err != nil {
 				resp.Diagnostics.AddError(
 					"Error updating SSM secret version",
 					fmt.Sprintf("UpdateSecret failed for %q version %q: %v", secretName, versionId, err),
@@ -324,7 +322,8 @@ func (r *SsmSecretVersionV2Resource) Delete(ctx context.Context, req resource.De
 		return
 	}
 
-	if err := r.client.DeleteSecretVersion(ctx, secretName, versionId); err != nil {
+	service := NewSsmService(r.Client())
+	if err := service.DeleteSecretVersion(ctx, secretName, versionId); err != nil {
 		resp.Diagnostics.AddError(
 			"Error deleting SSM secret version",
 			fmt.Sprintf("DeleteSecretVersion failed for %q version %q: %v", secretName, versionId, err),

@@ -34,6 +34,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `domain` - Domain.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyPackageDomain](https://www.tencentcloud.com/search/?wd=ModifyPackageDomain&type=document&lang=en)
+* Read: [DescribeDomainVipList](https://www.tencentcloud.com/search/?wd=DescribeDomainVipList&type=document&lang=en)
+* Update: [ModifyPackageDomain](https://www.tencentcloud.com/search/?wd=ModifyPackageDomain&type=document&lang=en)
+* Delete: [ModifyPackageDomain](https://www.tencentcloud.com/search/?wd=ModifyPackageDomain&type=document&lang=en)
 
 ## Import
 

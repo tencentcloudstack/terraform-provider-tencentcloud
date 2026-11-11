@@ -58,10 +58,12 @@ func TestDbdcDbCustomNodesDS_ReadBasic(t *testing.T) {
 					Tags: []*dbdcv20201029.Tag{
 						{Key: ptrStr("env"), Value: ptrStr("production")},
 					},
-					AutoRenew: ptrInt64(1),
-					SwitchId:  ptrStr("switch-abc123"),
-					RackId:    ptrStr("rack-abc123"),
-					HostIp:    ptrStr("192.168.1.1"),
+					AutoRenew:   ptrInt64(1),
+					SwitchId:    ptrStr("switch-abc123"),
+					RackId:      ptrStr("rack-abc123"),
+					HostIp:      ptrStr("192.168.1.1"),
+					NetworkMode: ptrStr("NetworkModeCrossTenantENI"),
+					EniIP:       ptrStr("10.0.0.5"),
 				},
 				{
 					NodeId:     ptrStr("dbcn-def67890"),
@@ -122,6 +124,8 @@ func TestDbdcDbCustomNodesDS_ReadBasic(t *testing.T) {
 	assert.Equal(t, "switch-abc123", node0["switch_id"].(string))
 	assert.Equal(t, "rack-abc123", node0["rack_id"].(string))
 	assert.Equal(t, "192.168.1.1", node0["host_ip"].(string))
+	assert.Equal(t, "NetworkModeCrossTenantENI", node0["network_mode"].(string))
+	assert.Equal(t, "10.0.0.5", node0["eni_ip"].(string))
 
 	tags0 := node0["tags"].([]interface{})
 	assert.Len(t, tags0, 1)
@@ -187,6 +191,50 @@ func TestDbdcDbCustomNodesDS_ReadWithNilFields(t *testing.T) {
 	if tagsField != nil {
 		tagsList := tagsField.([]interface{})
 		assert.Len(t, tagsList, 0)
+	}
+}
+
+func TestDbdcDbCustomNodesDS_ReadWithPrivateLinkMode(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	dbdcClient := &dbdcv20201029.Client{}
+	patches.ApplyMethodReturn(newMockMetaDbdcDS().client, "UseDbdcV20201029Client", dbdcClient)
+
+	patches.ApplyMethodFunc(dbdcClient, "DescribeDBCustomNodes", func(request *dbdcv20201029.DescribeDBCustomNodesRequest) (*dbdcv20201029.DescribeDBCustomNodesResponse, error) {
+		resp := dbdcv20201029.NewDescribeDBCustomNodesResponse()
+		resp.Response = &dbdcv20201029.DescribeDBCustomNodesResponseParams{
+			TotalCount: ptrInt64(1),
+			NodeSet: []*dbdcv20201029.DBCustomNode{
+				{
+					NodeId:      ptrStr("dbcn-private-link"),
+					NodeName:    ptrStr("node-private-link"),
+					Status:      ptrStr("Running"),
+					NetworkMode: ptrStr("NetworkModePrivateLink"),
+					// EniIP is nil when NetworkMode is NetworkModePrivateLink
+				},
+			},
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaDbdcDS()
+	res := dbdc.DataSourceTencentCloudDbdcDbCustomNodes()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{})
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+
+	nodeSet := d.Get("node_set").([]interface{})
+	assert.Len(t, nodeSet, 1)
+
+	node0 := nodeSet[0].(map[string]interface{})
+	assert.Equal(t, "dbcn-private-link", node0["node_id"].(string))
+	assert.Equal(t, "NetworkModePrivateLink", node0["network_mode"].(string))
+	// EniIP is nil, should not have eni_ip in output
+	eniIpField := node0["eni_ip"]
+	if eniIpField != nil {
+		assert.Equal(t, "", eniIpField.(string))
 	}
 }
 
@@ -336,4 +384,6 @@ func TestDbdcDbCustomNodesDS_Schema(t *testing.T) {
 	assert.Contains(t, elemRes.Schema, "switch_id")
 	assert.Contains(t, elemRes.Schema, "rack_id")
 	assert.Contains(t, elemRes.Schema, "host_ip")
+	assert.Contains(t, elemRes.Schema, "network_mode")
+	assert.Contains(t, elemRes.Schema, "eni_ip")
 }

@@ -38,6 +38,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `incremental_migration_id` - Incremental import task ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateIncrementalMigration](https://www.tencentcloud.com/document/api/238/39842)
+* Read: [DescribeIncrementalMigration](https://www.tencentcloud.com/document/api/238/39836)
+* Update: [ModifyIncrementalMigration](https://www.tencentcloud.com/document/api/238/39833)
+* Delete: [DeleteIncrementalMigration](https://www.tencentcloud.com/document/api/238/39840)
 
 ## Import
 

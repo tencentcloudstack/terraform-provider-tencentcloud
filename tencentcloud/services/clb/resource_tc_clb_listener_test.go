@@ -823,3 +823,98 @@ resource "tencentcloud_clb_listener" "listener_tcp"{
   health_check_recv_context  = "http_1xx"
 }
 `
+
+func TestAccTencentCloudClbListener_newParams(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckClbListenerDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: fmt.Sprintf(testAccClbListener_newParams, tcacctest.DefaultSshCertificate),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbListenerExists("tencentcloud_clb_listener.listener_new_params"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener.listener_new_params", "clb_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_new_params", "protocol", "TCP_SSL"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_new_params", "listener_name", "listener_new_params"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_new_params", "port", "443"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_new_params", "max_conn", "1000"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_new_params", "max_cps", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_new_params", "proxy_protocol", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_new_params", "data_compress_mode", "transparent"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_new_params", "scheduler", "WRR"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_new_params", "certificate_ssl_mode", "UNIDIRECTIONAL"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_new_params", "certificate_id", tcacctest.DefaultSshCertificate),
+				),
+			},
+			{
+				Config: fmt.Sprintf(testAccClbListener_newParams_update, tcacctest.DefaultSshCertificate),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbListenerExists("tencentcloud_clb_listener.listener_new_params"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener.listener_new_params", "clb_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_new_params", "protocol", "TCP_SSL"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_new_params", "listener_name", "listener_new_params_update"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_new_params", "port", "443"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_new_params", "max_conn", "500"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_new_params", "max_cps", "50"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_new_params", "proxy_protocol", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_new_params", "data_compress_mode", "compatibility"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_new_params", "scheduler", "WRR"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_new_params", "certificate_ssl_mode", "UNIDIRECTIONAL"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_new_params", "certificate_id", tcacctest.DefaultSshCertificate),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_clb_listener.listener_new_params",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+const testAccClbListener_newParams = `
+resource "tencentcloud_clb_instance" "clb_new_params" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-listener-new-params"
+}
+
+resource "tencentcloud_clb_listener" "listener_new_params" {
+  clb_id               = tencentcloud_clb_instance.clb_new_params.id
+  listener_name        = "listener_new_params"
+  port                 = 443
+  protocol             = "TCP_SSL"
+  certificate_ssl_mode = "UNIDIRECTIONAL"
+  certificate_id       = "%s"
+  scheduler            = "WRR"
+  max_conn             = 1000
+  max_cps              = 100
+  proxy_protocol       = true
+  data_compress_mode   = "transparent"
+  target_type          = "TARGETGROUP"
+}
+`
+
+const testAccClbListener_newParams_update = `
+resource "tencentcloud_clb_instance" "clb_new_params" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-listener-new-params"
+}
+
+resource "tencentcloud_clb_listener" "listener_new_params" {
+  clb_id               = tencentcloud_clb_instance.clb_new_params.id
+  listener_name        = "listener_new_params_update"
+  port                 = 443
+  protocol             = "TCP_SSL"
+  certificate_ssl_mode = "UNIDIRECTIONAL"
+  certificate_id       = "%s"
+  scheduler            = "WRR"
+  max_conn             = 500
+  max_cps              = 50
+  proxy_protocol       = false
+  data_compress_mode   = "compatibility"
+  target_type          = "TARGETGROUP"
+}
+`

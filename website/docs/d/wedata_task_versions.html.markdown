@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - Task version list.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListTaskVersions](https://www.tencentcloud.com/document/api/1174/73869)
 

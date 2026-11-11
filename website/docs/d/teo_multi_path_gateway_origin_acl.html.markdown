@@ -56,4 +56,9 @@ In addition to all arguments above, the following attributes are exported:
       * `ipv6` - IPv6 CIDR list.
     * `version` - Version number.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeMultiPathGatewayOriginACL](https://www.tencentcloud.com/document/api/1145/74212)
 

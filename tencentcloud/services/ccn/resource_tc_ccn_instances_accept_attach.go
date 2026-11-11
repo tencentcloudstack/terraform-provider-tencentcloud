@@ -61,6 +61,11 @@ func ResourceTencentCloudCcnInstancesAcceptAttach() *schema.Resource {
 							Optional:    true,
 							Description: "ID of the routing table associated with the instance. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
+						"order_type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Instance billing method. Valid values: `PayByCcnOwner` (CCN owner pays), `PayByInstanceOwner` (instance owner pays).",
+						},
 					},
 				},
 			},
@@ -103,6 +108,12 @@ func resourceTencentCloudCcnInstancesAcceptAttachCreate(d *schema.ResourceData, 
 				routeTableId := v.(string)
 				if routeTableId != "" {
 					ccnInstance.RouteTableId = helper.String(v.(string))
+				}
+			}
+			if v, ok := dMap["order_type"]; ok {
+				orderType := v.(string)
+				if orderType != "" {
+					ccnInstance.OrderType = helper.String(orderType)
 				}
 			}
 			request.Instances = append(request.Instances, &ccnInstance)

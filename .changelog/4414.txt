@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_teo_config_group_version: support specifying source_version parameter to derive a new version from a given source version
+```

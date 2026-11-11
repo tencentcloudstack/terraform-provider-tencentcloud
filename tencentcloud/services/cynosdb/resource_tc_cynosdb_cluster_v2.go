@@ -94,6 +94,14 @@ func resourceTencentCloudCynosdbClusterV2Create(d *schema.ResourceData, meta int
 		request.SlaveZone = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("sync_way"); ok {
+		request.SyncWay = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("semi_sync_timeout"); ok {
+		request.SemiSyncTimeout = helper.IntInt64(v.(int))
+	}
+
 	if v, ok := d.GetOkExists("instance_count"); ok {
 		request.InstanceCount = helper.IntInt64(v.(int))
 	}
@@ -479,6 +487,16 @@ func resourceTencentCloudCynosdbClusterV2Read(d *schema.ResourceData, meta inter
 		_ = d.Set("slave_zone", cluster.SlaveZones[0])
 	}
 
+	if cluster.SlaveZoneAttr != nil && len(cluster.SlaveZoneAttr) > 0 {
+		if cluster.SlaveZoneAttr[0].BinlogSyncWay != nil {
+			_ = d.Set("sync_way", cluster.SlaveZoneAttr[0].BinlogSyncWay)
+		}
+
+		if cluster.SlaveZoneAttr[0].SemiSyncTimeout != nil {
+			_ = d.Set("semi_sync_timeout", cluster.SlaveZoneAttr[0].SemiSyncTimeout)
+		}
+	}
+
 	if _, ok := d.GetOk("serverless_status_flag"); ok && *item.DbMode == CYNOSDB_SERVERLESS {
 		status := *item.ServerlessStatus
 		_ = d.Set("serverless_status_flag", status)
@@ -733,7 +751,6 @@ func resourceTencentCloudCynosdbClusterV2Update(d *schema.ResourceData, meta int
 		"max_cpu",
 		"auto_pause",
 		"auto_pause_delay",
-		"storage_pay_mode",
 		"prarm_template_id",
 		"param_template_id",
 	}
@@ -888,6 +905,64 @@ func resourceTencentCloudCynosdbClusterV2Update(d *schema.ResourceData, meta int
 		}
 	}
 
+	if d.HasChange("sync_way") || d.HasChange("semi_sync_timeout") {
+		request := cynosdb.NewModifyClusterSlaveZoneRequest()
+		if v, ok := d.GetOk("slave_zone"); ok {
+			request.OldSlaveZone = helper.String(v.(string))
+			request.NewSlaveZone = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("sync_way"); ok {
+			request.BinlogSyncWay = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOkExists("semi_sync_timeout"); ok {
+			request.SemiSyncTimeout = helper.IntInt64(v.(int))
+		}
+
+		var flowId int64
+		request.ClusterId = helper.String(clusterId)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCynosdbClient().ModifyClusterSlaveZone(request)
+			if err != nil {
+				return tccommon.RetryError(err)
+			}
+
+			if response == nil || response.Response == nil || response.Response.FlowId == nil {
+				return resource.NonRetryableError(fmt.Errorf("Modify cluster slave zone failed, response is nil."))
+			}
+
+			flowId = *response.Response.FlowId
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
+
+		service := CynosdbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		err = resource.Retry(6*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ok, err := service.DescribeFlow(ctx, flowId)
+			if err != nil {
+				if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(err)
+				} else {
+					return resource.NonRetryableError(err)
+				}
+			}
+
+			if ok {
+				return nil
+			} else {
+				return resource.RetryableError(fmt.Errorf("update cynosdb slave_zone is processing"))
+			}
+		})
+
+		if err != nil {
+			return err
+		}
+	}
+
 	// update slave_zone
 	if d.HasChange("slave_zone") {
 		oldValue, newValue := d.GetChange("slave_zone")
@@ -989,6 +1064,46 @@ func resourceTencentCloudCynosdbClusterV2Update(d *schema.ResourceData, meta int
 			return nil
 		})
 
+		if err != nil {
+			return err
+		}
+	}
+
+	// update storage_pay_mode (only support transfer from prepaid(1) to postpaid(0))
+	if d.HasChange("storage_pay_mode") {
+		oldPayMode, newPayMode := d.GetChange("storage_pay_mode")
+		if oldPayMode.(int) != 1 || newPayMode.(int) != 0 {
+			return fmt.Errorf("storage_pay_mode only supports transfer from prepaid(1) to postpaid(0)")
+		}
+
+		dealNames, err := cynosdbService.TransferStoragePrepayToPostpay(ctx, clusterId)
+		if err != nil {
+			return err
+		}
+		if len(dealNames) < 1 {
+			return fmt.Errorf("TransferStoragePrepayToPostpay response DealNames is empty, cynosdb cluster id=%s", clusterId)
+		}
+
+		dealName := dealNames[0]
+		dealReq := cynosdb.NewDescribeResourcesByDealNameRequest()
+		dealReq.DealName = dealName
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(dealReq.GetAction())
+			dealRes, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCynosdbClient().DescribeResourcesByDealName(dealReq)
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, dealReq.GetAction(), e.Error())
+				if sdkErr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+					if sdkErr.Code == "InvalidParameterValue.DealNameNotFound" {
+						return resource.RetryableError(fmt.Errorf("DealName[%s] Not Found, retry... reason: %s", *dealName, e.Error()))
+					}
+				}
+				return tccommon.RetryError(e)
+			}
+			if dealRes == nil || dealRes.Response == nil || len(dealRes.Response.BillingResourceInfos) < 1 {
+				return resource.RetryableError(fmt.Errorf("waiting for storage pay mode transfer, cynosdb cluster id=%s DealName[%s]", clusterId, *dealName))
+			}
+			return nil
+		})
 		if err != nil {
 			return err
 		}
@@ -1130,6 +1245,15 @@ func resourceTencentCloudCynosdbClusterV2Update(d *schema.ResourceData, meta int
 	if d.HasChange("cluster_name") {
 		clusterName := d.Get("cluster_name").(string)
 		err := cynosdbService.ModifyClusterName(ctx, clusterId, clusterName)
+		if err != nil {
+			return err
+		}
+	}
+
+	// update instance_name
+	if d.HasChange("instance_name") {
+		instanceName := d.Get("instance_name").(string)
+		err := cynosdbService.ModifyInstanceName(ctx, instanceId, instanceName)
 		if err != nil {
 			return err
 		}

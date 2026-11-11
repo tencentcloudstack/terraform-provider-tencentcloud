@@ -44,6 +44,18 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateDDoSGeoIPBlockConfig](https://www.tencentcloud.com/document/api/1213/61380)
+  - [DescribeListDDoSGeoIPBlockConfig](https://www.tencentcloud.com/document/api/1213/61362)
+* Read: [DescribeListDDoSGeoIPBlockConfig](https://www.tencentcloud.com/document/api/1213/61362)
+* Update: [ModifyDDoSGeoIPBlockConfig](https://www.tencentcloud.com/document/api/1213/61355)
+* Delete:
+  - [DeleteDDoSGeoIPBlockConfig](https://www.tencentcloud.com/document/api/1213/61372)
+  - [DescribeListDDoSGeoIPBlockConfig](https://www.tencentcloud.com/document/api/1213/61362)
 
 ## Import
 

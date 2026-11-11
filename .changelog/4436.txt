@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_ga2_forwarding_rule: optimize code logic for `origin_sni`
+```
+
+```release-note:enhancement
+resource/tencentcloud_ga2_global_accelerator_acl_rule_set: optimize code logic for `acl_entries`
+```

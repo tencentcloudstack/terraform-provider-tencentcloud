@@ -61,6 +61,14 @@ In addition to all arguments above, the following attributes are exported:
 * `tps` - Consumption TPS.
 * `update_time` - Modification time in milliseconds.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRocketMQGroup](https://www.tencentcloud.com/search/?wd=CreateRocketMQGroup&type=document&lang=en)
+* Read: [DescribeRocketMQGroups](https://www.tencentcloud.com/search/?wd=DescribeRocketMQGroups&type=document&lang=en)
+* Update: [ModifyRocketMQGroup](https://www.tencentcloud.com/search/?wd=ModifyRocketMQGroup&type=document&lang=en)
+* Delete: [DeleteRocketMQGroup](https://www.tencentcloud.com/search/?wd=DeleteRocketMQGroup&type=document&lang=en)
 
 ## Import
 

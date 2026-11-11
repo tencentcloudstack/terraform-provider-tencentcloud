@@ -64,4 +64,9 @@ In addition to all arguments above, the following attributes are exported:
   * `region` - CLB instance region.
   * `vip` - VIP of the CLB instance.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeLBListeners](https://www.tencentcloud.com/document/api/214/43272)
 

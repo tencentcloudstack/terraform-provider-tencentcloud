@@ -41,6 +41,18 @@ In addition to all arguments above, the following attributes are exported:
 * `cold_log_size` - Cold log size in MB.
 * `hot_log_size` - Hot log size in MB.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeAuditInstanceList](https://www.tencentcloud.com/document/api/409/79967)
+  - [OpenAuditService](https://www.tencentcloud.com/document/api/409/79963)
+* Read: [DescribeAuditInstanceList](https://www.tencentcloud.com/document/api/409/79967)
+* Update: [ModifyAuditService](https://www.tencentcloud.com/document/api/409/79964)
+* Delete:
+  - [CloseAuditService](https://www.tencentcloud.com/document/api/409/79970)
+  - [DescribeAuditInstanceList](https://www.tencentcloud.com/document/api/409/79967)
 
 ## Import
 

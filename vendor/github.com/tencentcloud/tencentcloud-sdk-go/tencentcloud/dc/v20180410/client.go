@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -59,12 +59,13 @@ func NewAcceptDirectConnectTunnelRequest() (request *AcceptDirectConnectTunnelRe
 func NewAcceptDirectConnectTunnelResponse() (response *AcceptDirectConnectTunnelResponse) {
     response = &AcceptDirectConnectTunnelResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AcceptDirectConnectTunnel
-// 接受专用通道申请
+// 接受专用通道申请。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -78,7 +79,7 @@ func (c *Client) AcceptDirectConnectTunnel(request *AcceptDirectConnectTunnelReq
 }
 
 // AcceptDirectConnectTunnel
-// 接受专用通道申请
+// 接受专用通道申请。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -91,6 +92,7 @@ func (c *Client) AcceptDirectConnectTunnelWithContext(ctx context.Context, reque
     if request == nil {
         request = NewAcceptDirectConnectTunnelRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dc", APIVersion, "AcceptDirectConnectTunnel")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AcceptDirectConnectTunnel require credential")
@@ -117,8 +119,9 @@ func NewApplyInternetAddressRequest() (request *ApplyInternetAddressRequest) {
 func NewApplyInternetAddressResponse() (response *ApplyInternetAddressResponse) {
     response = &ApplyInternetAddressResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ApplyInternetAddress
@@ -139,6 +142,7 @@ func (c *Client) ApplyInternetAddressWithContext(ctx context.Context, request *A
     if request == nil {
         request = NewApplyInternetAddressRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dc", APIVersion, "ApplyInternetAddress")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ApplyInternetAddress require credential")
@@ -147,6 +151,66 @@ func (c *Client) ApplyInternetAddressWithContext(ctx context.Context, request *A
     request.SetContext(ctx)
     
     response = NewApplyInternetAddressResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateCloudAttachServiceRequest() (request *CreateCloudAttachServiceRequest) {
+    request = &CreateCloudAttachServiceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dc", APIVersion, "CreateCloudAttachService")
+    
+    
+    return
+}
+
+func NewCreateCloudAttachServiceResponse() (response *CreateCloudAttachServiceResponse) {
+    response = &CreateCloudAttachServiceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateCloudAttachService
+// 创建敏捷上云服务
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_STATECONFLICT = "UnsupportedOperation.StateConfLict"
+func (c *Client) CreateCloudAttachService(request *CreateCloudAttachServiceRequest) (response *CreateCloudAttachServiceResponse, err error) {
+    return c.CreateCloudAttachServiceWithContext(context.Background(), request)
+}
+
+// CreateCloudAttachService
+// 创建敏捷上云服务
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_STATECONFLICT = "UnsupportedOperation.StateConfLict"
+func (c *Client) CreateCloudAttachServiceWithContext(ctx context.Context, request *CreateCloudAttachServiceRequest) (response *CreateCloudAttachServiceResponse, err error) {
+    if request == nil {
+        request = NewCreateCloudAttachServiceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dc", APIVersion, "CreateCloudAttachService")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCloudAttachService require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateCloudAttachServiceResponse()
     err = c.Send(request, response)
     return
 }
@@ -165,8 +229,9 @@ func NewCreateDirectConnectRequest() (request *CreateDirectConnectRequest) {
 func NewCreateDirectConnectResponse() (response *CreateDirectConnectResponse) {
     response = &CreateDirectConnectResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDirectConnect
@@ -209,6 +274,7 @@ func (c *Client) CreateDirectConnectWithContext(ctx context.Context, request *Cr
     if request == nil {
         request = NewCreateDirectConnectRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dc", APIVersion, "CreateDirectConnect")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateDirectConnect require credential")
@@ -235,12 +301,13 @@ func NewCreateDirectConnectTunnelRequest() (request *CreateDirectConnectTunnelRe
 func NewCreateDirectConnectTunnelResponse() (response *CreateDirectConnectTunnelResponse) {
     response = &CreateDirectConnectTunnelResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDirectConnectTunnel
-// 用于创建专用通道的接口
+// 创建专用通道。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -264,7 +331,7 @@ func (c *Client) CreateDirectConnectTunnel(request *CreateDirectConnectTunnelReq
 }
 
 // CreateDirectConnectTunnel
-// 用于创建专用通道的接口
+// 创建专用通道。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -287,6 +354,7 @@ func (c *Client) CreateDirectConnectTunnelWithContext(ctx context.Context, reque
     if request == nil {
         request = NewCreateDirectConnectTunnelRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dc", APIVersion, "CreateDirectConnectTunnel")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateDirectConnectTunnel require credential")
@@ -313,14 +381,13 @@ func NewDeleteDirectConnectRequest() (request *DeleteDirectConnectRequest) {
 func NewDeleteDirectConnectResponse() (response *DeleteDirectConnectResponse) {
     response = &DeleteDirectConnectResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteDirectConnect
-// 删除物理专线。
-//
-// 只能删除处于已连接状态的物理专线。
+// 删除物理专线。只能删除处于已连接状态的物理专线。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -337,9 +404,7 @@ func (c *Client) DeleteDirectConnect(request *DeleteDirectConnectRequest) (respo
 }
 
 // DeleteDirectConnect
-// 删除物理专线。
-//
-// 只能删除处于已连接状态的物理专线。
+// 删除物理专线。只能删除处于已连接状态的物理专线。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -355,6 +420,7 @@ func (c *Client) DeleteDirectConnectWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeleteDirectConnectRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dc", APIVersion, "DeleteDirectConnect")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteDirectConnect require credential")
@@ -381,12 +447,13 @@ func NewDeleteDirectConnectTunnelRequest() (request *DeleteDirectConnectTunnelRe
 func NewDeleteDirectConnectTunnelResponse() (response *DeleteDirectConnectTunnelResponse) {
     response = &DeleteDirectConnectTunnelResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteDirectConnectTunnel
-// 删除专用通道
+// 删除专用通道。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -400,7 +467,7 @@ func (c *Client) DeleteDirectConnectTunnel(request *DeleteDirectConnectTunnelReq
 }
 
 // DeleteDirectConnectTunnel
-// 删除专用通道
+// 删除专用通道。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -413,6 +480,7 @@ func (c *Client) DeleteDirectConnectTunnelWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDeleteDirectConnectTunnelRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dc", APIVersion, "DeleteDirectConnectTunnel")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteDirectConnectTunnel require credential")
@@ -439,12 +507,13 @@ func NewDescribeAccessPointsRequest() (request *DescribeAccessPointsRequest) {
 func NewDescribeAccessPointsResponse() (response *DescribeAccessPointsResponse) {
     response = &DescribeAccessPointsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAccessPoints
-// 查询物理专线接入点
+// 查询物理专线接入点。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -460,7 +529,7 @@ func (c *Client) DescribeAccessPoints(request *DescribeAccessPointsRequest) (res
 }
 
 // DescribeAccessPoints
-// 查询物理专线接入点
+// 查询物理专线接入点。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -475,6 +544,7 @@ func (c *Client) DescribeAccessPointsWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeAccessPointsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dc", APIVersion, "DescribeAccessPoints")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAccessPoints require credential")
@@ -501,12 +571,13 @@ func NewDescribeDirectConnectTunnelExtraRequest() (request *DescribeDirectConnec
 func NewDescribeDirectConnectTunnelExtraResponse() (response *DescribeDirectConnectTunnelExtraResponse) {
     response = &DescribeDirectConnectTunnelExtraResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDirectConnectTunnelExtra
-// 本接口（DescribeDirectConnectTunnelExtra）用于查询专用通道扩展信息
+// 查询专用通道扩展信息。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -517,7 +588,7 @@ func (c *Client) DescribeDirectConnectTunnelExtra(request *DescribeDirectConnect
 }
 
 // DescribeDirectConnectTunnelExtra
-// 本接口（DescribeDirectConnectTunnelExtra）用于查询专用通道扩展信息
+// 查询专用通道扩展信息。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -527,6 +598,7 @@ func (c *Client) DescribeDirectConnectTunnelExtraWithContext(ctx context.Context
     if request == nil {
         request = NewDescribeDirectConnectTunnelExtraRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dc", APIVersion, "DescribeDirectConnectTunnelExtra")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDirectConnectTunnelExtra require credential")
@@ -553,12 +625,13 @@ func NewDescribeDirectConnectTunnelsRequest() (request *DescribeDirectConnectTun
 func NewDescribeDirectConnectTunnelsResponse() (response *DescribeDirectConnectTunnelsResponse) {
     response = &DescribeDirectConnectTunnelsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDirectConnectTunnels
-// 用于查询专用通道列表。
+// 查询专用通道列表。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -571,7 +644,7 @@ func (c *Client) DescribeDirectConnectTunnels(request *DescribeDirectConnectTunn
 }
 
 // DescribeDirectConnectTunnels
-// 用于查询专用通道列表。
+// 查询专用通道列表。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -583,6 +656,7 @@ func (c *Client) DescribeDirectConnectTunnelsWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeDirectConnectTunnelsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dc", APIVersion, "DescribeDirectConnectTunnels")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDirectConnectTunnels require credential")
@@ -609,8 +683,9 @@ func NewDescribeDirectConnectsRequest() (request *DescribeDirectConnectsRequest)
 func NewDescribeDirectConnectsResponse() (response *DescribeDirectConnectsResponse) {
     response = &DescribeDirectConnectsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDirectConnects
@@ -641,6 +716,7 @@ func (c *Client) DescribeDirectConnectsWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeDirectConnectsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dc", APIVersion, "DescribeDirectConnects")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDirectConnects require credential")
@@ -667,8 +743,9 @@ func NewDescribeInternetAddressRequest() (request *DescribeInternetAddressReques
 func NewDescribeInternetAddressResponse() (response *DescribeInternetAddressResponse) {
     response = &DescribeInternetAddressResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInternetAddress
@@ -699,6 +776,7 @@ func (c *Client) DescribeInternetAddressWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeInternetAddressRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dc", APIVersion, "DescribeInternetAddress")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInternetAddress require credential")
@@ -725,8 +803,9 @@ func NewDescribeInternetAddressQuotaRequest() (request *DescribeInternetAddressQ
 func NewDescribeInternetAddressQuotaResponse() (response *DescribeInternetAddressQuotaResponse) {
     response = &DescribeInternetAddressQuotaResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInternetAddressQuota
@@ -757,6 +836,7 @@ func (c *Client) DescribeInternetAddressQuotaWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeInternetAddressQuotaRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dc", APIVersion, "DescribeInternetAddressQuota")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInternetAddressQuota require credential")
@@ -783,8 +863,9 @@ func NewDescribeInternetAddressStatisticsRequest() (request *DescribeInternetAdd
 func NewDescribeInternetAddressStatisticsResponse() (response *DescribeInternetAddressStatisticsResponse) {
     response = &DescribeInternetAddressStatisticsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInternetAddressStatistics
@@ -815,6 +896,7 @@ func (c *Client) DescribeInternetAddressStatisticsWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeInternetAddressStatisticsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dc", APIVersion, "DescribeInternetAddressStatistics")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInternetAddressStatistics require credential")
@@ -841,12 +923,13 @@ func NewDescribePublicDirectConnectTunnelRoutesRequest() (request *DescribePubli
 func NewDescribePublicDirectConnectTunnelRoutesResponse() (response *DescribePublicDirectConnectTunnelRoutesResponse) {
     response = &DescribePublicDirectConnectTunnelRoutesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePublicDirectConnectTunnelRoutes
-// 本接口（DescribePublicDirectConnectTunnelRoutes）用于查询互联网通道路由列表
+// 查询互联网通道路由列表。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -858,7 +941,7 @@ func (c *Client) DescribePublicDirectConnectTunnelRoutes(request *DescribePublic
 }
 
 // DescribePublicDirectConnectTunnelRoutes
-// 本接口（DescribePublicDirectConnectTunnelRoutes）用于查询互联网通道路由列表
+// 查询互联网通道路由列表。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -869,6 +952,7 @@ func (c *Client) DescribePublicDirectConnectTunnelRoutesWithContext(ctx context.
     if request == nil {
         request = NewDescribePublicDirectConnectTunnelRoutesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dc", APIVersion, "DescribePublicDirectConnectTunnelRoutes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePublicDirectConnectTunnelRoutes require credential")
@@ -895,8 +979,9 @@ func NewDisableInternetAddressRequest() (request *DisableInternetAddressRequest)
 func NewDisableInternetAddressResponse() (response *DisableInternetAddressResponse) {
     response = &DisableInternetAddressResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisableInternetAddress
@@ -923,6 +1008,7 @@ func (c *Client) DisableInternetAddressWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDisableInternetAddressRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dc", APIVersion, "DisableInternetAddress")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisableInternetAddress require credential")
@@ -949,8 +1035,9 @@ func NewEnableInternetAddressRequest() (request *EnableInternetAddressRequest) {
 func NewEnableInternetAddressResponse() (response *EnableInternetAddressResponse) {
     response = &EnableInternetAddressResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableInternetAddress
@@ -977,6 +1064,7 @@ func (c *Client) EnableInternetAddressWithContext(ctx context.Context, request *
     if request == nil {
         request = NewEnableInternetAddressRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dc", APIVersion, "EnableInternetAddress")
     
     if c.GetCredential() == nil {
         return nil, errors.New("EnableInternetAddress require credential")
@@ -1003,8 +1091,9 @@ func NewModifyDirectConnectAttributeRequest() (request *ModifyDirectConnectAttri
 func NewModifyDirectConnectAttributeResponse() (response *ModifyDirectConnectAttributeResponse) {
     response = &ModifyDirectConnectAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDirectConnectAttribute
@@ -1039,6 +1128,7 @@ func (c *Client) ModifyDirectConnectAttributeWithContext(ctx context.Context, re
     if request == nil {
         request = NewModifyDirectConnectAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dc", APIVersion, "ModifyDirectConnectAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDirectConnectAttribute require credential")
@@ -1065,12 +1155,13 @@ func NewModifyDirectConnectTunnelAttributeRequest() (request *ModifyDirectConnec
 func NewModifyDirectConnectTunnelAttributeResponse() (response *ModifyDirectConnectTunnelAttributeResponse) {
     response = &ModifyDirectConnectTunnelAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDirectConnectTunnelAttribute
-// 修改专用通道属性
+// 修改专用通道属性。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1084,7 +1175,7 @@ func (c *Client) ModifyDirectConnectTunnelAttribute(request *ModifyDirectConnect
 }
 
 // ModifyDirectConnectTunnelAttribute
-// 修改专用通道属性
+// 修改专用通道属性。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1097,6 +1188,7 @@ func (c *Client) ModifyDirectConnectTunnelAttributeWithContext(ctx context.Conte
     if request == nil {
         request = NewModifyDirectConnectTunnelAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dc", APIVersion, "ModifyDirectConnectTunnelAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDirectConnectTunnelAttribute require credential")
@@ -1123,12 +1215,13 @@ func NewModifyDirectConnectTunnelExtraRequest() (request *ModifyDirectConnectTun
 func NewModifyDirectConnectTunnelExtraResponse() (response *ModifyDirectConnectTunnelExtraResponse) {
     response = &ModifyDirectConnectTunnelExtraResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDirectConnectTunnelExtra
-// 本接口（ModifyDirectConnectTunnelExtra）用于修改专用通道扩展信息
+// 修改专用通道扩展信息。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1146,7 +1239,7 @@ func (c *Client) ModifyDirectConnectTunnelExtra(request *ModifyDirectConnectTunn
 }
 
 // ModifyDirectConnectTunnelExtra
-// 本接口（ModifyDirectConnectTunnelExtra）用于修改专用通道扩展信息
+// 修改专用通道扩展信息。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1163,6 +1256,7 @@ func (c *Client) ModifyDirectConnectTunnelExtraWithContext(ctx context.Context, 
     if request == nil {
         request = NewModifyDirectConnectTunnelExtraRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dc", APIVersion, "ModifyDirectConnectTunnelExtra")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDirectConnectTunnelExtra require credential")
@@ -1189,12 +1283,13 @@ func NewRejectDirectConnectTunnelRequest() (request *RejectDirectConnectTunnelRe
 func NewRejectDirectConnectTunnelResponse() (response *RejectDirectConnectTunnelResponse) {
     response = &RejectDirectConnectTunnelResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RejectDirectConnectTunnel
-// 拒绝专用通道申请
+// 拒绝专用通道申请。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -1207,7 +1302,7 @@ func (c *Client) RejectDirectConnectTunnel(request *RejectDirectConnectTunnelReq
 }
 
 // RejectDirectConnectTunnel
-// 拒绝专用通道申请
+// 拒绝专用通道申请。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -1219,6 +1314,7 @@ func (c *Client) RejectDirectConnectTunnelWithContext(ctx context.Context, reque
     if request == nil {
         request = NewRejectDirectConnectTunnelRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dc", APIVersion, "RejectDirectConnectTunnel")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RejectDirectConnectTunnel require credential")
@@ -1245,8 +1341,9 @@ func NewReleaseInternetAddressRequest() (request *ReleaseInternetAddressRequest)
 func NewReleaseInternetAddressResponse() (response *ReleaseInternetAddressResponse) {
     response = &ReleaseInternetAddressResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ReleaseInternetAddress
@@ -1275,6 +1372,7 @@ func (c *Client) ReleaseInternetAddressWithContext(ctx context.Context, request 
     if request == nil {
         request = NewReleaseInternetAddressRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "dc", APIVersion, "ReleaseInternetAddress")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ReleaseInternetAddress require credential")

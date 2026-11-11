@@ -50,13 +50,16 @@ const (
 	// 低频不支持配置kv和tag索引。
 	FAILEDOPERATION_INVALIDINDEXRULEFORSEARCHLOW = "FailedOperation.InValidIndexRuleForSearchLow"
 
+	// 目标索引不支持 update/delete
+	FAILEDOPERATION_INDEXSEGMENTOFFLOADED = "FailedOperation.IndexSegmentOffloaded"
+
 	// 该告警策略状态异常，请检查下日志主题ID是否都存在。
 	FAILEDOPERATION_INVALIDALARM = "FailedOperation.InvalidAlarm"
 
 	// 检索游标已失效或不存在。
 	FAILEDOPERATION_INVALIDCONTEXT = "FailedOperation.InvalidContext"
 
-	// 离线存储保存时间不得少于7天。
+	// 低频存储保存时间不得少于7天。
 	FAILEDOPERATION_INVALIDPERIOD = "FailedOperation.InvalidPeriod"
 
 	// 相同的日志集已存在。
@@ -67,6 +70,9 @@ const (
 
 	// 无效的Content。
 	FAILEDOPERATION_MISSINGCONTENT = "FailedOperation.MissingContent"
+
+	// 不能修改系统字段
+	FAILEDOPERATION_MODIFYSYSTEMFIELD = "FailedOperation.ModifySystemField"
 
 	// 修改的生命周期被禁止。
 	FAILEDOPERATION_PERIODMODIFYFORBIDDEN = "FailedOperation.PeriodModifyForbidden"
@@ -92,6 +98,9 @@ const (
 	// 查询语句解析错误。
 	FAILEDOPERATION_SYNTAXERROR = "FailedOperation.SyntaxError"
 
+	// 标签侧并发冲突
+	FAILEDOPERATION_TAGCONCURRENTCONFLICT = "FailedOperation.TagConcurrentConflict"
+
 	// 请求标签服务限频。
 	FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
 
@@ -101,11 +110,14 @@ const (
 	// 日志主题已关闭。
 	FAILEDOPERATION_TOPICCLOSED = "FailedOperation.TopicClosed"
 
-	// topic创建中
+	// Topic 创建中。
 	FAILEDOPERATION_TOPICCREATING = "FailedOperation.TopicCreating"
 
 	// 日志主题已隔离。
 	FAILEDOPERATION_TOPICISOLATED = "FailedOperation.TopicIsolated"
+
+	// 命中文档数超过 10000 上限
+	FAILEDOPERATION_WRITEBYQUERYREACHLIMIT = "FailedOperation.WriteByQueryReachLimit"
 
 	// 写qps超过限制。
 	FAILEDOPERATION_WRITEQPSLIMIT = "FailedOperation.WriteQpsLimit"
@@ -130,6 +142,9 @@ const (
 
 	// 内部错误服务器繁忙
 	INTERNALERROR_SERVERBUSY = "InternalError.ServerBusy"
+
+	// 无效的过滤器
+	INVALIDFILTER = "InvalidFilter"
 
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
@@ -197,7 +212,7 @@ const (
 	// 一个billing topic只能创建一个cos采集配置
 	LIMITEXCEEDED_BILLINGCOSRECHARGEOUTOFLIMIT = "LimitExceeded.BillingCosRechargeOutOfLimit"
 
-	// 一个uin只能创建一个billing topic
+	// 一个 uin 只能创建一个 billing topic。
 	LIMITEXCEEDED_BILLINGTOPICOUTOFLIMIT = "LimitExceeded.BillingTopicOutOfLimit"
 
 	// 采集规则配置超过最大值限制。
@@ -364,4 +379,7 @@ const (
 
 	// billing topic不允许修改cos导入配置
 	UNSUPPORTEDOPERATION_MODIFYBILLINGCOSRECHARGENOSUPPORT = "UnsupportedOperation.ModifyBillingCosRechargeNoSupport"
+
+	// 当前地域不支持。
+	UNSUPPORTEDOPERATION_UNSUPPORTEDREGION = "UnsupportedOperation.UnsupportedRegion"
 )

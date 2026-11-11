@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_gwlb_target_group: fix health check timeout, interval_time, health_num, and un_health_num sending zero values instead of defaults when not set
+```

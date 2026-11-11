@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -73,6 +73,7 @@ func NewCreateProbeTasksResponse() (response *CreateProbeTasksResponse) {
 //  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
 //  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
 //  FAILEDOPERATION_ERRPREPAIDRESOURCEEXPIRE = "FailedOperation.ErrPrePaidResourceExpire"
+//  FAILEDOPERATION_NEEDAPPROVAL = "FailedOperation.NeedApproval"
 //  FAILEDOPERATION_NOVALIDNODES = "FailedOperation.NoValidNodes"
 //  FAILEDOPERATION_ORDEROUTOFCREDIT = "FailedOperation.OrderOutOfCredit"
 //  FAILEDOPERATION_PRERESOURCEIDFAILED = "FailedOperation.PreResourceIDFailed"
@@ -101,6 +102,7 @@ func (c *Client) CreateProbeTasks(request *CreateProbeTasksRequest) (response *C
 //  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
 //  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
 //  FAILEDOPERATION_ERRPREPAIDRESOURCEEXPIRE = "FailedOperation.ErrPrePaidResourceExpire"
+//  FAILEDOPERATION_NEEDAPPROVAL = "FailedOperation.NeedApproval"
 //  FAILEDOPERATION_NOVALIDNODES = "FailedOperation.NoValidNodes"
 //  FAILEDOPERATION_ORDEROUTOFCREDIT = "FailedOperation.OrderOutOfCredit"
 //  FAILEDOPERATION_PRERESOURCEIDFAILED = "FailedOperation.PreResourceIDFailed"
@@ -120,6 +122,7 @@ func (c *Client) CreateProbeTasksWithContext(ctx context.Context, request *Creat
     if request == nil {
         request = NewCreateProbeTasksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cat", APIVersion, "CreateProbeTasks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateProbeTasks require credential")
@@ -189,6 +192,7 @@ func (c *Client) DeleteProbeTaskWithContext(ctx context.Context, request *Delete
     if request == nil {
         request = NewDeleteProbeTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cat", APIVersion, "DeleteProbeTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteProbeTask require credential")
@@ -252,6 +256,7 @@ func (c *Client) DescribeDetailedSingleProbeDataWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeDetailedSingleProbeDataRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cat", APIVersion, "DescribeDetailedSingleProbeData")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDetailedSingleProbeData require credential")
@@ -315,6 +320,7 @@ func (c *Client) DescribeInstantTasksWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeInstantTasksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cat", APIVersion, "DescribeInstantTasks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstantTasks require credential")
@@ -323,6 +329,60 @@ func (c *Client) DescribeInstantTasksWithContext(ctx context.Context, request *D
     request.SetContext(ctx)
     
     response = NewDescribeInstantTasksResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeNodeGroupsRequest() (request *DescribeNodeGroupsRequest) {
+    request = &DescribeNodeGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cat", APIVersion, "DescribeNodeGroups")
+    
+    
+    return
+}
+
+func NewDescribeNodeGroupsResponse() (response *DescribeNodeGroupsResponse) {
+    response = &DescribeNodeGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeNodeGroups
+// 获取拨测点组（可用性拨测点组、高级拨测点组、我的拨测点组）
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DescribeNodeGroups(request *DescribeNodeGroupsRequest) (response *DescribeNodeGroupsResponse, err error) {
+    return c.DescribeNodeGroupsWithContext(context.Background(), request)
+}
+
+// DescribeNodeGroups
+// 获取拨测点组（可用性拨测点组、高级拨测点组、我的拨测点组）
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DescribeNodeGroupsWithContext(ctx context.Context, request *DescribeNodeGroupsRequest) (response *DescribeNodeGroupsResponse, err error) {
+    if request == nil {
+        request = NewDescribeNodeGroupsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cat", APIVersion, "DescribeNodeGroups")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeNodeGroups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeNodeGroupsResponse()
     err = c.Send(request, response)
     return
 }
@@ -350,13 +410,8 @@ func NewDescribeNodesResponse() (response *DescribeNodesResponse) {
 // 获取拨测节点
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
-//  FAILEDOPERATION_ESQUERYERROR = "FailedOperation.ESQueryError"
-//  INTERNALERROR = "InternalError"
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 func (c *Client) DescribeNodes(request *DescribeNodesRequest) (response *DescribeNodesResponse, err error) {
     return c.DescribeNodesWithContext(context.Background(), request)
@@ -366,18 +421,14 @@ func (c *Client) DescribeNodes(request *DescribeNodesRequest) (response *Describ
 // 获取拨测节点
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
-//  FAILEDOPERATION_ESQUERYERROR = "FailedOperation.ESQueryError"
-//  INTERNALERROR = "InternalError"
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 func (c *Client) DescribeNodesWithContext(ctx context.Context, request *DescribeNodesRequest) (response *DescribeNodesResponse, err error) {
     if request == nil {
         request = NewDescribeNodesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cat", APIVersion, "DescribeNodes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeNodes require credential")
@@ -412,6 +463,8 @@ func NewDescribeProbeMetricDataResponse() (response *DescribeProbeMetricDataResp
 // DescribeProbeMetricData
 // 查询云拨测指标数据，指标支持使用sum,avg,max,min聚合函数进行指标数据查询
 //
+// 拨测频率与groupBy聚合时间设置关联，如拨测频率为 30 分钟，则 groupBy 聚合时间建议设置为大于30分钟，避免出现查询数据为空的情况
+//
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
@@ -422,6 +475,8 @@ func (c *Client) DescribeProbeMetricData(request *DescribeProbeMetricDataRequest
 // DescribeProbeMetricData
 // 查询云拨测指标数据，指标支持使用sum,avg,max,min聚合函数进行指标数据查询
 //
+// 拨测频率与groupBy聚合时间设置关联，如拨测频率为 30 分钟，则 groupBy 聚合时间建议设置为大于30分钟，避免出现查询数据为空的情况
+//
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
@@ -429,6 +484,7 @@ func (c *Client) DescribeProbeMetricDataWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeProbeMetricDataRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cat", APIVersion, "DescribeProbeMetricData")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeProbeMetricData require credential")
@@ -437,6 +493,58 @@ func (c *Client) DescribeProbeMetricDataWithContext(ctx context.Context, request
     request.SetContext(ctx)
     
     response = NewDescribeProbeMetricDataResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeProbeMetricTagValuesRequest() (request *DescribeProbeMetricTagValuesRequest) {
+    request = &DescribeProbeMetricTagValuesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cat", APIVersion, "DescribeProbeMetricTagValues")
+    
+    
+    return
+}
+
+func NewDescribeProbeMetricTagValuesResponse() (response *DescribeProbeMetricTagValuesResponse) {
+    response = &DescribeProbeMetricTagValuesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeProbeMetricTagValues
+// 查询同个任务类型下的维度标签值，包括查询用户任务信息，具体任务下的多个维度标签信息。（通过为DescribeProbeMetricData接口的Filters参数添加维度筛选条件，可实现多维数据分析）
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+func (c *Client) DescribeProbeMetricTagValues(request *DescribeProbeMetricTagValuesRequest) (response *DescribeProbeMetricTagValuesResponse, err error) {
+    return c.DescribeProbeMetricTagValuesWithContext(context.Background(), request)
+}
+
+// DescribeProbeMetricTagValues
+// 查询同个任务类型下的维度标签值，包括查询用户任务信息，具体任务下的多个维度标签信息。（通过为DescribeProbeMetricData接口的Filters参数添加维度筛选条件，可实现多维数据分析）
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+func (c *Client) DescribeProbeMetricTagValuesWithContext(ctx context.Context, request *DescribeProbeMetricTagValuesRequest) (response *DescribeProbeMetricTagValuesResponse, err error) {
+    if request == nil {
+        request = NewDescribeProbeMetricTagValuesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cat", APIVersion, "DescribeProbeMetricTagValues")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeProbeMetricTagValues require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeProbeMetricTagValuesResponse()
     err = c.Send(request, response)
     return
 }
@@ -480,6 +588,7 @@ func (c *Client) DescribeProbeNodesWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeProbeNodesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cat", APIVersion, "DescribeProbeNodes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeProbeNodes require credential")
@@ -543,6 +652,7 @@ func (c *Client) DescribeProbeTasksWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeProbeTasksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cat", APIVersion, "DescribeProbeTasks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeProbeTasks require credential")
@@ -614,6 +724,7 @@ func (c *Client) ResumeProbeTaskWithContext(ctx context.Context, request *Resume
     if request == nil {
         request = NewResumeProbeTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cat", APIVersion, "ResumeProbeTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResumeProbeTask require credential")
@@ -646,7 +757,7 @@ func NewSuspendProbeTaskResponse() (response *SuspendProbeTaskResponse) {
 }
 
 // SuspendProbeTask
-// 暂停拨测任务
+// 暂停任务
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -664,7 +775,7 @@ func (c *Client) SuspendProbeTask(request *SuspendProbeTaskRequest) (response *S
 }
 
 // SuspendProbeTask
-// 暂停拨测任务
+// 暂停任务
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -681,6 +792,7 @@ func (c *Client) SuspendProbeTaskWithContext(ctx context.Context, request *Suspe
     if request == nil {
         request = NewSuspendProbeTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cat", APIVersion, "SuspendProbeTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SuspendProbeTask require credential")
@@ -748,6 +860,7 @@ func (c *Client) UpdateProbeTaskAttributesWithContext(ctx context.Context, reque
     if request == nil {
         request = NewUpdateProbeTaskAttributesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cat", APIVersion, "UpdateProbeTaskAttributes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateProbeTaskAttributes require credential")
@@ -821,6 +934,7 @@ func (c *Client) UpdateProbeTaskConfigurationListWithContext(ctx context.Context
     if request == nil {
         request = NewUpdateProbeTaskConfigurationListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cat", APIVersion, "UpdateProbeTaskConfigurationList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateProbeTaskConfigurationList require credential")

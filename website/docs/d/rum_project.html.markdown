@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Project type.
   * `url` - Project URL.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeProjects](https://www.tencentcloud.com/document/api/1131/45308)
 

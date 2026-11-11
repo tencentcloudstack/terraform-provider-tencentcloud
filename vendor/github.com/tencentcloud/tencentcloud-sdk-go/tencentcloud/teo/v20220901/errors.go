@@ -116,6 +116,9 @@ const (
 	// 实时日志认证失败
 	FAILEDOPERATION_REALTIMELOGAUTHFAILURE = "FailedOperation.RealtimeLogAuthFailure"
 
+	// 当前不支持创建 EdgeOne 日志分析类型的实时日志推送任务。
+	FAILEDOPERATION_REALTIMELOGLOGANALYSISNOTSUPPORT = "FailedOperation.RealtimeLogLogAnalysisNotSupport"
+
 	// 实时日志推送任务不存在
 	FAILEDOPERATION_REALTIMELOGNOTFOUND = "FailedOperation.RealtimeLogNotFound"
 
@@ -191,6 +194,9 @@ const (
 	// 当前域名不支持同时开启高级回源优化和多层架构。
 	INVALIDPARAMETER_ADVANCEDORIGINROUTINGNOTSUPPORTMULTIPLYLAYER = "InvalidParameter.AdvancedOriginRoutingNotSupportMultiplyLayer"
 
+	// 新增域名过程中不支持开启高级回源优化，请关闭高级回源优化配置后重试。
+	INVALIDPARAMETER_ADVANCEDORIGINROUTINGNOTSUPPORTNEWLYADDEDHOST = "InvalidParameter.AdvancedOriginRoutingNotSupportNewlyAddedHost"
+
 	// 当前域名不支持同时开启高级回源优化和OC互转。
 	INVALIDPARAMETER_ADVANCEDORIGINROUTINGNOTSUPPORTOCDIRECTORIGIN = "InvalidParameter.AdvancedOriginRoutingNotSupportOCDirectOrigin"
 
@@ -223,6 +229,9 @@ const (
 
 	// 无效的边缘HTTPS证书配置，证书与域名不匹配。
 	INVALIDPARAMETER_CERTNOTMATCHDOMAIN = "InvalidParameter.CertNotMatchDomain"
+
+	// 证书 SAN 域名总长度超过限制（最大 4096 字节）。
+	INVALIDPARAMETER_CERTSANTOOLONG = "InvalidParameter.CertSANTooLong"
 
 	// 内部错误。
 	INVALIDPARAMETER_CERTSYSTEMERROR = "InvalidParameter.CertSystemError"
@@ -505,6 +514,9 @@ const (
 
 	// 无效的Ipv6开关配置。
 	INVALIDPARAMETER_INVALIDIPV6SWITCH = "InvalidParameter.InvalidIpv6Switch"
+
+	// 无效的日志分析匹配条件，查询语句解析失败。
+	INVALIDPARAMETER_INVALIDLOGANALYSISCONDITION = "InvalidParameter.InvalidLogAnalysisCondition"
 
 	// 日志输出格式的字段分隔符不正确
 	INVALIDPARAMETER_INVALIDLOGFORMATFIELDDELIMITER = "InvalidParameter.InvalidLogFormatFieldDelimiter"
@@ -971,6 +983,12 @@ const (
 	// 包含无效的值。
 	INVALIDPARAMETERVALUE_INCLUDEINVALIDVALUE = "InvalidParameterValue.IncludeInvalidValue"
 
+	// 推理服务名称格式错误。
+	INVALIDPARAMETERVALUE_INFERENCESERVICENAME = "InvalidParameterValue.InferenceServiceName"
+
+	// 推理服务名称重复。
+	INVALIDPARAMETERVALUE_INFERENCESERVICENAMEDUPLICATE = "InvalidParameterValue.InferenceServiceNameDuplicate"
+
 	// 别称域名名称不合法，别称域名应该由数字、英文字母、连词符组成，且连词符不能位于开头和结尾处。
 	INVALIDPARAMETERVALUE_INVALIDALIASDOMAINNAME = "InvalidParameterValue.InvalidAliasDomainName"
 
@@ -1025,6 +1043,9 @@ const (
 	// 页面名称已存在。
 	INVALIDPARAMETERVALUE_PAGENAMEALREADYEXIST = "InvalidParameterValue.PageNameAlreadyExist"
 
+	// 相同主机记录下至少需要包含一条默认解析线路，请确保当前主机记录下存在有已启用的默认解析线路后重试。
+	INVALIDPARAMETERVALUE_RECORDNEEDDEFAULTLOCATION = "InvalidParameterValue.RecordNeedDefaultLocation"
+
 	// 不符合指定的正则表达式。
 	INVALIDPARAMETERVALUE_REGEXMISMATCH = "InvalidParameterValue.RegExMismatch"
 
@@ -1057,6 +1078,9 @@ const (
 
 	// 试用套餐的自定义页面不允许引用。
 	INVALIDPARAMETERVALUE_TRIALPLANRESPONSEPAGE = "InvalidParameterValue.TrialPlanResponsePage"
+
+	// 存在多条相同主机记录类型的解析记录时，不允许将唯一一条权重值为0的解析记录删除。
+	INVALIDPARAMETERVALUE_UNSUPPORTDELETEWEIGHTRECORD = "InvalidParameterValue.UnSupportDeleteWeightRecord"
 
 	// 配置项错误。
 	INVALIDPARAMETERVALUE_UNRECOGNIZABLEVALUE = "InvalidParameterValue.UnrecognizableValue"
@@ -1099,6 +1123,9 @@ const (
 
 	// 函数数量达到限制。
 	LIMITEXCEEDED_FUNCTIONLIMITEXCEEDED = "LimitExceeded.FunctionLimitExceeded"
+
+	// 推理服务数量超限。
+	LIMITEXCEEDED_INFERENCESERVICE = "LimitExceeded.InferenceService"
 
 	// 负载均衡数量超过限制。
 	LIMITEXCEEDED_LOADBALANCINGCOUNTLIMITEXCEEDED = "LimitExceeded.LoadBalancingCountLimitExceeded"
@@ -1304,6 +1331,9 @@ const (
 	// 无域名接入站点不支持除切换为CNAME接入类型以外的任何修改动作。
 	OPERATIONDENIED_NODOMAINACCESSZONEONLYSUPPORTMODIFYTYPE = "OperationDenied.NoDomainAccessZoneOnlySupportModifyType"
 
+	// 当前站点下存在域名关联了专属加速IP，如需关闭「中国大陆网络优化」请先解绑专属IP后重试。
+	OPERATIONDENIED_NOTALLOWCLOSEACCELERATEMAINLANDWHENDOMAINBOUNDEXCLUSIVEIP = "OperationDenied.NotAllowCloseAccelerateMainlandWhenDomainBoundExclusiveIP"
+
 	// 当前高级回源优化功能仅针对白名单用户开放。
 	OPERATIONDENIED_NOTINADVANCEDORIGINROUTINGWHITELIST = "OperationDenied.NotInAdvancedOriginRoutingWhiteList"
 
@@ -1393,6 +1423,12 @@ const (
 
 	// 源站防护配置正在部署中，请待部署完成后再切换加速区域。
 	OPERATIONDENIED_SWITCHAREAORIGINPROTECTIONDEPLOYING = "OperationDenied.SwitchAreaOriginProtectionDeploying"
+
+	// 删除当前加速域名时将同时删除该域名对应的 CNMAE 记录，会导致当前主机记录缺少默认线路，请前往修改解析线路，保障当前主机记录至少有一条默认线路后重试。
+	OPERATIONDENIED_UNSUPPORTDELETELOCATIONRECORD = "OperationDenied.UnSupportDeleteLocationRecord"
+
+	// 删除当前加速域名时将同时删除该域名对应的 CNMAE 记录，会导致当前主机记录剩余的记录权重和为 0，请前往修改权重配置后重试。
+	OPERATIONDENIED_UNSUPPORTDELETEWEIGHTRECORD = "OperationDenied.UnSupportDeleteWeightRecord"
 
 	// 当前并不支持关闭回源双向认证，如需关闭，请通过将边缘 HTTPS 证书更改为不配置来关闭。
 	OPERATIONDENIED_UNSUPPORTTOCLOSEUPSTREAMMTLS = "OperationDenied.UnSupportToCloseUpstreamMTLS"
@@ -1498,6 +1534,12 @@ const (
 
 	// DNSPod 未正常接入该域名，请在 DNSPod 接入后重试。
 	RESOURCENOTFOUND_DNSPODDOMAINNOTINACCOUNT = "ResourceNotFound.DNSPodDomainNotInAccount"
+
+	// 推理域名不存在。
+	RESOURCENOTFOUND_INFERENCEDOMAIN = "ResourceNotFound.InferenceDomain"
+
+	// 推理服务不存在。
+	RESOURCENOTFOUND_INFERENCESERVICE = "ResourceNotFound.InferenceService"
 
 	// 最大上传大小额度未配置
 	RESOURCENOTFOUND_POSTMAXSIZEQUOTANOTFOUND = "ResourceNotFound.PostMaxSizeQuotaNotFound"

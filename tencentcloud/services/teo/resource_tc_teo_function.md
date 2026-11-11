@@ -10,7 +10,7 @@ resource "tencentcloud_teo_function" "teo_function" {
           e.respondWith(response);
         });
     EOT
-    name        = "aaa-zone-2qtuhspy7cr6-1310708577"
+    name        = "aaa"
     remark      = "test"
     zone_id     = "zone-2qtuhspy7cr6"
 }

@@ -20,6 +20,7 @@ resource "tencentcloud_ccn_instances_accept_attach" "ccn_instances_accept_attach
     instance_id     = "vpc-j9yhbzpn"
     instance_region = "ap-guangzhou"
     instance_type   = "VPC"
+    order_type      = "PayByCcnOwner"
   }
 }
 ```
@@ -37,6 +38,7 @@ The `instances` object supports the following:
 * `instance_region` - (Required, String) Instance Region.
 * `description` - (Optional, String) Description.
 * `instance_type` - (Optional, String) InstanceType: `VPC`, `DIRECTCONNECT`, `BMVPC`, `VPNGW`.
+* `order_type` - (Optional, String) Instance billing method. Valid values: `PayByCcnOwner` (CCN owner pays), `PayByInstanceOwner` (instance owner pays).
 * `route_table_id` - (Optional, String) ID of the routing table associated with the instance. Note: This field may return null, indicating that no valid value can be obtained.
 
 ## Attributes Reference
@@ -46,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AcceptAttachCcnInstances](https://www.tencentcloud.com/document/api/215/34793)
 

@@ -39,4 +39,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [ActivateInstance](https://www.tencentcloud.com/document/api/1098/45568)
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+  - [IsolateInstance](https://www.tencentcloud.com/document/api/1098/40744)
+* Update:
+  - [ActivateInstance](https://www.tencentcloud.com/document/api/1098/45568)
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+  - [IsolateInstance](https://www.tencentcloud.com/document/api/1098/40744)
 

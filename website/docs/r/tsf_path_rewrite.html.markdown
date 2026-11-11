@@ -40,6 +40,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `path_rewrite_id` - path rewrite rule ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePathRewritesWithDetailResp](https://www.tencentcloud.com/search/?wd=CreatePathRewritesWithDetailResp&type=document&lang=en)
+* Read: [DescribePathRewrite](https://www.tencentcloud.com/search/?wd=DescribePathRewrite&type=document&lang=en)
+* Update: [ModifyPathRewrite](https://www.tencentcloud.com/search/?wd=ModifyPathRewrite&type=document&lang=en)
+* Delete: [DeletePathRewrites](https://www.tencentcloud.com/search/?wd=DeletePathRewrites&type=document&lang=en)
 
 ## Import
 

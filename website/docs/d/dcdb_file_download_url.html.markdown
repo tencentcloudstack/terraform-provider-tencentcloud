@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `pre_signed_url` - Signed download URL.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeFileDownloadUrl](https://www.tencentcloud.com/document/api/1042/44288)
 

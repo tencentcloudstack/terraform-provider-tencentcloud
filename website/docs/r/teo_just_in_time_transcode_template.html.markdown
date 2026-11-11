@@ -76,6 +76,16 @@ In addition to all arguments above, the following attributes are exported:
 * `type` - Template type. Values: preset, custom.
 * `update_time` - Template last update time in ISO 8601 format.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateJustInTimeTranscodeTemplate](https://www.tencentcloud.com/document/api/1145/72309)
+  - [DescribeJustInTimeTranscodeTemplates](https://www.tencentcloud.com/document/api/1145/72307)
+* Read: [DescribeJustInTimeTranscodeTemplates](https://www.tencentcloud.com/document/api/1145/72307)
+* Update: [DescribeJustInTimeTranscodeTemplates](https://www.tencentcloud.com/document/api/1145/72307)
+* Delete: [DeleteJustInTimeTranscodeTemplates](https://www.tencentcloud.com/document/api/1145/72308)
 
 ## Import
 

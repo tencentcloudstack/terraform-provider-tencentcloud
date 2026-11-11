@@ -17,6 +17,22 @@ resource "tencentcloud_ssm_secret" "example" {
 }
 ```
 
+Create user defined secret with soft key encryption
+
+```hcl
+resource "tencentcloud_ssm_secret" "example" {
+  secret_name             = "tf-example"
+  description             = "desc."
+  is_enabled              = true
+  encrypt_type            = 1
+  recovery_window_in_days = 0
+
+  tags = {
+    createBy = "terraform"
+  }
+}
+```
+
 Create redis secret
 
 ```hcl
@@ -76,3 +92,24 @@ SSM secret can be imported using the secretName, e.g.
 ```
 $ terraform import tencentcloud_ssm_secret.foo test
 ```
+
+Argument Reference
+
+The following arguments are supported:
+
+* `secret_name` - (Required, ForceNew) Name of secret which cannot be repeated in the same region. The maximum length is 128 bytes. The name can only contain English letters, numbers, underscore and hyphen '-'. The first character must be a letter or number.
+* `description` - (Optional) Description of secret. The maximum is 2048 bytes.
+* `kms_key_id` - (Optional, ForceNew, Computed) KMS keyId used to encrypt secret. If it is empty, it means that the CMK created by SSM for you by default is used for encryption. You can also specify the KMS CMK created by yourself in the same region for encryption.
+* `secret_type` - (Optional, Computed) Type of secret. `0`: user-defined secret. `4`: redis secret. Default is `0`.
+* `additional_config` - (Optional) Additional config for specific secret types in JSON string format.
+* `encrypt_type` - (Optional, Computed) Encryption type of secret. `0`: KMS key encryption. `1`: soft key encryption. Default is `0`. Once created, it cannot be modified.
+* `is_enabled` - (Optional) Specify whether to enable secret. Default value is `true`.
+* `recovery_window_in_days` - (Optional) Specify the scheduled deletion date. Default value is `0` that means to delete immediately. 1-30 means the number of days reserved, completely deleted after this date.
+* `tags` - (Optional) Tags of secret.
+
+Attributes Reference
+
+The following attributes are exported:
+
+* `status` - Status of secret.
+* `id` - Secret name.

@@ -56,4 +56,9 @@ In addition to all arguments above, the following attributes are exported:
   * `user_name` - user name.
   * `where_flag` - If add where.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRuleTemplates](https://www.tencentcloud.com/document/api/1174/61110)
 

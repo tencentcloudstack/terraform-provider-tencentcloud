@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
   * `status_code` - Request status code.
   * `status` - Async event status. Values: `RUNNING` (running); `FINISHED` (invoked successfully); `ABORTED` (invocation ended); `FAILED` (invocation failed).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetAsyncEventStatus](https://www.tencentcloud.com/document/api/583/44482)
 

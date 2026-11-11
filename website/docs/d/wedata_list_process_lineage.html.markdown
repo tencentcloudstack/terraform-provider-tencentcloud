@@ -87,4 +87,9 @@ TABLE|METRIC|MODEL|SERVICE|COLUMN.
 Note: When lineage is for table columns, the unique ID should be TableResourceUniqueId::FieldName.
     * `update_time` - Update time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListProcessLineage](https://www.tencentcloud.com/document/api/1174/77946)
 

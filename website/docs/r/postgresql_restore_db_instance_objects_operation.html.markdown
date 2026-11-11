@@ -56,4 +56,11 @@ In addition to all arguments above, the following attributes are exported:
 The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
 
 * `create` - (Defaults to `10m`) Used when creating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeTasks](https://www.tencentcloud.com/document/api/409/78807)
+  - [RestoreDBInstanceObjects](https://www.tencentcloud.com/document/api/409/60785)
 

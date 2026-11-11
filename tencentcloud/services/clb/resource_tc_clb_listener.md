@@ -6,10 +6,22 @@ HTTP Listener
 
 ```hcl
 resource "tencentcloud_clb_listener" "example" {
-  clb_id        = "lb-qck8thny"
-  listener_name = "tf-example"
-  port          = 80
-  protocol      = "HTTP"
+  clb_id              = "lb-qck8thny"
+  listener_name       = "tf-example"
+  port                = 80
+  protocol            = "HTTP"
+}
+```
+
+HTTP Listener with specific data compress mode
+
+```hcl
+resource "tencentcloud_clb_listener" "example" {
+  clb_id              = "lb-qck8thny"
+  listener_name       = "tf-example"
+  port                = 80
+  protocol            = "HTTP"
+  data_compress_mode  = "transparent"
 }
 ```
 
@@ -163,6 +175,23 @@ resource "tencentcloud_clb_listener" "example" {
   health_check_unhealth_num  = 3
   scheduler                  = "WRR"
   target_type                = "TARGETGROUP"
+}
+```
+
+TCP_SSL Listener with MaxConn, MaxCps, ProxyProtocol
+
+```hcl
+resource "tencentcloud_clb_listener" "example" {
+  clb_id              = "lb-0lh5au7v"
+  listener_name       = "tf-example"
+  port                = "443"
+  protocol            = "TCP_SSL"
+  certificate_ssl_mode = "UNIDIRECTIONAL"
+  certificate_id      = "VjANRdz8"
+  scheduler           = "WRR"
+  max_conn            = 1000
+  max_cps             = 100
+  proxy_protocol      = true
 }
 ```
 

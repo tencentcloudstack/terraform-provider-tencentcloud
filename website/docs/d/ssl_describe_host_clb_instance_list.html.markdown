@@ -67,4 +67,9 @@ In addition to all arguments above, the following attributes are exported:
   * `load_balancer_id` - CLB instance ID.
   * `load_balancer_name` - CLB instance name name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeHostClbInstanceList](https://www.tencentcloud.com/search/?wd=DescribeHostClbInstanceList&type=document&lang=en)
 

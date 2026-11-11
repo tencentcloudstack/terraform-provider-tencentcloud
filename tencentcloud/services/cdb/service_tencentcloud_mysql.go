@@ -1374,6 +1374,31 @@ func (me *MysqlService) ModifyAutoRenewFlag(ctx context.Context, mysqlId string,
 	return
 }
 
+func (me *MysqlService) ModifyInstanceDestroyProtect(ctx context.Context, mysqlId string, destroyProtect string) (errRet error) {
+
+	logId := tccommon.GetLogId(ctx)
+	request := cdb.NewModifyInstanceDestroyProtectRequest()
+	request.InstanceIds = []*string{&mysqlId}
+	request.DestroyProtect = &destroyProtect
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMysqlClient().ModifyInstanceDestroyProtect(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
 func (me *MysqlService) IsolateDBInstance(ctx context.Context, mysqlId string) (asyncRequestId string, errRet error) {
 
 	logId := tccommon.GetLogId(ctx)
@@ -3621,5 +3646,65 @@ func (me *MysqlService) DeleteCdbStartCpuExpandById(ctx context.Context, instanc
 		return
 	}
 
+	return
+}
+
+func (me *MysqlService) CreateCloneInstance(ctx context.Context, request *cdb.CreateCloneInstanceRequest) (asyncRequestId string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMysqlClient().CreateCloneInstance(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("CreateCloneInstance failed, Response is nil.")
+		return
+	}
+	if response.Response.AsyncRequestId == nil || *response.Response.AsyncRequestId == "" {
+		errRet = fmt.Errorf("CreateCloneInstance failed, AsyncRequestId is nil or empty.")
+		return
+	}
+	asyncRequestId = *response.Response.AsyncRequestId
+	return
+}
+
+func (me *MysqlService) UpgradeMysqlCloneInstance(ctx context.Context, request *cdb.UpgradeDBInstanceRequest) (asyncRequestId string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMysqlClient().UpgradeDBInstance(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("UpgradeDBInstance failed, Response is nil.")
+		return
+	}
+	if response.Response.AsyncRequestId == nil || *response.Response.AsyncRequestId == "" {
+		errRet = fmt.Errorf("UpgradeDBInstance failed, AsyncRequestId is nil or empty.")
+		return
+	}
+	asyncRequestId = *response.Response.AsyncRequestId
 	return
 }

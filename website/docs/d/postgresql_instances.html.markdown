@@ -166,4 +166,12 @@ Default value: 0.
   * `tags` - The available tags within this postgresql.
   * `vpc_id` - ID of VPC.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read:
+  - [DescribeAccounts](https://www.tencentcloud.com/document/api/409/18109)
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/409/16773)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
 

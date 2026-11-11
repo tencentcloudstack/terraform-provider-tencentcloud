@@ -124,4 +124,9 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - VPC id.
   * `zone` - Zone.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribePrometheusInstances](https://www.tencentcloud.com/document/api/248/48753)
 

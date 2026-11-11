@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
   * `project_info` - Description of project.
   * `project_name` - Name of Project.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeProjects](https://www.tencentcloud.com/document/api/651/54679)
 

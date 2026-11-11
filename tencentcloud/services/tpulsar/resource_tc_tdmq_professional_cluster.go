@@ -76,6 +76,14 @@ func ResourceTencentCloudTdmqProfessionalCluster() *schema.Resource {
 				Computed:    true,
 			},
 
+			"instance_version": {
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Cluster version information. User can specify a version when creating the cluster.",
+			},
+
 			"vpc": {
 				Optional:    true,
 				Type:        schema.TypeList,
@@ -101,6 +109,13 @@ func ResourceTencentCloudTdmqProfessionalCluster() *schema.Resource {
 				Type:        schema.TypeMap,
 				Optional:    true,
 				Description: "Tag description list.",
+			},
+
+			// computed
+			"cluster_id": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Id of cluster.",
 			},
 		},
 	}
@@ -153,6 +168,10 @@ func resourceTencentCloudTdmqProfessionalClusterCreate(d *schema.ResourceData, m
 		request.AutoVoucher = helper.Int64(0)
 	}
 
+	if v, ok := d.GetOk("instance_version"); ok {
+		request.InstanceVersion = helper.String(v.(string))
+	}
+
 	if dMap, ok := helper.InterfacesHeadMap(d, "vpc"); ok {
 		vpcInfo := tdmq.VpcInfo{}
 		if v, ok := dMap["vpc_id"]; ok {
@@ -171,6 +190,11 @@ func resourceTencentCloudTdmqProfessionalClusterCreate(d *schema.ResourceData, m
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create pro cluster failed, Response is nil"))
+		}
+
 		response = result
 		return nil
 	})
@@ -179,13 +203,15 @@ func resourceTencentCloudTdmqProfessionalClusterCreate(d *schema.ResourceData, m
 		return err
 	}
 
+	if response.Response.ClusterId == nil {
+		return fmt.Errorf("ClusterId is nil")
+	}
+
 	clusterId = *response.Response.ClusterId
 	d.SetId(clusterId)
 
 	service := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-
 	conf := tccommon.BuildStateChangeConf([]string{"0"}, []string{"1"}, 8*tccommon.ReadRetryTimeout, time.Second, service.TdmqProfessionalClusterStateRefreshFunc(d.Id(), []string{}))
-
 	if _, e := conf.WaitForState(); e != nil {
 		return e
 	}
@@ -226,9 +252,13 @@ func resourceTencentCloudTdmqProfessionalClusterRead(d *schema.ResourceData, met
 	}
 
 	if professionalCluster == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_tdmq_professional_cluster` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `TdmqProfessionalCluster` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
+	}
+
+	if clusterInfo.ClusterId != nil {
+		_ = d.Set("cluster_id", clusterInfo.ClusterId)
 	}
 
 	if clusterInfo.NodeDistribution != nil {
@@ -257,6 +287,10 @@ func resourceTencentCloudTdmqProfessionalClusterRead(d *schema.ResourceData, met
 
 	if professionalCluster.InstanceName != nil {
 		_ = d.Set("cluster_name", professionalCluster.InstanceName)
+	}
+
+	if professionalCluster.InstanceVersion != nil {
+		_ = d.Set("instance_version", professionalCluster.InstanceVersion)
 	}
 
 	//if professionalCluster.AutoVoucher != nil {

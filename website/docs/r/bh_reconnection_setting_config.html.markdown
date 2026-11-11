@@ -34,6 +34,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyReconnectionSetting](https://www.tencentcloud.com/search/?wd=ModifyReconnectionSetting&type=document&lang=en)
+* Read: [DescribeSecuritySetting](https://www.tencentcloud.com/search/?wd=DescribeSecuritySetting&type=document&lang=en)
+* Update: [ModifyReconnectionSetting](https://www.tencentcloud.com/search/?wd=ModifyReconnectionSetting&type=document&lang=en)
 
 ## Import
 

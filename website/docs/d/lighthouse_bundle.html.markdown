@@ -65,4 +65,9 @@ In addition to all arguments above, the following attributes are exported:
   * `system_disk_size` - System disk size.
   * `system_disk_type` - System disk type.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBundles](https://www.tencentcloud.com/document/api/1103/42472)
 

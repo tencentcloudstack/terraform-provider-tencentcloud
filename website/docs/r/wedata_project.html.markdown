@@ -19,6 +19,7 @@ resource "tencentcloud_wedata_project" "example" {
     project_name  = "tf_example"
     display_name  = "display_name"
     project_model = "SIMPLE"
+    schedule_mode = "task"
   }
 
   dlc_info {
@@ -69,6 +70,7 @@ The `project` object supports the following:
 * `display_name` - (Required, String, ForceNew) Project display name, can be Chinese name starting with a letter, can contain letters, numbers, and underscores, cannot exceed 32 characters.
 * `project_name` - (Required, String) Project identifier, English name starting with a letter, can contain letters, numbers, and underscores, cannot exceed 32 characters.
 * `project_model` - (Optional, String, ForceNew) Project mode, SIMPLE (default): Simple mode STANDARD: Standard mode.
+* `schedule_mode` - (Optional, String, ForceNew) Project schedule mode. task: Task mode; workflow: Workflow mode.
 
 ## Attributes Reference
 
@@ -77,4 +79,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `project_id` - Project ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateProject](https://www.tencentcloud.com/document/api/1174/77876)
+  - [DisableProject](https://www.tencentcloud.com/document/api/1174/77872)
+* Read: [GetProject](https://www.tencentcloud.com/document/api/1174/77868)
+* Update:
+  - [DisableProject](https://www.tencentcloud.com/document/api/1174/77872)
+  - [EnableProject](https://www.tencentcloud.com/document/api/1174/77871)
+  - [UpdateProject](https://www.tencentcloud.com/document/api/1174/77859)
+* Delete: [DeleteProject](https://www.tencentcloud.com/document/api/1174/77880)
 

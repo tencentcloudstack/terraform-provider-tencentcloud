@@ -15,11 +15,12 @@ Provides a resource to create a cls alarm notice
 
 ```hcl
 resource "tencentcloud_cls_alarm_notice" "example" {
-  name                = "tf-example"
-  jump_domain         = "https://console.cloud.tencent.com"
-  deliver_status      = 2
-  alarm_shield_status = 2
-  callback_prioritize = true
+  name                 = "tf-example"
+  jump_domain          = "https://console.cloud.tencent.com"
+  deliver_status       = 2
+  alarm_shield_status  = 2
+  secure_detail_status = 1
+  callback_prioritize  = true
   notice_rules {
     escalate = true
     interval = 10
@@ -151,6 +152,7 @@ The following arguments are supported:
 * `jump_domain` - (Optional, String) Jump domain. Must start with http:// or https://, cannot end with /.
 * `notice_receivers` - (Optional, List) Notice receivers.
 * `notice_rules` - (Optional, List) Notice rules (advanced mode). Mutually exclusive with type/notice_receivers/web_callbacks (simple mode).
+* `secure_detail_status` - (Optional, Int) Alarm detail secure authentication redirect switch. Valid values: 1 (off, default), 2 (on).
 * `tags` - (Optional, Map) Tag description list.
 * `type` - (Optional, String) Notice type. Value: Trigger, Recovery, All.
 * `web_callbacks` - (Optional, List) Callback info.
@@ -258,6 +260,20 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateAlarmNotice](https://www.tencentcloud.com/document/api/614/42829)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeAlarmNotices](https://www.tencentcloud.com/document/api/614/42826)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [ModifyAlarmNotice](https://www.tencentcloud.com/document/api/614/42822)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteAlarmNotice](https://www.tencentcloud.com/document/api/614/42827)
 
 ## Import
 

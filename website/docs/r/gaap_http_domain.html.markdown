@@ -62,6 +62,25 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateDomain](https://www.tencentcloud.com/document/api/608/33046)
+  - [DescribeHTTPListeners](https://www.tencentcloud.com/document/api/608/33071)
+  - [DescribeHTTPSListeners](https://www.tencentcloud.com/document/api/608/33070)
+  - [DescribeRules](https://www.tencentcloud.com/document/api/608/33041)
+  - [SetAuthentication](https://www.tencentcloud.com/document/api/608/33037)
+* Read: [DescribeRules](https://www.tencentcloud.com/document/api/608/33041)
+* Update:
+  - [DescribeHTTPSListeners](https://www.tencentcloud.com/document/api/608/33070)
+  - [ModifyCertificate](https://www.tencentcloud.com/document/api/608/33040)
+  - [ModifyDomain](https://www.tencentcloud.com/document/api/608/33039)
+  - [SetAuthentication](https://www.tencentcloud.com/document/api/608/33037)
+* Delete:
+  - [DeleteDomain](https://www.tencentcloud.com/document/api/608/33044)
+  - [DescribeRules](https://www.tencentcloud.com/document/api/608/33041)
 
 ## Import
 

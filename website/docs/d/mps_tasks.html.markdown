@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `task_id` - Task ID.
   * `task_type` - Task type, including:WorkflowTask, EditMediaTask, LiveProcessTask.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTasks](https://www.tencentcloud.com/document/api/1041/33643)
 

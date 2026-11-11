@@ -169,6 +169,14 @@ In addition to all arguments above, the following attributes are exported:
 * `strategy_id` - strategy ID
 Note: This field may return null, indicating that a valid value is not available.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAutoScalerResourceStrategy](https://www.tencentcloud.com/document/api/1290/79297)
+* Read: [DescribeAutoScalerResourceStrategies](https://www.tencentcloud.com/document/api/1290/79271)
+* Update: [ModifyAutoScalerResourceStrategy](https://www.tencentcloud.com/document/api/1290/79245)
+* Delete: [DeleteAutoScalerResourceStrategy](https://www.tencentcloud.com/document/api/1290/79284)
 
 ## Import
 

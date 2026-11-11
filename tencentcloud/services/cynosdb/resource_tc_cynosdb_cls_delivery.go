@@ -563,12 +563,18 @@ func resourceTencentCloudCynosdbClsDeliveryDelete(d *schema.ResourceData, meta i
 		return fmt.Errorf("Status is nil.")
 	}
 
+	var logType string
+	if v, ok := d.GetOk("log_type"); ok {
+		logType = v.(string)
+	}
+
 	// stop first
 	if *respData.Status == "running" {
 		stopReq := cynosdbv20190107.NewStopCLSDeliveryRequest()
 		stopResp := cynosdbv20190107.NewStopCLSDeliveryResponse()
 		stopReq.InstanceId = helper.String(instanceId)
 		stopReq.CLSTopicIds = helper.Strings([]string{topicId})
+		stopReq.LogType = helper.String(logType)
 		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCynosdbClient().StopCLSDeliveryWithContext(ctx, stopReq)
 			if e != nil {
@@ -634,6 +640,7 @@ func resourceTencentCloudCynosdbClsDeliveryDelete(d *schema.ResourceData, meta i
 	// delete
 	request.InstanceId = &instanceId
 	request.CLSTopicIds = helper.Strings([]string{topicId})
+	request.LogType = helper.String(logType)
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCynosdbClient().DeleteCLSDeliveryWithContext(ctx, request)
 		if e != nil {

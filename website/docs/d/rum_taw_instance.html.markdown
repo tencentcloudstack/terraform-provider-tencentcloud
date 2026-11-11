@@ -54,4 +54,9 @@ In addition to all arguments above, the following attributes are exported:
     * `value` - Tag Value.
   * `updated_at` - Update time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTawInstances](https://www.tencentcloud.com/document/api/1131/45302)
 

@@ -61,4 +61,9 @@ In addition to all arguments above, the following attributes are exported:
   * `remark` - Topic name.
   * `update_time` - Update time in milliseconds.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRocketMQTopics](https://www.tencentcloud.com/search/?wd=DescribeRocketMQTopics&type=document&lang=en)
 

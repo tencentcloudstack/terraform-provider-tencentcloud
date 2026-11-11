@@ -29,6 +29,23 @@ resource "tencentcloud_kms_key" "example" {
 }
 ```
 
+### Create kms instance with key rotation and rotate days.
+
+```hcl
+resource "tencentcloud_kms_key" "example" {
+  alias                = "tf-example-kms-key"
+  description          = "example of kms key"
+  key_usage            = "ENCRYPT_DECRYPT"
+  key_rotation_enabled = true
+  rotate_days          = 30
+  is_enabled           = true
+
+  tags = {
+    createdBy = "Terraform"
+  }
+}
+```
+
 ### Create kms instance with HSM
 
 ```hcl
@@ -84,6 +101,7 @@ The following arguments are supported:
 * `key_rotation_enabled` - (Optional, Bool) Specify whether to enable key rotation, valid when key_usage is `ENCRYPT_DECRYPT`. Default value is `false`.
 * `key_usage` - (Optional, String, ForceNew) Usage of CMK. Available values include `ENCRYPT_DECRYPT`, `ASYMMETRIC_DECRYPT_RSA_2048`, `ASYMMETRIC_DECRYPT_SM2`, `ASYMMETRIC_SIGN_VERIFY_SM2`, `ASYMMETRIC_SIGN_VERIFY_RSA_2048`, `ASYMMETRIC_SIGN_VERIFY_ECC`. Default value is `ENCRYPT_DECRYPT`.
 * `pending_delete_window_in_days` - (Optional, Int) Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 7 days.
+* `rotate_days` - (Optional, Int) Key rotation period in days, range 7~365, default 365. Only effective when `key_usage` is `ENCRYPT_DECRYPT` and `key_rotation_enabled` is `true`.
 * `tags` - (Optional, Map) Tags of CMK.
 
 ## Attributes Reference
@@ -93,6 +111,29 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `key_state` - State of CMK.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [ArchiveKey](https://www.tencentcloud.com/document/api/1030/38198)
+  - [CreateKey](https://www.tencentcloud.com/document/api/1030/32199)
+  - [DescribeKey](https://www.tencentcloud.com/document/api/1030/32197)
+  - [DisableKey](https://www.tencentcloud.com/document/api/1030/32195)
+  - [EnableKeyRotation](https://www.tencentcloud.com/document/api/1030/32191)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeKey](https://www.tencentcloud.com/document/api/1030/32197)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [DescribeKey](https://www.tencentcloud.com/document/api/1030/32197)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [UpdateAlias](https://www.tencentcloud.com/document/api/1030/32182)
+  - [UpdateKeyDescription](https://www.tencentcloud.com/document/api/1030/32181)
+* Delete:
+  - [DescribeKey](https://www.tencentcloud.com/document/api/1030/32197)
+  - [DisableKey](https://www.tencentcloud.com/document/api/1030/32195)
+  - [ScheduleKeyDeletion](https://www.tencentcloud.com/document/api/1030/33534)
 
 ## Import
 

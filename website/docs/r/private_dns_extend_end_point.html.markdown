@@ -70,7 +70,21 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `forward_ip` object exports the following:
 
+* `proto` - Specifies the forwarding target IP protocol.
+* `snat_vip_cidr` - The SNAT CIDR block of the outbound endpoint.
+* `snat_vip_set` - The SNAT IP list of the outbound endpoint.
+* `vip` - Specifies the forwarding target IP proxy IP.
+* `vport` - Specifies the forwarding target IP proxy port.
+
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateExtendEndpoint](https://www.tencentcloud.com/document/api/1097/67599)
+* Read: [DescribeExtendEndpointList](https://www.tencentcloud.com/document/api/1097/67595)
+* Delete: [DeleteEndPoint](https://www.tencentcloud.com/document/api/1097/67598)
 
 ## Import
 

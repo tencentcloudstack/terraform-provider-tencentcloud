@@ -625,6 +625,60 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 											},
 										},
 									},
+									"frequent_scanning_protection": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "High-frequency scan protection configuration option. When a visitor's frequent requests hit the managed rule configured as block within a period of time, all requests from that visitor are blocked.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"enabled": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Computed:    true,
+													Description: "Whether the high-frequency scan protection rule is enabled. Valid values: `on`, `off`.",
+												},
+												"id": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Rule ID of the high-frequency scan protection, output only.",
+												},
+												"action": {
+													Type:        schema.TypeList,
+													MaxItems:    1,
+													Optional:    true,
+													Computed:    true,
+													Description: "The disposal action. Required when `enabled` is `on`. SecurityAction Name supports `Deny`, `Monitor`, `JSChallenge`.",
+													Elem:        securityActionSchema(),
+												},
+												"count_by": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Computed:    true,
+													Description: "Request statistical matching method. Valid values: `http.request.xff_header_ip`, `http.request.ip`.",
+												},
+												"block_threshold": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Computed:    true,
+													Description: "Cumulative block count threshold within the counting period. Range 1-4294967294.",
+												},
+												"counting_period": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Computed:    true,
+													Description: "Statistics time window. Range 5-1800, unit seconds (s), e.g. `5s`.",
+												},
+												"action_duration": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Computed:    true,
+													Description: "Duration of the disposal action. Range 60-86400, unit seconds (s), e.g. `60s`.",
+												},
+											},
+										},
+									},
 								},
 							},
 						},
@@ -1514,6 +1568,15 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 														Type: schema.TypeString,
 													},
 												},
+												"web_security_submodules_for_exception": {
+													Type:        schema.TypeSet,
+													Optional:    true,
+													Computed:    true,
+													Description: "Specifies the security protection submodule for the exception rule. It is valid only when SkipScope is WebSecuritySubmodules. The possible values are: <ul><li>ManagedRules module: <ul><li>websec-mod-managed-rules/managed-rule-groups: rule set; </li><li>websec-mod-managed-rules/frequent-scanning-protection: high-frequency scanning protection; </li></ul></li><li>RateLimitingRules module: <ul><li>websec-mod-rate-limiting-rules: rate limiting rule; </li></ul></li><li>CustomRules module: <ul><li>websec-mod-custom-rules: custom rule; </li></ul></li><li>HttpDDoSProtection module: <ul><li>websec-mod-http-ddos-protection/adaptive-frequency-control: adaptive frequency control; </li><li>websec-mod-http-ddos-protection/client-filtering: intelligent client filtering; </li><li>websec-mod-http-ddos-protection/bandwidth-abuse-defense: traffic theft protection; </li></ul></li><li>BotManagement module: <ul><li>websec-mod-bot-management/basic-feature: basic feature management; </li><li>websec-mod-bot-management/ip-reputation: client portrait analysis; </li><li>websec-mod-bot-management/bot-intelligence: intelligent Bot analysis; </li><li>websec-mod-bot-management/custom-rules: custom rule; </li><li>websec-mod-bot-management/browser-impersonation-detection: active feature recognition; </li><li>websec-mod-bot-management/client-attestation-rules: client authentication; </li></ul></li><li>BotManagementLite module: <ul><li>websec-mod-bot-management-lite/ai-crawler-detection: AI crawler disposal; </li><li>websec-mod-bot-management-lite/captcha-page-challenge: human verification page. </li></ul></li></ul>.",
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
 												"managed_rules_for_exception": {
 													Type:        schema.TypeSet,
 													Optional:    true,
@@ -1858,6 +1921,47 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 													MaxItems:    1,
 													Description: "Action when attestation is invalid.",
 													Elem:        securityActionSchema(),
+												},
+												"device_profiles": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Computed:    true,
+													Description: "Client device configurations. One profile per client type.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"client_type": {
+																Type:        schema.TypeString,
+																Required:    true,
+																Description: "Client device type. Valid values: `iOS`, `Android`, `WebView`, `WeChatMiniProgram`.",
+															},
+															"high_risk_min_score": {
+																Type:        schema.TypeInt,
+																Optional:    true,
+																Computed:    true,
+																Description: "Minimum score (1-99) for judging a request as high risk. Default 50.",
+															},
+															"high_risk_request_action": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																MaxItems:    1,
+																Description: "Action for high-risk requests, using the shared SecurityAction schema (Name supports `Deny`, `Monitor`, `Redirect`, `Challenge`; default `Monitor`).",
+																Elem:        securityActionSchema(),
+															},
+															"medium_risk_min_score": {
+																Type:        schema.TypeInt,
+																Optional:    true,
+																Computed:    true,
+																Description: "Minimum score (1-99) for judging a request as medium risk. Default 15.",
+															},
+															"medium_risk_request_action": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																MaxItems:    1,
+																Description: "Action for medium-risk requests, using the shared SecurityAction schema (default `Monitor`).",
+																Elem:        securityActionSchema(),
+															},
+														},
+													},
 												},
 											},
 										},
@@ -3243,6 +3347,35 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 			managedRulesMap["managed_rule_groups"] = managedRuleGroupsList
 		}
 
+		if respData.ManagedRules.FrequentScanningProtection != nil {
+			frequentScanningProtectionMap := map[string]interface{}{}
+			if respData.ManagedRules.FrequentScanningProtection.Enabled != nil {
+				frequentScanningProtectionMap["enabled"] = respData.ManagedRules.FrequentScanningProtection.Enabled
+			}
+			if respData.ManagedRules.FrequentScanningProtection.Id != nil {
+				frequentScanningProtectionMap["id"] = respData.ManagedRules.FrequentScanningProtection.Id
+			}
+			if respData.ManagedRules.FrequentScanningProtection.Action != nil {
+				actionMap := flattenSecurityAction(respData.ManagedRules.FrequentScanningProtection.Action)
+				if len(actionMap) > 0 {
+					frequentScanningProtectionMap["action"] = []interface{}{actionMap}
+				}
+			}
+			if respData.ManagedRules.FrequentScanningProtection.CountBy != nil {
+				frequentScanningProtectionMap["count_by"] = respData.ManagedRules.FrequentScanningProtection.CountBy
+			}
+			if respData.ManagedRules.FrequentScanningProtection.BlockThreshold != nil {
+				frequentScanningProtectionMap["block_threshold"] = respData.ManagedRules.FrequentScanningProtection.BlockThreshold
+			}
+			if respData.ManagedRules.FrequentScanningProtection.CountingPeriod != nil {
+				frequentScanningProtectionMap["counting_period"] = respData.ManagedRules.FrequentScanningProtection.CountingPeriod
+			}
+			if respData.ManagedRules.FrequentScanningProtection.ActionDuration != nil {
+				frequentScanningProtectionMap["action_duration"] = respData.ManagedRules.FrequentScanningProtection.ActionDuration
+			}
+			managedRulesMap["frequent_scanning_protection"] = []interface{}{frequentScanningProtectionMap}
+		}
+
 		securityPolicyMap["managed_rules"] = []interface{}{managedRulesMap}
 	}
 
@@ -3874,6 +4007,10 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 					rulesMap["web_security_modules_for_exception"] = rules.WebSecurityModulesForException
 				}
 
+				if rules.WebSecuritySubmodulesForException != nil {
+					rulesMap["web_security_submodules_for_exception"] = rules.WebSecuritySubmodulesForException
+				}
+
 				if rules.ManagedRulesForException != nil {
 					rulesMap["managed_rules_for_exception"] = rules.ManagedRulesForException
 				}
@@ -3980,7 +4117,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 				if basicBotSettings.SourceIDC.BotManagementActionOverrides != nil {
 					overridesList := []interface{}{}
 					for _, override := range basicBotSettings.SourceIDC.BotManagementActionOverrides {
-						overridesList = append(overridesList, flattenBotManagementActionOverride(override))
+						overridesList = append(overridesList, FlattenBotManagementActionOverride(override))
 					}
 					sourceIDCMap["action_overrides"] = overridesList
 				}
@@ -3996,7 +4133,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 				if basicBotSettings.SearchEngineBots.BotManagementActionOverrides != nil {
 					overridesList := []interface{}{}
 					for _, override := range basicBotSettings.SearchEngineBots.BotManagementActionOverrides {
-						overridesList = append(overridesList, flattenBotManagementActionOverride(override))
+						overridesList = append(overridesList, FlattenBotManagementActionOverride(override))
 					}
 					searchEngineBotsMap["action_overrides"] = overridesList
 				}
@@ -4012,7 +4149,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 				if basicBotSettings.KnownBotCategories.BotManagementActionOverrides != nil {
 					overridesList := []interface{}{}
 					for _, override := range basicBotSettings.KnownBotCategories.BotManagementActionOverrides {
-						overridesList = append(overridesList, flattenBotManagementActionOverride(override))
+						overridesList = append(overridesList, FlattenBotManagementActionOverride(override))
 					}
 					knownBotCategoriesMap["action_overrides"] = overridesList
 				}
@@ -4033,7 +4170,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 					if basicBotSettings.IPReputation.IPReputationGroup.BotManagementActionOverrides != nil {
 						overridesList := []interface{}{}
 						for _, override := range basicBotSettings.IPReputation.IPReputationGroup.BotManagementActionOverrides {
-							overridesList = append(overridesList, flattenBotManagementActionOverride(override))
+							overridesList = append(overridesList, FlattenBotManagementActionOverride(override))
 						}
 						ipReputationGroupMap["action_overrides"] = overridesList
 					}
@@ -4095,6 +4232,29 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 				}
 				if rule.InvalidAttestationAction != nil {
 					ruleMap["invalid_attestation_action"] = []interface{}{flattenSecurityAction(rule.InvalidAttestationAction)}
+				}
+				if rule.DeviceProfiles != nil {
+					deviceProfilesList := []interface{}{}
+					for _, deviceProfile := range rule.DeviceProfiles {
+						deviceProfileMap := map[string]interface{}{}
+						if deviceProfile.ClientType != nil {
+							deviceProfileMap["client_type"] = deviceProfile.ClientType
+						}
+						if deviceProfile.HighRiskMinScore != nil {
+							deviceProfileMap["high_risk_min_score"] = deviceProfile.HighRiskMinScore
+						}
+						if deviceProfile.MediumRiskMinScore != nil {
+							deviceProfileMap["medium_risk_min_score"] = deviceProfile.MediumRiskMinScore
+						}
+						if deviceProfile.HighRiskRequestAction != nil {
+							deviceProfileMap["high_risk_request_action"] = []interface{}{flattenSecurityAction(deviceProfile.HighRiskRequestAction)}
+						}
+						if deviceProfile.MediumRiskRequestAction != nil {
+							deviceProfileMap["medium_risk_request_action"] = []interface{}{flattenSecurityAction(deviceProfile.MediumRiskRequestAction)}
+						}
+						deviceProfilesList = append(deviceProfilesList, deviceProfileMap)
+					}
+					ruleMap["device_profiles"] = deviceProfilesList
 				}
 				rulesList = append(rulesList, ruleMap)
 			}
@@ -4636,6 +4796,29 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 
 					managedRules.ManagedRuleGroups = append(managedRules.ManagedRuleGroups, &managedRuleGroup)
 				}
+			}
+
+			if frequentScanningProtectionMap, ok := helper.ConvertInterfacesHeadToMap(managedRulesMap["frequent_scanning_protection"]); ok {
+				frequentScanningProtection := teov20220901.FrequentScanningProtection{}
+				if v, ok := frequentScanningProtectionMap["enabled"].(string); ok && v != "" {
+					frequentScanningProtection.Enabled = helper.String(v)
+				}
+				if actionMap, ok := helper.ConvertInterfacesHeadToMap(frequentScanningProtectionMap["action"]); ok && len(actionMap) > 0 {
+					frequentScanningProtection.Action = buildSecurityActionFromMap(actionMap)
+				}
+				if v, ok := frequentScanningProtectionMap["count_by"].(string); ok && v != "" {
+					frequentScanningProtection.CountBy = helper.String(v)
+				}
+				if v, ok := frequentScanningProtectionMap["block_threshold"].(int); ok && v != 0 {
+					frequentScanningProtection.BlockThreshold = helper.IntInt64(v)
+				}
+				if v, ok := frequentScanningProtectionMap["counting_period"].(string); ok && v != "" {
+					frequentScanningProtection.CountingPeriod = helper.String(v)
+				}
+				if v, ok := frequentScanningProtectionMap["action_duration"].(string); ok && v != "" {
+					frequentScanningProtection.ActionDuration = helper.String(v)
+				}
+				managedRules.FrequentScanningProtection = &frequentScanningProtection
 			}
 
 			securityPolicy.ManagedRules = &managedRules
@@ -5236,6 +5419,16 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 						}
 					}
 
+					if v, ok := rulesMap["web_security_submodules_for_exception"]; ok {
+						webSecuritySubmodulesForExceptionSet := v.(*schema.Set).List()
+						for i := range webSecuritySubmodulesForExceptionSet {
+							if webSecuritySubmodulesForExceptionSet[i] != nil {
+								webSecuritySubmodulesForException := webSecuritySubmodulesForExceptionSet[i].(string)
+								exceptionRule.WebSecuritySubmodulesForException = append(exceptionRule.WebSecuritySubmodulesForException, &webSecuritySubmodulesForException)
+							}
+						}
+					}
+
 					if v, ok := rulesMap["managed_rules_for_exception"]; ok {
 						managedRulesForExceptionSet := v.(*schema.Set).List()
 						for i := range managedRulesForExceptionSet {
@@ -5406,7 +5599,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 					if v, ok := sourceIDCMaps["action_overrides"]; ok {
 						for _, item := range v.([]interface{}) {
 							actionOverrideMap := item.(map[string]interface{})
-							actionOverride := buildBotManagementActionOverrideFromMap(actionOverrideMap)
+							actionOverride := BuildBotManagementActionOverrideFromMap(actionOverrideMap)
 							sourceIDC.BotManagementActionOverrides = append(sourceIDC.BotManagementActionOverrides, actionOverride)
 						}
 					}
@@ -5421,7 +5614,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 					if v, ok := searchEngineBotsMap["action_overrides"]; ok {
 						for _, item := range v.([]interface{}) {
 							actionOverrideMap := item.(map[string]interface{})
-							actionOverride := buildBotManagementActionOverrideFromMap(actionOverrideMap)
+							actionOverride := BuildBotManagementActionOverrideFromMap(actionOverrideMap)
 							searchEngineBots.BotManagementActionOverrides = append(searchEngineBots.BotManagementActionOverrides, actionOverride)
 						}
 					}
@@ -5436,7 +5629,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 					if v, ok := knownBotCategoriesMap["action_overrides"]; ok {
 						for _, item := range v.([]interface{}) {
 							actionOverrideMap := item.(map[string]interface{})
-							actionOverride := buildBotManagementActionOverrideFromMap(actionOverrideMap)
+							actionOverride := BuildBotManagementActionOverrideFromMap(actionOverrideMap)
 							knownBotCategories.BotManagementActionOverrides = append(knownBotCategories.BotManagementActionOverrides, actionOverride)
 						}
 					}
@@ -5456,7 +5649,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 						if v, ok := ipReputationGroupMap["action_overrides"]; ok {
 							for _, item := range v.([]interface{}) {
 								actionOverrideMap := item.(map[string]interface{})
-								actionOverride := buildBotManagementActionOverrideFromMap(actionOverrideMap)
+								actionOverride := BuildBotManagementActionOverrideFromMap(actionOverrideMap)
 								ipReputationGroup.BotManagementActionOverrides = append(ipReputationGroup.BotManagementActionOverrides, actionOverride)
 							}
 						}
@@ -5517,6 +5710,31 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 					}
 					if invalidActionMap, ok := helper.ConvertInterfacesHeadToMap(ruleMap["invalid_attestation_action"]); ok {
 						clientAttestationRule.InvalidAttestationAction = buildSecurityActionFromMap(invalidActionMap)
+					}
+					if deviceProfiles, ok := ruleMap["device_profiles"].([]interface{}); ok && len(deviceProfiles) > 0 {
+						for _, dpItem := range deviceProfiles {
+							deviceProfileMap, ok := dpItem.(map[string]interface{})
+							if !ok {
+								continue
+							}
+							deviceProfile := teov20220901.DeviceProfile{}
+							if v, ok := deviceProfileMap["client_type"].(string); ok && v != "" {
+								deviceProfile.ClientType = helper.String(v)
+							}
+							if v, ok := deviceProfileMap["high_risk_min_score"].(int); ok {
+								deviceProfile.HighRiskMinScore = helper.IntUint64(v)
+							}
+							if v, ok := deviceProfileMap["medium_risk_min_score"].(int); ok {
+								deviceProfile.MediumRiskMinScore = helper.IntUint64(v)
+							}
+							if highRiskActionMap, ok := helper.ConvertInterfacesHeadToMap(deviceProfileMap["high_risk_request_action"]); ok {
+								deviceProfile.HighRiskRequestAction = buildSecurityActionFromMap(highRiskActionMap)
+							}
+							if mediumRiskActionMap, ok := helper.ConvertInterfacesHeadToMap(deviceProfileMap["medium_risk_request_action"]); ok {
+								deviceProfile.MediumRiskRequestAction = buildSecurityActionFromMap(mediumRiskActionMap)
+							}
+							clientAttestationRule.DeviceProfiles = append(clientAttestationRule.DeviceProfiles, &deviceProfile)
+						}
 					}
 					botManagement.ClientAttestationRules = &teov20220901.ClientAttestationRules{
 						Rules: []*teov20220901.ClientAttestationRule{&clientAttestationRule},
@@ -6932,8 +7150,19 @@ func botManagementActionOverrideSchema() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"rule_id": {
 				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Rule ID or category ID for action override.",
+				Optional:    true,
+				Computed:    true,
+				Deprecated:  "It has been deprecated from version 1.83.31. Please use `rule_ids` instead.",
+				Description: "A single bot rule ID (or category ID) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids. Deprecated: use `rule_ids` to support one or more IDs.",
+			},
+			"rule_ids": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "One or more bot rule IDs (or category IDs) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids ([]*string). If both `rule_ids` and `rule_id` are set, `rule_ids` takes precedence.",
 			},
 			"action": {
 				Type:        schema.TypeList,
@@ -7010,14 +7239,25 @@ func buildSecurityActionFromMap(m map[string]interface{}) *teov20220901.Security
 	return action
 }
 
-// buildBotManagementActionOverrideFromMap converts a schema map to *teov20220901.BotManagementActionOverrides.
-func buildBotManagementActionOverrideFromMap(m map[string]interface{}) *teov20220901.BotManagementActionOverrides {
+// BuildBotManagementActionOverrideFromMap converts a schema map to *teov20220901.BotManagementActionOverrides.
+func BuildBotManagementActionOverrideFromMap(m map[string]interface{}) *teov20220901.BotManagementActionOverrides {
 	if len(m) == 0 {
 		return nil
 	}
 	override := &teov20220901.BotManagementActionOverrides{}
 	if v, ok := m["rule_id"].(string); ok && v != "" {
 		override.Ids = []*string{helper.String(v)}
+	}
+	if v, ok := m["rule_ids"].([]interface{}); ok {
+		ids := make([]*string, 0)
+		for _, item := range v {
+			if s, ok := item.(string); ok && s != "" {
+				ids = append(ids, helper.String(s))
+			}
+		}
+		if len(ids) > 0 {
+			override.Ids = ids
+		}
 	}
 	if actionMap, ok := helper.ConvertInterfacesHeadToMap(m["action"]); ok && len(actionMap) > 0 {
 		override.Action = buildSecurityActionFromMap(actionMap)
@@ -7097,14 +7337,25 @@ func flattenSecurityAction(action *teov20220901.SecurityAction) map[string]inter
 	return m
 }
 
-// flattenBotManagementActionOverride converts *teov20220901.BotManagementActionOverrides to a schema map.
-func flattenBotManagementActionOverride(override *teov20220901.BotManagementActionOverrides) map[string]interface{} {
+// FlattenBotManagementActionOverride converts *teov20220901.BotManagementActionOverrides to a schema map.
+func FlattenBotManagementActionOverride(override *teov20220901.BotManagementActionOverrides) map[string]interface{} {
 	m := map[string]interface{}{}
 	if override == nil {
 		return m
 	}
 	if len(override.Ids) > 0 && override.Ids[0] != nil {
 		m["rule_id"] = override.Ids[0]
+	}
+	if len(override.Ids) > 0 {
+		ruleIds := make([]interface{}, 0, len(override.Ids))
+		for _, id := range override.Ids {
+			if id != nil {
+				ruleIds = append(ruleIds, *id)
+			}
+		}
+		if len(ruleIds) > 0 {
+			m["rule_ids"] = ruleIds
+		}
 	}
 	if override.Action != nil {
 		m["action"] = []interface{}{flattenSecurityAction(override.Action)}

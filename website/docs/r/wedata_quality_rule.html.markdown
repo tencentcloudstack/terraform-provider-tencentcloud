@@ -171,4 +171,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `rule_id` - Rule ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateQualityRule](https://www.tencentcloud.com/search/?wd=CreateQualityRule&type=document&lang=en)
+* Read: [ListQualityRules](https://www.tencentcloud.com/search/?wd=ListQualityRules&type=document&lang=en)
+* Update: [ModifyQualityRule](https://www.tencentcloud.com/search/?wd=ModifyQualityRule&type=document&lang=en)
+* Delete: [DeleteQualityRule](https://www.tencentcloud.com/search/?wd=DeleteQualityRule&type=document&lang=en)
 

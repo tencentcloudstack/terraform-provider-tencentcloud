@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
   * `name` - Database name.
   * `storage_size` - Database storage size.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListDatabase](https://www.tencentcloud.com/document/api/1174/77948)
 

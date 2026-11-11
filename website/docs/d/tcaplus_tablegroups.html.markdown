@@ -52,4 +52,9 @@ In addition to all arguments above, the following attributes are exported:
   * `tablegroup_name` - Name of the table group.
   * `total_size` - Total storage size (MB).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTableGroups](https://www.tencentcloud.com/document/api/1016/35025)
 

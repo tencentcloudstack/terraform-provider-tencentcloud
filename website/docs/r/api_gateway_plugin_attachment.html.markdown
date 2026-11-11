@@ -99,6 +99,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AttachPlugin](https://www.tencentcloud.com/search/?wd=AttachPlugin&type=document&lang=en)
+* Read: [DescribePluginApis](https://www.tencentcloud.com/search/?wd=DescribePluginApis&type=document&lang=en)
+* Delete: [DetachPlugin](https://www.tencentcloud.com/search/?wd=DetachPlugin&type=document&lang=en)
 
 ## Import
 

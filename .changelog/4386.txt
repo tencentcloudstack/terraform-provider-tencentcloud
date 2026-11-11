@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cdn_domain: Fixed the change issue caused by the masked secret returned by the API.
+```

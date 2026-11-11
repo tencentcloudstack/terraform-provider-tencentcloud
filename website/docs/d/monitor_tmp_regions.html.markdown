@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
   * `region_state` - Region status (0-unavailable; 1-available).
   * `region` - Region.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribePrometheusRegions](https://www.tencentcloud.com/search/?wd=DescribePrometheusRegions&type=document&lang=en)
 

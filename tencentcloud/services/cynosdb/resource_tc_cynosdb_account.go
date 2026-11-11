@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -72,6 +74,7 @@ func resourceTencentCloudCynosdbAccountCreate(d *schema.ResourceData, meta inter
 		clusterId   string
 		accountName string
 		host        string
+		taskId      *int64
 	)
 	if v, ok := d.GetOk("cluster_id"); ok {
 		clusterId = v.(string)
@@ -105,14 +108,27 @@ func resourceTencentCloudCynosdbAccountCreate(d *schema.ResourceData, meta inter
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil || result.Response.TaskId == nil {
+			return resource.NonRetryableError(fmt.Errorf("create cynosdb_account failed, response or TaskId is nil"))
+		}
+		taskId = result.Response.TaskId
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create cynosdb account failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create cynosdb_account failed, reason:%+v", logId, err)
 		return err
 	}
 
 	d.SetId(clusterId + tccommon.FILED_SP + accountName + tccommon.FILED_SP + host)
+
+	if taskId != nil && *taskId > 0 {
+		service := CynosdbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		conf := tccommon.BuildStateChangeConf([]string{}, []string{"success"}, 10*tccommon.ReadRetryTimeout, time.Second, service.taskStateRefreshFunc(strconv.FormatInt(*taskId, 10), []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+	}
 
 	return resourceTencentCloudCynosdbAccountRead(d, meta)
 }
@@ -141,6 +157,9 @@ func resourceTencentCloudCynosdbAccountRead(d *schema.ResourceData, meta interfa
 	}
 
 	if account == nil {
+		if d.IsNewResource() {
+			return fmt.Errorf("cynosdb_account id=%s not found", d.Id())
+		}
 		log.Printf("[WARN]%s resource `tencentcloud_cynosdb_account` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil

@@ -89,4 +89,9 @@ In addition to all arguments above, the following attributes are exported:
     * `wan_service_address` - Node public network access address (IP or domain name).
     * `zone` - The availability zone where the node is located.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBInstanceNodeProperty](https://www.tencentcloud.com/document/api/240/74083)
 

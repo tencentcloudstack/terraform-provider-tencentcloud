@@ -354,3 +354,25 @@ func StringPtrSlicesEqual(slice1, slice2 []*string) bool {
 
 	return true
 }
+
+// GetStrPtrWithOldFallback retrieves the original value from old state when the API returns a masked
+// sensitive value (e.g., "cc****cc" instead of "cccccccc"). Writing the masked value directly to state
+// would cause plan drift; this function preserves the original value from the old state instead.
+//
+// oldRaw: the old state data obtained via d.Get(key).([]interface{})
+// fieldName: the field to preserve from the old state (e.g., "secret_key")
+// apiValue: the masked value returned by the API
+func GetStrPtrWithOldFallback(oldRaw []interface{}, fieldName string, apiValue *string) *string {
+	if len(oldRaw) == 0 {
+		return apiValue
+	}
+	oldMap, ok := oldRaw[0].(map[string]interface{})
+	if !ok {
+		return apiValue
+	}
+	oldVal, ok := oldMap[fieldName].(string)
+	if !ok || oldVal == "" {
+		return apiValue
+	}
+	return &oldVal
+}

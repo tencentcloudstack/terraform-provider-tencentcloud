@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
   * `level` - Log level note: This field may return null, indicating that a valid value cannot be obtained.
   * `timestamp` - Log timestamp note: This field may return null, indicating that a valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstanceErrorLogs](https://www.tencentcloud.com/document/api/1098/55902)
 

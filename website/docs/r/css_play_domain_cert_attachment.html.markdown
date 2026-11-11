@@ -50,6 +50,13 @@ In addition to all arguments above, the following attributes are exported:
 * `certificate_alias` - certificate remarks. Synonymous with CertName.
 * `update_time` - The time when the rule was last updated.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyLiveDomainCertBindings](https://www.tencentcloud.com/document/api/267/49644)
+* Read: [DescribeLiveDomainCertBindings](https://www.tencentcloud.com/document/api/267/49645)
+* Delete: [UnBindLiveDomainCert](https://www.tencentcloud.com/document/api/267/30774)
 
 ## Import
 

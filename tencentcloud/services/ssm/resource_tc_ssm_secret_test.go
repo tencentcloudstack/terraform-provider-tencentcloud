@@ -3,6 +3,7 @@ package ssm_test
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"strconv"
 	"testing"
 	"time"
@@ -122,6 +123,44 @@ func TestAccTencentCloudSsmSecret_basic(t *testing.T) {
 	})
 }
 
+// go test -i; go test -test.run TestAccTencentCloudSsmSecret_encryptType -v
+func TestAccTencentCloudSsmSecret_encryptType(t *testing.T) {
+	t.Parallel()
+	resourceName := "tencentcloud_ssm_secret.encrypt_example"
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckSsmSecretDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: TestAccTencentCloudSsmSecretEncryptType,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSsmSecretExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "secret_name", "tf-encrypt-example"),
+					resource.TestCheckResourceAttr(resourceName, "encrypt_type", "1"),
+				),
+			},
+			{
+				Config:      TestAccTencentCloudSsmSecretEncryptTypeUpdate,
+				ExpectError: regexp.MustCompile("argument `encrypt_type` cannot be changed"),
+			},
+			{
+				Config: TestAccTencentCloudSsmSecretEncryptType,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSsmSecretExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "encrypt_type", "1"),
+				),
+			},
+			{
+				ResourceName:            resourceName,
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"recovery_window_in_days"},
+			},
+		},
+	})
+}
+
 func testAccCheckSsmSecretDestroy(s *terraform.State) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
@@ -193,5 +232,23 @@ resource "tencentcloud_ssm_secret" "example" {
   tags = {
     createBy = "terraform"
   }
+}
+`
+
+const TestAccTencentCloudSsmSecretEncryptType = `
+resource "tencentcloud_ssm_secret" "encrypt_example" {
+  secret_name  = "tf-encrypt-example"
+  description  = "encrypt type test."
+  encrypt_type = 1
+  is_enabled   = false
+}
+`
+
+const TestAccTencentCloudSsmSecretEncryptTypeUpdate = `
+resource "tencentcloud_ssm_secret" "encrypt_example" {
+  secret_name  = "tf-encrypt-example"
+  description  = "encrypt type test."
+  encrypt_type = 0
+  is_enabled   = false
 }
 `

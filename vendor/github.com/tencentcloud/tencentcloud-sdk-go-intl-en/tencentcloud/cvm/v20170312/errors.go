@@ -38,8 +38,11 @@ const (
 	// BYOL images cannot be shared.
 	FAILEDOPERATION_BYOLIMAGESHAREFAILED = "FailedOperation.BYOLImageShareFailed"
 
-	// The specified spread placement group does not exist.
+	// The specified placement group does not exist.
 	FAILEDOPERATION_DISASTERRECOVERGROUPNOTFOUND = "FailedOperation.DisasterRecoverGroupNotFound"
+
+	// The placement group information of the instance is mismatched.
+	FAILEDOPERATION_DISASTERRECOVERGROUPNOTMATCH = "FailedOperation.DisasterRecoverGroupNotMatch"
 
 	// Failed to obtain the status of TencentCloud Automation Tools for the instance.
 	FAILEDOPERATION_GETINSTANCETATAGENTSTATUSFAILED = "FailedOperation.GetInstanceTATAgentStatusFailed"
@@ -188,7 +191,7 @@ const (
 	// The specified InstanceName exceeds the maximum length of 128 bytes.
 	INVALIDINSTANCENAME_TOOLONG = "InvalidInstanceName.TooLong"
 
-	// This instance does not meet the [Return Policy](https://intl.cloud.tencent.com/document/product/213/9711?from_cn_redirect=1) for prepaid instances.
+	// This instance does not meet the return policy for prepaid instances.
 	INVALIDINSTANCENOTSUPPORTEDPREPAIDINSTANCE = "InvalidInstanceNotSupportedPrepaidInstance"
 
 	// This operation cannot be performed due to the current instance status.
@@ -229,6 +232,9 @@ const (
 
 	// The parameter CdcId is not supported.
 	INVALIDPARAMETER_CDCNOTSUPPORTED = "InvalidParameter.CdcNotSupported"
+
+	// The parameter CdzId is not currently supported.
+	INVALIDPARAMETER_CDZNOTSUPPORTED = "InvalidParameter.CdzNotSupported"
 
 	// RootDisk ID should not be passed to DataDiskIds.
 	INVALIDPARAMETER_DATADISKIDCONTAINSROOTDISK = "InvalidParameter.DataDiskIdContainsRootDisk"
@@ -370,6 +376,15 @@ const (
 
 	// CDC does not support the specified billing mode.
 	INVALIDPARAMETERVALUE_DEDICATEDCLUSTERNOTSUPPORTEDCHARGETYPE = "InvalidParameterValue.DedicatedClusterNotSupportedChargeType"
+
+	// The specified dedicated resource pack ID is invalid.
+	INVALIDPARAMETERVALUE_DEDICATEDRESOURCEPACKIDSNOTFOUND = "InvalidParameterValue.DedicatedResourcePackIdsNotFound"
+
+	// No valid dedicated resource pack was found.
+	INVALIDPARAMETERVALUE_DEDICATEDRESOURCEPACKNOTVALID = "InvalidParameterValue.DedicatedResourcePackNotValid"
+
+	// The dedicated resource pack IDs do not match the tenancy.
+	INVALIDPARAMETERVALUE_DEDICATEDRESOURCEPACKTENANCYMISMATCH = "InvalidParameterValue.DedicatedResourcePackTenancyMismatch"
 
 	// A deployment VPC already exists.
 	INVALIDPARAMETERVALUE_DEPLOYVPCALREADYEXISTS = "InvalidParameterValue.DeployVpcAlreadyExists"
@@ -821,6 +836,9 @@ const (
 	// The HPC cluster does not exist.
 	RESOURCENOTFOUND_HPCCLUSTER = "ResourceNotFound.HpcCluster"
 
+	// Instance ID not found.
+	RESOURCENOTFOUND_INVALIDINSTANCEIDNOTFOUND = "ResourceNotFound.InvalidInstanceIdNotFound"
+
 	// The specified placement group does not exist.
 	RESOURCENOTFOUND_INVALIDPLACEMENTSET = "ResourceNotFound.InvalidPlacementSet"
 
@@ -929,7 +947,7 @@ const (
 	// A mixed payment mode is not supported.
 	UNSUPPORTEDOPERATION_INSTANCEMIXEDPRICINGMODEL = "UnsupportedOperation.InstanceMixedPricingModel"
 
-	// 
+	// Mixing upgrade and downgrade operations is not supported.
 	UNSUPPORTEDOPERATION_INSTANCEMIXEDRESETINSTANCETYPE = "UnsupportedOperation.InstanceMixedResetInstanceType"
 
 	// Central AZ and edge zone instances cannot be mixed in batch operation.
@@ -1142,7 +1160,7 @@ const (
 	// Shared images cannot be exported.
 	UNSUPPORTEDOPERATION_SHAREDIMAGEEXPORTUNSUPPORTED = "UnsupportedOperation.SharedImageExportUnsupported"
 
-	// 
+	// Images shared from other accounts do not support attribute modification.
 	UNSUPPORTEDOPERATION_SHAREDIMAGEMODIFYUNSUPPORTED = "UnsupportedOperation.SharedImageModifyUnsupported"
 
 	// This special instance type does not support the operation.

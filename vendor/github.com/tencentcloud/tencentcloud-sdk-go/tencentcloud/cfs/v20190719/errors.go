@@ -23,6 +23,9 @@ const (
 	// 获取CFS服务角色错误
 	AUTHFAILURE_GETROLEFAILED = "AuthFailure.GetRoleFailed"
 
+	// 鉴权token超时
+	AUTHFAILURE_TOKENFAILURE = "AuthFailure.TokenFailure"
+
 	// 请求未CAM授权。
 	AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 
@@ -37,6 +40,15 @@ const (
 
 	// 资源正在创建中。
 	FAILEDOPERATION_CLIENTTOKENINUSE = "FailedOperation.ClientTokenInUse"
+
+	// 操作失败：目标 COS Bucket 未开启多版本，`IsSyncDelete` 或 `IsOverwrite` 无法生效，请前往对象存储控制台开启多版本后重试
+	FAILEDOPERATION_COSMULTIVERSIONDISABLED = "FailedOperation.CosMultiVersionDisabled"
+
+	// 检索任务正在运行中
+	FAILEDOPERATION_DATARETRIEVALTASKRUNNING = "FailedOperation.DataRetrievalTaskRunning"
+
+	// 该文件系统存在S3结点，需要删除后再删除文件系统
+	FAILEDOPERATION_FILESYSTEMHASS3ENDPOINT = "FailedOperation.FileSystemHasS3Endpoint"
 
 	// 文件系统存在挂载点。
 	FAILEDOPERATION_MOUNTTARGETEXISTS = "FailedOperation.MountTargetExists"
@@ -62,6 +74,9 @@ const (
 	// 获取用户费用状态失败。
 	INTERNALERROR_GETACCOUNTSTATUSFAILED = "InternalError.GetAccountStatusFailed"
 
+	// InternalError.InternalError
+	INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+
 	// 超时。
 	INTERNALERROR_TIMEOUT = "InternalError.Timeout"
 
@@ -80,6 +95,9 @@ const (
 	// 定期小时 参数值错误。
 	INVALIDPARAMETER_INVALIDPARAMHOUR = "InvalidParameter.InvalidParamHour"
 
+	// InvalidParameter.InvalidParameter
+	INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+
 	// 无效的快照策略状态。
 	INVALIDPARAMETER_INVALIDSNAPPOLICYSTATUS = "InvalidParameter.InvalidSnapPolicyStatus"
 
@@ -88,6 +106,12 @@ const (
 
 	// 无效的文件系统快照策略名称。
 	INVALIDPARAMETER_INVALIDSNAPSHOTPOLICYNAME = "InvalidParameter.InvalidSnapshotPolicyName"
+
+	// ListPath 与 TaskPath 同时传入或同时为空
+	INVALIDPARAMETER_LISTPATHANDTASKPATHCONFLICT = "InvalidParameter.ListPathAndTaskPathConflict"
+
+	// 数据清单路径必须以 /cfs 开头
+	INVALIDPARAMETER_LISTPATHINVALIDPREFIX = "InvalidParameter.ListPathInvalidPrefix"
 
 	// 缺少策略相关参数。
 	INVALIDPARAMETER_MISSINGPOLICYPARAM = "InvalidParameter.MissingPolicyParam"
@@ -112,6 +136,9 @@ const (
 
 	// 用于保证请求幂等性的字符串长度超过限制（不能超过64字节）。
 	INVALIDPARAMETERVALUE_CLIENTTOKENLIMITEXCEEDED = "InvalidParameterValue.ClientTokenLimitExceeded"
+
+	// 数据检索定时规则冲突
+	INVALIDPARAMETERVALUE_DATARETRIEVALSCHEDULECONFLICT = "InvalidParameterValue.DataRetrievalScheduleConflict"
 
 	// 权限组名称重复。
 	INVALIDPARAMETERVALUE_DUPLICATEDPGROUPNAME = "InvalidParameterValue.DuplicatedPgroupName"
@@ -140,6 +167,9 @@ const (
 	// 扩容策略参数无效
 	INVALIDPARAMETERVALUE_INVALIDAUTOSCALEUPPARAMS = "InvalidParameterValue.InvalidAutoScaleUpParams"
 
+	// 传入的cfsversion 值不正确
+	INVALIDPARAMETERVALUE_INVALIDCFSVERSIONVALUE = "InvalidParameterValue.InvalidCfsVersionValue"
+
 	// 用于保证请求幂等性的字符串错误。
 	INVALIDPARAMETERVALUE_INVALIDCLIENTTOKEN = "InvalidParameterValue.InvalidClientToken"
 
@@ -157,6 +187,9 @@ const (
 
 	// 参数值错误：数据流动目标路径无效
 	INVALIDPARAMETERVALUE_INVALIDDATAFLOWTARGETPATH = "InvalidParameterValue.InvalidDataFlowTargetPath"
+
+	// 无效的数据检索ID
+	INVALIDPARAMETERVALUE_INVALIDDATARETRIEVALID = "InvalidParameterValue.InvalidDataRetrievalId"
 
 	// 快照跨地域复制参数不支持该地域
 	INVALIDPARAMETERVALUE_INVALIDDESTINATIONREGIONS = "InvalidParameterValue.InvalidDestinationRegions"
@@ -199,6 +232,18 @@ const (
 
 	// IntervalDays 参数值错误
 	INVALIDPARAMETERVALUE_INVALIDPARAMINTERVALDAYS = "InvalidParameterValue.InvalidParamIntervalDays"
+
+	// `IsCreateRealTimeSync` 必须为布尔值，且仅当 `StorageType=ExternalStorage` 时允许设置 `true`
+	INVALIDPARAMETERVALUE_INVALIDPARAMISCREATEREALTIMESYNC = "InvalidParameterValue.InvalidParamIsCreateRealTimeSync"
+
+	// 参数值错误：`IsModifyRealTimeSync` 必须为布尔值，且仅当 `StorageType=ExternalStorage` 时允许设置 `true`
+	INVALIDPARAMETERVALUE_INVALIDPARAMISMODIFYREALTIMESYNC = "InvalidParameterValue.InvalidParamIsModifyRealTimeSync"
+
+	// 参数值错误：`IsSyncDelete` 必须为布尔值，且仅当 `StorageType=ExternalStorage` 时允许设置 `true`
+	INVALIDPARAMETERVALUE_INVALIDPARAMISSYNCDELETE = "InvalidParameterValue.InvalidParamIsSyncDelete"
+
+	// InvalidParameterValue.InvalidParameterValue
+	INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
 
 	// 权限组不属于该用户。
 	INVALIDPARAMETERVALUE_INVALIDPGROUP = "InvalidParameterValue.InvalidPgroup"
@@ -277,6 +322,12 @@ const (
 
 	// 无效的可用区或可用区ID。
 	INVALIDPARAMETERVALUE_INVALIDZONEORZONEID = "InvalidParameterValue.InvalidZoneOrZoneId"
+
+	// 清单文件格式不正确，请以 /cfs/ 开头写入完整的文件路径
+	INVALIDPARAMETERVALUE_LISTPATHFILEINVALID = "InvalidParameterValue.ListPathFileInvalid"
+
+	// ListPath 指向的清单文件在 CFS 内不存在
+	INVALIDPARAMETERVALUE_LISTPATHFILENOTFOUND = "InvalidParameterValue.ListPathFileNotFound"
 
 	// FileSystemId缺失。
 	INVALIDPARAMETERVALUE_MISSINGFILESYSTEMID = "InvalidParameterValue.MissingFileSystemId"
@@ -392,11 +443,20 @@ const (
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
 
+	// MissingParameter.MissingParameter
+	MISSINGPARAMETER_MISSINGPARAMETER = "MissingParameter.MissingParameter"
+
 	// 操作被拒绝。
 	OPERATIONDENIED = "OperationDenied"
 
 	// 资源被占用。
 	RESOURCEINUSE = "ResourceInUse"
+
+	// ResourceInUse.DataRetrievalHasTask
+	RESOURCEINUSE_DATARETRIEVALHASTASK = "ResourceInUse.DataRetrievalHasTask"
+
+	// 任务正在运行中，不可做其他操作
+	RESOURCEINUSE_DATARETRIEVALTASKRUNNING = "ResourceInUse.DataRetrievalTaskRunning"
 
 	// 资源不足：数据流动数超限
 	RESOURCEINSUFFICIENT_DATAFLOWLIMITEXCEEDED = "ResourceInsufficient.DataFlowLimitExceeded"
@@ -440,6 +500,9 @@ const (
 	// 资源不存在。
 	RESOURCENOTFOUND = "ResourceNotFound"
 
+	// ResourceNotFound.DataRetrievalNotFound
+	RESOURCENOTFOUND_DATARETRIEVALNOTFOUND = "ResourceNotFound.DataRetrievalNotFound"
+
 	// 该文件系统不存在。
 	RESOURCENOTFOUND_FILESYSTEMNOTFOUND = "ResourceNotFound.FileSystemNotFound"
 
@@ -461,14 +524,23 @@ const (
 	// 快照ID 不存在。
 	RESOURCENOTFOUND_SNAPSHOTNOTFOUND = "ResourceNotFound.SnapshotNotFound"
 
+	// 资源售罄。
+	RESOURCESSOLDOUT = "ResourcesSoldOut"
+
 	// 未授权操作。
 	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+
+	// UnauthorizedOperation.UnauthorizedOperation
+	UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
 
 	// 操作不支持。
 	UNSUPPORTEDOPERATION = "UnsupportedOperation"
 
 	// 该可用区不支持基础网络。
 	UNSUPPORTEDOPERATION_BASICNETINTERFACENOTSUPPORTED = "UnsupportedOperation.BasicNetInterfaceNotSupported"
+
+	// `IsCreateRealTimeSync` / `IsModifyRealTimeSync` / `IsSyncDelete` / `IsOverwrite` 仅在 `StorageType=ExternalStorage` 时支持设置为 `true`
+	UNSUPPORTEDOPERATION_FIELDONLYFOREXTERNALSTORAGE = "UnsupportedOperation.FieldOnlyForExternalStorage"
 
 	// 该文件系统版本不支持当前操作
 	UNSUPPORTEDOPERATION_INVALIDCFSVERSION = "UnsupportedOperation.InvalidCfsVersion"

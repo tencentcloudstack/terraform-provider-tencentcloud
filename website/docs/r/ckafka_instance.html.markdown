@@ -190,6 +190,34 @@ In addition to all arguments above, the following attributes are exported:
 * `vip` - Vip of instance.
 * `vport` - Type of instance.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateInstancePre](https://www.tencentcloud.com/document/api/597/74261)
+  - [CreatePostPaidInstance](https://www.tencentcloud.com/document/api/597/55882)
+  - [DescribeInstanceAttributes](https://www.tencentcloud.com/document/api/597/35358)
+  - [DescribeInstancesDetail](https://www.tencentcloud.com/document/api/597/35356)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [ModifyInstanceAttributes](https://www.tencentcloud.com/document/api/597/35354)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeInstanceAttributes](https://www.tencentcloud.com/document/api/597/35358)
+  - [DescribeInstancesDetail](https://www.tencentcloud.com/document/api/597/35356)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [DescribeInstanceAttributes](https://www.tencentcloud.com/document/api/597/35358)
+  - [DescribeInstancesDetail](https://www.tencentcloud.com/document/api/597/35356)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [InstanceScalingDown](https://www.tencentcloud.com/document/api/597/74426)
+  - [ModifyInstanceAttributes](https://www.tencentcloud.com/document/api/597/35354)
+  - [ModifyInstancePre](https://www.tencentcloud.com/document/api/597/47533)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete:
+  - [DeleteInstancePost](https://www.tencentcloud.com/document/api/597/74260)
+  - [DeleteInstancePre](https://www.tencentcloud.com/document/api/597/51451)
+  - [DescribeInstancesDetail](https://www.tencentcloud.com/document/api/597/35356)
 
 ## Import
 

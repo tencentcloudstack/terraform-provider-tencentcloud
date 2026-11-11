@@ -90,6 +90,21 @@ In addition to all arguments above, the following attributes are exported:
 * `not_before_time` - Certificate effective start date.
 * `update_time` - Certificate update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [RegisterCaCertificate](https://www.tencentcloud.com/search/?wd=RegisterCaCertificate&type=document&lang=en)
+* Read:
+  - [DescribeCaCertificate](https://www.tencentcloud.com/search/?wd=DescribeCaCertificate&type=document&lang=en)
+  - [DescribeCaCertificates](https://www.tencentcloud.com/search/?wd=DescribeCaCertificates&type=document&lang=en)
+* Update:
+  - [ActivateCaCertificate](https://www.tencentcloud.com/search/?wd=ActivateCaCertificate&type=document&lang=en)
+  - [DeactivateCaCertificate](https://www.tencentcloud.com/search/?wd=DeactivateCaCertificate&type=document&lang=en)
+* Delete:
+  - [DeactivateCaCertificate](https://www.tencentcloud.com/search/?wd=DeactivateCaCertificate&type=document&lang=en)
+  - [DeleteCaCertificate](https://www.tencentcloud.com/search/?wd=DeleteCaCertificate&type=document&lang=en)
+  - [DescribeCaCertificate](https://www.tencentcloud.com/search/?wd=DescribeCaCertificate&type=document&lang=en)
 
 ## Import
 

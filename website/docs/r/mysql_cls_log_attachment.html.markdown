@@ -114,4 +114,11 @@ In addition to all arguments above, the following attributes are exported:
 * `log_topic_id` - Log topic Id.
 * `status` - Log Status.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyDBInstanceLogToCLS](https://www.tencentcloud.com/document/api/236/57988)
+* Read: [DescribeDBInstanceLogToCLS](https://www.tencentcloud.com/document/api/236/57978)
+* Delete: [ModifyDBInstanceLogToCLS](https://www.tencentcloud.com/document/api/236/57988)
 

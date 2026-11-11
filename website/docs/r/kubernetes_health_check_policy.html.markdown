@@ -52,6 +52,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateHealthCheckPolicy](https://www.tencentcloud.com/document/api/457/66319)
+* Read: [DescribeHealthCheckPolicies](https://www.tencentcloud.com/document/api/457/66314)
+* Update: [ModifyHealthCheckPolicy](https://www.tencentcloud.com/document/api/457/66310)
+* Delete: [DeleteHealthCheckPolicy](https://www.tencentcloud.com/document/api/457/66317)
 
 ## Import
 

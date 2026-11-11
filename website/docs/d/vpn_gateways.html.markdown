@@ -60,4 +60,11 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - ID of the VPC.
   * `zone` - Zone of the VPN gateway.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read:
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [DescribeVpnGateways](https://www.tencentcloud.com/document/api/215/17514)
 

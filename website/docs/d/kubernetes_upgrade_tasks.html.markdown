@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
   * `related_resources` - Related resources.
   * `upgrade_impact` - Upgrade impact.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeUpgradeTasks](https://www.tencentcloud.com/search/?wd=DescribeUpgradeTasks&type=document&lang=en)
 

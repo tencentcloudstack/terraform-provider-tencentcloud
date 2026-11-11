@@ -111,6 +111,20 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateNatGatewayDestinationIpPortTranslationNatRule](https://www.tencentcloud.com/document/api/215/34756)
+  - [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://www.tencentcloud.com/document/api/215/34753)
+* Read: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://www.tencentcloud.com/document/api/215/34753)
+* Update:
+  - [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://www.tencentcloud.com/document/api/215/34753)
+  - [ModifyNatGatewayDestinationIpPortTranslationNatRule](https://www.tencentcloud.com/document/api/215/34749)
+* Delete:
+  - [DeleteNatGatewayDestinationIpPortTranslationNatRule](https://www.tencentcloud.com/document/api/215/34754)
+  - [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://www.tencentcloud.com/document/api/215/34753)
 
 ## Import
 

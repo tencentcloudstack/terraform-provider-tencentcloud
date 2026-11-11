@@ -88,6 +88,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AssociateCustomizedConfig](https://www.tencentcloud.com/document/api/214/74449)
+* Read: [DescribeCustomizedConfigAssociateList](https://www.tencentcloud.com/document/api/214/42308)
+* Update:
+  - [AssociateCustomizedConfig](https://www.tencentcloud.com/document/api/214/74449)
+  - [DisassociateCustomizedConfig](https://www.tencentcloud.com/document/api/214/74446)
+* Delete: [DisassociateCustomizedConfig](https://www.tencentcloud.com/document/api/214/74446)
 
 ## Import
 

@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
 - `-1` has been installed in
 - `0` installation.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstancePluginList](https://www.tencentcloud.com/search/?wd=DescribeInstancePluginList&type=document&lang=en)
 

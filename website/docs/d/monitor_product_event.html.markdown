@@ -77,4 +77,9 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - The type of this event.
   * `update_time` - The update timestamp of this event.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeProductEventList](https://www.tencentcloud.com/document/api/248/35976)
 

@@ -66,4 +66,13 @@ In addition to all arguments above, the following attributes are exported:
   * `security_group_id` - ID of the security group.
   * `tags` - Tags of the security group.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read:
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [DescribeSecurityGroupAssociationStatistics](https://www.tencentcloud.com/document/api/215/17799)
+  - [DescribeSecurityGroupPolicies](https://www.tencentcloud.com/document/api/215/15804)
+  - [DescribeSecurityGroups](https://www.tencentcloud.com/document/api/215/15808)
 

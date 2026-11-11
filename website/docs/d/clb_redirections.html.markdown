@@ -46,4 +46,9 @@ In addition to all arguments above, the following attributes are exported:
   * `target_listener_id` - ID of target listener.
   * `target_rule_id` - Rule ID of target listener.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRewrite](https://www.tencentcloud.com/document/api/214/33829)
 

@@ -48,6 +48,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyAutoOpenProVersionConfig](https://www.tencentcloud.com/document/api/296/30875)
+* Read: [DescribeLicenseGeneral](https://www.tencentcloud.com/document/api/296/63782)
+* Update: [ModifyAutoOpenProVersionConfig](https://www.tencentcloud.com/document/api/296/30875)
 
 ## Import
 

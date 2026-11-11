@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `event_template` - Platform product event template.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetPlatformEventTemplate](https://www.tencentcloud.com/search/?wd=GetPlatformEventTemplate&type=document&lang=en)
 

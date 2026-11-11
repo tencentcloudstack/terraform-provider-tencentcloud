@@ -34,4 +34,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `lock_code` - Domain unlock code, can be obtained through the ModifyDomainLock interface.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyDomainLock](https://www.tencentcloud.com/document/api/1157/53850)
+* Delete: [ModifyDomainUnlock](https://www.tencentcloud.com/document/api/1157/53848)
 

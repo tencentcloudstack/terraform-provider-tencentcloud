@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `finish_time` - Latest transaction time.
   * `start_time` - Earliest transaction time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBinlogs](https://www.tencentcloud.com/document/api/1098/48594)
 

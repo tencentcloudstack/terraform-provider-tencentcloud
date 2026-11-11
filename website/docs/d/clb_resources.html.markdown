@@ -53,4 +53,9 @@ In addition to all arguments above, the following attributes are exported:
   * `zone_region` - Region of the AZ, such as ap-guangzhou.
   * `zone_resource_type` - Type of resources in the zone. Values: SHARED, EXCLUSIVE.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeResources](https://www.tencentcloud.com/document/api/214/51214)
 

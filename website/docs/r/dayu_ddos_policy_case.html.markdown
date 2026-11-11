@@ -77,4 +77,16 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Create time of the DDoS policy case.
 * `scene_id` - ID of the DDoS policy case.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDDoSPolicyCase](https://www.tencentcloud.com/search/?wd=CreateDDoSPolicyCase&type=document&lang=en)
+* Read: [DescribePolicyCase](https://www.tencentcloud.com/search/?wd=DescribePolicyCase&type=document&lang=en)
+* Update: [ModifyDDoSPolicyCase](https://www.tencentcloud.com/search/?wd=ModifyDDoSPolicyCase&type=document&lang=en)
+* Delete:
+  - [DeleteDDoSPolicyCase](https://www.tencentcloud.com/search/?wd=DeleteDDoSPolicyCase&type=document&lang=en)
+  - [DescribeDDoSPolicy](https://www.tencentcloud.com/search/?wd=DescribeDDoSPolicy&type=document&lang=en)
+  - [DescribePolicyCase](https://www.tencentcloud.com/search/?wd=DescribePolicyCase&type=document&lang=en)
+  - [ModifyResBindDDoSPolicy](https://www.tencentcloud.com/search/?wd=ModifyResBindDDoSPolicy&type=document&lang=en)
 

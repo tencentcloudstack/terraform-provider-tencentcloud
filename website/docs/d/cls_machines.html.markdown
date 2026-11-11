@@ -56,4 +56,9 @@ In addition to all arguments above, the following attributes are exported:
   * `update_status` - machine update status.
   * `version` - current machine version.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeMachines](https://www.tencentcloud.com/document/api/614/42817)
 

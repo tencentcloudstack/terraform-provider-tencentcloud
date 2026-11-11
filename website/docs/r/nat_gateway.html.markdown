@@ -132,6 +132,33 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `created_time` - Create time of the NAT gateway.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateNatGateway](https://www.tencentcloud.com/document/api/215/34757)
+  - [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
+  - [DescribeNatGateways](https://www.tencentcloud.com/document/api/215/34752)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
+  - [DescribeNatGateways](https://www.tencentcloud.com/document/api/215/34752)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [AssociateNatGatewayAddress](https://www.tencentcloud.com/document/api/215/36905)
+  - [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
+  - [DescribeNatGateways](https://www.tencentcloud.com/document/api/215/34752)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [DescribeVpcTaskResult](https://www.tencentcloud.com/document/api/215/41567)
+  - [DisassociateNatGatewayAddress](https://www.tencentcloud.com/document/api/215/34751)
+  - [ModifyNatGatewayAttribute](https://www.tencentcloud.com/document/api/215/34750)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [ResetNatGatewayConnection](https://www.tencentcloud.com/document/api/215/34748)
+* Delete:
+  - [DeleteNatGateway](https://www.tencentcloud.com/document/api/215/34755)
+  - [DescribeNatGateways](https://www.tencentcloud.com/document/api/215/34752)
 
 ## Import
 

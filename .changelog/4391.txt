@@ -1,0 +1,4 @@
+```release-note:enhancement
+resource/tencentcloud_clb_instance: support force param when updating sla_type via ModifyLoadBalancerSla
+```
+

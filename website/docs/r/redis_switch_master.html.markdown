@@ -94,4 +94,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [ChangeReplicaToMaster](https://www.tencentcloud.com/document/api/239/41037)
+  - [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+* Read: [DescribeInstanceZoneInfo](https://www.tencentcloud.com/document/api/239/39091)
+* Update:
+  - [ChangeReplicaToMaster](https://www.tencentcloud.com/document/api/239/41037)
+  - [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
 

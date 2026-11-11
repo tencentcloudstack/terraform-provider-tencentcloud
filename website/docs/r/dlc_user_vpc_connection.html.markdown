@@ -51,4 +51,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `user_vpc_endpoint_id` - User endpoint ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateUserVpcConnection](https://www.tencentcloud.com/search/?wd=CreateUserVpcConnection&type=document&lang=en)
+* Read: [DescribeUserVpcConnection](https://www.tencentcloud.com/search/?wd=DescribeUserVpcConnection&type=document&lang=en)
+* Delete: [DeleteUserVpcConnection](https://www.tencentcloud.com/search/?wd=DeleteUserVpcConnection&type=document&lang=en)
 

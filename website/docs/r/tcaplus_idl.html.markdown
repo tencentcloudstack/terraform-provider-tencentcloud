@@ -107,4 +107,11 @@ In addition to all arguments above, the following attributes are exported:
   * `table_name` - Name of the TcaplusDB table.
   * `value_fields` - Non-primary key fields of the TcaplusDB table.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [VerifyIdlFiles](https://www.tencentcloud.com/document/api/1016/35029)
+* Read: [VerifyIdlFiles](https://www.tencentcloud.com/document/api/1016/35029)
+* Delete: [DeleteIdlFiles](https://www.tencentcloud.com/document/api/1016/35051)
 

@@ -26,4 +26,9 @@ The following arguments are supported:
 * `content` - (Required, String) Live stream event notification obtained from CMQ.
 * `result_output_file` - (Optional, String) Used to save results.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ParseLiveStreamProcessNotification](https://www.tencentcloud.com/document/api/1041/33680)
 

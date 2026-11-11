@@ -67,6 +67,21 @@ In addition to all arguments above, the following attributes are exported:
 * `access_ip` - IP address of the internal access.
 * `status` - Status of the internal access.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1051/50703)
+  - [DescribeInternalEndpoints](https://www.tencentcloud.com/document/api/1051/50735)
+  - [ManageInternalEndpoint](https://www.tencentcloud.com/document/api/1051/50732)
+* Read:
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1051/50703)
+  - [DescribeInternalEndpoints](https://www.tencentcloud.com/document/api/1051/50735)
+* Delete:
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1051/50703)
+  - [DescribeInternalEndpoints](https://www.tencentcloud.com/document/api/1051/50735)
+  - [ManageInternalEndpoint](https://www.tencentcloud.com/document/api/1051/50732)
 
 ## Import
 

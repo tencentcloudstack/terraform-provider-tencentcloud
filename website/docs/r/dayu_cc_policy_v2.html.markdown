@@ -137,5 +137,63 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `cc_precision_policys` object exports the following:
 
+* `policy_id` - Policy Id.
+
+The `cc_precision_req_limits` object exports the following:
+
+* `instance_id` - Instance id.
+* `ip` - IP address.
+
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateCCPrecisionPolicy](https://www.tencentcloud.com/document/api/1213/61396)
+  - [CreateCCReqLimitPolicy](https://www.tencentcloud.com/document/api/1213/61395)
+  - [CreateCcBlackWhiteIpList](https://www.tencentcloud.com/document/api/1213/61383)
+  - [CreateCcGeoIPBlockConfig](https://www.tencentcloud.com/document/api/1213/61382)
+  - [DescribeListProtectThresholdConfigNew](https://www.tencentcloud.com/search/?wd=DescribeListProtectThresholdConfigNew&type=document&lang=en)
+  - [ModifyCCLevelPolicy](https://www.tencentcloud.com/search/?wd=ModifyCCLevelPolicy&type=document&lang=en)
+  - [ModifyCCThresholdPolicy](https://www.tencentcloud.com/search/?wd=ModifyCCThresholdPolicy&type=document&lang=en)
+* Read:
+  - [DescribeCCLevelList](https://www.tencentcloud.com/document/api/1213/61390)
+  - [DescribeCCPrecisionPlyList](https://www.tencentcloud.com/document/api/1213/61388)
+  - [DescribeCCReqLimitPolicyList](https://www.tencentcloud.com/search/?wd=DescribeCCReqLimitPolicyList&type=document&lang=en)
+  - [DescribeCCThresholdList](https://www.tencentcloud.com/document/api/1213/61387)
+  - [DescribeCcBlackWhiteIpList](https://www.tencentcloud.com/document/api/1213/61366)
+  - [DescribeCcGeoIPBlockConfigList](https://www.tencentcloud.com/document/api/1213/61365)
+* Update:
+  - [CreateCCPrecisionPolicy](https://www.tencentcloud.com/document/api/1213/61396)
+  - [CreateCCReqLimitPolicy](https://www.tencentcloud.com/document/api/1213/61395)
+  - [CreateCcBlackWhiteIpList](https://www.tencentcloud.com/document/api/1213/61383)
+  - [CreateCcGeoIPBlockConfig](https://www.tencentcloud.com/document/api/1213/61382)
+  - [DeleteCCLevelPolicy](https://www.tencentcloud.com/document/api/1213/61394)
+  - [DeleteCCPrecisionPolicy](https://www.tencentcloud.com/document/api/1213/61393)
+  - [DeleteCCRequestLimitPolicy](https://www.tencentcloud.com/search/?wd=DeleteCCRequestLimitPolicy&type=document&lang=en)
+  - [DeleteCCThresholdPolicy](https://www.tencentcloud.com/document/api/1213/61392)
+  - [DeleteCcBlackWhiteIpList](https://www.tencentcloud.com/document/api/1213/61374)
+  - [DeleteCcGeoIPBlockConfig](https://www.tencentcloud.com/document/api/1213/61373)
+  - [DescribeCCPrecisionPlyList](https://www.tencentcloud.com/document/api/1213/61388)
+  - [DescribeCCReqLimitPolicyList](https://www.tencentcloud.com/search/?wd=DescribeCCReqLimitPolicyList&type=document&lang=en)
+  - [DescribeCCThresholdList](https://www.tencentcloud.com/document/api/1213/61387)
+  - [DescribeCcBlackWhiteIpList](https://www.tencentcloud.com/document/api/1213/61366)
+  - [DescribeCcGeoIPBlockConfigList](https://www.tencentcloud.com/document/api/1213/61365)
+  - [DescribeListProtectThresholdConfigNew](https://www.tencentcloud.com/search/?wd=DescribeListProtectThresholdConfigNew&type=document&lang=en)
+  - [ModifyCCLevelPolicy](https://www.tencentcloud.com/search/?wd=ModifyCCLevelPolicy&type=document&lang=en)
+  - [ModifyCCThresholdPolicy](https://www.tencentcloud.com/search/?wd=ModifyCCThresholdPolicy&type=document&lang=en)
+* Delete:
+  - [DeleteCCLevelPolicy](https://www.tencentcloud.com/document/api/1213/61394)
+  - [DeleteCCPrecisionPolicy](https://www.tencentcloud.com/document/api/1213/61393)
+  - [DeleteCCThresholdPolicy](https://www.tencentcloud.com/document/api/1213/61392)
+  - [DeleteCcBlackWhiteIpList](https://www.tencentcloud.com/document/api/1213/61374)
+  - [DeleteCcGeoIPBlockConfig](https://www.tencentcloud.com/document/api/1213/61373)
+  - [DescribeCCLevelList](https://www.tencentcloud.com/document/api/1213/61390)
+  - [DescribeCCPrecisionPlyList](https://www.tencentcloud.com/document/api/1213/61388)
+  - [DescribeCCReqLimitPolicyList](https://www.tencentcloud.com/search/?wd=DescribeCCReqLimitPolicyList&type=document&lang=en)
+  - [DescribeCCThresholdList](https://www.tencentcloud.com/document/api/1213/61387)
+  - [DescribeCcBlackWhiteIpList](https://www.tencentcloud.com/document/api/1213/61366)
+  - [DescribeCcGeoIPBlockConfigList](https://www.tencentcloud.com/document/api/1213/61365)
 

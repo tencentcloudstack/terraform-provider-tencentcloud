@@ -42,6 +42,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `policy_id` - Policy Id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePolicy](https://www.tencentcloud.com/document/api/1031/78363)
+* Read:
+  - [DescribePolicy](https://www.tencentcloud.com/document/api/1031/78360)
+  - [ListPolicies](https://www.tencentcloud.com/document/api/1031/78772)
+* Update: [UpdatePolicy](https://www.tencentcloud.com/document/api/1031/78352)
+* Delete: [DeletePolicy](https://www.tencentcloud.com/document/api/1031/78362)
 
 ## Import
 

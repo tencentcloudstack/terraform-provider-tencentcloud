@@ -74,4 +74,9 @@ In addition to all arguments above, the following attributes are exported:
   * `dcg_id` - ID of the DCG.
   * `route_id` - ID of the DCG route.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDirectConnectGatewayCcnRoutes](https://www.tencentcloud.com/document/api/215/34775)
 

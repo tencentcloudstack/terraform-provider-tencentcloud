@@ -33,4 +33,9 @@ In addition to all arguments above, the following attributes are exported:
 * `ipv4_other_quota` - Non-BGP type IPv4 Internet address quota.
 * `ipv6_prefix_len` - The minimum prefix length allowed on the IPv6 Internet public network.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInternetAddressQuota](https://www.tencentcloud.com/document/api/216/39497)
 

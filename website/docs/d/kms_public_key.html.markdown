@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
 * `public_key_pem` - Public key content in PEM format.
 * `public_key` - Base64-encoded public key content.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetPublicKey](https://www.tencentcloud.com/document/api/1030/35179)
 

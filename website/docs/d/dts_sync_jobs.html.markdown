@@ -129,6 +129,7 @@ In addition to all arguments above, the following attributes are exported:
       * `new_schema_name` - new schema name.
       * `procedure_mode` - procedure mode.
       * `procedures` - procedures.
+      * `schema_mode` - schema selection mode, used by pg and sqlserver. enum values: All (all objects under the current object), Partial (partial objects).
       * `schema_name` - schema name.
       * `table_mode` - table mode.
       * `tables` - table list.
@@ -188,4 +189,9 @@ In addition to all arguments above, the following attributes are exported:
     * `tag_key` - tag key.
     * `tag_value` - tag value.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSyncJobs](https://www.tencentcloud.com/document/api/571/51793)
 

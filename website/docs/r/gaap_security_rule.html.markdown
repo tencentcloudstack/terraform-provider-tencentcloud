@@ -53,6 +53,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSecurityRules](https://www.tencentcloud.com/document/api/608/33107)
+* Read: [DescribeSecurityRules](https://www.tencentcloud.com/document/api/608/33138)
+* Update: [ModifySecurityRule](https://www.tencentcloud.com/document/api/608/33091)
+* Delete: [DeleteSecurityRules](https://www.tencentcloud.com/document/api/608/33105)
 
 ## Import
 

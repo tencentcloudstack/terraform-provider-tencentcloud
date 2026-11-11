@@ -53,6 +53,14 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Creation time in milliseconds.
 * `update_time` - Update time in milliseconds.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRocketMQTopic](https://www.tencentcloud.com/search/?wd=CreateRocketMQTopic&type=document&lang=en)
+* Read: [DescribeRocketMQTopics](https://www.tencentcloud.com/search/?wd=DescribeRocketMQTopics&type=document&lang=en)
+* Update: [ModifyRocketMQTopic](https://www.tencentcloud.com/search/?wd=ModifyRocketMQTopic&type=document&lang=en)
+* Delete: [DeleteRocketMQTopic](https://www.tencentcloud.com/search/?wd=DeleteRocketMQTopic&type=document&lang=en)
 
 ## Import
 

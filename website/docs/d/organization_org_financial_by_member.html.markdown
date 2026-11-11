@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
   * `total_cost` - Total cost of the member.
 * `total_cost` - Total cost of the member.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeOrganizationFinancialByMember](https://www.tencentcloud.com/search/?wd=DescribeOrganizationFinancialByMember&type=document&lang=en)
 

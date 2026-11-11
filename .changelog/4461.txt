@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cls_config: update log_type description to include multiline_fullregex_log as a valid value
+```

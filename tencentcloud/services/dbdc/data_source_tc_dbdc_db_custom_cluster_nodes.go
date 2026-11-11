@@ -91,6 +91,16 @@ func DataSourceTencentCloudDbdcDbCustomClusterNodes() *schema.Resource {
 							Computed:    true,
 							Description: "Node type.",
 						},
+						"network_mode": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Network mode. Valid values: `privatelink` (L4 network connectivity, opens SSH channel), `cross_tenant_eni` (L3 network connectivity, dual-network-card mode).",
+						},
+						"eni_ip": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "When the network mode is `cross_tenant_eni`, the accessible IP address of the node.",
+						},
 					},
 				},
 			},
@@ -180,6 +190,14 @@ func dataSourceTencentCloudDbdcDbCustomClusterNodesRead(d *schema.ResourceData, 
 
 			if node.NodeType != nil {
 				nodeMap["node_type"] = node.NodeType
+			}
+
+			if node.NetworkMode != nil {
+				nodeMap["network_mode"] = node.NetworkMode
+			}
+
+			if node.EniIP != nil {
+				nodeMap["eni_ip"] = node.EniIP
 			}
 
 			nodeSetList = append(nodeSetList, nodeMap)

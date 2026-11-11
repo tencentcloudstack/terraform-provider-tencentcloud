@@ -64,4 +64,9 @@ In addition to all arguments above, the following attributes are exported:
   * `severity` - Severity.
   * `start_time` - Start time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBDiagEvents](https://www.tencentcloud.com/document/api/1035/44292)
 

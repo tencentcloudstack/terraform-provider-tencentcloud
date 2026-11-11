@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
 * `latest_rotate_time` - Time of last rotation.
 * `next_rotate_begin_time` - The time to start the next rotation.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRotationDetail](https://www.tencentcloud.com/document/api/1078/41517)
 

@@ -45,4 +45,9 @@ In addition to all arguments above, the following attributes are exported:
     * `instance_type` - Instance type such as VPC or DIRECTCONNECT.
   * `interconnect_mode` - Interconnect mode: "CrossConnect": cross interconnect (each instance in group A interconnects with each instance in group B), "FullMesh": full mesh (group A content is identical to group B, equivalent to pairwise interconnection within the group).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCcnVpcFwSwitch](https://www.tencentcloud.com/search/?wd=DescribeCcnVpcFwSwitch&type=document&lang=en)
 

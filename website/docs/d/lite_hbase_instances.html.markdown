@@ -68,4 +68,9 @@ In addition to all arguments above, the following attributes are exported:
     * `zone` - The availability zone to which the instance belongs, such as ap-guangzhou-1.
   * `zone` - Primary Availability Zone Name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSLInstanceList](https://www.tencentcloud.com/document/api/1026/71617)
 

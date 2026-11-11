@@ -99,4 +99,11 @@ In addition to all arguments above, the following attributes are exported:
   * `instance_id` - SQL Server instance ID that the account belongs to.
   * `privilege` - Privilege of the account on DB. Valid value are `ReadOnly`, `ReadWrite`.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read:
+  - [DescribeAccounts](https://www.tencentcloud.com/document/api/238/32116)
+  - [DescribeDBs](https://www.tencentcloud.com/document/api/238/32114)
 

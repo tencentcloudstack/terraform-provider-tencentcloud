@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
     * `qps` - maximum QPS.
     * `suit_info` - recommended usage scenarios.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeShardSpec](https://www.tencentcloud.com/search/?wd=DescribeShardSpec&type=document&lang=en)
 

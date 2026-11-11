@@ -50,6 +50,7 @@ func ResourceTencentCloudVdbInstance() *schema.Resource {
 			"instance_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Instance name. Supports up to 60 characters.",
 			},
 			"security_group_ids": {
@@ -66,6 +67,7 @@ func ResourceTencentCloudVdbInstance() *schema.Resource {
 			"auto_renew": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "Auto-renew flag. 0: disabled, 1: enabled.",
 			},
 			"params": {
@@ -108,12 +110,14 @@ func ResourceTencentCloudVdbInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				ForceNew:    true,
+				Computed:    true,
 				Description: "Product version. 0: standard, 1: capacity-enhanced.",
 			},
 			"node_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
+				Computed:    true,
 				Description: "Node type. Valid values: compute, normal, store.",
 			},
 			"cpu": {
@@ -143,6 +147,11 @@ func ResourceTencentCloudVdbInstance() *schema.Resource {
 				Description: "Whether to force delete (destroy) the instance. If false, only isolate to recycle bin. If true, isolate then destroy. Default is false.",
 			},
 			// --- Computed fields from InstanceInfo response ---
+			"instance_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Instance ID.",
+			},
 			"status": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -238,6 +247,11 @@ func ResourceTencentCloudVdbInstance() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Old IP expiration time.",
+						},
+						"is_ssl": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Whether it is an SSL network.",
 						},
 					},
 				},
@@ -394,6 +408,8 @@ func resourceTencentCloudVdbInstanceCreate(d *schema.ResourceData, meta interfac
 		return reqErr
 	}
 
+	log.Printf("[INFO]%s create vdb instance done, logId=%s, current d.Id()=%s", logId, logId, d.Id())
+
 	if response.Response.InstanceIds == nil || len(response.Response.InstanceIds) == 0 {
 		return fmt.Errorf("InstanceIds is empty")
 	}
@@ -429,6 +445,10 @@ func resourceTencentCloudVdbInstanceRead(d *schema.ResourceData, meta interface{
 		log.Printf("[WARN]%s resource `tencentcloud_vdb_instance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
+	}
+
+	if instance.InstanceId != nil {
+		_ = d.Set("instance_id", instance.InstanceId)
 	}
 
 	if instance.Name != nil {
@@ -549,6 +569,9 @@ func resourceTencentCloudVdbInstanceRead(d *schema.ResourceData, meta interface{
 			if n.ExpireTime != nil {
 				networkMap["expire_time"] = n.ExpireTime
 			}
+			if n.IsSSL != nil {
+				networkMap["is_ssl"] = n.IsSSL
+			}
 			networksList = append(networksList, networkMap)
 		}
 		_ = d.Set("networks", networksList)
@@ -615,8 +638,8 @@ func resourceTencentCloudVdbInstanceUpdate(d *schema.ResourceData, meta interfac
 	var (
 		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		instanceId = d.Id()
 		service    = VdbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceId = d.Id()
 	)
 
 	// These fields cannot be modified in-place. Any change to them will be rejected.

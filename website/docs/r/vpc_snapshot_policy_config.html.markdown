@@ -61,6 +61,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DisableSnapshotPolicies](https://www.tencentcloud.com/document/api/215/55052)
+  - [EnableSnapshotPolicies](https://www.tencentcloud.com/document/api/215/55051)
+* Read: [DescribeSnapshotPolicies](https://www.tencentcloud.com/document/api/215/55054)
+* Update:
+  - [DisableSnapshotPolicies](https://www.tencentcloud.com/document/api/215/55052)
+  - [EnableSnapshotPolicies](https://www.tencentcloud.com/document/api/215/55051)
 
 ## Import
 

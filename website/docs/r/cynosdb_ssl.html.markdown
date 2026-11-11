@@ -36,6 +36,21 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `download_url` - Certificate download address.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CloseSSL](https://www.tencentcloud.com/document/api/1098/69801)
+  - [DescribeSSLStatus](https://www.tencentcloud.com/search/?wd=DescribeSSLStatus&type=document&lang=en)
+  - [DescribeTasks](https://www.tencentcloud.com/document/api/1098/74199)
+  - [OpenSSL](https://www.tencentcloud.com/search/?wd=OpenSSL&type=document&lang=en)
+* Read: [DescribeSSLStatus](https://www.tencentcloud.com/search/?wd=DescribeSSLStatus&type=document&lang=en)
+* Update:
+  - [CloseSSL](https://www.tencentcloud.com/document/api/1098/69801)
+  - [DescribeSSLStatus](https://www.tencentcloud.com/search/?wd=DescribeSSLStatus&type=document&lang=en)
+  - [DescribeTasks](https://www.tencentcloud.com/document/api/1098/74199)
+  - [OpenSSL](https://www.tencentcloud.com/search/?wd=OpenSSL&type=document&lang=en)
 
 ## Import
 

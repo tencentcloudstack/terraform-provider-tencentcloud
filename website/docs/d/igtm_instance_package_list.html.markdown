@@ -78,4 +78,9 @@ ENABLED: Normal
 DISABLED: Disabled.
   * `traffic_strategy` - Traffic strategy type: ALL return all, WEIGHT weight.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstancePackageList](https://www.tencentcloud.com/search/?wd=DescribeInstancePackageList&type=document&lang=en)
 

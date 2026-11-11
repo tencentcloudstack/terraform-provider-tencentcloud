@@ -70,6 +70,32 @@ func TestAccTencentCloudDlcDataEngineResource_basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudDlcDataEngineResource_tags(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDlcDataEngineWithTags,
+				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_dlc_data_engine.data_engine", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "tags.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "tags.0.tag_key", "owner"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "tags.0.tag_value", "tf-example"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_dlc_data_engine.data_engine",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"pay_mode", "size", "time_span", "time_unit"},
+			},
+		},
+	})
+}
+
 const testAccDlcDataEngine = `
 
 resource "tencentcloud_dlc_data_engine" "data_engine" {
@@ -93,6 +119,7 @@ resource "tencentcloud_dlc_data_engine" "data_engine" {
 }
 
 `
+
 const testAccDlcDataEngineUpdate = `
 
 resource "tencentcloud_dlc_data_engine" "data_engine" {
@@ -113,6 +140,35 @@ resource "tencentcloud_dlc_data_engine" "data_engine" {
   auto_suspend = false
   crontab_resume_suspend = 0
   engine_exec_type = "BATCH"
+}
+
+`
+
+const testAccDlcDataEngineWithTags = `
+
+resource "tencentcloud_dlc_data_engine" "data_engine" {
+  engine_type = "spark"
+  data_engine_name = "testSparkTags"
+  cluster_type = "spark_cu"
+  mode = 1
+  auto_resume = false
+  size = 16
+  pay_mode = 0
+  min_clusters = 1
+  max_clusters = 1
+  default_data_engine = false
+  cidr_block = "10.255.0.0/16"
+  message = "test spark with tags"
+  time_span = 1
+  time_unit = "h"
+  auto_suspend = false
+  crontab_resume_suspend = 0
+  engine_exec_type = "BATCH"
+
+  tags {
+    tag_key   = "owner"
+    tag_value = "tf-example"
+  }
 }
 
 `

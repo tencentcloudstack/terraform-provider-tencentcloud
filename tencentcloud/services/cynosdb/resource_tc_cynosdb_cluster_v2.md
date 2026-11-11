@@ -6,6 +6,8 @@ Provide a resource to create a CynosDB cluster.
 
 Example Usage
 
+Create a CynosDB cluster with available_zone
+
 ```hcl
 resource "tencentcloud_cynosdb_cluster_v2" "example" {
   available_zone               = "ap-guangzhou-6"
@@ -23,6 +25,58 @@ resource "tencentcloud_cynosdb_cluster_v2" "example" {
   instance_memory_size         = 4
   open_ro_group                = true
   force_delete                 = true
+  instance_maintain_weekdays = [
+    "Fri",
+    "Mon",
+    "Sat",
+    "Sun",
+    "Thu",
+    "Wed",
+    "Tue",
+  ]
+
+  rw_group_sg        = ["sg-7pnojfur", "sg-37tigqat"]
+  ro_group_sg        = ["sg-7pnojfur", "sg-37tigqat", "sg-08cqf7d5"]
+  single_ro_group_sg = ["sg-7pnojfur", "sg-37tigqat", "sg-08cqf7d5", "sg-l1txcqtj"]
+
+  param_items {
+    name          = "character_set_server"
+    current_value = "utf8mb4"
+  }
+
+  param_items {
+    name          = "lower_case_table_names"
+    current_value = "0"
+  }
+
+  tags = {
+    createBy = "terraform"
+  }
+}
+```
+
+Create a CynosDB cluster with available_zone and slave_zone
+
+```hcl
+resource "tencentcloud_cynosdb_cluster_v2" "example" {
+  available_zone               = "ap-guangzhou-6"
+  slave_zone                   = "ap-guangzhou-7"
+  vpc_id                       = "vpc-i5yyodl9"
+  subnet_id                    = "subnet-hhi88a58"
+  db_mode                      = "NORMAL"
+  db_type                      = "MYSQL"
+  db_version                   = "5.7"
+  port                         = 3306
+  cluster_name                 = "tf-example"
+  password                     = "cynosDB@123"
+  instance_maintain_duration   = 7200
+  instance_maintain_start_time = 10800
+  instance_cpu_core            = 2
+  instance_memory_size         = 4
+  open_ro_group                = true
+  force_delete                 = true
+  sync_way                     = "async"
+  semi_sync_timeout            = 10000
   instance_maintain_weekdays = [
     "Fri",
     "Mon",

@@ -39,6 +39,7 @@ func ResourceTencentCloudDlcUser() *schema.Resource {
 
 			"user_type": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Types of users. ADMIN: administrators; COMMON: general users. When the type of user is administrator, the collections of permissions and bound working groups cannot be set. Administrators own all the permissions by default. If the parameter is not filled in, it will be COMMON by default.",
 			},
@@ -47,6 +48,13 @@ func ResourceTencentCloudDlcUser() *schema.Resource {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "User alias, and its characters are less than 50.",
+			},
+
+			"account_type": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Account type. Valid values: `UserAccount` (user account), `RoleAccount` (role account). Default is `UserAccount`.",
 			},
 
 			"work_group_ids": {
@@ -86,6 +94,10 @@ func resourceTencentCloudDlcUserCreate(d *schema.ResourceData, meta interface{})
 		request.UserAlias = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("account_type"); ok {
+		request.AccountType = helper.String(v.(string))
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().CreateUser(request)
 		if e != nil {
@@ -121,13 +133,14 @@ func resourceTencentCloudDlcUserRead(d *schema.ResourceData, meta interface{}) e
 		userId  = d.Id()
 	)
 
-	user, err := service.DescribeDlcUserById(ctx, userId)
+	accountType := d.Get("account_type").(string)
+	user, err := service.DescribeDlcUserById(ctx, userId, accountType)
 	if err != nil {
 		return err
 	}
 
 	if user == nil {
-		log.Printf("[WARN]%s resource `DlcUser` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `tencentcloud_dlc_user` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
@@ -148,6 +161,10 @@ func resourceTencentCloudDlcUserRead(d *schema.ResourceData, meta interface{}) e
 		_ = d.Set("user_alias", user.UserAlias)
 	}
 
+	if user.AccountType != nil {
+		_ = d.Set("account_type", user.AccountType)
+	}
+
 	if user.WorkGroupSet != nil {
 		workGroups := make([]*int64, len(user.WorkGroupSet))
 		for _, workGroup := range user.WorkGroupSet {
@@ -165,9 +182,8 @@ func resourceTencentCloudDlcUserUpdate(d *schema.ResourceData, meta interface{})
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = tccommon.GetLogId(tccommon.ContextNil)
-		request = dlc.NewModifyUserRequest()
-		userId  = d.Id()
+		logId  = tccommon.GetLogId(tccommon.ContextNil)
+		userId = d.Id()
 	)
 
 	immutableArgs := []string{"user_type", "user_alias"}
@@ -178,6 +194,7 @@ func resourceTencentCloudDlcUserUpdate(d *schema.ResourceData, meta interface{})
 	}
 
 	if d.HasChange("user_description") {
+		request := dlc.NewModifyUserRequest()
 		if v, ok := d.GetOk("user_description"); ok {
 			request.UserDescription = helper.String(v.(string))
 		}
@@ -200,6 +217,34 @@ func resourceTencentCloudDlcUserUpdate(d *schema.ResourceData, meta interface{})
 		}
 	}
 
+	if d.HasChange("account_type") {
+		request := dlc.NewModifyUserTypeRequest()
+		if v, ok := d.GetOk("user_type"); ok {
+			request.UserType = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("account_type"); ok {
+			request.AccountType = helper.String(v.(string))
+		}
+
+		request.UserId = &userId
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().ModifyUserType(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update dlc user type failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
 	return resourceTencentCloudDlcUserRead(d, meta)
 }
 
@@ -214,7 +259,8 @@ func resourceTencentCloudDlcUserDelete(d *schema.ResourceData, meta interface{})
 		userId  = d.Id()
 	)
 
-	if err := service.DeleteDlcUserById(ctx, userId); err != nil {
+	accountType := d.Get("account_type").(string)
+	if err := service.DeleteDlcUserById(ctx, userId, accountType); err != nil {
 		return err
 	}
 

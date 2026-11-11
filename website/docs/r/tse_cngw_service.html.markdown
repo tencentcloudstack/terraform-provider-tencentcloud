@@ -126,6 +126,26 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `service_id` - service id.
 
+The `targets` object of `upstream_info` exports the following:
+
+* `created_time` - created time.
+* `health` - health.
+
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateCloudNativeAPIGatewayService](https://www.tencentcloud.com/document/api/1290/79290)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeOneCloudNativeAPIGatewayService](https://www.tencentcloud.com/document/api/1290/79251)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [DescribeOneCloudNativeAPIGatewayService](https://www.tencentcloud.com/document/api/1290/79251)
+  - [ModifyCloudNativeAPIGatewayService](https://www.tencentcloud.com/document/api/1290/79239)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteCloudNativeAPIGatewayService](https://www.tencentcloud.com/document/api/1290/79276)
 
 ## Import
 

@@ -54,4 +54,9 @@ In addition to all arguments above, the following attributes are exported:
   * `product_id` - Integration Center Product ID.
   * `unit` - Unit.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAlarmMetrics](https://www.tencentcloud.com/document/api/248/39322)
 

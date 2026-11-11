@@ -1,0 +1,19 @@
+```release-note:enhancement
+resource/tencentcloud_ga2_global_accelerator: optimize code logic
+```
+
+```release-note:enhancement
+resource/tencentcloud_ga2_accelerate_area: optimize code logic
+```
+
+```release-note:enhancement
+resource/tencentcloud_ga2_listener: add new params
+```
+
+```release-note:enhancement
+resource/tencentcloud_ga2_endpoint_group: optimize code logic
+```
+
+```release-note:enhancement
+resource/tencentcloud_ga2_forwarding_rule: add new params
+```
