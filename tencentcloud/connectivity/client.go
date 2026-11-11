@@ -12,6 +12,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/endpoints"
+	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	captchaintl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/captcha/v20190722"
@@ -348,6 +349,13 @@ func (me *TencentCloudClient) UseCosClient() *s3.S3 {
 		Region:           aws.String(me.Region),
 		EndpointResolver: endpoints.ResolverFunc(resolver),
 	}))
+	// Mark every COS request with the provider identity, e.g. "Terraform-1.83.41".
+	// aws-sdk-go has no UserAgent field; the official extension point is a Build
+	// handler and AddToUserAgent appends to the default SDK user agent.
+	userAgent := fmt.Sprintf("Terraform-%s", GetReqClientVersion())
+	sess.Handlers.Build.PushBack(func(r *request.Request) {
+		request.AddToUserAgent(r, userAgent)
+	})
 
 	return s3.New(sess)
 }
@@ -371,6 +379,11 @@ func (me *TencentCloudClient) UseCosCdcClient(cdcId string) *s3.S3 {
 		Region:           aws.String(me.Region),
 		EndpointResolver: endpoints.ResolverFunc(resolver),
 	}))
+	// Mark every COS request with the provider identity, e.g. "Terraform-1.83.41".
+	userAgent := fmt.Sprintf("Terraform-%s", GetReqClientVersion())
+	sess.Handlers.Build.PushBack(func(r *request.Request) {
+		request.AddToUserAgent(r, userAgent)
+	})
 
 	return s3.New(sess)
 }
@@ -415,6 +428,8 @@ func (me *TencentCloudClient) UseTencentCosClient(bucket string, clientTimeout .
 			SessionToken: me.Credential.Token,
 		},
 	})
+	// Mark every COS request with the provider identity, e.g. "Terraform-1.83.41".
+	me.tencentCosConn.UserAgent = fmt.Sprintf("Terraform-%s", GetReqClientVersion())
 
 	return me.tencentCosConn
 }
@@ -440,6 +455,8 @@ func (me *TencentCloudClient) UseTencentCosCdcClient(bucket string, cdcId string
 			SessionToken: me.Credential.Token,
 		},
 	})
+	// Mark every COS request with the provider identity, e.g. "Terraform-1.83.41".
+	me.tencentCosConn.UserAgent = fmt.Sprintf("Terraform-%s", GetReqClientVersion())
 
 	return me.tencentCosConn
 }
