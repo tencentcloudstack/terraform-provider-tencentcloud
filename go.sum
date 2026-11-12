@@ -991,7 +991,6 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.157/go.mod 
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.162/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.169/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.170/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.171/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.172/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.173/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.174/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
@@ -1074,8 +1073,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb v1.3.102 h1:I4Q
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb v1.3.102/go.mod h1:Thfxer0Xf7Oq//ceL5i5nObFEXyQkUxzLHVNFh3p7jw=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.3.193 h1:Fjywzd9xEpXPET2/bWCE6yRRBAplIyWcBVOn5Msibc4=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.3.193/go.mod h1:nBPq7QOEIHyAjHYP5qYphzStjGzVCU3VHNce4K9AASM=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.3.171 h1:10nJl24av+kj0HxfrtQtyYna96CZlWpWcJPETk1QAr8=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.3.171/go.mod h1:a9IF/vffQllM0byPS7kXFACCOeTgVfLiFz1fsi32WOI=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.3.194 h1:x1AxfpAXyBpBMnR0Z3TaLbsxy6srNXTlGUo1RnD8cLU=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.3.194/go.mod h1:Xrq306vMT58CkYXoRu3OMF4AHx3PcoTrGBv1f8LaKP0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.3.45 h1:35PD/GXaOl3QhL1fI5a3Q+jcenzR1PqfuGxltOeO48w=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.3.45/go.mod h1:OrNv7U7R19HZySH5o+/ag3EyAH1tDIwb5z23K5fY5vw=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mqtt v1.3.104 h1:+upw3F568kiJctCNy3MiLWl77pPqwtelEqDbFBc6wnI=

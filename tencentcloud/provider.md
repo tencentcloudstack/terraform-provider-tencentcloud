@@ -913,6 +913,7 @@ tencentcloud_monitor_alarm_notice
 tencentcloud_monitor_alarm_policy_set_default
 tencentcloud_monitor_notice_content_tmpl
 tencentcloud_monitor_external_cluster
+tencentcloud_monitor_dispense_external_rule
 
 Managed Service for Prometheus(TMP)
 Data Source
