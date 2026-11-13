@@ -104,6 +104,18 @@ func ResourceTencentCloudMonitorGrafanaInstance() *schema.Resource {
 				Description: "Grafana public address.",
 			},
 
+			"docker_image": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Custom docker image of the Grafana instance. The value should be obtained from the `Version` field in the response of the `monitor:DescribeGrafanaVersions` API.",
+			},
+
+			"version": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Version of the Grafana instance.",
+			},
+
 			"auto_voucher": {
 				Optional:    true,
 				Type:        schema.TypeBool,
@@ -157,6 +169,10 @@ func resourceTencentCloudMonitorGrafanaInstanceCreate(d *schema.ResourceData, me
 
 	if v, ok := d.GetOkExists("auto_voucher"); ok {
 		request.AutoVoucher = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOk("docker_image"); ok {
+		request.DockerImage = helper.String(v.(string))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -270,6 +286,10 @@ func resourceTencentCloudMonitorGrafanaInstanceRead(d *schema.ResourceData, meta
 		_ = d.Set("internal_url", grafanaInstance.InternalUrl)
 	}
 
+	if grafanaInstance.Version != nil {
+		_ = d.Set("version", grafanaInstance.Version)
+	}
+
 	if grafanaInstance.InstanceStatus != nil {
 		_ = d.Set("instance_status", grafanaInstance.InstanceStatus)
 	}
@@ -327,6 +347,10 @@ func resourceTencentCloudMonitorGrafanaInstanceUpdate(d *schema.ResourceData, me
 
 	if d.HasChange("grafana_init_password") {
 		return fmt.Errorf("`grafana_init_password` do not support change now.")
+	}
+
+	if d.HasChange("docker_image") {
+		return fmt.Errorf("`docker_image` do not support change now.")
 	}
 
 	if d.HasChange("auto_voucher") {
