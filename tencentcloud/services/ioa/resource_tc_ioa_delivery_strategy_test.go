@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/agiledragon/gomonkey/v2"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
@@ -97,33 +96,6 @@ func ioaTestStringSet(t *testing.T, values ...string) types.Set {
 		t.Fatalf("failed to build string set: %v", diags.Errors())
 	}
 	return set
-}
-
-func ioaTestStringSetFromPointers(t *testing.T, values []*string) types.Set {
-	t.Helper()
-
-	if len(values) == 0 {
-		return types.SetNull(types.StringType)
-	}
-	elements := make([]attr.Value, 0, len(values))
-	for _, v := range values {
-		elements = append(elements, types.StringPointerValue(v))
-	}
-	set, diags := types.SetValue(types.StringType, elements)
-	if diags.HasError() {
-		t.Fatalf("failed to build string set: %v", diags.Errors())
-	}
-	return set
-}
-
-func mustIoaObject(t *testing.T, attributeTypes map[string]attr.Type, values map[string]attr.Value) types.Object {
-	t.Helper()
-
-	object, diags := types.ObjectValue(attributeTypes, values)
-	if diags.HasError() {
-		t.Fatalf("failed to build object value: %v", diags.Errors())
-	}
-	return object
 }
 
 // samplePlanModel returns a plan model with every configurable leaf populated.
