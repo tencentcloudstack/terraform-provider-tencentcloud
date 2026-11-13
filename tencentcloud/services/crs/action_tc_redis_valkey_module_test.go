@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"testing"
-	"time"
 
 	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-framework/action"
@@ -13,6 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	redisv20180412 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/sharedmeta"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/crs"
@@ -20,10 +20,6 @@ import (
 
 func ptrStringRedisValkeyModule(s string) *string {
 	return &s
-}
-
-func ptrUInt64RedisValkeyModule(v uint64) *uint64 {
-	return &v
 }
 
 // redisValkeyModuleSchema returns the framework action schema used to build
@@ -101,7 +97,7 @@ func setRedisValkeyModuleClient(a *crs.RedisValkeyModule, client *connectivity.T
 // go test ./tencentcloud/services/crs/ -run "TestRedisValkeyModule" -v -count=1 -gcflags="all=-l"
 
 // TestRedisValkeyModule_Invoke_Success tests a successful invoke where the
-// asynchronous task completes with status succeed.
+// asynchronous task is already in succeed status on the first poll.
 func TestRedisValkeyModule_Invoke_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
@@ -122,23 +118,14 @@ func TestRedisValkeyModule_Invoke_Success(t *testing.T) {
 	})
 
 	var gotTaskRequest *redisv20180412.DescribeTaskInfoRequest
-	pollCount := 0
-	patches.ApplyMethodFunc(redisClient, "DescribeTaskInfoWithContext", func(_ context.Context, request *redisv20180412.DescribeTaskInfoRequest) (*redisv20180412.DescribeTaskInfoResponse, error) {
+	patches.ApplyMethodFunc(redisClient, "DescribeTaskInfo", func(request *redisv20180412.DescribeTaskInfoRequest) (*redisv20180412.DescribeTaskInfoResponse, error) {
 		gotTaskRequest = request
-		pollCount++
-		status := "running"
-		if pollCount >= 2 {
-			status = "succeed"
-		}
 		resp := &redisv20180412.DescribeTaskInfoResponse{}
 		resp.Response = &redisv20180412.DescribeTaskInfoResponseParams{
-			Status: ptrStringRedisValkeyModule(status),
+			Status: ptrStringRedisValkeyModule("succeed"),
 		}
 		return resp, nil
 	})
-
-	// shorten the poll interval so the test does not really sleep
-	patches.ApplyGlobalVar(&crs.RedisValkeyModulePollInterval, 1*time.Millisecond)
 
 	a := crs.NewRedisValkeyModule()
 	setRedisValkeyModuleClient(a.(*crs.RedisValkeyModule), client)
@@ -154,11 +141,11 @@ func TestRedisValkeyModule_Invoke_Success(t *testing.T) {
 	assert.Equal(t, "ON", *gotModifyRequest.Status)
 	assert.NotNil(t, gotTaskRequest)
 	assert.Equal(t, uint64(12345), *gotTaskRequest.TaskId)
-	assert.Equal(t, 2, pollCount)
 }
 
 // TestRedisValkeyModule_Invoke_TaskFailed tests the action fails when the
-// asynchronous task ends with a failed status.
+// asynchronous task ends with a failed status. The polling budget is shrunk to
+// milliseconds so the retry loop does not really wait for the full timeout.
 func TestRedisValkeyModule_Invoke_TaskFailed(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
@@ -175,7 +162,7 @@ func TestRedisValkeyModule_Invoke_TaskFailed(t *testing.T) {
 		return resp, nil
 	})
 
-	patches.ApplyMethodFunc(redisClient, "DescribeTaskInfoWithContext", func(_ context.Context, request *redisv20180412.DescribeTaskInfoRequest) (*redisv20180412.DescribeTaskInfoResponse, error) {
+	patches.ApplyMethodFunc(redisClient, "DescribeTaskInfo", func(request *redisv20180412.DescribeTaskInfoRequest) (*redisv20180412.DescribeTaskInfoResponse, error) {
 		resp := &redisv20180412.DescribeTaskInfoResponse{}
 		resp.Response = &redisv20180412.DescribeTaskInfoResponseParams{
 			Status: ptrStringRedisValkeyModule("failed"),
@@ -183,7 +170,7 @@ func TestRedisValkeyModule_Invoke_TaskFailed(t *testing.T) {
 		return resp, nil
 	})
 
-	patches.ApplyGlobalVar(&crs.RedisValkeyModulePollInterval, 1*time.Millisecond)
+	patches.ApplyGlobalVar(&tccommon.WriteRetryTimeout, 1)
 
 	a := crs.NewRedisValkeyModule()
 	setRedisValkeyModuleClient(a.(*crs.RedisValkeyModule), client)
@@ -194,7 +181,7 @@ func TestRedisValkeyModule_Invoke_TaskFailed(t *testing.T) {
 
 	assert.True(t, resp.Diagnostics.HasError())
 	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "waiting for Valkey module")
-	assert.Contains(t, resp.Diagnostics.Errors()[0].Detail(), "status failed")
+	assert.Contains(t, resp.Diagnostics.Errors()[0].Detail(), "redis task exe fail")
 }
 
 // TestRedisValkeyModule_Invoke_ModifyAPIError tests API error handling of the

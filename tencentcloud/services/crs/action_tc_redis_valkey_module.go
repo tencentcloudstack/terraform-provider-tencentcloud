@@ -3,11 +3,12 @@ package crs
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/action"
 	"github.com/hashicorp/terraform-plugin-framework/action/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	helperResource "github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
@@ -26,10 +27,6 @@ var _ action.ActionWithConfigure = &RedisValkeyModule{}
 func NewRedisValkeyModule() action.Action {
 	return &RedisValkeyModule{}
 }
-
-// RedisValkeyModulePollInterval is exported so unit tests in the external
-// _test package can shorten it with gomonkey.
-var RedisValkeyModulePollInterval = 5 * time.Second
 
 // RedisValkeyModule implements action.Action for
 // tencentcloud_redis_valkey_module.
@@ -135,67 +132,43 @@ func (a *RedisValkeyModule) Invoke(ctx context.Context, req action.InvokeRequest
 		)
 		return
 	}
+	if response.Response.TaskId == nil {
+		resp.Diagnostics.AddError(
+			fmt.Sprintf("modifying Valkey module (%s) of instance (%s)", moduleName, instanceId),
+			"no task id returned by the ModifyValkeyModule API",
+		)
+		return
+	}
 
-	// ModifyValkeyModule is asynchronous: poll DescribeTaskInfo with the
-	// returned task id until the task reaches a terminal state.
-	taskId := uint64(*response.Response.TaskId)
+	// ModifyValkeyModule is asynchronous: poll the shared RedisService
+	// DescribeTaskInfo helper with resource.Retry, following the same pattern
+	// as other redis operations in service_tencentcloud_redis.go.
+	taskId := *response.Response.TaskId
 	progress(fmt.Sprintf("ModifyValkeyModule submitted, task id %d; waiting for completion", taskId))
 
-	lastStatus := ""
-	err = a.waitRedisTaskComplete(ctx, client, taskId, tccommon.WriteRetryTimeout, func(status string) {
-		if status != lastStatus {
-			lastStatus = status
-			progress(fmt.Sprintf("task %d status: %s", taskId, status))
+	service := NewRedisService(a.Client())
+	err = helperResource.Retry(tccommon.WriteRetryTimeout, func() *helperResource.RetryError {
+		ok, e := service.DescribeTaskInfo(ctx, instanceId, taskId)
+		if e != nil {
+			if _, isSdkErr := e.(*sdkErrors.TencentCloudSDKError); isSdkErr {
+				return helperResource.NonRetryableError(e)
+			}
+			return helperResource.RetryableError(e)
 		}
+		if ok {
+			return nil
+		}
+		progress(fmt.Sprintf("task %d is processing", taskId))
+		return helperResource.RetryableError(fmt.Errorf("ModifyValkeyModule task %d is processing", taskId))
 	})
 	if err != nil {
 		resp.Diagnostics.AddError(
 			fmt.Sprintf("waiting for Valkey module (%s) task (%d) of instance (%s)", moduleName, taskId, instanceId),
-			fmt.Sprintf("last observed task status: %q; error: %v", lastStatus, err),
+			err.Error(),
 		)
 		return
 	}
 
 	progress(fmt.Sprintf("ModifyValkeyModule on %s for module %s completed", instanceId, moduleName))
 	// No state to write: actions have no terraform state and no output attributes.
-}
-
-// waitRedisTaskComplete polls DescribeTaskInfo until the task reaches a
-// terminal state within the given timeout.
-func (a *RedisValkeyModule) waitRedisTaskComplete(
-	ctx context.Context,
-	client *redis.Client,
-	taskId uint64,
-	timeout time.Duration,
-	onStatusChange func(string),
-) error {
-	deadline := time.Now().Add(timeout)
-	for {
-		taskReq := redis.NewDescribeTaskInfoRequest()
-		taskReq.TaskId = &taskId
-		taskResp, err := client.DescribeTaskInfoWithContext(ctx, taskReq)
-		if err != nil {
-			return fmt.Errorf("querying task %d: %w", taskId, err)
-		}
-		if taskResp == nil || taskResp.Response == nil || taskResp.Response.Status == nil {
-			return fmt.Errorf("empty response returned by the DescribeTaskInfo API for task %d", taskId)
-		}
-
-		status := *taskResp.Response.Status
-		switch status {
-		case "succeed":
-			return nil
-		case "failed", "error":
-			return fmt.Errorf("task %d ended with status %s", taskId, status)
-		}
-
-		if onStatusChange != nil {
-			onStatusChange(status)
-		}
-
-		if time.Now().After(deadline) {
-			return fmt.Errorf("task %d did not finish within %s", taskId, timeout)
-		}
-		time.Sleep(RedisValkeyModulePollInterval)
-	}
 }
