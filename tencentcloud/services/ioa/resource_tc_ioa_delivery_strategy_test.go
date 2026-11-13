@@ -2,6 +2,7 @@ package ioa_test
 
 import (
 	"context"
+	"reflect"
 	"testing"
 
 	"github.com/agiledragon/gomonkey/v2"
@@ -98,72 +99,6 @@ func ioaTestStringSet(t *testing.T, values ...string) types.Set {
 	return set
 }
 
-func ioaTestDataList(t *testing.T, item ioav20220601.DeliveryStrategyItem) types.List {
-	t.Helper()
-
-	res := svcioa.NewIoaDeliveryStrategyResource()
-	var schemaResp resource.SchemaResponse
-	res.Schema(context.Background(), resource.SchemaRequest{}, &schemaResp)
-	if schemaResp.Diagnostics.HasError() {
-		t.Fatalf("failed to build schema: %v", schemaResp.Diagnostics.Errors())
-	}
-
-	dataAttr := schemaResp.Schema.Attributes["data"].(schema.ListNestedAttribute)
-	dataObjectType := dataAttr.GetType().(types.ListType).ElemType.(types.ObjectType)
-	innerAttr := dataObjectType.AttrTypes["data"].(types.ListType)
-	detailObjectType := innerAttr.ElemType.(types.ObjectType)
-
-	detail := map[string]attr.Value{
-		"name":        types.StringPointerValue(item.Name),
-		"type":        types.Int64PointerValue(item.Type),
-		"log_types":   ioaTestStringSetFromPointers(t, item.LogTypes),
-		"config_name": types.StringPointerValue(item.ConfigName),
-		"description": types.StringPointerValue(item.Description),
-	}
-	if item.ID != nil {
-		detail["id"] = types.Int64Value(int64(*item.ID))
-	} else {
-		detail["id"] = types.Int64Null()
-	}
-	if item.ConfigId != nil {
-		detail["config_id"] = types.Int64Value(int64(*item.ConfigId))
-	} else {
-		detail["config_id"] = types.Int64Null()
-	}
-
-	inner, diags := types.ListValue(detailObjectType, []attr.Value{mustIoaObject(t, detailObjectType.AttrTypes, detail)})
-	if diags.HasError() {
-		t.Fatalf("failed to build inner data list: %v", diags.Errors())
-	}
-
-	outer, diags := types.ListValue(dataObjectType, []attr.Value{
-		mustIoaObject(t, dataObjectType.AttrTypes, map[string]attr.Value{"data": inner}),
-	})
-	if diags.HasError() {
-		t.Fatalf("failed to build outer data list: %v", diags.Errors())
-	}
-	return outer
-}
-
-func ioaTestDataObjectType(t *testing.T) types.ObjectType {
-	t.Helper()
-
-	res := svcioa.NewIoaDeliveryStrategyResource()
-	var schemaResp resource.SchemaResponse
-	res.Schema(context.Background(), resource.SchemaRequest{}, &schemaResp)
-	if schemaResp.Diagnostics.HasError() {
-		t.Fatalf("failed to build schema: %v", schemaResp.Diagnostics.Errors())
-	}
-	dataAttr := schemaResp.Schema.Attributes["data"].(schema.ListNestedAttribute)
-	return dataAttr.GetType().(types.ListType).ElemType.(types.ObjectType)
-}
-
-func ioaTestNullDataList(t *testing.T) types.List {
-	t.Helper()
-
-	return types.ListNull(ioaTestDataObjectType(t))
-}
-
 func ioaTestStringSetFromPointers(t *testing.T, values []*string) types.Set {
 	t.Helper()
 
@@ -191,8 +126,7 @@ func mustIoaObject(t *testing.T, attributeTypes map[string]attr.Type, values map
 	return object
 }
 
-// samplePlanModel returns a plan model with every configurable leaf populated
-// and the computed data list left null.
+// samplePlanModel returns a plan model with every configurable leaf populated.
 func ioaTestSamplePlanModel(t *testing.T) svcioa.IoaDeliveryStrategyResourceModel {
 	t.Helper()
 
@@ -204,7 +138,6 @@ func ioaTestSamplePlanModel(t *testing.T) svcioa.IoaDeliveryStrategyResourceMode
 		ConfigId:    types.Int64Value(100),
 		Description: types.StringValue("managed by terraform"),
 		Enabled:     types.BoolValue(true),
-		Data:        ioaTestNullDataList(t),
 	}
 }
 
@@ -240,11 +173,15 @@ func TestIoaDeliveryStrategyResourceCreate(t *testing.T) {
 		},
 	}
 	var capturedRequest *ioav20220601.ModifyDeliveryStrategyRequest
-	patches.ApplyMethod(c.client, "ModifyDeliveryStrategy", func(request *ioav20220601.ModifyDeliveryStrategyRequest) (*ioav20220601.ModifyDeliveryStrategyResponse, error) {
-		capturedRequest = request
-		return modifyResp, nil
-	})
-	patches.ApplyMethodReturn(c.client, "DescribeDeliveryStrategy", ioaTestDescribeResponse(ioaTestDescribeResponseItem()), nil)
+	patches.ApplyMethodFunc(reflect.TypeOf(&ioav20220601.Client{}), "ModifyDeliveryStrategyWithContext",
+		func(_ context.Context, request *ioav20220601.ModifyDeliveryStrategyRequest) (*ioav20220601.ModifyDeliveryStrategyResponse, error) {
+			capturedRequest = request
+			return modifyResp, nil
+		})
+	patches.ApplyMethodFunc(reflect.TypeOf(&ioav20220601.Client{}), "DescribeDeliveryStrategyWithContext",
+		func(_ context.Context, _ *ioav20220601.DescribeDeliveryStrategyRequest) (*ioav20220601.DescribeDeliveryStrategyResponse, error) {
+			return ioaTestDescribeResponse(ioaTestDescribeResponseItem()), nil
+		})
 
 	plan := c.plan(t, ioaTestSamplePlanModel(t))
 
@@ -272,23 +209,8 @@ func TestIoaDeliveryStrategyResourceCreate(t *testing.T) {
 	assert.Equal(t, int64(100), state.ConfigId.ValueInt64())
 	assert.Equal(t, "managed by terraform", state.Description.ValueString())
 	assert.True(t, state.Enabled.ValueBool())
-	assert.False(t, state.Data.IsNull())
-
-	elements := state.Data.Elements()
-	assert.Len(t, elements, 1)
-	inner := elements[0].(types.Object)
-	innerAttrs := inner.Attributes()
-	innerList := innerAttrs["data"].(types.List)
-	assert.Len(t, innerList.Elements(), 1)
-	detail := innerList.Elements()[0].(types.Object).Attributes()
-	assert.Equal(t, ioaTestStrategyName, detail["name"].(types.String).ValueString())
-	assert.Equal(t, int64(42), detail["id"].(types.Int64).ValueInt64())
-	assert.Equal(t, int64(100), detail["config_id"].(types.Int64).ValueInt64())
-	assert.Equal(t, "test-server", detail["config_name"].(types.String).ValueString())
-	assert.Equal(t, int64(0), detail["type"].(types.Int64).ValueInt64())
-	assert.Equal(t, "managed by terraform", detail["description"].(types.String).ValueString())
-	assert.False(t, detail["log_types"].(types.Set).IsNull())
-	assert.Len(t, detail["log_types"].(types.Set).Elements(), 2)
+	assert.False(t, state.LogTypes.IsNull())
+	assert.Len(t, state.LogTypes.Elements(), 2)
 }
 
 func ioaTestStringPointer(value string) *string { return &value }
@@ -298,7 +220,10 @@ func TestIoaDeliveryStrategyResourceCreateApiError(t *testing.T) {
 	defer patches.Reset()
 
 	c := newIoaDeliveryStrategyTestContext(t, patches)
-	patches.ApplyMethodReturn(c.client, "ModifyDeliveryStrategy", (*ioav20220601.ModifyDeliveryStrategyResponse)(nil), context.DeadlineExceeded)
+	patches.ApplyMethodFunc(reflect.TypeOf(&ioav20220601.Client{}), "ModifyDeliveryStrategyWithContext",
+		func(_ context.Context, _ *ioav20220601.ModifyDeliveryStrategyRequest) (*ioav20220601.ModifyDeliveryStrategyResponse, error) {
+			return nil, context.DeadlineExceeded
+		})
 
 	plan := c.plan(t, ioaTestSamplePlanModel(t))
 
@@ -314,11 +239,14 @@ func TestIoaDeliveryStrategyResourceCreateEmptyId(t *testing.T) {
 	defer patches.Reset()
 
 	c := newIoaDeliveryStrategyTestContext(t, patches)
-	patches.ApplyMethodReturn(c.client, "ModifyDeliveryStrategy", &ioav20220601.ModifyDeliveryStrategyResponse{
-		Response: &ioav20220601.ModifyDeliveryStrategyResponseParams{
-			Data: &ioav20220601.ModifyDeliveryStrategyData{ID: ioaTestUint64(0)},
-		},
-	}, nil)
+	patches.ApplyMethodFunc(reflect.TypeOf(&ioav20220601.Client{}), "ModifyDeliveryStrategyWithContext",
+		func(_ context.Context, _ *ioav20220601.ModifyDeliveryStrategyRequest) (*ioav20220601.ModifyDeliveryStrategyResponse, error) {
+			return &ioav20220601.ModifyDeliveryStrategyResponse{
+				Response: &ioav20220601.ModifyDeliveryStrategyResponseParams{
+					Data: &ioav20220601.ModifyDeliveryStrategyData{ID: ioaTestUint64(0)},
+				},
+			}, nil
+		})
 
 	plan := c.plan(t, ioaTestSamplePlanModel(t))
 
@@ -334,7 +262,10 @@ func TestIoaDeliveryStrategyResourceRead(t *testing.T) {
 	defer patches.Reset()
 
 	c := newIoaDeliveryStrategyTestContext(t, patches)
-	patches.ApplyMethodReturn(c.client, "DescribeDeliveryStrategy", ioaTestDescribeResponse(ioaTestDescribeResponseItem()), nil)
+	patches.ApplyMethodFunc(reflect.TypeOf(&ioav20220601.Client{}), "DescribeDeliveryStrategyWithContext",
+		func(_ context.Context, _ *ioav20220601.DescribeDeliveryStrategyRequest) (*ioav20220601.DescribeDeliveryStrategyResponse, error) {
+			return ioaTestDescribeResponse(ioaTestDescribeResponseItem()), nil
+		})
 
 	model := ioaTestSamplePlanModel(t)
 	model.Id = types.StringValue(ioaTestStrategyId)
@@ -357,7 +288,6 @@ func TestIoaDeliveryStrategyResourceRead(t *testing.T) {
 	assert.Equal(t, int64(0), state.Type.ValueInt64())
 	assert.Equal(t, int64(100), state.ConfigId.ValueInt64())
 	assert.Equal(t, "managed by terraform", state.Description.ValueString())
-	assert.False(t, state.Data.IsNull())
 	// Enabled has no counterpart in the describe response, the state value is kept.
 	assert.False(t, state.Enabled.ValueBool())
 }
@@ -367,7 +297,10 @@ func TestIoaDeliveryStrategyResourceReadNotFound(t *testing.T) {
 	defer patches.Reset()
 
 	c := newIoaDeliveryStrategyTestContext(t, patches)
-	patches.ApplyMethodReturn(c.client, "DescribeDeliveryStrategy", ioaTestDescribeResponse(nil), nil)
+	patches.ApplyMethodFunc(reflect.TypeOf(&ioav20220601.Client{}), "DescribeDeliveryStrategyWithContext",
+		func(_ context.Context, _ *ioav20220601.DescribeDeliveryStrategyRequest) (*ioav20220601.DescribeDeliveryStrategyResponse, error) {
+			return ioaTestDescribeResponse(nil), nil
+		})
 
 	model := ioaTestSamplePlanModel(t)
 	model.Id = types.StringValue(ioaTestStrategyId)
@@ -379,7 +312,7 @@ func TestIoaDeliveryStrategyResourceReadNotFound(t *testing.T) {
 	if readResp.Diagnostics.HasError() {
 		t.Fatalf("unexpected read diagnostics: %v", readResp.Diagnostics.Errors())
 	}
-	assert.Nil(t, readResp.State.Raw)
+	assert.True(t, readResp.State.Raw.IsNull())
 }
 
 func TestIoaDeliveryStrategyResourceReadApiError(t *testing.T) {
@@ -387,7 +320,10 @@ func TestIoaDeliveryStrategyResourceReadApiError(t *testing.T) {
 	defer patches.Reset()
 
 	c := newIoaDeliveryStrategyTestContext(t, patches)
-	patches.ApplyMethodReturn(c.client, "DescribeDeliveryStrategy", (*ioav20220601.DescribeDeliveryStrategyResponse)(nil), context.DeadlineExceeded)
+	patches.ApplyMethodFunc(reflect.TypeOf(&ioav20220601.Client{}), "DescribeDeliveryStrategyWithContext",
+		func(_ context.Context, _ *ioav20220601.DescribeDeliveryStrategyRequest) (*ioav20220601.DescribeDeliveryStrategyResponse, error) {
+			return nil, context.DeadlineExceeded
+		})
 
 	model := ioaTestSamplePlanModel(t)
 	model.Id = types.StringValue(ioaTestStrategyId)
@@ -406,22 +342,25 @@ func TestIoaDeliveryStrategyResourceUpdate(t *testing.T) {
 	c := newIoaDeliveryStrategyTestContext(t, patches)
 
 	var capturedRequest *ioav20220601.ModifyDeliveryStrategyRequest
-	patches.ApplyMethod(c.client, "ModifyDeliveryStrategy", func(request *ioav20220601.ModifyDeliveryStrategyRequest) (*ioav20220601.ModifyDeliveryStrategyResponse, error) {
-		capturedRequest = request
-		return &ioav20220601.ModifyDeliveryStrategyResponse{
-			Response: &ioav20220601.ModifyDeliveryStrategyResponseParams{
-				Data: &ioav20220601.ModifyDeliveryStrategyData{ID: ioaTestUint64(42)},
-			},
-		}, nil
-	})
+	patches.ApplyMethodFunc(reflect.TypeOf(&ioav20220601.Client{}), "ModifyDeliveryStrategyWithContext",
+		func(_ context.Context, request *ioav20220601.ModifyDeliveryStrategyRequest) (*ioav20220601.ModifyDeliveryStrategyResponse, error) {
+			capturedRequest = request
+			return &ioav20220601.ModifyDeliveryStrategyResponse{
+				Response: &ioav20220601.ModifyDeliveryStrategyResponseParams{
+					Data: &ioav20220601.ModifyDeliveryStrategyData{ID: ioaTestUint64(42)},
+				},
+			}, nil
+		})
 	updated := ioaTestDescribeResponseItem()
 	updated.Name = ioaTestString("tf-example-updated")
-	patches.ApplyMethodReturn(c.client, "DescribeDeliveryStrategy", ioaTestDescribeResponse(updated), nil)
+	patches.ApplyMethodFunc(reflect.TypeOf(&ioav20220601.Client{}), "DescribeDeliveryStrategyWithContext",
+		func(_ context.Context, _ *ioav20220601.DescribeDeliveryStrategyRequest) (*ioav20220601.DescribeDeliveryStrategyResponse, error) {
+			return ioaTestDescribeResponse(updated), nil
+		})
 
 	plan := ioaTestSamplePlanModel(t)
 	plan.Id = types.StringValue(ioaTestStrategyId)
 	plan.Name = types.StringValue("tf-example-updated")
-	plan.Data = ioaTestNullDataList(t)
 	state := c.state(t, plan)
 
 	var updateResp resource.UpdateResponse
@@ -443,7 +382,6 @@ func TestIoaDeliveryStrategyResourceUpdate(t *testing.T) {
 	}
 	assert.Equal(t, ioaTestStrategyId, newState.Id.ValueString())
 	assert.Equal(t, "tf-example-updated", newState.Name.ValueString())
-	assert.False(t, newState.Data.IsNull())
 }
 
 func TestIoaDeliveryStrategyResourceUpdateApiError(t *testing.T) {
@@ -451,11 +389,13 @@ func TestIoaDeliveryStrategyResourceUpdateApiError(t *testing.T) {
 	defer patches.Reset()
 
 	c := newIoaDeliveryStrategyTestContext(t, patches)
-	patches.ApplyMethodReturn(c.client, "ModifyDeliveryStrategy", (*ioav20220601.ModifyDeliveryStrategyResponse)(nil), context.DeadlineExceeded)
+	patches.ApplyMethodFunc(reflect.TypeOf(&ioav20220601.Client{}), "ModifyDeliveryStrategyWithContext",
+		func(_ context.Context, _ *ioav20220601.ModifyDeliveryStrategyRequest) (*ioav20220601.ModifyDeliveryStrategyResponse, error) {
+			return nil, context.DeadlineExceeded
+		})
 
 	plan := ioaTestSamplePlanModel(t)
 	plan.Id = types.StringValue(ioaTestStrategyId)
-	plan.Data = ioaTestNullDataList(t)
 
 	var updateResp resource.UpdateResponse
 	updateResp.State = tfsdk.State{Schema: c.schema}
@@ -471,12 +411,13 @@ func TestIoaDeliveryStrategyResourceDelete(t *testing.T) {
 	c := newIoaDeliveryStrategyTestContext(t, patches)
 
 	var capturedRequest *ioav20220601.DeleteDeliveryStrategyRequest
-	patches.ApplyMethod(c.client, "DeleteDeliveryStrategy", func(request *ioav20220601.DeleteDeliveryStrategyRequest) (*ioav20220601.DeleteDeliveryStrategyResponse, error) {
-		capturedRequest = request
-		return &ioav20220601.DeleteDeliveryStrategyResponse{
-			Response: &ioav20220601.DeleteDeliveryStrategyResponseParams{},
-		}, nil
-	})
+	patches.ApplyMethodFunc(reflect.TypeOf(&ioav20220601.Client{}), "DeleteDeliveryStrategyWithContext",
+		func(_ context.Context, request *ioav20220601.DeleteDeliveryStrategyRequest) (*ioav20220601.DeleteDeliveryStrategyResponse, error) {
+			capturedRequest = request
+			return &ioav20220601.DeleteDeliveryStrategyResponse{
+				Response: &ioav20220601.DeleteDeliveryStrategyResponseParams{},
+			}, nil
+		})
 
 	model := ioaTestSamplePlanModel(t)
 	model.Id = types.StringValue(ioaTestStrategyId)
@@ -497,7 +438,10 @@ func TestIoaDeliveryStrategyResourceDeleteApiError(t *testing.T) {
 	defer patches.Reset()
 
 	c := newIoaDeliveryStrategyTestContext(t, patches)
-	patches.ApplyMethodReturn(c.client, "DeleteDeliveryStrategy", (*ioav20220601.DeleteDeliveryStrategyResponse)(nil), context.DeadlineExceeded)
+	patches.ApplyMethodFunc(reflect.TypeOf(&ioav20220601.Client{}), "DeleteDeliveryStrategyWithContext",
+		func(_ context.Context, _ *ioav20220601.DeleteDeliveryStrategyRequest) (*ioav20220601.DeleteDeliveryStrategyResponse, error) {
+			return nil, context.DeadlineExceeded
+		})
 
 	model := ioaTestSamplePlanModel(t)
 	model.Id = types.StringValue(ioaTestStrategyId)

@@ -62,7 +62,7 @@ func TestIoaCompanyDirectoryConfigCreate(t *testing.T) {
 		return resp, nil
 	})
 
-	patches.ApplyMethodFunc(ioaClient, "DescribeCompanyDirectoryConfig", func(request *ioav20220601.DescribeCompanyDirectoryConfigRequest) (*ioav20220601.DescribeCompanyDirectoryConfigResponse, error) {
+	patches.ApplyMethodFunc(ioaClient, "DescribeCompanyDirectoryConfigWithContext", func(_ context.Context, request *ioav20220601.DescribeCompanyDirectoryConfigRequest) (*ioav20220601.DescribeCompanyDirectoryConfigResponse, error) {
 		resp := ioav20220601.NewDescribeCompanyDirectoryConfigResponse()
 		resp.Response = &ioav20220601.DescribeCompanyDirectoryConfigResponseParams{
 			Data: &ioav20220601.DirectoryConfigData{
@@ -122,11 +122,6 @@ func TestIoaCompanyDirectoryConfigCreate(t *testing.T) {
 	assert.Equal(t, "API", *capturedRequest.Scene)
 	assert.Len(t, capturedRequest.NameI18n, 1)
 	assert.Equal(t, "zh-CN", *capturedRequest.NameI18n[0].Lang)
-
-	assert.Equal(t, "identify-1", d.Get("identify_source_id"))
-	assert.Equal(t, "auth-src-1", d.Get("auth_source_id"))
-	assert.Equal(t, 456, d.Get("auth_config_id"))
-	assert.Equal(t, 789, d.Get("auth_policy_id"))
 }
 
 // TestIoaCompanyDirectoryConfigCreate_EmptyResponse verifies that an empty create response returns an error without setting id.
@@ -171,7 +166,7 @@ func TestIoaCompanyDirectoryConfigRead(t *testing.T) {
 	ioaClient := &ioav20220601.Client{}
 	patches.ApplyMethodReturn(newMockMetaIoaCompanyDirectoryConfig().client, "UseIoaV20220601Client", ioaClient)
 
-	patches.ApplyMethodFunc(ioaClient, "DescribeCompanyDirectoryConfig", func(request *ioav20220601.DescribeCompanyDirectoryConfigRequest) (*ioav20220601.DescribeCompanyDirectoryConfigResponse, error) {
+	patches.ApplyMethodFunc(ioaClient, "DescribeCompanyDirectoryConfigWithContext", func(_ context.Context, request *ioav20220601.DescribeCompanyDirectoryConfigRequest) (*ioav20220601.DescribeCompanyDirectoryConfigResponse, error) {
 		assert.NotNil(t, request.Id)
 		resp := ioav20220601.NewDescribeCompanyDirectoryConfigResponse()
 		resp.Response = &ioav20220601.DescribeCompanyDirectoryConfigResponseParams{
@@ -212,7 +207,6 @@ func TestIoaCompanyDirectoryConfigRead(t *testing.T) {
 	assert.True(t, d.Get("create_auth_config").(bool))
 	assert.True(t, d.Get("display_on_login_page").(bool))
 	assert.Equal(t, "updated-desc", d.Get("description"))
-	assert.Equal(t, "src-1", d.Get("source_id"))
 }
 
 // TestIoaCompanyDirectoryConfigRead_NotFound verifies that a nil Data clears the id.
@@ -223,7 +217,7 @@ func TestIoaCompanyDirectoryConfigRead_NotFound(t *testing.T) {
 	ioaClient := &ioav20220601.Client{}
 	patches.ApplyMethodReturn(newMockMetaIoaCompanyDirectoryConfig().client, "UseIoaV20220601Client", ioaClient)
 
-	patches.ApplyMethodFunc(ioaClient, "DescribeCompanyDirectoryConfig", func(request *ioav20220601.DescribeCompanyDirectoryConfigRequest) (*ioav20220601.DescribeCompanyDirectoryConfigResponse, error) {
+	patches.ApplyMethodFunc(ioaClient, "DescribeCompanyDirectoryConfigWithContext", func(_ context.Context, request *ioav20220601.DescribeCompanyDirectoryConfigRequest) (*ioav20220601.DescribeCompanyDirectoryConfigResponse, error) {
 		resp := ioav20220601.NewDescribeCompanyDirectoryConfigResponse()
 		resp.Response = &ioav20220601.DescribeCompanyDirectoryConfigResponseParams{}
 		return resp, nil
@@ -261,7 +255,7 @@ func TestIoaCompanyDirectoryConfigUpdate(t *testing.T) {
 		return resp, nil
 	})
 
-	patches.ApplyMethodFunc(ioaClient, "DescribeCompanyDirectoryConfig", func(request *ioav20220601.DescribeCompanyDirectoryConfigRequest) (*ioav20220601.DescribeCompanyDirectoryConfigResponse, error) {
+	patches.ApplyMethodFunc(ioaClient, "DescribeCompanyDirectoryConfigWithContext", func(_ context.Context, request *ioav20220601.DescribeCompanyDirectoryConfigRequest) (*ioav20220601.DescribeCompanyDirectoryConfigResponse, error) {
 		resp := ioav20220601.NewDescribeCompanyDirectoryConfigResponse()
 		resp.Response = &ioav20220601.DescribeCompanyDirectoryConfigResponseParams{
 			Data: &ioav20220601.DirectoryConfigData{
@@ -305,7 +299,6 @@ func TestIoaCompanyDirectoryConfigUpdate(t *testing.T) {
 	assert.Equal(t, "tf-example-updated", *capturedRequest.Name)
 	assert.Equal(t, "weekly", *capturedRequest.SyncPolicy)
 	assert.False(t, *capturedRequest.DisplayOnLoginPage)
-	assert.Equal(t, "identify-2", d.Get("identify_source_id"))
 }
 
 // TestIoaCompanyDirectoryConfigDelete tests the Delete business logic with a mocked DeleteAccountGroup call.

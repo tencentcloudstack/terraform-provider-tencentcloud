@@ -12,9 +12,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	sdkresource "github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 
 	ioav20220601 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ioa/v20220601"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -39,24 +41,6 @@ type IoaDeliveryStrategyResource struct {
 	fw.WithImportByID
 }
 
-// IoaDeliveryStrategyDetailItem maps the read-only detail object returned by
-// DescribeDeliveryStrategy (response.Response.Data.Data).
-type IoaDeliveryStrategyDetailItem struct {
-	Name        types.String `tfsdk:"name"`
-	Type        types.Int64  `tfsdk:"type"`
-	LogTypes    types.Set    `tfsdk:"log_types"`
-	ConfigName  types.String `tfsdk:"config_name"`
-	Description types.String `tfsdk:"description"`
-	Id          types.Int64  `tfsdk:"id"`
-	ConfigId    types.Int64  `tfsdk:"config_id"`
-}
-
-// IoaDeliveryStrategyDataItem maps the outer list returned by
-// DescribeDeliveryStrategy (response.Response.Data).
-type IoaDeliveryStrategyDataItem struct {
-	Data []IoaDeliveryStrategyDetailItem `tfsdk:"data"`
-}
-
 // IoaDeliveryStrategyResourceModel maps the schema attributes.
 type IoaDeliveryStrategyResourceModel struct {
 	Id          types.String `tfsdk:"id"`
@@ -66,23 +50,6 @@ type IoaDeliveryStrategyResourceModel struct {
 	ConfigId    types.Int64  `tfsdk:"config_id"`
 	Description types.String `tfsdk:"description"`
 	Enabled     types.Bool   `tfsdk:"enabled"`
-	Data        types.List   `tfsdk:"data"`
-}
-
-var ioaDeliveryStrategyDetailAttrTypes = map[string]attr.Type{
-	"name":        types.StringType,
-	"type":        types.Int64Type,
-	"log_types":   types.SetType{ElemType: types.StringType},
-	"config_name": types.StringType,
-	"description": types.StringType,
-	"id":          types.Int64Type,
-	"config_id":   types.Int64Type,
-}
-
-var ioaDeliveryStrategyDataAttrTypes = map[string]attr.Type{
-	"data": types.ListType{
-		ElemType: types.ObjectType{AttrTypes: ioaDeliveryStrategyDetailAttrTypes},
-	},
 }
 
 func (r *IoaDeliveryStrategyResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -131,51 +98,6 @@ func (r *IoaDeliveryStrategyResource) Schema(_ context.Context, _ resource.Schem
 				Computed:    true,
 				Description: "Whether the strategy is enabled. Note: DescribeDeliveryStrategy does not return this field, so drift detection is not available and the state value is kept on refresh.",
 			},
-			"data": schema.ListNestedAttribute{
-				Computed:    true,
-				Description: "Delivery strategy detail data returned by DescribeDeliveryStrategy.",
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"data": schema.ListNestedAttribute{
-							Computed:    true,
-							Description: "Delivery strategy detail.",
-							NestedObject: schema.NestedAttributeObject{
-								Attributes: map[string]schema.Attribute{
-									"name": schema.StringAttribute{
-										Computed:    true,
-										Description: "Delivery strategy name.",
-									},
-									"type": schema.Int64Attribute{
-										Computed:    true,
-										Description: "Delivery method. Valid values: `0` syslog, `2` kafka, `3` http (32-bit only).",
-									},
-									"log_types": schema.SetAttribute{
-										ElementType: types.StringType,
-										Computed:    true,
-										Description: "List of forwarded log types.",
-									},
-									"config_name": schema.StringAttribute{
-										Computed:    true,
-										Description: "Delivery server name.",
-									},
-									"description": schema.StringAttribute{
-										Computed:    true,
-										Description: "Delivery strategy description.",
-									},
-									"id": schema.Int64Attribute{
-										Computed:    true,
-										Description: "Delivery strategy id.",
-									},
-									"config_id": schema.Int64Attribute{
-										Computed:    true,
-										Description: "Delivery server id.",
-									},
-								},
-							},
-						},
-					},
-				},
-			},
 		},
 	}
 }
@@ -199,11 +121,19 @@ func (r *IoaDeliveryStrategyResource) Create(ctx context.Context, req resource.C
 	request.Description = plan.Description.ValueStringPointer()
 	request.Enabled = plan.Enabled.ValueBoolPointer()
 
-	response, err := r.Client().UseIoaV20220601Client().ModifyDeliveryStrategy(request)
-	if err != nil {
+	var response *ioav20220601.ModifyDeliveryStrategyResponse
+	retryErr := sdkresource.Retry(tccommon.WriteRetryTimeout, func() *sdkresource.RetryError {
+		result, e := r.Client().UseIoaV20220601Client().ModifyDeliveryStrategy(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
+	if retryErr != nil {
 		resp.Diagnostics.AddError(
 			"Error creating ioa delivery strategy",
-			fmt.Sprintf("ModifyDeliveryStrategy failed: %v", err),
+			fmt.Sprintf("ModifyDeliveryStrategy failed: %v", retryErr),
 		)
 		return
 	}
@@ -298,11 +228,17 @@ func (r *IoaDeliveryStrategyResource) Update(ctx context.Context, req resource.U
 	request.Description = plan.Description.ValueStringPointer()
 	request.Enabled = plan.Enabled.ValueBoolPointer()
 
-	_, err := r.Client().UseIoaV20220601Client().ModifyDeliveryStrategy(request)
-	if err != nil {
+	retryErr := sdkresource.Retry(tccommon.WriteRetryTimeout, func() *sdkresource.RetryError {
+		_, e := r.Client().UseIoaV20220601Client().ModifyDeliveryStrategy(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		return nil
+	})
+	if retryErr != nil {
 		resp.Diagnostics.AddError(
 			"Error updating ioa delivery strategy",
-			fmt.Sprintf("ModifyDeliveryStrategy failed: %v", err),
+			fmt.Sprintf("ModifyDeliveryStrategy failed: %v", retryErr),
 		)
 		return
 	}
@@ -335,13 +271,19 @@ func (r *IoaDeliveryStrategyResource) Delete(ctx context.Context, req resource.D
 	request := ioav20220601.NewDeleteDeliveryStrategyRequest()
 	request.ID = helper.StrToUint64Point(state.Id.ValueString())
 
-	_, err := r.Client().UseIoaV20220601Client().DeleteDeliveryStrategy(request)
-	if err != nil {
+	retryErr := sdkresource.Retry(tccommon.WriteRetryTimeout, func() *sdkresource.RetryError {
+		_, e := r.Client().UseIoaV20220601Client().DeleteDeliveryStrategy(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		return nil
+	})
+	if retryErr != nil {
 		// No error code is documented as "already gone"; everything must fail
 		// so the id stays in state for a retry.
 		resp.Diagnostics.AddError(
 			"Error deleting ioa delivery strategy",
-			fmt.Sprintf("DeleteDeliveryStrategy failed: %v", err),
+			fmt.Sprintf("DeleteDeliveryStrategy failed: %v", retryErr),
 		)
 		return
 	}
@@ -358,9 +300,17 @@ func (r *IoaDeliveryStrategyResource) read(ctx context.Context, id string) (*ioa
 	request := ioav20220601.NewDescribeDeliveryStrategyRequest()
 	request.ID = helper.StrToUint64Point(id)
 
-	response, err := r.Client().UseIoaV20220601Client().DescribeDeliveryStrategy(request)
-	if err != nil {
-		return nil, err
+	var response *ioav20220601.DescribeDeliveryStrategyResponse
+	retryErr := sdkresource.Retry(tccommon.ReadRetryTimeout, func() *sdkresource.RetryError {
+		result, e := r.Client().UseIoaV20220601Client().DescribeDeliveryStrategy(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
+	if retryErr != nil {
+		return nil, retryErr
 	}
 	if response == nil || response.Response == nil || response.Response.Data == nil {
 		return nil, fmt.Errorf("DescribeDeliveryStrategy returned an empty response for %s", id)
@@ -392,30 +342,6 @@ func (r *IoaDeliveryStrategyResource) refreshModel(m *IoaDeliveryStrategyResourc
 	if item.ConfigId != nil {
 		m.ConfigId = types.Int64Value(int64(*item.ConfigId))
 	}
-
-	detail := IoaDeliveryStrategyDetailItem{
-		Name:        types.StringPointerValue(item.Name),
-		LogTypes:    ioaDeliveryStrategySetFromLogTypes(item.LogTypes),
-		ConfigName:  types.StringPointerValue(item.ConfigName),
-		Description: types.StringPointerValue(item.Description),
-	}
-	if item.Type != nil {
-		detail.Type = types.Int64Value(*item.Type)
-	}
-	if item.ID != nil {
-		detail.Id = types.Int64Value(int64(*item.ID))
-	}
-	if item.ConfigId != nil {
-		detail.ConfigId = types.Int64Value(int64(*item.ConfigId))
-	}
-	dataItems := []IoaDeliveryStrategyDataItem{{Data: []IoaDeliveryStrategyDetailItem{detail}}}
-	list, diags := types.ListValueFrom(context.Background(), types.ObjectType{AttrTypes: ioaDeliveryStrategyDataAttrTypes}, dataItems)
-	if diags.HasError() {
-		log.Printf("[ERROR] failed to build ioa delivery strategy data list: %v", diags.Errors())
-		m.Data = types.ListNull(types.ObjectType{AttrTypes: ioaDeliveryStrategyDataAttrTypes})
-		return
-	}
-	m.Data = list
 }
 
 // ioaDeliveryStrategySetFromLogTypes converts the SDK string pointers into a
