@@ -1,0 +1,3 @@
+```release-note:new-action
+tencentcloud_redis_valkey_module
+```
