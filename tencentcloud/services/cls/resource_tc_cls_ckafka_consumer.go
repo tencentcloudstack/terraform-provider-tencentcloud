@@ -83,13 +83,13 @@ func ResourceTencentCloudClsCkafkaConsumer() *schema.Resource {
 			"role_arn": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "role access description name for cross-account delivery. Note: this field may return null, which indicates no valid values can be obtained.",
+				Description: "role access description name for cross-account delivery.",
 			},
 
 			"external_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "external id for cross-account delivery. Note: this field may return null, which indicates no valid values can be obtained.",
+				Description: "external id for cross-account delivery.",
 			},
 
 			"advanced_config": {
@@ -129,13 +129,13 @@ func ResourceTencentCloudClsCkafkaConsumer() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"vip": {
 							Type:        schema.TypeString,
-							Required:    true,
-							Description: "vip.",
+							Optional:    true,
+							Description: "vip.If the delivery task is created using a Role ARN, this field can be left empty.",
 						},
 						"vport": {
 							Type:        schema.TypeString,
-							Required:    true,
-							Description: "vport.",
+							Optional:    true,
+							Description: "vport.If the delivery task is created using a Role ARN, this field can be left empty.",
 						},
 						"instance_id": {
 							Type:        schema.TypeString,
@@ -144,13 +144,13 @@ func ResourceTencentCloudClsCkafkaConsumer() *schema.Resource {
 						},
 						"instance_name": {
 							Type:        schema.TypeString,
-							Required:    true,
-							Description: "instance name.",
+							Optional:    true,
+							Description: "instance name.If the delivery task is created using a Role ARN, this field can be left empty.",
 						},
 						"topic_id": {
 							Type:        schema.TypeString,
-							Required:    true,
-							Description: "topic id of ckafka.",
+							Optional:    true,
+							Description: "topic id of ckafka. If the delivery task is created using a Role ARN, this field can be left empty.",
 						},
 						"topic_name": {
 							Type:        schema.TypeString,

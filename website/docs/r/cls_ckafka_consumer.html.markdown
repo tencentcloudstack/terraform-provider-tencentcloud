@@ -13,6 +13,8 @@ Provides a resource to create a CLS ckafka consumer
 
 ## Example Usage
 
+### Create a Ckafka delivery task
+
 ```hcl
 resource "tencentcloud_cls_ckafka_consumer" "example" {
   compression  = 0
@@ -44,6 +46,35 @@ resource "tencentcloud_cls_ckafka_consumer" "example" {
 }
 ```
 
+### Create a cross-account Ckafka delivery task
+
+```hcl
+resource "tencentcloud_cls_ckafka_consumer" "example" {
+  compression  = 2
+  dsl_filter   = "log_keep(op_str_eq(v(\"type\"), \"kibana_stats\"))"
+  external_id  = "hello123"
+  need_content = true
+  role_arn     = "qcs::cam::uin/100022770164:roleName/uinA_writeCLS_to_CKafka"
+  topic_id     = "0c68cdff-cb95-4deb-876a-46d805a7a1fc"
+  advanced_config {
+    partition_fields      = ["test"]
+    partition_hash_status = true
+  }
+  ckafka {
+    instance_id = "ckafka-5k7vmdzo"
+    topic_name  = "tf-test"
+  }
+  content {
+    auto_convert_number = true
+    enable_tag          = true
+    json_type           = 0
+    meta_fields         = ["__FILENAME__", "__HOSTNAME__", "__SOURCE__", "__TIMESTAMP__"]
+    tag_json_not_tiled  = true
+    timestamp_accuracy  = 2
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -54,9 +85,9 @@ The following arguments are supported:
 * `compression` - (Optional, Int) compression method. 0 for NONE, 2 for SNAPPY, 3 for LZ4.
 * `content` - (Optional, List) metadata information.
 * `dsl_filter` - (Optional, String) log pre-filtering - pre-filter the raw data written to ckafka.
-* `external_id` - (Optional, String) external id for cross-account delivery. Note: this field may return null, which indicates no valid values can be obtained.
+* `external_id` - (Optional, String) external id for cross-account delivery.
 * `need_content` - (Optional, Bool) whether to deliver the metadata information of the log.
-* `role_arn` - (Optional, String) role access description name for cross-account delivery. Note: this field may return null, which indicates no valid values can be obtained.
+* `role_arn` - (Optional, String) role access description name for cross-account delivery.
 
 The `advanced_config` object supports the following:
 
@@ -66,11 +97,11 @@ The `advanced_config` object supports the following:
 The `ckafka` object supports the following:
 
 * `instance_id` - (Required, String) instance id.
-* `instance_name` - (Required, String) instance name.
-* `topic_id` - (Required, String) topic id of ckafka.
 * `topic_name` - (Required, String) topic name of ckafka.
-* `vip` - (Required, String) vip.
-* `vport` - (Required, String) vport.
+* `instance_name` - (Optional, String) instance name.If the delivery task is created using a Role ARN, this field can be left empty.
+* `topic_id` - (Optional, String) topic id of ckafka. If the delivery task is created using a Role ARN, this field can be left empty.
+* `vip` - (Optional, String) vip.If the delivery task is created using a Role ARN, this field can be left empty.
+* `vport` - (Optional, String) vport.If the delivery task is created using a Role ARN, this field can be left empty.
 
 The `content` object supports the following:
 
