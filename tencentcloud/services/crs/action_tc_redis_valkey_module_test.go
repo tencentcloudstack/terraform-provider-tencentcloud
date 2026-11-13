@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-framework/action"
@@ -118,7 +119,7 @@ func TestRedisValkeyModule_Invoke_Success(t *testing.T) {
 	})
 
 	var gotTaskRequest *redisv20180412.DescribeTaskInfoRequest
-	patches.ApplyMethodFunc(redisClient, "DescribeTaskInfo", func(request *redisv20180412.DescribeTaskInfoRequest) (*redisv20180412.DescribeTaskInfoResponse, error) {
+	patches.ApplyMethodFunc(redisClient, "DescribeTaskInfoWithContext", func(_ context.Context, request *redisv20180412.DescribeTaskInfoRequest) (*redisv20180412.DescribeTaskInfoResponse, error) {
 		gotTaskRequest = request
 		resp := &redisv20180412.DescribeTaskInfoResponse{}
 		resp.Response = &redisv20180412.DescribeTaskInfoResponseParams{
@@ -144,8 +145,7 @@ func TestRedisValkeyModule_Invoke_Success(t *testing.T) {
 }
 
 // TestRedisValkeyModule_Invoke_TaskFailed tests the action fails when the
-// asynchronous task ends with a failed status. The polling budget is shrunk to
-// milliseconds so the retry loop does not really wait for the full timeout.
+// asynchronous task ends with a failed status (non-retryable, fails fast).
 func TestRedisValkeyModule_Invoke_TaskFailed(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
@@ -162,7 +162,7 @@ func TestRedisValkeyModule_Invoke_TaskFailed(t *testing.T) {
 		return resp, nil
 	})
 
-	patches.ApplyMethodFunc(redisClient, "DescribeTaskInfo", func(request *redisv20180412.DescribeTaskInfoRequest) (*redisv20180412.DescribeTaskInfoResponse, error) {
+	patches.ApplyMethodFunc(redisClient, "DescribeTaskInfoWithContext", func(_ context.Context, request *redisv20180412.DescribeTaskInfoRequest) (*redisv20180412.DescribeTaskInfoResponse, error) {
 		resp := &redisv20180412.DescribeTaskInfoResponse{}
 		resp.Response = &redisv20180412.DescribeTaskInfoResponseParams{
 			Status: ptrStringRedisValkeyModule("failed"),
@@ -181,7 +181,52 @@ func TestRedisValkeyModule_Invoke_TaskFailed(t *testing.T) {
 
 	assert.True(t, resp.Diagnostics.HasError())
 	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "waiting for Valkey module")
-	assert.Contains(t, resp.Diagnostics.Errors()[0].Detail(), "redis task exe fail")
+	assert.Contains(t, resp.Diagnostics.Errors()[0].Detail(), "ended with status failed")
+}
+
+// TestRedisValkeyModule_Invoke_ModifyRetry tests the operation API is retried
+// on retryable errors (RequestLimitExceeded) until it succeeds. The retry
+// budget is shrunk to seconds so the test does not wait for the full timeout.
+func TestRedisValkeyModule_Invoke_ModifyRetry(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	client := &connectivity.TencentCloudClient{}
+	redisClient := &redisv20180412.Client{}
+	patches.ApplyMethodReturn(client, "UseRedisClient", redisClient)
+
+	attempts := 0
+	patches.ApplyMethodFunc(redisClient, "ModifyValkeyModuleWithContext", func(_ context.Context, request *redisv20180412.ModifyValkeyModuleRequest) (*redisv20180412.ModifyValkeyModuleResponse, error) {
+		attempts++
+		if attempts < 2 {
+			return nil, fmt.Errorf("[TencentCloudSDKError] Code=RequestLimitExceeded, Message=rate limited")
+		}
+		resp := &redisv20180412.ModifyValkeyModuleResponse{}
+		resp.Response = &redisv20180412.ModifyValkeyModuleResponseParams{
+			TaskId: func() *int64 { v := int64(54321); return &v }(),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(redisClient, "DescribeTaskInfoWithContext", func(_ context.Context, request *redisv20180412.DescribeTaskInfoRequest) (*redisv20180412.DescribeTaskInfoResponse, error) {
+		resp := &redisv20180412.DescribeTaskInfoResponse{}
+		resp.Response = &redisv20180412.DescribeTaskInfoResponseParams{
+			Status: ptrStringRedisValkeyModule("succeed"),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyGlobalVar(&tccommon.WriteRetryTimeout, 10*time.Second)
+
+	a := crs.NewRedisValkeyModule()
+	setRedisValkeyModuleClient(a.(*crs.RedisValkeyModule), client)
+
+	req := newRedisValkeyModuleInvokeRequest(t, "crs-1111222233334444", "ValkeyBloom", "ON")
+	resp := &action.InvokeResponse{}
+	a.Invoke(context.Background(), req, resp)
+
+	assert.False(t, resp.Diagnostics.HasError(), "expected no error diagnostics, got: %v", resp.Diagnostics)
+	assert.Equal(t, 2, attempts, "expected the ModifyValkeyModule API to be retried once")
 }
 
 // TestRedisValkeyModule_Invoke_ModifyAPIError tests API error handling of the

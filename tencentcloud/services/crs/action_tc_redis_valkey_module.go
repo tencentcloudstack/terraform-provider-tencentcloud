@@ -8,7 +8,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/action/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	helperResource "github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
@@ -117,18 +116,27 @@ func (a *RedisValkeyModule) Invoke(ctx context.Context, req action.InvokeRequest
 
 	progress(fmt.Sprintf("invoking ModifyValkeyModule on %s for module %s", instanceId, moduleName))
 
-	response, err := client.ModifyValkeyModuleWithContext(ctx, request)
+	// The operation API itself supports retry: transient errors are retried
+	// within tccommon.WriteRetryTimeout, SDK errors are retried only when they
+	// match the provider-wide retryable code list (tccommon.RetryError).
+	var response *redis.ModifyValkeyModuleResponse
+	err = helperResource.Retry(tccommon.WriteRetryTimeout, func() *helperResource.RetryError {
+		result, e := client.ModifyValkeyModuleWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		if result == nil || result.Response == nil {
+			return helperResource.NonRetryableError(
+				fmt.Errorf("empty response returned by the ModifyValkeyModule API"),
+			)
+		}
+		response = result
+		return nil
+	})
 	if err != nil {
 		resp.Diagnostics.AddError(
 			fmt.Sprintf("modifying Valkey module (%s) of instance (%s)", moduleName, instanceId),
 			err.Error(),
-		)
-		return
-	}
-	if response == nil || response.Response == nil {
-		resp.Diagnostics.AddError(
-			fmt.Sprintf("modifying Valkey module (%s) of instance (%s)", moduleName, instanceId),
-			"empty response returned by the ModifyValkeyModule API",
 		)
 		return
 	}
@@ -140,26 +148,45 @@ func (a *RedisValkeyModule) Invoke(ctx context.Context, req action.InvokeRequest
 		return
 	}
 
-	// ModifyValkeyModule is asynchronous: poll the shared RedisService
-	// DescribeTaskInfo helper with resource.Retry, following the same pattern
-	// as other redis operations in service_tencentcloud_redis.go.
+	// ModifyValkeyModule is asynchronous: poll DescribeTaskInfo, judge the
+	// task status each round, and only report success when the task reaches
+	// the succeed state (preparing/running keep polling; failed/error fail).
 	taskId := *response.Response.TaskId
 	progress(fmt.Sprintf("ModifyValkeyModule submitted, task id %d; waiting for completion", taskId))
 
-	service := NewRedisService(a.Client())
+	taskIdU64 := uint64(taskId)
 	err = helperResource.Retry(tccommon.WriteRetryTimeout, func() *helperResource.RetryError {
-		ok, e := service.DescribeTaskInfo(ctx, instanceId, taskId)
+		taskReq := redis.NewDescribeTaskInfoRequest()
+		taskReq.TaskId = &taskIdU64
+		taskResp, e := client.DescribeTaskInfoWithContext(ctx, taskReq)
 		if e != nil {
-			if _, isSdkErr := e.(*sdkErrors.TencentCloudSDKError); isSdkErr {
-				return helperResource.NonRetryableError(e)
-			}
-			return helperResource.RetryableError(e)
+			return tccommon.RetryError(e)
 		}
-		if ok {
+		if taskResp == nil || taskResp.Response == nil || taskResp.Response.Status == nil {
+			return helperResource.NonRetryableError(
+				fmt.Errorf("empty response returned by the DescribeTaskInfo API for task %d", taskId),
+			)
+		}
+
+		status := *taskResp.Response.Status
+		switch status {
+		case REDIS_TASK_SUCCEED:
 			return nil
+		case REDIS_TASK_FAILED, REDIS_TASK_ERROR:
+			return helperResource.NonRetryableError(
+				fmt.Errorf("task %d ended with status %s", taskId, status),
+			)
+		case REDIS_TASK_PREPARING, REDIS_TASK_RUNNING:
+			progress(fmt.Sprintf("task %d is processing, status %s", taskId, status))
+			return helperResource.RetryableError(
+				fmt.Errorf("ModifyValkeyModule task %d is processing, status %s", taskId, status),
+			)
+		default:
+			progress(fmt.Sprintf("task %d is processing, status %s", taskId, status))
+			return helperResource.RetryableError(
+				fmt.Errorf("ModifyValkeyModule task %d is processing, status %s", taskId, status),
+			)
 		}
-		progress(fmt.Sprintf("task %d is processing", taskId))
-		return helperResource.RetryableError(fmt.Errorf("ModifyValkeyModule task %d is processing", taskId))
 	})
 	if err != nil {
 		resp.Diagnostics.AddError(
