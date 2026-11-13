@@ -619,6 +619,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_kubernetes_cluster_native_node_pools":                   tke.DataSourceTencentCloudKubernetesClusterNativeNodePools(),
 			"tencentcloud_kubernetes_upgrade_tasks":                               tke.DataSourceTencentCloudKubernetesUpgradeTasks(),
 			"tencentcloud_kubernetes_upgrade_task_detail":                         tke.DataSourceTencentCloudKubernetesUpgradeTaskDetail(),
+			"tencentcloud_kubernetes_addon_values":                                tke.DataSourceTencentCloudKubernetesAddonValues(),
 			"tencentcloud_mysql_backup_list":                                      cdb.DataSourceTencentCloudMysqlBackupList(),
 			"tencentcloud_mysql_zone_config":                                      cdb.DataSourceTencentCloudMysqlZoneConfig(),
 			"tencentcloud_mysql_parameter_list":                                   cdb.DataSourceTencentCloudMysqlParameterList(),

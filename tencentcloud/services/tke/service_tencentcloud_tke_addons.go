@@ -148,6 +148,16 @@ func (me *TkeService) DescribeAddonList(ctx context.Context, clusterId, addonNam
 	return
 }
 
+// addonValuesDeterministicErrorMessages lists DescribeAddonValues messages that
+// describe a permanent failure which can never succeed on retry (the chart does not
+// exist, a required name is empty). They are returned with the generic retryable
+// code `ResourceUnavailable`, so they are turned into a NonRetryableError below to
+// fail fast instead of retrying until the read timeout expires.
+var addonValuesDeterministicErrorMessages = []string{
+	"not found chart",
+	"resource name may not be empty",
+}
+
 func (me *TkeService) DescribeAddonValuesList(ctx context.Context, clusterId, addonName string) (ret *tke.DescribeAddonValuesResponseParams, errRet error) {
 	request := tke.NewDescribeAddonValuesRequest()
 	response := tke.NewDescribeAddonValuesResponse()
@@ -157,6 +167,12 @@ func (me *TkeService) DescribeAddonValuesList(ctx context.Context, clusterId, ad
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := me.client.UseTkeClient().DescribeAddonValues(request)
 		if e != nil {
+			// DescribeAddonValues reports deterministic failures (a chart that does not
+			// exist, an empty addon name, ...) with the generic `ResourceUnavailable` code,
+			// which RetryError treats as retryable. Surface them immediately instead.
+			if tccommon.IsDeterministicErrorByMessage(e, addonValuesDeterministicErrorMessages) {
+				return resource.NonRetryableError(e)
+			}
 			return tccommon.RetryError(e)
 		}
 
