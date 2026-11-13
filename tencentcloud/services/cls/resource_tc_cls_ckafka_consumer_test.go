@@ -35,6 +35,14 @@ resource "tencentcloud_cls_ckafka_consumer" "ckafka_consumer" {
   compression  = 1
   need_content = true
   topic_id     = "7e34a3a7-635e-4da8-9005-88106c1fde69"
+  dsl_filter   = "* | where level = 'error'"
+
+  advanced_config {
+    partition_hash_status = true
+    partition_fields      = [
+      "__PKGID__",
+    ]
+  }
 
   ckafka {
     instance_id   = "ckafka-qzoeaqx8"
@@ -56,6 +64,8 @@ resource "tencentcloud_cls_ckafka_consumer" "ckafka_consumer" {
     ]
     tag_json_not_tiled = true
     timestamp_accuracy = 2
+    json_type          = 1
+    auto_convert_number = true
   }
 }
 
