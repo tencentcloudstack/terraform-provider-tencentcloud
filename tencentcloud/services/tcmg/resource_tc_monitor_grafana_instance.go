@@ -107,13 +107,8 @@ func ResourceTencentCloudMonitorGrafanaInstance() *schema.Resource {
 			"docker_image": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Custom docker image of the Grafana instance. The value should be obtained from the `Version` field in the response of the `monitor:DescribeGrafanaVersions` API.",
-			},
-
-			"version": {
-				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Version of the Grafana instance.",
+				Description: "Custom docker image of the Grafana instance. The value should be obtained from the `Version` field in the response of the `monitor:DescribeGrafanaVersions` API.",
 			},
 
 			"auto_voucher": {
@@ -287,7 +282,7 @@ func resourceTencentCloudMonitorGrafanaInstanceRead(d *schema.ResourceData, meta
 	}
 
 	if grafanaInstance.Version != nil {
-		_ = d.Set("version", grafanaInstance.Version)
+		_ = d.Set("docker_image", grafanaInstance.Version)
 	}
 
 	if grafanaInstance.InstanceStatus != nil {

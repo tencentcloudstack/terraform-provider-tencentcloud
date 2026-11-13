@@ -50,7 +50,7 @@ The following arguments are supported:
 
 * `instance_name` - (Required, String) Instance name.
 * `auto_voucher` - (Optional, Bool) Whether to automatically use vouchers.
-* `docker_image` - (Optional, String) Custom docker image of the Grafana instance. The value should be obtained from the `Version` field in the response of the `monitor:DescribeGrafanaVersions` API.
+* `docker_image` - (Optional, Computed, String) Custom docker image of the Grafana instance. The value should be obtained from the `Version` field in the response of the `monitor:DescribeGrafanaVersions` API.
 * `enable_internet` - (Optional, Bool) Control whether grafana could be accessed by internet.
 * `grafana_init_password` - (Optional, String) Grafana server admin password.
 * `is_destroy` - (Optional, Bool) Whether to clean up completely, the default is false.
@@ -69,7 +69,6 @@ In addition to all arguments above, the following attributes are exported:
 * `internal_url` - Grafana public address.
 * `internet_url` - Grafana intranet address.
 * `root_url` - Grafana external url which could be accessed by user.
-* `version` - Version of the Grafana instance.
 
 ## API Reference
 
