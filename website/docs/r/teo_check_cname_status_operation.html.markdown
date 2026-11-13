@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
   * `record_name` - Record name.
   * `status` - CNAME status. Valid values: active, moved.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CheckCnameStatus](https://www.tencentcloud.com/document/api/1145/56175)
 

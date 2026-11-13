@@ -131,7 +131,7 @@ The following arguments are supported:
 	- 0: When the adjustment is completed, perform the configuration task immediately. Default is 0.
 	- 1: Perform reconfiguration tasks within the maintenance time window.
 Note: Adjusting the number of nodes and slices does not support changes within the maintenance window.
-* `key_id` - (Optional, String) Key ID. If `manual` is selected as the key resource, you must enter the specified key ID. Note: this field does not support update, please recreate the resource if you need to change it.
+* `key_id` - (Optional, String) Please note that this field is the CMK name, corresponding to the `alias` field in KMS. Key ID. If `manual` is selected as the key resource, you must enter the specified key ID. Note: this field does not support update, please recreate the resource if you need to change it.
 * `kms_region` - (Optional, String) Key ID. If `manual` is selected as the key resource, you must enter the specified key region. Note: this field does not support update, please recreate the resource if you need to change it.
 * `mongos_cpu` - (Optional, Int) Number of mongos cpu.
 * `mongos_memory` - (Optional, Int) Mongos memory size in GB.
@@ -156,6 +156,32 @@ In addition to all arguments above, the following attributes are exported:
 * `vip` - IP of the Mongodb instance.
 * `vport` - IP port of the Mongodb instance.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateDBInstance](https://www.tencentcloud.com/search/?wd=CreateDBInstance&type=document&lang=en)
+  - [CreateDBInstanceHour](https://www.tencentcloud.com/document/api/240/34704)
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/240/34702)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [RenameInstance](https://www.tencentcloud.com/document/api/240/34697)
+* Read:
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/240/34702)
+  - [DescribeSecurityGroup](https://www.tencentcloud.com/document/api/240/40341)
+  - [DescribeTransparentDataEncryptionStatus](https://www.tencentcloud.com/search/?wd=DescribeTransparentDataEncryptionStatus&type=document&lang=en)
+* Update:
+  - [AssignProject](https://www.tencentcloud.com/document/api/240/34705)
+  - [DescribeDBInstanceDeal](https://www.tencentcloud.com/document/api/240/37330)
+  - [ModifyDBInstanceSecurityGroup](https://www.tencentcloud.com/document/api/240/45894)
+  - [ModifyDBInstanceSpec](https://www.tencentcloud.com/document/api/240/34699)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [RenameInstance](https://www.tencentcloud.com/document/api/240/34697)
+  - [RenewDBInstances](https://www.tencentcloud.com/document/api/240/37326)
+* Delete:
+  - [DescribeDBInstances](https://www.tencentcloud.com/document/api/240/34702)
+  - [IsolateDBInstance](https://www.tencentcloud.com/document/api/240/34700)
+  - [OfflineIsolatedDBInstance](https://www.tencentcloud.com/document/api/240/34698)
 
 ## Import
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,9 @@ const (
 	// CAM签名/鉴权错误。
 	AUTHFAILURE = "AuthFailure"
 
+	// 未授权的操作。
+	AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
@@ -32,8 +35,20 @@ const (
 	// 加密操作失败。
 	FAILEDOPERATION_ENCRYPTIONERROR = "FailedOperation.EncryptionError"
 
+	// 订单校验失败
+	FAILEDOPERATION_ORDERCHECKFAILED = "FailedOperation.OrderCheckFailed"
+
+	// 已有正在进行的轮转任务
+	FAILEDOPERATION_ROTATETASKRUNNING = "FailedOperation.RotateTaskRunning"
+
+	// 签名运算失败
+	FAILEDOPERATION_SIGNERROR = "FailedOperation.SignError"
+
 	// 标签服务错误。
 	FAILEDOPERATION_TAGGINGERROR = "FailedOperation.TaggingError"
+
+	// 验证签名失败
+	FAILEDOPERATION_VERIFYERROR = "FailedOperation.VerifyError"
 
 	// 内部错误。
 	INTERNALERROR = "InternalError"
@@ -41,17 +56,29 @@ const (
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
 
+	// 后付费传了 ProductVersion/InstanceChargePrepaid
+	INVALIDPARAMETER_CONFLICTPARAMETER = "InvalidParameter.ConflictParameter"
+
 	// 解密EncryptedKeyMaterial失败。
 	INVALIDPARAMETER_DECRYPTMATERIALERROR = "InvalidParameter.DecryptMaterialError"
 
 	// 计划删除时间参数非法。
 	INVALIDPARAMETER_INVALIDPENDINGWINDOWINDAYS = "InvalidParameter.InvalidPendingWindowInDays"
 
+	// ProductVersion参数缺失
+	INVALIDPARAMETER_MISSINGPRODUCTVERSION = "InvalidParameter.MissingProductVersion"
+
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
 
 	// 别名已经存在。
 	INVALIDPARAMETERVALUE_ALIASALREADYEXISTS = "InvalidParameterValue.AliasAlreadyExists"
+
+	// 数据密钥名称已存在
+	INVALIDPARAMETERVALUE_DATAKEYNAMEALREADYEXISTS = "InvalidParameterValue.DataKeyNameAlreadyExists"
+
+	// 存在重复的数据密钥ID
+	INVALIDPARAMETERVALUE_DUPLICATEDDATAKEYID = "InvalidParameterValue.DuplicatedDataKeyId"
 
 	// KeyId重复。
 	INVALIDPARAMETERVALUE_DUPLICATEDKEYID = "InvalidParameterValue.DuplicatedKeyId"
@@ -62,8 +89,20 @@ const (
 	// 密文格式错误。
 	INVALIDPARAMETERVALUE_INVALIDCIPHERTEXT = "InvalidParameterValue.InvalidCiphertext"
 
+	// 不合法的数据密钥ID
+	INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+
+	// 不合法的数据密钥名称
+	INVALIDPARAMETERVALUE_INVALIDDATAKEYNAME = "InvalidParameterValue.InvalidDataKeyName"
+
 	// 无效的 HSM 集群 ID。
 	INVALIDPARAMETERVALUE_INVALIDHSMCLUSTERID = "InvalidParameterValue.InvalidHsmClusterId"
+
+	// 导入的数据密钥合法
+	INVALIDPARAMETERVALUE_INVALIDIMPORTKEYMATERIAL = "InvalidParameterValue.InvalidImportKeyMaterial"
+
+	// InstanceChargeType类型非法
+	INVALIDPARAMETERVALUE_INVALIDINSTANCECHARGETYPE = "InvalidParameterValue.InvalidInstanceChargeType"
 
 	// KeyId不合法。
 	INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
@@ -71,8 +110,14 @@ const (
 	// KeyUsage参数错误。
 	INVALIDPARAMETERVALUE_INVALIDKEYUSAGE = "InvalidParameterValue.InvalidKeyUsage"
 
+	// Period 越界(1~36)
+	INVALIDPARAMETERVALUE_INVALIDPERIOD = "InvalidParameterValue.InvalidPeriod"
+
 	// Plaintext不合法。
 	INVALIDPARAMETERVALUE_INVALIDPLAINTEXT = "InvalidParameterValue.InvalidPlaintext"
+
+	// ProductVersion不合法
+	INVALIDPARAMETERVALUE_INVALIDPRODUCTVERSION = "InvalidParameterValue.InvalidProductVersion"
 
 	// Type参数错误。
 	INVALIDPARAMETERVALUE_INVALIDTYPE = "InvalidParameterValue.InvalidType"
@@ -89,14 +134,29 @@ const (
 	// CMK数量已达上限。
 	LIMITEXCEEDED_CMKLIMITEXCEEDED = "LimitExceeded.CmkLimitExceeded"
 
+	// DataKey超过上限
+	LIMITEXCEEDED_DATAKEYLIMITEXCEEDED = "LimitExceeded.DataKeyLimitExceeded"
+
 	// 设备指纹个数超过限制。
 	LIMITEXCEEDED_FINGERPRINTSLIMITEXCEEDED = "LimitExceeded.FingerprintsLimitExceeded"
+
+	// 预付费实例达上限
+	LIMITEXCEEDED_INSTANCEQUOTAEXCEEDED = "LimitExceeded.InstanceQuotaExceeded"
 
 	// 创建的密钥个数超过限制。
 	LIMITEXCEEDED_KEYLIMITEXCEEDED = "LimitExceeded.KeyLimitExceeded"
 
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
+
+	// 轮转操作触发限频，默认24小时内仅可轮转一次
+	REQUESTLIMITEXCEEDED_ROTATERATELIMITED = "RequestLimitExceeded.RotateRateLimited"
+
+	// 存在进行中订单
+	RESOURCEINUSE_ORDERINPROGRESS = "ResourceInUse.OrderInProgress"
+
+	// 后付费实例已存在
+	RESOURCEINUSE_POSTPAIDINSTANCEALREADYEXISTS = "ResourceInUse.PostpaidInstanceAlreadyExists"
 
 	// 资源不存在。
 	RESOURCENOTFOUND = "ResourceNotFound"
@@ -122,6 +182,21 @@ const (
 	// CMK 状态不支持该操作。
 	RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
 
+	// 数据密钥已禁用
+	RESOURCEUNAVAILABLE_DATAKEYDISABLED = "ResourceUnavailable.DataKeyDisabled"
+
+	// 数据密钥不存在
+	RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+
+	// 数据密钥不是计划删除状态不能被执行取消计划删除。
+	RESOURCEUNAVAILABLE_DATAKEYNOTPENDINGDELETE = "ResourceUnavailable.DataKeyNotPendingDelete"
+
+	// 数据密钥已计划删除
+	RESOURCEUNAVAILABLE_DATAKEYPENDINGDELETE = "ResourceUnavailable.DataKeyPendingDelete"
+
+	// 数据密钥状态不支持该操作
+	RESOURCEUNAVAILABLE_DATAKEYSTATENOTSUPPORT = "ResourceUnavailable.DataKeyStateNotSupport"
+
 	// 密钥已被禁用。
 	RESOURCEUNAVAILABLE_KEYDISABLED = "ResourceUnavailable.KeyDisabled"
 
@@ -146,12 +221,21 @@ const (
 	// CMK类型错误，仅支持External CMK。
 	UNSUPPORTEDOPERATION_NOTEXTERNALCMK = "UnsupportedOperation.NotExternalCmk"
 
+	// 用户角色不支持的操作
+	UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+
 	// 仅支持对用户自己创建的CMK做更新。
 	UNSUPPORTEDOPERATION_NOTUSERCREATEDCMK = "UnsupportedOperation.NotUserCreatedCmk"
+
+	// 不支持轮转（未开启轮转、外部密钥、副本密钥）
+	UNSUPPORTEDOPERATION_ROTATENOTSUPPORTED = "UnsupportedOperation.RotateNotSupported"
 
 	// 服务暂时不可用。
 	UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 
 	// 加密方式在当前region不支持。
 	UNSUPPORTEDOPERATION_UNSUPPORTEDKEYUSAGEINCURRENTREGION = "UnsupportedOperation.UnsupportedKeyUsageInCurrentRegion"
+
+	// 用户版本不支持
+	UNSUPPORTEDOPERATION_USERVERSIONNOTSUPPORT = "UnsupportedOperation.UserVersionNotSupport"
 )

@@ -122,7 +122,7 @@ func ResourceTencentCloudScfFunction() *schema.Resource {
 			"runtime": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Runtime of the SCF function, only supports `Python2.7`, `Python3.6`, `Nodejs6.10`, `Nodejs8.9`, `Nodejs10.15`, `Nodejs12.16`, `Php5.2`, `Php7.4`, `Go1`, `Java8`, and `CustomRuntime`, default is `Python2.7`.",
+				Description: "Runtime of the SCF function, only supports `Python2.7`, `Python3.6`, `Nodejs6.10`, `Nodejs8.9`, `Nodejs10.15`, `Nodejs12.16`, `Php5.2`, `Php7.4`, `Go1`, `Java8`, `CustomRuntime` and `CustomImage`, default is `Python2.7`. When deploying images using `image_comfig`, please explicitly specify the runtime as `CustomImage`. After creating a mirror function, it is not supported to modify the `runtime`.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,

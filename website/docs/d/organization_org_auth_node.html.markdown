@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
     * `member_uin` - Member uin.
   * `relation_id` - Relationship Id.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeOrganizationAuthNode](https://www.tencentcloud.com/search/?wd=DescribeOrganizationAuthNode&type=document&lang=en)
 

@@ -50,6 +50,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateDiskBackup](https://www.tencentcloud.com/document/api/362/53930)
+  - [DescribeDiskBackups](https://www.tencentcloud.com/document/api/362/50788)
+* Read: [DescribeDiskBackups](https://www.tencentcloud.com/document/api/362/50788)
+* Delete:
+  - [DeleteDiskBackups](https://www.tencentcloud.com/document/api/362/50789)
+  - [DescribeDiskBackups](https://www.tencentcloud.com/document/api/362/50788)
 
 ## Import
 

@@ -424,6 +424,23 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - The alarm policy create time.
 * `update_time` - The alarm policy update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [BindingPolicyTag](https://www.tencentcloud.com/search/?wd=BindingPolicyTag&type=document&lang=en)
+  - [CreateAlarmPolicy](https://www.tencentcloud.com/document/api/248/39326)
+  - [DescribeAlarmPolicy](https://www.tencentcloud.com/document/api/248/39320)
+* Read: [DescribeAlarmPolicy](https://www.tencentcloud.com/document/api/248/39320)
+* Update:
+  - [DescribeAlarmPolicy](https://www.tencentcloud.com/document/api/248/39320)
+  - [ModifyAlarmPolicyCondition](https://www.tencentcloud.com/document/api/248/39317)
+  - [ModifyAlarmPolicyInfo](https://www.tencentcloud.com/document/api/248/39316)
+  - [ModifyAlarmPolicyNotice](https://www.tencentcloud.com/document/api/248/39315)
+  - [ModifyAlarmPolicyStatus](https://www.tencentcloud.com/document/api/248/39314)
+  - [ModifyAlarmPolicyTasks](https://www.tencentcloud.com/document/api/248/39313)
+* Delete: [DeleteAlarmPolicy](https://www.tencentcloud.com/document/api/248/39325)
 
 ## Import
 

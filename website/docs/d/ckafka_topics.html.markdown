@@ -52,4 +52,11 @@ In addition to all arguments above, the following attributes are exported:
   * `topic_name` - Name of the CKafka topic.
   * `unclean_leader_election_enable` - Whether to allow unsynchronized replicas to be selected as leader, default is `false`, `true: `allowed, `false`: not allowed.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read:
+  - [DescribeInstanceAttributes](https://www.tencentcloud.com/document/api/597/35358)
+  - [DescribeTopicDetail](https://www.tencentcloud.com/document/api/597/35341)
 

@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
   * `region` - CLB instance region.
   * `vip` - CLB instance VIP.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeLoadBalancerTraffic](https://www.tencentcloud.com/document/api/214/39109)
 

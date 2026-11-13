@@ -288,6 +288,7 @@ func NewAddIp6RulesResponse() (response *AddIp6RulesResponse) {
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_IPV6RULEIDEXISTED = "InvalidParameterValue.IPv6RuleIdExisted"
 //  LIMITEXCEEDED = "LimitExceeded"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 func (c *Client) AddIp6Rules(request *AddIp6RulesRequest) (response *AddIp6RulesResponse, err error) {
     return c.AddIp6RulesWithContext(context.Background(), request)
 }
@@ -304,6 +305,7 @@ func (c *Client) AddIp6Rules(request *AddIp6RulesRequest) (response *AddIp6Rules
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_IPV6RULEIDEXISTED = "InvalidParameterValue.IPv6RuleIdExisted"
 //  LIMITEXCEEDED = "LimitExceeded"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 func (c *Client) AddIp6RulesWithContext(ctx context.Context, request *AddIp6RulesRequest) (response *AddIp6RulesResponse, err error) {
     if request == nil {
         request = NewAddIp6RulesRequest()
@@ -425,6 +427,7 @@ func NewAdjustPublicAddressResponse() (response *AdjustPublicAddressResponse) {
 //  LIMITEXCEEDED_DAILYCHANGEADDRESSQUOTA = "LimitExceeded.DailyChangeAddressQuota"
 //  OPERATIONDENIED_ADDRESSINARREARS = "OperationDenied.AddressInArrears"
 //  OPERATIONDENIED_MUTEXTASKRUNNING = "OperationDenied.MutexTaskRunning"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
 //  UNSUPPORTEDOPERATION_INVALIDADDRESSINTERNETCHARGETYPE = "UnsupportedOperation.InvalidAddressInternetChargeType"
@@ -454,6 +457,7 @@ func (c *Client) AdjustPublicAddress(request *AdjustPublicAddressRequest) (respo
 //  LIMITEXCEEDED_DAILYCHANGEADDRESSQUOTA = "LimitExceeded.DailyChangeAddressQuota"
 //  OPERATIONDENIED_ADDRESSINARREARS = "OperationDenied.AddressInArrears"
 //  OPERATIONDENIED_MUTEXTASKRUNNING = "OperationDenied.MutexTaskRunning"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
 //  UNSUPPORTEDOPERATION_INVALIDADDRESSINTERNETCHARGETYPE = "UnsupportedOperation.InvalidAddressInternetChargeType"
@@ -1076,6 +1080,7 @@ func NewAssignPrivateIpAddressesResponse() (response *AssignPrivateIpAddressesRe
 //  INVALIDPARAMETERVALUE_RESERVED = "InvalidParameterValue.Reserved"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_ACTIONLIMITED = "LimitExceeded.ActionLimited"
+//  LIMITEXCEEDED_ENIPRIVATEIPLIMIT = "LimitExceeded.EniPrivateIpLimit"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
@@ -1113,6 +1118,7 @@ func (c *Client) AssignPrivateIpAddresses(request *AssignPrivateIpAddressesReque
 //  INVALIDPARAMETERVALUE_RESERVED = "InvalidParameterValue.Reserved"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_ACTIONLIMITED = "LimitExceeded.ActionLimited"
+//  LIMITEXCEEDED_ENIPRIVATEIPLIMIT = "LimitExceeded.EniPrivateIpLimit"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
@@ -2079,9 +2085,11 @@ func NewAttachNetworkInterfaceResponse() (response *AttachNetworkInterfaceRespon
 //
 // 可能返回的错误码:
 //  INTERNALERROR_MODULEERROR = "InternalError.ModuleError"
+//  INVALIDPARAMETER_MISMATCHINSTANCEENICDC = "InvalidParameter.MismatchInstanceEniCdc"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_ACTIONLIMITED = "LimitExceeded.ActionLimited"
+//  LIMITEXCEEDED_ENIPRIVATEIPLIMIT = "LimitExceeded.EniPrivateIpLimit"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_ATTACHMENTALREADYEXISTS = "UnsupportedOperation.AttachmentAlreadyExists"
@@ -2117,9 +2125,11 @@ func (c *Client) AttachNetworkInterface(request *AttachNetworkInterfaceRequest) 
 //
 // 可能返回的错误码:
 //  INTERNALERROR_MODULEERROR = "InternalError.ModuleError"
+//  INVALIDPARAMETER_MISMATCHINSTANCEENICDC = "InvalidParameter.MismatchInstanceEniCdc"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_ACTIONLIMITED = "LimitExceeded.ActionLimited"
+//  LIMITEXCEEDED_ENIPRIVATEIPLIMIT = "LimitExceeded.EniPrivateIpLimit"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_ATTACHMENTALREADYEXISTS = "UnsupportedOperation.AttachmentAlreadyExists"
@@ -3316,6 +3326,8 @@ func NewCreateCcnPolicyBasedRoutingNextHopResponse() (response *CreateCcnPolicyB
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION_CCNNOTENABLEPOLICYBASEDROUTINGFLAG = "UnsupportedOperation.CcnNotEnablePolicyBasedRoutingFlag"
+//  UNSUPPORTEDOPERATION_CCNROUTEBASEDROUTEINGNOVPCTYPENOTSUPPORTCONFIGNEXTHOPRESOURCE = "UnsupportedOperation.CcnRouteBasedRouteingNoVpcTypeNotSupportConfigNextHopResource"
+//  UNSUPPORTEDOPERATION_GWLBCLUSTERTYPENOTDPDKNOTSUPPORTCREATE = "UnsupportedOperation.GwlbClusterTypeNotDpdkNotSupportCreate"
 func (c *Client) CreateCcnPolicyBasedRoutingNextHop(request *CreateCcnPolicyBasedRoutingNextHopRequest) (response *CreateCcnPolicyBasedRoutingNextHopResponse, err error) {
     return c.CreateCcnPolicyBasedRoutingNextHopWithContext(context.Background(), request)
 }
@@ -3326,6 +3338,8 @@ func (c *Client) CreateCcnPolicyBasedRoutingNextHop(request *CreateCcnPolicyBase
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION_CCNNOTENABLEPOLICYBASEDROUTINGFLAG = "UnsupportedOperation.CcnNotEnablePolicyBasedRoutingFlag"
+//  UNSUPPORTEDOPERATION_CCNROUTEBASEDROUTEINGNOVPCTYPENOTSUPPORTCONFIGNEXTHOPRESOURCE = "UnsupportedOperation.CcnRouteBasedRouteingNoVpcTypeNotSupportConfigNextHopResource"
+//  UNSUPPORTEDOPERATION_GWLBCLUSTERTYPENOTDPDKNOTSUPPORTCREATE = "UnsupportedOperation.GwlbClusterTypeNotDpdkNotSupportCreate"
 func (c *Client) CreateCcnPolicyBasedRoutingNextHopWithContext(ctx context.Context, request *CreateCcnPolicyBasedRoutingNextHopRequest) (response *CreateCcnPolicyBasedRoutingNextHopResponse, err error) {
     if request == nil {
         request = NewCreateCcnPolicyBasedRoutingNextHopRequest()
@@ -3619,12 +3633,15 @@ func NewCreateCustomerGatewayResponse() (response *CreateCustomerGatewayResponse
 //  LIMITEXCEEDED_TAGQUOTA = "LimitExceeded.TagQuota"
 //  LIMITEXCEEDED_TAGQUOTAEXCEEDED = "LimitExceeded.TagQuotaExceeded"
 //  LIMITEXCEEDED_TAGTAGSEXCEEDED = "LimitExceeded.TagTagsExceeded"
+//  UNSUPPORTEDOPERATION_CUSTOMERGATEWAYIPV6 = "UnsupportedOperation.CustomerGatewayIpv6"
+//  UNSUPPORTEDOPERATION_IPV6NOTSUPPORTBGP = "UnsupportedOperation.Ipv6NotSupportBgp"
 //  UNSUPPORTEDOPERATION_RECORDEXISTS = "UnsupportedOperation.RecordExists"
 //  UNSUPPORTEDOPERATION_TAGALLOCATE = "UnsupportedOperation.TagAllocate"
 //  UNSUPPORTEDOPERATION_TAGFREE = "UnsupportedOperation.TagFree"
 //  UNSUPPORTEDOPERATION_TAGNOTPERMIT = "UnsupportedOperation.TagNotPermit"
 //  UNSUPPORTEDOPERATION_TAGSYSTEMRESERVEDTAGKEY = "UnsupportedOperation.TagSystemReservedTagKey"
 //  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDBGP = "UnsupportedOperation.VpnUnsupportedBgp"
+//  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDBGPACCOUNTORREGION = "UnsupportedOperation.VpnUnsupportedBgpAccountOrRegion"
 //  VPCLIMITEXCEEDED = "VpcLimitExceeded"
 func (c *Client) CreateCustomerGateway(request *CreateCustomerGatewayRequest) (response *CreateCustomerGatewayResponse, err error) {
     return c.CreateCustomerGatewayWithContext(context.Background(), request)
@@ -3655,12 +3672,15 @@ func (c *Client) CreateCustomerGateway(request *CreateCustomerGatewayRequest) (r
 //  LIMITEXCEEDED_TAGQUOTA = "LimitExceeded.TagQuota"
 //  LIMITEXCEEDED_TAGQUOTAEXCEEDED = "LimitExceeded.TagQuotaExceeded"
 //  LIMITEXCEEDED_TAGTAGSEXCEEDED = "LimitExceeded.TagTagsExceeded"
+//  UNSUPPORTEDOPERATION_CUSTOMERGATEWAYIPV6 = "UnsupportedOperation.CustomerGatewayIpv6"
+//  UNSUPPORTEDOPERATION_IPV6NOTSUPPORTBGP = "UnsupportedOperation.Ipv6NotSupportBgp"
 //  UNSUPPORTEDOPERATION_RECORDEXISTS = "UnsupportedOperation.RecordExists"
 //  UNSUPPORTEDOPERATION_TAGALLOCATE = "UnsupportedOperation.TagAllocate"
 //  UNSUPPORTEDOPERATION_TAGFREE = "UnsupportedOperation.TagFree"
 //  UNSUPPORTEDOPERATION_TAGNOTPERMIT = "UnsupportedOperation.TagNotPermit"
 //  UNSUPPORTEDOPERATION_TAGSYSTEMRESERVEDTAGKEY = "UnsupportedOperation.TagSystemReservedTagKey"
 //  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDBGP = "UnsupportedOperation.VpnUnsupportedBgp"
+//  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDBGPACCOUNTORREGION = "UnsupportedOperation.VpnUnsupportedBgpAccountOrRegion"
 //  VPCLIMITEXCEEDED = "VpcLimitExceeded"
 func (c *Client) CreateCustomerGatewayWithContext(ctx context.Context, request *CreateCustomerGatewayRequest) (response *CreateCustomerGatewayResponse, err error) {
     if request == nil {
@@ -4455,6 +4475,7 @@ func NewCreateIp6TranslatorsResponse() (response *CreateIp6TranslatorsResponse) 
 //
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
 func (c *Client) CreateIp6Translators(request *CreateIp6TranslatorsRequest) (response *CreateIp6TranslatorsResponse, err error) {
     return c.CreateIp6TranslatorsWithContext(context.Background(), request)
@@ -4467,6 +4488,7 @@ func (c *Client) CreateIp6Translators(request *CreateIp6TranslatorsRequest) (res
 //
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
 func (c *Client) CreateIp6TranslatorsWithContext(ctx context.Context, request *CreateIp6TranslatorsRequest) (response *CreateIp6TranslatorsResponse, err error) {
     if request == nil {
@@ -8389,6 +8411,7 @@ func NewDeleteBandwidthPackageResponse() (response *DeleteBandwidthPackageRespon
 //  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGENOTFOUND = "InvalidParameterValue.BandwidthPackageNotFound"
 //  INVALIDPARAMETERVALUE_STOPCHARGINGINSTANCEINUSE = "InvalidParameterValue.StopChargingInstanceInUse"
 //  LIMITEXCEEDED_ACCOUNTRETURNQUOTA = "LimitExceeded.AccountReturnQuota"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  UNSUPPORTEDOPERATION_BANDWIDTHPACKAGEIDNOTSUPPORTED = "UnsupportedOperation.BandwidthPackageIdNotSupported"
 //  UNSUPPORTEDOPERATION_INVALIDADDRESSSTATE = "UnsupportedOperation.InvalidAddressState"
 //  UNSUPPORTEDOPERATION_UNPAIDORDERALREADYEXISTS = "UnsupportedOperation.UnpaidOrderAlreadyExists"
@@ -8407,6 +8430,7 @@ func (c *Client) DeleteBandwidthPackage(request *DeleteBandwidthPackageRequest) 
 //  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGENOTFOUND = "InvalidParameterValue.BandwidthPackageNotFound"
 //  INVALIDPARAMETERVALUE_STOPCHARGINGINSTANCEINUSE = "InvalidParameterValue.StopChargingInstanceInUse"
 //  LIMITEXCEEDED_ACCOUNTRETURNQUOTA = "LimitExceeded.AccountReturnQuota"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  UNSUPPORTEDOPERATION_BANDWIDTHPACKAGEIDNOTSUPPORTED = "UnsupportedOperation.BandwidthPackageIdNotSupported"
 //  UNSUPPORTEDOPERATION_INVALIDADDRESSSTATE = "UnsupportedOperation.InvalidAddressState"
 //  UNSUPPORTEDOPERATION_UNPAIDORDERALREADYEXISTS = "UnsupportedOperation.UnpaidOrderAlreadyExists"
@@ -9351,6 +9375,7 @@ func NewDeleteIp6TranslatorsResponse() (response *DeleteIp6TranslatorsResponse) 
 //  INTERNALSERVERERROR = "InternalServerError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_IP6TRANSLATORNOTFOUND = "InvalidParameterValue.Ip6TranslatorNotFound"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 func (c *Client) DeleteIp6Translators(request *DeleteIp6TranslatorsRequest) (response *DeleteIp6TranslatorsResponse, err error) {
     return c.DeleteIp6TranslatorsWithContext(context.Background(), request)
 }
@@ -9364,6 +9389,7 @@ func (c *Client) DeleteIp6Translators(request *DeleteIp6TranslatorsRequest) (res
 //  INTERNALSERVERERROR = "InternalServerError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_IP6TRANSLATORNOTFOUND = "InvalidParameterValue.Ip6TranslatorNotFound"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 func (c *Client) DeleteIp6TranslatorsWithContext(ctx context.Context, request *DeleteIp6TranslatorsRequest) (response *DeleteIp6TranslatorsResponse, err error) {
     if request == nil {
         request = NewDeleteIp6TranslatorsRequest()
@@ -11941,6 +11967,7 @@ func NewDescribeAddressQuotaResponse() (response *DescribeAddressQuotaResponse) 
 //
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeAddressQuota(request *DescribeAddressQuotaRequest) (response *DescribeAddressQuotaResponse, err error) {
     return c.DescribeAddressQuotaWithContext(context.Background(), request)
@@ -11951,6 +11978,7 @@ func (c *Client) DescribeAddressQuota(request *DescribeAddressQuotaRequest) (res
 //
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeAddressQuotaWithContext(ctx context.Context, request *DescribeAddressQuotaRequest) (response *DescribeAddressQuotaResponse, err error) {
     if request == nil {
@@ -12457,6 +12485,7 @@ func NewDescribeBandwidthPackageQuotaResponse() (response *DescribeBandwidthPack
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_RESOURCENOTSUPPORT = "InvalidParameterValue.ResourceNotSupport"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 func (c *Client) DescribeBandwidthPackageQuota(request *DescribeBandwidthPackageQuotaRequest) (response *DescribeBandwidthPackageQuotaResponse, err error) {
     return c.DescribeBandwidthPackageQuotaWithContext(context.Background(), request)
 }
@@ -12466,6 +12495,7 @@ func (c *Client) DescribeBandwidthPackageQuota(request *DescribeBandwidthPackage
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_RESOURCENOTSUPPORT = "InvalidParameterValue.ResourceNotSupport"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 func (c *Client) DescribeBandwidthPackageQuotaWithContext(ctx context.Context, request *DescribeBandwidthPackageQuotaRequest) (response *DescribeBandwidthPackageQuotaResponse, err error) {
     if request == nil {
         request = NewDescribeBandwidthPackageQuotaRequest()
@@ -12511,6 +12541,7 @@ func NewDescribeBandwidthPackageResourcesResponse() (response *DescribeBandwidth
 //  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEIDMALFORMED = "InvalidParameterValue.BandwidthPackageIdMalformed"
 //  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGENOTFOUND = "InvalidParameterValue.BandwidthPackageNotFound"
 //  INVALIDPARAMETERVALUE_ILLEGAL = "InvalidParameterValue.Illegal"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 func (c *Client) DescribeBandwidthPackageResources(request *DescribeBandwidthPackageResourcesRequest) (response *DescribeBandwidthPackageResourcesResponse, err error) {
     return c.DescribeBandwidthPackageResourcesWithContext(context.Background(), request)
 }
@@ -12524,6 +12555,7 @@ func (c *Client) DescribeBandwidthPackageResources(request *DescribeBandwidthPac
 //  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGEIDMALFORMED = "InvalidParameterValue.BandwidthPackageIdMalformed"
 //  INVALIDPARAMETERVALUE_BANDWIDTHPACKAGENOTFOUND = "InvalidParameterValue.BandwidthPackageNotFound"
 //  INVALIDPARAMETERVALUE_ILLEGAL = "InvalidParameterValue.Illegal"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 func (c *Client) DescribeBandwidthPackageResourcesWithContext(ctx context.Context, request *DescribeBandwidthPackageResourcesRequest) (response *DescribeBandwidthPackageResourcesResponse, err error) {
     if request == nil {
         request = NewDescribeBandwidthPackageResourcesRequest()
@@ -12628,6 +12660,7 @@ func NewDescribeCcnAttachedInstancesResponse() (response *DescribeCcnAttachedIns
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_APPIDNOTFOUND = "UnsupportedOperation.AppIdNotFound"
 func (c *Client) DescribeCcnAttachedInstances(request *DescribeCcnAttachedInstancesRequest) (response *DescribeCcnAttachedInstancesResponse, err error) {
@@ -12644,6 +12677,7 @@ func (c *Client) DescribeCcnAttachedInstances(request *DescribeCcnAttachedInstan
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_APPIDNOTFOUND = "UnsupportedOperation.AppIdNotFound"
 func (c *Client) DescribeCcnAttachedInstancesWithContext(ctx context.Context, request *DescribeCcnAttachedInstancesRequest) (response *DescribeCcnAttachedInstancesResponse, err error) {
@@ -13006,6 +13040,7 @@ func NewDescribeCcnRoutesResponse() (response *DescribeCcnRoutesResponse) {
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_PARAMETERMISMATCH = "InvalidParameterValue.ParameterMismatch"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION_APPIDNOTFOUND = "UnsupportedOperation.AppIdNotFound"
 func (c *Client) DescribeCcnRoutes(request *DescribeCcnRoutesRequest) (response *DescribeCcnRoutesResponse, err error) {
@@ -13020,6 +13055,7 @@ func (c *Client) DescribeCcnRoutes(request *DescribeCcnRoutesRequest) (response 
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_PARAMETERMISMATCH = "InvalidParameterValue.ParameterMismatch"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION_APPIDNOTFOUND = "UnsupportedOperation.AppIdNotFound"
 func (c *Client) DescribeCcnRoutesWithContext(ctx context.Context, request *DescribeCcnRoutesRequest) (response *DescribeCcnRoutesResponse, err error) {
@@ -13067,6 +13103,7 @@ func NewDescribeCcnsResponse() (response *DescribeCcnsResponse) {
 //  INVALIDPARAMETER_FILTERINVALIDKEY = "InvalidParameter.FilterInvalidKey"
 //  INVALIDPARAMETER_FILTERNOTDICT = "InvalidParameter.FilterNotDict"
 //  INVALIDPARAMETER_FILTERVALUESNOTLIST = "InvalidParameter.FilterValuesNotList"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
@@ -13087,6 +13124,7 @@ func (c *Client) DescribeCcns(request *DescribeCcnsRequest) (response *DescribeC
 //  INVALIDPARAMETER_FILTERINVALIDKEY = "InvalidParameter.FilterInvalidKey"
 //  INVALIDPARAMETER_FILTERNOTDICT = "InvalidParameter.FilterNotDict"
 //  INVALIDPARAMETER_FILTERVALUESNOTLIST = "InvalidParameter.FilterValuesNotList"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
@@ -13139,6 +13177,7 @@ func NewDescribeCdcLDCXListResponse() (response *DescribeCdcLDCXListResponse) {
 //  INVALIDPARAMETER_FILTERINVALIDKEY = "InvalidParameter.FilterInvalidKey"
 //  INVALIDPARAMETER_FILTERNOTDICT = "InvalidParameter.FilterNotDict"
 //  INVALIDPARAMETER_FILTERVALUESNOTLIST = "InvalidParameter.FilterValuesNotList"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
@@ -13159,6 +13198,7 @@ func (c *Client) DescribeCdcLDCXList(request *DescribeCdcLDCXListRequest) (respo
 //  INVALIDPARAMETER_FILTERINVALIDKEY = "InvalidParameter.FilterInvalidKey"
 //  INVALIDPARAMETER_FILTERNOTDICT = "InvalidParameter.FilterNotDict"
 //  INVALIDPARAMETER_FILTERVALUESNOTLIST = "InvalidParameter.FilterValuesNotList"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
@@ -13512,12 +13552,14 @@ func NewDescribeCrossBorderFlowMonitorResponse() (response *DescribeCrossBorderF
 //  INVALIDPARAMETER_FILTERINVALIDKEY = "InvalidParameter.FilterInvalidKey"
 //  INVALIDPARAMETER_FILTERNOTDICT = "InvalidParameter.FilterNotDict"
 //  INVALIDPARAMETER_FILTERVALUESNOTLIST = "InvalidParameter.FilterValuesNotList"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_CCNINSTANCEACCOUNTNOTAPPROVEDBYUNICOM = "UnsupportedOperation.CcnInstanceAccountNotApprovedByUnicom"
 //  UNSUPPORTEDOPERATION_CURRENTACCOUNTISNOTUNICOMACCOUNT = "UnsupportedOperation.CurrentAccountIsNotUnicomAccount"
 //  UNSUPPORTEDOPERATION_CURRENTQUERYREGIONISNOTCROSSBORDER = "UnsupportedOperation.CurrentQueryRegionIsNotCrossBorder"
+//  UNSUPPORTEDOPERATION_QUERYTIMEEXCEEDEDLIMIT = "UnsupportedOperation.QueryTimeExceededLimit"
 //  UNSUPPORTEDOPERATION_UINNOTFOUND = "UnsupportedOperation.UinNotFound"
 //  UNSUPPORTEDOPERATION_UNABLECROSSBORDER = "UnsupportedOperation.UnableCrossBorder"
 func (c *Client) DescribeCrossBorderFlowMonitor(request *DescribeCrossBorderFlowMonitorRequest) (response *DescribeCrossBorderFlowMonitorResponse, err error) {
@@ -13534,12 +13576,14 @@ func (c *Client) DescribeCrossBorderFlowMonitor(request *DescribeCrossBorderFlow
 //  INVALIDPARAMETER_FILTERINVALIDKEY = "InvalidParameter.FilterInvalidKey"
 //  INVALIDPARAMETER_FILTERNOTDICT = "InvalidParameter.FilterNotDict"
 //  INVALIDPARAMETER_FILTERVALUESNOTLIST = "InvalidParameter.FilterValuesNotList"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_CCNINSTANCEACCOUNTNOTAPPROVEDBYUNICOM = "UnsupportedOperation.CcnInstanceAccountNotApprovedByUnicom"
 //  UNSUPPORTEDOPERATION_CURRENTACCOUNTISNOTUNICOMACCOUNT = "UnsupportedOperation.CurrentAccountIsNotUnicomAccount"
 //  UNSUPPORTEDOPERATION_CURRENTQUERYREGIONISNOTCROSSBORDER = "UnsupportedOperation.CurrentQueryRegionIsNotCrossBorder"
+//  UNSUPPORTEDOPERATION_QUERYTIMEEXCEEDEDLIMIT = "UnsupportedOperation.QueryTimeExceededLimit"
 //  UNSUPPORTEDOPERATION_UINNOTFOUND = "UnsupportedOperation.UinNotFound"
 //  UNSUPPORTEDOPERATION_UNABLECROSSBORDER = "UnsupportedOperation.UnableCrossBorder"
 func (c *Client) DescribeCrossBorderFlowMonitorWithContext(ctx context.Context, request *DescribeCrossBorderFlowMonitorRequest) (response *DescribeCrossBorderFlowMonitorResponse, err error) {
@@ -13588,12 +13632,14 @@ func NewDescribeCustomerGatewayVendorsResponse() (response *DescribeCustomerGate
 //  INVALIDPARAMETER_FILTERINVALIDKEY = "InvalidParameter.FilterInvalidKey"
 //  INVALIDPARAMETER_FILTERNOTDICT = "InvalidParameter.FilterNotDict"
 //  INVALIDPARAMETER_FILTERVALUESNOTLIST = "InvalidParameter.FilterValuesNotList"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_CCNINSTANCEACCOUNTNOTAPPROVEDBYUNICOM = "UnsupportedOperation.CcnInstanceAccountNotApprovedByUnicom"
 //  UNSUPPORTEDOPERATION_CURRENTACCOUNTISNOTUNICOMACCOUNT = "UnsupportedOperation.CurrentAccountIsNotUnicomAccount"
 //  UNSUPPORTEDOPERATION_CURRENTQUERYREGIONISNOTCROSSBORDER = "UnsupportedOperation.CurrentQueryRegionIsNotCrossBorder"
+//  UNSUPPORTEDOPERATION_QUERYTIMEEXCEEDEDLIMIT = "UnsupportedOperation.QueryTimeExceededLimit"
 //  UNSUPPORTEDOPERATION_UINNOTFOUND = "UnsupportedOperation.UinNotFound"
 //  UNSUPPORTEDOPERATION_UNABLECROSSBORDER = "UnsupportedOperation.UnableCrossBorder"
 func (c *Client) DescribeCustomerGatewayVendors(request *DescribeCustomerGatewayVendorsRequest) (response *DescribeCustomerGatewayVendorsResponse, err error) {
@@ -13610,12 +13656,14 @@ func (c *Client) DescribeCustomerGatewayVendors(request *DescribeCustomerGateway
 //  INVALIDPARAMETER_FILTERINVALIDKEY = "InvalidParameter.FilterInvalidKey"
 //  INVALIDPARAMETER_FILTERNOTDICT = "InvalidParameter.FilterNotDict"
 //  INVALIDPARAMETER_FILTERVALUESNOTLIST = "InvalidParameter.FilterValuesNotList"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_CCNINSTANCEACCOUNTNOTAPPROVEDBYUNICOM = "UnsupportedOperation.CcnInstanceAccountNotApprovedByUnicom"
 //  UNSUPPORTEDOPERATION_CURRENTACCOUNTISNOTUNICOMACCOUNT = "UnsupportedOperation.CurrentAccountIsNotUnicomAccount"
 //  UNSUPPORTEDOPERATION_CURRENTQUERYREGIONISNOTCROSSBORDER = "UnsupportedOperation.CurrentQueryRegionIsNotCrossBorder"
+//  UNSUPPORTEDOPERATION_QUERYTIMEEXCEEDEDLIMIT = "UnsupportedOperation.QueryTimeExceededLimit"
 //  UNSUPPORTEDOPERATION_UINNOTFOUND = "UnsupportedOperation.UinNotFound"
 //  UNSUPPORTEDOPERATION_UNABLECROSSBORDER = "UnsupportedOperation.UnableCrossBorder"
 func (c *Client) DescribeCustomerGatewayVendorsWithContext(ctx context.Context, request *DescribeCustomerGatewayVendorsRequest) (response *DescribeCustomerGatewayVendorsResponse, err error) {
@@ -14708,6 +14756,7 @@ func NewDescribeIp6TranslatorsResponse() (response *DescribeIp6TranslatorsRespon
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 func (c *Client) DescribeIp6Translators(request *DescribeIp6TranslatorsRequest) (response *DescribeIp6TranslatorsResponse, err error) {
     return c.DescribeIp6TranslatorsWithContext(context.Background(), request)
 }
@@ -14720,6 +14769,7 @@ func (c *Client) DescribeIp6Translators(request *DescribeIp6TranslatorsRequest) 
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 func (c *Client) DescribeIp6TranslatorsWithContext(ctx context.Context, request *DescribeIp6TranslatorsRequest) (response *DescribeIp6TranslatorsResponse, err error) {
     if request == nil {
         request = NewDescribeIp6TranslatorsRequest()
@@ -14767,6 +14817,7 @@ func NewDescribeIpGeolocationDatabaseUrlResponse() (response *DescribeIpGeolocat
 //  INVALIDACCOUNT_NOTSUPPORTED = "InvalidAccount.NotSupported"
 //  INVALIDPARAMETERCONFLICT = "InvalidParameterConflict"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 func (c *Client) DescribeIpGeolocationDatabaseUrl(request *DescribeIpGeolocationDatabaseUrlRequest) (response *DescribeIpGeolocationDatabaseUrlResponse, err error) {
     return c.DescribeIpGeolocationDatabaseUrlWithContext(context.Background(), request)
 }
@@ -14782,6 +14833,7 @@ func (c *Client) DescribeIpGeolocationDatabaseUrl(request *DescribeIpGeolocation
 //  INVALIDACCOUNT_NOTSUPPORTED = "InvalidAccount.NotSupported"
 //  INVALIDPARAMETERCONFLICT = "InvalidParameterConflict"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 func (c *Client) DescribeIpGeolocationDatabaseUrlWithContext(ctx context.Context, request *DescribeIpGeolocationDatabaseUrlRequest) (response *DescribeIpGeolocationDatabaseUrlResponse, err error) {
     if request == nil {
         request = NewDescribeIpGeolocationDatabaseUrlRequest()
@@ -16632,6 +16684,7 @@ func NewDescribeRouteTableSelectionPoliciesResponse() (response *DescribeRouteTa
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeRouteTableSelectionPolicies(request *DescribeRouteTableSelectionPoliciesRequest) (response *DescribeRouteTableSelectionPoliciesResponse, err error) {
     return c.DescribeRouteTableSelectionPoliciesWithContext(context.Background(), request)
 }
@@ -16646,6 +16699,7 @@ func (c *Client) DescribeRouteTableSelectionPolicies(request *DescribeRouteTable
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DescribeRouteTableSelectionPoliciesWithContext(ctx context.Context, request *DescribeRouteTableSelectionPoliciesRequest) (response *DescribeRouteTableSelectionPoliciesResponse, err error) {
     if request == nil {
         request = NewDescribeRouteTableSelectionPoliciesRequest()
@@ -17922,6 +17976,7 @@ func NewDescribeTenantCcnsResponse() (response *DescribeTenantCcnsResponse) {
 //  INVALIDPARAMETER_FILTERINVALIDKEY = "InvalidParameter.FilterInvalidKey"
 //  INVALIDPARAMETER_FILTERNOTDICT = "InvalidParameter.FilterNotDict"
 //  INVALIDPARAMETER_FILTERVALUESNOTLIST = "InvalidParameter.FilterValuesNotList"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -17942,6 +17997,7 @@ func (c *Client) DescribeTenantCcns(request *DescribeTenantCcnsRequest) (respons
 //  INVALIDPARAMETER_FILTERINVALIDKEY = "InvalidParameter.FilterInvalidKey"
 //  INVALIDPARAMETER_FILTERNOTDICT = "InvalidParameter.FilterNotDict"
 //  INVALIDPARAMETER_FILTERVALUESNOTLIST = "InvalidParameter.FilterValuesNotList"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -20093,9 +20149,12 @@ func NewDisassociateAddressResponse() (response *DisassociateAddressResponse) {
 //  INVALIDPARAMETERVALUE_ADDRESSIDMALFORMED = "InvalidParameterValue.AddressIdMalformed"
 //  INVALIDPARAMETERVALUE_ADDRESSNOTFOUND = "InvalidParameterValue.AddressNotFound"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_INSTANCENOTMATCHDISASSOCIATEINSTANCE = "InvalidParameterValue.InstanceNotMatchDisassociateInstance"
 //  INVALIDPARAMETERVALUE_ONLYSUPPORTEDFORMASTERNETWORKCARD = "InvalidParameterValue.OnlySupportedForMasterNetworkCard"
 //  INVALIDPARAMETERVALUE_RESOURCENOTSUPPORT = "InvalidParameterValue.ResourceNotSupport"
 //  OPERATIONDENIED_MUTEXTASKRUNNING = "OperationDenied.MutexTaskRunning"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  UNAUTHORIZEDOPERATION_NEEDAPPROVAL = "UnauthorizedOperation.NeedApproval"
 //  UNSUPPORTEDOPERATION_ACTIONNOTFOUND = "UnsupportedOperation.ActionNotFound"
 //  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
 //  UNSUPPORTEDOPERATION_INSTANCESTATENOTSUPPORTED = "UnsupportedOperation.InstanceStateNotSupported"
@@ -20127,9 +20186,12 @@ func (c *Client) DisassociateAddress(request *DisassociateAddressRequest) (respo
 //  INVALIDPARAMETERVALUE_ADDRESSIDMALFORMED = "InvalidParameterValue.AddressIdMalformed"
 //  INVALIDPARAMETERVALUE_ADDRESSNOTFOUND = "InvalidParameterValue.AddressNotFound"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_INSTANCENOTMATCHDISASSOCIATEINSTANCE = "InvalidParameterValue.InstanceNotMatchDisassociateInstance"
 //  INVALIDPARAMETERVALUE_ONLYSUPPORTEDFORMASTERNETWORKCARD = "InvalidParameterValue.OnlySupportedForMasterNetworkCard"
 //  INVALIDPARAMETERVALUE_RESOURCENOTSUPPORT = "InvalidParameterValue.ResourceNotSupport"
 //  OPERATIONDENIED_MUTEXTASKRUNNING = "OperationDenied.MutexTaskRunning"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  UNAUTHORIZEDOPERATION_NEEDAPPROVAL = "UnauthorizedOperation.NeedApproval"
 //  UNSUPPORTEDOPERATION_ACTIONNOTFOUND = "UnsupportedOperation.ActionNotFound"
 //  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
 //  UNSUPPORTEDOPERATION_INSTANCESTATENOTSUPPORTED = "UnsupportedOperation.InstanceStateNotSupported"
@@ -21828,6 +21890,7 @@ func NewLockCcnBandwidthsResponse() (response *LockCcnBandwidthsResponse) {
 // 如有需要, 可以封禁任意限速实例, 可接入到内部运营系统。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -21844,6 +21907,7 @@ func (c *Client) LockCcnBandwidths(request *LockCcnBandwidthsRequest) (response 
 // 如有需要, 可以封禁任意限速实例, 可接入到内部运营系统。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -21896,6 +21960,7 @@ func NewLockCcnsResponse() (response *LockCcnsResponse) {
 // 如有需要, 可以封禁任意限速实例, 可接入到内部运营系统
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -21916,6 +21981,7 @@ func (c *Client) LockCcns(request *LockCcnsRequest) (response *LockCcnsResponse,
 // 如有需要, 可以封禁任意限速实例, 可接入到内部运营系统
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -21965,6 +22031,7 @@ func NewMigrateBandwidthPackageResourcesResponse() (response *MigrateBandwidthPa
 //  INVALIDPARAMETERVALUE_RESOURCEIDMALFORMED = "InvalidParameterValue.ResourceIdMalformed"
 //  INVALIDPARAMETERVALUE_RESOURCENOTFOUND = "InvalidParameterValue.ResourceNotFound"
 //  LIMITEXCEEDED_BANDWIDTHPACKAGERESOURCEQUOTA = "LimitExceeded.BandwidthPackageResourceQuota"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  UNSUPPORTEDOPERATION_BANDWIDTHPACKAGEIDNOTSUPPORTED = "UnsupportedOperation.BandwidthPackageIdNotSupported"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
 func (c *Client) MigrateBandwidthPackageResources(request *MigrateBandwidthPackageResourcesRequest) (response *MigrateBandwidthPackageResourcesResponse, err error) {
@@ -21980,6 +22047,7 @@ func (c *Client) MigrateBandwidthPackageResources(request *MigrateBandwidthPacka
 //  INVALIDPARAMETERVALUE_RESOURCEIDMALFORMED = "InvalidParameterValue.ResourceIdMalformed"
 //  INVALIDPARAMETERVALUE_RESOURCENOTFOUND = "InvalidParameterValue.ResourceNotFound"
 //  LIMITEXCEEDED_BANDWIDTHPACKAGERESOURCEQUOTA = "LimitExceeded.BandwidthPackageResourceQuota"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  UNSUPPORTEDOPERATION_BANDWIDTHPACKAGEIDNOTSUPPORTED = "UnsupportedOperation.BandwidthPackageIdNotSupported"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
 func (c *Client) MigrateBandwidthPackageResourcesWithContext(ctx context.Context, request *MigrateBandwidthPackageResourcesRequest) (response *MigrateBandwidthPackageResourcesResponse, err error) {
@@ -22026,6 +22094,7 @@ func NewMigrateNetworkInterfaceResponse() (response *MigrateNetworkInterfaceResp
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_ENIPRIVATEIPLIMIT = "LimitExceeded.EniPrivateIpLimit"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_ATTACHMENTNOTFOUND = "UnsupportedOperation.AttachmentNotFound"
@@ -22042,6 +22111,7 @@ func (c *Client) MigrateNetworkInterface(request *MigrateNetworkInterfaceRequest
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_ENIPRIVATEIPLIMIT = "LimitExceeded.EniPrivateIpLimit"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_ATTACHMENTNOTFOUND = "UnsupportedOperation.AttachmentNotFound"
@@ -22096,6 +22166,7 @@ func NewMigratePrivateIpAddressResponse() (response *MigratePrivateIpAddressResp
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_ENIPRIVATEIPLIMIT = "LimitExceeded.EniPrivateIpLimit"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_ATTACHMENTNOTFOUND = "UnauthorizedOperation.AttachmentNotFound"
 //  UNAUTHORIZEDOPERATION_PRIMARYIP = "UnauthorizedOperation.PrimaryIp"
@@ -22120,6 +22191,7 @@ func (c *Client) MigratePrivateIpAddress(request *MigratePrivateIpAddressRequest
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_ENIPRIVATEIPLIMIT = "LimitExceeded.EniPrivateIpLimit"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_ATTACHMENTNOTFOUND = "UnauthorizedOperation.AttachmentNotFound"
 //  UNAUTHORIZEDOPERATION_PRIMARYIP = "UnauthorizedOperation.PrimaryIp"
@@ -22988,7 +23060,12 @@ func NewModifyCcnPolicyBasedRoutingNextHopAttributeResponse() (response *ModifyC
 // 更新云联网策略路由下一跳参数
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_FILTERMISSPARAMETER = "InvalidParameter.FilterMissParameter"
 //  INVALIDPARAMETERVALUE_MUSTHASONE = "InvalidParameterValue.MustHasOne"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_CCNNOTENABLEPOLICYBASEDROUTINGFLAG = "UnsupportedOperation.CcnNotEnablePolicyBasedRoutingFlag"
+//  UNSUPPORTEDOPERATION_CCNROUTEBASEDROUTEINGNOVPCTYPENOTSUPPORTCONFIGNEXTHOPRESOURCE = "UnsupportedOperation.CcnRouteBasedRouteingNoVpcTypeNotSupportConfigNextHopResource"
+//  UNSUPPORTEDOPERATION_GWLBCLUSTERTYPENOTDPDKNOTSUPPORTCREATE = "UnsupportedOperation.GwlbClusterTypeNotDpdkNotSupportCreate"
 func (c *Client) ModifyCcnPolicyBasedRoutingNextHopAttribute(request *ModifyCcnPolicyBasedRoutingNextHopAttributeRequest) (response *ModifyCcnPolicyBasedRoutingNextHopAttributeResponse, err error) {
     return c.ModifyCcnPolicyBasedRoutingNextHopAttributeWithContext(context.Background(), request)
 }
@@ -22997,7 +23074,12 @@ func (c *Client) ModifyCcnPolicyBasedRoutingNextHopAttribute(request *ModifyCcnP
 // 更新云联网策略路由下一跳参数
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_FILTERMISSPARAMETER = "InvalidParameter.FilterMissParameter"
 //  INVALIDPARAMETERVALUE_MUSTHASONE = "InvalidParameterValue.MustHasOne"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_CCNNOTENABLEPOLICYBASEDROUTINGFLAG = "UnsupportedOperation.CcnNotEnablePolicyBasedRoutingFlag"
+//  UNSUPPORTEDOPERATION_CCNROUTEBASEDROUTEINGNOVPCTYPENOTSUPPORTCONFIGNEXTHOPRESOURCE = "UnsupportedOperation.CcnRouteBasedRouteingNoVpcTypeNotSupportConfigNextHopResource"
+//  UNSUPPORTEDOPERATION_GWLBCLUSTERTYPENOTDPDKNOTSUPPORTCREATE = "UnsupportedOperation.GwlbClusterTypeNotDpdkNotSupportCreate"
 func (c *Client) ModifyCcnPolicyBasedRoutingNextHopAttributeWithContext(ctx context.Context, request *ModifyCcnPolicyBasedRoutingNextHopAttributeRequest) (response *ModifyCcnPolicyBasedRoutingNextHopAttributeResponse, err error) {
     if request == nil {
         request = NewModifyCcnPolicyBasedRoutingNextHopAttributeRequest()
@@ -23038,7 +23120,12 @@ func NewModifyCcnPolicyBasedRoutingRuleAttributeResponse() (response *ModifyCcnP
 // 更新云联网策略路由匹配规则参数
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_FILTERMISSPARAMETER = "InvalidParameter.FilterMissParameter"
 //  INVALIDPARAMETERVALUE_MUSTHASONE = "InvalidParameterValue.MustHasOne"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_CCNNOTENABLEPOLICYBASEDROUTINGFLAG = "UnsupportedOperation.CcnNotEnablePolicyBasedRoutingFlag"
+//  UNSUPPORTEDOPERATION_CCNROUTEBASEDROUTEINGNOVPCTYPENOTSUPPORTCONFIGNEXTHOPRESOURCE = "UnsupportedOperation.CcnRouteBasedRouteingNoVpcTypeNotSupportConfigNextHopResource"
+//  UNSUPPORTEDOPERATION_GWLBCLUSTERTYPENOTDPDKNOTSUPPORTCREATE = "UnsupportedOperation.GwlbClusterTypeNotDpdkNotSupportCreate"
 func (c *Client) ModifyCcnPolicyBasedRoutingRuleAttribute(request *ModifyCcnPolicyBasedRoutingRuleAttributeRequest) (response *ModifyCcnPolicyBasedRoutingRuleAttributeResponse, err error) {
     return c.ModifyCcnPolicyBasedRoutingRuleAttributeWithContext(context.Background(), request)
 }
@@ -23047,7 +23134,12 @@ func (c *Client) ModifyCcnPolicyBasedRoutingRuleAttribute(request *ModifyCcnPoli
 // 更新云联网策略路由匹配规则参数
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_FILTERMISSPARAMETER = "InvalidParameter.FilterMissParameter"
 //  INVALIDPARAMETERVALUE_MUSTHASONE = "InvalidParameterValue.MustHasOne"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_CCNNOTENABLEPOLICYBASEDROUTINGFLAG = "UnsupportedOperation.CcnNotEnablePolicyBasedRoutingFlag"
+//  UNSUPPORTEDOPERATION_CCNROUTEBASEDROUTEINGNOVPCTYPENOTSUPPORTCONFIGNEXTHOPRESOURCE = "UnsupportedOperation.CcnRouteBasedRouteingNoVpcTypeNotSupportConfigNextHopResource"
+//  UNSUPPORTEDOPERATION_GWLBCLUSTERTYPENOTDPDKNOTSUPPORTCREATE = "UnsupportedOperation.GwlbClusterTypeNotDpdkNotSupportCreate"
 func (c *Client) ModifyCcnPolicyBasedRoutingRuleAttributeWithContext(ctx context.Context, request *ModifyCcnPolicyBasedRoutingRuleAttributeRequest) (response *ModifyCcnPolicyBasedRoutingRuleAttributeResponse, err error) {
     if request == nil {
         request = NewModifyCcnPolicyBasedRoutingRuleAttributeRequest()
@@ -24216,6 +24308,7 @@ func NewModifyIp6RuleResponse() (response *ModifyIp6RuleResponse) {
 //  INVALIDPARAMETERVALUE_IP6RULENOTFOUND = "InvalidParameterValue.Ip6RuleNotFound"
 //  INVALIDPARAMETERVALUE_IP6TRANSLATORNOTFOUND = "InvalidParameterValue.Ip6TranslatorNotFound"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 func (c *Client) ModifyIp6Rule(request *ModifyIp6RuleRequest) (response *ModifyIp6RuleResponse, err error) {
     return c.ModifyIp6RuleWithContext(context.Background(), request)
 }
@@ -24230,6 +24323,7 @@ func (c *Client) ModifyIp6Rule(request *ModifyIp6RuleRequest) (response *ModifyI
 //  INVALIDPARAMETERVALUE_IP6RULENOTFOUND = "InvalidParameterValue.Ip6RuleNotFound"
 //  INVALIDPARAMETERVALUE_IP6TRANSLATORNOTFOUND = "InvalidParameterValue.Ip6TranslatorNotFound"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 func (c *Client) ModifyIp6RuleWithContext(ctx context.Context, request *ModifyIp6RuleRequest) (response *ModifyIp6RuleResponse, err error) {
     if request == nil {
         request = NewModifyIp6RuleRequest()
@@ -24273,6 +24367,7 @@ func NewModifyIp6TranslatorResponse() (response *ModifyIp6TranslatorResponse) {
 //  INTERNALSERVERERROR = "InternalServerError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_IP6TRANSLATORNOTFOUND = "InvalidParameterValue.Ip6TranslatorNotFound"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 func (c *Client) ModifyIp6Translator(request *ModifyIp6TranslatorRequest) (response *ModifyIp6TranslatorResponse, err error) {
     return c.ModifyIp6TranslatorWithContext(context.Background(), request)
 }
@@ -24284,6 +24379,7 @@ func (c *Client) ModifyIp6Translator(request *ModifyIp6TranslatorRequest) (respo
 //  INTERNALSERVERERROR = "InternalServerError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_IP6TRANSLATORNOTFOUND = "InvalidParameterValue.Ip6TranslatorNotFound"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 func (c *Client) ModifyIp6TranslatorWithContext(ctx context.Context, request *ModifyIp6TranslatorRequest) (response *ModifyIp6TranslatorResponse, err error) {
     if request == nil {
         request = NewModifyIp6TranslatorRequest()
@@ -25588,6 +25684,7 @@ func NewModifyRouteTableSelectionPoliciesResponse() (response *ModifyRouteTableS
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNSUPPORTEDOPERATION_CANNOTASSIGNDEFAULTROUTETABLE = "UnsupportedOperation.CanNotAssignDefaultRouteTable"
 //  UNSUPPORTEDOPERATION_CCNROUTETABLENOTEXIST = "UnsupportedOperation.CcnRouteTableNotExist"
+//  UNSUPPORTEDOPERATION_CDCCCNNOTSUPPORTROUTETABLESELECTIONPOLICIES = "UnsupportedOperation.CdcCcnNotSupportRouteTableSelectionPolicies"
 //  UNSUPPORTEDOPERATION_INSTANCENOTEXIST = "UnsupportedOperation.InstanceNotExist"
 //  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
 //  UNSUPPORTEDOPERATION_NOTSUPPORTSAMECCNINSTANCEANDSOURCEADDRESS = "UnsupportedOperation.NotSupportSameCcnInstanceAndSourceAddress"
@@ -25610,6 +25707,7 @@ func (c *Client) ModifyRouteTableSelectionPolicies(request *ModifyRouteTableSele
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNSUPPORTEDOPERATION_CANNOTASSIGNDEFAULTROUTETABLE = "UnsupportedOperation.CanNotAssignDefaultRouteTable"
 //  UNSUPPORTEDOPERATION_CCNROUTETABLENOTEXIST = "UnsupportedOperation.CcnRouteTableNotExist"
+//  UNSUPPORTEDOPERATION_CDCCCNNOTSUPPORTROUTETABLESELECTIONPOLICIES = "UnsupportedOperation.CdcCcnNotSupportRouteTableSelectionPolicies"
 //  UNSUPPORTEDOPERATION_INSTANCENOTEXIST = "UnsupportedOperation.InstanceNotExist"
 //  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
 //  UNSUPPORTEDOPERATION_NOTSUPPORTSAMECCNINSTANCEANDSOURCEADDRESS = "UnsupportedOperation.NotSupportSameCcnInstanceAndSourceAddress"
@@ -27246,6 +27344,7 @@ func NewReleaseAddressesResponse() (response *ReleaseAddressesResponse) {
 //  LIMITEXCEEDED_ACCOUNTRETURNQUOTA = "LimitExceeded.AccountReturnQuota"
 //  OPERATIONDENIED_ADDRESSDELETIONPROTECTIONENABLED = "OperationDenied.AddressDeletionProtectionEnabled"
 //  OPERATIONDENIED_MUTEXTASKRUNNING = "OperationDenied.MutexTaskRunning"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
 //  UNSUPPORTEDOPERATION_UNPAIDORDERALREADYEXISTS = "UnsupportedOperation.UnpaidOrderAlreadyExists"
 func (c *Client) ReleaseAddresses(request *ReleaseAddressesRequest) (response *ReleaseAddressesResponse, err error) {
@@ -27270,6 +27369,7 @@ func (c *Client) ReleaseAddresses(request *ReleaseAddressesRequest) (response *R
 //  LIMITEXCEEDED_ACCOUNTRETURNQUOTA = "LimitExceeded.AccountReturnQuota"
 //  OPERATIONDENIED_ADDRESSDELETIONPROTECTIONENABLED = "OperationDenied.AddressDeletionProtectionEnabled"
 //  OPERATIONDENIED_MUTEXTASKRUNNING = "OperationDenied.MutexTaskRunning"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
 //  UNSUPPORTEDOPERATION_UNPAIDORDERALREADYEXISTS = "UnsupportedOperation.UnpaidOrderAlreadyExists"
 func (c *Client) ReleaseAddressesWithContext(ctx context.Context, request *ReleaseAddressesRequest) (response *ReleaseAddressesResponse, err error) {
@@ -27322,6 +27422,7 @@ func NewReleaseIPv6AddressesResponse() (response *ReleaseIPv6AddressesResponse) 
 //  INVALIDPARAMETERVALUE_ADDRESSIPNOTFOUND = "InvalidParameterValue.AddressIpNotFound"
 //  OPERATIONDENIED_ADDRESSDELETIONPROTECTIONENABLED = "OperationDenied.AddressDeletionProtectionEnabled"
 //  OPERATIONDENIED_ADDRESSINARREARS = "OperationDenied.AddressInArrears"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
 func (c *Client) ReleaseIPv6Addresses(request *ReleaseIPv6AddressesRequest) (response *ReleaseIPv6AddressesResponse, err error) {
     return c.ReleaseIPv6AddressesWithContext(context.Background(), request)
@@ -27341,6 +27442,7 @@ func (c *Client) ReleaseIPv6Addresses(request *ReleaseIPv6AddressesRequest) (res
 //  INVALIDPARAMETERVALUE_ADDRESSIPNOTFOUND = "InvalidParameterValue.AddressIpNotFound"
 //  OPERATIONDENIED_ADDRESSDELETIONPROTECTIONENABLED = "OperationDenied.AddressDeletionProtectionEnabled"
 //  OPERATIONDENIED_ADDRESSINARREARS = "OperationDenied.AddressInArrears"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
 func (c *Client) ReleaseIPv6AddressesWithContext(ctx context.Context, request *ReleaseIPv6AddressesRequest) (response *ReleaseIPv6AddressesResponse, err error) {
     if request == nil {
@@ -27536,6 +27638,7 @@ func NewRemoveIp6RulesResponse() (response *RemoveIp6RulesResponse) {
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_IP6RULENOTFOUND = "InvalidParameterValue.Ip6RuleNotFound"
 //  OPERATIONDENIED_MUTEXTASKRUNNING = "OperationDenied.MutexTaskRunning"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 func (c *Client) RemoveIp6Rules(request *RemoveIp6RulesRequest) (response *RemoveIp6RulesResponse, err error) {
     return c.RemoveIp6RulesWithContext(context.Background(), request)
 }
@@ -27550,6 +27653,7 @@ func (c *Client) RemoveIp6Rules(request *RemoveIp6RulesRequest) (response *Remov
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_IP6RULENOTFOUND = "InvalidParameterValue.Ip6RuleNotFound"
 //  OPERATIONDENIED_MUTEXTASKRUNNING = "OperationDenied.MutexTaskRunning"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 func (c *Client) RemoveIp6RulesWithContext(ctx context.Context, request *RemoveIp6RulesRequest) (response *RemoveIp6RulesResponse, err error) {
     if request == nil {
         request = NewRemoveIp6RulesRequest()
@@ -27753,9 +27857,16 @@ func NewReplaceCcnRouteTableBroadcastPolicysResponse() (response *ReplaceCcnRout
 //  INVALIDPARAMETERVALUE_PARAMETERMISMATCH = "InvalidParameterValue.ParameterMismatch"
 //  LIMITEXCEEDED_CCNROUTEBROADCASTPOLICY = "LimitExceeded.CcnRouteBroadcastPolicy"
 //  LIMITEXCEEDED_CCNROUTEBROADCASTPOLICYCOND = "LimitExceeded.CcnRouteBroadcastPolicyCond"
+//  UNSUPPORTEDOPERATION_BROADCASTCONDITIONMUSTBEVPGINSTANCE = "UnsupportedOperation.BroadcastConditionMustBeVpgInstance"
 //  UNSUPPORTEDOPERATION_BROADCASTCONDITIONMUSTBEVPGTYPEORVPGINSTANCE = "UnsupportedOperation.BroadcastConditionMustBeVpgTypeOrVpgInstance"
+//  UNSUPPORTEDOPERATION_CCNNOTENABLEBROADCASTANDINPUTPOLICY = "UnsupportedOperation.CcnNotEnableBroadcastAndInputPolicy"
 //  UNSUPPORTEDOPERATION_CCNNOTENABLEBROADCASTPOLICY = "UnsupportedOperation.CcnNotEnableBroadcastPolicy"
 //  UNSUPPORTEDOPERATION_CCNNOTENABLECOMMUNITY = "UnsupportedOperation.CcnNotEnableCommunity"
+//  UNSUPPORTEDOPERATION_CCNNOTENABLEPOLICYASPATHANDCOMMUNITYFLAG = "UnsupportedOperation.CcnNotEnablePolicyAsPathAndCommunityFlag"
+//  UNSUPPORTEDOPERATION_CCNNOTENABLEPOLICYASPATHFLAG = "UnsupportedOperation.CcnNotEnablePolicyAsPathFlag"
+//  UNSUPPORTEDOPERATION_CCNNOTENABLEPOLICYCOMMUNITYFLAG = "UnsupportedOperation.CcnNotEnablePolicyCommunityFlag"
+//  UNSUPPORTEDOPERATION_CCNPOLICYDROPACTIONNOTSUPPORTOPERATEPARAM = "UnsupportedOperation.CcnPolicyDropActionNotSupportOperateParam"
+//  UNSUPPORTEDOPERATION_CCNPOLICYOPERATESETANDMODEMUSTHAVEBOTH = "UnsupportedOperation.CcnPolicyOperateSetAndModeMustHaveBoth"
 func (c *Client) ReplaceCcnRouteTableBroadcastPolicys(request *ReplaceCcnRouteTableBroadcastPolicysRequest) (response *ReplaceCcnRouteTableBroadcastPolicysResponse, err error) {
     return c.ReplaceCcnRouteTableBroadcastPolicysWithContext(context.Background(), request)
 }
@@ -27813,9 +27924,16 @@ func (c *Client) ReplaceCcnRouteTableBroadcastPolicys(request *ReplaceCcnRouteTa
 //  INVALIDPARAMETERVALUE_PARAMETERMISMATCH = "InvalidParameterValue.ParameterMismatch"
 //  LIMITEXCEEDED_CCNROUTEBROADCASTPOLICY = "LimitExceeded.CcnRouteBroadcastPolicy"
 //  LIMITEXCEEDED_CCNROUTEBROADCASTPOLICYCOND = "LimitExceeded.CcnRouteBroadcastPolicyCond"
+//  UNSUPPORTEDOPERATION_BROADCASTCONDITIONMUSTBEVPGINSTANCE = "UnsupportedOperation.BroadcastConditionMustBeVpgInstance"
 //  UNSUPPORTEDOPERATION_BROADCASTCONDITIONMUSTBEVPGTYPEORVPGINSTANCE = "UnsupportedOperation.BroadcastConditionMustBeVpgTypeOrVpgInstance"
+//  UNSUPPORTEDOPERATION_CCNNOTENABLEBROADCASTANDINPUTPOLICY = "UnsupportedOperation.CcnNotEnableBroadcastAndInputPolicy"
 //  UNSUPPORTEDOPERATION_CCNNOTENABLEBROADCASTPOLICY = "UnsupportedOperation.CcnNotEnableBroadcastPolicy"
 //  UNSUPPORTEDOPERATION_CCNNOTENABLECOMMUNITY = "UnsupportedOperation.CcnNotEnableCommunity"
+//  UNSUPPORTEDOPERATION_CCNNOTENABLEPOLICYASPATHANDCOMMUNITYFLAG = "UnsupportedOperation.CcnNotEnablePolicyAsPathAndCommunityFlag"
+//  UNSUPPORTEDOPERATION_CCNNOTENABLEPOLICYASPATHFLAG = "UnsupportedOperation.CcnNotEnablePolicyAsPathFlag"
+//  UNSUPPORTEDOPERATION_CCNNOTENABLEPOLICYCOMMUNITYFLAG = "UnsupportedOperation.CcnNotEnablePolicyCommunityFlag"
+//  UNSUPPORTEDOPERATION_CCNPOLICYDROPACTIONNOTSUPPORTOPERATEPARAM = "UnsupportedOperation.CcnPolicyDropActionNotSupportOperateParam"
+//  UNSUPPORTEDOPERATION_CCNPOLICYOPERATESETANDMODEMUSTHAVEBOTH = "UnsupportedOperation.CcnPolicyOperateSetAndModeMustHaveBoth"
 func (c *Client) ReplaceCcnRouteTableBroadcastPolicysWithContext(ctx context.Context, request *ReplaceCcnRouteTableBroadcastPolicysRequest) (response *ReplaceCcnRouteTableBroadcastPolicysResponse, err error) {
     if request == nil {
         request = NewReplaceCcnRouteTableBroadcastPolicysRequest()
@@ -27891,8 +28009,12 @@ func NewReplaceCcnRouteTableInputPolicysResponse() (response *ReplaceCcnRouteTab
 //  INVALIDPARAMETERVALUE_PARAMETERMISMATCH = "InvalidParameterValue.ParameterMismatch"
 //  LIMITEXCEEDED_CCNROUTEBROADCASTPOLICY = "LimitExceeded.CcnRouteBroadcastPolicy"
 //  LIMITEXCEEDED_CCNROUTEBROADCASTPOLICYCOND = "LimitExceeded.CcnRouteBroadcastPolicyCond"
+//  UNSUPPORTEDOPERATION_CCNDEFAULTRTBROUTE = "UnsupportedOperation.CcnDefaultRTBRoute"
+//  UNSUPPORTEDOPERATION_CCNNOTENABLEBROADCASTANDINPUTPOLICY = "UnsupportedOperation.CcnNotEnableBroadcastAndInputPolicy"
 //  UNSUPPORTEDOPERATION_CCNNOTENABLEBROADCASTPOLICY = "UnsupportedOperation.CcnNotEnableBroadcastPolicy"
 //  UNSUPPORTEDOPERATION_CCNNOTENABLEPOLICYASPATHFLAG = "UnsupportedOperation.CcnNotEnablePolicyAsPathFlag"
+//  UNSUPPORTEDOPERATION_CCNPOLICYDROPACTIONNOTSUPPORTOPERATEPARAM = "UnsupportedOperation.CcnPolicyDropActionNotSupportOperateParam"
+//  UNSUPPORTEDOPERATION_CCNPOLICYOPERATESETANDMODEMUSTHAVEBOTH = "UnsupportedOperation.CcnPolicyOperateSetAndModeMustHaveBoth"
 func (c *Client) ReplaceCcnRouteTableInputPolicys(request *ReplaceCcnRouteTableInputPolicysRequest) (response *ReplaceCcnRouteTableInputPolicysResponse, err error) {
     return c.ReplaceCcnRouteTableInputPolicysWithContext(context.Background(), request)
 }
@@ -27936,8 +28058,12 @@ func (c *Client) ReplaceCcnRouteTableInputPolicys(request *ReplaceCcnRouteTableI
 //  INVALIDPARAMETERVALUE_PARAMETERMISMATCH = "InvalidParameterValue.ParameterMismatch"
 //  LIMITEXCEEDED_CCNROUTEBROADCASTPOLICY = "LimitExceeded.CcnRouteBroadcastPolicy"
 //  LIMITEXCEEDED_CCNROUTEBROADCASTPOLICYCOND = "LimitExceeded.CcnRouteBroadcastPolicyCond"
+//  UNSUPPORTEDOPERATION_CCNDEFAULTRTBROUTE = "UnsupportedOperation.CcnDefaultRTBRoute"
+//  UNSUPPORTEDOPERATION_CCNNOTENABLEBROADCASTANDINPUTPOLICY = "UnsupportedOperation.CcnNotEnableBroadcastAndInputPolicy"
 //  UNSUPPORTEDOPERATION_CCNNOTENABLEBROADCASTPOLICY = "UnsupportedOperation.CcnNotEnableBroadcastPolicy"
 //  UNSUPPORTEDOPERATION_CCNNOTENABLEPOLICYASPATHFLAG = "UnsupportedOperation.CcnNotEnablePolicyAsPathFlag"
+//  UNSUPPORTEDOPERATION_CCNPOLICYDROPACTIONNOTSUPPORTOPERATEPARAM = "UnsupportedOperation.CcnPolicyDropActionNotSupportOperateParam"
+//  UNSUPPORTEDOPERATION_CCNPOLICYOPERATESETANDMODEMUSTHAVEBOTH = "UnsupportedOperation.CcnPolicyOperateSetAndModeMustHaveBoth"
 func (c *Client) ReplaceCcnRouteTableInputPolicysWithContext(ctx context.Context, request *ReplaceCcnRouteTableInputPolicysRequest) (response *ReplaceCcnRouteTableInputPolicysResponse, err error) {
     if request == nil {
         request = NewReplaceCcnRouteTableInputPolicysRequest()
@@ -29433,6 +29559,7 @@ func NewReturnNormalAddressesResponse() (response *ReturnNormalAddressesResponse
 //  INVALIDPARAMETERVALUE_ADDRESSIPSNOTFOUND = "InvalidParameterValue.AddressIpsNotFound"
 //  INVALIDPARAMETERVALUE_ILLEGAL = "InvalidParameterValue.Illegal"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  UNSUPPORTEDOPERATION_NOTSUPPORTEDADDRESSIPSCHARGETYPE = "UnsupportedOperation.NotSupportedAddressIpsChargeType"
 func (c *Client) ReturnNormalAddresses(request *ReturnNormalAddressesRequest) (response *ReturnNormalAddressesResponse, err error) {
     return c.ReturnNormalAddressesWithContext(context.Background(), request)
@@ -29447,6 +29574,7 @@ func (c *Client) ReturnNormalAddresses(request *ReturnNormalAddressesRequest) (r
 //  INVALIDPARAMETERVALUE_ADDRESSIPSNOTFOUND = "InvalidParameterValue.AddressIpsNotFound"
 //  INVALIDPARAMETERVALUE_ILLEGAL = "InvalidParameterValue.Illegal"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  UNSUPPORTEDOPERATION_NOTSUPPORTEDADDRESSIPSCHARGETYPE = "UnsupportedOperation.NotSupportedAddressIpsChargeType"
 func (c *Client) ReturnNormalAddressesWithContext(ctx context.Context, request *ReturnNormalAddressesRequest) (response *ReturnNormalAddressesResponse, err error) {
     if request == nil {
@@ -29488,8 +29616,13 @@ func NewSetCcnRegionBandwidthLimitsResponse() (response *SetCcnRegionBandwidthLi
 // 本接口（SetCcnRegionBandwidthLimits）用于设置云联网（CCN）各地域出带宽上限，或者地域间带宽上限。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_BANDWIDTHREGIONINFOCONFLICT = "UnsupportedOperation.BandwidthRegionInfoConflict"
+//  UNSUPPORTEDOPERATION_EXISTFIXEDBANDWIDTHLIMITS = "UnsupportedOperation.ExistFixedBandwidthLimits"
+//  UNSUPPORTEDOPERATION_NEEDTORETAINONEDEFAULTBANDWIDTH = "UnsupportedOperation.NeedToRetainOneDefaultBandwidth"
 //  UNSUPPORTEDOPERATION_NOTPOSTPAIDCCNOPERATION = "UnsupportedOperation.NotPostpaidCcnOperation"
 func (c *Client) SetCcnRegionBandwidthLimits(request *SetCcnRegionBandwidthLimitsRequest) (response *SetCcnRegionBandwidthLimitsResponse, err error) {
     return c.SetCcnRegionBandwidthLimitsWithContext(context.Background(), request)
@@ -29499,8 +29632,13 @@ func (c *Client) SetCcnRegionBandwidthLimits(request *SetCcnRegionBandwidthLimit
 // 本接口（SetCcnRegionBandwidthLimits）用于设置云联网（CCN）各地域出带宽上限，或者地域间带宽上限。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_BANDWIDTHREGIONINFOCONFLICT = "UnsupportedOperation.BandwidthRegionInfoConflict"
+//  UNSUPPORTEDOPERATION_EXISTFIXEDBANDWIDTHLIMITS = "UnsupportedOperation.ExistFixedBandwidthLimits"
+//  UNSUPPORTEDOPERATION_NEEDTORETAINONEDEFAULTBANDWIDTH = "UnsupportedOperation.NeedToRetainOneDefaultBandwidth"
 //  UNSUPPORTEDOPERATION_NOTPOSTPAIDCCNOPERATION = "UnsupportedOperation.NotPostpaidCcnOperation"
 func (c *Client) SetCcnRegionBandwidthLimitsWithContext(ctx context.Context, request *SetCcnRegionBandwidthLimitsRequest) (response *SetCcnRegionBandwidthLimitsResponse, err error) {
     if request == nil {
@@ -30060,6 +30198,7 @@ func NewUnlockCcnBandwidthsResponse() (response *UnlockCcnBandwidthsResponse) {
 // 如有需要, 可以封禁任意限速实例, 可接入到内部运营系统。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -30077,6 +30216,7 @@ func (c *Client) UnlockCcnBandwidths(request *UnlockCcnBandwidthsRequest) (respo
 // 如有需要, 可以封禁任意限速实例, 可接入到内部运营系统。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -30130,6 +30270,7 @@ func NewUnlockCcnsResponse() (response *UnlockCcnsResponse) {
 // 如有需要, 可以封禁任意限速实例, 可接入到内部运营系统
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -30150,6 +30291,7 @@ func (c *Client) UnlockCcns(request *UnlockCcnsRequest) (response *UnlockCcnsRes
 // 如有需要, 可以封禁任意限速实例, 可接入到内部运营系统
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  RESOURCENOTFOUND = "ResourceNotFound"

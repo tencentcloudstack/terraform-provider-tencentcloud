@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
 * `max_data` - Returns the maximum value of an array.
 * `total` - Number of values in the curve graph.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBgpBizTrend](https://www.tencentcloud.com/document/api/1213/61343)
 

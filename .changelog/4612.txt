@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_organization_provision_role_configuration
+```

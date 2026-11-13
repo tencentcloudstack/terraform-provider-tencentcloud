@@ -72,4 +72,9 @@ In addition to all arguments above, the following attributes are exported:
   * `sql_template` - sql template.
   * `sql_text` - SQL with parameters (random).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSlowLogTopSqls](https://www.tencentcloud.com/document/api/1035/41183)
 

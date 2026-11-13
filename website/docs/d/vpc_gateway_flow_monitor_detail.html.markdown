@@ -46,4 +46,9 @@ In addition to all arguments above, the following attributes are exported:
   * `out_traffic` - Outbound traffic, in Byte.
   * `private_ip_address` - Origin `IP`.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeGatewayFlowMonitorDetail](https://www.tencentcloud.com/document/api/215/34739)
 

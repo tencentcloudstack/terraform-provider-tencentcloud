@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
   * `rw_permission` - Read and write permissions.
   * `user_permission` - The permissions of accessing users.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCfsRules](https://www.tencentcloud.com/document/api/582/34504)
 

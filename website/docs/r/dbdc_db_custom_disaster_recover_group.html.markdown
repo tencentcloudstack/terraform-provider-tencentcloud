@@ -55,6 +55,18 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `10m`) Used when creating the resource.
 * `update` - (Defaults to `10m`) Used when updating the resource.
 * `delete` - (Defaults to `10m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateDBCustomDisasterRecoverGroup](https://www.tencentcloud.com/search/?wd=CreateDBCustomDisasterRecoverGroup&type=document&lang=en)
+  - [DescribeDBCustomDisasterRecoverGroups](https://www.tencentcloud.com/search/?wd=DescribeDBCustomDisasterRecoverGroups&type=document&lang=en)
+* Read: [DescribeDBCustomDisasterRecoverGroups](https://www.tencentcloud.com/search/?wd=DescribeDBCustomDisasterRecoverGroups&type=document&lang=en)
+* Update:
+  - [ModifyDBCustomDisasterRecoverGroupAttribute](https://www.tencentcloud.com/search/?wd=ModifyDBCustomDisasterRecoverGroupAttribute&type=document&lang=en)
+  - [ModifyDBCustomDisasterRecoverGroupTags](https://www.tencentcloud.com/search/?wd=ModifyDBCustomDisasterRecoverGroupTags&type=document&lang=en)
+* Delete: [DeleteDBCustomDisasterRecoverGroups](https://www.tencentcloud.com/search/?wd=DeleteDBCustomDisasterRecoverGroups&type=document&lang=en)
 
 ## Import
 

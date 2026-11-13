@@ -62,4 +62,9 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Node instance status in the cluster.
   * `zone` - Node region.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBCustomClusterNodes](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterNodes&type=document&lang=en)
 

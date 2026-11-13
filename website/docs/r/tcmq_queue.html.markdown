@@ -47,6 +47,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCmqQueue](https://www.tencentcloud.com/search/?wd=CreateCmqQueue&type=document&lang=en)
+* Read: [DescribeCmqQueueDetail](https://www.tencentcloud.com/search/?wd=DescribeCmqQueueDetail&type=document&lang=en)
+* Update: [ModifyCmqQueueAttribute](https://www.tencentcloud.com/search/?wd=ModifyCmqQueueAttribute&type=document&lang=en)
+* Delete: [DeleteCmqQueue](https://www.tencentcloud.com/search/?wd=DeleteCmqQueue&type=document&lang=en)
 
 ## Import
 

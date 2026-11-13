@@ -56,6 +56,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeVpcFwGroupSwitch](https://www.tencentcloud.com/search/?wd=DescribeVpcFwGroupSwitch&type=document&lang=en)
+  - [ModifyFwGroupSwitch](https://www.tencentcloud.com/search/?wd=ModifyFwGroupSwitch&type=document&lang=en)
+* Read: [DescribeVpcFwGroupSwitch](https://www.tencentcloud.com/search/?wd=DescribeVpcFwGroupSwitch&type=document&lang=en)
+* Update:
+  - [DescribeVpcFwGroupSwitch](https://www.tencentcloud.com/search/?wd=DescribeVpcFwGroupSwitch&type=document&lang=en)
+  - [ModifyFwGroupSwitch](https://www.tencentcloud.com/search/?wd=ModifyFwGroupSwitch&type=document&lang=en)
 
 ## Import
 

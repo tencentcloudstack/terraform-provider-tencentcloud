@@ -64,4 +64,19 @@ The `dimensions` object exports the following:
 
 * `unique_id` - Object unique ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [BindingPolicyObject](https://www.tencentcloud.com/document/api/248/35985)
+  - [DescribeBindingPolicyObjectList](https://www.tencentcloud.com/document/api/248/35980)
+  - [DescribePolicyGroupList](https://www.tencentcloud.com/document/api/248/35977)
+* Read:
+  - [DescribeBindingPolicyObjectList](https://www.tencentcloud.com/document/api/248/35980)
+  - [DescribePolicyGroupList](https://www.tencentcloud.com/document/api/248/35977)
+* Delete:
+  - [DescribeBindingPolicyObjectList](https://www.tencentcloud.com/document/api/248/35980)
+  - [DescribePolicyGroupList](https://www.tencentcloud.com/document/api/248/35977)
+  - [UnBindingPolicyObject](https://www.tencentcloud.com/document/api/248/35971)
 

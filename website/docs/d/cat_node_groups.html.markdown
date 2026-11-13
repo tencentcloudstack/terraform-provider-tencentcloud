@@ -57,4 +57,9 @@ In addition to all arguments above, the following attributes are exported:
   * `content` - Node name.
   * `id` - Node ID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeNodeGroups](https://www.tencentcloud.com/search/?wd=DescribeNodeGroups&type=document&lang=en)
 

@@ -45,4 +45,9 @@ In addition to all arguments above, the following attributes are exported:
     * `repository_type` - Repository type (default Repository: default, private Repository: private).
   * `total_count` - Total Repository.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRepositories](https://www.tencentcloud.com/search/?wd=DescribeRepositories&type=document&lang=en)
 

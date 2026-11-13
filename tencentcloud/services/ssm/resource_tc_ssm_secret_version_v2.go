@@ -152,6 +152,13 @@ func (r *SsmSecretVersionV2Resource) Read(ctx context.Context, req resource.Read
 		return
 	}
 
+	// writeOnlyManaged reports whether this secret version is managed through
+	// the write-only attribute: secret_string_wo is set in state only as null,
+	// so both secret_binary and secret_string stay null. Back-filling them
+	// from GetSecretValue would reintroduce the secret into state and create a
+	// permanent in-place diff (config has no secret_string, refreshed state
+	// would), so the value must not be back-filled in that case.
+	writeOnlyManaged := state.SecretBinary.IsNull() && state.SecretString.IsNull()
 	secretName, versionId, ok := splitSsmVersionV2Id(state.Id.ValueString())
 	if !ok {
 		resp.Diagnostics.AddError(
@@ -213,8 +220,14 @@ func (r *SsmSecretVersionV2Resource) Read(ctx context.Context, req resource.Read
 			return
 		}
 
-		state.SecretBinary = stringValueOrNull(secretVersion.secretBinary)
-		state.SecretString = stringValueOrNull(secretVersion.secretString)
+		// Skip back-filling for write-only managed versions: the secret value
+		// must never re-enter state, otherwise every plan shows a permanent
+		// in-place diff (config null vs refreshed value) and apply rewrites the
+		// same value forever (never converges to "No changes").
+		if !writeOnlyManaged {
+			state.SecretBinary = stringValueOrNull(secretVersion.secretBinary)
+			state.SecretString = stringValueOrNull(secretVersion.secretString)
+		}
 	}
 
 	// secret_string_wo is write-only — never refresh it from API into state.

@@ -64,6 +64,14 @@ In addition to all arguments above, the following attributes are exported:
 * `key` - Unique project key (12 characters).
 * `project_status` - Project status (`1`: Creating; `2`: Running; `3`: Abnormal; `4`: Restarting; `5`: Stopping; `6`: Stopped; `7`: Terminating; `8`: Terminated).
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateProject](https://www.tencentcloud.com/document/api/1131/45346)
+* Read: [DescribeProjects](https://www.tencentcloud.com/document/api/1131/45308)
+* Update: [ModifyProject](https://www.tencentcloud.com/document/api/1131/45298)
+* Delete: [DeleteProject](https://www.tencentcloud.com/document/api/1131/45337)
 
 ## Import
 

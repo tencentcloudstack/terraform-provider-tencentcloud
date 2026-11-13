@@ -102,6 +102,16 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Creation time of resource.
 * `state` - State of the dedicated tunnels. Valid value: `PENDING`, `ALLOCATING`, `ALLOCATED`, `ALTERING`, `DELETING`, `DELETED`, `COMFIRMING` and `REJECTED`.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateDirectConnectTunnel](https://www.tencentcloud.com/document/api/216/19821)
+  - [DescribeDirectConnectTunnels](https://www.tencentcloud.com/document/api/216/19819)
+* Read: [DescribeDirectConnectTunnels](https://www.tencentcloud.com/document/api/216/19819)
+* Update: [ModifyDirectConnectTunnelAttribute](https://www.tencentcloud.com/document/api/216/19818)
+* Delete: [DeleteDirectConnectTunnel](https://www.tencentcloud.com/document/api/216/19820)
 
 ## Import
 

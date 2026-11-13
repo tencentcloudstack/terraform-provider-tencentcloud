@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
   * `subscription_name` - Subscription name, which must be unique in the same topic under the same account in the same region. It can contain up to 64 letters, digits, and hyphens and must begin with a letter.
   * `topic_owner` - Subscription owner APPID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCmqSubscriptionDetail](https://www.tencentcloud.com/search/?wd=DescribeCmqSubscriptionDetail&type=document&lang=en)
 

@@ -43,4 +43,9 @@ In addition to all arguments above, the following attributes are exported:
   * `min_replicate_set_num` - Minimum replicate set num for sharding cluster.
   * `min_storage` - Minimum sie of the disk.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSpecInfo](https://www.tencentcloud.com/document/api/240/34701)
 

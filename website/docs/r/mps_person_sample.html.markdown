@@ -42,6 +42,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePersonSample](https://www.tencentcloud.com/document/api/1041/33689)
+* Read: [DescribePersonSamples](https://www.tencentcloud.com/document/api/1041/33685)
+* Update: [ModifyPersonSample](https://www.tencentcloud.com/document/api/1041/33683)
+* Delete: [DeletePersonSample](https://www.tencentcloud.com/document/api/1041/33687)
 
 ## Import
 

@@ -83,6 +83,9 @@ const (
 	// 请求参数错误。
 	INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
 
+	// 参数验证失败。
+	INVALIDPARAMETER_PARAMETERVALIDATIONFAILED = "InvalidParameter.ParameterValidationFailed"
+
 	// 用户组父目录非法
 	INVALIDPARAMETER_PARENTACCOUNTGROUPINVALID = "InvalidParameter.ParentAccountGroupInvalid"
 
@@ -169,6 +172,9 @@ const (
 
 	// 没有业务资源权限。
 	UNAUTHORIZEDOPERATION_NORESOURCEPERMISSIONS = "UnauthorizedOperation.NoResourcePermissions"
+
+	// 当前业务资源无权限。
+	UNAUTHORIZEDOPERATION_NORESOURCEPERMISSIONSD = "UnauthorizedOperation.NoResourcePermissionsd"
 
 	// 未授权的操作。
 	UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"

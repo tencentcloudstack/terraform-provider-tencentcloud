@@ -53,6 +53,18 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `topic_id` - Topic parameter used when KafkaConsumer consumes.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeKafkaConsumer](https://www.tencentcloud.com/document/api/614/59908)
+  - [OpenKafkaConsumer](https://www.tencentcloud.com/document/api/614/46784)
+* Read: [DescribeKafkaConsumer](https://www.tencentcloud.com/document/api/614/59908)
+* Update:
+  - [DescribeKafkaConsumer](https://www.tencentcloud.com/document/api/614/59908)
+  - [ModifyKafkaConsumer](https://www.tencentcloud.com/document/api/614/59907)
+* Delete: [CloseKafkaConsumer](https://www.tencentcloud.com/document/api/614/46785)
 
 ## Import
 

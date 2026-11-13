@@ -77,6 +77,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/emr"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/es"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fl"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fwm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ga2"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gaap"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gs"
@@ -117,6 +118,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcr"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcss"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdcpg"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdmysql"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tem"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/thpc"
@@ -1380,6 +1382,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_antiddos_list_listener":                                 antiddos.DataSourceTencentCloudAntiddosListListener(),
 			"tencentcloud_antiddos_overview_attack_trend":                         antiddos.DataSourceTencentCloudAntiddosOverviewAttackTrend(),
 			"tencentcloud_antiddos_bgp_instances":                                 antiddos.DataSourceTencentCloudAntiddosBgpInstances(),
+			"tencentcloud_antiddos_ddos_block_records":                            antiddos.DataSourceTencentCloudAntiddosDDoSBlockRecords(),
 			"tencentcloud_clickhouse_spec":                                        cdwch.DataSourceTencentCloudClickhouseSpec(),
 			"tencentcloud_clickhouse_instances":                                   cdwch.DataSourceTencentCloudClickhouseInstances(),
 			"tencentcloud_clickhouse_instance_shards":                             cdwch.DataSourceTencentCloudClickhouseInstanceShards(),
@@ -1389,6 +1392,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cdc_dedicated_cluster_orders":                           cdc.DataSourceTencentCloudCdcDedicatedClusterOrders(),
 			"tencentcloud_cdc_dedicated_clusters":                                 cdc.DataSourceTencentCloudCdcDedicatedClusters(),
 			"tencentcloud_cdwdoris_instances":                                     cdwdoris.DataSourceTencentCloudCdwdorisInstances(),
+			"tencentcloud_cdwdoris_instance_nodes":                                cdwdoris.DataSourceTencentCloudCdwdorisInstanceNodes(),
 			"tencentcloud_controlcenter_account_factory_baseline_items":           controlcenter.DataSourceTencentCloudControlcenterAccountFactoryBaselineItems(),
 			"tencentcloud_lite_hbase_instances":                                   emr.DataSourceTencentCloudLiteHbaseInstances(),
 			"tencentcloud_cdwpg_instances":                                        cdwpg.DataSourceTencentCloudCdwpgInstances(),
@@ -1427,6 +1431,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_config_rules":                                           config.DataSourceTencentCloudConfigRules(),
 			"tencentcloud_config_discovered_resources":                            config.DataSourceTencentCloudConfigDiscoveredResources(),
 			"tencentcloud_config_resource_types":                                  config.DataSourceTencentCloudConfigResourceTypes(),
+			"tencentcloud_config_list_aggregators":                                config.DataSourceTencentCloudConfigListAggregators(),
 			"tencentcloud_products":                                               regionpkg.DataSourceTencentCloudProducts(),
 			"tencentcloud_regions":                                                regionpkg.DataSourceTencentCloudRegions(),
 			"tencentcloud_zones":                                                  regionpkg.DataSourceTencentCloudZones(),
@@ -1722,6 +1727,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_redis_log_delivery":                                                       crs.ResourceTencentCloudRedisLogDelivery(),
 			"tencentcloud_redis_audit_log":                                                          crs.ResourceTencentCloudRedisAuditLog(),
 			"tencentcloud_redis_instance_password_policy_config":                                    crs.ResourceTencentCloudRedisInstancePasswordPolicyConfig(),
+			"tencentcloud_redis_backup_encrypt":                                                     crs.ResourceTencentCloudRedisBackupEncrypt(),
 			"tencentcloud_as_load_balancer":                                                         as.ResourceTencentCloudAsLoadBalancer(),
 			"tencentcloud_as_scaling_config":                                                        as.ResourceTencentCloudAsScalingConfig(),
 			"tencentcloud_as_scaling_group":                                                         as.ResourceTencentCloudAsScalingGroup(),
@@ -1754,6 +1760,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mongodb_readonly_instance":                                                mongodb.ResourceTencentCloudMongodbReadOnlyInstance(),
 			"tencentcloud_mongodb_audit_log_file":                                                   mongodb.ResourceTencentCloudMongodbAuditLogFile(),
 			"tencentcloud_mongodb_audit_service":                                                    mongodb.ResourceTencentCloudMongodbAuditService(),
+			"tencentcloud_mongodb_scale_up_db_instance_cpu":                                         mongodb.ResourceTencentCloudMongodbScaleUpDbInstanceCpu(),
 			"tencentcloud_dayu_cc_http_policy":                                                      dayu.ResourceTencentCloudDayuCCHttpPolicy(),
 			"tencentcloud_dayu_cc_https_policy":                                                     dayu.ResourceTencentCloudDayuCCHttpsPolicy(),
 			"tencentcloud_dayu_ddos_policy":                                                         dayu.ResourceTencentCloudDayuDdosPolicy(),
@@ -1766,6 +1773,16 @@ func Provider() *schema.Provider {
 			"tencentcloud_dayu_l7_rule":                                                             dayu.ResourceTencentCloudDayuL7Rule(),
 			"tencentcloud_dayu_l7_rule_v2":                                                          dayuv2.ResourceTencentCloudDayuL7RuleV2(),
 			"tencentcloud_dayu_eip":                                                                 dayuv2.ResourceTencentCloudDayuEip(),
+			"tencentcloud_fwm_account_group":                                                        fwm.ResourceTencentCloudFwmAccountGroup(),
+			"tencentcloud_fwm_member_group_config":                                                  fwm.ResourceTencentCloudFwmMemberGroupConfig(),
+			"tencentcloud_fwm_cfw_managed_config":                                                   fwm.ResourceTencentCloudFwmCfwManagedConfig(),
+			"tencentcloud_fwm_cfw_share_role_config":                                                fwm.ResourceTencentCloudFwmCfwShareRoleConfig(),
+			"tencentcloud_fwm_rule_group":                                                           fwm.ResourceTencentCloudFwmRuleGroup(),
+			"tencentcloud_fwm_strategy":                                                             fwm.ResourceTencentCloudFwmStrategy(),
+			"tencentcloud_fwm_edge_acl_rule":                                                        fwm.ResourceTencentCloudFwmEdgeAclRule(),
+			"tencentcloud_fwm_security_group_rule":                                                  fwm.ResourceTencentCloudFwmSecurityGroupRule(),
+			"tencentcloud_fwm_nat_acl_rule":                                                         fwm.ResourceTencentCloudFwmNatAclRule(),
+			"tencentcloud_fwm_vpc_acl_rule":                                                         fwm.ResourceTencentCloudFwmVpcAclRule(),
 			"tencentcloud_ga2_global_accelerator":                                                   ga2.ResourceTencentCloudGa2GlobalAccelerator(),
 			"tencentcloud_ga2_global_accelerator_acl_policy":                                        ga2.ResourceTencentCloudGa2GlobalAcceleratorAclPolicy(),
 			"tencentcloud_ga2_global_accelerator_acl_rule":                                          ga2.ResourceTencentCloudGa2GlobalAcceleratorAclRule(),
@@ -2137,6 +2154,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_console":                                                              cls.ResourceTencentCloudClsConsole(),
 			"tencentcloud_cls_metric_subscribe":                                                     cls.ResourceTencentCloudClsMetricSubscribe(),
 			"tencentcloud_cls_remote_write_task":                                                    cls.ResourceTencentCloudClsRemoteWriteTask(),
+			"tencentcloud_cls_deliver_task":                                                         cls.ResourceTencentCloudClsDeliverTask(),
 			"tencentcloud_lighthouse_instance":                                                      lighthouse.ResourceTencentCloudLighthouseInstance(),
 			"tencentcloud_lighthouse_firewall_template":                                             lighthouse.ResourceTencentCloudLighthouseFirewallTemplate(),
 			"tencentcloud_tem_environment":                                                          tem.ResourceTencentCloudTemEnvironment(),
@@ -2257,6 +2275,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mariadb_instance_config":                                                  mariadb.ResourceTencentCloudMariadbInstanceConfig(),
 			"tencentcloud_tdcpg_cluster":                                                            tdcpg.ResourceTencentCloudTdcpgCluster(),
 			"tencentcloud_tdcpg_instance":                                                           tdcpg.ResourceTencentCloudTdcpgInstance(),
+			"tencentcloud_tdmysql_db_instance":                                                      tdmysql.ResourceTencentCloudTdmysqlDbInstance(),
 			"tencentcloud_css_watermark":                                                            css.ResourceTencentCloudCssWatermark(),
 			"tencentcloud_css_watermark_rule_attachment":                                            css.ResourceTencentCloudCssWatermarkRuleAttachment(),
 			"tencentcloud_css_pull_stream_task":                                                     css.ResourceTencentCloudCssPullStreamTask(),
@@ -2363,6 +2382,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_trocket_rocketmq_role":                                                    trocket.ResourceTencentCloudTrocketRocketmqRole(),
 			"tencentcloud_dts_sync_job":                                                             dts.ResourceTencentCloudDtsSyncJob(),
 			"tencentcloud_dts_sync_config":                                                          dts.ResourceTencentCloudDtsSyncConfig(),
+			"tencentcloud_dts_sync_job_config":                                                      dts.ResourceTencentCloudDtsSyncJobConfig(),
 			"tencentcloud_dts_sync_check_job_operation":                                             dts.ResourceTencentCloudDtsSyncCheckJobOperation(),
 			"tencentcloud_dts_sync_job_resume_operation":                                            dts.ResourceTencentCloudDtsSyncJobResumeOperation(),
 			"tencentcloud_dts_sync_job_start_operation":                                             dts.ResourceTencentCloudDtsSyncJobStartOperation(),
@@ -2567,6 +2587,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_standard_engine_resource_group_config_info":                           dlc.ResourceTencentCloudDlcStandardEngineResourceGroupConfigInfo(),
 			"tencentcloud_dlc_datasource_house_attachment":                                          dlc.ResourceTencentCloudDlcDatasourceHouseAttachment(),
 			"tencentcloud_dlc_attach_user_policy_attachment":                                        dlc.ResourceTencentCloudDlcAttachUserPolicyAttachment(),
+			"tencentcloud_dlc_meta_database":                                                        dlc.ResourceTencentCloudDlcMetaDatabase(),
 			"tencentcloud_waf_custom_rule":                                                          waf.ResourceTencentCloudWafCustomRule(),
 			"tencentcloud_waf_custom_white_rule":                                                    waf.ResourceTencentCloudWafCustomWhiteRule(),
 			"tencentcloud_waf_clb_domain":                                                           waf.ResourceTencentCloudWafClbDomain(),
@@ -2674,9 +2695,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_config_remediation":                                                       config.ResourceTencentCloudConfigRemediation(),
 			"tencentcloud_config_start_config_rule_evaluation_operation":                            config.ResourceTencentCloudConfigStartConfigRuleEvaluationOperation(),
 			"tencentcloud_config_deliver_config":                                                    config.ResourceTencentCloudConfigDeliverConfig(),
+			"tencentcloud_config_update_config_deliver":                                             config.ResourceTencentCloudConfigUpdateConfigDeliver(),
+			"tencentcloud_config_update_aggregate_config_deliver":                                   config.ResourceTencentCloudConfigUpdateAggregateConfigDeliver(),
 			"tencentcloud_config_recorder_config":                                                   config.ResourceTencentCloudConfigRecorderConfig(),
 			"tencentcloud_config_alarm_policy":                                                      config.ResourceTencentCloudConfigAlarmPolicy(),
 			"tencentcloud_config_rule":                                                              config.ResourceTencentCloudConfigRule(),
+			"tencentcloud_config_aggregator":                                                        config.ResourceTencentCloudConfigAggregator(),
 			"tencentcloud_bh_acl":                                                                   bh.ResourceTencentCloudBhAcl(),
 			"tencentcloud_bh_bind_device_account_kubeconfig":                                        bh.ResourceTencentCloudBhBindDeviceAccountKubeconfig(),
 			"tencentcloud_bh_bind_device_resource":                                                  bh.ResourceTencentCloudBhBindDeviceResource(),

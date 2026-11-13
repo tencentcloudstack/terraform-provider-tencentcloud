@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
   * `role_id` - Id of CAM role.
   * `update_time` - The last update time of the CAM role.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRoleList](https://www.tencentcloud.com/document/api/598/33559)
 

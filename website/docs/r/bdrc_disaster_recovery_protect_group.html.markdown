@@ -75,6 +75,14 @@ In addition to all arguments above, the following attributes are exported:
 * `target_vpc` - Target VPC.
 * `target_zone` - Target zone.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDisasterRecoveryProtectGroup](https://www.tencentcloud.com/search/?wd=CreateDisasterRecoveryProtectGroup&type=document&lang=en)
+* Read: [DescribeDisasterRecoveryProtectGroups](https://www.tencentcloud.com/search/?wd=DescribeDisasterRecoveryProtectGroups&type=document&lang=en)
+* Update: [ModifyProtectGroupAttribute](https://www.tencentcloud.com/search/?wd=ModifyProtectGroupAttribute&type=document&lang=en)
+* Delete: [DeleteDisasterRecoveryProtectGroups](https://www.tencentcloud.com/search/?wd=DeleteDisasterRecoveryProtectGroups&type=document&lang=en)
 
 ## Import
 

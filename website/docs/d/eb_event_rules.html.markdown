@@ -79,4 +79,9 @@ In addition to all arguments above, the following attributes are exported:
     * `target_id` - target Id.
     * `type` - target type.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListRules](https://www.tencentcloud.com/document/api/1108/45814)
 

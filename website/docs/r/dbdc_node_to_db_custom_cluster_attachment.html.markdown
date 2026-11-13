@@ -129,6 +129,22 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `1h0m`) Used when creating the resource.
 * `update` - (Defaults to `1h0m`) Used when updating the resource.
 * `delete` - (Defaults to `1h0m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [AddNodesToDBCustomCluster](https://www.tencentcloud.com/search/?wd=AddNodesToDBCustomCluster&type=document&lang=en)
+  - [DescribeDBCustomClusterNodeConfig](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterNodeConfig&type=document&lang=en)
+  - [DescribeDBCustomClusterNodes](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterNodes&type=document&lang=en)
+* Read:
+  - [DescribeDBCustomClusterNodeConfig](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterNodeConfig&type=document&lang=en)
+  - [DescribeDBCustomClusterNodes](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterNodes&type=document&lang=en)
+* Update:
+  - [DescribeDBCustomClusterNodeConfig](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterNodeConfig&type=document&lang=en)
+  - [DescribeDBCustomClusterNodes](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterNodes&type=document&lang=en)
+  - [ModifyDBCustomClusterNodeConfig](https://www.tencentcloud.com/search/?wd=ModifyDBCustomClusterNodeConfig&type=document&lang=en)
+* Delete: [RemoveNodesFromDBCustomCluster](https://www.tencentcloud.com/search/?wd=RemoveNodesFromDBCustomCluster&type=document&lang=en)
 
 ## Import
 

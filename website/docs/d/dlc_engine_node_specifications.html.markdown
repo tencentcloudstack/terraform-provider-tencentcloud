@@ -33,4 +33,9 @@ In addition to all arguments above, the following attributes are exported:
 * `driver_spec` - Driver available specifications.
 * `executor_spec` - Available executor specifications.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeEngineNodeSpec](https://www.tencentcloud.com/search/?wd=DescribeEngineNodeSpec&type=document&lang=en)
 

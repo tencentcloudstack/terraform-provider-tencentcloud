@@ -228,4 +228,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `config` - Global configuration.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePrometheusConfig](https://www.tencentcloud.com/document/api/248/53763)
+* Read: [DescribePrometheusConfig](https://www.tencentcloud.com/document/api/248/53332)
+* Update: [ModifyPrometheusConfig](https://www.tencentcloud.com/document/api/248/53761)
+* Delete: [DeletePrometheusConfig](https://www.tencentcloud.com/document/api/248/53762)
 

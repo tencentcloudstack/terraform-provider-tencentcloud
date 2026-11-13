@@ -34,4 +34,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+  - [DescribeProxies](https://www.tencentcloud.com/document/api/1098/56558)
+  - [UpgradeProxyVersion](https://www.tencentcloud.com/document/api/1098/56550)
+* Read: [DescribeProxies](https://www.tencentcloud.com/document/api/1098/56558)
+* Update:
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+  - [UpgradeProxyVersion](https://www.tencentcloud.com/document/api/1098/56550)
 

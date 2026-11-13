@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
   * `template_name` - Policy template name.
   * `zone_id` - Zone ID that the policy template belongs to.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeWebSecurityTemplates](https://www.tencentcloud.com/document/api/1145/71945)
 

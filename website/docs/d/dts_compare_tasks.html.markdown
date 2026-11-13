@@ -57,4 +57,9 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - compare task status, optional value is created/readyRun/running/success/stopping/failed/canceled.
   * `task_name` - compare task name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCompareTasks](https://www.tencentcloud.com/document/api/571/51816)
 

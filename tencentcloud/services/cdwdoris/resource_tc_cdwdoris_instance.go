@@ -210,6 +210,13 @@ func ResourceTencentCloudCdwdorisInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Whether it is storage-compute separation. Default is false.",
 			},
+			"disk_encrypt": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Disk encryption. Immutable after creation. `0` - disable, `1` - enable. Default is `0`.",
+			},
 			"security_group_ids": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -369,6 +376,10 @@ func resourceTencentCloudCdwdorisInstanceCreate(d *schema.ResourceData, meta int
 
 	if v, ok := d.GetOkExists("is_ssc"); ok {
 		request.IsSSC = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("disk_encrypt"); ok {
+		request.DiskEncrypt = helper.IntInt64(v.(int))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -556,6 +567,7 @@ func resourceTencentCloudCdwdorisInstanceRead(d *schema.ResourceData, meta inter
 		_ = d.Set("user_subnet_id", respData.SubnetId)
 	}
 
+	var diskEncrypt *int64
 	if respData.MasterSummary != nil {
 		masterSummaryMap := map[string]interface{}{}
 		if respData.MasterSummary.Spec != nil {
@@ -568,6 +580,10 @@ func resourceTencentCloudCdwdorisInstanceRead(d *schema.ResourceData, meta inter
 
 		if respData.MasterSummary.Disk != nil {
 			masterSummaryMap["disk_size"] = respData.MasterSummary.Disk
+		}
+
+		if respData.MasterSummary.Encrypt != nil {
+			diskEncrypt = respData.MasterSummary.Encrypt
 		}
 
 		_ = d.Set("fe_spec", []interface{}{masterSummaryMap})
@@ -587,7 +603,15 @@ func resourceTencentCloudCdwdorisInstanceRead(d *schema.ResourceData, meta inter
 			coreSummaryMap["disk_size"] = respData.CoreSummary.Disk
 		}
 
+		if respData.CoreSummary.Encrypt != nil {
+			diskEncrypt = respData.CoreSummary.Encrypt
+		}
+
 		_ = d.Set("be_spec", []interface{}{coreSummaryMap})
+	}
+
+	if diskEncrypt != nil {
+		_ = d.Set("disk_encrypt", diskEncrypt)
 	}
 
 	if respData.HA != nil {
@@ -664,7 +688,7 @@ func resourceTencentCloudCdwdorisInstanceUpdate(d *schema.ResourceData, meta int
 		instanceId = d.Id()
 	)
 
-	immutableArgs := []string{"zone", "fe_spec", "be_spec", "ha_flag", "user_vpc_id", "user_subnet_id", "product_version", "charge_type", "charge_properties", "doris_user_pwd", "tags", "case_sensitive", "enable_multi_zones", "user_multi_zone_infos", "is_ssc"}
+	immutableArgs := []string{"zone", "fe_spec", "be_spec", "ha_flag", "user_vpc_id", "user_subnet_id", "product_version", "charge_type", "charge_properties", "doris_user_pwd", "tags", "case_sensitive", "enable_multi_zones", "user_multi_zone_infos", "is_ssc", "disk_encrypt"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)

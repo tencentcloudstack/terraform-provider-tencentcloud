@@ -65,6 +65,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyMaintenanceWindow](https://www.tencentcloud.com/document/api/239/37832)
+* Read: [DescribeMaintenanceWindow](https://www.tencentcloud.com/document/api/239/37833)
+* Update: [ModifyMaintenanceWindow](https://www.tencentcloud.com/document/api/239/37832)
 
 ## Import
 

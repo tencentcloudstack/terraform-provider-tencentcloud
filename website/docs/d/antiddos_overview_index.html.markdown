@@ -43,4 +43,9 @@ In addition to all arguments above, the following attributes are exported:
 * `new_attack_time` - The time in the most recent attack.
 * `new_attack_type` - The type in the most recent attack.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeOverviewIndex](https://www.tencentcloud.com/search/?wd=DescribeOverviewIndex&type=document&lang=en)
 

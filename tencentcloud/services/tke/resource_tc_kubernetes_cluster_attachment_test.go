@@ -30,6 +30,7 @@ func TestAccTencentCloudKubernetesClusterAttachmentResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_attachment.test_attach", "unschedulable", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_attachment.test_attach", "labels.test1", "test1"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_attachment.test_attach", "labels.test2", "test2"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_attachment.test_attach", "skip_validate_options.0", "VpcCniCIDRCheck"),
 				),
 			},
 			{
@@ -208,6 +209,8 @@ resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
   instance_id = tencentcloud_instance.foo_attachment.id
   password    = "Lo4wbdit"
   unschedulable = 0
+
+  skip_validate_options = ["VpcCniCIDRCheck"]
 
   labels = {
     "test1" = "test1",

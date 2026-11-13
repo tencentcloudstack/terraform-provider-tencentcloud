@@ -333,131 +333,125 @@ type ChcDeployExtraConfig struct {
 }
 
 type ChcHost struct {
-	// CHC物理服务器ID。
+	// <p>CHC物理服务器ID。</p>
 	ChcId *string `json:"ChcId,omitnil,omitempty" name:"ChcId"`
 
-	// 实例名称。
+	// <p>实例名称。</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 服务器序列号。
+	// <p>服务器序列号。</p>
 	SerialNumber *string `json:"SerialNumber,omitnil,omitempty" name:"SerialNumber"`
 
-	// CHC的状态<br/>
-	// <ul>
-	// <li>INIT: 设备已录入。还未配置带外和部署网络</li>
-	// <li>READY: 已配置带外和部署网络</li>
-	// <li>PREPARED: 可分配云主机</li>
-	// <li>ONLINE: 已分配云主机</li>
-	// <li>OPERATING: 设备操作中，如正在配置带外网络等。</li>
-	// <li>CLEAR_NETWORK_FAILED: 清理带外和部署网络失败</li>
-	// </ul>
+	// <p>CHC的状态<br></p><ul><li>INIT: 设备已录入。还未配置带外和部署网络</li><li>READY: 已配置带外和部署网络</li><li>PREPARED: 可分配云主机</li><li>ONLINE: 已分配云主机</li><li>OPERATING: 设备操作中，如正在配置带外网络等。</li><li>CLEAR_NETWORK_FAILED: 清理带外和部署网络失败</li></ul>
 	InstanceState *string `json:"InstanceState,omitnil,omitempty" name:"InstanceState"`
 
-	// 设备类型。
+	// <p>设备类型。</p>
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
-	// 所属可用区
+	// <p>所属可用区。</p>
 	Placement *Placement `json:"Placement,omitnil,omitempty" name:"Placement"`
 
-	// 带外网络。
+	// <p>带外网络。</p>
 	BmcVirtualPrivateCloud *VirtualPrivateCloud `json:"BmcVirtualPrivateCloud,omitnil,omitempty" name:"BmcVirtualPrivateCloud"`
 
-	// 带外网络Ip。
+	// <p>带外网络IP。</p>
 	BmcIp *string `json:"BmcIp,omitnil,omitempty" name:"BmcIp"`
 
-	// 带外网络安全组Id。
+	// <p>带外网络安全组ID。</p>
 	BmcSecurityGroupIds []*string `json:"BmcSecurityGroupIds,omitnil,omitempty" name:"BmcSecurityGroupIds"`
 
-	// 部署网络。
+	// <p>部署网络。</p>
 	DeployVirtualPrivateCloud *VirtualPrivateCloud `json:"DeployVirtualPrivateCloud,omitnil,omitempty" name:"DeployVirtualPrivateCloud"`
 
-	// 部署网络Ip。
+	// <p>部署网络IP。</p>
 	DeployIp *string `json:"DeployIp,omitnil,omitempty" name:"DeployIp"`
 
-	// 部署网络安全组Id。
+	// <p>部署网络安全组ID。</p>
 	DeploySecurityGroupIds []*string `json:"DeploySecurityGroupIds,omitnil,omitempty" name:"DeploySecurityGroupIds"`
 
-	// 关联的云主机Id。
+	// <p>关联的云主机ID。</p>
 	CvmInstanceId *string `json:"CvmInstanceId,omitnil,omitempty" name:"CvmInstanceId"`
 
-	// 服务器导入的时间。
+	// <p>服务器导入的时间。</p>
 	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 
-	// 机型的硬件描述，分别为CPU核数，内存容量和磁盘容量
+	// <p>机型的硬件描述，分别为CPU核数，内存容量和磁盘容量。</p>
 	HardwareDescription *string `json:"HardwareDescription,omitnil,omitempty" name:"HardwareDescription"`
 
-	// CHC物理服务器的CPU核数
+	// <p>CHC物理服务器的CPU核数。</p>
 	CPU *int64 `json:"CPU,omitnil,omitempty" name:"CPU"`
 
-	// CHC物理服务器的内存大小，单位为GB
+	// <p>CHC物理服务器的内存大小，单位为GB。</p>
 	Memory *int64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// CHC物理服务器的磁盘信息
+	// <p>CHC物理服务器的磁盘信息。</p>
 	Disk *string `json:"Disk,omitnil,omitempty" name:"Disk"`
 
-	// 带外网络下分配的MAC地址
+	// <p>带外网络下分配的MAC地址。</p>
 	BmcMAC *string `json:"BmcMAC,omitnil,omitempty" name:"BmcMAC"`
 
-	// 部署网络下分配的MAC地址
+	// <p>部署网络下分配的MAC地址。</p>
 	DeployMAC *string `json:"DeployMAC,omitnil,omitempty" name:"DeployMAC"`
 
-	// 设备托管类型。
-	// HOSTING: 托管
-	// TENANT: 租赁
+	// <p>设备托管类型。</p><p>枚举值：</p><ul><li>HOSTING： 托管类型。</li><li>TENANT： 租赁类型。</li></ul>
 	TenantType *string `json:"TenantType,omitnil,omitempty" name:"TenantType"`
 
-	// chc dhcp选项，用于minios调试。
+	// <p>CHC DHCP选项，用于客户自建PXE环境。</p>
 	DeployExtraConfig *ChcDeployExtraConfig `json:"DeployExtraConfig,omitnil,omitempty" name:"DeployExtraConfig"`
 
-	// GPU型号。
+	// <p>GPU型号。</p>
 	Gpu *string `json:"Gpu,omitnil,omitempty" name:"Gpu"`
 
-	// 网卡型号。主要指RDMA网卡。
+	// <p>网卡型号。主要指RDMA网卡。</p>
 	NetworkCard *string `json:"NetworkCard,omitnil,omitempty" name:"NetworkCard"`
 
-	// 是否是预定义机型。
+	// <p>是否是预定义机型。</p>
 	IsPredefinedType *bool `json:"IsPredefinedType,omitnil,omitempty" name:"IsPredefinedType"`
 
-	// CHC云主机机型。
+	// <p>CHC云主机机型。</p>
 	ChcInstanceType *string `json:"ChcInstanceType,omitnil,omitempty" name:"ChcInstanceType"`
 
-	// CHC云主机机型簇。
+	// <p>CHC云主机机型簇。</p>
 	ChcInstanceFamily *string `json:"ChcInstanceFamily,omitnil,omitempty" name:"ChcInstanceFamily"`
 
-	// CHC云主机机型簇名称。
+	// <p>CHC云主机机型簇名称。</p>
 	ChcInstanceFamilyName *string `json:"ChcInstanceFamilyName,omitnil,omitempty" name:"ChcInstanceFamilyName"`
 
-	// 转售客户的AppId。
+	// <p>转售客户的AppID。</p>
 	ResaleAppId *string `json:"ResaleAppId,omitnil,omitempty" name:"ResaleAppId"`
 
-	// 转售客户的账号ID。
+	// <p>转售客户的账号ID。</p>
 	ResaleAccountId *string `json:"ResaleAccountId,omitnil,omitempty" name:"ResaleAccountId"`
 
-	// 售卖状态。<br/>
-	// <ul>
-	// <li>NOT_FOR_SALE:不可售卖</li>
-	// <li>AVAILABLE: 可售卖</li>
-	// <li>SOLD: 已售卖</li>
-	// </ul>
+	// <p>售卖状态。<br></p><ul><li>NOT_FOR_SALE:不可售卖</li><li>AVAILABLE: 可售卖</li><li>SOLD: 已售卖</li></ul>
 	SaleStatus *string `json:"SaleStatus,omitnil,omitempty" name:"SaleStatus"`
 
-	// CHC物理服务器关联的标签列表。
+	// <p>CHC物理服务器关联的标签列表。</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 最近操作
+	// <p>最近操作。</p>
 	LatestOperation *string `json:"LatestOperation,omitnil,omitempty" name:"LatestOperation"`
 
-	// 最近操作错误码
+	// <p>最近操作错误码。</p>
 	LatestOperationErrorCode *string `json:"LatestOperationErrorCode,omitnil,omitempty" name:"LatestOperationErrorCode"`
 
-	// 最近操作错误详情和建议项
+	// <p>最近操作错误详情和建议项。</p>
 	LatestOperationErrorMsg *string `json:"LatestOperationErrorMsg,omitnil,omitempty" name:"LatestOperationErrorMsg"`
 
-	// 最近操作名称
+	// <p>最近操作名称。</p>
 	LatestOperationName *string `json:"LatestOperationName,omitnil,omitempty" name:"LatestOperationName"`
 
-	// 最近操作状态
+	// <p>最近操作状态。</p><p>枚举值：</p><ul><li>SUCCESS： 成功。</li><li>FAILED： 失败。</li></ul>
 	LatestOperationState *string `json:"LatestOperationState,omitnil,omitempty" name:"LatestOperationState"`
+
+	// <p>所在的CHC网关的ID，只有专属网关才会返回。</p>
+	ChcGatewayId *string `json:"ChcGatewayId,omitnil,omitempty" name:"ChcGatewayId"`
+
+	// <p>所属的CDC集群ID。</p>
+	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
+
+	// <p>业务网卡网络模式。</p><p>枚举值：</p><ul><li>DEPLOY： 部署网络模式</li><li>BUSINESS： 业务网络模式</li></ul>
+	NetworkMode *string `json:"NetworkMode,omitnil,omitempty" name:"NetworkMode"`
 }
 
 type ChcHostDeniedActions struct {
@@ -1174,215 +1168,201 @@ func (r *CreateKeyPairResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateLaunchTemplateRequestParams struct {
-	// 实例启动模板名称。长度为2~128个英文或中文字符。
+	// <p>实例启动模板名称。长度为2~128个英文或中文字符。</p>
 	LaunchTemplateName *string `json:"LaunchTemplateName,omitnil,omitempty" name:"LaunchTemplateName"`
 
-	// 实例所在的位置。通过该参数可以指定实例所属可用区，所属项目，所属宿主机（在专用宿主机上创建子机时指定）等属性。
+	// <p>实例所在的位置。通过该参数可以指定实例所属可用区，所属项目，所属宿主机（在专用宿主机上创建子机时指定）等属性。</p>
 	Placement *Placement `json:"Placement,omitnil,omitempty" name:"Placement"`
 
-	// 指定有效的[镜像](https://cloud.tencent.com/document/product/213/4940)ID，格式形如`img-xxx`。镜像类型分为四种：<br/><li>公共镜像</li><li>自定义镜像</li><li>共享镜像</li><li>服务市场镜像</li><br/>可通过以下方式获取可用的镜像ID：<br/><li>`公共镜像`、`自定义镜像`、`共享镜像`的镜像ID可通过登录[控制台](https://console.cloud.tencent.com/cvm/image?rid=1&imageType=PUBLIC_IMAGE)查询；`服务镜像市场`的镜像ID可通过[云市场](https://market.cloud.tencent.com/list)查询。</li><li>通过调用接口 [DescribeImages](https://cloud.tencent.com/document/api/213/15715) ，传入InstanceType获取当前机型支持的镜像列表，取返回信息中的`ImageId`字段。</li>
+	// <p>指定有效的<a href="https://cloud.tencent.com/document/product/213/4940">镜像</a>ID，格式形如<code>img-xxx</code>。镜像类型分为四种：<br><li>公共镜像</li><li>自定义镜像</li><li>共享镜像</li><li>服务市场镜像</li><br>可通过以下方式获取可用的镜像ID：<br><li><code>公共镜像</code>、<code>自定义镜像</code>、<code>共享镜像</code>的镜像ID可通过登录<a href="https://console.cloud.tencent.com/cvm/image?rid=1&amp;imageType=PUBLIC_IMAGE">控制台</a>查询；<code>服务镜像市场</code>的镜像ID可通过<a href="https://market.cloud.tencent.com/list">云市场</a>查询。</li><li>通过调用接口 <a href="https://cloud.tencent.com/document/api/213/15715">DescribeImages</a> ，传入InstanceType获取当前机型支持的镜像列表，取返回信息中的<code>ImageId</code>字段。</li></p>
 	ImageId *string `json:"ImageId,omitnil,omitempty" name:"ImageId"`
 
-	// 实例启动模板版本描述。长度为2~256个英文或中文字符，默认为空字符。
+	// <p>实例启动模板版本描述。长度为2~256个英文或中文字符，默认为空字符。</p>
 	LaunchTemplateVersionDescription *string `json:"LaunchTemplateVersionDescription,omitnil,omitempty" name:"LaunchTemplateVersionDescription"`
 
-	// 实例机型。不同实例机型指定了不同的资源规格。
-	// <br><li>对于付费模式为PREPAID或POSTPAID\_BY\_HOUR的实例创建，具体取值可通过调用接口[DescribeInstanceTypeConfigs](https://cloud.tencent.com/document/api/213/15749)来获得最新的规格表或参见[实例规格](https://cloud.tencent.com/document/product/213/11518)描述。若不指定该参数，则系统将根据当前地域的资源售卖情况动态指定默认机型。</li><li>对于付费模式为CDHPAID的实例创建，该参数以"CDH_"为前缀，根据CPU和内存配置生成，具体形式为：CDH_XCXG，例如对于创建CPU为1核，内存为1G大小的专用宿主机的实例，该参数应该为CDH_1C1G。</li>
+	// <p>实例机型。不同实例机型指定了不同的资源规格。<br><br><li>对于付费模式为PREPAID或POSTPAID_BY_HOUR的实例创建，具体取值可通过调用接口<a href="https://cloud.tencent.com/document/api/213/15749">DescribeInstanceTypeConfigs</a>来获得最新的规格表或参见<a href="https://cloud.tencent.com/document/product/213/11518">实例规格</a>描述。若不指定该参数，则系统将根据当前地域的资源售卖情况动态指定默认机型。</li><li>对于付费模式为CDHPAID的实例创建，该参数以&quot;CDH_&quot;为前缀，根据CPU和内存配置生成，具体形式为：CDH_XCXG，例如对于创建CPU为1核，内存为1G大小的专用宿主机的实例，该参数应该为CDH_1C1G。</li></p>
 	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
-	// 实例系统盘配置信息。若不指定该参数，则按照系统默认值进行分配。
+	// <p>实例系统盘配置信息。若不指定该参数，则按照系统默认值进行分配。</p>
 	SystemDisk *SystemDisk `json:"SystemDisk,omitnil,omitempty" name:"SystemDisk"`
 
-	// 实例数据盘配置信息。若不指定该参数，则默认不购买数据盘。支持购买的时候指定21块数据盘，其中最多包含1块LOCAL_BASIC数据盘或者LOCAL_SSD数据盘，最多包含20块CLOUD_BASIC数据盘、CLOUD_PREMIUM数据盘或者CLOUD_SSD数据盘，详情请参考[ 云硬盘使用限制](https://cloud.tencent.com/document/product/362/5145)。
+	// <p>实例数据盘配置信息。若不指定该参数，则默认不购买数据盘。支持购买的时候指定21块数据盘，其中最多包含1块LOCAL_BASIC数据盘或者LOCAL_SSD数据盘，最多包含20块CLOUD_BASIC数据盘、CLOUD_PREMIUM数据盘或者CLOUD_SSD数据盘，详情请参考<a href="https://cloud.tencent.com/document/product/362/5145"> 云硬盘使用限制</a>。</p>
 	DataDisks []*DataDisk `json:"DataDisks,omitnil,omitempty" name:"DataDisks"`
 
-	// 私有网络相关信息配置。通过该参数可以指定私有网络的ID，子网ID等信息。若不指定该参数，则默认使用基础网络。若在此参数中指定了私有网络IP，即表示每个实例的主网卡IP；同时，InstanceCount参数必须与私有网络IP的个数一致且不能大于20。
+	// <p>私有网络相关信息配置。通过该参数可以指定私有网络的ID，子网ID等信息。若不指定该参数，则默认使用基础网络。若在此参数中指定了私有网络IP，即表示每个实例的主网卡IP；同时，InstanceCount参数必须与私有网络IP的个数一致且不能大于20。</p>
 	VirtualPrivateCloud *VirtualPrivateCloud `json:"VirtualPrivateCloud,omitnil,omitempty" name:"VirtualPrivateCloud"`
 
-	// 公网带宽相关信息设置。若不指定该参数，则默认公网带宽为0Mbps。
+	// <p>公网带宽相关信息设置。若不指定该参数，则默认公网带宽为0Mbps。</p>
 	InternetAccessible *InternetAccessible `json:"InternetAccessible,omitnil,omitempty" name:"InternetAccessible"`
 
-	// 购买实例数量。默认取值：1。指定购买实例的数量不能超过用户所能购买的剩余配额数量，具体配额相关限制详见[CVM实例购买限制](https://cloud.tencent.com/document/product/213/2664)。
+	// <p>购买实例数量。默认取值：1。指定购买实例的数量不能超过用户所能购买的剩余配额数量，具体配额相关限制详见<a href="https://cloud.tencent.com/document/product/213/2664">CVM实例购买限制</a>。</p>
 	InstanceCount *int64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
 
-	// 实例显示名称。<br><li>不指定实例显示名称则默认显示‘未命名’。</li><li>购买多台实例，如果指定模式串`{R:x}`，表示生成数字`[x, x+n-1]`，其中`n`表示购买实例的数量，例如`server_{R:3}`，购买1台时，实例显示名称为`server_3`；购买2台时，实例显示名称分别为`server_3`，`server_4`。支持指定多个模式串`{R:x}`。</li><li>购买多台实例，如果不指定模式串，则在实例显示名称添加后缀`1、2...n`，其中`n`表示购买实例的数量，例如`server_`，购买2台时，实例显示名称分别为`server_1`，`server_2`。</li><li>最多支持128个字符（包含模式串）。</li>
+	// <p>实例显示名称。<br><li>不指定实例显示名称则默认显示‘未命名’。</li><li>购买多台实例，如果指定模式串<code>{R:x}</code>，表示生成数字<code>[x, x+n-1]</code>，其中<code>n</code>表示购买实例的数量，例如<code>server_{R:3}</code>，购买1台时，实例显示名称为<code>server_3</code>；购买2台时，实例显示名称分别为<code>server_3</code>，<code>server_4</code>。支持指定多个模式串<code>{R:x}</code>。</li><li>购买多台实例，如果不指定模式串，则在实例显示名称添加后缀<code>1、2...n</code>，其中<code>n</code>表示购买实例的数量，例如<code>server_</code>，购买2台时，实例显示名称分别为<code>server_1</code>，<code>server_2</code>。</li><li>最多支持128个字符（包含模式串）。</li></p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 实例登录设置。通过该参数可以设置实例的登录方式为密钥或保持镜像的原始登录设置。
+	// <p>实例登录设置。通过该参数可以设置实例的登录方式为密钥或保持镜像的原始登录设置。</p>
 	LoginSettings *LoginSettings `json:"LoginSettings,omitnil,omitempty" name:"LoginSettings"`
 
-	// 实例所属安全组。该参数可以通过调用 [DescribeSecurityGroups](https://cloud.tencent.com/document/api/215/15808) 的返回值中的 `SecurityGroupId` 字段来获取。若不指定该参数，则绑定指定项目下的默认安全组，如默认安全组不存在则将自动创建。
+	// <p>实例所属安全组。该参数可以通过调用 <a href="https://cloud.tencent.com/document/api/215/15808">DescribeSecurityGroups</a> 的返回值中的 <code>SecurityGroupId</code> 字段来获取。若不指定该参数，则绑定指定项目下的默认安全组，如默认安全组不存在则将自动创建。</p>
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 增强服务。通过该参数可以指定是否开启云安全、云监控等服务。若不指定该参数，则默认公共镜像开启云监控、云安全服务；自定义镜像与镜像市场镜像默认不开启云监控，云安全服务，而使用镜像里保留的服务。
+	// <p>增强服务。通过该参数可以指定是否开启云安全、云监控等服务。若不指定该参数，则默认公共镜像开启云监控、云安全服务；自定义镜像与镜像市场镜像默认不开启云监控，云安全服务，而使用镜像里保留的服务。</p>
 	EnhancedService *EnhancedService `json:"EnhancedService,omitnil,omitempty" name:"EnhancedService"`
 
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
+	// <p>用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 
-	// 云服务器的主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><li>Windows 实例：名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><li>其他类型（Linux 等）实例：字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li>
+	// <p>云服务器的主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><li>Windows 实例：名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><li>其他类型（Linux 等）实例：字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li></p>
 	HostName *string `json:"HostName,omitnil,omitempty" name:"HostName"`
 
-	// 定时任务。通过该参数可以为实例指定定时任务，目前仅支持定时销毁。
+	// <p>定时任务。通过该参数可以为实例指定定时任务，目前仅支持定时销毁。</p>
 	ActionTimer *ActionTimer `json:"ActionTimer,omitnil,omitempty" name:"ActionTimer"`
 
-	// 置放群组id，仅支持指定一个。该参数可以通过调用 [ DescribeDisasterRecoverGroups ](https://cloud.tencent.com/document/api/213/17810) 的返回值中的 `DisasterRecoverGroupId` 字段来获取。
+	// <p>置放群组id，仅支持指定一个。该参数可以通过调用 <a href="https://cloud.tencent.com/document/api/213/17810"> DescribeDisasterRecoverGroups </a> 的返回值中的 <code>DisasterRecoverGroupId</code> 字段来获取。</p>
 	DisasterRecoverGroupIds []*string `json:"DisasterRecoverGroupIds,omitnil,omitempty" name:"DisasterRecoverGroupIds"`
 
-	// 标签描述列表。通过指定该参数可以同时绑定标签到相应的资源实例，当前仅支持绑定标签到云服务器实例。
+	// <p>标签描述列表。通过指定该参数可以同时绑定标签到相应的资源实例，当前仅支持绑定标签到云服务器实例。</p>
 	TagSpecification []*TagSpecification `json:"TagSpecification,omitnil,omitempty" name:"TagSpecification"`
 
-	// 实例的市场相关选项，如竞价实例相关参数，若指定实例的付费模式为竞价付费则该参数必传。
+	// <p>实例的市场相关选项，如竞价实例相关参数，若指定实例的付费模式为竞价付费则该参数必传。</p>
 	InstanceMarketOptions *InstanceMarketOptionsRequest `json:"InstanceMarketOptions,omitnil,omitempty" name:"InstanceMarketOptions"`
 
-	// 提供给实例使用的用户数据，需要以 base64 方式编码，支持的最大数据大小为 16KB。关于获取此参数的详细介绍，请参阅[Windows](https://cloud.tencent.com/document/product/213/17526)和[Linux](https://cloud.tencent.com/document/product/213/17525)启动时运行命令。
+	// <p>提供给实例使用的用户数据，需要以 base64 方式编码，支持的最大数据大小为 16KB。关于获取此参数的详细介绍，请参阅<a href="https://cloud.tencent.com/document/product/213/17526">Windows</a>和<a href="https://cloud.tencent.com/document/product/213/17525">Linux</a>启动时运行命令。</p>
 	UserData *string `json:"UserData,omitnil,omitempty" name:"UserData"`
 
-	// 是否只预检此次请求。
-	// true：发送检查请求，不会创建实例。检查项包括是否填写了必需参数，请求格式，业务限制和云服务器库存。
-	// 如果检查不通过，则返回对应错误码；
-	// 如果检查通过，则返回RequestId.
-	// false（默认）：发送正常请求，通过检查后直接创建实例。
+	// <p>是否只预检此次请求。<br>true：发送检查请求，不会创建实例。检查项包括是否填写了必需参数，请求格式，业务限制和云服务器库存。<br>如果检查不通过，则返回对应错误码；<br>如果检查通过，则返回RequestId.<br>false（默认）：发送正常请求，通过检查后直接创建实例。</p>
 	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
 
-	// CAM角色名称。可通过[ DescribeRoleList ](https://cloud.tencent.com/document/product/598/36223)接口返回值中的`RoleName `获取。
+	// <p>CAM角色名称。可通过<a href="https://cloud.tencent.com/document/product/598/36223"> DescribeRoleList </a>接口返回值中的<code>RoleName</code>获取。</p>
 	CamRoleName *string `json:"CamRoleName,omitnil,omitempty" name:"CamRoleName"`
 
-	// 高性能计算集群ID。若创建的实例为高性能计算实例，需指定实例放置的集群，否则不可指定。该参数可以通过调用 [DescribeHpcClusters](https://cloud.tencent.com/document/api/213/83220) 的返回值中的 `HpcClusterId` 字段来获取。
+	// <p>高性能计算集群ID。若创建的实例为高性能计算实例，需指定实例放置的集群，否则不可指定。该参数可以通过调用 <a href="https://cloud.tencent.com/document/api/213/83220">DescribeHpcClusters</a> 的返回值中的 <code>HpcClusterId</code> 字段来获取。</p>
 	HpcClusterId *string `json:"HpcClusterId,omitnil,omitempty" name:"HpcClusterId"`
 
-	// 实例[计费类型](https://cloud.tencent.com/document/product/213/2180)。<br><li>PREPAID：预付费，即包年包月</li><li>POSTPAID_BY_HOUR：按小时后付费</li><li>CDHPAID：独享子机（基于专用宿主机创建，宿主机部分的资源不收费）</li><li>SPOTPAID：竞价付费</li>默认值：POSTPAID_BY_HOUR。
+	// <p>实例<a href="https://cloud.tencent.com/document/product/213/2180">计费类型</a>。<br><li>PREPAID：预付费，即包年包月</li><li>POSTPAID_BY_HOUR：按小时后付费</li><li>CDHPAID：独享子机（基于专用宿主机创建，宿主机部分的资源不收费）</li><li>SPOTPAID：竞价付费</li>默认值：POSTPAID_BY_HOUR。</p>
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
-	// 预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。若指定实例的付费模式为预付费则该参数必传。
+	// <p>预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。若指定实例的付费模式为预付费则该参数必传。</p>
 	InstanceChargePrepaid *InstanceChargePrepaid `json:"InstanceChargePrepaid,omitnil,omitempty" name:"InstanceChargePrepaid"`
 
-	// 实例销毁保护标志，表示是否允许通过api接口删除实例。取值范围：<br><li>TRUE：表示开启实例保护，不允许通过api接口删除实例</li><li>FALSE：表示关闭实例保护，允许通过api接口删除实例<br></li>默认取值：FALSE。
+	// <p>实例销毁保护标志，表示是否允许通过api接口删除实例。取值范围：<br><li>TRUE：表示开启实例保护，不允许通过api接口删除实例</li><li>FALSE：表示关闭实例保护，允许通过api接口删除实例<br></li>默认取值：FALSE。</p>
 	DisableApiTermination *bool `json:"DisableApiTermination,omitnil,omitempty" name:"DisableApiTermination"`
 
-	// 实例是否开启巨型帧，取值范围：<br><li/> true：表示实例开启巨型帧，只有支持巨型帧的机型可设置为true。<br><li/>false：表示实例关闭巨型帧，只有支持巨型帧的机型可设置为false。<br> 支持巨型帧的实例规格： [实例规格](https://cloud.tencent.com/document/product/213/11518)
+	// <p>实例是否开启巨型帧，取值范围：<br>&lt;li/&gt; true：表示实例开启巨型帧，只有支持巨型帧的机型可设置为true。<br>&lt;li/&gt;false：表示实例关闭巨型帧，只有支持巨型帧的机型可设置为false。<br> 支持巨型帧的实例规格： <a href="https://cloud.tencent.com/document/product/213/11518">实例规格</a></p>
 	EnableJumboFrame *bool `json:"EnableJumboFrame,omitnil,omitempty" name:"EnableJumboFrame"`
 
-	// 标签描述列表。通过指定该参数可以绑定标签到实例启动模板。
+	// <p>标签描述列表。通过指定该参数可以绑定标签到实例启动模板。</p>
 	LaunchTemplateTagSpecification []*TagSpecification `json:"LaunchTemplateTagSpecification,omitnil,omitempty" name:"LaunchTemplateTagSpecification"`
 
-	// 自定义metadata，支持创建 CVM 时添加自定义元数据键值对。
-	// **注：内测中**。
+	// <p>自定义metadata，支持创建 CVM 时添加自定义元数据键值对。<br><strong>注：内测中</strong>。</p>
 	Metadata *Metadata `json:"Metadata,omitnil,omitempty" name:"Metadata"`
 
-	// 只允许传递 Update 和 Replace 参数，在模板使用自定义 Metadata 且在 RunInstances 也传递 Metadata 时生效。默认采用 Replace。
-	// 
-	// - Update：设模板 t含本参数值为Update、 metadata=[k1:v1, k2:v2] ，则RunInstances（给metadata=[k2:v3]）+ t 创建的 cvm 使用metadata=[k1:v1, k2:v3] 
-	// - Replace：模板 t含本参数值为Replace、 metadata=[k1:v1, k2:v2] ，则RunInstances（给metadata=[k2:v3]）+ t 创建的 cvm 使用metadata=[k2:v3] 
-	// **注：内测中**。
+	// <p>只允许传递 Update 和 Replace 参数，在模板使用自定义 Metadata 且在 RunInstances 也传递 Metadata 时生效。默认采用 Replace。</p><ul><li>Update：设模板 t含本参数值为Update、 metadata=[k1:v1, k2:v2] ，则RunInstances（给metadata=[k2:v3]）+ t 创建的 cvm 使用metadata=[k1:v1, k2:v3] </li><li>Replace：模板 t含本参数值为Replace、 metadata=[k1:v1, k2:v2] ，则RunInstances（给metadata=[k2:v3]）+ t 创建的 cvm 使用metadata=[k2:v3]<br><strong>注：内测中</strong>。</li></ul>
 	TemplateDataModifyAction *string `json:"TemplateDataModifyAction,omitnil,omitempty" name:"TemplateDataModifyAction"`
+
+	// <p>多网卡参数信息。 此功能仅部分地区灰度开放，如需使用<a href="https://console.cloud.tencent.com/workorder/category">请提交工单咨询</a></p>
+	NetworkInterfaces []*NetworkInterfaces `json:"NetworkInterfaces,omitnil,omitempty" name:"NetworkInterfaces"`
 }
 
 type CreateLaunchTemplateRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例启动模板名称。长度为2~128个英文或中文字符。
+	// <p>实例启动模板名称。长度为2~128个英文或中文字符。</p>
 	LaunchTemplateName *string `json:"LaunchTemplateName,omitnil,omitempty" name:"LaunchTemplateName"`
 
-	// 实例所在的位置。通过该参数可以指定实例所属可用区，所属项目，所属宿主机（在专用宿主机上创建子机时指定）等属性。
+	// <p>实例所在的位置。通过该参数可以指定实例所属可用区，所属项目，所属宿主机（在专用宿主机上创建子机时指定）等属性。</p>
 	Placement *Placement `json:"Placement,omitnil,omitempty" name:"Placement"`
 
-	// 指定有效的[镜像](https://cloud.tencent.com/document/product/213/4940)ID，格式形如`img-xxx`。镜像类型分为四种：<br/><li>公共镜像</li><li>自定义镜像</li><li>共享镜像</li><li>服务市场镜像</li><br/>可通过以下方式获取可用的镜像ID：<br/><li>`公共镜像`、`自定义镜像`、`共享镜像`的镜像ID可通过登录[控制台](https://console.cloud.tencent.com/cvm/image?rid=1&imageType=PUBLIC_IMAGE)查询；`服务镜像市场`的镜像ID可通过[云市场](https://market.cloud.tencent.com/list)查询。</li><li>通过调用接口 [DescribeImages](https://cloud.tencent.com/document/api/213/15715) ，传入InstanceType获取当前机型支持的镜像列表，取返回信息中的`ImageId`字段。</li>
+	// <p>指定有效的<a href="https://cloud.tencent.com/document/product/213/4940">镜像</a>ID，格式形如<code>img-xxx</code>。镜像类型分为四种：<br><li>公共镜像</li><li>自定义镜像</li><li>共享镜像</li><li>服务市场镜像</li><br>可通过以下方式获取可用的镜像ID：<br><li><code>公共镜像</code>、<code>自定义镜像</code>、<code>共享镜像</code>的镜像ID可通过登录<a href="https://console.cloud.tencent.com/cvm/image?rid=1&amp;imageType=PUBLIC_IMAGE">控制台</a>查询；<code>服务镜像市场</code>的镜像ID可通过<a href="https://market.cloud.tencent.com/list">云市场</a>查询。</li><li>通过调用接口 <a href="https://cloud.tencent.com/document/api/213/15715">DescribeImages</a> ，传入InstanceType获取当前机型支持的镜像列表，取返回信息中的<code>ImageId</code>字段。</li></p>
 	ImageId *string `json:"ImageId,omitnil,omitempty" name:"ImageId"`
 
-	// 实例启动模板版本描述。长度为2~256个英文或中文字符，默认为空字符。
+	// <p>实例启动模板版本描述。长度为2~256个英文或中文字符，默认为空字符。</p>
 	LaunchTemplateVersionDescription *string `json:"LaunchTemplateVersionDescription,omitnil,omitempty" name:"LaunchTemplateVersionDescription"`
 
-	// 实例机型。不同实例机型指定了不同的资源规格。
-	// <br><li>对于付费模式为PREPAID或POSTPAID\_BY\_HOUR的实例创建，具体取值可通过调用接口[DescribeInstanceTypeConfigs](https://cloud.tencent.com/document/api/213/15749)来获得最新的规格表或参见[实例规格](https://cloud.tencent.com/document/product/213/11518)描述。若不指定该参数，则系统将根据当前地域的资源售卖情况动态指定默认机型。</li><li>对于付费模式为CDHPAID的实例创建，该参数以"CDH_"为前缀，根据CPU和内存配置生成，具体形式为：CDH_XCXG，例如对于创建CPU为1核，内存为1G大小的专用宿主机的实例，该参数应该为CDH_1C1G。</li>
+	// <p>实例机型。不同实例机型指定了不同的资源规格。<br><br><li>对于付费模式为PREPAID或POSTPAID_BY_HOUR的实例创建，具体取值可通过调用接口<a href="https://cloud.tencent.com/document/api/213/15749">DescribeInstanceTypeConfigs</a>来获得最新的规格表或参见<a href="https://cloud.tencent.com/document/product/213/11518">实例规格</a>描述。若不指定该参数，则系统将根据当前地域的资源售卖情况动态指定默认机型。</li><li>对于付费模式为CDHPAID的实例创建，该参数以&quot;CDH_&quot;为前缀，根据CPU和内存配置生成，具体形式为：CDH_XCXG，例如对于创建CPU为1核，内存为1G大小的专用宿主机的实例，该参数应该为CDH_1C1G。</li></p>
 	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
-	// 实例系统盘配置信息。若不指定该参数，则按照系统默认值进行分配。
+	// <p>实例系统盘配置信息。若不指定该参数，则按照系统默认值进行分配。</p>
 	SystemDisk *SystemDisk `json:"SystemDisk,omitnil,omitempty" name:"SystemDisk"`
 
-	// 实例数据盘配置信息。若不指定该参数，则默认不购买数据盘。支持购买的时候指定21块数据盘，其中最多包含1块LOCAL_BASIC数据盘或者LOCAL_SSD数据盘，最多包含20块CLOUD_BASIC数据盘、CLOUD_PREMIUM数据盘或者CLOUD_SSD数据盘，详情请参考[ 云硬盘使用限制](https://cloud.tencent.com/document/product/362/5145)。
+	// <p>实例数据盘配置信息。若不指定该参数，则默认不购买数据盘。支持购买的时候指定21块数据盘，其中最多包含1块LOCAL_BASIC数据盘或者LOCAL_SSD数据盘，最多包含20块CLOUD_BASIC数据盘、CLOUD_PREMIUM数据盘或者CLOUD_SSD数据盘，详情请参考<a href="https://cloud.tencent.com/document/product/362/5145"> 云硬盘使用限制</a>。</p>
 	DataDisks []*DataDisk `json:"DataDisks,omitnil,omitempty" name:"DataDisks"`
 
-	// 私有网络相关信息配置。通过该参数可以指定私有网络的ID，子网ID等信息。若不指定该参数，则默认使用基础网络。若在此参数中指定了私有网络IP，即表示每个实例的主网卡IP；同时，InstanceCount参数必须与私有网络IP的个数一致且不能大于20。
+	// <p>私有网络相关信息配置。通过该参数可以指定私有网络的ID，子网ID等信息。若不指定该参数，则默认使用基础网络。若在此参数中指定了私有网络IP，即表示每个实例的主网卡IP；同时，InstanceCount参数必须与私有网络IP的个数一致且不能大于20。</p>
 	VirtualPrivateCloud *VirtualPrivateCloud `json:"VirtualPrivateCloud,omitnil,omitempty" name:"VirtualPrivateCloud"`
 
-	// 公网带宽相关信息设置。若不指定该参数，则默认公网带宽为0Mbps。
+	// <p>公网带宽相关信息设置。若不指定该参数，则默认公网带宽为0Mbps。</p>
 	InternetAccessible *InternetAccessible `json:"InternetAccessible,omitnil,omitempty" name:"InternetAccessible"`
 
-	// 购买实例数量。默认取值：1。指定购买实例的数量不能超过用户所能购买的剩余配额数量，具体配额相关限制详见[CVM实例购买限制](https://cloud.tencent.com/document/product/213/2664)。
+	// <p>购买实例数量。默认取值：1。指定购买实例的数量不能超过用户所能购买的剩余配额数量，具体配额相关限制详见<a href="https://cloud.tencent.com/document/product/213/2664">CVM实例购买限制</a>。</p>
 	InstanceCount *int64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
 
-	// 实例显示名称。<br><li>不指定实例显示名称则默认显示‘未命名’。</li><li>购买多台实例，如果指定模式串`{R:x}`，表示生成数字`[x, x+n-1]`，其中`n`表示购买实例的数量，例如`server_{R:3}`，购买1台时，实例显示名称为`server_3`；购买2台时，实例显示名称分别为`server_3`，`server_4`。支持指定多个模式串`{R:x}`。</li><li>购买多台实例，如果不指定模式串，则在实例显示名称添加后缀`1、2...n`，其中`n`表示购买实例的数量，例如`server_`，购买2台时，实例显示名称分别为`server_1`，`server_2`。</li><li>最多支持128个字符（包含模式串）。</li>
+	// <p>实例显示名称。<br><li>不指定实例显示名称则默认显示‘未命名’。</li><li>购买多台实例，如果指定模式串<code>{R:x}</code>，表示生成数字<code>[x, x+n-1]</code>，其中<code>n</code>表示购买实例的数量，例如<code>server_{R:3}</code>，购买1台时，实例显示名称为<code>server_3</code>；购买2台时，实例显示名称分别为<code>server_3</code>，<code>server_4</code>。支持指定多个模式串<code>{R:x}</code>。</li><li>购买多台实例，如果不指定模式串，则在实例显示名称添加后缀<code>1、2...n</code>，其中<code>n</code>表示购买实例的数量，例如<code>server_</code>，购买2台时，实例显示名称分别为<code>server_1</code>，<code>server_2</code>。</li><li>最多支持128个字符（包含模式串）。</li></p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 实例登录设置。通过该参数可以设置实例的登录方式为密钥或保持镜像的原始登录设置。
+	// <p>实例登录设置。通过该参数可以设置实例的登录方式为密钥或保持镜像的原始登录设置。</p>
 	LoginSettings *LoginSettings `json:"LoginSettings,omitnil,omitempty" name:"LoginSettings"`
 
-	// 实例所属安全组。该参数可以通过调用 [DescribeSecurityGroups](https://cloud.tencent.com/document/api/215/15808) 的返回值中的 `SecurityGroupId` 字段来获取。若不指定该参数，则绑定指定项目下的默认安全组，如默认安全组不存在则将自动创建。
+	// <p>实例所属安全组。该参数可以通过调用 <a href="https://cloud.tencent.com/document/api/215/15808">DescribeSecurityGroups</a> 的返回值中的 <code>SecurityGroupId</code> 字段来获取。若不指定该参数，则绑定指定项目下的默认安全组，如默认安全组不存在则将自动创建。</p>
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 增强服务。通过该参数可以指定是否开启云安全、云监控等服务。若不指定该参数，则默认公共镜像开启云监控、云安全服务；自定义镜像与镜像市场镜像默认不开启云监控，云安全服务，而使用镜像里保留的服务。
+	// <p>增强服务。通过该参数可以指定是否开启云安全、云监控等服务。若不指定该参数，则默认公共镜像开启云监控、云安全服务；自定义镜像与镜像市场镜像默认不开启云监控，云安全服务，而使用镜像里保留的服务。</p>
 	EnhancedService *EnhancedService `json:"EnhancedService,omitnil,omitempty" name:"EnhancedService"`
 
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
+	// <p>用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 
-	// 云服务器的主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><li>Windows 实例：名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><li>其他类型（Linux 等）实例：字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li>
+	// <p>云服务器的主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><li>Windows 实例：名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><li>其他类型（Linux 等）实例：字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li></p>
 	HostName *string `json:"HostName,omitnil,omitempty" name:"HostName"`
 
-	// 定时任务。通过该参数可以为实例指定定时任务，目前仅支持定时销毁。
+	// <p>定时任务。通过该参数可以为实例指定定时任务，目前仅支持定时销毁。</p>
 	ActionTimer *ActionTimer `json:"ActionTimer,omitnil,omitempty" name:"ActionTimer"`
 
-	// 置放群组id，仅支持指定一个。该参数可以通过调用 [ DescribeDisasterRecoverGroups ](https://cloud.tencent.com/document/api/213/17810) 的返回值中的 `DisasterRecoverGroupId` 字段来获取。
+	// <p>置放群组id，仅支持指定一个。该参数可以通过调用 <a href="https://cloud.tencent.com/document/api/213/17810"> DescribeDisasterRecoverGroups </a> 的返回值中的 <code>DisasterRecoverGroupId</code> 字段来获取。</p>
 	DisasterRecoverGroupIds []*string `json:"DisasterRecoverGroupIds,omitnil,omitempty" name:"DisasterRecoverGroupIds"`
 
-	// 标签描述列表。通过指定该参数可以同时绑定标签到相应的资源实例，当前仅支持绑定标签到云服务器实例。
+	// <p>标签描述列表。通过指定该参数可以同时绑定标签到相应的资源实例，当前仅支持绑定标签到云服务器实例。</p>
 	TagSpecification []*TagSpecification `json:"TagSpecification,omitnil,omitempty" name:"TagSpecification"`
 
-	// 实例的市场相关选项，如竞价实例相关参数，若指定实例的付费模式为竞价付费则该参数必传。
+	// <p>实例的市场相关选项，如竞价实例相关参数，若指定实例的付费模式为竞价付费则该参数必传。</p>
 	InstanceMarketOptions *InstanceMarketOptionsRequest `json:"InstanceMarketOptions,omitnil,omitempty" name:"InstanceMarketOptions"`
 
-	// 提供给实例使用的用户数据，需要以 base64 方式编码，支持的最大数据大小为 16KB。关于获取此参数的详细介绍，请参阅[Windows](https://cloud.tencent.com/document/product/213/17526)和[Linux](https://cloud.tencent.com/document/product/213/17525)启动时运行命令。
+	// <p>提供给实例使用的用户数据，需要以 base64 方式编码，支持的最大数据大小为 16KB。关于获取此参数的详细介绍，请参阅<a href="https://cloud.tencent.com/document/product/213/17526">Windows</a>和<a href="https://cloud.tencent.com/document/product/213/17525">Linux</a>启动时运行命令。</p>
 	UserData *string `json:"UserData,omitnil,omitempty" name:"UserData"`
 
-	// 是否只预检此次请求。
-	// true：发送检查请求，不会创建实例。检查项包括是否填写了必需参数，请求格式，业务限制和云服务器库存。
-	// 如果检查不通过，则返回对应错误码；
-	// 如果检查通过，则返回RequestId.
-	// false（默认）：发送正常请求，通过检查后直接创建实例。
+	// <p>是否只预检此次请求。<br>true：发送检查请求，不会创建实例。检查项包括是否填写了必需参数，请求格式，业务限制和云服务器库存。<br>如果检查不通过，则返回对应错误码；<br>如果检查通过，则返回RequestId.<br>false（默认）：发送正常请求，通过检查后直接创建实例。</p>
 	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
 
-	// CAM角色名称。可通过[ DescribeRoleList ](https://cloud.tencent.com/document/product/598/36223)接口返回值中的`RoleName `获取。
+	// <p>CAM角色名称。可通过<a href="https://cloud.tencent.com/document/product/598/36223"> DescribeRoleList </a>接口返回值中的<code>RoleName</code>获取。</p>
 	CamRoleName *string `json:"CamRoleName,omitnil,omitempty" name:"CamRoleName"`
 
-	// 高性能计算集群ID。若创建的实例为高性能计算实例，需指定实例放置的集群，否则不可指定。该参数可以通过调用 [DescribeHpcClusters](https://cloud.tencent.com/document/api/213/83220) 的返回值中的 `HpcClusterId` 字段来获取。
+	// <p>高性能计算集群ID。若创建的实例为高性能计算实例，需指定实例放置的集群，否则不可指定。该参数可以通过调用 <a href="https://cloud.tencent.com/document/api/213/83220">DescribeHpcClusters</a> 的返回值中的 <code>HpcClusterId</code> 字段来获取。</p>
 	HpcClusterId *string `json:"HpcClusterId,omitnil,omitempty" name:"HpcClusterId"`
 
-	// 实例[计费类型](https://cloud.tencent.com/document/product/213/2180)。<br><li>PREPAID：预付费，即包年包月</li><li>POSTPAID_BY_HOUR：按小时后付费</li><li>CDHPAID：独享子机（基于专用宿主机创建，宿主机部分的资源不收费）</li><li>SPOTPAID：竞价付费</li>默认值：POSTPAID_BY_HOUR。
+	// <p>实例<a href="https://cloud.tencent.com/document/product/213/2180">计费类型</a>。<br><li>PREPAID：预付费，即包年包月</li><li>POSTPAID_BY_HOUR：按小时后付费</li><li>CDHPAID：独享子机（基于专用宿主机创建，宿主机部分的资源不收费）</li><li>SPOTPAID：竞价付费</li>默认值：POSTPAID_BY_HOUR。</p>
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
-	// 预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。若指定实例的付费模式为预付费则该参数必传。
+	// <p>预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。若指定实例的付费模式为预付费则该参数必传。</p>
 	InstanceChargePrepaid *InstanceChargePrepaid `json:"InstanceChargePrepaid,omitnil,omitempty" name:"InstanceChargePrepaid"`
 
-	// 实例销毁保护标志，表示是否允许通过api接口删除实例。取值范围：<br><li>TRUE：表示开启实例保护，不允许通过api接口删除实例</li><li>FALSE：表示关闭实例保护，允许通过api接口删除实例<br></li>默认取值：FALSE。
+	// <p>实例销毁保护标志，表示是否允许通过api接口删除实例。取值范围：<br><li>TRUE：表示开启实例保护，不允许通过api接口删除实例</li><li>FALSE：表示关闭实例保护，允许通过api接口删除实例<br></li>默认取值：FALSE。</p>
 	DisableApiTermination *bool `json:"DisableApiTermination,omitnil,omitempty" name:"DisableApiTermination"`
 
-	// 实例是否开启巨型帧，取值范围：<br><li/> true：表示实例开启巨型帧，只有支持巨型帧的机型可设置为true。<br><li/>false：表示实例关闭巨型帧，只有支持巨型帧的机型可设置为false。<br> 支持巨型帧的实例规格： [实例规格](https://cloud.tencent.com/document/product/213/11518)
+	// <p>实例是否开启巨型帧，取值范围：<br>&lt;li/&gt; true：表示实例开启巨型帧，只有支持巨型帧的机型可设置为true。<br>&lt;li/&gt;false：表示实例关闭巨型帧，只有支持巨型帧的机型可设置为false。<br> 支持巨型帧的实例规格： <a href="https://cloud.tencent.com/document/product/213/11518">实例规格</a></p>
 	EnableJumboFrame *bool `json:"EnableJumboFrame,omitnil,omitempty" name:"EnableJumboFrame"`
 
-	// 标签描述列表。通过指定该参数可以绑定标签到实例启动模板。
+	// <p>标签描述列表。通过指定该参数可以绑定标签到实例启动模板。</p>
 	LaunchTemplateTagSpecification []*TagSpecification `json:"LaunchTemplateTagSpecification,omitnil,omitempty" name:"LaunchTemplateTagSpecification"`
 
-	// 自定义metadata，支持创建 CVM 时添加自定义元数据键值对。
-	// **注：内测中**。
+	// <p>自定义metadata，支持创建 CVM 时添加自定义元数据键值对。<br><strong>注：内测中</strong>。</p>
 	Metadata *Metadata `json:"Metadata,omitnil,omitempty" name:"Metadata"`
 
-	// 只允许传递 Update 和 Replace 参数，在模板使用自定义 Metadata 且在 RunInstances 也传递 Metadata 时生效。默认采用 Replace。
-	// 
-	// - Update：设模板 t含本参数值为Update、 metadata=[k1:v1, k2:v2] ，则RunInstances（给metadata=[k2:v3]）+ t 创建的 cvm 使用metadata=[k1:v1, k2:v3] 
-	// - Replace：模板 t含本参数值为Replace、 metadata=[k1:v1, k2:v2] ，则RunInstances（给metadata=[k2:v3]）+ t 创建的 cvm 使用metadata=[k2:v3] 
-	// **注：内测中**。
+	// <p>只允许传递 Update 和 Replace 参数，在模板使用自定义 Metadata 且在 RunInstances 也传递 Metadata 时生效。默认采用 Replace。</p><ul><li>Update：设模板 t含本参数值为Update、 metadata=[k1:v1, k2:v2] ，则RunInstances（给metadata=[k2:v3]）+ t 创建的 cvm 使用metadata=[k1:v1, k2:v3] </li><li>Replace：模板 t含本参数值为Replace、 metadata=[k1:v1, k2:v2] ，则RunInstances（给metadata=[k2:v3]）+ t 创建的 cvm 使用metadata=[k2:v3]<br><strong>注：内测中</strong>。</li></ul>
 	TemplateDataModifyAction *string `json:"TemplateDataModifyAction,omitnil,omitempty" name:"TemplateDataModifyAction"`
+
+	// <p>多网卡参数信息。 此功能仅部分地区灰度开放，如需使用<a href="https://console.cloud.tencent.com/workorder/category">请提交工单咨询</a></p>
+	NetworkInterfaces []*NetworkInterfaces `json:"NetworkInterfaces,omitnil,omitempty" name:"NetworkInterfaces"`
 }
 
 func (r *CreateLaunchTemplateRequest) ToJsonString() string {
@@ -1428,6 +1408,7 @@ func (r *CreateLaunchTemplateRequest) FromJsonString(s string) error {
 	delete(f, "LaunchTemplateTagSpecification")
 	delete(f, "Metadata")
 	delete(f, "TemplateDataModifyAction")
+	delete(f, "NetworkInterfaces")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateLaunchTemplateRequest has unknown keys!", "")
 	}
@@ -1436,7 +1417,7 @@ func (r *CreateLaunchTemplateRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateLaunchTemplateResponseParams struct {
-	// 当通过本接口来创建实例启动模板时会返回该参数，表示创建成功的实例启动模板`ID`。
+	// <p>当通过本接口来创建实例启动模板时会返回该参数，表示创建成功的实例启动模板<code>ID</code>。</p>
 	LaunchTemplateId *string `json:"LaunchTemplateId,omitnil,omitempty" name:"LaunchTemplateId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1461,215 +1442,201 @@ func (r *CreateLaunchTemplateResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateLaunchTemplateVersionRequestParams struct {
-	// 实例所在的位置。通过该参数可以指定实例所属可用区，所属项目，所属宿主机（在专用宿主机上创建子机时指定）等属性。
+	// <p>实例所在的位置。通过该参数可以指定实例所属可用区，所属项目，所属宿主机（在专用宿主机上创建子机时指定）等属性。</p>
 	Placement *Placement `json:"Placement,omitnil,omitempty" name:"Placement"`
 
-	// 启动模板ID，新版本将基于该实例启动模板ID创建。可通过 [DescribeLaunchTemplates](https://cloud.tencent.com/document/api/213/66322) 接口返回值中的`LaunchTemplateId`获取。
+	// <p>启动模板ID，新版本将基于该实例启动模板ID创建。可通过 <a href="https://cloud.tencent.com/document/api/213/66322">DescribeLaunchTemplates</a> 接口返回值中的<code>LaunchTemplateId</code>获取。</p>
 	LaunchTemplateId *string `json:"LaunchTemplateId,omitnil,omitempty" name:"LaunchTemplateId"`
 
-	// 若给定，新实例启动模板将基于给定的版本号创建。若未指定则使用默认版本,可以通过 [DescribeLaunchTemplateVersions](https://cloud.tencent.com/document/api/213/66323)查询默认版本。
+	// <p>若给定，新实例启动模板将基于给定的版本号创建。若未指定则使用默认版本,可以通过 <a href="https://cloud.tencent.com/document/api/213/66323">DescribeLaunchTemplateVersions</a>查询默认版本。</p>
 	LaunchTemplateVersion *int64 `json:"LaunchTemplateVersion,omitnil,omitempty" name:"LaunchTemplateVersion"`
 
-	// 实例启动模板版本描述。长度为2~256个英文或中文字符，不指定该参数时默认为空字符。
+	// <p>实例启动模板版本描述。长度为2~256个英文或中文字符，不指定该参数时默认为空字符。</p>
 	LaunchTemplateVersionDescription *string `json:"LaunchTemplateVersionDescription,omitnil,omitempty" name:"LaunchTemplateVersionDescription"`
 
-	// 实例机型。不同实例机型指定了不同的资源规格。
-	// <br><li>对于付费模式为PREPAID或POSTPAID\_BY\_HOUR的实例创建，具体取值可通过调用接口[DescribeInstanceTypeConfigs](https://cloud.tencent.com/document/api/213/15749)来获得最新的规格表或参见[实例规格](https://cloud.tencent.com/document/product/213/11518)描述。若不指定该参数，则系统将根据当前地域的资源售卖情况动态指定默认机型。</li><br><li>对于付费模式为CDHPAID的实例创建，该参数以"CDH_"为前缀，根据CPU和内存配置生成，具体形式为：CDH_XCXG，例如对于创建CPU为1核，内存为1G大小的专用宿主机的实例，该参数应该为CDH_1C1G。</li>
+	// <p>实例机型。不同实例机型指定了不同的资源规格。<br><br><li>对于付费模式为PREPAID或POSTPAID_BY_HOUR的实例创建，具体取值可通过调用接口<a href="https://cloud.tencent.com/document/api/213/15749">DescribeInstanceTypeConfigs</a>来获得最新的规格表或参见<a href="https://cloud.tencent.com/document/product/213/11518">实例规格</a>描述。若不指定该参数，则系统将根据当前地域的资源售卖情况动态指定默认机型。</li><br><li>对于付费模式为CDHPAID的实例创建，该参数以&quot;CDH_&quot;为前缀，根据CPU和内存配置生成，具体形式为：CDH_XCXG，例如对于创建CPU为1核，内存为1G大小的专用宿主机的实例，该参数应该为CDH_1C1G。</li></p>
 	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
-	// 指定有效的[镜像](https://cloud.tencent.com/document/product/213/4940)ID，格式形如`img-xxx`。镜像类型分为四种：<br/><li>公共镜像</li><li>自定义镜像</li><li>共享镜像</li><li>云镜像市场</li><br/>可通过以下方式获取可用的镜像ID：<br/><li>`公共镜像`、`自定义镜像`、`共享镜像`的镜像ID可通过登录[控制台](https://console.cloud.tencent.com/cvm/image?rid=1&imageType=PUBLIC_IMAGE)查询；`云镜像市场`的镜像ID可通过[云市场](https://market.cloud.tencent.com/list)查询。</li><li>通过调用接口 [DescribeImages](https://cloud.tencent.com/document/api/213/15715) ，传入InstanceType获取当前机型支持的镜像列表，取返回信息中的`ImageId`字段。</li>
+	// <p>指定有效的<a href="https://cloud.tencent.com/document/product/213/4940">镜像</a>ID，格式形如<code>img-xxx</code>。镜像类型分为四种：<br><li>公共镜像</li><li>自定义镜像</li><li>共享镜像</li><li>云镜像市场</li><br>可通过以下方式获取可用的镜像ID：<br><li><code>公共镜像</code>、<code>自定义镜像</code>、<code>共享镜像</code>的镜像ID可通过登录<a href="https://console.cloud.tencent.com/cvm/image?rid=1&amp;imageType=PUBLIC_IMAGE">控制台</a>查询；<code>云镜像市场</code>的镜像ID可通过<a href="https://market.cloud.tencent.com/list">云市场</a>查询。</li><li>通过调用接口 <a href="https://cloud.tencent.com/document/api/213/15715">DescribeImages</a> ，传入InstanceType获取当前机型支持的镜像列表，取返回信息中的<code>ImageId</code>字段。</li></p>
 	ImageId *string `json:"ImageId,omitnil,omitempty" name:"ImageId"`
 
-	// 实例系统盘配置信息。若不指定该参数，则按照系统默认值进行分配。
+	// <p>实例系统盘配置信息。若不指定该参数，则按照系统默认值进行分配。</p>
 	SystemDisk *SystemDisk `json:"SystemDisk,omitnil,omitempty" name:"SystemDisk"`
 
-	// 实例数据盘配置信息。若不指定该参数，则默认不购买数据盘。支持购买的时候指定21块数据盘，其中最多包含1块LOCAL_BASIC数据盘或者LOCAL_SSD数据盘，最多包含20块CLOUD_BASIC数据盘、CLOUD_PREMIUM数据盘或者CLOUD_SSD数据盘。
+	// <p>实例数据盘配置信息。若不指定该参数，则默认不购买数据盘。支持购买的时候指定21块数据盘，其中最多包含1块LOCAL_BASIC数据盘或者LOCAL_SSD数据盘，最多包含20块CLOUD_BASIC数据盘、CLOUD_PREMIUM数据盘或者CLOUD_SSD数据盘。</p>
 	DataDisks []*DataDisk `json:"DataDisks,omitnil,omitempty" name:"DataDisks"`
 
-	// 私有网络相关信息配置。通过该参数可以指定私有网络的ID，子网ID等信息。若不指定该参数，则默认使用基础网络。若在此参数中指定了私有网络IP，即表示每个实例的主网卡IP；同时，InstanceCount参数必须与私有网络IP的个数一致且不能大于20。
+	// <p>私有网络相关信息配置。通过该参数可以指定私有网络的ID，子网ID等信息。若不指定该参数，则默认使用基础网络。若在此参数中指定了私有网络IP，即表示每个实例的主网卡IP；同时，InstanceCount参数必须与私有网络IP的个数一致且不能大于20。</p>
 	VirtualPrivateCloud *VirtualPrivateCloud `json:"VirtualPrivateCloud,omitnil,omitempty" name:"VirtualPrivateCloud"`
 
-	// 公网带宽相关信息设置。若不指定该参数，则默认公网带宽为0Mbps。
+	// <p>公网带宽相关信息设置。若不指定该参数，则默认公网带宽为0Mbps。</p>
 	InternetAccessible *InternetAccessible `json:"InternetAccessible,omitnil,omitempty" name:"InternetAccessible"`
 
-	// 购买实例数量。具体配额相关限制详见[CVM实例购买限制](https://cloud.tencent.com/document/product/213/2664)。
+	// <p>购买实例数量。具体配额相关限制详见<a href="https://cloud.tencent.com/document/product/213/2664">CVM实例购买限制</a>。</p>
 	InstanceCount *int64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
 
-	// 实例显示名称。<br><li>不指定实例显示名称则默认显示‘未命名’。</li><li>购买多台实例，如果指定模式串`{R:x}`，表示生成数字`[x, x+n-1]`，其中`n`表示购买实例的数量，例如`server_{R:3}`，购买1台时，实例显示名称为`server_3`；购买2台时，实例显示名称分别为`server_3`，`server_4`。支持指定多个模式串`{R:x}`。</li><li>购买多台实例，如果不指定模式串，则在实例显示名称添加后缀`1、2...n`，其中`n`表示购买实例的数量，例如`server_`，购买2台时，实例显示名称分别为`server_1`，`server_2`。</li><li>最多支持128个字符（包含模式串）。</li>
+	// <p>实例显示名称。<br><li>不指定实例显示名称则默认显示‘未命名’。</li><li>购买多台实例，如果指定模式串<code>{R:x}</code>，表示生成数字<code>[x, x+n-1]</code>，其中<code>n</code>表示购买实例的数量，例如<code>server_{R:3}</code>，购买1台时，实例显示名称为<code>server_3</code>；购买2台时，实例显示名称分别为<code>server_3</code>，<code>server_4</code>。支持指定多个模式串<code>{R:x}</code>。</li><li>购买多台实例，如果不指定模式串，则在实例显示名称添加后缀<code>1、2...n</code>，其中<code>n</code>表示购买实例的数量，例如<code>server_</code>，购买2台时，实例显示名称分别为<code>server_1</code>，<code>server_2</code>。</li><li>最多支持128个字符（包含模式串）。</li></p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 实例登录设置。通过该参数可以设置实例的登录方式为密钥或保持镜像的原始登录设置。
+	// <p>实例登录设置。通过该参数可以设置实例的登录方式为密钥或保持镜像的原始登录设置。</p>
 	LoginSettings *LoginSettings `json:"LoginSettings,omitnil,omitempty" name:"LoginSettings"`
 
-	// 实例所属安全组。该参数可以通过调用 [DescribeSecurityGroups](https://cloud.tencent.com/document/api/215/15808) 的返回值中的sgId字段来获取。若不指定该参数，则绑定默认安全组。
+	// <p>实例所属安全组。该参数可以通过调用 <a href="https://cloud.tencent.com/document/api/215/15808">DescribeSecurityGroups</a> 的返回值中的sgId字段来获取。若不指定该参数，则绑定默认安全组。</p>
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 增强服务。通过该参数可以指定是否开启云安全、云监控等服务。若不指定该参数，则默认公共镜像开启云监控、云安全服务；自定义镜像与云镜像市场镜像默认不开启云监控，云安全服务，而使用镜像里保留的服务。
+	// <p>增强服务。通过该参数可以指定是否开启云安全、云监控等服务。若不指定该参数，则默认公共镜像开启云监控、云安全服务；自定义镜像与云镜像市场镜像默认不开启云监控，云安全服务，而使用镜像里保留的服务。</p>
 	EnhancedService *EnhancedService `json:"EnhancedService,omitnil,omitempty" name:"EnhancedService"`
 
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
+	// <p>用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 
-	// 云服务器的主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><br><li>Windows 实例：名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><br><li>其他类型（Linux 等）实例：字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li>
+	// <p>云服务器的主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><br><li>Windows 实例：名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><br><li>其他类型（Linux 等）实例：字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li></p>
 	HostName *string `json:"HostName,omitnil,omitempty" name:"HostName"`
 
-	// 定时任务。通过该参数可以为实例指定定时任务，目前仅支持定时销毁。
+	// <p>定时任务。通过该参数可以为实例指定定时任务，目前仅支持定时销毁。</p>
 	ActionTimer *ActionTimer `json:"ActionTimer,omitnil,omitempty" name:"ActionTimer"`
 
-	// 置放群组id，仅支持指定一个。可使用[DescribeDisasterRecoverGroups](https://cloud.tencent.com/document/api/213/17810)接口获取。
+	// <p>置放群组id，仅支持指定一个。可使用<a href="https://cloud.tencent.com/document/api/213/17810">DescribeDisasterRecoverGroups</a>接口获取。</p>
 	DisasterRecoverGroupIds []*string `json:"DisasterRecoverGroupIds,omitnil,omitempty" name:"DisasterRecoverGroupIds"`
 
-	// 标签描述列表。通过指定该参数可以同时绑定标签到相应的资源实例，当前仅支持绑定标签到云服务器实例。
+	// <p>标签描述列表。通过指定该参数可以同时绑定标签到相应的资源实例，当前仅支持绑定标签到云服务器实例。</p>
 	TagSpecification []*TagSpecification `json:"TagSpecification,omitnil,omitempty" name:"TagSpecification"`
 
-	// 实例的市场相关选项，如竞价实例相关参数，若指定实例的付费模式为竞价付费则该参数必传。
+	// <p>实例的市场相关选项，如竞价实例相关参数，若指定实例的付费模式为竞价付费则该参数必传。</p>
 	InstanceMarketOptions *InstanceMarketOptionsRequest `json:"InstanceMarketOptions,omitnil,omitempty" name:"InstanceMarketOptions"`
 
-	// 提供给实例使用的用户数据，需要以 base64 方式编码，支持的最大数据大小为 16KB。关于获取此参数的详细介绍，请参阅[Windows](https://cloud.tencent.com/document/product/213/17526)和[Linux](https://cloud.tencent.com/document/product/213/17525)启动时运行命令。
+	// <p>提供给实例使用的用户数据，需要以 base64 方式编码，支持的最大数据大小为 16KB。关于获取此参数的详细介绍，请参阅<a href="https://cloud.tencent.com/document/product/213/17526">Windows</a>和<a href="https://cloud.tencent.com/document/product/213/17525">Linux</a>启动时运行命令。</p>
 	UserData *string `json:"UserData,omitnil,omitempty" name:"UserData"`
 
-	// 是否只预检此次请求。
-	// true：发送检查请求，不会创建实例。检查项包括是否填写了必需参数，请求格式，业务限制和云服务器库存。
-	// 如果检查不通过，则返回对应错误码；
-	// 如果检查通过，则返回RequestId.
-	// false（默认）：发送正常请求，通过检查后直接创建实例。
+	// <p>是否只预检此次请求。<br>true：发送检查请求，不会创建实例。检查项包括是否填写了必需参数，请求格式，业务限制和云服务器库存。<br>如果检查不通过，则返回对应错误码；<br>如果检查通过，则返回RequestId.<br>false（默认）：发送正常请求，通过检查后直接创建实例。</p>
 	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
 
-	// CAM角色名称。可通过[ DescribeRoleList ](https://cloud.tencent.com/document/product/598/13887)接口返回值中的`roleName`获取。
+	// <p>CAM角色名称。可通过<a href="https://cloud.tencent.com/document/product/598/13887"> DescribeRoleList </a>接口返回值中的<code>roleName</code>获取。</p>
 	CamRoleName *string `json:"CamRoleName,omitnil,omitempty" name:"CamRoleName"`
 
-	// 高性能计算集群ID。若创建的实例为高性能计算实例，需指定实例放置的集群，否则不可指定。该参数可以通过调用 [DescribeHpcClusters](https://cloud.tencent.com/document/api/213/83220) 的返回值中的 `HpcClusterId` 字段来获取。
+	// <p>高性能计算集群ID。若创建的实例为高性能计算实例，需指定实例放置的集群，否则不可指定。该参数可以通过调用 <a href="https://cloud.tencent.com/document/api/213/83220">DescribeHpcClusters</a> 的返回值中的 <code>HpcClusterId</code> 字段来获取。</p>
 	HpcClusterId *string `json:"HpcClusterId,omitnil,omitempty" name:"HpcClusterId"`
 
-	// 实例[计费类型](https://cloud.tencent.com/document/product/213/2180)。<br><li>PREPAID：预付费，即包年包月</li><li>POSTPAID_BY_HOUR：按小时后付费</li><li>CDHPAID：独享子机（基于专用宿主机创建，宿主机部分的资源不收费）</li><li>SPOTPAID：竞价付费</li>默认值：POSTPAID_BY_HOUR。
+	// <p>实例<a href="https://cloud.tencent.com/document/product/213/2180">计费类型</a>。<br><li>PREPAID：预付费，即包年包月</li><li>POSTPAID_BY_HOUR：按小时后付费</li><li>CDHPAID：独享子机（基于专用宿主机创建，宿主机部分的资源不收费）</li><li>SPOTPAID：竞价付费</li>默认值：POSTPAID_BY_HOUR。</p>
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
-	// 预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。若指定实例的付费模式为预付费则该参数必传。
+	// <p>预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。若指定实例的付费模式为预付费则该参数必传。</p>
 	InstanceChargePrepaid *InstanceChargePrepaid `json:"InstanceChargePrepaid,omitnil,omitempty" name:"InstanceChargePrepaid"`
 
-	// 实例销毁保护标志，表示是否允许通过api接口删除实例。取值范围：<br><li>TRUE：表示开启实例保护，不允许通过api接口删除实例</li><br><li>FALSE：表示关闭实例保护，允许通过api接口删除实例</li><br><br>默认取值：FALSE。
+	// <p>实例销毁保护标志，表示是否允许通过api接口删除实例。取值范围：<br><li>TRUE：表示开启实例保护，不允许通过api接口删除实例</li><br><li>FALSE：表示关闭实例保护，允许通过api接口删除实例</li><br><br>默认取值：FALSE。</p>
 	DisableApiTermination *bool `json:"DisableApiTermination,omitnil,omitempty" name:"DisableApiTermination"`
 
-	// 实例是否开启巨型帧，取值范围：<br><li/> true：表示实例开启巨型帧，只有支持巨型帧的机型可设置为true。<br><li/>false：表示实例关闭巨型帧，只有支持巨型帧的机型可设置为false。<br> 支持巨型帧的实例规格： [实例规格](https://cloud.tencent.com/document/product/213/11518)
+	// <p>实例是否开启巨型帧，取值范围：<br>&lt;li/&gt; true：表示实例开启巨型帧，只有支持巨型帧的机型可设置为true。<br>&lt;li/&gt;false：表示实例关闭巨型帧，只有支持巨型帧的机型可设置为false。<br> 支持巨型帧的实例规格： <a href="https://cloud.tencent.com/document/product/213/11518">实例规格</a></p>
 	EnableJumboFrame *bool `json:"EnableJumboFrame,omitnil,omitempty" name:"EnableJumboFrame"`
 
-	// 自定义metadata，支持创建 CVM 时添加自定义元数据键值对。
-	// **注：内测中**。
+	// <p>自定义metadata，支持创建 CVM 时添加自定义元数据键值对。<br><strong>注：内测中</strong>。</p>
 	Metadata *Metadata `json:"Metadata,omitnil,omitempty" name:"Metadata"`
 
-	// 只允许传递 Update 和 Replace 参数，在模板使用自定义 Metadata 且在 RunInstances 也传递 Metadata 时生效。默认采用 Replace。
-	// 
-	// - Update：设模板 t含本参数值为Update、 metadata=[k1:v1, k2:v2] ，则RunInstances（给metadata=[k2:v3]）+ t 创建的 cvm 使用metadata=[k1:v1, k2:v3] 
-	// - Replace：模板 t含本参数值为Replace、 metadata=[k1:v1, k2:v2] ，则RunInstances（给metadata=[k2:v3]）+ t 创建的 cvm 使用metadata=[k2:v3] 
-	// **注：内测中**。
+	// <p>只允许传递 Update 和 Replace 参数，在模板使用自定义 Metadata 且在 RunInstances 也传递 Metadata 时生效。默认采用 Replace。</p><ul><li>Update：设模板 t含本参数值为Update、 metadata=[k1:v1, k2:v2] ，则RunInstances（给metadata=[k2:v3]）+ t 创建的 cvm 使用metadata=[k1:v1, k2:v3] </li><li>Replace：模板 t含本参数值为Replace、 metadata=[k1:v1, k2:v2] ，则RunInstances（给metadata=[k2:v3]）+ t 创建的 cvm 使用metadata=[k2:v3]<br><strong>注：内测中</strong>。</li></ul>
 	TemplateDataModifyAction *string `json:"TemplateDataModifyAction,omitnil,omitempty" name:"TemplateDataModifyAction"`
+
+	// <p>多网卡参数信息。 此功能仅部分地区灰度开放，如需使用<a href="https://console.cloud.tencent.com/workorder/category">请提交工单咨询</a></p>
+	NetworkInterfaces []*NetworkInterfaces `json:"NetworkInterfaces,omitnil,omitempty" name:"NetworkInterfaces"`
 }
 
 type CreateLaunchTemplateVersionRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例所在的位置。通过该参数可以指定实例所属可用区，所属项目，所属宿主机（在专用宿主机上创建子机时指定）等属性。
+	// <p>实例所在的位置。通过该参数可以指定实例所属可用区，所属项目，所属宿主机（在专用宿主机上创建子机时指定）等属性。</p>
 	Placement *Placement `json:"Placement,omitnil,omitempty" name:"Placement"`
 
-	// 启动模板ID，新版本将基于该实例启动模板ID创建。可通过 [DescribeLaunchTemplates](https://cloud.tencent.com/document/api/213/66322) 接口返回值中的`LaunchTemplateId`获取。
+	// <p>启动模板ID，新版本将基于该实例启动模板ID创建。可通过 <a href="https://cloud.tencent.com/document/api/213/66322">DescribeLaunchTemplates</a> 接口返回值中的<code>LaunchTemplateId</code>获取。</p>
 	LaunchTemplateId *string `json:"LaunchTemplateId,omitnil,omitempty" name:"LaunchTemplateId"`
 
-	// 若给定，新实例启动模板将基于给定的版本号创建。若未指定则使用默认版本,可以通过 [DescribeLaunchTemplateVersions](https://cloud.tencent.com/document/api/213/66323)查询默认版本。
+	// <p>若给定，新实例启动模板将基于给定的版本号创建。若未指定则使用默认版本,可以通过 <a href="https://cloud.tencent.com/document/api/213/66323">DescribeLaunchTemplateVersions</a>查询默认版本。</p>
 	LaunchTemplateVersion *int64 `json:"LaunchTemplateVersion,omitnil,omitempty" name:"LaunchTemplateVersion"`
 
-	// 实例启动模板版本描述。长度为2~256个英文或中文字符，不指定该参数时默认为空字符。
+	// <p>实例启动模板版本描述。长度为2~256个英文或中文字符，不指定该参数时默认为空字符。</p>
 	LaunchTemplateVersionDescription *string `json:"LaunchTemplateVersionDescription,omitnil,omitempty" name:"LaunchTemplateVersionDescription"`
 
-	// 实例机型。不同实例机型指定了不同的资源规格。
-	// <br><li>对于付费模式为PREPAID或POSTPAID\_BY\_HOUR的实例创建，具体取值可通过调用接口[DescribeInstanceTypeConfigs](https://cloud.tencent.com/document/api/213/15749)来获得最新的规格表或参见[实例规格](https://cloud.tencent.com/document/product/213/11518)描述。若不指定该参数，则系统将根据当前地域的资源售卖情况动态指定默认机型。</li><br><li>对于付费模式为CDHPAID的实例创建，该参数以"CDH_"为前缀，根据CPU和内存配置生成，具体形式为：CDH_XCXG，例如对于创建CPU为1核，内存为1G大小的专用宿主机的实例，该参数应该为CDH_1C1G。</li>
+	// <p>实例机型。不同实例机型指定了不同的资源规格。<br><br><li>对于付费模式为PREPAID或POSTPAID_BY_HOUR的实例创建，具体取值可通过调用接口<a href="https://cloud.tencent.com/document/api/213/15749">DescribeInstanceTypeConfigs</a>来获得最新的规格表或参见<a href="https://cloud.tencent.com/document/product/213/11518">实例规格</a>描述。若不指定该参数，则系统将根据当前地域的资源售卖情况动态指定默认机型。</li><br><li>对于付费模式为CDHPAID的实例创建，该参数以&quot;CDH_&quot;为前缀，根据CPU和内存配置生成，具体形式为：CDH_XCXG，例如对于创建CPU为1核，内存为1G大小的专用宿主机的实例，该参数应该为CDH_1C1G。</li></p>
 	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
-	// 指定有效的[镜像](https://cloud.tencent.com/document/product/213/4940)ID，格式形如`img-xxx`。镜像类型分为四种：<br/><li>公共镜像</li><li>自定义镜像</li><li>共享镜像</li><li>云镜像市场</li><br/>可通过以下方式获取可用的镜像ID：<br/><li>`公共镜像`、`自定义镜像`、`共享镜像`的镜像ID可通过登录[控制台](https://console.cloud.tencent.com/cvm/image?rid=1&imageType=PUBLIC_IMAGE)查询；`云镜像市场`的镜像ID可通过[云市场](https://market.cloud.tencent.com/list)查询。</li><li>通过调用接口 [DescribeImages](https://cloud.tencent.com/document/api/213/15715) ，传入InstanceType获取当前机型支持的镜像列表，取返回信息中的`ImageId`字段。</li>
+	// <p>指定有效的<a href="https://cloud.tencent.com/document/product/213/4940">镜像</a>ID，格式形如<code>img-xxx</code>。镜像类型分为四种：<br><li>公共镜像</li><li>自定义镜像</li><li>共享镜像</li><li>云镜像市场</li><br>可通过以下方式获取可用的镜像ID：<br><li><code>公共镜像</code>、<code>自定义镜像</code>、<code>共享镜像</code>的镜像ID可通过登录<a href="https://console.cloud.tencent.com/cvm/image?rid=1&amp;imageType=PUBLIC_IMAGE">控制台</a>查询；<code>云镜像市场</code>的镜像ID可通过<a href="https://market.cloud.tencent.com/list">云市场</a>查询。</li><li>通过调用接口 <a href="https://cloud.tencent.com/document/api/213/15715">DescribeImages</a> ，传入InstanceType获取当前机型支持的镜像列表，取返回信息中的<code>ImageId</code>字段。</li></p>
 	ImageId *string `json:"ImageId,omitnil,omitempty" name:"ImageId"`
 
-	// 实例系统盘配置信息。若不指定该参数，则按照系统默认值进行分配。
+	// <p>实例系统盘配置信息。若不指定该参数，则按照系统默认值进行分配。</p>
 	SystemDisk *SystemDisk `json:"SystemDisk,omitnil,omitempty" name:"SystemDisk"`
 
-	// 实例数据盘配置信息。若不指定该参数，则默认不购买数据盘。支持购买的时候指定21块数据盘，其中最多包含1块LOCAL_BASIC数据盘或者LOCAL_SSD数据盘，最多包含20块CLOUD_BASIC数据盘、CLOUD_PREMIUM数据盘或者CLOUD_SSD数据盘。
+	// <p>实例数据盘配置信息。若不指定该参数，则默认不购买数据盘。支持购买的时候指定21块数据盘，其中最多包含1块LOCAL_BASIC数据盘或者LOCAL_SSD数据盘，最多包含20块CLOUD_BASIC数据盘、CLOUD_PREMIUM数据盘或者CLOUD_SSD数据盘。</p>
 	DataDisks []*DataDisk `json:"DataDisks,omitnil,omitempty" name:"DataDisks"`
 
-	// 私有网络相关信息配置。通过该参数可以指定私有网络的ID，子网ID等信息。若不指定该参数，则默认使用基础网络。若在此参数中指定了私有网络IP，即表示每个实例的主网卡IP；同时，InstanceCount参数必须与私有网络IP的个数一致且不能大于20。
+	// <p>私有网络相关信息配置。通过该参数可以指定私有网络的ID，子网ID等信息。若不指定该参数，则默认使用基础网络。若在此参数中指定了私有网络IP，即表示每个实例的主网卡IP；同时，InstanceCount参数必须与私有网络IP的个数一致且不能大于20。</p>
 	VirtualPrivateCloud *VirtualPrivateCloud `json:"VirtualPrivateCloud,omitnil,omitempty" name:"VirtualPrivateCloud"`
 
-	// 公网带宽相关信息设置。若不指定该参数，则默认公网带宽为0Mbps。
+	// <p>公网带宽相关信息设置。若不指定该参数，则默认公网带宽为0Mbps。</p>
 	InternetAccessible *InternetAccessible `json:"InternetAccessible,omitnil,omitempty" name:"InternetAccessible"`
 
-	// 购买实例数量。具体配额相关限制详见[CVM实例购买限制](https://cloud.tencent.com/document/product/213/2664)。
+	// <p>购买实例数量。具体配额相关限制详见<a href="https://cloud.tencent.com/document/product/213/2664">CVM实例购买限制</a>。</p>
 	InstanceCount *int64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
 
-	// 实例显示名称。<br><li>不指定实例显示名称则默认显示‘未命名’。</li><li>购买多台实例，如果指定模式串`{R:x}`，表示生成数字`[x, x+n-1]`，其中`n`表示购买实例的数量，例如`server_{R:3}`，购买1台时，实例显示名称为`server_3`；购买2台时，实例显示名称分别为`server_3`，`server_4`。支持指定多个模式串`{R:x}`。</li><li>购买多台实例，如果不指定模式串，则在实例显示名称添加后缀`1、2...n`，其中`n`表示购买实例的数量，例如`server_`，购买2台时，实例显示名称分别为`server_1`，`server_2`。</li><li>最多支持128个字符（包含模式串）。</li>
+	// <p>实例显示名称。<br><li>不指定实例显示名称则默认显示‘未命名’。</li><li>购买多台实例，如果指定模式串<code>{R:x}</code>，表示生成数字<code>[x, x+n-1]</code>，其中<code>n</code>表示购买实例的数量，例如<code>server_{R:3}</code>，购买1台时，实例显示名称为<code>server_3</code>；购买2台时，实例显示名称分别为<code>server_3</code>，<code>server_4</code>。支持指定多个模式串<code>{R:x}</code>。</li><li>购买多台实例，如果不指定模式串，则在实例显示名称添加后缀<code>1、2...n</code>，其中<code>n</code>表示购买实例的数量，例如<code>server_</code>，购买2台时，实例显示名称分别为<code>server_1</code>，<code>server_2</code>。</li><li>最多支持128个字符（包含模式串）。</li></p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 实例登录设置。通过该参数可以设置实例的登录方式为密钥或保持镜像的原始登录设置。
+	// <p>实例登录设置。通过该参数可以设置实例的登录方式为密钥或保持镜像的原始登录设置。</p>
 	LoginSettings *LoginSettings `json:"LoginSettings,omitnil,omitempty" name:"LoginSettings"`
 
-	// 实例所属安全组。该参数可以通过调用 [DescribeSecurityGroups](https://cloud.tencent.com/document/api/215/15808) 的返回值中的sgId字段来获取。若不指定该参数，则绑定默认安全组。
+	// <p>实例所属安全组。该参数可以通过调用 <a href="https://cloud.tencent.com/document/api/215/15808">DescribeSecurityGroups</a> 的返回值中的sgId字段来获取。若不指定该参数，则绑定默认安全组。</p>
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 增强服务。通过该参数可以指定是否开启云安全、云监控等服务。若不指定该参数，则默认公共镜像开启云监控、云安全服务；自定义镜像与云镜像市场镜像默认不开启云监控，云安全服务，而使用镜像里保留的服务。
+	// <p>增强服务。通过该参数可以指定是否开启云安全、云监控等服务。若不指定该参数，则默认公共镜像开启云监控、云安全服务；自定义镜像与云镜像市场镜像默认不开启云监控，云安全服务，而使用镜像里保留的服务。</p>
 	EnhancedService *EnhancedService `json:"EnhancedService,omitnil,omitempty" name:"EnhancedService"`
 
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
+	// <p>用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 
-	// 云服务器的主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><br><li>Windows 实例：名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><br><li>其他类型（Linux 等）实例：字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li>
+	// <p>云服务器的主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><br><li>Windows 实例：名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><br><li>其他类型（Linux 等）实例：字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li></p>
 	HostName *string `json:"HostName,omitnil,omitempty" name:"HostName"`
 
-	// 定时任务。通过该参数可以为实例指定定时任务，目前仅支持定时销毁。
+	// <p>定时任务。通过该参数可以为实例指定定时任务，目前仅支持定时销毁。</p>
 	ActionTimer *ActionTimer `json:"ActionTimer,omitnil,omitempty" name:"ActionTimer"`
 
-	// 置放群组id，仅支持指定一个。可使用[DescribeDisasterRecoverGroups](https://cloud.tencent.com/document/api/213/17810)接口获取。
+	// <p>置放群组id，仅支持指定一个。可使用<a href="https://cloud.tencent.com/document/api/213/17810">DescribeDisasterRecoverGroups</a>接口获取。</p>
 	DisasterRecoverGroupIds []*string `json:"DisasterRecoverGroupIds,omitnil,omitempty" name:"DisasterRecoverGroupIds"`
 
-	// 标签描述列表。通过指定该参数可以同时绑定标签到相应的资源实例，当前仅支持绑定标签到云服务器实例。
+	// <p>标签描述列表。通过指定该参数可以同时绑定标签到相应的资源实例，当前仅支持绑定标签到云服务器实例。</p>
 	TagSpecification []*TagSpecification `json:"TagSpecification,omitnil,omitempty" name:"TagSpecification"`
 
-	// 实例的市场相关选项，如竞价实例相关参数，若指定实例的付费模式为竞价付费则该参数必传。
+	// <p>实例的市场相关选项，如竞价实例相关参数，若指定实例的付费模式为竞价付费则该参数必传。</p>
 	InstanceMarketOptions *InstanceMarketOptionsRequest `json:"InstanceMarketOptions,omitnil,omitempty" name:"InstanceMarketOptions"`
 
-	// 提供给实例使用的用户数据，需要以 base64 方式编码，支持的最大数据大小为 16KB。关于获取此参数的详细介绍，请参阅[Windows](https://cloud.tencent.com/document/product/213/17526)和[Linux](https://cloud.tencent.com/document/product/213/17525)启动时运行命令。
+	// <p>提供给实例使用的用户数据，需要以 base64 方式编码，支持的最大数据大小为 16KB。关于获取此参数的详细介绍，请参阅<a href="https://cloud.tencent.com/document/product/213/17526">Windows</a>和<a href="https://cloud.tencent.com/document/product/213/17525">Linux</a>启动时运行命令。</p>
 	UserData *string `json:"UserData,omitnil,omitempty" name:"UserData"`
 
-	// 是否只预检此次请求。
-	// true：发送检查请求，不会创建实例。检查项包括是否填写了必需参数，请求格式，业务限制和云服务器库存。
-	// 如果检查不通过，则返回对应错误码；
-	// 如果检查通过，则返回RequestId.
-	// false（默认）：发送正常请求，通过检查后直接创建实例。
+	// <p>是否只预检此次请求。<br>true：发送检查请求，不会创建实例。检查项包括是否填写了必需参数，请求格式，业务限制和云服务器库存。<br>如果检查不通过，则返回对应错误码；<br>如果检查通过，则返回RequestId.<br>false（默认）：发送正常请求，通过检查后直接创建实例。</p>
 	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
 
-	// CAM角色名称。可通过[ DescribeRoleList ](https://cloud.tencent.com/document/product/598/13887)接口返回值中的`roleName`获取。
+	// <p>CAM角色名称。可通过<a href="https://cloud.tencent.com/document/product/598/13887"> DescribeRoleList </a>接口返回值中的<code>roleName</code>获取。</p>
 	CamRoleName *string `json:"CamRoleName,omitnil,omitempty" name:"CamRoleName"`
 
-	// 高性能计算集群ID。若创建的实例为高性能计算实例，需指定实例放置的集群，否则不可指定。该参数可以通过调用 [DescribeHpcClusters](https://cloud.tencent.com/document/api/213/83220) 的返回值中的 `HpcClusterId` 字段来获取。
+	// <p>高性能计算集群ID。若创建的实例为高性能计算实例，需指定实例放置的集群，否则不可指定。该参数可以通过调用 <a href="https://cloud.tencent.com/document/api/213/83220">DescribeHpcClusters</a> 的返回值中的 <code>HpcClusterId</code> 字段来获取。</p>
 	HpcClusterId *string `json:"HpcClusterId,omitnil,omitempty" name:"HpcClusterId"`
 
-	// 实例[计费类型](https://cloud.tencent.com/document/product/213/2180)。<br><li>PREPAID：预付费，即包年包月</li><li>POSTPAID_BY_HOUR：按小时后付费</li><li>CDHPAID：独享子机（基于专用宿主机创建，宿主机部分的资源不收费）</li><li>SPOTPAID：竞价付费</li>默认值：POSTPAID_BY_HOUR。
+	// <p>实例<a href="https://cloud.tencent.com/document/product/213/2180">计费类型</a>。<br><li>PREPAID：预付费，即包年包月</li><li>POSTPAID_BY_HOUR：按小时后付费</li><li>CDHPAID：独享子机（基于专用宿主机创建，宿主机部分的资源不收费）</li><li>SPOTPAID：竞价付费</li>默认值：POSTPAID_BY_HOUR。</p>
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
-	// 预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。若指定实例的付费模式为预付费则该参数必传。
+	// <p>预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。若指定实例的付费模式为预付费则该参数必传。</p>
 	InstanceChargePrepaid *InstanceChargePrepaid `json:"InstanceChargePrepaid,omitnil,omitempty" name:"InstanceChargePrepaid"`
 
-	// 实例销毁保护标志，表示是否允许通过api接口删除实例。取值范围：<br><li>TRUE：表示开启实例保护，不允许通过api接口删除实例</li><br><li>FALSE：表示关闭实例保护，允许通过api接口删除实例</li><br><br>默认取值：FALSE。
+	// <p>实例销毁保护标志，表示是否允许通过api接口删除实例。取值范围：<br><li>TRUE：表示开启实例保护，不允许通过api接口删除实例</li><br><li>FALSE：表示关闭实例保护，允许通过api接口删除实例</li><br><br>默认取值：FALSE。</p>
 	DisableApiTermination *bool `json:"DisableApiTermination,omitnil,omitempty" name:"DisableApiTermination"`
 
-	// 实例是否开启巨型帧，取值范围：<br><li/> true：表示实例开启巨型帧，只有支持巨型帧的机型可设置为true。<br><li/>false：表示实例关闭巨型帧，只有支持巨型帧的机型可设置为false。<br> 支持巨型帧的实例规格： [实例规格](https://cloud.tencent.com/document/product/213/11518)
+	// <p>实例是否开启巨型帧，取值范围：<br>&lt;li/&gt; true：表示实例开启巨型帧，只有支持巨型帧的机型可设置为true。<br>&lt;li/&gt;false：表示实例关闭巨型帧，只有支持巨型帧的机型可设置为false。<br> 支持巨型帧的实例规格： <a href="https://cloud.tencent.com/document/product/213/11518">实例规格</a></p>
 	EnableJumboFrame *bool `json:"EnableJumboFrame,omitnil,omitempty" name:"EnableJumboFrame"`
 
-	// 自定义metadata，支持创建 CVM 时添加自定义元数据键值对。
-	// **注：内测中**。
+	// <p>自定义metadata，支持创建 CVM 时添加自定义元数据键值对。<br><strong>注：内测中</strong>。</p>
 	Metadata *Metadata `json:"Metadata,omitnil,omitempty" name:"Metadata"`
 
-	// 只允许传递 Update 和 Replace 参数，在模板使用自定义 Metadata 且在 RunInstances 也传递 Metadata 时生效。默认采用 Replace。
-	// 
-	// - Update：设模板 t含本参数值为Update、 metadata=[k1:v1, k2:v2] ，则RunInstances（给metadata=[k2:v3]）+ t 创建的 cvm 使用metadata=[k1:v1, k2:v3] 
-	// - Replace：模板 t含本参数值为Replace、 metadata=[k1:v1, k2:v2] ，则RunInstances（给metadata=[k2:v3]）+ t 创建的 cvm 使用metadata=[k2:v3] 
-	// **注：内测中**。
+	// <p>只允许传递 Update 和 Replace 参数，在模板使用自定义 Metadata 且在 RunInstances 也传递 Metadata 时生效。默认采用 Replace。</p><ul><li>Update：设模板 t含本参数值为Update、 metadata=[k1:v1, k2:v2] ，则RunInstances（给metadata=[k2:v3]）+ t 创建的 cvm 使用metadata=[k1:v1, k2:v3] </li><li>Replace：模板 t含本参数值为Replace、 metadata=[k1:v1, k2:v2] ，则RunInstances（给metadata=[k2:v3]）+ t 创建的 cvm 使用metadata=[k2:v3]<br><strong>注：内测中</strong>。</li></ul>
 	TemplateDataModifyAction *string `json:"TemplateDataModifyAction,omitnil,omitempty" name:"TemplateDataModifyAction"`
+
+	// <p>多网卡参数信息。 此功能仅部分地区灰度开放，如需使用<a href="https://console.cloud.tencent.com/workorder/category">请提交工单咨询</a></p>
+	NetworkInterfaces []*NetworkInterfaces `json:"NetworkInterfaces,omitnil,omitempty" name:"NetworkInterfaces"`
 }
 
 func (r *CreateLaunchTemplateVersionRequest) ToJsonString() string {
@@ -1715,6 +1682,7 @@ func (r *CreateLaunchTemplateVersionRequest) FromJsonString(s string) error {
 	delete(f, "EnableJumboFrame")
 	delete(f, "Metadata")
 	delete(f, "TemplateDataModifyAction")
+	delete(f, "NetworkInterfaces")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateLaunchTemplateVersionRequest has unknown keys!", "")
 	}
@@ -1723,7 +1691,7 @@ func (r *CreateLaunchTemplateVersionRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateLaunchTemplateVersionResponseParams struct {
-	// 新创建的实例启动模板版本号。
+	// <p>新创建的实例启动模板版本号。</p>
 	LaunchTemplateVersionNumber *int64 `json:"LaunchTemplateVersionNumber,omitnil,omitempty" name:"LaunchTemplateVersionNumber"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4800,38 +4768,26 @@ func (r *DescribeZonesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DisassociateInstancesKeyPairsRequestParams struct {
-	// 一个或多个待操作的实例ID，每次请求批量实例的上限为100。<br>可以通过以下方式获取可用的实例ID：
-	// <li>通过登录[控制台](https://console.cloud.tencent.com/cvm/index)查询实例ID。</li>
-	// <li>通过调用接口 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) ，取返回信息中的 `InstanceId` 获取实例ID。</li>
+	// <p>一个或多个待操作的实例ID，每次请求批量实例的上限为100。<br>可以通过以下方式获取可用的实例ID：</p><li>通过登录[控制台](https://console.cloud.tencent.com/cvm/index)查询实例ID。</li><li>通过调用接口 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) ，取返回信息中的 <code>InstanceId</code> 获取实例ID。</li>
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
-	// 密钥对ID列表，列表长度上限为100。可以通过以下方式获取可用的密钥ID：
-	// <li>通过登录[控制台](https://console.cloud.tencent.com/cvm/sshkey)查询密钥ID。</li>
-	// <li>通过调用接口 [DescribeKeyPairs](https://cloud.tencent.com/document/api/213/15699) ，取返回信息中的 `KeyId` 获取密钥对ID。</li>
+	// <p>密钥对ID列表，列表长度上限为100。可以通过以下方式获取可用的密钥ID：</p><li>通过登录[控制台](https://console.cloud.tencent.com/cvm/sshkey)查询密钥ID。</li><li>通过调用接口 [DescribeKeyPairs](https://cloud.tencent.com/document/api/213/15699) ，取返回信息中的 <code>KeyId</code> 获取密钥对ID。</li>
 	KeyIds []*string `json:"KeyIds,omitnil,omitempty" name:"KeyIds"`
 
-	// 是否强制关机，默认值为 false。常规场景下，建议手动关机后解绑密钥。取值范围：
-	// <li>true：先执行强制关机，再解绑密钥。</li>
-	// <li>false：不执行强制关机，仅支持对已关机状态实例进行解绑操作。</li>
+	// <p>是否强制关机，默认值为 false。常规场景下，建议手动关机后解绑密钥。取值范围：</p><li>true：先执行强制关机，再解绑密钥。</li><li>false：不执行强制关机，仅支持对已关机状态实例进行解绑操作。</li>
 	ForceStop *bool `json:"ForceStop,omitnil,omitempty" name:"ForceStop"`
 }
 
 type DisassociateInstancesKeyPairsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 一个或多个待操作的实例ID，每次请求批量实例的上限为100。<br>可以通过以下方式获取可用的实例ID：
-	// <li>通过登录[控制台](https://console.cloud.tencent.com/cvm/index)查询实例ID。</li>
-	// <li>通过调用接口 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) ，取返回信息中的 `InstanceId` 获取实例ID。</li>
+	// <p>一个或多个待操作的实例ID，每次请求批量实例的上限为100。<br>可以通过以下方式获取可用的实例ID：</p><li>通过登录[控制台](https://console.cloud.tencent.com/cvm/index)查询实例ID。</li><li>通过调用接口 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) ，取返回信息中的 <code>InstanceId</code> 获取实例ID。</li>
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
-	// 密钥对ID列表，列表长度上限为100。可以通过以下方式获取可用的密钥ID：
-	// <li>通过登录[控制台](https://console.cloud.tencent.com/cvm/sshkey)查询密钥ID。</li>
-	// <li>通过调用接口 [DescribeKeyPairs](https://cloud.tencent.com/document/api/213/15699) ，取返回信息中的 `KeyId` 获取密钥对ID。</li>
+	// <p>密钥对ID列表，列表长度上限为100。可以通过以下方式获取可用的密钥ID：</p><li>通过登录[控制台](https://console.cloud.tencent.com/cvm/sshkey)查询密钥ID。</li><li>通过调用接口 [DescribeKeyPairs](https://cloud.tencent.com/document/api/213/15699) ，取返回信息中的 <code>KeyId</code> 获取密钥对ID。</li>
 	KeyIds []*string `json:"KeyIds,omitnil,omitempty" name:"KeyIds"`
 
-	// 是否强制关机，默认值为 false。常规场景下，建议手动关机后解绑密钥。取值范围：
-	// <li>true：先执行强制关机，再解绑密钥。</li>
-	// <li>false：不执行强制关机，仅支持对已关机状态实例进行解绑操作。</li>
+	// <p>是否强制关机，默认值为 false。常规场景下，建议手动关机后解绑密钥。取值范围：</p><li>true：先执行强制关机，再解绑密钥。</li><li>false：不执行强制关机，仅支持对已关机状态实例进行解绑操作。</li>
 	ForceStop *bool `json:"ForceStop,omitnil,omitempty" name:"ForceStop"`
 }
 
@@ -6445,151 +6401,147 @@ func (r *InquiryPriceResizeInstanceDisksResponse) FromJsonString(s string) error
 
 // Predefined struct for user
 type InquiryPriceRunInstancesRequestParams struct {
-	// 实例所在的位置。通过该参数可以指定实例所属可用区，所属项目等属性。
-	//  <b>注：如果您不指定LaunchTemplate参数，则Placement为必选参数。若同时传递Placement和LaunchTemplate，则默认覆盖LaunchTemplate中对应的Placement的值。</b>
+	// <p>实例所在的位置。通过该参数可以指定实例所属可用区，所属项目等属性。<br> <b>注：如果您不指定LaunchTemplate参数，则Placement为必选参数。若同时传递Placement和LaunchTemplate，则默认覆盖LaunchTemplate中对应的Placement的值。</b></p>
 	Placement *Placement `json:"Placement,omitnil,omitempty" name:"Placement"`
 
-	// 指定有效的[镜像](https://cloud.tencent.com/document/product/213/4940)ID，格式形如`img-xxx`。镜像类型分为四种：<br/><li>公共镜像</li><li>自定义镜像</li><li>共享镜像</li><li>服务市场镜像</li><br/>可通过以下方式获取可用的镜像ID：<br/><li>`公共镜像`、`自定义镜像`、`共享镜像`的镜像ID可通过登录[控制台](https://console.cloud.tencent.com/cvm/image?rid=1&imageType=PUBLIC_IMAGE)查询；`服务镜像市场`的镜像ID可通过[云市场](https://market.cloud.tencent.com/list)查询。</li><li>通过调用接口 [DescribeImages](https://cloud.tencent.com/document/api/213/15715) ，取返回信息中的`ImageId`字段。</li>
-	//  <b>注：如果您不指定LaunchTemplate参数，则ImageId为必选参数。若同时传递ImageId和LaunchTemplate，则默认覆盖LaunchTemplate中对应的ImageId的值。</b>
+	// <p>指定有效的<a href="https://cloud.tencent.com/document/product/213/4940">镜像</a>ID，格式形如<code>img-xxx</code>。镜像类型分为四种：<br><li>公共镜像</li><li>自定义镜像</li><li>共享镜像</li><li>服务市场镜像</li><br>可通过以下方式获取可用的镜像ID：<br><li><code>公共镜像</code>、<code>自定义镜像</code>、<code>共享镜像</code>的镜像ID可通过登录<a href="https://console.cloud.tencent.com/cvm/image?rid=1&amp;imageType=PUBLIC_IMAGE">控制台</a>查询；<code>服务镜像市场</code>的镜像ID可通过<a href="https://market.cloud.tencent.com/list">云市场</a>查询。</li><li>通过调用接口 <a href="https://cloud.tencent.com/document/api/213/15715">DescribeImages</a> ，取返回信息中的<code>ImageId</code>字段。</li><br> <b>注：如果您不指定LaunchTemplate参数，则ImageId为必选参数。若同时传递ImageId和LaunchTemplate，则默认覆盖LaunchTemplate中对应的ImageId的值。</b></p>
 	ImageId *string `json:"ImageId,omitnil,omitempty" name:"ImageId"`
 
-	// 实例[计费类型](https://cloud.tencent.com/document/product/213/2180)。<br><li>PREPAID：预付费，即包年包月</li><br><li>POSTPAID_BY_HOUR：按小时后付费</li><br><li>SPOTPAID：竞价付费</li><br>默认值：POSTPAID_BY_HOUR。
+	// <p>实例<a href="https://cloud.tencent.com/document/product/213/2180">计费类型</a>。<br><li>PREPAID：预付费，即包年包月</li><br><li>POSTPAID_BY_HOUR：按小时后付费</li><br><li>SPOTPAID：竞价付费</li><br>默认值：POSTPAID_BY_HOUR。</p>
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
-	// 预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。若指定实例的付费模式为预付费则该参数必传。
+	// <p>预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。若指定实例的付费模式为预付费则该参数必传。</p>
 	InstanceChargePrepaid *InstanceChargePrepaid `json:"InstanceChargePrepaid,omitnil,omitempty" name:"InstanceChargePrepaid"`
 
-	// 实例机型。不同实例机型指定了不同的资源规格。
-	// <br><li>对于付费模式为PREPAID或POSTPAID_BY_HOUR的实例创建，具体取值可通过调用接口[DescribeInstanceTypeConfigs](https://cloud.tencent.com/document/api/213/15749)来获得最新的规格表或参见[实例规格](https://cloud.tencent.com/document/product/213/11518)描述。若不指定该参数，则系统将根据当前地域的资源售卖情况动态指定默认机型。</li><br><li>对于付费模式为CDHPAID的实例创建，该参数以"CDH_"为前缀，根据CPU和内存配置生成，具体形式为：CDH_XCXG，例如对于创建CPU为1核，内存为1G大小的专用宿主机的实例，该参数应该为CDH_1C1G。</li>
+	// <p>实例机型。不同实例机型指定了不同的资源规格。<br><br><li>对于付费模式为PREPAID或POSTPAID_BY_HOUR的实例创建，具体取值可通过调用接口<a href="https://cloud.tencent.com/document/api/213/15749">DescribeInstanceTypeConfigs</a>来获得最新的规格表或参见<a href="https://cloud.tencent.com/document/product/213/11518">实例规格</a>描述。若不指定该参数，则系统将根据当前地域的资源售卖情况动态指定默认机型。</li><br><li>对于付费模式为CDHPAID的实例创建，该参数以&quot;CDH_&quot;为前缀，根据CPU和内存配置生成，具体形式为：CDH_XCXG，例如对于创建CPU为1核，内存为1G大小的专用宿主机的实例，该参数应该为CDH_1C1G。</li></p>
 	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
-	// 实例系统盘配置信息。若不指定该参数，则按照系统默认值进行分配。
+	// <p>实例系统盘配置信息。若不指定该参数，则按照系统默认值进行分配。</p>
 	SystemDisk *SystemDisk `json:"SystemDisk,omitnil,omitempty" name:"SystemDisk"`
 
-	// 实例数据盘配置信息。若不指定该参数，则默认不购买数据盘。支持购买的时候指定21块数据盘，其中最多包含1块LOCAL_BASIC数据盘或者LOCAL_SSD数据盘，最多包含20块CLOUD_BASIC数据盘、CLOUD_PREMIUM数据盘或者CLOUD_SSD数据盘。
+	// <p>实例数据盘配置信息。若不指定该参数，则默认不购买数据盘。支持购买的时候指定21块数据盘，其中最多包含1块LOCAL_BASIC数据盘或者LOCAL_SSD数据盘，最多包含20块CLOUD_BASIC数据盘、CLOUD_PREMIUM数据盘或者CLOUD_SSD数据盘。</p>
 	DataDisks []*DataDisk `json:"DataDisks,omitnil,omitempty" name:"DataDisks"`
 
-	// 私有网络相关信息配置。通过该参数可以指定私有网络的ID，子网ID等信息。若不指定该参数，则默认使用基础网络。若在此参数中指定了私有网络IP，那么InstanceCount参数只能为1。
+	// <p>私有网络相关信息配置。通过该参数可以指定私有网络的ID，子网ID等信息。若不指定该参数，则默认使用基础网络。若在此参数中指定了私有网络IP，那么InstanceCount参数只能为1。</p>
 	VirtualPrivateCloud *VirtualPrivateCloud `json:"VirtualPrivateCloud,omitnil,omitempty" name:"VirtualPrivateCloud"`
 
-	// 公网带宽相关信息设置。若不指定该参数，则默认公网带宽为0Mbps。
+	// <p>公网带宽相关信息设置。若不指定该参数，则默认公网带宽为0Mbps。</p>
 	InternetAccessible *InternetAccessible `json:"InternetAccessible,omitnil,omitempty" name:"InternetAccessible"`
 
-	// 购买实例数量。取值范围：[1，100]。默认取值：1。指定购买实例的数量不能超过用户所能购买的剩余配额数量，具体配额相关限制详见[CVM实例购买限制](https://cloud.tencent.com/document/product/213/2664)。
+	// <p>购买实例数量。取值范围：[1，100]。默认取值：1。指定购买实例的数量不能超过用户所能购买的剩余配额数量，具体配额相关限制详见<a href="https://cloud.tencent.com/document/product/213/2664">CVM实例购买限制</a>。</p>
 	InstanceCount *int64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
 
-	// 实例显示名称。<br><li>不指定实例显示名称则默认显示‘未命名’。</li><li>购买多台实例，如果指定模式串`{R:x}`，表示生成数字`[x, x+n-1]`，其中`n`表示购买实例的数量，例如`server_{R:3}`，购买1台时，实例显示名称为`server_3`；购买2台时，实例显示名称分别为`server_3`，`server_4`。支持指定多个模式串`{R:x}`。</li><li>购买多台实例，如果不指定模式串，则在实例显示名称添加后缀`1、2...n`，其中`n`表示购买实例的数量，例如`server_`，购买2台时，实例显示名称分别为`server_1`，`server_2`。</li><li>最多支持128个字符（包含模式串）。</li>
+	// <p>实例显示名称。<br><li>不指定实例显示名称则默认显示‘未命名’。</li><li>购买多台实例，如果指定模式串<code>{R:x}</code>，表示生成数字<code>[x, x+n-1]</code>，其中<code>n</code>表示购买实例的数量，例如<code>server_{R:3}</code>，购买1台时，实例显示名称为<code>server_3</code>；购买2台时，实例显示名称分别为<code>server_3</code>，<code>server_4</code>。支持指定多个模式串<code>{R:x}</code>。</li><li>购买多台实例，如果不指定模式串，则在实例显示名称添加后缀<code>1、2...n</code>，其中<code>n</code>表示购买实例的数量，例如<code>server_</code>，购买2台时，实例显示名称分别为<code>server_1</code>，<code>server_2</code>。</li><li>最多支持128个字符（包含模式串）。</li></p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 实例登录设置。通过该参数可以设置实例的登录方式密码、密钥或保持镜像的原始登录设置。默认情况下会随机生成密码，并以站内信方式知会到用户。
+	// <p>实例登录设置。通过该参数可以设置实例的登录方式密码、密钥或保持镜像的原始登录设置。默认情况下会随机生成密码，并以站内信方式知会到用户。</p>
 	LoginSettings *LoginSettings `json:"LoginSettings,omitnil,omitempty" name:"LoginSettings"`
 
-	// 实例所属安全组。该参数可以通过调用 [DescribeSecurityGroups](https://cloud.tencent.com/document/api/215/15808) 的返回值中的 `SecurityGroupId` 字段来获取。若不指定该参数，则绑定指定项目下的默认安全组，如默认安全组不存在则将自动创建。
+	// <p>实例所属安全组。该参数可以通过调用 <a href="https://cloud.tencent.com/document/api/215/15808">DescribeSecurityGroups</a> 的返回值中的 <code>SecurityGroupId</code> 字段来获取。若不指定该参数，则绑定指定项目下的默认安全组，如默认安全组不存在则将自动创建。</p>
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 增强服务。通过该参数可以指定是否开启云安全、云监控等服务。若不指定该参数，则默认开启云监控、云安全服务。
+	// <p>增强服务。通过该参数可以指定是否开启云安全、云监控等服务。若不指定该参数，则默认开启云监控、云安全服务。</p>
 	EnhancedService *EnhancedService `json:"EnhancedService,omitnil,omitempty" name:"EnhancedService"`
 
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
+	// <p>用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 
-	// 云服务器的主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><br><li>Windows 实例：主机名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><br><li>其他类型（Linux 等）实例：主机名字符长度为[2, 30]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li>
+	// <p>云服务器的主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><br><li>Windows 实例：主机名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><br><li>其他类型（Linux 等）实例：主机名字符长度为[2, 30]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li></p>
 	HostName *string `json:"HostName,omitnil,omitempty" name:"HostName"`
 
-	// 标签描述列表。通过指定该参数可以同时绑定标签到相应的资源实例，当前仅支持绑定标签到云服务器实例。
+	// <p>标签描述列表。通过指定该参数可以同时绑定标签到相应的资源实例，当前仅支持绑定标签到云服务器实例。</p>
 	TagSpecification []*TagSpecification `json:"TagSpecification,omitnil,omitempty" name:"TagSpecification"`
 
-	// 实例的市场相关选项，如竞价实例相关参数
+	// <p>实例的市场相关选项，如竞价实例相关参数</p>
 	InstanceMarketOptions *InstanceMarketOptionsRequest `json:"InstanceMarketOptions,omitnil,omitempty" name:"InstanceMarketOptions"`
 
-	// 自定义metadata，支持创建 CVM 时添加自定义元数据键值对。
-	// 
-	// **注：内测中**。
+	// <p>自定义metadata，支持创建 CVM 时添加自定义元数据键值对。</p><p><strong>注：内测中</strong>。</p>
 	Metadata *Metadata `json:"Metadata,omitnil,omitempty" name:"Metadata"`
 
-	// 高性能计算集群ID。
+	// <p>高性能计算集群ID。</p>
 	HpcClusterId *string `json:"HpcClusterId,omitnil,omitempty" name:"HpcClusterId"`
 
-	// 描述了实例CPU拓扑结构的相关信息。若不指定该参数，则按系统资源情况决定。
+	// <p>描述了实例CPU拓扑结构的相关信息。若不指定该参数，则按系统资源情况决定。</p>
 	CpuTopology *CpuTopology `json:"CpuTopology,omitnil,omitempty" name:"CpuTopology"`
 
-	// 实例启动模板。
+	// <p>实例启动模板。</p>
 	LaunchTemplate *LaunchTemplate `json:"LaunchTemplate,omitnil,omitempty" name:"LaunchTemplate"`
+
+	// <p>多网卡参数信息。 此功能仅部分地区灰度开放，如需使用<a href="https://console.cloud.tencent.com/workorder/category">请提交工单咨询</a></p>
+	NetworkInterfaces []*NetworkInterfaces `json:"NetworkInterfaces,omitnil,omitempty" name:"NetworkInterfaces"`
 }
 
 type InquiryPriceRunInstancesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例所在的位置。通过该参数可以指定实例所属可用区，所属项目等属性。
-	//  <b>注：如果您不指定LaunchTemplate参数，则Placement为必选参数。若同时传递Placement和LaunchTemplate，则默认覆盖LaunchTemplate中对应的Placement的值。</b>
+	// <p>实例所在的位置。通过该参数可以指定实例所属可用区，所属项目等属性。<br> <b>注：如果您不指定LaunchTemplate参数，则Placement为必选参数。若同时传递Placement和LaunchTemplate，则默认覆盖LaunchTemplate中对应的Placement的值。</b></p>
 	Placement *Placement `json:"Placement,omitnil,omitempty" name:"Placement"`
 
-	// 指定有效的[镜像](https://cloud.tencent.com/document/product/213/4940)ID，格式形如`img-xxx`。镜像类型分为四种：<br/><li>公共镜像</li><li>自定义镜像</li><li>共享镜像</li><li>服务市场镜像</li><br/>可通过以下方式获取可用的镜像ID：<br/><li>`公共镜像`、`自定义镜像`、`共享镜像`的镜像ID可通过登录[控制台](https://console.cloud.tencent.com/cvm/image?rid=1&imageType=PUBLIC_IMAGE)查询；`服务镜像市场`的镜像ID可通过[云市场](https://market.cloud.tencent.com/list)查询。</li><li>通过调用接口 [DescribeImages](https://cloud.tencent.com/document/api/213/15715) ，取返回信息中的`ImageId`字段。</li>
-	//  <b>注：如果您不指定LaunchTemplate参数，则ImageId为必选参数。若同时传递ImageId和LaunchTemplate，则默认覆盖LaunchTemplate中对应的ImageId的值。</b>
+	// <p>指定有效的<a href="https://cloud.tencent.com/document/product/213/4940">镜像</a>ID，格式形如<code>img-xxx</code>。镜像类型分为四种：<br><li>公共镜像</li><li>自定义镜像</li><li>共享镜像</li><li>服务市场镜像</li><br>可通过以下方式获取可用的镜像ID：<br><li><code>公共镜像</code>、<code>自定义镜像</code>、<code>共享镜像</code>的镜像ID可通过登录<a href="https://console.cloud.tencent.com/cvm/image?rid=1&amp;imageType=PUBLIC_IMAGE">控制台</a>查询；<code>服务镜像市场</code>的镜像ID可通过<a href="https://market.cloud.tencent.com/list">云市场</a>查询。</li><li>通过调用接口 <a href="https://cloud.tencent.com/document/api/213/15715">DescribeImages</a> ，取返回信息中的<code>ImageId</code>字段。</li><br> <b>注：如果您不指定LaunchTemplate参数，则ImageId为必选参数。若同时传递ImageId和LaunchTemplate，则默认覆盖LaunchTemplate中对应的ImageId的值。</b></p>
 	ImageId *string `json:"ImageId,omitnil,omitempty" name:"ImageId"`
 
-	// 实例[计费类型](https://cloud.tencent.com/document/product/213/2180)。<br><li>PREPAID：预付费，即包年包月</li><br><li>POSTPAID_BY_HOUR：按小时后付费</li><br><li>SPOTPAID：竞价付费</li><br>默认值：POSTPAID_BY_HOUR。
+	// <p>实例<a href="https://cloud.tencent.com/document/product/213/2180">计费类型</a>。<br><li>PREPAID：预付费，即包年包月</li><br><li>POSTPAID_BY_HOUR：按小时后付费</li><br><li>SPOTPAID：竞价付费</li><br>默认值：POSTPAID_BY_HOUR。</p>
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
-	// 预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。若指定实例的付费模式为预付费则该参数必传。
+	// <p>预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。若指定实例的付费模式为预付费则该参数必传。</p>
 	InstanceChargePrepaid *InstanceChargePrepaid `json:"InstanceChargePrepaid,omitnil,omitempty" name:"InstanceChargePrepaid"`
 
-	// 实例机型。不同实例机型指定了不同的资源规格。
-	// <br><li>对于付费模式为PREPAID或POSTPAID_BY_HOUR的实例创建，具体取值可通过调用接口[DescribeInstanceTypeConfigs](https://cloud.tencent.com/document/api/213/15749)来获得最新的规格表或参见[实例规格](https://cloud.tencent.com/document/product/213/11518)描述。若不指定该参数，则系统将根据当前地域的资源售卖情况动态指定默认机型。</li><br><li>对于付费模式为CDHPAID的实例创建，该参数以"CDH_"为前缀，根据CPU和内存配置生成，具体形式为：CDH_XCXG，例如对于创建CPU为1核，内存为1G大小的专用宿主机的实例，该参数应该为CDH_1C1G。</li>
+	// <p>实例机型。不同实例机型指定了不同的资源规格。<br><br><li>对于付费模式为PREPAID或POSTPAID_BY_HOUR的实例创建，具体取值可通过调用接口<a href="https://cloud.tencent.com/document/api/213/15749">DescribeInstanceTypeConfigs</a>来获得最新的规格表或参见<a href="https://cloud.tencent.com/document/product/213/11518">实例规格</a>描述。若不指定该参数，则系统将根据当前地域的资源售卖情况动态指定默认机型。</li><br><li>对于付费模式为CDHPAID的实例创建，该参数以&quot;CDH_&quot;为前缀，根据CPU和内存配置生成，具体形式为：CDH_XCXG，例如对于创建CPU为1核，内存为1G大小的专用宿主机的实例，该参数应该为CDH_1C1G。</li></p>
 	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
-	// 实例系统盘配置信息。若不指定该参数，则按照系统默认值进行分配。
+	// <p>实例系统盘配置信息。若不指定该参数，则按照系统默认值进行分配。</p>
 	SystemDisk *SystemDisk `json:"SystemDisk,omitnil,omitempty" name:"SystemDisk"`
 
-	// 实例数据盘配置信息。若不指定该参数，则默认不购买数据盘。支持购买的时候指定21块数据盘，其中最多包含1块LOCAL_BASIC数据盘或者LOCAL_SSD数据盘，最多包含20块CLOUD_BASIC数据盘、CLOUD_PREMIUM数据盘或者CLOUD_SSD数据盘。
+	// <p>实例数据盘配置信息。若不指定该参数，则默认不购买数据盘。支持购买的时候指定21块数据盘，其中最多包含1块LOCAL_BASIC数据盘或者LOCAL_SSD数据盘，最多包含20块CLOUD_BASIC数据盘、CLOUD_PREMIUM数据盘或者CLOUD_SSD数据盘。</p>
 	DataDisks []*DataDisk `json:"DataDisks,omitnil,omitempty" name:"DataDisks"`
 
-	// 私有网络相关信息配置。通过该参数可以指定私有网络的ID，子网ID等信息。若不指定该参数，则默认使用基础网络。若在此参数中指定了私有网络IP，那么InstanceCount参数只能为1。
+	// <p>私有网络相关信息配置。通过该参数可以指定私有网络的ID，子网ID等信息。若不指定该参数，则默认使用基础网络。若在此参数中指定了私有网络IP，那么InstanceCount参数只能为1。</p>
 	VirtualPrivateCloud *VirtualPrivateCloud `json:"VirtualPrivateCloud,omitnil,omitempty" name:"VirtualPrivateCloud"`
 
-	// 公网带宽相关信息设置。若不指定该参数，则默认公网带宽为0Mbps。
+	// <p>公网带宽相关信息设置。若不指定该参数，则默认公网带宽为0Mbps。</p>
 	InternetAccessible *InternetAccessible `json:"InternetAccessible,omitnil,omitempty" name:"InternetAccessible"`
 
-	// 购买实例数量。取值范围：[1，100]。默认取值：1。指定购买实例的数量不能超过用户所能购买的剩余配额数量，具体配额相关限制详见[CVM实例购买限制](https://cloud.tencent.com/document/product/213/2664)。
+	// <p>购买实例数量。取值范围：[1，100]。默认取值：1。指定购买实例的数量不能超过用户所能购买的剩余配额数量，具体配额相关限制详见<a href="https://cloud.tencent.com/document/product/213/2664">CVM实例购买限制</a>。</p>
 	InstanceCount *int64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
 
-	// 实例显示名称。<br><li>不指定实例显示名称则默认显示‘未命名’。</li><li>购买多台实例，如果指定模式串`{R:x}`，表示生成数字`[x, x+n-1]`，其中`n`表示购买实例的数量，例如`server_{R:3}`，购买1台时，实例显示名称为`server_3`；购买2台时，实例显示名称分别为`server_3`，`server_4`。支持指定多个模式串`{R:x}`。</li><li>购买多台实例，如果不指定模式串，则在实例显示名称添加后缀`1、2...n`，其中`n`表示购买实例的数量，例如`server_`，购买2台时，实例显示名称分别为`server_1`，`server_2`。</li><li>最多支持128个字符（包含模式串）。</li>
+	// <p>实例显示名称。<br><li>不指定实例显示名称则默认显示‘未命名’。</li><li>购买多台实例，如果指定模式串<code>{R:x}</code>，表示生成数字<code>[x, x+n-1]</code>，其中<code>n</code>表示购买实例的数量，例如<code>server_{R:3}</code>，购买1台时，实例显示名称为<code>server_3</code>；购买2台时，实例显示名称分别为<code>server_3</code>，<code>server_4</code>。支持指定多个模式串<code>{R:x}</code>。</li><li>购买多台实例，如果不指定模式串，则在实例显示名称添加后缀<code>1、2...n</code>，其中<code>n</code>表示购买实例的数量，例如<code>server_</code>，购买2台时，实例显示名称分别为<code>server_1</code>，<code>server_2</code>。</li><li>最多支持128个字符（包含模式串）。</li></p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 实例登录设置。通过该参数可以设置实例的登录方式密码、密钥或保持镜像的原始登录设置。默认情况下会随机生成密码，并以站内信方式知会到用户。
+	// <p>实例登录设置。通过该参数可以设置实例的登录方式密码、密钥或保持镜像的原始登录设置。默认情况下会随机生成密码，并以站内信方式知会到用户。</p>
 	LoginSettings *LoginSettings `json:"LoginSettings,omitnil,omitempty" name:"LoginSettings"`
 
-	// 实例所属安全组。该参数可以通过调用 [DescribeSecurityGroups](https://cloud.tencent.com/document/api/215/15808) 的返回值中的 `SecurityGroupId` 字段来获取。若不指定该参数，则绑定指定项目下的默认安全组，如默认安全组不存在则将自动创建。
+	// <p>实例所属安全组。该参数可以通过调用 <a href="https://cloud.tencent.com/document/api/215/15808">DescribeSecurityGroups</a> 的返回值中的 <code>SecurityGroupId</code> 字段来获取。若不指定该参数，则绑定指定项目下的默认安全组，如默认安全组不存在则将自动创建。</p>
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 增强服务。通过该参数可以指定是否开启云安全、云监控等服务。若不指定该参数，则默认开启云监控、云安全服务。
+	// <p>增强服务。通过该参数可以指定是否开启云安全、云监控等服务。若不指定该参数，则默认开启云监控、云安全服务。</p>
 	EnhancedService *EnhancedService `json:"EnhancedService,omitnil,omitempty" name:"EnhancedService"`
 
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
+	// <p>用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 
-	// 云服务器的主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><br><li>Windows 实例：主机名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><br><li>其他类型（Linux 等）实例：主机名字符长度为[2, 30]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li>
+	// <p>云服务器的主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><br><li>Windows 实例：主机名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><br><li>其他类型（Linux 等）实例：主机名字符长度为[2, 30]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li></p>
 	HostName *string `json:"HostName,omitnil,omitempty" name:"HostName"`
 
-	// 标签描述列表。通过指定该参数可以同时绑定标签到相应的资源实例，当前仅支持绑定标签到云服务器实例。
+	// <p>标签描述列表。通过指定该参数可以同时绑定标签到相应的资源实例，当前仅支持绑定标签到云服务器实例。</p>
 	TagSpecification []*TagSpecification `json:"TagSpecification,omitnil,omitempty" name:"TagSpecification"`
 
-	// 实例的市场相关选项，如竞价实例相关参数
+	// <p>实例的市场相关选项，如竞价实例相关参数</p>
 	InstanceMarketOptions *InstanceMarketOptionsRequest `json:"InstanceMarketOptions,omitnil,omitempty" name:"InstanceMarketOptions"`
 
-	// 自定义metadata，支持创建 CVM 时添加自定义元数据键值对。
-	// 
-	// **注：内测中**。
+	// <p>自定义metadata，支持创建 CVM 时添加自定义元数据键值对。</p><p><strong>注：内测中</strong>。</p>
 	Metadata *Metadata `json:"Metadata,omitnil,omitempty" name:"Metadata"`
 
-	// 高性能计算集群ID。
+	// <p>高性能计算集群ID。</p>
 	HpcClusterId *string `json:"HpcClusterId,omitnil,omitempty" name:"HpcClusterId"`
 
-	// 描述了实例CPU拓扑结构的相关信息。若不指定该参数，则按系统资源情况决定。
+	// <p>描述了实例CPU拓扑结构的相关信息。若不指定该参数，则按系统资源情况决定。</p>
 	CpuTopology *CpuTopology `json:"CpuTopology,omitnil,omitempty" name:"CpuTopology"`
 
-	// 实例启动模板。
+	// <p>实例启动模板。</p>
 	LaunchTemplate *LaunchTemplate `json:"LaunchTemplate,omitnil,omitempty" name:"LaunchTemplate"`
+
+	// <p>多网卡参数信息。 此功能仅部分地区灰度开放，如需使用<a href="https://console.cloud.tencent.com/workorder/category">请提交工单咨询</a></p>
+	NetworkInterfaces []*NetworkInterfaces `json:"NetworkInterfaces,omitnil,omitempty" name:"NetworkInterfaces"`
 }
 
 func (r *InquiryPriceRunInstancesRequest) ToJsonString() string {
@@ -6626,6 +6578,7 @@ func (r *InquiryPriceRunInstancesRequest) FromJsonString(s string) error {
 	delete(f, "HpcClusterId")
 	delete(f, "CpuTopology")
 	delete(f, "LaunchTemplate")
+	delete(f, "NetworkInterfaces")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "InquiryPriceRunInstancesRequest has unknown keys!", "")
 	}
@@ -6634,7 +6587,7 @@ func (r *InquiryPriceRunInstancesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type InquiryPriceRunInstancesResponseParams struct {
-	// 该参数表示对应配置实例的价格。
+	// <p>该参数表示对应配置实例的价格。</p>
 	Price *Price `json:"Price,omitnil,omitempty" name:"Price"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6841,6 +6794,9 @@ type Instance struct {
 	// <p>实例销毁保护标志，表示是否允许通过api接口删除实例。取值范围：<br><li>true：表示开启实例保护，不允许通过api接口删除实例</li><li>false：表示关闭实例保护，允许通过api接口删除实例</li><br>默认取值：false。</p>
 	DisableApiTermination *bool `json:"DisableApiTermination,omitnil,omitempty" name:"DisableApiTermination"`
 
+	// <p>实例主机名。</p>
+	HostName *string `json:"HostName,omitnil,omitempty" name:"HostName"`
+
 	// <p>默认登录用户。</p>
 	DefaultLoginUser *string `json:"DefaultLoginUser,omitnil,omitempty" name:"DefaultLoginUser"`
 
@@ -6850,6 +6806,9 @@ type Instance struct {
 	// <p>实例的最新操作错误信息。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	LatestOperationErrorMsg *string `json:"LatestOperationErrorMsg,omitnil,omitempty" name:"LatestOperationErrorMsg"`
+
+	// <p>实例是否开启巨型帧</p>
+	EnableJumboFrame *bool `json:"EnableJumboFrame,omitnil,omitempty" name:"EnableJumboFrame"`
 
 	// <p>自定义metadata，本参数对应创建 CVM时指定的Metadata 信息。<strong>注：内测中</strong>。</p>
 	Metadata *Metadata `json:"Metadata,omitnil,omitempty" name:"Metadata"`
@@ -6916,29 +6875,35 @@ type InstanceStatus struct {
 }
 
 type InstanceTypeConfig struct {
-	// 可用区。
+	// <p>可用区。</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 实例机型。
+	// <p>实例机型。</p>
 	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
-	// 实例机型系列。
+	// <p>实例机型系列。</p>
 	InstanceFamily *string `json:"InstanceFamily,omitnil,omitempty" name:"InstanceFamily"`
 
-	// GPU核数，单位：核。
+	// <p>GPU核数，单位：核。</p>
 	GPU *int64 `json:"GPU,omitnil,omitempty" name:"GPU"`
 
-	// CPU核数，单位：核。
+	// <p>CPU核数，单位：核。</p>
 	CPU *int64 `json:"CPU,omitnil,omitempty" name:"CPU"`
 
-	// 内存容量，单位：`GiB`。
+	// <p>内存容量，单位：<code>GiB</code>。</p>
 	Memory *int64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// FPGA核数，单位：核。
+	// <p>FPGA核数，单位：核。</p>
 	FPGA *int64 `json:"FPGA,omitnil,omitempty" name:"FPGA"`
 
-	// 实例机型映射的物理GPU卡数，单位：卡。vGPU卡型小于1，直通卡型大于等于1。vGPU是通过分片虚拟化技术，将物理GPU卡重新划分，同一块GPU卡经虚拟化分割后可分配至不同的实例使用。直通卡型会将GPU设备直接挂载给实例使用。
+	// <p>实例机型映射的物理GPU卡数，单位：卡。vGPU卡型小于1，直通卡型大于等于1。vGPU是通过分片虚拟化技术，将物理GPU卡重新划分，同一块GPU卡经虚拟化分割后可分配至不同的实例使用。直通卡型会将GPU设备直接挂载给实例使用。</p>
 	GpuCount *float64 `json:"GpuCount,omitnil,omitempty" name:"GpuCount"`
+
+	// <p>实例GPU类型</p>
+	GpuType *string `json:"GpuType,omitnil,omitempty" name:"GpuType"`
+
+	// <p>实例GPU单块显存,单位：GiB。</p>
+	GpuMemory *float64 `json:"GpuMemory,omitnil,omitempty" name:"GpuMemory"`
 }
 
 type InstanceTypeConfigStatus struct {
@@ -7944,73 +7909,69 @@ func (r *ModifyInstanceDiskTypeResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyInstancesAttributeRequestParams struct {
-	// 一个或多个待操作的实例ID。可通过[DescribeInstances](https://cloud.tencent.com/document/api/213/15728) API返回值中的`InstanceId`获取。每次请求允许操作的实例数量上限是100。
+	// <p>一个或多个待操作的实例ID。可通过<a href="https://cloud.tencent.com/document/api/213/15728">DescribeInstances</a> API返回值中的<code>InstanceId</code>获取。每次请求允许操作的实例数量上限是100。</p>
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
-	// 修改后实例名称。可任意命名，但不得超过60个字符。
+	// <p>修改后实例名称。可任意命名，但不得超过60个字符。</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 提供给实例使用的用户数据，需要以 base64 方式编码，支持的最大数据大小为 16 KB。关于获取此参数的详细介绍，请参阅 [Windows](https://cloud.tencent.com/document/product/213/17526) 和 [Linux](https://cloud.tencent.com/document/product/213/17525) 启动时运行命令。
+	// <p>提供给实例使用的用户数据，需要以 base64 方式编码，支持的最大数据大小为 16 KB。关于获取此参数的详细介绍，请参阅 <a href="https://cloud.tencent.com/document/product/213/17526">Windows</a> 和 <a href="https://cloud.tencent.com/document/product/213/17525">Linux</a> 启动时运行命令。</p>
 	UserData *string `json:"UserData,omitnil,omitempty" name:"UserData"`
 
-	// 指定实例的修改后的安全组Id列表，子机将重新关联指定列表的安全组，原本关联的安全组会被解绑。
+	// <p>指定实例的修改后的安全组Id列表，子机将重新关联指定列表的安全组，原本关联的安全组会被解绑。</p>
 	SecurityGroups []*string `json:"SecurityGroups,omitnil,omitempty" name:"SecurityGroups"`
 
-	// 给实例绑定用户角色，传空值为解绑操作
+	// <p>给实例绑定用户角色，传空值为解绑操作</p>
 	CamRoleName *string `json:"CamRoleName,omitnil,omitempty" name:"CamRoleName"`
 
-	// 修改后实例的主机名。<li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><li>Windows 实例：主机名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><li>其他类型（Linux 等）实例：主机名字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li>注意点：修改主机名后实例会立即重启，重启后新的主机名生效。
+	// <p>修改后实例的主机名。<li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><li>Windows 实例：主机名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><li>其他类型（Linux 等）实例：主机名字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li>注意点：修改主机名后实例会立即重启，重启后新的主机名生效。</p>
 	HostName *string `json:"HostName,omitnil,omitempty" name:"HostName"`
 
-	// 实例销毁保护标志，表示是否允许通过api接口删除实例。取值范围：<li>true：表示开启实例保护，不允许通过api接口删除实例</li><li>false：表示关闭实例保护，允许通过api接口删除实例</li>默认取值：false。
+	// <p>实例销毁保护标志，表示是否允许通过api接口删除实例。取值范围：<li>true：表示开启实例保护，不允许通过api接口删除实例</li><li>false：表示关闭实例保护，允许通过api接口删除实例</li>默认取值：false。</p>
 	DisableApiTermination *bool `json:"DisableApiTermination,omitnil,omitempty" name:"DisableApiTermination"`
 
-	// 角色类别，与CamRoleName搭配使用，该值可从CAM [ DescribeRoleList ](https://cloud.tencent.com/document/product/598/36223)或[ GetRole ](https://cloud.tencent.com/document/product/598/36221)接口返回RoleType字段获取，当前只接受user、system和service_linked三种类别。
-	// 举例：一般CamRoleName中包含“LinkedRoleIn”（如TKE_QCSLinkedRoleInPrometheusService）时，DescribeRoleList和GetRole返回的RoleType为service_linked，则本参数也需要传递service_linked。
-	// 该参数默认值为user，若CameRoleName为非service_linked类型，本参数可不传递。
+	// <p>角色类别，与CamRoleName搭配使用，该值可从CAM <a href="https://cloud.tencent.com/document/product/598/36223"> DescribeRoleList </a>或<a href="https://cloud.tencent.com/document/product/598/36221"> GetRole </a>接口返回RoleType字段获取，当前只接受user、system和service_linked三种类别。<br>举例：一般CamRoleName中包含“LinkedRoleIn”（如TKE_QCSLinkedRoleInPrometheusService）时，DescribeRoleList和GetRole返回的RoleType为service_linked，则本参数也需要传递service_linked。<br>该参数默认值为user，若CameRoleName为非service_linked类型，本参数可不传递。</p>
 	CamRoleType *string `json:"CamRoleType,omitnil,omitempty" name:"CamRoleType"`
 
-	// 修改实例主机名是否自动重启实例，不传默认自动重启。
-	// - true: 修改主机名，并自动重启实例；
-	// - false: 修改主机名，不自动重启实例，需要手动重启使新主机名生效。
-	// 注意点：本参数仅对修改主机名生效。
+	// <p>修改实例主机名是否自动重启实例，不传默认自动重启。</p><ul><li>true: 修改主机名，并自动重启实例；</li><li>false: 修改主机名，不自动重启实例，需要手动重启使新主机名生效。<br>注意点：本参数仅对修改主机名生效。</li></ul>
 	AutoReboot *bool `json:"AutoReboot,omitnil,omitempty" name:"AutoReboot"`
+
+	// <p>实例是否开启巨型帧，取值范围：<br></p><ul><li>true：表示实例开启巨型帧，只有支持巨型帧的机型可设置为true。</li><li>false：表示实例关闭巨型帧，只有支持巨型帧的机型可设置为false。<br><br>支持巨型帧的实例规格： <a href="https://cloud.tencent.com/document/product/213/11518">实例规格</a></li></ul>
+	EnableJumboFrame *bool `json:"EnableJumboFrame,omitnil,omitempty" name:"EnableJumboFrame"`
 }
 
 type ModifyInstancesAttributeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 一个或多个待操作的实例ID。可通过[DescribeInstances](https://cloud.tencent.com/document/api/213/15728) API返回值中的`InstanceId`获取。每次请求允许操作的实例数量上限是100。
+	// <p>一个或多个待操作的实例ID。可通过<a href="https://cloud.tencent.com/document/api/213/15728">DescribeInstances</a> API返回值中的<code>InstanceId</code>获取。每次请求允许操作的实例数量上限是100。</p>
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
-	// 修改后实例名称。可任意命名，但不得超过60个字符。
+	// <p>修改后实例名称。可任意命名，但不得超过60个字符。</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 提供给实例使用的用户数据，需要以 base64 方式编码，支持的最大数据大小为 16 KB。关于获取此参数的详细介绍，请参阅 [Windows](https://cloud.tencent.com/document/product/213/17526) 和 [Linux](https://cloud.tencent.com/document/product/213/17525) 启动时运行命令。
+	// <p>提供给实例使用的用户数据，需要以 base64 方式编码，支持的最大数据大小为 16 KB。关于获取此参数的详细介绍，请参阅 <a href="https://cloud.tencent.com/document/product/213/17526">Windows</a> 和 <a href="https://cloud.tencent.com/document/product/213/17525">Linux</a> 启动时运行命令。</p>
 	UserData *string `json:"UserData,omitnil,omitempty" name:"UserData"`
 
-	// 指定实例的修改后的安全组Id列表，子机将重新关联指定列表的安全组，原本关联的安全组会被解绑。
+	// <p>指定实例的修改后的安全组Id列表，子机将重新关联指定列表的安全组，原本关联的安全组会被解绑。</p>
 	SecurityGroups []*string `json:"SecurityGroups,omitnil,omitempty" name:"SecurityGroups"`
 
-	// 给实例绑定用户角色，传空值为解绑操作
+	// <p>给实例绑定用户角色，传空值为解绑操作</p>
 	CamRoleName *string `json:"CamRoleName,omitnil,omitempty" name:"CamRoleName"`
 
-	// 修改后实例的主机名。<li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><li>Windows 实例：主机名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><li>其他类型（Linux 等）实例：主机名字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li>注意点：修改主机名后实例会立即重启，重启后新的主机名生效。
+	// <p>修改后实例的主机名。<li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><li>Windows 实例：主机名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><li>其他类型（Linux 等）实例：主机名字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li>注意点：修改主机名后实例会立即重启，重启后新的主机名生效。</p>
 	HostName *string `json:"HostName,omitnil,omitempty" name:"HostName"`
 
-	// 实例销毁保护标志，表示是否允许通过api接口删除实例。取值范围：<li>true：表示开启实例保护，不允许通过api接口删除实例</li><li>false：表示关闭实例保护，允许通过api接口删除实例</li>默认取值：false。
+	// <p>实例销毁保护标志，表示是否允许通过api接口删除实例。取值范围：<li>true：表示开启实例保护，不允许通过api接口删除实例</li><li>false：表示关闭实例保护，允许通过api接口删除实例</li>默认取值：false。</p>
 	DisableApiTermination *bool `json:"DisableApiTermination,omitnil,omitempty" name:"DisableApiTermination"`
 
-	// 角色类别，与CamRoleName搭配使用，该值可从CAM [ DescribeRoleList ](https://cloud.tencent.com/document/product/598/36223)或[ GetRole ](https://cloud.tencent.com/document/product/598/36221)接口返回RoleType字段获取，当前只接受user、system和service_linked三种类别。
-	// 举例：一般CamRoleName中包含“LinkedRoleIn”（如TKE_QCSLinkedRoleInPrometheusService）时，DescribeRoleList和GetRole返回的RoleType为service_linked，则本参数也需要传递service_linked。
-	// 该参数默认值为user，若CameRoleName为非service_linked类型，本参数可不传递。
+	// <p>角色类别，与CamRoleName搭配使用，该值可从CAM <a href="https://cloud.tencent.com/document/product/598/36223"> DescribeRoleList </a>或<a href="https://cloud.tencent.com/document/product/598/36221"> GetRole </a>接口返回RoleType字段获取，当前只接受user、system和service_linked三种类别。<br>举例：一般CamRoleName中包含“LinkedRoleIn”（如TKE_QCSLinkedRoleInPrometheusService）时，DescribeRoleList和GetRole返回的RoleType为service_linked，则本参数也需要传递service_linked。<br>该参数默认值为user，若CameRoleName为非service_linked类型，本参数可不传递。</p>
 	CamRoleType *string `json:"CamRoleType,omitnil,omitempty" name:"CamRoleType"`
 
-	// 修改实例主机名是否自动重启实例，不传默认自动重启。
-	// - true: 修改主机名，并自动重启实例；
-	// - false: 修改主机名，不自动重启实例，需要手动重启使新主机名生效。
-	// 注意点：本参数仅对修改主机名生效。
+	// <p>修改实例主机名是否自动重启实例，不传默认自动重启。</p><ul><li>true: 修改主机名，并自动重启实例；</li><li>false: 修改主机名，不自动重启实例，需要手动重启使新主机名生效。<br>注意点：本参数仅对修改主机名生效。</li></ul>
 	AutoReboot *bool `json:"AutoReboot,omitnil,omitempty" name:"AutoReboot"`
+
+	// <p>实例是否开启巨型帧，取值范围：<br></p><ul><li>true：表示实例开启巨型帧，只有支持巨型帧的机型可设置为true。</li><li>false：表示实例关闭巨型帧，只有支持巨型帧的机型可设置为false。<br><br>支持巨型帧的实例规格： <a href="https://cloud.tencent.com/document/product/213/11518">实例规格</a></li></ul>
+	EnableJumboFrame *bool `json:"EnableJumboFrame,omitnil,omitempty" name:"EnableJumboFrame"`
 }
 
 func (r *ModifyInstancesAttributeRequest) ToJsonString() string {
@@ -8034,6 +7995,7 @@ func (r *ModifyInstancesAttributeRequest) FromJsonString(s string) error {
 	delete(f, "DisableApiTermination")
 	delete(f, "CamRoleType")
 	delete(f, "AutoReboot")
+	delete(f, "EnableJumboFrame")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyInstancesAttributeRequest has unknown keys!", "")
 	}
@@ -8549,6 +8511,29 @@ func (r *ModifyLaunchTemplateDefaultVersionResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *ModifyLaunchTemplateDefaultVersionResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type NetworkInterfaces struct {
+	// <p>表示是主网卡还是辅助网卡。注意：枚举值要全部大写；<strong>NetworkInterfaces数组中必须要有PRIMARY</strong>，且PRIMARY只能存在一个，SECONDARY可以存在多个。</p><p>枚举值：</p><ul><li>PRIMARY： 主网卡</li><li>SECONDARY： 辅助网卡</li></ul>
+	InterfaceType *string `json:"InterfaceType,omitnil,omitempty" name:"InterfaceType"`
+
+	// <p>私有网络ID，形如<code>vpc-xxx</code>。有效的VpcId可通过登录<a href="https://console.cloud.tencent.com/vpc/vpc?rid=1">控制台</a>查询；也可以调用接口 <a href="https://cloud.tencent.com/document/product/215/15778">DescribeVpcs</a> ，从接口返回中的<code>VpcId</code>字段获取。若在创建子机时VpcId与SubnetId同时传入<code>DEFAULT</code>，则强制使用默认vpc网络。</p>
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// <p>私有网络子网ID，形如<code>subnet-xxx</code>。有效的私有网络子网ID可通过登录<a href="https://console.cloud.tencent.com/vpc/subnet?rid=1">控制台</a>查询；也可以调用接口  <a href="https://cloud.tencent.com/document/product/215/15784">DescribeSubnets</a> ，从接口返回中的<code>SubnetId</code>字段获取。若在创建子机时SubnetId与VpcId同时传入<code>DEFAULT</code>，则强制使用默认vpc网络。</p>
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
+
+	// <p>此字段是必填字段，表示每张网卡自动分配私有网卡IP个数。注意：不允许客户同时指定ip且动态分配ip。</p><p>取值范围：[1, 50]</p>
+	PrivateIpv4AddressCount *int64 `json:"PrivateIpv4AddressCount,omitnil,omitempty" name:"PrivateIpv4AddressCount"`
+
+	// <p>指定存量的网卡ID用于绑定。只对辅助网卡生效，主网卡的生成采用既有流程。注：客户手动指定已有弹性网卡时，相关接口InstanceCount必须为1。主网卡不支持指定。</p>
+	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
+
+	// <p>实例所属安全组。该参数可以通过调用 <a href="https://cloud.tencent.com/document/api/215/15808">DescribeSecurityGroups</a> 的返回值中的 <code>SecurityGroupId</code> 字段来获取。若不指定该参数，则绑定指定项目下的默认安全组，如默认安全组不存在则将自动创建。</p><p>每个用户在每个地域每个项目下最多可设置50个安全组。</p>
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
+
+	// <p>是否随CVM删除绑定的弹性网卡，参数只对辅助网卡生效。默认保留辅助网卡兼容当前线上行为。该参数放置在主网卡上不生效，主网卡会随着CVM一同销毁。</p><p>默认值：<code>false</code></p>
+	DeleteWithInstance *bool `json:"DeleteWithInstance,omitnil,omitempty" name:"DeleteWithInstance"`
 }
 
 type OperationCountLimit struct {
@@ -9417,52 +9402,50 @@ type RepairTaskInfo struct {
 
 // Predefined struct for user
 type ResetInstanceRequestParams struct {
-	// 实例ID。可通过 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) API返回值中的`InstanceId`获取。
+	// <p>实例ID。可通过 <a href="https://cloud.tencent.com/document/api/213/15728">DescribeInstances</a> API返回值中的<code>InstanceId</code>获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 指定有效的[镜像](https://cloud.tencent.com/document/product/213/4940)ID，格式形如`img-xxx`。镜像类型分为四种：<br/><li>公共镜像</li><li>自定义镜像</li><li>共享镜像</li><li>服务市场镜像</li><br/>可通过以下方式获取可用的镜像ID：<br/><li>`公共镜像`、`自定义镜像`、`共享镜像`的镜像ID可通过登录[控制台](https://console.cloud.tencent.com/cvm/image?rid=1&imageType=PUBLIC_IMAGE)查询；`服务镜像市场`的镜像ID可通过[云市场](https://market.cloud.tencent.com/list)查询。</li><li>通过调用接口 [DescribeImages](https://cloud.tencent.com/document/api/213/15715) ，取返回信息中的`ImageId`字段。</li>
-	// 默认取值：默认使用当前镜像。
+	// <p>指定有效的<a href="https://cloud.tencent.com/document/product/213/4940">镜像</a>ID，格式形如<code>img-xxx</code>。镜像类型分为四种：<br><li>公共镜像</li><li>自定义镜像</li><li>共享镜像</li><li>服务市场镜像</li><br>可通过以下方式获取可用的镜像ID：<br><li><code>公共镜像</code>、<code>自定义镜像</code>、<code>共享镜像</code>的镜像ID可通过登录<a href="https://console.cloud.tencent.com/cvm/image?rid=1&amp;imageType=PUBLIC_IMAGE">控制台</a>查询；<code>服务镜像市场</code>的镜像ID可通过<a href="https://market.cloud.tencent.com/list">云市场</a>查询。</li><li>通过调用接口 <a href="https://cloud.tencent.com/document/api/213/15715">DescribeImages</a> ，取返回信息中的<code>ImageId</code>字段。</li><br>默认取值：默认使用当前镜像。</p>
 	ImageId *string `json:"ImageId,omitnil,omitempty" name:"ImageId"`
 
-	// 实例系统盘配置信息。系统盘为云盘的实例可以通过该参数指定重装后的系统盘大小来实现对系统盘的扩容操作。系统盘大小只支持扩容不支持缩容；重装只支持修改系统盘的大小，不能修改系统盘的类型。
+	// <p>实例系统盘配置信息。系统盘为云盘的实例可以通过该参数指定重装后的系统盘大小来实现对系统盘的扩容操作。系统盘大小只支持扩容不支持缩容；重装只支持修改系统盘的大小，不能修改系统盘的类型。</p>
 	SystemDisk *SystemDisk `json:"SystemDisk,omitnil,omitempty" name:"SystemDisk"`
 
-	// 实例登录设置。通过该参数可以设置实例的登录方式密码、密钥或保持镜像的原始登录设置。默认情况下会随机生成密码，并以站内信方式知会到用户。
+	// <p>实例登录设置。通过该参数可以设置实例的登录方式密码、密钥或保持镜像的原始登录设置。默认情况下会随机生成密码，并以站内信方式知会到用户。</p>
 	LoginSettings *LoginSettings `json:"LoginSettings,omitnil,omitempty" name:"LoginSettings"`
 
-	// 增强服务。通过该参数可以指定是否开启云安全、云监控等服务。若不指定该参数，则默认公共镜像开启云监控、云安全服务；自定义镜像与镜像市场镜像默认不开启云监控，云安全服务，而使用镜像里保留的服务。
+	// <p>增强服务。通过该参数可以指定是否开启云安全、云监控等服务。若不指定该参数，则默认公共镜像开启云监控、云安全服务；自定义镜像与镜像市场镜像默认不开启云监控，云安全服务，而使用镜像里保留的服务。</p>
 	EnhancedService *EnhancedService `json:"EnhancedService,omitnil,omitempty" name:"EnhancedService"`
 
-	// 重装系统时，可以指定修改实例的主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><br><li>Windows 实例：主机名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><br><li>其他类型（Linux 等）实例：主机名字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li>
+	// <p>重装系统时，可以指定修改实例的主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><br><li>Windows 实例：主机名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><br><li>其他类型（Linux 等）实例：主机名字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li></p>
 	HostName *string `json:"HostName,omitnil,omitempty" name:"HostName"`
 
-	// 提供给实例使用的用户数据，需要以 base64 方式编码，支持的最大数据大小为 16KB。关于获取此参数的详细介绍，请参阅[Windows](https://cloud.tencent.com/document/product/213/17526)和[Linux](https://cloud.tencent.com/document/product/213/17525)启动时运行命令。
+	// <p>提供给实例使用的用户数据，需要以 base64 方式编码，支持的最大数据大小为 16KB。关于获取此参数的详细介绍，请参阅<a href="https://cloud.tencent.com/document/product/213/17526">Windows</a>和<a href="https://cloud.tencent.com/document/product/213/17525">Linux</a>启动时运行命令。</p>
 	UserData *string `json:"UserData,omitnil,omitempty" name:"UserData"`
 }
 
 type ResetInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID。可通过 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) API返回值中的`InstanceId`获取。
+	// <p>实例ID。可通过 <a href="https://cloud.tencent.com/document/api/213/15728">DescribeInstances</a> API返回值中的<code>InstanceId</code>获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 指定有效的[镜像](https://cloud.tencent.com/document/product/213/4940)ID，格式形如`img-xxx`。镜像类型分为四种：<br/><li>公共镜像</li><li>自定义镜像</li><li>共享镜像</li><li>服务市场镜像</li><br/>可通过以下方式获取可用的镜像ID：<br/><li>`公共镜像`、`自定义镜像`、`共享镜像`的镜像ID可通过登录[控制台](https://console.cloud.tencent.com/cvm/image?rid=1&imageType=PUBLIC_IMAGE)查询；`服务镜像市场`的镜像ID可通过[云市场](https://market.cloud.tencent.com/list)查询。</li><li>通过调用接口 [DescribeImages](https://cloud.tencent.com/document/api/213/15715) ，取返回信息中的`ImageId`字段。</li>
-	// 默认取值：默认使用当前镜像。
+	// <p>指定有效的<a href="https://cloud.tencent.com/document/product/213/4940">镜像</a>ID，格式形如<code>img-xxx</code>。镜像类型分为四种：<br><li>公共镜像</li><li>自定义镜像</li><li>共享镜像</li><li>服务市场镜像</li><br>可通过以下方式获取可用的镜像ID：<br><li><code>公共镜像</code>、<code>自定义镜像</code>、<code>共享镜像</code>的镜像ID可通过登录<a href="https://console.cloud.tencent.com/cvm/image?rid=1&amp;imageType=PUBLIC_IMAGE">控制台</a>查询；<code>服务镜像市场</code>的镜像ID可通过<a href="https://market.cloud.tencent.com/list">云市场</a>查询。</li><li>通过调用接口 <a href="https://cloud.tencent.com/document/api/213/15715">DescribeImages</a> ，取返回信息中的<code>ImageId</code>字段。</li><br>默认取值：默认使用当前镜像。</p>
 	ImageId *string `json:"ImageId,omitnil,omitempty" name:"ImageId"`
 
-	// 实例系统盘配置信息。系统盘为云盘的实例可以通过该参数指定重装后的系统盘大小来实现对系统盘的扩容操作。系统盘大小只支持扩容不支持缩容；重装只支持修改系统盘的大小，不能修改系统盘的类型。
+	// <p>实例系统盘配置信息。系统盘为云盘的实例可以通过该参数指定重装后的系统盘大小来实现对系统盘的扩容操作。系统盘大小只支持扩容不支持缩容；重装只支持修改系统盘的大小，不能修改系统盘的类型。</p>
 	SystemDisk *SystemDisk `json:"SystemDisk,omitnil,omitempty" name:"SystemDisk"`
 
-	// 实例登录设置。通过该参数可以设置实例的登录方式密码、密钥或保持镜像的原始登录设置。默认情况下会随机生成密码，并以站内信方式知会到用户。
+	// <p>实例登录设置。通过该参数可以设置实例的登录方式密码、密钥或保持镜像的原始登录设置。默认情况下会随机生成密码，并以站内信方式知会到用户。</p>
 	LoginSettings *LoginSettings `json:"LoginSettings,omitnil,omitempty" name:"LoginSettings"`
 
-	// 增强服务。通过该参数可以指定是否开启云安全、云监控等服务。若不指定该参数，则默认公共镜像开启云监控、云安全服务；自定义镜像与镜像市场镜像默认不开启云监控，云安全服务，而使用镜像里保留的服务。
+	// <p>增强服务。通过该参数可以指定是否开启云安全、云监控等服务。若不指定该参数，则默认公共镜像开启云监控、云安全服务；自定义镜像与镜像市场镜像默认不开启云监控，云安全服务，而使用镜像里保留的服务。</p>
 	EnhancedService *EnhancedService `json:"EnhancedService,omitnil,omitempty" name:"EnhancedService"`
 
-	// 重装系统时，可以指定修改实例的主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><br><li>Windows 实例：主机名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><br><li>其他类型（Linux 等）实例：主机名字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li>
+	// <p>重装系统时，可以指定修改实例的主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。</li><br><li>Windows 实例：主机名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><br><li>其他类型（Linux 等）实例：主机名字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li></p>
 	HostName *string `json:"HostName,omitnil,omitempty" name:"HostName"`
 
-	// 提供给实例使用的用户数据，需要以 base64 方式编码，支持的最大数据大小为 16KB。关于获取此参数的详细介绍，请参阅[Windows](https://cloud.tencent.com/document/product/213/17526)和[Linux](https://cloud.tencent.com/document/product/213/17525)启动时运行命令。
+	// <p>提供给实例使用的用户数据，需要以 base64 方式编码，支持的最大数据大小为 16KB。关于获取此参数的详细介绍，请参阅<a href="https://cloud.tencent.com/document/product/213/17526">Windows</a>和<a href="https://cloud.tencent.com/document/product/213/17525">Linux</a>启动时运行命令。</p>
 	UserData *string `json:"UserData,omitnil,omitempty" name:"UserData"`
 }
 
@@ -10011,6 +9994,9 @@ type RunInstancesRequestParams struct {
 
 	// <p>实例是否开启巨型帧，取值范围：<br>&lt;li/&gt; true：表示实例开启巨型帧，只有支持巨型帧的机型可设置为true。<br>&lt;li/&gt;false：表示实例关闭巨型帧，只有支持巨型帧的机型可设置为false。<br> 支持巨型帧的实例规格： <a href="https://cloud.tencent.com/document/product/213/11518">实例规格</a></p>
 	EnableJumboFrame *bool `json:"EnableJumboFrame,omitnil,omitempty" name:"EnableJumboFrame"`
+
+	// <p>多网卡参数信息。 此功能仅部分地区灰度开放，如需使用<a href="https://console.cloud.tencent.com/workorder/category">请提交工单咨询</a></p>
+	NetworkInterfaces []*NetworkInterfaces `json:"NetworkInterfaces,omitnil,omitempty" name:"NetworkInterfaces"`
 }
 
 type RunInstancesRequest struct {
@@ -10114,6 +10100,9 @@ type RunInstancesRequest struct {
 
 	// <p>实例是否开启巨型帧，取值范围：<br>&lt;li/&gt; true：表示实例开启巨型帧，只有支持巨型帧的机型可设置为true。<br>&lt;li/&gt;false：表示实例关闭巨型帧，只有支持巨型帧的机型可设置为false。<br> 支持巨型帧的实例规格： <a href="https://cloud.tencent.com/document/product/213/11518">实例规格</a></p>
 	EnableJumboFrame *bool `json:"EnableJumboFrame,omitnil,omitempty" name:"EnableJumboFrame"`
+
+	// <p>多网卡参数信息。 此功能仅部分地区灰度开放，如需使用<a href="https://console.cloud.tencent.com/workorder/category">请提交工单咨询</a></p>
+	NetworkInterfaces []*NetworkInterfaces `json:"NetworkInterfaces,omitnil,omitempty" name:"NetworkInterfaces"`
 }
 
 func (r *RunInstancesRequest) ToJsonString() string {
@@ -10161,6 +10150,7 @@ func (r *RunInstancesRequest) FromJsonString(s string) error {
 	delete(f, "PartitionNumber")
 	delete(f, "DisableApiTermination")
 	delete(f, "EnableJumboFrame")
+	delete(f, "NetworkInterfaces")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RunInstancesRequest has unknown keys!", "")
 	}
@@ -10703,69 +10693,15 @@ type VirtualPrivateCloud struct {
 }
 
 type ZoneInfo struct {
-	// 可用区名称，例如，ap-guangzhou-3
-	// 全网可用区名称如下：
-	// <li> ap-chongqing-1 </li>
-	// <li> ap-seoul-1 </li>
-	// <li> ap-seoul-2 </li>
-	// <li> ap-chengdu-1 </li>
-	// <li> ap-chengdu-2 </li>
-	// <li> ap-hongkong-1（售罄） </li>
-	// <li> ap-hongkong-2 </li>
-	// <li> ap-hongkong-3 </li>
-	// <li> ap-shenzhen-fsi-1 </li>
-	// <li> ap-shenzhen-fsi-2 </li>
-	// <li> ap-shenzhen-fsi-3（售罄） </li>
-	// <li> ap-guangzhou-1（售罄）</li>
-	// <li> ap-guangzhou-2（售罄）</li>
-	// <li> ap-guangzhou-3 </li>
-	// <li> ap-guangzhou-4 </li>
-	// <li> ap-guangzhou-6 </li>
-	// <li> ap-guangzhou-7 </li>
-	// <li> ap-tokyo-1 </li>
-	// <li> ap-tokyo-2 </li>
-	// <li> ap-singapore-1 </li>
-	// <li> ap-singapore-2 </li>
-	// <li> ap-singapore-3 </li>
-	// <li>ap-singapore-4 </li>
-	// <li> ap-shanghai-fsi-1 </li>
-	// <li> ap-shanghai-fsi-2 </li>
-	// <li> ap-shanghai-fsi-3 </li>
-	// <li> ap-bangkok-1 </li>
-	// <li> ap-bangkok-2 </li>
-	// <li> ap-shanghai-2 </li>
-	// <li> ap-shanghai-3 </li>
-	// <li> ap-shanghai-4 </li>
-	// <li> ap-shanghai-5 </li>
-	// <li> ap-shanghai-8 </li>
-	// <li> ap-mumbai-1 </li>
-	// <li> ap-mumbai-2 </li>
-	// <li> ap-beijing-1（售罄）</li>
-	// <li> ap-beijing-3 </li>
-	// <li> ap-beijing-4 </li>
-	// <li> ap-beijing-5 </li>
-	// <li> ap-beijing-6 </li>
-	// <li> ap-beijing-7 </li>
-	// <li> na-siliconvalley-1 </li>
-	// <li> na-siliconvalley-2 </li>
-	// <li> eu-frankfurt-1 </li>
-	// <li> eu-frankfurt-2 </li>
-	// <li> na-ashburn-1 </li>
-	// <li> na-ashburn-2 </li>
-	// <li> ap-nanjing-1 </li>
-	// <li> ap-nanjing-2 </li>
-	// <li> ap-nanjing-3 </li>
-	// <li> sa-saopaulo-1</li>
-	// <li> ap-jakarta-1 </li>
-	// <li> ap-jakarta-2 </li>
+	// <p>可用区名称，例如，ap-guangzhou-3<br>全网可用区名称如下：</p><li> ap-chongqing-1 </li><li> ap-seoul-1 </li><li> ap-seoul-2 </li><li> ap-chengdu-1 </li><li> ap-chengdu-2 </li><li> ap-hongkong-1（售罄） </li><li> ap-hongkong-2 </li><li> ap-hongkong-3 </li><li> ap-shenzhen-fsi-1 </li><li> ap-shenzhen-fsi-2 </li><li> ap-shenzhen-fsi-3（售罄） </li><li> ap-guangzhou-1（售罄）</li><li> ap-guangzhou-2（售罄）</li><li> ap-guangzhou-3 </li><li> ap-guangzhou-4 </li><li> ap-guangzhou-6 </li><li> ap-guangzhou-7 </li><li> ap-tokyo-1 </li><li> ap-tokyo-2 </li><li> ap-singapore-1 </li><li> ap-singapore-2 </li><li> ap-singapore-3 </li><li>ap-singapore-4 </li><li> ap-shanghai-fsi-2 </li><li> ap-shanghai-fsi-3 </li><li> ap-shanghai-fsi-4 </li><li> ap-bangkok-1 </li><li> ap-bangkok-2 </li><li> ap-shanghai-2 </li><li> ap-shanghai-3 </li><li> ap-shanghai-4 </li><li> ap-shanghai-5 </li><li> ap-shanghai-8 </li><li> ap-mumbai-1 </li><li> ap-mumbai-2 </li><li> ap-beijing-1（售罄）</li><li> ap-beijing-3 </li><li> ap-beijing-4 </li><li> ap-beijing-5 </li><li> ap-beijing-6 </li><li> ap-beijing-7 </li><li> na-siliconvalley-1 </li><li> na-siliconvalley-2 </li><li> eu-frankfurt-1 </li><li> eu-frankfurt-2 </li><li> na-ashburn-1 </li><li> na-ashburn-2 </li><li> ap-nanjing-1 </li><li> ap-nanjing-2 </li><li> ap-nanjing-3 </li><li> sa-saopaulo-1</li><li> ap-jakarta-1 </li><li> ap-jakarta-2 </li>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 可用区描述，例如，广州三区
+	// <p>可用区描述，例如，广州三区</p>
 	ZoneName *string `json:"ZoneName,omitnil,omitempty" name:"ZoneName"`
 
-	// 可用区ID
+	// <p>可用区ID</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 可用区状态，包含AVAILABLE和UNAVAILABLE。AVAILABLE代表可用，UNAVAILABLE代表不可用。
+	// <p>可用区状态，包含AVAILABLE和UNAVAILABLE。AVAILABLE代表可用，UNAVAILABLE代表不可用。</p>
 	ZoneState *string `json:"ZoneState,omitnil,omitempty" name:"ZoneState"`
 }

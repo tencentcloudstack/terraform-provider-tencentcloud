@@ -92,4 +92,9 @@ In addition to all arguments above, the following attributes are exported:
   * `sni_switch` - ServerNameIndication (SNI) switch.
   * `sni` - ServerNameIndication (SNI).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRules](https://www.tencentcloud.com/document/api/608/33041)
 

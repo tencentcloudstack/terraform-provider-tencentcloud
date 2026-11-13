@@ -37,6 +37,14 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Create Time.
 * `owner` - APPID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateVpcEndPointServiceWhiteList](https://www.tencentcloud.com/document/api/215/40157)
+* Read: [DescribeVpcEndPointServiceWhiteList](https://www.tencentcloud.com/document/api/215/40151)
+* Update: [ModifyVpcEndPointServiceWhiteList](https://www.tencentcloud.com/document/api/215/40146)
+* Delete: [DeleteVpcEndPointServiceWhiteList](https://www.tencentcloud.com/document/api/215/40154)
 
 ## Import
 

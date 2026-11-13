@@ -43,4 +43,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `role_info` - Role details.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetRole](https://www.tencentcloud.com/document/api/598/33557)
 

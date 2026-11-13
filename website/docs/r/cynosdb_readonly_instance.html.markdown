@@ -58,6 +58,29 @@ In addition to all arguments above, the following attributes are exported:
 * `instance_status` - Status of the instance.
 * `instance_storage_size` - Storage size of the instance, unit in GB.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [AddInstances](https://www.tencentcloud.com/document/api/1098/40754)
+  - [DescribeResourcesByDealName](https://www.tencentcloud.com/document/api/1098/40735)
+  - [ModifyMaintainPeriodConfig](https://www.tencentcloud.com/document/api/1098/40743)
+* Read:
+  - [DescribeInstanceDetail](https://www.tencentcloud.com/document/api/1098/40749)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1098/40747)
+  - [DescribeMaintainPeriod](https://www.tencentcloud.com/document/api/1098/40746)
+* Update:
+  - [DescribeInstanceDetail](https://www.tencentcloud.com/document/api/1098/40749)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1098/40747)
+  - [ModifyInstanceName](https://www.tencentcloud.com/document/api/1098/46317)
+  - [ModifyMaintainPeriodConfig](https://www.tencentcloud.com/document/api/1098/40743)
+  - [UpgradeInstance](https://www.tencentcloud.com/document/api/1098/40739)
+* Delete:
+  - [DescribeInstanceDetail](https://www.tencentcloud.com/document/api/1098/40749)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1098/40747)
+  - [IsolateInstance](https://www.tencentcloud.com/document/api/1098/40744)
+  - [OfflineInstance](https://www.tencentcloud.com/document/api/1098/40741)
 
 ## Import
 

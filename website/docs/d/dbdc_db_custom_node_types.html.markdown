@@ -61,4 +61,9 @@ In addition to all arguments above, the following attributes are exported:
   * `system_disk_types` - System disk types supported by this node type. Note: This field may return null, indicating that no valid value can be obtained.
   * `zone` - Availability zone, such as ap-guangzhou-6.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBCustomNodeTypes](https://www.tencentcloud.com/search/?wd=DescribeDBCustomNodeTypes&type=document&lang=en)
 

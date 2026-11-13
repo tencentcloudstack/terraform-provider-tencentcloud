@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
   * `start_time` - start time of backup.
   * `status` - Backup status.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBBackups](https://www.tencentcloud.com/document/api/240/34707)
 

@@ -51,4 +51,9 @@ In addition to all arguments above, the following attributes are exported:
   * `rip` - VPC IP.
   * `spec` - Model, such as S1.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstanceNodes](https://www.tencentcloud.com/search/?wd=DescribeInstanceNodes&type=document&lang=en)
 

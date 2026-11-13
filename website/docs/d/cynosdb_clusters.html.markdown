@@ -52,4 +52,9 @@ In addition to all arguments above, the following attributes are exported:
   * `subnet_id` - ID of the subnet within this VPC.
   * `vpc_id` - ID of the VPC.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeClusters](https://www.tencentcloud.com/document/api/1098/40750)
 

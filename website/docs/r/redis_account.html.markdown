@@ -115,6 +115,22 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateInstanceAccount](https://www.tencentcloud.com/document/api/239/33297)
+  - [DescribeInstanceAccount](https://www.tencentcloud.com/document/api/239/33295)
+  - [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+* Read: [DescribeInstanceAccount](https://www.tencentcloud.com/document/api/239/33295)
+* Update:
+  - [DescribeInstanceAccount](https://www.tencentcloud.com/document/api/239/33295)
+  - [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+  - [ModifyInstanceAccount](https://www.tencentcloud.com/document/api/239/33292)
+* Delete:
+  - [DeleteInstanceAccount](https://www.tencentcloud.com/document/api/239/33296)
+  - [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
 
 ## Import
 

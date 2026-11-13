@@ -102,6 +102,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyRouteTableSelectionPolicies](https://www.tencentcloud.com/search/?wd=ModifyRouteTableSelectionPolicies&type=document&lang=en)
+* Read: [DescribeRouteTableSelectionPolicies](https://www.tencentcloud.com/search/?wd=DescribeRouteTableSelectionPolicies&type=document&lang=en)
+* Update: [ModifyRouteTableSelectionPolicies](https://www.tencentcloud.com/search/?wd=ModifyRouteTableSelectionPolicies&type=document&lang=en)
+* Delete: [ClearRouteTableSelectionPolicies](https://www.tencentcloud.com/search/?wd=ClearRouteTableSelectionPolicies&type=document&lang=en)
 
 ## Import
 

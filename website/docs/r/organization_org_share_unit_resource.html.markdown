@@ -42,6 +42,13 @@ In addition to all arguments above, the following attributes are exported:
 * `shared_member_num` - Number of shared unit members.
 * `shared_member_use_num` - Number of shared unit members in use.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddShareUnitResources](https://www.tencentcloud.com/document/api/1031/68235)
+* Read: [DescribeShareUnitResources](https://www.tencentcloud.com/document/api/1031/68229)
+* Delete: [DeleteShareUnitResources](https://www.tencentcloud.com/document/api/1031/68232)
 
 ## Import
 

@@ -60,4 +60,9 @@ In addition to all arguments above, the following attributes are exported:
   * `state` - NAT gateway status, `0`: Running, `1`: Unavailable, `2`: Be in arrears and out of service.
   * `vpc_id` - The VPC ID for NAT Gateway.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeNatGateways](https://www.tencentcloud.com/document/api/215/34752)
 

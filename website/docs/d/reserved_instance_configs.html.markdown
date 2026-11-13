@@ -45,4 +45,9 @@ In addition to all arguments above, the following attributes are exported:
   * `price` - Purchase price of the reserved instance.
   * `usage_price` - UsagePrice of the reserved instance.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeReservedInstancesOfferings](https://www.tencentcloud.com/document/api/213/68356)
 

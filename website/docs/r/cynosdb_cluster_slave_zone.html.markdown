@@ -59,8 +59,10 @@ resource "tencentcloud_cynosdb_cluster" "example" {
 }
 
 resource "tencentcloud_cynosdb_cluster_slave_zone" "example" {
-  cluster_id = tencentcloud_cynosdb_cluster.example.id
-  slave_zone = "ap-guangzhou-7"
+  cluster_id        = tencentcloud_cynosdb_cluster.example.id
+  slave_zone        = "ap-guangzhou-7"
+  binlog_sync_way   = "async"
+  semi_sync_timeout = 10000
 }
 ```
 
@@ -70,6 +72,8 @@ The following arguments are supported:
 
 * `cluster_id` - (Required, String) The ID of cluster.
 * `slave_zone` - (Required, String) Slave zone.
+* `binlog_sync_way` - (Optional, String) Binlog sync way. Default value: `async`. Valid values: `sync`, `semisync`, `async`.
+* `semi_sync_timeout` - (Optional, Int) Semisync timeout in ms. The semisync replication degrades to async replication if the timeout is exceeded. Minimum: 1000, maximum: 4294967295, default: 10000.
 
 ## Attributes Reference
 
@@ -85,6 +89,20 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `5m`) Used when creating the resource.
 * `update` - (Defaults to `5m`) Used when updating the resource.
 * `delete` - (Defaults to `5m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [AddClusterSlaveZone](https://www.tencentcloud.com/document/api/1098/50016)
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+* Read: [DescribeClusterDetail](https://www.tencentcloud.com/document/api/1098/40752)
+* Update:
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+  - [ModifyClusterSlaveZone](https://www.tencentcloud.com/document/api/1098/50015)
+* Delete:
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+  - [RemoveClusterSlaveZone](https://www.tencentcloud.com/document/api/1098/50014)
 
 ## Import
 

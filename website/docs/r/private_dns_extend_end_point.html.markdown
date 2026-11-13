@@ -78,6 +78,13 @@ The `forward_ip` object exports the following:
 * `vip` - Specifies the forwarding target IP proxy IP.
 * `vport` - Specifies the forwarding target IP proxy port.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateExtendEndpoint](https://www.tencentcloud.com/document/api/1097/67599)
+* Read: [DescribeExtendEndpointList](https://www.tencentcloud.com/document/api/1097/67595)
+* Delete: [DeleteEndPoint](https://www.tencentcloud.com/document/api/1097/67598)
 
 ## Import
 

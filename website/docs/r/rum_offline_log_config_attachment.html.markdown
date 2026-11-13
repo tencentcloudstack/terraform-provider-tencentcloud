@@ -34,6 +34,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `msg` - Interface call information.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateOfflineLogConfig](https://www.tencentcloud.com/search/?wd=CreateOfflineLogConfig&type=document&lang=en)
+* Read: [DescribeOfflineLogConfigs](https://www.tencentcloud.com/search/?wd=DescribeOfflineLogConfigs&type=document&lang=en)
+* Delete: [DeleteOfflineLogConfig](https://www.tencentcloud.com/search/?wd=DeleteOfflineLogConfig&type=document&lang=en)
 
 ## Import
 

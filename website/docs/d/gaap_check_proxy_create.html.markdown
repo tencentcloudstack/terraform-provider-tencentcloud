@@ -46,4 +46,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `check_flag` - Query whether the proxy with the given configuration can be created, 1 can be created, 0 cannot be created.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [CheckProxyCreate](https://www.tencentcloud.com/document/api/608/33112)
 

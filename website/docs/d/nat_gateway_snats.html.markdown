@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
   * `create_time` - Create time.
   * `snat_id` - SNAT rule ID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeNatGatewaySourceIpTranslationNatRules](https://www.tencentcloud.com/document/api/215/39644)
 

@@ -208,6 +208,18 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `rule_id` - rule ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [AddCustomRule](https://www.tencentcloud.com/document/api/627/64553)
+  - [ModifyCustomRuleStatus](https://www.tencentcloud.com/document/api/627/64512)
+* Read: [DescribeCustomRuleList](https://www.tencentcloud.com/document/api/627/64523)
+* Update:
+  - [ModifyCustomRule](https://www.tencentcloud.com/document/api/627/64513)
+  - [ModifyCustomRuleStatus](https://www.tencentcloud.com/document/api/627/64512)
+* Delete: [DeleteCustomRule](https://www.tencentcloud.com/document/api/627/64550)
 
 ## Import
 

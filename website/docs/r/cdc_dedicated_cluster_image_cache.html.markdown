@@ -34,6 +34,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateDedicatedClusterImageCache](https://www.tencentcloud.com/search/?wd=CreateDedicatedClusterImageCache&type=document&lang=en)
+  - [DescribeImages](https://www.tencentcloud.com/document/api/213/33272)
+* Read: [DescribeImages](https://www.tencentcloud.com/document/api/213/33272)
+* Delete:
+  - [DeleteDedicatedClusterImageCache](https://www.tencentcloud.com/search/?wd=DeleteDedicatedClusterImageCache&type=document&lang=en)
+  - [DescribeImages](https://www.tencentcloud.com/document/api/213/33272)
 
 ## Import
 

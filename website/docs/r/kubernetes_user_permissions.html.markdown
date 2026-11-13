@@ -57,6 +57,18 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [GrantUserPermissions](https://www.tencentcloud.com/search/?wd=GrantUserPermissions&type=document&lang=en)
+* Read: [DescribeUserPermissions](https://www.tencentcloud.com/search/?wd=DescribeUserPermissions&type=document&lang=en)
+* Update:
+  - [DeleteUserPermissions](https://www.tencentcloud.com/search/?wd=DeleteUserPermissions&type=document&lang=en)
+  - [GrantUserPermissions](https://www.tencentcloud.com/search/?wd=GrantUserPermissions&type=document&lang=en)
+* Delete:
+  - [DeleteUserPermissions](https://www.tencentcloud.com/search/?wd=DeleteUserPermissions&type=document&lang=en)
+  - [DescribeUserPermissions](https://www.tencentcloud.com/search/?wd=DescribeUserPermissions&type=document&lang=en)
 
 ## Import
 

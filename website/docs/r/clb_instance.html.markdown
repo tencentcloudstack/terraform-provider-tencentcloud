@@ -670,6 +670,33 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `10m`) Used when creating the resource.
 * `update` - (Defaults to `10m`) Used when updating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateLoadBalancer](https://www.tencentcloud.com/document/api/214/33841)
+  - [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
+  - [DescribeLoadBalancers](https://www.tencentcloud.com/document/api/214/33830)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [ModifyLoadBalancerAttributes](https://www.tencentcloud.com/document/api/214/33817)
+  - [SetLoadBalancerClsLog](https://www.tencentcloud.com/document/api/214/35734)
+  - [SetLoadBalancerSecurityGroups](https://www.tencentcloud.com/document/api/214/33798)
+* Read:
+  - [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
+  - [DescribeLoadBalancers](https://www.tencentcloud.com/document/api/214/33830)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [AssociateAddress](https://www.tencentcloud.com/document/api/215/16700)
+  - [DescribeAddresses](https://www.tencentcloud.com/document/api/215/16702)
+  - [DisassociateAddress](https://www.tencentcloud.com/document/api/215/16703)
+  - [ModifyLoadBalancerAttributes](https://www.tencentcloud.com/document/api/214/33817)
+  - [ModifyLoadBalancerSla](https://www.tencentcloud.com/document/api/214/43786)
+  - [ModifyLoadBalancersProject](https://www.tencentcloud.com/document/api/214/57286)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [SetLoadBalancerClsLog](https://www.tencentcloud.com/document/api/214/35734)
+  - [SetLoadBalancerSecurityGroups](https://www.tencentcloud.com/document/api/214/33798)
+* Delete: [DeleteLoadBalancer](https://www.tencentcloud.com/document/api/214/33837)
 
 ## Import
 

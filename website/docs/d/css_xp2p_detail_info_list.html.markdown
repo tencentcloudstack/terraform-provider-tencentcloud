@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
   * `time` - The requested format for time in UTC with one-minute granularity is yyyy-mm-ddTHH:MM:SSZ. This format follows the ISO 8601 standard and is commonly used for representing timestamps in UTC. For more information and examples, you can refer to the link provided: https://cloud.tencent.com/document/product/266/11732#I.
   * `type` - Type, divided into two categories: live and vod.Note: This field may return null, indicating that no valid value is available.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeLiveXP2PDetailInfoList](https://www.tencentcloud.com/search/?wd=DescribeLiveXP2PDetailInfoList&type=document&lang=en)
 

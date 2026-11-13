@@ -150,6 +150,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateOpsAlarmRule](https://www.tencentcloud.com/document/api/1174/73836)
+* Read: [GetOpsAlarmRule](https://www.tencentcloud.com/document/api/1174/73833)
+* Update: [UpdateOpsAlarmRule](https://www.tencentcloud.com/document/api/1174/73810)
+* Delete: [DeleteOpsAlarmRule](https://www.tencentcloud.com/document/api/1174/73835)
 
 ## Import
 

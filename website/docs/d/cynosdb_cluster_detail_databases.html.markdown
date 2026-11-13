@@ -49,4 +49,9 @@ In addition to all arguments above, the following attributes are exported:
     * `db_privilege` - User permission note: This field may return null, indicating that a valid value cannot be obtained.
     * `db_user_name` - DbUserName.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeClusterDetailDatabases](https://www.tencentcloud.com/document/api/1098/55912)
 

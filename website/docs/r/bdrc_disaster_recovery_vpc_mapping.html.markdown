@@ -55,6 +55,15 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Mapping status.
 * `vpc_mapping_id` - Mapping rule primary key ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateDisasterRecoveryVpcMapping](https://www.tencentcloud.com/search/?wd=CreateDisasterRecoveryVpcMapping&type=document&lang=en)
+  - [DescribeVpcMappings](https://www.tencentcloud.com/search/?wd=DescribeVpcMappings&type=document&lang=en)
+* Read: [DescribeVpcMappings](https://www.tencentcloud.com/search/?wd=DescribeVpcMappings&type=document&lang=en)
+* Delete: [DeleteDisasterRecoveryVpcMapping](https://www.tencentcloud.com/search/?wd=DeleteDisasterRecoveryVpcMapping&type=document&lang=en)
 
 ## Import
 

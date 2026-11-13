@@ -74,6 +74,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLiveTranscodeTemplate](https://www.tencentcloud.com/document/api/267/30790)
+* Read: [DescribeLiveTranscodeTemplate](https://www.tencentcloud.com/document/api/267/30786)
+* Update: [ModifyLiveTranscodeTemplate](https://www.tencentcloud.com/document/api/267/30784)
+* Delete: [DeleteLiveTranscodeTemplate](https://www.tencentcloud.com/document/api/267/30788)
 
 ## Import
 

@@ -60,4 +60,9 @@ In addition to all arguments above, the following attributes are exported:
     * `update_time` - update time.
   * `total_count` - The total number of applications.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeApplications](https://www.tencentcloud.com/search/?wd=DescribeApplications&type=document&lang=en)
 

@@ -43,4 +43,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `tag_value_set` - Tag value serialized string.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeProbeMetricTagValues](https://www.tencentcloud.com/search/?wd=DescribeProbeMetricTagValues&type=document&lang=en)
 

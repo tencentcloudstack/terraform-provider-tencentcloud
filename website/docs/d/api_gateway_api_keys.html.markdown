@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
   * `modify_time` - Last modified time in the format of `YYYY-MM-DDThh:mm:ssZ` according to ISO 8601 standard. UTC time is used.
   * `status` - Key status. Values: `on`, `off`.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeApiKeysStatus](https://www.tencentcloud.com/search/?wd=DescribeApiKeysStatus&type=document&lang=en)
 

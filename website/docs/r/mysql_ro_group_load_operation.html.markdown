@@ -101,4 +101,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [BalanceRoGroupLoad](https://www.tencentcloud.com/document/api/236/35192)
 

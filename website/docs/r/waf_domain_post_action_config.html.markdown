@@ -36,6 +36,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyDomainPostAction](https://www.tencentcloud.com/document/api/627/66359)
+* Read: [DescribeDomains](https://www.tencentcloud.com/document/api/627/64580)
+* Update: [ModifyDomainPostAction](https://www.tencentcloud.com/document/api/627/66359)
 
 ## Import
 

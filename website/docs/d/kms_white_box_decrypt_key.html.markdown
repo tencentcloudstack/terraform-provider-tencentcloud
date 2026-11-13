@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `decrypt_key` - White box decryption key, base64 encoded.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeWhiteBoxDecryptKey](https://www.tencentcloud.com/search/?wd=DescribeWhiteBoxDecryptKey&type=document&lang=en)
 

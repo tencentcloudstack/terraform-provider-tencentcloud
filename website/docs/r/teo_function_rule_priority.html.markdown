@@ -39,6 +39,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyFunctionRulePriority](https://www.tencentcloud.com/document/api/1145/64805)
+* Read: [DescribeFunctionRules](https://www.tencentcloud.com/document/api/1145/64811)
+* Update: [ModifyFunctionRulePriority](https://www.tencentcloud.com/document/api/1145/64805)
 
 ## Import
 

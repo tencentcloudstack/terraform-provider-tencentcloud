@@ -32,5 +32,5 @@ Import
 IOA company directory config can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ioa_company_directory_config.example 123
+terraform import tencentcloud_ioa_company_directory_config.example 2875393
 ```

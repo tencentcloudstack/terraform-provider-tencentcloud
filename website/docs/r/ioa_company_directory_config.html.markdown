@@ -52,7 +52,7 @@ The following arguments are supported:
 * `type` - (Required, String) Enterprise directory type, enum: `WeCom`, `Lark`, `DingTalk`, `MicrosoftEntraID`.
 * `description` - (Optional, String) Directory description.
 * `name_i18n` - (Optional, List) Multi-language names.
-* `scene` - (Optional, String) Usage scene: API created, quick start, normal config. Create-only, not present in Describe output.
+* `scene` - (Optional, String, ForceNew) Usage scene: API created, quick start, normal config. Create-only, not present in Describe output.
 
 The `name_i18n` object supports the following:
 
@@ -66,12 +66,20 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCompanyDirectoryConfig](https://www.tencentcloud.com/search/?wd=CreateCompanyDirectoryConfig&type=document&lang=en)
+* Read: [DescribeCompanyDirectoryConfig](https://www.tencentcloud.com/search/?wd=DescribeCompanyDirectoryConfig&type=document&lang=en)
+* Update: [ModifyCompanyDirectoryConfig](https://www.tencentcloud.com/search/?wd=ModifyCompanyDirectoryConfig&type=document&lang=en)
+* Delete: [DeleteAccountGroup](https://www.tencentcloud.com/search/?wd=DeleteAccountGroup&type=document&lang=en)
 
 ## Import
 
 IOA company directory config can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ioa_company_directory_config.example 123
+terraform import tencentcloud_ioa_company_directory_config.example 2875393
 ```
 

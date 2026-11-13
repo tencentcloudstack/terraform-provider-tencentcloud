@@ -99,6 +99,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [RegisterTargetGroupInstances](https://www.tencentcloud.com/document/api/214/33810)
+* Read: [DescribeTargetGroupInstances](https://www.tencentcloud.com/document/api/214/33828)
+* Update: [ModifyTargetGroupInstancesWeight](https://www.tencentcloud.com/document/api/214/33813)
+* Delete: [DeregisterTargetGroupInstances](https://www.tencentcloud.com/document/api/214/33833)
 
 ## Import
 

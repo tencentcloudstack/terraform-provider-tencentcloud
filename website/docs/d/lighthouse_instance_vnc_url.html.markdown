@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `instance_vnc_url` - Instance VNC URL.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstanceVncUrl](https://www.tencentcloud.com/document/api/1103/42499)
 

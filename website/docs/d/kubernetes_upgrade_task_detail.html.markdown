@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `upgrade_end_at` - Upgrade end time.
   * `upgrade_start_at` - Upgrade start time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeUpgradeTaskDetail](https://www.tencentcloud.com/search/?wd=DescribeUpgradeTaskDetail&type=document&lang=en)
 

@@ -52,4 +52,9 @@ In addition to all arguments above, the following attributes are exported:
   * `resource_id` - Resource ID.
   * `resource_type` - Resource type. 1 indicates JAR package, which is currently the only supported value.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSystemResources](https://www.tencentcloud.com/search/?wd=DescribeSystemResources&type=document&lang=en)
 

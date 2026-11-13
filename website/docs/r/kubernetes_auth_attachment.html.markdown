@@ -78,6 +78,20 @@ In addition to all arguments above, the following attributes are exported:
 * `tke_default_issuer` - The default issuer of tke. If `use_tke_default` is set to `true`, this parameter will be set to the default value.
 * `tke_default_jwks_uri` - The default jwks_uri of tke. If `use_tke_default` is set to `true`, this parameter will be set to the default value.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42699)
+  - [ModifyClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42698)
+* Read: [DescribeClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42699)
+* Update:
+  - [DescribeClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42699)
+  - [ModifyClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42698)
+* Delete:
+  - [DescribeClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42699)
+  - [ModifyClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42698)
 
 ## Import
 

@@ -42,4 +42,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddSmsTemplate](https://www.tencentcloud.com/document/api/382/40526)
+* Read: [DescribeSmsTemplateList](https://www.tencentcloud.com/document/api/382/40524)
+* Update: [ModifySmsTemplate](https://www.tencentcloud.com/document/api/382/40523)
+* Delete: [DeleteSmsTemplate](https://www.tencentcloud.com/document/api/382/40525)
 

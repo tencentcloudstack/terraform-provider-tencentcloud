@@ -202,4 +202,28 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Credential creation time in UNIX timestamp format.
 * `secret_type` - `0`: user-defined secret. `1`: Tencent Cloud services secret. `2`: SSH key secret. `3`: Tencent Cloud API key secret. Note: this field may return `null`, indicating that no valid values can be obtained.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateProductSecret](https://www.tencentcloud.com/document/api/1078/41519)
+  - [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/1078/41518)
+  - [DescribeSecret](https://www.tencentcloud.com/document/api/1078/38653)
+  - [DisableSecret](https://www.tencentcloud.com/document/api/1078/38652)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [DescribeSecret](https://www.tencentcloud.com/document/api/1078/38653)
+  - [ListSecrets](https://www.tencentcloud.com/document/api/1078/38646)
+* Update:
+  - [DescribeSecret](https://www.tencentcloud.com/document/api/1078/38653)
+  - [DisableSecret](https://www.tencentcloud.com/document/api/1078/38652)
+  - [EnableSecret](https://www.tencentcloud.com/document/api/1078/38651)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [UpdateDescription](https://www.tencentcloud.com/document/api/1078/38643)
+  - [UpdateRotationStatus](https://www.tencentcloud.com/document/api/1078/41514)
+* Delete:
+  - [DeleteSecret](https://www.tencentcloud.com/document/api/1078/38655)
+  - [DisableSecret](https://www.tencentcloud.com/document/api/1078/38652)
 

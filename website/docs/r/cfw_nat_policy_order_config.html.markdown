@@ -117,6 +117,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeNatAcRule](https://www.tencentcloud.com/document/api/1160/54831)
+  - [ModifyNatAcRule](https://www.tencentcloud.com/document/api/1160/54829)
+* Read: [DescribeNatAcRule](https://www.tencentcloud.com/document/api/1160/54831)
+* Update:
+  - [DescribeNatAcRule](https://www.tencentcloud.com/document/api/1160/54831)
+  - [ModifyNatAcRule](https://www.tencentcloud.com/document/api/1160/54829)
 
 ## Import
 

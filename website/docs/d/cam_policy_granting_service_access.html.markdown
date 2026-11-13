@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
     * `service_name` - Service name.
     * `service_type` - Service type.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListPoliciesGrantingServiceAccess](https://www.tencentcloud.com/search/?wd=ListPoliciesGrantingServiceAccess&type=document&lang=en)
 

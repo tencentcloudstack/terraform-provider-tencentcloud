@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
 * `is_paid_usr` - Is it a paid user? True: paid user, false: regular user.
 * `total` - Total number of all pending risk events.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribePendingRiskInfo](https://www.tencentcloud.com/document/api/1213/61337)
 

@@ -42,6 +42,20 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeInstanceState](https://www.tencentcloud.com/search/?wd=DescribeInstanceState&type=document&lang=en)
+  - [ModifyInstanceKeyValConfigs](https://www.tencentcloud.com/search/?wd=ModifyInstanceKeyValConfigs&type=document&lang=en)
+* Read: [DescribeInstanceKeyValConfigs](https://www.tencentcloud.com/search/?wd=DescribeInstanceKeyValConfigs&type=document&lang=en)
+* Update:
+  - [DescribeInstanceState](https://www.tencentcloud.com/search/?wd=DescribeInstanceState&type=document&lang=en)
+  - [ModifyInstanceKeyValConfigs](https://www.tencentcloud.com/search/?wd=ModifyInstanceKeyValConfigs&type=document&lang=en)
+* Delete:
+  - [DescribeInstanceState](https://www.tencentcloud.com/search/?wd=DescribeInstanceState&type=document&lang=en)
+  - [ModifyInstanceKeyValConfigs](https://www.tencentcloud.com/search/?wd=ModifyInstanceKeyValConfigs&type=document&lang=en)
 
 ## Import
 

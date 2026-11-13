@@ -64,6 +64,19 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `20m`) Used when creating the resource.
 * `update` - (Defaults to `20m`) Used when updating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateMultiPathGateway](https://www.tencentcloud.com/document/api/1145/72305)
+  - [DescribeMultiPathGateways](https://www.tencentcloud.com/document/api/1145/72296)
+* Read: [DescribeMultiPathGateways](https://www.tencentcloud.com/document/api/1145/72296)
+* Update:
+  - [DescribeMultiPathGateways](https://www.tencentcloud.com/document/api/1145/72296)
+  - [ModifyMultiPathGateway](https://www.tencentcloud.com/document/api/1145/72295)
+  - [ModifyMultiPathGatewayStatus](https://www.tencentcloud.com/document/api/1145/74211)
+* Delete: [DeleteMultiPathGateway](https://www.tencentcloud.com/document/api/1145/72302)
 
 ## Import
 

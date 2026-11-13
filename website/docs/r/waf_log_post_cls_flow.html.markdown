@@ -54,6 +54,16 @@ In addition to all arguments above, the following attributes are exported:
 * `logset_id` - CLS logset ID.
 * `status` - Status 0- Off 1- On.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreatePostCLSFlow](https://www.tencentcloud.com/search/?wd=CreatePostCLSFlow&type=document&lang=en)
+  - [DescribePostCLSFlows](https://www.tencentcloud.com/search/?wd=DescribePostCLSFlows&type=document&lang=en)
+* Read: [DescribePostCLSFlows](https://www.tencentcloud.com/search/?wd=DescribePostCLSFlows&type=document&lang=en)
+* Update: [CreatePostCLSFlow](https://www.tencentcloud.com/search/?wd=CreatePostCLSFlow&type=document&lang=en)
+* Delete: [DestroyPostCLSFlow](https://www.tencentcloud.com/search/?wd=DestroyPostCLSFlow&type=document&lang=en)
 
 ## Import
 

@@ -140,6 +140,8 @@ resource "tencentcloud_instance" "example" {
   instance_charge_type                    = "PREPAID"
   instance_charge_type_prepaid_period     = 1
   instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
+  delete_with_instance                    = false
+  delete_with_instance_prepaid            = true
   force_delete                            = true
   data_disks {
     data_disk_type = "CLOUD_PREMIUM"
@@ -458,6 +460,32 @@ resource "tencentcloud_instance" "example" {
 }
 ```
 
+### Create CVM instance with enable_jumbo_frame
+
+```hcl
+resource "tencentcloud_instance" "example" {
+  instance_name      = "tf-example"
+  availability_zone  = "ap-guangzhou-6"
+  image_id           = "img-eb30mz89"
+  instance_type      = "S5.MEDIUM4"
+  system_disk_type   = "CLOUD_HSSD"
+  system_disk_size   = 50
+  hostname           = "user"
+  project_id         = 0
+  vpc_id             = "vpc-i5yyodl9"
+  subnet_id          = "subnet-hhi88a58"
+  enable_jumbo_frame = true
+  data_disks {
+    data_disk_type = "CLOUD_HSSD"
+    data_disk_size = 100
+    encrypt        = false
+  }
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -479,6 +507,7 @@ The following arguments are supported:
 * `disable_monitor_service` - (Optional, Bool) Disable enhance service for monitor, it is enabled by default. When this options is set, monitor agent won't be installed. Modifications may lead to the reinstallation of the instance's operating system.
 * `disable_security_service` - (Optional, Bool) Disable enhance service for security, it is enabled by default. When this options is set, security agent won't be installed. Modifications may lead to the reinstallation of the instance's operating system.
 * `disaster_recover_group_ids` - (Optional, Set: [`String`]) Placement group ID list. Supports up to 3 group IDs. When set, `placement_group_id` will be ignored and this list will be used for CRUD operations.
+* `enable_jumbo_frame` - (Optional, Bool) Whether to enable jumbo frames for the instance. Only supported instance types accept `true`. See https://cloud.tencent.com/document/product/213/11518 for supported instance types. **NOTE: modifying this field automatically reboots the instance (`AutoReboot` is always set to `true` on update); use with caution**.
 * `force_delete` - (Optional, Bool) Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.
 * `force_replace_placement_group_id` - (Optional, Bool) Whether to force the instance host to be replaced. Value range: true: Allows the instance to change the host and restart the instance. Local disk machines do not support specifying this parameter; false: Does not allow the instance to change the host and only join the placement group on the current host. This may cause the placement group to fail to change. Can be used with both `placement_group_id` and `disaster_recover_group_ids`. Default is false.
 * `force_stop` - (Optional, Bool) Whether to forcibly shut down a running instance. Default is false. Forcing a shutdown is equivalent to switching off the power button on a physical computer. Forcing a shutdown may result in data loss or file system corruption; therefore, please use this option only when the server cannot be shut down normally.
@@ -567,6 +596,53 @@ In addition to all arguments above, the following attributes are exported:
 The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
 
 * `create` - (Defaults to `15m`) Used when creating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeDisks](https://www.tencentcloud.com/document/api/362/16315)
+  - [DescribeImages](https://www.tencentcloud.com/document/api/213/33272)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+  - [DescribeInstancesAttributes](https://www.tencentcloud.com/document/api/213/68775)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [ModifyInstancesDisasterRecoverGroup](https://www.tencentcloud.com/document/api/213/73189)
+  - [RunInstances](https://www.tencentcloud.com/document/api/213/33237)
+  - [StopInstances](https://www.tencentcloud.com/document/api/213/33235)
+* Read:
+  - [DescribeDisks](https://www.tencentcloud.com/document/api/362/16315)
+  - [DescribeImages](https://www.tencentcloud.com/document/api/213/33272)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+  - [DescribeInstancesAttributes](https://www.tencentcloud.com/document/api/213/68775)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [AssociateInstancesKeyPairs](https://www.tencentcloud.com/document/api/213/33232)
+  - [DescribeDisks](https://www.tencentcloud.com/document/api/362/16315)
+  - [DescribeImages](https://www.tencentcloud.com/document/api/213/33272)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+  - [DescribeInstancesAttributes](https://www.tencentcloud.com/document/api/213/68775)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [DisassociateInstancesKeyPairs](https://www.tencentcloud.com/document/api/213/33228)
+  - [ModifyDiskAttributes](https://www.tencentcloud.com/document/api/362/15659)
+  - [ModifyInstancesAttribute](https://www.tencentcloud.com/document/api/213/33246)
+  - [ModifyInstancesChargeType](https://www.tencentcloud.com/document/api/213/73503)
+  - [ModifyInstancesDisasterRecoverGroup](https://www.tencentcloud.com/document/api/213/73189)
+  - [ModifyInstancesProject](https://www.tencentcloud.com/document/api/213/33245)
+  - [ModifyInstancesRenewFlag](https://www.tencentcloud.com/document/api/213/68324)
+  - [ModifyInstancesVpcAttribute](https://www.tencentcloud.com/document/api/213/33244)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [ResetInstance](https://www.tencentcloud.com/document/api/213/33242)
+  - [ResetInstancesInternetMaxBandwidth](https://www.tencentcloud.com/document/api/213/33241)
+  - [ResetInstancesPassword](https://www.tencentcloud.com/document/api/213/33240)
+  - [ResetInstancesType](https://www.tencentcloud.com/document/api/213/33239)
+  - [ResizeDisk](https://www.tencentcloud.com/document/api/362/16310)
+  - [ResizeInstanceDisks](https://www.tencentcloud.com/document/api/213/33238)
+* Delete:
+  - [DescribeDisks](https://www.tencentcloud.com/document/api/362/16315)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+  - [DetachDisks](https://www.tencentcloud.com/document/api/362/16316)
+  - [TerminateDisks](https://www.tencentcloud.com/document/api/362/16321)
+  - [TerminateInstances](https://www.tencentcloud.com/document/api/213/33234)
 
 ## Import
 

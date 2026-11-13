@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
 - ISOLATED indicates that it has been isolated;
 - MOVING indicates that migration is in progress.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeProxiesStatus](https://www.tencentcloud.com/document/api/608/33100)
 

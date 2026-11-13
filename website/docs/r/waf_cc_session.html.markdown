@@ -50,6 +50,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `session_id` - Session ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [UpsertSession](https://www.tencentcloud.com/document/api/627/64534)
+* Read: [DescribeSession](https://www.tencentcloud.com/document/api/627/64519)
+* Update: [UpsertSession](https://www.tencentcloud.com/document/api/627/64534)
+* Delete: [DeleteSession](https://www.tencentcloud.com/document/api/627/64760)
 
 ## Import
 

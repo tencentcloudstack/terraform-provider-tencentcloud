@@ -37,6 +37,15 @@ In addition to all arguments above, the following attributes are exported:
 * `created_time` - Create time. Note: This field may return null, indicating that no valid value was found.
 * `updated_time` - Update time. Note: This field may return null, indicating that no valid value was found.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateUnitNamespaces](https://www.tencentcloud.com/search/?wd=CreateUnitNamespaces&type=document&lang=en)
+* Read: [DescribeUnitNamespaces](https://www.tencentcloud.com/search/?wd=DescribeUnitNamespaces&type=document&lang=en)
+* Delete:
+  - [DeleteUnitNamespaces](https://www.tencentcloud.com/search/?wd=DeleteUnitNamespaces&type=document&lang=en)
+  - [DescribeUnitNamespaces](https://www.tencentcloud.com/search/?wd=DescribeUnitNamespaces&type=document&lang=en)
 
 ## Import
 

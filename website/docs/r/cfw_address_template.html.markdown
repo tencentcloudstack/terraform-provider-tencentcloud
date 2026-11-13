@@ -51,6 +51,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAddressTemplate](https://www.tencentcloud.com/search/?wd=CreateAddressTemplate&type=document&lang=en)
+* Read: [DescribeAddressTemplateList](https://www.tencentcloud.com/search/?wd=DescribeAddressTemplateList&type=document&lang=en)
+* Update: [ModifyAddressTemplate](https://www.tencentcloud.com/search/?wd=ModifyAddressTemplate&type=document&lang=en)
+* Delete: [DeleteAddressTemplate](https://www.tencentcloud.com/search/?wd=DeleteAddressTemplate&type=document&lang=en)
 
 ## Import
 

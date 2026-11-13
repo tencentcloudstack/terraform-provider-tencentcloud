@@ -55,6 +55,16 @@ In addition to all arguments above, the following attributes are exported:
 * `location` - The download location url of layer.
 * `status` - The current status of layer.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [GetLayerVersion](https://www.tencentcloud.com/document/api/583/36319)
+  - [GetSecretValue](https://www.tencentcloud.com/document/api/1078/38649)
+  - [PublishLayerVersion](https://www.tencentcloud.com/document/api/583/36316)
+* Read: [GetLayerVersion](https://www.tencentcloud.com/document/api/583/36319)
+* Delete: [DeleteLayerVersion](https://www.tencentcloud.com/document/api/583/36320)
 
 ## Import
 

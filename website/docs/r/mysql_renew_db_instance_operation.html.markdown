@@ -90,4 +90,10 @@ In addition to all arguments above, the following attributes are exported:
 * `deadline_time` - Instance expiration time.
 * `deal_id` - Deal id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [RenewDBInstance](https://www.tencentcloud.com/document/api/236/53308)
+* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/api/236/15872)
 

@@ -1372,3 +1372,39 @@ func (me *MongodbService) RestoreDBInstance(ctx context.Context, instanceId, res
 	flowId = *response.Response.FlowId
 	return
 }
+
+func (me *MongodbService) DescribeMongodbScaleUpDbInstanceCpuById(ctx context.Context, instanceId string) (respData *mongodb.CheckDBInstanceElasticCpuScalableResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := mongodb.NewCheckDBInstanceElasticCpuScalableRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *mongodb.CheckDBInstanceElasticCpuScalableResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMongodbClient().CheckDBInstanceElasticCpuScalable(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	respData = response.Response
+	return
+}

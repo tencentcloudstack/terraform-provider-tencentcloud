@@ -58,4 +58,9 @@ In addition to all arguments above, the following attributes are exported:
   * `renew_flag` - Renew flag.
   * `zone` - Availability zone.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDisks](https://www.tencentcloud.com/document/api/1103/44573)
 

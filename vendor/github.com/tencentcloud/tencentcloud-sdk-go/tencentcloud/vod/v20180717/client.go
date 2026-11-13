@@ -177,6 +177,122 @@ func (c *Client) AttachMediaSubtitlesWithContext(ctx context.Context, request *A
     return
 }
 
+func NewCloneVoiceAsyncRequest() (request *CloneVoiceAsyncRequest) {
+    request = &CloneVoiceAsyncRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vod", APIVersion, "CloneVoiceAsync")
+    
+    
+    return
+}
+
+func NewCloneVoiceAsyncResponse() (response *CloneVoiceAsyncResponse) {
+    response = &CloneVoiceAsyncResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CloneVoiceAsync
+// 发起音色克隆任务，基于参考音频克隆生成专属音色，生成的音色可供后续语音合成使用。音色克隆为异步任务，音色 ID 及试听音频在任务完成后产出。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CloneVoiceAsync(request *CloneVoiceAsyncRequest) (response *CloneVoiceAsyncResponse, err error) {
+    return c.CloneVoiceAsyncWithContext(context.Background(), request)
+}
+
+// CloneVoiceAsync
+// 发起音色克隆任务，基于参考音频克隆生成专属音色，生成的音色可供后续语音合成使用。音色克隆为异步任务，音色 ID 及试听音频在任务完成后产出。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CloneVoiceAsyncWithContext(ctx context.Context, request *CloneVoiceAsyncRequest) (response *CloneVoiceAsyncResponse, err error) {
+    if request == nil {
+        request = NewCloneVoiceAsyncRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vod", APIVersion, "CloneVoiceAsync")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CloneVoiceAsync require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCloneVoiceAsyncResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCloneVoiceSyncRequest() (request *CloneVoiceSyncRequest) {
+    request = &CloneVoiceSyncRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vod", APIVersion, "CloneVoiceSync")
+    
+    
+    return
+}
+
+func NewCloneVoiceSyncResponse() (response *CloneVoiceSyncResponse) {
+    response = &CloneVoiceSyncResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CloneVoiceSync
+// 发起音色克隆任务，基于参考音频克隆生成专属音色，生成的音色可供后续语音合成使用。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CloneVoiceSync(request *CloneVoiceSyncRequest) (response *CloneVoiceSyncResponse, err error) {
+    return c.CloneVoiceSyncWithContext(context.Background(), request)
+}
+
+// CloneVoiceSync
+// 发起音色克隆任务，基于参考音频克隆生成专属音色，生成的音色可供后续语音合成使用。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CloneVoiceSyncWithContext(ctx context.Context, request *CloneVoiceSyncRequest) (response *CloneVoiceSyncResponse, err error) {
+    if request == nil {
+        request = NewCloneVoiceSyncRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vod", APIVersion, "CloneVoiceSync")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CloneVoiceSync require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCloneVoiceSyncResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCommitUploadRequest() (request *CommitUploadRequest) {
     request = &CommitUploadRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -741,7 +857,7 @@ func NewCreateAigcApiTokenResponse() (response *CreateAigcApiTokenResponse) {
 }
 
 // CreateAigcApiToken
-// 创建AIGC调用API的Token。创建后数据同步有延时，约30秒后可查询或删除。
+// 创建 AIGC 调用 API 的 Token。创建后数据同步有延时，约30秒后可查询或删除。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
@@ -753,7 +869,7 @@ func (c *Client) CreateAigcApiToken(request *CreateAigcApiTokenRequest) (respons
 }
 
 // CreateAigcApiToken
-// 创建AIGC调用API的Token。创建后数据同步有延时，约30秒后可查询或删除。
+// 创建 AIGC 调用 API 的 Token。创建后数据同步有延时，约30秒后可查询或删除。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
@@ -859,19 +975,31 @@ func NewCreateAigcAudioTaskResponse() (response *CreateAigcAudioTaskResponse) {
 }
 
 // CreateAigcAudioTask
-// 调用该接口，用于创建AI生音频任务。
+// 调用该接口，用于创建 AI 生音频任务。
 //
 // 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_VIOLATIONCONTENT = "InvalidParameter.ViolationContent"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_FILEID = "InvalidParameterValue.FileId"
+//  INVALIDPARAMETERVALUE_SESSIONCONTEXTTOOLONG = "InvalidParameterValue.SessionContextTooLong"
+//  INVALIDPARAMETERVALUE_SESSIONID = "InvalidParameterValue.SessionId"
+//  INVALIDPARAMETERVALUE_SESSIONIDTOOLONG = "InvalidParameterValue.SessionIdTooLong"
 func (c *Client) CreateAigcAudioTask(request *CreateAigcAudioTaskRequest) (response *CreateAigcAudioTaskResponse, err error) {
     return c.CreateAigcAudioTaskWithContext(context.Background(), request)
 }
 
 // CreateAigcAudioTask
-// 调用该接口，用于创建AI生音频任务。
+// 调用该接口，用于创建 AI 生音频任务。
 //
 // 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_VIOLATIONCONTENT = "InvalidParameter.ViolationContent"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_FILEID = "InvalidParameterValue.FileId"
+//  INVALIDPARAMETERVALUE_SESSIONCONTEXTTOOLONG = "InvalidParameterValue.SessionContextTooLong"
+//  INVALIDPARAMETERVALUE_SESSIONID = "InvalidParameterValue.SessionId"
+//  INVALIDPARAMETERVALUE_SESSIONIDTOOLONG = "InvalidParameterValue.SessionIdTooLong"
 func (c *Client) CreateAigcAudioTaskWithContext(ctx context.Context, request *CreateAigcAudioTaskRequest) (response *CreateAigcAudioTaskResponse, err error) {
     if request == nil {
         request = NewCreateAigcAudioTaskRequest()
@@ -912,7 +1040,8 @@ func NewCreateAigcCustomElementResponse() (response *CreateAigcCustomElementResp
 // 调用该接口，针对指定模型进行主体创建。
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_VIOLATIONCONTENT = "InvalidParameter.ViolationContent"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 func (c *Client) CreateAigcCustomElement(request *CreateAigcCustomElementRequest) (response *CreateAigcCustomElementResponse, err error) {
     return c.CreateAigcCustomElementWithContext(context.Background(), request)
 }
@@ -921,7 +1050,8 @@ func (c *Client) CreateAigcCustomElement(request *CreateAigcCustomElementRequest
 // 调用该接口，针对指定模型进行主体创建。
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_VIOLATIONCONTENT = "InvalidParameter.ViolationContent"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 func (c *Client) CreateAigcCustomElementWithContext(ctx context.Context, request *CreateAigcCustomElementRequest) (response *CreateAigcCustomElementResponse, err error) {
     if request == nil {
         request = NewCreateAigcCustomElementRequest()
@@ -1001,6 +1131,76 @@ func (c *Client) CreateAigcCustomVoiceWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewCreateAigcCustomVoiceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateAigcHunyuan3DTaskRequest() (request *CreateAigcHunyuan3DTaskRequest) {
+    request = &CreateAigcHunyuan3DTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vod", APIVersion, "CreateAigcHunyuan3DTask")
+    
+    
+    return
+}
+
+func NewCreateAigcHunyuan3DTaskResponse() (response *CreateAigcHunyuan3DTaskResponse) {
+    response = &CreateAigcHunyuan3DTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateAigcHunyuan3DTask
+// 该接口用于创建 AIGC 混元 3D 任务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_INVALIDVODUSER = "FailedOperation.InvalidVodUser"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_FILEID = "InvalidParameterValue.FileId"
+//  INVALIDPARAMETERVALUE_SESSIONCONTEXTTOOLONG = "InvalidParameterValue.SessionContextTooLong"
+//  INVALIDPARAMETERVALUE_SESSIONIDTOOLONG = "InvalidParameterValue.SessionIdTooLong"
+//  INVALIDPARAMETERVALUE_SUBAPPID = "InvalidParameterValue.SubAppId"
+//  LIMITEXCEEDED_QUOTA = "LimitExceeded.Quota"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) CreateAigcHunyuan3DTask(request *CreateAigcHunyuan3DTaskRequest) (response *CreateAigcHunyuan3DTaskResponse, err error) {
+    return c.CreateAigcHunyuan3DTaskWithContext(context.Background(), request)
+}
+
+// CreateAigcHunyuan3DTask
+// 该接口用于创建 AIGC 混元 3D 任务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_INVALIDVODUSER = "FailedOperation.InvalidVodUser"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_FILEID = "InvalidParameterValue.FileId"
+//  INVALIDPARAMETERVALUE_SESSIONCONTEXTTOOLONG = "InvalidParameterValue.SessionContextTooLong"
+//  INVALIDPARAMETERVALUE_SESSIONIDTOOLONG = "InvalidParameterValue.SessionIdTooLong"
+//  INVALIDPARAMETERVALUE_SUBAPPID = "InvalidParameterValue.SubAppId"
+//  LIMITEXCEEDED_QUOTA = "LimitExceeded.Quota"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) CreateAigcHunyuan3DTaskWithContext(ctx context.Context, request *CreateAigcHunyuan3DTaskRequest) (response *CreateAigcHunyuan3DTaskResponse, err error) {
+    if request == nil {
+        request = NewCreateAigcHunyuan3DTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vod", APIVersion, "CreateAigcHunyuan3DTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateAigcHunyuan3DTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateAigcHunyuan3DTaskResponse()
     err = c.Send(request, response)
     return
 }
@@ -1231,7 +1431,7 @@ func NewCreateAigcVideoRedrawTaskResponse() (response *CreateAigcVideoRedrawTask
 }
 
 // CreateAigcVideoRedrawTask
-// 该接口用于[生成 AIGC 视频](https://cloud.tencent.com/document/product/266/124474)。<b>接口处于内测阶段，如需使用请[联系我们](https://cloud.tencent.com/online-service?from=sales_sales&source=PRESALE)，接口调用会产生实际费用</b>，请参考点播 [AIGC 生视频计费文档](https://cloud.tencent.com/document/product/266/95125#96b3b59a-f9e1-49e9-966a-bedb70a4bf12)。该功能结算模式为[后付费](https://cloud.tencent.com/document/product/266/2838)，日结客户当天使用将在第二天出账，月结客户将在次月1日统一出上月使用费用。
+// 该接口用于[生成 AIGC 视频](https://cloud.tencent.com/document/product/266/124474)。接口调用会产生实际费用，请参考点播 [AIGC 生视频计费文档](https://cloud.tencent.com/document/product/266/95125#96b3b59a-f9e1-49e9-966a-bedb70a4bf12)。该功能结算模式为[后付费](https://cloud.tencent.com/document/product/266/2838)，日结客户当天使用将在第二天出账，月结客户将在次月1日统一出上月使用费用。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1249,7 +1449,7 @@ func (c *Client) CreateAigcVideoRedrawTask(request *CreateAigcVideoRedrawTaskReq
 }
 
 // CreateAigcVideoRedrawTask
-// 该接口用于[生成 AIGC 视频](https://cloud.tencent.com/document/product/266/124474)。<b>接口处于内测阶段，如需使用请[联系我们](https://cloud.tencent.com/online-service?from=sales_sales&source=PRESALE)，接口调用会产生实际费用</b>，请参考点播 [AIGC 生视频计费文档](https://cloud.tencent.com/document/product/266/95125#96b3b59a-f9e1-49e9-966a-bedb70a4bf12)。该功能结算模式为[后付费](https://cloud.tencent.com/document/product/266/2838)，日结客户当天使用将在第二天出账，月结客户将在次月1日统一出上月使用费用。
+// 该接口用于[生成 AIGC 视频](https://cloud.tencent.com/document/product/266/124474)。接口调用会产生实际费用，请参考点播 [AIGC 生视频计费文档](https://cloud.tencent.com/document/product/266/95125#96b3b59a-f9e1-49e9-966a-bedb70a4bf12)。该功能结算模式为[后付费](https://cloud.tencent.com/document/product/266/2838)，日结客户当天使用将在第二天出账，月结客户将在次月1日统一出上月使用费用。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2237,6 +2437,62 @@ func (c *Client) CreateJustInTimeTranscodeTemplateWithContext(ctx context.Contex
     return
 }
 
+func NewCreateKnowledgeBaseRequest() (request *CreateKnowledgeBaseRequest) {
+    request = &CreateKnowledgeBaseRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vod", APIVersion, "CreateKnowledgeBase")
+    
+    
+    return
+}
+
+func NewCreateKnowledgeBaseResponse() (response *CreateKnowledgeBaseResponse) {
+    response = &CreateKnowledgeBaseResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateKnowledgeBase
+// 创建知识库。用于为智能媒资功能创建一个新的知识库，每个用户最多可创建的20个知识库。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) CreateKnowledgeBase(request *CreateKnowledgeBaseRequest) (response *CreateKnowledgeBaseResponse, err error) {
+    return c.CreateKnowledgeBaseWithContext(context.Background(), request)
+}
+
+// CreateKnowledgeBase
+// 创建知识库。用于为智能媒资功能创建一个新的知识库，每个用户最多可创建的20个知识库。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) CreateKnowledgeBaseWithContext(ctx context.Context, request *CreateKnowledgeBaseRequest) (response *CreateKnowledgeBaseResponse, err error) {
+    if request == nil {
+        request = NewCreateKnowledgeBaseRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vod", APIVersion, "CreateKnowledgeBase")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateKnowledgeBase require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateKnowledgeBaseResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateLLMComprehendTemplateRequest() (request *CreateLLMComprehendTemplateRequest) {
     request = &CreateLLMComprehendTemplateRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2917,7 +3173,7 @@ func NewCreateSceneAigcImageTaskResponse() (response *CreateSceneAigcImageTaskRe
 }
 
 // CreateSceneAigcImageTask
-// 该接口用于生成场景化 AIGC 图片。<b>接口处于内测阶段，如需使用请[联系我们](https://cloud.tencent.com/online-service?from=sales_sales&source=PRESALE)，接口调用会产生实际费用。</b>
+// 该接口用于生成场景化 AIGC 图片。接口调用会产生实际费用，请参考点播 [AIGC 生图计费文档](https://cloud.tencent.com/document/product/266/95125#9c4dc6ff-4b3f-4b25-bf2d-393889dfb9ac)。该功能结算模式为[后付费](https://cloud.tencent.com/document/product/266/2838)，日结客户当天使用将在第二天出账，月结客户将在次月1日统一出上月使用费用。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2929,13 +3185,14 @@ func NewCreateSceneAigcImageTaskResponse() (response *CreateSceneAigcImageTaskRe
 //  INVALIDPARAMETERVALUE_SESSIONID = "InvalidParameterValue.SessionId"
 //  INVALIDPARAMETERVALUE_SESSIONIDTOOLONG = "InvalidParameterValue.SessionIdTooLong"
 //  INVALIDPARAMETERVALUE_SUBAPPID = "InvalidParameterValue.SubAppId"
+//  LIMITEXCEEDED_QUOTA = "LimitExceeded.Quota"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) CreateSceneAigcImageTask(request *CreateSceneAigcImageTaskRequest) (response *CreateSceneAigcImageTaskResponse, err error) {
     return c.CreateSceneAigcImageTaskWithContext(context.Background(), request)
 }
 
 // CreateSceneAigcImageTask
-// 该接口用于生成场景化 AIGC 图片。<b>接口处于内测阶段，如需使用请[联系我们](https://cloud.tencent.com/online-service?from=sales_sales&source=PRESALE)，接口调用会产生实际费用。</b>
+// 该接口用于生成场景化 AIGC 图片。接口调用会产生实际费用，请参考点播 [AIGC 生图计费文档](https://cloud.tencent.com/document/product/266/95125#9c4dc6ff-4b3f-4b25-bf2d-393889dfb9ac)。该功能结算模式为[后付费](https://cloud.tencent.com/document/product/266/2838)，日结客户当天使用将在第二天出账，月结客户将在次月1日统一出上月使用费用。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2947,6 +3204,7 @@ func (c *Client) CreateSceneAigcImageTask(request *CreateSceneAigcImageTaskReque
 //  INVALIDPARAMETERVALUE_SESSIONID = "InvalidParameterValue.SessionId"
 //  INVALIDPARAMETERVALUE_SESSIONIDTOOLONG = "InvalidParameterValue.SessionIdTooLong"
 //  INVALIDPARAMETERVALUE_SUBAPPID = "InvalidParameterValue.SubAppId"
+//  LIMITEXCEEDED_QUOTA = "LimitExceeded.Quota"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) CreateSceneAigcImageTaskWithContext(ctx context.Context, request *CreateSceneAigcImageTaskRequest) (response *CreateSceneAigcImageTaskResponse, err error) {
     if request == nil {
@@ -3881,7 +4139,7 @@ func NewDeleteAigcApiTokenResponse() (response *DeleteAigcApiTokenResponse) {
 }
 
 // DeleteAigcApiToken
-// 删除 AIGC API Token
+// 删除 AIGC API Token。与该 Token 关联的 AIGC 配额也会被删除。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
@@ -3892,7 +4150,7 @@ func (c *Client) DeleteAigcApiToken(request *DeleteAigcApiTokenRequest) (respons
 }
 
 // DeleteAigcApiToken
-// 删除 AIGC API Token
+// 删除 AIGC API Token。与该 Token 关联的 AIGC 配额也会被删除。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
@@ -4559,6 +4817,64 @@ func (c *Client) DeleteJustInTimeTranscodeTemplateWithContext(ctx context.Contex
     request.SetContext(ctx)
     
     response = NewDeleteJustInTimeTranscodeTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteKnowledgeBaseRequest() (request *DeleteKnowledgeBaseRequest) {
+    request = &DeleteKnowledgeBaseRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vod", APIVersion, "DeleteKnowledgeBase")
+    
+    
+    return
+}
+
+func NewDeleteKnowledgeBaseResponse() (response *DeleteKnowledgeBaseResponse) {
+    response = &DeleteKnowledgeBaseResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteKnowledgeBase
+// 删除知识库。
+//
+// 调用接口后，知识库会处于“删除中”状态，并在后台执行删除操作。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) DeleteKnowledgeBase(request *DeleteKnowledgeBaseRequest) (response *DeleteKnowledgeBaseResponse, err error) {
+    return c.DeleteKnowledgeBaseWithContext(context.Background(), request)
+}
+
+// DeleteKnowledgeBase
+// 删除知识库。
+//
+// 调用接口后，知识库会处于“删除中”状态，并在后台执行删除操作。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) DeleteKnowledgeBaseWithContext(ctx context.Context, request *DeleteKnowledgeBaseRequest) (response *DeleteKnowledgeBaseResponse, err error) {
+    if request == nil {
+        request = NewDeleteKnowledgeBaseRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vod", APIVersion, "DeleteKnowledgeBase")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteKnowledgeBase require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteKnowledgeBaseResponse()
     err = c.Send(request, response)
     return
 }
@@ -5451,6 +5767,68 @@ func (c *Client) DeleteVodDomainWithContext(ctx context.Context, request *Delete
     request.SetContext(ctx)
     
     response = NewDeleteVodDomainResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteVoiceRequest() (request *DeleteVoiceRequest) {
+    request = &DeleteVoiceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vod", APIVersion, "DeleteVoice")
+    
+    
+    return
+}
+
+func NewDeleteVoiceResponse() (response *DeleteVoiceResponse) {
+    response = &DeleteVoiceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteVoice
+// 按音色 ID 删除指定音色，删除后不可恢复、不可再用于后续接口。仅支持删除本账号下的音色，系统预置音色不支持删除。
+//
+// 
+//
+// 注意：新设计、克隆的音色未被激活前无法被删除（查询不到即不可操作），需首次使用该新建音色执行一次 TTS 后才被激活。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DeleteVoice(request *DeleteVoiceRequest) (response *DeleteVoiceResponse, err error) {
+    return c.DeleteVoiceWithContext(context.Background(), request)
+}
+
+// DeleteVoice
+// 按音色 ID 删除指定音色，删除后不可恢复、不可再用于后续接口。仅支持删除本账号下的音色，系统预置音色不支持删除。
+//
+// 
+//
+// 注意：新设计、克隆的音色未被激活前无法被删除（查询不到即不可操作），需首次使用该新建音色执行一次 TTS 后才被激活。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DeleteVoiceWithContext(ctx context.Context, request *DeleteVoiceRequest) (response *DeleteVoiceResponse, err error) {
+    if request == nil {
+        request = NewDeleteVoiceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vod", APIVersion, "DeleteVoice")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteVoice require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteVoiceResponse()
     err = c.Send(request, response)
     return
 }
@@ -7927,6 +8305,60 @@ func (c *Client) DescribeJustInTimeTranscodeTemplatesWithContext(ctx context.Con
     return
 }
 
+func NewDescribeKnowledgeBasesRequest() (request *DescribeKnowledgeBasesRequest) {
+    request = &DescribeKnowledgeBasesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vod", APIVersion, "DescribeKnowledgeBases")
+    
+    
+    return
+}
+
+func NewDescribeKnowledgeBasesResponse() (response *DescribeKnowledgeBasesResponse) {
+    response = &DescribeKnowledgeBasesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeKnowledgeBases
+// 查询知识库列表。返回指定用户下的所有知识库信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) DescribeKnowledgeBases(request *DescribeKnowledgeBasesRequest) (response *DescribeKnowledgeBasesResponse, err error) {
+    return c.DescribeKnowledgeBasesWithContext(context.Background(), request)
+}
+
+// DescribeKnowledgeBases
+// 查询知识库列表。返回指定用户下的所有知识库信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) DescribeKnowledgeBasesWithContext(ctx context.Context, request *DescribeKnowledgeBasesRequest) (response *DescribeKnowledgeBasesResponse, err error) {
+    if request == nil {
+        request = NewDescribeKnowledgeBasesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vod", APIVersion, "DescribeKnowledgeBases")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeKnowledgeBases require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeKnowledgeBasesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeLLMComprehendTemplatesRequest() (request *DescribeLLMComprehendTemplatesRequest) {
     request = &DescribeLLMComprehendTemplatesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -9625,6 +10057,76 @@ func (c *Client) DescribeVodDomainsWithContext(ctx context.Context, request *Des
     return
 }
 
+func NewDescribeVoicesRequest() (request *DescribeVoicesRequest) {
+    request = &DescribeVoicesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vod", APIVersion, "DescribeVoices")
+    
+    
+    return
+}
+
+func NewDescribeVoicesResponse() (response *DescribeVoicesResponse) {
+    response = &DescribeVoicesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeVoices
+// 查询当前账号下可用音色列表，支持按音色 ID、类型、名称、性别、年龄、语言、标签、场景等可选条件过滤。
+//
+// 
+//
+// 注意：新设计、克隆的音色未被激活前无法被查询到，需首次使用该新建音色执行一次TTS后才被激活。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_INVALIDVODUSER = "FailedOperation.InvalidVodUser"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_LIMIT = "InvalidParameterValue.Limit"
+//  INVALIDPARAMETERVALUE_LIMITTOOLARGE = "InvalidParameterValue.LimitTooLarge"
+//  INVALIDPARAMETERVALUE_OFFSET = "InvalidParameterValue.Offset"
+//  INVALIDPARAMETERVALUE_OFFSETTOOLARGE = "InvalidParameterValue.OffsetTooLarge"
+func (c *Client) DescribeVoices(request *DescribeVoicesRequest) (response *DescribeVoicesResponse, err error) {
+    return c.DescribeVoicesWithContext(context.Background(), request)
+}
+
+// DescribeVoices
+// 查询当前账号下可用音色列表，支持按音色 ID、类型、名称、性别、年龄、语言、标签、场景等可选条件过滤。
+//
+// 
+//
+// 注意：新设计、克隆的音色未被激活前无法被查询到，需首次使用该新建音色执行一次TTS后才被激活。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_INVALIDVODUSER = "FailedOperation.InvalidVodUser"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_LIMIT = "InvalidParameterValue.Limit"
+//  INVALIDPARAMETERVALUE_LIMITTOOLARGE = "InvalidParameterValue.LimitTooLarge"
+//  INVALIDPARAMETERVALUE_OFFSET = "InvalidParameterValue.Offset"
+//  INVALIDPARAMETERVALUE_OFFSETTOOLARGE = "InvalidParameterValue.OffsetTooLarge"
+func (c *Client) DescribeVoicesWithContext(ctx context.Context, request *DescribeVoicesRequest) (response *DescribeVoicesResponse, err error) {
+    if request == nil {
+        request = NewDescribeVoicesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vod", APIVersion, "DescribeVoices")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeVoices require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeVoicesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeWatermarkTemplatesRequest() (request *DescribeWatermarkTemplatesRequest) {
     request = &DescribeWatermarkTemplatesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -9739,6 +10241,60 @@ func (c *Client) DescribeWordSamplesWithContext(ctx context.Context, request *De
     request.SetContext(ctx)
     
     response = NewDescribeWordSamplesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDesignVoiceAsyncRequest() (request *DesignVoiceAsyncRequest) {
+    request = &DesignVoiceAsyncRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vod", APIVersion, "DesignVoiceAsync")
+    
+    
+    return
+}
+
+func NewDesignVoiceAsyncResponse() (response *DesignVoiceAsyncResponse) {
+    response = &DesignVoiceAsyncResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DesignVoiceAsync
+// 发起音色设计任务，根据自然语言描述文本生成自定义音色，可同时指定音色画像（名称、性别、年龄、语言、标签、场景等）；提交时若附带试听文本，则任务完成后同时产出试听音频。音色设计为异步任务，音色 ID 在任务完成后产出。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DesignVoiceAsync(request *DesignVoiceAsyncRequest) (response *DesignVoiceAsyncResponse, err error) {
+    return c.DesignVoiceAsyncWithContext(context.Background(), request)
+}
+
+// DesignVoiceAsync
+// 发起音色设计任务，根据自然语言描述文本生成自定义音色，可同时指定音色画像（名称、性别、年龄、语言、标签、场景等）；提交时若附带试听文本，则任务完成后同时产出试听音频。音色设计为异步任务，音色 ID 在任务完成后产出。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DesignVoiceAsyncWithContext(ctx context.Context, request *DesignVoiceAsyncRequest) (response *DesignVoiceAsyncResponse, err error) {
+    if request == nil {
+        request = NewDesignVoiceAsyncRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vod", APIVersion, "DesignVoiceAsync")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DesignVoiceAsync require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDesignVoiceAsyncResponse()
     err = c.Send(request, response)
     return
 }
@@ -11879,6 +12435,60 @@ func (c *Client) ModifyJustInTimeTranscodeTemplateWithContext(ctx context.Contex
     request.SetContext(ctx)
     
     response = NewModifyJustInTimeTranscodeTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyKnowledgeBaseRequest() (request *ModifyKnowledgeBaseRequest) {
+    request = &ModifyKnowledgeBaseRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vod", APIVersion, "ModifyKnowledgeBase")
+    
+    
+    return
+}
+
+func NewModifyKnowledgeBaseResponse() (response *ModifyKnowledgeBaseResponse) {
+    response = &ModifyKnowledgeBaseResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyKnowledgeBase
+// 修改知识库。可以修改知识库的名称和/或描述。至少需要提供 Name 或 Description 中的一个字段。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) ModifyKnowledgeBase(request *ModifyKnowledgeBaseRequest) (response *ModifyKnowledgeBaseResponse, err error) {
+    return c.ModifyKnowledgeBaseWithContext(context.Background(), request)
+}
+
+// ModifyKnowledgeBase
+// 修改知识库。可以修改知识库的名称和/或描述。至少需要提供 Name 或 Description 中的一个字段。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) ModifyKnowledgeBaseWithContext(ctx context.Context, request *ModifyKnowledgeBaseRequest) (response *ModifyKnowledgeBaseResponse, err error) {
+    if request == nil {
+        request = NewModifyKnowledgeBaseRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vod", APIVersion, "ModifyKnowledgeBase")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyKnowledgeBase require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyKnowledgeBaseResponse()
     err = c.Send(request, response)
     return
 }
@@ -14959,6 +15569,8 @@ func NewSearchMediaBySemanticsResponse() (response *SearchMediaBySemanticsRespon
 // SearchMediaBySemantics
 // 使用自然语言对媒体进行语义搜索。
 //
+// 仅支持文搜视频、文搜图、图搜图，图搜视频请使用SearchMediaBySemanticsAsync.
+//
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
@@ -14968,6 +15580,8 @@ func (c *Client) SearchMediaBySemantics(request *SearchMediaBySemanticsRequest) 
 
 // SearchMediaBySemantics
 // 使用自然语言对媒体进行语义搜索。
+//
+// 仅支持文搜视频、文搜图、图搜图，图搜视频请使用SearchMediaBySemanticsAsync.
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -15385,6 +15999,258 @@ func (c *Client) SplitMediaWithContext(ctx context.Context, request *SplitMediaR
     return
 }
 
+func NewTextToSpeechAsyncRequest() (request *TextToSpeechAsyncRequest) {
+    request = &TextToSpeechAsyncRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vod", APIVersion, "TextToSpeechAsync")
+    
+    
+    return
+}
+
+func NewTextToSpeechAsyncResponse() (response *TextToSpeechAsyncResponse) {
+    response = &TextToSpeechAsyncResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// TextToSpeechAsync
+// 发起语音合成任务，将文本合成为语音，面向长文本场景（最大 200000 字符），支持指定音色及语速、音量、音调、采样率、输出格式等合成参数。语音合成为异步任务，完成后产出音频结果，可通过 DescribeTaskDetail 查询。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_INVALIDVODUSER = "FailedOperation.InvalidVodUser"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_SESSIONCONTEXTTOOLONG = "InvalidParameterValue.SessionContextTooLong"
+//  INVALIDPARAMETERVALUE_SESSIONID = "InvalidParameterValue.SessionId"
+//  INVALIDPARAMETERVALUE_SESSIONIDTOOLONG = "InvalidParameterValue.SessionIdTooLong"
+//  INVALIDPARAMETERVALUE_SUBAPPID = "InvalidParameterValue.SubAppId"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) TextToSpeechAsync(request *TextToSpeechAsyncRequest) (response *TextToSpeechAsyncResponse, err error) {
+    return c.TextToSpeechAsyncWithContext(context.Background(), request)
+}
+
+// TextToSpeechAsync
+// 发起语音合成任务，将文本合成为语音，面向长文本场景（最大 200000 字符），支持指定音色及语速、音量、音调、采样率、输出格式等合成参数。语音合成为异步任务，完成后产出音频结果，可通过 DescribeTaskDetail 查询。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_INVALIDVODUSER = "FailedOperation.InvalidVodUser"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_SESSIONCONTEXTTOOLONG = "InvalidParameterValue.SessionContextTooLong"
+//  INVALIDPARAMETERVALUE_SESSIONID = "InvalidParameterValue.SessionId"
+//  INVALIDPARAMETERVALUE_SESSIONIDTOOLONG = "InvalidParameterValue.SessionIdTooLong"
+//  INVALIDPARAMETERVALUE_SUBAPPID = "InvalidParameterValue.SubAppId"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) TextToSpeechAsyncWithContext(ctx context.Context, request *TextToSpeechAsyncRequest) (response *TextToSpeechAsyncResponse, err error) {
+    if request == nil {
+        request = NewTextToSpeechAsyncRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vod", APIVersion, "TextToSpeechAsync")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("TextToSpeechAsync require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewTextToSpeechAsyncResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewTextToSpeechSyncRequest() (request *TextToSpeechSyncRequest) {
+    request = &TextToSpeechSyncRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vod", APIVersion, "TextToSpeechSync")
+    
+    
+    return
+}
+
+func NewTextToSpeechSyncResponse() (response *TextToSpeechSyncResponse) {
+    response = &TextToSpeechSyncResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// TextToSpeechSync
+// 发起语音合成任务，将文本合成为语音。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_INVALIDVODUSER = "FailedOperation.InvalidVodUser"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_SESSIONCONTEXTTOOLONG = "InvalidParameterValue.SessionContextTooLong"
+//  INVALIDPARAMETERVALUE_SESSIONID = "InvalidParameterValue.SessionId"
+//  INVALIDPARAMETERVALUE_SESSIONIDTOOLONG = "InvalidParameterValue.SessionIdTooLong"
+//  INVALIDPARAMETERVALUE_SUBAPPID = "InvalidParameterValue.SubAppId"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) TextToSpeechSync(request *TextToSpeechSyncRequest) (response *TextToSpeechSyncResponse, err error) {
+    return c.TextToSpeechSyncWithContext(context.Background(), request)
+}
+
+// TextToSpeechSync
+// 发起语音合成任务，将文本合成为语音。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_INVALIDVODUSER = "FailedOperation.InvalidVodUser"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_SESSIONCONTEXTTOOLONG = "InvalidParameterValue.SessionContextTooLong"
+//  INVALIDPARAMETERVALUE_SESSIONID = "InvalidParameterValue.SessionId"
+//  INVALIDPARAMETERVALUE_SESSIONIDTOOLONG = "InvalidParameterValue.SessionIdTooLong"
+//  INVALIDPARAMETERVALUE_SUBAPPID = "InvalidParameterValue.SubAppId"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) TextToSpeechSyncWithContext(ctx context.Context, request *TextToSpeechSyncRequest) (response *TextToSpeechSyncResponse, err error) {
+    if request == nil {
+        request = NewTextToSpeechSyncRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vod", APIVersion, "TextToSpeechSync")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("TextToSpeechSync require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewTextToSpeechSyncResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateAigcApiTokenRequest() (request *UpdateAigcApiTokenRequest) {
+    request = &UpdateAigcApiTokenRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vod", APIVersion, "UpdateAigcApiToken")
+    
+    
+    return
+}
+
+func NewUpdateAigcApiTokenResponse() (response *UpdateAigcApiTokenResponse) {
+    response = &UpdateAigcApiTokenResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpdateAigcApiToken
+// 更新 AIGC 调用 API 的 Token。更新后数据同步有延时，需要约30秒。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) UpdateAigcApiToken(request *UpdateAigcApiTokenRequest) (response *UpdateAigcApiTokenResponse, err error) {
+    return c.UpdateAigcApiTokenWithContext(context.Background(), request)
+}
+
+// UpdateAigcApiToken
+// 更新 AIGC 调用 API 的 Token。更新后数据同步有延时，需要约30秒。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) UpdateAigcApiTokenWithContext(ctx context.Context, request *UpdateAigcApiTokenRequest) (response *UpdateAigcApiTokenResponse, err error) {
+    if request == nil {
+        request = NewUpdateAigcApiTokenRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vod", APIVersion, "UpdateAigcApiToken")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateAigcApiToken require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateAigcApiTokenResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateVoiceRequest() (request *UpdateVoiceRequest) {
+    request = &UpdateVoiceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vod", APIVersion, "UpdateVoice")
+    
+    
+    return
+}
+
+func NewUpdateVoiceResponse() (response *UpdateVoiceResponse) {
+    response = &UpdateVoiceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpdateVoice
+// 按音色 ID 更新音色的画像信息（名称、描述、性别、年龄、语言、标签、场景等），返回更新后的完整音色信息。仅支持更新本账号下的音色，系统预置音色不支持更新。
+//
+// 
+//
+// 注意：新设计、克隆的音色未被激活前无法被更新，需首次使用该新建音色执行一次 TTS 后才被激活。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) UpdateVoice(request *UpdateVoiceRequest) (response *UpdateVoiceResponse, err error) {
+    return c.UpdateVoiceWithContext(context.Background(), request)
+}
+
+// UpdateVoice
+// 按音色 ID 更新音色的画像信息（名称、描述、性别、年龄、语言、标签、场景等），返回更新后的完整音色信息。仅支持更新本账号下的音色，系统预置音色不支持更新。
+//
+// 
+//
+// 注意：新设计、克隆的音色未被激活前无法被更新，需首次使用该新建音色执行一次 TTS 后才被激活。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) UpdateVoiceWithContext(ctx context.Context, request *UpdateVoiceRequest) (response *UpdateVoiceResponse, err error) {
+    if request == nil {
+        request = NewUpdateVoiceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vod", APIVersion, "UpdateVoice")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateVoice require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateVoiceResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewVerifyDomainRecordRequest() (request *VerifyDomainRecordRequest) {
     request = &VerifyDomainRecordRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -15437,6 +16303,72 @@ func (c *Client) VerifyDomainRecordWithContext(ctx context.Context, request *Ver
     request.SetContext(ctx)
     
     response = NewVerifyDomainRecordResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewVideoDepthEstimationRequest() (request *VideoDepthEstimationRequest) {
+    request = &VideoDepthEstimationRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vod", APIVersion, "VideoDepthEstimation")
+    
+    
+    return
+}
+
+func NewVideoDepthEstimationResponse() (response *VideoDepthEstimationResponse) {
+    response = &VideoDepthEstimationResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// VideoDepthEstimation
+// 视频深度估计接口。输入视频，输出灰度深度视频，白色为近、黑色为远。深度值为单视频内归一化的相对深度。输出存储由 OutputConfig 控制，默认临时存储 7 天后过期。任务提交成功后返回任务 ID，可通过 DescribeTaskDetail 查询结果
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_EXPIRETIME = "InvalidParameterValue.ExpireTime"
+//  INVALIDPARAMETERVALUE_FILEID = "InvalidParameterValue.FileId"
+//  INVALIDPARAMETERVALUE_SESSIONCONTEXTTOOLONG = "InvalidParameterValue.SessionContextTooLong"
+//  INVALIDPARAMETERVALUE_SESSIONID = "InvalidParameterValue.SessionId"
+//  INVALIDPARAMETERVALUE_SESSIONIDTOOLONG = "InvalidParameterValue.SessionIdTooLong"
+//  INVALIDPARAMETERVALUE_URL = "InvalidParameterValue.Url"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) VideoDepthEstimation(request *VideoDepthEstimationRequest) (response *VideoDepthEstimationResponse, err error) {
+    return c.VideoDepthEstimationWithContext(context.Background(), request)
+}
+
+// VideoDepthEstimation
+// 视频深度估计接口。输入视频，输出灰度深度视频，白色为近、黑色为远。深度值为单视频内归一化的相对深度。输出存储由 OutputConfig 控制，默认临时存储 7 天后过期。任务提交成功后返回任务 ID，可通过 DescribeTaskDetail 查询结果
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_EXPIRETIME = "InvalidParameterValue.ExpireTime"
+//  INVALIDPARAMETERVALUE_FILEID = "InvalidParameterValue.FileId"
+//  INVALIDPARAMETERVALUE_SESSIONCONTEXTTOOLONG = "InvalidParameterValue.SessionContextTooLong"
+//  INVALIDPARAMETERVALUE_SESSIONID = "InvalidParameterValue.SessionId"
+//  INVALIDPARAMETERVALUE_SESSIONIDTOOLONG = "InvalidParameterValue.SessionIdTooLong"
+//  INVALIDPARAMETERVALUE_URL = "InvalidParameterValue.Url"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) VideoDepthEstimationWithContext(ctx context.Context, request *VideoDepthEstimationRequest) (response *VideoDepthEstimationResponse, err error) {
+    if request == nil {
+        request = NewVideoDepthEstimationRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vod", APIVersion, "VideoDepthEstimation")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("VideoDepthEstimation require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewVideoDepthEstimationResponse()
     err = c.Send(request, response)
     return
 }

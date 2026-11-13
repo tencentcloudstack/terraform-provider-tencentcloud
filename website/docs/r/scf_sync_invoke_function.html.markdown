@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [InvokeFunction](https://www.tencentcloud.com/document/api/583/41408)
 

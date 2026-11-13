@@ -105,6 +105,25 @@ In addition to all arguments above, the following attributes are exported:
 * `old_password_expire_time` - Expiration time of the old password. If `password_status` is `unmodifiable`, it means the old password has not yet expired.
 * `password_status` - Password status of the TcaplusDB cluster. Valid values: `unmodifiable`, `modifiable`. `unmodifiable`. which means the password can not be changed in this moment; `modifiable`, which means the password can be changed in this moment.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateCluster](https://www.tencentcloud.com/document/api/1016/35053)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/1016/35050)
+* Read:
+  - [DescribeClusterTags](https://www.tencentcloud.com/document/api/1016/36904)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/1016/35050)
+* Update:
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/1016/35050)
+  - [ModifyClusterMachine](https://www.tencentcloud.com/document/api/1016/39272)
+  - [ModifyClusterName](https://www.tencentcloud.com/document/api/1016/35049)
+  - [ModifyClusterPassword](https://www.tencentcloud.com/document/api/1016/35048)
+  - [ModifyClusterTags](https://www.tencentcloud.com/document/api/1016/36903)
+* Delete:
+  - [DeleteCluster](https://www.tencentcloud.com/document/api/1016/35052)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/1016/35050)
 
 ## Import
 

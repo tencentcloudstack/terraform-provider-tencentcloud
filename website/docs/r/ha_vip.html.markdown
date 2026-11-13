@@ -43,6 +43,20 @@ In addition to all arguments above, the following attributes are exported:
 * `network_interface_id` - Network interface ID that is associated.
 * `state` - State of the HA VIP. Valid value: `AVAILABLE`, `UNBIND`.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateHaVip](https://www.tencentcloud.com/document/api/215/34764)
+  - [DescribeHaVips](https://www.tencentcloud.com/document/api/215/34762)
+* Read: [DescribeHaVips](https://www.tencentcloud.com/document/api/215/34762)
+* Update:
+  - [DescribeHaVips](https://www.tencentcloud.com/document/api/215/34762)
+  - [ModifyHaVipAttribute](https://www.tencentcloud.com/document/api/215/34759)
+* Delete:
+  - [DeleteHaVip](https://www.tencentcloud.com/document/api/215/34763)
+  - [DescribeHaVips](https://www.tencentcloud.com/document/api/215/34762)
 
 ## Import
 

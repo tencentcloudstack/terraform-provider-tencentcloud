@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
     * `timestamp` - The timestamp corresponding to the monitoring indicator.
   * `table_schema` - databases name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTopSpaceSchemaTimeSeries](https://www.tencentcloud.com/document/api/1035/41190)
 

@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
   * `pre_value` - Modify the previous value.
   * `status` - Parameter status:1: parameter configuration modification.2: The parameter configuration is modified successfully.3: Parameter configuration modification failed.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstanceParamRecords](https://www.tencentcloud.com/document/api/239/32083)
 

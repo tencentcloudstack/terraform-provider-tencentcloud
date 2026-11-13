@@ -134,6 +134,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DisableWorkflow](https://www.tencentcloud.com/document/api/1041/33635)
+  - [EnableWorkflow](https://www.tencentcloud.com/document/api/1041/33634)
+* Read: [DescribeWorkflows](https://www.tencentcloud.com/document/api/1041/33636)
+* Update:
+  - [DisableWorkflow](https://www.tencentcloud.com/document/api/1041/33635)
+  - [EnableWorkflow](https://www.tencentcloud.com/document/api/1041/33634)
 
 ## Import
 

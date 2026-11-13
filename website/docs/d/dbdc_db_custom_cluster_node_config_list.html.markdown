@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
     * `key` - Taint key.
     * `value` - Taint value.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBCustomClusterNodeConfig](https://www.tencentcloud.com/search/?wd=DescribeDBCustomClusterNodeConfig&type=document&lang=en)
 

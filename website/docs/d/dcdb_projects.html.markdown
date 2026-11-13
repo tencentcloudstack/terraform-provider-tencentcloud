@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
   * `src_plat` - Source platform.
   * `status` - Project status. Valid values: `0` (normal), `-1` (disabled), `3` (default project).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeProjects](https://www.tencentcloud.com/search/?wd=DescribeProjects&type=document&lang=en)
 

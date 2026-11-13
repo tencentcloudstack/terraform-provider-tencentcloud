@@ -34,6 +34,15 @@ In addition to all arguments above, the following attributes are exported:
 * `name` - Logset name, which unique and fixed `clb_logset` among all CLS logsets.
 * `topic_count` - Number of log topics in logset.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateClsLogSet](https://www.tencentcloud.com/document/api/214/37821)
+  - [DescribeClsLogSet](https://www.tencentcloud.com/document/api/214/37819)
+* Read: [DescribeLogsets](https://www.tencentcloud.com/document/api/614/42778)
+* Delete: [DeleteLogset](https://www.tencentcloud.com/document/api/614/42779)
 
 ## Import
 

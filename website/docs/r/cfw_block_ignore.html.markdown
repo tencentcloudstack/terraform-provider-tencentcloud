@@ -60,6 +60,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateBlockIgnoreRuleList](https://www.tencentcloud.com/search/?wd=CreateBlockIgnoreRuleList&type=document&lang=en)
+* Read: [DescribeBlockIgnoreList](https://www.tencentcloud.com/document/api/1160/54826)
+* Update: [ModifyBlockIgnoreRule](https://www.tencentcloud.com/search/?wd=ModifyBlockIgnoreRule&type=document&lang=en)
+* Delete: [DeleteBlockIgnoreRuleList](https://www.tencentcloud.com/search/?wd=DeleteBlockIgnoreRuleList&type=document&lang=en)
 
 ## Import
 

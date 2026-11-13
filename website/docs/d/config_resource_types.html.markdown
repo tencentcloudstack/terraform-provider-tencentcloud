@@ -33,4 +33,9 @@ In addition to all arguments above, the following attributes are exported:
   * `resource_type_name` - Resource type name.
   * `resource_type` - Resource type identifier (e.g. QCS::CAM::Group).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListResourceTypes](https://www.tencentcloud.com/document/api/1164/84979)
 

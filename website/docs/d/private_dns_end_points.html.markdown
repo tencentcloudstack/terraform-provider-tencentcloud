@@ -66,4 +66,9 @@ In addition to all arguments above, the following attributes are exported:
 * `end_point_set` - Endpoint list.
 Note: This field may return null, indicating that no valid values can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeEndPointList](https://www.tencentcloud.com/document/api/1097/65934)
 

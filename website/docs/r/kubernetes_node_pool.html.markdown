@@ -468,6 +468,28 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `30m`) Used when creating the resource.
 * `update` - (Defaults to `30m`) Used when updating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateClusterNodePool](https://www.tencentcloud.com/document/api/457/38781)
+* Read:
+  - [DescribeClusterNodePoolDetail](https://www.tencentcloud.com/document/api/457/38778)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
+* Update:
+  - [DeleteMachine](https://www.tencentcloud.com/document/api/296/30907)
+  - [DescribeAutoScalingActivities](https://www.tencentcloud.com/document/api/377/31014)
+  - [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
+  - [DescribeClusterNodePoolDetail](https://www.tencentcloud.com/document/api/457/38778)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+  - [InvokeCommand](https://www.tencentcloud.com/document/api/1147/46690)
+  - [ModifyClusterNodePool](https://www.tencentcloud.com/document/api/457/38776)
+  - [ModifyLaunchConfigurationAttributes](https://www.tencentcloud.com/document/api/377/30998)
+  - [ModifyNodePoolDesiredCapacityAboutAsg](https://www.tencentcloud.com/search/?wd=ModifyNodePoolDesiredCapacityAboutAsg&type=document&lang=en)
+  - [Send](https://www.tencentcloud.com/search/?wd=Send&type=document&lang=en)
+  - [UseAsClient](https://www.tencentcloud.com/search/?wd=UseAsClient&type=document&lang=en)
+* Delete: [DeleteClusterNodePool](https://www.tencentcloud.com/document/api/457/38779)
 
 ## Import
 

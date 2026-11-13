@@ -93,6 +93,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `task_id` - task id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateScheduledSql](https://www.tencentcloud.com/document/api/614/59901)
+* Read: [DescribeScheduledSqlInfo](https://www.tencentcloud.com/document/api/614/59899)
+* Update: [ModifyScheduledSql](https://www.tencentcloud.com/document/api/614/59898)
+* Delete: [DeleteScheduledSql](https://www.tencentcloud.com/document/api/614/59900)
 
 ## Import
 

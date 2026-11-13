@@ -111,4 +111,11 @@ In addition to all arguments above, the following attributes are exported:
   * `tags` - Tags of the subnet resource.
   * `vpc_id` - ID of the VPC.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read:
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [DescribeSubnets](https://www.tencentcloud.com/document/api/215/15784)
 

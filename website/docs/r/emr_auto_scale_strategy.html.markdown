@@ -170,6 +170,18 @@ The `time_auto_scale_strategy` object exports the following:
 
 * `strategy_id` - Policy unique ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddMetricScaleStrategy](https://www.tencentcloud.com/document/api/1026/73224)
+* Read: [DescribeAutoScaleStrategies](https://www.tencentcloud.com/document/api/1026/73218)
+* Update:
+  - [DescribeAutoScaleStrategies](https://www.tencentcloud.com/document/api/1026/73218)
+  - [ModifyAutoScaleStrategy](https://www.tencentcloud.com/document/api/1026/73214)
+* Delete:
+  - [DeleteAutoScaleStrategy](https://www.tencentcloud.com/document/api/1026/73222)
+  - [DescribeAutoScaleStrategies](https://www.tencentcloud.com/document/api/1026/73218)
 
 ## Import
 

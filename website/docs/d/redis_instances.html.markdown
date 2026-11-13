@@ -61,4 +61,11 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - ID of the vpc with which the instance is associated.
   * `zone` - Available zone to which a redis instance belongs.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read:
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/239/32065)
+  - [DescribeZones](https://www.tencentcloud.com/document/api/1271/71924)
 

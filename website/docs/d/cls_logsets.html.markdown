@@ -82,4 +82,9 @@ In addition to all arguments above, the following attributes are exported:
     * `value` - Tag value.
   * `topic_count` - Topic count.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeLogsets](https://www.tencentcloud.com/document/api/614/42778)
 

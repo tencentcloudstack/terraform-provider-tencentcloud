@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
   * `region_name` - geographical name.
   * `support` - NONE: The default value does not support any special models CVM: Supports CVM types.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRegion](https://www.tencentcloud.com/document/api/597/40317)
 

@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
   * `description` - Description.
   * `identity` - identity.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeWhiteBoxDeviceFingerprints](https://www.tencentcloud.com/search/?wd=DescribeWhiteBoxDeviceFingerprints&type=document&lang=en)
 

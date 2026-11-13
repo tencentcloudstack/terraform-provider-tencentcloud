@@ -59,4 +59,9 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Database Agent Node Status.
   * `zone` - Availability Zone.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeProxyNodes](https://www.tencentcloud.com/document/api/1098/56557)
 

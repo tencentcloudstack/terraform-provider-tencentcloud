@@ -12,6 +12,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/endpoints"
+	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	captchaintl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/captcha/v20190722"
@@ -23,7 +24,9 @@ import (
 	privatednsIntl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/privatedns/v20201028"
 	advisorv20200721 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor/v20200721"
 	v20200721 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor/v20200721"
+	agsv20250920 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ags/v20250920"
 	antiddos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309"
+	antiddosv20250903 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20250903"
 	api "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api/v20201106"
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
 	apm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm/v20210622"
@@ -70,6 +73,7 @@ import (
 	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
+	fwmv20250611 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/fwm/v20250611"
 	ga2v20250115 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ga2/v20250115"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	gsv20191118 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gs/v20191118"
@@ -109,6 +113,7 @@ import (
 	tcss "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcss/v20201101"
 	tdcpg "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg/v20211118"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
+	tdmysqlv20211122 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmysql/v20211122"
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	thpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/thpc/v20230321"
@@ -144,96 +149,98 @@ type TencentCloudClient struct {
 	Domain     string
 	CosDomain  string
 
-	cosConn              *s3.S3
-	tencentCosConn       *cos.Client
-	mysqlConn            *cdb.Client
-	redisConn            *redis.Client
-	asConn               *as.Client
-	vpcConn              *vpc.Client
-	cbsConn              *cbs.Client
-	cvmv20170312Conn     *cvmv20170312.Client
-	cvmIntlConn          *cvmintl.Client
-	clbConn              *clb.Client
-	clbIntlConn          *clbintl.Client
-	dayuConn             *dayu.Client
-	dcConn               *dc.Client
-	tagConn              *tag.Client
-	mongodbConn          *mongodb.Client
-	tkev20180525Conn     *tkev20180525.Client
-	tdmqConn             *tdmq.Client
-	tcrConn              *tcr.Client
-	camConn              *cam.Client
-	stsConn              *sts.Client
-	gaapConn             *gaap.Client
-	sslConn              *ssl.Client
-	cfsConn              *cfs.Client
-	scfConn              *scf.Client
-	tcaplusConn          *tcaplusdb.Client
-	cdnConn              *cdn.Client
-	monitorConn          *monitor.Client
-	monitorv20230616Conn *monitorv20230616.Client
-	esConn               *es.Client
-	sqlserverConn        *sqlserver.Client
-	postgreConn          *postgre.Client
-	ckafkaConn           *ckafka.Client
-	auditConn            *audit.Client
-	cynosConn            *cynosdb.Client
-	vodConn              *vod.Client
-	apiGatewayConn       *apigateway.Client
-	sslCertificateConn   *sslCertificate.Client
-	kmsConn              *kms.Client
-	ssmConn              *ssm.Client
-	apiConn              *api.Client
-	emrConn              *emr.Client
-	clsConn              *cls.Client
-	dnsPodConn           *dnspod.Client
-	dnsPodIntlConn       *dnspodintl.Client
-	privateDnsConn       *privatedns.Client
-	antiddosConn         *antiddos.Client
-	domainConn           *domain.Client
-	lighthouseConn       *lighthouse.Client
-	temConn              *tem.Client
-	teoConn              *teo.Client
-	tcmConn              *tcm.Client
-	cssConn              *css.Client
-	sesConn              *ses.Client
-	dcdbConn             *dcdb.Client
-	smsConn              *sms.Client
-	catConn              *cat.Client
-	mariadbConn          *mariadb.Client
-	rumConn              *rum.Client
-	ptsConn              *pts.Client
-	tatConn              *tat.Client
-	organizationConn     *organization.Client
-	tdcpgConn            *tdcpg.Client
-	dbbrainConn          *dbbrain.Client
-	dtsConn              *dts.Client
-	ciConn               *cos.Client
-	cosBatchConn         *cos.Client
-	tsfConn              *tsf.Client
-	mpsConn              *mps.Client
-	cwpConn              *cwp.Client
-	chdfsConn            *chdfs.Client
-	configv20220802Conn  *configv20220802.Client
-	mdlConn              *mdl.Client
-	apmConn              *apm.Client
-	ciamConn             *ciam.Client
-	tseConn              *tse.Client
-	cdwchConn            *cdwch.Client
-	ebConn               *eb.Client
-	dlcConn              *dlc.Client
-	captchaConn          *captchaintl.Client
-	wedataConn           *wedata.Client
-	wedatav20250806Conn  *wedatav20250806.Client
-	wafConn              *waf.Client
-	cfwConn              *cfw.Client
-	oceanusConn          *oceanus.Client
-	dasbConn             *dasb.Client
-	trocketConn          *trocket.Client
-	biConn               *bi.Client
-	cdwpgConn            *cdwpg.Client
-	csipConn             *csip.Client
-	regionConn           *region.Client
+	cosConn               *s3.S3
+	tencentCosConn        *cos.Client
+	mysqlConn             *cdb.Client
+	redisConn             *redis.Client
+	asConn                *as.Client
+	vpcConn               *vpc.Client
+	cbsConn               *cbs.Client
+	cvmv20170312Conn      *cvmv20170312.Client
+	cvmIntlConn           *cvmintl.Client
+	clbConn               *clb.Client
+	clbIntlConn           *clbintl.Client
+	dayuConn              *dayu.Client
+	dcConn                *dc.Client
+	tagConn               *tag.Client
+	mongodbConn           *mongodb.Client
+	tkev20180525Conn      *tkev20180525.Client
+	tdmqConn              *tdmq.Client
+	tcrConn               *tcr.Client
+	camConn               *cam.Client
+	stsConn               *sts.Client
+	gaapConn              *gaap.Client
+	sslConn               *ssl.Client
+	cfsConn               *cfs.Client
+	scfConn               *scf.Client
+	tcaplusConn           *tcaplusdb.Client
+	cdnConn               *cdn.Client
+	monitorConn           *monitor.Client
+	monitorv20230616Conn  *monitorv20230616.Client
+	esConn                *es.Client
+	sqlserverConn         *sqlserver.Client
+	postgreConn           *postgre.Client
+	ckafkaConn            *ckafka.Client
+	auditConn             *audit.Client
+	cynosConn             *cynosdb.Client
+	vodConn               *vod.Client
+	apiGatewayConn        *apigateway.Client
+	sslCertificateConn    *sslCertificate.Client
+	kmsConn               *kms.Client
+	ssmConn               *ssm.Client
+	agsConn               *agsv20250920.Client
+	apiConn               *api.Client
+	emrConn               *emr.Client
+	clsConn               *cls.Client
+	dnsPodConn            *dnspod.Client
+	dnsPodIntlConn        *dnspodintl.Client
+	privateDnsConn        *privatedns.Client
+	antiddosConn          *antiddos.Client
+	antiddosV20250903Conn *antiddosv20250903.Client
+	domainConn            *domain.Client
+	lighthouseConn        *lighthouse.Client
+	temConn               *tem.Client
+	teoConn               *teo.Client
+	tcmConn               *tcm.Client
+	cssConn               *css.Client
+	sesConn               *ses.Client
+	dcdbConn              *dcdb.Client
+	smsConn               *sms.Client
+	catConn               *cat.Client
+	mariadbConn           *mariadb.Client
+	rumConn               *rum.Client
+	ptsConn               *pts.Client
+	tatConn               *tat.Client
+	organizationConn      *organization.Client
+	tdcpgConn             *tdcpg.Client
+	dbbrainConn           *dbbrain.Client
+	dtsConn               *dts.Client
+	ciConn                *cos.Client
+	cosBatchConn          *cos.Client
+	tsfConn               *tsf.Client
+	mpsConn               *mps.Client
+	cwpConn               *cwp.Client
+	chdfsConn             *chdfs.Client
+	configv20220802Conn   *configv20220802.Client
+	mdlConn               *mdl.Client
+	apmConn               *apm.Client
+	ciamConn              *ciam.Client
+	tseConn               *tse.Client
+	cdwchConn             *cdwch.Client
+	ebConn                *eb.Client
+	dlcConn               *dlc.Client
+	captchaConn           *captchaintl.Client
+	wedataConn            *wedata.Client
+	wedatav20250806Conn   *wedatav20250806.Client
+	wafConn               *waf.Client
+	cfwConn               *cfw.Client
+	oceanusConn           *oceanus.Client
+	dasbConn              *dasb.Client
+	trocketConn           *trocket.Client
+	biConn                *bi.Client
+	cdwpgConn             *cdwpg.Client
+	csipConn              *csip.Client
+	regionConn            *region.Client
 	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	tkev20220501Conn  *tkev20220501.Client
@@ -248,6 +255,7 @@ type TencentCloudClient struct {
 	sslv20191205Conn            *sslCertificate.Client
 	postgresv20170312Conn       *postgre.Client
 	cfwv20190904Conn            *cfw.Client
+	fwmv20250611Conn            *fwmv20250611.Client
 	ccnv20170312Conn            *vpc.Client
 	tcssv20201101Conn           *tcss.Client
 	cloudauditv20190319Conn     *audit.Client
@@ -274,6 +282,7 @@ type TencentCloudClient struct {
 	dbdcv20201029Conn           *dbdcv20201029.Client
 	vcubev20220410Conn          *vcubev20220410.Client
 	advisorv20200721Conn        *advisorv20200721.Client
+	tdmysqlv20211122Conn        *tdmysqlv20211122.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -346,6 +355,13 @@ func (me *TencentCloudClient) UseCosClient() *s3.S3 {
 		Region:           aws.String(me.Region),
 		EndpointResolver: endpoints.ResolverFunc(resolver),
 	}))
+	// Mark every COS request with the provider identity, e.g. "Terraform-1.83.41".
+	// aws-sdk-go has no UserAgent field; the official extension point is a Build
+	// handler and AddToUserAgent appends to the default SDK user agent.
+	userAgent := fmt.Sprintf("Terraform-%s", GetReqClientVersion())
+	sess.Handlers.Build.PushBack(func(r *request.Request) {
+		request.AddToUserAgent(r, userAgent)
+	})
 
 	return s3.New(sess)
 }
@@ -369,6 +385,11 @@ func (me *TencentCloudClient) UseCosCdcClient(cdcId string) *s3.S3 {
 		Region:           aws.String(me.Region),
 		EndpointResolver: endpoints.ResolverFunc(resolver),
 	}))
+	// Mark every COS request with the provider identity, e.g. "Terraform-1.83.41".
+	userAgent := fmt.Sprintf("Terraform-%s", GetReqClientVersion())
+	sess.Handlers.Build.PushBack(func(r *request.Request) {
+		request.AddToUserAgent(r, userAgent)
+	})
 
 	return s3.New(sess)
 }
@@ -413,6 +434,8 @@ func (me *TencentCloudClient) UseTencentCosClient(bucket string, clientTimeout .
 			SessionToken: me.Credential.Token,
 		},
 	})
+	// Mark every COS request with the provider identity, e.g. "Terraform-1.83.41".
+	me.tencentCosConn.UserAgent = fmt.Sprintf("Terraform-%s", GetReqClientVersion())
 
 	return me.tencentCosConn
 }
@@ -438,6 +461,8 @@ func (me *TencentCloudClient) UseTencentCosCdcClient(bucket string, cdcId string
 			SessionToken: me.Credential.Token,
 		},
 	})
+	// Mark every COS request with the provider identity, e.g. "Terraform-1.83.41".
+	me.tencentCosConn.UserAgent = fmt.Sprintf("Terraform-%s", GetReqClientVersion())
 
 	return me.tencentCosConn
 }
@@ -1117,6 +1142,19 @@ func (me *TencentCloudClient) UseSsmClient() *ssm.Client {
 	return me.ssmConn
 }
 
+// UseAgsClient returns AGS client for service
+func (me *TencentCloudClient) UseAgsClient() *agsv20250920.Client {
+	if me.agsConn != nil {
+		return me.agsConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.agsConn, _ = agsv20250920.NewClient(me.Credential, me.Region, cpf)
+	me.agsConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.agsConn
+}
+
 // UseApiClient return API client for service
 func (me *TencentCloudClient) UseApiClient() *api.Client {
 	if me.apiConn != nil {
@@ -1245,6 +1283,19 @@ func (me *TencentCloudClient) UseAntiddosClient() *antiddos.Client {
 	me.antiddosConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.antiddosConn
+}
+
+// UseAntiddosV20250903Client returns antiddos v20250903 client for service
+func (me *TencentCloudClient) UseAntiddosV20250903Client() *antiddosv20250903.Client {
+	if me.antiddosV20250903Conn != nil {
+		return me.antiddosV20250903Conn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.antiddosV20250903Conn, _ = antiddosv20250903.NewClient(me.Credential, me.Region, cpf)
+	me.antiddosV20250903Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.antiddosV20250903Conn
 }
 
 // UseTemClient returns tem client for service
@@ -1773,6 +1824,24 @@ func (me *TencentCloudClient) UseCfwClient(iacExtInfo ...IacExtInfo) *cfw.Client
 	return me.cfwConn
 }
 
+func (me *TencentCloudClient) UseFwmClient(iacExtInfo ...IacExtInfo) *fwmv20250611.Client {
+	var logRoundTripper LogRoundTripper
+	if len(iacExtInfo) != 0 {
+		logRoundTripper.InstanceId = iacExtInfo[0].InstanceId
+	}
+
+	if me.fwmv20250611Conn != nil {
+		me.fwmv20250611Conn.WithHttpTransport(&logRoundTripper)
+		return me.fwmv20250611Conn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.fwmv20250611Conn, _ = fwmv20250611.NewClient(me.Credential, me.Region, cpf)
+	me.fwmv20250611Conn.WithHttpTransport(&logRoundTripper)
+
+	return me.fwmv20250611Conn
+}
+
 func (me *TencentCloudClient) UseOceanusClient() *oceanus.Client {
 	if me.oceanusConn != nil {
 		return me.oceanusConn
@@ -2048,6 +2117,18 @@ func (me *TencentCloudClient) UseCfwV20190904Client() *cfw.Client {
 	me.cfwv20190904Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.cfwv20190904Conn
+}
+
+// UseFwmV20250611Client return FWM client for service
+func (me *TencentCloudClient) UseFwmV20250611Client() *fwmv20250611.Client {
+	if me.fwmv20250611Conn != nil {
+		return me.fwmv20250611Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.fwmv20250611Conn, _ = fwmv20250611.NewClient(me.Credential, me.Region, cpf)
+	me.fwmv20250611Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.fwmv20250611Conn
 }
 
 // UseCcnV20170312Client return CCN client for service
@@ -2349,4 +2430,16 @@ func (me *TencentCloudClient) UseDbdcV20201029Client() *dbdcv20201029.Client {
 	me.dbdcv20201029Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.dbdcv20201029Conn
+}
+
+// UseTdmysqlV20211122Client return TDSQL-C for MySQL client for service
+func (me *TencentCloudClient) UseTdmysqlV20211122Client() *tdmysqlv20211122.Client {
+	if me.tdmysqlv20211122Conn != nil {
+		return me.tdmysqlv20211122Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.tdmysqlv20211122Conn, _ = tdmysqlv20211122.NewClient(me.Credential, me.Region, cpf)
+	me.tdmysqlv20211122Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.tdmysqlv20211122Conn
 }

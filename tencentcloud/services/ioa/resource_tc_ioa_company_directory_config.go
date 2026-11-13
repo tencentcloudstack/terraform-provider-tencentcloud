@@ -82,6 +82,7 @@ func ResourceTencentCloudIoaCompanyDirectoryConfig() *schema.Resource {
 			"scene": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Usage scene: API created, quick start, normal config. Create-only, not present in Describe output.",
 			},
 
@@ -221,7 +222,7 @@ func resourceTencentCloudIoaCompanyDirectoryConfigRead(d *schema.ResourceData, m
 	}
 
 	if respData == nil {
-		log.Printf("[CRUD] ioa_company_directory_config id=%s", d.Id())
+		log.Printf("[WARN]%s resource `tencentcloud_ioa_company_directory_config` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
@@ -262,7 +263,7 @@ func resourceTencentCloudIoaCompanyDirectoryConfigRead(d *schema.ResourceData, m
 		_ = d.Set("description", respData.Description)
 	}
 
-	if respData.NameI18n != nil && len(respData.NameI18n) > 0 {
+	if respData.NameI18n != nil {
 		nameI18nList := make([]map[string]interface{}, 0, len(respData.NameI18n))
 		for _, i18nString := range respData.NameI18n {
 			nameI18nMap := map[string]interface{}{}

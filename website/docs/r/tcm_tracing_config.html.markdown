@@ -72,6 +72,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyTracingConfig](https://www.tencentcloud.com/search/?wd=ModifyTracingConfig&type=document&lang=en)
+* Read: [DescribeMesh](https://www.tencentcloud.com/search/?wd=DescribeMesh&type=document&lang=en)
+* Update: [ModifyTracingConfig](https://www.tencentcloud.com/search/?wd=ModifyTracingConfig&type=document&lang=en)
 
 ## Import
 

@@ -908,6 +908,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyBotIdRule](https://www.tencentcloud.com/search/?wd=ModifyBotIdRule&type=document&lang=en)
+* Read: [DescribeBotIdRule](https://www.tencentcloud.com/search/?wd=DescribeBotIdRule&type=document&lang=en)
+* Update: [ModifyBotIdRule](https://www.tencentcloud.com/search/?wd=ModifyBotIdRule&type=document&lang=en)
 
 ## Import
 

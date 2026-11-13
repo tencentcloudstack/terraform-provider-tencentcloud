@@ -38,6 +38,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [UpdateIPWhitelist](https://www.tencentcloud.com/search/?wd=UpdateIPWhitelist&type=document&lang=en)
+* Read: [GetIPWhitelist](https://www.tencentcloud.com/search/?wd=GetIPWhitelist&type=document&lang=en)
+* Update: [UpdateIPWhitelist](https://www.tencentcloud.com/search/?wd=UpdateIPWhitelist&type=document&lang=en)
+* Delete: [UpdateIPWhitelist](https://www.tencentcloud.com/search/?wd=UpdateIPWhitelist&type=document&lang=en)
 
 ## Import
 

@@ -51,6 +51,19 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Create time of Customized Config.
 * `update_time` - Update time of Customized Config.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeCustomizedConfigAssociateList](https://www.tencentcloud.com/document/api/214/42308)
+  - [DescribeCustomizedConfigList](https://www.tencentcloud.com/document/api/214/42307)
+  - [SetCustomizedConfigForLoadBalancer](https://www.tencentcloud.com/document/api/214/51215)
+* Read:
+  - [DescribeCustomizedConfigAssociateList](https://www.tencentcloud.com/document/api/214/42308)
+  - [DescribeCustomizedConfigList](https://www.tencentcloud.com/document/api/214/42307)
+* Update: [SetCustomizedConfigForLoadBalancer](https://www.tencentcloud.com/document/api/214/51215)
+* Delete: [SetCustomizedConfigForLoadBalancer](https://www.tencentcloud.com/document/api/214/51215)
 
 ## Import
 

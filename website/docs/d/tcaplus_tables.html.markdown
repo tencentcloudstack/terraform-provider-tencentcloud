@@ -71,4 +71,9 @@ In addition to all arguments above, the following attributes are exported:
   * `table_type` - Type of the TcaplusDB table.
   * `tablegroup_id` - Table group id of the TcaplusDB table.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTables](https://www.tencentcloud.com/document/api/1016/35036)
 

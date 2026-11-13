@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
   * `max_element_size` - Maximum element length.
   * `type` - key type.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRedisTopBigKeys](https://www.tencentcloud.com/search/?wd=DescribeRedisTopBigKeys&type=document&lang=en)
 

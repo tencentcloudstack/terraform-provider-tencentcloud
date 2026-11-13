@@ -29,6 +29,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ApplyConfigToMachineGroup](https://www.tencentcloud.com/document/api/614/42814)
+* Read: [DescribeConfigMachineGroups](https://www.tencentcloud.com/document/api/614/42810)
+* Delete: [DeleteConfigFromMachineGroup](https://www.tencentcloud.com/document/api/614/42811)
 
 ## Import
 

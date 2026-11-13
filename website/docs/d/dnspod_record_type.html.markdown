@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `type_list` - Record type list.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRecordType](https://www.tencentcloud.com/document/api/1157/53838)
 

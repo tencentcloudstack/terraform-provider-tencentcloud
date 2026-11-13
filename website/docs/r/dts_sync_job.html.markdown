@@ -45,7 +45,7 @@ The following arguments are supported:
 * `instance_class` - (Optional, String) Sync link specification, such as `micro`, `small`, `medium`, `large`. Default is `medium`.
 * `job_name` - (Optional, String, ForceNew) Sync job name.
 * `specification` - (Optional, String, ForceNew) Sync job specification. `Standard` indicates the standard edition; currently only `Standard` is supported.
-* `tags` - (Optional, List, ForceNew) Tag information.
+* `tags` - (Optional, Set) Tag information.Cannot be modified.
 
 The `tags` object supports the following:
 
@@ -59,6 +59,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `job_id` - Sync job ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSyncJob](https://www.tencentcloud.com/document/api/571/51795)
+* Read: [DescribeSyncJobs](https://www.tencentcloud.com/document/api/571/51793)
+* Update: [ResizeSyncJob](https://www.tencentcloud.com/document/api/571/51789)
+* Delete:
+  - [DescribeSyncJobs](https://www.tencentcloud.com/document/api/571/51793)
+  - [DestroySyncJob](https://www.tencentcloud.com/document/api/571/51792)
+  - [IsolateSyncJob](https://www.tencentcloud.com/document/api/571/51791)
 
 ## Import
 

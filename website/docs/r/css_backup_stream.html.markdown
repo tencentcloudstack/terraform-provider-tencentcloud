@@ -40,6 +40,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [SwitchBackupStream](https://www.tencentcloud.com/search/?wd=SwitchBackupStream&type=document&lang=en)
+* Read: [DescribeBackupStreamList](https://www.tencentcloud.com/search/?wd=DescribeBackupStreamList&type=document&lang=en)
+* Update: [SwitchBackupStream](https://www.tencentcloud.com/search/?wd=SwitchBackupStream&type=document&lang=en)
 
 ## Import
 

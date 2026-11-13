@@ -59,4 +59,12 @@ In addition to all arguments above, the following attributes are exported:
 * `namespace_id_list` - A list of namespaces to which the swimlane has associated deployment groups.
 * `update_time` - update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLane](https://www.tencentcloud.com/search/?wd=CreateLane&type=document&lang=en)
+* Read: [DescribeLanes](https://www.tencentcloud.com/search/?wd=DescribeLanes&type=document&lang=en)
+* Update: [ModifyLane](https://www.tencentcloud.com/search/?wd=ModifyLane&type=document&lang=en)
+* Delete: [DeleteLane](https://www.tencentcloud.com/search/?wd=DeleteLane&type=document&lang=en)
 

@@ -1,3 +1,155 @@
+## 1.83.41(November‌ 6, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_fwm_vpc_acl_rule` ([#4583](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4583))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_kubernetes_node_pool: Optimize script field handling. ([#4634](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4634))
+* resource/tencentcloud_teo_load_balancer: add new parameter. ([#4633](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4633))
+
+## 1.83.40(November‌ 2, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_fwm_cfw_share_role_config` ([#4593](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4593))
+* **New Resource:** `tencentcloud_fwm_edge_acl_rule` ([#4587](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4587))
+* **New Resource:** `tencentcloud_fwm_nat_acl_rule` ([#4588](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4588))
+* **New Resource:** `tencentcloud_fwm_security_group_rule` ([#4589](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4589))
+* **New Resource:** `tencentcloud_kms_instance` ([#4616](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4616))
+* **New Resource:** `tencentcloud_ssm_service` ([#4611](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4611))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_mongodb_instance: modify doc. ([#4619](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4619))
+* resource/tencentcloud_monitor_tmp_exporter_integration_v2: optimize code logic. ([#4622](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4622))
+* resource/tencentcloud_teo_load_balancer: add probe_cluster parameter to health_checker block and support HTTP_V2 type ([#4621](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4621))
+
+## 1.83.39(October 28, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_dlc_meta_database` ([#4475](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4475))
+* **New Resource:** `tencentcloud_dts_sync_job_config` ([#4610](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4610))
+* **New Resource:** `tencentcloud_fwm_account_group` ([#4592](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4592))
+* **New Resource:** `tencentcloud_fwm_cfw_managed_config` ([#4591](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4591))
+* **New Resource:** `tencentcloud_fwm_member_group_config` ([#4594](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4594))
+* **New Resource:** `tencentcloud_fwm_rule_group` ([#4584](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4584))
+* **New Resource:** `tencentcloud_fwm_strategy` ([#4590](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4590))
+* **New Resource:** `tencentcloud_organization_provision_role_configuration` ([#4612](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4612))
+* **New Resource:** `tencentcloud_ssl_upload_certificate_instance` ([#4585](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4585))
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_dts_sync_jobs: add `schema_mode` computed field in `list.objects.databases` block to expose the schema selection mode (All/Partial) used by PostgreSQL and SQL Server links ([#4608](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4608))
+* data-source/tencentcloud_teo_config_group_version_detail: add `source_version` field to `config_group_version_info` block ([#4413](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4413))
+* resource/tencentcloud_cam_access_key: optimize code logic ([#4604](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4604))
+* resource/tencentcloud_ckafka_route: support security_group_ids parameter ([#4607](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4607))
+* resource/tencentcloud_cos_bucket: support new params ([#4602](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4602))
+* resource/tencentcloud_kubernetes_cluster: modify error message. ([#4614](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4614))
+* resource/tencentcloud_kubernetes_node_pool: Optimizing diffs during changes. ([#4597](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4597))
+* resource/tencentcloud_nat_gateway_snat: update document ([#4606](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4606))
+* resource/tencentcloud_scf_function: update document ([#4605](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4605))
+* resource/tencentcloud_sqlserver_basic_instance: support new params ([#4603](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4603))
+* resource/tencentcloud_sqlserver_general_cloud_instance: support new params ([#4603](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4603))
+* resource/tencentcloud_teo_bind_security_template: add `message` computed parameter ([#4352](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4352))
+* resource/tencentcloud_teo_security_policy_config: support configuring frequent_scanning_protection within managed_rules ([#4609](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4609))
+* resource/tencentcloud_teo_zone_setting: add `jit_video_process` parameter to support just-in-time video processing configuration ([#4149](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4149))
+
+## 1.83.38(October 23, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_redis_backup_encrypt` ([#4582](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4582))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_dayu_eip: fix provider panic (nil pointer dereference) when antiddos DescribeListBGPIPInstances / DescribeListBGPIPInstanceById / DescribeListBGPInstanceById receive a nil response ([#4580](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4580))
+* resource/tencentcloud_eni: fix provider panic (nil pointer dereference) in DetachEniFromCvm when ResourceNotFound is swallowed ([#4580](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4580))
+* resource/tencentcloud_postgresql_instance: fix the wrong error variable passed to `RetryError` when `CreateBackupPlan` fails during creation, which swallowed the real API error and reported `empty non-retryable error received` ([#4595](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4595))
+* resource/tencentcloud_vpc_acl: fix provider panic (nil pointer dereference) when DescribeNetWorkAcls receives a nil response ([#4580](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4580))
+
+## 1.83.37(October 20, 2026)
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_organization_nodes: Optimize queries. ([#4572](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4572))
+* resource/tencentcloud_instance: support `enable_jumbo_frame` parameter ([#4573](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4573))
+* resource/tencentcloud_mysql_readonly_instance: use clientToken polling mechanism for create operations ([#4574](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4574))
+* resource/tencentcloud_vpn_gateway: fix provider panic (nil pointer dereference) when Read encounters ResourceNotFound, so refresh can properly remove deleted resources from state ([#4570](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4570))
+
+## 1.83.36(October 16, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_vdb_instance` ([#4562](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4562))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_bh_resource: support modifying web_access and client_access fields in-place without recreating the resource ([#4569](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4569))
+* resource/tencentcloud_dcdb_account: update document ([#4568](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4568))
+* resource/tencentcloud_kubernetes_cluster_endpoint: update create code logic- #4568 ([#4568](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4568))
+* resource/tencentcloud_ssm_secret: support `encrypt_type` parameter to declare secret encryption type (0 = KMS key encryption, 1 = soft key encryption) ([#4564](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4564))
+* resource/tencentcloud_dts_sync_job: change tags from list to set to fix unordered tags response ([#4559](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4559))
+* resource/tencentcloud_ssm_secret: treat `encrypt_type` as immutable and reject changes with an error instead of force-new to avoid accidental secret destruction ([#4564](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4564))
+
+## 1.83.35(October 14, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_config_list_aggregators` ([#4539](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4539))
+* **New Resource:** `tencentcloud_cls_deliver_task` ([#4545](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4545))
+* **New Resource:** `tencentcloud_config_aggregator` ([#4537](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4537))
+* **New Resource:** `tencentcloud_config_update_aggregate_config_deliver` ([#4538](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4538))
+* **New Resource:** `tencentcloud_config_update_config_deliver` ([#4540](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4540))
+* **New Resource:** `tencentcloud_mongodb_scale_up_db_instance_cpu` ([#4553](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4553))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cdwdoris_instance: support disk_encrypt parameter to enable disk encryption at creation time ([#4554](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4554))
+* resource/tencentcloud_cynosdb_cluster: support updating storage_pay_mode from prepaid(1) to postpaid(0) via TransferStoragePrepayToPostpay API ([#4558](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4558))
+* resource/tencentcloud_instance: update document ([#4556](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4556))
+* resource/tencentcloud_lite_hbase_instance: support disk_size expansion update via ModifySLInstance API ([#4551](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4551))
+* resource/tencentcloud_private_dns_zone: deprecated `account_vpc_set.#.vpc_name` ([#4560](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4560))
+* resource/tencentcloud_serverless_hbase_instance: support `disk_size` in-place expansion via `ModifySLInstance` ([#4552](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4552))
+* resource/tencentcloud_vpn_gateway_route: fix Read error when cloud API returns ResourceNotFound during DescribeVpnGatewayRoutes ([#4550](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4550))
+
+## 1.83.34(September 30, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_antiddos_ddos_block_records` ([#4535](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4535))
+* **New Data Source:** `tencentcloud_cdwdoris_instance_nodes` ([#4544](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4544))
+* **New Resource:** `tencentcloud_antiddos_unblock_resources` ([#4534](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4534))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cfs_file_system: support encrypted parameter for file system encryption ([#4546](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4546))
+* resource/tencentcloud_emr_cluster_v2: `meta_db_group_info` can only be set on create; changing it afterwards returns an error. ([#4542](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4542))
+* resource/tencentcloud_emr_cluster_v2: add meta_db_group_info field. ([#4541](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4541))
+* resource/tencentcloud_kms_key: support rotate_days parameter to specify key rotation period ([#4532](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4532))
+* resource/tencentcloud_mysql_instance: support `disk_encryption` parameter to enable disk encryption when creating cloud-disk edition CDB instances ([#4531](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4531))
+
+BUG FIXES:
+
+* resource/tencentcloud_emr_cluster_v2: fix the permanent `meta_db_group_info` diff - the block is now a `TypeList` whose query result is matched to the configured blocks by `components`, its fields are `Optional` and `Computed`, and the write-only `meta_data_pass` keeps the configured value. ([#4542](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4542))
+
+## 1.83.33(September 21, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_dlc_tc_lake_meta_instance` ([#4527](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4527))
+* **New Resource:** `tencentcloud_dlc_initialize_tc_lake` ([#4528](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4528))
+* **New Resource:** `tencentcloud_mongodb_restore_db_instance` ([#4529](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4529))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_bh_resource: support import ([#4520](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4520))
+* resource/tencentcloud_kubernetes_node_pool: support modify `extra_args` ([#4518](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4518))
+* resource/tencentcloud_waf_custom_rule: update document ([#4519](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4519))
+* resource/tencentcloud_waf_custom_white_rule: update document ([#4519](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4519))
+
 ## 1.83.32(September 17, 2026)
 
 FEATURES:

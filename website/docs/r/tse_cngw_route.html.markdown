@@ -130,4 +130,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `route_id` - the id of the route, unique in the instance.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCloudNativeAPIGatewayRoute](https://www.tencentcloud.com/document/api/1290/79292)
+* Read: [DescribeCloudNativeAPIGatewayRoutes](https://www.tencentcloud.com/document/api/1290/79259)
+* Update:
+  - [DescribeCloudNativeAPIGatewayRoutes](https://www.tencentcloud.com/document/api/1290/79259)
+  - [ModifyCloudNativeAPIGatewayRoute](https://www.tencentcloud.com/document/api/1290/79241)
+* Delete: [DeleteCloudNativeAPIGatewayRoute](https://www.tencentcloud.com/document/api/1290/79278)
 

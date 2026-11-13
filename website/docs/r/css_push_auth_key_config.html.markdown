@@ -40,6 +40,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyLivePushAuthKey](https://www.tencentcloud.com/document/api/267/30769)
+* Read: [DescribeLivePushAuthKey](https://www.tencentcloud.com/document/api/267/30771)
+* Update: [ModifyLivePushAuthKey](https://www.tencentcloud.com/document/api/267/30769)
 
 ## Import
 

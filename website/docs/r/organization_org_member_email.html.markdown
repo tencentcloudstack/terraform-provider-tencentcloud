@@ -43,6 +43,13 @@ In addition to all arguments above, the following attributes are exported:
 * `description` - FailedNote: This field may return NULL, indicating that the valid value cannot be obtained.
 * `phone_bind` - Safe mobile phone binding state is not bound: 0, has been binded: 1Note: This field may return NULL, indicating that the valid value cannot be obtained.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddOrganizationMemberEmail](https://www.tencentcloud.com/document/api/1031/68344)
+* Read: [DescribeOrganizationMemberEmailBind](https://www.tencentcloud.com/document/api/1031/68343)
+* Update: [UpdateOrganizationMemberEmailBind](https://www.tencentcloud.com/document/api/1031/68341)
 
 ## Import
 

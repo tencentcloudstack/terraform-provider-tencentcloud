@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 * `session_token` - Temporary access key token.
 * `start_time` - Start timestamp.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeReleaseFileSign](https://www.tencentcloud.com/document/api/1131/45306)
 

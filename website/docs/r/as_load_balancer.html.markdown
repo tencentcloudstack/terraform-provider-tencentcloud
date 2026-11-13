@@ -125,6 +125,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AttachLoadBalancers](https://www.tencentcloud.com/document/api/377/44582)
+* Read: [DescribeAutoScalingGroups](https://www.tencentcloud.com/document/api/377/31013)
+* Update: [ModifyLoadBalancerTargetAttributes](https://www.tencentcloud.com/document/api/377/44579)
+* Delete: [ModifyLoadBalancers](https://www.tencentcloud.com/document/api/377/31006)
 
 ## Import
 

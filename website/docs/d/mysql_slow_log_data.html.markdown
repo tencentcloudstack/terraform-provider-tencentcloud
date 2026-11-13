@@ -59,4 +59,9 @@ In addition to all arguments above, the following attributes are exported:
   * `user_host` - client address.
   * `user_name` - user name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSlowLogData](https://www.tencentcloud.com/document/api/236/35668)
 

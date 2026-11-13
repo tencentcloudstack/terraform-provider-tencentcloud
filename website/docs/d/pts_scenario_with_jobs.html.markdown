@@ -279,4 +279,9 @@ In addition to all arguments above, the following attributes are exported:
     * `uin` - Uin.
     * `updated_at` - The updating time of the scenario.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeScenarioWithJobs](https://www.tencentcloud.com/document/api/1249/68503)
 

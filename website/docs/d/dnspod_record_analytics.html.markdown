@@ -64,4 +64,9 @@ In addition to all arguments above, the following attributes are exported:
   * `start_date` - Start date of the current statistical period.
   * `subdomain` - The subdomain currently being analyzed.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSubdomainAnalytics](https://www.tencentcloud.com/document/api/1157/53857)
 

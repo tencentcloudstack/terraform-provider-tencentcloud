@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `dedicated_cluster_set` - Dedicated cluster set info.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDedicatedClusters](https://www.tencentcloud.com/document/api/409/78809)
 

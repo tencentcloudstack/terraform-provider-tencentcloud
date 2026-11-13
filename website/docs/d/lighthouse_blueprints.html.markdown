@@ -102,4 +102,9 @@ In addition to all arguments above, the following attributes are exported:
   * `scene_id_set` - Array of IDs of scenes associated with a blueprint. Note: This field may return null, indicating that no valid values can be obtained.
   * `support_automation_tools` - Whether the blueprint supports automation tools.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBlueprints](https://www.tencentcloud.com/document/api/1103/42503)
 

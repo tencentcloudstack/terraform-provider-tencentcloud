@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `charset` - The default character set of the instance, such as `latin1`, `utf8` etc.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBInstanceCharset](https://www.tencentcloud.com/document/api/236/15866)
 

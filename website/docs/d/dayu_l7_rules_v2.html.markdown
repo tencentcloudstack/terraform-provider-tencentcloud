@@ -62,4 +62,9 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Rule status, value [0 (rule configuration is successful), 1 (rule configuration is in effect), 2 (rule configuration fails), 3 (rule deletion is in effect), 5 (rule deletion fails), 6 (rule is waiting to be configured), 7 (rule pending deletion), 8 (rule pending configuration certificate)].
   * `virtual_port` - Virtual port of resource.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribleNewL7Rules](https://www.tencentcloud.com/search/?wd=DescribleNewL7Rules&type=document&lang=en)
 

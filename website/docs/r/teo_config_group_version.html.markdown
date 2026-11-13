@@ -372,6 +372,12 @@ In addition to all arguments above, the following attributes are exported:
 * `version_id` - Version ID.
 * `version_number` - Version number.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateConfigGroupVersion](https://www.tencentcloud.com/document/api/1145/57977)
+* Read: [DescribeConfigGroupVersionDetail](https://www.tencentcloud.com/document/api/1145/57975)
 
 ## Import
 

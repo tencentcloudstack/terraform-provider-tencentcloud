@@ -13,6 +13,7 @@ import (
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/pkg/errors"
 	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
 
@@ -151,10 +152,13 @@ func (me *KmsService) CreateKey(ctx context.Context, keyType uint64, alias, desc
 	return
 }
 
-func (me *KmsService) EnableKeyRotation(ctx context.Context, keyId string) (errRet error) {
+func (me *KmsService) EnableKeyRotation(ctx context.Context, keyId string, rotateDays uint64) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := kms.NewEnableKeyRotationRequest()
 	request.KeyId = helper.String(keyId)
+	if rotateDays > 0 {
+		request.RotateDays = helper.Uint64(rotateDays)
+	}
 	ratelimit.Check(request.GetAction())
 
 	response, err := me.client.UseKmsClient().EnableKeyRotation(request)
@@ -887,5 +891,41 @@ func (me *KmsService) DescribeKmsServiceStatusByFilter(ctx context.Context, para
 	}
 
 	ret = response.Response
+	return
+}
+
+// CreateKmsInstance calls the KMS CreateKmsInstance API to purchase and
+// activate a prepaid KMS instance, wrapped with retry logic.
+func (me *KmsService) CreateKmsInstance(ctx context.Context, request *kms.CreateKmsInstanceRequest) (response *kms.CreateKmsInstanceResponse, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseKmsClient().CreateKmsInstanceWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("create tencentcloud_kms_instance return empty response")
+		return
+	}
+
 	return
 }

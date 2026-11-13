@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
   * `key` - Properties name.
   * `value` - Properties value.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBasicDeviceStatus](https://www.tencentcloud.com/document/api/1213/61391)
 

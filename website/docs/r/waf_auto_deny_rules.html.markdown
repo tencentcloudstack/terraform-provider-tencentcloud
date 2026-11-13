@@ -38,6 +38,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyWafAutoDenyRules](https://www.tencentcloud.com/search/?wd=ModifyWafAutoDenyRules&type=document&lang=en)
+* Read: [DescribeWafAutoDenyRules](https://www.tencentcloud.com/search/?wd=DescribeWafAutoDenyRules&type=document&lang=en)
+* Delete: [ModifyWafAutoDenyRules](https://www.tencentcloud.com/search/?wd=ModifyWafAutoDenyRules&type=document&lang=en)
 
 ## Import
 

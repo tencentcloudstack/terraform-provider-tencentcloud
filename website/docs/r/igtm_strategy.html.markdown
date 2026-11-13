@@ -171,6 +171,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `strategy_id` - Strategy ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateStrategy](https://www.tencentcloud.com/search/?wd=CreateStrategy&type=document&lang=en)
+* Read: [DescribeStrategyDetail](https://www.tencentcloud.com/search/?wd=DescribeStrategyDetail&type=document&lang=en)
+* Update: [ModifyStrategy](https://www.tencentcloud.com/search/?wd=ModifyStrategy&type=document&lang=en)
+* Delete: [DeleteStrategy](https://www.tencentcloud.com/search/?wd=DeleteStrategy&type=document&lang=en)
 
 ## Import
 
