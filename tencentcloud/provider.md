@@ -1054,6 +1054,8 @@ tencentcloud_redis_log_delivery
 tencentcloud_redis_audit_log
 tencentcloud_redis_instance_password_policy_config
 tencentcloud_redis_backup_encrypt
+Action
+tencentcloud_redis_valkey_module
 
 Serverless Cloud Function(SCF)
 Data Source
