@@ -120,6 +120,7 @@ func (a *RedisValkeyModule) Invoke(ctx context.Context, req action.InvokeRequest
 	// within tccommon.WriteRetryTimeout, SDK errors are retried only when they
 	// match the provider-wide retryable code list (tccommon.RetryError).
 	var response *redis.ModifyValkeyModuleResponse
+	var err error
 	err = helperResource.Retry(tccommon.WriteRetryTimeout, func() *helperResource.RetryError {
 		result, e := client.ModifyValkeyModuleWithContext(ctx, request)
 		if e != nil {
