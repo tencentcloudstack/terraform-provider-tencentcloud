@@ -127,6 +127,7 @@ The following arguments are supported:
 * `support_ha` - (Required, Int, ForceNew) The flag whether the instance support high availability.(0=>not support, 1=>support).
 * `vpc_settings` - (Required, Map, ForceNew) The private net config of EMR instance.
 * `auto_renew` - (Optional, Int) 0 means turn off automatic renewal, 1 means turn on automatic renewal. Default is 0.
+* `cos_bucket` - (Optional, String, ForceNew) COS bucket path for StarRocks shared-data cluster. Format: `cosn://<bucket-name>-<appid>/<path>`.
 * `display_strategy` - (Optional, String, **Deprecated**) It will be deprecated in later versions. Display strategy of EMR instance.
 * `extend_fs_field` - (Optional, String) Access the external file system.
 * `login_settings` - (Optional, Map) Instance login settings. There are two optional fields:- password: Instance login password: 8-16 characters, including uppercase letters, lowercase letters, numbers and special characters. Special symbols only support! @% ^ *. The first bit of the password cannot be a special character;- public_key_id: Public key id. After the key is associated, the instance can be accessed through the corresponding private key.
