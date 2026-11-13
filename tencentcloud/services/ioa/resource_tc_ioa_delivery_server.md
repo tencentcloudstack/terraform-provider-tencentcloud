@@ -14,7 +14,7 @@ The create and update paths reuse the `ModifyDeliveryServer` API: on create the
 server id inside `data` is ignored and the API-generated id is returned and
 tracked as the resource `id`; on update the create-time id is sent as `Data.ID`.
 
-## Example Usage
+Example Usage
 
 ```hcl
 resource "tencentcloud_ioa_delivery_server" "example" {

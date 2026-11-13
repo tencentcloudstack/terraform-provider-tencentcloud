@@ -41,25 +41,25 @@ type IoaDeliveryServerResource struct {
 // IoaDeliveryServerDataModel maps the nested `data` attribute, which carries
 // the full delivery server definition consumed by ModifyDeliveryServer.
 type IoaDeliveryServerDataModel struct {
-	Id                  types.Int64  `tfsdk:"id"`
-	Name                types.String `tfsdk:"name"`
-	Type                types.Int64  `tfsdk:"type"`
-	Description         types.String `tfsdk:"description"`
-	TargetSyslogAddress types.String `tfsdk:"target_syslog_address"`
+	Id                   types.Int64  `tfsdk:"id"`
+	Name                 types.String `tfsdk:"name"`
+	Type                 types.Int64  `tfsdk:"type"`
+	Description          types.String `tfsdk:"description"`
+	TargetSyslogAddress  types.String `tfsdk:"target_syslog_address"`
 	TargetSyslogProtocol types.String `tfsdk:"target_syslog_protocol"`
-	TargetSyslogPort    types.Int64  `tfsdk:"target_syslog_port"`
-	SyslogFacility      types.String `tfsdk:"syslog_facility"`
-	TargetKafkaAddress  types.String `tfsdk:"target_kafka_address"`
-	TargetKafkaTopic    types.String `tfsdk:"target_kafka_topic"`
-	KafkaVersion        types.String `tfsdk:"kafka_version"`
-	KafkaSaslUserName   types.String `tfsdk:"kafka_sasl_user_name"`
-	KafkaSaslPassword   types.String `tfsdk:"kafka_sasl_password"`
-	TargetHttpUrl       types.String `tfsdk:"target_http_url"`
-	TargetHttpTimeout   types.Int64  `tfsdk:"target_http_timeout"`
-	ConnectorGroupId    types.String `tfsdk:"connector_group_id"`
-	ConnectorGroupName  types.String `tfsdk:"connector_group_name"`
-	KafkaSslEnable      types.Bool   `tfsdk:"kafka_ssl_enable"`
-	SslSkipVerify       types.Bool   `tfsdk:"ssl_skip_verify"`
+	TargetSyslogPort     types.Int64  `tfsdk:"target_syslog_port"`
+	SyslogFacility       types.String `tfsdk:"syslog_facility"`
+	TargetKafkaAddress   types.String `tfsdk:"target_kafka_address"`
+	TargetKafkaTopic     types.String `tfsdk:"target_kafka_topic"`
+	KafkaVersion         types.String `tfsdk:"kafka_version"`
+	KafkaSaslUserName    types.String `tfsdk:"kafka_sasl_user_name"`
+	KafkaSaslPassword    types.String `tfsdk:"kafka_sasl_password"`
+	TargetHttpUrl        types.String `tfsdk:"target_http_url"`
+	TargetHttpTimeout    types.Int64  `tfsdk:"target_http_timeout"`
+	ConnectorGroupId     types.String `tfsdk:"connector_group_id"`
+	ConnectorGroupName   types.String `tfsdk:"connector_group_name"`
+	KafkaSslEnable       types.Bool   `tfsdk:"kafka_ssl_enable"`
+	SslSkipVerify        types.Bool   `tfsdk:"ssl_skip_verify"`
 }
 
 // IoaDeliveryServerResourceModel maps the schema attributes.
@@ -86,7 +86,7 @@ func (r *IoaDeliveryServerResource) Schema(_ context.Context, _ resource.SchemaR
 				},
 			},
 			"data": schema.SingleNestedAttribute{
-				Optional:    true,
+				Optional: true,
 				Description: "Delivery server definition. All fields are optional on the API side; " +
 					"fields relevant to the selected `type` should be provided.",
 				Attributes: map[string]schema.Attribute{
