@@ -49,10 +49,19 @@ resource "tencentcloud_cls_ckafka_consumer" "example" {
 The following arguments are supported:
 
 * `topic_id` - (Required, String, ForceNew) topic id.
+* `advanced_config` - (Optional, List) advanced configuration.
 * `ckafka` - (Optional, List) ckafka info.
 * `compression` - (Optional, Int) compression method. 0 for NONE, 2 for SNAPPY, 3 for LZ4.
 * `content` - (Optional, List) metadata information.
+* `dsl_filter` - (Optional, String) log pre-filtering - pre-filter the raw data written to ckafka.
+* `external_id` - (Optional, String) external id for cross-account delivery. Note: this field may return null, which indicates no valid values can be obtained.
 * `need_content` - (Optional, Bool) whether to deliver the metadata information of the log.
+* `role_arn` - (Optional, String) role access description name for cross-account delivery. Note: this field may return null, which indicates no valid values can be obtained.
+
+The `advanced_config` object supports the following:
+
+* `partition_fields` - (Optional, Set) list of fields used to calculate hash. Supports up to 5 fields.
+* `partition_hash_status` - (Optional, Bool) whether to deliver messages with the same hash value of fields to the same ckafka partition. Default value: `false`.
 
 The `ckafka` object supports the following:
 
@@ -67,6 +76,7 @@ The `content` object supports the following:
 
 * `enable_tag` - (Required, Bool) whether to deliver the TAG info.
 * `meta_fields` - (Required, Set) metadata info list.
+* `auto_convert_number` - (Optional, Bool) whether to automatically convert numeric strings (such as `123`) in the first-level values of the JSON structure to numeric types (int / float). Default value: `false`.
 * `json_type` - (Optional, Int) JSON format for delivery. Valid values:
 - `0`: consistent with the original log, no escaping.
 - `1`: escaped.
