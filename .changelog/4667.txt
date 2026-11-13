@@ -1,3 +1,3 @@
 ```release-note:enhancement
-mongodb: support MONGO_83_WT for engine_version and update documents of mongodb instance resources
+resource/tencentcloud_mongodb_instance: update
 ```
