@@ -199,7 +199,7 @@ func ResourceTencentCloudRedisInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "Specify the product version of the instance. `local`: Local disk version, `cloud`: Cloud disk version, `cdc`: Exclusive cluster version. Default is `local`.",
+				Description: "Specify the product version of the instance. `local`: common type I;`localv2 `: common type II; `cloud`: cloud native,Currently not available for sale; `cdc`: dedicated cluster type. Default is `local`.",
 			},
 			"redis_cluster_id": {
 				Type:        schema.TypeString,
