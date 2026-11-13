@@ -14910,52 +14910,52 @@ func (r *ModifyPrometheusAlertPolicyResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyPrometheusConfigRequestParams struct {
-	// 实例id
+	// <p>实例id</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 集群类型
+	// <p>集群类型</p>
 	ClusterType *string `json:"ClusterType,omitnil,omitempty" name:"ClusterType"`
 
-	// 集群id
+	// <p>集群id</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// ServiceMonitors配置
+	// <p>ServiceMonitors配置</p>
 	ServiceMonitors []*PrometheusConfigItem `json:"ServiceMonitors,omitnil,omitempty" name:"ServiceMonitors"`
 
-	// PodMonitors配置
+	// <p>PodMonitors配置</p>
 	PodMonitors []*PrometheusConfigItem `json:"PodMonitors,omitnil,omitempty" name:"PodMonitors"`
 
-	// prometheus原生Job配置
+	// <p>prometheus原生Job配置</p>
 	RawJobs []*PrometheusConfigItem `json:"RawJobs,omitnil,omitempty" name:"RawJobs"`
 
-	// 0: 更新实例组件镜像版本；
-	// 1: 不更新实例组件镜像版本
+	// <p>0: 更新实例组件镜像版本；<br>1: 不更新实例组件镜像版本</p><p>取值范围：[0, 1]</p><p>默认值：0</p>
+	//
+	// Deprecated: UpdateImage is deprecated.
 	UpdateImage *int64 `json:"UpdateImage,omitnil,omitempty" name:"UpdateImage"`
 }
 
 type ModifyPrometheusConfigRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例id
+	// <p>实例id</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 集群类型
+	// <p>集群类型</p>
 	ClusterType *string `json:"ClusterType,omitnil,omitempty" name:"ClusterType"`
 
-	// 集群id
+	// <p>集群id</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// ServiceMonitors配置
+	// <p>ServiceMonitors配置</p>
 	ServiceMonitors []*PrometheusConfigItem `json:"ServiceMonitors,omitnil,omitempty" name:"ServiceMonitors"`
 
-	// PodMonitors配置
+	// <p>PodMonitors配置</p>
 	PodMonitors []*PrometheusConfigItem `json:"PodMonitors,omitnil,omitempty" name:"PodMonitors"`
 
-	// prometheus原生Job配置
+	// <p>prometheus原生Job配置</p>
 	RawJobs []*PrometheusConfigItem `json:"RawJobs,omitnil,omitempty" name:"RawJobs"`
 
-	// 0: 更新实例组件镜像版本；
-	// 1: 不更新实例组件镜像版本
+	// <p>0: 更新实例组件镜像版本；<br>1: 不更新实例组件镜像版本</p><p>取值范围：[0, 1]</p><p>默认值：0</p>
 	UpdateImage *int64 `json:"UpdateImage,omitnil,omitempty" name:"UpdateImage"`
 }
 
@@ -15856,41 +15856,44 @@ type PrometheusAlertGroupRuleSet struct {
 }
 
 type PrometheusAlertGroupSet struct {
-	// 告警分组ID，满足正则表达式`alert-[a-z0-9]{8}`
+	// <p>告警分组ID，满足正则表达式<code>alert-[a-z0-9]{8}</code></p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
-	// 告警分组名称
+	// <p>告警分组名称</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
 
-	// 腾讯云可观测平台告警模板ID ，返回告警模板转换后的notice ID。
+	// <p>腾讯云可观测平台告警模板ID ，返回告警模板转换后的notice ID。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AMPReceivers []*string `json:"AMPReceivers,omitnil,omitempty" name:"AMPReceivers"`
 
-	// 自定义告警模板
+	// <p>自定义告警模板</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CustomReceiver *PrometheusAlertCustomReceiver `json:"CustomReceiver,omitnil,omitempty" name:"CustomReceiver"`
 
-	// 告警通知间隔
+	// <p>告警通知间隔</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RepeatInterval *string `json:"RepeatInterval,omitnil,omitempty" name:"RepeatInterval"`
 
-	// 若告警分组通过模板创建，则返回模板ID
+	// <p>若告警分组通过模板创建，则返回模板ID</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TemplateId *string `json:"TemplateId,omitnil,omitempty" name:"TemplateId"`
 
-	// 分组内告警规则详情
+	// <p>分组内告警规则详情</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Rules []*PrometheusAlertGroupRuleSet `json:"Rules,omitnil,omitempty" name:"Rules"`
 
-	// 分组创建时间
+	// <p>分组创建时间</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreatedAt *string `json:"CreatedAt,omitnil,omitempty" name:"CreatedAt"`
 
-	// 分组更新时间
+	// <p>分组更新时间</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	UpdatedAt *string `json:"UpdatedAt,omitnil,omitempty" name:"UpdatedAt"`
+
+	// <p>最后修改人子账号uin</p>
+	LastModifySubAccountUin *string `json:"LastModifySubAccountUin,omitnil,omitempty" name:"LastModifySubAccountUin"`
 }
 
 type PrometheusAlertManagerConfig struct {

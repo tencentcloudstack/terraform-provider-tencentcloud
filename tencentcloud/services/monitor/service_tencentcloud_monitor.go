@@ -3074,3 +3074,104 @@ func (me *MonitorService) DescribeExternalClusterRegisterCommandById(ctx context
 
 	return
 }
+
+func (me *MonitorService) CreateDispenseExternalRule(ctx context.Context, request *monitorv20230616.CreateDispenseExternalRuleRequest) (ruleId int64, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMonitorV20230616Client().CreateDispenseExternalRule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.RuleId == nil {
+		errRet = fmt.Errorf("CreateDispenseExternalRule returned an empty response or an empty rule id")
+		return
+	}
+	ruleId = *response.Response.RuleId
+
+	return
+}
+
+func (me *MonitorService) DescribeDispenseExternalRuleById(ctx context.Context, ruleId int64) (rule *monitorv20230616.Rule, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "DescribeDispenseExternalRule", "", errRet.Error())
+		}
+	}()
+
+	ratelimit.Check("DescribeDispenseExternalRule")
+
+	request := monitorv20230616.NewDescribeDispenseExternalRuleRequest()
+	request.RuleId = helper.Int64(ruleId)
+
+	response, err := me.client.UseMonitorV20230616Client().DescribeDispenseExternalRule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
+	rule = response.Response.Rule
+
+	return
+}
+
+func (me *MonitorService) ModifyDispenseExternalRule(ctx context.Context, request *monitorv20230616.ModifyDispenseExternalRuleRequest) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMonitorV20230616Client().ModifyDispenseExternalRule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MonitorService) DeleteDispenseExternalRule(ctx context.Context, ruleId int64) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "DeleteDispenseExternalRule", "", errRet.Error())
+		}
+	}()
+
+	ratelimit.Check("DeleteDispenseExternalRule")
+
+	request := monitorv20230616.NewDeleteDispenseExternalRuleRequest()
+	request.RuleIdList = []*int64{helper.Int64(ruleId)}
+
+	response, err := me.client.UseMonitorV20230616Client().DeleteDispenseExternalRule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
