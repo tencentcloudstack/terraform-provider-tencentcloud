@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	tftypes "github.com/hashicorp/terraform-plugin-go/tftypes"
 	ioav20220601 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ioa/v20220601"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -171,7 +172,6 @@ func assertDeliveryServerModel(t *testing.T, model svcioa.IoaDeliveryServerResou
 		"target_kafka_topic":     model.Data.TargetKafkaTopic.ValueString,
 		"kafka_version":          model.Data.KafkaVersion.ValueString,
 		"kafka_sasl_user_name":   model.Data.KafkaSaslUserName.ValueString,
-		"kafka_sasl_password":    model.Data.KafkaSaslPassword.ValueString,
 		"target_http_url":        model.Data.TargetHttpUrl.ValueString,
 		"connector_group_id":     model.Data.ConnectorGroupId.ValueString,
 		"connector_group_name":   model.Data.ConnectorGroupName.ValueString,
@@ -180,6 +180,10 @@ func assertDeliveryServerModel(t *testing.T, model svcioa.IoaDeliveryServerResou
 		if getter() == "" {
 			t.Errorf("data.%s is empty, want a non-empty value", name)
 		}
+	}
+	// kafka_sasl_password is write-only and must never be persisted in state.
+	if !model.Data.KafkaSaslPassword.IsNull() {
+		t.Errorf("data.kafka_sasl_password = %v, want null (write-only)", model.Data.KafkaSaslPassword)
 	}
 	if model.Data.Name.ValueString() != ioaTestServerName {
 		t.Errorf("data.name = %q, want %q", model.Data.Name.ValueString(), ioaTestServerName)
@@ -212,7 +216,7 @@ func TestIoaDeliveryServerCreateSuccess(t *testing.T) {
 
 	var captured *ioav20220601.ModifyDeliveryServerRequest
 	patches.ApplyMethodFunc(reflect.TypeOf(&ioav20220601.Client{}), "ModifyDeliveryServerWithContext",
-		func(_ *ioav20220601.Client, _ context.Context, req *ioav20220601.ModifyDeliveryServerRequest) (*ioav20220601.ModifyDeliveryServerResponse, error) {
+		func(_ context.Context, req *ioav20220601.ModifyDeliveryServerRequest) (*ioav20220601.ModifyDeliveryServerResponse, error) {
 			captured = req
 			return &ioav20220601.ModifyDeliveryServerResponse{
 				Response: &ioav20220601.ModifyDeliveryServerResponseParams{
@@ -221,7 +225,7 @@ func TestIoaDeliveryServerCreateSuccess(t *testing.T) {
 			}, nil
 		})
 	patches.ApplyMethodFunc(reflect.TypeOf(&ioav20220601.Client{}), "DescribeDeliveryServerWithContext",
-		func(_ *ioav20220601.Client, _ context.Context, _ *ioav20220601.DescribeDeliveryServerRequest) (*ioav20220601.DescribeDeliveryServerResponse, error) {
+		func(_ context.Context, _ *ioav20220601.DescribeDeliveryServerRequest) (*ioav20220601.DescribeDeliveryServerResponse, error) {
 			return &ioav20220601.DescribeDeliveryServerResponse{
 				Response: &ioav20220601.DescribeDeliveryServerResponseParams{Data: ioaTestItem()},
 			}, nil
@@ -230,6 +234,7 @@ func TestIoaDeliveryServerCreateSuccess(t *testing.T) {
 	ctx := newIoaDeliveryServerTestContext(t, patches)
 	model := ioaTestModel("")
 	var createResp resource.CreateResponse
+	createResp.State = ctx.state(t, model)
 	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, model)}, &createResp)
 	if createResp.Diagnostics.HasError() {
 		t.Fatalf("Create failed: %v", createResp.Diagnostics.Errors())
@@ -259,7 +264,7 @@ func TestIoaDeliveryServerCreateEmptyId(t *testing.T) {
 	defer patches.Reset()
 
 	patches.ApplyMethodFunc(reflect.TypeOf(&ioav20220601.Client{}), "ModifyDeliveryServerWithContext",
-		func(_ *ioav20220601.Client, _ context.Context, _ *ioav20220601.ModifyDeliveryServerRequest) (*ioav20220601.ModifyDeliveryServerResponse, error) {
+		func(_ context.Context, _ *ioav20220601.ModifyDeliveryServerRequest) (*ioav20220601.ModifyDeliveryServerResponse, error) {
 			return &ioav20220601.ModifyDeliveryServerResponse{
 				Response: &ioav20220601.ModifyDeliveryServerResponseParams{},
 			}, nil
@@ -267,6 +272,7 @@ func TestIoaDeliveryServerCreateEmptyId(t *testing.T) {
 
 	ctx := newIoaDeliveryServerTestContext(t, patches)
 	var createResp resource.CreateResponse
+	createResp.State = ctx.state(t, ioaTestModel(""))
 	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, ioaTestModel(""))}, &createResp)
 	if !createResp.Diagnostics.HasError() {
 		t.Fatal("Create should fail when the API returns an empty server id")
@@ -279,7 +285,7 @@ func TestIoaDeliveryServerReadSuccess(t *testing.T) {
 	defer patches.Reset()
 
 	patches.ApplyMethodFunc(reflect.TypeOf(&ioav20220601.Client{}), "DescribeDeliveryServerWithContext",
-		func(_ *ioav20220601.Client, _ context.Context, req *ioav20220601.DescribeDeliveryServerRequest) (*ioav20220601.DescribeDeliveryServerResponse, error) {
+		func(_ context.Context, req *ioav20220601.DescribeDeliveryServerRequest) (*ioav20220601.DescribeDeliveryServerResponse, error) {
 			if req.ID == nil || *req.ID != ioaTestServerId {
 				t.Errorf("DescribeDeliveryServer request id = %v, want %d", req.ID, ioaTestServerId)
 			}
@@ -290,6 +296,7 @@ func TestIoaDeliveryServerReadSuccess(t *testing.T) {
 
 	ctx := newIoaDeliveryServerTestContext(t, patches)
 	var readResp resource.ReadResponse
+	readResp.State = ctx.state(t, ioaTestModel("12345"))
 	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, ioaTestModel("12345"))}, &readResp)
 	if readResp.Diagnostics.HasError() {
 		t.Fatalf("Read failed: %v", readResp.Diagnostics.Errors())
@@ -309,7 +316,7 @@ func TestIoaDeliveryServerReadNotFound(t *testing.T) {
 	defer patches.Reset()
 
 	patches.ApplyMethodFunc(reflect.TypeOf(&ioav20220601.Client{}), "DescribeDeliveryServerWithContext",
-		func(_ *ioav20220601.Client, _ context.Context, _ *ioav20220601.DescribeDeliveryServerRequest) (*ioav20220601.DescribeDeliveryServerResponse, error) {
+		func(_ context.Context, _ *ioav20220601.DescribeDeliveryServerRequest) (*ioav20220601.DescribeDeliveryServerResponse, error) {
 			return &ioav20220601.DescribeDeliveryServerResponse{
 				Response: &ioav20220601.DescribeDeliveryServerResponseParams{},
 			}, nil
@@ -317,6 +324,7 @@ func TestIoaDeliveryServerReadNotFound(t *testing.T) {
 
 	ctx := newIoaDeliveryServerTestContext(t, patches)
 	var readResp resource.ReadResponse
+	readResp.State = ctx.state(t, ioaTestModel("12345"))
 	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, ioaTestModel("12345"))}, &readResp)
 	if readResp.Diagnostics.HasError() {
 		t.Fatalf("Read should not error on confirmed not-found: %v", readResp.Diagnostics.Errors())
@@ -333,12 +341,13 @@ func TestIoaDeliveryServerReadApiError(t *testing.T) {
 	defer patches.Reset()
 
 	patches.ApplyMethodFunc(reflect.TypeOf(&ioav20220601.Client{}), "DescribeDeliveryServerWithContext",
-		func(_ *ioav20220601.Client, _ context.Context, _ *ioav20220601.DescribeDeliveryServerRequest) (*ioav20220601.DescribeDeliveryServerResponse, error) {
+		func(_ context.Context, _ *ioav20220601.DescribeDeliveryServerRequest) (*ioav20220601.DescribeDeliveryServerResponse, error) {
 			return nil, fmt.Errorf("network error")
 		})
 
 	ctx := newIoaDeliveryServerTestContext(t, patches)
 	var readResp resource.ReadResponse
+	readResp.State = ctx.state(t, ioaTestModel("12345"))
 	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, ioaTestModel("12345"))}, &readResp)
 	if !readResp.Diagnostics.HasError() {
 		t.Fatal("Read should fail on an API error")
@@ -356,7 +365,7 @@ func TestIoaDeliveryServerUpdateSuccess(t *testing.T) {
 
 	var captured *ioav20220601.ModifyDeliveryServerRequest
 	patches.ApplyMethodFunc(reflect.TypeOf(&ioav20220601.Client{}), "ModifyDeliveryServerWithContext",
-		func(_ *ioav20220601.Client, _ context.Context, req *ioav20220601.ModifyDeliveryServerRequest) (*ioav20220601.ModifyDeliveryServerResponse, error) {
+		func(_ context.Context, req *ioav20220601.ModifyDeliveryServerRequest) (*ioav20220601.ModifyDeliveryServerResponse, error) {
 			captured = req
 			return &ioav20220601.ModifyDeliveryServerResponse{
 				Response: &ioav20220601.ModifyDeliveryServerResponseParams{
@@ -365,7 +374,7 @@ func TestIoaDeliveryServerUpdateSuccess(t *testing.T) {
 			}, nil
 		})
 	patches.ApplyMethodFunc(reflect.TypeOf(&ioav20220601.Client{}), "DescribeDeliveryServerWithContext",
-		func(_ *ioav20220601.Client, _ context.Context, _ *ioav20220601.DescribeDeliveryServerRequest) (*ioav20220601.DescribeDeliveryServerResponse, error) {
+		func(_ context.Context, _ *ioav20220601.DescribeDeliveryServerRequest) (*ioav20220601.DescribeDeliveryServerResponse, error) {
 			return &ioav20220601.DescribeDeliveryServerResponse{
 				Response: &ioav20220601.DescribeDeliveryServerResponseParams{Data: ioaTestItem()},
 			}, nil
@@ -375,6 +384,7 @@ func TestIoaDeliveryServerUpdateSuccess(t *testing.T) {
 	plan := ioaTestModel("")
 	plan.Data.Name = stringPtrValue("renamed-server")
 	var updateResp resource.UpdateResponse
+	updateResp.State = ctx.state(t, ioaTestModel("12345"))
 	ctx.resource.Update(context.Background(),
 		resource.UpdateRequest{Plan: ctx.plan(t, plan), State: ctx.state(t, ioaTestModel("12345"))}, &updateResp)
 	if updateResp.Diagnostics.HasError() {
@@ -395,7 +405,16 @@ func TestIoaDeliveryServerUpdateSuccess(t *testing.T) {
 	if diags := updateResp.State.Get(context.Background(), &got); diags.HasError() {
 		t.Fatalf("failed to read back state: %v", diags.Errors())
 	}
-	assertDeliveryServerModel(t, got)
+	// Non-computed values from the plan must be preserved in state after update.
+	if got.Data == nil || got.Data.Name.ValueString() != "renamed-server" {
+		t.Errorf("data.name = %v, want %q", got.Data.Name, "renamed-server")
+	}
+	if got.Data.Id.ValueInt64() != int64(ioaTestServerId) {
+		t.Errorf("data.id = %d, want %d", got.Data.Id.ValueInt64(), ioaTestServerId)
+	}
+	if !got.Data.KafkaSaslPassword.IsNull() {
+		t.Errorf("data.kafka_sasl_password = %v, want null (write-only)", got.Data.KafkaSaslPassword)
+	}
 	if got.Id.IsNull() || got.Id.ValueString() != "12345" {
 		t.Errorf("id = %v, want 12345", got.Id.ValueString())
 	}
@@ -409,7 +428,7 @@ func TestIoaDeliveryServerDeleteSuccess(t *testing.T) {
 
 	var captured *ioav20220601.DeleteDeliveryServerRequest
 	patches.ApplyMethodFunc(reflect.TypeOf(&ioav20220601.Client{}), "DeleteDeliveryServerWithContext",
-		func(_ *ioav20220601.Client, _ context.Context, req *ioav20220601.DeleteDeliveryServerRequest) (*ioav20220601.DeleteDeliveryServerResponse, error) {
+		func(_ context.Context, req *ioav20220601.DeleteDeliveryServerRequest) (*ioav20220601.DeleteDeliveryServerResponse, error) {
 			captured = req
 			return &ioav20220601.DeleteDeliveryServerResponse{
 				Response: &ioav20220601.DeleteDeliveryServerResponseParams{},
@@ -434,7 +453,7 @@ func TestIoaDeliveryServerDeleteError(t *testing.T) {
 	defer patches.Reset()
 
 	patches.ApplyMethodFunc(reflect.TypeOf(&ioav20220601.Client{}), "DeleteDeliveryServerWithContext",
-		func(_ *ioav20220601.Client, _ context.Context, _ *ioav20220601.DeleteDeliveryServerRequest) (*ioav20220601.DeleteDeliveryServerResponse, error) {
+		func(_ context.Context, _ *ioav20220601.DeleteDeliveryServerRequest) (*ioav20220601.DeleteDeliveryServerResponse, error) {
 			return nil, fmt.Errorf("delete failed")
 		})
 
@@ -455,8 +474,10 @@ func TestIoaDeliveryServerImportState(t *testing.T) {
 	}
 
 	var importResp resource.ImportStateResponse
+	importResp.State.Schema = ctx.schema
+	importResp.State.Raw = tftypes.NewValue(ctx.schema.Type().TerraformType(context.Background()), nil)
 	importer.ImportState(context.Background(),
-		resource.ImportStateRequest{ID: "12345", TypeName: "tencentcloud_ioa_delivery_server"}, &importResp)
+		resource.ImportStateRequest{ID: "12345"}, &importResp)
 	if importResp.Diagnostics.HasError() {
 		t.Fatalf("ImportState failed: %v", importResp.Diagnostics.Errors())
 	}

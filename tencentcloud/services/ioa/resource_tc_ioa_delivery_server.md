@@ -1,13 +1,3 @@
----
-subcategory: ""
-layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_ioa_delivery_server"
-description: |-
-  Provides a resource to create or update an IOA log delivery server.
----
-
-# tencentcloud_ioa_delivery_server
-
 Provides a resource to create or update an IOA (iOA) log delivery server.
 
 The create and update paths reuse the `ModifyDeliveryServer` API: on create the
@@ -16,57 +6,60 @@ tracked as the resource `id`; on update the create-time id is sent as `Data.ID`.
 
 Example Usage
 
+Syslog delivery server
+
 ```hcl
 resource "tencentcloud_ioa_delivery_server" "example" {
-  data {
-    name                   = "tf-example-syslog"
+  data = {
+    name                   = "tf-example"
     type                   = 4
     description            = "syslog delivery server managed by terraform"
-    target_syslog_address  = "10.0.0.1"
-    target_syslog_protocol = "udp"
-    target_syslog_port     = 514
+    target_syslog_address  = "http://www.example.com"
+    target_syslog_protocol = "tcp"
+    target_syslog_port     = 601
     syslog_facility        = "local0"
+    target_http_timeout    = 60
   }
 }
 ```
 
-Kafka delivery server:
+Kafka delivery server
 
 ```hcl
-resource "tencentcloud_ioa_delivery_server" "kafka" {
-  data {
-    name                 = "tf-example-kafka"
+resource "tencentcloud_ioa_delivery_server" "example" {
+  data = {
+    name                 = "tf-example"
     type                 = 2
     description          = "kafka delivery server managed by terraform"
-    target_kafka_address = "10.0.0.2:9092"
-    target_kafka_topic   = "ioa-log"
-    kafka_version        = "2.8.0"
-    kafka_sasl_user_name = "sasl-user"
-    kafka_sasl_password  = "sasl-pass"
-    kafka_ssl_enable     = true
+    target_kafka_address = "106.55.81.5:50000"
+    target_kafka_topic   = "test_topic"
+    kafka_version        = "2.8.1"
+    kafka_sasl_user_name = "ckafka-9jdm9zxe#root"
+    kafka_sasl_password  = "Qwer!234"
+    kafka_ssl_enable     = false
     ssl_skip_verify      = false
   }
 }
 ```
 
-HTTP delivery server:
+HTTP delivery server
 
 ```hcl
-resource "tencentcloud_ioa_delivery_server" "http" {
-  data {
-    name                 = "tf-example-http"
-    type                 = 3
-    description          = "http delivery server managed by terraform"
-    target_http_url      = "http://10.0.0.3/collect"
-    target_http_timeout  = 3000
+resource "tencentcloud_ioa_delivery_server" "example" {
+  data = {
+    name                = "tf-example"
+    type                = 3
+    description         = "http delivery server managed by terraform"
+    target_http_url     = "http://www.example.com"
+    target_http_timeout = 60
   }
 }
 ```
 
-## Import
+Import
 
 IOA delivery server can be imported using the server id, e.g.
 
 ```
-terraform import tencentcloud_ioa_delivery_server.example 12345
+terraform import tencentcloud_ioa_delivery_server.example 325
 ```
