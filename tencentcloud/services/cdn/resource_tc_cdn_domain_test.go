@@ -1687,6 +1687,87 @@ func TestAccTencentCloudCdnDomainResource_OriginPathRules(t *testing.T) {
 	})
 }
 
+const testAccCdnDomainPathBasedOrigin = testAccDomainCosForCDN + `
+
+resource "tencentcloud_cdn_domain" "path_based_origin" {
+  domain       = "pb.${local.domain}"
+  service_type = "web"
+  area         = "overseas"
+
+  origin {
+    origin_type          = "cos"
+    origin_list          = [local.bucket_url]
+    server_name          = local.bucket_url
+    origin_pull_protocol = "follow"
+
+    path_based_origin {
+      rule_type  = "file"
+      rule_paths = ["jpg", "png"]
+      origin     = ["origin1.example.com"]
+    }
+  }
+}
+`
+
+const testAccCdnDomainPathBasedOriginUpdate = testAccDomainCosForCDN + `
+
+resource "tencentcloud_cdn_domain" "path_based_origin" {
+  domain       = "pb.${local.domain}"
+  service_type = "web"
+  area         = "overseas"
+
+  origin {
+    origin_type          = "cos"
+    origin_list          = [local.bucket_url]
+    server_name          = local.bucket_url
+    origin_pull_protocol = "follow"
+
+    path_based_origin {
+      rule_type  = "directory"
+      rule_paths = ["/static/"]
+      origin     = ["origin2.example.com", "origin3.example.com"]
+    }
+  }
+}
+`
+
+func TestAccTencentCloudCdnDomainResource_PathBasedOrigin(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY)
+		},
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckCdnDomainDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCdnDomainPathBasedOrigin,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCdnDomainExists("tencentcloud_cdn_domain.path_based_origin"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_based_origin", "origin.0.path_based_origin.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_based_origin", "origin.0.path_based_origin.0.rule_type", "file"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_based_origin", "origin.0.path_based_origin.0.rule_paths.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_based_origin", "origin.0.path_based_origin.0.rule_paths.0", "jpg"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_based_origin", "origin.0.path_based_origin.0.origin.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_based_origin", "origin.0.path_based_origin.0.origin.0", "origin1.example.com"),
+				),
+			},
+			{
+				Config: testAccCdnDomainPathBasedOriginUpdate,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCdnDomainExists("tencentcloud_cdn_domain.path_based_origin"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_based_origin", "origin.0.path_based_origin.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_based_origin", "origin.0.path_based_origin.0.rule_type", "directory"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_based_origin", "origin.0.path_based_origin.0.rule_paths.0", "/static/"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_based_origin", "origin.0.path_based_origin.0.origin.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_based_origin", "origin.0.path_based_origin.0.origin.0", "origin2.example.com"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudCdnDomainResource_AdvancedFields(t *testing.T) {
 	t.Parallel()
 
