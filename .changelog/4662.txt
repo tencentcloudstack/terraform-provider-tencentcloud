@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_ioa_delivery_server
+```
