@@ -168,6 +168,12 @@ func (r *IoaDeliveryStrategyResource) Create(ctx context.Context, req resource.C
 		return
 	}
 	r.refreshModel(&plan, item)
+	// The describe API does not return `enabled`; a computed unknown must be
+	// resolved before writing the final state, otherwise core rejects the
+	// result. Null is the honest value: drift detection is unavailable.
+	if plan.Enabled.IsUnknown() {
+		plan.Enabled = types.BoolNull()
+	}
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -257,6 +263,10 @@ func (r *IoaDeliveryStrategyResource) Update(ctx context.Context, req resource.U
 	}
 	plan.Id = state.Id
 	r.refreshModel(&plan, item)
+	// Same as Create: resolve a computed unknown `enabled` before writing state.
+	if plan.Enabled.IsUnknown() {
+		plan.Enabled = types.BoolNull()
+	}
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 

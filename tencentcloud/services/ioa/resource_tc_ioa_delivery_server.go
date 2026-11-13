@@ -15,9 +15,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	sdkresource "github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 
 	ioav20220601 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ioa/v20220601"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
 )
 
@@ -421,11 +423,19 @@ func (r *IoaDeliveryServerResource) Create(ctx context.Context, req resource.Cre
 	}
 	request.Data = item
 
-	response, err := r.Client().UseIoaV20220601Client().ModifyDeliveryServerWithContext(ctx, request)
-	if err != nil {
+	var response *ioav20220601.ModifyDeliveryServerResponse
+	retryErr := sdkresource.Retry(tccommon.WriteRetryTimeout, func() *sdkresource.RetryError {
+		result, e := r.Client().UseIoaV20220601Client().ModifyDeliveryServerWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
+	if retryErr != nil {
 		resp.Diagnostics.AddError(
 			"Error creating IOA delivery server",
-			fmt.Sprintf("ModifyDeliveryServer failed: %v", err),
+			fmt.Sprintf("ModifyDeliveryServer failed: %v", retryErr),
 		)
 		return
 	}
@@ -447,7 +457,7 @@ func (r *IoaDeliveryServerResource) Create(ctx context.Context, req resource.Cre
 		return
 	}
 
-	item, err = r.readById(ctx, serverId)
+	item, err := r.readById(ctx, serverId)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading IOA delivery server after create",
@@ -555,10 +565,17 @@ func (r *IoaDeliveryServerResource) Update(ctx context.Context, req resource.Upd
 	}
 	request.Data = item
 
-	if _, err := r.Client().UseIoaV20220601Client().ModifyDeliveryServerWithContext(ctx, request); err != nil {
+	retryErr := sdkresource.Retry(tccommon.WriteRetryTimeout, func() *sdkresource.RetryError {
+		_, e := r.Client().UseIoaV20220601Client().ModifyDeliveryServerWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		return nil
+	})
+	if retryErr != nil {
 		resp.Diagnostics.AddError(
 			"Error updating IOA delivery server",
-			fmt.Sprintf("ModifyDeliveryServer failed for server %d: %v", serverId, err),
+			fmt.Sprintf("ModifyDeliveryServer failed for server %d: %v", serverId, retryErr),
 		)
 		return
 	}
@@ -604,10 +621,17 @@ func (r *IoaDeliveryServerResource) Delete(ctx context.Context, req resource.Del
 	request := ioav20220601.NewDeleteDeliveryServerRequest()
 	request.ID = &serverId
 
-	if _, err := r.Client().UseIoaV20220601Client().DeleteDeliveryServerWithContext(ctx, request); err != nil {
+	retryErr := sdkresource.Retry(tccommon.WriteRetryTimeout, func() *sdkresource.RetryError {
+		_, e := r.Client().UseIoaV20220601Client().DeleteDeliveryServerWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		return nil
+	})
+	if retryErr != nil {
 		resp.Diagnostics.AddError(
 			"Error deleting IOA delivery server",
-			fmt.Sprintf("DeleteDeliveryServer failed for server %d: %v", serverId, err),
+			fmt.Sprintf("DeleteDeliveryServer failed for server %d: %v", serverId, retryErr),
 		)
 		return
 	}
@@ -663,9 +687,17 @@ func (r *IoaDeliveryServerResource) readById(ctx context.Context, serverId uint6
 	request := ioav20220601.NewDescribeDeliveryServerRequest()
 	request.ID = &serverId
 
-	response, err := r.Client().UseIoaV20220601Client().DescribeDeliveryServerWithContext(ctx, request)
-	if err != nil {
-		return nil, err
+	var response *ioav20220601.DescribeDeliveryServerResponse
+	retryErr := sdkresource.Retry(tccommon.ReadRetryTimeout, func() *sdkresource.RetryError {
+		result, e := r.Client().UseIoaV20220601Client().DescribeDeliveryServerWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
+	if retryErr != nil {
+		return nil, retryErr
 	}
 	if response == nil || response.Response == nil {
 		return nil, fmt.Errorf("DescribeDeliveryServer returned an empty response for server %d", serverId)

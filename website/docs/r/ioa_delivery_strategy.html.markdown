@@ -11,22 +11,29 @@ description: |-
 
 Provides a resource to create or edit an IOA (T-Sec Internet of Amount Security Management Center) log delivery strategy.
 
-Note: `ModifyDeliveryStrategy` is a combined create/update API. On creation the strategy id is
-omitted and returned in the response; on update the id from the state is sent. Removing an optional
-attribute from the configuration does not clear the corresponding value on the cloud side.
-In addition, the describe API does not return the `enabled` field, so drift detection is not
-available for it and the state value is kept on refresh.
-
 ## Example Usage
 
 ```hcl
 resource "tencentcloud_ioa_delivery_strategy" "example" {
   name        = "tf-example"
   description = "delivery strategy for IOA logs"
-  type        = 0
-  config_id   = 100
+  type        = 2
+  config_id   = 944
   enabled     = true
-  log_types   = ["040201000000", "040203000000"]
+  log_types = [
+    "040201000000",
+    "040205000000",
+    "040209000000",
+    "320500000000",
+    "340600000000",
+    "340100000000",
+    "040206000000",
+    "040203000000",
+    "040202000000",
+    "040207000000",
+    "320300000000",
+    "340200000000"
+  ]
 }
 ```
 
@@ -45,15 +52,6 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-    * `config_id` - Delivery server id.
-    * `config_name` - Delivery server name.
-    * `description` - Delivery strategy description.
-    * `id` - Delivery strategy id.
-    * `log_types` - List of forwarded log types.
-    * `name` - Delivery strategy name.
-    * `type` - Delivery method. Valid values: `0` syslog, `2` kafka, `3` http (32-bit only).
-  * `data` - Delivery strategy detail.
-* `data` - Delivery strategy detail data returned by DescribeDeliveryStrategy.
 * `id` - ID of the delivery strategy, from the ID returned by ModifyDeliveryStrategy.
 
 ## API Reference
@@ -74,6 +72,6 @@ This resource interacts with the following TencentCloud APIs:
 IOA delivery strategy can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ioa_delivery_strategy.example 42
+terraform import tencentcloud_ioa_delivery_strategy.example 621
 ```
 
