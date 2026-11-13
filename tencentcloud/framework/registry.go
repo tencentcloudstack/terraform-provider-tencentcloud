@@ -36,6 +36,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cam"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/config"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dlc"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ioa"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/kms"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mongodb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssl"
@@ -49,6 +50,7 @@ var resourcesMap = map[string]func() resource.Resource{
 	"tencentcloud_ags_sandbox_tool":                 ags.NewAgsSandboxToolResource,
 	"tencentcloud_cam_update_password_rule_config":  cam.NewCamUpdatePasswordRuleConfigResource,
 	"tencentcloud_config_aggregate_compliance_pack": config.NewConfigAggregateCompliancePackResource,
+	"tencentcloud_ioa_delivery_strategy":            ioa.NewIoaDeliveryStrategyResource,
 	"tencentcloud_ssm_secret_version_v2":            ssm.NewSsmSecretVersionV2Resource,
 }
 
