@@ -2752,6 +2752,7 @@ tencentcloud_igtm_package_task
 Identity and Access Management Open APIs(IOA)
 Resource
 tencentcloud_ioa_company_directory_config
+tencentcloud_ioa_delivery_server
 tencentcloud_ioa_delivery_strategy
 
 Database Dedicated Cluster(DBDC)
