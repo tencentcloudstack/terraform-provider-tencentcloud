@@ -62,5 +62,7 @@ The following arguments are supported:
 
 This action invokes the following TencentCloud APIs:
 
-* Invoke: [ModifyValkeyModule](https://www.tencentcloud.com/document/api/239/85838)
+* Invoke:
+  - [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+  - [ModifyValkeyModule](https://www.tencentcloud.com/document/api/239/85838)
 
