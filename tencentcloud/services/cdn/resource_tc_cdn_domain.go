@@ -183,6 +183,36 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 								},
 							},
 						},
+						"path_based_origin": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Computed:    true,
+							Description: "Path-based origin routing configuration. Each element configures a rule that routes requests matching the rule to a specified origin server list.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"rule_type": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Computed:    true,
+										Description: "Rule type. The following types are supported: `file`: the specified file suffix takes effect, `directory`: the specified path takes effect, `path`: specify the absolute path to take effect, `index`: home page.",
+									},
+									"rule_paths": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Computed:    true,
+										Elem:        &schema.Schema{Type: schema.TypeString},
+										Description: "Matching content under the corresponding type of `rule_type`: `file`: fill in the suffix name, such as jpg, txt, `directory`: fill in the path, such as /xxx/test/, `path`: fill in the absolute path, such as /xxx/test.html, `index`: fill /.",
+									},
+									"origin": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Computed:    true,
+										Elem:        &schema.Schema{Type: schema.TypeString},
+										Description: "Origin server list, supports domain names or IPv4 addresses.",
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -2361,6 +2391,13 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 		}
 		request.Origin.PathRules = pathRulesList
 	}
+	if pathBasedOrigins, ok := origin["path_based_origin"].([]interface{}); ok && len(pathBasedOrigins) > 0 {
+		pathBasedOriginList := make([]*cdn.PathBasedOriginRule, 0, len(pathBasedOrigins))
+		for _, item := range pathBasedOrigins {
+			pathBasedOriginList = append(pathBasedOriginList, expandCdnPathBasedOriginRuleFromMap(item.(map[string]interface{})))
+		}
+		request.Origin.PathBasedOrigin = pathBasedOriginList
+	}
 
 	// https config
 	if v, ok := d.GetOk("https_config"); ok {
@@ -3108,6 +3145,23 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 			pathRulesList = append(pathRulesList, pathRuleMap)
 		}
 		origin["path_rules"] = pathRulesList
+	}
+	if domainConfig.Origin.PathBasedOrigin != nil {
+		pathBasedOriginList := make([]map[string]interface{}, 0, len(domainConfig.Origin.PathBasedOrigin))
+		for _, rule := range domainConfig.Origin.PathBasedOrigin {
+			ruleMap := make(map[string]interface{})
+			if rule.RuleType != nil {
+				ruleMap["rule_type"] = *rule.RuleType
+			}
+			if rule.RulePaths != nil {
+				ruleMap["rule_paths"] = rule.RulePaths
+			}
+			if rule.Origin != nil {
+				ruleMap["origin"] = rule.Origin
+			}
+			pathBasedOriginList = append(pathBasedOriginList, ruleMap)
+		}
+		origin["path_based_origin"] = pathBasedOriginList
 	}
 	origins = append(origins, origin)
 	_ = d.Set("origin", origins)
@@ -3946,6 +4000,13 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 				pathRulesList = append(pathRulesList, pathRule)
 			}
 			request.Origin.PathRules = pathRulesList
+		}
+		if pathBasedOrigins, ok := origin["path_based_origin"].([]interface{}); ok && len(pathBasedOrigins) > 0 {
+			pathBasedOriginList := make([]*cdn.PathBasedOriginRule, 0, len(pathBasedOrigins))
+			for _, item := range pathBasedOrigins {
+				pathBasedOriginList = append(pathBasedOriginList, expandCdnPathBasedOriginRuleFromMap(item.(map[string]interface{})))
+			}
+			request.Origin.PathBasedOrigin = pathBasedOriginList
 		}
 	}
 	if d.HasChange("request_header") {
@@ -5272,6 +5333,28 @@ func expandCdnPathRuleFromMap(ruleMap map[string]interface{}) *cdn.PathRule {
 		pathRule.ForwardUri = &rv
 	}
 	return pathRule
+}
+
+func expandCdnPathBasedOriginRuleFromMap(ruleMap map[string]interface{}) *cdn.PathBasedOriginRule {
+	pathBasedOriginRule := &cdn.PathBasedOriginRule{}
+	if rv, ok := ruleMap["rule_type"].(string); ok && rv != "" {
+		pathBasedOriginRule.RuleType = &rv
+	}
+	if rv, ok := ruleMap["rule_paths"].([]interface{}); ok && len(rv) > 0 {
+		rulePaths := make([]*string, 0, len(rv))
+		for _, item := range rv {
+			rulePaths = append(rulePaths, helper.String(item.(string)))
+		}
+		pathBasedOriginRule.RulePaths = rulePaths
+	}
+	if rv, ok := ruleMap["origin"].([]interface{}); ok && len(rv) > 0 {
+		originList := make([]*string, 0, len(rv))
+		for _, item := range rv {
+			originList = append(originList, helper.String(item.(string)))
+		}
+		pathBasedOriginRule.Origin = originList
+	}
+	return pathBasedOriginRule
 }
 
 // isPathRuleTupleEqual checks whether the {full_match, path, server_name, forward_uri} tuple
