@@ -504,6 +504,7 @@ The `origin` object supports the following:
 * `cos_private_access` - (Optional, String) When OriginType is COS, you can specify if access to private buckets is allowed. Valid values are `on` and `off`. and default value is `off`.
 * `origin_company` - (Optional, String) Object storage back to the source vendor. Required when the source station type is a third-party storage source station (third_party). Optional values include the following: `aws_s3`: AWS S3; `ali_oss`: Alibaba Cloud OSS; `hw_obs`: Huawei OBS; `qiniu_kodo`: Qiniu Cloud kodo; `others`: other vendors' object storage, only supports object storage compatible with AWS signature algorithm, such as Tencent Cloud Financial Zone COS. Example value: `hw_obs`.
 * `origin_pull_protocol` - (Optional, String) Origin-pull protocol configuration. `http`: forced HTTP origin-pull, `follow`: protocol follow origin-pull, `https`: forced HTTPS origin-pull. This only supports origin server port 443 for origin-pull.
+* `path_based_origin` - (Optional, List) Path-based origin routing configuration. Each element configures a rule that routes requests matching the rule to a specified origin server list.
 * `path_rules` - (Optional, List) Origin path rewrite rules. Each element configures a path-based origin routing rule.
 * `server_name` - (Optional, String) Host header used when accessing the master origin server. If left empty, the acceleration domain name will be used by default.
 
@@ -528,6 +529,12 @@ The `page_rules` object of `error_page` supports the following:
 * `redirect_code` - (Required, Int) Redirect code of error page rules.
 * `redirect_url` - (Required, String) Redirect url of error page rules.
 * `status_code` - (Required, Int) Status code of error page rules.
+
+The `path_based_origin` object of `origin` supports the following:
+
+* `origin` - (Optional, List) Origin server list, supports domain names or IPv4 addresses.
+* `rule_paths` - (Optional, List) Matching content under the corresponding type of `rule_type`: `file`: fill in the suffix name, such as jpg, txt, `directory`: fill in the path, such as /xxx/test/, `path`: fill in the absolute path, such as /xxx/test.html, `index`: fill /.
+* `rule_type` - (Optional, String) Rule type. The following types are supported: `file`: the specified file suffix takes effect, `directory`: the specified path takes effect, `path`: specify the absolute path to take effect, `index`: home page.
 
 The `path_rules` object of `origin` supports the following:
 

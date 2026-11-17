@@ -3,18 +3,21 @@ package vod
 import (
 	"context"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func ResourceTencentCloudVodAigcApiToken() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudVodAigcApiTokenCreate,
 		Read:   resourceTencentCloudVodAigcApiTokenRead,
+		Update: resourceTencentCloudVodAigcApiTokenUpdate,
 		Delete: resourceTencentCloudVodAigcApiTokenDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -26,6 +29,20 @@ func ResourceTencentCloudVodAigcApiToken() *schema.Resource {
 				ForceNew:    true,
 				Description: "The VOD [sub application](https://intl.cloud.tencent.com/document/product/266/14574) ID. Users who activated VOD service after December 25, 2023 must specify the application ID.",
 			},
+
+			"ext_info": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "ExtInfo JSON string of the API Token. Top-level keys: `ip` (IP whitelist object, e.g. `{\"127.0.0.1\":true}`, empty object to disable), `model` (model whitelist object, e.g. `{\"deepseek-v4-pro\":true}`) and `name` (token name). Build the value with `jsonencode()`.",
+			},
+
+			"action_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Action of the ExtInfo update. Valid values: `Merge` (default, merge the ExtInfo JSON by top-level key), `Overwrite` (overwrite directly).",
+			},
+
+			// computed
 			"api_token": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -55,23 +72,30 @@ func parseVodAigcApiTokenId(id string) (subAppId uint64, apiToken string, err er
 
 func resourceTencentCloudVodAigcApiTokenCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_vod_aigc_api_token.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	service := VodService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
+		ctx      = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		service  = VodService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		subAppId uint64
+	)
 
-	subAppId := uint64(d.Get("sub_app_id").(int))
+	if v, ok := d.GetOkExists("sub_app_id"); ok {
+		subAppId = uint64(v.(int))
+	}
 
 	apiToken, err := service.CreateVodAigcApiToken(ctx, subAppId)
 	if err != nil {
+		log.Printf("[CRITAL]%s create vod aigc api token failed, reason:%+v", logId, err)
 		return err
 	}
+
 	if apiToken == "" {
 		return fmt.Errorf("CreateAigcApiToken returned an empty api_token for sub_app_id [%d]", subAppId)
 	}
 
-	d.SetId(fmt.Sprintf("%d%s%s", subAppId, tccommon.FILED_SP, apiToken))
-	_ = d.Set("api_token", apiToken)
+	d.SetId(strings.Join([]string{helper.UInt64ToStr(subAppId), apiToken}, tccommon.FILED_SP))
 
 	// The cloud side has ~30s data-sync delay before the new token becomes visible
 	// via DescribeAigcApiTokens. Poll until it shows up to avoid spurious drift on
@@ -86,46 +110,111 @@ func resourceTencentCloudVodAigcApiTokenCreate(d *schema.ResourceData, meta inte
 		}
 		return nil
 	})
+
 	if err != nil {
+		log.Printf("[CRITAL]%s wait for vod aigc api token creation failed, reason:%+v", logId, err)
 		return err
 	}
 
-	return resourceTencentCloudVodAigcApiTokenRead(d, meta)
+	// Per the required flow: after Create, continue into the Update business
+	// logic (which applies `ext_info` when configured), then return to Read.
+	return resourceTencentCloudVodAigcApiTokenUpdate(d, meta)
 }
 
 func resourceTencentCloudVodAigcApiTokenRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_vod_aigc_api_token.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	service := VodService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		service = VodService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	subAppId, apiToken, err := parseVodAigcApiTokenId(d.Id())
 	if err != nil {
 		return err
 	}
 
-	exists, err := service.DescribeVodAigcApiTokenById(ctx, subAppId, apiToken)
+	exists, extInfo, err := service.DescribeVodAigcApiTokenExtInfoById(ctx, subAppId, apiToken)
 	if err != nil {
 		return err
 	}
+
 	if !exists {
-		return fmt.Errorf("resource `tencentcloud_vod_aigc_api_token` [sub_app_id=%d] not found in cloud, please check if the sub app or the token has been deleted", subAppId)
+		log.Printf("[WARN]%s resource `tencentcloud_vod_aigc_api_token` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		d.SetId("")
+		return nil
 	}
 
 	_ = d.Set("sub_app_id", subAppId)
 	_ = d.Set("api_token", apiToken)
 
+	if extInfo != "" {
+		_ = d.Set("ext_info", extInfo)
+	}
+
 	return nil
+}
+
+func resourceTencentCloudVodAigcApiTokenUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_aigc_api_token.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		service = VodService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
+
+	subAppId, apiToken, err := parseVodAigcApiTokenId(d.Id())
+	if err != nil {
+		return err
+	}
+
+	needChange := false
+	mutableArgs := []string{"ext_info", "action_type"}
+	for _, v := range mutableArgs {
+		if d.HasChange(v) {
+			needChange = true
+			break
+		}
+	}
+
+	if needChange {
+		var (
+			extInfo    string
+			actionType string
+		)
+
+		if v, ok := d.GetOk("ext_info"); ok && v.(string) != "" {
+			extInfo = v.(string)
+		}
+
+		if v, ok := d.GetOk("action_type"); ok && v.(string) != "" {
+			actionType = v.(string)
+		}
+
+		if extInfo != "" {
+			if err := service.UpdateVodAigcApiToken(ctx, subAppId, apiToken, actionType, extInfo); err != nil {
+				log.Printf("[CRITAL]%s update vod aigc api token failed, reason:%+v", logId, err)
+				return err
+			}
+		}
+	}
+
+	return resourceTencentCloudVodAigcApiTokenRead(d, meta)
 }
 
 func resourceTencentCloudVodAigcApiTokenDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_vod_aigc_api_token.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	service := VodService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		service = VodService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	subAppId, apiToken, err := parseVodAigcApiTokenId(d.Id())
 	if err != nil {
@@ -133,6 +222,7 @@ func resourceTencentCloudVodAigcApiTokenDelete(d *schema.ResourceData, meta inte
 	}
 
 	if err := service.DeleteVodAigcApiToken(ctx, subAppId, apiToken); err != nil {
+		log.Printf("[CRITAL]%s delete vod aigc api token failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -148,6 +238,7 @@ func resourceTencentCloudVodAigcApiTokenDelete(d *schema.ResourceData, meta inte
 		return nil
 	})
 	if err != nil {
+		log.Printf("[CRITAL]%s wait for vod aigc api token deletion failed, reason:%+v", logId, err)
 		return err
 	}
 

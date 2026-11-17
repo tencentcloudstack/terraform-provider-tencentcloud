@@ -53,6 +53,64 @@ func ResourceTencentCloudVodAigcQuota() *schema.Resource {
 				Description: "API token for quota restriction. Only meaningful when `quota_type` is `Text`.",
 			},
 
+			"quota_period": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Quota reset period. Valid values: `Day` (reset every day), `Month` (reset on the specified day of each month), `Total` (never reset, `quota_limit` is the total quota).",
+			},
+
+			"reset_day": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Reset day of the month, only valid when `quota_period` is `Month`. If the specified day does not exist in the current month, the quota resets at 00:00 on the 1st day of the next month.",
+			},
+
+			"model_quota_switch": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to enable per-model quota settings. Valid values: `ON`, `OFF`. Default value: `OFF`.",
+			},
+
+			"model_quotas": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				Description: "Per-model quotas, only valid when `model_quota_switch` is `ON`.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"model_name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Model name.",
+						},
+
+						"model_version": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Model version.",
+						},
+
+						"quota_limit": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Computed:    true,
+							Description: "Model quota limit value. Unit: when `quota_type` is `Image`, count by images; when `quota_type` is `Video`, count by seconds.",
+						},
+
+						"usage": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Current usage amount of the model quota. Unit: when `quota_type` is `Image`, count by images; when `quota_type` is `Video`, count by seconds.",
+						},
+					},
+				},
+			},
+
 			// computed
 			"usage": {
 				Type:        schema.TypeInt,
@@ -79,7 +137,7 @@ func resourceTencentCloudVodAigcQuotaCreate(d *schema.ResourceData, meta interfa
 		apiToken  string
 	)
 
-	if v, ok := d.GetOk("sub_app_id"); ok {
+	if v, ok := d.GetOkExists("sub_app_id"); ok {
 		request.SubAppId = helper.IntUint64(v.(int))
 		subAppId = helper.IntToStr(v.(int))
 	}
@@ -89,13 +147,45 @@ func resourceTencentCloudVodAigcQuotaCreate(d *schema.ResourceData, meta interfa
 		quotaType = v.(string)
 	}
 
-	if v, ok := d.GetOk("quota_limit"); ok {
+	if v, ok := d.GetOkExists("quota_limit"); ok {
 		request.QuotaLimit = helper.IntUint64(v.(int))
 	}
 
 	if v, ok := d.GetOk("api_token"); ok {
 		request.ApiToken = helper.String(v.(string))
 		apiToken = v.(string)
+	}
+
+	if v, ok := d.GetOk("quota_period"); ok {
+		request.QuotaPeriod = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("reset_day"); ok {
+		request.ResetDay = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOk("model_quota_switch"); ok {
+		request.ModelQuotaSwitch = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("model_quotas"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			modelQuota := vod.AigcModelQuota{}
+			if mv, ok := dMap["model_name"]; ok {
+				modelQuota.ModelName = helper.String(mv.(string))
+			}
+
+			if mv, ok := dMap["model_version"]; ok {
+				modelQuota.ModelVersion = helper.String(mv.(string))
+			}
+
+			if mv, ok := dMap["quota_limit"]; ok {
+				modelQuota.QuotaLimit = helper.IntUint64(mv.(int))
+			}
+
+			request.ModelQuotas = append(request.ModelQuotas, &modelQuota)
+		}
 	}
 
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -171,6 +261,50 @@ func resourceTencentCloudVodAigcQuotaRead(d *schema.ResourceData, meta interface
 		_ = d.Set("quota_limit", int(*item.QuotaLimit))
 	}
 
+	if item.QuotaPeriod != nil {
+		_ = d.Set("quota_period", item.QuotaPeriod)
+	}
+
+	if item.ResetDay != nil {
+		_ = d.Set("reset_day", int(*item.ResetDay))
+	}
+
+	if item.ModelQuotaSwitch != nil {
+		_ = d.Set("model_quota_switch", item.ModelQuotaSwitch)
+	}
+
+	if item.ModelQuotas != nil {
+		modelQuotas := make([]map[string]interface{}, 0, len(item.ModelQuotas))
+		for _, modelQuota := range item.ModelQuotas {
+			if modelQuota == nil {
+				continue
+			}
+
+			m := map[string]interface{}{}
+			if modelQuota.ModelName != nil {
+				m["model_name"] = *modelQuota.ModelName
+			}
+
+			if modelQuota.ModelVersion != nil {
+				m["model_version"] = *modelQuota.ModelVersion
+			}
+
+			if modelQuota.QuotaLimit != nil {
+				m["quota_limit"] = int(*modelQuota.QuotaLimit)
+			}
+
+			if modelQuota.Usage != nil {
+				m["usage"] = int(*modelQuota.Usage)
+			}
+
+			modelQuotas = append(modelQuotas, m)
+		}
+
+		if len(modelQuotas) > 0 {
+			_ = d.Set("model_quotas", modelQuotas)
+		}
+	}
+
 	if item.Usage != nil {
 		_ = d.Set("usage", int(*item.Usage))
 	}
@@ -193,7 +327,7 @@ func resourceTencentCloudVodAigcQuotaUpdate(d *schema.ResourceData, meta interfa
 	}
 
 	needChange := false
-	mutableArgs := []string{"quota_limit"}
+	mutableArgs := []string{"quota_limit", "quota_period", "reset_day", "model_quota_switch", "model_quotas"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -207,6 +341,38 @@ func resourceTencentCloudVodAigcQuotaUpdate(d *schema.ResourceData, meta interfa
 		request.QuotaType = helper.String(quotaType)
 		if v, ok := d.GetOk("quota_limit"); ok {
 			request.QuotaLimit = helper.IntUint64(v.(int))
+		}
+
+		if v, ok := d.GetOk("quota_period"); ok {
+			request.QuotaPeriod = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("reset_day"); ok {
+			request.ResetDay = helper.IntUint64(v.(int))
+		}
+
+		if v, ok := d.GetOk("model_quota_switch"); ok {
+			request.ModelQuotaSwitch = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("model_quotas"); ok {
+			for _, item := range v.([]interface{}) {
+				dMap := item.(map[string]interface{})
+				modelQuota := vod.AigcModelQuota{}
+				if mv, ok := dMap["model_name"]; ok {
+					modelQuota.ModelName = helper.String(mv.(string))
+				}
+
+				if mv, ok := dMap["model_version"]; ok {
+					modelQuota.ModelVersion = helper.String(mv.(string))
+				}
+
+				if mv, ok := dMap["quota_limit"]; ok {
+					modelQuota.QuotaLimit = helper.IntUint64(mv.(int))
+				}
+
+				request.ModelQuotas = append(request.ModelQuotas, &modelQuota)
+			}
 		}
 
 		if apiToken != "" {

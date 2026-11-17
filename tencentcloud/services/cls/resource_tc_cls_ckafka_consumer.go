@@ -71,8 +71,53 @@ func ResourceTencentCloudClsCkafkaConsumer() *schema.Resource {
 							Optional:    true,
 							Description: "JSON format for delivery. Valid values:\n- `0`: consistent with the original log, no escaping.\n- `1`: escaped.",
 						},
+						"auto_convert_number": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "whether to automatically convert numeric strings (such as `123`) in the first-level values of the JSON structure to numeric types (int / float). Default value: `false`.",
+						},
 					},
 				},
+			},
+
+			"role_arn": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "role access description name for cross-account delivery.",
+			},
+
+			"external_id": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "external id for cross-account delivery.",
+			},
+
+			"advanced_config": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Description: "advanced configuration.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"partition_hash_status": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "whether to deliver messages with the same hash value of fields to the same ckafka partition. Default value: `false`.",
+						},
+						"partition_fields": {
+							Type:        schema.TypeSet,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Optional:    true,
+							Description: "list of fields used to calculate hash. Supports up to 5 fields.",
+						},
+					},
+				},
+			},
+
+			"dsl_filter": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "log pre-filtering - pre-filter the raw data written to ckafka.",
 			},
 
 			"ckafka": {
@@ -84,13 +129,13 @@ func ResourceTencentCloudClsCkafkaConsumer() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"vip": {
 							Type:        schema.TypeString,
-							Required:    true,
-							Description: "vip.",
+							Optional:    true,
+							Description: "vip.If the delivery task is created using a Role ARN, this field can be left empty.",
 						},
 						"vport": {
 							Type:        schema.TypeString,
-							Required:    true,
-							Description: "vport.",
+							Optional:    true,
+							Description: "vport.If the delivery task is created using a Role ARN, this field can be left empty.",
 						},
 						"instance_id": {
 							Type:        schema.TypeString,
@@ -99,13 +144,13 @@ func ResourceTencentCloudClsCkafkaConsumer() *schema.Resource {
 						},
 						"instance_name": {
 							Type:        schema.TypeString,
-							Required:    true,
-							Description: "instance name.",
+							Optional:    true,
+							Description: "instance name.If the delivery task is created using a Role ARN, this field can be left empty.",
 						},
 						"topic_id": {
 							Type:        schema.TypeString,
-							Required:    true,
-							Description: "topic id of ckafka.",
+							Optional:    true,
+							Description: "topic id of ckafka. If the delivery task is created using a Role ARN, this field can be left empty.",
 						},
 						"topic_name": {
 							Type:        schema.TypeString,
@@ -165,7 +210,37 @@ func resourceTencentCloudClsCkafkaConsumerCreate(d *schema.ResourceData, meta in
 		if v, ok := dMap["json_type"]; ok {
 			consumerContent.JsonType = helper.IntInt64(v.(int))
 		}
+		if v, ok := dMap["auto_convert_number"]; ok {
+			consumerContent.AutoConvertNumber = helper.Bool(v.(bool))
+		}
 		request.Content = &consumerContent
+	}
+
+	if v, ok := d.GetOk("role_arn"); ok {
+		request.RoleArn = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("external_id"); ok {
+		request.ExternalId = helper.String(v.(string))
+	}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "advanced_config"); ok {
+		advancedConfig := cls.AdvancedConsumerConfiguration{}
+		if v, ok := dMap["partition_hash_status"]; ok {
+			advancedConfig.PartitionHashStatus = helper.Bool(v.(bool))
+		}
+		if v, ok := dMap["partition_fields"]; ok {
+			partitionFieldsSet := v.(*schema.Set).List()
+			for i := range partitionFieldsSet {
+				partitionFields := partitionFieldsSet[i].(string)
+				advancedConfig.PartitionFields = append(advancedConfig.PartitionFields, &partitionFields)
+			}
+		}
+		request.AdvancedConfig = &advancedConfig
+	}
+
+	if v, ok := d.GetOk("dsl_filter"); ok {
+		request.DSLFilter = helper.String(v.(string))
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "ckafka"); ok {
@@ -266,7 +341,37 @@ func resourceTencentCloudClsCkafkaConsumerRead(d *schema.ResourceData, meta inte
 			contentMap["json_type"] = ckafkaConsumer.Content.JsonType
 		}
 
+		if ckafkaConsumer.Content.AutoConvertNumber != nil {
+			contentMap["auto_convert_number"] = ckafkaConsumer.Content.AutoConvertNumber
+		}
+
 		_ = d.Set("content", []interface{}{contentMap})
+	}
+
+	if ckafkaConsumer.RoleArn != nil {
+		_ = d.Set("role_arn", ckafkaConsumer.RoleArn)
+	}
+
+	if ckafkaConsumer.ExternalId != nil {
+		_ = d.Set("external_id", ckafkaConsumer.ExternalId)
+	}
+
+	if ckafkaConsumer.AdvancedConfig != nil {
+		advancedConfigMap := map[string]interface{}{}
+
+		if ckafkaConsumer.AdvancedConfig.PartitionHashStatus != nil {
+			advancedConfigMap["partition_hash_status"] = ckafkaConsumer.AdvancedConfig.PartitionHashStatus
+		}
+
+		if ckafkaConsumer.AdvancedConfig.PartitionFields != nil {
+			advancedConfigMap["partition_fields"] = ckafkaConsumer.AdvancedConfig.PartitionFields
+		}
+
+		_ = d.Set("advanced_config", []interface{}{advancedConfigMap})
+	}
+
+	if ckafkaConsumer.DSLFilter != nil {
+		_ = d.Set("dsl_filter", ckafkaConsumer.DSLFilter)
 	}
 
 	if ckafkaConsumer.Ckafka != nil {
@@ -319,7 +424,7 @@ func resourceTencentCloudClsCkafkaConsumerUpdate(d *schema.ResourceData, meta in
 	request.TopicId = &topicId
 
 	needChange := false
-	mutableArgs := []string{"need_content", "content", "ckafka", "compression"}
+	mutableArgs := []string{"need_content", "content", "ckafka", "compression", "role_arn", "external_id", "advanced_config", "dsl_filter"}
 
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
@@ -355,7 +460,37 @@ func resourceTencentCloudClsCkafkaConsumerUpdate(d *schema.ResourceData, meta in
 			if v, ok := dMap["json_type"]; ok {
 				consumerContent.JsonType = helper.IntInt64(v.(int))
 			}
+			if v, ok := dMap["auto_convert_number"]; ok {
+				consumerContent.AutoConvertNumber = helper.Bool(v.(bool))
+			}
 			request.Content = &consumerContent
+		}
+
+		if v, ok := d.GetOk("role_arn"); ok {
+			request.RoleArn = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("external_id"); ok {
+			request.ExternalId = helper.String(v.(string))
+		}
+
+		if dMap, ok := helper.InterfacesHeadMap(d, "advanced_config"); ok {
+			advancedConfig := cls.AdvancedConsumerConfiguration{}
+			if v, ok := dMap["partition_hash_status"]; ok {
+				advancedConfig.PartitionHashStatus = helper.Bool(v.(bool))
+			}
+			if v, ok := dMap["partition_fields"]; ok {
+				partitionFieldsSet := v.(*schema.Set).List()
+				for i := range partitionFieldsSet {
+					partitionFields := partitionFieldsSet[i].(string)
+					advancedConfig.PartitionFields = append(advancedConfig.PartitionFields, &partitionFields)
+				}
+			}
+			request.AdvancedConfig = &advancedConfig
+		}
+
+		if v, ok := d.GetOk("dsl_filter"); ok {
+			request.DSLFilter = helper.String(v.(string))
 		}
 
 		if dMap, ok := helper.InterfacesHeadMap(d, "ckafka"); ok {

@@ -107,6 +107,7 @@ The `rule` object supports the following:
 * `name` - (Required, String, ForceNew) Name of synchronization rule.
 * `override` - (Required, Bool) Whether to override.
 * `deletion` - (Optional, Bool) Whether synchronous deletion event.
+* `enabled` - (Optional, Bool) Whether to enable the rule.
 
 ## Attributes Reference
 

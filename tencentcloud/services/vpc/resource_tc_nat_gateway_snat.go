@@ -63,7 +63,7 @@ func NatGatewaySnatPara() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Optional:    true,
 			ForceNew:    true,
-			Description: "Private IPs of the instance's primary ENI, required when `resource_type` is " + NAT_GATEWAY_TYPE_NETWORK_INTERFACE + ".",
+			Description: "Private IPs of the instance's primary ENI, required when `resource_type` is " + NAT_GATEWAY_TYPE_NETWORK_INTERFACE + " or " + NAT_GATEWAY_TYPE_USERDEFINED + ".",
 		},
 		"public_ip_addr": {
 			Type:        schema.TypeList,
@@ -76,6 +76,7 @@ func NatGatewaySnatPara() map[string]*schema.Schema {
 			Required:    true,
 			Description: "Description.",
 		},
+		// computed
 		"snat_id": {
 			Type:        schema.TypeString,
 			Computed:    true,
@@ -178,6 +179,8 @@ func resourceTencentCloudNatGatewaySnatRead(d *schema.ResourceData, meta interfa
 	} else if *resourceType == NAT_GATEWAY_TYPE_NETWORK_INTERFACE {
 		_ = d.Set("instance_id", snat.ResourceId)
 		_ = d.Set("instance_private_ip_addr", snat.PrivateIpAddress)
+	} else if *resourceType == NAT_GATEWAY_TYPE_USERDEFINED {
+		_ = d.Set("instance_private_ip_addr", snat.PrivateIpAddress)
 	}
 	return nil
 }
@@ -263,6 +266,8 @@ func getSnat(d *schema.ResourceData) *vpc.SourceIpTranslationNatRule {
 		privateIpAddr = d.Get("subnet_cidr_block").(string)
 	} else if resourceType == NAT_GATEWAY_TYPE_NETWORK_INTERFACE {
 		resourceId = d.Get("instance_id").(string)
+		privateIpAddr = d.Get("instance_private_ip_addr").(string)
+	} else if resourceType == NAT_GATEWAY_TYPE_USERDEFINED {
 		privateIpAddr = d.Get("instance_private_ip_addr").(string)
 	}
 	sNat := &vpc.SourceIpTranslationNatRule{

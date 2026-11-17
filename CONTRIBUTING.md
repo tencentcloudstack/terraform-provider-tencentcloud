@@ -8,9 +8,11 @@ resources and data sources.
 
 The provider serves both [`terraform-plugin-sdk/v2`][sdkv2] and
 [`terraform-plugin-framework`][framework] resources via a single
-[`tf5muxserver`][mux] in `main.go`. The two stacks share the same
-`*connectivity.TencentCloudClient`, so credentials and SDK clients are
-configured exactly once.
+`tf6muxserver` in `main.go`, from [`terraform-plugin-mux`][mux]. The SDKv2
+half is upgraded to protocol 6 with `tf5to6server` first, because nested
+attributes in framework schemas only exist in tfplugin6. The two stacks share
+the same `*connectivity.TencentCloudClient`, so credentials and SDK clients
+are configured exactly once.
 
 [sdkv2]: https://github.com/hashicorp/terraform-plugin-sdk
 [framework]: https://github.com/hashicorp/terraform-plugin-framework

@@ -59,8 +59,10 @@ resource "tencentcloud_cynosdb_cluster" "example" {
 }
 
 resource "tencentcloud_cynosdb_cluster_slave_zone" "example" {
-  cluster_id = tencentcloud_cynosdb_cluster.example.id
-  slave_zone = "ap-guangzhou-7"
+  cluster_id        = tencentcloud_cynosdb_cluster.example.id
+  slave_zone        = "ap-guangzhou-7"
+  binlog_sync_way   = "async"
+  semi_sync_timeout = 10000
 }
 ```
 
@@ -70,6 +72,8 @@ The following arguments are supported:
 
 * `cluster_id` - (Required, String) The ID of cluster.
 * `slave_zone` - (Required, String) Slave zone.
+* `binlog_sync_way` - (Optional, String) Binlog sync way. Default value: `async`. Valid values: `sync`, `semisync`, `async`.
+* `semi_sync_timeout` - (Optional, Int) Semisync timeout in ms. The semisync replication degrades to async replication if the timeout is exceeded. Minimum: 1000, maximum: 4294967295, default: 10000.
 
 ## Attributes Reference
 

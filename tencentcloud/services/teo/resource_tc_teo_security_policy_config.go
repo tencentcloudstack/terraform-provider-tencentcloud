@@ -171,13 +171,13 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 													Type:        schema.TypeList,
 													Required:    true,
 													MaxItems:    1,
-													Description: "Execution actions for custom rules. the Name parameter value of SecurityAction supports: <li>Deny: block;</li> <li>Monitor: observe;</li> <li>ReturnCustomPage: block using a specified page;</li> <li>Redirect: Redirect to URL;</li> <li>BlockIP: IP blocking;</li> <li>JSChallenge: JavaScript challenge;</li> <li>ManagedChallenge: managed challenge;</li> <li>Allow: Allow.</li>.",
+													Description: "Execution actions for custom rules. the Name parameter value of SecurityAction supports: <li>Allow: allow, where AllowActionParameters supports MinDelayTime and MaxDelayTime configuration;</li> <li>Deny: block, where DenyActionParameters supports BlockIp, ReturnCustomPage, and Stall configuration;</li> <li>Monitor: observe;</li> <li>Challenge: challenge, where ChallengeActionParameters.ChallengeOption supports JSChallenge and ManagedChallenge;</li> <li>Redirect: redirect to a URL.</li>.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"name": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Specific actions for safe execution. valid values:.\n<li>Deny: block</li> <li>Monitor: Monitor</li> <li>ReturnCustomPage: use specified page to block</li> <li>Redirect: Redirect to URL</li> <li>BlockIP: IP block</li> <li>JSChallenge: JavaScript challenge</li> <li>ManagedChallenge: managed challenge</li> <li>Disabled: Disabled</li> <li>Allow: Allow</li>.",
+																Description: "Specific actions for safe execution. valid values:.\n<li>Deny: block, prevent requests from accessing site resources;</li> <li>Monitor: observe, only record logs; </li> <li>Redirect: redirect to URL;</li> <li>Disabled: not enabled, disable the specified rule;</li> <li>Allow: allow, skip the remaining rules of the current security module. Delay response when the AllowActionParameters parameter is configured;</li> <li>Challenge: challenge, respond with challenge content;</li> <li>BlockIP: to be deprecated, IP block;</li> <li>ReturnCustomPage: to be deprecated, use a specified page for interception;</li> <li>JSChallenge: to be deprecated, JavaScript challenge;</li><li>ManagedChallenge: to be deprecated, managed challenge.</li>.",
 															},
 															"block_ip_action_parameters": {
 																Type:        schema.TypeList,
@@ -218,7 +218,7 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 																Type:        schema.TypeList,
 																Optional:    true,
 																MaxItems:    1,
-																Description: "Additional parameter when Name is Redirect.",
+																Description: "Additional parameter for safe execution when the action is set to redirect.\n\nThis parameter is used to specify the extra handling action taken by the system when a security rule is hit and a redirection action is executed.\nDifferent handling actions are configured with different fixed parameter combinations. The system will determine the effective handling action type according to the configured parameter combination.\nOnly one handling action can be configured and made effective during the same redirection. Parameter composites corresponding to multiple handling actions cannot appear at the same time. Otherwise, it is deemed as an invalid configuration.\nRedirectActionParameters supports the following extra handling actions:\n\n<li>Redirect: redirect client requests to the specified destination URL. Corresponding parameter: URL.</li>.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"url": {
@@ -1379,19 +1379,19 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 													Type:        schema.TypeList,
 													Optional:    true,
 													MaxItems:    1,
-													Description: "The precise rate limit handling method. The values are: <li>Monitor: Observe; </li><li>Deny: Intercept, where DenyActionParameters.Name supports Deny and ReturnCustomPage; </li><li>Challenge: Challenge, where ChallengeActionParameters.Name supports JSChallenge and ManagedChallenge; </li><li>Redirect: Redirect to URL; </li>.",
+													Description: "The precise rate limit handling method. The values are: <li>Allow: allow, where AllowActionParameters supports MinDelayTime and MaxDelayTime configuration; </li><li>Deny: block, where DenyActionParameters supports ReturnCustomPage and Stall configuration; </li><li>Monitor: observe; </li><li>Challenge: challenge, where ChallengeActionParameters.ChallengeOption supports JSChallenge and ManagedChallenge; </li><li>Redirect: redirect to a URL.</li>.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"name": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "The specific action of security execution. The values are:\n<li>Deny: intercept, block the request to access site resources;</li>\n<li>Monitor: observe, only record logs;</li>\n<li>Redirect: redirect to URL;</li>\n<li>Disabled: disabled, do not enable the specified rule;</li>\n<li>Allow: allow access, but delay processing requests;</li>\n<li>Challenge: challenge, respond to challenge content;</li>\n<li>BlockIP: to be abandoned, IP ban;</li>\n<li>ReturnCustomPage: to be abandoned, use the specified page to intercept;</li>\n<li>JSChallenge: to be abandoned, JavaScript challenge;</li>\n<li>ManagedChallenge: to be abandoned, managed challenge.</li>.",
+																Description: "Specific actions for safe execution. valid values:.\n<li>Deny: block, prevent requests from accessing site resources;</li> <li>Monitor: observe, only record logs; </li> <li>Redirect: redirect to URL;</li> <li>Disabled: not enabled, disable the specified rule;</li> <li>Allow: allow, skip the remaining rules of the current security module. Delay response when the AllowActionParameters parameter is configured;</li> <li>Challenge: challenge, respond with challenge content;</li> <li>BlockIP: to be deprecated, IP block;</li> <li>ReturnCustomPage: to be deprecated, use a specified page for interception;</li> <li>JSChallenge: to be deprecated, JavaScript challenge;</li><li>ManagedChallenge: to be deprecated, managed challenge.</li>.",
 															},
 															"deny_action_parameters": {
 																Type:        schema.TypeList,
 																Optional:    true,
 																MaxItems:    1,
-																Description: "Additional parameters when Name is Deny.",
+																Description: "Additional parameter for the safe execution action when it is interception.\n\nThis parameter is used to specify the extra handling action taken by the system when a security rule is hit and an intercept action is executed.\nDifferent handling actions are configured with different fixed parameter combinations. The system will determine the actually effective handling action type according to the configured parameter combination.\nOnly one handling action can be configured and made effective during the same block execution. Parameters corresponding to multiple handling actions cannot appear simultaneously, otherwise the configuration is deemed invalid. If empty, the default block handling action is used.\nDenyActionParameters supports the following extra handling actions:\n\n<li>Default: When DenyActionParameters is empty or no extra handling action is enabled, the system will perform the default block, responding with an interception page.</li>\n<li>IP blocking: Continuously block the client source IP that triggers the rule. Corresponding parameters: BlockIp, BlockIpDuration.</li>\n<li>Custom page interception: Use the specified custom page content to respond to requests. Corresponding parameters: ReturnCustomPage, ResponseCode, ErrorPageId.</li>\n<li>Silence: Accept client requests but do not return. Corresponding parameter: Stall.</li>.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"block_ip": {
@@ -1431,7 +1431,7 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 																Type:        schema.TypeList,
 																Optional:    true,
 																MaxItems:    1,
-																Description: "Additional parameters when Name is Redirect.",
+																Description: "Additional parameter for safe execution when the action is set to redirect.\n\nThis parameter is used to specify the extra handling action taken by the system when a security rule is hit and a redirection action is executed.\nDifferent handling actions are configured with different fixed parameter combinations. The system will determine the effective handling action type according to the configured parameter combination.\nOnly one handling action can be configured and made effective during the same redirection. Parameter composites corresponding to multiple handling actions cannot appear at the same time. Otherwise, it is deemed as an invalid configuration.\nRedirectActionParameters supports the following extra handling actions:\n\n<li>Redirect: redirect client requests to the specified destination URL. Corresponding parameter: URL.</li>.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"url": {
@@ -1446,7 +1446,7 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 																Type:        schema.TypeList,
 																Optional:    true,
 																MaxItems:    1,
-																Description: "Additional parameters when Name is Challenge.",
+																Description: "Additional parameter for the safe execution action when it is a challenge.\n\nThis parameter is used to specify the extra handling action taken by the system when a security rule is hit and a challenge action is executed.\nChallenge disposal actions are segmented through ChallengeOption. Different challenge types correspond to different interaction forms and parameter requirements. The system will bring the corresponding parameter configuration into effect according to the selected challenge type.\nChallengeActionParameters supports the following challenge disposition types:\n\n<li>Interstitial challenge: responds with a new page and runs the authentication mechanism within the new page. The corresponding ChallengeOption value is InterstitialChallenge.</li>\n<li>Inline challenge: responds with an SDK challenge. The corresponding ChallengeOption value is InlineChallenge.</li>\n<li>JavaScript challenge: invisible verification in the browser. The browser automatically performs verification and shows the requested resource. The corresponding ChallengeOption value is JSChallenge.</li>\n<li>Managed challenge: responds with a redirect page containing a JavaScript program, used for verification of the browser runtime environment. The corresponding ChallengeOption value is ManagedChallenge.</li>.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"challenge_option": {
@@ -2743,7 +2743,7 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 							Optional:    true,
 							Computed:    true,
 							MaxItems:    1,
-							Description: "Layer-7 protection master switch.",
+							Description: "Security switch configuration.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"web_switch": {
@@ -2784,7 +2784,7 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 							Optional:    true,
 							Computed:    true,
 							MaxItems:    1,
-							Description: "Exception rules configuration.",
+							Description: "Exception rule configuration.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"switch": {

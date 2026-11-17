@@ -82,6 +82,12 @@ func ResourceTencentCloudTcrReplication() *schema.Resource {
 							Optional:    true,
 							Description: "Whether synchronous deletion event.",
 						},
+						"enabled": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Computed:    true,
+							Description: "Whether to enable the rule.",
+						},
 					},
 				},
 			},
@@ -185,6 +191,10 @@ func resourceTencentCloudTcrReplicationCreate(d *schema.ResourceData, meta inter
 		}
 
 		if v, ok := ruleMap["deletion"].(bool); ok {
+			replicationRule.Deletion = helper.Bool(v)
+		}
+
+		if v, ok := ruleMap["enabled"].(bool); ok {
 			replicationRule.Deletion = helper.Bool(v)
 		}
 

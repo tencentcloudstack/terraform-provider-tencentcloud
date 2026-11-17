@@ -2,7 +2,8 @@
 // TencentCloud provider.
 //
 // This package coexists with the SDKv2-based `tencentcloud.Provider()` inside
-// the same provider binary via tf5muxserver. Directory layout: framework
+// the same provider binary via tf6muxserver (the SDKv2 half is upgraded to
+// tfplugin6 with tf5to6server). Directory layout: framework
 // entry-points (provider, registry, tests) live under
 // `tencentcloud/framework/`, while every business reference (resource,
 // data source, function, ephemeral, list, action) is co-located with the
@@ -12,7 +13,7 @@
 //	├── framework/                 # this package: framework entry only
 //	│   ├── provider.go            # Provider Schema/Configure (this file)
 //	│   ├── registry.go            # 6-type aggregator
-//	│   ├── acctest/               # ProtoV5 test factories
+//	│   ├── acctest/               # ProtoV6 test factories
 //	│   └── internal/              # framework-only helpers
 //	└── services/
 //	    ├── common/                # cross-product / provider-meta references
@@ -87,7 +88,7 @@ func (p *Provider) Metadata(_ context.Context, _ provider.MetadataRequest, resp 
 // MetaSchema MUST mirror SDKv2 exactly. The SDKv2 provider in
 // tencentcloud/provider.go does NOT define a ProviderMetaSchemaFunc, which
 // means SDKv2 reports an empty (zero-attribute) provider meta schema to
-// the protocol. tf5muxserver compares the meta schema across underlying
+// the protocol. tf6muxserver compares the meta schema across underlying
 // providers, so framework MUST also report an empty schema. Any attribute
 // declared here that is not declared in SDKv2 will fail provider startup
 // with "Invalid Provider Server Combination".
@@ -100,7 +101,7 @@ func (p *Provider) MetaSchema(_ context.Context, _ provider.MetaSchemaRequest, r
 // Key principles:
 //   - Field names, types, Required/Optional, Sensitive flags and
 //     Description strings MUST match SDKv2 (tencentcloud/provider.go)
-//     exactly. tf5muxserver compares the protocol-level schema across
+//     exactly. tf6muxserver compares the protocol-level schema across
 //     underlying providers; any divergence (including a single character
 //     in Description) will fail provider startup with
 //     "Invalid Provider Server Combination".
