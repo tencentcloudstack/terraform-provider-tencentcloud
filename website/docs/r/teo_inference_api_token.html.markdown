@@ -24,7 +24,7 @@ resource "tencentcloud_teo_inference_api_token" "example" {
 
 The following arguments are supported:
 
-* `name` - (Required, String, ForceNew) Name of the inference API token. Max length: 30 characters.
+* `name` - (Required, String) Name of the inference API token. Max length: 30 characters.
 * `zone_id` - (Required, String, ForceNew) Site ID.
 
 ## Attributes Reference

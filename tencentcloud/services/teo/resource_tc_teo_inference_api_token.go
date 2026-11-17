@@ -33,7 +33,6 @@ func ResourceTencentCloudTeoInferenceAPIToken() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "Name of the inference API token. Max length: 30 characters.",
 			},
 			"token_id": {
