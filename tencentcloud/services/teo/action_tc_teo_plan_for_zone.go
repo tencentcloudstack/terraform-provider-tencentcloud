@@ -15,6 +15,16 @@ import (
 var _ action.Action = &TeoPlanForZoneAction{}
 var _ action.ActionWithConfigure = &TeoPlanForZoneAction{}
 
+// TeoPlanForZoneClient is the subset of TeoService used by the action. It is
+// an interface so unit tests can inject a fake implementation directly instead
+// of runtime monkey patching, which only works with compiler inlining disabled
+// (`-gcflags=all=-l`).
+type TeoPlanForZoneClient interface {
+	TeoPlanForZone(zoneId, planType string) (resourceNames, dealNames []*string, errRet error)
+}
+
+var _ TeoPlanForZoneClient = &TeoService{}
+
 // NewTeoPlanForZoneAction is the factory referenced by
 // tencentcloud/framework/registry.go to register this framework action.
 func NewTeoPlanForZoneAction() action.Action {
@@ -27,7 +37,7 @@ func NewTeoPlanForZoneAction() action.Action {
 // response's ResourceNames and DealNames are logged for diagnostics but not
 // returned to the caller (framework actions cannot surface output values).
 type TeoPlanForZoneAction struct {
-	client TeoService
+	client TeoPlanForZoneClient
 }
 
 // TeoPlanForZoneActionModel maps the action schema attributes.
@@ -76,7 +86,14 @@ func (a *TeoPlanForZoneAction) Configure(_ context.Context, req action.Configure
 		return
 	}
 
-	a.client = NewTeoService(meta.Client)
+	if meta.Client == nil {
+		// Keep the client unset so Invoke reports "not configured" instead of
+		// panicking on a nil TencentCloudClient.
+		return
+	}
+
+	service := NewTeoService(meta.Client)
+	a.client = &service
 }
 
 // Invoke runs the CreatePlanForZone API call to purchase a plan for the zone.
@@ -101,7 +118,7 @@ func (a *TeoPlanForZoneAction) Invoke(ctx context.Context, req action.InvokeRequ
 		return
 	}
 
-	if a.client.client == nil {
+	if a.client == nil {
 		resp.Diagnostics.AddError(
 			"TEO client not configured",
 			"The TeoPlanForZone action was invoked before the provider client was configured. "+

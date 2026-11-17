@@ -1,20 +1,17 @@
-package teo_test
+package teo
 
 import (
 	"context"
 	"fmt"
 	"testing"
 
-	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-framework/action"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 	"github.com/stretchr/testify/assert"
-	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/sharedmeta"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 )
 
 // ptrStringPlanForZone returns a pointer to s.
@@ -22,10 +19,20 @@ func ptrStringPlanForZone(s string) *string {
 	return &s
 }
 
-// newSharedMeta builds a *sharedmeta.ProviderMeta wrapping a non-nil
-// *connectivity.TencentCloudClient for framework Action Configure.
-func newSharedMeta() *sharedmeta.ProviderMeta {
-	return &sharedmeta.ProviderMeta{Client: &connectivity.TencentCloudClient{}}
+// fakePlanForZoneClient implements TeoPlanForZoneClient for tests. Injecting a
+// fake directly does not depend on runtime monkey patching, so the tests pass
+// regardless of compiler inlining (no `-gcflags=all=-l` required).
+type fakePlanForZoneClient struct {
+	invoke func(zoneId, planType string) (resourceNames, dealNames []*string, errRet error)
+}
+
+func (f fakePlanForZoneClient) TeoPlanForZone(zoneId, planType string) (resourceNames, dealNames []*string, errRet error) {
+	return f.invoke(zoneId, planType)
+}
+
+// newConfiguredAction returns an action with the given fake client injected.
+func newConfiguredAction(fake TeoPlanForZoneClient) *TeoPlanForZoneAction {
+	return &TeoPlanForZoneAction{client: fake}
 }
 
 // planForZoneConfig builds an action.InvokeRequest whose Config tfsdk.Config
@@ -56,152 +63,118 @@ func planForZoneConfig(ctx context.Context, a action.Action, zoneId, planType st
 	}, nil
 }
 
-// go test ./tencentcloud/services/teo/ -run "TestTeoPlanForZoneAction" -v -count=1 -gcflags="all=-l"
+// invoke runs the action with the given config and returns the response.
+func invoke(t *testing.T, a *TeoPlanForZoneAction, zoneId, planType string) *action.InvokeResponse {
+	t.Helper()
 
-// TestTeoPlanForZoneAction_Success tests Invoke calls CreatePlanForZone and
-// returns no diagnostics on a successful response.
-func TestTeoPlanForZoneAction_Success(t *testing.T) {
-	patches := gomonkey.NewPatches()
-	defer patches.Reset()
-
-	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newSharedMeta().Client, "UseTeoV20220901Client", teoClient)
-
-	patches.ApplyMethodFunc(teoClient, "CreatePlanForZone", func(request *teov20220901.CreatePlanForZoneRequest) (*teov20220901.CreatePlanForZoneResponse, error) {
-		assert.Equal(t, "zone-27h0vbm5w1e", *request.ZoneId)
-		assert.Equal(t, "sta_global", *request.PlanType)
-
-		resp := teov20220901.NewCreatePlanForZoneResponse()
-		resp.Response = &teov20220901.CreatePlanForZoneResponseParams{
-			ResourceNames: []*string{
-				ptrStringPlanForZone("plan-res-123456"),
-			},
-			DealNames: []*string{
-				ptrStringPlanForZone("2025122000000123"),
-			},
-			RequestId: ptrStringPlanForZone("fake-request-id"),
-		}
-		return resp, nil
-	})
-
-	a := teo.NewTeoPlanForZoneAction()
-
-	// Configure the action with the shared provider meta.
-	configureReq := action.ConfigureRequest{ProviderData: newSharedMeta()}
-	configureResp := &action.ConfigureResponse{}
-	a.Configure(context.Background(), configureReq, configureResp)
-	assert.False(t, configureResp.Diagnostics.HasError())
-
-	ctx := context.Background()
-	invokeReq, err := planForZoneConfig(ctx, a, "zone-27h0vbm5w1e", "sta_global")
+	invokeReq, err := planForZoneConfig(context.Background(), a, zoneId, planType)
 	assert.NoError(t, err)
 
 	invokeResp := &action.InvokeResponse{}
-	a.Invoke(ctx, invokeReq, invokeResp)
+	a.Invoke(context.Background(), invokeReq, invokeResp)
+	return invokeResp
+}
+
+// TestTeoPlanForZoneAction_Success tests Invoke passes the config values
+// through and returns no diagnostics on a successful call.
+func TestTeoPlanForZoneAction_Success(t *testing.T) {
+	var gotZoneId, gotPlanType string
+
+	a := newConfiguredAction(fakePlanForZoneClient{
+		invoke: func(zoneId, planType string) (resourceNames, dealNames []*string, errRet error) {
+			gotZoneId, gotPlanType = zoneId, planType
+			return []*string{ptrStringPlanForZone("plan-res-123456")},
+				[]*string{ptrStringPlanForZone("2025122000000123")},
+				nil
+		},
+	})
+
+	invokeResp := invoke(t, a, "zone-27h0vbm5w1e", "sta_global")
+
 	assert.False(t, invokeResp.Diagnostics.HasError(), "expected no diagnostics, got: %v", invokeResp.Diagnostics)
+	assert.Equal(t, "zone-27h0vbm5w1e", gotZoneId)
+	assert.Equal(t, "sta_global", gotPlanType)
 }
 
 // TestTeoPlanForZoneAction_MissingZoneId tests Invoke errors when zone_id is empty.
 func TestTeoPlanForZoneAction_MissingZoneId(t *testing.T) {
-	a := teo.NewTeoPlanForZoneAction()
+	invoked := false
 
-	configureReq := action.ConfigureRequest{ProviderData: newSharedMeta()}
-	configureResp := &action.ConfigureResponse{}
-	a.Configure(context.Background(), configureReq, configureResp)
-	assert.False(t, configureResp.Diagnostics.HasError())
+	a := newConfiguredAction(fakePlanForZoneClient{
+		invoke: func(zoneId, planType string) (resourceNames, dealNames []*string, errRet error) {
+			invoked = true
+			return nil, nil, nil
+		},
+	})
 
-	ctx := context.Background()
-	invokeReq, err := planForZoneConfig(ctx, a, "", "sta_global")
-	assert.NoError(t, err)
+	invokeResp := invoke(t, a, "", "sta_global")
 
-	invokeResp := &action.InvokeResponse{}
-	a.Invoke(ctx, invokeReq, invokeResp)
 	assert.True(t, invokeResp.Diagnostics.HasError())
 	assert.Contains(t, invokeResp.Diagnostics.Errors()[0].Summary(), "zone_id")
+	assert.False(t, invoked, "client must not be invoked when zone_id is empty")
 }
 
 // TestTeoPlanForZoneAction_MissingPlanType tests Invoke errors when plan_type is empty.
 func TestTeoPlanForZoneAction_MissingPlanType(t *testing.T) {
-	a := teo.NewTeoPlanForZoneAction()
+	invoked := false
 
-	configureReq := action.ConfigureRequest{ProviderData: newSharedMeta()}
-	configureResp := &action.ConfigureResponse{}
-	a.Configure(context.Background(), configureReq, configureResp)
-	assert.False(t, configureResp.Diagnostics.HasError())
+	a := newConfiguredAction(fakePlanForZoneClient{
+		invoke: func(zoneId, planType string) (resourceNames, dealNames []*string, errRet error) {
+			invoked = true
+			return nil, nil, nil
+		},
+	})
 
-	ctx := context.Background()
-	invokeReq, err := planForZoneConfig(ctx, a, "zone-27h0vbm5w1e", "")
-	assert.NoError(t, err)
+	invokeResp := invoke(t, a, "zone-27h0vbm5w1e", "")
 
-	invokeResp := &action.InvokeResponse{}
-	a.Invoke(ctx, invokeReq, invokeResp)
 	assert.True(t, invokeResp.Diagnostics.HasError())
 	assert.Contains(t, invokeResp.Diagnostics.Errors()[0].Summary(), "plan_type")
+	assert.False(t, invoked, "client must not be invoked when plan_type is empty")
 }
 
 // TestTeoPlanForZoneAction_APIError tests Invoke surfaces API errors.
 func TestTeoPlanForZoneAction_APIError(t *testing.T) {
-	patches := gomonkey.NewPatches()
-	defer patches.Reset()
-
-	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newSharedMeta().Client, "UseTeoV20220901Client", teoClient)
-
-	patches.ApplyMethodFunc(teoClient, "CreatePlanForZone", func(request *teov20220901.CreatePlanForZoneRequest) (*teov20220901.CreatePlanForZoneResponse, error) {
-		assert.Equal(t, "zone-invalid", *request.ZoneId)
-		return nil, fmt.Errorf("[TencentCloudSDKError] Code=InvalidParameter.ZoneHasBeenBound, Message=Zone has been bound")
+	a := newConfiguredAction(fakePlanForZoneClient{
+		invoke: func(zoneId, planType string) (resourceNames, dealNames []*string, errRet error) {
+			return nil, nil, fmt.Errorf("[TencentCloudSDKError] Code=InvalidParameter.ZoneHasBeenBound, Message=Zone has been bound")
+		},
 	})
 
-	a := teo.NewTeoPlanForZoneAction()
+	invokeResp := invoke(t, a, "zone-invalid", "sta_global")
 
-	configureReq := action.ConfigureRequest{ProviderData: newSharedMeta()}
-	configureResp := &action.ConfigureResponse{}
-	a.Configure(context.Background(), configureReq, configureResp)
-	assert.False(t, configureResp.Diagnostics.HasError())
-
-	ctx := context.Background()
-	invokeReq, err := planForZoneConfig(ctx, a, "zone-invalid", "sta_global")
-	assert.NoError(t, err)
-
-	invokeResp := &action.InvokeResponse{}
-	a.Invoke(ctx, invokeReq, invokeResp)
 	assert.True(t, invokeResp.Diagnostics.HasError())
 	assert.Contains(t, invokeResp.Diagnostics.Errors()[0].Summary(), "CreatePlanForZone")
 }
 
-// TestTeoPlanForZoneAction_EmptyResponse tests Invoke errors on a nil/empty response.
+// TestTeoPlanForZoneAction_EmptyResponse tests Invoke errors when the call
+// returns neither resource names nor deal names.
 func TestTeoPlanForZoneAction_EmptyResponse(t *testing.T) {
-	patches := gomonkey.NewPatches()
-	defer patches.Reset()
-
-	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newSharedMeta().Client, "UseTeoV20220901Client", teoClient)
-
-	patches.ApplyMethodFunc(teoClient, "CreatePlanForZone", func(request *teov20220901.CreatePlanForZoneRequest) (*teov20220901.CreatePlanForZoneResponse, error) {
-		resp := teov20220901.NewCreatePlanForZoneResponse()
-		resp.Response = nil
-		return resp, nil
+	a := newConfiguredAction(fakePlanForZoneClient{
+		invoke: func(zoneId, planType string) (resourceNames, dealNames []*string, errRet error) {
+			return nil, nil, nil
+		},
 	})
 
-	a := teo.NewTeoPlanForZoneAction()
+	invokeResp := invoke(t, a, "zone-27h0vbm5w1e", "sta_global")
 
-	configureReq := action.ConfigureRequest{ProviderData: newSharedMeta()}
-	configureResp := &action.ConfigureResponse{}
-	a.Configure(context.Background(), configureReq, configureResp)
-	assert.False(t, configureResp.Diagnostics.HasError())
-
-	ctx := context.Background()
-	invokeReq, err := planForZoneConfig(ctx, a, "zone-27h0vbm5w1e", "sta_global")
-	assert.NoError(t, err)
-
-	invokeResp := &action.InvokeResponse{}
-	a.Invoke(ctx, invokeReq, invokeResp)
 	assert.True(t, invokeResp.Diagnostics.HasError())
+	assert.Contains(t, invokeResp.Diagnostics.Errors()[0].Summary(), "CreatePlanForZone")
+}
+
+// TestTeoPlanForZoneAction_NotConfigured tests Invoke reports a clear error
+// when the action was never configured with a client.
+func TestTeoPlanForZoneAction_NotConfigured(t *testing.T) {
+	a := &TeoPlanForZoneAction{}
+
+	invokeResp := invoke(t, a, "zone-27h0vbm5w1e", "sta_global")
+
+	assert.True(t, invokeResp.Diagnostics.HasError())
+	assert.Contains(t, invokeResp.Diagnostics.Errors()[0].Summary(), "not configured")
 }
 
 // TestTeoPlanForZoneAction_Metadata validates the action type name.
 func TestTeoPlanForZoneAction_Metadata(t *testing.T) {
-	a := teo.NewTeoPlanForZoneAction()
+	a := &TeoPlanForZoneAction{}
 	req := action.MetadataRequest{}
 	resp := &action.MetadataResponse{}
 
@@ -212,7 +185,7 @@ func TestTeoPlanForZoneAction_Metadata(t *testing.T) {
 
 // TestTeoPlanForZoneAction_Schema validates the schema definition.
 func TestTeoPlanForZoneAction_Schema(t *testing.T) {
-	a := teo.NewTeoPlanForZoneAction()
+	a := &TeoPlanForZoneAction{}
 	req := action.SchemaRequest{}
 	resp := &action.SchemaResponse{}
 
@@ -226,11 +199,39 @@ func TestTeoPlanForZoneAction_Schema(t *testing.T) {
 // TestTeoPlanForZoneAction_ConfigureNilProviderData ensures Configure with nil
 // ProviderData is a silent no-op.
 func TestTeoPlanForZoneAction_ConfigureNilProviderData(t *testing.T) {
-	a := &teo.TeoPlanForZoneAction{}
+	a := &TeoPlanForZoneAction{}
 	req := action.ConfigureRequest{}
 	resp := &action.ConfigureResponse{}
 
 	a.Configure(context.Background(), req, resp)
 
 	assert.False(t, resp.Diagnostics.HasError())
+	assert.Nil(t, a.client)
+}
+
+// TestTeoPlanForZoneAction_ConfigureNilClient ensures Configure keeps the
+// client unset when the shared client is nil, so Invoke fails with the
+// "not configured" diagnostic instead of panicking.
+func TestTeoPlanForZoneAction_ConfigureNilClient(t *testing.T) {
+	a := &TeoPlanForZoneAction{}
+	req := action.ConfigureRequest{ProviderData: &sharedmeta.ProviderMeta{}}
+	resp := &action.ConfigureResponse{}
+
+	a.Configure(context.Background(), req, resp)
+
+	assert.False(t, resp.Diagnostics.HasError())
+	assert.Nil(t, a.client)
+}
+
+// TestTeoPlanForZoneAction_ConfigureWithSharedMeta ensures Configure wires the
+// TeoService built from the shared client into the action.
+func TestTeoPlanForZoneAction_ConfigureWithSharedMeta(t *testing.T) {
+	a := &TeoPlanForZoneAction{}
+	req := action.ConfigureRequest{ProviderData: &sharedmeta.ProviderMeta{Client: &connectivity.TencentCloudClient{}}}
+	resp := &action.ConfigureResponse{}
+
+	a.Configure(context.Background(), req, resp)
+
+	assert.False(t, resp.Diagnostics.HasError())
+	assert.NotNil(t, a.client)
 }
