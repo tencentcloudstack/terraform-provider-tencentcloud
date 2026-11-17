@@ -460,6 +460,12 @@ tencentcloud_cos_object_restore_operation
 tencentcloud_cos_bucket_generate_inventory_immediately_operation
 tencentcloud_cos_object_download_operation
 
+COS Vectors
+Resource
+tencentcloud_cos_vector_bucket
+tencentcloud_cos_vector_index
+tencentcloud_cos_vector_bucket_policy
+
 Cloud Virtual Machine(CVM)
 Data Source
 tencentcloud_image

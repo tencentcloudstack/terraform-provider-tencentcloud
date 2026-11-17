@@ -50,7 +50,7 @@ resource "tencentcloud_cos_bucket" "mycos" {
 }
 '
 	`
-	hclExp := `Private Bucket
+	hclExp := `### Private Bucket
 
 'hcl
 resource "tencentcloud_cos_bucket" "mycos" {
@@ -59,7 +59,7 @@ resource "tencentcloud_cos_bucket" "mycos" {
 }
 '
 
-Static Website
+### Static Website
 
 'hcl
 resource "tencentcloud_cos_bucket" "mycos" {

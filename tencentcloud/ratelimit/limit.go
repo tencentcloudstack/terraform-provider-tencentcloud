@@ -1,6 +1,7 @@
 package ratelimit
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"math/rand"
@@ -20,12 +21,8 @@ var (
 	locker sync.Mutex
 )
 
-func ProCheck(namespace, action string) {
-
+func actionLimiter(namespace, action string) *simpleratelimit.RateLimiter {
 	key := fmt.Sprintf("%s.%s", namespace, action)
-
-	var limit *simpleratelimit.RateLimiter
-
 	locker.Lock()
 
 	limitNumber := limitConfig[key]
@@ -42,9 +39,14 @@ func ProCheck(namespace, action string) {
 		limitContainer[key] = simpleratelimit.New(int(limitNumber), time.Second)
 	}
 
-	limit = limitContainer[key]
+	limit := limitContainer[key]
 	locker.Unlock()
+	return limit
+}
 
+func ProCheck(namespace, action string) {
+	key := fmt.Sprintf("%s.%s", namespace, action)
+	limit := actionLimiter(namespace, action)
 	old := time.Now()
 
 	for limit.Limit() {
@@ -58,6 +60,36 @@ func ProCheck(namespace, action string) {
 		}
 	}
 
+}
+
+// ProCheckContext 保留限流键，取消或超时后不放行请求。
+func ProCheckContext(ctx context.Context, namespace, action string) error {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Minute)
+	defer cancel()
+	limit := actionLimiter(namespace, action)
+	for {
+		if err := ctx.Err(); err != nil {
+			return err
+		}
+		if !limit.Limit() {
+			return nil
+		}
+		timer := time.NewTimer(time.Duration(10+rand.Intn(30)) * time.Millisecond)
+		select {
+		case <-ctx.Done():
+			timer.Stop()
+			return ctx.Err()
+		case <-timer.C:
+		}
+	}
+}
+
+func CheckContext(ctx context.Context, action string) error {
+	_, filePath, _, _ := runtime.Caller(1)
+	items := strings.Split(filePath, `/`)
+	items = strings.Split(items[len(items)-1], `\`)
+	fileName := strings.TrimSuffix(items[len(items)-1], ".go")
+	return ProCheckContext(ctx, fileName, action)
 }
 
 func Check(action string) {

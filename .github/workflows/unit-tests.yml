@@ -7,6 +7,11 @@ on:
   pull_request:
     paths:
       - tencentcloud/**
+      - examples/tencentcloud-cos-vector-bucket/**
+      - .github/workflows/unit-tests.yml
+      - go.mod
+      - go.sum
+      - vendor/**
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -34,3 +39,25 @@ jobs:
       # no duplicate resource/data source type names across stacks).
       - name: mux compatibility
         run: make check-mux
+
+  cosvectors:
+    name: COS Vectors unit and Terraform lifecycle tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.13.5
+          terraform_wrapper: false
+      - name: Test COS Vectors without cloud credentials
+        env:
+          CHECKPOINT_DISABLE: "1"
+          TENCENTCLOUD_COS_VECTOR_LOCAL_TEST: "1"
+          GOPROXY: "off"
+          GOSUMDB: "off"
+        run: |
+          export TF_ACC_TERRAFORM_PATH="$(command -v terraform)"
+          go test -mod=vendor -p 2 ./tencentcloud/connectivity ./tencentcloud/ratelimit ./tencentcloud/services/cosvectors -run '^(TestCosVector|TestProCheckContext|TestCheckContext)' -count=1 -timeout=5m
