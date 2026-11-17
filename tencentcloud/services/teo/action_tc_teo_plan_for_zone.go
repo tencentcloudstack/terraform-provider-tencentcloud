@@ -3,41 +3,31 @@ package teo
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/hashicorp/terraform-plugin-framework/action"
-	actionschema "github.com/hashicorp/terraform-plugin-framework/action/schema"
+	"github.com/hashicorp/terraform-plugin-framework/action/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/sharedmeta"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
 )
 
-var _ action.Action = &TeoPlanForZoneAction{}
+// _ action.Action is intentionally omitted: the factory function
+// NewTeoPlanForZoneAction returns action.Action, which already
+// performs the implicit compile-time check at the return statement. Only the
+// extended-interface assertion is kept here to verify the Configure method
+// signature (promoted from fw.ActionWithConfigure) at compile time.
 var _ action.ActionWithConfigure = &TeoPlanForZoneAction{}
 
-// TeoPlanForZoneClient is the subset of TeoService used by the action. It is
-// an interface so unit tests can inject a fake implementation directly instead
-// of runtime monkey patching, which only works with compiler inlining disabled
-// (`-gcflags=all=-l`).
-type TeoPlanForZoneClient interface {
-	TeoPlanForZone(zoneId, planType string) (resourceNames, dealNames []*string, errRet error)
-}
-
-var _ TeoPlanForZoneClient = &TeoService{}
-
 // NewTeoPlanForZoneAction is the factory referenced by
-// tencentcloud/framework/registry.go to register this framework action.
+// tencentcloud/framework/registry.go to register this action.
 func NewTeoPlanForZoneAction() action.Action {
 	return &TeoPlanForZoneAction{}
 }
 
-// TeoPlanForZoneAction implements action.Action for purchasing a TEO plan for
-// a zone via the CreatePlanForZone API. It is a one-time operation: it does not
-// manage any long-lived resource state and produces side-effects only; the
-// response's ResourceNames and DealNames are logged for diagnostics but not
-// returned to the caller (framework actions cannot surface output values).
+// TeoPlanForZoneAction implements action.Action for
+// tencentcloud_teo_plan_for_zone.
 type TeoPlanForZoneAction struct {
-	client TeoPlanForZoneClient
+	fw.ActionWithConfigure
 }
 
 // TeoPlanForZoneActionModel maps the action schema attributes.
@@ -51,14 +41,15 @@ func (a *TeoPlanForZoneAction) Metadata(_ context.Context, _ action.MetadataRequ
 }
 
 func (a *TeoPlanForZoneAction) Schema(_ context.Context, _ action.SchemaRequest, resp *action.SchemaResponse) {
-	resp.Schema = actionschema.Schema{
-		Description: "Purchase an EdgeOne (TEO) plan for a zone that has not yet bound a plan via the CreatePlanForZone API. This is a one-time operation action; the plan purchase is irreversible and cannot be cancelled.",
-		Attributes: map[string]actionschema.Attribute{
-			"zone_id": actionschema.StringAttribute{
+	resp.Schema = schema.Schema{
+		Description: "Purchase an EdgeOne (TEO) plan for a zone that has not yet bound a plan via the CreatePlanForZone API. " +
+			"This is a one-time operation: the plan purchase is irreversible and cannot be cancelled.",
+		Attributes: map[string]schema.Attribute{
+			"zone_id": schema.StringAttribute{
 				Required:    true,
 				Description: "Zone ID.",
 			},
-			"plan_type": actionschema.StringAttribute{
+			"plan_type": schema.StringAttribute{
 				Required:    true,
 				Description: "Plan type to purchase. Valid values: `sta`, `sta_with_bot`, `sta_cm`, `sta_cm_with_bot`, `sta_global`, `sta_global_with_bot`, `ent`, `ent_with_bot`, `ent_cm`, `ent_cm_with_bot`, `ent_global`, `ent_global_with_bot`.",
 			},
@@ -66,84 +57,46 @@ func (a *TeoPlanForZoneAction) Schema(_ context.Context, _ action.SchemaRequest,
 	}
 }
 
-// Configure receives the *sharedmeta.ProviderMeta populated by
-// framework.Provider.Configure (which itself reuses the SDKv2-built
-// *connectivity.TencentCloudClient). We then construct the SDKv2-style
-// TeoService directly from the shared client, mirroring how SDKv2 resources
-// in this package construct it.
-func (a *TeoPlanForZoneAction) Configure(_ context.Context, req action.ConfigureRequest, resp *action.ConfigureResponse) {
-	if req.ProviderData == nil {
-		return
-	}
-
-	meta, ok := req.ProviderData.(*sharedmeta.ProviderMeta)
-	if !ok {
-		resp.Diagnostics.AddError(
-			"Unexpected ProviderData type",
-			fmt.Sprintf("Expected *sharedmeta.ProviderMeta, got: %T. "+
-				"This is a bug in the provider; please report it.", req.ProviderData),
-		)
-		return
-	}
-
-	if meta.Client == nil {
-		// Keep the client unset so Invoke reports "not configured" instead of
-		// panicking on a nil TencentCloudClient.
-		return
-	}
-
-	service := NewTeoService(meta.Client)
-	a.client = &service
-}
-
-// Invoke runs the CreatePlanForZone API call to purchase a plan for the zone.
-// The response's ResourceNames and DealNames are logged for diagnostics.
+// Invoke is called to run the logic of the action.
 func (a *TeoPlanForZoneAction) Invoke(ctx context.Context, req action.InvokeRequest, resp *action.InvokeResponse) {
 	var data TeoPlanForZoneActionModel
-
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
+	if data.ZoneId.IsNull() || data.ZoneId.IsUnknown() || data.ZoneId.ValueString() == "" {
+		resp.Diagnostics.AddError(
+			"Missing zone_id",
+			"zone_id is required and cannot be empty.",
+		)
+		return
+	}
+
+	if data.PlanType.IsNull() || data.PlanType.IsUnknown() || data.PlanType.ValueString() == "" {
+		resp.Diagnostics.AddError(
+			"Missing plan_type",
+			"plan_type is required and cannot be empty.",
+		)
+		return
+	}
+
+	if a.Client() == nil {
+		resp.Diagnostics.AddError(
+			"Provider not configured",
+			"The provider client is not available. This is unexpected; please report it.",
+		)
+		return
+	}
+
 	zoneId := data.ZoneId.ValueString()
-	if zoneId == "" {
-		resp.Diagnostics.AddError("Missing zone_id", "zone_id is required and cannot be empty.")
-		return
-	}
-
 	planType := data.PlanType.ValueString()
-	if planType == "" {
-		resp.Diagnostics.AddError("Missing plan_type", "plan_type is required and cannot be empty.")
-		return
-	}
-
-	if a.client == nil {
+	service := NewTeoService(a.Client())
+	if _, _, err := service.TeoPlanForZone(zoneId, planType); err != nil {
 		resp.Diagnostics.AddError(
-			"TEO client not configured",
-			"The TeoPlanForZone action was invoked before the provider client was configured. "+
-				"This is a bug in the provider; please report it.",
+			fmt.Sprintf("purchasing TEO plan for zone (%s)", zoneId),
+			err.Error(),
 		)
 		return
 	}
-
-	resourceNames, dealNames, err := a.client.TeoPlanForZone(zoneId, planType)
-	if err != nil {
-		resp.Diagnostics.AddError(
-			"CreatePlanForZone failed",
-			fmt.Sprintf("Failed to purchase plan for zone %q: %v", zoneId, err),
-		)
-		return
-	}
-
-	if resourceNames == nil && dealNames == nil {
-		resp.Diagnostics.AddError(
-			"CreatePlanForZone returned empty result",
-			fmt.Sprintf("CreatePlanForZone returned an empty result for zone %q.", zoneId),
-		)
-		return
-	}
-
-	log.Printf("[DEBUG] teo plan_for_zone invoke success, zone_id=%s, resource_names: %+v, deal_names: %+v",
-		zoneId, resourceNames, dealNames)
 }
