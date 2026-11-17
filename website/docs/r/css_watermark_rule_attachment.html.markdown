@@ -62,6 +62,13 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - create time.
 * `update_time` - update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLiveWatermarkRule](https://www.tencentcloud.com/document/api/267/30825)
+* Read: [DescribeLiveWatermarkRules](https://www.tencentcloud.com/document/api/267/30821)
+* Delete: [DeleteLiveWatermarkRule](https://www.tencentcloud.com/document/api/267/30823)
 
 ## Import
 

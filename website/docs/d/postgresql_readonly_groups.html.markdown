@@ -150,4 +150,9 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - virtual network id.
   * `zone` - region id.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeReadOnlyGroups](https://www.tencentcloud.com/document/api/409/39725)
 

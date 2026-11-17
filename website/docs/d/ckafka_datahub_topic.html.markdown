@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
   * `topic_id` - Topic Id.
   * `topic_name` - Topic name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDatahubTopics](https://www.tencentcloud.com/document/api/597/54003)
 

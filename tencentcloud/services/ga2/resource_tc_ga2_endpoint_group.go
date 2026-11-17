@@ -356,11 +356,19 @@ func resourceTencentCloudGa2EndpointGroupRead(d *schema.ResourceData, meta inter
 
 	respData, err := service.DescribeGa2EndpointGroupById(ctx, gaId, listenerId, endpointGroupId)
 	if err != nil {
+		if !d.IsNewResource() && IsGa2ResourceNotFoundError(err) {
+			log.Printf("[WARN]%s resource `tencentcloud_ga2_endpoint_group` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+			d.SetId("")
+			return nil
+		}
 		return err
 	}
 
 	if respData == nil {
 		log.Printf("[WARN]%s resource `tencentcloud_ga2_endpoint_group` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		if d.IsNewResource() {
+			return fmt.Errorf("resource `tencentcloud_ga2_endpoint_group` [%s] not found after creation", d.Id())
+		}
 		d.SetId("")
 		return nil
 	}
@@ -668,8 +676,11 @@ func applyConfigurationToModifyRequest(request *ga2v20250115.ModifyEndpointGroup
 	}
 
 	if v, ok := m["forward_protocol"].(string); ok && v != "" {
-		request.ForwardProtocol = helper.String(v)
+		if v == "HTTP" || v == "HTTPS" {
+			request.ForwardProtocol = helper.String(v)
+		}
 	}
+
 	if v, ok := m["port_overrides"]; ok {
 		request.PortOverrides = buildPortOverrides(v.([]interface{}))
 	}

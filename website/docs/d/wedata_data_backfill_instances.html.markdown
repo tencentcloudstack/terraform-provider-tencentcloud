@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - All backfill  instances under one backfill  plan.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListDataBackfillInstances](https://www.tencentcloud.com/document/api/1174/73824)
 

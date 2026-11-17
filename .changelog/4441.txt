@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cls_data_transform: support cross-account destination topic configuration with is_cross_account, role_arn, external_id, topic_name and logset_name fields in dst_resources block
+```

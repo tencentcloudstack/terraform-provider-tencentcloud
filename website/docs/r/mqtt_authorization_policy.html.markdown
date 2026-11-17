@@ -76,6 +76,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `policy_id` - Authorization policy rule id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAuthorizationPolicy](https://www.tencentcloud.com/document/api/1294/76536)
+* Read: [DescribeAuthorizationPolicies](https://www.tencentcloud.com/document/api/1294/76534)
+* Update: [ModifyAuthorizationPolicy](https://www.tencentcloud.com/document/api/1294/76533)
+* Delete: [DeleteAuthorizationPolicy](https://www.tencentcloud.com/document/api/1294/76535)
 
 ## Import
 

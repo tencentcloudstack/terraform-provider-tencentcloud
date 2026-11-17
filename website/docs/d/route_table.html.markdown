@@ -53,4 +53,9 @@ In addition to all arguments above, the following attributes are exported:
 * `subnet_num` - Number of associated subnets.
 * `vpc_id` - The VPC ID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRouteTables](https://www.tencentcloud.com/document/api/215/15763)
 

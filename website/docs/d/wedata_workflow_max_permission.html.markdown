@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
 * `data` - Current user's recursive maximum permission type for entity resources.
   * `permission_type` - Authorization permission type (CAN_VIEW/CAN_RUN/CAN_EDIT/CAN_MANAGE, currently only supports CAN_MANAGE).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetMyWorkflowMaxPermission](https://www.tencentcloud.com/document/api/1174/77930)
 

@@ -15,12 +15,17 @@ Provides a resource to create a ckafka route
 
 ```hcl
 resource "tencentcloud_ckafka_route" "example" {
-  instance_id    = "ckafka-8j4rodrr"
+  instance_id    = "ckafka-8j4ra928"
   vip_type       = 3
-  vpc_id         = "vpc-axrsmmrv"
-  subnet_id      = "subnet-j5vja918"
+  vpc_id         = "vpc-i5yyodl9"
+  subnet_id      = "subnet-hhi88a58"
   access_type    = 0
   public_network = 3
+  security_group_ids = [
+    "sg-8ztqghor",
+    "sg-rc9644tr",
+    "sg-n8zf5ry9"
+  ]
 }
 ```
 
@@ -39,6 +44,7 @@ The following arguments are supported:
 * `caller_appid` - (Optional, Int) Caller appid.
 * `ip` - (Optional, String) Ip.
 * `public_network` - (Optional, Int) Public network.
+* `security_group_ids` - (Optional, List: [`String`]) List of associated security group IDs in order.
 * `subnet_id` - (Optional, String) Subnet id.
 * `vpc_id` - (Optional, String) Vpc id.
 
@@ -50,16 +56,29 @@ In addition to all arguments above, the following attributes are exported:
 * `broker_vip_list` - Virtual IP list (1 to 1 broker nodes).
   * `vip` - Virtual IP.
   * `vport` - Virtual port.
+* `route_id` - Route ID.
 * `vip_list` - Virtual IP list.
   * `vip` - Virtual IP.
   * `vport` - Virtual port.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateRoute](https://www.tencentcloud.com/document/api/597/74258)
+  - [DescribeTaskStatus](https://www.tencentcloud.com/document/api/597/55881)
+* Read:
+  - [DescribeRoute](https://www.tencentcloud.com/document/api/597/37090)
+  - [DescribeSecurityGroupRoutes](https://www.tencentcloud.com/document/api/597/74257)
+* Update: [ModifyRouteSecurityGroups](https://www.tencentcloud.com/search/?wd=ModifyRouteSecurityGroups&type=document&lang=en)
+* Delete: [DeleteRoute](https://www.tencentcloud.com/document/api/597/47140)
 
 ## Import
 
-ckafka route can be imported using the id, e.g.
+ckafka route can be imported using the instanceId#routeId, e.g.
 
 ```
-terraform import tencentcloud_ckafka_route.example ckafka-8j4rodrr#135912
+terraform import tencentcloud_ckafka_route.example ckafka-8j4ra928#135912
 ```
 

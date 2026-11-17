@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `spark_sessions_list` - Spark sessions list.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeNativeSparkSessions](https://www.tencentcloud.com/search/?wd=DescribeNativeSparkSessions&type=document&lang=en)
 

@@ -49,4 +49,9 @@ In addition to all arguments above, the following attributes are exported:
   * `load_balancer_id` - CLB instance ID.
   * `load_balancer_name` - CLB instance name. Note: This field may return null, indicating that no valid values can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTargetHealth](https://www.tencentcloud.com/document/api/214/33825)
 

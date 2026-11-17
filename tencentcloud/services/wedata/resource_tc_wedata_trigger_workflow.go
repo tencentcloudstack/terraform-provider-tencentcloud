@@ -133,11 +133,13 @@ func ResourceTencentCloudWedataTriggerWorkflow() *schema.Resource {
 						"trigger_minimum_interval_second": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Deprecated:  "This parameter is deprecated and will be removed in a future version.",
 							Description: "Minimum trigger interval in file arrival mode (seconds).",
 						},
 						"trigger_wait_time_second": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Deprecated:  "This parameter is deprecated and will be removed in a future version.",
 							Description: "Trigger wait time in file arrival mode (seconds).",
 						},
 						"scheduler_status": {
@@ -271,10 +273,10 @@ func resourceTencentCloudWedataTriggerWorkflowCreate(d *schema.ResourceData, met
 				workflowTriggerConfig.FileArrivalPath = helper.String(v)
 			}
 			if v, ok := triggerWorkflowSchedulerConfigurationsMap["trigger_minimum_interval_second"].(int); ok {
-				workflowTriggerConfig.TriggerMinimumIntervalSecond = helper.IntUint64(v)
+				workflowTriggerConfig.TriggerMinimumIntervalSecond = helper.IntInt64(v)
 			}
 			if v, ok := triggerWorkflowSchedulerConfigurationsMap["trigger_wait_time_second"].(int); ok {
-				workflowTriggerConfig.TriggerWaitTimeSecond = helper.IntUint64(v)
+				workflowTriggerConfig.TriggerWaitTimeSecond = helper.IntInt64(v)
 			}
 			if v, ok := triggerWorkflowSchedulerConfigurationsMap["scheduler_status"].(string); ok && v != "" {
 				workflowTriggerConfig.SchedulerStatus = helper.String(v)
@@ -594,10 +596,10 @@ func resourceTencentCloudWedataTriggerWorkflowUpdate(d *schema.ResourceData, met
 					workflowTriggerConfig.FileArrivalPath = helper.String(v)
 				}
 				if v, ok := triggerWorkflowSchedulerConfigurationsMap["trigger_minimum_interval_second"].(int); ok {
-					workflowTriggerConfig.TriggerMinimumIntervalSecond = helper.IntUint64(v)
+					workflowTriggerConfig.TriggerMinimumIntervalSecond = helper.IntInt64(v)
 				}
 				if v, ok := triggerWorkflowSchedulerConfigurationsMap["trigger_wait_time_second"].(int); ok {
-					workflowTriggerConfig.TriggerWaitTimeSecond = helper.IntUint64(v)
+					workflowTriggerConfig.TriggerWaitTimeSecond = helper.IntInt64(v)
 				}
 				if v, ok := triggerWorkflowSchedulerConfigurationsMap["scheduler_status"].(string); ok && v != "" {
 					workflowTriggerConfig.SchedulerStatus = helper.String(v)

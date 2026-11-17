@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_teo_function: fix false plan drift caused by concatenated name returned by DescribeFunctions API - parse original name by stripping zone_id and app_id suffix
+```

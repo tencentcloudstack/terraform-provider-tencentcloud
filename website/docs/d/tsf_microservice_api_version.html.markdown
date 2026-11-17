@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
   * `application_name` - Application Name.
   * `pkg_version` - application pkg version.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeApiVersions](https://www.tencentcloud.com/search/?wd=DescribeApiVersions&type=document&lang=en)
 

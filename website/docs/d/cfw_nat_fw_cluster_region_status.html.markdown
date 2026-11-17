@@ -50,4 +50,9 @@ In addition to all arguments above, the following attributes are exported:
   * `routing_mode` - Traffic steering routing method. 0: multi-route table mode, 1: policy routing mode.
   * `status` - Region cluster status. Valid values: `NotDeployed` (cluster not deployed), `Deployed` (cluster deployed but traffic steering network not created), `DeployedCustomOnly` (cluster deployed but internal segment covered, need custom traffic steering segment), `Auto` (traffic steering network created with auto-assigned CIDR), `Custom` (traffic steering network created with custom CIDR).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeNatFwClusterRegionStatus](https://www.tencentcloud.com/search/?wd=DescribeNatFwClusterRegionStatus&type=document&lang=en)
 

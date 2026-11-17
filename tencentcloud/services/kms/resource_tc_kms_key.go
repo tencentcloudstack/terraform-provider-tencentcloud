@@ -76,6 +76,12 @@ func ResourceTencentCloudKmsKey() *schema.Resource {
 			Default:     false,
 			Description: "Specify whether to enable key rotation, valid when key_usage is `ENCRYPT_DECRYPT`. Default value is `false`.",
 		},
+		"rotate_days": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "Key rotation period in days, range 7~365, default 365. Only effective when `key_usage` is `ENCRYPT_DECRYPT` and `key_rotation_enabled` is `true`.",
+		},
 		"hsm_cluster_id": {
 			Type:        schema.TypeString,
 			Optional:    true,
@@ -164,8 +170,12 @@ func resourceTencentCloudKmsKeyCreate(d *schema.ResourceData, meta interface{}) 
 
 	if keyUsage == KMS_KEY_USAGE_ENCRYPT_DECRYPT {
 		if keyRotationEnabled := d.Get("key_rotation_enabled").(bool); keyRotationEnabled {
+			var rotateDays uint64
+			if v, ok := d.GetOk("rotate_days"); ok {
+				rotateDays = uint64(v.(int))
+			}
 			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-				e := kmsService.EnableKeyRotation(ctx, d.Id())
+				e := kmsService.EnableKeyRotation(ctx, d.Id(), rotateDays)
 				if e != nil {
 					return tccommon.RetryError(e)
 				}
@@ -252,6 +262,9 @@ func resourceTencentCloudKmsKeyRead(d *schema.ResourceData, meta interface{}) er
 	_ = d.Set("key_rotation_enabled", key.KeyRotationEnabled)
 	if key.HsmClusterId != nil {
 		_ = d.Set("hsm_cluster_id", key.HsmClusterId)
+	}
+	if key.RotateDays != nil {
+		_ = d.Set("rotate_days", key.RotateDays)
 	}
 	transformKeyState(d)
 
@@ -340,14 +353,17 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 	}
 
 	if v := d.Get("key_usage").(string); v == KMS_KEY_USAGE_ENCRYPT_DECRYPT {
-		if d.HasChange("key_rotation_enabled") {
+		if d.HasChange("key_rotation_enabled") || d.HasChange("rotate_days") {
 			keyRotationEnabled := d.Get("key_rotation_enabled").(bool)
-			err := updateKeyRotationStatus(ctx, kmsService, keyId, keyRotationEnabled)
+			var rotateDays uint64
+			if v, ok := d.GetOk("rotate_days"); ok {
+				rotateDays = uint64(v.(int))
+			}
+			err := updateKeyRotationStatus(ctx, kmsService, keyId, keyRotationEnabled, rotateDays)
 			if err != nil {
 				log.Printf("[CRITAL]%s modify KMS key rotation status failed, reason:%+v", logId, err)
 				return err
 			}
-
 		}
 	}
 
@@ -438,11 +454,11 @@ func resourceTencentCloudKmsKeyDelete(d *schema.ResourceData, meta interface{}) 
 	})
 }
 
-func updateKeyRotationStatus(ctx context.Context, kmsService KmsService, keyId string, keyRotationEnabled bool) error {
+func updateKeyRotationStatus(ctx context.Context, kmsService KmsService, keyId string, keyRotationEnabled bool, rotateDays uint64) error {
 	var err error
 	if keyRotationEnabled {
 		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			e := kmsService.EnableKeyRotation(ctx, keyId)
+			e := kmsService.EnableKeyRotation(ctx, keyId, rotateDays)
 			if e != nil {
 				return tccommon.RetryError(e)
 			}

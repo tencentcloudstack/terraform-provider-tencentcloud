@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
   * `instance_count` - Total number of instances.Note: This field may return null, indicating that no valid values can be obtained.
   * `run_instance_count` - Number of running instances.Note: This field may return null, indicating that no valid values can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeApplicationAttribute](https://www.tencentcloud.com/search/?wd=DescribeApplicationAttribute&type=document&lang=en)
 

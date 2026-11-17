@@ -51,4 +51,9 @@ In addition to all arguments above, the following attributes are exported:
   * `unit_cname` - Units used for indicators.
   * `unit` - Units used for indicators.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBaseMetrics](https://www.tencentcloud.com/document/api/248/33882)
 

@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
   * `length` - Total occupied memory (Byte).
   * `max_element_size` - Maximum element length.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRedisTopKeyPrefixList](https://www.tencentcloud.com/document/api/1035/50450)
 

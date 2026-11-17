@@ -66,6 +66,20 @@ In addition to all arguments above, the following attributes are exported:
 * `policy_name` - Name of the policy.
 * `policy_type` - Type of the policy strategy. `User` means customer strategy and `QCS` means preset strategy.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [AttachUserPolicy](https://www.tencentcloud.com/document/api/598/32249)
+  - [GetUser](https://www.tencentcloud.com/document/api/598/32259)
+  - [ListAttachedUserPolicies](https://www.tencentcloud.com/document/api/598/32242)
+* Read:
+  - [GetUser](https://www.tencentcloud.com/document/api/598/32259)
+  - [ListAttachedUserPolicies](https://www.tencentcloud.com/document/api/598/32242)
+* Delete:
+  - [DetachUserPolicy](https://www.tencentcloud.com/document/api/598/32245)
+  - [GetUser](https://www.tencentcloud.com/document/api/598/32259)
 
 ## Import
 

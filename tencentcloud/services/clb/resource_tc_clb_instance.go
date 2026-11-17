@@ -176,6 +176,13 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 					"`clb.c4.xlarge`: Super Large 4. " +
 					"For more details, see [Instance Specifications](https://intl.cloud.tencent.com/document/product/214/84689?from_cn_redirect=1).",
 			},
+			"force": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+				Description: "Whether to forcibly upgrade the CLB instance, default is `false`. " +
+					"This parameter only takes effect when `sla_type` changes.",
+			},
 			"vip_isp": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -1089,6 +1096,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		param.LoadBalancerId = &clbId
 		param.SlaType = helper.String(d.Get("sla_type").(string))
 		slaRequest.LoadBalancerSla = []*clb.SlaUpdateParam{&param}
+		slaRequest.Force = helper.Bool(d.Get("force").(bool))
 		var taskId string
 		err := resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyLoadBalancerSla(slaRequest)

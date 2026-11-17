@@ -15,12 +15,24 @@ const (
 	ES_LICENSE_TYPE_BASIC    = "basic"
 	ES_LICENSE_TYPE_PLATINUM = "platinum"
 
+	ES_SUB_PRODUCT_CODE_OPEN_SOURCE     = "sp_es_io2"
+	ES_SUB_PRODUCT_CODE_BASIC           = "sp_es_basic"
+	ES_SUB_PRODUCT_CODE_PLATINUM        = "sp_es_platinum"
+	ES_SUB_PRODUCT_CODE_ENTERPRISE      = "sp_es_enterprise"
+	ES_SUB_PRODUCT_CODE_CDC_PLATINUM    = "sp_es_cdc_platinum"
+	ES_SUB_PRODUCT_CODE_LOGGING_ENHANCE = "sp_es_enlogging"
+	ES_SUB_PRODUCT_CODE_AI_SEARCH       = "sp_es_aisearch"
+	ES_SUB_PRODUCT_CODE_TSEARCH         = "sp_tsearch_io2"
+	ES_SUB_PRODUCT_CODE_LOGSTASH        = "sp_es_logstash"
+
 	ES_BASIC_SECURITY_TYPE_ON  = 2
 	ES_BASIC_SECURITY_TYPE_OFF = 1
 
-	ES_NODE_TYPE_HOT_DATA        = "hotData"
-	ES_NODE_TYPE_WARM_DATA       = "warmData"
-	ES_NODE_TYPE_DEDICATED_MATER = "dedicatedMaster"
+	ES_NODE_TYPE_HOT_DATA               = "hotData"
+	ES_NODE_TYPE_WARM_DATA              = "warmData"
+	ES_NODE_TYPE_DEDICATED_MATER        = "dedicatedMaster"
+	ES_NODE_TYPE_DEDICATED_COORDINATING = "dedicatedCoordinating"
+	ES_NODE_TYPE_DEDICATED_ML           = "dedicatedMl"
 
 	ES_RENEW_FLAG_AUTO   = "RENEW_FLAG_AUTO"
 	ES_RENEW_FLAG_MANUAL = "RENEW_FLAG_MANUAL"
@@ -68,6 +80,8 @@ var ES_NODE_TYPE = []string{
 	ES_NODE_TYPE_HOT_DATA,
 	ES_NODE_TYPE_WARM_DATA,
 	ES_NODE_TYPE_DEDICATED_MATER,
+	ES_NODE_TYPE_DEDICATED_COORDINATING,
+	ES_NODE_TYPE_DEDICATED_ML,
 }
 
 var ES_NODE_DISK_TYPE = []string{

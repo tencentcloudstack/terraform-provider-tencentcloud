@@ -50,4 +50,9 @@ In addition to all arguments above, the following attributes are exported:
   * `submit_audit_time` - The last time the review timeNote: This field may return NULL, indicating that the valid value cannot be obtained.
   * `verify_time` - Examination timeNote: This field may return NULL, indicating that the valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeManagers](https://www.tencentcloud.com/document/api/1007/79832)
 

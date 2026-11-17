@@ -76,6 +76,10 @@ func TestAccTencentCloudDtsSyncJobResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_dts_sync_job.sync_job", "dst_database_type", "cynosdbmysql"),
 					resource.TestCheckResourceAttr("tencentcloud_dts_sync_job.sync_job", "dst_region", "ap-guangzhou"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job.sync_job", "tags.#"),
+					resource.TestCheckTypeSetElemNestedAttrs("tencentcloud_dts_sync_job.sync_job", "tags.*", map[string]string{
+						"tag_key":   "aaa",
+						"tag_value": "bbb",
+					}),
 					resource.TestCheckResourceAttr("tencentcloud_dts_sync_job.sync_job", "auto_renew", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_dts_sync_job.sync_job", "instance_class", "micro"),
 				),

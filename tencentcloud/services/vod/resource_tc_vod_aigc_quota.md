@@ -13,9 +13,29 @@ resource "tencentcloud_vod_sub_application" "example" {
 }
 
 resource "tencentcloud_vod_aigc_quota" "example" {
-  sub_app_id  = tencentcloud_vod_sub_application.example.sub_app_id
-  quota_type  = "Image"
-  quota_limit = 100
+  sub_app_id         = tencentcloud_vod_sub_application.example.sub_app_id
+  quota_type         = "Image"
+  quota_limit        = 100
+  quota_period       = "Month"
+  reset_day          = 1
+  model_quota_switch = "ON"
+  model_quotas {
+    model_name    = "model1"
+    model_version = "v1"
+    quota_limit   = 100
+  }
+
+  model_quotas {
+    model_name    = "model2"
+    model_version = "v2"
+    quota_limit   = 50
+  }
+
+  model_quotas {
+    model_name    = "model3"
+    model_version = "v3"
+    quota_limit   = 80
+  }
 }
 ```
 

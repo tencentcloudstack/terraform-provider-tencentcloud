@@ -72,6 +72,12 @@ func ResourceTencentCloudWafCcSession() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Session Name.",
 			},
+			"key": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Precise-match session key, configured when Category is precise matching.",
+			},
 			"session_id": {
 				Computed:    true,
 				Type:        schema.TypeInt,
@@ -130,6 +136,10 @@ func resourceTencentCloudWafCcSessionCreate(d *schema.ResourceData, meta interfa
 
 	if v, ok := d.GetOk("session_name"); ok {
 		request.SessionName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("key"); ok {
+		request.Key = helper.String(v.(string))
 	}
 
 	request.SessionID = helper.IntInt64(-1)
@@ -222,6 +232,10 @@ func resourceTencentCloudWafCcSessionRead(d *schema.ResourceData, meta interface
 		_ = d.Set("session_name", ccSession.SessionName)
 	}
 
+	if ccSession.Key != nil {
+		_ = d.Set("key", ccSession.Key)
+	}
+
 	if ccSession.SessionId != nil {
 		_ = d.Set("session_id", ccSession.SessionId)
 	}
@@ -285,6 +299,10 @@ func resourceTencentCloudWafCcSessionUpdate(d *schema.ResourceData, meta interfa
 
 	if v, ok := d.GetOk("session_name"); ok {
 		request.SessionName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("key"); ok {
+		request.Key = helper.String(v.(string))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {

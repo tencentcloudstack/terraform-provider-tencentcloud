@@ -63,37 +63,42 @@ func DataSourceTencentCloudTeoConfigGroupVersions() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"version_id": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Computed:    true,
 							Description: "Version ID.",
 						},
 						"version_number": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "Version No.",
+						},
+						"source_version": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Source version ID that the configuration group version was derived from. Format: ver-xxxxxxxx.",
 						},
 						"group_id": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "Configuraration group ID.",
 						},
 						"group_type": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "Configuration group type. Valid values: l7_acceleration (L7 acceleration configuration group), edge_functions (Edge function configuration group).",
 						},
 						"description": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "Version description.",
 						},
 						"status": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "Version status. Valid values: creating (Being created), inactive (Not effective), active (Effective).",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "Version creation time. The time format follows the ISO 8601 standard and is represented in Coordinated Universal Time (UTC).",
 						},
 					},
@@ -177,6 +182,10 @@ func dataSourceTencentCloudTeoConfigGroupVersionsRead(d *schema.ResourceData, me
 
 			if configGroupVersionInfos.VersionNumber != nil {
 				configGroupVersionInfosMap["version_number"] = configGroupVersionInfos.VersionNumber
+			}
+
+			if configGroupVersionInfos.SourceVersion != nil {
+				configGroupVersionInfosMap["source_version"] = configGroupVersionInfos.SourceVersion
 			}
 
 			if configGroupVersionInfos.GroupId != nil {

@@ -75,4 +75,21 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `10m`) Used when creating the resource.
 * `update` - (Defaults to `10m`) Used when updating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateAliasDomain](https://www.tencentcloud.com/document/api/1145/51740)
+  - [DescribeAliasDomains](https://www.tencentcloud.com/document/api/1145/51738)
+  - [ModifyAliasDomainStatus](https://www.tencentcloud.com/document/api/1145/51736)
+* Read: [DescribeAliasDomains](https://www.tencentcloud.com/document/api/1145/51738)
+* Update:
+  - [DescribeAliasDomains](https://www.tencentcloud.com/document/api/1145/51738)
+  - [ModifyAliasDomain](https://www.tencentcloud.com/document/api/1145/51737)
+  - [ModifyAliasDomainStatus](https://www.tencentcloud.com/document/api/1145/51736)
+* Delete:
+  - [DeleteAliasDomain](https://www.tencentcloud.com/document/api/1145/51739)
+  - [DescribeAliasDomains](https://www.tencentcloud.com/document/api/1145/51738)
+  - [ModifyAliasDomainStatus](https://www.tencentcloud.com/document/api/1145/51736)
 

@@ -189,6 +189,7 @@ func NewAddCdnDomainResponse() (response *AddCdnDomainResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
+//  FAILEDOPERATION_EDGEONESERVICEERROR = "FailedOperation.EdgeoneServiceError"
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
@@ -220,6 +221,7 @@ func NewAddCdnDomainResponse() (response *AddCdnDomainResponse) {
 //  LIMITEXCEEDED_CDNCONFIGTOOMANYCACHERULES = "LimitExceeded.CdnConfigTooManyCacheRules"
 //  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
 //  LIMITEXCEEDED_CDNUSERTOOMANYHOSTS = "LimitExceeded.CdnUserTooManyHosts"
+//  OPERATIONDENIED_CDNDOMAINNOTAPPROVED = "OperationDenied.CdnDomainNotApproved"
 //  OPERATIONDENIED_CDNHOSTHASDDOSRISK = "OperationDenied.CdnHostHasDDosRisk"
 //  OPERATIONDENIED_PRODUCTUPGRADED = "OperationDenied.ProductUpgraded"
 //  OPERATIONDENIED_USERMIGRATING = "OperationDenied.UserMigrating"
@@ -260,6 +262,7 @@ func (c *Client) AddCdnDomain(request *AddCdnDomainRequest) (response *AddCdnDom
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
+//  FAILEDOPERATION_EDGEONESERVICEERROR = "FailedOperation.EdgeoneServiceError"
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
@@ -291,6 +294,7 @@ func (c *Client) AddCdnDomain(request *AddCdnDomainRequest) (response *AddCdnDom
 //  LIMITEXCEEDED_CDNCONFIGTOOMANYCACHERULES = "LimitExceeded.CdnConfigTooManyCacheRules"
 //  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
 //  LIMITEXCEEDED_CDNUSERTOOMANYHOSTS = "LimitExceeded.CdnUserTooManyHosts"
+//  OPERATIONDENIED_CDNDOMAINNOTAPPROVED = "OperationDenied.CdnDomainNotApproved"
 //  OPERATIONDENIED_CDNHOSTHASDDOSRISK = "OperationDenied.CdnHostHasDDosRisk"
 //  OPERATIONDENIED_PRODUCTUPGRADED = "OperationDenied.ProductUpgraded"
 //  OPERATIONDENIED_USERMIGRATING = "OperationDenied.UserMigrating"
@@ -4575,6 +4579,7 @@ func NewSearchClsLogResponse() (response *SearchClsLogResponse) {
 //  INVALIDPARAMETER_CLSINDEXRULEEMPTY = "InvalidParameter.ClsIndexRuleEmpty"
 //  INVALIDPARAMETER_CLSINVALIDCONTENT = "InvalidParameter.ClsInvalidContent"
 //  INVALIDPARAMETER_CLSINVALIDCONTENTTYPE = "InvalidParameter.ClsInvalidContentType"
+//  INVALIDPARAMETER_CLSINVALIDLOGSETID = "InvalidParameter.ClsInvalidLogsetId"
 //  INVALIDPARAMETER_CLSINVALIDPARAM = "InvalidParameter.ClsInvalidParam"
 //  INVALIDPARAMETER_CLSLOGSETCONFLICT = "InvalidParameter.ClsLogsetConflict"
 //  INVALIDPARAMETER_CLSLOGSETEMPTY = "InvalidParameter.ClsLogsetEmpty"
@@ -4616,6 +4621,7 @@ func (c *Client) SearchClsLog(request *SearchClsLogRequest) (response *SearchCls
 //  INVALIDPARAMETER_CLSINDEXRULEEMPTY = "InvalidParameter.ClsIndexRuleEmpty"
 //  INVALIDPARAMETER_CLSINVALIDCONTENT = "InvalidParameter.ClsInvalidContent"
 //  INVALIDPARAMETER_CLSINVALIDCONTENTTYPE = "InvalidParameter.ClsInvalidContentType"
+//  INVALIDPARAMETER_CLSINVALIDLOGSETID = "InvalidParameter.ClsInvalidLogsetId"
 //  INVALIDPARAMETER_CLSINVALIDPARAM = "InvalidParameter.ClsInvalidParam"
 //  INVALIDPARAMETER_CLSLOGSETCONFLICT = "InvalidParameter.ClsLogsetConflict"
 //  INVALIDPARAMETER_CLSLOGSETEMPTY = "InvalidParameter.ClsLogsetEmpty"

@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
   * `old_value` - The value of the parameter before modification.
   * `param_name` - parameter name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstanceParamRecords](https://www.tencentcloud.com/document/api/236/34468)
 

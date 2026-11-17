@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
   * `name` - Name of protocol template.
   * `protocols` - Set of the protocols.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeServiceTemplates](https://www.tencentcloud.com/document/api/215/16719)
 

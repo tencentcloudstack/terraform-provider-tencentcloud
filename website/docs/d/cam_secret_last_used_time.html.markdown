@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
   * `last_used_date` - Last used date (with 1 day delay).
   * `secret_id` - Secret Id.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetSecurityLastUsed](https://www.tencentcloud.com/document/api/598/41082)
 

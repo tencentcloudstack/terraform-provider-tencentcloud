@@ -60,4 +60,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `protocol_type` - The protocol type, http or tcp.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [RegisterTargets](https://www.tencentcloud.com/document/api/214/33809)
+* Read:
+  - [DescribeListeners](https://www.tencentcloud.com/document/api/214/33831)
+  - [DescribeTargets](https://www.tencentcloud.com/document/api/214/33824)
+* Update:
+  - [DeregisterTargets](https://www.tencentcloud.com/document/api/214/33832)
+  - [RegisterTargets](https://www.tencentcloud.com/document/api/214/33809)
+* Delete: [DeregisterTargets](https://www.tencentcloud.com/document/api/214/33832)
 

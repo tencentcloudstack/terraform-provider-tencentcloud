@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
   * `internet_family` - ipv4, ipv6.
   * `package_set` - Supported package types.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDetectors](https://www.tencentcloud.com/search/?wd=DescribeDetectors&type=document&lang=en)
 

@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
   * `role_name` - The role name.
   * `uin` - The user ID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeUserRoles](https://www.tencentcloud.com/document/api/1155/56962)
 

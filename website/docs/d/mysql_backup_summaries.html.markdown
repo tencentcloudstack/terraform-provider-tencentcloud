@@ -46,4 +46,9 @@ In addition to all arguments above, the following attributes are exported:
   * `manual_backup_count` - The number of manual data backups for this instance.
   * `manual_backup_volume` - The capacity of manual data backup for this instance.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBackupSummaries](https://www.tencentcloud.com/document/api/236/35195)
 

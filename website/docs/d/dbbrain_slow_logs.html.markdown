@@ -54,4 +54,9 @@ In addition to all arguments above, the following attributes are exported:
   * `user_host` - Ip sourceNote: This field may return null, indicating that no valid value can be obtained.
   * `user_name` - User sourceNote: This field may return null, indicating that no valid value can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSlowLogs](https://www.tencentcloud.com/document/api/1035/54781)
 

@@ -50,6 +50,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateForwardRule](https://www.tencentcloud.com/document/api/1097/65937)
+* Read: [DescribeForwardRule](https://www.tencentcloud.com/document/api/1097/67594)
+* Update: [ModifyForwardRule](https://www.tencentcloud.com/document/api/1097/67593)
+* Delete: [DeleteForwardRule](https://www.tencentcloud.com/document/api/1097/67597)
 
 ## Import
 

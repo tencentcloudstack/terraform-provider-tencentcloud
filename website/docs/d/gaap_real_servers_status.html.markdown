@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
   * `proxy_id` - Bind the proxy ID of this real server, which is an empty string when not bound.
   * `real_server_id` - Real Server Id.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRealServersStatus](https://www.tencentcloud.com/document/api/608/33059)
 

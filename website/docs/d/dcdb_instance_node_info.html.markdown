@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
   * `role` - Node role. Valid values: `master`, `slave`.
   * `shard_id` - Instance shard ID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDCDBInstanceNodeInfo](https://www.tencentcloud.com/document/api/1042/40254)
 

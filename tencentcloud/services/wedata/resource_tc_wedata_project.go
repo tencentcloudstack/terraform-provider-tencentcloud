@@ -44,6 +44,13 @@ func ResourceTencentCloudWedataProject() *schema.Resource {
 							ForceNew:    true,
 							Description: "Project mode, SIMPLE (default): Simple mode STANDARD: Standard mode.",
 						},
+						"schedule_mode": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							ForceNew:    true,
+							Description: "Project schedule mode. task: Task mode; workflow: Workflow mode.",
+						},
 					},
 				},
 			},
@@ -143,6 +150,10 @@ func resourceTencentCloudWedataProjectCreate(d *schema.ResourceData, meta interf
 
 		if v, ok := projectMap["project_model"].(string); ok && v != "" {
 			projectRequest.ProjectModel = helper.String(v)
+		}
+
+		if v, ok := projectMap["schedule_mode"].(string); ok && v != "" {
+			projectRequest.ScheduleMode = helper.String(v)
 		}
 
 		request.Project = &projectRequest
@@ -283,6 +294,17 @@ func resourceTencentCloudWedataProjectRead(d *schema.ResourceData, meta interfac
 
 	if respData.ProjectModel != nil {
 		dMapProject["project_model"] = *respData.ProjectModel
+	}
+
+	for _, ext := range respData.WorkspaceExt {
+		if ext == nil || ext.Key == nil || ext.Value == nil {
+			continue
+		}
+
+		if *ext.Key == "scheduleMode" {
+			dMapProject["schedule_mode"] = *ext.Value
+			break
+		}
 	}
 
 	_ = d.Set("project", []interface{}{dMapProject})

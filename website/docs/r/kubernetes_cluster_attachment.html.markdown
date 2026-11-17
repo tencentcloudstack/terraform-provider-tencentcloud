@@ -120,6 +120,8 @@ The following arguments are supported:
 * `labels` - (Optional, Map, ForceNew) Labels of tke attachment exits CVM.
 * `password` - (Optional, String, ForceNew) Password to access, should be set if `key_ids` not set.
 * `security_groups` - (Optional, List: [`String`], ForceNew) A list of security group IDs after attach to cluster.
+* `skip_options` - (Optional, List: [`String`], ForceNew) Steps to skip when adding existing instances into the cluster. Default is empty. Valid values: `ResetCVM` (skip CVM reinstallation, make sure the TKE UserData has been written into the CVM), `InstallRuntime` (skip container runtime installation), `ConfigRuntime` (skip container runtime configuration file distribution), `InstallKubelet` (skip kubelet installation), `ConfigKubelet` (skip kubelet configuration file distribution).
+* `skip_validate_options` - (Optional, List: [`String`], ForceNew) Validation rule related options, which can be configured to skip certain validation rules. Currently supported values: `GlobalRouteCIDRCheck` (skip GlobalRouter related validations), `VpcCniCIDRCheck` (skip VpcCni related validations).
 * `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is `0`, which means it participates in scheduling. Non-zero(eg: `1`) number means it does not participate in scheduling.
 * `worker_config_overrides` - (Optional, List, ForceNew) Override variable worker_config, commonly used to attach existing instances.
 * `worker_config` - (Optional, List, ForceNew) Deploy the machine configuration information of the 'WORKER', commonly used to attach existing instances.
@@ -187,7 +189,8 @@ The `worker_config` object supports the following:
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
 * `pre_start_user_script` - (Optional, String, ForceNew) Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.
 * `taints` - (Optional, List, ForceNew) Node taint.
-* `user_data` - (Optional, String, ForceNew) Base64-encoded User Data text, the length limit is 16KB.
+* `user_data` - (Optional, String, ForceNew, **Deprecated**) It has been deprecated from version 1.83.16. Use `user_script` instead. Base64-encoded User Data text, the length limit is 16KB.
+* `user_script` - (Optional, String, ForceNew) A Base64-encoded user script that executes after Kubernetes components start. Users must ensure the script supports re-entrancy and retry logic. The script and its generated log files can be found in the `/data/ccs_userscript/` directory on the node. If the node should only join the scheduling pool after initialization is complete, the `unschedulable` parameter can be used; in this case, add the command `kubectl uncordon nodename --kubeconfig=/root/.kube/config` at the end of the user script to enable scheduling on the node. Note: This field may return null, indicating that no valid value is available. Example value: `#!/bin/sh echo "hello world"`.
 
 ## Attributes Reference
 
@@ -201,4 +204,14 @@ In addition to all arguments above, the following attributes are exported:
 The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
 
 * `create` - (Defaults to `30m`) Used when creating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddExistedInstances](https://www.tencentcloud.com/document/api/457/32039)
+* Read:
+  - [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+* Delete: [DeleteClusterInstances](https://www.tencentcloud.com/document/api/457/32038)
 

@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a Ckafka Acl.
 
+-> **Note:** When creating the ACL, if the cloud API `CreateAcl` returns a `FailedOperation` error (e.g. the instance is being modified or the cluster is busy), the provider will automatically retry the request using `resource.Retry` with `WriteRetryTimeout` as the timeout. A maximum of 5 `FailedOperation` errors are tolerated before giving up to avoid indefinite retries.
+
 ## Example Usage
 
 ### Ckafka Acl
@@ -52,6 +54,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAcl](https://www.tencentcloud.com/document/api/597/35368)
+* Read:
+  - [DescribeACL](https://www.tencentcloud.com/document/api/597/35364)
+  - [DescribeInstanceAttributes](https://www.tencentcloud.com/document/api/597/35358)
+  - [DescribeTopicAttributes](https://www.tencentcloud.com/document/api/597/35342)
+* Delete: [DeleteAcl](https://www.tencentcloud.com/document/api/597/35366)
 
 ## Import
 

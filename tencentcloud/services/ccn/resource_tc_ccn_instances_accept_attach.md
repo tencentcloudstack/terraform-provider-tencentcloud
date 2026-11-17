@@ -9,6 +9,7 @@ resource "tencentcloud_ccn_instances_accept_attach" "ccn_instances_accept_attach
     instance_id = "vpc-j9yhbzpn"
     instance_region = "ap-guangzhou"
     instance_type = "VPC"
+    order_type = "PayByCcnOwner"
   }
 }
 ```

@@ -44,4 +44,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `job_id` - Copy Job ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CopyJobs](https://www.tencentcloud.com/search/?wd=CopyJobs&type=document&lang=en)
+* Read: [DescribeJobs](https://www.tencentcloud.com/search/?wd=DescribeJobs&type=document&lang=en)
+* Delete: [DeleteJobs](https://www.tencentcloud.com/search/?wd=DeleteJobs&type=document&lang=en)
 

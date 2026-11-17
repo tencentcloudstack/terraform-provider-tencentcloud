@@ -32,4 +32,11 @@ In addition to all arguments above, the following attributes are exported:
 * `owner_uin` - Current account OwnerUIN.
 * `uin` - Current account UIN.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read:
+  - [DescribeSubAccounts](https://www.tencentcloud.com/document/api/598/39986)
+  - [GetUserAppId](https://www.tencentcloud.com/document/api/598/45982)
 

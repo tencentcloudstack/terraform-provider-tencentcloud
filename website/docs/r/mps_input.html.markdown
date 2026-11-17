@@ -115,6 +115,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateStreamLinkInput](https://www.tencentcloud.com/search/?wd=CreateStreamLinkInput&type=document&lang=en)
+* Read: [DescribeStreamLinkFlow](https://www.tencentcloud.com/search/?wd=DescribeStreamLinkFlow&type=document&lang=en)
+* Update: [ModifyStreamLinkInput](https://www.tencentcloud.com/search/?wd=ModifyStreamLinkInput&type=document&lang=en)
 
 ## Import
 

@@ -197,4 +197,33 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `1h0m`) Used when creating the resource.
 * `update` - (Defaults to `1h0m`) Used when updating the resource.
 * `delete` - (Defaults to `1h0m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CloneDBInstance](https://www.tencentcloud.com/document/api/409/45153)
+  - [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
+  - [DescribeDBInstanceSecurityGroups](https://www.tencentcloud.com/document/api/409/52648)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [CreateDBInstanceNetworkAccess](https://www.tencentcloud.com/document/api/409/45951)
+  - [DeleteDBInstanceNetworkAccess](https://www.tencentcloud.com/document/api/409/45949)
+  - [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
+  - [ModifyDBInstanceChargeType](https://www.tencentcloud.com/document/api/409/55665)
+  - [ModifyDBInstanceDeletionProtection](https://www.tencentcloud.com/document/api/409/79011)
+  - [ModifyDBInstanceDeployment](https://www.tencentcloud.com/document/api/409/45148)
+  - [ModifyDBInstanceName](https://www.tencentcloud.com/document/api/409/18101)
+  - [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/document/api/409/52647)
+  - [ModifyDBInstancesProject](https://www.tencentcloud.com/document/api/409/18100)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [RenewInstance](https://www.tencentcloud.com/document/api/409/18098)
+  - [SetAutoRenewFlag](https://www.tencentcloud.com/document/api/409/18096)
+* Delete:
+  - [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
+  - [DestroyDBInstance](https://www.tencentcloud.com/document/api/409/37117)
+  - [IsolateDBInstances](https://www.tencentcloud.com/document/api/409/40109)
 

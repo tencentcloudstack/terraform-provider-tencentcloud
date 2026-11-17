@@ -70,4 +70,9 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Cluster status: 1- In process, 2- Running, 3- Isolated.
   * `zone_id` - zone Id.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRedisClusters](https://www.tencentcloud.com/document/api/239/66798)
 

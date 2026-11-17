@@ -57,4 +57,9 @@ In addition to all arguments above, the following attributes are exported:
   * `state` - State of the DC, and available values include `REJECTED`, `TOPAY`, `PAID`, `ALLOCATED`, `AVAILABLE`, `DELETING` and `DELETED`.
   * `tencent_address` - Interconnect IP of the DC within Tencent. Note: This field may return null, indicating that no valid values are taken.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDirectConnects](https://www.tencentcloud.com/document/api/216/35330)
 

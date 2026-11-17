@@ -33,4 +33,9 @@ In addition to all arguments above, the following attributes are exported:
 * `result` - When the verification result is failed, this field will return the reason.
 * `status` - Ownership verification results. `success`: verification successful; `fail`: verification failed.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [VerifyOwnership](https://www.tencentcloud.com/document/api/1145/57426)
 

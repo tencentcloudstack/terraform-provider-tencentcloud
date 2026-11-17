@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,93 +20,544 @@ import (
     "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
 )
 
+type AIGWCacheAwareRouteCandidate struct {
+	// <p>模型服务ID</p>
+	ModelServiceId *string `json:"ModelServiceId,omitnil,omitempty" name:"ModelServiceId"`
+
+	// <p>模型服务名称</p>
+	ModelServiceName *string `json:"ModelServiceName,omitnil,omitempty" name:"ModelServiceName"`
+}
+
+type AIGWCacheAwareRouteConfig struct {
+	// <p>前缀缓存感知路由模型服务候选列表</p>
+	Candidates []*AIGWCacheAwareRouteCandidate `json:"Candidates,omitnil,omitempty" name:"Candidates"`
+}
+
+type AIGWCrossServiceFallbackConfig struct {
+	// <p>触发条件</p><p>枚举值：</p><ul><li>ServiceUnavailable： 服务不可用</li><li>ConnectionTimeout： 连接超时</li><li>RateLimited： 限流</li></ul>
+	TriggerConditions []*string `json:"TriggerConditions,omitnil,omitempty" name:"TriggerConditions"`
+
+	// <p>fallback 服务链</p>
+	FallbackServiceChain []*AIGWFallbackServiceItem `json:"FallbackServiceChain,omitnil,omitempty" name:"FallbackServiceChain"`
+
+	// <p>额度降级触发配置</p>
+	QuotaFallbackTrigger *AIGWLLMQuotaFallbackTrigger `json:"QuotaFallbackTrigger,omitnil,omitempty" name:"QuotaFallbackTrigger"`
+}
+
+type AIGWCustomDesensitizeRule struct {
+	// <p>自定义脱敏规则名称</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>自定义脱敏规则匹配正则</p>
+	Pattern *string `json:"Pattern,omitnil,omitempty" name:"Pattern"`
+
+	// <p>自定义脱敏规则掩码</p>
+	MaskFormat *string `json:"MaskFormat,omitnil,omitempty" name:"MaskFormat"`
+
+	// <p>自定义脱敏规则开关</p>
+	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+}
+
+type AIGWFallbackServiceItem struct {
+	// <p>模型服务 Id</p>
+	ModelServiceId *string `json:"ModelServiceId,omitnil,omitempty" name:"ModelServiceId"`
+
+	// <p>模型服务名</p>
+	ModelServiceName *string `json:"ModelServiceName,omitnil,omitempty" name:"ModelServiceName"`
+}
+
+type AIGWForwardDesensitizeConfig struct {
+	// <p>转发脱敏开关</p>
+	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+
+	// <p>预定义规则类型</p><p>枚举值：</p><ul><li>Phone： 电话号码</li><li>IdCard： 身份证号</li><li>BankCard： 银行卡号</li><li>Email： 电子邮箱地址</li><li>IP： IP地址</li><li>Name： 姓名</li></ul>
+	PredefinedRuleTypes []*string `json:"PredefinedRuleTypes,omitnil,omitempty" name:"PredefinedRuleTypes"`
+
+	// <p>自定义脱敏规则</p>
+	CustomRules []*AIGWCustomDesensitizeRule `json:"CustomRules,omitnil,omitempty" name:"CustomRules"`
+
+	// <p>掩码</p>
+	PlaceholderFormat *string `json:"PlaceholderFormat,omitnil,omitempty" name:"PlaceholderFormat"`
+
+	// <p>脱敏异常处理</p><p>枚举值：</p><ul><li>Reject： 拒绝请求</li><li>Skip： 跳过</li></ul>
+	OnFailure *string `json:"OnFailure,omitnil,omitempty" name:"OnFailure"`
+}
+
+type AIGWIntentRoute struct {
+	// <p>意图识别模型id</p>
+	IntentModelServiceId *string `json:"IntentModelServiceId,omitnil,omitempty" name:"IntentModelServiceId"`
+
+	// <p>置信度</p>
+	ConfidenceThreshold *float64 `json:"ConfidenceThreshold,omitnil,omitempty" name:"ConfidenceThreshold"`
+
+	// <p>默认服务id</p>
+	DefaultModelServiceId *string `json:"DefaultModelServiceId,omitnil,omitempty" name:"DefaultModelServiceId"`
+
+	// <p>规则</p>
+	Rules []*AIGWIntentRouteRule `json:"Rules,omitnil,omitempty" name:"Rules"`
+}
+
+type AIGWIntentRouteRule struct {
+	// <p>意图编码</p><p>枚举值：</p><ul><li>Coder： 代码编写</li><li>Math： 数学计算</li><li>Translation： 翻译</li><li>Flash： 快速问答</li><li>Complex： 复杂推理</li></ul>
+	IntentCode *string `json:"IntentCode,omitnil,omitempty" name:"IntentCode"`
+
+	// <p>模型服务id</p>
+	ModelServiceId *string `json:"ModelServiceId,omitnil,omitempty" name:"ModelServiceId"`
+}
+
+type AIGWJWTCredentialConfig struct {
+	// <p>JWT 消费者标识，iss claim</p>
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+
+	// <p>签名算法，取值：HS256 HS384 HS512 RS256 RS384 RS512 ES256 ES384 ES512</p>
+	Algorithm *string `json:"Algorithm,omitnil,omitempty" name:"Algorithm"`
+
+	// <p>HS 对称密钥，仅 Algorithm 为 HS256/HS384/HS512 时必填；RS/ES* 时留空</p>
+	Secret *string `json:"Secret,omitnil,omitempty" name:"Secret"`
+
+	// <p>RS/ES PEM 格式公钥，仅 Algorithm 为 RS256/RS384/RS512/ES256/ES384/ES512 时必填；HS* 时留空</p>
+	RSAPublicKey *string `json:"RSAPublicKey,omitnil,omitempty" name:"RSAPublicKey"`
+}
+
+type AIGWKVMatch struct {
+	// <p>键</p>
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+
+	// <p>值</p>
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+
+	// <p>操作类型</p>
+	Operator *string `json:"Operator,omitnil,omitempty" name:"Operator"`
+}
+
+type AIGWLLMModelServiceSubRoute struct {
+	// <p>生效的路由算法类型：权重路由，模型名称路由、参数路由等Weighted/ModelName/Query (预留多个，暂时只能填写一个)</p>
+	SelectedTypes []*string `json:"SelectedTypes,omitnil,omitempty" name:"SelectedTypes"`
+
+	// <p>权重路由配置，最多10个</p>
+	WeightedConfig []*CloudNativeAPIGatewayLLMModelServiceRouteWeightedStrategy `json:"WeightedConfig,omitnil,omitempty" name:"WeightedConfig"`
+
+	// <p>延迟路由</p>
+	LatencyPriorityConfig *AIGWLatencyPriorityConfig `json:"LatencyPriorityConfig,omitnil,omitempty" name:"LatencyPriorityConfig"`
+
+	// <p>指定模型路由（暂时只用在Token长度路由时的子路由选择）</p>
+	ModelServiceConfig *AIGWRouteModelServiceConfig `json:"ModelServiceConfig,omitnil,omitempty" name:"ModelServiceConfig"`
+}
+
+type AIGWLLMQuotaFallbackTrigger struct {
+	// <p>配额感知阈值百分比（RPM 与 TPM 共用）</p><p>取值范围：[0, 99]</p>
+	ThresholdPercent *int64 `json:"ThresholdPercent,omitnil,omitempty" name:"ThresholdPercent"`
+
+	// <p>检查维度策略</p><p>枚举值：</p><ul><li>AnyInsufficient：  RPM 或 TPM 任一不足即触发</li><li>AllInsufficient： RPM 和 TPM 同时不足才触发</li></ul>
+	CheckDimension *string `json:"CheckDimension,omitnil,omitempty" name:"CheckDimension"`
+}
+
+type AIGWLLMQuotaLimit struct {
+	// <p>该模型服务每分钟请求数上限，0 表示该维度不限</p>
+	RPMLimit *int64 `json:"RPMLimit,omitnil,omitempty" name:"RPMLimit"`
+
+	// <p>该模型服务每分钟 Token 数上限，0 表示该维度不限</p>
+	TPMLimit *int64 `json:"TPMLimit,omitnil,omitempty" name:"TPMLimit"`
+
+	// <p>并发限流数</p>
+	ConcurrentCountLimit *int64 `json:"ConcurrentCountLimit,omitnil,omitempty" name:"ConcurrentCountLimit"`
+}
+
+type AIGWLatencyPriorityConfig struct {
+	// <p>路由规则列表</p>
+	Rules []*AIGWLatencyPriorityRouteRule `json:"Rules,omitnil,omitempty" name:"Rules"`
+
+	// <p>延迟指标</p><p>枚举值：</p><ul><li>LLMLatency： LLM 延迟</li><li>NetworkLatency： 网络延迟</li></ul>
+	LatencyMetric *string `json:"LatencyMetric,omitnil,omitempty" name:"LatencyMetric"`
+
+	// <p>路由策略</p><p>枚举值：</p><ul><li>FastMode： 快速模式</li><li>BalanceMode： 均衡模式</li></ul>
+	RouteMode *string `json:"RouteMode,omitnil,omitempty" name:"RouteMode"`
+}
+
+type AIGWLatencyPriorityRouteRule struct {
+	// <p>模型服务id</p>
+	ModelServiceId *string `json:"ModelServiceId,omitnil,omitempty" name:"ModelServiceId"`
+}
+
+type AIGWLogConfig struct {
+	// <p>是否开启请求 payload 记录日志</p>
+	EnableRequestLogPayloads *bool `json:"EnableRequestLogPayloads,omitnil,omitempty" name:"EnableRequestLogPayloads"`
+
+	// <p>是否开启响应 payload 记录日志</p>
+	EnableResponseLogPayloads *bool `json:"EnableResponseLogPayloads,omitnil,omitempty" name:"EnableResponseLogPayloads"`
+
+	// <p>日志记录的请求body的最大字节数</p><p>取值范围：[512, 1048576]</p><p>EnableRequestLogPayloads 为true时必填</p>
+	RequestLogPayloadMaxSize *int64 `json:"RequestLogPayloadMaxSize,omitnil,omitempty" name:"RequestLogPayloadMaxSize"`
+
+	// <p>日志记录的响应body的最大字节数</p><p>取值范围：[512, 1048576]</p><p>EnableResponseLogPayloads 为true时必填</p>
+	ResponseLogPayloadMaxSize *int64 `json:"ResponseLogPayloadMaxSize,omitnil,omitempty" name:"ResponseLogPayloadMaxSize"`
+
+	// <p>请求 payload access log 输出模式</p><p>枚举值：</p><ul><li>raw： access log 中 body 记录客户端原始请求</li><li>processed： access log 中 body 记录 AI 网关协议适配、改写、归一化后的 OpenAI-compatible 内容</li></ul>
+	RequestLogPayloadMode *string `json:"RequestLogPayloadMode,omitnil,omitempty" name:"RequestLogPayloadMode"`
+
+	// <p>上游原始 payload access log 输出模式</p><p>枚举值：</p><ul><li>raw： access log 中 body 记录客户端原始上游响应</li><li>processed： access log 中 body 记录 AI 网关协议适配、改写、归一化后的 OpenAI-compatible 内容</li></ul>
+	ResponseLogPayloadMode *string `json:"ResponseLogPayloadMode,omitnil,omitempty" name:"ResponseLogPayloadMode"`
+}
+
+type AIGWLogDesensitizeConfig struct {
+	// <p>日志脱敏开关</p>
+	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+
+	// <p>预定义规则类型</p><p>枚举值：</p><ul><li>Phone： 电话号码</li><li>IdCard： 身份证号</li><li>BankCard： 银行卡号</li><li>Email： 邮箱地址</li><li>IP： IP地址</li><li>Name： 姓名</li></ul>
+	PredefinedRuleTypes []*string `json:"PredefinedRuleTypes,omitnil,omitempty" name:"PredefinedRuleTypes"`
+
+	// <p>自定义脱敏规则</p>
+	CustomRules []*AIGWCustomDesensitizeRule `json:"CustomRules,omitnil,omitempty" name:"CustomRules"`
+
+	// <p>日志脱敏范围</p><p>枚举值：</p><ul><li>Request： 请求</li><li>Response： 响应</li></ul>
+	Scope []*string `json:"Scope,omitnil,omitempty" name:"Scope"`
+}
+
+type AIGWModelRewriteRule struct {
+	// <p>原始模型</p>
+	SourceModel *string `json:"SourceModel,omitnil,omitempty" name:"SourceModel"`
+
+	// <p>目标模型</p>
+	TargetModel *string `json:"TargetModel,omitnil,omitempty" name:"TargetModel"`
+}
+
+type AIGWOAuthCredentialConfig struct {
+	// <p>OAuth2 client_id</p>
+	ClientId *string `json:"ClientId,omitnil,omitempty" name:"ClientId"`
+
+	// <p>OAuth2 client_secret</p>
+	ClientSecret *string `json:"ClientSecret,omitnil,omitempty" name:"ClientSecret"`
+}
+
+type AIGWOIDCCredentialConfig struct {
+	// <p>IdP 注册的 client_id</p>
+	ClientId *string `json:"ClientId,omitnil,omitempty" name:"ClientId"`
+
+	// <p>IdP 注册的 client_secret</p>
+	ClientSecret *string `json:"ClientSecret,omitnil,omitempty" name:"ClientSecret"`
+
+	// <p>IdP Issuer URL</p>
+	IssuerURL *string `json:"IssuerURL,omitnil,omitempty" name:"IssuerURL"`
+
+	// <p>IdP 中该用户的 claim 值</p>
+	ConsumerClaimValue *string `json:"ConsumerClaimValue,omitnil,omitempty" name:"ConsumerClaimValue"`
+}
+
+type AIGWRouteModelServiceConfig struct {
+	// <p>模型服务名字</p>
+	ModelServiceName *string `json:"ModelServiceName,omitnil,omitempty" name:"ModelServiceName"`
+}
+
+type AIGWTagFilter struct {
+	// <p>匹配策略</p><p>枚举值：</p><ul><li>AND： 并</li><li>OR： 或</li></ul>
+	MatchStrategy *string `json:"MatchStrategy,omitnil,omitempty" name:"MatchStrategy"`
+
+	// <p>标签</p>
+	Tags []*string `json:"Tags,omitnil,omitempty" name:"Tags"`
+}
+
+type AIGWTokenLengthRoute struct {
+	// <p>默认tokenizer编码器</p><p>枚举值：</p><ul><li>o200k_base： OpenApi o200k_base</li><li>cl100k_base： OpenApi cl100k_base</li><li>p50k_base： OpenApi p50k_base</li><li>r50k_base： OpenApi r50k_base</li></ul>
+	DefaultEncodingName *string `json:"DefaultEncodingName,omitnil,omitempty" name:"DefaultEncodingName"`
+
+	// <p>token 计数失败、规则为空或未命中任何规则时执行的默认二级路由（暂时只能选择一个指定模型路由）</p>
+	DefaultTarget *AIGWLLMModelServiceSubRoute `json:"DefaultTarget,omitnil,omitempty" name:"DefaultTarget"`
+
+	// <p>规则</p>
+	Rules []*AIGWTokenLengthRouteRule `json:"Rules,omitnil,omitempty" name:"Rules"`
+}
+
+type AIGWTokenLengthRouteRule struct {
+	// <p>token 长度下界，闭区间；0 合法</p>
+	MinTokenLength *int64 `json:"MinTokenLength,omitnil,omitempty" name:"MinTokenLength"`
+
+	// <p>token 长度上界，闭区间</p>
+	MaxTokenLength *int64 `json:"MaxTokenLength,omitnil,omitempty" name:"MaxTokenLength"`
+
+	// <p>命中该分段后执行的二级路由</p>
+	Target *AIGWLLMModelServiceSubRoute `json:"Target,omitnil,omitempty" name:"Target"`
+}
+
+type AccurateQpsThreshold struct {
+	// qps阈值控制维度,包含:second、minute、hour、day、month、year
+	Unit *string `json:"Unit,omitnil,omitempty" name:"Unit"`
+
+	// 全局配置ID
+	GlobalConfigId *string `json:"GlobalConfigId,omitnil,omitempty" name:"GlobalConfigId"`
+}
+
+// Predefined struct for user
+type AddCloudNativeAPIGatewayConsumerGroupAuthRequestParams struct {
+	// <p>网关实例id</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>授权资源类型。</p><p>枚举值：</p><ul><li>ModelAPI：模型 API</li><li>MCPServer：MCP Server</li></ul>
+	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
+
+	// <p>对应资源的 ID。</p><ul><li>ResourceType=ModelAPI 时是模型 API ID</li><li>ResourceType=MCPServer 时是 MCP Server ID</li></ul>
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
+
+	// <p>消费者组 ID 列表（每个 ID 以 cg- 开头），长度 1-10。</p>
+	ConsumerGroupIds []*string `json:"ConsumerGroupIds,omitnil,omitempty" name:"ConsumerGroupIds"`
+}
+
+type AddCloudNativeAPIGatewayConsumerGroupAuthRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>网关实例id</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>授权资源类型。</p><p>枚举值：</p><ul><li>ModelAPI：模型 API</li><li>MCPServer：MCP Server</li></ul>
+	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
+
+	// <p>对应资源的 ID。</p><ul><li>ResourceType=ModelAPI 时是模型 API ID</li><li>ResourceType=MCPServer 时是 MCP Server ID</li></ul>
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
+
+	// <p>消费者组 ID 列表（每个 ID 以 cg- 开头），长度 1-10。</p>
+	ConsumerGroupIds []*string `json:"ConsumerGroupIds,omitnil,omitempty" name:"ConsumerGroupIds"`
+}
+
+func (r *AddCloudNativeAPIGatewayConsumerGroupAuthRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AddCloudNativeAPIGatewayConsumerGroupAuthRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "ResourceType")
+	delete(f, "ResourceId")
+	delete(f, "ConsumerGroupIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AddCloudNativeAPIGatewayConsumerGroupAuthRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type AddCloudNativeAPIGatewayConsumerGroupAuthResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type AddCloudNativeAPIGatewayConsumerGroupAuthResponse struct {
+	*tchttp.BaseResponse
+	Response *AddCloudNativeAPIGatewayConsumerGroupAuthResponseParams `json:"Response"`
+}
+
+func (r *AddCloudNativeAPIGatewayConsumerGroupAuthResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AddCloudNativeAPIGatewayConsumerGroupAuthResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type AddCloudNativeAPIGatewayConsumerInGroupRequestParams struct {
+	// 网关实例id
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>消费者组 ID（以 cg- 开头）。</p>
+	ConsumerGroupId *string `json:"ConsumerGroupId,omitnil,omitempty" name:"ConsumerGroupId"`
+
+	// <p>消费者 ID 列表，长度 1-10。</p>
+	ConsumerIds []*string `json:"ConsumerIds,omitnil,omitempty" name:"ConsumerIds"`
+}
+
+type AddCloudNativeAPIGatewayConsumerInGroupRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关实例id
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>消费者组 ID（以 cg- 开头）。</p>
+	ConsumerGroupId *string `json:"ConsumerGroupId,omitnil,omitempty" name:"ConsumerGroupId"`
+
+	// <p>消费者 ID 列表，长度 1-10。</p>
+	ConsumerIds []*string `json:"ConsumerIds,omitnil,omitempty" name:"ConsumerIds"`
+}
+
+func (r *AddCloudNativeAPIGatewayConsumerInGroupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AddCloudNativeAPIGatewayConsumerInGroupRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "ConsumerGroupId")
+	delete(f, "ConsumerIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AddCloudNativeAPIGatewayConsumerInGroupRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type AddCloudNativeAPIGatewayConsumerInGroupResponseParams struct {
+	// <p>是否成功。</p>
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type AddCloudNativeAPIGatewayConsumerInGroupResponse struct {
+	*tchttp.BaseResponse
+	Response *AddCloudNativeAPIGatewayConsumerInGroupResponseParams `json:"Response"`
+}
+
+func (r *AddCloudNativeAPIGatewayConsumerInGroupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AddCloudNativeAPIGatewayConsumerInGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type ApolloEnvParam struct {
 	// 环境名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 环境内引擎的节点规格 ID
 	// -1C2G
 	// -2C4G
 	// 兼容原spec-xxxxxx形式的规格ID
-	EngineResourceSpec *string `json:"EngineResourceSpec,omitnil" name:"EngineResourceSpec"`
+	EngineResourceSpec *string `json:"EngineResourceSpec,omitnil,omitempty" name:"EngineResourceSpec"`
 
 	// 环境内引擎的节点数量
-	EngineNodeNum *int64 `json:"EngineNodeNum,omitnil" name:"EngineNodeNum"`
+	EngineNodeNum *int64 `json:"EngineNodeNum,omitnil,omitempty" name:"EngineNodeNum"`
 
 	// 配置存储空间大小，以GB为单位
-	StorageCapacity *int64 `json:"StorageCapacity,omitnil" name:"StorageCapacity"`
+	StorageCapacity *int64 `json:"StorageCapacity,omitnil,omitempty" name:"StorageCapacity"`
 
 	// VPC ID。在 VPC 的子网内分配一个 IP 作为 ConfigServer 的访问地址
-	VpcId *string `json:"VpcId,omitnil" name:"VpcId"`
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 子网 ID。在 VPC 的子网内分配一个 IP 作为 ConfigServer 的访问地址
-	SubnetId *string `json:"SubnetId,omitnil" name:"SubnetId"`
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// 环境描述
-	EnvDesc *string `json:"EnvDesc,omitnil" name:"EnvDesc"`
+	EnvDesc *string `json:"EnvDesc,omitnil,omitempty" name:"EnvDesc"`
+}
+
+type Argument struct {
+	// 类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// key值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+
+	// 匹配条件参数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Value *ArgumentValue `json:"Value,omitnil,omitempty" name:"Value"`
+}
+
+type ArgumentValue struct {
+	// 表达式类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 匹配值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+
+	// 值类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ValueType *string `json:"ValueType,omitnil,omitempty" name:"ValueType"`
 }
 
 type AutoScalerBehavior struct {
 	// 扩容行为配置
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ScaleUp *AutoScalerRules `json:"ScaleUp,omitnil" name:"ScaleUp"`
+	ScaleUp *AutoScalerRules `json:"ScaleUp,omitnil,omitempty" name:"ScaleUp"`
 
 	// 缩容行为配置
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ScaleDown *AutoScalerRules `json:"ScaleDown,omitnil" name:"ScaleDown"`
+	ScaleDown *AutoScalerRules `json:"ScaleDown,omitnil,omitempty" name:"ScaleDown"`
 }
 
 type AutoScalerPolicy struct {
 	// 类型，Pods
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Type *string `json:"Type,omitnil" name:"Type"`
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 数量
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Value *int64 `json:"Value,omitnil" name:"Value"`
+	Value *int64 `json:"Value,omitnil,omitempty" name:"Value"`
 
 	// 扩容周期
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	PeriodSeconds *int64 `json:"PeriodSeconds,omitnil" name:"PeriodSeconds"`
+	PeriodSeconds *int64 `json:"PeriodSeconds,omitnil,omitempty" name:"PeriodSeconds"`
 }
 
 type AutoScalerRules struct {
 	// 稳定窗口时间，扩容时默认0，缩容时默认300
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	StabilizationWindowSeconds *int64 `json:"StabilizationWindowSeconds,omitnil" name:"StabilizationWindowSeconds"`
+	StabilizationWindowSeconds *int64 `json:"StabilizationWindowSeconds,omitnil,omitempty" name:"StabilizationWindowSeconds"`
 
 	// 选择策略依据
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	SelectPolicy *string `json:"SelectPolicy,omitnil" name:"SelectPolicy"`
+	SelectPolicy *string `json:"SelectPolicy,omitnil,omitempty" name:"SelectPolicy"`
 
 	// 扩缩容策略
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Policies []*AutoScalerPolicy `json:"Policies,omitnil" name:"Policies"`
+	Policies []*AutoScalerPolicy `json:"Policies,omitnil,omitempty" name:"Policies"`
+}
+
+type BetaLabel struct {
+	// <p>键</p>
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+
+	// <p>值</p>
+	Value *BetaLabelMatchString `json:"Value,omitnil,omitempty" name:"Value"`
+}
+
+type BetaLabelMatchString struct {
+	// <p>类型</p><p>枚举值：</p><ul><li>EXAT： 精确匹配</li></ul>
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// <p>值</p>
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+
+	// <p>值类型</p><p>枚举值：</p><ul><li>TEXT： 文本</li></ul>
+	ValueType *string `json:"ValueType,omitnil,omitempty" name:"ValueType"`
 }
 
 // Predefined struct for user
 type BindAutoScalerResourceStrategyToGroupsRequestParams struct {
 	// 网关实例ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 策略ID
-	StrategyId *string `json:"StrategyId,omitnil" name:"StrategyId"`
+	StrategyId *string `json:"StrategyId,omitnil,omitempty" name:"StrategyId"`
 
 	// 网关分组ID列表
-	GroupIds []*string `json:"GroupIds,omitnil" name:"GroupIds"`
+	GroupIds []*string `json:"GroupIds,omitnil,omitempty" name:"GroupIds"`
 }
 
 type BindAutoScalerResourceStrategyToGroupsRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关实例ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 策略ID
-	StrategyId *string `json:"StrategyId,omitnil" name:"StrategyId"`
+	StrategyId *string `json:"StrategyId,omitnil,omitempty" name:"StrategyId"`
 
 	// 网关分组ID列表
-	GroupIds []*string `json:"GroupIds,omitnil" name:"GroupIds"`
+	GroupIds []*string `json:"GroupIds,omitnil,omitempty" name:"GroupIds"`
 }
 
 func (r *BindAutoScalerResourceStrategyToGroupsRequest) ToJsonString() string {
@@ -133,10 +584,10 @@ func (r *BindAutoScalerResourceStrategyToGroupsRequest) FromJsonString(s string)
 // Predefined struct for user
 type BindAutoScalerResourceStrategyToGroupsResponseParams struct {
 	// 是否成功
-	Result *bool `json:"Result,omitnil" name:"Result"`
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type BindAutoScalerResourceStrategyToGroupsResponse struct {
@@ -157,72 +608,212 @@ func (r *BindAutoScalerResourceStrategyToGroupsResponse) FromJsonString(s string
 
 type BoundK8SInfo struct {
 	// 绑定的kubernetes集群ID
-	BoundClusterId *string `json:"BoundClusterId,omitnil" name:"BoundClusterId"`
+	BoundClusterId *string `json:"BoundClusterId,omitnil,omitempty" name:"BoundClusterId"`
 
 	// 绑定的kubernetes的集群类型，分tke和eks两种
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	BoundClusterType *string `json:"BoundClusterType,omitnil" name:"BoundClusterType"`
+	BoundClusterType *string `json:"BoundClusterType,omitnil,omitempty" name:"BoundClusterType"`
 
 	// 服务同步模式，all为全量同步，demand为按需同步
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	SyncMode *string `json:"SyncMode,omitnil" name:"SyncMode"`
+	SyncMode *string `json:"SyncMode,omitnil,omitempty" name:"SyncMode"`
 
 	// 绑定的kubernetes集群所在地域
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	BindRegion *string `json:"BindRegion,omitnil" name:"BindRegion"`
+	BindRegion *string `json:"BindRegion,omitnil,omitempty" name:"BindRegion"`
 }
 
 type CLBMultiRegion struct {
 	// 是否启用多可用区
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CLBMultiZoneFlag *bool `json:"CLBMultiZoneFlag,omitnil" name:"CLBMultiZoneFlag"`
+	CLBMultiZoneFlag *bool `json:"CLBMultiZoneFlag,omitnil,omitempty" name:"CLBMultiZoneFlag"`
 
 	// 主可用区信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CLBMasterZone *string `json:"CLBMasterZone,omitnil" name:"CLBMasterZone"`
+	CLBMasterZone *string `json:"CLBMasterZone,omitnil,omitempty" name:"CLBMasterZone"`
 
 	// 备可用区信息
+	CLBSlaveZone *string `json:"CLBSlaveZone,omitnil,omitempty" name:"CLBSlaveZone"`
+}
+
+type CNAPIGwConsumer struct {
+	// <p>消费者 ID。</p>
+	ConsumerId *string `json:"ConsumerId,omitnil,omitempty" name:"ConsumerId"`
+
+	// <p>名字</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>创建时间</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>更新时间 yyyy-MM-dd hh:mm:ss</p>
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
+
+	// <p>描述</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	CLBSlaveZone *string `json:"CLBSlaveZone,omitnil" name:"CLBSlaveZone"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>消费者分组</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ConsumerGroups []*CNAPIGwConsumerGroup `json:"ConsumerGroups,omitnil,omitempty" name:"ConsumerGroups"`
+}
+
+type CNAPIGwConsumerGroup struct {
+	// 分组id
+	ConsumerGroupId *string `json:"ConsumerGroupId,omitnil,omitempty" name:"ConsumerGroupId"`
+
+	// 名字
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 状态Disable/Enable
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 描述
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 创建时间
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 更新时间 yyyy-MM-dd hh:mm:ss
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
+
+	// 绑定的消费者数量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BindCount *uint64 `json:"BindCount,omitnil,omitempty" name:"BindCount"`
+}
+
+type CNAPIGwConsumerGroupList struct {
+	// 总数
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 消费者分组信息
+	ConsumerGroups []*CNAPIGwConsumerGroup `json:"ConsumerGroups,omitnil,omitempty" name:"ConsumerGroups"`
+}
+
+type CNAPIGwConsumerList struct {
+	// 总数
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 消费者列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Consumers []*CNAPIGwConsumer `json:"Consumers,omitnil,omitempty" name:"Consumers"`
+}
+
+type CNAPIGwCreateCommonResult struct {
+	// 是否成功
+	Success *bool `json:"Success,omitnil,omitempty" name:"Success"`
+
+	// 对应的id 值
+	ID *string `json:"ID,omitnil,omitempty" name:"ID"`
+}
+
+type CNAPIGwSecretKey struct {
+	// <p>密钥id</p>
+	SecretKeyId *string `json:"SecretKeyId,omitnil,omitempty" name:"SecretKeyId"`
+
+	// <p>密钥名字</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>密钥协议类型。</p>
+	SecretType *string `json:"SecretType,omitnil,omitempty" name:"SecretType"`
+
+	// <p>状态。</p><p>枚举值：</p><ul><li>Enable： 启用</li><li>Disable： 禁用</li></ul>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>密钥生成方式。</p><p>枚举值：</p><ul><li>System： 系统自动生成</li><li>Custom： 用户自定义</li><li>KMS： 使用 KMS 密钥</li></ul>
+	GenerateType *string `json:"GenerateType,omitnil,omitempty" name:"GenerateType"`
+
+	// <p>密钥明文</p>
+	SecretValue *string `json:"SecretValue,omitnil,omitempty" name:"SecretValue"`
+
+	// <p>KMS凭证名字</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	KmsKeyName *string `json:"KmsKeyName,omitnil,omitempty" name:"KmsKeyName"`
+
+	// <p>KMS凭证版本</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	KmsKeyVersion *string `json:"KmsKeyVersion,omitnil,omitempty" name:"KmsKeyVersion"`
+
+	// <p>描述</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>是否可以绑定</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CanBind *bool `json:"CanBind,omitnil,omitempty" name:"CanBind"`
+
+	// <p>创建时间</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>修改时间</p>
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
+
+	// <p>绑定数</p>
+	BindCount *uint64 `json:"BindCount,omitnil,omitempty" name:"BindCount"`
+
+	// <p>密钥归属资源类型。</p><p>枚举值：</p><ul><li>Consumer： 消费者</li><li>ModelService： 模型服务</li></ul>
+	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
+
+	// <p>JWT凭证配置</p>
+	JWTCredentialConfig *AIGWJWTCredentialConfig `json:"JWTCredentialConfig,omitnil,omitempty" name:"JWTCredentialConfig"`
+
+	// <p>OAuth凭证配置</p>
+	OAuthCredentialConfig *AIGWOAuthCredentialConfig `json:"OAuthCredentialConfig,omitnil,omitempty" name:"OAuthCredentialConfig"`
+
+	// <p>OIDC凭证配置</p>
+	OIDCCredentialConfig *AIGWOIDCCredentialConfig `json:"OIDCCredentialConfig,omitnil,omitempty" name:"OIDCCredentialConfig"`
+
+	// <p>secret key provider方</p><p>枚举值：</p><ul><li>Dify： Dify</li></ul>
+	Provider *string `json:"Provider,omitnil,omitempty" name:"Provider"`
+}
+
+type CNAPIGwSecretKeyList struct {
+	// 总数
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 密钥列表
+	SecretKeys []*CNAPIGwSecretKey `json:"SecretKeys,omitnil,omitempty" name:"SecretKeys"`
+}
+
+type CanaryPriorityRule struct {
+	// 优先级
+	Priority *int64 `json:"Priority,omitnil,omitempty" name:"Priority"`
+
+	// 灰度规则配置
+	CanaryRule *CloudNativeAPIGatewayCanaryRule `json:"CanaryRule,omitnil,omitempty" name:"CanaryRule"`
 }
 
 type CertificateInfo struct {
 	// 唯一id
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 }
 
 // Predefined struct for user
 type CloseWafProtectionRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	//  防护资源的类型。
 	// - Global  实例
 	// - Service  服务
 	// - Route  路由
 	// - Object  对象
-	Type *string `json:"Type,omitnil" name:"Type"`
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 当资源类型 Type 是 Service 或 Route 的时候，传入的服务或路由的列表
-	List []*string `json:"List,omitnil" name:"List"`
+	List []*string `json:"List,omitnil,omitempty" name:"List"`
 }
 
 type CloseWafProtectionRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	//  防护资源的类型。
 	// - Global  实例
 	// - Service  服务
 	// - Route  路由
 	// - Object  对象
-	Type *string `json:"Type,omitnil" name:"Type"`
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 当资源类型 Type 是 Service 或 Route 的时候，传入的服务或路由的列表
-	List []*string `json:"List,omitnil" name:"List"`
+	List []*string `json:"List,omitnil,omitempty" name:"List"`
 }
 
 func (r *CloseWafProtectionRequest) ToJsonString() string {
@@ -248,8 +839,8 @@ func (r *CloseWafProtectionRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CloseWafProtectionResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CloseWafProtectionResponse struct {
@@ -270,388 +861,594 @@ func (r *CloseWafProtectionResponse) FromJsonString(s string) error {
 
 type CloudAPIGatewayCanaryRuleList struct {
 	// 灰度规则
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CanaryRuleList []*CloudNativeAPIGatewayCanaryRule `json:"CanaryRuleList,omitnil" name:"CanaryRuleList"`
+	CanaryRuleList []*CloudNativeAPIGatewayCanaryRule `json:"CanaryRuleList,omitnil,omitempty" name:"CanaryRuleList"`
 
 	// 总数
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 }
 
 type CloudNativeAPIGatewayBalancedService struct {
 	// 服务 ID，作为入参时，必填
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ServiceID *string `json:"ServiceID,omitnil" name:"ServiceID"`
+	ServiceID *string `json:"ServiceID,omitnil,omitempty" name:"ServiceID"`
 
 	// 服务名称，作为入参时，无意义
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ServiceName *string `json:"ServiceName,omitnil" name:"ServiceName"`
+	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
 
 	// Upstream 名称，作为入参时，无意义
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	UpstreamName *string `json:"UpstreamName,omitnil" name:"UpstreamName"`
+	UpstreamName *string `json:"UpstreamName,omitnil,omitempty" name:"UpstreamName"`
 
 	// 百分比，10 即 10%，范围0-100
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Percent *float64 `json:"Percent,omitnil" name:"Percent"`
+	Percent *float64 `json:"Percent,omitnil,omitempty" name:"Percent"`
 }
 
 type CloudNativeAPIGatewayCanaryRule struct {
 	// 优先级，值范围为 0 到 100；值越大，优先级越高；不同规则间优先级不可重复
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Priority *int64 `json:"Priority,omitnil" name:"Priority"`
+	Priority *int64 `json:"Priority,omitnil,omitempty" name:"Priority"`
 
 	// 是否启用规则
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Enabled *bool `json:"Enabled,omitnil" name:"Enabled"`
+	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
 
 	// 参数匹配条件
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ConditionList []*CloudNativeAPIGatewayCanaryRuleCondition `json:"ConditionList,omitnil" name:"ConditionList"`
+	ConditionList []*CloudNativeAPIGatewayCanaryRuleCondition `json:"ConditionList,omitnil,omitempty" name:"ConditionList"`
 
 	// 服务的流量百分比配置
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	BalancedServiceList []*CloudNativeAPIGatewayBalancedService `json:"BalancedServiceList,omitnil" name:"BalancedServiceList"`
+	BalancedServiceList []*CloudNativeAPIGatewayBalancedService `json:"BalancedServiceList,omitnil,omitempty" name:"BalancedServiceList"`
 
 	// 归属服务 ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ServiceId *string `json:"ServiceId,omitnil" name:"ServiceId"`
+	ServiceId *string `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
 
 	// 归属服务名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ServiceName *string `json:"ServiceName,omitnil" name:"ServiceName"`
+	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
+
+	// 灰度规则类别
+	// Standard｜Lane
+	RuleType *string `json:"RuleType,omitnil,omitempty" name:"RuleType"`
+
+	// 全链路灰度策略多个条件之间的匹配方式，与AND，或OR
+	MatchType *string `json:"MatchType,omitnil,omitempty" name:"MatchType"`
+
+	// 泳道组ID
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
+
+	// 泳道组名称
+	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
+
+	// 泳道ID
+	LaneId *string `json:"LaneId,omitnil,omitempty" name:"LaneId"`
+
+	// 泳道名称
+	LaneName *string `json:"LaneName,omitnil,omitempty" name:"LaneName"`
+
+	// 泳道匹配规则：严格STRICT｜宽松PERMISSIVE
+	MatchMode *string `json:"MatchMode,omitnil,omitempty" name:"MatchMode"`
+
+	// 泳道标签
+	LaneTag *string `json:"LaneTag,omitnil,omitempty" name:"LaneTag"`
 }
 
 type CloudNativeAPIGatewayCanaryRuleCondition struct {
 	// 条件类型，支持 path, method, query, header, cookie, body 和 system。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Type *string `json:"Type,omitnil" name:"Type"`
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 参数名
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Key *string `json:"Key,omitnil" name:"Key"`
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
 
 	// 操作符，支持 "le", "eq", "lt", "ne", "ge", "gt", "regex", "exists", "in", "not in",  "prefix" ,"exact", "regex" 等
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Operator *string `json:"Operator,omitnil" name:"Operator"`
+	Operator *string `json:"Operator,omitnil,omitempty" name:"Operator"`
 
 	// 目标参数值
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Value *string `json:"Value,omitnil" name:"Value"`
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
 
 	// 分隔符，当 Operator 为 in 或者 not in 时生效。支持值为英文逗号，英文分号，空格，换行符。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Delimiter *string `json:"Delimiter,omitnil" name:"Delimiter"`
+	Delimiter *string `json:"Delimiter,omitnil,omitempty" name:"Delimiter"`
 
 	// 全局配置 Id
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	GlobalConfigId *string `json:"GlobalConfigId,omitnil" name:"GlobalConfigId"`
+	GlobalConfigId *string `json:"GlobalConfigId,omitnil,omitempty" name:"GlobalConfigId"`
 
 	// 全局配置名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	GlobalConfigName *string `json:"GlobalConfigName,omitnil" name:"GlobalConfigName"`
+	GlobalConfigName *string `json:"GlobalConfigName,omitnil,omitempty" name:"GlobalConfigName"`
 }
 
 type CloudNativeAPIGatewayConfig struct {
 	// 控制台类型。
-	ConsoleType *string `json:"ConsoleType,omitnil" name:"ConsoleType"`
+	ConsoleType *string `json:"ConsoleType,omitnil,omitempty" name:"ConsoleType"`
 
 	// HTTP链接地址。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	HttpUrl *string `json:"HttpUrl,omitnil" name:"HttpUrl"`
+	HttpUrl *string `json:"HttpUrl,omitnil,omitempty" name:"HttpUrl"`
 
 	// HTTPS链接地址。
-	HttpsUrl *string `json:"HttpsUrl,omitnil" name:"HttpsUrl"`
+	HttpsUrl *string `json:"HttpsUrl,omitnil,omitempty" name:"HttpsUrl"`
 
 	// 网络类型, Open|Internal。
-	NetType *string `json:"NetType,omitnil" name:"NetType"`
+	NetType *string `json:"NetType,omitnil,omitempty" name:"NetType"`
 
 	// 管理员用户名。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	AdminUser *string `json:"AdminUser,omitnil" name:"AdminUser"`
+	AdminUser *string `json:"AdminUser,omitnil,omitempty" name:"AdminUser"`
 
 	// 管理员密码。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	AdminPassword *string `json:"AdminPassword,omitnil" name:"AdminPassword"`
+	AdminPassword *string `json:"AdminPassword,omitnil,omitempty" name:"AdminPassword"`
 
 	// 网络状态, Open|Closed|Updating
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Status *string `json:"Status,omitnil" name:"Status"`
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 网络访问策略
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	AccessControl *NetworkAccessControl `json:"AccessControl,omitnil" name:"AccessControl"`
+	AccessControl *NetworkAccessControl `json:"AccessControl,omitnil,omitempty" name:"AccessControl"`
 
 	// 内网子网 ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	SubnetId *string `json:"SubnetId,omitnil" name:"SubnetId"`
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// 内网VPC ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	VpcId *string `json:"VpcId,omitnil" name:"VpcId"`
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 负载均衡的描述
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 负载均衡的规格类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	SlaType *string `json:"SlaType,omitnil" name:"SlaType"`
+	SlaType *string `json:"SlaType,omitnil,omitempty" name:"SlaType"`
 
 	// clb规格名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	SlaName *string `json:"SlaName,omitnil" name:"SlaName"`
+	SlaName *string `json:"SlaName,omitnil,omitempty" name:"SlaName"`
 
 	// clb vip
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Vip *string `json:"Vip,omitnil" name:"Vip"`
+	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
 	// 带宽
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil" name:"InternetMaxBandwidthOut"`
+	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
 
 	// 是否多可用区
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	MultiZoneFlag *bool `json:"MultiZoneFlag,omitnil" name:"MultiZoneFlag"`
+	MultiZoneFlag *bool `json:"MultiZoneFlag,omitnil,omitempty" name:"MultiZoneFlag"`
 
 	// 主可用区
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	MasterZoneId *string `json:"MasterZoneId,omitnil" name:"MasterZoneId"`
+	MasterZoneId *string `json:"MasterZoneId,omitnil,omitempty" name:"MasterZoneId"`
 
 	// 备可用区
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	SlaveZoneId *string `json:"SlaveZoneId,omitnil" name:"SlaveZoneId"`
+	SlaveZoneId *string `json:"SlaveZoneId,omitnil,omitempty" name:"SlaveZoneId"`
 
 	// 主可用区名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	MasterZoneName *string `json:"MasterZoneName,omitnil" name:"MasterZoneName"`
+	MasterZoneName *string `json:"MasterZoneName,omitnil,omitempty" name:"MasterZoneName"`
 
 	// 备可用区名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	SlaveZoneName *string `json:"SlaveZoneName,omitnil" name:"SlaveZoneName"`
+	SlaveZoneName *string `json:"SlaveZoneName,omitnil,omitempty" name:"SlaveZoneName"`
 
 	// 网络 id
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	NetworkId *string `json:"NetworkId,omitnil" name:"NetworkId"`
+	NetworkId *string `json:"NetworkId,omitnil,omitempty" name:"NetworkId"`
+
+	// 是否为新 ipv6 CLB
+	IPV6FullChain *bool `json:"IPV6FullChain,omitnil,omitempty" name:"IPV6FullChain"`
+
+	// 负载均衡个性化配置内容
+	CustomizedConfigContent *string `json:"CustomizedConfigContent,omitnil,omitempty" name:"CustomizedConfigContent"`
+}
+
+type CloudNativeAPIGatewayLLMModelAPI struct {
+	// <p>模型 API ID。</p>
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// <p>创建时间</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>修改时间</p>
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
+
+	// <p>AI 网关 LLM 模型 API 的唯一标识名称，格式规则：2-50 字符，支持英文、数字、下划线。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>选择业务场景,xa0 选项：Chat（聊天）。</p>
+	SceneType *string `json:"SceneType,omitnil,omitempty" name:"SceneType"`
+
+	// <p>业务场景对应的请求协议，选项：OpenAI（目前只支持 OpenAI）。</p>
+	RequestProtocol *string `json:"RequestProtocol,omitnil,omitempty" name:"RequestProtocol"`
+
+	// <p>路由列表</p>
+	RouteList []*DefaultKongRoute `json:"RouteList,omitnil,omitempty" name:"RouteList"`
+
+	// <p>为API设置统一的前缀，格式：以/开头，支持字母、数字、短横线。</p>
+	BasePath *string `json:"BasePath,omitnil,omitempty" name:"BasePath"`
+
+	// <p>路径简化，<br>启用时：客户端请求路径 → 移除Base Path → 后端接收简洁路径<br>禁用时：客户端请求路径 → 完整传递给后端。</p>
+	StripPath *bool `json:"StripPath,omitnil,omitempty" name:"StripPath"`
+
+	// <p>模型 API 的相关描述。</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>模型服务Id</p>
+	ModelServiceId *string `json:"ModelServiceId,omitnil,omitempty" name:"ModelServiceId"`
+
+	// <p>模型服务名称</p>
+	ModelServiceName *string `json:"ModelServiceName,omitnil,omitempty" name:"ModelServiceName"`
+
+	// <p>模型服务路由策略（是指如何路由到模型服务）</p>
+	ModelServiceRoute *CloudNativeAPIGatewayLLMModelServiceRoute `json:"ModelServiceRoute,omitnil,omitempty" name:"ModelServiceRoute"`
+
+	// <p>无</p>
+	MatchHeaders []*AIGWKVMatch `json:"MatchHeaders,omitnil,omitempty" name:"MatchHeaders"`
+
+	// <p>是否开启跨服务fallback</p>
+	EnableCrossServiceFallback *bool `json:"EnableCrossServiceFallback,omitnil,omitempty" name:"EnableCrossServiceFallback"`
+
+	// <p>跨服务fallback配置详情</p>
+	CrossServiceFallbackConfig *AIGWCrossServiceFallbackConfig `json:"CrossServiceFallbackConfig,omitnil,omitempty" name:"CrossServiceFallbackConfig"`
+
+	// <p>是否展示模型API</p>
+	DescribeCloudNativeAPIGatewayLLMModelAPI *bool `json:"DescribeCloudNativeAPIGatewayLLMModelAPI,omitnil,omitempty" name:"DescribeCloudNativeAPIGatewayLLMModelAPI"`
+
+	// <p>标签</p>
+	TagFilter *AIGWTagFilter `json:"TagFilter,omitnil,omitempty" name:"TagFilter"`
+
+	// <p>日志显示相关开关</p>
+	LogConfig *AIGWLogConfig `json:"LogConfig,omitnil,omitempty" name:"LogConfig"`
+
+	// <p>日志脱敏规则</p>
+	LogDesensitizeConfig *AIGWLogDesensitizeConfig `json:"LogDesensitizeConfig,omitnil,omitempty" name:"LogDesensitizeConfig"`
+
+	// <p>转发脱敏规则</p>
+	ForwardDesensitizeConfig *AIGWForwardDesensitizeConfig `json:"ForwardDesensitizeConfig,omitnil,omitempty" name:"ForwardDesensitizeConfig"`
+}
+
+type CloudNativeAPIGatewayLLMModelFallbackRule struct {
+	// 备选模型，主模型不可用时将依次按顺序尝试。
+	FallbackModels []*string `json:"FallbackModels,omitnil,omitempty" name:"FallbackModels"`
+}
+
+type CloudNativeAPIGatewayLLMModelParamCheckInfo struct {
+	// 允许的模型列表。
+	AllowModelList []*string `json:"AllowModelList,omitnil,omitempty" name:"AllowModelList"`
+
+	// 模型参数校验失败时的处理策略，选项：Return404（返回404）、FallBackToDefaultModel（使用默认模型降级）。
+	ModelValidationFailureStrategy *string `json:"ModelValidationFailureStrategy,omitnil,omitempty" name:"ModelValidationFailureStrategy"`
+}
+
+type CloudNativeAPIGatewayLLMModelService struct {
+	// <p>模型服务 ID。</p>
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// <p>模型服务名称。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>创建时间。</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>修改时间。</p>
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
+
+	// <p>服务类型，目前只支持xa0LLMService。</p>
+	ServiceType *string `json:"ServiceType,omitnil,omitempty" name:"ServiceType"`
+
+	// <p>选择模型提供商, 选项：OpenAI、Anthropic、Azure OpenAI、自定义HTTP。</p>
+	ModelProvider *string `json:"ModelProvider,omitnil,omitempty" name:"ModelProvider"`
+
+	// <p>API协议标准，根据供应商动态变化：OpenAI→OpenAI/v1，Anthropic→Anthropic/v1等</p>
+	ModelProtocol *string `json:"ModelProtocol,omitnil,omitempty" name:"ModelProtocol"`
+
+	// <p>自定义的模型请求 URL。</p>
+	UpstreamURL *string `json:"UpstreamURL,omitnil,omitempty" name:"UpstreamURL"`
+
+	// <p>模型选择方式，选项：Specify（指定模型）、PassThrough（透传请求模型）。</p>
+	ModelSelector *string `json:"ModelSelector,omitnil,omitempty" name:"ModelSelector"`
+
+	// <p>默认模型，模型选择方式为 Specify 时必填。</p>
+	DefaultModel *string `json:"DefaultModel,omitnil,omitempty" name:"DefaultModel"`
+
+	// <p>开启模型降级，模型选择方式为 Specify 时必填。</p>
+	EnableModelFallback *bool `json:"EnableModelFallback,omitnil,omitempty" name:"EnableModelFallback"`
+
+	// <p>可以配置备用模型规则，EnableSpecifyModelFallbackxa0为 true 时必填。</p>
+	ModelFallbackRule *CloudNativeAPIGatewayLLMModelFallbackRule `json:"ModelFallbackRule,omitnil,omitempty" name:"ModelFallbackRule"`
+
+	// <p>开启模型参数校验，是否校验客户端传递的 model 参数,xa0模型选择方式为 PassThrough 时必填。</p>
+	EnableModelParamCheck *bool `json:"EnableModelParamCheck,omitnil,omitempty" name:"EnableModelParamCheck"`
+
+	// <p>模型检验信息，EnableModelParamCheckxa0为 true 时必填。</p>
+	ModelParamCheckRule *CloudNativeAPIGatewayLLMModelParamCheckInfo `json:"ModelParamCheckRule,omitnil,omitempty" name:"ModelParamCheckRule"`
+
+	// <p>描述。</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>连接超时时间</p><p>取值范围：[1, 3600000]</p><p>单位：毫秒</p><p>默认值：10000</p>
+	ConnectTimeout *int64 `json:"ConnectTimeout,omitnil,omitempty" name:"ConnectTimeout"`
+
+	// <p>写入超时时间</p><p>取值范围：[1, 3600000]</p><p>单位：毫秒</p><p>默认值：60000</p>
+	WriteTimeout *int64 `json:"WriteTimeout,omitnil,omitempty" name:"WriteTimeout"`
+
+	// <p>读取超时时间</p><p>取值范围：[1, 3600000]</p><p>单位：毫秒</p>
+	ReadTimeout *int64 `json:"ReadTimeout,omitnil,omitempty" name:"ReadTimeout"`
+
+	// <p>重试次数</p><p>取值范围：[0, 5]</p><p>单位：次</p><p>默认值：0</p>
+	Retries *int64 `json:"Retries,omitnil,omitempty" name:"Retries"`
+
+	// <p>路径拼接模式</p><p>枚举值：</p><ul><li>FixedPath： 固定路径</li><li>AutoConcat： 自动拼接</li></ul>
+	UpstreamUrlMode *string `json:"UpstreamUrlMode,omitnil,omitempty" name:"UpstreamUrlMode"`
+
+	// <p>sni</p>
+	SNI *string `json:"SNI,omitnil,omitempty" name:"SNI"`
+
+	// <p>配额限制</p>
+	QuotaLimit *AIGWLLMQuotaLimit `json:"QuotaLimit,omitnil,omitempty" name:"QuotaLimit"`
+
+	// <p>标签</p>
+	Tags *string `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// <p>绑定的模型服务秘钥</p>
+	SecretKeyIds []*string `json:"SecretKeyIds,omitnil,omitempty" name:"SecretKeyIds"`
+
+	// <p>模型改写规则</p>
+	ModelRewriteRules []*AIGWModelRewriteRule `json:"ModelRewriteRules,omitnil,omitempty" name:"ModelRewriteRules"`
+
+	// <p>服务来源ID</p>
+	SourceId *string `json:"SourceId,omitnil,omitempty" name:"SourceId"`
+
+	// <p>命名空间</p>
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// <p>服务名称</p>
+	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
+
+	// <p>协议</p>
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// <p>扩展参数</p>
+	ExtParams []*KeyValue `json:"ExtParams,omitnil,omitempty" name:"ExtParams"`
+
+	// <p>自定义供应商名称</p>
+	CustomProviderName *string `json:"CustomProviderName,omitnil,omitempty" name:"CustomProviderName"`
+
+	// <p>是否开启密钥轮转</p>
+	KeyRotationEnabled *bool `json:"KeyRotationEnabled,omitnil,omitempty" name:"KeyRotationEnabled"`
+
+	// <p>密钥轮转周期</p><p>单位：天数</p>
+	KeyRotationPeriodDays *uint64 `json:"KeyRotationPeriodDays,omitnil,omitempty" name:"KeyRotationPeriodDays"`
+
+	// <p>外部服务来源ID</p>
+	ExternalInstanceId *string `json:"ExternalInstanceId,omitnil,omitempty" name:"ExternalInstanceId"`
+}
+
+type CloudNativeAPIGatewayLLMModelServiceRoute struct {
+	// <p>生效的路由算法类型：权重路由，模型名称路由、参数路由等Weighted/ModelName/Query (预留多个，暂时只能填写一个)</p>
+	SelectedTypes []*string `json:"SelectedTypes,omitnil,omitempty" name:"SelectedTypes"`
+
+	// <p>权重路由配置，最多10个</p>
+	WeightedConfig []*CloudNativeAPIGatewayLLMModelServiceRouteWeightedStrategy `json:"WeightedConfig,omitnil,omitempty" name:"WeightedConfig"`
+
+	// <p>模型名称路由配置，最多10个</p>
+	ModelNameConfig []*CloudNativeAPIGatewayLLMModelServiceRouteModelNameStrategy `json:"ModelNameConfig,omitnil,omitempty" name:"ModelNameConfig"`
+
+	// <p>意图识别</p>
+	IntentRouteConfig *AIGWIntentRoute `json:"IntentRouteConfig,omitnil,omitempty" name:"IntentRouteConfig"`
+
+	// <p>延迟路由</p>
+	LatencyPriorityConfig *AIGWLatencyPriorityConfig `json:"LatencyPriorityConfig,omitnil,omitempty" name:"LatencyPriorityConfig"`
+
+	// <p>缓存感知路由配置（前缀缓存）</p>
+	CacheAwareRouteConfig *AIGWCacheAwareRouteConfig `json:"CacheAwareRouteConfig,omitnil,omitempty" name:"CacheAwareRouteConfig"`
+
+	// <p>token 长度路由</p>
+	TokenLengthRouteConfig *AIGWTokenLengthRoute `json:"TokenLengthRouteConfig,omitnil,omitempty" name:"TokenLengthRouteConfig"`
+}
+
+type CloudNativeAPIGatewayLLMModelServiceRouteModelNameStrategy struct {
+	// <p>模型服务id</p>
+	ModelServiceId *string `json:"ModelServiceId,omitnil,omitempty" name:"ModelServiceId"`
+
+	// <p>匹配模型服务</p>
+	MatchModelName *string `json:"MatchModelName,omitnil,omitempty" name:"MatchModelName"`
+
+	// <p>重写模型</p>
+	RewriteModelName *string `json:"RewriteModelName,omitnil,omitempty" name:"RewriteModelName"`
+}
+
+type CloudNativeAPIGatewayLLMModelServiceRouteWeightedStrategy struct {
+	// <p>模型服务id</p>
+	ModelServiceId *string `json:"ModelServiceId,omitnil,omitempty" name:"ModelServiceId"`
+
+	// <p>权重值</p>
+	Weight *int64 `json:"Weight,omitnil,omitempty" name:"Weight"`
 }
 
 type CloudNativeAPIGatewayNode struct {
 	// 云原生网关节点 id
-	NodeId *string `json:"NodeId,omitnil" name:"NodeId"`
+	NodeId *string `json:"NodeId,omitnil,omitempty" name:"NodeId"`
 
 	// 节点 ip
-	NodeIp *string `json:"NodeIp,omitnil" name:"NodeIp"`
+	NodeIp *string `json:"NodeIp,omitnil,omitempty" name:"NodeIp"`
 
 	// Zone id
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ZoneId *string `json:"ZoneId,omitnil" name:"ZoneId"`
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// Zone
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Zone *string `json:"Zone,omitnil" name:"Zone"`
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
 	// 分组ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 分组名
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	GroupName *string `json:"GroupName,omitnil" name:"GroupName"`
+	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
 
 	// 状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Status *string `json:"Status,omitnil" name:"Status"`
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 节点权重
+	Weight *int64 `json:"Weight,omitnil,omitempty" name:"Weight"`
+
+	// 是否默认权重
+	IsDefaultWeight *bool `json:"IsDefaultWeight,omitnil,omitempty" name:"IsDefaultWeight"`
 }
 
 type CloudNativeAPIGatewayNodeConfig struct {
 	// 节点配置, 1c2g|2c4g|4c8g|8c16g。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Specification *string `json:"Specification,omitnil" name:"Specification"`
+	Specification *string `json:"Specification,omitnil,omitempty" name:"Specification"`
 
 	// 节点数量，2-9。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Number *int64 `json:"Number,omitnil" name:"Number"`
+	Number *int64 `json:"Number,omitnil,omitempty" name:"Number"`
 }
 
 type CloudNativeAPIGatewayRateLimitDetail struct {
 	// 插件启用状态
-	Enabled *bool `json:"Enabled,omitnil" name:"Enabled"`
+	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
 
 	// qps阈值
-	QpsThresholds []*QpsThreshold `json:"QpsThresholds,omitnil" name:"QpsThresholds"`
+	QpsThresholds []*QpsThreshold `json:"QpsThresholds,omitnil,omitempty" name:"QpsThresholds"`
+
+	// 需要进行流量控制的请求路径
+	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
+
+	// 需要进行流量控制的请求头Key
+	Header *string `json:"Header,omitnil,omitempty" name:"Header"`
 
 	// 限流依据
 	// ip service consumer credential path header
-	LimitBy *string `json:"LimitBy,omitnil" name:"LimitBy"`
-
-	// 响应策略
-	// url请求转发
-	// text 响应配置
-	// default 直接返回
-	ResponseType *string `json:"ResponseType,omitnil" name:"ResponseType"`
-
-	// 是否隐藏限流客户端响应头
-	HideClientHeaders *bool `json:"HideClientHeaders,omitnil" name:"HideClientHeaders"`
-
-	// 是否开启请求排队
-	IsDelay *bool `json:"IsDelay,omitnil" name:"IsDelay"`
-
-	// 需要进行流量控制的请求路径
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Path *string `json:"Path,omitnil" name:"Path"`
-
-	// 需要进行流量控制的请求头Key
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Header *string `json:"Header,omitnil" name:"Header"`
+	LimitBy *string `json:"LimitBy,omitnil,omitempty" name:"LimitBy"`
 
 	// 外部redis配置
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ExternalRedis *ExternalRedis `json:"ExternalRedis,omitnil" name:"ExternalRedis"`
+	ExternalRedis *ExternalRedis `json:"ExternalRedis,omitnil,omitempty" name:"ExternalRedis"`
+
+	// 全局配置中的redis配置
+	GlobalConfigId *string `json:"GlobalConfigId,omitnil,omitempty" name:"GlobalConfigId"`
 
 	// 计数器策略 
 	// local 单机
 	// redis  默认redis
 	// external_redis 外部redis
-	// 
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Policy *string `json:"Policy,omitnil" name:"Policy"`
+	Policy *string `json:"Policy,omitnil,omitempty" name:"Policy"`
 
 	// 响应配置，响应策略为text
-	// 
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	RateLimitResponse *RateLimitResponse `json:"RateLimitResponse,omitnil" name:"RateLimitResponse"`
+	RateLimitResponse *RateLimitResponse `json:"RateLimitResponse,omitnil,omitempty" name:"RateLimitResponse"`
 
 	// 请求转发地址
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	RateLimitResponseUrl *string `json:"RateLimitResponseUrl,omitnil" name:"RateLimitResponseUrl"`
+	RateLimitResponseUrl *string `json:"RateLimitResponseUrl,omitnil,omitempty" name:"RateLimitResponseUrl"`
+
+	// 响应策略
+	// url请求转发
+	// text 响应配置
+	// default 直接返回
+	ResponseType *string `json:"ResponseType,omitnil,omitempty" name:"ResponseType"`
+
+	// 是否隐藏限流客户端响应头
+	HideClientHeaders *bool `json:"HideClientHeaders,omitnil,omitempty" name:"HideClientHeaders"`
 
 	// 排队时间
-	LineUpTime *int64 `json:"LineUpTime,omitnil" name:"LineUpTime"`
+	LineUpTime *int64 `json:"LineUpTime,omitnil,omitempty" name:"LineUpTime"`
+
+	// 是否开启请求排队
+	IsDelay *bool `json:"IsDelay,omitnil,omitempty" name:"IsDelay"`
+
+	// 基础限流
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BasicLimitQpsThresholds []*QpsThreshold `json:"BasicLimitQpsThresholds,omitnil,omitempty" name:"BasicLimitQpsThresholds"`
+
+	// 参数限流的规则
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LimitRules []*LimitRule `json:"LimitRules,omitnil,omitempty" name:"LimitRules"`
 }
 
 type CloudNativeAPIGatewayStrategy struct {
 	// 策略ID
-	StrategyId *string `json:"StrategyId,omitnil" name:"StrategyId"`
+	StrategyId *string `json:"StrategyId,omitnil,omitempty" name:"StrategyId"`
 
 	// 策略名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	StrategyName *string `json:"StrategyName,omitnil" name:"StrategyName"`
+	StrategyName *string `json:"StrategyName,omitnil,omitempty" name:"StrategyName"`
 
 	// 创建时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CreateTime *string `json:"CreateTime,omitnil" name:"CreateTime"`
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 更新时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ModifyTime *string `json:"ModifyTime,omitnil" name:"ModifyTime"`
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
 
 	// 策略描述
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 弹性伸缩配置
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Config *CloudNativeAPIGatewayStrategyAutoScalerConfig `json:"Config,omitnil" name:"Config"`
+	Config *CloudNativeAPIGatewayStrategyAutoScalerConfig `json:"Config,omitnil,omitempty" name:"Config"`
 
 	// 网关实例ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 定时伸缩配置
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CronConfig *CloudNativeAPIGatewayStrategyCronScalerConfig `json:"CronConfig,omitnil" name:"CronConfig"`
+	CronConfig *CloudNativeAPIGatewayStrategyCronScalerConfig `json:"CronConfig,omitnil,omitempty" name:"CronConfig"`
 
 	// 最大节点数
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	//
 	// Deprecated: MaxReplicas is deprecated.
-	MaxReplicas *uint64 `json:"MaxReplicas,omitnil" name:"MaxReplicas"`
+	MaxReplicas *uint64 `json:"MaxReplicas,omitnil,omitempty" name:"MaxReplicas"`
 }
 
 type CloudNativeAPIGatewayStrategyAutoScalerConfig struct {
 	// 最大副本数
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	MaxReplicas *int64 `json:"MaxReplicas,omitnil" name:"MaxReplicas"`
+	MaxReplicas *int64 `json:"MaxReplicas,omitnil,omitempty" name:"MaxReplicas"`
 
 	// 指标列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Metrics []*CloudNativeAPIGatewayStrategyAutoScalerConfigMetric `json:"Metrics,omitnil" name:"Metrics"`
+	Metrics []*CloudNativeAPIGatewayStrategyAutoScalerConfigMetric `json:"Metrics,omitnil,omitempty" name:"Metrics"`
 
 	// 是否开启指标伸缩
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	//
 	// Deprecated: Enabled is deprecated.
-	Enabled *bool `json:"Enabled,omitnil" name:"Enabled"`
+	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
 
 	// 创建时间
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	//
 	// Deprecated: CreateTime is deprecated.
-	CreateTime *string `json:"CreateTime,omitnil" name:"CreateTime"`
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 修改时间
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	//
 	// Deprecated: ModifyTime is deprecated.
-	ModifyTime *string `json:"ModifyTime,omitnil" name:"ModifyTime"`
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
 
 	// 弹性策略ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	//
 	// Deprecated: StrategyId is deprecated.
-	StrategyId *string `json:"StrategyId,omitnil" name:"StrategyId"`
+	StrategyId *string `json:"StrategyId,omitnil,omitempty" name:"StrategyId"`
 
 	// 指标配置ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	//
 	// Deprecated: AutoScalerId is deprecated.
-	AutoScalerId *string `json:"AutoScalerId,omitnil" name:"AutoScalerId"`
+	AutoScalerId *string `json:"AutoScalerId,omitnil,omitempty" name:"AutoScalerId"`
 
 	// 指标伸缩行为配置
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Behavior *AutoScalerBehavior `json:"Behavior,omitnil" name:"Behavior"`
+	Behavior *AutoScalerBehavior `json:"Behavior,omitnil,omitempty" name:"Behavior"`
 }
 
 type CloudNativeAPIGatewayStrategyAutoScalerConfigMetric struct {
 	// 指标类型
 	// - Resource
-	Type *string `json:"Type,omitnil" name:"Type"`
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 指标资源名称
 	// - cpu
 	// - memory
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ResourceName *string `json:"ResourceName,omitnil" name:"ResourceName"`
+	ResourceName *string `json:"ResourceName,omitnil,omitempty" name:"ResourceName"`
 
 	// 指标目标类型，目前只支持百分比Utilization
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TargetType *string `json:"TargetType,omitnil" name:"TargetType"`
+	TargetType *string `json:"TargetType,omitnil,omitempty" name:"TargetType"`
 
 	// 指标目标值
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TargetValue *int64 `json:"TargetValue,omitnil" name:"TargetValue"`
+	TargetValue *int64 `json:"TargetValue,omitnil,omitempty" name:"TargetValue"`
 }
 
 type CloudNativeAPIGatewayStrategyBindingGroupInfo struct {
 	// 网关分组ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 节点配置
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	NodeConfig *CloudNativeAPIGatewayNodeConfig `json:"NodeConfig,omitnil" name:"NodeConfig"`
+	NodeConfig *CloudNativeAPIGatewayNodeConfig `json:"NodeConfig,omitnil,omitempty" name:"NodeConfig"`
 
 	// 绑定时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	BindTime *string `json:"BindTime,omitnil" name:"BindTime"`
+	BindTime *string `json:"BindTime,omitnil,omitempty" name:"BindTime"`
 
 	// 网关分组名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	GroupName *string `json:"GroupName,omitnil" name:"GroupName"`
+	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
 
 	// 绑定状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Status *string `json:"Status,omitnil" name:"Status"`
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 }
 
 type CloudNativeAPIGatewayStrategyCronScalerConfig struct {
@@ -659,110 +1456,451 @@ type CloudNativeAPIGatewayStrategyCronScalerConfig struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	//
 	// Deprecated: Enabled is deprecated.
-	Enabled *bool `json:"Enabled,omitnil" name:"Enabled"`
+	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
 
 	// 定时伸缩配置参数列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Params []*CloudNativeAPIGatewayStrategyCronScalerConfigParam `json:"Params,omitnil" name:"Params"`
+	Params []*CloudNativeAPIGatewayStrategyCronScalerConfigParam `json:"Params,omitnil,omitempty" name:"Params"`
 
 	// 创建时间
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	//
 	// Deprecated: CreateTime is deprecated.
-	CreateTime *string `json:"CreateTime,omitnil" name:"CreateTime"`
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 修改时间
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	//
 	// Deprecated: ModifyTime is deprecated.
-	ModifyTime *string `json:"ModifyTime,omitnil" name:"ModifyTime"`
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
 
 	// 弹性策略ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	//
 	// Deprecated: StrategyId is deprecated.
-	StrategyId *string `json:"StrategyId,omitnil" name:"StrategyId"`
+	StrategyId *string `json:"StrategyId,omitnil,omitempty" name:"StrategyId"`
 }
 
 type CloudNativeAPIGatewayStrategyCronScalerConfigParam struct {
 	// 定时伸缩周期
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Period *string `json:"Period,omitnil" name:"Period"`
+	Period *string `json:"Period,omitnil,omitempty" name:"Period"`
 
 	// 定时伸缩开始时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	StartAt *string `json:"StartAt,omitnil" name:"StartAt"`
+	StartAt *string `json:"StartAt,omitnil,omitempty" name:"StartAt"`
 
 	// 定时伸缩目标节点数，不超过指标伸缩中定义的最大节点数
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TargetReplicas *int64 `json:"TargetReplicas,omitnil" name:"TargetReplicas"`
+	TargetReplicas *int64 `json:"TargetReplicas,omitnil,omitempty" name:"TargetReplicas"`
 
 	// 定时伸缩cron表达式，无需输入
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Crontab *string `json:"Crontab,omitnil" name:"Crontab"`
+	Crontab *string `json:"Crontab,omitnil,omitempty" name:"Crontab"`
 }
 
 type CloudNativeAPIGatewayVpcConfig struct {
 	// 私有网络ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	VpcId *string `json:"VpcId,omitnil" name:"VpcId"`
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 子网ID。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	SubnetId *string `json:"SubnetId,omitnil" name:"SubnetId"`
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
+}
+
+type ConfigFile struct {
+	// 配置文件id
+	Id *uint64 `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// 配置文件名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 配置文件命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 配置文件组
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 配置文件内容
+	Content *string `json:"Content,omitnil,omitempty" name:"Content"`
+
+	// 配置文件格式
+	Format *string `json:"Format,omitnil,omitempty" name:"Format"`
+
+	// 配置文件注释
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// 配置文件状态
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 配置文件标签数组
+	Tags []*ConfigFileTag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 配置文件创建时间
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 配置文件创建者
+	CreateBy *string `json:"CreateBy,omitnil,omitempty" name:"CreateBy"`
+
+	// 配置文件修改时间
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
+
+	// 配置文件修改者
+	ModifyBy *string `json:"ModifyBy,omitnil,omitempty" name:"ModifyBy"`
+
+	// 配置文件发布时间
+	ReleaseTime *string `json:"ReleaseTime,omitnil,omitempty" name:"ReleaseTime"`
+
+	// 配置文件发布者
+	ReleaseBy *string `json:"ReleaseBy,omitnil,omitempty" name:"ReleaseBy"`
+
+	// 配置文件类型
+	ConfigFileSupportedClient *int64 `json:"ConfigFileSupportedClient,omitnil,omitempty" name:"ConfigFileSupportedClient"`
+
+	// 配置文件持久化
+	ConfigFilePersistent *ConfigFilePersistent `json:"ConfigFilePersistent,omitnil,omitempty" name:"ConfigFilePersistent"`
+
+	// 是否开启加密算法
+	Encrypted *bool `json:"Encrypted,omitnil,omitempty" name:"Encrypted"`
+
+	// 加密算法
+	EncryptAlgo *string `json:"EncryptAlgo,omitnil,omitempty" name:"EncryptAlgo"`
+}
+
+type ConfigFileGroup struct {
+	// 配置文件组id
+	Id *uint64 `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// 配置文件组名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 备注
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// 创建时间
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 创建者
+	CreateBy *string `json:"CreateBy,omitnil,omitempty" name:"CreateBy"`
+
+	// 修改时间
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
+
+	// 修改者
+	ModifyBy *string `json:"ModifyBy,omitnil,omitempty" name:"ModifyBy"`
+
+	// 文件数
+	FileCount *uint64 `json:"FileCount,omitnil,omitempty" name:"FileCount"`
+
+	// 关联用户，link_users
+	UserIds []*string `json:"UserIds,omitnil,omitempty" name:"UserIds"`
+
+	// 组id，link_groups
+	GroupIds []*string `json:"GroupIds,omitnil,omitempty" name:"GroupIds"`
+
+	// remove_link_users
+	RemoveUserIds []*string `json:"RemoveUserIds,omitnil,omitempty" name:"RemoveUserIds"`
+
+	// remove_link_groups
+	RemoveGroupIds []*string `json:"RemoveGroupIds,omitnil,omitempty" name:"RemoveGroupIds"`
+
+	// 是否可编辑
+	Editable *bool `json:"Editable,omitnil,omitempty" name:"Editable"`
+
+	// 归属者
+	Owner *string `json:"Owner,omitnil,omitempty" name:"Owner"`
+
+	// 部门
+	Department *string `json:"Department,omitnil,omitempty" name:"Department"`
+
+	// 业务
+	Business *string `json:"Business,omitnil,omitempty" name:"Business"`
+
+	// 配置文件组标签
+	ConfigFileGroupTags []*ConfigFileGroupTag `json:"ConfigFileGroupTags,omitnil,omitempty" name:"ConfigFileGroupTags"`
+}
+
+type ConfigFileGroupTag struct {
+	// key-value 键
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+
+	// key-value 值
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+}
+
+type ConfigFilePersistent struct {
+	// 文件编码
+	Encoding *string `json:"Encoding,omitnil,omitempty" name:"Encoding"`
+
+	// 文件下发路径
+	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
+
+	// 文件后置命令
+	PostCmd *string `json:"PostCmd,omitnil,omitempty" name:"PostCmd"`
+}
+
+type ConfigFilePublishInfo struct {
+	// 发布名称
+	ReleaseName *string `json:"ReleaseName,omitnil,omitempty" name:"ReleaseName"`
+
+	// 命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 发布组
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 文件名
+	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
+
+	// 内容
+	Content *string `json:"Content,omitnil,omitempty" name:"Content"`
+
+	// 描述
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// 格式
+	Format *string `json:"Format,omitnil,omitempty" name:"Format"`
+
+	// 创建者
+	CreateBy *string `json:"CreateBy,omitnil,omitempty" name:"CreateBy"`
+
+	// 修改者
+	ModifyBy *string `json:"ModifyBy,omitnil,omitempty" name:"ModifyBy"`
+
+	// 标签
+	Tags []*ConfigFileTag `json:"Tags,omitnil,omitempty" name:"Tags"`
+}
+
+type ConfigFileRelease struct {
+	// <p>配置文件发布id</p>
+	Id *uint64 `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// <p>配置文件发布名称</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>配置文件发布命名空间</p>
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// <p>配置文件发布组</p>
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// <p>配置文件发布文件名称</p>
+	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
+
+	// <p>配置文件发布内容</p>
+	Content *string `json:"Content,omitnil,omitempty" name:"Content"`
+
+	// <p>配置文件发布注释</p>
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// <p>配置文件发布Md5</p>
+	Md5 *string `json:"Md5,omitnil,omitempty" name:"Md5"`
+
+	// <p>配置文件发布版本</p>
+	Version *uint64 `json:"Version,omitnil,omitempty" name:"Version"`
+
+	// <p>配置文件发布创建时间</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>配置文件发布创建者</p>
+	CreateBy *string `json:"CreateBy,omitnil,omitempty" name:"CreateBy"`
+
+	// <p>配置文件发布修改时间</p>
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
+
+	// <p>配置文件发布修改者</p>
+	ModifyBy *string `json:"ModifyBy,omitnil,omitempty" name:"ModifyBy"`
+
+	// <p>发布描述</p>
+	ReleaseDescription *string `json:"ReleaseDescription,omitnil,omitempty" name:"ReleaseDescription"`
+
+	// <p>是否生效</p>
+	Active *bool `json:"Active,omitnil,omitempty" name:"Active"`
+
+	// <p>格式</p>
+	Format *string `json:"Format,omitnil,omitempty" name:"Format"`
+
+	// <p>配置文件ID</p>
+	ConfigFileId *string `json:"ConfigFileId,omitnil,omitempty" name:"ConfigFileId"`
+
+	// <p>配置文件类型</p>
+	ConfigFileSupportedClient *int64 `json:"ConfigFileSupportedClient,omitnil,omitempty" name:"ConfigFileSupportedClient"`
+
+	// <p>配置文件持久化</p>
+	ConfigFilePersistent *ConfigFilePersistent `json:"ConfigFilePersistent,omitnil,omitempty" name:"ConfigFilePersistent"`
+
+	// <p>灰度标签</p>
+	BetaLabels []*BetaLabel `json:"BetaLabels,omitnil,omitempty" name:"BetaLabels"`
+
+	// <p>发布类型</p><p>枚举值：</p><ul><li>gary： 灰度发布</li></ul>
+	ReleaseType *string `json:"ReleaseType,omitnil,omitempty" name:"ReleaseType"`
+}
+
+type ConfigFileReleaseDeletion struct {
+	// 命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 配置分组
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 文件名称
+	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
+
+	// 发布版本
+	ReleaseVersion *string `json:"ReleaseVersion,omitnil,omitempty" name:"ReleaseVersion"`
+
+	// 配置发布ID
+	Id *uint64 `json:"Id,omitnil,omitempty" name:"Id"`
+}
+
+type ConfigFileReleaseHistory struct {
+	// 配置文件发布历史记录id
+	Id *uint64 `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// 配置文件发布历史名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 配置文件发布历史命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 配置文件发布历史组
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 配置文件发布历史名称
+	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
+
+	// 配置文件发布历史内容
+	Content *string `json:"Content,omitnil,omitempty" name:"Content"`
+
+	// 配置文件发布历史格式
+	Format *string `json:"Format,omitnil,omitempty" name:"Format"`
+
+	// 配置文件发布历史注释
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// 配置文件发布历史Md5
+	Md5 *string `json:"Md5,omitnil,omitempty" name:"Md5"`
+
+	// 配置文件发布历史类型
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 配置文件发布历史状态
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 配置文件发布历史标签组
+	Tags []*ConfigFileTag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 配置文件发布创建时间
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 配置文件发布创建者
+	CreateBy *string `json:"CreateBy,omitnil,omitempty" name:"CreateBy"`
+
+	// 配置文件发布修改时间
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
+
+	// 配置文件发布修改者
+	ModifyBy *string `json:"ModifyBy,omitnil,omitempty" name:"ModifyBy"`
+
+	// 发布描述
+	ReleaseDescription *string `json:"ReleaseDescription,omitnil,omitempty" name:"ReleaseDescription"`
+
+	// 原因，用于失败时原因展示
+	ReleaseReason *string `json:"ReleaseReason,omitnil,omitempty" name:"ReleaseReason"`
+
+	// 配置文件类型
+	ConfigFileSupportedClient *int64 `json:"ConfigFileSupportedClient,omitnil,omitempty" name:"ConfigFileSupportedClient"`
+
+	// 配置文件持久化
+	ConfigFilePersistent *ConfigFilePersistent `json:"ConfigFilePersistent,omitnil,omitempty" name:"ConfigFilePersistent"`
+}
+
+type ConfigFileTag struct {
+	// key-value 键
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+
+	// key-value 值
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+}
+
+type ConfigFileTemplate struct {
+	// 配置文件模板id
+	Id *uint64 `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// 配置文件模板名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 配置文件模板内容
+	Content *string `json:"Content,omitnil,omitempty" name:"Content"`
+
+	// 配置文件模板格式
+	Format *string `json:"Format,omitnil,omitempty" name:"Format"`
+
+	// 配置文件模板注释
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// 配置文件模板创建时间
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 配置文件模板创建者
+	CreateBy *string `json:"CreateBy,omitnil,omitempty" name:"CreateBy"`
+
+	// 配置文件模板修改时间
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
+
+	// 配置文件模板修改者
+	ModifyBy *string `json:"ModifyBy,omitnil,omitempty" name:"ModifyBy"`
 }
 
 // Predefined struct for user
 type CreateAutoScalerResourceStrategyRequestParams struct {
 	// 网关实例ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 策略名称
-	StrategyName *string `json:"StrategyName,omitnil" name:"StrategyName"`
+	StrategyName *string `json:"StrategyName,omitnil,omitempty" name:"StrategyName"`
 
 	// 策略描述
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 指标伸缩配置
-	Config *CloudNativeAPIGatewayStrategyAutoScalerConfig `json:"Config,omitnil" name:"Config"`
+	Config *CloudNativeAPIGatewayStrategyAutoScalerConfig `json:"Config,omitnil,omitempty" name:"Config"`
 
 	// 定时伸缩配置列表
 	//
 	// Deprecated: CronScalerConfig is deprecated.
-	CronScalerConfig *CloudNativeAPIGatewayStrategyCronScalerConfig `json:"CronScalerConfig,omitnil" name:"CronScalerConfig"`
+	CronScalerConfig *CloudNativeAPIGatewayStrategyCronScalerConfig `json:"CronScalerConfig,omitnil,omitempty" name:"CronScalerConfig"`
 
 	// 最大节点数
 	//
 	// Deprecated: MaxReplicas is deprecated.
-	MaxReplicas *int64 `json:"MaxReplicas,omitnil" name:"MaxReplicas"`
+	MaxReplicas *int64 `json:"MaxReplicas,omitnil,omitempty" name:"MaxReplicas"`
 
 	// 定时伸缩配置
-	CronConfig *CloudNativeAPIGatewayStrategyCronScalerConfig `json:"CronConfig,omitnil" name:"CronConfig"`
+	CronConfig *CloudNativeAPIGatewayStrategyCronScalerConfig `json:"CronConfig,omitnil,omitempty" name:"CronConfig"`
 }
 
 type CreateAutoScalerResourceStrategyRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关实例ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 策略名称
-	StrategyName *string `json:"StrategyName,omitnil" name:"StrategyName"`
+	StrategyName *string `json:"StrategyName,omitnil,omitempty" name:"StrategyName"`
 
 	// 策略描述
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 指标伸缩配置
-	Config *CloudNativeAPIGatewayStrategyAutoScalerConfig `json:"Config,omitnil" name:"Config"`
+	Config *CloudNativeAPIGatewayStrategyAutoScalerConfig `json:"Config,omitnil,omitempty" name:"Config"`
 
 	// 定时伸缩配置列表
-	CronScalerConfig *CloudNativeAPIGatewayStrategyCronScalerConfig `json:"CronScalerConfig,omitnil" name:"CronScalerConfig"`
+	CronScalerConfig *CloudNativeAPIGatewayStrategyCronScalerConfig `json:"CronScalerConfig,omitnil,omitempty" name:"CronScalerConfig"`
 
 	// 最大节点数
-	MaxReplicas *int64 `json:"MaxReplicas,omitnil" name:"MaxReplicas"`
+	MaxReplicas *int64 `json:"MaxReplicas,omitnil,omitempty" name:"MaxReplicas"`
 
 	// 定时伸缩配置
-	CronConfig *CloudNativeAPIGatewayStrategyCronScalerConfig `json:"CronConfig,omitnil" name:"CronConfig"`
+	CronConfig *CloudNativeAPIGatewayStrategyCronScalerConfig `json:"CronConfig,omitnil,omitempty" name:"CronConfig"`
 }
 
 func (r *CreateAutoScalerResourceStrategyRequest) ToJsonString() string {
@@ -795,14 +1933,13 @@ type CreateAutoScalerResourceStrategyResponseParams struct {
 	// 是否成功
 	//
 	// Deprecated: Result is deprecated.
-	Result *bool `json:"Result,omitnil" name:"Result"`
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 策略Id
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	StrategyId *string `json:"StrategyId,omitnil" name:"StrategyId"`
+	StrategyId *string `json:"StrategyId,omitnil,omitempty" name:"StrategyId"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CreateAutoScalerResourceStrategyResponse struct {
@@ -824,26 +1961,32 @@ func (r *CreateAutoScalerResourceStrategyResponse) FromJsonString(s string) erro
 // Predefined struct for user
 type CreateCloudNativeAPIGatewayCanaryRuleRequestParams struct {
 	// 网关 ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务 ID
-	ServiceId *string `json:"ServiceId,omitnil" name:"ServiceId"`
+	ServiceId *string `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
 
 	// 灰度规则配置
-	CanaryRule *CloudNativeAPIGatewayCanaryRule `json:"CanaryRule,omitnil" name:"CanaryRule"`
+	CanaryRule *CloudNativeAPIGatewayCanaryRule `json:"CanaryRule,omitnil,omitempty" name:"CanaryRule"`
+
+	// 灰度规则配置列表，如果配置了此参数，将以此参数为准，忽略CanaryRule参数
+	CanaryRuleList []*CloudNativeAPIGatewayCanaryRule `json:"CanaryRuleList,omitnil,omitempty" name:"CanaryRuleList"`
 }
 
 type CreateCloudNativeAPIGatewayCanaryRuleRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关 ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务 ID
-	ServiceId *string `json:"ServiceId,omitnil" name:"ServiceId"`
+	ServiceId *string `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
 
 	// 灰度规则配置
-	CanaryRule *CloudNativeAPIGatewayCanaryRule `json:"CanaryRule,omitnil" name:"CanaryRule"`
+	CanaryRule *CloudNativeAPIGatewayCanaryRule `json:"CanaryRule,omitnil,omitempty" name:"CanaryRule"`
+
+	// 灰度规则配置列表，如果配置了此参数，将以此参数为准，忽略CanaryRule参数
+	CanaryRuleList []*CloudNativeAPIGatewayCanaryRule `json:"CanaryRuleList,omitnil,omitempty" name:"CanaryRuleList"`
 }
 
 func (r *CreateCloudNativeAPIGatewayCanaryRuleRequest) ToJsonString() string {
@@ -861,6 +2004,7 @@ func (r *CreateCloudNativeAPIGatewayCanaryRuleRequest) FromJsonString(s string) 
 	delete(f, "GatewayId")
 	delete(f, "ServiceId")
 	delete(f, "CanaryRule")
+	delete(f, "CanaryRuleList")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCloudNativeAPIGatewayCanaryRuleRequest has unknown keys!", "")
 	}
@@ -869,8 +2013,8 @@ func (r *CreateCloudNativeAPIGatewayCanaryRuleRequest) FromJsonString(s string) 
 
 // Predefined struct for user
 type CreateCloudNativeAPIGatewayCanaryRuleResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CreateCloudNativeAPIGatewayCanaryRuleResponse struct {
@@ -892,48 +2036,48 @@ func (r *CreateCloudNativeAPIGatewayCanaryRuleResponse) FromJsonString(s string)
 // Predefined struct for user
 type CreateCloudNativeAPIGatewayCertificateRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 绑定的域名
-	BindDomains []*string `json:"BindDomains,omitnil" name:"BindDomains"`
+	BindDomains []*string `json:"BindDomains,omitnil,omitempty" name:"BindDomains"`
 
 	// ssl平台证书 Id
-	CertId *string `json:"CertId,omitnil" name:"CertId"`
+	CertId *string `json:"CertId,omitnil,omitempty" name:"CertId"`
 
 	// 证书名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 证书私钥
 	//
 	// Deprecated: Key is deprecated.
-	Key *string `json:"Key,omitnil" name:"Key"`
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
 
 	// 证书pem格式
 	//
 	// Deprecated: Crt is deprecated.
-	Crt *string `json:"Crt,omitnil" name:"Crt"`
+	Crt *string `json:"Crt,omitnil,omitempty" name:"Crt"`
 }
 
 type CreateCloudNativeAPIGatewayCertificateRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 绑定的域名
-	BindDomains []*string `json:"BindDomains,omitnil" name:"BindDomains"`
+	BindDomains []*string `json:"BindDomains,omitnil,omitempty" name:"BindDomains"`
 
 	// ssl平台证书 Id
-	CertId *string `json:"CertId,omitnil" name:"CertId"`
+	CertId *string `json:"CertId,omitnil,omitempty" name:"CertId"`
 
 	// 证书名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 证书私钥
-	Key *string `json:"Key,omitnil" name:"Key"`
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
 
 	// 证书pem格式
-	Crt *string `json:"Crt,omitnil" name:"Crt"`
+	Crt *string `json:"Crt,omitnil,omitempty" name:"Crt"`
 }
 
 func (r *CreateCloudNativeAPIGatewayCertificateRequest) ToJsonString() string {
@@ -963,11 +2107,10 @@ func (r *CreateCloudNativeAPIGatewayCertificateRequest) FromJsonString(s string)
 // Predefined struct for user
 type CreateCloudNativeAPIGatewayCertificateResponseParams struct {
 	// 创建证书结果
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Result *CertificateInfo `json:"Result,omitnil" name:"Result"`
+	Result *CertificateInfo `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CreateCloudNativeAPIGatewayCertificateResponse struct {
@@ -987,28 +2130,605 @@ func (r *CreateCloudNativeAPIGatewayCertificateResponse) FromJsonString(s string
 }
 
 // Predefined struct for user
+type CreateCloudNativeAPIGatewayConsumerGroupRequestParams struct {
+	// 网关实例id
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>消费者组名称，最长 60 字符。同一网关下唯一。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>启用状态。</p><p>枚举值：</p><ul><li>Enable：启用</li><li>Disable：禁用</li></ul>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>消费者组描述。最长 200 字符。</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+}
+
+type CreateCloudNativeAPIGatewayConsumerGroupRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关实例id
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>消费者组名称，最长 60 字符。同一网关下唯一。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>启用状态。</p><p>枚举值：</p><ul><li>Enable：启用</li><li>Disable：禁用</li></ul>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>消费者组描述。最长 200 字符。</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+}
+
+func (r *CreateCloudNativeAPIGatewayConsumerGroupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCloudNativeAPIGatewayConsumerGroupRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "Name")
+	delete(f, "Status")
+	delete(f, "Description")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCloudNativeAPIGatewayConsumerGroupRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateCloudNativeAPIGatewayConsumerGroupResponseParams struct {
+	// <p>创建结果。包含成功标识与新建资源 ID。</p>
+	Result *CNAPIGwCreateCommonResult `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateCloudNativeAPIGatewayConsumerGroupResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateCloudNativeAPIGatewayConsumerGroupResponseParams `json:"Response"`
+}
+
+func (r *CreateCloudNativeAPIGatewayConsumerGroupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCloudNativeAPIGatewayConsumerGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateCloudNativeAPIGatewayConsumerRequestParams struct {
+	// 网关实例id
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>消费者名称，最长 60 字符。同一网关下唯一。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>消费者描述。最长 200 字符。</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+}
+
+type CreateCloudNativeAPIGatewayConsumerRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关实例id
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>消费者名称，最长 60 字符。同一网关下唯一。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>消费者描述。最长 200 字符。</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+}
+
+func (r *CreateCloudNativeAPIGatewayConsumerRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCloudNativeAPIGatewayConsumerRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "Name")
+	delete(f, "Description")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCloudNativeAPIGatewayConsumerRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateCloudNativeAPIGatewayConsumerResponseParams struct {
+	// <p>创建结果。包含成功标识与新建资源 ID。</p>
+	Result *CNAPIGwCreateCommonResult `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateCloudNativeAPIGatewayConsumerResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateCloudNativeAPIGatewayConsumerResponseParams `json:"Response"`
+}
+
+func (r *CreateCloudNativeAPIGatewayConsumerResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCloudNativeAPIGatewayConsumerResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateCloudNativeAPIGatewayLLMModelAPIRequestParams struct {
+	// <p>网关 id。</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>模型 API 名称，最长 60 字符。同一网关下唯一。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>业务场景。</p><p>枚举值：</p><ul><li>Chat：聊天</li><li>Image：图像（需要网关版本 ≥ 3.9.3）</li></ul>
+	SceneType *string `json:"SceneType,omitnil,omitempty" name:"SceneType"`
+
+	// <p>请求协议（小写）。当前仅支持：</p><ul><li>openai</li></ul>
+	RequestProtocol *string `json:"RequestProtocol,omitnil,omitempty" name:"RequestProtocol"`
+
+	// <p>关联的模型服务 ID 列表，长度 1-10。</p><p>注：字段名建议改为 ModelServiceIds，当前保留用于兼容。</p>
+	ListModelServiceId []*string `json:"ListModelServiceId,omitnil,omitempty" name:"ListModelServiceId"`
+
+	// <p>路由列表，至少 1 条。每条包含 Methods/Paths/Hosts 等 Kong 路由属性。</p>
+	RouteList []*DefaultKongRoute `json:"RouteList,omitnil,omitempty" name:"RouteList"`
+
+	// <p>统一前缀路径（可选）。例如 /v1/openai。</p>
+	BasePath *string `json:"BasePath,omitnil,omitempty" name:"BasePath"`
+
+	// <p>模型 API 描述。最长 200 字符。</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>多模型服务路由策略。ListModelServiceId 多于 1 项时必填。</p>
+	ModelServiceRoute *CloudNativeAPIGatewayLLMModelServiceRoute `json:"ModelServiceRoute,omitnil,omitempty" name:"ModelServiceRoute"`
+
+	// <p>Header 路由匹配规则。当前仅支持 Operator=exact。</p>
+	MatchHeaders []*AIGWKVMatch `json:"MatchHeaders,omitnil,omitempty" name:"MatchHeaders"`
+
+	// <p>是否启用跨服务 Fallback。开启后需提供 CrossServiceFallbackConfig。</p>
+	EnableCrossServiceFallback *bool `json:"EnableCrossServiceFallback,omitnil,omitempty" name:"EnableCrossServiceFallback"`
+
+	// <p>跨服务 Fallback 配置。EnableCrossServiceFallback=true 时必填。</p>
+	CrossServiceFallbackConfig *AIGWCrossServiceFallbackConfig `json:"CrossServiceFallbackConfig,omitnil,omitempty" name:"CrossServiceFallbackConfig"`
+
+	// <p>标签过滤策略。需要网关版本 ≥ 3.9.4。</p>
+	TagFilter *AIGWTagFilter `json:"TagFilter,omitnil,omitempty" name:"TagFilter"`
+
+	// <p>日志输出配置（请求/响应 payload 落 LLM Log）。需要网关版本 ≥ 3.9.4。</p>
+	LogConfig *AIGWLogConfig `json:"LogConfig,omitnil,omitempty" name:"LogConfig"`
+}
+
+type CreateCloudNativeAPIGatewayLLMModelAPIRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>网关 id。</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>模型 API 名称，最长 60 字符。同一网关下唯一。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>业务场景。</p><p>枚举值：</p><ul><li>Chat：聊天</li><li>Image：图像（需要网关版本 ≥ 3.9.3）</li></ul>
+	SceneType *string `json:"SceneType,omitnil,omitempty" name:"SceneType"`
+
+	// <p>请求协议（小写）。当前仅支持：</p><ul><li>openai</li></ul>
+	RequestProtocol *string `json:"RequestProtocol,omitnil,omitempty" name:"RequestProtocol"`
+
+	// <p>关联的模型服务 ID 列表，长度 1-10。</p><p>注：字段名建议改为 ModelServiceIds，当前保留用于兼容。</p>
+	ListModelServiceId []*string `json:"ListModelServiceId,omitnil,omitempty" name:"ListModelServiceId"`
+
+	// <p>路由列表，至少 1 条。每条包含 Methods/Paths/Hosts 等 Kong 路由属性。</p>
+	RouteList []*DefaultKongRoute `json:"RouteList,omitnil,omitempty" name:"RouteList"`
+
+	// <p>统一前缀路径（可选）。例如 /v1/openai。</p>
+	BasePath *string `json:"BasePath,omitnil,omitempty" name:"BasePath"`
+
+	// <p>模型 API 描述。最长 200 字符。</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>多模型服务路由策略。ListModelServiceId 多于 1 项时必填。</p>
+	ModelServiceRoute *CloudNativeAPIGatewayLLMModelServiceRoute `json:"ModelServiceRoute,omitnil,omitempty" name:"ModelServiceRoute"`
+
+	// <p>Header 路由匹配规则。当前仅支持 Operator=exact。</p>
+	MatchHeaders []*AIGWKVMatch `json:"MatchHeaders,omitnil,omitempty" name:"MatchHeaders"`
+
+	// <p>是否启用跨服务 Fallback。开启后需提供 CrossServiceFallbackConfig。</p>
+	EnableCrossServiceFallback *bool `json:"EnableCrossServiceFallback,omitnil,omitempty" name:"EnableCrossServiceFallback"`
+
+	// <p>跨服务 Fallback 配置。EnableCrossServiceFallback=true 时必填。</p>
+	CrossServiceFallbackConfig *AIGWCrossServiceFallbackConfig `json:"CrossServiceFallbackConfig,omitnil,omitempty" name:"CrossServiceFallbackConfig"`
+
+	// <p>标签过滤策略。需要网关版本 ≥ 3.9.4。</p>
+	TagFilter *AIGWTagFilter `json:"TagFilter,omitnil,omitempty" name:"TagFilter"`
+
+	// <p>日志输出配置（请求/响应 payload 落 LLM Log）。需要网关版本 ≥ 3.9.4。</p>
+	LogConfig *AIGWLogConfig `json:"LogConfig,omitnil,omitempty" name:"LogConfig"`
+}
+
+func (r *CreateCloudNativeAPIGatewayLLMModelAPIRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCloudNativeAPIGatewayLLMModelAPIRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "Name")
+	delete(f, "SceneType")
+	delete(f, "RequestProtocol")
+	delete(f, "ListModelServiceId")
+	delete(f, "RouteList")
+	delete(f, "BasePath")
+	delete(f, "Description")
+	delete(f, "ModelServiceRoute")
+	delete(f, "MatchHeaders")
+	delete(f, "EnableCrossServiceFallback")
+	delete(f, "CrossServiceFallbackConfig")
+	delete(f, "TagFilter")
+	delete(f, "LogConfig")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCloudNativeAPIGatewayLLMModelAPIRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateCloudNativeAPIGatewayLLMModelAPIResponseParams struct {
+	// <p>是否成功。</p>
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// <p>模型 API ID，全局唯一标识。</p>
+	ModelAPIId *string `json:"ModelAPIId,omitnil,omitempty" name:"ModelAPIId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateCloudNativeAPIGatewayLLMModelAPIResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateCloudNativeAPIGatewayLLMModelAPIResponseParams `json:"Response"`
+}
+
+func (r *CreateCloudNativeAPIGatewayLLMModelAPIResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCloudNativeAPIGatewayLLMModelAPIResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateCloudNativeAPIGatewayLLMModelServiceRequestParams struct {
+	// <p>网关 id。</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>服务名称，最长60个字符，支持中英文大小写、数字及分隔符（“-”、“_”)，不能以数字和分隔符开头，不能以分隔符结尾。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>服务类型。目前仅支持 LLMService。</p><p>枚举值：</p><ul><li>LLMService： 大语言模型服务</li></ul>
+	ServiceType *string `json:"ServiceType,omitnil,omitempty" name:"ServiceType"`
+
+	// <p>选择模型提供商, 选项：OpenAI、Anthropic、Azure OpenAI等。</p>
+	ModelProvider *string `json:"ModelProvider,omitnil,omitempty" name:"ModelProvider"`
+
+	// <p>API协议标准，根据供应商动态变化：OpenAI→OpenAI/v1，Anthropic→Anthropic/v1等</p>
+	ModelProtocol *string `json:"ModelProtocol,omitnil,omitempty" name:"ModelProtocol"`
+
+	// <p>模型选择方式，选项：Specify（指定模型）、PassThrough（透传请求模型）。</p>
+	ModelSelector *string `json:"ModelSelector,omitnil,omitempty" name:"ModelSelector"`
+
+	// <p>LLM 厂商颁发的认证信息 token 。</p>
+	SecretKeyIds []*string `json:"SecretKeyIds,omitnil,omitempty" name:"SecretKeyIds"`
+
+	// <p>默认模型，模型选择方式为 Specify 时必填。</p>
+	DefaultModel *string `json:"DefaultModel,omitnil,omitempty" name:"DefaultModel"`
+
+	// <p>开启模型降级，模型选择方式为 Specify 时必填。</p>
+	EnableModelFallback *bool `json:"EnableModelFallback,omitnil,omitempty" name:"EnableModelFallback"`
+
+	// <p>可以配置备用模型规则，EnableSpecifyModelFallbackxa0为 true 时必填。</p>
+	ModelFallbackRule *CloudNativeAPIGatewayLLMModelFallbackRule `json:"ModelFallbackRule,omitnil,omitempty" name:"ModelFallbackRule"`
+
+	// <p>开启模型参数校验，是否校验客户端传递的 model 参数,xa0模型选择方式为 PassThrough 时必填</p>
+	EnableModelParamCheck *bool `json:"EnableModelParamCheck,omitnil,omitempty" name:"EnableModelParamCheck"`
+
+	// <p>模型检验信息，EnableModelParamCheckxa0为 true 时必填。</p>
+	ModelParamCheckRule *CloudNativeAPIGatewayLLMModelParamCheckInfo `json:"ModelParamCheckRule,omitnil,omitempty" name:"ModelParamCheckRule"`
+
+	// <p>描述。</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>服务提供商自定义 url</p>
+	UpstreamURL *string `json:"UpstreamURL,omitnil,omitempty" name:"UpstreamURL"`
+
+	// <p>连接超时时间</p><p>取值范围：[1, 3600000]</p><p>单位：毫秒</p><p>默认值：10000</p>
+	ConnectTimeout *int64 `json:"ConnectTimeout,omitnil,omitempty" name:"ConnectTimeout"`
+
+	// <p>写入超时时间</p><p>取值范围：[1, 3600000]</p><p>单位：毫秒</p><p>默认值：60000</p>
+	WriteTimeout *int64 `json:"WriteTimeout,omitnil,omitempty" name:"WriteTimeout"`
+
+	// <p>读取超时时间</p><p>取值范围：[1, 3600000]</p><p>单位：毫秒</p><p>默认值：60000</p>
+	ReadTimeout *int64 `json:"ReadTimeout,omitnil,omitempty" name:"ReadTimeout"`
+
+	// <p>重试次数</p><p>取值范围：[0, 5]</p><p>单位：次</p><p>默认值：0</p>
+	Retries *int64 `json:"Retries,omitnil,omitempty" name:"Retries"`
+
+	// <p>路径拼接模式</p><p>枚举值：</p><ul><li>FixedPath： 固定地址</li><li>AutoConcat： 自动拼接</li></ul>
+	UpstreamUrlMode *string `json:"UpstreamUrlMode,omitnil,omitempty" name:"UpstreamUrlMode"`
+
+	// <p>sni</p>
+	SNI *string `json:"SNI,omitnil,omitempty" name:"SNI"`
+
+	// <p>模型服务级别的配额上限（RPM/TPM）。需要网关版本 ≥ 3.9.4。</p>
+	QuotaLimit *AIGWLLMQuotaLimit `json:"QuotaLimit,omitnil,omitempty" name:"QuotaLimit"`
+
+	// <p>标签</p>
+	Tags []*string `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// <p>模型改写规则</p>
+	ModelRewriteRules []*AIGWModelRewriteRule `json:"ModelRewriteRules,omitnil,omitempty" name:"ModelRewriteRules"`
+
+	// <p>服务来源ID</p>
+	SourceId *string `json:"SourceId,omitnil,omitempty" name:"SourceId"`
+
+	// <p>服务来源命名空间</p>
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// <p>服务来源服务名</p>
+	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
+
+	// <p>服务来源协议</p>
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// <p>扩展参数</p>
+	ExtParams []*KeyValue `json:"ExtParams,omitnil,omitempty" name:"ExtParams"`
+
+	// <p>自定义供应商名字</p>
+	CustomProviderName *string `json:"CustomProviderName,omitnil,omitempty" name:"CustomProviderName"`
+
+	// <p>是否开启密钥轮转</p>
+	KeyRotationEnabled *bool `json:"KeyRotationEnabled,omitnil,omitempty" name:"KeyRotationEnabled"`
+
+	// <p>密钥轮转周期</p><p>单位：天数</p>
+	KeyRotationPeriodDays *uint64 `json:"KeyRotationPeriodDays,omitnil,omitempty" name:"KeyRotationPeriodDays"`
+
+	// <p>外部服务来源ID</p>
+	ExternalInstanceId *string `json:"ExternalInstanceId,omitnil,omitempty" name:"ExternalInstanceId"`
+}
+
+type CreateCloudNativeAPIGatewayLLMModelServiceRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>网关 id。</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>服务名称，最长60个字符，支持中英文大小写、数字及分隔符（“-”、“_”)，不能以数字和分隔符开头，不能以分隔符结尾。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>服务类型。目前仅支持 LLMService。</p><p>枚举值：</p><ul><li>LLMService： 大语言模型服务</li></ul>
+	ServiceType *string `json:"ServiceType,omitnil,omitempty" name:"ServiceType"`
+
+	// <p>选择模型提供商, 选项：OpenAI、Anthropic、Azure OpenAI等。</p>
+	ModelProvider *string `json:"ModelProvider,omitnil,omitempty" name:"ModelProvider"`
+
+	// <p>API协议标准，根据供应商动态变化：OpenAI→OpenAI/v1，Anthropic→Anthropic/v1等</p>
+	ModelProtocol *string `json:"ModelProtocol,omitnil,omitempty" name:"ModelProtocol"`
+
+	// <p>模型选择方式，选项：Specify（指定模型）、PassThrough（透传请求模型）。</p>
+	ModelSelector *string `json:"ModelSelector,omitnil,omitempty" name:"ModelSelector"`
+
+	// <p>LLM 厂商颁发的认证信息 token 。</p>
+	SecretKeyIds []*string `json:"SecretKeyIds,omitnil,omitempty" name:"SecretKeyIds"`
+
+	// <p>默认模型，模型选择方式为 Specify 时必填。</p>
+	DefaultModel *string `json:"DefaultModel,omitnil,omitempty" name:"DefaultModel"`
+
+	// <p>开启模型降级，模型选择方式为 Specify 时必填。</p>
+	EnableModelFallback *bool `json:"EnableModelFallback,omitnil,omitempty" name:"EnableModelFallback"`
+
+	// <p>可以配置备用模型规则，EnableSpecifyModelFallbackxa0为 true 时必填。</p>
+	ModelFallbackRule *CloudNativeAPIGatewayLLMModelFallbackRule `json:"ModelFallbackRule,omitnil,omitempty" name:"ModelFallbackRule"`
+
+	// <p>开启模型参数校验，是否校验客户端传递的 model 参数,xa0模型选择方式为 PassThrough 时必填</p>
+	EnableModelParamCheck *bool `json:"EnableModelParamCheck,omitnil,omitempty" name:"EnableModelParamCheck"`
+
+	// <p>模型检验信息，EnableModelParamCheckxa0为 true 时必填。</p>
+	ModelParamCheckRule *CloudNativeAPIGatewayLLMModelParamCheckInfo `json:"ModelParamCheckRule,omitnil,omitempty" name:"ModelParamCheckRule"`
+
+	// <p>描述。</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>服务提供商自定义 url</p>
+	UpstreamURL *string `json:"UpstreamURL,omitnil,omitempty" name:"UpstreamURL"`
+
+	// <p>连接超时时间</p><p>取值范围：[1, 3600000]</p><p>单位：毫秒</p><p>默认值：10000</p>
+	ConnectTimeout *int64 `json:"ConnectTimeout,omitnil,omitempty" name:"ConnectTimeout"`
+
+	// <p>写入超时时间</p><p>取值范围：[1, 3600000]</p><p>单位：毫秒</p><p>默认值：60000</p>
+	WriteTimeout *int64 `json:"WriteTimeout,omitnil,omitempty" name:"WriteTimeout"`
+
+	// <p>读取超时时间</p><p>取值范围：[1, 3600000]</p><p>单位：毫秒</p><p>默认值：60000</p>
+	ReadTimeout *int64 `json:"ReadTimeout,omitnil,omitempty" name:"ReadTimeout"`
+
+	// <p>重试次数</p><p>取值范围：[0, 5]</p><p>单位：次</p><p>默认值：0</p>
+	Retries *int64 `json:"Retries,omitnil,omitempty" name:"Retries"`
+
+	// <p>路径拼接模式</p><p>枚举值：</p><ul><li>FixedPath： 固定地址</li><li>AutoConcat： 自动拼接</li></ul>
+	UpstreamUrlMode *string `json:"UpstreamUrlMode,omitnil,omitempty" name:"UpstreamUrlMode"`
+
+	// <p>sni</p>
+	SNI *string `json:"SNI,omitnil,omitempty" name:"SNI"`
+
+	// <p>模型服务级别的配额上限（RPM/TPM）。需要网关版本 ≥ 3.9.4。</p>
+	QuotaLimit *AIGWLLMQuotaLimit `json:"QuotaLimit,omitnil,omitempty" name:"QuotaLimit"`
+
+	// <p>标签</p>
+	Tags []*string `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// <p>模型改写规则</p>
+	ModelRewriteRules []*AIGWModelRewriteRule `json:"ModelRewriteRules,omitnil,omitempty" name:"ModelRewriteRules"`
+
+	// <p>服务来源ID</p>
+	SourceId *string `json:"SourceId,omitnil,omitempty" name:"SourceId"`
+
+	// <p>服务来源命名空间</p>
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// <p>服务来源服务名</p>
+	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
+
+	// <p>服务来源协议</p>
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// <p>扩展参数</p>
+	ExtParams []*KeyValue `json:"ExtParams,omitnil,omitempty" name:"ExtParams"`
+
+	// <p>自定义供应商名字</p>
+	CustomProviderName *string `json:"CustomProviderName,omitnil,omitempty" name:"CustomProviderName"`
+
+	// <p>是否开启密钥轮转</p>
+	KeyRotationEnabled *bool `json:"KeyRotationEnabled,omitnil,omitempty" name:"KeyRotationEnabled"`
+
+	// <p>密钥轮转周期</p><p>单位：天数</p>
+	KeyRotationPeriodDays *uint64 `json:"KeyRotationPeriodDays,omitnil,omitempty" name:"KeyRotationPeriodDays"`
+
+	// <p>外部服务来源ID</p>
+	ExternalInstanceId *string `json:"ExternalInstanceId,omitnil,omitempty" name:"ExternalInstanceId"`
+}
+
+func (r *CreateCloudNativeAPIGatewayLLMModelServiceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCloudNativeAPIGatewayLLMModelServiceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "Name")
+	delete(f, "ServiceType")
+	delete(f, "ModelProvider")
+	delete(f, "ModelProtocol")
+	delete(f, "ModelSelector")
+	delete(f, "SecretKeyIds")
+	delete(f, "DefaultModel")
+	delete(f, "EnableModelFallback")
+	delete(f, "ModelFallbackRule")
+	delete(f, "EnableModelParamCheck")
+	delete(f, "ModelParamCheckRule")
+	delete(f, "Description")
+	delete(f, "UpstreamURL")
+	delete(f, "ConnectTimeout")
+	delete(f, "WriteTimeout")
+	delete(f, "ReadTimeout")
+	delete(f, "Retries")
+	delete(f, "UpstreamUrlMode")
+	delete(f, "SNI")
+	delete(f, "QuotaLimit")
+	delete(f, "Tags")
+	delete(f, "ModelRewriteRules")
+	delete(f, "SourceId")
+	delete(f, "Namespace")
+	delete(f, "ServiceName")
+	delete(f, "Protocol")
+	delete(f, "ExtParams")
+	delete(f, "CustomProviderName")
+	delete(f, "KeyRotationEnabled")
+	delete(f, "KeyRotationPeriodDays")
+	delete(f, "ExternalInstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCloudNativeAPIGatewayLLMModelServiceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateCloudNativeAPIGatewayLLMModelServiceResponseParams struct {
+	// <p>是否成功</p>
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// <p>模型服务 ID，全局唯一标识。</p>
+	ModelServiceId *string `json:"ModelServiceId,omitnil,omitempty" name:"ModelServiceId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateCloudNativeAPIGatewayLLMModelServiceResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateCloudNativeAPIGatewayLLMModelServiceResponseParams `json:"Response"`
+}
+
+func (r *CreateCloudNativeAPIGatewayLLMModelServiceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCloudNativeAPIGatewayLLMModelServiceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateCloudNativeAPIGatewayPublicNetworkRequestParams struct {
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 分组id。
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 公网负载均衡配置。
-	InternetConfig *InternetConfig `json:"InternetConfig,omitnil" name:"InternetConfig"`
+	InternetConfig *InternetConfig `json:"InternetConfig,omitnil,omitempty" name:"InternetConfig"`
 }
 
 type CreateCloudNativeAPIGatewayPublicNetworkRequest struct {
 	*tchttp.BaseRequest
 	
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 分组id。
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 公网负载均衡配置。
-	InternetConfig *InternetConfig `json:"InternetConfig,omitnil" name:"InternetConfig"`
+	InternetConfig *InternetConfig `json:"InternetConfig,omitnil,omitempty" name:"InternetConfig"`
 }
 
 func (r *CreateCloudNativeAPIGatewayPublicNetworkRequest) ToJsonString() string {
@@ -1035,11 +2755,10 @@ func (r *CreateCloudNativeAPIGatewayPublicNetworkRequest) FromJsonString(s strin
 // Predefined struct for user
 type CreateCloudNativeAPIGatewayPublicNetworkResponseParams struct {
 	// 返回结果
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Result *CreatePublicNetworkResult `json:"Result,omitnil" name:"Result"`
+	Result *CreatePublicNetworkResult `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CreateCloudNativeAPIGatewayPublicNetworkResponse struct {
@@ -1061,106 +2780,112 @@ func (r *CreateCloudNativeAPIGatewayPublicNetworkResponse) FromJsonString(s stri
 // Predefined struct for user
 type CreateCloudNativeAPIGatewayRequestParams struct {
 	// 云原生API网关名字, 最多支持60个字符。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 云原生API网关类型, 目前只支持kong。
-	Type *string `json:"Type,omitnil" name:"Type"`
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 云原生API网关版本。参考值：
 	// - 2.4.1
 	// - 2.5.1
-	GatewayVersion *string `json:"GatewayVersion,omitnil" name:"GatewayVersion"`
+	GatewayVersion *string `json:"GatewayVersion,omitnil,omitempty" name:"GatewayVersion"`
 
 	// 云原生API网关节点配置。
-	NodeConfig *CloudNativeAPIGatewayNodeConfig `json:"NodeConfig,omitnil" name:"NodeConfig"`
+	NodeConfig *CloudNativeAPIGatewayNodeConfig `json:"NodeConfig,omitnil,omitempty" name:"NodeConfig"`
 
 	// 云原生API网关vpc配置。
-	VpcConfig *CloudNativeAPIGatewayVpcConfig `json:"VpcConfig,omitnil" name:"VpcConfig"`
+	VpcConfig *CloudNativeAPIGatewayVpcConfig `json:"VpcConfig,omitnil,omitempty" name:"VpcConfig"`
 
 	// 云原生API网关描述信息, 最多支持120个字符。
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 标签列表
-	Tags []*InstanceTagInfo `json:"Tags,omitnil" name:"Tags"`
+	Tags []*InstanceTagInfo `json:"Tags,omitnil,omitempty" name:"Tags"`
 
 	// 是否开启 CLS 日志。默认值：fasle
-	EnableCls *bool `json:"EnableCls,omitnil" name:"EnableCls"`
+	EnableCls *bool `json:"EnableCls,omitnil,omitempty" name:"EnableCls"`
 
 	// 产品版本。参考值：
 	// - TRIAL：开发版
 	// - STANDARD：标准版 （默认值）
 	// - PROFESSIONAL：专业版
-	FeatureVersion *string `json:"FeatureVersion,omitnil" name:"FeatureVersion"`
+	FeatureVersion *string `json:"FeatureVersion,omitnil,omitempty" name:"FeatureVersion"`
 
 	// 公网出流量带宽，[1,2048]Mbps
-	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil" name:"InternetMaxBandwidthOut"`
+	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
 
 	// 实例实际的地域信息，默认值：ap-guangzhou
-	EngineRegion *string `json:"EngineRegion,omitnil" name:"EngineRegion"`
+	EngineRegion *string `json:"EngineRegion,omitnil,omitempty" name:"EngineRegion"`
 
 	// ingress Class名称
-	IngressClassName *string `json:"IngressClassName,omitnil" name:"IngressClassName"`
+	IngressClassName *string `json:"IngressClassName,omitnil,omitempty" name:"IngressClassName"`
 
 	// 付费类型。参考值：
 	// 0：后付费（默认值）
 	// 1：预付费（接口暂不支持创建预付费实例）
-	TradeType *int64 `json:"TradeType,omitnil" name:"TradeType"`
+	TradeType *int64 `json:"TradeType,omitnil,omitempty" name:"TradeType"`
 
 	// 公网相关配置
-	InternetConfig *InternetConfig `json:"InternetConfig,omitnil" name:"InternetConfig"`
+	InternetConfig *InternetConfig `json:"InternetConfig,omitnil,omitempty" name:"InternetConfig"`
+
+	// 关联的prometheus ID
+	PromId *string `json:"PromId,omitnil,omitempty" name:"PromId"`
 }
 
 type CreateCloudNativeAPIGatewayRequest struct {
 	*tchttp.BaseRequest
 	
 	// 云原生API网关名字, 最多支持60个字符。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 云原生API网关类型, 目前只支持kong。
-	Type *string `json:"Type,omitnil" name:"Type"`
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 云原生API网关版本。参考值：
 	// - 2.4.1
 	// - 2.5.1
-	GatewayVersion *string `json:"GatewayVersion,omitnil" name:"GatewayVersion"`
+	GatewayVersion *string `json:"GatewayVersion,omitnil,omitempty" name:"GatewayVersion"`
 
 	// 云原生API网关节点配置。
-	NodeConfig *CloudNativeAPIGatewayNodeConfig `json:"NodeConfig,omitnil" name:"NodeConfig"`
+	NodeConfig *CloudNativeAPIGatewayNodeConfig `json:"NodeConfig,omitnil,omitempty" name:"NodeConfig"`
 
 	// 云原生API网关vpc配置。
-	VpcConfig *CloudNativeAPIGatewayVpcConfig `json:"VpcConfig,omitnil" name:"VpcConfig"`
+	VpcConfig *CloudNativeAPIGatewayVpcConfig `json:"VpcConfig,omitnil,omitempty" name:"VpcConfig"`
 
 	// 云原生API网关描述信息, 最多支持120个字符。
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 标签列表
-	Tags []*InstanceTagInfo `json:"Tags,omitnil" name:"Tags"`
+	Tags []*InstanceTagInfo `json:"Tags,omitnil,omitempty" name:"Tags"`
 
 	// 是否开启 CLS 日志。默认值：fasle
-	EnableCls *bool `json:"EnableCls,omitnil" name:"EnableCls"`
+	EnableCls *bool `json:"EnableCls,omitnil,omitempty" name:"EnableCls"`
 
 	// 产品版本。参考值：
 	// - TRIAL：开发版
 	// - STANDARD：标准版 （默认值）
 	// - PROFESSIONAL：专业版
-	FeatureVersion *string `json:"FeatureVersion,omitnil" name:"FeatureVersion"`
+	FeatureVersion *string `json:"FeatureVersion,omitnil,omitempty" name:"FeatureVersion"`
 
 	// 公网出流量带宽，[1,2048]Mbps
-	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil" name:"InternetMaxBandwidthOut"`
+	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
 
 	// 实例实际的地域信息，默认值：ap-guangzhou
-	EngineRegion *string `json:"EngineRegion,omitnil" name:"EngineRegion"`
+	EngineRegion *string `json:"EngineRegion,omitnil,omitempty" name:"EngineRegion"`
 
 	// ingress Class名称
-	IngressClassName *string `json:"IngressClassName,omitnil" name:"IngressClassName"`
+	IngressClassName *string `json:"IngressClassName,omitnil,omitempty" name:"IngressClassName"`
 
 	// 付费类型。参考值：
 	// 0：后付费（默认值）
 	// 1：预付费（接口暂不支持创建预付费实例）
-	TradeType *int64 `json:"TradeType,omitnil" name:"TradeType"`
+	TradeType *int64 `json:"TradeType,omitnil,omitempty" name:"TradeType"`
 
 	// 公网相关配置
-	InternetConfig *InternetConfig `json:"InternetConfig,omitnil" name:"InternetConfig"`
+	InternetConfig *InternetConfig `json:"InternetConfig,omitnil,omitempty" name:"InternetConfig"`
+
+	// 关联的prometheus ID
+	PromId *string `json:"PromId,omitnil,omitempty" name:"PromId"`
 }
 
 func (r *CreateCloudNativeAPIGatewayRequest) ToJsonString() string {
@@ -1189,6 +2914,7 @@ func (r *CreateCloudNativeAPIGatewayRequest) FromJsonString(s string) error {
 	delete(f, "IngressClassName")
 	delete(f, "TradeType")
 	delete(f, "InternetConfig")
+	delete(f, "PromId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCloudNativeAPIGatewayRequest has unknown keys!", "")
 	}
@@ -1198,10 +2924,10 @@ func (r *CreateCloudNativeAPIGatewayRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type CreateCloudNativeAPIGatewayResponseParams struct {
 	// 创建云原生API网关实例响应结果。
-	Result *CreateCloudNativeAPIGatewayResult `json:"Result,omitnil" name:"Result"`
+	Result *CreateCloudNativeAPIGatewayResult `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CreateCloudNativeAPIGatewayResponse struct {
@@ -1222,41 +2948,40 @@ func (r *CreateCloudNativeAPIGatewayResponse) FromJsonString(s string) error {
 
 type CreateCloudNativeAPIGatewayResult struct {
 	// 云原生API网关ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 云原生网关状态。
-	Status *string `json:"Status,omitnil" name:"Status"`
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 任务ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TaskId *string `json:"TaskId,omitnil" name:"TaskId"`
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 }
 
 // Predefined struct for user
 type CreateCloudNativeAPIGatewayRouteRateLimitRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 路由id，或路由名称。
 	// 不支持“未命名”
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// 限流配置
-	LimitDetail *CloudNativeAPIGatewayRateLimitDetail `json:"LimitDetail,omitnil" name:"LimitDetail"`
+	LimitDetail *CloudNativeAPIGatewayRateLimitDetail `json:"LimitDetail,omitnil,omitempty" name:"LimitDetail"`
 }
 
 type CreateCloudNativeAPIGatewayRouteRateLimitRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 路由id，或路由名称。
 	// 不支持“未命名”
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// 限流配置
-	LimitDetail *CloudNativeAPIGatewayRateLimitDetail `json:"LimitDetail,omitnil" name:"LimitDetail"`
+	LimitDetail *CloudNativeAPIGatewayRateLimitDetail `json:"LimitDetail,omitnil,omitempty" name:"LimitDetail"`
 }
 
 func (r *CreateCloudNativeAPIGatewayRouteRateLimitRequest) ToJsonString() string {
@@ -1282,8 +3007,8 @@ func (r *CreateCloudNativeAPIGatewayRouteRateLimitRequest) FromJsonString(s stri
 
 // Predefined struct for user
 type CreateCloudNativeAPIGatewayRouteRateLimitResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CreateCloudNativeAPIGatewayRouteRateLimitResponse struct {
@@ -1305,13 +3030,13 @@ func (r *CreateCloudNativeAPIGatewayRouteRateLimitResponse) FromJsonString(s str
 // Predefined struct for user
 type CreateCloudNativeAPIGatewayRouteRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 所属服务的ID
-	ServiceID *string `json:"ServiceID,omitnil" name:"ServiceID"`
+	ServiceID *string `json:"ServiceID,omitnil,omitempty" name:"ServiceID"`
 
 	// 路由的名字，实例级别唯一，可以不提供
-	RouteName *string `json:"RouteName,omitnil" name:"RouteName"`
+	RouteName *string `json:"RouteName,omitnil,omitempty" name:"RouteName"`
 
 	// 路由的方法，其中方法可选值：
 	// - GET
@@ -1330,51 +3055,63 @@ type CreateCloudNativeAPIGatewayRouteRequestParams struct {
 	// - MKCOL
 	// - LOCK
 	// - UNLOCK
-	Methods []*string `json:"Methods,omitnil" name:"Methods"`
+	Methods []*string `json:"Methods,omitnil,omitempty" name:"Methods"`
 
 	// 路由的域名
-	Hosts []*string `json:"Hosts,omitnil" name:"Hosts"`
+	Hosts []*string `json:"Hosts,omitnil,omitempty" name:"Hosts"`
 
 	// 路由的路径
-	Paths []*string `json:"Paths,omitnil" name:"Paths"`
+	Paths []*string `json:"Paths,omitnil,omitempty" name:"Paths"`
 
 	// 路由的协议，可选
 	// - https
 	// - http
-	Protocols []*string `json:"Protocols,omitnil" name:"Protocols"`
+	Protocols []*string `json:"Protocols,omitnil,omitempty" name:"Protocols"`
 
 	// 转发到后端时是否保留Host
-	PreserveHost *bool `json:"PreserveHost,omitnil" name:"PreserveHost"`
+	PreserveHost *bool `json:"PreserveHost,omitnil,omitempty" name:"PreserveHost"`
 
 	// https重定向状态码
-	HttpsRedirectStatusCode *int64 `json:"HttpsRedirectStatusCode,omitnil" name:"HttpsRedirectStatusCode"`
+	HttpsRedirectStatusCode *int64 `json:"HttpsRedirectStatusCode,omitnil,omitempty" name:"HttpsRedirectStatusCode"`
 
 	// 转发到后端时是否StripPath
-	StripPath *bool `json:"StripPath,omitnil" name:"StripPath"`
+	StripPath *bool `json:"StripPath,omitnil,omitempty" name:"StripPath"`
 
 	// 是否开启强制HTTPS
 	//
 	// Deprecated: ForceHttps is deprecated.
-	ForceHttps *bool `json:"ForceHttps,omitnil" name:"ForceHttps"`
+	ForceHttps *bool `json:"ForceHttps,omitnil,omitempty" name:"ForceHttps"`
 
 	// 四层匹配的目的端口
-	DestinationPorts []*uint64 `json:"DestinationPorts,omitnil" name:"DestinationPorts"`
+	DestinationPorts []*uint64 `json:"DestinationPorts,omitnil,omitempty" name:"DestinationPorts"`
 
 	// 路由的Headers
-	Headers []*KVMapping `json:"Headers,omitnil" name:"Headers"`
+	Headers []*KVMapping `json:"Headers,omitnil,omitempty" name:"Headers"`
+
+	// 是否缓存请求body，默认true
+	RequestBuffering *bool `json:"RequestBuffering,omitnil,omitempty" name:"RequestBuffering"`
+
+	// 是否缓存响应body，默认true
+	ResponseBuffering *bool `json:"ResponseBuffering,omitnil,omitempty" name:"ResponseBuffering"`
+
+	// 正则优先级
+	RegexPriority *int64 `json:"RegexPriority,omitnil,omitempty" name:"RegexPriority"`
+
+	// queryString参数
+	QueryStringParameters []*KVMapping `json:"QueryStringParameters,omitnil,omitempty" name:"QueryStringParameters"`
 }
 
 type CreateCloudNativeAPIGatewayRouteRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 所属服务的ID
-	ServiceID *string `json:"ServiceID,omitnil" name:"ServiceID"`
+	ServiceID *string `json:"ServiceID,omitnil,omitempty" name:"ServiceID"`
 
 	// 路由的名字，实例级别唯一，可以不提供
-	RouteName *string `json:"RouteName,omitnil" name:"RouteName"`
+	RouteName *string `json:"RouteName,omitnil,omitempty" name:"RouteName"`
 
 	// 路由的方法，其中方法可选值：
 	// - GET
@@ -1393,36 +3130,48 @@ type CreateCloudNativeAPIGatewayRouteRequest struct {
 	// - MKCOL
 	// - LOCK
 	// - UNLOCK
-	Methods []*string `json:"Methods,omitnil" name:"Methods"`
+	Methods []*string `json:"Methods,omitnil,omitempty" name:"Methods"`
 
 	// 路由的域名
-	Hosts []*string `json:"Hosts,omitnil" name:"Hosts"`
+	Hosts []*string `json:"Hosts,omitnil,omitempty" name:"Hosts"`
 
 	// 路由的路径
-	Paths []*string `json:"Paths,omitnil" name:"Paths"`
+	Paths []*string `json:"Paths,omitnil,omitempty" name:"Paths"`
 
 	// 路由的协议，可选
 	// - https
 	// - http
-	Protocols []*string `json:"Protocols,omitnil" name:"Protocols"`
+	Protocols []*string `json:"Protocols,omitnil,omitempty" name:"Protocols"`
 
 	// 转发到后端时是否保留Host
-	PreserveHost *bool `json:"PreserveHost,omitnil" name:"PreserveHost"`
+	PreserveHost *bool `json:"PreserveHost,omitnil,omitempty" name:"PreserveHost"`
 
 	// https重定向状态码
-	HttpsRedirectStatusCode *int64 `json:"HttpsRedirectStatusCode,omitnil" name:"HttpsRedirectStatusCode"`
+	HttpsRedirectStatusCode *int64 `json:"HttpsRedirectStatusCode,omitnil,omitempty" name:"HttpsRedirectStatusCode"`
 
 	// 转发到后端时是否StripPath
-	StripPath *bool `json:"StripPath,omitnil" name:"StripPath"`
+	StripPath *bool `json:"StripPath,omitnil,omitempty" name:"StripPath"`
 
 	// 是否开启强制HTTPS
-	ForceHttps *bool `json:"ForceHttps,omitnil" name:"ForceHttps"`
+	ForceHttps *bool `json:"ForceHttps,omitnil,omitempty" name:"ForceHttps"`
 
 	// 四层匹配的目的端口
-	DestinationPorts []*uint64 `json:"DestinationPorts,omitnil" name:"DestinationPorts"`
+	DestinationPorts []*uint64 `json:"DestinationPorts,omitnil,omitempty" name:"DestinationPorts"`
 
 	// 路由的Headers
-	Headers []*KVMapping `json:"Headers,omitnil" name:"Headers"`
+	Headers []*KVMapping `json:"Headers,omitnil,omitempty" name:"Headers"`
+
+	// 是否缓存请求body，默认true
+	RequestBuffering *bool `json:"RequestBuffering,omitnil,omitempty" name:"RequestBuffering"`
+
+	// 是否缓存响应body，默认true
+	ResponseBuffering *bool `json:"ResponseBuffering,omitnil,omitempty" name:"ResponseBuffering"`
+
+	// 正则优先级
+	RegexPriority *int64 `json:"RegexPriority,omitnil,omitempty" name:"RegexPriority"`
+
+	// queryString参数
+	QueryStringParameters []*KVMapping `json:"QueryStringParameters,omitnil,omitempty" name:"QueryStringParameters"`
 }
 
 func (r *CreateCloudNativeAPIGatewayRouteRequest) ToJsonString() string {
@@ -1450,6 +3199,10 @@ func (r *CreateCloudNativeAPIGatewayRouteRequest) FromJsonString(s string) error
 	delete(f, "ForceHttps")
 	delete(f, "DestinationPorts")
 	delete(f, "Headers")
+	delete(f, "RequestBuffering")
+	delete(f, "ResponseBuffering")
+	delete(f, "RegexPriority")
+	delete(f, "QueryStringParameters")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCloudNativeAPIGatewayRouteRequest has unknown keys!", "")
 	}
@@ -1458,8 +3211,8 @@ func (r *CreateCloudNativeAPIGatewayRouteRequest) FromJsonString(s string) error
 
 // Predefined struct for user
 type CreateCloudNativeAPIGatewayRouteResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CreateCloudNativeAPIGatewayRouteResponse struct {
@@ -1478,45 +3231,184 @@ func (r *CreateCloudNativeAPIGatewayRouteResponse) FromJsonString(s string) erro
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateCloudNativeAPIGatewaySecretKeyRequestParams struct {
+	// <p>实例 ID</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>密钥协议类型。</p><p>枚举值：</p><ul><li>ApiKey</li><li>Basic</li><li>Hmac</li><li>OAuth2</li><li>JWT</li></ul>
+	SecretType *string `json:"SecretType,omitnil,omitempty" name:"SecretType"`
+
+	// <p>密钥名称，2-60 字符。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>密钥生成方式。</p><p>枚举值：</p><ul><li>System：系统自动生成</li><li>Custom：用户自定义（需传 SecretValue）</li><li>KMS：使用 KMS 密钥（需传 KmsKeyName 与 KmsKeyVersion）</li></ul>
+	GenerateType *string `json:"GenerateType,omitnil,omitempty" name:"GenerateType"`
+
+	// <p>密钥归属资源类型。</p><p>枚举值：</p><ul><li>Consumer：消费者</li><li>ModelService：模型服务</li></ul>
+	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
+
+	// <p>KMS 密钥名称。GenerateType=KMS 时必填。</p>
+	KmsKeyName *string `json:"KmsKeyName,omitnil,omitempty" name:"KmsKeyName"`
+
+	// <p>KMS 密钥版本。GenerateType=KMS 时必填。</p>
+	KmsKeyVersion *string `json:"KmsKeyVersion,omitnil,omitempty" name:"KmsKeyVersion"`
+
+	// <p>密钥值，长度 8-256。GenerateType=Custom 时必填。</p>
+	SecretValue *string `json:"SecretValue,omitnil,omitempty" name:"SecretValue"`
+
+	// <p>密钥描述。最长 200 字符。</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>JWT凭证配置</p>
+	JWTCredentialConfig *AIGWJWTCredentialConfig `json:"JWTCredentialConfig,omitnil,omitempty" name:"JWTCredentialConfig"`
+
+	// <p>OAuth2.0凭证配置</p>
+	OAuthCredentialConfig *AIGWOAuthCredentialConfig `json:"OAuthCredentialConfig,omitnil,omitempty" name:"OAuthCredentialConfig"`
+
+	// <p>OIDC凭证配置</p>
+	OIDCCredentialConfig *AIGWOIDCCredentialConfig `json:"OIDCCredentialConfig,omitnil,omitempty" name:"OIDCCredentialConfig"`
+
+	// <p>第三方平台类型</p><p>枚举值：</p><ul><li>Dify： Dify平台</li></ul>
+	Provider *string `json:"Provider,omitnil,omitempty" name:"Provider"`
+}
+
+type CreateCloudNativeAPIGatewaySecretKeyRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实例 ID</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>密钥协议类型。</p><p>枚举值：</p><ul><li>ApiKey</li><li>Basic</li><li>Hmac</li><li>OAuth2</li><li>JWT</li></ul>
+	SecretType *string `json:"SecretType,omitnil,omitempty" name:"SecretType"`
+
+	// <p>密钥名称，2-60 字符。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>密钥生成方式。</p><p>枚举值：</p><ul><li>System：系统自动生成</li><li>Custom：用户自定义（需传 SecretValue）</li><li>KMS：使用 KMS 密钥（需传 KmsKeyName 与 KmsKeyVersion）</li></ul>
+	GenerateType *string `json:"GenerateType,omitnil,omitempty" name:"GenerateType"`
+
+	// <p>密钥归属资源类型。</p><p>枚举值：</p><ul><li>Consumer：消费者</li><li>ModelService：模型服务</li></ul>
+	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
+
+	// <p>KMS 密钥名称。GenerateType=KMS 时必填。</p>
+	KmsKeyName *string `json:"KmsKeyName,omitnil,omitempty" name:"KmsKeyName"`
+
+	// <p>KMS 密钥版本。GenerateType=KMS 时必填。</p>
+	KmsKeyVersion *string `json:"KmsKeyVersion,omitnil,omitempty" name:"KmsKeyVersion"`
+
+	// <p>密钥值，长度 8-256。GenerateType=Custom 时必填。</p>
+	SecretValue *string `json:"SecretValue,omitnil,omitempty" name:"SecretValue"`
+
+	// <p>密钥描述。最长 200 字符。</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>JWT凭证配置</p>
+	JWTCredentialConfig *AIGWJWTCredentialConfig `json:"JWTCredentialConfig,omitnil,omitempty" name:"JWTCredentialConfig"`
+
+	// <p>OAuth2.0凭证配置</p>
+	OAuthCredentialConfig *AIGWOAuthCredentialConfig `json:"OAuthCredentialConfig,omitnil,omitempty" name:"OAuthCredentialConfig"`
+
+	// <p>OIDC凭证配置</p>
+	OIDCCredentialConfig *AIGWOIDCCredentialConfig `json:"OIDCCredentialConfig,omitnil,omitempty" name:"OIDCCredentialConfig"`
+
+	// <p>第三方平台类型</p><p>枚举值：</p><ul><li>Dify： Dify平台</li></ul>
+	Provider *string `json:"Provider,omitnil,omitempty" name:"Provider"`
+}
+
+func (r *CreateCloudNativeAPIGatewaySecretKeyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCloudNativeAPIGatewaySecretKeyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "SecretType")
+	delete(f, "Name")
+	delete(f, "GenerateType")
+	delete(f, "ResourceType")
+	delete(f, "KmsKeyName")
+	delete(f, "KmsKeyVersion")
+	delete(f, "SecretValue")
+	delete(f, "Description")
+	delete(f, "JWTCredentialConfig")
+	delete(f, "OAuthCredentialConfig")
+	delete(f, "OIDCCredentialConfig")
+	delete(f, "Provider")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCloudNativeAPIGatewaySecretKeyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateCloudNativeAPIGatewaySecretKeyResponseParams struct {
+	// <p>创建结果。包含成功标识与新建资源 ID。</p>
+	Result *CNAPIGwCreateCommonResult `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateCloudNativeAPIGatewaySecretKeyResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateCloudNativeAPIGatewaySecretKeyResponseParams `json:"Response"`
+}
+
+func (r *CreateCloudNativeAPIGatewaySecretKeyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCloudNativeAPIGatewaySecretKeyResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type CreateCloudNativeAPIGatewayServerGroupResult struct {
 	// 网关实例id
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 分组id
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Status *string `json:"Status,omitnil" name:"Status"`
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 任务ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TaskId *string `json:"TaskId,omitnil" name:"TaskId"`
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 }
 
 // Predefined struct for user
 type CreateCloudNativeAPIGatewayServiceRateLimitRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务名称，或服务ID
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 限流配置
-	LimitDetail *CloudNativeAPIGatewayRateLimitDetail `json:"LimitDetail,omitnil" name:"LimitDetail"`
+	LimitDetail *CloudNativeAPIGatewayRateLimitDetail `json:"LimitDetail,omitnil,omitempty" name:"LimitDetail"`
 }
 
 type CreateCloudNativeAPIGatewayServiceRateLimitRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务名称，或服务ID
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 限流配置
-	LimitDetail *CloudNativeAPIGatewayRateLimitDetail `json:"LimitDetail,omitnil" name:"LimitDetail"`
+	LimitDetail *CloudNativeAPIGatewayRateLimitDetail `json:"LimitDetail,omitnil,omitempty" name:"LimitDetail"`
 }
 
 func (r *CreateCloudNativeAPIGatewayServiceRateLimitRequest) ToJsonString() string {
@@ -1542,8 +3434,8 @@ func (r *CreateCloudNativeAPIGatewayServiceRateLimitRequest) FromJsonString(s st
 
 // Predefined struct for user
 type CreateCloudNativeAPIGatewayServiceRateLimitResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CreateCloudNativeAPIGatewayServiceRateLimitResponse struct {
@@ -1565,26 +3457,23 @@ func (r *CreateCloudNativeAPIGatewayServiceRateLimitResponse) FromJsonString(s s
 // Predefined struct for user
 type CreateCloudNativeAPIGatewayServiceRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 请求协议：
 	// - https
 	// - http
 	// - tcp
 	// - udp
-	Protocol *string `json:"Protocol,omitnil" name:"Protocol"`
-
-	// 请求路径
-	Path *string `json:"Path,omitnil" name:"Path"`
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
 	// 超时时间，单位ms
-	Timeout *int64 `json:"Timeout,omitnil" name:"Timeout"`
+	Timeout *int64 `json:"Timeout,omitnil,omitempty" name:"Timeout"`
 
 	// 重试次数
-	Retries *int64 `json:"Retries,omitnil" name:"Retries"`
+	Retries *int64 `json:"Retries,omitnil,omitempty" name:"Retries"`
 
 	// 服务类型: 
 	// - Kubernetes 
@@ -1592,36 +3481,36 @@ type CreateCloudNativeAPIGatewayServiceRequestParams struct {
 	// - IPList
 	// - HostIP
 	// - Scf	
-	UpstreamType *string `json:"UpstreamType,omitnil" name:"UpstreamType"`
+	UpstreamType *string `json:"UpstreamType,omitnil,omitempty" name:"UpstreamType"`
 
 	// 服务配置信息
-	UpstreamInfo *KongUpstreamInfo `json:"UpstreamInfo,omitnil" name:"UpstreamInfo"`
+	UpstreamInfo *KongUpstreamInfo `json:"UpstreamInfo,omitnil,omitempty" name:"UpstreamInfo"`
+
+	// 请求路径
+	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
 }
 
 type CreateCloudNativeAPIGatewayServiceRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 请求协议：
 	// - https
 	// - http
 	// - tcp
 	// - udp
-	Protocol *string `json:"Protocol,omitnil" name:"Protocol"`
-
-	// 请求路径
-	Path *string `json:"Path,omitnil" name:"Path"`
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
 	// 超时时间，单位ms
-	Timeout *int64 `json:"Timeout,omitnil" name:"Timeout"`
+	Timeout *int64 `json:"Timeout,omitnil,omitempty" name:"Timeout"`
 
 	// 重试次数
-	Retries *int64 `json:"Retries,omitnil" name:"Retries"`
+	Retries *int64 `json:"Retries,omitnil,omitempty" name:"Retries"`
 
 	// 服务类型: 
 	// - Kubernetes 
@@ -1629,10 +3518,13 @@ type CreateCloudNativeAPIGatewayServiceRequest struct {
 	// - IPList
 	// - HostIP
 	// - Scf	
-	UpstreamType *string `json:"UpstreamType,omitnil" name:"UpstreamType"`
+	UpstreamType *string `json:"UpstreamType,omitnil,omitempty" name:"UpstreamType"`
 
 	// 服务配置信息
-	UpstreamInfo *KongUpstreamInfo `json:"UpstreamInfo,omitnil" name:"UpstreamInfo"`
+	UpstreamInfo *KongUpstreamInfo `json:"UpstreamInfo,omitnil,omitempty" name:"UpstreamInfo"`
+
+	// 请求路径
+	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
 }
 
 func (r *CreateCloudNativeAPIGatewayServiceRequest) ToJsonString() string {
@@ -1650,11 +3542,11 @@ func (r *CreateCloudNativeAPIGatewayServiceRequest) FromJsonString(s string) err
 	delete(f, "GatewayId")
 	delete(f, "Name")
 	delete(f, "Protocol")
-	delete(f, "Path")
 	delete(f, "Timeout")
 	delete(f, "Retries")
 	delete(f, "UpstreamType")
 	delete(f, "UpstreamInfo")
+	delete(f, "Path")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCloudNativeAPIGatewayServiceRequest has unknown keys!", "")
 	}
@@ -1664,11 +3556,10 @@ func (r *CreateCloudNativeAPIGatewayServiceRequest) FromJsonString(s string) err
 // Predefined struct for user
 type CreateCloudNativeAPIGatewayServiceResponseParams struct {
 	// 网关服务创建结果
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Result *CreateGatewayServiceResult `json:"Result,omitnil" name:"Result"`
+	Result *CreateGatewayServiceResult `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CreateCloudNativeAPIGatewayServiceResponse struct {
@@ -1688,6 +3579,137 @@ func (r *CreateCloudNativeAPIGatewayServiceResponse) FromJsonString(s string) er
 }
 
 // Predefined struct for user
+type CreateConfigFileGroupRequestParams struct {
+	// tse 实例 id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 配置文件组实体
+	ConfigFileGroup *ConfigFileGroup `json:"ConfigFileGroup,omitnil,omitempty" name:"ConfigFileGroup"`
+}
+
+type CreateConfigFileGroupRequest struct {
+	*tchttp.BaseRequest
+	
+	// tse 实例 id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 配置文件组实体
+	ConfigFileGroup *ConfigFileGroup `json:"ConfigFileGroup,omitnil,omitempty" name:"ConfigFileGroup"`
+}
+
+func (r *CreateConfigFileGroupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateConfigFileGroupRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ConfigFileGroup")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateConfigFileGroupRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateConfigFileGroupResponseParams struct {
+	// 是否创建成功
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateConfigFileGroupResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateConfigFileGroupResponseParams `json:"Response"`
+}
+
+func (r *CreateConfigFileGroupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateConfigFileGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateConfigFileRequestParams struct {
+	// TSE 实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 配置文件列表详情
+	ConfigFile *ConfigFile `json:"ConfigFile,omitnil,omitempty" name:"ConfigFile"`
+}
+
+type CreateConfigFileRequest struct {
+	*tchttp.BaseRequest
+	
+	// TSE 实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 配置文件列表详情
+	ConfigFile *ConfigFile `json:"ConfigFile,omitnil,omitempty" name:"ConfigFile"`
+}
+
+func (r *CreateConfigFileRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateConfigFileRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ConfigFile")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateConfigFileRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateConfigFileResponseParams struct {
+	// 是否创建成功
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 创建的配置文件Id
+	ConfigFileId *string `json:"ConfigFileId,omitnil,omitempty" name:"ConfigFileId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateConfigFileResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateConfigFileResponseParams `json:"Response"`
+}
+
+func (r *CreateConfigFileResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateConfigFileResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateEngineRequestParams struct {
 	// 引擎类型。参考值：
 	// - zookeeper
@@ -1696,13 +3718,14 @@ type CreateEngineRequestParams struct {
 	// - apollo
 	// - eureka
 	// - polaris
-	EngineType *string `json:"EngineType,omitnil" name:"EngineType"`
+	EngineType *string `json:"EngineType,omitnil,omitempty" name:"EngineType"`
 
 	// 引擎的开源版本。每种引擎支持的开源版本不同，请参考产品文档或者控制台购买页
-	EngineVersion *string `json:"EngineVersion,omitnil" name:"EngineVersion"`
+	EngineVersion *string `json:"EngineVersion,omitnil,omitempty" name:"EngineVersion"`
 
 	// 引擎的产品版本。参考值：
 	// - STANDARD： 标准版
+	// - PROFESSIONAL: 专业版（Zookeeper）/企业版（PolarisMesh）
 	// 
 	// 引擎各版本及可选择的规格、节点数说明：
 	// apollo - STANDARD版本
@@ -1717,7 +3740,7 @@ type CreateEngineRequestParams struct {
 	// 规格列表：NUM50、NUM100、NUM200、NUM500、NUM1000、NUM5000、NUM10000、NUM50000
 	// 
 	// 兼容原spec-xxxxxx形式的规格ID
-	EngineProductVersion *string `json:"EngineProductVersion,omitnil" name:"EngineProductVersion"`
+	EngineProductVersion *string `json:"EngineProductVersion,omitnil,omitempty" name:"EngineProductVersion"`
 
 	// 引擎所在地域。参考值说明：
 	// 中国区 参考值：
@@ -1733,35 +3756,57 @@ type CreateEngineRequestParams struct {
 	// - ap-jakarta：雅加达
 	// - ap-singapore：新加坡
 	// 北美区 参考值
-	// - na-toronto：多伦多
+	// - na-siliconvalley：硅谷
+	// - na-ashburn: 弗吉尼亚
 	// 金融专区 参考值
 	// - ap-beijing-fsi：北京金融
 	// - ap-shanghai-fsi：上海金融
 	// - ap-shenzhen-fsi：深圳金融
-	EngineRegion *string `json:"EngineRegion,omitnil" name:"EngineRegion"`
+	EngineRegion *string `json:"EngineRegion,omitnil,omitempty" name:"EngineRegion"`
 
 	// 引擎名称。参考值：
 	// - eurek-test
-	EngineName *string `json:"EngineName,omitnil" name:"EngineName"`
+	EngineName *string `json:"EngineName,omitnil,omitempty" name:"EngineName"`
 
 	// 付费类型。参考值：
 	// - 0：后付费
 	// - 1：预付费（接口暂不支持创建预付费实例）
-	TradeType *int64 `json:"TradeType,omitnil" name:"TradeType"`
+	TradeType *int64 `json:"TradeType,omitnil,omitempty" name:"TradeType"`
 
 	// 引擎的节点规格 ID。参见EngineProductVersion字段说明
-	EngineResourceSpec *string `json:"EngineResourceSpec,omitnil" name:"EngineResourceSpec"`
+	// 北极星支持的引擎规格ID与节点数对应关系：
+	// 基础版：
+	// spec-c160bas1 500
+	// spec-c160bas2 1000
+	// spec-c160bas3 2000
+	// spec-c160bas4 5000
+	// spec-c160bas5 10000
+	// spec-c160bas6 20000
+	// spec-c160bas7 50000
+	// 企业版：
+	// spec-c160pro50 50
+	// spec-c160pro100 100
+	// spec-c160pro200 200
+	// spec-c160pro500 500
+	// spec-c160pro1k 1000
+	// spec-c160pro5k 5000
+	// spec-c160pro10k 10000
+	// spec-c160pro20k 20000
+	// spec-c160pro50k 50000
+	// 开发版：
+	// spec-c160dev1 50
+	EngineResourceSpec *string `json:"EngineResourceSpec,omitnil,omitempty" name:"EngineResourceSpec"`
 
 	// 引擎的节点数量。参见EngineProductVersion字段说明
-	EngineNodeNum *int64 `json:"EngineNodeNum,omitnil" name:"EngineNodeNum"`
+	EngineNodeNum *int64 `json:"EngineNodeNum,omitnil,omitempty" name:"EngineNodeNum"`
 
 	// VPC ID。在 VPC 的子网内分配一个 IP 作为引擎的访问地址。参考值：
 	// - vpc-conz6aix
-	VpcId *string `json:"VpcId,omitnil" name:"VpcId"`
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 子网 ID。在 VPC 的子网内分配一个 IP 作为引擎的访问地址。参考值：
 	// - subnet-ahde9me9
-	SubnetId *string `json:"SubnetId,omitnil" name:"SubnetId"`
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// Apollo 环境配置参数列表。参数说明：
 	// 如果创建Apollo类型，此参数为必填的环境信息列表，最多可选4个环境。环境信息参数说明：
@@ -1771,27 +3816,51 @@ type CreateEngineRequestParams struct {
 	// - StorageCapacity：配置存储空间大小，以GB为单位，步长为5.参考值：35
 	// - VpcId：VPC ID。参考值：vpc-conz6aix
 	// - SubnetId：子网 ID。参考值：subnet-ahde9me9
-	ApolloEnvParams []*ApolloEnvParam `json:"ApolloEnvParams,omitnil" name:"ApolloEnvParams"`
+	ApolloEnvParams []*ApolloEnvParam `json:"ApolloEnvParams,omitnil,omitempty" name:"ApolloEnvParams"`
 
 	// 引擎的标签列表。用户自定义的key/value形式，无参考值
-	EngineTags []*InstanceTagInfo `json:"EngineTags,omitnil" name:"EngineTags"`
+	EngineTags []*InstanceTagInfo `json:"EngineTags,omitnil,omitempty" name:"EngineTags"`
 
 	// 引擎的初始账号信息。可设置参数：
 	// - Name：控制台初始用户名
 	// - Password：控制台初始密码
 	// - Token：引擎接口的管理员 Token
-	EngineAdmin *EngineAdmin `json:"EngineAdmin,omitnil" name:"EngineAdmin"`
+	EngineAdmin *EngineAdmin `json:"EngineAdmin,omitnil,omitempty" name:"EngineAdmin"`
 
 	// 预付费时长，以月为单位
-	PrepaidPeriod *int64 `json:"PrepaidPeriod,omitnil" name:"PrepaidPeriod"`
+	PrepaidPeriod *int64 `json:"PrepaidPeriod,omitnil,omitempty" name:"PrepaidPeriod"`
 
 	// 自动续费标记，仅预付费使用。参考值：
 	// - 0：不自动续费
 	// - 1：自动续费
-	PrepaidRenewFlag *int64 `json:"PrepaidRenewFlag,omitnil" name:"PrepaidRenewFlag"`
+	PrepaidRenewFlag *int64 `json:"PrepaidRenewFlag,omitnil,omitempty" name:"PrepaidRenewFlag"`
 
 	// 跨地域部署的引擎地域配置详情
-	EngineRegionInfos []*EngineRegionInfo `json:"EngineRegionInfos,omitnil" name:"EngineRegionInfos"`
+	// zk标准版没有跨地域部署，请不要填写
+	// zk专业版跨地域部署开启了固定Leader所在地域，需要满足以下条件
+	// - 固定Leader所在地域当前仅支持跨两个地域
+	// - leader地域的副本数必须是3/2 + 1，5/2+1，7/2+1，也就是 2，3，4
+	EngineRegionInfos []*EngineRegionInfo `json:"EngineRegionInfos,omitnil,omitempty" name:"EngineRegionInfos"`
+
+	// zk标准版请填CLOUD_PREMIUM，zk标准版无法选择磁盘类型和磁盘容量，默认为CLOUD_PREMIUM
+	// zk专业版可以为：CLOUD_SSD,CLOUD_SSD_PLUS,CLOUD_PREMIUM
+	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
+
+	// zk标准版请填50，zk标准版无法选择磁盘类型和磁盘容量，磁盘容量默认为50
+	StorageCapacity *int64 `json:"StorageCapacity,omitnil,omitempty" name:"StorageCapacity"`
+
+	// zk专业版至多有两个盘，且磁盘的容量在50-3200之间
+	// 如果只有一个磁盘，storageCapacity与storageOption里面的capacity应该一致
+	StorageOption []*StorageOption `json:"StorageOption,omitnil,omitempty" name:"StorageOption"`
+
+	// ZK引擎实例，可用区分布约束，STRICT:强约束，PERMISSIVE: 弱约束
+	AffinityConstraint *string `json:"AffinityConstraint,omitnil,omitempty" name:"AffinityConstraint"`
+
+	// 指定zone id列表
+	ZoneIds []*int64 `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
+
+	// 地域特殊标签，用于区分相同地域，不通的业务属性
+	EngineRegionTag *string `json:"EngineRegionTag,omitnil,omitempty" name:"EngineRegionTag"`
 }
 
 type CreateEngineRequest struct {
@@ -1804,13 +3873,14 @@ type CreateEngineRequest struct {
 	// - apollo
 	// - eureka
 	// - polaris
-	EngineType *string `json:"EngineType,omitnil" name:"EngineType"`
+	EngineType *string `json:"EngineType,omitnil,omitempty" name:"EngineType"`
 
 	// 引擎的开源版本。每种引擎支持的开源版本不同，请参考产品文档或者控制台购买页
-	EngineVersion *string `json:"EngineVersion,omitnil" name:"EngineVersion"`
+	EngineVersion *string `json:"EngineVersion,omitnil,omitempty" name:"EngineVersion"`
 
 	// 引擎的产品版本。参考值：
 	// - STANDARD： 标准版
+	// - PROFESSIONAL: 专业版（Zookeeper）/企业版（PolarisMesh）
 	// 
 	// 引擎各版本及可选择的规格、节点数说明：
 	// apollo - STANDARD版本
@@ -1825,7 +3895,7 @@ type CreateEngineRequest struct {
 	// 规格列表：NUM50、NUM100、NUM200、NUM500、NUM1000、NUM5000、NUM10000、NUM50000
 	// 
 	// 兼容原spec-xxxxxx形式的规格ID
-	EngineProductVersion *string `json:"EngineProductVersion,omitnil" name:"EngineProductVersion"`
+	EngineProductVersion *string `json:"EngineProductVersion,omitnil,omitempty" name:"EngineProductVersion"`
 
 	// 引擎所在地域。参考值说明：
 	// 中国区 参考值：
@@ -1841,35 +3911,57 @@ type CreateEngineRequest struct {
 	// - ap-jakarta：雅加达
 	// - ap-singapore：新加坡
 	// 北美区 参考值
-	// - na-toronto：多伦多
+	// - na-siliconvalley：硅谷
+	// - na-ashburn: 弗吉尼亚
 	// 金融专区 参考值
 	// - ap-beijing-fsi：北京金融
 	// - ap-shanghai-fsi：上海金融
 	// - ap-shenzhen-fsi：深圳金融
-	EngineRegion *string `json:"EngineRegion,omitnil" name:"EngineRegion"`
+	EngineRegion *string `json:"EngineRegion,omitnil,omitempty" name:"EngineRegion"`
 
 	// 引擎名称。参考值：
 	// - eurek-test
-	EngineName *string `json:"EngineName,omitnil" name:"EngineName"`
+	EngineName *string `json:"EngineName,omitnil,omitempty" name:"EngineName"`
 
 	// 付费类型。参考值：
 	// - 0：后付费
 	// - 1：预付费（接口暂不支持创建预付费实例）
-	TradeType *int64 `json:"TradeType,omitnil" name:"TradeType"`
+	TradeType *int64 `json:"TradeType,omitnil,omitempty" name:"TradeType"`
 
 	// 引擎的节点规格 ID。参见EngineProductVersion字段说明
-	EngineResourceSpec *string `json:"EngineResourceSpec,omitnil" name:"EngineResourceSpec"`
+	// 北极星支持的引擎规格ID与节点数对应关系：
+	// 基础版：
+	// spec-c160bas1 500
+	// spec-c160bas2 1000
+	// spec-c160bas3 2000
+	// spec-c160bas4 5000
+	// spec-c160bas5 10000
+	// spec-c160bas6 20000
+	// spec-c160bas7 50000
+	// 企业版：
+	// spec-c160pro50 50
+	// spec-c160pro100 100
+	// spec-c160pro200 200
+	// spec-c160pro500 500
+	// spec-c160pro1k 1000
+	// spec-c160pro5k 5000
+	// spec-c160pro10k 10000
+	// spec-c160pro20k 20000
+	// spec-c160pro50k 50000
+	// 开发版：
+	// spec-c160dev1 50
+	EngineResourceSpec *string `json:"EngineResourceSpec,omitnil,omitempty" name:"EngineResourceSpec"`
 
 	// 引擎的节点数量。参见EngineProductVersion字段说明
-	EngineNodeNum *int64 `json:"EngineNodeNum,omitnil" name:"EngineNodeNum"`
+	EngineNodeNum *int64 `json:"EngineNodeNum,omitnil,omitempty" name:"EngineNodeNum"`
 
 	// VPC ID。在 VPC 的子网内分配一个 IP 作为引擎的访问地址。参考值：
 	// - vpc-conz6aix
-	VpcId *string `json:"VpcId,omitnil" name:"VpcId"`
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 子网 ID。在 VPC 的子网内分配一个 IP 作为引擎的访问地址。参考值：
 	// - subnet-ahde9me9
-	SubnetId *string `json:"SubnetId,omitnil" name:"SubnetId"`
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// Apollo 环境配置参数列表。参数说明：
 	// 如果创建Apollo类型，此参数为必填的环境信息列表，最多可选4个环境。环境信息参数说明：
@@ -1879,27 +3971,51 @@ type CreateEngineRequest struct {
 	// - StorageCapacity：配置存储空间大小，以GB为单位，步长为5.参考值：35
 	// - VpcId：VPC ID。参考值：vpc-conz6aix
 	// - SubnetId：子网 ID。参考值：subnet-ahde9me9
-	ApolloEnvParams []*ApolloEnvParam `json:"ApolloEnvParams,omitnil" name:"ApolloEnvParams"`
+	ApolloEnvParams []*ApolloEnvParam `json:"ApolloEnvParams,omitnil,omitempty" name:"ApolloEnvParams"`
 
 	// 引擎的标签列表。用户自定义的key/value形式，无参考值
-	EngineTags []*InstanceTagInfo `json:"EngineTags,omitnil" name:"EngineTags"`
+	EngineTags []*InstanceTagInfo `json:"EngineTags,omitnil,omitempty" name:"EngineTags"`
 
 	// 引擎的初始账号信息。可设置参数：
 	// - Name：控制台初始用户名
 	// - Password：控制台初始密码
 	// - Token：引擎接口的管理员 Token
-	EngineAdmin *EngineAdmin `json:"EngineAdmin,omitnil" name:"EngineAdmin"`
+	EngineAdmin *EngineAdmin `json:"EngineAdmin,omitnil,omitempty" name:"EngineAdmin"`
 
 	// 预付费时长，以月为单位
-	PrepaidPeriod *int64 `json:"PrepaidPeriod,omitnil" name:"PrepaidPeriod"`
+	PrepaidPeriod *int64 `json:"PrepaidPeriod,omitnil,omitempty" name:"PrepaidPeriod"`
 
 	// 自动续费标记，仅预付费使用。参考值：
 	// - 0：不自动续费
 	// - 1：自动续费
-	PrepaidRenewFlag *int64 `json:"PrepaidRenewFlag,omitnil" name:"PrepaidRenewFlag"`
+	PrepaidRenewFlag *int64 `json:"PrepaidRenewFlag,omitnil,omitempty" name:"PrepaidRenewFlag"`
 
 	// 跨地域部署的引擎地域配置详情
-	EngineRegionInfos []*EngineRegionInfo `json:"EngineRegionInfos,omitnil" name:"EngineRegionInfos"`
+	// zk标准版没有跨地域部署，请不要填写
+	// zk专业版跨地域部署开启了固定Leader所在地域，需要满足以下条件
+	// - 固定Leader所在地域当前仅支持跨两个地域
+	// - leader地域的副本数必须是3/2 + 1，5/2+1，7/2+1，也就是 2，3，4
+	EngineRegionInfos []*EngineRegionInfo `json:"EngineRegionInfos,omitnil,omitempty" name:"EngineRegionInfos"`
+
+	// zk标准版请填CLOUD_PREMIUM，zk标准版无法选择磁盘类型和磁盘容量，默认为CLOUD_PREMIUM
+	// zk专业版可以为：CLOUD_SSD,CLOUD_SSD_PLUS,CLOUD_PREMIUM
+	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
+
+	// zk标准版请填50，zk标准版无法选择磁盘类型和磁盘容量，磁盘容量默认为50
+	StorageCapacity *int64 `json:"StorageCapacity,omitnil,omitempty" name:"StorageCapacity"`
+
+	// zk专业版至多有两个盘，且磁盘的容量在50-3200之间
+	// 如果只有一个磁盘，storageCapacity与storageOption里面的capacity应该一致
+	StorageOption []*StorageOption `json:"StorageOption,omitnil,omitempty" name:"StorageOption"`
+
+	// ZK引擎实例，可用区分布约束，STRICT:强约束，PERMISSIVE: 弱约束
+	AffinityConstraint *string `json:"AffinityConstraint,omitnil,omitempty" name:"AffinityConstraint"`
+
+	// 指定zone id列表
+	ZoneIds []*int64 `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
+
+	// 地域特殊标签，用于区分相同地域，不通的业务属性
+	EngineRegionTag *string `json:"EngineRegionTag,omitnil,omitempty" name:"EngineRegionTag"`
 }
 
 func (r *CreateEngineRequest) ToJsonString() string {
@@ -1930,6 +4046,12 @@ func (r *CreateEngineRequest) FromJsonString(s string) error {
 	delete(f, "PrepaidPeriod")
 	delete(f, "PrepaidRenewFlag")
 	delete(f, "EngineRegionInfos")
+	delete(f, "StorageType")
+	delete(f, "StorageCapacity")
+	delete(f, "StorageOption")
+	delete(f, "AffinityConstraint")
+	delete(f, "ZoneIds")
+	delete(f, "EngineRegionTag")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateEngineRequest has unknown keys!", "")
 	}
@@ -1939,10 +4061,10 @@ func (r *CreateEngineRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type CreateEngineResponseParams struct {
 	// 引擎实例 ID
-	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CreateEngineResponse struct {
@@ -1963,33 +4085,380 @@ func (r *CreateEngineResponse) FromJsonString(s string) error {
 
 type CreateGatewayServiceResult struct {
 	// 网关服务ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ServiceId *string `json:"ServiceId,omitnil" name:"ServiceId"`
+	ServiceId *string `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
+}
+
+// Predefined struct for user
+type CreateGovernanceAliasRequestParams struct {
+	// tse实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 服务别名
+	Alias *string `json:"Alias,omitnil,omitempty" name:"Alias"`
+
+	// 服务别名命名空间
+	AliasNamespace *string `json:"AliasNamespace,omitnil,omitempty" name:"AliasNamespace"`
+
+	// 服务别名所指向的服务名
+	Service *string `json:"Service,omitnil,omitempty" name:"Service"`
+
+	// 服务别名所指向的命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 服务别名描述
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+}
+
+type CreateGovernanceAliasRequest struct {
+	*tchttp.BaseRequest
+	
+	// tse实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 服务别名
+	Alias *string `json:"Alias,omitnil,omitempty" name:"Alias"`
+
+	// 服务别名命名空间
+	AliasNamespace *string `json:"AliasNamespace,omitnil,omitempty" name:"AliasNamespace"`
+
+	// 服务别名所指向的服务名
+	Service *string `json:"Service,omitnil,omitempty" name:"Service"`
+
+	// 服务别名所指向的命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 服务别名描述
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+}
+
+func (r *CreateGovernanceAliasRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateGovernanceAliasRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Alias")
+	delete(f, "AliasNamespace")
+	delete(f, "Service")
+	delete(f, "Namespace")
+	delete(f, "Comment")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateGovernanceAliasRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateGovernanceAliasResponseParams struct {
+	// 创建是否成功。
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateGovernanceAliasResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateGovernanceAliasResponseParams `json:"Response"`
+}
+
+func (r *CreateGovernanceAliasResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateGovernanceAliasResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateGovernanceInstancesRequestParams struct {
+	// tse实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 服务实例信息。
+	GovernanceInstances []*GovernanceInstanceInput `json:"GovernanceInstances,omitnil,omitempty" name:"GovernanceInstances"`
+}
+
+type CreateGovernanceInstancesRequest struct {
+	*tchttp.BaseRequest
+	
+	// tse实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 服务实例信息。
+	GovernanceInstances []*GovernanceInstanceInput `json:"GovernanceInstances,omitnil,omitempty" name:"GovernanceInstances"`
+}
+
+func (r *CreateGovernanceInstancesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateGovernanceInstancesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "GovernanceInstances")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateGovernanceInstancesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateGovernanceInstancesResponseParams struct {
+	// 创建是否成功。
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateGovernanceInstancesResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateGovernanceInstancesResponseParams `json:"Response"`
+}
+
+func (r *CreateGovernanceInstancesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateGovernanceInstancesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateGovernanceLaneGroupsRequestParams struct {
+	// 引擎实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 泳道组规则列表
+	LaneGroups []*GovernanceLaneGroup `json:"LaneGroups,omitnil,omitempty" name:"LaneGroups"`
+}
+
+type CreateGovernanceLaneGroupsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 引擎实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 泳道组规则列表
+	LaneGroups []*GovernanceLaneGroup `json:"LaneGroups,omitnil,omitempty" name:"LaneGroups"`
+}
+
+func (r *CreateGovernanceLaneGroupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateGovernanceLaneGroupsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "LaneGroups")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateGovernanceLaneGroupsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateGovernanceLaneGroupsResponseParams struct {
+	// 是否创建成功
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateGovernanceLaneGroupsResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateGovernanceLaneGroupsResponseParams `json:"Response"`
+}
+
+func (r *CreateGovernanceLaneGroupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateGovernanceLaneGroupsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateGovernanceNamespacesRequestParams struct {
+	// tse 实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 命名空间信息。
+	GovernanceNamespaces []*GovernanceNamespaceInput `json:"GovernanceNamespaces,omitnil,omitempty" name:"GovernanceNamespaces"`
+}
+
+type CreateGovernanceNamespacesRequest struct {
+	*tchttp.BaseRequest
+	
+	// tse 实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 命名空间信息。
+	GovernanceNamespaces []*GovernanceNamespaceInput `json:"GovernanceNamespaces,omitnil,omitempty" name:"GovernanceNamespaces"`
+}
+
+func (r *CreateGovernanceNamespacesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateGovernanceNamespacesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "GovernanceNamespaces")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateGovernanceNamespacesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateGovernanceNamespacesResponseParams struct {
+	// 操作是否成功。
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateGovernanceNamespacesResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateGovernanceNamespacesResponseParams `json:"Response"`
+}
+
+func (r *CreateGovernanceNamespacesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateGovernanceNamespacesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateGovernanceServicesRequestParams struct {
+	// tse 实例 id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 服务信息。
+	GovernanceServices []*GovernanceServiceInput `json:"GovernanceServices,omitnil,omitempty" name:"GovernanceServices"`
+}
+
+type CreateGovernanceServicesRequest struct {
+	*tchttp.BaseRequest
+	
+	// tse 实例 id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 服务信息。
+	GovernanceServices []*GovernanceServiceInput `json:"GovernanceServices,omitnil,omitempty" name:"GovernanceServices"`
+}
+
+func (r *CreateGovernanceServicesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateGovernanceServicesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "GovernanceServices")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateGovernanceServicesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateGovernanceServicesResponseParams struct {
+	// 创建是否成功。
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateGovernanceServicesResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateGovernanceServicesResponseParams `json:"Response"`
+}
+
+func (r *CreateGovernanceServicesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateGovernanceServicesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
 type CreateNativeGatewayServerGroupRequestParams struct {
 	// 网关实例id。
 	// 只支持后付费实例
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 网关分组名
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 节点配置
-	NodeConfig *CloudNativeAPIGatewayNodeConfig `json:"NodeConfig,omitnil" name:"NodeConfig"`
+	NodeConfig *CloudNativeAPIGatewayNodeConfig `json:"NodeConfig,omitnil,omitempty" name:"NodeConfig"`
 
 	// 子网id
-	SubnetId *string `json:"SubnetId,omitnil" name:"SubnetId"`
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// 描述信息
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 公网带宽信息
-	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil" name:"InternetMaxBandwidthOut"`
+	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
 
 	// 公网配置。
-	InternetConfig *InternetConfig `json:"InternetConfig,omitnil" name:"InternetConfig"`
+	InternetConfig *InternetConfig `json:"InternetConfig,omitnil,omitempty" name:"InternetConfig"`
 }
 
 type CreateNativeGatewayServerGroupRequest struct {
@@ -1997,25 +4466,25 @@ type CreateNativeGatewayServerGroupRequest struct {
 	
 	// 网关实例id。
 	// 只支持后付费实例
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 网关分组名
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 节点配置
-	NodeConfig *CloudNativeAPIGatewayNodeConfig `json:"NodeConfig,omitnil" name:"NodeConfig"`
+	NodeConfig *CloudNativeAPIGatewayNodeConfig `json:"NodeConfig,omitnil,omitempty" name:"NodeConfig"`
 
 	// 子网id
-	SubnetId *string `json:"SubnetId,omitnil" name:"SubnetId"`
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// 描述信息
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 公网带宽信息
-	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil" name:"InternetMaxBandwidthOut"`
+	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
 
 	// 公网配置。
-	InternetConfig *InternetConfig `json:"InternetConfig,omitnil" name:"InternetConfig"`
+	InternetConfig *InternetConfig `json:"InternetConfig,omitnil,omitempty" name:"InternetConfig"`
 }
 
 func (r *CreateNativeGatewayServerGroupRequest) ToJsonString() string {
@@ -2046,11 +4515,10 @@ func (r *CreateNativeGatewayServerGroupRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type CreateNativeGatewayServerGroupResponseParams struct {
 	// 网关分组创建信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Result *CreateCloudNativeAPIGatewayServerGroupResult `json:"Result,omitnil" name:"Result"`
+	Result *CreateCloudNativeAPIGatewayServerGroupResult `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CreateNativeGatewayServerGroupResponse struct {
@@ -2069,37 +4537,434 @@ func (r *CreateNativeGatewayServerGroupResponse) FromJsonString(s string) error 
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateNativeGatewayServiceSourceRequestParams struct {
+	// 网关实例ID
+	GatewayID *string `json:"GatewayID,omitnil,omitempty" name:"GatewayID"`
+
+	// 服务来源类型，参考值：
+	// - TSE-Nacos 
+	// - TSE-Consul 
+	// - TSE-PolarisMesh
+	// - Customer-Nacos
+	// - Customer-Consul
+	// - Customer-PolarisMesh
+	// - TSF
+	// - TKE
+	// - EKS
+	// - PrivateDNS
+	// - Customer-DNS
+	SourceType *string `json:"SourceType,omitnil,omitempty" name:"SourceType"`
+
+	// 服务来源实例ID，当SourceType的值不为PrivateDNS或Customer-DNS时，必填
+	SourceID *string `json:"SourceID,omitnil,omitempty" name:"SourceID"`
+
+	// 服务来源实例名称，当SourceType的值不为PrivateDNS时，必填
+	SourceName *string `json:"SourceName,omitnil,omitempty" name:"SourceName"`
+
+	// 服务来源实例额外信息
+	SourceInfo *SourceInfo `json:"SourceInfo,omitnil,omitempty" name:"SourceInfo"`
+}
+
+type CreateNativeGatewayServiceSourceRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关实例ID
+	GatewayID *string `json:"GatewayID,omitnil,omitempty" name:"GatewayID"`
+
+	// 服务来源类型，参考值：
+	// - TSE-Nacos 
+	// - TSE-Consul 
+	// - TSE-PolarisMesh
+	// - Customer-Nacos
+	// - Customer-Consul
+	// - Customer-PolarisMesh
+	// - TSF
+	// - TKE
+	// - EKS
+	// - PrivateDNS
+	// - Customer-DNS
+	SourceType *string `json:"SourceType,omitnil,omitempty" name:"SourceType"`
+
+	// 服务来源实例ID，当SourceType的值不为PrivateDNS或Customer-DNS时，必填
+	SourceID *string `json:"SourceID,omitnil,omitempty" name:"SourceID"`
+
+	// 服务来源实例名称，当SourceType的值不为PrivateDNS时，必填
+	SourceName *string `json:"SourceName,omitnil,omitempty" name:"SourceName"`
+
+	// 服务来源实例额外信息
+	SourceInfo *SourceInfo `json:"SourceInfo,omitnil,omitempty" name:"SourceInfo"`
+}
+
+func (r *CreateNativeGatewayServiceSourceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateNativeGatewayServiceSourceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayID")
+	delete(f, "SourceType")
+	delete(f, "SourceID")
+	delete(f, "SourceName")
+	delete(f, "SourceInfo")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateNativeGatewayServiceSourceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateNativeGatewayServiceSourceResponseParams struct {
+	// 创建是否成功
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 服务来源ID
+	SourceID *string `json:"SourceID,omitnil,omitempty" name:"SourceID"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateNativeGatewayServiceSourceResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateNativeGatewayServiceSourceResponseParams `json:"Response"`
+}
+
+func (r *CreateNativeGatewayServiceSourceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateNativeGatewayServiceSourceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateOrModifyCloudNativeAPIGatewayCORSRequestParams struct {
+	// 网关ID
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 跨域插件绑定的资源类型：route|service
+	SourceType *string `json:"SourceType,omitnil,omitempty" name:"SourceType"`
+
+	// 路由或服务的id
+	SourceId *string `json:"SourceId,omitnil,omitempty" name:"SourceId"`
+
+	// 是否启用插件
+	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+
+	// 跨域 Access-Control-Allow-Origin
+	Origins []*string `json:"Origins,omitnil,omitempty" name:"Origins"`
+
+	// 跨域 Access-Control-Allow-Headers header
+	Headers []*string `json:"Headers,omitnil,omitempty" name:"Headers"`
+
+	// 跨域 Access-Control-Allow-Methods
+	Methods []*string `json:"Methods,omitnil,omitempty" name:"Methods"`
+
+	// 跨域 Access-Control-Expose-Headers
+	ExposedHeaders []*string `json:"ExposedHeaders,omitnil,omitempty" name:"ExposedHeaders"`
+
+	// preflight 请求缓存时间
+	MaxAge *int64 `json:"MaxAge,omitnil,omitempty" name:"MaxAge"`
+
+	// 跨域 Access-Control-Allow-Credentials
+	Credentials *bool `json:"Credentials,omitnil,omitempty" name:"Credentials"`
+
+	// 是否把OPTIONS请求透传后端
+	PreFlightContinue *bool `json:"PreFlightContinue,omitnil,omitempty" name:"PreFlightContinue"`
+}
+
+type CreateOrModifyCloudNativeAPIGatewayCORSRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关ID
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 跨域插件绑定的资源类型：route|service
+	SourceType *string `json:"SourceType,omitnil,omitempty" name:"SourceType"`
+
+	// 路由或服务的id
+	SourceId *string `json:"SourceId,omitnil,omitempty" name:"SourceId"`
+
+	// 是否启用插件
+	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+
+	// 跨域 Access-Control-Allow-Origin
+	Origins []*string `json:"Origins,omitnil,omitempty" name:"Origins"`
+
+	// 跨域 Access-Control-Allow-Headers header
+	Headers []*string `json:"Headers,omitnil,omitempty" name:"Headers"`
+
+	// 跨域 Access-Control-Allow-Methods
+	Methods []*string `json:"Methods,omitnil,omitempty" name:"Methods"`
+
+	// 跨域 Access-Control-Expose-Headers
+	ExposedHeaders []*string `json:"ExposedHeaders,omitnil,omitempty" name:"ExposedHeaders"`
+
+	// preflight 请求缓存时间
+	MaxAge *int64 `json:"MaxAge,omitnil,omitempty" name:"MaxAge"`
+
+	// 跨域 Access-Control-Allow-Credentials
+	Credentials *bool `json:"Credentials,omitnil,omitempty" name:"Credentials"`
+
+	// 是否把OPTIONS请求透传后端
+	PreFlightContinue *bool `json:"PreFlightContinue,omitnil,omitempty" name:"PreFlightContinue"`
+}
+
+func (r *CreateOrModifyCloudNativeAPIGatewayCORSRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateOrModifyCloudNativeAPIGatewayCORSRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "SourceType")
+	delete(f, "SourceId")
+	delete(f, "Enabled")
+	delete(f, "Origins")
+	delete(f, "Headers")
+	delete(f, "Methods")
+	delete(f, "ExposedHeaders")
+	delete(f, "MaxAge")
+	delete(f, "Credentials")
+	delete(f, "PreFlightContinue")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateOrModifyCloudNativeAPIGatewayCORSRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateOrModifyCloudNativeAPIGatewayCORSResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateOrModifyCloudNativeAPIGatewayCORSResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateOrModifyCloudNativeAPIGatewayCORSResponseParams `json:"Response"`
+}
+
+func (r *CreateOrModifyCloudNativeAPIGatewayCORSResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateOrModifyCloudNativeAPIGatewayCORSResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateOrModifyCloudNativeAPIGatewayIPRestrictionRequestParams struct {
+	// 网关ID
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 访问控制插件绑定的资源类型：route|service
+	SourceType *string `json:"SourceType,omitnil,omitempty" name:"SourceType"`
+
+	// 路由或服务的id
+	SourceId *string `json:"SourceId,omitnil,omitempty" name:"SourceId"`
+
+	// 是否启用插件
+	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+
+	// 访问控制类型：whiteList｜blackList
+	RestrictionType *string `json:"RestrictionType,omitnil,omitempty" name:"RestrictionType"`
+
+	// cidr｜ip
+	AddressList []*string `json:"AddressList,omitnil,omitempty" name:"AddressList"`
+}
+
+type CreateOrModifyCloudNativeAPIGatewayIPRestrictionRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关ID
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 访问控制插件绑定的资源类型：route|service
+	SourceType *string `json:"SourceType,omitnil,omitempty" name:"SourceType"`
+
+	// 路由或服务的id
+	SourceId *string `json:"SourceId,omitnil,omitempty" name:"SourceId"`
+
+	// 是否启用插件
+	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+
+	// 访问控制类型：whiteList｜blackList
+	RestrictionType *string `json:"RestrictionType,omitnil,omitempty" name:"RestrictionType"`
+
+	// cidr｜ip
+	AddressList []*string `json:"AddressList,omitnil,omitempty" name:"AddressList"`
+}
+
+func (r *CreateOrModifyCloudNativeAPIGatewayIPRestrictionRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateOrModifyCloudNativeAPIGatewayIPRestrictionRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "SourceType")
+	delete(f, "SourceId")
+	delete(f, "Enabled")
+	delete(f, "RestrictionType")
+	delete(f, "AddressList")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateOrModifyCloudNativeAPIGatewayIPRestrictionRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateOrModifyCloudNativeAPIGatewayIPRestrictionResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateOrModifyCloudNativeAPIGatewayIPRestrictionResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateOrModifyCloudNativeAPIGatewayIPRestrictionResponseParams `json:"Response"`
+}
+
+func (r *CreateOrModifyCloudNativeAPIGatewayIPRestrictionResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateOrModifyCloudNativeAPIGatewayIPRestrictionResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateOrUpdateConfigFileAndReleaseRequestParams struct {
+	// 实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 配置文件列表详情	
+	ConfigFilePublishInfo *ConfigFilePublishInfo `json:"ConfigFilePublishInfo,omitnil,omitempty" name:"ConfigFilePublishInfo"`
+
+	// 控制开启校验配置版本是否已经存在
+	StrictEnable *bool `json:"StrictEnable,omitnil,omitempty" name:"StrictEnable"`
+}
+
+type CreateOrUpdateConfigFileAndReleaseRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 配置文件列表详情	
+	ConfigFilePublishInfo *ConfigFilePublishInfo `json:"ConfigFilePublishInfo,omitnil,omitempty" name:"ConfigFilePublishInfo"`
+
+	// 控制开启校验配置版本是否已经存在
+	StrictEnable *bool `json:"StrictEnable,omitnil,omitempty" name:"StrictEnable"`
+}
+
+func (r *CreateOrUpdateConfigFileAndReleaseRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateOrUpdateConfigFileAndReleaseRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ConfigFilePublishInfo")
+	delete(f, "StrictEnable")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateOrUpdateConfigFileAndReleaseRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateOrUpdateConfigFileAndReleaseResponseParams struct {
+	// 操作是否成功
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 配置发布Id
+	ConfigFileReleaseId *string `json:"ConfigFileReleaseId,omitnil,omitempty" name:"ConfigFileReleaseId"`
+
+	// 配置文件Id
+	ConfigFileId *string `json:"ConfigFileId,omitnil,omitempty" name:"ConfigFileId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateOrUpdateConfigFileAndReleaseResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateOrUpdateConfigFileAndReleaseResponseParams `json:"Response"`
+}
+
+func (r *CreateOrUpdateConfigFileAndReleaseResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateOrUpdateConfigFileAndReleaseResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type CreatePublicNetworkResult struct {
 	// 网关实例ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 分组ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 客户端公网网络ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	NetworkId *string `json:"NetworkId,omitnil" name:"NetworkId"`
+	NetworkId *string `json:"NetworkId,omitnil,omitempty" name:"NetworkId"`
 }
 
 // Predefined struct for user
 type CreateWafDomainsRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// WAF 防护域名列表
-	Domains []*string `json:"Domains,omitnil" name:"Domains"`
+	Domains []*string `json:"Domains,omitnil,omitempty" name:"Domains"`
 }
 
 type CreateWafDomainsRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// WAF 防护域名列表
-	Domains []*string `json:"Domains,omitnil" name:"Domains"`
+	Domains []*string `json:"Domains,omitnil,omitempty" name:"Domains"`
 }
 
 func (r *CreateWafDomainsRequest) ToJsonString() string {
@@ -2124,8 +4989,8 @@ func (r *CreateWafDomainsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateWafDomainsResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CreateWafDomainsResponse struct {
@@ -2144,23 +5009,37 @@ func (r *CreateWafDomainsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DefaultKongRoute struct {
+	// <p>服务名字</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>服务ID</p>
+	ID *string `json:"ID,omitnil,omitempty" name:"ID"`
+
+	// <p>HTTP Method</p>
+	Methods []*string `json:"Methods,omitnil,omitempty" name:"Methods"`
+
+	// <p>Http Path</p>
+	Paths []*string `json:"Paths,omitnil,omitempty" name:"Paths"`
+}
+
 // Predefined struct for user
 type DeleteAutoScalerResourceStrategyRequestParams struct {
 	// 网关实例ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 策略ID
-	StrategyId *string `json:"StrategyId,omitnil" name:"StrategyId"`
+	StrategyId *string `json:"StrategyId,omitnil,omitempty" name:"StrategyId"`
 }
 
 type DeleteAutoScalerResourceStrategyRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关实例ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 策略ID
-	StrategyId *string `json:"StrategyId,omitnil" name:"StrategyId"`
+	StrategyId *string `json:"StrategyId,omitnil,omitempty" name:"StrategyId"`
 }
 
 func (r *DeleteAutoScalerResourceStrategyRequest) ToJsonString() string {
@@ -2186,10 +5065,10 @@ func (r *DeleteAutoScalerResourceStrategyRequest) FromJsonString(s string) error
 // Predefined struct for user
 type DeleteAutoScalerResourceStrategyResponseParams struct {
 	// 是否成功
-	Result *bool `json:"Result,omitnil" name:"Result"`
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DeleteAutoScalerResourceStrategyResponse struct {
@@ -2209,28 +5088,102 @@ func (r *DeleteAutoScalerResourceStrategyResponse) FromJsonString(s string) erro
 }
 
 // Predefined struct for user
+type DeleteCloudNativeAPIGatewayCORSRequestParams struct {
+	// 网关ID
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 跨域插件绑定的资源类型：route|service
+	SourceType *string `json:"SourceType,omitnil,omitempty" name:"SourceType"`
+
+	// 路由或服务的id
+	SourceId *string `json:"SourceId,omitnil,omitempty" name:"SourceId"`
+}
+
+type DeleteCloudNativeAPIGatewayCORSRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关ID
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 跨域插件绑定的资源类型：route|service
+	SourceType *string `json:"SourceType,omitnil,omitempty" name:"SourceType"`
+
+	// 路由或服务的id
+	SourceId *string `json:"SourceId,omitnil,omitempty" name:"SourceId"`
+}
+
+func (r *DeleteCloudNativeAPIGatewayCORSRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCloudNativeAPIGatewayCORSRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "SourceType")
+	delete(f, "SourceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteCloudNativeAPIGatewayCORSRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteCloudNativeAPIGatewayCORSResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteCloudNativeAPIGatewayCORSResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteCloudNativeAPIGatewayCORSResponseParams `json:"Response"`
+}
+
+func (r *DeleteCloudNativeAPIGatewayCORSResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCloudNativeAPIGatewayCORSResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DeleteCloudNativeAPIGatewayCanaryRuleRequestParams struct {
 	// 网关 ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务 ID
-	ServiceId *string `json:"ServiceId,omitnil" name:"ServiceId"`
+	ServiceId *string `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
 
 	// 优先级
-	Priority *int64 `json:"Priority,omitnil" name:"Priority"`
+	Priority *int64 `json:"Priority,omitnil,omitempty" name:"Priority"`
+
+	// 优先级列表，如果配置了此参数，将以此参数为准，忽略Priority参数
+	PriorityList []*int64 `json:"PriorityList,omitnil,omitempty" name:"PriorityList"`
 }
 
 type DeleteCloudNativeAPIGatewayCanaryRuleRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关 ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务 ID
-	ServiceId *string `json:"ServiceId,omitnil" name:"ServiceId"`
+	ServiceId *string `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
 
 	// 优先级
-	Priority *int64 `json:"Priority,omitnil" name:"Priority"`
+	Priority *int64 `json:"Priority,omitnil,omitempty" name:"Priority"`
+
+	// 优先级列表，如果配置了此参数，将以此参数为准，忽略Priority参数
+	PriorityList []*int64 `json:"PriorityList,omitnil,omitempty" name:"PriorityList"`
 }
 
 func (r *DeleteCloudNativeAPIGatewayCanaryRuleRequest) ToJsonString() string {
@@ -2248,6 +5201,7 @@ func (r *DeleteCloudNativeAPIGatewayCanaryRuleRequest) FromJsonString(s string) 
 	delete(f, "GatewayId")
 	delete(f, "ServiceId")
 	delete(f, "Priority")
+	delete(f, "PriorityList")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteCloudNativeAPIGatewayCanaryRuleRequest has unknown keys!", "")
 	}
@@ -2256,8 +5210,8 @@ func (r *DeleteCloudNativeAPIGatewayCanaryRuleRequest) FromJsonString(s string) 
 
 // Predefined struct for user
 type DeleteCloudNativeAPIGatewayCanaryRuleResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DeleteCloudNativeAPIGatewayCanaryRuleResponse struct {
@@ -2279,20 +5233,20 @@ func (r *DeleteCloudNativeAPIGatewayCanaryRuleResponse) FromJsonString(s string)
 // Predefined struct for user
 type DeleteCloudNativeAPIGatewayCertificateRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 证书Id
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 }
 
 type DeleteCloudNativeAPIGatewayCertificateRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 证书Id
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 }
 
 func (r *DeleteCloudNativeAPIGatewayCertificateRequest) ToJsonString() string {
@@ -2317,8 +5271,8 @@ func (r *DeleteCloudNativeAPIGatewayCertificateRequest) FromJsonString(s string)
 
 // Predefined struct for user
 type DeleteCloudNativeAPIGatewayCertificateResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DeleteCloudNativeAPIGatewayCertificateResponse struct {
@@ -2338,38 +5292,356 @@ func (r *DeleteCloudNativeAPIGatewayCertificateResponse) FromJsonString(s string
 }
 
 // Predefined struct for user
+type DeleteCloudNativeAPIGatewayConsumerGroupRequestParams struct {
+	// 网关实例id
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 消费者组ID
+	ConsumerGroupId *string `json:"ConsumerGroupId,omitnil,omitempty" name:"ConsumerGroupId"`
+}
+
+type DeleteCloudNativeAPIGatewayConsumerGroupRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关实例id
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 消费者组ID
+	ConsumerGroupId *string `json:"ConsumerGroupId,omitnil,omitempty" name:"ConsumerGroupId"`
+}
+
+func (r *DeleteCloudNativeAPIGatewayConsumerGroupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCloudNativeAPIGatewayConsumerGroupRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "ConsumerGroupId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteCloudNativeAPIGatewayConsumerGroupRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteCloudNativeAPIGatewayConsumerGroupResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteCloudNativeAPIGatewayConsumerGroupResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteCloudNativeAPIGatewayConsumerGroupResponseParams `json:"Response"`
+}
+
+func (r *DeleteCloudNativeAPIGatewayConsumerGroupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCloudNativeAPIGatewayConsumerGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteCloudNativeAPIGatewayConsumerRequestParams struct {
+	// 网关实例id
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 消费者ID
+	ConsumerId *string `json:"ConsumerId,omitnil,omitempty" name:"ConsumerId"`
+}
+
+type DeleteCloudNativeAPIGatewayConsumerRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关实例id
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 消费者ID
+	ConsumerId *string `json:"ConsumerId,omitnil,omitempty" name:"ConsumerId"`
+}
+
+func (r *DeleteCloudNativeAPIGatewayConsumerRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCloudNativeAPIGatewayConsumerRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "ConsumerId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteCloudNativeAPIGatewayConsumerRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteCloudNativeAPIGatewayConsumerResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteCloudNativeAPIGatewayConsumerResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteCloudNativeAPIGatewayConsumerResponseParams `json:"Response"`
+}
+
+func (r *DeleteCloudNativeAPIGatewayConsumerResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCloudNativeAPIGatewayConsumerResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteCloudNativeAPIGatewayIPRestrictionRequestParams struct {
+	// 网关ID
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 访问控制插件绑定的资源类型：route|service
+	SourceType *string `json:"SourceType,omitnil,omitempty" name:"SourceType"`
+
+	// 路由或服务的id
+	SourceId *string `json:"SourceId,omitnil,omitempty" name:"SourceId"`
+}
+
+type DeleteCloudNativeAPIGatewayIPRestrictionRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关ID
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 访问控制插件绑定的资源类型：route|service
+	SourceType *string `json:"SourceType,omitnil,omitempty" name:"SourceType"`
+
+	// 路由或服务的id
+	SourceId *string `json:"SourceId,omitnil,omitempty" name:"SourceId"`
+}
+
+func (r *DeleteCloudNativeAPIGatewayIPRestrictionRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCloudNativeAPIGatewayIPRestrictionRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "SourceType")
+	delete(f, "SourceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteCloudNativeAPIGatewayIPRestrictionRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteCloudNativeAPIGatewayIPRestrictionResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteCloudNativeAPIGatewayIPRestrictionResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteCloudNativeAPIGatewayIPRestrictionResponseParams `json:"Response"`
+}
+
+func (r *DeleteCloudNativeAPIGatewayIPRestrictionResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCloudNativeAPIGatewayIPRestrictionResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteCloudNativeAPIGatewayLLMModelAPIRequestParams struct {
+	// 网关 id。
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 模型 API ID，全局唯一标识。
+	ModelAPIId *string `json:"ModelAPIId,omitnil,omitempty" name:"ModelAPIId"`
+}
+
+type DeleteCloudNativeAPIGatewayLLMModelAPIRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关 id。
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 模型 API ID，全局唯一标识。
+	ModelAPIId *string `json:"ModelAPIId,omitnil,omitempty" name:"ModelAPIId"`
+}
+
+func (r *DeleteCloudNativeAPIGatewayLLMModelAPIRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCloudNativeAPIGatewayLLMModelAPIRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "ModelAPIId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteCloudNativeAPIGatewayLLMModelAPIRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteCloudNativeAPIGatewayLLMModelAPIResponseParams struct {
+	// <p>是否成功。</p>
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteCloudNativeAPIGatewayLLMModelAPIResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteCloudNativeAPIGatewayLLMModelAPIResponseParams `json:"Response"`
+}
+
+func (r *DeleteCloudNativeAPIGatewayLLMModelAPIResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCloudNativeAPIGatewayLLMModelAPIResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteCloudNativeAPIGatewayLLMModelServiceRequestParams struct {
+	// 网关 id。
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 模型服务 ID，全局唯一标识。
+	ModelServiceId *string `json:"ModelServiceId,omitnil,omitempty" name:"ModelServiceId"`
+}
+
+type DeleteCloudNativeAPIGatewayLLMModelServiceRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关 id。
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 模型服务 ID，全局唯一标识。
+	ModelServiceId *string `json:"ModelServiceId,omitnil,omitempty" name:"ModelServiceId"`
+}
+
+func (r *DeleteCloudNativeAPIGatewayLLMModelServiceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCloudNativeAPIGatewayLLMModelServiceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "ModelServiceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteCloudNativeAPIGatewayLLMModelServiceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteCloudNativeAPIGatewayLLMModelServiceResponseParams struct {
+	// <p>是否成功。</p>
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteCloudNativeAPIGatewayLLMModelServiceResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteCloudNativeAPIGatewayLLMModelServiceResponseParams `json:"Response"`
+}
+
+func (r *DeleteCloudNativeAPIGatewayLLMModelServiceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCloudNativeAPIGatewayLLMModelServiceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DeleteCloudNativeAPIGatewayPublicNetworkRequestParams struct {
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 分组id，kong类型时必填
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 公网类型
 	// - IPV4 （默认值）
 	// - IPV6
-	InternetAddressVersion *string `json:"InternetAddressVersion,omitnil" name:"InternetAddressVersion"`
+	InternetAddressVersion *string `json:"InternetAddressVersion,omitnil,omitempty" name:"InternetAddressVersion"`
 
 	// 公网ip，存在多个公网时必填
-	Vip *string `json:"Vip,omitnil" name:"Vip"`
+	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 }
 
 type DeleteCloudNativeAPIGatewayPublicNetworkRequest struct {
 	*tchttp.BaseRequest
 	
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 分组id，kong类型时必填
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 公网类型
 	// - IPV4 （默认值）
 	// - IPV6
-	InternetAddressVersion *string `json:"InternetAddressVersion,omitnil" name:"InternetAddressVersion"`
+	InternetAddressVersion *string `json:"InternetAddressVersion,omitnil,omitempty" name:"InternetAddressVersion"`
 
 	// 公网ip，存在多个公网时必填
-	Vip *string `json:"Vip,omitnil" name:"Vip"`
+	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 }
 
 func (r *DeleteCloudNativeAPIGatewayPublicNetworkRequest) ToJsonString() string {
@@ -2396,8 +5668,8 @@ func (r *DeleteCloudNativeAPIGatewayPublicNetworkRequest) FromJsonString(s strin
 
 // Predefined struct for user
 type DeleteCloudNativeAPIGatewayPublicNetworkResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DeleteCloudNativeAPIGatewayPublicNetworkResponse struct {
@@ -2419,20 +5691,20 @@ func (r *DeleteCloudNativeAPIGatewayPublicNetworkResponse) FromJsonString(s stri
 // Predefined struct for user
 type DeleteCloudNativeAPIGatewayRequestParams struct {
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 是否删除实例关联的 CLS 日志主题。
-	DeleteClsTopic *bool `json:"DeleteClsTopic,omitnil" name:"DeleteClsTopic"`
+	DeleteClsTopic *bool `json:"DeleteClsTopic,omitnil,omitempty" name:"DeleteClsTopic"`
 }
 
 type DeleteCloudNativeAPIGatewayRequest struct {
 	*tchttp.BaseRequest
 	
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 是否删除实例关联的 CLS 日志主题。
-	DeleteClsTopic *bool `json:"DeleteClsTopic,omitnil" name:"DeleteClsTopic"`
+	DeleteClsTopic *bool `json:"DeleteClsTopic,omitnil,omitempty" name:"DeleteClsTopic"`
 }
 
 func (r *DeleteCloudNativeAPIGatewayRequest) ToJsonString() string {
@@ -2458,10 +5730,10 @@ func (r *DeleteCloudNativeAPIGatewayRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DeleteCloudNativeAPIGatewayResponseParams struct {
 	// 删除云原生API网关实例响应结果。
-	Result *DeleteCloudNativeAPIGatewayResult `json:"Result,omitnil" name:"Result"`
+	Result *DeleteCloudNativeAPIGatewayResult `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DeleteCloudNativeAPIGatewayResponse struct {
@@ -2482,31 +5754,31 @@ func (r *DeleteCloudNativeAPIGatewayResponse) FromJsonString(s string) error {
 
 type DeleteCloudNativeAPIGatewayResult struct {
 	// 云原生网关ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 云原生网关状态。
-	Status *string `json:"Status,omitnil" name:"Status"`
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 }
 
 // Predefined struct for user
 type DeleteCloudNativeAPIGatewayRouteRateLimitRequestParams struct {
 	// 网关Id
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 路由Id，或路由名称。
 	// 不支持“未命名”
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 }
 
 type DeleteCloudNativeAPIGatewayRouteRateLimitRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关Id
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 路由Id，或路由名称。
 	// 不支持“未命名”
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 }
 
 func (r *DeleteCloudNativeAPIGatewayRouteRateLimitRequest) ToJsonString() string {
@@ -2531,8 +5803,8 @@ func (r *DeleteCloudNativeAPIGatewayRouteRateLimitRequest) FromJsonString(s stri
 
 // Predefined struct for user
 type DeleteCloudNativeAPIGatewayRouteRateLimitResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DeleteCloudNativeAPIGatewayRouteRateLimitResponse struct {
@@ -2554,20 +5826,20 @@ func (r *DeleteCloudNativeAPIGatewayRouteRateLimitResponse) FromJsonString(s str
 // Predefined struct for user
 type DeleteCloudNativeAPIGatewayRouteRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 路由的ID或名字，不支持名称“未命名”
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 }
 
 type DeleteCloudNativeAPIGatewayRouteRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 路由的ID或名字，不支持名称“未命名”
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 }
 
 func (r *DeleteCloudNativeAPIGatewayRouteRequest) ToJsonString() string {
@@ -2592,8 +5864,8 @@ func (r *DeleteCloudNativeAPIGatewayRouteRequest) FromJsonString(s string) error
 
 // Predefined struct for user
 type DeleteCloudNativeAPIGatewayRouteResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DeleteCloudNativeAPIGatewayRouteResponse struct {
@@ -2613,22 +5885,83 @@ func (r *DeleteCloudNativeAPIGatewayRouteResponse) FromJsonString(s string) erro
 }
 
 // Predefined struct for user
+type DeleteCloudNativeAPIGatewaySecretKeyRequestParams struct {
+	// 网关ID
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 密钥id
+	SecretKeyId *string `json:"SecretKeyId,omitnil,omitempty" name:"SecretKeyId"`
+}
+
+type DeleteCloudNativeAPIGatewaySecretKeyRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关ID
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 密钥id
+	SecretKeyId *string `json:"SecretKeyId,omitnil,omitempty" name:"SecretKeyId"`
+}
+
+func (r *DeleteCloudNativeAPIGatewaySecretKeyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCloudNativeAPIGatewaySecretKeyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "SecretKeyId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteCloudNativeAPIGatewaySecretKeyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteCloudNativeAPIGatewaySecretKeyResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteCloudNativeAPIGatewaySecretKeyResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteCloudNativeAPIGatewaySecretKeyResponseParams `json:"Response"`
+}
+
+func (r *DeleteCloudNativeAPIGatewaySecretKeyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCloudNativeAPIGatewaySecretKeyResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DeleteCloudNativeAPIGatewayServiceRateLimitRequestParams struct {
 	// 网关Id
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务名称，或服务ID
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 }
 
 type DeleteCloudNativeAPIGatewayServiceRateLimitRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关Id
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务名称，或服务ID
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 }
 
 func (r *DeleteCloudNativeAPIGatewayServiceRateLimitRequest) ToJsonString() string {
@@ -2653,8 +5986,8 @@ func (r *DeleteCloudNativeAPIGatewayServiceRateLimitRequest) FromJsonString(s st
 
 // Predefined struct for user
 type DeleteCloudNativeAPIGatewayServiceRateLimitResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DeleteCloudNativeAPIGatewayServiceRateLimitResponse struct {
@@ -2676,20 +6009,26 @@ func (r *DeleteCloudNativeAPIGatewayServiceRateLimitResponse) FromJsonString(s s
 // Predefined struct for user
 type DeleteCloudNativeAPIGatewayServiceRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务名字，服务ID
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 是否同步删除服务上绑定的路由
+	DeleteRoutes *bool `json:"DeleteRoutes,omitnil,omitempty" name:"DeleteRoutes"`
 }
 
 type DeleteCloudNativeAPIGatewayServiceRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务名字，服务ID
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 是否同步删除服务上绑定的路由
+	DeleteRoutes *bool `json:"DeleteRoutes,omitnil,omitempty" name:"DeleteRoutes"`
 }
 
 func (r *DeleteCloudNativeAPIGatewayServiceRequest) ToJsonString() string {
@@ -2706,6 +6045,7 @@ func (r *DeleteCloudNativeAPIGatewayServiceRequest) FromJsonString(s string) err
 	}
 	delete(f, "GatewayId")
 	delete(f, "Name")
+	delete(f, "DeleteRoutes")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteCloudNativeAPIGatewayServiceRequest has unknown keys!", "")
 	}
@@ -2714,8 +6054,8 @@ func (r *DeleteCloudNativeAPIGatewayServiceRequest) FromJsonString(s string) err
 
 // Predefined struct for user
 type DeleteCloudNativeAPIGatewayServiceResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DeleteCloudNativeAPIGatewayServiceResponse struct {
@@ -2735,16 +6075,236 @@ func (r *DeleteCloudNativeAPIGatewayServiceResponse) FromJsonString(s string) er
 }
 
 // Predefined struct for user
+type DeleteConfigFileGroupRequestParams struct {
+	// tse 实例 id。	
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 组
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+}
+
+type DeleteConfigFileGroupRequest struct {
+	*tchttp.BaseRequest
+	
+	// tse 实例 id。	
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 组
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+}
+
+func (r *DeleteConfigFileGroupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteConfigFileGroupRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Namespace")
+	delete(f, "Group")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteConfigFileGroupRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteConfigFileGroupResponseParams struct {
+	// 是否删除成功
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteConfigFileGroupResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteConfigFileGroupResponseParams `json:"Response"`
+}
+
+func (r *DeleteConfigFileGroupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteConfigFileGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteConfigFileReleasesRequestParams struct {
+	// 实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 待删除配置发布详情
+	ConfigFileReleases []*ConfigFileReleaseDeletion `json:"ConfigFileReleases,omitnil,omitempty" name:"ConfigFileReleases"`
+}
+
+type DeleteConfigFileReleasesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 待删除配置发布详情
+	ConfigFileReleases []*ConfigFileReleaseDeletion `json:"ConfigFileReleases,omitnil,omitempty" name:"ConfigFileReleases"`
+}
+
+func (r *DeleteConfigFileReleasesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteConfigFileReleasesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ConfigFileReleases")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteConfigFileReleasesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteConfigFileReleasesResponseParams struct {
+	// 删除配置发布结果
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteConfigFileReleasesResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteConfigFileReleasesResponseParams `json:"Response"`
+}
+
+func (r *DeleteConfigFileReleasesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteConfigFileReleasesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteConfigFilesRequestParams struct {
+	// TSE实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 配置分组名称
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 配置文件名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 配置文件Id
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+}
+
+type DeleteConfigFilesRequest struct {
+	*tchttp.BaseRequest
+	
+	// TSE实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 配置分组名称
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 配置文件名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 配置文件Id
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+}
+
+func (r *DeleteConfigFilesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteConfigFilesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Namespace")
+	delete(f, "Group")
+	delete(f, "Name")
+	delete(f, "Id")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteConfigFilesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteConfigFilesResponseParams struct {
+	// 修改是否成功
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteConfigFilesResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteConfigFilesResponseParams `json:"Response"`
+}
+
+func (r *DeleteConfigFilesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteConfigFilesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DeleteEngineRequestParams struct {
 	// 引擎实例 ID
-	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type DeleteEngineRequest struct {
 	*tchttp.BaseRequest
 	
 	// 引擎实例 ID
-	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 func (r *DeleteEngineRequest) ToJsonString() string {
@@ -2768,8 +6328,8 @@ func (r *DeleteEngineRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteEngineResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DeleteEngineResponse struct {
@@ -2789,13 +6349,439 @@ func (r *DeleteEngineResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DeleteGovernanceAliasesRequestParams struct {
+	// tse实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 服务别名列表
+	GovernanceAliases []*GovernanceAlias `json:"GovernanceAliases,omitnil,omitempty" name:"GovernanceAliases"`
+}
+
+type DeleteGovernanceAliasesRequest struct {
+	*tchttp.BaseRequest
+	
+	// tse实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 服务别名列表
+	GovernanceAliases []*GovernanceAlias `json:"GovernanceAliases,omitnil,omitempty" name:"GovernanceAliases"`
+}
+
+func (r *DeleteGovernanceAliasesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteGovernanceAliasesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "GovernanceAliases")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteGovernanceAliasesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteGovernanceAliasesResponseParams struct {
+	// 创建是否成功。
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteGovernanceAliasesResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteGovernanceAliasesResponseParams `json:"Response"`
+}
+
+func (r *DeleteGovernanceAliasesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteGovernanceAliasesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteGovernanceInstancesByHostRequestParams struct {
+	// tse实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 要删除的服务实例信息。
+	GovernanceInstances []*GovernanceInstanceUpdate `json:"GovernanceInstances,omitnil,omitempty" name:"GovernanceInstances"`
+}
+
+type DeleteGovernanceInstancesByHostRequest struct {
+	*tchttp.BaseRequest
+	
+	// tse实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 要删除的服务实例信息。
+	GovernanceInstances []*GovernanceInstanceUpdate `json:"GovernanceInstances,omitnil,omitempty" name:"GovernanceInstances"`
+}
+
+func (r *DeleteGovernanceInstancesByHostRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteGovernanceInstancesByHostRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "GovernanceInstances")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteGovernanceInstancesByHostRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteGovernanceInstancesByHostResponseParams struct {
+	// 操作是否成功。
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteGovernanceInstancesByHostResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteGovernanceInstancesByHostResponseParams `json:"Response"`
+}
+
+func (r *DeleteGovernanceInstancesByHostResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteGovernanceInstancesByHostResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteGovernanceInstancesRequestParams struct {
+	// tse实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 要删除的服务实例信息。
+	GovernanceInstances []*GovernanceInstanceUpdate `json:"GovernanceInstances,omitnil,omitempty" name:"GovernanceInstances"`
+}
+
+type DeleteGovernanceInstancesRequest struct {
+	*tchttp.BaseRequest
+	
+	// tse实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 要删除的服务实例信息。
+	GovernanceInstances []*GovernanceInstanceUpdate `json:"GovernanceInstances,omitnil,omitempty" name:"GovernanceInstances"`
+}
+
+func (r *DeleteGovernanceInstancesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteGovernanceInstancesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "GovernanceInstances")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteGovernanceInstancesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteGovernanceInstancesResponseParams struct {
+	// 操作是否成功。
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteGovernanceInstancesResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteGovernanceInstancesResponseParams `json:"Response"`
+}
+
+func (r *DeleteGovernanceInstancesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteGovernanceInstancesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteGovernanceLaneGroup struct {
+	// 泳道名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 泳道组ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ID *string `json:"ID,omitnil,omitempty" name:"ID"`
+
+	// 泳道入口服务列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TrafficEntries []*LaneTrafficEntry `json:"TrafficEntries,omitnil,omitempty" name:"TrafficEntries"`
+
+	// 泳道服务列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Destinations []*GovernanceServiceDestination `json:"Destinations,omitnil,omitempty" name:"Destinations"`
+
+	// 泳道组描述
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 规则内容摘要
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Revision *string `json:"Revision,omitnil,omitempty" name:"Revision"`
+
+	// 创建时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 修改时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
+
+	// 规则一致性状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Consistency *string `json:"Consistency,omitnil,omitempty" name:"Consistency"`
+
+	// 泳道规则列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Rules []*GovernanceLaneRule `json:"Rules,omitnil,omitempty" name:"Rules"`
+}
+
+// Predefined struct for user
+type DeleteGovernanceLaneGroupsRequestParams struct {
+	// 引擎实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 泳道组规则列表
+	LaneGroups []*DeleteGovernanceLaneGroup `json:"LaneGroups,omitnil,omitempty" name:"LaneGroups"`
+}
+
+type DeleteGovernanceLaneGroupsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 引擎实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 泳道组规则列表
+	LaneGroups []*DeleteGovernanceLaneGroup `json:"LaneGroups,omitnil,omitempty" name:"LaneGroups"`
+}
+
+func (r *DeleteGovernanceLaneGroupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteGovernanceLaneGroupsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "LaneGroups")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteGovernanceLaneGroupsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteGovernanceLaneGroupsResponseParams struct {
+	// 是否创建成功
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteGovernanceLaneGroupsResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteGovernanceLaneGroupsResponseParams `json:"Response"`
+}
+
+func (r *DeleteGovernanceLaneGroupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteGovernanceLaneGroupsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteGovernanceNamespacesRequestParams struct {
+	// tse 实例 id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 命名空间信息。
+	GovernanceNamespaces []*GovernanceNamespaceInput `json:"GovernanceNamespaces,omitnil,omitempty" name:"GovernanceNamespaces"`
+}
+
+type DeleteGovernanceNamespacesRequest struct {
+	*tchttp.BaseRequest
+	
+	// tse 实例 id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 命名空间信息。
+	GovernanceNamespaces []*GovernanceNamespaceInput `json:"GovernanceNamespaces,omitnil,omitempty" name:"GovernanceNamespaces"`
+}
+
+func (r *DeleteGovernanceNamespacesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteGovernanceNamespacesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "GovernanceNamespaces")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteGovernanceNamespacesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteGovernanceNamespacesResponseParams struct {
+	// 删除是否成功。
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteGovernanceNamespacesResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteGovernanceNamespacesResponseParams `json:"Response"`
+}
+
+func (r *DeleteGovernanceNamespacesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteGovernanceNamespacesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteGovernanceServicesRequestParams struct {
+	// tse实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 服务信息。
+	GovernanceServices []*GovernanceServiceInput `json:"GovernanceServices,omitnil,omitempty" name:"GovernanceServices"`
+}
+
+type DeleteGovernanceServicesRequest struct {
+	*tchttp.BaseRequest
+	
+	// tse实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 服务信息。
+	GovernanceServices []*GovernanceServiceInput `json:"GovernanceServices,omitnil,omitempty" name:"GovernanceServices"`
+}
+
+func (r *DeleteGovernanceServicesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteGovernanceServicesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "GovernanceServices")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteGovernanceServicesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteGovernanceServicesResponseParams struct {
+	// 删除服务结果。
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteGovernanceServicesResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteGovernanceServicesResponseParams `json:"Response"`
+}
+
+func (r *DeleteGovernanceServicesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteGovernanceServicesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DeleteNativeGatewayServerGroupRequestParams struct {
 	// 网关实例id。
 	// 只支持后付费实例
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 网关分组id
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 }
 
 type DeleteNativeGatewayServerGroupRequest struct {
@@ -2803,10 +6789,10 @@ type DeleteNativeGatewayServerGroupRequest struct {
 	
 	// 网关实例id。
 	// 只支持后付费实例
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 网关分组id
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 }
 
 func (r *DeleteNativeGatewayServerGroupRequest) ToJsonString() string {
@@ -2832,10 +6818,10 @@ func (r *DeleteNativeGatewayServerGroupRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DeleteNativeGatewayServerGroupResponseParams struct {
 	// 删除信息
-	Result *DeleteNativeGatewayServerGroupResult `json:"Result,omitnil" name:"Result"`
+	Result *DeleteNativeGatewayServerGroupResult `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DeleteNativeGatewayServerGroupResponse struct {
@@ -2856,36 +6842,99 @@ func (r *DeleteNativeGatewayServerGroupResponse) FromJsonString(s string) error 
 
 type DeleteNativeGatewayServerGroupResult struct {
 	// 网关实例id
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 网关分组id
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 删除状态
-	Status *string `json:"Status,omitnil" name:"Status"`
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 任务ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TaskId *string `json:"TaskId,omitnil" name:"TaskId"`
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+}
+
+// Predefined struct for user
+type DeleteNativeGatewayServiceSourceRequestParams struct {
+	// 网关实例 ID
+	GatewayID *string `json:"GatewayID,omitnil,omitempty" name:"GatewayID"`
+
+	// 服务来源实例 ID
+	SourceID *string `json:"SourceID,omitnil,omitempty" name:"SourceID"`
+}
+
+type DeleteNativeGatewayServiceSourceRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关实例 ID
+	GatewayID *string `json:"GatewayID,omitnil,omitempty" name:"GatewayID"`
+
+	// 服务来源实例 ID
+	SourceID *string `json:"SourceID,omitnil,omitempty" name:"SourceID"`
+}
+
+func (r *DeleteNativeGatewayServiceSourceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteNativeGatewayServiceSourceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayID")
+	delete(f, "SourceID")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteNativeGatewayServiceSourceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteNativeGatewayServiceSourceResponseParams struct {
+	// 结果
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteNativeGatewayServiceSourceResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteNativeGatewayServiceSourceResponseParams `json:"Response"`
+}
+
+func (r *DeleteNativeGatewayServiceSourceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteNativeGatewayServiceSourceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
 type DeleteWafDomainsRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// WAF 防护域名列表
-	Domains []*string `json:"Domains,omitnil" name:"Domains"`
+	Domains []*string `json:"Domains,omitnil,omitempty" name:"Domains"`
 }
 
 type DeleteWafDomainsRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// WAF 防护域名列表
-	Domains []*string `json:"Domains,omitnil" name:"Domains"`
+	Domains []*string `json:"Domains,omitnil,omitempty" name:"Domains"`
 }
 
 func (r *DeleteWafDomainsRequest) ToJsonString() string {
@@ -2910,8 +6959,8 @@ func (r *DeleteWafDomainsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteWafDomainsResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DeleteWafDomainsResponse struct {
@@ -2931,22 +6980,82 @@ func (r *DeleteWafDomainsResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeAllConfigFileTemplatesRequestParams struct {
+	// TSE实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+type DescribeAllConfigFileTemplatesRequest struct {
+	*tchttp.BaseRequest
+	
+	// TSE实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeAllConfigFileTemplatesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAllConfigFileTemplatesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAllConfigFileTemplatesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeAllConfigFileTemplatesResponseParams struct {
+	// 数据总数量
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 配置文件模板列表
+	ConfigFileTemplates []*ConfigFileTemplate `json:"ConfigFileTemplates,omitnil,omitempty" name:"ConfigFileTemplates"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeAllConfigFileTemplatesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeAllConfigFileTemplatesResponseParams `json:"Response"`
+}
+
+func (r *DescribeAllConfigFileTemplatesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAllConfigFileTemplatesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeAutoScalerResourceStrategiesRequestParams struct {
 	// 网关实例ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 策略ID
-	StrategyId *string `json:"StrategyId,omitnil" name:"StrategyId"`
+	StrategyId *string `json:"StrategyId,omitnil,omitempty" name:"StrategyId"`
 }
 
 type DescribeAutoScalerResourceStrategiesRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关实例ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 策略ID
-	StrategyId *string `json:"StrategyId,omitnil" name:"StrategyId"`
+	StrategyId *string `json:"StrategyId,omitnil,omitempty" name:"StrategyId"`
 }
 
 func (r *DescribeAutoScalerResourceStrategiesRequest) ToJsonString() string {
@@ -2972,10 +7081,10 @@ func (r *DescribeAutoScalerResourceStrategiesRequest) FromJsonString(s string) e
 // Predefined struct for user
 type DescribeAutoScalerResourceStrategiesResponseParams struct {
 	// 获取云原生API网关实例弹性伸缩策略列表响应结果。
-	Result *ListCloudNativeAPIGatewayStrategyResult `json:"Result,omitnil" name:"Result"`
+	Result *ListCloudNativeAPIGatewayStrategyResult `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeAutoScalerResourceStrategiesResponse struct {
@@ -2997,32 +7106,32 @@ func (r *DescribeAutoScalerResourceStrategiesResponse) FromJsonString(s string) 
 // Predefined struct for user
 type DescribeAutoScalerResourceStrategyBindingGroupsRequestParams struct {
 	// 网关实例ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 策略ID
-	StrategyId *string `json:"StrategyId,omitnil" name:"StrategyId"`
+	StrategyId *string `json:"StrategyId,omitnil,omitempty" name:"StrategyId"`
 
 	// 查询偏移量
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 查询数量限制
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
 type DescribeAutoScalerResourceStrategyBindingGroupsRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关实例ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 策略ID
-	StrategyId *string `json:"StrategyId,omitnil" name:"StrategyId"`
+	StrategyId *string `json:"StrategyId,omitnil,omitempty" name:"StrategyId"`
 
 	// 查询偏移量
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 查询数量限制
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
 func (r *DescribeAutoScalerResourceStrategyBindingGroupsRequest) ToJsonString() string {
@@ -3050,10 +7159,10 @@ func (r *DescribeAutoScalerResourceStrategyBindingGroupsRequest) FromJsonString(
 // Predefined struct for user
 type DescribeAutoScalerResourceStrategyBindingGroupsResponseParams struct {
 	// 云原生API网关实例策略绑定网关分组列表响应结果
-	Result *ListCloudNativeAPIGatewayStrategyBindingGroupInfoResult `json:"Result,omitnil" name:"Result"`
+	Result *ListCloudNativeAPIGatewayStrategyBindingGroupInfoResult `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeAutoScalerResourceStrategyBindingGroupsResponse struct {
@@ -3073,34 +7182,190 @@ func (r *DescribeAutoScalerResourceStrategyBindingGroupsResponse) FromJsonString
 }
 
 // Predefined struct for user
+type DescribeCNGWServicesWithRoutesRequestParams struct {
+	// <p>网关ID</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>列表数量</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>列表 offset</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>过滤条件，多个过滤条件之间是与的关系，支持 name,upstreamType</p>
+	Filters []*ListFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+type DescribeCNGWServicesWithRoutesRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>网关ID</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>列表数量</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>列表 offset</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>过滤条件，多个过滤条件之间是与的关系，支持 name,upstreamType</p>
+	Filters []*ListFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+func (r *DescribeCNGWServicesWithRoutesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCNGWServicesWithRoutesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "Filters")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCNGWServicesWithRoutesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCNGWServicesWithRoutesResponseParams struct {
+	// <p>无</p>
+	Result *KongServiceWithRoutes `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCNGWServicesWithRoutesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCNGWServicesWithRoutesResponseParams `json:"Response"`
+}
+
+func (r *DescribeCNGWServicesWithRoutesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCNGWServicesWithRoutesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayCORSRequestParams struct {
+	// 网关ID
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 跨域插件绑定的资源类型：route|service
+	SourceType *string `json:"SourceType,omitnil,omitempty" name:"SourceType"`
+
+	// 路由或服务的id
+	SourceId *string `json:"SourceId,omitnil,omitempty" name:"SourceId"`
+}
+
+type DescribeCloudNativeAPIGatewayCORSRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关ID
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 跨域插件绑定的资源类型：route|service
+	SourceType *string `json:"SourceType,omitnil,omitempty" name:"SourceType"`
+
+	// 路由或服务的id
+	SourceId *string `json:"SourceId,omitnil,omitempty" name:"SourceId"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayCORSRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayCORSRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "SourceType")
+	delete(f, "SourceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCloudNativeAPIGatewayCORSRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayCORSResponseParams struct {
+	// 出参
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Result *DescribeKongCORSResult `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCloudNativeAPIGatewayCORSResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCloudNativeAPIGatewayCORSResponseParams `json:"Response"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayCORSResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayCORSResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeCloudNativeAPIGatewayCanaryRulesRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务 ID
-	ServiceId *string `json:"ServiceId,omitnil" name:"ServiceId"`
+	ServiceId *string `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
+
+	// 灰度规则类别 Standard｜Lane
+	RuleType *string `json:"RuleType,omitnil,omitempty" name:"RuleType"`
 
 	// 列表数量
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 列表offset
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 type DescribeCloudNativeAPIGatewayCanaryRulesRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务 ID
-	ServiceId *string `json:"ServiceId,omitnil" name:"ServiceId"`
+	ServiceId *string `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
+
+	// 灰度规则类别 Standard｜Lane
+	RuleType *string `json:"RuleType,omitnil,omitempty" name:"RuleType"`
 
 	// 列表数量
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 列表offset
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 func (r *DescribeCloudNativeAPIGatewayCanaryRulesRequest) ToJsonString() string {
@@ -3117,6 +7382,7 @@ func (r *DescribeCloudNativeAPIGatewayCanaryRulesRequest) FromJsonString(s strin
 	}
 	delete(f, "GatewayId")
 	delete(f, "ServiceId")
+	delete(f, "RuleType")
 	delete(f, "Limit")
 	delete(f, "Offset")
 	if len(f) > 0 {
@@ -3128,10 +7394,10 @@ func (r *DescribeCloudNativeAPIGatewayCanaryRulesRequest) FromJsonString(s strin
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewayCanaryRulesResponseParams struct {
 	// 灰度规则列表
-	Result *CloudAPIGatewayCanaryRuleList `json:"Result,omitnil" name:"Result"`
+	Result *CloudAPIGatewayCanaryRuleList `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeCloudNativeAPIGatewayCanaryRulesResponse struct {
@@ -3153,20 +7419,20 @@ func (r *DescribeCloudNativeAPIGatewayCanaryRulesResponse) FromJsonString(s stri
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewayCertificateDetailsRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 证书Id
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 }
 
 type DescribeCloudNativeAPIGatewayCertificateDetailsRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 证书Id
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 }
 
 func (r *DescribeCloudNativeAPIGatewayCertificateDetailsRequest) ToJsonString() string {
@@ -3192,11 +7458,10 @@ func (r *DescribeCloudNativeAPIGatewayCertificateDetailsRequest) FromJsonString(
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewayCertificateDetailsResponseParams struct {
 	// 无
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Result *KongCertificate `json:"Result,omitnil" name:"Result"`
+	Result *KongCertificate `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeCloudNativeAPIGatewayCertificateDetailsResponse struct {
@@ -3218,32 +7483,32 @@ func (r *DescribeCloudNativeAPIGatewayCertificateDetailsResponse) FromJsonString
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewayCertificatesRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 列表数量
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 列表offset
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 过滤条件，多个过滤条件之间是与的关系，支持BindDomain ，Name
-	Filters []*ListFilter `json:"Filters,omitnil" name:"Filters"`
+	Filters []*ListFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 type DescribeCloudNativeAPIGatewayCertificatesRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 列表数量
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 列表offset
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 过滤条件，多个过滤条件之间是与的关系，支持BindDomain ，Name
-	Filters []*ListFilter `json:"Filters,omitnil" name:"Filters"`
+	Filters []*ListFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 func (r *DescribeCloudNativeAPIGatewayCertificatesRequest) ToJsonString() string {
@@ -3271,10 +7536,10 @@ func (r *DescribeCloudNativeAPIGatewayCertificatesRequest) FromJsonString(s stri
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewayCertificatesResponseParams struct {
 	// 无
-	Result *KongCertificatesList `json:"Result,omitnil" name:"Result"`
+	Result *KongCertificatesList `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeCloudNativeAPIGatewayCertificatesResponse struct {
@@ -3296,20 +7561,20 @@ func (r *DescribeCloudNativeAPIGatewayCertificatesResponse) FromJsonString(s str
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewayConfigRequestParams struct {
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 分组id，不填时为默认分组
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 }
 
 type DescribeCloudNativeAPIGatewayConfigRequest struct {
 	*tchttp.BaseRequest
 	
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 分组id，不填时为默认分组
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 }
 
 func (r *DescribeCloudNativeAPIGatewayConfigRequest) ToJsonString() string {
@@ -3335,10 +7600,10 @@ func (r *DescribeCloudNativeAPIGatewayConfigRequest) FromJsonString(s string) er
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewayConfigResponseParams struct {
 	// 获取云原生API网关响应结果。
-	Result *DescribeCloudNativeAPIGatewayConfigResult `json:"Result,omitnil" name:"Result"`
+	Result *DescribeCloudNativeAPIGatewayConfigResult `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeCloudNativeAPIGatewayConfigResponse struct {
@@ -3359,53 +7624,796 @@ func (r *DescribeCloudNativeAPIGatewayConfigResponse) FromJsonString(s string) e
 
 type DescribeCloudNativeAPIGatewayConfigResult struct {
 	// 网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 分组网络配置列表。
-	ConfigList []*CloudNativeAPIGatewayConfig `json:"ConfigList,omitnil" name:"ConfigList"`
+	ConfigList []*CloudNativeAPIGatewayConfig `json:"ConfigList,omitnil,omitempty" name:"ConfigList"`
 
 	// 分组子网信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	GroupSubnetId *string `json:"GroupSubnetId,omitnil" name:"GroupSubnetId"`
+	GroupSubnetId *string `json:"GroupSubnetId,omitnil,omitempty" name:"GroupSubnetId"`
 
 	// 分组VPC信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	GroupVpcId *string `json:"GroupVpcId,omitnil" name:"GroupVpcId"`
+	GroupVpcId *string `json:"GroupVpcId,omitnil,omitempty" name:"GroupVpcId"`
 
 	// 分组ID
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayConsumerGroupListRequestParams struct {
+	// <p>网关实例id</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>每页条数，范围 [1, 100]，默认 10。</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>起始位置，从 0 开始。</p>
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+}
+
+type DescribeCloudNativeAPIGatewayConsumerGroupListRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>网关实例id</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>每页条数，范围 [1, 100]，默认 10。</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>起始位置，从 0 开始。</p>
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayConsumerGroupListRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayConsumerGroupListRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCloudNativeAPIGatewayConsumerGroupListRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayConsumerGroupListResponseParams struct {
+	// <p>分组列表</p>
+	Result *CNAPIGwConsumerGroupList `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCloudNativeAPIGatewayConsumerGroupListResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCloudNativeAPIGatewayConsumerGroupListResponseParams `json:"Response"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayConsumerGroupListResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayConsumerGroupListResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayConsumerGroupRequestParams struct {
+	// <p>网关实例id</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>消费者组ID</p>
+	ConsumerGroupId *string `json:"ConsumerGroupId,omitnil,omitempty" name:"ConsumerGroupId"`
+}
+
+type DescribeCloudNativeAPIGatewayConsumerGroupRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>网关实例id</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>消费者组ID</p>
+	ConsumerGroupId *string `json:"ConsumerGroupId,omitnil,omitempty" name:"ConsumerGroupId"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayConsumerGroupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayConsumerGroupRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "ConsumerGroupId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCloudNativeAPIGatewayConsumerGroupRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayConsumerGroupResponseParams struct {
+	// <p>消费者组详情。</p>
+	Result *CNAPIGwConsumerGroup `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCloudNativeAPIGatewayConsumerGroupResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCloudNativeAPIGatewayConsumerGroupResponseParams `json:"Response"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayConsumerGroupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayConsumerGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayConsumerListRequestParams struct {
+	// <p>网关实例id</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>页显示条数，最大20</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>起始位置</p>
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>资源类型</p><p>枚举值：</p><ul><li>ModelAPI： 模型API</li><li>MCPServer： MCP服务</li></ul>
+	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
+
+	// <p>资源ID</p>
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
+}
+
+type DescribeCloudNativeAPIGatewayConsumerListRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>网关实例id</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>页显示条数，最大20</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>起始位置</p>
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>资源类型</p><p>枚举值：</p><ul><li>ModelAPI： 模型API</li><li>MCPServer： MCP服务</li></ul>
+	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
+
+	// <p>资源ID</p>
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayConsumerListRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayConsumerListRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "ResourceType")
+	delete(f, "ResourceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCloudNativeAPIGatewayConsumerListRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayConsumerListResponseParams struct {
+	// <p>消费者列表</p>
+	Result *CNAPIGwConsumerList `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCloudNativeAPIGatewayConsumerListResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCloudNativeAPIGatewayConsumerListResponseParams `json:"Response"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayConsumerListResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayConsumerListResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayConsumerRequestParams struct {
+	// <p>网关实例id</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>消费者ID</p>
+	ConsumerId *string `json:"ConsumerId,omitnil,omitempty" name:"ConsumerId"`
+}
+
+type DescribeCloudNativeAPIGatewayConsumerRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>网关实例id</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>消费者ID</p>
+	ConsumerId *string `json:"ConsumerId,omitnil,omitempty" name:"ConsumerId"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayConsumerRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayConsumerRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "ConsumerId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCloudNativeAPIGatewayConsumerRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayConsumerResponseParams struct {
+	// <p>消费者详情</p>
+	Result *CNAPIGwConsumer `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCloudNativeAPIGatewayConsumerResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCloudNativeAPIGatewayConsumerResponseParams `json:"Response"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayConsumerResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayConsumerResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayIPRestrictionRequestParams struct {
+	// 网关ID
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 访问控制插件绑定的资源类型：route|service
+	SourceType *string `json:"SourceType,omitnil,omitempty" name:"SourceType"`
+
+	// 路由或服务的id
+	SourceId *string `json:"SourceId,omitnil,omitempty" name:"SourceId"`
+}
+
+type DescribeCloudNativeAPIGatewayIPRestrictionRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关ID
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 访问控制插件绑定的资源类型：route|service
+	SourceType *string `json:"SourceType,omitnil,omitempty" name:"SourceType"`
+
+	// 路由或服务的id
+	SourceId *string `json:"SourceId,omitnil,omitempty" name:"SourceId"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayIPRestrictionRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayIPRestrictionRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "SourceType")
+	delete(f, "SourceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCloudNativeAPIGatewayIPRestrictionRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayIPRestrictionResponseParams struct {
+	// 出参
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	Result *DescribeKongIpRestrictionResult `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCloudNativeAPIGatewayIPRestrictionResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCloudNativeAPIGatewayIPRestrictionResponseParams `json:"Response"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayIPRestrictionResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayIPRestrictionResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayInfoByIpRequestParams struct {
+	// 云原生网关的公网ip
+	PublicNetworkIP *string `json:"PublicNetworkIP,omitnil,omitempty" name:"PublicNetworkIP"`
+}
+
+type DescribeCloudNativeAPIGatewayInfoByIpRequest struct {
+	*tchttp.BaseRequest
+	
+	// 云原生网关的公网ip
+	PublicNetworkIP *string `json:"PublicNetworkIP,omitnil,omitempty" name:"PublicNetworkIP"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayInfoByIpRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayInfoByIpRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "PublicNetworkIP")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCloudNativeAPIGatewayInfoByIpRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayInfoByIpResponseParams struct {
+	// 出参
+	Result *DescribeInstanceInfoByIpResult `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCloudNativeAPIGatewayInfoByIpResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCloudNativeAPIGatewayInfoByIpResponseParams `json:"Response"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayInfoByIpResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayInfoByIpResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayLLMModelAPIRequestParams struct {
+	// <p>网关 id。</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>模型 API ID，全局唯一标识。</p>
+	ModelAPIId *string `json:"ModelAPIId,omitnil,omitempty" name:"ModelAPIId"`
+}
+
+type DescribeCloudNativeAPIGatewayLLMModelAPIRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>网关 id。</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>模型 API ID，全局唯一标识。</p>
+	ModelAPIId *string `json:"ModelAPIId,omitnil,omitempty" name:"ModelAPIId"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayLLMModelAPIRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayLLMModelAPIRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "ModelAPIId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCloudNativeAPIGatewayLLMModelAPIRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayLLMModelAPIResponseParams struct {
+	// <p>模型 API 信息。</p>
+	Result *CloudNativeAPIGatewayLLMModelAPI `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCloudNativeAPIGatewayLLMModelAPIResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCloudNativeAPIGatewayLLMModelAPIResponseParams `json:"Response"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayLLMModelAPIResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayLLMModelAPIResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayLLMModelAPIsRequestParams struct {
+	// <p>网关 id。</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>每页条数，范围 [1, 1000]，默认 10。</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>起始位置，从 0 开始。</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>过滤条件。当前未启用具体字段。</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>模糊匹配模型 API 名称。</p>
+	Keyword *string `json:"Keyword,omitnil,omitempty" name:"Keyword"`
+
+	// <p>消费者组 ID（以 cg- 开头），与 UseToBind 搭配使用。</p>
+	ConsumerGroupId *string `json:"ConsumerGroupId,omitnil,omitempty" name:"ConsumerGroupId"`
+
+	// <p>是否用于绑定场景。true 时仅返回可被绑定到指定消费者组的模型 API。</p>
+	UseToBind *bool `json:"UseToBind,omitnil,omitempty" name:"UseToBind"`
+
+	// <p>消费者ID</p>
+	ConsumerId *string `json:"ConsumerId,omitnil,omitempty" name:"ConsumerId"`
+}
+
+type DescribeCloudNativeAPIGatewayLLMModelAPIsRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>网关 id。</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>每页条数，范围 [1, 1000]，默认 10。</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>起始位置，从 0 开始。</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>过滤条件。当前未启用具体字段。</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>模糊匹配模型 API 名称。</p>
+	Keyword *string `json:"Keyword,omitnil,omitempty" name:"Keyword"`
+
+	// <p>消费者组 ID（以 cg- 开头），与 UseToBind 搭配使用。</p>
+	ConsumerGroupId *string `json:"ConsumerGroupId,omitnil,omitempty" name:"ConsumerGroupId"`
+
+	// <p>是否用于绑定场景。true 时仅返回可被绑定到指定消费者组的模型 API。</p>
+	UseToBind *bool `json:"UseToBind,omitnil,omitempty" name:"UseToBind"`
+
+	// <p>消费者ID</p>
+	ConsumerId *string `json:"ConsumerId,omitnil,omitempty" name:"ConsumerId"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayLLMModelAPIsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayLLMModelAPIsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "Filters")
+	delete(f, "Keyword")
+	delete(f, "ConsumerGroupId")
+	delete(f, "UseToBind")
+	delete(f, "ConsumerId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCloudNativeAPIGatewayLLMModelAPIsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayLLMModelAPIsResponseParams struct {
+	// <p>模型 API 列表。</p>
+	Result *ListCloudNativeAPIGatewayLLMModelAPI `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCloudNativeAPIGatewayLLMModelAPIsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCloudNativeAPIGatewayLLMModelAPIsResponseParams `json:"Response"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayLLMModelAPIsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayLLMModelAPIsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayLLMModelServiceRequestParams struct {
+	// <p>网关 id。</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>模型服务 ID，全局唯一标识。</p>
+	ModelServiceId *string `json:"ModelServiceId,omitnil,omitempty" name:"ModelServiceId"`
+}
+
+type DescribeCloudNativeAPIGatewayLLMModelServiceRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>网关 id。</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>模型服务 ID，全局唯一标识。</p>
+	ModelServiceId *string `json:"ModelServiceId,omitnil,omitempty" name:"ModelServiceId"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayLLMModelServiceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayLLMModelServiceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "ModelServiceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCloudNativeAPIGatewayLLMModelServiceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayLLMModelServiceResponseParams struct {
+	// <p>模型服务。</p>
+	Result *CloudNativeAPIGatewayLLMModelService `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCloudNativeAPIGatewayLLMModelServiceResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCloudNativeAPIGatewayLLMModelServiceResponseParams `json:"Response"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayLLMModelServiceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayLLMModelServiceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayLLMModelServicesRequestParams struct {
+	// <p>网关 id。</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>返回数量，默认为 10，最大值为 1000。</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>偏移量，默认为 0。</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>过滤条件，多个过滤条件之间是“与”的关系，支持 Name</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>通过模型 API 筛选模型服务</p>
+	ModelAPIId *string `json:"ModelAPIId,omitnil,omitempty" name:"ModelAPIId"`
+
+	// <p>通过密匙查询绑定的模型服务</p>
+	SecretKeyId *string `json:"SecretKeyId,omitnil,omitempty" name:"SecretKeyId"`
+
+	// <p>搜索关键词，模糊匹配 name 和 description</p>
+	Keyword *string `json:"Keyword,omitnil,omitempty" name:"Keyword"`
+}
+
+type DescribeCloudNativeAPIGatewayLLMModelServicesRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>网关 id。</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>返回数量，默认为 10，最大值为 1000。</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>偏移量，默认为 0。</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>过滤条件，多个过滤条件之间是“与”的关系，支持 Name</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>通过模型 API 筛选模型服务</p>
+	ModelAPIId *string `json:"ModelAPIId,omitnil,omitempty" name:"ModelAPIId"`
+
+	// <p>通过密匙查询绑定的模型服务</p>
+	SecretKeyId *string `json:"SecretKeyId,omitnil,omitempty" name:"SecretKeyId"`
+
+	// <p>搜索关键词，模糊匹配 name 和 description</p>
+	Keyword *string `json:"Keyword,omitnil,omitempty" name:"Keyword"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayLLMModelServicesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayLLMModelServicesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "Filters")
+	delete(f, "ModelAPIId")
+	delete(f, "SecretKeyId")
+	delete(f, "Keyword")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCloudNativeAPIGatewayLLMModelServicesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayLLMModelServicesResponseParams struct {
+	// <p>模型服务列表。</p>
+	Result *ListCloudNativeAPIGatewayLLMModelService `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCloudNativeAPIGatewayLLMModelServicesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCloudNativeAPIGatewayLLMModelServicesResponseParams `json:"Response"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayLLMModelServicesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayLLMModelServicesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewayNodesRequestParams struct {
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 实例分组id
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 翻页获取多少个
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 翻页从第几个开始获取
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 type DescribeCloudNativeAPIGatewayNodesRequest struct {
 	*tchttp.BaseRequest
 	
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 实例分组id
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 翻页获取多少个
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 翻页从第几个开始获取
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 func (r *DescribeCloudNativeAPIGatewayNodesRequest) ToJsonString() string {
@@ -3433,10 +8441,10 @@ func (r *DescribeCloudNativeAPIGatewayNodesRequest) FromJsonString(s string) err
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewayNodesResponseParams struct {
 	// 获取云原生网关节点列表结果。
-	Result *DescribeCloudNativeAPIGatewayNodesResult `json:"Result,omitnil" name:"Result"`
+	Result *DescribeCloudNativeAPIGatewayNodesResult `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeCloudNativeAPIGatewayNodesResponse struct {
@@ -3457,23 +8465,23 @@ func (r *DescribeCloudNativeAPIGatewayNodesResponse) FromJsonString(s string) er
 
 type DescribeCloudNativeAPIGatewayNodesResult struct {
 	// 获取云原生API网关节点列表响应结果。
-	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 云原生API网关节点列表。
-	NodeList []*CloudNativeAPIGatewayNode `json:"NodeList,omitnil" name:"NodeList"`
+	NodeList []*CloudNativeAPIGatewayNode `json:"NodeList,omitnil,omitempty" name:"NodeList"`
 }
 
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewayPortsRequestParams struct {
 	// 云原生API网关实例ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 }
 
 type DescribeCloudNativeAPIGatewayPortsRequest struct {
 	*tchttp.BaseRequest
 	
 	// 云原生API网关实例ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 }
 
 func (r *DescribeCloudNativeAPIGatewayPortsRequest) ToJsonString() string {
@@ -3498,11 +8506,10 @@ func (r *DescribeCloudNativeAPIGatewayPortsRequest) FromJsonString(s string) err
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewayPortsResponseParams struct {
 	// 云原生API网关实例协议端口列表响应结果
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Result *DescribeGatewayInstancePortResult `json:"Result,omitnil" name:"Result"`
+	Result *DescribeGatewayInstancePortResult `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeCloudNativeAPIGatewayPortsResponse struct {
@@ -3524,14 +8531,14 @@ func (r *DescribeCloudNativeAPIGatewayPortsResponse) FromJsonString(s string) er
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewayRequestParams struct {
 	// 云原生API网关实例ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 }
 
 type DescribeCloudNativeAPIGatewayRequest struct {
 	*tchttp.BaseRequest
 	
 	// 云原生API网关实例ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 }
 
 func (r *DescribeCloudNativeAPIGatewayRequest) ToJsonString() string {
@@ -3556,10 +8563,10 @@ func (r *DescribeCloudNativeAPIGatewayRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewayResponseParams struct {
 	// 获取云原生API网关基础信息响应结果。
-	Result *DescribeCloudNativeAPIGatewayResult `json:"Result,omitnil" name:"Result"`
+	Result *DescribeCloudNativeAPIGatewayResult `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeCloudNativeAPIGatewayResponse struct {
@@ -3579,120 +8586,120 @@ func (r *DescribeCloudNativeAPIGatewayResponse) FromJsonString(s string) error {
 }
 
 type DescribeCloudNativeAPIGatewayResult struct {
-	// 云原生API网关ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	// <p>云原生API网关ID。</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
-	// 云原生API网关状态。
-	Status *string `json:"Status,omitnil" name:"Status"`
+	// <p>云原生API网关状态。</p>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 云原生API网关名。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	// <p>云原生API网关名。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 云原生API网关类型。
-	Type *string `json:"Type,omitnil" name:"Type"`
+	// <p>云原生API网关类型。</p>
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 实例版本：
-	// - 2.4.1
-	// - 2.5.1
-	GatewayVersion *string `json:"GatewayVersion,omitnil" name:"GatewayVersion"`
+	// <p>实例版本：</p><ul><li>2.4.1</li><li>2.5.1</li></ul>
+	GatewayVersion *string `json:"GatewayVersion,omitnil,omitempty" name:"GatewayVersion"`
 
-	// 云原生API网关节点信息。
-	NodeConfig *CloudNativeAPIGatewayNodeConfig `json:"NodeConfig,omitnil" name:"NodeConfig"`
+	// <p>云原生API网关节点信息。</p>
+	NodeConfig *CloudNativeAPIGatewayNodeConfig `json:"NodeConfig,omitnil,omitempty" name:"NodeConfig"`
 
-	// 云原生API网关vpc配置。
-	VpcConfig *CloudNativeAPIGatewayVpcConfig `json:"VpcConfig,omitnil" name:"VpcConfig"`
+	// <p>云原生API网关vpc配置。</p>
+	VpcConfig *CloudNativeAPIGatewayVpcConfig `json:"VpcConfig,omitnil,omitempty" name:"VpcConfig"`
 
-	// 云原生API网关描述。
-	Description *string `json:"Description,omitnil" name:"Description"`
+	// <p>云原生API网关描述。</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// 云原生API网关创建时间。
-	CreateTime *string `json:"CreateTime,omitnil" name:"CreateTime"`
+	// <p>云原生API网关创建时间。</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 实例的标签信息
+	// <p>实例的标签信息</p>
+	Tags []*InstanceTagInfo `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// <p>是否开启 cls 日志</p>
+	EnableCls *bool `json:"EnableCls,omitnil,omitempty" name:"EnableCls"`
+
+	// <p>付费模式，0表示后付费，1预付费</p>
+	TradeType *int64 `json:"TradeType,omitnil,omitempty" name:"TradeType"`
+
+	// <p>实例版本，当前支持开发版、标准版、专业版【TRIAL、STANDARD、PROFESSIONAL】</p>
+	FeatureVersion *string `json:"FeatureVersion,omitnil,omitempty" name:"FeatureVersion"`
+
+	// <p>公网出流量带宽，[1,2048]Mbps</p>
+	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
+
+	// <p>自动续费标记，0表示默认状态(用户未设置，即初始状态)；<br>1表示自动续费，2表示明确不自动续费(用户设置)，若业务无续费概念或无需自动续费，需要设置为0</p>
+	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
+
+	// <p>到期时间，预付费时使用</p>
+	CurDeadline *string `json:"CurDeadline,omitnil,omitempty" name:"CurDeadline"`
+
+	// <p>隔离时间，实例隔离时使用</p>
+	IsolateTime *string `json:"IsolateTime,omitnil,omitempty" name:"IsolateTime"`
+
+	// <p>是否开启客户端公网。</p>
+	EnableInternet *bool `json:"EnableInternet,omitnil,omitempty" name:"EnableInternet"`
+
+	// <p>实例实际的地域信息</p>
+	EngineRegion *string `json:"EngineRegion,omitnil,omitempty" name:"EngineRegion"`
+
+	// <p>Ingress class名称</p>
+	IngressClassName *string `json:"IngressClassName,omitnil,omitempty" name:"IngressClassName"`
+
+	// <p>公网计费方式。可选取值 BANDWIDTH | TRAFFIC ，表示按带宽和按流量计费。</p>
+	InternetPayMode *string `json:"InternetPayMode,omitnil,omitempty" name:"InternetPayMode"`
+
+	// <p>云原生API网关小版本号</p>
+	GatewayMinorVersion *string `json:"GatewayMinorVersion,omitnil,omitempty" name:"GatewayMinorVersion"`
+
+	// <p>实例监听的端口信息</p>
+	InstancePort *InstancePort `json:"InstancePort,omitnil,omitempty" name:"InstancePort"`
+
+	// <p>公网CLB默认类型</p>
+	LoadBalancerType *string `json:"LoadBalancerType,omitnil,omitempty" name:"LoadBalancerType"`
+
+	// <p>公网IP地址列表</p>
+	PublicIpAddresses []*string `json:"PublicIpAddresses,omitnil,omitempty" name:"PublicIpAddresses"`
+
+	// <p>是否开启删除保护</p>
+	DeleteProtect *bool `json:"DeleteProtect,omitnil,omitempty" name:"DeleteProtect"`
+
+	// <p>表示可以升级的版本号</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Tags []*InstanceTagInfo `json:"Tags,omitnil" name:"Tags"`
+	AvailableVersions []*string `json:"AvailableVersions,omitnil,omitempty" name:"AvailableVersions"`
 
-	// 是否开启 cls 日志
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	EnableCls *bool `json:"EnableCls,omitnil" name:"EnableCls"`
+	// <p>网关可以升级的版本号列表</p>
+	AvailableUpgradeVersions []*string `json:"AvailableUpgradeVersions,omitnil,omitempty" name:"AvailableUpgradeVersions"`
 
-	// 付费模式，0表示后付费，1预付费
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TradeType *int64 `json:"TradeType,omitnil" name:"TradeType"`
+	// <p>是否提示可升级</p>
+	AvailableUpgrade *bool `json:"AvailableUpgrade,omitnil,omitempty" name:"AvailableUpgrade"`
 
-	// 实例版本，当前支持开发版、标准版、专业版【TRIAL、STANDARD、PROFESSIONAL】
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	FeatureVersion *string `json:"FeatureVersion,omitnil" name:"FeatureVersion"`
+	// <p>可回退的版本</p>
+	AvailableRollbackVersion *string `json:"AvailableRollbackVersion,omitnil,omitempty" name:"AvailableRollbackVersion"`
 
-	// 公网出流量带宽，[1,2048]Mbps
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil" name:"InternetMaxBandwidthOut"`
-
-	// 自动续费标记，0表示默认状态(用户未设置，即初始状态)；
-	// 1表示自动续费，2表示明确不自动续费(用户设置)，若业务无续费概念或无需自动续费，需要设置为0
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil" name:"AutoRenewFlag"`
-
-	// 到期时间，预付费时使用
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CurDeadline *string `json:"CurDeadline,omitnil" name:"CurDeadline"`
-
-	// 隔离时间，实例隔离时使用
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	IsolateTime *string `json:"IsolateTime,omitnil" name:"IsolateTime"`
-
-	// 是否开启客户端公网。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	EnableInternet *bool `json:"EnableInternet,omitnil" name:"EnableInternet"`
-
-	// 实例实际的地域信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	EngineRegion *string `json:"EngineRegion,omitnil" name:"EngineRegion"`
-
-	// Ingress class名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	IngressClassName *string `json:"IngressClassName,omitnil" name:"IngressClassName"`
-
-	// 公网计费方式。可选取值 BANDWIDTH | TRAFFIC ，表示按带宽和按流量计费。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	InternetPayMode *string `json:"InternetPayMode,omitnil" name:"InternetPayMode"`
-
-	// 云原生API网关小版本号
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	GatewayMinorVersion *string `json:"GatewayMinorVersion,omitnil" name:"GatewayMinorVersion"`
-
-	// 实例监听的端口信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	InstancePort *InstancePort `json:"InstancePort,omitnil" name:"InstancePort"`
-
-	// 公网CLB默认类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	LoadBalancerType *string `json:"LoadBalancerType,omitnil" name:"LoadBalancerType"`
-
-	// 公网IP地址列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	PublicIpAddresses []*string `json:"PublicIpAddresses,omitnil" name:"PublicIpAddresses"`
+	// <p>强制跳转HTTPS开关</p>
+	ForceHTTPSRedirect *bool `json:"ForceHTTPSRedirect,omitnil,omitempty" name:"ForceHTTPSRedirect"`
 }
 
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewayRouteRateLimitRequestParams struct {
 	// 网关Id
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 路由Id，或路由名称。
 	// 不支持“未命名”
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 }
 
 type DescribeCloudNativeAPIGatewayRouteRateLimitRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关Id
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 路由Id，或路由名称。
 	// 不支持“未命名”
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 }
 
 func (r *DescribeCloudNativeAPIGatewayRouteRateLimitRequest) ToJsonString() string {
@@ -3718,10 +8725,10 @@ func (r *DescribeCloudNativeAPIGatewayRouteRateLimitRequest) FromJsonString(s st
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewayRouteRateLimitResponseParams struct {
 	// 获取云原生网关限流插件(路由)
-	Result *CloudNativeAPIGatewayRateLimitDetail `json:"Result,omitnil" name:"Result"`
+	Result *CloudNativeAPIGatewayRateLimitDetail `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeCloudNativeAPIGatewayRouteRateLimitResponse struct {
@@ -3742,45 +8749,69 @@ func (r *DescribeCloudNativeAPIGatewayRouteRateLimitResponse) FromJsonString(s s
 
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewayRoutesRequestParams struct {
-	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	// <p>网关ID</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
-	// 翻页单页查询限制数量[0,1000], 默认值0
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	// <p>翻页单页查询限制数量[0,1000], 默认值0</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 翻页单页偏移量，默认值0
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	// <p>翻页单页偏移量，默认值0</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 服务的名字，精确匹配
-	ServiceName *string `json:"ServiceName,omitnil" name:"ServiceName"`
+	// <p>服务的名字，精确匹配</p>
+	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
 
-	// 路由的名字，精确匹配
-	RouteName *string `json:"RouteName,omitnil" name:"RouteName"`
+	// <p>路由的名字，精确匹配</p>
+	RouteName *string `json:"RouteName,omitnil,omitempty" name:"RouteName"`
 
-	// 过滤条件，多个过滤条件之间是与的关系，支持 name, path, host, method, service, protocol
-	Filters []*ListFilter `json:"Filters,omitnil" name:"Filters"`
+	// <p>过滤条件，多个过滤条件之间是与的关系，支持 name, path, host, method, service, protocol</p>
+	Filters []*ListFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>路由类型</p>
+	RouteTypes []*string `json:"RouteTypes,omitnil,omitempty" name:"RouteTypes"`
+
+	// <p>是否将灰度规则可能带来的路由排在原始路由前</p>
+	GrayRoutesFirst *bool `json:"GrayRoutesFirst,omitnil,omitempty" name:"GrayRoutesFirst"`
+
+	// <p>排序字段</p>
+	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
+
+	// <p>排序方式</p><p>枚举值：</p><ul><li>DESC： 降序</li><li>ASC： 升序</li></ul>
+	OrderType *string `json:"OrderType,omitnil,omitempty" name:"OrderType"`
 }
 
 type DescribeCloudNativeAPIGatewayRoutesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	// <p>网关ID</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
-	// 翻页单页查询限制数量[0,1000], 默认值0
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	// <p>翻页单页查询限制数量[0,1000], 默认值0</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 翻页单页偏移量，默认值0
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	// <p>翻页单页偏移量，默认值0</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 服务的名字，精确匹配
-	ServiceName *string `json:"ServiceName,omitnil" name:"ServiceName"`
+	// <p>服务的名字，精确匹配</p>
+	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
 
-	// 路由的名字，精确匹配
-	RouteName *string `json:"RouteName,omitnil" name:"RouteName"`
+	// <p>路由的名字，精确匹配</p>
+	RouteName *string `json:"RouteName,omitnil,omitempty" name:"RouteName"`
 
-	// 过滤条件，多个过滤条件之间是与的关系，支持 name, path, host, method, service, protocol
-	Filters []*ListFilter `json:"Filters,omitnil" name:"Filters"`
+	// <p>过滤条件，多个过滤条件之间是与的关系，支持 name, path, host, method, service, protocol</p>
+	Filters []*ListFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>路由类型</p>
+	RouteTypes []*string `json:"RouteTypes,omitnil,omitempty" name:"RouteTypes"`
+
+	// <p>是否将灰度规则可能带来的路由排在原始路由前</p>
+	GrayRoutesFirst *bool `json:"GrayRoutesFirst,omitnil,omitempty" name:"GrayRoutesFirst"`
+
+	// <p>排序字段</p>
+	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
+
+	// <p>排序方式</p><p>枚举值：</p><ul><li>DESC： 降序</li><li>ASC： 升序</li></ul>
+	OrderType *string `json:"OrderType,omitnil,omitempty" name:"OrderType"`
 }
 
 func (r *DescribeCloudNativeAPIGatewayRoutesRequest) ToJsonString() string {
@@ -3801,6 +8832,10 @@ func (r *DescribeCloudNativeAPIGatewayRoutesRequest) FromJsonString(s string) er
 	delete(f, "ServiceName")
 	delete(f, "RouteName")
 	delete(f, "Filters")
+	delete(f, "RouteTypes")
+	delete(f, "GrayRoutesFirst")
+	delete(f, "OrderField")
+	delete(f, "OrderType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCloudNativeAPIGatewayRoutesRequest has unknown keys!", "")
 	}
@@ -3809,12 +8844,11 @@ func (r *DescribeCloudNativeAPIGatewayRoutesRequest) FromJsonString(s string) er
 
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewayRoutesResponseParams struct {
-	// 无
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Result *KongServiceRouteList `json:"Result,omitnil" name:"Result"`
+	// <p>无</p>
+	Result *KongServiceRouteList `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeCloudNativeAPIGatewayRoutesResponse struct {
@@ -3834,22 +8868,228 @@ func (r *DescribeCloudNativeAPIGatewayRoutesResponse) FromJsonString(s string) e
 }
 
 // Predefined struct for user
+type DescribeCloudNativeAPIGatewaySecretKeyListRequestParams struct {
+	// <p>实例 ID</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>每页条数，范围 [1, 100]，默认 10。</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>起始位置，从 0 开始。</p>
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>密钥归属资源类型。UseToBind=true 时必填。</p><p>枚举值：</p><ul><li>Consumer：消费者</li><li>ModelService：模型服务</li></ul>
+	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
+}
+
+type DescribeCloudNativeAPIGatewaySecretKeyListRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实例 ID</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>每页条数，范围 [1, 100]，默认 10。</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>起始位置，从 0 开始。</p>
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>密钥归属资源类型。UseToBind=true 时必填。</p><p>枚举值：</p><ul><li>Consumer：消费者</li><li>ModelService：模型服务</li></ul>
+	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
+}
+
+func (r *DescribeCloudNativeAPIGatewaySecretKeyListRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewaySecretKeyListRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "ResourceType")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCloudNativeAPIGatewaySecretKeyListRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewaySecretKeyListResponseParams struct {
+	// <p>密钥列表</p>
+	Result *CNAPIGwSecretKeyList `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCloudNativeAPIGatewaySecretKeyListResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCloudNativeAPIGatewaySecretKeyListResponseParams `json:"Response"`
+}
+
+func (r *DescribeCloudNativeAPIGatewaySecretKeyListResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewaySecretKeyListResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewaySecretKeyRequestParams struct {
+	// <p>实例 ID</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>密钥id</p>
+	SecretKeyId *string `json:"SecretKeyId,omitnil,omitempty" name:"SecretKeyId"`
+}
+
+type DescribeCloudNativeAPIGatewaySecretKeyRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实例 ID</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>密钥id</p>
+	SecretKeyId *string `json:"SecretKeyId,omitnil,omitempty" name:"SecretKeyId"`
+}
+
+func (r *DescribeCloudNativeAPIGatewaySecretKeyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewaySecretKeyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "SecretKeyId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCloudNativeAPIGatewaySecretKeyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewaySecretKeyResponseParams struct {
+	// <p>密钥详情。</p>
+	Result *CNAPIGwSecretKey `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCloudNativeAPIGatewaySecretKeyResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCloudNativeAPIGatewaySecretKeyResponseParams `json:"Response"`
+}
+
+func (r *DescribeCloudNativeAPIGatewaySecretKeyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewaySecretKeyResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewaySecretKeyValueRequestParams struct {
+	// 实例 ID
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 密钥id
+	SecretKeyId *string `json:"SecretKeyId,omitnil,omitempty" name:"SecretKeyId"`
+}
+
+type DescribeCloudNativeAPIGatewaySecretKeyValueRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例 ID
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 密钥id
+	SecretKeyId *string `json:"SecretKeyId,omitnil,omitempty" name:"SecretKeyId"`
+}
+
+func (r *DescribeCloudNativeAPIGatewaySecretKeyValueRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewaySecretKeyValueRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "SecretKeyId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCloudNativeAPIGatewaySecretKeyValueRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewaySecretKeyValueResponseParams struct {
+	// 密钥值
+	Result *string `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCloudNativeAPIGatewaySecretKeyValueResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCloudNativeAPIGatewaySecretKeyValueResponseParams `json:"Response"`
+}
+
+func (r *DescribeCloudNativeAPIGatewaySecretKeyValueResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewaySecretKeyValueResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeCloudNativeAPIGatewayServiceRateLimitRequestParams struct {
 	// 网关Id
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务名称，或服务ID。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 }
 
 type DescribeCloudNativeAPIGatewayServiceRateLimitRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关Id
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务名称，或服务ID。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 }
 
 func (r *DescribeCloudNativeAPIGatewayServiceRateLimitRequest) ToJsonString() string {
@@ -3875,10 +9115,10 @@ func (r *DescribeCloudNativeAPIGatewayServiceRateLimitRequest) FromJsonString(s 
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewayServiceRateLimitResponseParams struct {
 	// 获取云原生网关限流插件(服务)
-	Result *CloudNativeAPIGatewayRateLimitDetail `json:"Result,omitnil" name:"Result"`
+	Result *CloudNativeAPIGatewayRateLimitDetail `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeCloudNativeAPIGatewayServiceRateLimitResponse struct {
@@ -3898,34 +9138,124 @@ func (r *DescribeCloudNativeAPIGatewayServiceRateLimitResponse) FromJsonString(s
 }
 
 // Predefined struct for user
-type DescribeCloudNativeAPIGatewayServicesRequestParams struct {
+type DescribeCloudNativeAPIGatewayServicesLightRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 列表数量
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 列表 offset
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 过滤条件，多个过滤条件之间是与的关系，支持 name,upstreamType
-	Filters []*ListFilter `json:"Filters,omitnil" name:"Filters"`
+	// 过滤条件，多个过滤条件之间是与的关系，支持 id、name、upstreamType
+	Filters []*ListFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+type DescribeCloudNativeAPIGatewayServicesLightRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关ID
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 列表数量
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 列表 offset
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 过滤条件，多个过滤条件之间是与的关系，支持 id、name、upstreamType
+	Filters []*ListFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayServicesLightRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayServicesLightRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "Filters")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCloudNativeAPIGatewayServicesLightRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayServicesLightResponseParams struct {
+	// 无
+	Result *GatewayServices `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCloudNativeAPIGatewayServicesLightResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCloudNativeAPIGatewayServicesLightResponseParams `json:"Response"`
+}
+
+func (r *DescribeCloudNativeAPIGatewayServicesLightResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCloudNativeAPIGatewayServicesLightResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCloudNativeAPIGatewayServicesRequestParams struct {
+	// <p>网关ID</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>列表数量</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>列表 offset</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>过滤条件，多个过滤条件之间是与的关系，支持 name,upstreamType</p>
+	Filters []*ListFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>排序字段</p>
+	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
+
+	// <p>排序方式</p><p>枚举值：</p><ul><li>DESC： 降序</li><li>ASC： 升序</li></ul>
+	OrderType *string `json:"OrderType,omitnil,omitempty" name:"OrderType"`
 }
 
 type DescribeCloudNativeAPIGatewayServicesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	// <p>网关ID</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
-	// 列表数量
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	// <p>列表数量</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 列表 offset
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	// <p>列表 offset</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 过滤条件，多个过滤条件之间是与的关系，支持 name,upstreamType
-	Filters []*ListFilter `json:"Filters,omitnil" name:"Filters"`
+	// <p>过滤条件，多个过滤条件之间是与的关系，支持 name,upstreamType</p>
+	Filters []*ListFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>排序字段</p>
+	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
+
+	// <p>排序方式</p><p>枚举值：</p><ul><li>DESC： 降序</li><li>ASC： 升序</li></ul>
+	OrderType *string `json:"OrderType,omitnil,omitempty" name:"OrderType"`
 }
 
 func (r *DescribeCloudNativeAPIGatewayServicesRequest) ToJsonString() string {
@@ -3944,6 +9274,8 @@ func (r *DescribeCloudNativeAPIGatewayServicesRequest) FromJsonString(s string) 
 	delete(f, "Limit")
 	delete(f, "Offset")
 	delete(f, "Filters")
+	delete(f, "OrderField")
+	delete(f, "OrderType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCloudNativeAPIGatewayServicesRequest has unknown keys!", "")
 	}
@@ -3952,12 +9284,11 @@ func (r *DescribeCloudNativeAPIGatewayServicesRequest) FromJsonString(s string) 
 
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewayServicesResponseParams struct {
-	// 无
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Result *KongServices `json:"Result,omitnil" name:"Result"`
+	// <p>无</p>
+	Result *KongServices `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeCloudNativeAPIGatewayServicesResponse struct {
@@ -3979,20 +9310,20 @@ func (r *DescribeCloudNativeAPIGatewayServicesResponse) FromJsonString(s string)
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewayUpstreamRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务名字
-	ServiceName *string `json:"ServiceName,omitnil" name:"ServiceName"`
+	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
 }
 
 type DescribeCloudNativeAPIGatewayUpstreamRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务名字
-	ServiceName *string `json:"ServiceName,omitnil" name:"ServiceName"`
+	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
 }
 
 func (r *DescribeCloudNativeAPIGatewayUpstreamRequest) ToJsonString() string {
@@ -4018,10 +9349,10 @@ func (r *DescribeCloudNativeAPIGatewayUpstreamRequest) FromJsonString(s string) 
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewayUpstreamResponseParams struct {
 	// 无
-	Result *KongUpstreamList `json:"Result,omitnil" name:"Result"`
+	Result *KongUpstreamList `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeCloudNativeAPIGatewayUpstreamResponse struct {
@@ -4042,27 +9373,27 @@ func (r *DescribeCloudNativeAPIGatewayUpstreamResponse) FromJsonString(s string)
 
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewaysRequestParams struct {
-	// 返回数量，默认为 20，最大值为 100。
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	// <p>返回数量，默认为 20，最大值为 100。</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 偏移量，默认为 0。
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	// <p>偏移量，默认为 0。</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 请求过滤参数，支持按照实例名称、ID和标签键值（Name、GatewayId、Tag）筛选
-	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+	// <p>请求过滤参数，支持按照实例名称、ID和标签键值（Name、GatewayId、Tag）筛选</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 type DescribeCloudNativeAPIGatewaysRequest struct {
 	*tchttp.BaseRequest
 	
-	// 返回数量，默认为 20，最大值为 100。
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	// <p>返回数量，默认为 20，最大值为 100。</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 偏移量，默认为 0。
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	// <p>偏移量，默认为 0。</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 请求过滤参数，支持按照实例名称、ID和标签键值（Name、GatewayId、Tag）筛选
-	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+	// <p>请求过滤参数，支持按照实例名称、ID和标签键值（Name、GatewayId、Tag）筛选</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 func (r *DescribeCloudNativeAPIGatewaysRequest) ToJsonString() string {
@@ -4088,11 +9419,11 @@ func (r *DescribeCloudNativeAPIGatewaysRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeCloudNativeAPIGatewaysResponseParams struct {
-	// 获取云原生API网关实例列表响应结果。
-	Result *ListCloudNativeAPIGatewayResult `json:"Result,omitnil" name:"Result"`
+	// <p>获取云原生API网关实例列表响应结果。</p>
+	Result *ListCloudNativeAPIGatewayResult `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeCloudNativeAPIGatewaysResponse struct {
@@ -4111,77 +9442,1749 @@ func (r *DescribeCloudNativeAPIGatewaysResponse) FromJsonString(s string) error 
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeConfigFileGroupsRequestParams struct {
+	// tse实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 根据命名空间过滤
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 根据配置文件组名过滤
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 根据配置文件组名过滤
+	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
+
+	// 返回数量，默认为20，最大值为100。	
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 偏移量，默认为0。	
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+}
+
+type DescribeConfigFileGroupsRequest struct {
+	*tchttp.BaseRequest
+	
+	// tse实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 根据命名空间过滤
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 根据配置文件组名过滤
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 根据配置文件组名过滤
+	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
+
+	// 返回数量，默认为20，最大值为100。	
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 偏移量，默认为0。	
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+}
+
+func (r *DescribeConfigFileGroupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeConfigFileGroupsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Namespace")
+	delete(f, "Group")
+	delete(f, "FileName")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeConfigFileGroupsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeConfigFileGroupsResponseParams struct {
+	// 列表总数量
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 配置文件组列表
+	ConfigFileGroups []*ConfigFileGroup `json:"ConfigFileGroups,omitnil,omitempty" name:"ConfigFileGroups"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeConfigFileGroupsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeConfigFileGroupsResponseParams `json:"Response"`
+}
+
+func (r *DescribeConfigFileGroupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeConfigFileGroupsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeConfigFileReleaseHistoriesRequestParams struct {
+	// TSE实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 组
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 发布历史记录id，用于分页优化，一般指定 EndId，就不用指定 Offset，否则分页可能不连续
+	EndId *uint64 `json:"EndId,omitnil,omitempty" name:"EndId"`
+
+	// 配置文件ID
+	ConfigFileId *string `json:"ConfigFileId,omitnil,omitempty" name:"ConfigFileId"`
+
+	// 返回数量，默认为20，最大值为100。	
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 偏移量，默认为0。	
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+}
+
+type DescribeConfigFileReleaseHistoriesRequest struct {
+	*tchttp.BaseRequest
+	
+	// TSE实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 组
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 发布历史记录id，用于分页优化，一般指定 EndId，就不用指定 Offset，否则分页可能不连续
+	EndId *uint64 `json:"EndId,omitnil,omitempty" name:"EndId"`
+
+	// 配置文件ID
+	ConfigFileId *string `json:"ConfigFileId,omitnil,omitempty" name:"ConfigFileId"`
+
+	// 返回数量，默认为20，最大值为100。	
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 偏移量，默认为0。	
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+}
+
+func (r *DescribeConfigFileReleaseHistoriesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeConfigFileReleaseHistoriesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Namespace")
+	delete(f, "Group")
+	delete(f, "Name")
+	delete(f, "EndId")
+	delete(f, "ConfigFileId")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeConfigFileReleaseHistoriesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeConfigFileReleaseHistoriesResponseParams struct {
+	// 数据总数量
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 配置文件发布历史列表
+	ConfigFileReleaseHistories []*ConfigFileReleaseHistory `json:"ConfigFileReleaseHistories,omitnil,omitempty" name:"ConfigFileReleaseHistories"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeConfigFileReleaseHistoriesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeConfigFileReleaseHistoriesResponseParams `json:"Response"`
+}
+
+func (r *DescribeConfigFileReleaseHistoriesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeConfigFileReleaseHistoriesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeConfigFileReleaseRequestParams struct {
+	// TSE实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 命名空间名称
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 配置分组名称
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 配置文件名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 配置文件发布名称
+	ReleaseName *string `json:"ReleaseName,omitnil,omitempty" name:"ReleaseName"`
+
+	// 配置文件发布Id
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+}
+
+type DescribeConfigFileReleaseRequest struct {
+	*tchttp.BaseRequest
+	
+	// TSE实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 命名空间名称
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 配置分组名称
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 配置文件名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 配置文件发布名称
+	ReleaseName *string `json:"ReleaseName,omitnil,omitempty" name:"ReleaseName"`
+
+	// 配置文件发布Id
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+}
+
+func (r *DescribeConfigFileReleaseRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeConfigFileReleaseRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Namespace")
+	delete(f, "Group")
+	delete(f, "Name")
+	delete(f, "ReleaseName")
+	delete(f, "Id")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeConfigFileReleaseRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeConfigFileReleaseResponseParams struct {
+	// 配置文件发布详情
+	ConfigFileRelease *ConfigFileRelease `json:"ConfigFileRelease,omitnil,omitempty" name:"ConfigFileRelease"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeConfigFileReleaseResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeConfigFileReleaseResponseParams `json:"Response"`
+}
+
+func (r *DescribeConfigFileReleaseResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeConfigFileReleaseResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeConfigFileReleaseVersionsRequestParams struct {
+	// 实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 配置分组
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 文件名称
+	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
+
+	// 配置文件ID
+	ConfigFileId *string `json:"ConfigFileId,omitnil,omitempty" name:"ConfigFileId"`
+}
+
+type DescribeConfigFileReleaseVersionsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 配置分组
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 文件名称
+	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
+
+	// 配置文件ID
+	ConfigFileId *string `json:"ConfigFileId,omitnil,omitempty" name:"ConfigFileId"`
+}
+
+func (r *DescribeConfigFileReleaseVersionsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeConfigFileReleaseVersionsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Namespace")
+	delete(f, "Group")
+	delete(f, "FileName")
+	delete(f, "ConfigFileId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeConfigFileReleaseVersionsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeConfigFileReleaseVersionsResponseParams struct {
+	// 版本信息
+	ReleaseVersions []*ReleaseVersion `json:"ReleaseVersions,omitnil,omitempty" name:"ReleaseVersions"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeConfigFileReleaseVersionsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeConfigFileReleaseVersionsResponseParams `json:"Response"`
+}
+
+func (r *DescribeConfigFileReleaseVersionsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeConfigFileReleaseVersionsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeConfigFileReleasesRequestParams struct {
+	// 实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 条数
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 偏移量
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 配置分组
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 文件名称
+	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
+
+	// 只保护处于使用状态
+	OnlyUse *bool `json:"OnlyUse,omitnil,omitempty" name:"OnlyUse"`
+
+	// 发布名称
+	ReleaseName *string `json:"ReleaseName,omitnil,omitempty" name:"ReleaseName"`
+
+	// 排序字段，mtime/version/name
+	// ，默认version
+	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
+
+	// 排序，asc/desc，默认 desc
+	OrderDesc *string `json:"OrderDesc,omitnil,omitempty" name:"OrderDesc"`
+
+	// 配置发布ID
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+}
+
+type DescribeConfigFileReleasesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 条数
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 偏移量
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 配置分组
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 文件名称
+	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
+
+	// 只保护处于使用状态
+	OnlyUse *bool `json:"OnlyUse,omitnil,omitempty" name:"OnlyUse"`
+
+	// 发布名称
+	ReleaseName *string `json:"ReleaseName,omitnil,omitempty" name:"ReleaseName"`
+
+	// 排序字段，mtime/version/name
+	// ，默认version
+	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
+
+	// 排序，asc/desc，默认 desc
+	OrderDesc *string `json:"OrderDesc,omitnil,omitempty" name:"OrderDesc"`
+
+	// 配置发布ID
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+}
+
+func (r *DescribeConfigFileReleasesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeConfigFileReleasesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "Namespace")
+	delete(f, "Group")
+	delete(f, "FileName")
+	delete(f, "OnlyUse")
+	delete(f, "ReleaseName")
+	delete(f, "OrderField")
+	delete(f, "OrderDesc")
+	delete(f, "Id")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeConfigFileReleasesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeConfigFileReleasesResponseParams struct {
+	// 总条数
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 发布列表
+	Releases []*ConfigFileRelease `json:"Releases,omitnil,omitempty" name:"Releases"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeConfigFileReleasesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeConfigFileReleasesResponseParams `json:"Response"`
+}
+
+func (r *DescribeConfigFileReleasesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeConfigFileReleasesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeConfigFileRequestParams struct {
+	// TSE实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 组
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 配置文件名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 配置文件Id
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+}
+
+type DescribeConfigFileRequest struct {
+	*tchttp.BaseRequest
+	
+	// TSE实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 组
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 配置文件名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 配置文件Id
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+}
+
+func (r *DescribeConfigFileRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeConfigFileRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Namespace")
+	delete(f, "Group")
+	delete(f, "Name")
+	delete(f, "Id")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeConfigFileRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeConfigFileResponseParams struct {
+	// 配置文件
+	ConfigFile *ConfigFile `json:"ConfigFile,omitnil,omitempty" name:"ConfigFile"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeConfigFileResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeConfigFileResponseParams `json:"Response"`
+}
+
+func (r *DescribeConfigFileResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeConfigFileResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeConfigFilesByGroupRequestParams struct {
+	// TSE实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 命名空间名
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 组名
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 返回数量，默认为20，最大值为100。	
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 偏移量，默认为0。	
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+}
+
+type DescribeConfigFilesByGroupRequest struct {
+	*tchttp.BaseRequest
+	
+	// TSE实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 命名空间名
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 组名
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 返回数量，默认为20，最大值为100。	
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 偏移量，默认为0。	
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+}
+
+func (r *DescribeConfigFilesByGroupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeConfigFilesByGroupRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Namespace")
+	delete(f, "Group")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeConfigFilesByGroupRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeConfigFilesByGroupResponseParams struct {
+	// 记录总数量
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 配置文件列表
+	ConfigFiles []*ConfigFile `json:"ConfigFiles,omitnil,omitempty" name:"ConfigFiles"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeConfigFilesByGroupResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeConfigFilesByGroupResponseParams `json:"Response"`
+}
+
+func (r *DescribeConfigFilesByGroupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeConfigFilesByGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeConfigFilesRequestParams struct {
+	// 命名空间名称
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// TSE实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 组名
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 配置文件名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 标签列表
+	Tags []*ConfigFileTag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 返回数量，默认为20，最大值为100。	
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 偏移量，默认为0。	
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 配置文件ID
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+}
+
+type DescribeConfigFilesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 命名空间名称
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// TSE实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 组名
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 配置文件名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 标签列表
+	Tags []*ConfigFileTag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 返回数量，默认为20，最大值为100。	
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 偏移量，默认为0。	
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 配置文件ID
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+}
+
+func (r *DescribeConfigFilesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeConfigFilesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Namespace")
+	delete(f, "InstanceId")
+	delete(f, "Group")
+	delete(f, "Name")
+	delete(f, "Tags")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "Id")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeConfigFilesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeConfigFilesResponseParams struct {
+	// 分页总数量
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 配置文件列表
+	ConfigFiles []*ConfigFile `json:"ConfigFiles,omitnil,omitempty" name:"ConfigFiles"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeConfigFilesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeConfigFilesResponseParams `json:"Response"`
+}
+
+func (r *DescribeConfigFilesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeConfigFilesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeGatewayInstancePortResult struct {
 	// 云原生API网关ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 网关实例协议端口列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	GatewayInstancePortList []*GatewayInstanceSchemeAndPorts `json:"GatewayInstancePortList,omitnil" name:"GatewayInstancePortList"`
+	GatewayInstancePortList []*GatewayInstanceSchemeAndPorts `json:"GatewayInstancePortList,omitnil,omitempty" name:"GatewayInstancePortList"`
+}
+
+// Predefined struct for user
+type DescribeGovernanceAliasesRequestParams struct {
+	// tse实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 服务别名所指向的服务名。
+	Service *string `json:"Service,omitnil,omitempty" name:"Service"`
+
+	// 服务别名所指向的命名空间名。
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 服务别名。
+	Alias *string `json:"Alias,omitnil,omitempty" name:"Alias"`
+
+	// 服务别名命名空间。
+	AliasNamespace *string `json:"AliasNamespace,omitnil,omitempty" name:"AliasNamespace"`
+
+	// 服务别名描述。
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// 偏移量，默认为0。
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 返回数量，默认为20，最大值为100。
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+}
+
+type DescribeGovernanceAliasesRequest struct {
+	*tchttp.BaseRequest
+	
+	// tse实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 服务别名所指向的服务名。
+	Service *string `json:"Service,omitnil,omitempty" name:"Service"`
+
+	// 服务别名所指向的命名空间名。
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 服务别名。
+	Alias *string `json:"Alias,omitnil,omitempty" name:"Alias"`
+
+	// 服务别名命名空间。
+	AliasNamespace *string `json:"AliasNamespace,omitnil,omitempty" name:"AliasNamespace"`
+
+	// 服务别名描述。
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// 偏移量，默认为0。
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 返回数量，默认为20，最大值为100。
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+}
+
+func (r *DescribeGovernanceAliasesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeGovernanceAliasesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Service")
+	delete(f, "Namespace")
+	delete(f, "Alias")
+	delete(f, "AliasNamespace")
+	delete(f, "Comment")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeGovernanceAliasesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeGovernanceAliasesResponseParams struct {
+	// 服务别名总数量。
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 服务别名列表。
+	Content []*GovernanceAlias `json:"Content,omitnil,omitempty" name:"Content"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeGovernanceAliasesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeGovernanceAliasesResponseParams `json:"Response"`
+}
+
+func (r *DescribeGovernanceAliasesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeGovernanceAliasesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeGovernanceInstancesRequestParams struct {
+	// 实例所在的服务名。
+	Service *string `json:"Service,omitnil,omitempty" name:"Service"`
+
+	// 实例所在命名空间名。
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// tse实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 根据实例ip过滤，多个ip使用英文逗号分隔。
+	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
+
+	// 根据实例版本过滤。
+	InstanceVersion *string `json:"InstanceVersion,omitnil,omitempty" name:"InstanceVersion"`
+
+	// 根据实例协议过滤。
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// 根据实例健康状态过滤。false：表示不健康，true：表示健康。
+	HealthStatus *bool `json:"HealthStatus,omitnil,omitempty" name:"HealthStatus"`
+
+	// 根据实例隔离状态过滤。false：表示非隔离，true：表示隔离中。
+	Isolate *bool `json:"Isolate,omitnil,omitempty" name:"Isolate"`
+
+	// 根据元数据信息过滤。目前只支持一组元数据键值，若传了多个键值对，只会以第一个过滤。
+	Metadatas []*Metadata `json:"Metadatas,omitnil,omitempty" name:"Metadatas"`
+
+	// 偏移量，默认为0。
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 返回数量，默认为20，最大值为100。
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 地域
+	Location *Location `json:"Location,omitnil,omitempty" name:"Location"`
+}
+
+type DescribeGovernanceInstancesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例所在的服务名。
+	Service *string `json:"Service,omitnil,omitempty" name:"Service"`
+
+	// 实例所在命名空间名。
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// tse实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 根据实例ip过滤，多个ip使用英文逗号分隔。
+	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
+
+	// 根据实例版本过滤。
+	InstanceVersion *string `json:"InstanceVersion,omitnil,omitempty" name:"InstanceVersion"`
+
+	// 根据实例协议过滤。
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// 根据实例健康状态过滤。false：表示不健康，true：表示健康。
+	HealthStatus *bool `json:"HealthStatus,omitnil,omitempty" name:"HealthStatus"`
+
+	// 根据实例隔离状态过滤。false：表示非隔离，true：表示隔离中。
+	Isolate *bool `json:"Isolate,omitnil,omitempty" name:"Isolate"`
+
+	// 根据元数据信息过滤。目前只支持一组元数据键值，若传了多个键值对，只会以第一个过滤。
+	Metadatas []*Metadata `json:"Metadatas,omitnil,omitempty" name:"Metadatas"`
+
+	// 偏移量，默认为0。
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 返回数量，默认为20，最大值为100。
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 地域
+	Location *Location `json:"Location,omitnil,omitempty" name:"Location"`
+}
+
+func (r *DescribeGovernanceInstancesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeGovernanceInstancesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Service")
+	delete(f, "Namespace")
+	delete(f, "InstanceId")
+	delete(f, "Host")
+	delete(f, "InstanceVersion")
+	delete(f, "Protocol")
+	delete(f, "HealthStatus")
+	delete(f, "Isolate")
+	delete(f, "Metadatas")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "Location")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeGovernanceInstancesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeGovernanceInstancesResponseParams struct {
+	// 服务实例总数量。
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 服务里实例列表。
+	Content []*GovernanceInstance `json:"Content,omitnil,omitempty" name:"Content"`
+
+	// 地域
+	Location *Location `json:"Location,omitnil,omitempty" name:"Location"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeGovernanceInstancesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeGovernanceInstancesResponseParams `json:"Response"`
+}
+
+func (r *DescribeGovernanceInstancesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeGovernanceInstancesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeGovernanceLaneGroupsRequestParams struct {
+	// 引擎实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 分页查询偏移量
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 分页条数
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 泳道名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 泳道ID
+	GroupID *string `json:"GroupID,omitnil,omitempty" name:"GroupID"`
+
+	// 是否展示泳道规则列表
+	Brief *bool `json:"Brief,omitnil,omitempty" name:"Brief"`
+}
+
+type DescribeGovernanceLaneGroupsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 引擎实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 分页查询偏移量
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 分页条数
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 泳道名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 泳道ID
+	GroupID *string `json:"GroupID,omitnil,omitempty" name:"GroupID"`
+
+	// 是否展示泳道规则列表
+	Brief *bool `json:"Brief,omitnil,omitempty" name:"Brief"`
+}
+
+func (r *DescribeGovernanceLaneGroupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeGovernanceLaneGroupsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "Name")
+	delete(f, "GroupID")
+	delete(f, "Brief")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeGovernanceLaneGroupsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeGovernanceLaneGroupsResponseParams struct {
+	// 总数
+	Total *int64 `json:"Total,omitnil,omitempty" name:"Total"`
+
+	// 泳道规则列表
+	LaneGroups []*GovernanceLaneGroup `json:"LaneGroups,omitnil,omitempty" name:"LaneGroups"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeGovernanceLaneGroupsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeGovernanceLaneGroupsResponseParams `json:"Response"`
+}
+
+func (r *DescribeGovernanceLaneGroupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeGovernanceLaneGroupsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeGovernanceNamespacesRequestParams struct {
+	// tse实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 根据命名空间名称过滤。
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 是否开启同步到全局注册中心	
+	SyncToGlobalRegistry *string `json:"SyncToGlobalRegistry,omitnil,omitempty" name:"SyncToGlobalRegistry"`
+
+	// 偏移量，默认为0。
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 返回数量，默认为20，最大值为100。
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+}
+
+type DescribeGovernanceNamespacesRequest struct {
+	*tchttp.BaseRequest
+	
+	// tse实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 根据命名空间名称过滤。
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 是否开启同步到全局注册中心	
+	SyncToGlobalRegistry *string `json:"SyncToGlobalRegistry,omitnil,omitempty" name:"SyncToGlobalRegistry"`
+
+	// 偏移量，默认为0。
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 返回数量，默认为20，最大值为100。
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+}
+
+func (r *DescribeGovernanceNamespacesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeGovernanceNamespacesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Name")
+	delete(f, "SyncToGlobalRegistry")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeGovernanceNamespacesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeGovernanceNamespacesResponseParams struct {
+	// 列表总数量。
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 治理中心命名空间实例列表。
+	Content []*GovernanceNamespace `json:"Content,omitnil,omitempty" name:"Content"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeGovernanceNamespacesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeGovernanceNamespacesResponseParams `json:"Response"`
+}
+
+func (r *DescribeGovernanceNamespacesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeGovernanceNamespacesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeGovernanceServiceContractVersionsRequestParams struct {
+	// 引擎实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 服务名
+	Service *string `json:"Service,omitnil,omitempty" name:"Service"`
+}
+
+type DescribeGovernanceServiceContractVersionsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 引擎实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 服务名
+	Service *string `json:"Service,omitnil,omitempty" name:"Service"`
+}
+
+func (r *DescribeGovernanceServiceContractVersionsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeGovernanceServiceContractVersionsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Namespace")
+	delete(f, "Service")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeGovernanceServiceContractVersionsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeGovernanceServiceContractVersionsResponseParams struct {
+	// 服务契约版本列表
+	GovernanceServiceContractVersions []*GovernanceServiceContractVersion `json:"GovernanceServiceContractVersions,omitnil,omitempty" name:"GovernanceServiceContractVersions"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeGovernanceServiceContractVersionsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeGovernanceServiceContractVersionsResponseParams `json:"Response"`
+}
+
+func (r *DescribeGovernanceServiceContractVersionsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeGovernanceServiceContractVersionsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeGovernanceServiceContractsRequestParams struct {
+	// 北极星引擎实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 分页偏移量
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 分页条数
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 服务名
+	Service *string `json:"Service,omitnil,omitempty" name:"Service"`
+
+	// 契约名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 契约版本
+	ContractVersion *string `json:"ContractVersion,omitnil,omitempty" name:"ContractVersion"`
+
+	// 契约协议
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// 是否只展示基本信息
+	Brief *bool `json:"Brief,omitnil,omitempty" name:"Brief"`
+}
+
+type DescribeGovernanceServiceContractsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 北极星引擎实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 分页偏移量
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 分页条数
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 服务名
+	Service *string `json:"Service,omitnil,omitempty" name:"Service"`
+
+	// 契约名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 契约版本
+	ContractVersion *string `json:"ContractVersion,omitnil,omitempty" name:"ContractVersion"`
+
+	// 契约协议
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// 是否只展示基本信息
+	Brief *bool `json:"Brief,omitnil,omitempty" name:"Brief"`
+}
+
+func (r *DescribeGovernanceServiceContractsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeGovernanceServiceContractsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "Namespace")
+	delete(f, "Service")
+	delete(f, "Name")
+	delete(f, "ContractVersion")
+	delete(f, "Protocol")
+	delete(f, "Brief")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeGovernanceServiceContractsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeGovernanceServiceContractsResponseParams struct {
+	// 总数
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 返回条数
+	Size *int64 `json:"Size,omitnil,omitempty" name:"Size"`
+
+	// 契约定义列表
+	ServiceContracts []*GovernanceServiceContract `json:"ServiceContracts,omitnil,omitempty" name:"ServiceContracts"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeGovernanceServiceContractsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeGovernanceServiceContractsResponseParams `json:"Response"`
+}
+
+func (r *DescribeGovernanceServiceContractsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeGovernanceServiceContractsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeGovernanceServicesRequestParams struct {
+	// <p>按照服务名过滤，精确匹配。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>按照命名空间过滤，精确匹配。</p>
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// <p>使用元数据过滤，目前只支持一组元组数，若传了多条，只会使用第一条元数据过滤。</p>
+	Metadatas []*Metadata `json:"Metadatas,omitnil,omitempty" name:"Metadatas"`
+
+	// <p>偏移量，默认为0。</p>
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>返回数量，默认为20，最大值为100。</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>tse 实例 id。</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>服务所属部门。</p>
+	Department *string `json:"Department,omitnil,omitempty" name:"Department"`
+
+	// <p>服务所属业务。</p>
+	Business *string `json:"Business,omitnil,omitempty" name:"Business"`
+
+	// <p>服务中实例的ip，用来过滤服务。</p>
+	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
+
+	// <p>是否只查询存在健康实例的服务</p>
+	OnlyExistHealthyInstance *bool `json:"OnlyExistHealthyInstance,omitnil,omitempty" name:"OnlyExistHealthyInstance"`
+
+	// <p>是否开启同步到全局注册中心</p>
+	SyncToGlobalRegistry *string `json:"SyncToGlobalRegistry,omitnil,omitempty" name:"SyncToGlobalRegistry"`
+
+	// <p>过滤筛选条件</p>
+	StatusFilter []*Filter `json:"StatusFilter,omitnil,omitempty" name:"StatusFilter"`
+
+	// <p>服务类型</p><p>枚举值：</p><ul><li>0： 微服务（默认）</li><li>1： MCP Server</li><li>2： AI Agent</li></ul>
+	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
+}
+
+type DescribeGovernanceServicesRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>按照服务名过滤，精确匹配。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>按照命名空间过滤，精确匹配。</p>
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// <p>使用元数据过滤，目前只支持一组元组数，若传了多条，只会使用第一条元数据过滤。</p>
+	Metadatas []*Metadata `json:"Metadatas,omitnil,omitempty" name:"Metadatas"`
+
+	// <p>偏移量，默认为0。</p>
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>返回数量，默认为20，最大值为100。</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>tse 实例 id。</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>服务所属部门。</p>
+	Department *string `json:"Department,omitnil,omitempty" name:"Department"`
+
+	// <p>服务所属业务。</p>
+	Business *string `json:"Business,omitnil,omitempty" name:"Business"`
+
+	// <p>服务中实例的ip，用来过滤服务。</p>
+	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
+
+	// <p>是否只查询存在健康实例的服务</p>
+	OnlyExistHealthyInstance *bool `json:"OnlyExistHealthyInstance,omitnil,omitempty" name:"OnlyExistHealthyInstance"`
+
+	// <p>是否开启同步到全局注册中心</p>
+	SyncToGlobalRegistry *string `json:"SyncToGlobalRegistry,omitnil,omitempty" name:"SyncToGlobalRegistry"`
+
+	// <p>过滤筛选条件</p>
+	StatusFilter []*Filter `json:"StatusFilter,omitnil,omitempty" name:"StatusFilter"`
+
+	// <p>服务类型</p><p>枚举值：</p><ul><li>0： 微服务（默认）</li><li>1： MCP Server</li><li>2： AI Agent</li></ul>
+	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
+}
+
+func (r *DescribeGovernanceServicesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeGovernanceServicesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Name")
+	delete(f, "Namespace")
+	delete(f, "Metadatas")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "InstanceId")
+	delete(f, "Department")
+	delete(f, "Business")
+	delete(f, "Host")
+	delete(f, "OnlyExistHealthyInstance")
+	delete(f, "SyncToGlobalRegistry")
+	delete(f, "StatusFilter")
+	delete(f, "Type")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeGovernanceServicesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeGovernanceServicesResponseParams struct {
+	// <p>服务数总量。</p>
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// <p>服务信息详情。</p>
+	Content []*GovernanceService `json:"Content,omitnil,omitempty" name:"Content"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeGovernanceServicesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeGovernanceServicesResponseParams `json:"Response"`
+}
+
+func (r *DescribeGovernanceServicesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeGovernanceServicesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeInstanceInfoByIpResult struct {
+	// 实例id
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 分组id
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 }
 
 type DescribeInstanceRegionInfo struct {
 	// 引擎部署地域信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	EngineRegion *string `json:"EngineRegion,omitnil" name:"EngineRegion"`
+	EngineRegion *string `json:"EngineRegion,omitnil,omitempty" name:"EngineRegion"`
 
 	// 引擎在该地域的副本数
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Replica *int64 `json:"Replica,omitnil" name:"Replica"`
+	Replica *int64 `json:"Replica,omitnil,omitempty" name:"Replica"`
 
 	// 引擎在该地域的规格id
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	SpecId *string `json:"SpecId,omitnil" name:"SpecId"`
+	SpecId *string `json:"SpecId,omitnil,omitempty" name:"SpecId"`
 
 	// 客户端内网的网络信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	IntranetVpcInfos []*VpcInfo `json:"IntranetVpcInfos,omitnil" name:"IntranetVpcInfos"`
+	IntranetVpcInfos []*VpcInfo `json:"IntranetVpcInfos,omitnil,omitempty" name:"IntranetVpcInfos"`
 
 	// 控制台内网的网络信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ConsoleIntranetVpcInfos []*VpcInfo `json:"ConsoleIntranetVpcInfos,omitnil" name:"ConsoleIntranetVpcInfos"`
+	ConsoleIntranetVpcInfos []*VpcInfo `json:"ConsoleIntranetVpcInfos,omitnil,omitempty" name:"ConsoleIntranetVpcInfos"`
 
 	// 是否开公网
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	EnableClientInternet *bool `json:"EnableClientInternet,omitnil" name:"EnableClientInternet"`
+	EnableClientInternet *bool `json:"EnableClientInternet,omitnil,omitempty" name:"EnableClientInternet"`
 
 	// 限流客户端内网的网络信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	LimiterIntranetVpcInfos []*VpcInfo `json:"LimiterIntranetVpcInfos,omitnil" name:"LimiterIntranetVpcInfos"`
+	LimiterIntranetVpcInfos []*VpcInfo `json:"LimiterIntranetVpcInfos,omitnil,omitempty" name:"LimiterIntranetVpcInfos"`
 
 	// 是否为主地域，仅在服务治理中心多地域有效
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	MainRegion *bool `json:"MainRegion,omitnil" name:"MainRegion"`
+	MainRegion *bool `json:"MainRegion,omitnil,omitempty" name:"MainRegion"`
 
 	// 该地域所在的EKS集群
+	EKSClusterID *string `json:"EKSClusterID,omitnil,omitempty" name:"EKSClusterID"`
+}
+
+// Predefined struct for user
+type DescribeInstanceTagInfosRequestParams struct {
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+type DescribeInstanceTagInfosRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeInstanceTagInfosRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeInstanceTagInfosRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeInstanceTagInfosRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeInstanceTagInfosResponseParams struct {
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 实例标签集合
+	TagInfos []*InstanceTagInfo `json:"TagInfos,omitnil,omitempty" name:"TagInfos"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeInstanceTagInfosResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeInstanceTagInfosResponseParams `json:"Response"`
+}
+
+func (r *DescribeInstanceTagInfosResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeInstanceTagInfosResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeKongCORSResult struct {
+	// 资源类型
+	SourceType *string `json:"SourceType,omitnil,omitempty" name:"SourceType"`
+
+	// 资源id
+	SourceId *string `json:"SourceId,omitnil,omitempty" name:"SourceId"`
+
+	// 是否启用
+	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+
+	// 跨域 Origins
+	Origins []*string `json:"Origins,omitnil,omitempty" name:"Origins"`
+
+	// 跨域 Headers
+	Headers []*string `json:"Headers,omitnil,omitempty" name:"Headers"`
+
+	// 跨域 Methods
+	Methods []*string `json:"Methods,omitnil,omitempty" name:"Methods"`
+
+	// 跨域 ExposedHeaders
+	ExposedHeaders []*string `json:"ExposedHeaders,omitnil,omitempty" name:"ExposedHeaders"`
+
+	// 跨域OPTIONS请求缓存时间
+	MaxAge *int64 `json:"MaxAge,omitnil,omitempty" name:"MaxAge"`
+
+	// 跨域请求是否允许携带身份信息
+	Credentials *bool `json:"Credentials,omitnil,omitempty" name:"Credentials"`
+
+	// 跨域请求是否透传后端
+	PreFlightContinue *bool `json:"PreFlightContinue,omitnil,omitempty" name:"PreFlightContinue"`
+}
+
+type DescribeKongIpRestrictionResult struct {
+	// 访问控制插件绑定的资源类型：route | service
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	EKSClusterID *string `json:"EKSClusterID,omitnil" name:"EKSClusterID"`
+	SourceType *string `json:"SourceType,omitnil,omitempty" name:"SourceType"`
+
+	// 路由或服务的id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SourceId *string `json:"SourceId,omitnil,omitempty" name:"SourceId"`
+
+	// 是否启用插件
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+
+	// 访问控制类型：whiteList｜blackList
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RestrictionType *string `json:"RestrictionType,omitnil,omitempty" name:"RestrictionType"`
+
+	// cidr｜ip
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AddressList []*string `json:"AddressList,omitnil,omitempty" name:"AddressList"`
 }
 
 // Predefined struct for user
 type DescribeNacosReplicasRequestParams struct {
 	// 引擎实例ID
-	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 副本列表Limit
-	Limit *uint64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 副本列表Offset
-	Offset *uint64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 type DescribeNacosReplicasRequest struct {
 	*tchttp.BaseRequest
 	
 	// 引擎实例ID
-	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 副本列表Limit
-	Limit *uint64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 副本列表Offset
-	Offset *uint64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 func (r *DescribeNacosReplicasRequest) ToJsonString() string {
@@ -4208,14 +11211,13 @@ func (r *DescribeNacosReplicasRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeNacosReplicasResponseParams struct {
 	// 引擎实例副本信息
-	Replicas []*NacosReplica `json:"Replicas,omitnil" name:"Replicas"`
+	Replicas []*NacosReplica `json:"Replicas,omitnil,omitempty" name:"Replicas"`
 
 	// 副本个数
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TotalCount *uint64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeNacosReplicasResponse struct {
@@ -4237,26 +11239,26 @@ func (r *DescribeNacosReplicasResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeNacosServerInterfacesRequestParams struct {
 	// 实例id
-	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 返回的列表个数
-	Limit *uint64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 返回的列表起始偏移量
-	Offset *uint64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 type DescribeNacosServerInterfacesRequest struct {
 	*tchttp.BaseRequest
 	
 	// 实例id
-	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 返回的列表个数
-	Limit *uint64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 返回的列表起始偏移量
-	Offset *uint64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 func (r *DescribeNacosServerInterfacesRequest) ToJsonString() string {
@@ -4283,13 +11285,13 @@ func (r *DescribeNacosServerInterfacesRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeNacosServerInterfacesResponseParams struct {
 	// 接口总个数
-	TotalCount *uint64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 接口列表
-	Content []*NacosServerInterface `json:"Content,omitnil" name:"Content"`
+	Content []*NacosServerInterface `json:"Content,omitnil,omitempty" name:"Content"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeNacosServerInterfacesResponse struct {
@@ -4311,32 +11313,32 @@ func (r *DescribeNacosServerInterfacesResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeNativeGatewayServerGroupsRequestParams struct {
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
-	// 翻页从第几个开始获取
-	Offset *uint64 `json:"Offset,omitnil" name:"Offset"`
+	// 偏移量，默认为 0。
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 翻页获取多少个
-	Limit *uint64 `json:"Limit,omitnil" name:"Limit"`
+	// 返回数量，默认为 20。
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 过滤参数
-	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+	// 过滤参数，支持按照分组名称、分组ID（Name、GroupId）筛选
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 type DescribeNativeGatewayServerGroupsRequest struct {
 	*tchttp.BaseRequest
 	
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
-	// 翻页从第几个开始获取
-	Offset *uint64 `json:"Offset,omitnil" name:"Offset"`
+	// 偏移量，默认为 0。
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 翻页获取多少个
-	Limit *uint64 `json:"Limit,omitnil" name:"Limit"`
+	// 返回数量，默认为 20。
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 过滤参数
-	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+	// 过滤参数，支持按照分组名称、分组ID（Name、GroupId）筛选
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 func (r *DescribeNativeGatewayServerGroupsRequest) ToJsonString() string {
@@ -4364,10 +11366,10 @@ func (r *DescribeNativeGatewayServerGroupsRequest) FromJsonString(s string) erro
 // Predefined struct for user
 type DescribeNativeGatewayServerGroupsResponseParams struct {
 	// 分组列表信息
-	Result *NativeGatewayServerGroups `json:"Result,omitnil" name:"Result"`
+	Result *NativeGatewayServerGroups `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeNativeGatewayServerGroupsResponse struct {
@@ -4387,22 +11389,131 @@ func (r *DescribeNativeGatewayServerGroupsResponse) FromJsonString(s string) err
 }
 
 // Predefined struct for user
+type DescribeNativeGatewayServiceSourcesRequestParams struct {
+	// 网关实例ID
+	GatewayID *string `json:"GatewayID,omitnil,omitempty" name:"GatewayID"`
+
+	// 单页条数，最大100
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 分页偏移量
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 服务来源ID
+	SourceID *string `json:"SourceID,omitnil,omitempty" name:"SourceID"`
+
+	// 服务来源实例名称，模糊搜索
+	SourceName *string `json:"SourceName,omitnil,omitempty" name:"SourceName"`
+
+	// 微服务引擎类型：TSE-Nacos｜TSE-Consul｜TSE-PolarisMesh｜Customer-Nacos｜Customer-Consul｜Customer-PolarisMesh
+	SourceTypes []*string `json:"SourceTypes,omitnil,omitempty" name:"SourceTypes"`
+
+	// 排序字段类型，当前仅支持SourceName
+	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
+
+	// 排序类型，AES/DESC
+	OrderType *string `json:"OrderType,omitnil,omitempty" name:"OrderType"`
+}
+
+type DescribeNativeGatewayServiceSourcesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关实例ID
+	GatewayID *string `json:"GatewayID,omitnil,omitempty" name:"GatewayID"`
+
+	// 单页条数，最大100
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 分页偏移量
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 服务来源ID
+	SourceID *string `json:"SourceID,omitnil,omitempty" name:"SourceID"`
+
+	// 服务来源实例名称，模糊搜索
+	SourceName *string `json:"SourceName,omitnil,omitempty" name:"SourceName"`
+
+	// 微服务引擎类型：TSE-Nacos｜TSE-Consul｜TSE-PolarisMesh｜Customer-Nacos｜Customer-Consul｜Customer-PolarisMesh
+	SourceTypes []*string `json:"SourceTypes,omitnil,omitempty" name:"SourceTypes"`
+
+	// 排序字段类型，当前仅支持SourceName
+	OrderField *string `json:"OrderField,omitnil,omitempty" name:"OrderField"`
+
+	// 排序类型，AES/DESC
+	OrderType *string `json:"OrderType,omitnil,omitempty" name:"OrderType"`
+}
+
+func (r *DescribeNativeGatewayServiceSourcesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeNativeGatewayServiceSourcesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayID")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "SourceID")
+	delete(f, "SourceName")
+	delete(f, "SourceTypes")
+	delete(f, "OrderField")
+	delete(f, "OrderType")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeNativeGatewayServiceSourcesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeNativeGatewayServiceSourcesResponseParams struct {
+	// 总实例数
+	Total *uint64 `json:"Total,omitnil,omitempty" name:"Total"`
+
+	// 服务来源实例列表
+	List []*NativeGatewayServiceSourceItem `json:"List,omitnil,omitempty" name:"List"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeNativeGatewayServiceSourcesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeNativeGatewayServiceSourcesResponseParams `json:"Response"`
+}
+
+func (r *DescribeNativeGatewayServiceSourcesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeNativeGatewayServiceSourcesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeOneCloudNativeAPIGatewayServiceRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务名字，或服务ID
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 }
 
 type DescribeOneCloudNativeAPIGatewayServiceRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务名字，或服务ID
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 }
 
 func (r *DescribeOneCloudNativeAPIGatewayServiceRequest) ToJsonString() string {
@@ -4428,10 +11539,10 @@ func (r *DescribeOneCloudNativeAPIGatewayServiceRequest) FromJsonString(s string
 // Predefined struct for user
 type DescribeOneCloudNativeAPIGatewayServiceResponseParams struct {
 	// 无
-	Result *KongServiceDetail `json:"Result,omitnil" name:"Result"`
+	Result *KongServiceDetail `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeOneCloudNativeAPIGatewayServiceResponse struct {
@@ -4451,28 +11562,103 @@ func (r *DescribeOneCloudNativeAPIGatewayServiceResponse) FromJsonString(s strin
 }
 
 // Predefined struct for user
+type DescribePublicAddressConfigRequestParams struct {
+	// 网关实例id
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 查询该分组的公网信息，不传则查询实例所有的公网负载均衡信息
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
+}
+
+type DescribePublicAddressConfigRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关实例id
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 查询该分组的公网信息，不传则查询实例所有的公网负载均衡信息
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
+}
+
+func (r *DescribePublicAddressConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribePublicAddressConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "GroupId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribePublicAddressConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribePublicAddressConfigResponseParams struct {
+	// 公网地址信息
+	Result *DescribePublicAddressConfigResult `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribePublicAddressConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribePublicAddressConfigResponseParams `json:"Response"`
+}
+
+func (r *DescribePublicAddressConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribePublicAddressConfigResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribePublicAddressConfigResult struct {
+	// 网关实例id
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 公网地址信息
+	ConfigList []*PublicAddressConfig `json:"ConfigList,omitnil,omitempty" name:"ConfigList"`
+
+	// 总个数	
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+}
+
+// Predefined struct for user
 type DescribePublicNetworkRequestParams struct {
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 网关分组ID
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 网络ID
-	NetworkId *string `json:"NetworkId,omitnil" name:"NetworkId"`
+	NetworkId *string `json:"NetworkId,omitnil,omitempty" name:"NetworkId"`
 }
 
 type DescribePublicNetworkRequest struct {
 	*tchttp.BaseRequest
 	
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 网关分组ID
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 网络ID
-	NetworkId *string `json:"NetworkId,omitnil" name:"NetworkId"`
+	NetworkId *string `json:"NetworkId,omitnil,omitempty" name:"NetworkId"`
 }
 
 func (r *DescribePublicNetworkRequest) ToJsonString() string {
@@ -4499,11 +11685,10 @@ func (r *DescribePublicNetworkRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribePublicNetworkResponseParams struct {
 	// 获取云原生API网关公网详情响应结果。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Result *DescribePublicNetworkResult `json:"Result,omitnil" name:"Result"`
+	Result *DescribePublicNetworkResult `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribePublicNetworkResponse struct {
@@ -4524,53 +11709,50 @@ func (r *DescribePublicNetworkResponse) FromJsonString(s string) error {
 
 type DescribePublicNetworkResult struct {
 	// 网关实例ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 网关分组ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 客户端公网信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	PublicNetwork *CloudNativeAPIGatewayConfig `json:"PublicNetwork,omitnil" name:"PublicNetwork"`
+	PublicNetwork *CloudNativeAPIGatewayConfig `json:"PublicNetwork,omitnil,omitempty" name:"PublicNetwork"`
 }
 
 // Predefined struct for user
 type DescribeSREInstanceAccessAddressRequestParams struct {
 	// 注册引擎实例Id
-	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// VPC ID
-	VpcId *string `json:"VpcId,omitnil" name:"VpcId"`
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 子网ID
-	SubnetId *string `json:"SubnetId,omitnil" name:"SubnetId"`
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// 引擎其他组件名称（pushgateway、polaris-limiter）
-	Workload *string `json:"Workload,omitnil" name:"Workload"`
+	Workload *string `json:"Workload,omitnil,omitempty" name:"Workload"`
 
 	// 部署地域
-	EngineRegion *string `json:"EngineRegion,omitnil" name:"EngineRegion"`
+	EngineRegion *string `json:"EngineRegion,omitnil,omitempty" name:"EngineRegion"`
 }
 
 type DescribeSREInstanceAccessAddressRequest struct {
 	*tchttp.BaseRequest
 	
 	// 注册引擎实例Id
-	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// VPC ID
-	VpcId *string `json:"VpcId,omitnil" name:"VpcId"`
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 子网ID
-	SubnetId *string `json:"SubnetId,omitnil" name:"SubnetId"`
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// 引擎其他组件名称（pushgateway、polaris-limiter）
-	Workload *string `json:"Workload,omitnil" name:"Workload"`
+	Workload *string `json:"Workload,omitnil,omitempty" name:"Workload"`
 
 	// 部署地域
-	EngineRegion *string `json:"EngineRegion,omitnil" name:"EngineRegion"`
+	EngineRegion *string `json:"EngineRegion,omitnil,omitempty" name:"EngineRegion"`
 }
 
 func (r *DescribeSREInstanceAccessAddressRequest) ToJsonString() string {
@@ -4599,40 +11781,35 @@ func (r *DescribeSREInstanceAccessAddressRequest) FromJsonString(s string) error
 // Predefined struct for user
 type DescribeSREInstanceAccessAddressResponseParams struct {
 	// 内网访问地址
-	IntranetAddress *string `json:"IntranetAddress,omitnil" name:"IntranetAddress"`
+	IntranetAddress *string `json:"IntranetAddress,omitnil,omitempty" name:"IntranetAddress"`
 
 	// 公网访问地址
-	InternetAddress *string `json:"InternetAddress,omitnil" name:"InternetAddress"`
+	InternetAddress *string `json:"InternetAddress,omitnil,omitempty" name:"InternetAddress"`
 
 	// apollo多环境公网ip
-	EnvAddressInfos []*EnvAddressInfo `json:"EnvAddressInfos,omitnil" name:"EnvAddressInfos"`
+	EnvAddressInfos []*EnvAddressInfo `json:"EnvAddressInfos,omitnil,omitempty" name:"EnvAddressInfos"`
 
 	// 控制台公网访问地址
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ConsoleInternetAddress *string `json:"ConsoleInternetAddress,omitnil" name:"ConsoleInternetAddress"`
+	ConsoleInternetAddress *string `json:"ConsoleInternetAddress,omitnil,omitempty" name:"ConsoleInternetAddress"`
 
 	// 控制台内网访问地址
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ConsoleIntranetAddress *string `json:"ConsoleIntranetAddress,omitnil" name:"ConsoleIntranetAddress"`
+	ConsoleIntranetAddress *string `json:"ConsoleIntranetAddress,omitnil,omitempty" name:"ConsoleIntranetAddress"`
 
 	// 客户端公网带宽
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	InternetBandWidth *int64 `json:"InternetBandWidth,omitnil" name:"InternetBandWidth"`
+	InternetBandWidth *int64 `json:"InternetBandWidth,omitnil,omitempty" name:"InternetBandWidth"`
 
 	// 控制台公网带宽
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ConsoleInternetBandWidth *int64 `json:"ConsoleInternetBandWidth,omitnil" name:"ConsoleInternetBandWidth"`
+	ConsoleInternetBandWidth *int64 `json:"ConsoleInternetBandWidth,omitnil,omitempty" name:"ConsoleInternetBandWidth"`
 
 	// 北极星限流server节点接入IP
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	LimiterAddressInfos []*PolarisLimiterAddress `json:"LimiterAddressInfos,omitnil" name:"LimiterAddressInfos"`
+	LimiterAddressInfos []*PolarisLimiterAddress `json:"LimiterAddressInfos,omitnil,omitempty" name:"LimiterAddressInfos"`
 
 	// InternetAddress 的公网 CLB 多可用区信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CLBMultiRegion *CLBMultiRegion `json:"CLBMultiRegion,omitnil" name:"CLBMultiRegion"`
+	CLBMultiRegion *CLBMultiRegion `json:"CLBMultiRegion,omitnil,omitempty" name:"CLBMultiRegion"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeSREInstanceAccessAddressResponse struct {
@@ -4654,38 +11831,38 @@ func (r *DescribeSREInstanceAccessAddressResponse) FromJsonString(s string) erro
 // Predefined struct for user
 type DescribeSREInstancesRequestParams struct {
 	// 请求过滤参数
-	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 翻页单页查询限制数量[0,1000], 默认值0
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 翻页单页偏移量，默认值0
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 查询类型
-	QueryType *string `json:"QueryType,omitnil" name:"QueryType"`
+	QueryType *string `json:"QueryType,omitnil,omitempty" name:"QueryType"`
 
 	// 调用方来源
-	QuerySource *string `json:"QuerySource,omitnil" name:"QuerySource"`
+	QuerySource *string `json:"QuerySource,omitnil,omitempty" name:"QuerySource"`
 }
 
 type DescribeSREInstancesRequest struct {
 	*tchttp.BaseRequest
 	
 	// 请求过滤参数
-	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 翻页单页查询限制数量[0,1000], 默认值0
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 翻页单页偏移量，默认值0
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 查询类型
-	QueryType *string `json:"QueryType,omitnil" name:"QueryType"`
+	QueryType *string `json:"QueryType,omitnil,omitempty" name:"QueryType"`
 
 	// 调用方来源
-	QuerySource *string `json:"QuerySource,omitnil" name:"QuerySource"`
+	QuerySource *string `json:"QuerySource,omitnil,omitempty" name:"QuerySource"`
 }
 
 func (r *DescribeSREInstancesRequest) ToJsonString() string {
@@ -4714,13 +11891,13 @@ func (r *DescribeSREInstancesRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeSREInstancesResponseParams struct {
 	// 总数量
-	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 实例记录
-	Content []*SREInstance `json:"Content,omitnil" name:"Content"`
+	Content []*SREInstance `json:"Content,omitnil,omitempty" name:"Content"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeSREInstancesResponse struct {
@@ -4742,20 +11919,20 @@ func (r *DescribeSREInstancesResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeUpstreamHealthCheckConfigRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 网关服务名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 }
 
 type DescribeUpstreamHealthCheckConfigRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 网关服务名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 }
 
 func (r *DescribeUpstreamHealthCheckConfigRequest) ToJsonString() string {
@@ -4781,11 +11958,10 @@ func (r *DescribeUpstreamHealthCheckConfigRequest) FromJsonString(s string) erro
 // Predefined struct for user
 type DescribeUpstreamHealthCheckConfigResponseParams struct {
 	// 健康检查配置
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Result *UpstreamHealthCheckConfig `json:"Result,omitnil" name:"Result"`
+	Result *UpstreamHealthCheckConfig `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeUpstreamHealthCheckConfigResponse struct {
@@ -4807,14 +11983,14 @@ func (r *DescribeUpstreamHealthCheckConfigResponse) FromJsonString(s string) err
 // Predefined struct for user
 type DescribeWafDomainsRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 }
 
 type DescribeWafDomainsRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 }
 
 func (r *DescribeWafDomainsRequest) ToJsonString() string {
@@ -4839,11 +12015,10 @@ func (r *DescribeWafDomainsRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeWafDomainsResponseParams struct {
 	// 已被 WAF 防护域名
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Result *DescribeWafDomainsResult `json:"Result,omitnil" name:"Result"`
+	Result *DescribeWafDomainsResult `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeWafDomainsResponse struct {
@@ -4865,13 +12040,13 @@ func (r *DescribeWafDomainsResponse) FromJsonString(s string) error {
 type DescribeWafDomainsResult struct {
 	// WAF防护域名列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Domains []*string `json:"Domains,omitnil" name:"Domains"`
+	Domains []*string `json:"Domains,omitnil,omitempty" name:"Domains"`
 }
 
 // Predefined struct for user
 type DescribeWafProtectionRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	//  防护资源的类型。
 	// - Global  实例
@@ -4880,27 +12055,27 @@ type DescribeWafProtectionRequestParams struct {
 	// - Object  对象
 	//
 	// Deprecated: Type is deprecated.
-	Type *string `json:"Type,omitnil" name:"Type"`
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 防护资源类型列表，支持查询多个类型（Global、Service、Route、Object）。为空时，默认查询Global类型。
-	TypeList []*string `json:"TypeList,omitnil" name:"TypeList"`
+	TypeList []*string `json:"TypeList,omitnil,omitempty" name:"TypeList"`
 }
 
 type DescribeWafProtectionRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	//  防护资源的类型。
 	// - Global  实例
 	// - Service  服务
 	// - Route  路由
 	// - Object  对象
-	Type *string `json:"Type,omitnil" name:"Type"`
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 防护资源类型列表，支持查询多个类型（Global、Service、Route、Object）。为空时，默认查询Global类型。
-	TypeList []*string `json:"TypeList,omitnil" name:"TypeList"`
+	TypeList []*string `json:"TypeList,omitnil,omitempty" name:"TypeList"`
 }
 
 func (r *DescribeWafProtectionRequest) ToJsonString() string {
@@ -4927,10 +12102,10 @@ func (r *DescribeWafProtectionRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeWafProtectionResponseParams struct {
 	// 保护状态
-	Result *DescribeWafProtectionResult `json:"Result,omitnil" name:"Result"`
+	Result *DescribeWafProtectionResult `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeWafProtectionResponse struct {
@@ -4951,45 +12126,41 @@ func (r *DescribeWafProtectionResponse) FromJsonString(s string) error {
 
 type DescribeWafProtectionResult struct {
 	// 全局防护状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	GlobalStatus *string `json:"GlobalStatus,omitnil" name:"GlobalStatus"`
+	GlobalStatus *string `json:"GlobalStatus,omitnil,omitempty" name:"GlobalStatus"`
 
 	// 服务防护状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ServicesStatus []*ServiceWafStatus `json:"ServicesStatus,omitnil" name:"ServicesStatus"`
+	ServicesStatus []*ServiceWafStatus `json:"ServicesStatus,omitnil,omitempty" name:"ServicesStatus"`
 
 	// 路由防护状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	RouteStatus []*RouteWafStatus `json:"RouteStatus,omitnil" name:"RouteStatus"`
+	RouteStatus []*RouteWafStatus `json:"RouteStatus,omitnil,omitempty" name:"RouteStatus"`
 
 	// 对象防护状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ObjectStatus *string `json:"ObjectStatus,omitnil" name:"ObjectStatus"`
+	ObjectStatus *string `json:"ObjectStatus,omitnil,omitempty" name:"ObjectStatus"`
 }
 
 // Predefined struct for user
 type DescribeZookeeperReplicasRequestParams struct {
 	// 注册引擎实例ID
-	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 副本列表Limit
-	Limit *uint64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 副本列表Offset
-	Offset *uint64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 type DescribeZookeeperReplicasRequest struct {
 	*tchttp.BaseRequest
 	
 	// 注册引擎实例ID
-	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 副本列表Limit
-	Limit *uint64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 副本列表Offset
-	Offset *uint64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 func (r *DescribeZookeeperReplicasRequest) ToJsonString() string {
@@ -5016,14 +12187,13 @@ func (r *DescribeZookeeperReplicasRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeZookeeperReplicasResponseParams struct {
 	// 注册引擎实例副本信息
-	Replicas []*ZookeeperReplica `json:"Replicas,omitnil" name:"Replicas"`
+	Replicas []*ZookeeperReplica `json:"Replicas,omitnil,omitempty" name:"Replicas"`
 
 	// 副本个数
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TotalCount *uint64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeZookeeperReplicasResponse struct {
@@ -5045,26 +12215,26 @@ func (r *DescribeZookeeperReplicasResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeZookeeperServerInterfacesRequestParams struct {
 	// 实例id
-	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 返回的列表个数
-	Limit *uint64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 返回的列表起始偏移量
-	Offset *uint64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 type DescribeZookeeperServerInterfacesRequest struct {
 	*tchttp.BaseRequest
 	
 	// 实例id
-	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 返回的列表个数
-	Limit *uint64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 返回的列表起始偏移量
-	Offset *uint64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 func (r *DescribeZookeeperServerInterfacesRequest) ToJsonString() string {
@@ -5091,13 +12261,13 @@ func (r *DescribeZookeeperServerInterfacesRequest) FromJsonString(s string) erro
 // Predefined struct for user
 type DescribeZookeeperServerInterfacesResponseParams struct {
 	// 接口总个数
-	TotalCount *uint64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 接口列表
-	Content []*ZookeeperServerInterface `json:"Content,omitnil" name:"Content"`
+	Content []*ZookeeperServerInterface `json:"Content,omitnil,omitempty" name:"Content"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeZookeeperServerInterfacesResponse struct {
@@ -5118,692 +12288,1326 @@ func (r *DescribeZookeeperServerInterfacesResponse) FromJsonString(s string) err
 
 type EngineAdmin struct {
 	// 控制台初始用户名
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 控制台初始密码
-	Password *string `json:"Password,omitnil" name:"Password"`
+	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
 	// 引擎接口的管理员 Token
-	Token *string `json:"Token,omitnil" name:"Token"`
+	Token *string `json:"Token,omitnil,omitempty" name:"Token"`
 }
 
 type EngineRegionInfo struct {
 	// 引擎节点所在地域
-	EngineRegion *string `json:"EngineRegion,omitnil" name:"EngineRegion"`
+	EngineRegion *string `json:"EngineRegion,omitnil,omitempty" name:"EngineRegion"`
 
 	// 此地域节点分配数量
-	Replica *int64 `json:"Replica,omitnil" name:"Replica"`
+	Replica *int64 `json:"Replica,omitnil,omitempty" name:"Replica"`
 
 	// 集群网络信息
-	VpcInfos []*VpcInfo `json:"VpcInfos,omitnil" name:"VpcInfos"`
+	VpcInfos []*VpcInfo `json:"VpcInfos,omitnil,omitempty" name:"VpcInfos"`
 
-	// 是否为主地域
-	MainRegion *bool `json:"MainRegion,omitnil" name:"MainRegion"`
+	// Polaris: 是否为主地域
+	// Zookeeper: 是否为Leader固定地域
+	MainRegion *bool `json:"MainRegion,omitnil,omitempty" name:"MainRegion"`
 
 	// 引擎规格ID
-	SpecId *string `json:"SpecId,omitnil" name:"SpecId"`
+	SpecId *string `json:"SpecId,omitnil,omitempty" name:"SpecId"`
 }
 
 type EnvAddressInfo struct {
 	// 环境名
-	EnvName *string `json:"EnvName,omitnil" name:"EnvName"`
+	EnvName *string `json:"EnvName,omitnil,omitempty" name:"EnvName"`
 
 	// 是否开启config公网
-	EnableConfigInternet *bool `json:"EnableConfigInternet,omitnil" name:"EnableConfigInternet"`
+	EnableConfigInternet *bool `json:"EnableConfigInternet,omitnil,omitempty" name:"EnableConfigInternet"`
 
 	// config公网ip
-	ConfigInternetServiceIp *string `json:"ConfigInternetServiceIp,omitnil" name:"ConfigInternetServiceIp"`
+	ConfigInternetServiceIp *string `json:"ConfigInternetServiceIp,omitnil,omitempty" name:"ConfigInternetServiceIp"`
 
 	// config内网访问地址
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ConfigIntranetAddress *string `json:"ConfigIntranetAddress,omitnil" name:"ConfigIntranetAddress"`
+	ConfigIntranetAddress *string `json:"ConfigIntranetAddress,omitnil,omitempty" name:"ConfigIntranetAddress"`
 
 	// 是否开启config内网clb
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	EnableConfigIntranet *bool `json:"EnableConfigIntranet,omitnil" name:"EnableConfigIntranet"`
+	EnableConfigIntranet *bool `json:"EnableConfigIntranet,omitnil,omitempty" name:"EnableConfigIntranet"`
 
 	// 客户端公网带宽
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	InternetBandWidth *int64 `json:"InternetBandWidth,omitnil" name:"InternetBandWidth"`
+	InternetBandWidth *int64 `json:"InternetBandWidth,omitnil,omitempty" name:"InternetBandWidth"`
 
 	// 客户端公网CLB多可用区信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CLBMultiRegion *CLBMultiRegion `json:"CLBMultiRegion,omitnil" name:"CLBMultiRegion"`
+	CLBMultiRegion *CLBMultiRegion `json:"CLBMultiRegion,omitnil,omitempty" name:"CLBMultiRegion"`
 }
 
 type EnvInfo struct {
 	// 环境名称
-	EnvName *string `json:"EnvName,omitnil" name:"EnvName"`
+	EnvName *string `json:"EnvName,omitnil,omitempty" name:"EnvName"`
 
 	// 环境对应的网络信息
-	VpcInfos []*VpcInfo `json:"VpcInfos,omitnil" name:"VpcInfos"`
+	VpcInfos []*VpcInfo `json:"VpcInfos,omitnil,omitempty" name:"VpcInfos"`
 
 	// 云硬盘容量
-	StorageCapacity *int64 `json:"StorageCapacity,omitnil" name:"StorageCapacity"`
+	StorageCapacity *int64 `json:"StorageCapacity,omitnil,omitempty" name:"StorageCapacity"`
 
 	// 运行状态
-	Status *string `json:"Status,omitnil" name:"Status"`
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// Admin service 访问地址
-	AdminServiceIp *string `json:"AdminServiceIp,omitnil" name:"AdminServiceIp"`
+	AdminServiceIp *string `json:"AdminServiceIp,omitnil,omitempty" name:"AdminServiceIp"`
 
 	// Config service访问地址
-	ConfigServiceIp *string `json:"ConfigServiceIp,omitnil" name:"ConfigServiceIp"`
+	ConfigServiceIp *string `json:"ConfigServiceIp,omitnil,omitempty" name:"ConfigServiceIp"`
 
 	// 是否开启config-server公网
-	EnableConfigInternet *bool `json:"EnableConfigInternet,omitnil" name:"EnableConfigInternet"`
+	EnableConfigInternet *bool `json:"EnableConfigInternet,omitnil,omitempty" name:"EnableConfigInternet"`
 
 	// config-server公网访问地址
-	ConfigInternetServiceIp *string `json:"ConfigInternetServiceIp,omitnil" name:"ConfigInternetServiceIp"`
+	ConfigInternetServiceIp *string `json:"ConfigInternetServiceIp,omitnil,omitempty" name:"ConfigInternetServiceIp"`
 
 	// 规格ID
-	SpecId *string `json:"SpecId,omitnil" name:"SpecId"`
+	SpecId *string `json:"SpecId,omitnil,omitempty" name:"SpecId"`
 
 	// 环境的节点数
-	EnvReplica *int64 `json:"EnvReplica,omitnil" name:"EnvReplica"`
+	EnvReplica *int64 `json:"EnvReplica,omitnil,omitempty" name:"EnvReplica"`
 
 	// 环境运行的节点数
-	RunningCount *int64 `json:"RunningCount,omitnil" name:"RunningCount"`
+	RunningCount *int64 `json:"RunningCount,omitnil,omitempty" name:"RunningCount"`
 
 	// 环境别名
-	AliasEnvName *string `json:"AliasEnvName,omitnil" name:"AliasEnvName"`
+	AliasEnvName *string `json:"AliasEnvName,omitnil,omitempty" name:"AliasEnvName"`
 
 	// 环境描述
-	EnvDesc *string `json:"EnvDesc,omitnil" name:"EnvDesc"`
+	EnvDesc *string `json:"EnvDesc,omitnil,omitempty" name:"EnvDesc"`
 
 	// 客户端带宽
-	ClientBandWidth *uint64 `json:"ClientBandWidth,omitnil" name:"ClientBandWidth"`
+	ClientBandWidth *uint64 `json:"ClientBandWidth,omitnil,omitempty" name:"ClientBandWidth"`
 
 	// 客户端内网开关
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	EnableConfigIntranet *bool `json:"EnableConfigIntranet,omitnil" name:"EnableConfigIntranet"`
+	EnableConfigIntranet *bool `json:"EnableConfigIntranet,omitnil,omitempty" name:"EnableConfigIntranet"`
 }
 
 type ExternalRedis struct {
 	// redis ip
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	RedisHost *string `json:"RedisHost,omitnil" name:"RedisHost"`
+	RedisHost *string `json:"RedisHost,omitnil,omitempty" name:"RedisHost"`
 
 	// redis密码
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	RedisPassword *string `json:"RedisPassword,omitnil" name:"RedisPassword"`
+	RedisPassword *string `json:"RedisPassword,omitnil,omitempty" name:"RedisPassword"`
 
 	// redis端口
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	RedisPort *int64 `json:"RedisPort,omitnil" name:"RedisPort"`
+	RedisPort *int64 `json:"RedisPort,omitnil,omitempty" name:"RedisPort"`
 
 	// 超时时间  ms
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	RedisTimeout *int64 `json:"RedisTimeout,omitnil" name:"RedisTimeout"`
+	RedisTimeout *int64 `json:"RedisTimeout,omitnil,omitempty" name:"RedisTimeout"`
 }
 
 type Filter struct {
 	// 过滤参数名
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 过滤参数值
-	Values []*string `json:"Values,omitnil" name:"Values"`
+	Values []*string `json:"Values,omitnil,omitempty" name:"Values"`
 }
 
 type GatewayInstanceSchemeAndPorts struct {
 	// 端口协议，可选HTTP、HTTPS、TCP和UDP
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Scheme *string `json:"Scheme,omitnil" name:"Scheme"`
+	Scheme *string `json:"Scheme,omitnil,omitempty" name:"Scheme"`
 
 	// 端口列表
+	PortList []*uint64 `json:"PortList,omitnil,omitempty" name:"PortList"`
+}
+
+type GatewayServices struct {
+	// 服务列表
+	ServiceList []*KongServiceLightPreview `json:"ServiceList,omitnil,omitempty" name:"ServiceList"`
+
+	// 结果总数
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+}
+
+type GovernanceAlias struct {
+	// 服务别名
+	Alias *string `json:"Alias,omitnil,omitempty" name:"Alias"`
+
+	// 服务别名命名空间
+	AliasNamespace *string `json:"AliasNamespace,omitnil,omitempty" name:"AliasNamespace"`
+
+	// 服务别名指向的服务名
+	Service *string `json:"Service,omitnil,omitempty" name:"Service"`
+
+	// 服务别名指向的服务命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 服务别名的描述信息
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// 服务别名创建时间
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 服务别名修改时间
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
+
+	// 服务别名ID
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// 该服务别名是否可以编辑
+	Editable *bool `json:"Editable,omitnil,omitempty" name:"Editable"`
+
+	// 元数据信息
+	Metadatas []*Metadata `json:"Metadatas,omitnil,omitempty" name:"Metadatas"`
+}
+
+type GovernanceInstance struct {
+	// 实例id。
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// 实例所在服务名。
+	Service *string `json:"Service,omitnil,omitempty" name:"Service"`
+
+	// 实例所在命名空间名。
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 实例ip地址。
+	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
+
+	// 实例端口信息。
+	Port *uint64 `json:"Port,omitnil,omitempty" name:"Port"`
+
+	// 通信协议。
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// 版本信息。
+	Version *string `json:"Version,omitnil,omitempty" name:"Version"`
+
+	// 负载均衡权重。
+	Weight *uint64 `json:"Weight,omitnil,omitempty" name:"Weight"`
+
+	// 是否开启健康检查。
+	EnableHealthCheck *bool `json:"EnableHealthCheck,omitnil,omitempty" name:"EnableHealthCheck"`
+
+	// 实例是否健康。
+	Healthy *bool `json:"Healthy,omitnil,omitempty" name:"Healthy"`
+
+	// 实例是否隔离。
+	Isolate *bool `json:"Isolate,omitnil,omitempty" name:"Isolate"`
+
+	// 实例创建时间。
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 实例修改时间。
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
+
+	// 元数据数组。
+	Metadatas []*Metadata `json:"Metadatas,omitnil,omitempty" name:"Metadatas"`
+
+	// 上报心跳间隔。
+	Ttl *uint64 `json:"Ttl,omitnil,omitempty" name:"Ttl"`
+
+	// 版本信息。
+	InstanceVersion *string `json:"InstanceVersion,omitnil,omitempty" name:"InstanceVersion"`
+
+	// 状态信息
+	HealthStatus *string `json:"HealthStatus,omitnil,omitempty" name:"HealthStatus"`
+
+	// 描述
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+}
+
+type GovernanceInstanceInput struct {
+	// 实例所在服务名。
+	Service *string `json:"Service,omitnil,omitempty" name:"Service"`
+
+	// 实例服务所在命名空间。
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 实例负载均衡权重信息。不填默认为100。
+	Weight *uint64 `json:"Weight,omitnil,omitempty" name:"Weight"`
+
+	// 实例默认健康信息。不填默认为健康。
+	Healthy *bool `json:"Healthy,omitnil,omitempty" name:"Healthy"`
+
+	// 实例隔离信息。不填默认为非隔离。
+	Isolate *bool `json:"Isolate,omitnil,omitempty" name:"Isolate"`
+
+	// 实例ip。
+	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
+
+	// 实例监听端口。
+	Port *uint64 `json:"Port,omitnil,omitempty" name:"Port"`
+
+	// 实例使用协议。不填默认为空。
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// 实例版本。不填默认为空。
+	InstanceVersion *string `json:"InstanceVersion,omitnil,omitempty" name:"InstanceVersion"`
+
+	// 是否启用健康检查。不填默认不启用。
+	EnableHealthCheck *bool `json:"EnableHealthCheck,omitnil,omitempty" name:"EnableHealthCheck"`
+
+	// 上报心跳时间间隔。若 EnableHealthCheck 为不启用，则此参数不生效；若 EnableHealthCheck 启用，此参数不填，则默认 ttl 为 5s。
+	Ttl *uint64 `json:"Ttl,omitnil,omitempty" name:"Ttl"`
+}
+
+type GovernanceInstanceUpdate struct {
+	// 实例所在服务名。
+	Service *string `json:"Service,omitnil,omitempty" name:"Service"`
+
+	// 实例服务所在命名空间。
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 实例负载均衡权重信息。不填默认为100。
+	Weight *uint64 `json:"Weight,omitnil,omitempty" name:"Weight"`
+
+	// 实例默认健康信息。不填默认为健康。
+	Healthy *bool `json:"Healthy,omitnil,omitempty" name:"Healthy"`
+
+	// 实例隔离信息。不填默认为非隔离。
+	Isolate *bool `json:"Isolate,omitnil,omitempty" name:"Isolate"`
+
+	// 实例ip。
+	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
+
+	// 实例监听端口。
+	Port *uint64 `json:"Port,omitnil,omitempty" name:"Port"`
+
+	// 实例使用协议。不填默认为空。
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// 实例版本。不填默认为空。
+	InstanceVersion *string `json:"InstanceVersion,omitnil,omitempty" name:"InstanceVersion"`
+
+	// 是否启用健康检查。不填默认不启用。
+	EnableHealthCheck *bool `json:"EnableHealthCheck,omitnil,omitempty" name:"EnableHealthCheck"`
+
+	// 上报心跳时间间隔。若 EnableHealthCheck 为不启用，则此参数不生效；若 EnableHealthCheck 启用，此参数不填，则默认 ttl 为 5s。
+	Ttl *uint64 `json:"Ttl,omitnil,omitempty" name:"Ttl"`
+
+	// 治理中心服务实例id。
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// 元数据信息。
+	Metadatas []*Metadata `json:"Metadatas,omitnil,omitempty" name:"Metadatas"`
+}
+
+type GovernanceInterfaceDescription struct {
+	// 契约接口ID
+	ID *string `json:"ID,omitnil,omitempty" name:"ID"`
+
+	// 方法名称
+	Method *string `json:"Method,omitnil,omitempty" name:"Method"`
+
+	// 路径/接口名称
+	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
+
+	// 内容
+	Content *string `json:"Content,omitnil,omitempty" name:"Content"`
+
+	// 创建来源
+	Source *string `json:"Source,omitnil,omitempty" name:"Source"`
+
+	// 信息摘要
+	Revision *string `json:"Revision,omitnil,omitempty" name:"Revision"`
+
+	// 创建时间
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 修改时间
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
+
+	// 接口名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+}
+
+type GovernanceLaneGroup struct {
+	// 泳道名称
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	PortList []*uint64 `json:"PortList,omitnil" name:"PortList"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 泳道组ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ID *string `json:"ID,omitnil,omitempty" name:"ID"`
+
+	// 泳道入口服务列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TrafficEntries []*LaneTrafficEntry `json:"TrafficEntries,omitnil,omitempty" name:"TrafficEntries"`
+
+	// 泳道服务列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Destinations []*GovernanceServiceDestination `json:"Destinations,omitnil,omitempty" name:"Destinations"`
+
+	// 泳道组描述
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 该泳道组下的所有泳道规则列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Rules []*GovernanceLaneRule `json:"Rules,omitnil,omitempty" name:"Rules"`
+
+	// 规则内容摘要
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Revision *string `json:"Revision,omitnil,omitempty" name:"Revision"`
+
+	// 创建时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 修改时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
+
+	// 规则一致性状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Consistency *string `json:"Consistency,omitnil,omitempty" name:"Consistency"`
+}
+
+type GovernanceLaneRule struct {
+	// 泳道规则ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ID *string `json:"ID,omitnil,omitempty" name:"ID"`
+
+	// 泳道名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 泳道所属泳道组
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LaneGroup *string `json:"LaneGroup,omitnil,omitempty" name:"LaneGroup"`
+
+	// 泳道规则启用状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Enable *bool `json:"Enable,omitnil,omitempty" name:"Enable"`
+
+	// 流量标签
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TrafficLabels []*Argument `json:"TrafficLabels,omitnil,omitempty" name:"TrafficLabels"`
+
+	// 多个流量标签匹配方式
+	// AND：与
+	// OR：或
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TrafficMatchMode *string `json:"TrafficMatchMode,omitnil,omitempty" name:"TrafficMatchMode"`
+
+	// 泳道匹配方式
+	// STRICT：严格匹配
+	// PERMISSIVE：宽松匹配
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LaneMatchMode *string `json:"LaneMatchMode,omitnil,omitempty" name:"LaneMatchMode"`
+
+	// 泳道灰度规则
+	TrafficGray *TrafficGray `json:"TrafficGray,omitnil,omitempty" name:"TrafficGray"`
+
+	// 泳道规则描述
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 泳道标签内容
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LaneLabelValue *string `json:"LaneLabelValue,omitnil,omitempty" name:"LaneLabelValue"`
+
+	// 创建时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 启用时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EnableTime *string `json:"EnableTime,omitnil,omitempty" name:"EnableTime"`
+
+	// 修改时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
+
+	// 泳道规则优先级
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Priority *int64 `json:"Priority,omitnil,omitempty" name:"Priority"`
+
+	// 规则摘要
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Revision *string `json:"Revision,omitnil,omitempty" name:"Revision"`
+}
+
+type GovernanceNamespace struct {
+	// 命名空间名称。
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 命名空间描述信息。
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// 创建时间。
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 修改时间。
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
+
+	// 命名空间下总服务数据量
+	TotalServiceCount *int64 `json:"TotalServiceCount,omitnil,omitempty" name:"TotalServiceCount"`
+
+	// 命名空间下总健康实例数量
+	TotalHealthInstanceCount *int64 `json:"TotalHealthInstanceCount,omitnil,omitempty" name:"TotalHealthInstanceCount"`
+
+	// 命名空间下总实例数量
+	TotalInstanceCount *int64 `json:"TotalInstanceCount,omitnil,omitempty" name:"TotalInstanceCount"`
+
+	// 命名空间ID
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// 是否可以编辑
+	Editable *bool `json:"Editable,omitnil,omitempty" name:"Editable"`
+
+	// 可以操作此命名空间的用户ID列表
+	UserIds []*string `json:"UserIds,omitnil,omitempty" name:"UserIds"`
+
+	// 可以操作此命名空间的用户组ID列表
+	GroupIds []*string `json:"GroupIds,omitnil,omitempty" name:"GroupIds"`
+
+	// 移除可以操作此命名空间的用户ID列表
+	RemoveUserIds []*string `json:"RemoveUserIds,omitnil,omitempty" name:"RemoveUserIds"`
+
+	// 移除可以操作此命名空间的用户组ID列表
+	RemoveGroupIds []*string `json:"RemoveGroupIds,omitnil,omitempty" name:"RemoveGroupIds"`
+
+	// 该命名空间下的服务对哪些命名空间可见
+	ServiceExportTo []*string `json:"ServiceExportTo,omitnil,omitempty" name:"ServiceExportTo"`
+
+	// 是否开启同步到全局注册中心	
+	SyncToGlobalRegistry *bool `json:"SyncToGlobalRegistry,omitnil,omitempty" name:"SyncToGlobalRegistry"`
+
+	// 元数据
+	Metadatas []*Metadata `json:"Metadatas,omitnil,omitempty" name:"Metadatas"`
+}
+
+type GovernanceNamespaceInput struct {
+	// 命名空间名。
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 描述信息。
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// 新增的可以操作此命名空间的用户ID列表
+	UserIds []*string `json:"UserIds,omitnil,omitempty" name:"UserIds"`
+
+	// 新增的可以操作此命名空间的用户组ID列表
+	GroupIds []*string `json:"GroupIds,omitnil,omitempty" name:"GroupIds"`
+
+	// 移除可以操作此命名空间的用户ID列表
+	RemoveUserIds []*string `json:"RemoveUserIds,omitnil,omitempty" name:"RemoveUserIds"`
+
+	// 移除可以操作此命名空间的用户组ID列表
+	RemoveGroupIds []*string `json:"RemoveGroupIds,omitnil,omitempty" name:"RemoveGroupIds"`
+
+	// 该命名空间下的服务对哪些命名空间下可见，
+	// 1、为空或者不填写，表示仅当前命名空间可见
+	// 2、列表内容仅一个元素，且为字符 *，表示所有命名空间可见（包括新增）
+	// 3、列表内容为部份命名空间名称，则只对这些命名空间下可见
+	ServiceExportTo []*string `json:"ServiceExportTo,omitnil,omitempty" name:"ServiceExportTo"`
+
+	// 是否开启同步到全局注册中心
+	SyncToGlobalRegistry *bool `json:"SyncToGlobalRegistry,omitnil,omitempty" name:"SyncToGlobalRegistry"`
+}
+
+type GovernanceService struct {
+	// <p>服务名称。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>命名空间名称。</p>
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// <p>元数据信息数组。</p>
+	Metadatas []*Metadata `json:"Metadatas,omitnil,omitempty" name:"Metadatas"`
+
+	// <p>描述信息。</p>
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// <p>创建时间。</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>修改时间。</p>
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
+
+	// <p>服务所属部门。</p>
+	Department *string `json:"Department,omitnil,omitempty" name:"Department"`
+
+	// <p>服务所属业务。</p>
+	Business *string `json:"Business,omitnil,omitempty" name:"Business"`
+
+	// <p>健康服务实例数</p>
+	HealthyInstanceCount *uint64 `json:"HealthyInstanceCount,omitnil,omitempty" name:"HealthyInstanceCount"`
+
+	// <p>服务实例总数</p>
+	TotalInstanceCount *uint64 `json:"TotalInstanceCount,omitnil,omitempty" name:"TotalInstanceCount"`
+
+	// <p>服务ID</p>
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// <p>是否可以编辑</p>
+	Editable *bool `json:"Editable,omitnil,omitempty" name:"Editable"`
+
+	// <p>可以编辑该资源的用户ID</p>
+	UserIds []*string `json:"UserIds,omitnil,omitempty" name:"UserIds"`
+
+	// <p>可以编辑该资源的用户组ID</p>
+	GroupIds []*string `json:"GroupIds,omitnil,omitempty" name:"GroupIds"`
+
+	// <p>移除可以编辑该资源的用户ID</p>
+	RemoveUserIds []*string `json:"RemoveUserIds,omitnil,omitempty" name:"RemoveUserIds"`
+
+	// <p>移除可以编辑该资源的用户组ID</p>
+	RemoveGroupIds []*string `json:"RemoveGroupIds,omitnil,omitempty" name:"RemoveGroupIds"`
+
+	// <p>该服务对哪些命名空间可见</p>
+	ExportTo []*string `json:"ExportTo,omitnil,omitempty" name:"ExportTo"`
+
+	// <p>该服务信息摘要签名</p>
+	Revision *string `json:"Revision,omitnil,omitempty" name:"Revision"`
+
+	// <p>是否开启同步到全局注册中心</p>
+	SyncToGlobalRegistry *bool `json:"SyncToGlobalRegistry,omitnil,omitempty" name:"SyncToGlobalRegistry"`
+
+	// <p>隔离实例数</p>
+	IsolateInstanceCount *uint64 `json:"IsolateInstanceCount,omitnil,omitempty" name:"IsolateInstanceCount"`
+
+	// <p>服务健康状态</p>
+	ServiceStatus *int64 `json:"ServiceStatus,omitnil,omitempty" name:"ServiceStatus"`
+
+	// <p>服务类型</p><p>枚举值：</p><ul><li>0： 微服务（默认）</li><li>1： MCP Server</li><li>2： AI Agent</li></ul>
+	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
+}
+
+type GovernanceServiceContract struct {
+	// 契约名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 所属服务命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 协议
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// 契约ID
+	ID *string `json:"ID,omitnil,omitempty" name:"ID"`
+
+	// 所属服务名称
+	Service *string `json:"Service,omitnil,omitempty" name:"Service"`
+
+	// 版本
+	Version *string `json:"Version,omitnil,omitempty" name:"Version"`
+
+	// 信息摘要
+	Revision *string `json:"Revision,omitnil,omitempty" name:"Revision"`
+
+	// 额外内容描述
+	Content *string `json:"Content,omitnil,omitempty" name:"Content"`
+
+	// 创建时间
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 修改时间
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
+
+	// 契约接口列表
+	Interfaces []*GovernanceInterfaceDescription `json:"Interfaces,omitnil,omitempty" name:"Interfaces"`
+
+	// 元数据
+	Metadatas []*Metadata `json:"Metadatas,omitnil,omitempty" name:"Metadatas"`
+}
+
+type GovernanceServiceContractVersion struct {
+	// 契约版本
+	Version *string `json:"Version,omitnil,omitempty" name:"Version"`
+
+	// 契约名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 唯一名称
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+}
+
+type GovernanceServiceDestination struct {
+	// 命名空间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 服务
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Service *string `json:"Service,omitnil,omitempty" name:"Service"`
+
+	// 实例标签
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Labels []*RoutingDestinationRuleLabel `json:"Labels,omitnil,omitempty" name:"Labels"`
+}
+
+type GovernanceServiceInput struct {
+	// <p>服务名。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>服务所属命名空间。</p>
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// <p>服务描述信息。</p>
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// <p>服务元数据。</p>
+	Metadatas []*Metadata `json:"Metadatas,omitnil,omitempty" name:"Metadatas"`
+
+	// <p>服务所属部门。</p>
+	Department *string `json:"Department,omitnil,omitempty" name:"Department"`
+
+	// <p>服务所属业务。</p>
+	Business *string `json:"Business,omitnil,omitempty" name:"Business"`
+
+	// <p>被添加进来可以操作此命名空间的用户ID列表</p>
+	UserIds []*string `json:"UserIds,omitnil,omitempty" name:"UserIds"`
+
+	// <p>被添加进来可以操作此命名空间的用户组ID列表</p>
+	GroupIds []*string `json:"GroupIds,omitnil,omitempty" name:"GroupIds"`
+
+	// <p>从操作此命名空间的用户组ID列表被移除的ID列表</p>
+	RemoveUserIds []*string `json:"RemoveUserIds,omitnil,omitempty" name:"RemoveUserIds"`
+
+	// <p>从可以操作此命名空间的用户组ID列表中被移除的ID列表</p>
+	RemoveGroupIds []*string `json:"RemoveGroupIds,omitnil,omitempty" name:"RemoveGroupIds"`
+
+	// <p>该服务对哪些命名空间可见</p>
+	ExportTo []*string `json:"ExportTo,omitnil,omitempty" name:"ExportTo"`
+
+	// <p>是否开启同步到全局注册中心</p>
+	SyncToGlobalRegistry *bool `json:"SyncToGlobalRegistry,omitnil,omitempty" name:"SyncToGlobalRegistry"`
+
+	// <p>服务类型</p><p>枚举值：</p><ul><li>0： 微服务（默认）</li><li>1： MCP Server</li><li>2： AI Agent</li></ul><p>默认值：0</p>
+	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
 }
 
 type InstancePort struct {
 	// 监听的 http 端口范围。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	HttpPort *string `json:"HttpPort,omitnil" name:"HttpPort"`
+	HttpPort *string `json:"HttpPort,omitnil,omitempty" name:"HttpPort"`
 
 	// 监听的 https 端口范围。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	HttpsPort *string `json:"HttpsPort,omitnil" name:"HttpsPort"`
+	HttpsPort *string `json:"HttpsPort,omitnil,omitempty" name:"HttpsPort"`
 
 	// 监听的 tcp 端口范围。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TcpPort *string `json:"TcpPort,omitnil" name:"TcpPort"`
+	TcpPort *string `json:"TcpPort,omitnil,omitempty" name:"TcpPort"`
 
 	// 监听的 udp 端口范围。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	UdpPort *string `json:"UdpPort,omitnil" name:"UdpPort"`
+	UdpPort *string `json:"UdpPort,omitnil,omitempty" name:"UdpPort"`
 }
 
 type InstanceTagInfo struct {
 	// 标签键
-	TagKey *string `json:"TagKey,omitnil" name:"TagKey"`
+	TagKey *string `json:"TagKey,omitnil,omitempty" name:"TagKey"`
 
 	// 标签值
-	TagValue *string `json:"TagValue,omitnil" name:"TagValue"`
+	TagValue *string `json:"TagValue,omitnil,omitempty" name:"TagValue"`
 }
 
 type InternetConfig struct {
 	// 公网地址版本，可选："IPV4" | "IPV6" 。不填默认 IPV4 。
-	InternetAddressVersion *string `json:"InternetAddressVersion,omitnil" name:"InternetAddressVersion"`
+	InternetAddressVersion *string `json:"InternetAddressVersion,omitnil,omitempty" name:"InternetAddressVersion"`
 
 	// 公网付费类型，当前仅可选："BANDWIDTH"。不填默认为 "BANDWIDTH"
-	InternetPayMode *string `json:"InternetPayMode,omitnil" name:"InternetPayMode"`
+	InternetPayMode *string `json:"InternetPayMode,omitnil,omitempty" name:"InternetPayMode"`
 
 	// 公网带宽。
-	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil" name:"InternetMaxBandwidthOut"`
+	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
 
 	// 负载均衡描述
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 负载均衡的规格类型，支持clb.c2.medium、clb.c3.small、clb.c3.medium、clb.c4.small、clb.c4.medium、clb.c4.large、clb.c4.xlarge，不传为共享型。
-	SlaType *string `json:"SlaType,omitnil" name:"SlaType"`
+	SlaType *string `json:"SlaType,omitnil,omitempty" name:"SlaType"`
 
 	// 负载均衡是否多可用区
-	MultiZoneFlag *bool `json:"MultiZoneFlag,omitnil" name:"MultiZoneFlag"`
+	MultiZoneFlag *bool `json:"MultiZoneFlag,omitnil,omitempty" name:"MultiZoneFlag"`
 
 	// 主可用区
-	MasterZoneId *string `json:"MasterZoneId,omitnil" name:"MasterZoneId"`
+	MasterZoneId *string `json:"MasterZoneId,omitnil,omitempty" name:"MasterZoneId"`
 
 	// 备可用区
-	SlaveZoneId *string `json:"SlaveZoneId,omitnil" name:"SlaveZoneId"`
+	SlaveZoneId *string `json:"SlaveZoneId,omitnil,omitempty" name:"SlaveZoneId"`
 }
 
 type KVMapping struct {
 	// key
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Key *string `json:"Key,omitnil" name:"Key"`
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
 
 	// value
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Value *string `json:"Value,omitnil" name:"Value"`
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
 }
 
 type KVPair struct {
 	// 键
-	Key *string `json:"Key,omitnil" name:"Key"`
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
 
 	// 值
-	Value *string `json:"Value,omitnil" name:"Value"`
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+}
+
+type KeyValue struct {
+	// 条件的Key
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+
+	// 条件的Value
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
 }
 
 type KongActiveHealthCheck struct {
-	// 主动健康检查健康探测间隔，单位：秒，0表示不开启
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	HealthyInterval *uint64 `json:"HealthyInterval,omitnil" name:"HealthyInterval"`
+	// <p>主动健康检查健康探测间隔，单位：秒，0表示不开启</p>
+	HealthyInterval *uint64 `json:"HealthyInterval,omitnil,omitempty" name:"HealthyInterval"`
 
-	// 主动健康检查异常探测间隔，单位：秒，0表示不开启
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	UnHealthyInterval *uint64 `json:"UnHealthyInterval,omitnil" name:"UnHealthyInterval"`
+	// <p>主动健康检查异常探测间隔，单位：秒，0表示不开启</p>
+	UnHealthyInterval *uint64 `json:"UnHealthyInterval,omitnil,omitempty" name:"UnHealthyInterval"`
 
-	// 在 GET HTTP 请求中使用的路径，以作为主动运行状况检查的探测器运行。默认： ”/”。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	HttpPath *string `json:"HttpPath,omitnil" name:"HttpPath"`
+	// <p>在 GET HTTP 请求中使用的路径，以作为主动运行状况检查的探测器运行。默认： ”/”。</p>
+	HttpPath *string `json:"HttpPath,omitnil,omitempty" name:"HttpPath"`
+
+	// <p>GET HTTP 请求的超时时间，单位：秒。默认 60。</p>
+	Timeout *float64 `json:"Timeout,omitnil,omitempty" name:"Timeout"`
+
+	// <p>Host头</p>
+	HostHeader *string `json:"HostHeader,omitnil,omitempty" name:"HostHeader"`
 }
 
 type KongCertificate struct {
 	// 无
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Cert *KongCertificatesPreview `json:"Cert,omitnil" name:"Cert"`
+	Cert *KongCertificatesPreview `json:"Cert,omitnil,omitempty" name:"Cert"`
 }
 
 type KongCertificatesList struct {
 	// 证书列表总数
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Total *int64 `json:"Total,omitnil" name:"Total"`
+	Total *int64 `json:"Total,omitnil,omitempty" name:"Total"`
 
 	// 无
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	CertificatesList []*KongCertificatesPreview `json:"CertificatesList,omitnil" name:"CertificatesList"`
+	CertificatesList []*KongCertificatesPreview `json:"CertificatesList,omitnil,omitempty" name:"CertificatesList"`
 
 	// 证书列表总页数
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	//
 	// Deprecated: Pages is deprecated.
-	Pages *int64 `json:"Pages,omitnil" name:"Pages"`
+	Pages *int64 `json:"Pages,omitnil,omitempty" name:"Pages"`
 }
 
 type KongCertificatesPreview struct {
 	// 证书名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// Id
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// 绑定的域名
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	BindDomains []*string `json:"BindDomains,omitnil" name:"BindDomains"`
+	BindDomains []*string `json:"BindDomains,omitnil,omitempty" name:"BindDomains"`
 
 	// 证书状态：expired(已过期)
 	//                    active(生效中)
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Status *string `json:"Status,omitnil" name:"Status"`
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 证书pem格式
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Crt *string `json:"Crt,omitnil" name:"Crt"`
+	Crt *string `json:"Crt,omitnil,omitempty" name:"Crt"`
 
 	// 证书私钥
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Key *string `json:"Key,omitnil" name:"Key"`
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
 
 	// 证书过期时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ExpireTime *string `json:"ExpireTime,omitnil" name:"ExpireTime"`
+	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 
 	// 证书上传时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CreateTime *string `json:"CreateTime,omitnil" name:"CreateTime"`
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 证书签发时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	IssueTime *string `json:"IssueTime,omitnil" name:"IssueTime"`
+	IssueTime *string `json:"IssueTime,omitnil,omitempty" name:"IssueTime"`
 
 	// 证书来源：native(kong自定义证书)
 	//                     ssl(ssl平台证书)
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CertSource *string `json:"CertSource,omitnil" name:"CertSource"`
+	CertSource *string `json:"CertSource,omitnil,omitempty" name:"CertSource"`
 
 	// ssl平台证书Id
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CertId *string `json:"CertId,omitnil" name:"CertId"`
+	CertId *string `json:"CertId,omitnil,omitempty" name:"CertId"`
 }
 
 type KongPassiveHealthCheck struct {
 	// 后端target协议类型，被动健康检查支持http和tcp，主动健康检查支持http
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Type *string `json:"Type,omitnil" name:"Type"`
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 }
 
 type KongRoutePreview struct {
-	// 服务ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ID *string `json:"ID,omitnil" name:"ID"`
+	// <p>服务ID</p>
+	ID *string `json:"ID,omitnil,omitempty" name:"ID"`
 
-	// 服务名字
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	// <p>服务名字</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 无
+	// <p>无</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Methods []*string `json:"Methods,omitnil" name:"Methods"`
+	Methods []*string `json:"Methods,omitnil,omitempty" name:"Methods"`
 
-	// 无
+	// <p>无</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Paths []*string `json:"Paths,omitnil" name:"Paths"`
+	Paths []*string `json:"Paths,omitnil,omitempty" name:"Paths"`
 
-	// 无
+	// <p>无</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Hosts []*string `json:"Hosts,omitnil" name:"Hosts"`
+	Hosts []*string `json:"Hosts,omitnil,omitempty" name:"Hosts"`
 
-	// 无
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Protocols []*string `json:"Protocols,omitnil" name:"Protocols"`
+	// <p>无</p>
+	Protocols []*string `json:"Protocols,omitnil,omitempty" name:"Protocols"`
 
-	// 无
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	PreserveHost *bool `json:"PreserveHost,omitnil" name:"PreserveHost"`
+	// <p>无</p>
+	PreserveHost *bool `json:"PreserveHost,omitnil,omitempty" name:"PreserveHost"`
 
-	// 无
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	HttpsRedirectStatusCode *int64 `json:"HttpsRedirectStatusCode,omitnil" name:"HttpsRedirectStatusCode"`
+	// <p>无</p>
+	HttpsRedirectStatusCode *int64 `json:"HttpsRedirectStatusCode,omitnil,omitempty" name:"HttpsRedirectStatusCode"`
 
-	// 无
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	StripPath *bool `json:"StripPath,omitnil" name:"StripPath"`
+	// <p>无</p>
+	StripPath *bool `json:"StripPath,omitnil,omitempty" name:"StripPath"`
 
-	// 无
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CreatedTime *string `json:"CreatedTime,omitnil" name:"CreatedTime"`
+	// <p>无</p>
+	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 
-	// 是否开启了强制HTTPS
+	// <p>是否开启了强制HTTPS</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	//
 	// Deprecated: ForceHttps is deprecated.
-	ForceHttps *bool `json:"ForceHttps,omitnil" name:"ForceHttps"`
+	ForceHttps *bool `json:"ForceHttps,omitnil,omitempty" name:"ForceHttps"`
 
-	// 服务名
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ServiceName *string `json:"ServiceName,omitnil" name:"ServiceName"`
+	// <p>服务名</p>
+	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
 
-	// 服务ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ServiceID *string `json:"ServiceID,omitnil" name:"ServiceID"`
+	// <p>服务ID</p>
+	ServiceID *string `json:"ServiceID,omitnil,omitempty" name:"ServiceID"`
 
-	// 目的端口
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	DestinationPorts []*uint64 `json:"DestinationPorts,omitnil" name:"DestinationPorts"`
+	// <p>目的端口</p>
+	DestinationPorts []*uint64 `json:"DestinationPorts,omitnil,omitempty" name:"DestinationPorts"`
 
-	// 路由的Headers
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Headers []*KVMapping `json:"Headers,omitnil" name:"Headers"`
+	// <p>路由的Headers</p>
+	Headers []*KVMapping `json:"Headers,omitnil,omitempty" name:"Headers"`
+
+	// <p>是否缓存请求body，默认true</p>
+	RequestBuffering *bool `json:"RequestBuffering,omitnil,omitempty" name:"RequestBuffering"`
+
+	// <p>是否缓存响应body，默认true</p>
+	ResponseBuffering *bool `json:"ResponseBuffering,omitnil,omitempty" name:"ResponseBuffering"`
+
+	// <p>正则优先级</p>
+	RegexPriority *int64 `json:"RegexPriority,omitnil,omitempty" name:"RegexPriority"`
+
+	// <p>querystring参数</p>
+	QueryStringParameters []*KVMapping `json:"QueryStringParameters,omitnil,omitempty" name:"QueryStringParameters"`
+
+	// <p>路由来源</p>
+	RouteSource *string `json:"RouteSource,omitnil,omitempty" name:"RouteSource"`
 }
 
 type KongServiceDetail struct {
 	// 服务ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ID *string `json:"ID,omitnil" name:"ID"`
+	ID *string `json:"ID,omitnil,omitempty" name:"ID"`
 
 	// 服务名字
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 后端协议
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Protocol *string `json:"Protocol,omitnil" name:"Protocol"`
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
 	// 后端路径
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Path *string `json:"Path,omitnil" name:"Path"`
+	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
 
 	// 后端延时，单位ms
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Timeout *int64 `json:"Timeout,omitnil" name:"Timeout"`
+	Timeout *int64 `json:"Timeout,omitnil,omitempty" name:"Timeout"`
 
 	// 重试次数
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Retries *int64 `json:"Retries,omitnil" name:"Retries"`
+	Retries *int64 `json:"Retries,omitnil,omitempty" name:"Retries"`
 
 	// 标签
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Tags []*string `json:"Tags,omitnil" name:"Tags"`
+	Tags []*string `json:"Tags,omitnil,omitempty" name:"Tags"`
 
 	// 后端配置
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	UpstreamInfo *KongUpstreamInfo `json:"UpstreamInfo,omitnil" name:"UpstreamInfo"`
+	UpstreamInfo *KongUpstreamInfo `json:"UpstreamInfo,omitnil,omitempty" name:"UpstreamInfo"`
 
 	// 后端类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	UpstreamType *string `json:"UpstreamType,omitnil" name:"UpstreamType"`
+	UpstreamType *string `json:"UpstreamType,omitnil,omitempty" name:"UpstreamType"`
 
 	// 是否可编辑
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Editable *bool `json:"Editable,omitnil" name:"Editable"`
+	Editable *bool `json:"Editable,omitnil,omitempty" name:"Editable"`
 
 	// 创建时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CreatedTime *string `json:"CreatedTime,omitnil" name:"CreatedTime"`
+	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 }
 
-type KongServicePreview struct {
+type KongServiceLightPreview struct {
 	// 服务ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ID *string `json:"ID,omitnil" name:"ID"`
+	ID *string `json:"ID,omitnil,omitempty" name:"ID"`
 
 	// 服务名字
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Name *string `json:"Name,omitnil" name:"Name"`
-
-	// 标签
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Tags []*string `json:"Tags,omitnil" name:"Tags"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 后端配置
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	UpstreamInfo *KongUpstreamInfo `json:"UpstreamInfo,omitnil" name:"UpstreamInfo"`
+	UpstreamInfo *KongUpstreamInfo `json:"UpstreamInfo,omitnil,omitempty" name:"UpstreamInfo"`
 
 	// 后端类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	UpstreamType *string `json:"UpstreamType,omitnil" name:"UpstreamType"`
+	UpstreamType *string `json:"UpstreamType,omitnil,omitempty" name:"UpstreamType"`
 
 	// 创建时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CreatedTime *string `json:"CreatedTime,omitnil" name:"CreatedTime"`
-
-	// 是否可编辑
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Editable *bool `json:"Editable,omitnil" name:"Editable"`
+	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 
 	// 请求路径
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Path *string `json:"Path,omitnil" name:"Path"`
+	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
+
+	// 后端协议
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// 重试次数
+	Retries *uint64 `json:"Retries,omitnil,omitempty" name:"Retries"`
+
+	// 后端延时，单位ms
+	Timeout *uint64 `json:"Timeout,omitnil,omitempty" name:"Timeout"`
+}
+
+type KongServicePreview struct {
+	// <p>服务ID</p>
+	ID *string `json:"ID,omitnil,omitempty" name:"ID"`
+
+	// <p>服务名字</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>标签</p>
+	Tags []*string `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// <p>后端配置</p>
+	UpstreamInfo *KongUpstreamInfo `json:"UpstreamInfo,omitnil,omitempty" name:"UpstreamInfo"`
+
+	// <p>后端类型</p>
+	UpstreamType *string `json:"UpstreamType,omitnil,omitempty" name:"UpstreamType"`
+
+	// <p>创建时间</p>
+	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
+
+	// <p>是否可编辑</p>
+	Editable *bool `json:"Editable,omitnil,omitempty" name:"Editable"`
+
+	// <p>请求路径</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
+}
+
+type KongServiceRoute struct {
+	// <p>服务信息</p>
+	Service *KongServicePreview `json:"Service,omitnil,omitempty" name:"Service"`
+
+	// <p>路由总条数</p>
+	RouteTotalCount *int64 `json:"RouteTotalCount,omitnil,omitempty" name:"RouteTotalCount"`
+
+	// <p>是否有未返回的路由</p>
+	RouteHasMore *bool `json:"RouteHasMore,omitnil,omitempty" name:"RouteHasMore"`
+
+	// <p>路由信息</p>
+	Routes []*KongRoutePreview `json:"Routes,omitnil,omitempty" name:"Routes"`
 }
 
 type KongServiceRouteList struct {
 	// 无
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	RouteList []*KongRoutePreview `json:"RouteList,omitnil" name:"RouteList"`
+	RouteList []*KongRoutePreview `json:"RouteList,omitnil,omitempty" name:"RouteList"`
 
 	// 总数
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+}
+
+type KongServiceWithRoutes struct {
+
+	ServiceList []*KongServiceRoute `json:"ServiceList,omitnil,omitempty" name:"ServiceList"`
+
+	// 总数
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 }
 
 type KongServices struct {
 	// kong实例的服务列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ServiceList []*KongServicePreview `json:"ServiceList,omitnil" name:"ServiceList"`
+	ServiceList []*KongServicePreview `json:"ServiceList,omitnil,omitempty" name:"ServiceList"`
 
 	// 列表总数
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 }
 
 type KongTarget struct {
 	// Host
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Host *string `json:"Host,omitnil" name:"Host"`
+	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
 
 	// 端口
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Port *int64 `json:"Port,omitnil" name:"Port"`
+	Port *int64 `json:"Port,omitnil,omitempty" name:"Port"`
 
 	// 权重
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Weight *int64 `json:"Weight,omitnil" name:"Weight"`
+	Weight *int64 `json:"Weight,omitnil,omitempty" name:"Weight"`
 
 	// 健康状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Health *string `json:"Health,omitnil" name:"Health"`
+	Health *string `json:"Health,omitnil,omitempty" name:"Health"`
 
 	// 创建时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CreatedTime *string `json:"CreatedTime,omitnil" name:"CreatedTime"`
+	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 
 	// Target的来源
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Source *string `json:"Source,omitnil" name:"Source"`
+	Source *string `json:"Source,omitnil,omitempty" name:"Source"`
 
 	// CVM实例ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CvmInstanceId *string `json:"CvmInstanceId,omitnil" name:"CvmInstanceId"`
+	CvmInstanceId *string `json:"CvmInstanceId,omitnil,omitempty" name:"CvmInstanceId"`
 
 	// CVM实例名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CvmInstanceName *string `json:"CvmInstanceName,omitnil" name:"CvmInstanceName"`
+	CvmInstanceName *string `json:"CvmInstanceName,omitnil,omitempty" name:"CvmInstanceName"`
+
+	// target标签
+	Tags []*string `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type KongUpstreamInfo struct {
 	// IP或域名
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Host *string `json:"Host,omitnil" name:"Host"`
+	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
 
 	// 端口
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Port *int64 `json:"Port,omitnil" name:"Port"`
+	Port *int64 `json:"Port,omitnil,omitempty" name:"Port"`
 
 	// 服务来源ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	SourceID *string `json:"SourceID,omitnil" name:"SourceID"`
+	SourceID *string `json:"SourceID,omitnil,omitempty" name:"SourceID"`
 
 	// 命名空间
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Namespace *string `json:"Namespace,omitnil" name:"Namespace"`
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
 
 	// 服务（注册中心或Kubernetes中的服务）名字
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ServiceName *string `json:"ServiceName,omitnil" name:"ServiceName"`
+	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
 
 	// 服务后端类型是IPList时提供
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Targets []*KongTarget `json:"Targets,omitnil" name:"Targets"`
+	Targets []*KongTarget `json:"Targets,omitnil,omitempty" name:"Targets"`
 
 	// 服务来源类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	SourceType *string `json:"SourceType,omitnil" name:"SourceType"`
+	SourceType *string `json:"SourceType,omitnil,omitempty" name:"SourceType"`
 
 	// SCF函数类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ScfType *string `json:"ScfType,omitnil" name:"ScfType"`
+	ScfType *string `json:"ScfType,omitnil,omitempty" name:"ScfType"`
 
 	// SCF函数命名空间
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ScfNamespace *string `json:"ScfNamespace,omitnil" name:"ScfNamespace"`
+	ScfNamespace *string `json:"ScfNamespace,omitnil,omitempty" name:"ScfNamespace"`
 
 	// SCF函数名
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ScfLambdaName *string `json:"ScfLambdaName,omitnil" name:"ScfLambdaName"`
+	ScfLambdaName *string `json:"ScfLambdaName,omitnil,omitempty" name:"ScfLambdaName"`
 
 	// SCF函数版本
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ScfLambdaQualifier *string `json:"ScfLambdaQualifier,omitnil" name:"ScfLambdaQualifier"`
+	ScfLambdaQualifier *string `json:"ScfLambdaQualifier,omitnil,omitempty" name:"ScfLambdaQualifier"`
 
 	// 冷启动时间，单位秒
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	SlowStart *int64 `json:"SlowStart,omitnil" name:"SlowStart"`
+	SlowStart *int64 `json:"SlowStart,omitnil,omitempty" name:"SlowStart"`
 
 	// 负载均衡算法，默认为 round-robin，还支持 least-connections，consisten_hashing
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Algorithm *string `json:"Algorithm,omitnil" name:"Algorithm"`
+	Algorithm *string `json:"Algorithm,omitnil,omitempty" name:"Algorithm"`
 
 	// CVM弹性伸缩组ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	AutoScalingGroupID *string `json:"AutoScalingGroupID,omitnil" name:"AutoScalingGroupID"`
+	AutoScalingGroupID *string `json:"AutoScalingGroupID,omitnil,omitempty" name:"AutoScalingGroupID"`
 
 	// CVM弹性伸缩组端口
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	AutoScalingCvmPort *uint64 `json:"AutoScalingCvmPort,omitnil" name:"AutoScalingCvmPort"`
+	AutoScalingCvmPort *uint64 `json:"AutoScalingCvmPort,omitnil,omitempty" name:"AutoScalingCvmPort"`
 
 	// CVM弹性伸缩组使用的CVM TAT命令状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	AutoScalingTatCmdStatus *string `json:"AutoScalingTatCmdStatus,omitnil" name:"AutoScalingTatCmdStatus"`
+	AutoScalingTatCmdStatus *string `json:"AutoScalingTatCmdStatus,omitnil,omitempty" name:"AutoScalingTatCmdStatus"`
 
 	// CVM弹性伸缩组生命周期挂钩状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	AutoScalingHookStatus *string `json:"AutoScalingHookStatus,omitnil" name:"AutoScalingHookStatus"`
+	AutoScalingHookStatus *string `json:"AutoScalingHookStatus,omitnil,omitempty" name:"AutoScalingHookStatus"`
 
 	// 服务来源的名字
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	SourceName *string `json:"SourceName,omitnil" name:"SourceName"`
+	SourceName *string `json:"SourceName,omitnil,omitempty" name:"SourceName"`
 
 	// 精确的服务来源类型，新建服务来源时候传入的类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	RealSourceType *string `json:"RealSourceType,omitnil" name:"RealSourceType"`
+	RealSourceType *string `json:"RealSourceType,omitnil,omitempty" name:"RealSourceType"`
 
 	// upstream健康状态HEALTHY（健康）, UNHEALTHY（异常）, HEALTHCHECKS_OFF（未开启）和NONE（不支持健康检查）
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	HealthStatus *string `json:"HealthStatus,omitnil" name:"HealthStatus"`
+	HealthStatus *string `json:"HealthStatus,omitnil,omitempty" name:"HealthStatus"`
+
+	// 云函数是否开启CAM鉴权，不填时默认为开启(true)
+	ScfCamAuthEnable *bool `json:"ScfCamAuthEnable,omitnil,omitempty" name:"ScfCamAuthEnable"`
+
+	// 云函数是否开启Base64编码，默认为false
+	ScfIsBase64Encoded *bool `json:"ScfIsBase64Encoded,omitnil,omitempty" name:"ScfIsBase64Encoded"`
+
+	// 云函数是否开启响应集成，默认为false
+	ScfIsIntegratedResponse *bool `json:"ScfIsIntegratedResponse,omitnil,omitempty" name:"ScfIsIntegratedResponse"`
 }
 
 type KongUpstreamList struct {
 	// 无
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	UpstreamList []*KongUpstreamPreview `json:"UpstreamList,omitnil" name:"UpstreamList"`
+	UpstreamList []*KongUpstreamPreview `json:"UpstreamList,omitnil,omitempty" name:"UpstreamList"`
 }
 
 type KongUpstreamPreview struct {
 	// 服务ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ID *string `json:"ID,omitnil" name:"ID"`
+	ID *string `json:"ID,omitnil,omitempty" name:"ID"`
 
 	// 服务名字
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 后端配置
+	Target []*KongTarget `json:"Target,omitnil,omitempty" name:"Target"`
+}
+
+type Label struct {
+	// 标签键名称
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+
+	// 标签值
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+}
+
+type LaneTrafficEntry struct {
+	//    // type == "polarismesh.cn/gateway/tse-gateway, 则 selector 为 TSEGatewaySelector
+	//    // type == "polarismesh.cn/gateway/spring-cloud-gateway", 则 selector 为 ServiceGatewaySelector
+	//    // type == "polarismesh.cn/service, 则 selector 为 ServiceSelector
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Target []*KongTarget `json:"Target,omitnil" name:"Target"`
+	EntryType *string `json:"EntryType,omitnil,omitempty" name:"EntryType"`
+
+	// TSE云原生网关选择器
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TSEGatewaySelector *TSEGatewaySelector `json:"TSEGatewaySelector,omitnil,omitempty" name:"TSEGatewaySelector"`
+
+	// 微服务网关选择器
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ServiceGatewaySelector *ServiceGatewaySelector `json:"ServiceGatewaySelector,omitnil,omitempty" name:"ServiceGatewaySelector"`
+
+	// 普通微服务选择器
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ServiceSelector *ServiceSelector `json:"ServiceSelector,omitnil,omitempty" name:"ServiceSelector"`
+}
+
+type LimitRule struct {
+	// 请求匹配条件
+	Filters []*RuleFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// 参数限流依据组合
+	LimitBy []*KeyValue `json:"LimitBy,omitnil,omitempty" name:"LimitBy"`
+
+	// 限流阈值
+	QpsThresholds []*QpsThreshold `json:"QpsThresholds,omitnil,omitempty" name:"QpsThresholds"`
+
+	// 精确限流阈值
+	AccurateQpsThresholds []*AccurateQpsThreshold `json:"AccurateQpsThresholds,omitnil,omitempty" name:"AccurateQpsThresholds"`
+}
+
+type ListCloudNativeAPIGatewayLLMModelAPI struct {
+	// 总数
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// AI 网关模型 API 列表。
+	DataList []*CloudNativeAPIGatewayLLMModelAPI `json:"DataList,omitnil,omitempty" name:"DataList"`
+}
+
+type ListCloudNativeAPIGatewayLLMModelService struct {
+	// 模型服务数量。
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 模型服务列表。
+	DataList []*CloudNativeAPIGatewayLLMModelService `json:"DataList,omitnil,omitempty" name:"DataList"`
 }
 
 type ListCloudNativeAPIGatewayResult struct {
 	// 总数。
-	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 云原生API网关实例列表。
-	GatewayList []*DescribeCloudNativeAPIGatewayResult `json:"GatewayList,omitnil" name:"GatewayList"`
+	GatewayList []*DescribeCloudNativeAPIGatewayResult `json:"GatewayList,omitnil,omitempty" name:"GatewayList"`
 }
 
 type ListCloudNativeAPIGatewayStrategyBindingGroupInfoResult struct {
 	// 数量
-	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 云原生API网关实例策略绑定网关分组列表
-	GroupInfos []*CloudNativeAPIGatewayStrategyBindingGroupInfo `json:"GroupInfos,omitnil" name:"GroupInfos"`
+	GroupInfos []*CloudNativeAPIGatewayStrategyBindingGroupInfo `json:"GroupInfos,omitnil,omitempty" name:"GroupInfos"`
 }
 
 type ListCloudNativeAPIGatewayStrategyResult struct {
 	// 总数。
-	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 云原生API网关实例策略列表。
-	StrategyList []*CloudNativeAPIGatewayStrategy `json:"StrategyList,omitnil" name:"StrategyList"`
+	StrategyList []*CloudNativeAPIGatewayStrategy `json:"StrategyList,omitnil,omitempty" name:"StrategyList"`
 }
 
 type ListFilter struct {
 	// 过滤字段
-	Key *string `json:"Key,omitnil" name:"Key"`
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
 
 	// 过滤值
-	Value *string `json:"Value,omitnil" name:"Value"`
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+}
+
+type Location struct {
+	// 大区
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
+
+	// 可用区
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
+
+	// 机房
+	Campus *string `json:"Campus,omitnil,omitempty" name:"Campus"`
+}
+
+type Metadata struct {
+	// 元数据键名。
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+
+	// 元数据键值。不填则默认为空字符串。
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
 }
 
 // Predefined struct for user
 type ModifyAutoScalerResourceStrategyRequestParams struct {
 	// 网关实例ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 策略ID
-	StrategyId *string `json:"StrategyId,omitnil" name:"StrategyId"`
+	StrategyId *string `json:"StrategyId,omitnil,omitempty" name:"StrategyId"`
 
 	// 策略名称
-	StrategyName *string `json:"StrategyName,omitnil" name:"StrategyName"`
+	StrategyName *string `json:"StrategyName,omitnil,omitempty" name:"StrategyName"`
 
 	// 策略描述
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 指标伸缩配置
-	Config *CloudNativeAPIGatewayStrategyAutoScalerConfig `json:"Config,omitnil" name:"Config"`
+	Config *CloudNativeAPIGatewayStrategyAutoScalerConfig `json:"Config,omitnil,omitempty" name:"Config"`
 
 	// 定时伸缩配置
 	//
 	// Deprecated: CronScalerConfig is deprecated.
-	CronScalerConfig *CloudNativeAPIGatewayStrategyCronScalerConfig `json:"CronScalerConfig,omitnil" name:"CronScalerConfig"`
+	CronScalerConfig *CloudNativeAPIGatewayStrategyCronScalerConfig `json:"CronScalerConfig,omitnil,omitempty" name:"CronScalerConfig"`
 
 	// 最大节点数
 	//
 	// Deprecated: MaxReplicas is deprecated.
-	MaxReplicas *int64 `json:"MaxReplicas,omitnil" name:"MaxReplicas"`
+	MaxReplicas *int64 `json:"MaxReplicas,omitnil,omitempty" name:"MaxReplicas"`
 
 	// 指标伸缩配置
-	CronConfig *CloudNativeAPIGatewayStrategyCronScalerConfig `json:"CronConfig,omitnil" name:"CronConfig"`
+	CronConfig *CloudNativeAPIGatewayStrategyCronScalerConfig `json:"CronConfig,omitnil,omitempty" name:"CronConfig"`
 }
 
 type ModifyAutoScalerResourceStrategyRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关实例ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 策略ID
-	StrategyId *string `json:"StrategyId,omitnil" name:"StrategyId"`
+	StrategyId *string `json:"StrategyId,omitnil,omitempty" name:"StrategyId"`
 
 	// 策略名称
-	StrategyName *string `json:"StrategyName,omitnil" name:"StrategyName"`
+	StrategyName *string `json:"StrategyName,omitnil,omitempty" name:"StrategyName"`
 
 	// 策略描述
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 指标伸缩配置
-	Config *CloudNativeAPIGatewayStrategyAutoScalerConfig `json:"Config,omitnil" name:"Config"`
+	Config *CloudNativeAPIGatewayStrategyAutoScalerConfig `json:"Config,omitnil,omitempty" name:"Config"`
 
 	// 定时伸缩配置
-	CronScalerConfig *CloudNativeAPIGatewayStrategyCronScalerConfig `json:"CronScalerConfig,omitnil" name:"CronScalerConfig"`
+	CronScalerConfig *CloudNativeAPIGatewayStrategyCronScalerConfig `json:"CronScalerConfig,omitnil,omitempty" name:"CronScalerConfig"`
 
 	// 最大节点数
-	MaxReplicas *int64 `json:"MaxReplicas,omitnil" name:"MaxReplicas"`
+	MaxReplicas *int64 `json:"MaxReplicas,omitnil,omitempty" name:"MaxReplicas"`
 
 	// 指标伸缩配置
-	CronConfig *CloudNativeAPIGatewayStrategyCronScalerConfig `json:"CronConfig,omitnil" name:"CronConfig"`
+	CronConfig *CloudNativeAPIGatewayStrategyCronScalerConfig `json:"CronConfig,omitnil,omitempty" name:"CronConfig"`
 }
 
 func (r *ModifyAutoScalerResourceStrategyRequest) ToJsonString() string {
@@ -5835,10 +13639,10 @@ func (r *ModifyAutoScalerResourceStrategyRequest) FromJsonString(s string) error
 // Predefined struct for user
 type ModifyAutoScalerResourceStrategyResponseParams struct {
 	// 是否成功
-	Result *bool `json:"Result,omitnil" name:"Result"`
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type ModifyAutoScalerResourceStrategyResponse struct {
@@ -5860,32 +13664,38 @@ func (r *ModifyAutoScalerResourceStrategyResponse) FromJsonString(s string) erro
 // Predefined struct for user
 type ModifyCloudNativeAPIGatewayCanaryRuleRequestParams struct {
 	// 网关 ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务 ID
-	ServiceId *string `json:"ServiceId,omitnil" name:"ServiceId"`
+	ServiceId *string `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
 
 	// 优先级，同一个服务的灰度规则优先级是唯一的
-	Priority *int64 `json:"Priority,omitnil" name:"Priority"`
+	Priority *int64 `json:"Priority,omitnil,omitempty" name:"Priority"`
 
 	// 灰度规则配置
-	CanaryRule *CloudNativeAPIGatewayCanaryRule `json:"CanaryRule,omitnil" name:"CanaryRule"`
+	CanaryRule *CloudNativeAPIGatewayCanaryRule `json:"CanaryRule,omitnil,omitempty" name:"CanaryRule"`
+
+	// 灰度规则配置列表，如果配置了此参数，将以此参数为准，忽略Priority和CanaryRule参数
+	CanaryRuleList []*CanaryPriorityRule `json:"CanaryRuleList,omitnil,omitempty" name:"CanaryRuleList"`
 }
 
 type ModifyCloudNativeAPIGatewayCanaryRuleRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关 ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务 ID
-	ServiceId *string `json:"ServiceId,omitnil" name:"ServiceId"`
+	ServiceId *string `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
 
 	// 优先级，同一个服务的灰度规则优先级是唯一的
-	Priority *int64 `json:"Priority,omitnil" name:"Priority"`
+	Priority *int64 `json:"Priority,omitnil,omitempty" name:"Priority"`
 
 	// 灰度规则配置
-	CanaryRule *CloudNativeAPIGatewayCanaryRule `json:"CanaryRule,omitnil" name:"CanaryRule"`
+	CanaryRule *CloudNativeAPIGatewayCanaryRule `json:"CanaryRule,omitnil,omitempty" name:"CanaryRule"`
+
+	// 灰度规则配置列表，如果配置了此参数，将以此参数为准，忽略Priority和CanaryRule参数
+	CanaryRuleList []*CanaryPriorityRule `json:"CanaryRuleList,omitnil,omitempty" name:"CanaryRuleList"`
 }
 
 func (r *ModifyCloudNativeAPIGatewayCanaryRuleRequest) ToJsonString() string {
@@ -5904,6 +13714,7 @@ func (r *ModifyCloudNativeAPIGatewayCanaryRuleRequest) FromJsonString(s string) 
 	delete(f, "ServiceId")
 	delete(f, "Priority")
 	delete(f, "CanaryRule")
+	delete(f, "CanaryRuleList")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCloudNativeAPIGatewayCanaryRuleRequest has unknown keys!", "")
 	}
@@ -5912,8 +13723,8 @@ func (r *ModifyCloudNativeAPIGatewayCanaryRuleRequest) FromJsonString(s string) 
 
 // Predefined struct for user
 type ModifyCloudNativeAPIGatewayCanaryRuleResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type ModifyCloudNativeAPIGatewayCanaryRuleResponse struct {
@@ -5935,64 +13746,64 @@ func (r *ModifyCloudNativeAPIGatewayCanaryRuleResponse) FromJsonString(s string)
 // Predefined struct for user
 type ModifyCloudNativeAPIGatewayCertificateRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 证书id
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// 证书名称，即将废弃
 	//
 	// Deprecated: Name is deprecated.
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 证书私钥，CertSource为native时必填。
-	Key *string `json:"Key,omitnil" name:"Key"`
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
 
 	// 证书pem格式，CertSource为native时必填。
-	Crt *string `json:"Crt,omitnil" name:"Crt"`
+	Crt *string `json:"Crt,omitnil,omitempty" name:"Crt"`
 
 	// 绑定的域名，即将废弃
 	//
 	// Deprecated: BindDomains is deprecated.
-	BindDomains []*string `json:"BindDomains,omitnil" name:"BindDomains"`
+	BindDomains []*string `json:"BindDomains,omitnil,omitempty" name:"BindDomains"`
 
 	// ssl平台证书 Id，CertSource为ssl时必填。
-	CertId *string `json:"CertId,omitnil" name:"CertId"`
+	CertId *string `json:"CertId,omitnil,omitempty" name:"CertId"`
 
 	// 证书来源
 	// - ssl (ssl平台证书)，默认值
 	// - native (kong自定义证书) 
-	CertSource *string `json:"CertSource,omitnil" name:"CertSource"`
+	CertSource *string `json:"CertSource,omitnil,omitempty" name:"CertSource"`
 }
 
 type ModifyCloudNativeAPIGatewayCertificateRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 证书id
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// 证书名称，即将废弃
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 证书私钥，CertSource为native时必填。
-	Key *string `json:"Key,omitnil" name:"Key"`
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
 
 	// 证书pem格式，CertSource为native时必填。
-	Crt *string `json:"Crt,omitnil" name:"Crt"`
+	Crt *string `json:"Crt,omitnil,omitempty" name:"Crt"`
 
 	// 绑定的域名，即将废弃
-	BindDomains []*string `json:"BindDomains,omitnil" name:"BindDomains"`
+	BindDomains []*string `json:"BindDomains,omitnil,omitempty" name:"BindDomains"`
 
 	// ssl平台证书 Id，CertSource为ssl时必填。
-	CertId *string `json:"CertId,omitnil" name:"CertId"`
+	CertId *string `json:"CertId,omitnil,omitempty" name:"CertId"`
 
 	// 证书来源
 	// - ssl (ssl平台证书)，默认值
 	// - native (kong自定义证书) 
-	CertSource *string `json:"CertSource,omitnil" name:"CertSource"`
+	CertSource *string `json:"CertSource,omitnil,omitempty" name:"CertSource"`
 }
 
 func (r *ModifyCloudNativeAPIGatewayCertificateRequest) ToJsonString() string {
@@ -6023,8 +13834,8 @@ func (r *ModifyCloudNativeAPIGatewayCertificateRequest) FromJsonString(s string)
 
 // Predefined struct for user
 type ModifyCloudNativeAPIGatewayCertificateResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type ModifyCloudNativeAPIGatewayCertificateResponse struct {
@@ -6044,40 +13855,583 @@ func (r *ModifyCloudNativeAPIGatewayCertificateResponse) FromJsonString(s string
 }
 
 // Predefined struct for user
+type ModifyCloudNativeAPIGatewayConsumerGroupRequestParams struct {
+	// 网关实例id
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>消费者组 ID（以 cg- 开头）。</p>
+	ConsumerGroupId *string `json:"ConsumerGroupId,omitnil,omitempty" name:"ConsumerGroupId"`
+
+	// <p>消费者组名称，最长 60 字符。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>启用状态。</p><p>枚举值：</p><ul><li>Enable：启用</li><li>Disable：禁用</li></ul>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>消费者组描述。最长 200 字符。</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+}
+
+type ModifyCloudNativeAPIGatewayConsumerGroupRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关实例id
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>消费者组 ID（以 cg- 开头）。</p>
+	ConsumerGroupId *string `json:"ConsumerGroupId,omitnil,omitempty" name:"ConsumerGroupId"`
+
+	// <p>消费者组名称，最长 60 字符。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>启用状态。</p><p>枚举值：</p><ul><li>Enable：启用</li><li>Disable：禁用</li></ul>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>消费者组描述。最长 200 字符。</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+}
+
+func (r *ModifyCloudNativeAPIGatewayConsumerGroupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCloudNativeAPIGatewayConsumerGroupRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "ConsumerGroupId")
+	delete(f, "Name")
+	delete(f, "Status")
+	delete(f, "Description")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCloudNativeAPIGatewayConsumerGroupRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyCloudNativeAPIGatewayConsumerGroupResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyCloudNativeAPIGatewayConsumerGroupResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyCloudNativeAPIGatewayConsumerGroupResponseParams `json:"Response"`
+}
+
+func (r *ModifyCloudNativeAPIGatewayConsumerGroupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCloudNativeAPIGatewayConsumerGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyCloudNativeAPIGatewayConsumerRequestParams struct {
+	// 网关实例id
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>消费者 ID。</p>
+	ConsumerId *string `json:"ConsumerId,omitnil,omitempty" name:"ConsumerId"`
+
+	// <p>消费者名称，最长 60 字符。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>消费者描述。最长 200 字符。</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+}
+
+type ModifyCloudNativeAPIGatewayConsumerRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关实例id
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>消费者 ID。</p>
+	ConsumerId *string `json:"ConsumerId,omitnil,omitempty" name:"ConsumerId"`
+
+	// <p>消费者名称，最长 60 字符。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>消费者描述。最长 200 字符。</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+}
+
+func (r *ModifyCloudNativeAPIGatewayConsumerRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCloudNativeAPIGatewayConsumerRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "ConsumerId")
+	delete(f, "Name")
+	delete(f, "Description")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCloudNativeAPIGatewayConsumerRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyCloudNativeAPIGatewayConsumerResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyCloudNativeAPIGatewayConsumerResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyCloudNativeAPIGatewayConsumerResponseParams `json:"Response"`
+}
+
+func (r *ModifyCloudNativeAPIGatewayConsumerResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCloudNativeAPIGatewayConsumerResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyCloudNativeAPIGatewayLLMModelAPIRequestParams struct {
+	// <p>网关 id。</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>模型 API ID，全局唯一标识。</p>
+	ModelAPIId *string `json:"ModelAPIId,omitnil,omitempty" name:"ModelAPIId"`
+
+	// <p>模型 API 名称，最长 60 字符。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>统一前缀路径（可选）。例如 /v1/openai。</p>
+	BasePath *string `json:"BasePath,omitnil,omitempty" name:"BasePath"`
+
+	// <p>模型 API 描述。最长 200 字符。</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>关联的模型服务 ID 列表，长度 1-10。</p>
+	ListModelServiceId []*string `json:"ListModelServiceId,omitnil,omitempty" name:"ListModelServiceId"`
+
+	// <p>多模型服务路由策略。ListModelServiceId 多于 1 项时必填。</p>
+	ModelServiceRoute *CloudNativeAPIGatewayLLMModelServiceRoute `json:"ModelServiceRoute,omitnil,omitempty" name:"ModelServiceRoute"`
+
+	// <p>Header 路由匹配规则。当前仅支持 Operator=exact。</p>
+	MatchHeaders []*AIGWKVMatch `json:"MatchHeaders,omitnil,omitempty" name:"MatchHeaders"`
+
+	// <p>是否启用跨服务 Fallback。</p>
+	EnableCrossServiceFallback *bool `json:"EnableCrossServiceFallback,omitnil,omitempty" name:"EnableCrossServiceFallback"`
+
+	// <p>跨服务 Fallback 配置。EnableCrossServiceFallback=true 时必填。</p>
+	CrossServiceFallbackConfig *AIGWCrossServiceFallbackConfig `json:"CrossServiceFallbackConfig,omitnil,omitempty" name:"CrossServiceFallbackConfig"`
+
+	// <p>标签过滤策略。需要网关版本 ≥ 3.9.4。</p>
+	TagFilter *AIGWTagFilter `json:"TagFilter,omitnil,omitempty" name:"TagFilter"`
+
+	// <p>日志输出配置。需要网关版本 ≥ 3.9.4。</p>
+	LogConfig *AIGWLogConfig `json:"LogConfig,omitnil,omitempty" name:"LogConfig"`
+}
+
+type ModifyCloudNativeAPIGatewayLLMModelAPIRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>网关 id。</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>模型 API ID，全局唯一标识。</p>
+	ModelAPIId *string `json:"ModelAPIId,omitnil,omitempty" name:"ModelAPIId"`
+
+	// <p>模型 API 名称，最长 60 字符。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>统一前缀路径（可选）。例如 /v1/openai。</p>
+	BasePath *string `json:"BasePath,omitnil,omitempty" name:"BasePath"`
+
+	// <p>模型 API 描述。最长 200 字符。</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>关联的模型服务 ID 列表，长度 1-10。</p>
+	ListModelServiceId []*string `json:"ListModelServiceId,omitnil,omitempty" name:"ListModelServiceId"`
+
+	// <p>多模型服务路由策略。ListModelServiceId 多于 1 项时必填。</p>
+	ModelServiceRoute *CloudNativeAPIGatewayLLMModelServiceRoute `json:"ModelServiceRoute,omitnil,omitempty" name:"ModelServiceRoute"`
+
+	// <p>Header 路由匹配规则。当前仅支持 Operator=exact。</p>
+	MatchHeaders []*AIGWKVMatch `json:"MatchHeaders,omitnil,omitempty" name:"MatchHeaders"`
+
+	// <p>是否启用跨服务 Fallback。</p>
+	EnableCrossServiceFallback *bool `json:"EnableCrossServiceFallback,omitnil,omitempty" name:"EnableCrossServiceFallback"`
+
+	// <p>跨服务 Fallback 配置。EnableCrossServiceFallback=true 时必填。</p>
+	CrossServiceFallbackConfig *AIGWCrossServiceFallbackConfig `json:"CrossServiceFallbackConfig,omitnil,omitempty" name:"CrossServiceFallbackConfig"`
+
+	// <p>标签过滤策略。需要网关版本 ≥ 3.9.4。</p>
+	TagFilter *AIGWTagFilter `json:"TagFilter,omitnil,omitempty" name:"TagFilter"`
+
+	// <p>日志输出配置。需要网关版本 ≥ 3.9.4。</p>
+	LogConfig *AIGWLogConfig `json:"LogConfig,omitnil,omitempty" name:"LogConfig"`
+}
+
+func (r *ModifyCloudNativeAPIGatewayLLMModelAPIRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCloudNativeAPIGatewayLLMModelAPIRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "ModelAPIId")
+	delete(f, "Name")
+	delete(f, "BasePath")
+	delete(f, "Description")
+	delete(f, "ListModelServiceId")
+	delete(f, "ModelServiceRoute")
+	delete(f, "MatchHeaders")
+	delete(f, "EnableCrossServiceFallback")
+	delete(f, "CrossServiceFallbackConfig")
+	delete(f, "TagFilter")
+	delete(f, "LogConfig")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCloudNativeAPIGatewayLLMModelAPIRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyCloudNativeAPIGatewayLLMModelAPIResponseParams struct {
+	// <p>是否成功。</p>
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyCloudNativeAPIGatewayLLMModelAPIResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyCloudNativeAPIGatewayLLMModelAPIResponseParams `json:"Response"`
+}
+
+func (r *ModifyCloudNativeAPIGatewayLLMModelAPIResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCloudNativeAPIGatewayLLMModelAPIResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyCloudNativeAPIGatewayLLMModelServiceRequestParams struct {
+	// <p>网关 id。</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>模型服务 ID，全局唯一标识。</p>
+	ModelServiceId *string `json:"ModelServiceId,omitnil,omitempty" name:"ModelServiceId"`
+
+	// <p>修改服务名称，长度2-50字符，支持中英文、数字、下划线。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>修改默认模型，模型选择方式为 Specify 时必填。</p>
+	DefaultModel *string `json:"DefaultModel,omitnil,omitempty" name:"DefaultModel"`
+
+	// <p>修改模型选择方式，选项：Specify（指定模型）、PassThrough（透传请求模型）。</p>
+	ModelSelector *string `json:"ModelSelector,omitnil,omitempty" name:"ModelSelector"`
+
+	// <p>修改开启模型降级，模型选择方式为 Specify 时必填。</p>
+	EnableModelFallback *bool `json:"EnableModelFallback,omitnil,omitempty" name:"EnableModelFallback"`
+
+	// <p>修改可以配置备用模型规则，EnableSpecifyModelFallback 为 true 时必填。</p>
+	ModelFallbackRule *CloudNativeAPIGatewayLLMModelFallbackRule `json:"ModelFallbackRule,omitnil,omitempty" name:"ModelFallbackRule"`
+
+	// <p>修改开启模型参数校验，是否校验客户端传递的 model 参数, 模型选择方式为 PassThrough 时必填</p>
+	EnableModelParamCheck *bool `json:"EnableModelParamCheck,omitnil,omitempty" name:"EnableModelParamCheck"`
+
+	// <p>修改模型检验信息，EnableModelParamCheck 为 true 时必填。</p>
+	ModelParamCheckRule *CloudNativeAPIGatewayLLMModelParamCheckInfo `json:"ModelParamCheckRule,omitnil,omitempty" name:"ModelParamCheckRule"`
+
+	// <p>修改描述。</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>修改模型服务地址</p>
+	UpstreamURL *string `json:"UpstreamURL,omitnil,omitempty" name:"UpstreamURL"`
+
+	// <p>连接超时时间</p><p>取值范围：[1, 3600000]</p><p>单位：毫秒</p><p>默认值：10000</p>
+	ConnectTimeout *int64 `json:"ConnectTimeout,omitnil,omitempty" name:"ConnectTimeout"`
+
+	// <p>写入超时时间</p><p>取值范围：[1, 3600000]</p><p>单位：毫秒</p><p>默认值：60000</p>
+	WriteTimeout *int64 `json:"WriteTimeout,omitnil,omitempty" name:"WriteTimeout"`
+
+	// <p>读取超时时间</p><p>取值范围：[1, 3600000]</p><p>单位：毫秒</p><p>默认值：60000</p>
+	ReadTimeout *int64 `json:"ReadTimeout,omitnil,omitempty" name:"ReadTimeout"`
+
+	// <p>重试次数</p><p>取值范围：[0, 5]</p><p>单位：次</p><p>默认值：0</p>
+	Retries *int64 `json:"Retries,omitnil,omitempty" name:"Retries"`
+
+	// <p>路径拼接模式</p><p>枚举值：</p><ul><li>FixedPath： 固定路径</li><li>AutoConcat： 自动拼接</li></ul>
+	UpstreamUrlMode *string `json:"UpstreamUrlMode,omitnil,omitempty" name:"UpstreamUrlMode"`
+
+	// <p>SNI</p>
+	SNI *string `json:"SNI,omitnil,omitempty" name:"SNI"`
+
+	// <p>模型服务级别的配额上限（RPM/TPM）。需要网关版本 ≥ 3.9.4。</p>
+	QuotaLimit *AIGWLLMQuotaLimit `json:"QuotaLimit,omitnil,omitempty" name:"QuotaLimit"`
+
+	// <p>标签</p>
+	Tags []*string `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// <p>模型改写规则</p>
+	ModelRewriteRules []*AIGWModelRewriteRule `json:"ModelRewriteRules,omitnil,omitempty" name:"ModelRewriteRules"`
+
+	// <p>来源 id</p>
+	SourceId *string `json:"SourceId,omitnil,omitempty" name:"SourceId"`
+
+	// <p>命名空间</p>
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// <p>服务名字</p>
+	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
+
+	// <p>协议</p>
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// <p>扩展参数</p>
+	ExtParams []*KeyValue `json:"ExtParams,omitnil,omitempty" name:"ExtParams"`
+
+	// <p>密钥轮转开关</p>
+	KeyRotationEnabled *bool `json:"KeyRotationEnabled,omitnil,omitempty" name:"KeyRotationEnabled"`
+
+	// <p>密钥轮转天数</p>
+	KeyRotationPeriodDays *uint64 `json:"KeyRotationPeriodDays,omitnil,omitempty" name:"KeyRotationPeriodDays"`
+
+	// <p>外部服务来源ID</p>
+	ExternalInstanceId *string `json:"ExternalInstanceId,omitnil,omitempty" name:"ExternalInstanceId"`
+}
+
+type ModifyCloudNativeAPIGatewayLLMModelServiceRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>网关 id。</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>模型服务 ID，全局唯一标识。</p>
+	ModelServiceId *string `json:"ModelServiceId,omitnil,omitempty" name:"ModelServiceId"`
+
+	// <p>修改服务名称，长度2-50字符，支持中英文、数字、下划线。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>修改默认模型，模型选择方式为 Specify 时必填。</p>
+	DefaultModel *string `json:"DefaultModel,omitnil,omitempty" name:"DefaultModel"`
+
+	// <p>修改模型选择方式，选项：Specify（指定模型）、PassThrough（透传请求模型）。</p>
+	ModelSelector *string `json:"ModelSelector,omitnil,omitempty" name:"ModelSelector"`
+
+	// <p>修改开启模型降级，模型选择方式为 Specify 时必填。</p>
+	EnableModelFallback *bool `json:"EnableModelFallback,omitnil,omitempty" name:"EnableModelFallback"`
+
+	// <p>修改可以配置备用模型规则，EnableSpecifyModelFallback 为 true 时必填。</p>
+	ModelFallbackRule *CloudNativeAPIGatewayLLMModelFallbackRule `json:"ModelFallbackRule,omitnil,omitempty" name:"ModelFallbackRule"`
+
+	// <p>修改开启模型参数校验，是否校验客户端传递的 model 参数, 模型选择方式为 PassThrough 时必填</p>
+	EnableModelParamCheck *bool `json:"EnableModelParamCheck,omitnil,omitempty" name:"EnableModelParamCheck"`
+
+	// <p>修改模型检验信息，EnableModelParamCheck 为 true 时必填。</p>
+	ModelParamCheckRule *CloudNativeAPIGatewayLLMModelParamCheckInfo `json:"ModelParamCheckRule,omitnil,omitempty" name:"ModelParamCheckRule"`
+
+	// <p>修改描述。</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>修改模型服务地址</p>
+	UpstreamURL *string `json:"UpstreamURL,omitnil,omitempty" name:"UpstreamURL"`
+
+	// <p>连接超时时间</p><p>取值范围：[1, 3600000]</p><p>单位：毫秒</p><p>默认值：10000</p>
+	ConnectTimeout *int64 `json:"ConnectTimeout,omitnil,omitempty" name:"ConnectTimeout"`
+
+	// <p>写入超时时间</p><p>取值范围：[1, 3600000]</p><p>单位：毫秒</p><p>默认值：60000</p>
+	WriteTimeout *int64 `json:"WriteTimeout,omitnil,omitempty" name:"WriteTimeout"`
+
+	// <p>读取超时时间</p><p>取值范围：[1, 3600000]</p><p>单位：毫秒</p><p>默认值：60000</p>
+	ReadTimeout *int64 `json:"ReadTimeout,omitnil,omitempty" name:"ReadTimeout"`
+
+	// <p>重试次数</p><p>取值范围：[0, 5]</p><p>单位：次</p><p>默认值：0</p>
+	Retries *int64 `json:"Retries,omitnil,omitempty" name:"Retries"`
+
+	// <p>路径拼接模式</p><p>枚举值：</p><ul><li>FixedPath： 固定路径</li><li>AutoConcat： 自动拼接</li></ul>
+	UpstreamUrlMode *string `json:"UpstreamUrlMode,omitnil,omitempty" name:"UpstreamUrlMode"`
+
+	// <p>SNI</p>
+	SNI *string `json:"SNI,omitnil,omitempty" name:"SNI"`
+
+	// <p>模型服务级别的配额上限（RPM/TPM）。需要网关版本 ≥ 3.9.4。</p>
+	QuotaLimit *AIGWLLMQuotaLimit `json:"QuotaLimit,omitnil,omitempty" name:"QuotaLimit"`
+
+	// <p>标签</p>
+	Tags []*string `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// <p>模型改写规则</p>
+	ModelRewriteRules []*AIGWModelRewriteRule `json:"ModelRewriteRules,omitnil,omitempty" name:"ModelRewriteRules"`
+
+	// <p>来源 id</p>
+	SourceId *string `json:"SourceId,omitnil,omitempty" name:"SourceId"`
+
+	// <p>命名空间</p>
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// <p>服务名字</p>
+	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
+
+	// <p>协议</p>
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// <p>扩展参数</p>
+	ExtParams []*KeyValue `json:"ExtParams,omitnil,omitempty" name:"ExtParams"`
+
+	// <p>密钥轮转开关</p>
+	KeyRotationEnabled *bool `json:"KeyRotationEnabled,omitnil,omitempty" name:"KeyRotationEnabled"`
+
+	// <p>密钥轮转天数</p>
+	KeyRotationPeriodDays *uint64 `json:"KeyRotationPeriodDays,omitnil,omitempty" name:"KeyRotationPeriodDays"`
+
+	// <p>外部服务来源ID</p>
+	ExternalInstanceId *string `json:"ExternalInstanceId,omitnil,omitempty" name:"ExternalInstanceId"`
+}
+
+func (r *ModifyCloudNativeAPIGatewayLLMModelServiceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCloudNativeAPIGatewayLLMModelServiceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "ModelServiceId")
+	delete(f, "Name")
+	delete(f, "DefaultModel")
+	delete(f, "ModelSelector")
+	delete(f, "EnableModelFallback")
+	delete(f, "ModelFallbackRule")
+	delete(f, "EnableModelParamCheck")
+	delete(f, "ModelParamCheckRule")
+	delete(f, "Description")
+	delete(f, "UpstreamURL")
+	delete(f, "ConnectTimeout")
+	delete(f, "WriteTimeout")
+	delete(f, "ReadTimeout")
+	delete(f, "Retries")
+	delete(f, "UpstreamUrlMode")
+	delete(f, "SNI")
+	delete(f, "QuotaLimit")
+	delete(f, "Tags")
+	delete(f, "ModelRewriteRules")
+	delete(f, "SourceId")
+	delete(f, "Namespace")
+	delete(f, "ServiceName")
+	delete(f, "Protocol")
+	delete(f, "ExtParams")
+	delete(f, "KeyRotationEnabled")
+	delete(f, "KeyRotationPeriodDays")
+	delete(f, "ExternalInstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCloudNativeAPIGatewayLLMModelServiceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyCloudNativeAPIGatewayLLMModelServiceResponseParams struct {
+	// <p>是否成功</p>
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyCloudNativeAPIGatewayLLMModelServiceResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyCloudNativeAPIGatewayLLMModelServiceResponseParams `json:"Response"`
+}
+
+func (r *ModifyCloudNativeAPIGatewayLLMModelServiceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCloudNativeAPIGatewayLLMModelServiceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyCloudNativeAPIGatewayRequestParams struct {
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 云原生API网关名字, 最多支持60个字符。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 云原生API网关描述信息, 最多支持120个字符。
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 是否开启 CLS 日志。暂时取值只能是 true，即只能从关闭状态变成开启状态。
-	EnableCls *bool `json:"EnableCls,omitnil" name:"EnableCls"`
+	EnableCls *bool `json:"EnableCls,omitnil,omitempty" name:"EnableCls"`
 
 	// 公网计费模式。可选取值 BANDWIDTH | TRAFFIC ，表示按带宽和按流量计费。
-	InternetPayMode *string `json:"InternetPayMode,omitnil" name:"InternetPayMode"`
+	InternetPayMode *string `json:"InternetPayMode,omitnil,omitempty" name:"InternetPayMode"`
+
+	// 是否开启实例删除保护,默认false
+	DeleteProtect *bool `json:"DeleteProtect,omitnil,omitempty" name:"DeleteProtect"`
 }
 
 type ModifyCloudNativeAPIGatewayRequest struct {
 	*tchttp.BaseRequest
 	
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 云原生API网关名字, 最多支持60个字符。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 云原生API网关描述信息, 最多支持120个字符。
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 是否开启 CLS 日志。暂时取值只能是 true，即只能从关闭状态变成开启状态。
-	EnableCls *bool `json:"EnableCls,omitnil" name:"EnableCls"`
+	EnableCls *bool `json:"EnableCls,omitnil,omitempty" name:"EnableCls"`
 
 	// 公网计费模式。可选取值 BANDWIDTH | TRAFFIC ，表示按带宽和按流量计费。
-	InternetPayMode *string `json:"InternetPayMode,omitnil" name:"InternetPayMode"`
+	InternetPayMode *string `json:"InternetPayMode,omitnil,omitempty" name:"InternetPayMode"`
+
+	// 是否开启实例删除保护,默认false
+	DeleteProtect *bool `json:"DeleteProtect,omitnil,omitempty" name:"DeleteProtect"`
 }
 
 func (r *ModifyCloudNativeAPIGatewayRequest) ToJsonString() string {
@@ -6097,6 +14451,7 @@ func (r *ModifyCloudNativeAPIGatewayRequest) FromJsonString(s string) error {
 	delete(f, "Description")
 	delete(f, "EnableCls")
 	delete(f, "InternetPayMode")
+	delete(f, "DeleteProtect")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCloudNativeAPIGatewayRequest has unknown keys!", "")
 	}
@@ -6105,8 +14460,8 @@ func (r *ModifyCloudNativeAPIGatewayRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyCloudNativeAPIGatewayResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type ModifyCloudNativeAPIGatewayResponse struct {
@@ -6128,28 +14483,28 @@ func (r *ModifyCloudNativeAPIGatewayResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type ModifyCloudNativeAPIGatewayRouteRateLimitRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 路由id，或路由名称。
 	// 不支持“未命名”
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// 限流配置
-	LimitDetail *CloudNativeAPIGatewayRateLimitDetail `json:"LimitDetail,omitnil" name:"LimitDetail"`
+	LimitDetail *CloudNativeAPIGatewayRateLimitDetail `json:"LimitDetail,omitnil,omitempty" name:"LimitDetail"`
 }
 
 type ModifyCloudNativeAPIGatewayRouteRateLimitRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 路由id，或路由名称。
 	// 不支持“未命名”
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// 限流配置
-	LimitDetail *CloudNativeAPIGatewayRateLimitDetail `json:"LimitDetail,omitnil" name:"LimitDetail"`
+	LimitDetail *CloudNativeAPIGatewayRateLimitDetail `json:"LimitDetail,omitnil,omitempty" name:"LimitDetail"`
 }
 
 func (r *ModifyCloudNativeAPIGatewayRouteRateLimitRequest) ToJsonString() string {
@@ -6175,8 +14530,8 @@ func (r *ModifyCloudNativeAPIGatewayRouteRateLimitRequest) FromJsonString(s stri
 
 // Predefined struct for user
 type ModifyCloudNativeAPIGatewayRouteRateLimitResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type ModifyCloudNativeAPIGatewayRouteRateLimitResponse struct {
@@ -6197,131 +14552,119 @@ func (r *ModifyCloudNativeAPIGatewayRouteRateLimitResponse) FromJsonString(s str
 
 // Predefined struct for user
 type ModifyCloudNativeAPIGatewayRouteRequestParams struct {
-	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	// <p>网关ID</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
-	// 所属服务的ID
-	ServiceID *string `json:"ServiceID,omitnil" name:"ServiceID"`
+	// <p>所属服务的ID</p>
+	ServiceID *string `json:"ServiceID,omitnil,omitempty" name:"ServiceID"`
 
-	// 路由的ID，实例级别唯一
-	RouteID *string `json:"RouteID,omitnil" name:"RouteID"`
+	// <p>路由的ID，实例级别唯一</p>
+	RouteID *string `json:"RouteID,omitnil,omitempty" name:"RouteID"`
 
-	// 路由的名字，实例级别唯一，可以不提供
-	RouteName *string `json:"RouteName,omitnil" name:"RouteName"`
+	// <p>路由的名字，实例级别唯一，可以不提供</p>
+	RouteName *string `json:"RouteName,omitnil,omitempty" name:"RouteName"`
 
-	// 路由的方法，其中方法可选值：
-	// - GET
-	// - POST
-	// - DELETE
-	// - PUT
-	// - OPTIONS
-	// - PATCH
-	// - HEAD
-	// - ANY
-	// - TRACE
-	// - COPY
-	// - MOVE
-	// - PROPFIND
-	// - PROPPATCH
-	// - MKCOL
-	// - LOCK
-	// - UNLOCK
-	Methods []*string `json:"Methods,omitnil" name:"Methods"`
+	// <p>路由的方法，其中方法可选值：</p><ul><li>GET</li><li>POST</li><li>DELETE</li><li>PUT</li><li>OPTIONS</li><li>PATCH</li><li>HEAD</li><li>ANY</li><li>TRACE</li><li>COPY</li><li>MOVE</li><li>PROPFIND</li><li>PROPPATCH</li><li>MKCOL</li><li>LOCK</li><li>UNLOCK</li></ul>
+	Methods []*string `json:"Methods,omitnil,omitempty" name:"Methods"`
 
-	// 路由的域名
-	Hosts []*string `json:"Hosts,omitnil" name:"Hosts"`
+	// <p>路由的域名</p>
+	Hosts []*string `json:"Hosts,omitnil,omitempty" name:"Hosts"`
 
-	// 路由的路径
-	Paths []*string `json:"Paths,omitnil" name:"Paths"`
+	// <p>路由的路径</p>
+	Paths []*string `json:"Paths,omitnil,omitempty" name:"Paths"`
 
-	// 路由的协议，可选
-	// - https
-	// - http
-	Protocols []*string `json:"Protocols,omitnil" name:"Protocols"`
+	// <p>路由的协议，可选</p><ul><li>https</li><li>http</li></ul>
+	Protocols []*string `json:"Protocols,omitnil,omitempty" name:"Protocols"`
 
-	// 转发到后端时是否保留Host
-	PreserveHost *bool `json:"PreserveHost,omitnil" name:"PreserveHost"`
+	// <p>转发到后端时是否保留Host</p>
+	PreserveHost *bool `json:"PreserveHost,omitnil,omitempty" name:"PreserveHost"`
 
-	// https重定向状态码
-	HttpsRedirectStatusCode *int64 `json:"HttpsRedirectStatusCode,omitnil" name:"HttpsRedirectStatusCode"`
+	// <p>https重定向状态码</p>
+	HttpsRedirectStatusCode *int64 `json:"HttpsRedirectStatusCode,omitnil,omitempty" name:"HttpsRedirectStatusCode"`
 
-	// 转发到后端时是否StripPath
-	StripPath *bool `json:"StripPath,omitnil" name:"StripPath"`
+	// <p>转发到后端时是否StripPath</p>
+	StripPath *bool `json:"StripPath,omitnil,omitempty" name:"StripPath"`
 
-	// 是否开启强制HTTPS
+	// <p>是否开启强制HTTPS</p>
 	//
 	// Deprecated: ForceHttps is deprecated.
-	ForceHttps *bool `json:"ForceHttps,omitnil" name:"ForceHttps"`
+	ForceHttps *bool `json:"ForceHttps,omitnil,omitempty" name:"ForceHttps"`
 
-	// 四层匹配的目的端口	
-	DestinationPorts []*uint64 `json:"DestinationPorts,omitnil" name:"DestinationPorts"`
+	// <p>四层匹配的目的端口</p>
+	DestinationPorts []*uint64 `json:"DestinationPorts,omitnil,omitempty" name:"DestinationPorts"`
 
-	// 路由的Headers
-	Headers []*KVMapping `json:"Headers,omitnil" name:"Headers"`
+	// <p>路由的Headers</p>
+	Headers []*KVMapping `json:"Headers,omitnil,omitempty" name:"Headers"`
+
+	// <p>是否缓存请求body，默认true</p>
+	RequestBuffering *bool `json:"RequestBuffering,omitnil,omitempty" name:"RequestBuffering"`
+
+	// <p>是否缓存响应body，默认true</p>
+	ResponseBuffering *bool `json:"ResponseBuffering,omitnil,omitempty" name:"ResponseBuffering"`
+
+	// <p>增加优先级</p>
+	RegexPriority *int64 `json:"RegexPriority,omitnil,omitempty" name:"RegexPriority"`
+
+	// <p>querysring参数</p>
+	QueryStringParameters []*KVMapping `json:"QueryStringParameters,omitnil,omitempty" name:"QueryStringParameters"`
 }
 
 type ModifyCloudNativeAPIGatewayRouteRequest struct {
 	*tchttp.BaseRequest
 	
-	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	// <p>网关ID</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
-	// 所属服务的ID
-	ServiceID *string `json:"ServiceID,omitnil" name:"ServiceID"`
+	// <p>所属服务的ID</p>
+	ServiceID *string `json:"ServiceID,omitnil,omitempty" name:"ServiceID"`
 
-	// 路由的ID，实例级别唯一
-	RouteID *string `json:"RouteID,omitnil" name:"RouteID"`
+	// <p>路由的ID，实例级别唯一</p>
+	RouteID *string `json:"RouteID,omitnil,omitempty" name:"RouteID"`
 
-	// 路由的名字，实例级别唯一，可以不提供
-	RouteName *string `json:"RouteName,omitnil" name:"RouteName"`
+	// <p>路由的名字，实例级别唯一，可以不提供</p>
+	RouteName *string `json:"RouteName,omitnil,omitempty" name:"RouteName"`
 
-	// 路由的方法，其中方法可选值：
-	// - GET
-	// - POST
-	// - DELETE
-	// - PUT
-	// - OPTIONS
-	// - PATCH
-	// - HEAD
-	// - ANY
-	// - TRACE
-	// - COPY
-	// - MOVE
-	// - PROPFIND
-	// - PROPPATCH
-	// - MKCOL
-	// - LOCK
-	// - UNLOCK
-	Methods []*string `json:"Methods,omitnil" name:"Methods"`
+	// <p>路由的方法，其中方法可选值：</p><ul><li>GET</li><li>POST</li><li>DELETE</li><li>PUT</li><li>OPTIONS</li><li>PATCH</li><li>HEAD</li><li>ANY</li><li>TRACE</li><li>COPY</li><li>MOVE</li><li>PROPFIND</li><li>PROPPATCH</li><li>MKCOL</li><li>LOCK</li><li>UNLOCK</li></ul>
+	Methods []*string `json:"Methods,omitnil,omitempty" name:"Methods"`
 
-	// 路由的域名
-	Hosts []*string `json:"Hosts,omitnil" name:"Hosts"`
+	// <p>路由的域名</p>
+	Hosts []*string `json:"Hosts,omitnil,omitempty" name:"Hosts"`
 
-	// 路由的路径
-	Paths []*string `json:"Paths,omitnil" name:"Paths"`
+	// <p>路由的路径</p>
+	Paths []*string `json:"Paths,omitnil,omitempty" name:"Paths"`
 
-	// 路由的协议，可选
-	// - https
-	// - http
-	Protocols []*string `json:"Protocols,omitnil" name:"Protocols"`
+	// <p>路由的协议，可选</p><ul><li>https</li><li>http</li></ul>
+	Protocols []*string `json:"Protocols,omitnil,omitempty" name:"Protocols"`
 
-	// 转发到后端时是否保留Host
-	PreserveHost *bool `json:"PreserveHost,omitnil" name:"PreserveHost"`
+	// <p>转发到后端时是否保留Host</p>
+	PreserveHost *bool `json:"PreserveHost,omitnil,omitempty" name:"PreserveHost"`
 
-	// https重定向状态码
-	HttpsRedirectStatusCode *int64 `json:"HttpsRedirectStatusCode,omitnil" name:"HttpsRedirectStatusCode"`
+	// <p>https重定向状态码</p>
+	HttpsRedirectStatusCode *int64 `json:"HttpsRedirectStatusCode,omitnil,omitempty" name:"HttpsRedirectStatusCode"`
 
-	// 转发到后端时是否StripPath
-	StripPath *bool `json:"StripPath,omitnil" name:"StripPath"`
+	// <p>转发到后端时是否StripPath</p>
+	StripPath *bool `json:"StripPath,omitnil,omitempty" name:"StripPath"`
 
-	// 是否开启强制HTTPS
-	ForceHttps *bool `json:"ForceHttps,omitnil" name:"ForceHttps"`
+	// <p>是否开启强制HTTPS</p>
+	ForceHttps *bool `json:"ForceHttps,omitnil,omitempty" name:"ForceHttps"`
 
-	// 四层匹配的目的端口	
-	DestinationPorts []*uint64 `json:"DestinationPorts,omitnil" name:"DestinationPorts"`
+	// <p>四层匹配的目的端口</p>
+	DestinationPorts []*uint64 `json:"DestinationPorts,omitnil,omitempty" name:"DestinationPorts"`
 
-	// 路由的Headers
-	Headers []*KVMapping `json:"Headers,omitnil" name:"Headers"`
+	// <p>路由的Headers</p>
+	Headers []*KVMapping `json:"Headers,omitnil,omitempty" name:"Headers"`
+
+	// <p>是否缓存请求body，默认true</p>
+	RequestBuffering *bool `json:"RequestBuffering,omitnil,omitempty" name:"RequestBuffering"`
+
+	// <p>是否缓存响应body，默认true</p>
+	ResponseBuffering *bool `json:"ResponseBuffering,omitnil,omitempty" name:"ResponseBuffering"`
+
+	// <p>增加优先级</p>
+	RegexPriority *int64 `json:"RegexPriority,omitnil,omitempty" name:"RegexPriority"`
+
+	// <p>querysring参数</p>
+	QueryStringParameters []*KVMapping `json:"QueryStringParameters,omitnil,omitempty" name:"QueryStringParameters"`
 }
 
 func (r *ModifyCloudNativeAPIGatewayRouteRequest) ToJsonString() string {
@@ -6350,6 +14693,10 @@ func (r *ModifyCloudNativeAPIGatewayRouteRequest) FromJsonString(s string) error
 	delete(f, "ForceHttps")
 	delete(f, "DestinationPorts")
 	delete(f, "Headers")
+	delete(f, "RequestBuffering")
+	delete(f, "ResponseBuffering")
+	delete(f, "RegexPriority")
+	delete(f, "QueryStringParameters")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCloudNativeAPIGatewayRouteRequest has unknown keys!", "")
 	}
@@ -6358,8 +14705,8 @@ func (r *ModifyCloudNativeAPIGatewayRouteRequest) FromJsonString(s string) error
 
 // Predefined struct for user
 type ModifyCloudNativeAPIGatewayRouteResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type ModifyCloudNativeAPIGatewayRouteResponse struct {
@@ -6379,28 +14726,96 @@ func (r *ModifyCloudNativeAPIGatewayRouteResponse) FromJsonString(s string) erro
 }
 
 // Predefined struct for user
+type ModifyCloudNativeAPIGatewaySecretKeyStatusRequestParams struct {
+	// <p>实例 ID</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>密钥状态。</p><p>枚举值：</p><ul><li>Enable：启用</li><li>Disable：禁用</li></ul>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>密钥 ID（以 secret- 开头）。</p>
+	SecretKeyId *string `json:"SecretKeyId,omitnil,omitempty" name:"SecretKeyId"`
+}
+
+type ModifyCloudNativeAPIGatewaySecretKeyStatusRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实例 ID</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>密钥状态。</p><p>枚举值：</p><ul><li>Enable：启用</li><li>Disable：禁用</li></ul>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>密钥 ID（以 secret- 开头）。</p>
+	SecretKeyId *string `json:"SecretKeyId,omitnil,omitempty" name:"SecretKeyId"`
+}
+
+func (r *ModifyCloudNativeAPIGatewaySecretKeyStatusRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCloudNativeAPIGatewaySecretKeyStatusRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "Status")
+	delete(f, "SecretKeyId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCloudNativeAPIGatewaySecretKeyStatusRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyCloudNativeAPIGatewaySecretKeyStatusResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyCloudNativeAPIGatewaySecretKeyStatusResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyCloudNativeAPIGatewaySecretKeyStatusResponseParams `json:"Response"`
+}
+
+func (r *ModifyCloudNativeAPIGatewaySecretKeyStatusResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCloudNativeAPIGatewaySecretKeyStatusResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyCloudNativeAPIGatewayServiceRateLimitRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务名称，或服务ID
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 限流配置
-	LimitDetail *CloudNativeAPIGatewayRateLimitDetail `json:"LimitDetail,omitnil" name:"LimitDetail"`
+	LimitDetail *CloudNativeAPIGatewayRateLimitDetail `json:"LimitDetail,omitnil,omitempty" name:"LimitDetail"`
 }
 
 type ModifyCloudNativeAPIGatewayServiceRateLimitRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务名称，或服务ID
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 限流配置
-	LimitDetail *CloudNativeAPIGatewayRateLimitDetail `json:"LimitDetail,omitnil" name:"LimitDetail"`
+	LimitDetail *CloudNativeAPIGatewayRateLimitDetail `json:"LimitDetail,omitnil,omitempty" name:"LimitDetail"`
 }
 
 func (r *ModifyCloudNativeAPIGatewayServiceRateLimitRequest) ToJsonString() string {
@@ -6426,8 +14841,8 @@ func (r *ModifyCloudNativeAPIGatewayServiceRateLimitRequest) FromJsonString(s st
 
 // Predefined struct for user
 type ModifyCloudNativeAPIGatewayServiceRateLimitResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type ModifyCloudNativeAPIGatewayServiceRateLimitResponse struct {
@@ -6449,26 +14864,23 @@ func (r *ModifyCloudNativeAPIGatewayServiceRateLimitResponse) FromJsonString(s s
 // Predefined struct for user
 type ModifyCloudNativeAPIGatewayServiceRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 请求协议： 
 	// - https 
 	// - http 
 	// - tcp 
 	// - udp
-	Protocol *string `json:"Protocol,omitnil" name:"Protocol"`
-
-	// 请求路径
-	Path *string `json:"Path,omitnil" name:"Path"`
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
 	// 超时时间，单位ms
-	Timeout *int64 `json:"Timeout,omitnil" name:"Timeout"`
+	Timeout *int64 `json:"Timeout,omitnil,omitempty" name:"Timeout"`
 
 	// 重试次数
-	Retries *int64 `json:"Retries,omitnil" name:"Retries"`
+	Retries *int64 `json:"Retries,omitnil,omitempty" name:"Retries"`
 
 	// 服务类型: 
 	// - Kubernetes 
@@ -6476,39 +14888,39 @@ type ModifyCloudNativeAPIGatewayServiceRequestParams struct {
 	// - IPList
 	// - HostIP
 	// - Scf	
-	UpstreamType *string `json:"UpstreamType,omitnil" name:"UpstreamType"`
+	UpstreamType *string `json:"UpstreamType,omitnil,omitempty" name:"UpstreamType"`
 
 	// 服务配置
-	UpstreamInfo *KongUpstreamInfo `json:"UpstreamInfo,omitnil" name:"UpstreamInfo"`
+	UpstreamInfo *KongUpstreamInfo `json:"UpstreamInfo,omitnil,omitempty" name:"UpstreamInfo"`
 
 	// 服务ID
-	ID *string `json:"ID,omitnil" name:"ID"`
+	ID *string `json:"ID,omitnil,omitempty" name:"ID"`
+
+	// 请求路径
+	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
 }
 
 type ModifyCloudNativeAPIGatewayServiceRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 请求协议： 
 	// - https 
 	// - http 
 	// - tcp 
 	// - udp
-	Protocol *string `json:"Protocol,omitnil" name:"Protocol"`
-
-	// 请求路径
-	Path *string `json:"Path,omitnil" name:"Path"`
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
 	// 超时时间，单位ms
-	Timeout *int64 `json:"Timeout,omitnil" name:"Timeout"`
+	Timeout *int64 `json:"Timeout,omitnil,omitempty" name:"Timeout"`
 
 	// 重试次数
-	Retries *int64 `json:"Retries,omitnil" name:"Retries"`
+	Retries *int64 `json:"Retries,omitnil,omitempty" name:"Retries"`
 
 	// 服务类型: 
 	// - Kubernetes 
@@ -6516,13 +14928,16 @@ type ModifyCloudNativeAPIGatewayServiceRequest struct {
 	// - IPList
 	// - HostIP
 	// - Scf	
-	UpstreamType *string `json:"UpstreamType,omitnil" name:"UpstreamType"`
+	UpstreamType *string `json:"UpstreamType,omitnil,omitempty" name:"UpstreamType"`
 
 	// 服务配置
-	UpstreamInfo *KongUpstreamInfo `json:"UpstreamInfo,omitnil" name:"UpstreamInfo"`
+	UpstreamInfo *KongUpstreamInfo `json:"UpstreamInfo,omitnil,omitempty" name:"UpstreamInfo"`
 
 	// 服务ID
-	ID *string `json:"ID,omitnil" name:"ID"`
+	ID *string `json:"ID,omitnil,omitempty" name:"ID"`
+
+	// 请求路径
+	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
 }
 
 func (r *ModifyCloudNativeAPIGatewayServiceRequest) ToJsonString() string {
@@ -6540,12 +14955,12 @@ func (r *ModifyCloudNativeAPIGatewayServiceRequest) FromJsonString(s string) err
 	delete(f, "GatewayId")
 	delete(f, "Name")
 	delete(f, "Protocol")
-	delete(f, "Path")
 	delete(f, "Timeout")
 	delete(f, "Retries")
 	delete(f, "UpstreamType")
 	delete(f, "UpstreamInfo")
 	delete(f, "ID")
+	delete(f, "Path")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCloudNativeAPIGatewayServiceRequest has unknown keys!", "")
 	}
@@ -6554,8 +14969,8 @@ func (r *ModifyCloudNativeAPIGatewayServiceRequest) FromJsonString(s string) err
 
 // Predefined struct for user
 type ModifyCloudNativeAPIGatewayServiceResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type ModifyCloudNativeAPIGatewayServiceResponse struct {
@@ -6575,42 +14990,170 @@ func (r *ModifyCloudNativeAPIGatewayServiceResponse) FromJsonString(s string) er
 }
 
 // Predefined struct for user
+type ModifyConfigFileGroupRequestParams struct {
+	// tse实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 配置文件组
+	ConfigFileGroup *ConfigFileGroup `json:"ConfigFileGroup,omitnil,omitempty" name:"ConfigFileGroup"`
+}
+
+type ModifyConfigFileGroupRequest struct {
+	*tchttp.BaseRequest
+	
+	// tse实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 配置文件组
+	ConfigFileGroup *ConfigFileGroup `json:"ConfigFileGroup,omitnil,omitempty" name:"ConfigFileGroup"`
+}
+
+func (r *ModifyConfigFileGroupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyConfigFileGroupRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ConfigFileGroup")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyConfigFileGroupRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyConfigFileGroupResponseParams struct {
+	// 修改是否成功
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyConfigFileGroupResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyConfigFileGroupResponseParams `json:"Response"`
+}
+
+func (r *ModifyConfigFileGroupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyConfigFileGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyConfigFilesRequestParams struct {
+	// ins-df344df5	
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 配置文件列表
+	ConfigFile *ConfigFile `json:"ConfigFile,omitnil,omitempty" name:"ConfigFile"`
+}
+
+type ModifyConfigFilesRequest struct {
+	*tchttp.BaseRequest
+	
+	// ins-df344df5	
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 配置文件列表
+	ConfigFile *ConfigFile `json:"ConfigFile,omitnil,omitempty" name:"ConfigFile"`
+}
+
+func (r *ModifyConfigFilesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyConfigFilesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ConfigFile")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyConfigFilesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyConfigFilesResponseParams struct {
+	// 修改是否成功
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyConfigFilesResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyConfigFilesResponseParams `json:"Response"`
+}
+
+func (r *ModifyConfigFilesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyConfigFilesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyConsoleNetworkRequestParams struct {
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 网络类型：
 	// - Open 公网
 	// - Internal 内网（暂不支持）
-	NetworkType *string `json:"NetworkType,omitnil" name:"NetworkType"`
+	NetworkType *string `json:"NetworkType,omitnil,omitempty" name:"NetworkType"`
 
 	// 开启Konga网络，不填时默认为Open
 	// - Open，开启
 	// - Close，关闭
-	Operate *string `json:"Operate,omitnil" name:"Operate"`
+	Operate *string `json:"Operate,omitnil,omitempty" name:"Operate"`
 
 	// 访问控制策略
-	AccessControl *NetworkAccessControl `json:"AccessControl,omitnil" name:"AccessControl"`
+	AccessControl *NetworkAccessControl `json:"AccessControl,omitnil,omitempty" name:"AccessControl"`
 }
 
 type ModifyConsoleNetworkRequest struct {
 	*tchttp.BaseRequest
 	
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 网络类型：
 	// - Open 公网
 	// - Internal 内网（暂不支持）
-	NetworkType *string `json:"NetworkType,omitnil" name:"NetworkType"`
+	NetworkType *string `json:"NetworkType,omitnil,omitempty" name:"NetworkType"`
 
 	// 开启Konga网络，不填时默认为Open
 	// - Open，开启
 	// - Close，关闭
-	Operate *string `json:"Operate,omitnil" name:"Operate"`
+	Operate *string `json:"Operate,omitnil,omitempty" name:"Operate"`
 
 	// 访问控制策略
-	AccessControl *NetworkAccessControl `json:"AccessControl,omitnil" name:"AccessControl"`
+	AccessControl *NetworkAccessControl `json:"AccessControl,omitnil,omitempty" name:"AccessControl"`
 }
 
 func (r *ModifyConsoleNetworkRequest) ToJsonString() string {
@@ -6637,8 +15180,8 @@ func (r *ModifyConsoleNetworkRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyConsoleNetworkResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type ModifyConsoleNetworkResponse struct {
@@ -6658,34 +15201,382 @@ func (r *ModifyConsoleNetworkResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyGovernanceAliasRequestParams struct {
+	// tse实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 服务别名
+	Alias *string `json:"Alias,omitnil,omitempty" name:"Alias"`
+
+	// 服务别名命名空间
+	AliasNamespace *string `json:"AliasNamespace,omitnil,omitempty" name:"AliasNamespace"`
+
+	// 服务别名所指向的服务名
+	Service *string `json:"Service,omitnil,omitempty" name:"Service"`
+
+	// 服务别名所指向的命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 服务别名描述
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+}
+
+type ModifyGovernanceAliasRequest struct {
+	*tchttp.BaseRequest
+	
+	// tse实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 服务别名
+	Alias *string `json:"Alias,omitnil,omitempty" name:"Alias"`
+
+	// 服务别名命名空间
+	AliasNamespace *string `json:"AliasNamespace,omitnil,omitempty" name:"AliasNamespace"`
+
+	// 服务别名所指向的服务名
+	Service *string `json:"Service,omitnil,omitempty" name:"Service"`
+
+	// 服务别名所指向的命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 服务别名描述
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+}
+
+func (r *ModifyGovernanceAliasRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyGovernanceAliasRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Alias")
+	delete(f, "AliasNamespace")
+	delete(f, "Service")
+	delete(f, "Namespace")
+	delete(f, "Comment")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyGovernanceAliasRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyGovernanceAliasResponseParams struct {
+	// 创建是否成功。
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyGovernanceAliasResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyGovernanceAliasResponseParams `json:"Response"`
+}
+
+func (r *ModifyGovernanceAliasResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyGovernanceAliasResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyGovernanceInstancesRequestParams struct {
+	// tse实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 服务实例信息。
+	GovernanceInstances []*GovernanceInstanceUpdate `json:"GovernanceInstances,omitnil,omitempty" name:"GovernanceInstances"`
+}
+
+type ModifyGovernanceInstancesRequest struct {
+	*tchttp.BaseRequest
+	
+	// tse实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 服务实例信息。
+	GovernanceInstances []*GovernanceInstanceUpdate `json:"GovernanceInstances,omitnil,omitempty" name:"GovernanceInstances"`
+}
+
+func (r *ModifyGovernanceInstancesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyGovernanceInstancesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "GovernanceInstances")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyGovernanceInstancesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyGovernanceInstancesResponseParams struct {
+	// 修改是否成功。
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyGovernanceInstancesResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyGovernanceInstancesResponseParams `json:"Response"`
+}
+
+func (r *ModifyGovernanceInstancesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyGovernanceInstancesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyGovernanceLaneGroupsRequestParams struct {
+	// 引擎实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 泳道组规则列表
+	LaneGroups []*GovernanceLaneGroup `json:"LaneGroups,omitnil,omitempty" name:"LaneGroups"`
+}
+
+type ModifyGovernanceLaneGroupsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 引擎实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 泳道组规则列表
+	LaneGroups []*GovernanceLaneGroup `json:"LaneGroups,omitnil,omitempty" name:"LaneGroups"`
+}
+
+func (r *ModifyGovernanceLaneGroupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyGovernanceLaneGroupsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "LaneGroups")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyGovernanceLaneGroupsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyGovernanceLaneGroupsResponseParams struct {
+	// 是否创建成功
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyGovernanceLaneGroupsResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyGovernanceLaneGroupsResponseParams `json:"Response"`
+}
+
+func (r *ModifyGovernanceLaneGroupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyGovernanceLaneGroupsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyGovernanceNamespacesRequestParams struct {
+	// tse实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 命名空间信息。
+	GovernanceNamespaces []*GovernanceNamespaceInput `json:"GovernanceNamespaces,omitnil,omitempty" name:"GovernanceNamespaces"`
+}
+
+type ModifyGovernanceNamespacesRequest struct {
+	*tchttp.BaseRequest
+	
+	// tse实例id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 命名空间信息。
+	GovernanceNamespaces []*GovernanceNamespaceInput `json:"GovernanceNamespaces,omitnil,omitempty" name:"GovernanceNamespaces"`
+}
+
+func (r *ModifyGovernanceNamespacesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyGovernanceNamespacesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "GovernanceNamespaces")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyGovernanceNamespacesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyGovernanceNamespacesResponseParams struct {
+	// 操作是否成功。
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyGovernanceNamespacesResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyGovernanceNamespacesResponseParams `json:"Response"`
+}
+
+func (r *ModifyGovernanceNamespacesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyGovernanceNamespacesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyGovernanceServicesRequestParams struct {
+	// tse 实例 id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 服务信息。
+	GovernanceServices []*GovernanceServiceInput `json:"GovernanceServices,omitnil,omitempty" name:"GovernanceServices"`
+}
+
+type ModifyGovernanceServicesRequest struct {
+	*tchttp.BaseRequest
+	
+	// tse 实例 id。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 服务信息。
+	GovernanceServices []*GovernanceServiceInput `json:"GovernanceServices,omitnil,omitempty" name:"GovernanceServices"`
+}
+
+func (r *ModifyGovernanceServicesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyGovernanceServicesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "GovernanceServices")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyGovernanceServicesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyGovernanceServicesResponseParams struct {
+	// 是否成功
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyGovernanceServicesResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyGovernanceServicesResponseParams `json:"Response"`
+}
+
+func (r *ModifyGovernanceServicesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyGovernanceServicesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyNativeGatewayServerGroupRequestParams struct {
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 网关分组 id
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 云原生API网关名字, 最多支持60个字符。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 云原生API网关描述信息, 最多支持120个字符。
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 }
 
 type ModifyNativeGatewayServerGroupRequest struct {
 	*tchttp.BaseRequest
 	
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 网关分组 id
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 云原生API网关名字, 最多支持60个字符。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 云原生API网关描述信息, 最多支持120个字符。
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 }
 
 func (r *ModifyNativeGatewayServerGroupRequest) ToJsonString() string {
@@ -6712,8 +15603,8 @@ func (r *ModifyNativeGatewayServerGroupRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyNativeGatewayServerGroupResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type ModifyNativeGatewayServerGroupResponse struct {
@@ -6733,44 +15624,119 @@ func (r *ModifyNativeGatewayServerGroupResponse) FromJsonString(s string) error 
 }
 
 // Predefined struct for user
+type ModifyNativeGatewayServiceSourceRequestParams struct {
+	// 网关实例ID
+	GatewayID *string `json:"GatewayID,omitnil,omitempty" name:"GatewayID"`
+
+	// 服务来源实例ID
+	SourceID *string `json:"SourceID,omitnil,omitempty" name:"SourceID"`
+
+	// 服务来源名称
+	SourceName *string `json:"SourceName,omitnil,omitempty" name:"SourceName"`
+
+	// 服务来源实例额外信息
+	SourceInfo *SourceInfo `json:"SourceInfo,omitnil,omitempty" name:"SourceInfo"`
+}
+
+type ModifyNativeGatewayServiceSourceRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关实例ID
+	GatewayID *string `json:"GatewayID,omitnil,omitempty" name:"GatewayID"`
+
+	// 服务来源实例ID
+	SourceID *string `json:"SourceID,omitnil,omitempty" name:"SourceID"`
+
+	// 服务来源名称
+	SourceName *string `json:"SourceName,omitnil,omitempty" name:"SourceName"`
+
+	// 服务来源实例额外信息
+	SourceInfo *SourceInfo `json:"SourceInfo,omitnil,omitempty" name:"SourceInfo"`
+}
+
+func (r *ModifyNativeGatewayServiceSourceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyNativeGatewayServiceSourceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayID")
+	delete(f, "SourceID")
+	delete(f, "SourceName")
+	delete(f, "SourceInfo")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyNativeGatewayServiceSourceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyNativeGatewayServiceSourceResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyNativeGatewayServiceSourceResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyNativeGatewayServiceSourceResponseParams `json:"Response"`
+}
+
+func (r *ModifyNativeGatewayServiceSourceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyNativeGatewayServiceSourceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyNetworkAccessStrategyRequestParams struct {
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 分组id
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 网络类型： 
 	// - Open 公网
 	// - Internal 内网	（暂不支持）
-	NetworkType *string `json:"NetworkType,omitnil" name:"NetworkType"`
+	NetworkType *string `json:"NetworkType,omitnil,omitempty" name:"NetworkType"`
 
 	// ip地址
-	Vip *string `json:"Vip,omitnil" name:"Vip"`
+	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
 	// 访问控制策略
-	AccessControl *NetworkAccessControl `json:"AccessControl,omitnil" name:"AccessControl"`
+	AccessControl *NetworkAccessControl `json:"AccessControl,omitnil,omitempty" name:"AccessControl"`
 }
 
 type ModifyNetworkAccessStrategyRequest struct {
 	*tchttp.BaseRequest
 	
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 分组id
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 网络类型： 
 	// - Open 公网
 	// - Internal 内网	（暂不支持）
-	NetworkType *string `json:"NetworkType,omitnil" name:"NetworkType"`
+	NetworkType *string `json:"NetworkType,omitnil,omitempty" name:"NetworkType"`
 
 	// ip地址
-	Vip *string `json:"Vip,omitnil" name:"Vip"`
+	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
 	// 访问控制策略
-	AccessControl *NetworkAccessControl `json:"AccessControl,omitnil" name:"AccessControl"`
+	AccessControl *NetworkAccessControl `json:"AccessControl,omitnil,omitempty" name:"AccessControl"`
 }
 
 func (r *ModifyNetworkAccessStrategyRequest) ToJsonString() string {
@@ -6798,8 +15764,8 @@ func (r *ModifyNetworkAccessStrategyRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyNetworkAccessStrategyResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type ModifyNetworkAccessStrategyResponse struct {
@@ -6821,50 +15787,72 @@ func (r *ModifyNetworkAccessStrategyResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type ModifyNetworkBasicInfoRequestParams struct {
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 分组id
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 网络类型：
 	// - Open 公网ipv4
 	// - Open-IPv6 公网ipv6
 	// - Internal 内网
-	NetworkType *string `json:"NetworkType,omitnil" name:"NetworkType"`
+	NetworkType *string `json:"NetworkType,omitnil,omitempty" name:"NetworkType"`
 
 	// ip地址
-	Vip *string `json:"Vip,omitnil" name:"Vip"`
+	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
 	// 公网出流量带宽[1,2048]Mbps
-	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil" name:"InternetMaxBandwidthOut"`
+	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
 
 	// 负载均衡描述
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 负载均衡的规格类型，支持：
+	// - 不传为共享型。
+	// - clb.c2.medium：标准型规格
+	// - clb.c3.small：高阶型1规格
+	// - clb.c3.medium：高阶型2规格
+	// - clb.c4.small：超强型1规格
+	// - clb.c4.medium：超强型2规格
+	// - clb.c4.large：超强型3规格
+	// - clb.c4.xlarge：超强型4规格
+	SlaType *string `json:"SlaType,omitnil,omitempty" name:"SlaType"`
 }
 
 type ModifyNetworkBasicInfoRequest struct {
 	*tchttp.BaseRequest
 	
 	// 云原生API网关实例ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 分组id
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 网络类型：
 	// - Open 公网ipv4
 	// - Open-IPv6 公网ipv6
 	// - Internal 内网
-	NetworkType *string `json:"NetworkType,omitnil" name:"NetworkType"`
+	NetworkType *string `json:"NetworkType,omitnil,omitempty" name:"NetworkType"`
 
 	// ip地址
-	Vip *string `json:"Vip,omitnil" name:"Vip"`
+	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
 	// 公网出流量带宽[1,2048]Mbps
-	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil" name:"InternetMaxBandwidthOut"`
+	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
 
 	// 负载均衡描述
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 负载均衡的规格类型，支持：
+	// - 不传为共享型。
+	// - clb.c2.medium：标准型规格
+	// - clb.c3.small：高阶型1规格
+	// - clb.c3.medium：高阶型2规格
+	// - clb.c4.small：超强型1规格
+	// - clb.c4.medium：超强型2规格
+	// - clb.c4.large：超强型3规格
+	// - clb.c4.xlarge：超强型4规格
+	SlaType *string `json:"SlaType,omitnil,omitempty" name:"SlaType"`
 }
 
 func (r *ModifyNetworkBasicInfoRequest) ToJsonString() string {
@@ -6885,6 +15873,7 @@ func (r *ModifyNetworkBasicInfoRequest) FromJsonString(s string) error {
 	delete(f, "Vip")
 	delete(f, "InternetMaxBandwidthOut")
 	delete(f, "Description")
+	delete(f, "SlaType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyNetworkBasicInfoRequest has unknown keys!", "")
 	}
@@ -6893,8 +15882,8 @@ func (r *ModifyNetworkBasicInfoRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyNetworkBasicInfoResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type ModifyNetworkBasicInfoResponse struct {
@@ -6916,38 +15905,38 @@ func (r *ModifyNetworkBasicInfoResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type ModifyUpstreamNodeStatusRequestParams struct {
 	// 网关实例ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务名称
-	ServiceName *string `json:"ServiceName,omitnil" name:"ServiceName"`
+	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
 
 	// 访问IP地址或域名
-	Host *string `json:"Host,omitnil" name:"Host"`
+	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
 
 	// 访问端口
-	Port *int64 `json:"Port,omitnil" name:"Port"`
+	Port *int64 `json:"Port,omitnil,omitempty" name:"Port"`
 
 	// HEALTHY或UNHEALTHY
-	Status *string `json:"Status,omitnil" name:"Status"`
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 }
 
 type ModifyUpstreamNodeStatusRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关实例ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务名称
-	ServiceName *string `json:"ServiceName,omitnil" name:"ServiceName"`
+	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
 
 	// 访问IP地址或域名
-	Host *string `json:"Host,omitnil" name:"Host"`
+	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
 
 	// 访问端口
-	Port *int64 `json:"Port,omitnil" name:"Port"`
+	Port *int64 `json:"Port,omitnil,omitempty" name:"Port"`
 
 	// HEALTHY或UNHEALTHY
-	Status *string `json:"Status,omitnil" name:"Status"`
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 }
 
 func (r *ModifyUpstreamNodeStatusRequest) ToJsonString() string {
@@ -6977,10 +15966,10 @@ func (r *ModifyUpstreamNodeStatusRequest) FromJsonString(s string) error {
 type ModifyUpstreamNodeStatusResponseParams struct {
 	// 是否成功
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Result *bool `json:"Result,omitnil" name:"Result"`
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type ModifyUpstreamNodeStatusResponse struct {
@@ -7001,132 +15990,157 @@ func (r *ModifyUpstreamNodeStatusResponse) FromJsonString(s string) error {
 
 type NacosReplica struct {
 	// 名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 角色
-	Role *string `json:"Role,omitnil" name:"Role"`
+	Role *string `json:"Role,omitnil,omitempty" name:"Role"`
 
 	// 状态
-	Status *string `json:"Status,omitnil" name:"Status"`
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 子网ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	SubnetId *string `json:"SubnetId,omitnil" name:"SubnetId"`
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// 可用区ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Zone *string `json:"Zone,omitnil" name:"Zone"`
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
 	// 可用区ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ZoneId *string `json:"ZoneId,omitnil" name:"ZoneId"`
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// VPC ID	
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	VpcId *string `json:"VpcId,omitnil" name:"VpcId"`
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 }
 
 type NacosServerInterface struct {
 	// 接口名
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Interface *string `json:"Interface,omitnil" name:"Interface"`
+	Interface *string `json:"Interface,omitnil,omitempty" name:"Interface"`
 }
 
 type NativeGatewayServerGroup struct {
 	// 云原生网关分组唯一id
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 分组名
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 描述信息
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 节点规格、节点数信息
-	NodeConfig *CloudNativeAPIGatewayNodeConfig `json:"NodeConfig,omitnil" name:"NodeConfig"`
+	NodeConfig *CloudNativeAPIGatewayNodeConfig `json:"NodeConfig,omitnil,omitempty" name:"NodeConfig"`
 
 	// 网关分组状态。
-	Status *string `json:"Status,omitnil" name:"Status"`
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 创建时间
-	CreateTime *string `json:"CreateTime,omitnil" name:"CreateTime"`
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 是否是默认分组。
 	// 0：否。
 	// 1：是。
-	IsFirstGroup *int64 `json:"IsFirstGroup,omitnil" name:"IsFirstGroup"`
+	IsFirstGroup *int64 `json:"IsFirstGroup,omitnil,omitempty" name:"IsFirstGroup"`
 
 	// 关联策略信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	BindingStrategy *CloudNativeAPIGatewayStrategy `json:"BindingStrategy,omitnil" name:"BindingStrategy"`
+	BindingStrategy *CloudNativeAPIGatewayStrategy `json:"BindingStrategy,omitnil,omitempty" name:"BindingStrategy"`
 
 	// 网关实例 id
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 带宽
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	InternetMaxBandwidthOut *int64 `json:"InternetMaxBandwidthOut,omitnil" name:"InternetMaxBandwidthOut"`
+	InternetMaxBandwidthOut *int64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
 
 	// 修改时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ModifyTime *string `json:"ModifyTime,omitnil" name:"ModifyTime"`
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
 
 	// 子网id
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	SubnetIds *string `json:"SubnetIds,omitnil" name:"SubnetIds"`
+	SubnetIds *string `json:"SubnetIds,omitnil,omitempty" name:"SubnetIds"`
+
+	// 分组默认权重
+	DefaultWeight *int64 `json:"DefaultWeight,omitnil,omitempty" name:"DefaultWeight"`
+
+	// 弹性节点
+	ElasticNumber *uint64 `json:"ElasticNumber,omitnil,omitempty" name:"ElasticNumber"`
+
+	// 是否支持TOA
+	SupportTOA *bool `json:"SupportTOA,omitnil,omitempty" name:"SupportTOA"`
+
+	// 是否支持IPV6
+	SupportIPV6 *bool `json:"SupportIPV6,omitnil,omitempty" name:"SupportIPV6"`
 }
 
 type NativeGatewayServerGroups struct {
 	// 总数
-	TotalCount *uint64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 分组信息数组。
-	GatewayGroupList []*NativeGatewayServerGroup `json:"GatewayGroupList,omitnil" name:"GatewayGroupList"`
+	GatewayGroupList []*NativeGatewayServerGroup `json:"GatewayGroupList,omitnil,omitempty" name:"GatewayGroupList"`
+}
+
+type NativeGatewayServiceSourceItem struct {
+	// 网关实例ID
+	GatewayID *string `json:"GatewayID,omitnil,omitempty" name:"GatewayID"`
+
+	// 服务来源ID
+	SourceID *string `json:"SourceID,omitnil,omitempty" name:"SourceID"`
+
+	// 服务来源名称
+	SourceName *string `json:"SourceName,omitnil,omitempty" name:"SourceName"`
+
+	// 服务来源类型
+	SourceType *string `json:"SourceType,omitnil,omitempty" name:"SourceType"`
+
+	// 服务来源额外信息
+	SourceInfo *SourceInfo `json:"SourceInfo,omitnil,omitempty" name:"SourceInfo"`
+
+	// 创建时间
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 修改时间
+	ModifyTime *string `json:"ModifyTime,omitnil,omitempty" name:"ModifyTime"`
 }
 
 type NetworkAccessControl struct {
 	// 访问模式：Whitelist|Blacklist
-	Mode *string `json:"Mode,omitnil" name:"Mode"`
+	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
 
 	// 白名单列表
-	CidrWhiteList []*string `json:"CidrWhiteList,omitnil" name:"CidrWhiteList"`
+	CidrWhiteList []*string `json:"CidrWhiteList,omitnil,omitempty" name:"CidrWhiteList"`
 
 	// 黑名单列表
-	CidrBlackList []*string `json:"CidrBlackList,omitnil" name:"CidrBlackList"`
+	CidrBlackList []*string `json:"CidrBlackList,omitnil,omitempty" name:"CidrBlackList"`
 }
 
 // Predefined struct for user
 type OpenWafProtectionRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	//  防护资源的类型。
 	// - Global  实例
 	// - Service  服务
 	// - Route  路由
 	// - Object  对象（接口暂不支持）
-	Type *string `json:"Type,omitnil" name:"Type"`
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 当资源类型 Type 是 Service 或 Route 的时候，传入的服务或路由的列表
-	List []*string `json:"List,omitnil" name:"List"`
+	List []*string `json:"List,omitnil,omitempty" name:"List"`
 }
 
 type OpenWafProtectionRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	//  防护资源的类型。
 	// - Global  实例
 	// - Service  服务
 	// - Route  路由
 	// - Object  对象（接口暂不支持）
-	Type *string `json:"Type,omitnil" name:"Type"`
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 当资源类型 Type 是 Service 或 Route 的时候，传入的服务或路由的列表
-	List []*string `json:"List,omitnil" name:"List"`
+	List []*string `json:"List,omitnil,omitempty" name:"List"`
 }
 
 func (r *OpenWafProtectionRequest) ToJsonString() string {
@@ -7152,8 +16166,8 @@ func (r *OpenWafProtectionRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type OpenWafProtectionResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type OpenWafProtectionResponse struct {
@@ -7174,299 +16188,776 @@ func (r *OpenWafProtectionResponse) FromJsonString(s string) error {
 
 type PolarisCLSTopicInfo struct {
 	// 日志集ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	LogSetId *string `json:"LogSetId,omitnil" name:"LogSetId"`
+	LogSetId *string `json:"LogSetId,omitnil,omitempty" name:"LogSetId"`
 
 	// 日志集名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	LogSetName *string `json:"LogSetName,omitnil" name:"LogSetName"`
+	LogSetName *string `json:"LogSetName,omitnil,omitempty" name:"LogSetName"`
 
 	// 日志主题ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TopicId *string `json:"TopicId,omitnil" name:"TopicId"`
+	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
 	// 日志主题名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TopicName *string `json:"TopicName,omitnil" name:"TopicName"`
+	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
 }
 
 type PolarisLimiterAddress struct {
 	// VPC接入IP列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	IntranetAddress *string `json:"IntranetAddress,omitnil" name:"IntranetAddress"`
+	IntranetAddress *string `json:"IntranetAddress,omitnil,omitempty" name:"IntranetAddress"`
+}
+
+type PublicAddressConfig struct {
+	// 公网 ip
+	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
+
+	// 公网最大带宽
+	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitnil,omitempty" name:"InternetMaxBandwidthOut"`
+
+	// 公网所属分组 id
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
+
+	// 公网所属分组名
+	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
+
+	// 公网负载均衡 id
+	NetworkId *string `json:"NetworkId,omitnil,omitempty" name:"NetworkId"`
+
+	// 公网负载均衡描述
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+}
+
+// Predefined struct for user
+type PublishConfigFilesRequestParams struct {
+	// TSE实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 配置文件发布
+	ConfigFileReleases *ConfigFileRelease `json:"ConfigFileReleases,omitnil,omitempty" name:"ConfigFileReleases"`
+
+	// 控制开启校验配置版本是否已经存在
+	StrictEnable *bool `json:"StrictEnable,omitnil,omitempty" name:"StrictEnable"`
+}
+
+type PublishConfigFilesRequest struct {
+	*tchttp.BaseRequest
+	
+	// TSE实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 配置文件发布
+	ConfigFileReleases *ConfigFileRelease `json:"ConfigFileReleases,omitnil,omitempty" name:"ConfigFileReleases"`
+
+	// 控制开启校验配置版本是否已经存在
+	StrictEnable *bool `json:"StrictEnable,omitnil,omitempty" name:"StrictEnable"`
+}
+
+func (r *PublishConfigFilesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *PublishConfigFilesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ConfigFileReleases")
+	delete(f, "StrictEnable")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "PublishConfigFilesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type PublishConfigFilesResponseParams struct {
+	// 配置文件发布是否成功
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 配置文件发布Id
+	ConfigFileReleaseId *string `json:"ConfigFileReleaseId,omitnil,omitempty" name:"ConfigFileReleaseId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type PublishConfigFilesResponse struct {
+	*tchttp.BaseResponse
+	Response *PublishConfigFilesResponseParams `json:"Response"`
+}
+
+func (r *PublishConfigFilesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *PublishConfigFilesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type QpsThreshold struct {
 	// qps阈值控制维度,包含:second、minute、hour、day、month、year
-	Unit *string `json:"Unit,omitnil" name:"Unit"`
+	Unit *string `json:"Unit,omitnil,omitempty" name:"Unit"`
 
 	// 阈值
-	Max *int64 `json:"Max,omitnil" name:"Max"`
+	Max *int64 `json:"Max,omitnil,omitempty" name:"Max"`
 }
 
 type RateLimitResponse struct {
 	// 自定义响应体
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Body *string `json:"Body,omitnil" name:"Body"`
+	Body *string `json:"Body,omitnil,omitempty" name:"Body"`
 
 	// Headers
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Headers []*KVMapping `json:"Headers,omitnil" name:"Headers"`
+	Headers []*KVMapping `json:"Headers,omitnil,omitempty" name:"Headers"`
 
 	// http状态码
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	HttpStatus *int64 `json:"HttpStatus,omitnil" name:"HttpStatus"`
+	HttpStatus *int64 `json:"HttpStatus,omitnil,omitempty" name:"HttpStatus"`
+}
+
+type ReleaseVersion struct {
+	// 配置发布的版本
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 是否生效
+	Active *bool `json:"Active,omitnil,omitempty" name:"Active"`
+
+	// 配置发布的ID
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// 配置发布的命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 配置发布的分组
+	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
+
+	// 配置发布的文件名
+	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
+}
+
+// Predefined struct for user
+type RemoveCloudNativeAPIGatewayConsumerGroupAuthRequestParams struct {
+	// <p>网关实例id</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>授权资源类型。</p><p>枚举值：</p><ul><li>ModelAPI：模型 API</li><li>MCPServer：MCP Server</li></ul>
+	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
+
+	// <p>对应资源的 ID。</p><ul><li>ResourceType=ModelAPI 时是模型 API ID</li><li>ResourceType=MCPServer 时是 MCP Server ID</li></ul>
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
+
+	// <p>消费者组 ID 列表（每个 ID 以 cg- 开头），长度 1-10。</p>
+	ConsumerGroupIds []*string `json:"ConsumerGroupIds,omitnil,omitempty" name:"ConsumerGroupIds"`
+}
+
+type RemoveCloudNativeAPIGatewayConsumerGroupAuthRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>网关实例id</p>
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>授权资源类型。</p><p>枚举值：</p><ul><li>ModelAPI：模型 API</li><li>MCPServer：MCP Server</li></ul>
+	ResourceType *string `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
+
+	// <p>对应资源的 ID。</p><ul><li>ResourceType=ModelAPI 时是模型 API ID</li><li>ResourceType=MCPServer 时是 MCP Server ID</li></ul>
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
+
+	// <p>消费者组 ID 列表（每个 ID 以 cg- 开头），长度 1-10。</p>
+	ConsumerGroupIds []*string `json:"ConsumerGroupIds,omitnil,omitempty" name:"ConsumerGroupIds"`
+}
+
+func (r *RemoveCloudNativeAPIGatewayConsumerGroupAuthRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RemoveCloudNativeAPIGatewayConsumerGroupAuthRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "ResourceType")
+	delete(f, "ResourceId")
+	delete(f, "ConsumerGroupIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RemoveCloudNativeAPIGatewayConsumerGroupAuthRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RemoveCloudNativeAPIGatewayConsumerGroupAuthResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type RemoveCloudNativeAPIGatewayConsumerGroupAuthResponse struct {
+	*tchttp.BaseResponse
+	Response *RemoveCloudNativeAPIGatewayConsumerGroupAuthResponseParams `json:"Response"`
+}
+
+func (r *RemoveCloudNativeAPIGatewayConsumerGroupAuthResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RemoveCloudNativeAPIGatewayConsumerGroupAuthResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RemoveCloudNativeAPIGatewayConsumerInGroupRequestParams struct {
+	// 网关实例id
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>消费者组 ID（以 cg- 开头）。</p>
+	ConsumerGroupId *string `json:"ConsumerGroupId,omitnil,omitempty" name:"ConsumerGroupId"`
+
+	// <p>消费者 ID 列表，长度 1-10。</p>
+	ConsumerIds []*string `json:"ConsumerIds,omitnil,omitempty" name:"ConsumerIds"`
+}
+
+type RemoveCloudNativeAPIGatewayConsumerInGroupRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关实例id
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// <p>消费者组 ID（以 cg- 开头）。</p>
+	ConsumerGroupId *string `json:"ConsumerGroupId,omitnil,omitempty" name:"ConsumerGroupId"`
+
+	// <p>消费者 ID 列表，长度 1-10。</p>
+	ConsumerIds []*string `json:"ConsumerIds,omitnil,omitempty" name:"ConsumerIds"`
+}
+
+func (r *RemoveCloudNativeAPIGatewayConsumerInGroupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RemoveCloudNativeAPIGatewayConsumerInGroupRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "ConsumerGroupId")
+	delete(f, "ConsumerIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RemoveCloudNativeAPIGatewayConsumerInGroupRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RemoveCloudNativeAPIGatewayConsumerInGroupResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type RemoveCloudNativeAPIGatewayConsumerInGroupResponse struct {
+	*tchttp.BaseResponse
+	Response *RemoveCloudNativeAPIGatewayConsumerInGroupResponseParams `json:"Response"`
+}
+
+func (r *RemoveCloudNativeAPIGatewayConsumerInGroupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RemoveCloudNativeAPIGatewayConsumerInGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RestartSREInstanceRequestParams struct {
+	// 微服务引擎实例Id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 重启的环境类型（PROD，DEV，UAT等）
+	EnvTypes []*string `json:"EnvTypes,omitnil,omitempty" name:"EnvTypes"`
+
+	// 指定需要重启的实例节点（当前仅支持zk单节点重启）
+	NodeName *string `json:"NodeName,omitnil,omitempty" name:"NodeName"`
+}
+
+type RestartSREInstanceRequest struct {
+	*tchttp.BaseRequest
+	
+	// 微服务引擎实例Id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 重启的环境类型（PROD，DEV，UAT等）
+	EnvTypes []*string `json:"EnvTypes,omitnil,omitempty" name:"EnvTypes"`
+
+	// 指定需要重启的实例节点（当前仅支持zk单节点重启）
+	NodeName *string `json:"NodeName,omitnil,omitempty" name:"NodeName"`
+}
+
+func (r *RestartSREInstanceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RestartSREInstanceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "EnvTypes")
+	delete(f, "NodeName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RestartSREInstanceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RestartSREInstanceResponseParams struct {
+	// 任务ID
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type RestartSREInstanceResponse struct {
+	*tchttp.BaseResponse
+	Response *RestartSREInstanceResponseParams `json:"Response"`
+}
+
+func (r *RestartSREInstanceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RestartSREInstanceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RollbackConfigFileReleasesRequestParams struct {
+	// TSE实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 回滚发布
+	RollbackConfigFileReleases []*ConfigFileRelease `json:"RollbackConfigFileReleases,omitnil,omitempty" name:"RollbackConfigFileReleases"`
+}
+
+type RollbackConfigFileReleasesRequest struct {
+	*tchttp.BaseRequest
+	
+	// TSE实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 回滚发布
+	RollbackConfigFileReleases []*ConfigFileRelease `json:"RollbackConfigFileReleases,omitnil,omitempty" name:"RollbackConfigFileReleases"`
+}
+
+func (r *RollbackConfigFileReleasesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RollbackConfigFileReleasesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "RollbackConfigFileReleases")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RollbackConfigFileReleasesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RollbackConfigFileReleasesResponseParams struct {
+	// 回滚结果
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type RollbackConfigFileReleasesResponse struct {
+	*tchttp.BaseResponse
+	Response *RollbackConfigFileReleasesResponseParams `json:"Response"`
+}
+
+func (r *RollbackConfigFileReleasesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RollbackConfigFileReleasesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type RouteWafStatus struct {
 	// 路由的名字
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 路由的 ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
 	//  路由是否开启 WAF 防护
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Status *string `json:"Status,omitnil" name:"Status"`
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 方法
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Methods []*string `json:"Methods,omitnil" name:"Methods"`
+	Methods []*string `json:"Methods,omitnil,omitempty" name:"Methods"`
 
 	// 路径
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Paths []*string `json:"Paths,omitnil" name:"Paths"`
+	Paths []*string `json:"Paths,omitnil,omitempty" name:"Paths"`
 
 	// 域名
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Hosts []*string `json:"Hosts,omitnil" name:"Hosts"`
+	Hosts []*string `json:"Hosts,omitnil,omitempty" name:"Hosts"`
 
 	// 路由对应服务的名字
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ServiceName *string `json:"ServiceName,omitnil" name:"ServiceName"`
+	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
 
 	// 路由对应服务的ID
+	ServiceId *string `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
+}
+
+type RoutingDestinationRuleLabel struct {
+	// 标签键
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ServiceId *string `json:"ServiceId,omitnil" name:"ServiceId"`
+	LabelKey *string `json:"LabelKey,omitnil,omitempty" name:"LabelKey"`
+
+	// 标签值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LabelValue *string `json:"LabelValue,omitnil,omitempty" name:"LabelValue"`
+
+	// 表达式类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LabelType *string `json:"LabelType,omitnil,omitempty" name:"LabelType"`
+
+	// 值类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LabelValueType *string `json:"LabelValueType,omitnil,omitempty" name:"LabelValueType"`
+}
+
+type RuleFilter struct {
+	// 限流条件的Key
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+
+	// 限流条件的Values
+	Values []*string `json:"Values,omitnil,omitempty" name:"Values"`
+
+	// 操作符
+	Operator *string `json:"Operator,omitnil,omitempty" name:"Operator"`
+
+	// header或query对应的name
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 }
 
 type SREInstance struct {
 	// 实例ID
-	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 版本号
-	Edition *string `json:"Edition,omitnil" name:"Edition"`
+	Edition *string `json:"Edition,omitnil,omitempty" name:"Edition"`
 
 	// 状态, 枚举值:creating/create_fail/running/updating/update_fail/restarting/restart_fail/destroying/destroy_fail
-	Status *string `json:"Status,omitnil" name:"Status"`
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 规格ID
-	SpecId *string `json:"SpecId,omitnil" name:"SpecId"`
+	SpecId *string `json:"SpecId,omitnil,omitempty" name:"SpecId"`
 
 	// 副本数
-	Replica *int64 `json:"Replica,omitnil" name:"Replica"`
+	Replica *int64 `json:"Replica,omitnil,omitempty" name:"Replica"`
 
 	// 类型
-	Type *string `json:"Type,omitnil" name:"Type"`
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// Vpc iD
-	VpcId *string `json:"VpcId,omitnil" name:"VpcId"`
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 子网ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	SubnetIds []*string `json:"SubnetIds,omitnil" name:"SubnetIds"`
+	SubnetIds []*string `json:"SubnetIds,omitnil,omitempty" name:"SubnetIds"`
 
 	// 是否开启持久化存储
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	EnableStorage *bool `json:"EnableStorage,omitnil" name:"EnableStorage"`
+	EnableStorage *bool `json:"EnableStorage,omitnil,omitempty" name:"EnableStorage"`
 
 	// 数据存储方式
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	StorageType *string `json:"StorageType,omitnil" name:"StorageType"`
+	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 
 	// 云硬盘容量
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	StorageCapacity *int64 `json:"StorageCapacity,omitnil" name:"StorageCapacity"`
+	StorageCapacity *int64 `json:"StorageCapacity,omitnil,omitempty" name:"StorageCapacity"`
 
 	// 计费方式
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Paymode *string `json:"Paymode,omitnil" name:"Paymode"`
+	Paymode *string `json:"Paymode,omitnil,omitempty" name:"Paymode"`
 
 	// EKS集群的ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	EKSClusterID *string `json:"EKSClusterID,omitnil" name:"EKSClusterID"`
+	EKSClusterID *string `json:"EKSClusterID,omitnil,omitempty" name:"EKSClusterID"`
 
 	// 集群创建时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CreateTime *string `json:"CreateTime,omitnil" name:"CreateTime"`
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 环境配置信息列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	EnvInfos []*EnvInfo `json:"EnvInfos,omitnil" name:"EnvInfos"`
+	EnvInfos []*EnvInfo `json:"EnvInfos,omitnil,omitempty" name:"EnvInfos"`
 
 	// 引擎所在的区域
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	EngineRegion *string `json:"EngineRegion,omitnil" name:"EngineRegion"`
+	EngineRegion *string `json:"EngineRegion,omitnil,omitempty" name:"EngineRegion"`
 
 	// 注册引擎是否开启公网
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	EnableInternet *bool `json:"EnableInternet,omitnil" name:"EnableInternet"`
+	EnableInternet *bool `json:"EnableInternet,omitnil,omitempty" name:"EnableInternet"`
 
 	// 私有网络列表信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	VpcInfos []*VpcInfo `json:"VpcInfos,omitnil" name:"VpcInfos"`
+	VpcInfos []*VpcInfo `json:"VpcInfos,omitnil,omitempty" name:"VpcInfos"`
 
 	// 服务治理相关信息列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ServiceGovernanceInfos []*ServiceGovernanceInfo `json:"ServiceGovernanceInfos,omitnil" name:"ServiceGovernanceInfos"`
+	ServiceGovernanceInfos []*ServiceGovernanceInfo `json:"ServiceGovernanceInfos,omitnil,omitempty" name:"ServiceGovernanceInfos"`
 
 	// 实例的标签信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Tags []*KVPair `json:"Tags,omitnil" name:"Tags"`
+	Tags []*KVPair `json:"Tags,omitnil,omitempty" name:"Tags"`
 
 	// 引擎实例是否开启控制台公网访问地址
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	EnableConsoleInternet *bool `json:"EnableConsoleInternet,omitnil" name:"EnableConsoleInternet"`
+	EnableConsoleInternet *bool `json:"EnableConsoleInternet,omitnil,omitempty" name:"EnableConsoleInternet"`
 
 	// 引擎实例是否开启控制台内网访问地址
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	EnableConsoleIntranet *bool `json:"EnableConsoleIntranet,omitnil" name:"EnableConsoleIntranet"`
+	EnableConsoleIntranet *bool `json:"EnableConsoleIntranet,omitnil,omitempty" name:"EnableConsoleIntranet"`
 
 	// 引擎实例是否展示参数配置页面
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ConfigInfoVisible *bool `json:"ConfigInfoVisible,omitnil" name:"ConfigInfoVisible"`
+	ConfigInfoVisible *bool `json:"ConfigInfoVisible,omitnil,omitempty" name:"ConfigInfoVisible"`
 
 	// 引擎实例控制台默认密码
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ConsoleDefaultPwd *string `json:"ConsoleDefaultPwd,omitnil" name:"ConsoleDefaultPwd"`
+	ConsoleDefaultPwd *string `json:"ConsoleDefaultPwd,omitnil,omitempty" name:"ConsoleDefaultPwd"`
 
 	// 交易付费类型，0后付费/1预付费
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TradeType *int64 `json:"TradeType,omitnil" name:"TradeType"`
+	TradeType *int64 `json:"TradeType,omitnil,omitempty" name:"TradeType"`
 
 	// 自动续费标记：0表示默认状态(用户未设置，即初始状态)， 1表示自动续费，2表示明确不自动续费
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil" name:"AutoRenewFlag"`
+	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
 	// 预付费到期时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CurDeadline *string `json:"CurDeadline,omitnil" name:"CurDeadline"`
+	CurDeadline *string `json:"CurDeadline,omitnil,omitempty" name:"CurDeadline"`
 
 	// 隔离开始时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	IsolateTime *string `json:"IsolateTime,omitnil" name:"IsolateTime"`
+	IsolateTime *string `json:"IsolateTime,omitnil,omitempty" name:"IsolateTime"`
 
 	// 实例地域相关的描述信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	RegionInfos []*DescribeInstanceRegionInfo `json:"RegionInfos,omitnil" name:"RegionInfos"`
+	RegionInfos []*DescribeInstanceRegionInfo `json:"RegionInfos,omitnil,omitempty" name:"RegionInfos"`
 
 	// 所在EKS环境，分为common和yunti
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	EKSType *string `json:"EKSType,omitnil" name:"EKSType"`
+	EKSType *string `json:"EKSType,omitnil,omitempty" name:"EKSType"`
 
 	// 引擎的产品版本
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	FeatureVersion *string `json:"FeatureVersion,omitnil" name:"FeatureVersion"`
+	FeatureVersion *string `json:"FeatureVersion,omitnil,omitempty" name:"FeatureVersion"`
 
 	// 引擎实例是否开启客户端内网访问地址
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	EnableClientIntranet *bool `json:"EnableClientIntranet,omitnil" name:"EnableClientIntranet"`
+	EnableClientIntranet *bool `json:"EnableClientIntranet,omitnil,omitempty" name:"EnableClientIntranet"`
 
 	// 存储额外配置选项
+	StorageOption []*StorageOption `json:"StorageOption,omitnil,omitempty" name:"StorageOption"`
+
+	// Zookeeper的额外环境数据信息
+	ZookeeperRegionInfo *ZookeeperRegionInfo `json:"ZookeeperRegionInfo,omitnil,omitempty" name:"ZookeeperRegionInfo"`
+
+	// 部署架构
+	DeployMode *string `json:"DeployMode,omitnil,omitempty" name:"DeployMode"`
+
+	// 全局属性
+	GlobalType *string `json:"GlobalType,omitnil,omitempty" name:"GlobalType"`
+
+	// 所属组类型
+	GroupType *string `json:"GroupType,omitnil,omitempty" name:"GroupType"`
+
+	// 组id
+	GroupId []*string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
+
+	// 是否为主地域
+	IsMainRegion *bool `json:"IsMainRegion,omitnil,omitempty" name:"IsMainRegion"`
+}
+
+type ServiceGatewaySelector struct {
+	// 命名空间
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	StorageOption []*StorageOption `json:"StorageOption,omitnil" name:"StorageOption"`
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 服务
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Service *string `json:"Service,omitnil,omitempty" name:"Service"`
+
+	// 实例标签
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Labels []*Label `json:"Labels,omitnil,omitempty" name:"Labels"`
 }
 
 type ServiceGovernanceInfo struct {
 	// 引擎所在的地域
-	EngineRegion *string `json:"EngineRegion,omitnil" name:"EngineRegion"`
+	EngineRegion *string `json:"EngineRegion,omitnil,omitempty" name:"EngineRegion"`
 
 	// 服务治理引擎绑定的kubernetes集群信息
-	BoundK8SInfos []*BoundK8SInfo `json:"BoundK8SInfos,omitnil" name:"BoundK8SInfos"`
+	BoundK8SInfos []*BoundK8SInfo `json:"BoundK8SInfos,omitnil,omitempty" name:"BoundK8SInfos"`
 
 	// 服务治理引擎绑定的网络信息
-	VpcInfos []*VpcInfo `json:"VpcInfos,omitnil" name:"VpcInfos"`
+	VpcInfos []*VpcInfo `json:"VpcInfos,omitnil,omitempty" name:"VpcInfos"`
 
 	// 当前实例鉴权是否开启
-	AuthOpen *bool `json:"AuthOpen,omitnil" name:"AuthOpen"`
+	AuthOpen *bool `json:"AuthOpen,omitnil,omitempty" name:"AuthOpen"`
 
 	// 该实例支持的功能，鉴权就是 Auth
-	Features []*string `json:"Features,omitnil" name:"Features"`
+	Features []*string `json:"Features,omitnil,omitempty" name:"Features"`
 
 	// 主账户名默认为 polaris，该值为主账户的默认密码
-	MainPassword *string `json:"MainPassword,omitnil" name:"MainPassword"`
+	MainPassword *string `json:"MainPassword,omitnil,omitempty" name:"MainPassword"`
 
 	// 服务治理pushgateway引擎绑定的网络信息
-	PgwVpcInfos []*VpcInfo `json:"PgwVpcInfos,omitnil" name:"PgwVpcInfos"`
+	PgwVpcInfos []*VpcInfo `json:"PgwVpcInfos,omitnil,omitempty" name:"PgwVpcInfos"`
 
 	// 服务治理限流server引擎绑定的网络信息
-	LimiterVpcInfos []*VpcInfo `json:"LimiterVpcInfos,omitnil" name:"LimiterVpcInfos"`
+	LimiterVpcInfos []*VpcInfo `json:"LimiterVpcInfos,omitnil,omitempty" name:"LimiterVpcInfos"`
 
 	// 引擎关联CLS日志主题信息
+	CLSTopics []*PolarisCLSTopicInfo `json:"CLSTopics,omitnil,omitempty" name:"CLSTopics"`
+
+	// 子用户密码
+	SubPassword *string `json:"SubPassword,omitnil,omitempty" name:"SubPassword"`
+}
+
+type ServiceSelector struct {
+	// 命名空间
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	CLSTopics []*PolarisCLSTopicInfo `json:"CLSTopics,omitnil" name:"CLSTopics"`
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 服务
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Service *string `json:"Service,omitnil,omitempty" name:"Service"`
+
+	// 实例标签
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Labels []*Label `json:"Labels,omitnil,omitempty" name:"Labels"`
 }
 
 type ServiceWafStatus struct {
 	//  服务的名字
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 服务的 ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// 服务的类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Type *string `json:"Type,omitnil" name:"Type"`
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	//  服务是否开启 WAF 防护
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Status *string `json:"Status,omitnil" name:"Status"`
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+}
+
+type SourceInfo struct {
+	// 微服务引擎接入IP地址信息
+	Addresses []*string `json:"Addresses,omitnil,omitempty" name:"Addresses"`
+
+	// 微服务引擎VPC信息
+	VpcInfo *SourceInstanceVpcInfo `json:"VpcInfo,omitnil,omitempty" name:"VpcInfo"`
+
+	// 微服务引擎鉴权信息
+	Auth *SourceInstanceAuth `json:"Auth,omitnil,omitempty" name:"Auth"`
+}
+
+type SourceInstanceAuth struct {
+	// 用户名
+	Username *string `json:"Username,omitnil,omitempty" name:"Username"`
+
+	// 账户密码
+	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
+
+	// 访问凭据 token
+	AccessToken *string `json:"AccessToken,omitnil,omitempty" name:"AccessToken"`
+}
+
+type SourceInstanceVpcInfo struct {
+	// 微服务引擎VPC信息
+	VpcID *string `json:"VpcID,omitnil,omitempty" name:"VpcID"`
+
+	// 微服务引擎子网信息
+	SubnetID *string `json:"SubnetID,omitnil,omitempty" name:"SubnetID"`
 }
 
 type StorageOption struct {
 	// 存储对象，分为snap和txn两种
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 存储类型，分为三类CLOUD_PREMIUM/CLOUD_SSD/CLOUD_SSD_PLUS，分别对应高性能云硬盘、SSD云硬盘、增强型SSD云硬盘
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Type *string `json:"Type,omitnil" name:"Type"`
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 存储容量，[50, 3200]的范围
+	Capacity *uint64 `json:"Capacity,omitnil,omitempty" name:"Capacity"`
+}
+
+type TSEGatewaySelector struct {
+	// 网关引擎实例ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Capacity *uint64 `json:"Capacity,omitnil" name:"Capacity"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
+
+	// 网关服务
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Services []*string `json:"Services,omitnil,omitempty" name:"Services"`
+}
+
+type TrafficGray struct {
+	// 流量灰度规则，按比例灰度或预热方式
+	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
+
+	// 按比例灰度的百分比值1-100
+	Percent *int64 `json:"Percent,omitnil,omitempty" name:"Percent"`
+
+	// 预热的间隔
+	IntervalSecond *int64 `json:"IntervalSecond,omitnil,omitempty" name:"IntervalSecond"`
+
+	// 预热的曲度
+	Curvature *int64 `json:"Curvature,omitnil,omitempty" name:"Curvature"`
 }
 
 // Predefined struct for user
 type UnbindAutoScalerResourceStrategyFromGroupsRequestParams struct {
 	// 网关实例ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 策略ID
-	StrategyId *string `json:"StrategyId,omitnil" name:"StrategyId"`
+	StrategyId *string `json:"StrategyId,omitnil,omitempty" name:"StrategyId"`
 
 	// 网关分组ID列表
-	GroupIds []*string `json:"GroupIds,omitnil" name:"GroupIds"`
+	GroupIds []*string `json:"GroupIds,omitnil,omitempty" name:"GroupIds"`
 }
 
 type UnbindAutoScalerResourceStrategyFromGroupsRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关实例ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 策略ID
-	StrategyId *string `json:"StrategyId,omitnil" name:"StrategyId"`
+	StrategyId *string `json:"StrategyId,omitnil,omitempty" name:"StrategyId"`
 
 	// 网关分组ID列表
-	GroupIds []*string `json:"GroupIds,omitnil" name:"GroupIds"`
+	GroupIds []*string `json:"GroupIds,omitnil,omitempty" name:"GroupIds"`
 }
 
 func (r *UnbindAutoScalerResourceStrategyFromGroupsRequest) ToJsonString() string {
@@ -7493,10 +16984,10 @@ func (r *UnbindAutoScalerResourceStrategyFromGroupsRequest) FromJsonString(s str
 // Predefined struct for user
 type UnbindAutoScalerResourceStrategyFromGroupsResponseParams struct {
 	// 是否成功
-	Result *bool `json:"Result,omitnil" name:"Result"`
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type UnbindAutoScalerResourceStrategyFromGroupsResponse struct {
@@ -7518,32 +17009,32 @@ func (r *UnbindAutoScalerResourceStrategyFromGroupsResponse) FromJsonString(s st
 // Predefined struct for user
 type UpdateCloudNativeAPIGatewayCertificateInfoRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 证书id
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// 绑定的域名列表
-	BindDomains []*string `json:"BindDomains,omitnil" name:"BindDomains"`
+	BindDomains []*string `json:"BindDomains,omitnil,omitempty" name:"BindDomains"`
 
 	// 证书名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 }
 
 type UpdateCloudNativeAPIGatewayCertificateInfoRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 证书id
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// 绑定的域名列表
-	BindDomains []*string `json:"BindDomains,omitnil" name:"BindDomains"`
+	BindDomains []*string `json:"BindDomains,omitnil,omitempty" name:"BindDomains"`
 
 	// 证书名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 }
 
 func (r *UpdateCloudNativeAPIGatewayCertificateInfoRequest) ToJsonString() string {
@@ -7570,8 +17061,8 @@ func (r *UpdateCloudNativeAPIGatewayCertificateInfoRequest) FromJsonString(s str
 
 // Predefined struct for user
 type UpdateCloudNativeAPIGatewayCertificateInfoResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type UpdateCloudNativeAPIGatewayCertificateInfoResponse struct {
@@ -7592,27 +17083,26 @@ func (r *UpdateCloudNativeAPIGatewayCertificateInfoResponse) FromJsonString(s st
 
 type UpdateCloudNativeAPIGatewayResult struct {
 	// 云原生API网关ID。
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 云原生网关状态。
-	Status *string `json:"Status,omitnil" name:"Status"`
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 任务ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TaskId *string `json:"TaskId,omitnil" name:"TaskId"`
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 }
 
 // Predefined struct for user
 type UpdateCloudNativeAPIGatewaySpecRequestParams struct {
 	// 云原生API网关实例ID。
 	// 只支持后付费实例
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 网关分组id
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 网关分组节点规格配置。
-	NodeConfig *CloudNativeAPIGatewayNodeConfig `json:"NodeConfig,omitnil" name:"NodeConfig"`
+	NodeConfig *CloudNativeAPIGatewayNodeConfig `json:"NodeConfig,omitnil,omitempty" name:"NodeConfig"`
 }
 
 type UpdateCloudNativeAPIGatewaySpecRequest struct {
@@ -7620,13 +17110,13 @@ type UpdateCloudNativeAPIGatewaySpecRequest struct {
 	
 	// 云原生API网关实例ID。
 	// 只支持后付费实例
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 网关分组id
-	GroupId *string `json:"GroupId,omitnil" name:"GroupId"`
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
 	// 网关分组节点规格配置。
-	NodeConfig *CloudNativeAPIGatewayNodeConfig `json:"NodeConfig,omitnil" name:"NodeConfig"`
+	NodeConfig *CloudNativeAPIGatewayNodeConfig `json:"NodeConfig,omitnil,omitempty" name:"NodeConfig"`
 }
 
 func (r *UpdateCloudNativeAPIGatewaySpecRequest) ToJsonString() string {
@@ -7653,10 +17143,10 @@ func (r *UpdateCloudNativeAPIGatewaySpecRequest) FromJsonString(s string) error 
 // Predefined struct for user
 type UpdateCloudNativeAPIGatewaySpecResponseParams struct {
 	// 更新云原生API网关实例规格的响应结果。
-	Result *UpdateCloudNativeAPIGatewayResult `json:"Result,omitnil" name:"Result"`
+	Result *UpdateCloudNativeAPIGatewayResult `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type UpdateCloudNativeAPIGatewaySpecResponse struct {
@@ -7678,26 +17168,26 @@ func (r *UpdateCloudNativeAPIGatewaySpecResponse) FromJsonString(s string) error
 // Predefined struct for user
 type UpdateEngineInternetAccessRequestParams struct {
 	// 引擎ID
-	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 引擎类型
-	EngineType *string `json:"EngineType,omitnil" name:"EngineType"`
+	EngineType *string `json:"EngineType,omitnil,omitempty" name:"EngineType"`
 
 	// 是否开启客户端公网访问，true开 false关
-	EnableClientInternetAccess *bool `json:"EnableClientInternetAccess,omitnil" name:"EnableClientInternetAccess"`
+	EnableClientInternetAccess *bool `json:"EnableClientInternetAccess,omitnil,omitempty" name:"EnableClientInternetAccess"`
 }
 
 type UpdateEngineInternetAccessRequest struct {
 	*tchttp.BaseRequest
 	
 	// 引擎ID
-	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 引擎类型
-	EngineType *string `json:"EngineType,omitnil" name:"EngineType"`
+	EngineType *string `json:"EngineType,omitnil,omitempty" name:"EngineType"`
 
 	// 是否开启客户端公网访问，true开 false关
-	EnableClientInternetAccess *bool `json:"EnableClientInternetAccess,omitnil" name:"EnableClientInternetAccess"`
+	EnableClientInternetAccess *bool `json:"EnableClientInternetAccess,omitnil,omitempty" name:"EnableClientInternetAccess"`
 }
 
 func (r *UpdateEngineInternetAccessRequest) ToJsonString() string {
@@ -7723,8 +17213,8 @@ func (r *UpdateEngineInternetAccessRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type UpdateEngineInternetAccessResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type UpdateEngineInternetAccessResponse struct {
@@ -7746,26 +17236,26 @@ func (r *UpdateEngineInternetAccessResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type UpdateUpstreamHealthCheckConfigRequestParams struct {
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 网关服务名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 健康检查配置
-	HealthCheckConfig *UpstreamHealthCheckConfig `json:"HealthCheckConfig,omitnil" name:"HealthCheckConfig"`
+	HealthCheckConfig *UpstreamHealthCheckConfig `json:"HealthCheckConfig,omitnil,omitempty" name:"HealthCheckConfig"`
 }
 
 type UpdateUpstreamHealthCheckConfigRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 网关服务名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 健康检查配置
-	HealthCheckConfig *UpstreamHealthCheckConfig `json:"HealthCheckConfig,omitnil" name:"HealthCheckConfig"`
+	HealthCheckConfig *UpstreamHealthCheckConfig `json:"HealthCheckConfig,omitnil,omitempty" name:"HealthCheckConfig"`
 }
 
 func (r *UpdateUpstreamHealthCheckConfigRequest) ToJsonString() string {
@@ -7792,11 +17282,10 @@ func (r *UpdateUpstreamHealthCheckConfigRequest) FromJsonString(s string) error 
 // Predefined struct for user
 type UpdateUpstreamHealthCheckConfigResponseParams struct {
 	// 是否成功
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Result *bool `json:"Result,omitnil" name:"Result"`
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type UpdateUpstreamHealthCheckConfigResponse struct {
@@ -7818,26 +17307,26 @@ func (r *UpdateUpstreamHealthCheckConfigResponse) FromJsonString(s string) error
 // Predefined struct for user
 type UpdateUpstreamTargetsRequestParams struct {
 	// 网关实例ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务名称或ID
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 实例列表
-	Targets []*KongTarget `json:"Targets,omitnil" name:"Targets"`
+	Targets []*KongTarget `json:"Targets,omitnil,omitempty" name:"Targets"`
 }
 
 type UpdateUpstreamTargetsRequest struct {
 	*tchttp.BaseRequest
 	
 	// 网关实例ID
-	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+	GatewayId *string `json:"GatewayId,omitnil,omitempty" name:"GatewayId"`
 
 	// 服务名称或ID
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 实例列表
-	Targets []*KongTarget `json:"Targets,omitnil" name:"Targets"`
+	Targets []*KongTarget `json:"Targets,omitnil,omitempty" name:"Targets"`
 }
 
 func (r *UpdateUpstreamTargetsRequest) ToJsonString() string {
@@ -7864,11 +17353,10 @@ func (r *UpdateUpstreamTargetsRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type UpdateUpstreamTargetsResponseParams struct {
 	// 是否更新成功
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Result *bool `json:"Result,omitnil" name:"Result"`
+	Result *bool `json:"Result,omitnil,omitempty" name:"Result"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type UpdateUpstreamTargetsResponse struct {
@@ -7889,87 +17377,109 @@ func (r *UpdateUpstreamTargetsResponse) FromJsonString(s string) error {
 
 type UpstreamHealthCheckConfig struct {
 	// 开启主动健康检查
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	EnableActiveHealthCheck *bool `json:"EnableActiveHealthCheck,omitnil" name:"EnableActiveHealthCheck"`
+	EnableActiveHealthCheck *bool `json:"EnableActiveHealthCheck,omitnil,omitempty" name:"EnableActiveHealthCheck"`
 
 	// 主动健康检查配置
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ActiveHealthCheck *KongActiveHealthCheck `json:"ActiveHealthCheck,omitnil" name:"ActiveHealthCheck"`
+	ActiveHealthCheck *KongActiveHealthCheck `json:"ActiveHealthCheck,omitnil,omitempty" name:"ActiveHealthCheck"`
 
 	// 开启被动健康检查
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	EnablePassiveHealthCheck *bool `json:"EnablePassiveHealthCheck,omitnil" name:"EnablePassiveHealthCheck"`
+	EnablePassiveHealthCheck *bool `json:"EnablePassiveHealthCheck,omitnil,omitempty" name:"EnablePassiveHealthCheck"`
 
 	// 被动健康检查配置
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	PassiveHealthCheck *KongPassiveHealthCheck `json:"PassiveHealthCheck,omitnil" name:"PassiveHealthCheck"`
+	PassiveHealthCheck *KongPassiveHealthCheck `json:"PassiveHealthCheck,omitnil,omitempty" name:"PassiveHealthCheck"`
 
 	// 连续健康阈值，单位：次
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Successes *uint64 `json:"Successes,omitnil" name:"Successes"`
+	Successes *uint64 `json:"Successes,omitnil,omitempty" name:"Successes"`
 
 	// 连续异常阈值，单位：次	
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Failures *uint64 `json:"Failures,omitnil" name:"Failures"`
+	Failures *uint64 `json:"Failures,omitnil,omitempty" name:"Failures"`
 
 	// 超时阈值，单位：次
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Timeouts *uint64 `json:"Timeouts,omitnil" name:"Timeouts"`
+	Timeouts *uint64 `json:"Timeouts,omitnil,omitempty" name:"Timeouts"`
 
 	// 健康HTTP状态码
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	HealthyHttpStatuses []*uint64 `json:"HealthyHttpStatuses,omitnil" name:"HealthyHttpStatuses"`
+	HealthyHttpStatuses []*uint64 `json:"HealthyHttpStatuses,omitnil,omitempty" name:"HealthyHttpStatuses"`
 
 	// 异常HTTP状态码
+	UnhealthyHttpStatuses []*uint64 `json:"UnhealthyHttpStatuses,omitnil,omitempty" name:"UnhealthyHttpStatuses"`
+
+	// 健康检查监控上报的数据屏蔽权重为0的节点
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	UnhealthyHttpStatuses []*uint64 `json:"UnhealthyHttpStatuses,omitnil" name:"UnhealthyHttpStatuses"`
+	//
+	// Deprecated: IgnoreZeroWeightNodes is deprecated.
+	IgnoreZeroWeightNodes *bool `json:"IgnoreZeroWeightNodes,omitnil,omitempty" name:"IgnoreZeroWeightNodes"`
+
+	// 健康检查支持权重为0节点
+	ZeroWeightHeathCheck *bool `json:"ZeroWeightHeathCheck,omitnil,omitempty" name:"ZeroWeightHeathCheck"`
 }
 
 type VpcInfo struct {
 	// Vpc Id
-	VpcId *string `json:"VpcId,omitnil" name:"VpcId"`
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 子网ID
-	SubnetId *string `json:"SubnetId,omitnil" name:"SubnetId"`
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// 内网访问地址
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	IntranetAddress *string `json:"IntranetAddress,omitnil" name:"IntranetAddress"`
+	IntranetAddress *string `json:"IntranetAddress,omitnil,omitempty" name:"IntranetAddress"`
+
+	// 负载均衡均衡接入点子网ID
+	LbSubnetId *string `json:"LbSubnetId,omitnil,omitempty" name:"LbSubnetId"`
+}
+
+type ZookeeperRegionInfo struct {
+	// 部署架构信息
+	// 
+	// - SingleRegion: 普通单地域
+	// - MultiRegion: 普通多地域场景
+	// - MasterSlave: 两地域，主备地域场景
+	DeployMode *string `json:"DeployMode,omitnil,omitempty" name:"DeployMode"`
+
+	// 主地域的额外信息
+	MainRegion *ZookeeperRegionMyIdInfo `json:"MainRegion,omitnil,omitempty" name:"MainRegion"`
+
+	// 其他地域的额外信息
+	OtherRegions []*ZookeeperRegionMyIdInfo `json:"OtherRegions,omitnil,omitempty" name:"OtherRegions"`
+}
+
+type ZookeeperRegionMyIdInfo struct {
+	// 地域信息
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
+
+	// myid 的起始号段
+	MyIdStart *int64 `json:"MyIdStart,omitnil,omitempty" name:"MyIdStart"`
+
+	// myid 的结束号段
+	MyIdEnd *int64 `json:"MyIdEnd,omitnil,omitempty" name:"MyIdEnd"`
 }
 
 type ZookeeperReplica struct {
 	// 名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 角色
-	Role *string `json:"Role,omitnil" name:"Role"`
+	Role *string `json:"Role,omitnil,omitempty" name:"Role"`
 
 	// 状态
-	Status *string `json:"Status,omitnil" name:"Status"`
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 子网ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	SubnetId *string `json:"SubnetId,omitnil" name:"SubnetId"`
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
 	// 可用区ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Zone *string `json:"Zone,omitnil" name:"Zone"`
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
 	// 可用区ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ZoneId *string `json:"ZoneId,omitnil" name:"ZoneId"`
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
 	// 别名
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	AliasName *string `json:"AliasName,omitnil" name:"AliasName"`
+	AliasName *string `json:"AliasName,omitnil,omitempty" name:"AliasName"`
 
 	// VPC ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	VpcId *string `json:"VpcId,omitnil" name:"VpcId"`
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 }
 
 type ZookeeperServerInterface struct {
 	// 接口名
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Interface *string `json:"Interface,omitnil" name:"Interface"`
+	Interface *string `json:"Interface,omitnil,omitempty" name:"Interface"`
 }

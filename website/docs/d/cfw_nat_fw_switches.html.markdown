@@ -62,4 +62,9 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - Vpc Id.
   * `vpc_name` - Vpc Name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeNatFwSwitch](https://www.tencentcloud.com/search/?wd=DescribeNatFwSwitch&type=document&lang=en)
 

@@ -147,4 +147,9 @@ In addition to all arguments above, the following attributes are exported:
   * `zone_desc` - Note about availability zone, such as Guangzhou Zone 2. Note: This field may return null, indicating that no valid values can be obtained.
   * `zone` - Availability zone, ap-guangzhou-3. Note: This field may return null, indicating that no valid values can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstances](https://www.tencentcloud.com/search/?wd=DescribeInstances&type=document&lang=en)
 

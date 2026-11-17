@@ -46,4 +46,9 @@ In addition to all arguments above, the following attributes are exported:
   * `payer_uin` - Payer uin.
   * `update_time` - Update time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBudgetOperationLog](https://www.tencentcloud.com/search/?wd=DescribeBudgetOperationLog&type=document&lang=en)
 

@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
   * `account_id` - ID of the account with which the image is shared.
   * `created_time` - Time when an image was shared.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeImageSharePermission](https://www.tencentcloud.com/document/api/213/33273)
 

@@ -1753,6 +1753,64 @@ func (c *Client) DescribeBackupDownloadRestrictionWithContext(ctx context.Contex
     return
 }
 
+func NewDescribeBackupEncryptConfigRequest() (request *DescribeBackupEncryptConfigRequest) {
+    request = &DescribeBackupEncryptConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "DescribeBackupEncryptConfig")
+    
+    
+    return
+}
+
+func NewDescribeBackupEncryptConfigResponse() (response *DescribeBackupEncryptConfigResponse) {
+    response = &DescribeBackupEncryptConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeBackupEncryptConfig
+// 本接口（DescribeBackupEncryptConfig）用于查询实例 备份加密相关信息，包括开启状态、加密密钥等。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+func (c *Client) DescribeBackupEncryptConfig(request *DescribeBackupEncryptConfigRequest) (response *DescribeBackupEncryptConfigResponse, err error) {
+    return c.DescribeBackupEncryptConfigWithContext(context.Background(), request)
+}
+
+// DescribeBackupEncryptConfig
+// 本接口（DescribeBackupEncryptConfig）用于查询实例 备份加密相关信息，包括开启状态、加密密钥等。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+func (c *Client) DescribeBackupEncryptConfigWithContext(ctx context.Context, request *DescribeBackupEncryptConfigRequest) (response *DescribeBackupEncryptConfigResponse, err error) {
+    if request == nil {
+        request = NewDescribeBackupEncryptConfigRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeBackupEncryptConfig")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBackupEncryptConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBackupEncryptConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeBackupUrlRequest() (request *DescribeBackupUrlRequest) {
     request = &DescribeBackupUrlRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3103,6 +3161,56 @@ func (c *Client) DescribeInstanceParamsWithContext(ctx context.Context, request 
     return
 }
 
+func NewDescribeInstancePasswordPolicyRequest() (request *DescribeInstancePasswordPolicyRequest) {
+    request = &DescribeInstancePasswordPolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "DescribeInstancePasswordPolicy")
+    
+    
+    return
+}
+
+func NewDescribeInstancePasswordPolicyResponse() (response *DescribeInstancePasswordPolicyResponse) {
+    response = &DescribeInstancePasswordPolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeInstancePasswordPolicy
+// 查询指定实例当前密码复杂度配置
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+func (c *Client) DescribeInstancePasswordPolicy(request *DescribeInstancePasswordPolicyRequest) (response *DescribeInstancePasswordPolicyResponse, err error) {
+    return c.DescribeInstancePasswordPolicyWithContext(context.Background(), request)
+}
+
+// DescribeInstancePasswordPolicy
+// 查询指定实例当前密码复杂度配置
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+func (c *Client) DescribeInstancePasswordPolicyWithContext(ctx context.Context, request *DescribeInstancePasswordPolicyRequest) (response *DescribeInstancePasswordPolicyResponse, err error) {
+    if request == nil {
+        request = NewDescribeInstancePasswordPolicyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstancePasswordPolicy")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstancePasswordPolicy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInstancePasswordPolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeInstanceSecurityGroupRequest() (request *DescribeInstanceSecurityGroupRequest) {
     request = &DescribeInstanceSecurityGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3556,15 +3664,10 @@ func NewDescribeLogsResponse() (response *DescribeLogsResponse) {
 // 查询日志
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
-//  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
-//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_EMPTYPARAM = "InvalidParameter.EmptyParam"
-//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
-//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
-//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  FAILEDOPERATION_SERVICEACCESSERROR = "FailedOperation.ServiceAccessError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 func (c *Client) DescribeLogs(request *DescribeLogsRequest) (response *DescribeLogsResponse, err error) {
     return c.DescribeLogsWithContext(context.Background(), request)
 }
@@ -3573,15 +3676,10 @@ func (c *Client) DescribeLogs(request *DescribeLogsRequest) (response *DescribeL
 // 查询日志
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
-//  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
-//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_EMPTYPARAM = "InvalidParameter.EmptyParam"
-//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
-//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
-//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  FAILEDOPERATION_SERVICEACCESSERROR = "FailedOperation.ServiceAccessError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 func (c *Client) DescribeLogsWithContext(ctx context.Context, request *DescribeLogsRequest) (response *DescribeLogsResponse, err error) {
     if request == nil {
         request = NewDescribeLogsRequest()
@@ -5467,6 +5565,64 @@ func (c *Client) ModifyBackupDownloadRestrictionWithContext(ctx context.Context,
     return
 }
 
+func NewModifyBackupEncryptRequest() (request *ModifyBackupEncryptRequest) {
+    request = &ModifyBackupEncryptRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "ModifyBackupEncrypt")
+    
+    
+    return
+}
+
+func NewModifyBackupEncryptResponse() (response *ModifyBackupEncryptResponse) {
+    response = &ModifyBackupEncryptResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyBackupEncrypt
+// 本接口（ModifyBackupEncrypt）用于开启 /关闭备份加密，修改备份密钥功能。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+func (c *Client) ModifyBackupEncrypt(request *ModifyBackupEncryptRequest) (response *ModifyBackupEncryptResponse, err error) {
+    return c.ModifyBackupEncryptWithContext(context.Background(), request)
+}
+
+// ModifyBackupEncrypt
+// 本接口（ModifyBackupEncrypt）用于开启 /关闭备份加密，修改备份密钥功能。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+func (c *Client) ModifyBackupEncryptWithContext(ctx context.Context, request *ModifyBackupEncryptRequest) (response *ModifyBackupEncryptResponse, err error) {
+    if request == nil {
+        request = NewModifyBackupEncryptRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModifyBackupEncrypt")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyBackupEncrypt require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyBackupEncryptResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyConnectionConfigRequest() (request *ModifyConnectionConfigRequest) {
     request = &ModifyConnectionConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -6159,6 +6315,64 @@ func (c *Client) ModifyInstancePasswordWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewModifyInstancePasswordResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyInstancePasswordPolicyRequest() (request *ModifyInstancePasswordPolicyRequest) {
+    request = &ModifyInstancePasswordPolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "ModifyInstancePasswordPolicy")
+    
+    
+    return
+}
+
+func NewModifyInstancePasswordPolicyResponse() (response *ModifyInstancePasswordPolicyResponse) {
+    response = &ModifyInstancePasswordPolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyInstancePasswordPolicy
+// 本接口（ModifyInstancePasswordPolicy）用于修改实例密码复杂度。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INSTANCENOTFOUNDERROR = "InternalError.InstanceNotFoundError"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCENOTSUPPORTOPERATION = "ResourceUnavailable.InstanceNotSupportOperation"
+//  UNSUPPORTEDOPERATION_INSTANCENOTOPERATION = "UnsupportedOperation.InstanceNotOperation"
+func (c *Client) ModifyInstancePasswordPolicy(request *ModifyInstancePasswordPolicyRequest) (response *ModifyInstancePasswordPolicyResponse, err error) {
+    return c.ModifyInstancePasswordPolicyWithContext(context.Background(), request)
+}
+
+// ModifyInstancePasswordPolicy
+// 本接口（ModifyInstancePasswordPolicy）用于修改实例密码复杂度。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INSTANCENOTFOUNDERROR = "InternalError.InstanceNotFoundError"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCENOTSUPPORTOPERATION = "ResourceUnavailable.InstanceNotSupportOperation"
+//  UNSUPPORTEDOPERATION_INSTANCENOTOPERATION = "UnsupportedOperation.InstanceNotOperation"
+func (c *Client) ModifyInstancePasswordPolicyWithContext(ctx context.Context, request *ModifyInstancePasswordPolicyRequest) (response *ModifyInstancePasswordPolicyResponse, err error) {
+    if request == nil {
+        request = NewModifyInstancePasswordPolicyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModifyInstancePasswordPolicy")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyInstancePasswordPolicy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyInstancePasswordPolicyResponse()
     err = c.Send(request, response)
     return
 }
@@ -7397,6 +7611,64 @@ func (c *Client) UpgradeInstanceWithContext(ctx context.Context, request *Upgrad
     request.SetContext(ctx)
     
     response = NewUpgradeInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpgradeInstanceProductVersionRequest() (request *UpgradeInstanceProductVersionRequest) {
+    request = &UpgradeInstanceProductVersionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "UpgradeInstanceProductVersion")
+    
+    
+    return
+}
+
+func NewUpgradeInstanceProductVersionResponse() (response *UpgradeInstanceProductVersionResponse) {
+    response = &UpgradeInstanceProductVersionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpgradeInstanceProductVersion
+// 本接口（UpgradeInstanceProductVersion）用于升级实例类型，可从通用 I 型升级到通用 II 型。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+//  UNAUTHORIZEDOPERATION_USERNOTINWHITELIST = "UnauthorizedOperation.UserNotInWhiteList"
+func (c *Client) UpgradeInstanceProductVersion(request *UpgradeInstanceProductVersionRequest) (response *UpgradeInstanceProductVersionResponse, err error) {
+    return c.UpgradeInstanceProductVersionWithContext(context.Background(), request)
+}
+
+// UpgradeInstanceProductVersion
+// 本接口（UpgradeInstanceProductVersion）用于升级实例类型，可从通用 I 型升级到通用 II 型。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
+//  UNAUTHORIZEDOPERATION_USERNOTINWHITELIST = "UnauthorizedOperation.UserNotInWhiteList"
+func (c *Client) UpgradeInstanceProductVersionWithContext(ctx context.Context, request *UpgradeInstanceProductVersionRequest) (response *UpgradeInstanceProductVersionResponse, err error) {
+    if request == nil {
+        request = NewUpgradeInstanceProductVersionRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "UpgradeInstanceProductVersion")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpgradeInstanceProductVersion require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpgradeInstanceProductVersionResponse()
     err = c.Send(request, response)
     return
 }

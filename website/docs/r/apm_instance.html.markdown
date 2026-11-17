@@ -96,6 +96,20 @@ In addition to all arguments above, the following attributes are exported:
 * `public_collector_url` - External Network Reporting Address.
 * `token` - Business system authentication token.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateApmInstance](https://www.tencentcloud.com/document/api/1166/68215)
+  - [ModifyApmInstance](https://www.tencentcloud.com/document/api/1166/68212)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeApmAgent](https://www.tencentcloud.com/document/api/1166/68214)
+  - [DescribeApmInstances](https://www.tencentcloud.com/document/api/1166/68213)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update: [ModifyApmInstance](https://www.tencentcloud.com/document/api/1166/68212)
+* Delete: [TerminateApmInstance](https://www.tencentcloud.com/document/api/1166/68211)
 
 ## Import
 

@@ -40,24 +40,24 @@ func ResourceTencentCloudGa2ForwardingRule() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Global accelerator instance ID this forwarding rule belongs to.",
+				Description: "Global accelerator instance ID. Example value: `ga-ask56kjh`.",
 			},
 			"listener_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Listener ID this forwarding rule belongs to.",
+				Description: "Listener ID. Example value: `lsr-kzjzfs7n`.",
 			},
 			"forwarding_policy_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Forwarding policy ID this forwarding rule belongs to.",
+				Description: "Forwarding policy ID. Example value: `dm-dz058e4q`.",
 			},
 			"rule_conditions": {
 				Type:        schema.TypeSet,
 				Required:    true,
-				Description: "Layer-7 forwarding rule condition list. Maximum of 1 element. Treated as an unordered set; HCL element order has no semantic meaning.",
+				Description: "Layer-7 forwarding rule conditions. The array length cannot exceed 1. Treated as an unordered set; HCL element order has no semantic meaning.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"rule_condition_type": {
@@ -70,7 +70,7 @@ func ResourceTencentCloudGa2ForwardingRule() *schema.Resource {
 							Required: true,
 							Elem:     &schema.Schema{Type: schema.TypeString},
 							Description: "Layer-7 forwarding rule condition values. Each value must match the regular expression " +
-								"`^[a-zA-Z0-9_.-/]{1,80}$`. Maximum of 1 element. Treated as an unordered set.",
+								"`^[a-zA-Z0-9_.-/]{1,80}$`. The array length cannot exceed 1. Treated as an unordered set.",
 						},
 					},
 				},
@@ -78,7 +78,7 @@ func ResourceTencentCloudGa2ForwardingRule() *schema.Resource {
 			"rule_actions": {
 				Type:        schema.TypeSet,
 				Required:    true,
-				Description: "Layer-7 forwarding rule action list. Treated as an unordered set; HCL element order has no semantic meaning.",
+				Description: "Layer-7 forwarding rule actions. The array length cannot exceed 1. Treated as an unordered set; HCL element order has no semantic meaning.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"rule_action_type": {
@@ -101,7 +101,7 @@ func ResourceTencentCloudGa2ForwardingRule() *schema.Resource {
 				Type:     schema.TypeSet,
 				Optional: true,
 				Computed: true,
-				Description: "Origin request header list. Maximum of 5 elements. Required when `rule_actions.rule_action_type` " +
+				Description: "Origin request headers. The array length cannot exceed 5. Required when `rule_actions.rule_action_type` " +
 					"is `ForwardGroup`. Treated as an unordered set; HCL element order has no semantic meaning.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -138,6 +138,48 @@ func ResourceTencentCloudGa2ForwardingRule() *schema.Resource {
 				Computed: true,
 				Description: "Origin host value. Maximum length is 80 characters. Required when `rule_actions.rule_action_type` " +
 					"is `ForwardGroup`.",
+			},
+			"response_headers": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Computed: true,
+				Description: "Origin response headers. The array length cannot exceed 5. An empty set means clearing the " +
+					"configuration. Treated as an unordered set; HCL element order has no semantic meaning.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"key": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Origin response header key. Must contain only printable ASCII characters and must not contain `()<>@,;:\\\"/[ ]?={}`. Length must be between 1 and 40 characters.",
+						},
+						"value": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Origin response header value. Maximum length is 128 characters. If the value contains `$`, only `$remote_addr` or `$remote_port` are supported.",
+						},
+					},
+				},
+			},
+			"hide_response_headers": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Computed: true,
+				Description: "Origin response headers to remove. The array length cannot exceed 5. An empty set means clearing the " +
+					"configuration. Treated as an unordered set; HCL element order has no semantic meaning.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"key": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Origin response header key to remove. Maximum length is 128 characters. If it contains `$`, only `$remote_addr` or `$remote_port` are supported.",
+						},
+						"value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Origin response header value to remove. Currently only an empty string is accepted.",
+						},
+					},
+				},
 			},
 
 			// Computed
@@ -198,12 +240,20 @@ func resourceTencentCloudGa2ForwardingRuleCreate(d *schema.ResourceData, meta in
 		request.EnableOriginSni = helper.Bool(v.(bool))
 	}
 
-	if v, ok := d.GetOk("origin_sni"); ok {
+	if v, ok := d.GetOk("origin_sni"); ok && v.(string) != "" {
 		request.OriginSni = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("origin_host"); ok {
 		request.OriginHost = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("response_headers"); ok {
+		request.ResponseHeaders = buildGa2ForwardingRuleResponseHeaders(v.(*schema.Set).List())
+	}
+
+	if v, ok := d.GetOk("hide_response_headers"); ok {
+		request.HideResponseHeaders = buildGa2ForwardingRuleHideResponseHeaders(v.(*schema.Set).List())
 	}
 
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -263,11 +313,19 @@ func resourceTencentCloudGa2ForwardingRuleRead(d *schema.ResourceData, meta inte
 
 	respData, err := service.DescribeGa2ForwardingRuleById(ctx, gaId, listenerId, policyId, ruleId)
 	if err != nil {
+		if !d.IsNewResource() && IsGa2ResourceNotFoundError(err) {
+			log.Printf("[WARN]%s resource `tencentcloud_ga2_forwarding_rule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+			d.SetId("")
+			return nil
+		}
 		return err
 	}
 
 	if respData == nil {
 		log.Printf("[WARN]%s resource `tencentcloud_ga2_forwarding_rule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		if d.IsNewResource() {
+			return fmt.Errorf("resource `tencentcloud_ga2_forwarding_rule` [%s] not found after creation", d.Id())
+		}
 		d.SetId("")
 		return nil
 	}
@@ -314,6 +372,14 @@ func resourceTencentCloudGa2ForwardingRuleRead(d *schema.ResourceData, meta inte
 		_ = d.Set("origin_host", respData.OriginHost)
 	}
 
+	if len(respData.ResponseHeaders) > 0 {
+		_ = d.Set("response_headers", flattenGa2ForwardingRuleResponseHeaders(respData.ResponseHeaders))
+	}
+
+	if len(respData.HideResponseHeaders) > 0 {
+		_ = d.Set("hide_response_headers", flattenGa2ForwardingRuleHideResponseHeaders(respData.HideResponseHeaders))
+	}
+
 	return nil
 }
 
@@ -336,6 +402,7 @@ func resourceTencentCloudGa2ForwardingRuleUpdate(d *schema.ResourceData, meta in
 	bodyFields := []string{
 		"rule_conditions", "rule_actions", "origin_headers",
 		"enable_origin_sni", "origin_sni", "origin_host",
+		"response_headers", "hide_response_headers",
 	}
 	needModify := false
 	for _, f := range bodyFields {
@@ -372,12 +439,20 @@ func resourceTencentCloudGa2ForwardingRuleUpdate(d *schema.ResourceData, meta in
 		request.EnableOriginSni = helper.Bool(v.(bool))
 	}
 
-	if v, ok := d.GetOk("origin_sni"); ok {
+	if v, ok := d.GetOk("origin_sni"); ok && v.(string) != "" {
 		request.OriginSni = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("origin_host"); ok {
 		request.OriginHost = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("response_headers"); ok {
+		request.ResponseHeaders = buildGa2ForwardingRuleResponseHeaders(v.(*schema.Set).List())
+	}
+
+	if v, ok := d.GetOk("hide_response_headers"); ok {
+		request.HideResponseHeaders = buildGa2ForwardingRuleHideResponseHeaders(v.(*schema.Set).List())
 	}
 
 	var taskId string
@@ -608,6 +683,88 @@ func flattenGa2ForwardingRuleActions(items []*ga2v20250115.RuleAction) []map[str
 
 // flattenGa2ForwardingRuleOriginHeaders maps SDK OriginHeader slice back into the schema set payload.
 func flattenGa2ForwardingRuleOriginHeaders(items []*ga2v20250115.OriginHeader) []map[string]interface{} {
+	result := make([]map[string]interface{}, 0, len(items))
+	for _, item := range items {
+		if item == nil {
+			continue
+		}
+		m := map[string]interface{}{}
+		if item.Key != nil {
+			m["key"] = *item.Key
+		}
+		if item.Value != nil {
+			m["value"] = *item.Value
+		}
+		result = append(result, m)
+	}
+	return result
+}
+
+// buildGa2ForwardingRuleResponseHeaders converts the schema set into the SDK ResponseHeaders slice.
+func buildGa2ForwardingRuleResponseHeaders(rawList []interface{}) []*ga2v20250115.ResponseHeaders {
+	result := make([]*ga2v20250115.ResponseHeaders, 0, len(rawList))
+	for _, item := range rawList {
+		if item == nil {
+			continue
+		}
+		m := item.(map[string]interface{})
+		rh := &ga2v20250115.ResponseHeaders{}
+
+		if v, ok := m["key"].(string); ok && v != "" {
+			rh.Key = helper.String(v)
+		}
+		if v, ok := m["value"].(string); ok {
+			rh.Value = helper.String(v)
+		}
+
+		result = append(result, rh)
+	}
+	return result
+}
+
+// buildGa2ForwardingRuleHideResponseHeaders converts the schema set into the SDK HideResponseHeaders slice.
+func buildGa2ForwardingRuleHideResponseHeaders(rawList []interface{}) []*ga2v20250115.HideResponseHeaders {
+	result := make([]*ga2v20250115.HideResponseHeaders, 0, len(rawList))
+	for _, item := range rawList {
+		if item == nil {
+			continue
+		}
+		m := item.(map[string]interface{})
+		hrh := &ga2v20250115.HideResponseHeaders{}
+
+		if v, ok := m["key"].(string); ok && v != "" {
+			hrh.Key = helper.String(v)
+		}
+		if v, ok := m["value"].(string); ok {
+			hrh.Value = helper.String(v)
+		}
+
+		result = append(result, hrh)
+	}
+	return result
+}
+
+// flattenGa2ForwardingRuleResponseHeaders maps SDK ResponseHeaders slice back into the schema set payload.
+func flattenGa2ForwardingRuleResponseHeaders(items []*ga2v20250115.ResponseHeaders) []map[string]interface{} {
+	result := make([]map[string]interface{}, 0, len(items))
+	for _, item := range items {
+		if item == nil {
+			continue
+		}
+		m := map[string]interface{}{}
+		if item.Key != nil {
+			m["key"] = *item.Key
+		}
+		if item.Value != nil {
+			m["value"] = *item.Value
+		}
+		result = append(result, m)
+	}
+	return result
+}
+
+// flattenGa2ForwardingRuleHideResponseHeaders maps SDK HideResponseHeaders slice back into the schema set payload.
+func flattenGa2ForwardingRuleHideResponseHeaders(items []*ga2v20250115.HideResponseHeaders) []map[string]interface{} {
 	result := make([]map[string]interface{}, 0, len(items))
 	for _, item := range items {
 		if item == nil {

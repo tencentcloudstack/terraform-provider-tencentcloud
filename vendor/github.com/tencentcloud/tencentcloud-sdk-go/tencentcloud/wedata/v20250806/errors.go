@@ -20,6 +20,9 @@ const (
 	// CAM签名/鉴权错误。
 	AUTHFAILURE = "AuthFailure"
 
+	// 未登录或登录已过期。
+	AUTHFAILURE_SIGNATUREEXPIRE = "AuthFailure.SignatureExpire"
+
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
@@ -28,6 +31,12 @@ const (
 
 	// 内部错误。
 	INTERNALERROR = "InternalError"
+
+	// 缺少参数或参数不合法
+	INTERNALERROR_INVALIDPARAMETER = "InternalError.InvalidParameter"
+
+	// 未知错误
+	INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
@@ -40,6 +49,9 @@ const (
 
 	// 查询过滤条件参数错误。
 	INVALIDPARAMETER_INVALIDFILTERPARAMETER = "InvalidParameter.InvalidFilterParameter"
+
+	// 非法参数
+	INVALIDPARAMETER_INVALIDPARAMSERROR = "InvalidParameter.InvalidParamsError"
 
 	// Missing Servlet Request Parameter
 	INVALIDPARAMETER_MISSINGREQUESTPARAMETER = "InvalidParameter.MissingRequestParameter"
@@ -61,6 +73,9 @@ const (
 
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
+
+	// 参数非法
+	INVALIDPARAMETERVALUE_PARAMILLEGALERROR = "InvalidParameterValue.ParamIllegalError"
 
 	// 告警规则名称重复
 	INVALIDPARAMETERVALUE_RULENAMEREPEATED = "InvalidParameterValue.RuleNameRepeated"

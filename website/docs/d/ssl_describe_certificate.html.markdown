@@ -116,4 +116,9 @@ In addition to all arguments above, the following attributes are exported:
   * `vulnerability_report` - Vulnerability scanning evaluation report.Note: This field may return NULL, indicating that the valid value cannot be obtained.
   * `vulnerability_status` - Vulnerability scanning status.Note: This field may return NULL, indicating that the valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCertificate](https://www.tencentcloud.com/document/api/1007/36588)
 

@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `image` - Information of Image.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeImageFromFamily](https://www.tencentcloud.com/document/api/213/64971)
 

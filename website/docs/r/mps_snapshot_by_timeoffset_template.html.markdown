@@ -43,6 +43,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSnapshotByTimeOffsetTemplate](https://www.tencentcloud.com/document/api/1041/33672)
+* Read: [DescribeSnapshotByTimeOffsetTemplates](https://www.tencentcloud.com/document/api/1041/33656)
+* Update: [ModifySnapshotByTimeOffsetTemplate](https://www.tencentcloud.com/document/api/1041/33648)
+* Delete: [DeleteSnapshotByTimeOffsetTemplate](https://www.tencentcloud.com/document/api/1041/33664)
 
 ## Import
 

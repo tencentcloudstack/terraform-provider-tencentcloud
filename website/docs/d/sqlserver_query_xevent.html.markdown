@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
   * `start_time` - Generation start time of an extended file.
   * `status` - Event record status. Valid values: 1 (succeeded), 2 (failed).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeXEvents](https://www.tencentcloud.com/document/api/238/54814)
 

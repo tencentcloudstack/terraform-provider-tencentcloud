@@ -5875,6 +5875,10 @@ func NewDescribeAvailableTKEEdgeVersionResponse() (response *DescribeAvailableTK
 }
 
 // DescribeAvailableTKEEdgeVersion
+// edge-dashboard 接口，当前edge产品已完成下线周知，同时edge-dashboard功能已经全部转移至edge-gw，申请将edge-dashboard所有接口先下线
+//
+// 
+//
 // 边缘计算支持版本和k8s版本
 //
 // 可能返回的错误码:
@@ -5893,6 +5897,10 @@ func (c *Client) DescribeAvailableTKEEdgeVersion(request *DescribeAvailableTKEEd
 }
 
 // DescribeAvailableTKEEdgeVersion
+// edge-dashboard 接口，当前edge产品已完成下线周知，同时edge-dashboard功能已经全部转移至edge-gw，申请将edge-dashboard所有接口先下线
+//
+// 
+//
 // 边缘计算支持版本和k8s版本
 //
 // 可能返回的错误码:
@@ -7817,6 +7825,10 @@ func NewDescribeClusterSecurityResponse() (response *DescribeClusterSecurityResp
 }
 
 // DescribeClusterSecurity
+// This API has been retired and is no longer available. To obtain cluster access credentials (Kubeconfig), use DescribeClusterKubeconfig. To query the cluster API Server\\\'s access addresses, domain names, and other connection information, use DescribeClusterEndpoints. Update your integration to accommodate the replacement APIs\\\' request parameters and response fields. DescribeClusterKubeconfig returns credentials specific to the calling account. A cluster administrator must configure the required Kubernetes RBAC permissions for that account under \\\"Authorization Management\\\" in TKE. Select the private or public network access configuration based on your network environment. If you rely on other information returned by the retired API, submit a support ticket for assistance.
+//
+// 
+//
 // 集群的密钥信息
 //
 // 可能返回的错误码:
@@ -7858,6 +7870,10 @@ func (c *Client) DescribeClusterSecurity(request *DescribeClusterSecurityRequest
 }
 
 // DescribeClusterSecurity
+// This API has been retired and is no longer available. To obtain cluster access credentials (Kubeconfig), use DescribeClusterKubeconfig. To query the cluster API Server\\\'s access addresses, domain names, and other connection information, use DescribeClusterEndpoints. Update your integration to accommodate the replacement APIs\\\' request parameters and response fields. DescribeClusterKubeconfig returns credentials specific to the calling account. A cluster administrator must configure the required Kubernetes RBAC permissions for that account under \\\"Authorization Management\\\" in TKE. Select the private or public network access configuration based on your network environment. If you rely on other information returned by the retired API, submit a support ticket for assistance.
+//
+// 
+//
 // 集群的密钥信息
 //
 // 可能返回的错误码:
@@ -8673,6 +8689,10 @@ func NewDescribeEdgeAvailableExtraArgsResponse() (response *DescribeEdgeAvailabl
 }
 
 // DescribeEdgeAvailableExtraArgs
+// edge-dashboard 接口，当前edge产品已完成下线周知，同时edge-dashboard功能已经全部转移至edge-gw，申请将edge-dashboard所有接口先下线
+//
+// 
+//
 // 查询边缘容器集群可用的自定义参数
 //
 // 可能返回的错误码:
@@ -8683,6 +8703,10 @@ func (c *Client) DescribeEdgeAvailableExtraArgs(request *DescribeEdgeAvailableEx
 }
 
 // DescribeEdgeAvailableExtraArgs
+// edge-dashboard 接口，当前edge产品已完成下线周知，同时edge-dashboard功能已经全部转移至edge-gw，申请将edge-dashboard所有接口先下线
+//
+// 
+//
 // 查询边缘容器集群可用的自定义参数
 //
 // 可能返回的错误码:
@@ -12295,6 +12319,10 @@ func NewDescribeTKEEdgeExternalKubeconfigResponse() (response *DescribeTKEEdgeEx
 }
 
 // DescribeTKEEdgeExternalKubeconfig
+// edge-dashboard 接口，当前edge产品已完成下线周知，同时edge-dashboard功能已经全部转移至edge-gw，申请将edge-dashboard所有接口先下线
+//
+// 
+//
 // 获取边缘计算外部访问的kubeconfig
 //
 // 可能返回的错误码:
@@ -12314,6 +12342,10 @@ func (c *Client) DescribeTKEEdgeExternalKubeconfig(request *DescribeTKEEdgeExter
 }
 
 // DescribeTKEEdgeExternalKubeconfig
+// edge-dashboard 接口，当前edge产品已完成下线周知，同时edge-dashboard功能已经全部转移至edge-gw，申请将edge-dashboard所有接口先下线
+//
+// 
+//
 // 获取边缘计算外部访问的kubeconfig
 //
 // 可能返回的错误码:
@@ -12365,6 +12397,10 @@ func NewDescribeTKEEdgeScriptResponse() (response *DescribeTKEEdgeScriptResponse
 }
 
 // DescribeTKEEdgeScript
+// edge-dashboard 接口，当前edge产品已完成下线周知，同时edge-dashboard功能已经全部转移至edge-gw，申请将edge-dashboard所有接口先下线
+//
+// 
+//
 // 获取边缘脚本链接，此接口用于添加第三方节点，通过下载脚本从而将节点添加到边缘集群。
 //
 // 可能返回的错误码:
@@ -12384,6 +12420,10 @@ func (c *Client) DescribeTKEEdgeScript(request *DescribeTKEEdgeScriptRequest) (r
 }
 
 // DescribeTKEEdgeScript
+// edge-dashboard 接口，当前edge产品已完成下线周知，同时edge-dashboard功能已经全部转移至edge-gw，申请将edge-dashboard所有接口先下线
+//
+// 
+//
 // 获取边缘脚本链接，此接口用于添加第三方节点，通过下载脚本从而将节点添加到边缘集群。
 //
 // 可能返回的错误码:
@@ -16849,6 +16889,78 @@ func (c *Client) RollbackClusterReleaseWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewRollbackClusterReleaseResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRotateClusterTokenRequest() (request *RotateClusterTokenRequest) {
+    request = &RotateClusterTokenRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "RotateClusterToken")
+    
+    
+    return
+}
+
+func NewRotateClusterTokenResponse() (response *RotateClusterTokenResponse) {
+    response = &RotateClusterTokenResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RotateClusterToken
+// 轮转集群的token
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_MARKETGETAUTHFAILED = "FailedOperation.MarketGetAuthFailed"
+//  FAILEDOPERATION_MARKETRELEASEOPERATION = "FailedOperation.MarketReleaseOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_MARKETGETAUTHFAILED = "InternalError.MarketGetAuthFailed"
+//  INTERNALERROR_MARKETINTERNALSERVERERROR = "InternalError.MarketInternalServerError"
+//  INTERNALERROR_MARKETRELEASEOPERATION = "InternalError.MarketReleaseOperation"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) RotateClusterToken(request *RotateClusterTokenRequest) (response *RotateClusterTokenResponse, err error) {
+    return c.RotateClusterTokenWithContext(context.Background(), request)
+}
+
+// RotateClusterToken
+// 轮转集群的token
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_MARKETGETAUTHFAILED = "FailedOperation.MarketGetAuthFailed"
+//  FAILEDOPERATION_MARKETRELEASEOPERATION = "FailedOperation.MarketReleaseOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_MARKETGETAUTHFAILED = "InternalError.MarketGetAuthFailed"
+//  INTERNALERROR_MARKETINTERNALSERVERERROR = "InternalError.MarketInternalServerError"
+//  INTERNALERROR_MARKETRELEASEOPERATION = "InternalError.MarketReleaseOperation"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) RotateClusterTokenWithContext(ctx context.Context, request *RotateClusterTokenRequest) (response *RotateClusterTokenResponse, err error) {
+    if request == nil {
+        request = NewRotateClusterTokenRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tke", APIVersion, "RotateClusterToken")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RotateClusterToken require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRotateClusterTokenResponse()
     err = c.Send(request, response)
     return
 }

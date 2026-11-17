@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_teo_security_policy_config: add `rule_ids` field to `bot_management.basic_bot_settings.*.action_overrides` to support multiple bot rule IDs (deprecate `rule_id`)
+```

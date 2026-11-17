@@ -60,4 +60,9 @@ In addition to all arguments above, the following attributes are exported:
   * `table_schema` - database name.
   * `total_length` - Total space used (MB).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTopSpaceTables](https://www.tencentcloud.com/document/api/1035/41187)
 

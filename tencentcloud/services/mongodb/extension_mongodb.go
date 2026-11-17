@@ -95,7 +95,7 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 		"engine_version": {
 			Type:        schema.TypeString,
 			Required:    true,
-			Description: "Refers to version information. The DescribeSpecInfo API can be called to obtain detailed information about the supported versions.\n- MONGO_40_WT: version of the MongoDB 4.0 WiredTiger storage engine.\n- MONGO_42_WT: version of the MongoDB 4.2 WiredTiger storage engine.\n- MONGO_44_WT: version of the MongoDB 4.4 WiredTiger storage engine.\n- MONGO_50_WT: version of the MongoDB 5.0 WiredTiger storage engine.\n- MONGO_60_WT: version of the MongoDB 6.0 WiredTiger storage engine.\n- MONGO_70_WT: version of the MongoDB 7.0 WiredTiger storage engine.\n- MONGO_80_WT: version of the MongoDB 8.0 WiredTiger storage engine.",
+			Description: "Refers to version information. The DescribeSpecInfo API can be called to obtain detailed information about the supported versions.\n- MONGO_40_WT: version of the MongoDB 4.0 WiredTiger storage engine.\n- MONGO_42_WT: version of the MongoDB 4.2 WiredTiger storage engine.\n- MONGO_44_WT: version of the MongoDB 4.4 WiredTiger storage engine.\n- MONGO_50_WT: version of the MongoDB 5.0 WiredTiger storage engine.\n- MONGO_60_WT: version of the MongoDB 6.0 WiredTiger storage engine.\n- MONGO_70_WT: version of the MongoDB 7.0 WiredTiger storage engine.\n- MONGO_80_WT: version of the MongoDB 8.0 WiredTiger storage engine.\n- MONGO_83_WT: version of the MongoDB 8.3 WiredTiger storage engine.",
 		},
 		"machine_type": {
 			Type:     schema.TypeString,
@@ -205,6 +205,30 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 				"	- 0: When the adjustment is completed, perform the configuration task immediately. Default is 0.\n" +
 				"	- 1: Perform reconfiguration tasks within the maintenance time window.\n" +
 				"Note: Adjusting the number of nodes and slices does not support changes within the maintenance window.",
+		},
+		// encryption
+		"data_encryption": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Database storage encryption setting. `No_Encryption`: Storage encryption is not used. `TDE`: Enables TDE storage encryption. Note: this field does not support update, please recreate the resource if you need to change it.",
+		},
+		"encryption_key_source": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "If TDE storage encryption is selected, the key source must be specified. `auto`: Automatically generate the key. `manual`: Manually specify the key. Note: this field does not support update, please recreate the resource if you need to change it.",
+		},
+		"key_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Please note that this field is the CMK name, corresponding to the `alias` field in KMS. Key ID. If `manual` is selected as the key resource, you must enter the specified key ID. Note: this field does not support update, please recreate the resource if you need to change it.",
+		},
+		"kms_region": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Key ID. If `manual` is selected as the key resource, you must enter the specified key region. Note: this field does not support update, please recreate the resource if you need to change it.",
 		},
 		// Computed
 		"status": {

@@ -855,8 +855,8 @@ The following arguments are supported:
 The `auth_options` object supports the following:
 
 * `auto_create_discovery_anonymous_auth` - (Optional, Bool) If set to `true`, the rbac rule will be created automatically which allow anonymous user to access '/.well-known/openid-configuration' and '/openid/v1/jwks'.
-* `issuer` - (Optional, String) Specify service-account-issuer. If use_tke_default is set to `true`, please do not set this field, it will be ignored anyway.
-* `jwks_uri` - (Optional, String) Specify service-account-jwks-uri. If use_tke_default is set to `true`, please do not set this field, it will be ignored anyway.
+* `issuer` - (Optional, String) Specify service-account-issuer. If use_tke_default is set to `true`, please do not set this field, it will be ignored anyway. This field is also computed: when use_tke_default is `true`, TKE will auto-generate the value and it will be read back into state.
+* `jwks_uri` - (Optional, String) Specify service-account-jwks-uri. If use_tke_default is set to `true`, please do not set this field, it will be ignored anyway. This field is also computed: when use_tke_default is `true`, TKE will auto-generate the value and it will be read back into state.
 * `use_tke_default` - (Optional, Bool) If set to `true`, the issuer and jwks_uri will be generated automatically by tke, please do not set issuer and jwks_uri, and they will be ignored.
 
 The `cluster_audit` object supports the following:
@@ -1075,6 +1075,36 @@ In addition to all arguments above, the following attributes are exported:
   * `instance_state` - State of the cvm.
   * `lan_ip` - LAN IP of the cvm.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCluster](https://www.tencentcloud.com/document/api/457/32027)
+* Read:
+  - [DescribeClusterExtraArgs](https://www.tencentcloud.com/search/?wd=DescribeClusterExtraArgs&type=document&lang=en)
+  - [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
+  - [DescribeClusterSecurity](https://www.tencentcloud.com/search/?wd=DescribeClusterSecurity&type=document&lang=en)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
+* Update:
+  - [AddVpcCniSubnets](https://www.tencentcloud.com/document/api/457/40679)
+  - [DescribeBatchModifyTagsStatus](https://www.tencentcloud.com/search/?wd=DescribeBatchModifyTagsStatus&type=document&lang=en)
+  - [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
+  - [DescribeIPAMD](https://www.tencentcloud.com/document/api/457/66011)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+  - [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
+  - [DisableVpcCniNetworkType](https://www.tencentcloud.com/search/?wd=DisableVpcCniNetworkType&type=document&lang=en)
+  - [EnableVpcCniNetworkType](https://www.tencentcloud.com/document/api/457/41569)
+  - [ModifyClusterAsGroupOptionAttribute](https://www.tencentcloud.com/document/api/457/39252)
+  - [ModifyClusterAttribute](https://www.tencentcloud.com/document/api/457/35615)
+  - [ModifyClusterEndpointSP](https://www.tencentcloud.com/document/api/457/33864)
+  - [ModifyClusterExtraArgs](https://www.tencentcloud.com/search/?wd=ModifyClusterExtraArgs&type=document&lang=en)
+  - [ModifyClusterImage](https://www.tencentcloud.com/search/?wd=ModifyClusterImage&type=document&lang=en)
+  - [ScaleInClusterMaster](https://www.tencentcloud.com/search/?wd=ScaleInClusterMaster&type=document&lang=en)
+  - [ScaleOutClusterMaster](https://www.tencentcloud.com/search/?wd=ScaleOutClusterMaster&type=document&lang=en)
+  - [Send](https://www.tencentcloud.com/search/?wd=Send&type=document&lang=en)
+  - [UpdateClusterVersion](https://www.tencentcloud.com/document/api/457/39567)
+* Delete: [DeleteCluster](https://www.tencentcloud.com/document/api/457/33870)
 
 ## Import
 

@@ -572,6 +572,7 @@ func NewCreateAccelerationDomainResponse() (response *CreateAccelerationDomainRe
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR_CONFIGLOCKED = "InternalError.ConfigLocked"
+//  INVALIDPARAMETER_ADVANCEDORIGINROUTINGNOTSUPPORTNEWLYADDEDHOST = "InvalidParameter.AdvancedOriginRoutingNotSupportNewlyAddedHost"
 //  INVALIDPARAMETER_CONFLICTHOSTORIGIN = "InvalidParameter.ConflictHostOrigin"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAM = "InvalidParameter.ErrInvalidActionParam"
 //  INVALIDPARAMETER_INVALIDACCELERATETYPE = "InvalidParameter.InvalidAccelerateType"
@@ -636,6 +637,7 @@ func (c *Client) CreateAccelerationDomain(request *CreateAccelerationDomainReque
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR_CONFIGLOCKED = "InternalError.ConfigLocked"
+//  INVALIDPARAMETER_ADVANCEDORIGINROUTINGNOTSUPPORTNEWLYADDEDHOST = "InvalidParameter.AdvancedOriginRoutingNotSupportNewlyAddedHost"
 //  INVALIDPARAMETER_CONFLICTHOSTORIGIN = "InvalidParameter.ConflictHostOrigin"
 //  INVALIDPARAMETER_ERRINVALIDACTIONPARAM = "InvalidParameter.ErrInvalidActionParam"
 //  INVALIDPARAMETER_INVALIDACCELERATETYPE = "InvalidParameter.InvalidAccelerateType"
@@ -1037,7 +1039,7 @@ func NewCreateConfigGroupVersionResponse() (response *CreateConfigGroupVersionRe
 }
 
 // CreateConfigGroupVersion
-// 在版本管理模式下，用于创建指定配置组的新版本。版本管理功能内测中，当前仅白名单开放。
+// 在版本管理模式下，用于创建指定配置组的新版本。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1085,7 +1087,7 @@ func (c *Client) CreateConfigGroupVersion(request *CreateConfigGroupVersionReque
 }
 
 // CreateConfigGroupVersion
-// 在版本管理模式下，用于创建指定配置组的新版本。版本管理功能内测中，当前仅白名单开放。
+// 在版本管理模式下，用于创建指定配置组的新版本。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1293,7 +1295,7 @@ func NewCreateCustomizeErrorPageResponse() (response *CreateCustomizeErrorPageRe
 }
 
 // CreateCustomizeErrorPage
-// 创建自定义错误页面。
+// 创建自定义响应页面。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_CONTENTTYPENOTMATCH = "InvalidParameterValue.ContentTypeNotMatch"
@@ -1303,7 +1305,7 @@ func (c *Client) CreateCustomizeErrorPage(request *CreateCustomizeErrorPageReque
 }
 
 // CreateCustomizeErrorPage
-// 创建自定义错误页面。
+// 创建自定义响应页面。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_CONTENTTYPENOTMATCH = "InvalidParameterValue.ContentTypeNotMatch"
@@ -1695,6 +1697,78 @@ func (c *Client) CreateInferenceAPITokenWithContext(ctx context.Context, request
     request.SetContext(ctx)
     
     response = NewCreateInferenceAPITokenResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateInferenceDomainRequest() (request *CreateInferenceDomainRequest) {
+    request = &CreateInferenceDomainRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "CreateInferenceDomain")
+    
+    
+    return
+}
+
+func NewCreateInferenceDomainResponse() (response *CreateInferenceDomainResponse) {
+    response = &CreateInferenceDomainResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateInferenceDomain
+// 创建推理服务域名，用于通过自定义域名访问推理服务，一个推理服务下最多支持创建 5 个自定义域名。
+//
+// 创建成功后，还需完成以下步骤，域名才能正常对外提供访问：
+//
+// 1. 校验域名 CNAME 配置状态，请参考 [CheckCnameStatus](https://cloud.tencent.com/document/api/1552/94491) 接口；
+//
+// 2. 验证归属权，请参考 [VerifyOwnership](https://cloud.tencent.com/document/api/1552/98879) 接口；
+//
+// 3. 配置域名证书，请参考 [ModifyHostsCertificate](https://cloud.tencent.com/document/api/1552/80764) 接口。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_ZONENOTFOUND = "InvalidParameterValue.ZoneNotFound"
+//  RESOURCENOTFOUND_INFERENCEDOMAIN = "ResourceNotFound.InferenceDomain"
+//  RESOURCENOTFOUND_INFERENCESERVICE = "ResourceNotFound.InferenceService"
+func (c *Client) CreateInferenceDomain(request *CreateInferenceDomainRequest) (response *CreateInferenceDomainResponse, err error) {
+    return c.CreateInferenceDomainWithContext(context.Background(), request)
+}
+
+// CreateInferenceDomain
+// 创建推理服务域名，用于通过自定义域名访问推理服务，一个推理服务下最多支持创建 5 个自定义域名。
+//
+// 创建成功后，还需完成以下步骤，域名才能正常对外提供访问：
+//
+// 1. 校验域名 CNAME 配置状态，请参考 [CheckCnameStatus](https://cloud.tencent.com/document/api/1552/94491) 接口；
+//
+// 2. 验证归属权，请参考 [VerifyOwnership](https://cloud.tencent.com/document/api/1552/98879) 接口；
+//
+// 3. 配置域名证书，请参考 [ModifyHostsCertificate](https://cloud.tencent.com/document/api/1552/80764) 接口。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_ZONENOTFOUND = "InvalidParameterValue.ZoneNotFound"
+//  RESOURCENOTFOUND_INFERENCEDOMAIN = "ResourceNotFound.InferenceDomain"
+//  RESOURCENOTFOUND_INFERENCESERVICE = "ResourceNotFound.InferenceService"
+func (c *Client) CreateInferenceDomainWithContext(ctx context.Context, request *CreateInferenceDomainRequest) (response *CreateInferenceDomainResponse, err error) {
+    if request == nil {
+        request = NewCreateInferenceDomainRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "CreateInferenceDomain")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateInferenceDomain require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateInferenceDomainResponse()
     err = c.Send(request, response)
     return
 }
@@ -2937,21 +3011,37 @@ func NewCreateRealtimeLogDeliveryTaskResponse() (response *CreateRealtimeLogDeli
 }
 
 // CreateRealtimeLogDeliveryTask
-// 本接口用于创建实时日志投递任务。本接口有如下限制：
-//
-// - 当数据投递类型（LogType）为站点加速日志（七层访问日志）、四层代理日志、边缘函数运行日志时，同一个实体（七层域名、四层代理实例、边缘函数实例）在同种数据投递类型（LogType）和数据投递区域（Area）的组合下，只能被添加到如下实时日志投递任务类型（TaskType）组合中：
-//
-//     - 一个推送至腾讯云  CLS 的任务，加上另一个推送至自定义 HTTP(S) 地址的任务；
-//
-//     - 一个推送至腾讯云  CLS 的任务，加上另一个推送至 AWS S3 兼容对象存储的任务；
-//
-// - 当数据投递类型（LogType）为速率限制和 CC 攻击防护日志、托管规则日志、自定义规则日志、Bot 管理日志时，同一个实体在同种数据投递类型（LogType）和数据投递区域（Area）的组合下，只能被添加到一个实时日志投递任务中。
-//
-// - 当实时日志投递任务类型（TaskType）为 EdgeOne 日志分析（log_analysis）时，只支持数据投递类型（LogType）为站点加速日志（domain）或托管规则日志（web-attack）；在同一站点（ZoneId）、同一数据投递区域（Area）和数据的组合下，每种数据投递类型（LogType）只能添加一个推送至 EdgeOne 日志分析的实时日志投递任务。
+// 本接口用于创建实时日志投递任务。
 //
 // 
 //
-// 建议先通过 [DescribeRealtimeLogDeliveryTasks](https://cloud.tencent.com/document/product/1552/104110)  接口根据实体查询实时日志投递任务列表，检查实体是否已经被添加到另一实时日志投递任务中。
+// **限制规则**
+//
+// 
+//
+// 同一实体（七层域名、四层代理实例、边缘函数实例）在同一 `LogType` + `Area` 组合下，每种 `TaskType` 仅允许创建一个任务。不同 `LogType` 的互斥规则如下：
+//
+// 
+//
+// | LogType | 互斥的 TaskType |
+//
+// | --- | --- |
+//
+// | 四层代理日志、边缘函数运行日志 | `custom_endpoint`、`s3`、`aws_s3` 三选一 |
+//
+// 
+//
+// 当 `TaskType` 为 `log_analysis` 时：
+//
+// 
+//
+// - 仅支持 `LogType` 为 `l7-access-logs` 或 `web-attack`。
+//
+// - 同一 `ZoneId` + `Area` 下，每种 `LogType` 仅允许创建一个任务。
+//
+// 
+//
+// **建议**：创建前先通过 [DescribeRealtimeLogDeliveryTasks](https://cloud.tencent.com/document/product/1552/104110) 接口查询已有任务，避免重复添加。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2981,21 +3071,37 @@ func (c *Client) CreateRealtimeLogDeliveryTask(request *CreateRealtimeLogDeliver
 }
 
 // CreateRealtimeLogDeliveryTask
-// 本接口用于创建实时日志投递任务。本接口有如下限制：
-//
-// - 当数据投递类型（LogType）为站点加速日志（七层访问日志）、四层代理日志、边缘函数运行日志时，同一个实体（七层域名、四层代理实例、边缘函数实例）在同种数据投递类型（LogType）和数据投递区域（Area）的组合下，只能被添加到如下实时日志投递任务类型（TaskType）组合中：
-//
-//     - 一个推送至腾讯云  CLS 的任务，加上另一个推送至自定义 HTTP(S) 地址的任务；
-//
-//     - 一个推送至腾讯云  CLS 的任务，加上另一个推送至 AWS S3 兼容对象存储的任务；
-//
-// - 当数据投递类型（LogType）为速率限制和 CC 攻击防护日志、托管规则日志、自定义规则日志、Bot 管理日志时，同一个实体在同种数据投递类型（LogType）和数据投递区域（Area）的组合下，只能被添加到一个实时日志投递任务中。
-//
-// - 当实时日志投递任务类型（TaskType）为 EdgeOne 日志分析（log_analysis）时，只支持数据投递类型（LogType）为站点加速日志（domain）或托管规则日志（web-attack）；在同一站点（ZoneId）、同一数据投递区域（Area）和数据的组合下，每种数据投递类型（LogType）只能添加一个推送至 EdgeOne 日志分析的实时日志投递任务。
+// 本接口用于创建实时日志投递任务。
 //
 // 
 //
-// 建议先通过 [DescribeRealtimeLogDeliveryTasks](https://cloud.tencent.com/document/product/1552/104110)  接口根据实体查询实时日志投递任务列表，检查实体是否已经被添加到另一实时日志投递任务中。
+// **限制规则**
+//
+// 
+//
+// 同一实体（七层域名、四层代理实例、边缘函数实例）在同一 `LogType` + `Area` 组合下，每种 `TaskType` 仅允许创建一个任务。不同 `LogType` 的互斥规则如下：
+//
+// 
+//
+// | LogType | 互斥的 TaskType |
+//
+// | --- | --- |
+//
+// | 四层代理日志、边缘函数运行日志 | `custom_endpoint`、`s3`、`aws_s3` 三选一 |
+//
+// 
+//
+// 当 `TaskType` 为 `log_analysis` 时：
+//
+// 
+//
+// - 仅支持 `LogType` 为 `l7-access-logs` 或 `web-attack`。
+//
+// - 同一 `ZoneId` + `Area` 下，每种 `LogType` 仅允许创建一个任务。
+//
+// 
+//
+// **建议**：创建前先通过 [DescribeRealtimeLogDeliveryTasks](https://cloud.tencent.com/document/product/1552/104110) 接口查询已有任务，避免重复添加。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4347,8 +4453,12 @@ func NewDeleteAccelerationDomainsResponse() (response *DeleteAccelerationDomains
 //  INVALIDPARAMETER_ZONEISGRAYPUBLISHING = "InvalidParameter.ZoneIsGrayPublishing"
 //  INVALIDPARAMETER_ZONENOTFOUND = "InvalidParameter.ZoneNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDDOMAINSTATUS = "InvalidParameterValue.InvalidDomainStatus"
+//  INVALIDPARAMETERVALUE_RECORDNEEDDEFAULTLOCATION = "InvalidParameterValue.RecordNeedDefaultLocation"
+//  INVALIDPARAMETERVALUE_UNSUPPORTDELETEWEIGHTRECORD = "InvalidParameterValue.UnSupportDeleteWeightRecord"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_RESOURCELOCKEDTEMPORARY = "OperationDenied.ResourceLockedTemporary"
+//  OPERATIONDENIED_UNSUPPORTDELETELOCATIONRECORD = "OperationDenied.UnSupportDeleteLocationRecord"
+//  OPERATIONDENIED_UNSUPPORTDELETEWEIGHTRECORD = "OperationDenied.UnSupportDeleteWeightRecord"
 //  OPERATIONDENIED_VERSIONCONTROLISGRAYING = "OperationDenied.VersionControlIsGraying"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEUNAVAILABLE_DOMAINNOTFOUND = "ResourceUnavailable.DomainNotFound"
@@ -4364,8 +4474,12 @@ func (c *Client) DeleteAccelerationDomains(request *DeleteAccelerationDomainsReq
 //  INVALIDPARAMETER_ZONEISGRAYPUBLISHING = "InvalidParameter.ZoneIsGrayPublishing"
 //  INVALIDPARAMETER_ZONENOTFOUND = "InvalidParameter.ZoneNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDDOMAINSTATUS = "InvalidParameterValue.InvalidDomainStatus"
+//  INVALIDPARAMETERVALUE_RECORDNEEDDEFAULTLOCATION = "InvalidParameterValue.RecordNeedDefaultLocation"
+//  INVALIDPARAMETERVALUE_UNSUPPORTDELETEWEIGHTRECORD = "InvalidParameterValue.UnSupportDeleteWeightRecord"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_RESOURCELOCKEDTEMPORARY = "OperationDenied.ResourceLockedTemporary"
+//  OPERATIONDENIED_UNSUPPORTDELETELOCATIONRECORD = "OperationDenied.UnSupportDeleteLocationRecord"
+//  OPERATIONDENIED_UNSUPPORTDELETEWEIGHTRECORD = "OperationDenied.UnSupportDeleteWeightRecord"
 //  OPERATIONDENIED_VERSIONCONTROLISGRAYING = "OperationDenied.VersionControlIsGraying"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEUNAVAILABLE_DOMAINNOTFOUND = "ResourceUnavailable.DomainNotFound"
@@ -4633,7 +4747,7 @@ func NewDeleteCustomErrorPageResponse() (response *DeleteCustomErrorPageResponse
 }
 
 // DeleteCustomErrorPage
-// 删除自定义错误页面。
+// 删除自定义响应页面。
 //
 // 可能返回的错误码:
 //  RESOURCEINUSE = "ResourceInUse"
@@ -4643,7 +4757,7 @@ func (c *Client) DeleteCustomErrorPage(request *DeleteCustomErrorPageRequest) (r
 }
 
 // DeleteCustomErrorPage
-// 删除自定义错误页面。
+// 删除自定义响应页面。
 //
 // 可能返回的错误码:
 //  RESOURCEINUSE = "ResourceInUse"
@@ -4793,7 +4907,7 @@ func NewDeleteFunctionResponse() (response *DeleteFunctionResponse) {
 }
 
 // DeleteFunction
-// 删除边缘函数，删除后函数无法恢复，关联的触发规则会一并删除。
+// 删除边缘函数，删除后函数无法恢复，关联的触发规则，环境变量和副本会一并删除。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4807,7 +4921,7 @@ func (c *Client) DeleteFunction(request *DeleteFunctionRequest) (response *Delet
 }
 
 // DeleteFunction
-// 删除边缘函数，删除后函数无法恢复，关联的触发规则会一并删除。
+// 删除边缘函数，删除后函数无法恢复，关联的触发规则，环境变量和副本会一并删除。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -6130,6 +6244,7 @@ func NewDeleteZoneResponse() (response *DeleteZoneResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_COMPLIANCEFORBIDDEN = "OperationDenied.ComplianceForbidden"
 //  OPERATIONDENIED_DELETEZONEPRECHECKFAILED = "OperationDenied.DeleteZonePreCheckFailed"
 //  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
 //  OPERATIONDENIED_ZONEISBINDINGSHAREDCNAME = "OperationDenied.ZoneIsBindingSharedCNAME"
@@ -6146,6 +6261,7 @@ func (c *Client) DeleteZone(request *DeleteZoneRequest) (response *DeleteZoneRes
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_COMPLIANCEFORBIDDEN = "OperationDenied.ComplianceForbidden"
 //  OPERATIONDENIED_DELETEZONEPRECHECKFAILED = "OperationDenied.DeleteZonePreCheckFailed"
 //  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
 //  OPERATIONDENIED_ZONEISBINDINGSHAREDCNAME = "OperationDenied.ZoneIsBindingSharedCNAME"
@@ -6435,6 +6551,170 @@ func (c *Client) DescribeApplicationProxiesWithContext(ctx context.Context, requ
     request.SetContext(ctx)
     
     response = NewDescribeApplicationProxiesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAvailableCustomActionsForRuleEngineRequest() (request *DescribeAvailableCustomActionsForRuleEngineRequest) {
+    request = &DescribeAvailableCustomActionsForRuleEngineRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeAvailableCustomActionsForRuleEngine")
+    
+    
+    return
+}
+
+func NewDescribeAvailableCustomActionsForRuleEngineResponse() (response *DescribeAvailableCustomActionsForRuleEngineResponse) {
+    response = &DescribeAvailableCustomActionsForRuleEngineResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAvailableCustomActionsForRuleEngine
+// 查询站点规则引擎操作可用的定制配置列表。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_ZONENOTFOUND = "InvalidParameterValue.ZoneNotFound"
+func (c *Client) DescribeAvailableCustomActionsForRuleEngine(request *DescribeAvailableCustomActionsForRuleEngineRequest) (response *DescribeAvailableCustomActionsForRuleEngineResponse, err error) {
+    return c.DescribeAvailableCustomActionsForRuleEngineWithContext(context.Background(), request)
+}
+
+// DescribeAvailableCustomActionsForRuleEngine
+// 查询站点规则引擎操作可用的定制配置列表。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_ZONENOTFOUND = "InvalidParameterValue.ZoneNotFound"
+func (c *Client) DescribeAvailableCustomActionsForRuleEngineWithContext(ctx context.Context, request *DescribeAvailableCustomActionsForRuleEngineRequest) (response *DescribeAvailableCustomActionsForRuleEngineResponse, err error) {
+    if request == nil {
+        request = NewDescribeAvailableCustomActionsForRuleEngineRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "DescribeAvailableCustomActionsForRuleEngine")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAvailableCustomActionsForRuleEngine require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAvailableCustomActionsForRuleEngineResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAvailableOriginACLFamilyRequest() (request *DescribeAvailableOriginACLFamilyRequest) {
+    request = &DescribeAvailableOriginACLFamilyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeAvailableOriginACLFamily")
+    
+    
+    return
+}
+
+func NewDescribeAvailableOriginACLFamilyResponse() (response *DescribeAvailableOriginACLFamilyResponse) {
+    response = &DescribeAvailableOriginACLFamilyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAvailableOriginACLFamily
+// 查询源站防护 IP 段控制域详细信息，包含版本号和具体IP网段信息等。
+//
+// 标准控制域和精简控制域主要区别在于提供的 IP 段数量差异，后者数量更少,但是使用上有些限制，具体限制请咨询产品。具体格式说明如下：
+//
+// 标准控制域：
+//
+// <li>gaz：标准全球控制域；</li>
+//
+// <li>mlc：标准中国控制域；</li>
+//
+// <li>emc：标准海外(全球不含中国)控制域；</li>
+//
+// 精简控制域控制域：
+//
+// <li>plat-gaz：精简全球控制域；</li>
+//
+// <li>plat-mlc：精简中国控制域；</li>
+//
+// <li>plat-emc：精简海外(全球不含中国)控制域；</li>
+//
+// <li>plat-specific-gaz：定制版控全球可用区制域；</li>
+//
+// <li>plat-specific-mlc：定制版控中国大陆可用区控制域；</li>
+//
+// <li>plat-specific-emc：定制版控全球（不含中国大陆）可用区控制域；</li>
+//
+// 缩写说明：
+//
+// <li>gaz：Global AZ Availability Zone;</li>
+//
+// <li>mlc：mainlandChina;</li>
+//
+// <li>emc：Exclude mainlandChina.</li>
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_ZONENOTFOUND = "InvalidParameterValue.ZoneNotFound"
+func (c *Client) DescribeAvailableOriginACLFamily(request *DescribeAvailableOriginACLFamilyRequest) (response *DescribeAvailableOriginACLFamilyResponse, err error) {
+    return c.DescribeAvailableOriginACLFamilyWithContext(context.Background(), request)
+}
+
+// DescribeAvailableOriginACLFamily
+// 查询源站防护 IP 段控制域详细信息，包含版本号和具体IP网段信息等。
+//
+// 标准控制域和精简控制域主要区别在于提供的 IP 段数量差异，后者数量更少,但是使用上有些限制，具体限制请咨询产品。具体格式说明如下：
+//
+// 标准控制域：
+//
+// <li>gaz：标准全球控制域；</li>
+//
+// <li>mlc：标准中国控制域；</li>
+//
+// <li>emc：标准海外(全球不含中国)控制域；</li>
+//
+// 精简控制域控制域：
+//
+// <li>plat-gaz：精简全球控制域；</li>
+//
+// <li>plat-mlc：精简中国控制域；</li>
+//
+// <li>plat-emc：精简海外(全球不含中国)控制域；</li>
+//
+// <li>plat-specific-gaz：定制版控全球可用区制域；</li>
+//
+// <li>plat-specific-mlc：定制版控中国大陆可用区控制域；</li>
+//
+// <li>plat-specific-emc：定制版控全球（不含中国大陆）可用区控制域；</li>
+//
+// 缩写说明：
+//
+// <li>gaz：Global AZ Availability Zone;</li>
+//
+// <li>mlc：mainlandChina;</li>
+//
+// <li>emc：Exclude mainlandChina.</li>
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_ZONENOTFOUND = "InvalidParameterValue.ZoneNotFound"
+func (c *Client) DescribeAvailableOriginACLFamilyWithContext(ctx context.Context, request *DescribeAvailableOriginACLFamilyRequest) (response *DescribeAvailableOriginACLFamilyResponse, err error) {
+    if request == nil {
+        request = NewDescribeAvailableOriginACLFamilyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "DescribeAvailableOriginACLFamily")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAvailableOriginACLFamily require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAvailableOriginACLFamilyResponse()
     err = c.Send(request, response)
     return
 }
@@ -7067,6 +7347,8 @@ func NewDescribeDefaultCertificatesResponse() (response *DescribeDefaultCertific
 // DescribeDefaultCertificates
 // 查询默认证书列表
 //
+// <p style="color: red;">注意：该旧版接口已停止更新迭代，后续新增功能将仅在新版接口中提供，旧版接口支持的原有能力将不受影响。如需查询域名配置的证书，请使用DescribeAccelerationDomains。</p>
+//
 // 可能返回的错误码:
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
@@ -7083,6 +7365,8 @@ func (c *Client) DescribeDefaultCertificates(request *DescribeDefaultCertificate
 
 // DescribeDefaultCertificates
 // 查询默认证书列表
+//
+// <p style="color: red;">注意：该旧版接口已停止更新迭代，后续新增功能将仅在新版接口中提供，旧版接口支持的原有能力将不受影响。如需查询域名配置的证书，请使用DescribeAccelerationDomains。</p>
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
@@ -7685,6 +7969,68 @@ func (c *Client) DescribeHostsSettingWithContext(ctx context.Context, request *D
     return
 }
 
+func NewDescribeIPGroupReferencesRequest() (request *DescribeIPGroupReferencesRequest) {
+    request = &DescribeIPGroupReferencesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeIPGroupReferences")
+    
+    
+    return
+}
+
+func NewDescribeIPGroupReferencesResponse() (response *DescribeIPGroupReferencesResponse) {
+    response = &DescribeIPGroupReferencesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeIPGroupReferences
+// 获取使用 IP 分组的策略配置。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
+func (c *Client) DescribeIPGroupReferences(request *DescribeIPGroupReferencesRequest) (response *DescribeIPGroupReferencesResponse, err error) {
+    return c.DescribeIPGroupReferencesWithContext(context.Background(), request)
+}
+
+// DescribeIPGroupReferences
+// 获取使用 IP 分组的策略配置。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
+func (c *Client) DescribeIPGroupReferencesWithContext(ctx context.Context, request *DescribeIPGroupReferencesRequest) (response *DescribeIPGroupReferencesResponse, err error) {
+    if request == nil {
+        request = NewDescribeIPGroupReferencesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "DescribeIPGroupReferences")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeIPGroupReferences require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeIPGroupReferencesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeIPRegionRequest() (request *DescribeIPRegionRequest) {
     request = &DescribeIPRegionRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -7841,6 +8187,60 @@ func (c *Client) DescribeInferenceAPITokensWithContext(ctx context.Context, requ
     request.SetContext(ctx)
     
     response = NewDescribeInferenceAPITokensResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeInferenceDomainsRequest() (request *DescribeInferenceDomainsRequest) {
+    request = &DescribeInferenceDomainsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeInferenceDomains")
+    
+    
+    return
+}
+
+func NewDescribeInferenceDomainsResponse() (response *DescribeInferenceDomainsResponse) {
+    response = &DescribeInferenceDomainsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeInferenceDomains
+// 查询推理服务域名列表，返回域名的Cname地址、归属权验证和证书等相关信息。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_ZONENOTFOUND = "InvalidParameterValue.ZoneNotFound"
+//  RESOURCENOTFOUND_INFERENCESERVICE = "ResourceNotFound.InferenceService"
+func (c *Client) DescribeInferenceDomains(request *DescribeInferenceDomainsRequest) (response *DescribeInferenceDomainsResponse, err error) {
+    return c.DescribeInferenceDomainsWithContext(context.Background(), request)
+}
+
+// DescribeInferenceDomains
+// 查询推理服务域名列表，返回域名的Cname地址、归属权验证和证书等相关信息。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_ZONENOTFOUND = "InvalidParameterValue.ZoneNotFound"
+//  RESOURCENOTFOUND_INFERENCESERVICE = "ResourceNotFound.InferenceService"
+func (c *Client) DescribeInferenceDomainsWithContext(ctx context.Context, request *DescribeInferenceDomainsRequest) (response *DescribeInferenceDomainsResponse, err error) {
+    if request == nil {
+        request = NewDescribeInferenceDomainsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "DescribeInferenceDomains")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInferenceDomains require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInferenceDomainsResponse()
     err = c.Send(request, response)
     return
 }
@@ -8565,6 +8965,58 @@ func (c *Client) DescribeLogAnalysisDownloadTasksWithContext(ctx context.Context
     request.SetContext(ctx)
     
     response = NewDescribeLogAnalysisDownloadTasksResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLogAnalysisStatisticsRequest() (request *DescribeLogAnalysisStatisticsRequest) {
+    request = &DescribeLogAnalysisStatisticsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeLogAnalysisStatistics")
+    
+    
+    return
+}
+
+func NewDescribeLogAnalysisStatisticsResponse() (response *DescribeLogAnalysisStatisticsResponse) {
+    response = &DescribeLogAnalysisStatisticsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeLogAnalysisStatistics
+// 本接口用于日志分析统计结果查询。用户在检索语句后追加 SQL 聚合语句（[检索条件] | [SQL语句]），后端执行聚合并返回列式统计结果（列定义 + 数据行）。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_REALTIMELOGLOGANALYSISNOTSUPPORT = "FailedOperation.RealtimeLogLogAnalysisNotSupport"
+//  INVALIDPARAMETER_INVALIDLOGANALYSISCONDITION = "InvalidParameter.InvalidLogAnalysisCondition"
+func (c *Client) DescribeLogAnalysisStatistics(request *DescribeLogAnalysisStatisticsRequest) (response *DescribeLogAnalysisStatisticsResponse, err error) {
+    return c.DescribeLogAnalysisStatisticsWithContext(context.Background(), request)
+}
+
+// DescribeLogAnalysisStatistics
+// 本接口用于日志分析统计结果查询。用户在检索语句后追加 SQL 聚合语句（[检索条件] | [SQL语句]），后端执行聚合并返回列式统计结果（列定义 + 数据行）。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_REALTIMELOGLOGANALYSISNOTSUPPORT = "FailedOperation.RealtimeLogLogAnalysisNotSupport"
+//  INVALIDPARAMETER_INVALIDLOGANALYSISCONDITION = "InvalidParameter.InvalidLogAnalysisCondition"
+func (c *Client) DescribeLogAnalysisStatisticsWithContext(ctx context.Context, request *DescribeLogAnalysisStatisticsRequest) (response *DescribeLogAnalysisStatisticsResponse, err error) {
+    if request == nil {
+        request = NewDescribeLogAnalysisStatisticsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "DescribeLogAnalysisStatistics")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLogAnalysisStatistics require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLogAnalysisStatisticsResponse()
     err = c.Send(request, response)
     return
 }
@@ -10687,7 +11139,7 @@ func NewDescribeZoneConfigImportResultResponse() (response *DescribeZoneConfigIm
 }
 
 // DescribeZoneConfigImportResult
-// 查询站点配置项导入结果接口，本接口用于站点配置导入接口（ImportZoneConfig）的结果查询。该功能仅支持标准版或企业版套餐的站点使用。
+// 查询站点配置项导入结果接口，本接口用于站点配置导入接口（ImportZoneConfig）的结果查询。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
@@ -10699,7 +11151,7 @@ func (c *Client) DescribeZoneConfigImportResult(request *DescribeZoneConfigImpor
 }
 
 // DescribeZoneConfigImportResult
-// 查询站点配置项导入结果接口，本接口用于站点配置导入接口（ImportZoneConfig）的结果查询。该功能仅支持标准版或企业版套餐的站点使用。
+// 查询站点配置项导入结果接口，本接口用于站点配置导入接口（ImportZoneConfig）的结果查询。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
@@ -10719,6 +11171,68 @@ func (c *Client) DescribeZoneConfigImportResultWithContext(ctx context.Context, 
     request.SetContext(ctx)
     
     response = NewDescribeZoneConfigImportResultResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeZoneCustomVariablesRequest() (request *DescribeZoneCustomVariablesRequest) {
+    request = &DescribeZoneCustomVariablesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeZoneCustomVariables")
+    
+    
+    return
+}
+
+func NewDescribeZoneCustomVariablesResponse() (response *DescribeZoneCustomVariablesResponse) {
+    response = &DescribeZoneCustomVariablesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeZoneCustomVariables
+// 本接口用于查询站点级自定义变量配置，包括变量定义和变量运算。未配置时，变量定义和变量运算均返回空列表。
+//
+// 
+//
+// 如需查询规则级自定义变量，请调用 DescribeL7AccRules 接口。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
+func (c *Client) DescribeZoneCustomVariables(request *DescribeZoneCustomVariablesRequest) (response *DescribeZoneCustomVariablesResponse, err error) {
+    return c.DescribeZoneCustomVariablesWithContext(context.Background(), request)
+}
+
+// DescribeZoneCustomVariables
+// 本接口用于查询站点级自定义变量配置，包括变量定义和变量运算。未配置时，变量定义和变量运算均返回空列表。
+//
+// 
+//
+// 如需查询规则级自定义变量，请调用 DescribeL7AccRules 接口。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
+func (c *Client) DescribeZoneCustomVariablesWithContext(ctx context.Context, request *DescribeZoneCustomVariablesRequest) (response *DescribeZoneCustomVariablesResponse, err error) {
+    if request == nil {
+        request = NewDescribeZoneCustomVariablesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "DescribeZoneCustomVariables")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeZoneCustomVariables require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeZoneCustomVariablesResponse()
     err = c.Send(request, response)
     return
 }
@@ -11001,7 +11515,9 @@ func NewDownloadL4LogsResponse() (response *DownloadL4LogsResponse) {
 }
 
 // DownloadL4Logs
-// 本接口（DownloadL4Logs）用于下载四层离线日志。
+// 本接口（DownloadL4Logs）用于获取四层代理业务的离线日志下载链接。
+//
+// **注意：**仅当离线日志功能开启期间，EO 才会存储相关离线日志并提供下载服务。具体功能介绍请见[文档](https://cloud.tencent.com/document/product/1552/73660)。
 //
 // 可能返回的错误码:
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -11010,7 +11526,9 @@ func (c *Client) DownloadL4Logs(request *DownloadL4LogsRequest) (response *Downl
 }
 
 // DownloadL4Logs
-// 本接口（DownloadL4Logs）用于下载四层离线日志。
+// 本接口（DownloadL4Logs）用于获取四层代理业务的离线日志下载链接。
+//
+// **注意：**仅当离线日志功能开启期间，EO 才会存储相关离线日志并提供下载服务。具体功能介绍请见[文档](https://cloud.tencent.com/document/product/1552/73660)。
 //
 // 可能返回的错误码:
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -11051,7 +11569,9 @@ func NewDownloadL7LogsResponse() (response *DownloadL7LogsResponse) {
 }
 
 // DownloadL7Logs
-// 本接口（DownloadL7Logs）下载七层离线日志。
+// 本接口（DownloadL7Logs）用于获取七层域名业务的离线日志下载链接。
+//
+// **注意：**仅当离线日志功能开启期间，EO 才会存储相关离线日志并提供下载服务。具体功能介绍请见[文档](https://cloud.tencent.com/document/product/1552/73660)。
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
@@ -11062,7 +11582,9 @@ func (c *Client) DownloadL7Logs(request *DownloadL7LogsRequest) (response *Downl
 }
 
 // DownloadL7Logs
-// 本接口（DownloadL7Logs）下载七层离线日志。
+// 本接口（DownloadL7Logs）用于获取七层域名业务的离线日志下载链接。
+//
+// **注意：**仅当离线日志功能开启期间，EO 才会存储相关离线日志并提供下载服务。具体功能介绍请见[文档](https://cloud.tencent.com/document/product/1552/73660)。
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
@@ -11081,6 +11603,60 @@ func (c *Client) DownloadL7LogsWithContext(ctx context.Context, request *Downloa
     request.SetContext(ctx)
     
     response = NewDownloadL7LogsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDummyParseZoneFullConfigRequest() (request *DummyParseZoneFullConfigRequest) {
+    request = &DummyParseZoneFullConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DummyParseZoneFullConfig")
+    
+    
+    return
+}
+
+func NewDummyParseZoneFullConfigResponse() (response *DummyParseZoneFullConfigResponse) {
+    response = &DummyParseZoneFullConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DummyParseZoneFullConfig
+// 本接口用于定义站点完整配置的结构，仅供查阅。注意：调用本接口不返回实际数据。
+//
+// 可能返回的错误码:
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DummyParseZoneFullConfig(request *DummyParseZoneFullConfigRequest) (response *DummyParseZoneFullConfigResponse, err error) {
+    return c.DummyParseZoneFullConfigWithContext(context.Background(), request)
+}
+
+// DummyParseZoneFullConfig
+// 本接口用于定义站点完整配置的结构，仅供查阅。注意：调用本接口不返回实际数据。
+//
+// 可能返回的错误码:
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DummyParseZoneFullConfigWithContext(ctx context.Context, request *DummyParseZoneFullConfigRequest) (response *DummyParseZoneFullConfigResponse, err error) {
+    if request == nil {
+        request = NewDummyParseZoneFullConfigRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "DummyParseZoneFullConfig")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DummyParseZoneFullConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDummyParseZoneFullConfigResponse()
     err = c.Send(request, response)
     return
 }
@@ -11473,7 +12049,7 @@ func NewHandleFunctionRuntimeEnvironmentResponse() (response *HandleFunctionRunt
 // HandleFunctionRuntimeEnvironment
 // 操作边缘函数运行环境，支持环境变量的相关设置。
 //
-// 设置环境变量后，可在函数代码中使用，具体参考 [边缘函数引入环境变量](https://cloud.tencent.com/document/product/1552/109151#0151fd9a-8b0e-407b-ae37-54553a60ded6)。
+// 设置环境变量后，可在函数代码和函数副本代码中使用，具体参考 [边缘函数引入环境变量](https://cloud.tencent.com/document/product/1552/109151#0151fd9a-8b0e-407b-ae37-54553a60ded6)。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -11489,7 +12065,7 @@ func (c *Client) HandleFunctionRuntimeEnvironment(request *HandleFunctionRuntime
 // HandleFunctionRuntimeEnvironment
 // 操作边缘函数运行环境，支持环境变量的相关设置。
 //
-// 设置环境变量后，可在函数代码中使用，具体参考 [边缘函数引入环境变量](https://cloud.tencent.com/document/product/1552/109151#0151fd9a-8b0e-407b-ae37-54553a60ded6)。
+// 设置环境变量后，可在函数代码和函数副本代码中使用，具体参考 [边缘函数引入环境变量](https://cloud.tencent.com/document/product/1552/109151#0151fd9a-8b0e-407b-ae37-54553a60ded6)。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -11589,7 +12165,7 @@ func NewImportZoneConfigResponse() (response *ImportZoneConfigResponse) {
 }
 
 // ImportZoneConfig
-// 导入站点配置接口，本接口支持站点配置文件的快速导入，发起导入后接口会返回对应的任务 ID（TaskId），用户需通过查询站点配置导入结果接口（DescribeZoneConfigImportResult）获取本次导入任务执行的结果。该功能仅支持标准版和企业版套餐站点使用。
+// 导入站点配置接口，本接口支持站点配置文件的快速导入，发起导入后接口会返回对应的任务 ID（TaskId），用户需通过查询站点配置导入结果接口（DescribeZoneConfigImportResult）获取本次导入任务执行的结果。
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
@@ -11600,7 +12176,7 @@ func (c *Client) ImportZoneConfig(request *ImportZoneConfigRequest) (response *I
 }
 
 // ImportZoneConfig
-// 导入站点配置接口，本接口支持站点配置文件的快速导入，发起导入后接口会返回对应的任务 ID（TaskId），用户需通过查询站点配置导入结果接口（DescribeZoneConfigImportResult）获取本次导入任务执行的结果。该功能仅支持标准版和企业版套餐站点使用。
+// 导入站点配置接口，本接口支持站点配置文件的快速导入，发起导入后接口会返回对应的任务 ID（TaskId），用户需通过查询站点配置导入结果接口（DescribeZoneConfigImportResult）获取本次导入任务执行的结果。
 //
 // 可能返回的错误码:
 //  OPERATIONDENIED = "OperationDenied"
@@ -12325,7 +12901,7 @@ func NewModifyCustomErrorPageResponse() (response *ModifyCustomErrorPageResponse
 }
 
 // ModifyCustomErrorPage
-// 修改自定义错误页面。
+// 修改自定义响应页面。
 //
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -12334,7 +12910,7 @@ func (c *Client) ModifyCustomErrorPage(request *ModifyCustomErrorPageRequest) (r
 }
 
 // ModifyCustomErrorPage
-// 修改自定义错误页面。
+// 修改自定义响应页面。
 //
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -12933,6 +13509,7 @@ func NewModifyHostsCertificateResponse() (response *ModifyHostsCertificateRespon
 //  INVALIDPARAMETER_ACTIONINPROGRESS = "InvalidParameter.ActionInProgress"
 //  INVALIDPARAMETER_ALIASDOMAINNOTSUPPORTKEYLESS = "InvalidParameter.AliasDomainNotSupportKeyless"
 //  INVALIDPARAMETER_CERTNOTMATCHDOMAIN = "InvalidParameter.CertNotMatchDomain"
+//  INVALIDPARAMETER_CERTSANTOOLONG = "InvalidParameter.CertSANTooLong"
 //  INVALIDPARAMETER_CERTTOEXPIRE = "InvalidParameter.CertToExpire"
 //  INVALIDPARAMETER_CERTTOOSHORTKEYSIZE = "InvalidParameter.CertTooShortKeySize"
 //  INVALIDPARAMETER_CERTIFICATECONFLICTWITHKEYLESSSERVER = "InvalidParameter.CertificateConflictWithKeylessServer"
@@ -13017,6 +13594,7 @@ func (c *Client) ModifyHostsCertificate(request *ModifyHostsCertificateRequest) 
 //  INVALIDPARAMETER_ACTIONINPROGRESS = "InvalidParameter.ActionInProgress"
 //  INVALIDPARAMETER_ALIASDOMAINNOTSUPPORTKEYLESS = "InvalidParameter.AliasDomainNotSupportKeyless"
 //  INVALIDPARAMETER_CERTNOTMATCHDOMAIN = "InvalidParameter.CertNotMatchDomain"
+//  INVALIDPARAMETER_CERTSANTOOLONG = "InvalidParameter.CertSANTooLong"
 //  INVALIDPARAMETER_CERTTOEXPIRE = "InvalidParameter.CertToExpire"
 //  INVALIDPARAMETER_CERTTOOSHORTKEYSIZE = "InvalidParameter.CertTooShortKeySize"
 //  INVALIDPARAMETER_CERTIFICATECONFLICTWITHKEYLESSSERVER = "InvalidParameter.CertificateConflictWithKeylessServer"
@@ -13798,6 +14376,7 @@ func NewModifyL7AccSettingResponse() (response *ModifyL7AccSettingResponse) {
 //  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
 //  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
 //  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
+//  OPERATIONDENIED_NOTALLOWCLOSEACCELERATEMAINLANDWHENDOMAINBOUNDEXCLUSIVEIP = "OperationDenied.NotAllowCloseAccelerateMainlandWhenDomainBoundExclusiveIP"
 //  OPERATIONDENIED_SHAREDCNAMEUNSUPPORTEDACCELERATEMAINLAND = "OperationDenied.SharedCNAMEUnsupportedAccelerateMainland"
 //  OPERATIONDENIED_SHAREDCNAMEUNSUPPORTEDIPV6 = "OperationDenied.SharedCNAMEUnsupportedIPv6"
 //  RESOURCEINUSE = "ResourceInUse"
@@ -13878,6 +14457,7 @@ func (c *Client) ModifyL7AccSetting(request *ModifyL7AccSettingRequest) (respons
 //  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
 //  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
 //  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
+//  OPERATIONDENIED_NOTALLOWCLOSEACCELERATEMAINLANDWHENDOMAINBOUNDEXCLUSIVEIP = "OperationDenied.NotAllowCloseAccelerateMainlandWhenDomainBoundExclusiveIP"
 //  OPERATIONDENIED_SHAREDCNAMEUNSUPPORTEDACCELERATEMAINLAND = "OperationDenied.SharedCNAMEUnsupportedAccelerateMainland"
 //  OPERATIONDENIED_SHAREDCNAMEUNSUPPORTEDIPV6 = "OperationDenied.SharedCNAMEUnsupportedIPv6"
 //  RESOURCEINUSE = "ResourceInUse"
@@ -15879,6 +16459,208 @@ func (c *Client) ModifyZoneWithContext(ctx context.Context, request *ModifyZoneR
     return
 }
 
+func NewModifyZoneCustomVariablesRequest() (request *ModifyZoneCustomVariablesRequest) {
+    request = &ModifyZoneCustomVariablesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "ModifyZoneCustomVariables")
+    
+    
+    return
+}
+
+func NewModifyZoneCustomVariablesResponse() (response *ModifyZoneCustomVariablesResponse) {
+    response = &ModifyZoneCustomVariablesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyZoneCustomVariables
+// 本接口用于管理站点级自定义变量，支持创建、修改和删除变量定义及变量运算。提交的列表将覆盖对应的现有配置；如需清空配置，请传入空列表。未传入的配置项保持不变。变量定义和变量运算的默认值均为空。
+//
+// 
+//
+// 规则级自定义变量相关操作，请调用 CreateL7AccRules 或 ModifyL7AccRule 接口。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
+//  INTERNALERROR_CONFIGLOCKED = "InternalError.ConfigLocked"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INTERNALERROR_UNKNOWERROR = "InternalError.UnknowError"
+//  INVALIDPARAMETER_ACTIONINPROGRESS = "InvalidParameter.ActionInProgress"
+//  INVALIDPARAMETER_CACHEKEYQUERYSTRINGREQUIRESFULLURLCACHEOFF = "InvalidParameter.CacheKeyQueryStringRequiresFullUrlCacheOff"
+//  INVALIDPARAMETER_CACHEKEYQUERYSTRINGTOOMANYVALUE = "InvalidParameter.CacheKeyQueryStringTooManyValue"
+//  INVALIDPARAMETER_CERTSYSTEMERROR = "InvalidParameter.CertSystemError"
+//  INVALIDPARAMETER_CLIENTIPCOUNTRYCONFLICTSWITHIPV6 = "InvalidParameter.ClientIpCountryConflictsWithIpv6"
+//  INVALIDPARAMETER_GRPCREQUIREHTTP2 = "InvalidParameter.GrpcRequireHttp2"
+//  INVALIDPARAMETER_INVALIDAWSPRIVATEACCESS = "InvalidParameter.InvalidAwsPrivateAccess"
+//  INVALIDPARAMETER_INVALIDCACHECONFIGFOLLOWORIGIN = "InvalidParameter.InvalidCacheConfigFollowOrigin"
+//  INVALIDPARAMETER_INVALIDCACHEKEYQUERYSTRINGVALUE = "InvalidParameter.InvalidCacheKeyQueryStringValue"
+//  INVALIDPARAMETER_INVALIDCACHEONLYONSWITCH = "InvalidParameter.InvalidCacheOnlyOnSwitch"
+//  INVALIDPARAMETER_INVALIDCACHETIME = "InvalidParameter.InvalidCacheTime"
+//  INVALIDPARAMETER_INVALIDCLIENTIPCOUNTRYHEADERNAME = "InvalidParameter.InvalidClientIpCountryHeaderName"
+//  INVALIDPARAMETER_INVALIDCLIENTIPHEADERNAME = "InvalidParameter.InvalidClientIpHeaderName"
+//  INVALIDPARAMETER_INVALIDDYNAMICROUTINE = "InvalidParameter.InvalidDynamicRoutine"
+//  INVALIDPARAMETER_INVALIDDYNAMICROUTINEBILLING = "InvalidParameter.InvalidDynamicRoutineBilling"
+//  INVALIDPARAMETER_INVALIDFORCEREDIRECTTYPE = "InvalidParameter.InvalidForceRedirectType"
+//  INVALIDPARAMETER_INVALIDHTTPS = "InvalidParameter.InvalidHttps"
+//  INVALIDPARAMETER_INVALIDHTTPSCERTINFO = "InvalidParameter.InvalidHttpsCertInfo"
+//  INVALIDPARAMETER_INVALIDHTTPSCIPHERSUITEANDTLSVERSION = "InvalidParameter.InvalidHttpsCipherSuiteAndTlsVersion"
+//  INVALIDPARAMETER_INVALIDHTTPSHSTSMAXAGE = "InvalidParameter.InvalidHttpsHstsMaxAge"
+//  INVALIDPARAMETER_INVALIDHTTPSTLSVERSION = "InvalidParameter.InvalidHttpsTlsVersion"
+//  INVALIDPARAMETER_INVALIDIPV6SWITCH = "InvalidParameter.InvalidIpv6Switch"
+//  INVALIDPARAMETER_INVALIDMAXAGETIME = "InvalidParameter.InvalidMaxAgeTime"
+//  INVALIDPARAMETER_INVALIDORIGIN = "InvalidParameter.InvalidOrigin"
+//  INVALIDPARAMETER_INVALIDORIGINTYPE = "InvalidParameter.InvalidOriginType"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPOSTMAXSIZEBILLING = "InvalidParameter.InvalidPostMaxSizeBilling"
+//  INVALIDPARAMETER_INVALIDPOSTSIZEVALUE = "InvalidParameter.InvalidPostSizeValue"
+//  INVALIDPARAMETER_INVALIDRANGEORIGINPULL = "InvalidParameter.InvalidRangeOriginPull"
+//  INVALIDPARAMETER_INVALIDREQUESTHEADERNAME = "InvalidParameter.InvalidRequestHeaderName"
+//  INVALIDPARAMETER_INVALIDRESOURCEIDBILLING = "InvalidParameter.InvalidResourceIdBilling"
+//  INVALIDPARAMETER_INVALIDSTANDARDDEBUGCLIENTIP = "InvalidParameter.InvalidStandardDebugClientIp"
+//  INVALIDPARAMETER_INVALIDSTANDARDDEBUGEMPTYLIST = "InvalidParameter.InvalidStandardDebugEmptyList"
+//  INVALIDPARAMETER_INVALIDSTANDARDDEBUGEXPIRETIMELIMIT = "InvalidParameter.InvalidStandardDebugExpireTimeLimit"
+//  INVALIDPARAMETER_INVALIDWEBSOCKETTIMEOUT = "InvalidParameter.InvalidWebSocketTimeout"
+//  INVALIDPARAMETER_MULTIPLYLAYERNOTSUPPORTSMARTROUTING = "InvalidParameter.MultiplyLayerNotSupportSmartRouting"
+//  INVALIDPARAMETER_OCDIRECTORIGINREQUIRESSMARTROUTING = "InvalidParameter.OCDirectOriginRequiresSmartRouting"
+//  INVALIDPARAMETER_POSTMAXSIZELIMITEXCEEDED = "InvalidParameter.PostMaxSizeLimitExceeded"
+//  INVALIDPARAMETER_SETTINGINVALIDPARAM = "InvalidParameter.SettingInvalidParam"
+//  INVALIDPARAMETER_SHIELDNOTSUPPORTZONECACHEPREFRESH = "InvalidParameter.ShieldNotSupportZoneCachePrefresh"
+//  INVALIDPARAMETER_SHIELDNOTSUPPORTZONESMARTROUTING = "InvalidParameter.ShieldNotSupportZoneSmartRouting"
+//  INVALIDPARAMETER_ZONEISGRAYPUBLISHING = "InvalidParameter.ZoneIsGrayPublishing"
+//  INVALIDPARAMETER_ZONENOTFOUND = "InvalidParameter.ZoneNotFound"
+//  INVALIDPARAMETERVALUE_FORMATMISMATCH = "InvalidParameterValue.FormatMismatch"
+//  INVALIDPARAMETERVALUE_GENERALMISMATCH = "InvalidParameterValue.GeneralMismatch"
+//  INVALIDPARAMETERVALUE_INCLUDEINVALIDVALUE = "InvalidParameterValue.IncludeInvalidValue"
+//  INVALIDPARAMETERVALUE_MISSINGNECESSARYPARAM = "InvalidParameterValue.MissingNecessaryParam"
+//  INVALIDPARAMETERVALUE_NOTINENUMERATION = "InvalidParameterValue.NotInEnumeration"
+//  INVALIDPARAMETERVALUE_NOTWITHINRANGE = "InvalidParameterValue.NotWithinRange"
+//  INVALIDPARAMETERVALUE_REGEXMISMATCH = "InvalidParameterValue.RegExMismatch"
+//  INVALIDPARAMETERVALUE_UNRECOGNIZABLEVALUE = "InvalidParameterValue.UnrecognizableValue"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCELERATEMAINLANDDISABLE = "OperationDenied.AccelerateMainlandDisable"
+//  OPERATIONDENIED_ACCELERATEMAINLANDIPV6CONFLICT = "OperationDenied.AccelerateMainlandIpv6Conflict"
+//  OPERATIONDENIED_ACCELERATEMAINLANDMULTIPLYLAYERCONFLICT = "OperationDenied.AccelerateMainlandMultiplyLayerConflict"
+//  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
+//  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
+//  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
+//  OPERATIONDENIED_NOTALLOWCLOSEACCELERATEMAINLANDWHENDOMAINBOUNDEXCLUSIVEIP = "OperationDenied.NotAllowCloseAccelerateMainlandWhenDomainBoundExclusiveIP"
+//  OPERATIONDENIED_SHAREDCNAMEUNSUPPORTEDACCELERATEMAINLAND = "OperationDenied.SharedCNAMEUnsupportedAccelerateMainland"
+//  OPERATIONDENIED_SHAREDCNAMEUNSUPPORTEDIPV6 = "OperationDenied.SharedCNAMEUnsupportedIPv6"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_POSTMAXSIZEQUOTANOTFOUND = "ResourceNotFound.PostMaxSizeQuotaNotFound"
+//  RESOURCEUNAVAILABLE_CERTNOTFOUND = "ResourceUnavailable.CertNotFound"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+func (c *Client) ModifyZoneCustomVariables(request *ModifyZoneCustomVariablesRequest) (response *ModifyZoneCustomVariablesResponse, err error) {
+    return c.ModifyZoneCustomVariablesWithContext(context.Background(), request)
+}
+
+// ModifyZoneCustomVariables
+// 本接口用于管理站点级自定义变量，支持创建、修改和删除变量定义及变量运算。提交的列表将覆盖对应的现有配置；如需清空配置，请传入空列表。未传入的配置项保持不变。变量定义和变量运算的默认值均为空。
+//
+// 
+//
+// 规则级自定义变量相关操作，请调用 CreateL7AccRules 或 ModifyL7AccRule 接口。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
+//  INTERNALERROR_CONFIGLOCKED = "InternalError.ConfigLocked"
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INTERNALERROR_UNKNOWERROR = "InternalError.UnknowError"
+//  INVALIDPARAMETER_ACTIONINPROGRESS = "InvalidParameter.ActionInProgress"
+//  INVALIDPARAMETER_CACHEKEYQUERYSTRINGREQUIRESFULLURLCACHEOFF = "InvalidParameter.CacheKeyQueryStringRequiresFullUrlCacheOff"
+//  INVALIDPARAMETER_CACHEKEYQUERYSTRINGTOOMANYVALUE = "InvalidParameter.CacheKeyQueryStringTooManyValue"
+//  INVALIDPARAMETER_CERTSYSTEMERROR = "InvalidParameter.CertSystemError"
+//  INVALIDPARAMETER_CLIENTIPCOUNTRYCONFLICTSWITHIPV6 = "InvalidParameter.ClientIpCountryConflictsWithIpv6"
+//  INVALIDPARAMETER_GRPCREQUIREHTTP2 = "InvalidParameter.GrpcRequireHttp2"
+//  INVALIDPARAMETER_INVALIDAWSPRIVATEACCESS = "InvalidParameter.InvalidAwsPrivateAccess"
+//  INVALIDPARAMETER_INVALIDCACHECONFIGFOLLOWORIGIN = "InvalidParameter.InvalidCacheConfigFollowOrigin"
+//  INVALIDPARAMETER_INVALIDCACHEKEYQUERYSTRINGVALUE = "InvalidParameter.InvalidCacheKeyQueryStringValue"
+//  INVALIDPARAMETER_INVALIDCACHEONLYONSWITCH = "InvalidParameter.InvalidCacheOnlyOnSwitch"
+//  INVALIDPARAMETER_INVALIDCACHETIME = "InvalidParameter.InvalidCacheTime"
+//  INVALIDPARAMETER_INVALIDCLIENTIPCOUNTRYHEADERNAME = "InvalidParameter.InvalidClientIpCountryHeaderName"
+//  INVALIDPARAMETER_INVALIDCLIENTIPHEADERNAME = "InvalidParameter.InvalidClientIpHeaderName"
+//  INVALIDPARAMETER_INVALIDDYNAMICROUTINE = "InvalidParameter.InvalidDynamicRoutine"
+//  INVALIDPARAMETER_INVALIDDYNAMICROUTINEBILLING = "InvalidParameter.InvalidDynamicRoutineBilling"
+//  INVALIDPARAMETER_INVALIDFORCEREDIRECTTYPE = "InvalidParameter.InvalidForceRedirectType"
+//  INVALIDPARAMETER_INVALIDHTTPS = "InvalidParameter.InvalidHttps"
+//  INVALIDPARAMETER_INVALIDHTTPSCERTINFO = "InvalidParameter.InvalidHttpsCertInfo"
+//  INVALIDPARAMETER_INVALIDHTTPSCIPHERSUITEANDTLSVERSION = "InvalidParameter.InvalidHttpsCipherSuiteAndTlsVersion"
+//  INVALIDPARAMETER_INVALIDHTTPSHSTSMAXAGE = "InvalidParameter.InvalidHttpsHstsMaxAge"
+//  INVALIDPARAMETER_INVALIDHTTPSTLSVERSION = "InvalidParameter.InvalidHttpsTlsVersion"
+//  INVALIDPARAMETER_INVALIDIPV6SWITCH = "InvalidParameter.InvalidIpv6Switch"
+//  INVALIDPARAMETER_INVALIDMAXAGETIME = "InvalidParameter.InvalidMaxAgeTime"
+//  INVALIDPARAMETER_INVALIDORIGIN = "InvalidParameter.InvalidOrigin"
+//  INVALIDPARAMETER_INVALIDORIGINTYPE = "InvalidParameter.InvalidOriginType"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPOSTMAXSIZEBILLING = "InvalidParameter.InvalidPostMaxSizeBilling"
+//  INVALIDPARAMETER_INVALIDPOSTSIZEVALUE = "InvalidParameter.InvalidPostSizeValue"
+//  INVALIDPARAMETER_INVALIDRANGEORIGINPULL = "InvalidParameter.InvalidRangeOriginPull"
+//  INVALIDPARAMETER_INVALIDREQUESTHEADERNAME = "InvalidParameter.InvalidRequestHeaderName"
+//  INVALIDPARAMETER_INVALIDRESOURCEIDBILLING = "InvalidParameter.InvalidResourceIdBilling"
+//  INVALIDPARAMETER_INVALIDSTANDARDDEBUGCLIENTIP = "InvalidParameter.InvalidStandardDebugClientIp"
+//  INVALIDPARAMETER_INVALIDSTANDARDDEBUGEMPTYLIST = "InvalidParameter.InvalidStandardDebugEmptyList"
+//  INVALIDPARAMETER_INVALIDSTANDARDDEBUGEXPIRETIMELIMIT = "InvalidParameter.InvalidStandardDebugExpireTimeLimit"
+//  INVALIDPARAMETER_INVALIDWEBSOCKETTIMEOUT = "InvalidParameter.InvalidWebSocketTimeout"
+//  INVALIDPARAMETER_MULTIPLYLAYERNOTSUPPORTSMARTROUTING = "InvalidParameter.MultiplyLayerNotSupportSmartRouting"
+//  INVALIDPARAMETER_OCDIRECTORIGINREQUIRESSMARTROUTING = "InvalidParameter.OCDirectOriginRequiresSmartRouting"
+//  INVALIDPARAMETER_POSTMAXSIZELIMITEXCEEDED = "InvalidParameter.PostMaxSizeLimitExceeded"
+//  INVALIDPARAMETER_SETTINGINVALIDPARAM = "InvalidParameter.SettingInvalidParam"
+//  INVALIDPARAMETER_SHIELDNOTSUPPORTZONECACHEPREFRESH = "InvalidParameter.ShieldNotSupportZoneCachePrefresh"
+//  INVALIDPARAMETER_SHIELDNOTSUPPORTZONESMARTROUTING = "InvalidParameter.ShieldNotSupportZoneSmartRouting"
+//  INVALIDPARAMETER_ZONEISGRAYPUBLISHING = "InvalidParameter.ZoneIsGrayPublishing"
+//  INVALIDPARAMETER_ZONENOTFOUND = "InvalidParameter.ZoneNotFound"
+//  INVALIDPARAMETERVALUE_FORMATMISMATCH = "InvalidParameterValue.FormatMismatch"
+//  INVALIDPARAMETERVALUE_GENERALMISMATCH = "InvalidParameterValue.GeneralMismatch"
+//  INVALIDPARAMETERVALUE_INCLUDEINVALIDVALUE = "InvalidParameterValue.IncludeInvalidValue"
+//  INVALIDPARAMETERVALUE_MISSINGNECESSARYPARAM = "InvalidParameterValue.MissingNecessaryParam"
+//  INVALIDPARAMETERVALUE_NOTINENUMERATION = "InvalidParameterValue.NotInEnumeration"
+//  INVALIDPARAMETERVALUE_NOTWITHINRANGE = "InvalidParameterValue.NotWithinRange"
+//  INVALIDPARAMETERVALUE_REGEXMISMATCH = "InvalidParameterValue.RegExMismatch"
+//  INVALIDPARAMETERVALUE_UNRECOGNIZABLEVALUE = "InvalidParameterValue.UnrecognizableValue"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCELERATEMAINLANDDISABLE = "OperationDenied.AccelerateMainlandDisable"
+//  OPERATIONDENIED_ACCELERATEMAINLANDIPV6CONFLICT = "OperationDenied.AccelerateMainlandIpv6Conflict"
+//  OPERATIONDENIED_ACCELERATEMAINLANDMULTIPLYLAYERCONFLICT = "OperationDenied.AccelerateMainlandMultiplyLayerConflict"
+//  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
+//  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
+//  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
+//  OPERATIONDENIED_NOTALLOWCLOSEACCELERATEMAINLANDWHENDOMAINBOUNDEXCLUSIVEIP = "OperationDenied.NotAllowCloseAccelerateMainlandWhenDomainBoundExclusiveIP"
+//  OPERATIONDENIED_SHAREDCNAMEUNSUPPORTEDACCELERATEMAINLAND = "OperationDenied.SharedCNAMEUnsupportedAccelerateMainland"
+//  OPERATIONDENIED_SHAREDCNAMEUNSUPPORTEDIPV6 = "OperationDenied.SharedCNAMEUnsupportedIPv6"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_POSTMAXSIZEQUOTANOTFOUND = "ResourceNotFound.PostMaxSizeQuotaNotFound"
+//  RESOURCEUNAVAILABLE_CERTNOTFOUND = "ResourceUnavailable.CertNotFound"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+func (c *Client) ModifyZoneCustomVariablesWithContext(ctx context.Context, request *ModifyZoneCustomVariablesRequest) (response *ModifyZoneCustomVariablesResponse, err error) {
+    if request == nil {
+        request = NewModifyZoneCustomVariablesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "ModifyZoneCustomVariables")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyZoneCustomVariables require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyZoneCustomVariablesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyZoneSettingRequest() (request *ModifyZoneSettingRequest) {
     request = &ModifyZoneSettingRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -16211,6 +16993,62 @@ func (c *Client) ModifyZoneWorkModeWithContext(ctx context.Context, request *Mod
     request.SetContext(ctx)
     
     response = NewModifyZoneWorkModeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewOperateInferenceDomainRequest() (request *OperateInferenceDomainRequest) {
+    request = &OperateInferenceDomainRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "OperateInferenceDomain")
+    
+    
+    return
+}
+
+func NewOperateInferenceDomainResponse() (response *OperateInferenceDomainResponse) {
+    response = &OperateInferenceDomainResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// OperateInferenceDomain
+// 操作推理服务域名，支持停止、启用和删除推理服务域名，删除后的资源不可恢复。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_ZONENOTFOUND = "InvalidParameterValue.ZoneNotFound"
+//  RESOURCENOTFOUND_INFERENCEDOMAIN = "ResourceNotFound.InferenceDomain"
+//  RESOURCENOTFOUND_INFERENCESERVICE = "ResourceNotFound.InferenceService"
+func (c *Client) OperateInferenceDomain(request *OperateInferenceDomainRequest) (response *OperateInferenceDomainResponse, err error) {
+    return c.OperateInferenceDomainWithContext(context.Background(), request)
+}
+
+// OperateInferenceDomain
+// 操作推理服务域名，支持停止、启用和删除推理服务域名，删除后的资源不可恢复。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_ZONENOTFOUND = "InvalidParameterValue.ZoneNotFound"
+//  RESOURCENOTFOUND_INFERENCEDOMAIN = "ResourceNotFound.InferenceDomain"
+//  RESOURCENOTFOUND_INFERENCESERVICE = "ResourceNotFound.InferenceService"
+func (c *Client) OperateInferenceDomainWithContext(ctx context.Context, request *OperateInferenceDomainRequest) (response *OperateInferenceDomainResponse, err error) {
+    if request == nil {
+        request = NewOperateInferenceDomainRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "OperateInferenceDomain")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("OperateInferenceDomain require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewOperateInferenceDomainResponse()
     err = c.Send(request, response)
     return
 }

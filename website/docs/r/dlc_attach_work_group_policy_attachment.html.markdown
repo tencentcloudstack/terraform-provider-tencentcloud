@@ -95,7 +95,24 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `policy_set` object exports the following:
 
+* `create_time` - The permission policy creation time, which is not required as an input parameter.
+* `id` - The policy ID.
+* `is_admin_policy` - Whether the permission source is admin, which is not required as an input parameter.
+* `operator` - The operator, which is not required as an input parameter.
+* `policy_id` - The deterministic string PolicyId corresponding to user and workgroup, which is not required as an input parameter.
+* `re_auth` - Whether the grantee is allowed to further grant the permissions. Valid values: `false` (default) and `true` (the grantee can grant permissions gained here to other sub-users).
+* `source_id` - The ID of the work group, which applies only when the value of the `Source` field is `WORKGROUP`.
+* `source_name` - The name of the work group, which applies only when the value of the `Source` field is `WORKGROUP`.
+
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AttachWorkGroupPolicy](https://www.tencentcloud.com/document/api/1155/62677)
+* Read: [DescribeWorkGroupInfo](https://www.tencentcloud.com/document/api/1155/62667)
+* Delete: [DetachWorkGroupPolicy](https://www.tencentcloud.com/document/api/1155/62664)
 
 ## Import
 

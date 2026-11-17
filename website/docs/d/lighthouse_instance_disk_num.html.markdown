@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
   * `instance_id` - Instance Id.
   * `max_attach_count` - Number of elastic cloud disks that can be mounted.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstancesDiskNum](https://www.tencentcloud.com/document/api/1103/44563)
 

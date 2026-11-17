@@ -73,4 +73,9 @@ In addition to all arguments above, the following attributes are exported:
   * `volume` - hard disk storage, in GB.
   * `vport` - intranet port.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDiagDBInstances](https://www.tencentcloud.com/document/api/1035/41195)
 

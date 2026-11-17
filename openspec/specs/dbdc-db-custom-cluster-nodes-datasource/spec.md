@@ -1,7 +1,10 @@
-## ADDED Requirements
+# dbdc-db-custom-cluster-nodes-datasource Specification
 
+## Purpose
+TBD - created by archiving change add-dbdc-db-custom-cluster-nodes-datasource. Update Purpose after archive.
+## Requirements
 ### Requirement: 支持查询 DB Custom 集群节点列表
-数据源 `tencentcloud_dbdc_db_custom_cluster_nodes` 必须能够查询指定 DB Custom 集群中的节点列表，支持按集群ID和过滤条件查询。
+数据源 `tencentcloud_dbdc_db_custom_cluster_nodes` 必须能够查询指定 DB Custom 集群中的节点列表，支持按集群ID和过滤条件查询。 This requirement MUST be satisfied.
 
 **Rationale**: 用户需要在 Terraform 配置中动态发现和引用特定 DB Custom 集群内的节点信息，用于基础设施规划和节点管理。
 
@@ -27,13 +30,13 @@
 - 使用 `[]*dbdcv20201029.Filter` 类型
 
 ### Requirement: 完整的节点信息映射
-数据源必须返回节点的完整详细信息，涵盖所有 `DBCustomClusterNode` 结构体中的字段。
+数据源 SHALL 返回节点的完整详细信息，涵盖所有 `DBCustomClusterNode` 结构体中的字段。
 
 **Rationale**: 用户需要完整的节点信息用于资源规划和管理决策，包括节点标识、网络配置、状态和规格。
 
 #### Scenario: 返回节点基础信息字段
 - **WHEN** 查询到节点列表
-- **THEN** 每个 `node_set` 元素包含以下字段
+- **THEN** 每个 `node_set` 元素 SHALL 包含以下字段
 
 **Acceptance Criteria**:
 - `node_id` - 节点ID (TypeString, Computed)
@@ -43,17 +46,29 @@
 - `status` - 节点在集群中的实例状态 (TypeString, Computed)
 - `zone` - 节点所属地域 (TypeString, Computed)
 - `node_type` - 节点类型 (TypeString, Computed，枚举值包括 DB.AT5.32XLARGE512, DB.AT5.64XLARGE1152, DB.AT5.128XLARGE2304, DB.AT5.16XLARGE256, DB.AT5.8XLARGE128)
+- `network_mode` - 网络模式 (TypeString, Computed，枚举值包括 `privatelink` 四层网络联通放通SSH通路、`cross_tenant_eni` 三层网络联通双网卡模式)，映射到 API 的 `response.NodeSet.NetworkMode`
+- `eni_ip` - 当网络模式为 `cross_tenant_eni` 时节点的可访问 IP 地址 (TypeString, Computed)，映射到 API 的 `response.NodeSet.EniIP`
 
 #### Scenario: 返回总数量
 - **WHEN** 查询到节点列表
-- **THEN** 返回集群下总的节点数量
+- **THEN** 数据源 SHALL 返回集群下总的节点数量
 
 **Acceptance Criteria**:
 - `total_count` - 集群下总的节点数量 (TypeInt, Computed)
 - 映射到 API 的 `Response.TotalCount`
 
+#### Scenario: 安全设置 network_mode 和 eni_ip 字段
+- **WHEN** API 返回的 `DBCustomClusterNode` 中 `NetworkMode` 或 `EniIP` 为 nil
+- **THEN** 数据源 MUST NOT 调用对应的 set 方法，字段保持零值
+
+**Acceptance Criteria**:
+- 在设置 `network_mode` 前判断 `node.NetworkMode != nil`，为 nil 时跳过
+- 在设置 `eni_ip` 前判断 `node.EniIP != nil`，为 nil 时跳过
+- 遵循项目规则 #8 的 nil 检查要求
+- `NetworkMode` 和 `EniIP` 在 SDK 中标注"可能返回 null"，nil 处理必不可少
+
 ### Requirement: 数据类型转换与空值处理
-数据源必须正确处理 API 返回的数据类型转换，安全处理空值和 nil 指针。
+数据源必须正确处理 API 返回的数据类型转换，安全处理空值和 nil 指针。 This requirement MUST be satisfied.
 
 **Rationale**: 腾讯云 SDK 使用指针类型，需要安全解引用避免程序崩溃。
 
@@ -67,7 +82,7 @@
 - 遵循项目规则 #8
 
 ### Requirement: 输出文件支持
-数据源支持将查询结果输出到 JSON 文件，方便用户审查和分析。
+数据源支持将查询结果输出到 JSON 文件，方便用户审查和分析。 This requirement MUST be satisfied.
 
 **Rationale**: 用户可能需要将查询结果导出用于离线分析或审计。
 
@@ -80,7 +95,7 @@
 - 使用 `tccommon.WriteToFile` 写入
 
 ### Requirement: 错误处理与重试
-数据源必须正确处理 API 错误，实现重试逻辑以应对临时性故障。
+数据源必须正确处理 API 错误，实现重试逻辑以应对临时性故障。 This requirement MUST be satisfied.
 
 **Rationale**: 云 API 调用可能因为网络、限流等原因失败，需要重试机制。
 
@@ -113,7 +128,7 @@
 - 日志中使用资源名称 `dbdc_db_custom_cluster_nodes` 而非模糊措辞
 
 ### Requirement: 代码质量与规范
-数据源代码必须符合项目规范，遵循命名和结构约定。
+数据源代码必须符合项目规范，遵循命名和结构约定。 This requirement MUST be satisfied.
 
 **Rationale**: 保持代码库一致性和可维护性。
 
@@ -142,7 +157,7 @@
 - 在 `tencentcloud/provider.md` 中添加数据源条目
 
 ### Requirement: Service Layer 实现
-必须在 `service_tencentcloud_dbdc.go` 中新增 `DescribeDBCustomClusterNodesByFilter` 方法。
+必须在 `service_tencentcloud_dbdc.go` 中新增 `DescribeDBCustomClusterNodesByFilter` 方法。 This requirement MUST be satisfied.
 
 **Rationale**: Service 层封装 API 调用和分页逻辑，提供复用性。
 
@@ -173,7 +188,7 @@
 - 若为空，返回 `resource.NonRetryableError(fmt.Errorf("Describe dbdc_db_custom_cluster_nodes failed, Response is nil."))`
 
 ### Requirement: Provider 注册
-必须在 `tencentcloud/provider.go` 中注册数据源，并在 `tencentcloud/provider.md` 中添加数据源条目。
+必须在 `tencentcloud/provider.go` 中注册数据源，并在 `tencentcloud/provider.md` 中添加数据源条目。 This requirement MUST be satisfied.
 
 **Rationale**: 数据源必须在 Provider 中注册才能被 Terraform 使用。
 
@@ -186,7 +201,7 @@
 - `provider.md` 中 DBDC Data Source 部分添加 `tencentcloud_dbdc_db_custom_cluster_nodes`
 
 ### Requirement: 文档
-必须提供完整的 .md 文档文件。
+必须提供完整的 .md 文档文件。 This requirement MUST be satisfied.
 
 **Rationale**: 每个数据源必须有文档说明使用方法。
 
@@ -200,7 +215,7 @@
 - 不包含 Argument Reference 和 Attribute Reference（这些由工具自动生成）
 
 ### Requirement: 单元测试
-必须提供 gomonkey mock 方式的单元测试，验证数据源的 Read 功能。
+必须提供 gomonkey mock 方式的单元测试，验证数据源的 Read 功能。 This requirement MUST be satisfied.
 
 **Rationale**: 项目规则要求新资源使用 mock 方式进行单元测试。
 
@@ -229,3 +244,4 @@
 **Acceptance Criteria**:
 - mock API 返回空 NodeSet
 - 验证 Read 方法返回错误
+

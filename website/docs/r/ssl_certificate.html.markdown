@@ -78,6 +78,22 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Status of the SSL certificate.
 * `subject_names` - ALL domains included in the SSL certificate. Including the primary domain name.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeCertificateDetail](https://www.tencentcloud.com/document/api/1007/36587)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [UploadCertificate](https://www.tencentcloud.com/document/api/1007/36579)
+* Read:
+  - [DescribeCertificateDetail](https://www.tencentcloud.com/document/api/1007/36587)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [ModifyCertificateAlias](https://www.tencentcloud.com/document/api/1007/36583)
+  - [ModifyCertificateProject](https://www.tencentcloud.com/document/api/1007/36582)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteCertificate](https://www.tencentcloud.com/document/api/1007/36589)
 
 ## Import
 

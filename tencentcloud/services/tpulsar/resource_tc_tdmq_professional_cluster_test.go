@@ -41,11 +41,12 @@ func TestAccTencentCloudTdmqProfessionalClusterResource_basic(t *testing.T) {
 const testAccTdmqProfessionalCluster = `
 
 resource "tencentcloud_tdmq_professional_cluster" "professional_cluster" {
-  auto_renew_flag = 1
-  cluster_name    = "single_zone_cluster"
-  product_name    = "PULSAR.P1.MINI2"
-  storage_size    = 600
-  tags            = {
+  auto_renew_flag  = 1
+  cluster_name     = "single_zone_cluster"
+  product_name     = "PULSAR.P1.MINI2"
+  storage_size     = 600
+  instance_version = "PULSAR_PRO_2.0.0"
+  tags             = {
     "createby" = "terrafrom"
   }
   zone_ids = [
@@ -63,11 +64,12 @@ resource "tencentcloud_tdmq_professional_cluster" "professional_cluster" {
 const testAccTdmqProfessionalClusterUpdate = `
 
 resource "tencentcloud_tdmq_professional_cluster" "professional_cluster" {
-  auto_renew_flag = 1
-  cluster_name    = "single_zone_cluster_test"
-  product_name    = "PULSAR.P1.MINI2"
-  storage_size    = 600
-  tags            = {
+  auto_renew_flag  = 1
+  cluster_name     = "single_zone_cluster_test"
+  product_name     = "PULSAR.P1.MINI2"
+  storage_size     = 600
+  instance_version = "PULSAR_PRO_2.0.0"
+  tags             = {
     "createby" = "terrafrom"
   }
   zone_ids = [

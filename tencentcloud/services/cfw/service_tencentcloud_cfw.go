@@ -953,6 +953,7 @@ func (me *CfwService) DescribeCfwEdgeFirewallSwitchById(ctx context.Context, pub
 	logId := tccommon.GetLogId(ctx)
 
 	request := cfw.NewDescribeFwEdgeIpsRequest()
+	response := cfw.NewDescribeFwEdgeIpsResponse()
 	request.Filters = []*cfw.CommonFilter{
 		{
 			Name:         common.StringPtr("PublicIp"),
@@ -960,7 +961,7 @@ func (me *CfwService) DescribeCfwEdgeFirewallSwitchById(ctx context.Context, pub
 			OperatorType: common.Int64Ptr(1),
 		},
 	}
-	request.Limit = helper.Int64(10)
+	request.Limit = helper.Int64(100)
 
 	defer func() {
 		if errRet != nil {
@@ -968,15 +969,27 @@ func (me *CfwService) DescribeCfwEdgeFirewallSwitchById(ctx context.Context, pub
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCfwClient().DescribeFwEdgeIps(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseCfwClient().DescribeFwEdgeIps(request)
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe fw edgeIps failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.Data) < 1 {
 		return

@@ -221,6 +221,14 @@ In addition to all arguments above, the following attributes are exported:
 * `domain` - Public network access domain.
 * `intranet_domain` - Intranet access domain.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateConsole](https://www.tencentcloud.com/document/api/614/80563)
+* Read: [DescribeConsoles](https://www.tencentcloud.com/document/api/614/80559)
+* Update: [ModifyConsole](https://www.tencentcloud.com/document/api/614/80555)
+* Delete: [DeleteConsole](https://www.tencentcloud.com/document/api/614/80561)
 
 ## Import
 

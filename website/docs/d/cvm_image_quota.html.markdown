@@ -30,4 +30,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `image_num_quota` - The image quota of an account.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeImageQuota](https://www.tencentcloud.com/document/api/213/33274)
 

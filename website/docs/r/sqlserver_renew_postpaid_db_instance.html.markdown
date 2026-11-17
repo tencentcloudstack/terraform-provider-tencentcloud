@@ -79,6 +79,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [RenewPostpaidDBInstance](https://www.tencentcloud.com/document/api/238/72754)
+* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/api/238/32115)
+* Update: [RenewPostpaidDBInstance](https://www.tencentcloud.com/document/api/238/72754)
 
 ## Import
 

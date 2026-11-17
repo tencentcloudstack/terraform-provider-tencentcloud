@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
   * `region_id` - Region id.
   * `region_name` - Chinese or English name of the region.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAccessRegionsByDestRegion](https://www.tencentcloud.com/document/api/608/33103)
 

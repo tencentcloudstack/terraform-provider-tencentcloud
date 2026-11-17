@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `id_number` - ID numberNote: This field may return NULL, indicating that the valid value cannot be obtained.
   * `id_type` - typeNote: This field may return NULL, indicating that the valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCompanies](https://www.tencentcloud.com/document/api/1007/79833)
 

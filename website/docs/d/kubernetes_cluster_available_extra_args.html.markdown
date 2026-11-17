@@ -69,4 +69,9 @@ In addition to all arguments above, the following attributes are exported:
     * `type` - Argument type.
     * `usage` - Argument description.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeClusterAvailableExtraArgs](https://www.tencentcloud.com/search/?wd=DescribeClusterAvailableExtraArgs&type=document&lang=en)
 

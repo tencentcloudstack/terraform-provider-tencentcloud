@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `jwks_uri` - service-account-jwks-uri. Note: this field may return `null`, indicating that no valid values can be obtained.
   * `use_tke_default` - Use TKE default issuer and jwksuri. Note: This field may return `null`, indicating that no valid values can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeClusterAuthenticationOptions](https://www.tencentcloud.com/document/api/457/42699)
 

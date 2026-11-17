@@ -43,4 +43,9 @@ In addition to all arguments above, the following attributes are exported:
   * `snapshot_file_id` - snap shot file id.
   * `snapshot_policy_id` - Snapshot Policy Id.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSnapshotFiles](https://www.tencentcloud.com/document/api/215/55055)
 

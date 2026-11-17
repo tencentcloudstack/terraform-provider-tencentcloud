@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	ga2v20250115 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ga2/v20250115"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -16,6 +17,16 @@ import (
 
 // taskStatusSuccess is the terminal success status returned by DescribeTaskResult.
 const taskStatusSuccess = "SUCCESS"
+
+// IsGa2ResourceNotFoundError checks whether the given error is an SDK error with
+// code "ResourceNotFound". This is used by resource Read functions to distinguish
+// "resource does not exist" from other errors.
+func IsGa2ResourceNotFoundError(err error) bool {
+	if sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+		return sdkErr.Code == "ResourceNotFound"
+	}
+	return false
+}
 
 // Ga2Service wraps the GA2 v20250115 SDK client for the provider.
 type Ga2Service struct {
@@ -489,6 +500,193 @@ func (me *Ga2Service) DescribeGa2ForwardingPolicyById(ctx context.Context, gaId,
 	}
 
 	return nil, nil
+}
+
+// DescribeGa2GlobalAcceleratorAclPolicyById queries an ACL policy by its (gaId, policyId) tuple.
+// Returns (nil, nil) when the policy does not exist.
+//
+// Note: DescribeGlobalAcceleratorAclPolicies is keyed by GlobalAcceleratorId and lacks a per-policy
+// filter slot. We paginate through every policy under the accelerator and match
+// `GlobalAcceleratorAclPolicyId` strictly client-side.
+func (me *Ga2Service) DescribeGa2GlobalAcceleratorAclPolicyById(ctx context.Context, gaId, policyId string) (*ga2v20250115.GlobalAcceleratorAclPolicies, error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := ga2v20250115.NewDescribeGlobalAcceleratorAclPoliciesRequest()
+	request.GlobalAcceleratorId = helper.String(gaId)
+
+	var (
+		offset uint64 = 0
+		// limit equals the API-documented maximum ("200") to minimize round-trips.
+		limit = "200"
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		var response *ga2v20250115.DescribeGlobalAcceleratorAclPoliciesResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseGa2V20250115Client().DescribeGlobalAcceleratorAclPoliciesWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe ga2 global accelerator acl policies failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s describe ga2 global accelerator acl policies failed, reason:%+v", logId, err)
+			return nil, err
+		}
+
+		set := response.Response.GlobalAcceleratorAclPolicySet
+		for i := range set {
+			item := set[i]
+			if item == nil || item.GlobalAcceleratorAclPolicyId == nil {
+				continue
+			}
+
+			// Strict equality check on the policy ID: the API has no per-policy filter, so we match client-side.
+			if *item.GlobalAcceleratorAclPolicyId == policyId {
+				return item, nil
+			}
+		}
+
+		// Stop when the current page is the last page.
+		if uint64(len(set)) < 200 {
+			break
+		}
+
+		offset += 200
+	}
+
+	return nil, nil
+}
+
+// DescribeGa2GlobalAcceleratorAclRuleById queries an ACL rule by its (policyId, ruleId) tuple.
+// Returns (nil, nil) when the rule does not exist.
+//
+// Note: DescribeGlobalAcceleratorAclRules is keyed by GlobalAcceleratorAclPolicyId only and
+// lacks a per-rule filter slot. We paginate through every rule under the policy and match
+// GlobalAcceleratorAclRuleId strictly client-side.
+func (me *Ga2Service) DescribeGa2GlobalAcceleratorAclRuleById(ctx context.Context, policyId, ruleId string) (*ga2v20250115.GlobalAcceleratorAclRuleSet, error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := ga2v20250115.NewDescribeGlobalAcceleratorAclRulesRequest()
+	request.GlobalAcceleratorAclPolicyId = helper.String(policyId)
+
+	var (
+		offset uint64 = 0
+		// limit equals the API-documented maximum to minimize round-trips.
+		limit uint64 = 200
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		var response *ga2v20250115.DescribeGlobalAcceleratorAclRulesResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseGa2V20250115Client().DescribeGlobalAcceleratorAclRulesWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe ga2 global accelerator acl rules failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s describe ga2 global accelerator acl rules failed, reason:%+v", logId, err)
+			return nil, err
+		}
+
+		set := response.Response.GlobalAcceleratorAclRuleSet
+		for i := range set {
+			item := set[i]
+			if item == nil || item.GlobalAcceleratorAclRuleId == nil {
+				continue
+			}
+
+			// Strict equality check on the rule ID: the API has no per-rule filter, so we match client-side.
+			if *item.GlobalAcceleratorAclRuleId == ruleId {
+				return item, nil
+			}
+		}
+
+		// Stop when the current page is the last page.
+		if uint64(len(set)) < limit {
+			break
+		}
+
+		offset += limit
+	}
+
+	return nil, nil
+}
+
+// DescribeGa2GlobalAcceleratorAclRulesByPolicyId returns the full set of ACL rules under the given ACL policy id.
+// It paginates DescribeGlobalAcceleratorAclRules with Limit=200 (the documented maximum) and aggregates every
+// GlobalAcceleratorAclRuleSet item across pages. If response.Response is nil on any page it returns an error
+// rather than silently returning an empty slice, so that real API failures are surfaced to the caller.
+func (me *Ga2Service) DescribeGa2GlobalAcceleratorAclRulesByPolicyId(ctx context.Context, policyId string) ([]*ga2v20250115.GlobalAcceleratorAclRuleSet, error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := ga2v20250115.NewDescribeGlobalAcceleratorAclRulesRequest()
+	request.GlobalAcceleratorAclPolicyId = helper.String(policyId)
+
+	var (
+		offset uint64 = 0
+		// limit equals the API-documented maximum to minimize round-trips.
+		limit  uint64 = 200
+		result []*ga2v20250115.GlobalAcceleratorAclRuleSet
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		var response *ga2v20250115.DescribeGlobalAcceleratorAclRulesResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ret, e := me.client.UseGa2V20250115Client().DescribeGlobalAcceleratorAclRulesWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if ret == nil || ret.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe ga2 global_accelerator_acl_rule_set failed, Response is nil."))
+			}
+
+			response = ret
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s describe ga2 global_accelerator_acl_rule_set failed, reason:%+v", logId, err)
+			return nil, err
+		}
+
+		set := response.Response.GlobalAcceleratorAclRuleSet
+		result = append(result, set...)
+
+		// Stop when the current page is the last page.
+		if uint64(len(set)) < limit {
+			break
+		}
+
+		offset += limit
+	}
+
+	return result, nil
 }
 
 // WaitForGa2TaskFinish polls DescribeTaskResult until the task reaches "SUCCESS" or the given timeout elapses.

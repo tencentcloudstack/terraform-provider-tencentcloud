@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cls_config: support input_type parameter for configuring log input source type
+```

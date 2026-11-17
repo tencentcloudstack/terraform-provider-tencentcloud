@@ -11,6 +11,12 @@ description: |-
 
 Provides an elasticsearch instance resource.
 
+~> **NOTE:** After executing `terraform destroy`, the resource instance will be isolated in the recycle bin(reserved for 24 hours by default). If you need to completely destroy the instance, you can set `force_delete` to `true`.
+
+~> **NOTE:** Currently, Once the `enable_cerebro` field is `true`, it cannot be `false`.
+
+~> **NOTE:** `sub_product_code` specifies the sub-product of the instance (e.g. `sp_es_enterprise` for enterprise edition). It can only be set at creation time. If omitted, the backend maps it from `license_type`.
+
 ## Example Usage
 
 ### Create a basic version of elasticsearch instance paid by the hour
@@ -117,6 +123,100 @@ resource "tencentcloud_elasticsearch_instance" "example" {
 }
 ```
 
+### Create a elasticsearch instance with Cerebro public access enabled
+
+```hcl
+resource "tencentcloud_elasticsearch_instance" "example" {
+  instance_name       = "tf_example"
+  availability_zone   = "ap-guangzhou-6"
+  version             = "7.14.2"
+  vpc_id              = "vpc-i5yyodl9"
+  subnet_id           = "subnet-hhi88a58"
+  password            = "Password@2026"
+  license_type        = "platinum"
+  basic_security_type = 2
+  enable_cerebro      = true
+  force_delete        = true
+
+  web_node_type_info {
+    node_num  = 1
+    node_type = "ES.S1.MEDIUM4"
+  }
+
+  node_info_list {
+    type      = "dedicatedMaster"
+    node_num  = 3
+    node_type = "ES.S1.MEDIUM8"
+    encrypt   = false
+  }
+
+  node_info_list {
+    type      = "hotData"
+    node_num  = 2
+    node_type = "ES.S1.MEDIUM8"
+    encrypt   = false
+  }
+
+  es_acl {
+    white_list = [
+      "127.0.0.1",
+    ]
+  }
+
+  tags = {
+    createBy = "Terraform"
+  }
+}
+```
+
+### Create a elasticsearch instance with Cerebro private access enabled
+
+```hcl
+resource "tencentcloud_elasticsearch_instance" "example" {
+  instance_name          = "tf_example"
+  availability_zone      = "ap-guangzhou-6"
+  version                = "7.14.2"
+  vpc_id                 = "vpc-i5yyodl9"
+  subnet_id              = "subnet-hhi88a58"
+  password               = "Password@2026"
+  license_type           = "platinum"
+  basic_security_type    = 2
+  enable_cerebro         = true
+  cerebro_private_access = "OPEN"
+  cerebro_private_domain = "http://10.0.30.56:9000"
+  force_delete           = true
+
+  web_node_type_info {
+    node_num  = 1
+    node_type = "ES.S1.MEDIUM4"
+  }
+
+  node_info_list {
+    type      = "dedicatedMaster"
+    node_num  = 3
+    node_type = "ES.S1.MEDIUM8"
+    encrypt   = false
+  }
+
+  node_info_list {
+    type      = "hotData"
+    node_num  = 2
+    node_type = "ES.S1.MEDIUM8"
+    encrypt   = false
+  }
+
+  es_acl {
+    white_list = [
+      "127.0.0.1",
+    ]
+  }
+
+  tags = {
+    createBy = "Terraform"
+  }
+}
+```
+
 ### Create a basic version of elasticsearch instance for multi-availability zone deployment
 
 ```hcl
@@ -199,6 +299,69 @@ resource "tencentcloud_elasticsearch_instance" "example_multi_zone" {
 }
 ```
 
+### Create a basic version of elasticsearch instance with dedicated coordinating node
+
+```hcl
+data "tencentcloud_availability_zones_by_product" "availability_zone" {
+  product = "es"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_es_vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = data.tencentcloud_availability_zones_by_product.availability_zone.zones.0.name
+  name              = "tf_es_subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+resource "tencentcloud_elasticsearch_instance" "example" {
+  instance_name       = "tf_example_es"
+  availability_zone   = data.tencentcloud_availability_zones_by_product.availability_zone.zones.0.name
+  version             = "7.10.1"
+  vpc_id              = tencentcloud_vpc.vpc.id
+  subnet_id           = tencentcloud_subnet.subnet.id
+  password            = "Test12345"
+  license_type        = "basic"
+  basic_security_type = 2
+
+  web_node_type_info {
+    node_num  = 1
+    node_type = "ES.S1.MEDIUM4"
+  }
+
+  node_info_list {
+    type      = "hotData"
+    node_num  = 2
+    node_type = "ES.S1.MEDIUM8"
+    disk_type = "CLOUD_SSD"
+    disk_size = 100
+    encrypt   = false
+  }
+
+  node_info_list {
+    type      = "dedicatedMaster"
+    node_num  = 3
+    node_type = "ES.S1.MEDIUM4"
+    disk_type = "CLOUD_SSD"
+    disk_size = 50
+    encrypt   = false
+  }
+
+  node_info_list {
+    type      = "dedicatedCoordinating"
+    node_num  = 2
+    node_type = "ES.S1.MEDIUM4"
+    disk_type = "CLOUD_SSD"
+    disk_size = 50
+    encrypt   = false
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -208,13 +371,18 @@ The following arguments are supported:
 * `vpc_id` - (Required, String, ForceNew) The ID of a VPC network.
 * `availability_zone` - (Optional, String, ForceNew) Availability zone. When create multi-az es, this parameter must be the primary availability zone.
 * `basic_security_type` - (Optional, Int) Whether to enable X-Pack security authentication in Basic Edition 6.8 and above. Valid values are `1` and `2`. `1` is disabled, `2` is enabled, and default value is `1`. Notice: this parameter is only take effect on `basic` license.
+* `cerebro_private_access` - (Optional, String) Cerebro private network access status. Valid values are `OPEN` and `CLOSE`. Note: Cerebro configuration cannot be read back from the API, so Terraform will not detect drift if changed outside of Terraform.
+* `cerebro_private_domain` - (Optional, String) Cerebro private network custom domain. Note: Cerebro configuration cannot be read back from the API, so Terraform will not detect drift if changed outside of Terraform.
+* `cerebro_public_access` - (Optional, String) Cerebro public network access status. Valid values are `OPEN` and `CLOSE`. Note: Cerebro configuration cannot be read back from the API, so Terraform will not detect drift if changed outside of Terraform.
 * `charge_period` - (Optional, Int, ForceNew) The tenancy of the prepaid instance, and uint is month. NOTE: it only works when charge_type is set to `PREPAID`.
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`.
 * `cos_backup` - (Optional, List) COS automatic backup information.
 * `deploy_mode` - (Optional, Int) Cluster deployment mode. Valid values are `0` and `1`. `0` is single-AZ deployment, and `1` is multi-AZ deployment. Default value is `0`.
+* `enable_cerebro` - (Optional, Bool) Whether to enable Cerebro. Note: Cerebro configuration cannot be read back from the API, so Terraform will not detect drift if changed outside of Terraform.
 * `enable_destroy_protection` - (Optional, String) Cluster destroy protection status. Valid values are `OPEN` (enable protection) and `CLOSE` (disable protection). NOTE: when destroy protection is `OPEN`, `terraform destroy` will fail at the cloud API `DeleteInstance` call until this field is set to `CLOSE`.
 * `es_acl` - (Optional, List) Kibana Access Control Configuration.
 * `es_public_acl` - (Optional, List) Public network access control list.
+* `force_delete` - (Optional, Bool) Whether to force delete the instance. Default is `false`. Set it to `true` while deleting the instance.
 * `instance_name` - (Optional, String) Name of the instance, which can contain 1 to 50 English letters, Chinese characters, digits, dashes(-), or underscores(_).
 * `kibana_private_access` - (Optional, String) Kibana private network access status. Valid values are `OPEN` and `CLOSE`.
 * `kibana_public_access` - (Optional, String) Kibana public network access status. Valid values are `OPEN` and `CLOSE`.
@@ -225,6 +393,7 @@ The following arguments are supported:
 * `public_access` - (Optional, String) ES cluster public network access status. Valid values are `OPEN` and `CLOSE`. Cannot be changed at the same time as `es_acl`.
 * `renew_flag` - (Optional, String, ForceNew) When enabled, the instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `RENEW_FLAG_AUTO` and `RENEW_FLAG_MANUAL`. NOTE: it only works when charge_type is set to `PREPAID`.
 * `scene_type` - (Optional, Int) Scenario based template type. 0: Not enabled; 1: Universal; 2: Log; 3: Search.
+* `sub_product_code` - (Optional, String, ForceNew) Sub-product code of the instance. Valid values: `sp_es_io2` (open source), `sp_es_basic` (basic), `sp_es_platinum` (platinum), `sp_es_enterprise` (enterprise), `sp_es_cdc_platinum` (CDC platinum), `sp_es_enlogging` (logging enhanced), `sp_es_aisearch` (AI search enhanced), `sp_tsearch_io2` (tsearch), `sp_es_logstash` (logstash). If omitted, the value is mapped from `license_type` by the backend. NOTE: this field can only be set when creating the instance.
 * `subnet_id` - (Optional, String, ForceNew) The ID of a VPC subnetwork. When create multi-az es, this parameter must be the subnet in the primary availability zone.
 * `tags` - (Optional, Map) A mapping of tags to assign to the instance. For tag limits, please refer to [Use Limits](https://intl.cloud.tencent.com/document/product/651/13354).
 * `web_node_type_info` - (Optional, List) Visual node configuration.
@@ -255,7 +424,7 @@ The `node_info_list` object supports the following:
 * `disk_size` - (Optional, Int) Node disk size. Unit is GB, and default value is `100`. Big Data and High IO models do not support the specified disk size and have no default values.
 * `disk_type` - (Optional, String) Node disk type. Valid values are `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_HSSD`, `CLOUD_BSSD`, `CLOUD_BIGDATA` and `CLOUD_HIGHIO`. The default value is `CLOUD_SSD`. Big Data and High IO models do not support the specified disk type and have no default values.
 * `encrypt` - (Optional, Bool) Decides to encrypt this disk or not.
-* `type` - (Optional, String) Node type. Valid values are `hotData`, `warmData` and `dedicatedMaster`. The default value is 'hotData`.
+* `type` - (Optional, String) Node type. Valid values are `hotData`, `warmData`, `dedicatedMaster`, `dedicatedCoordinating` and `dedicatedMl`. The default value is `hotData`.
 
 The `web_node_type_info` object supports the following:
 
@@ -275,6 +444,23 @@ In addition to all arguments above, the following attributes are exported:
 * `kibana_private_url` - Kibana private URL.
 * `kibana_url` - Kibana access URL.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateInstance](https://www.tencentcloud.com/document/api/845/32218)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/845/32214)
+  - [UpdateInstance](https://www.tencentcloud.com/document/api/845/32212)
+* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/845/32214)
+* Update:
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [UpdateInstance](https://www.tencentcloud.com/document/api/845/32212)
+  - [UpgradeInstance](https://www.tencentcloud.com/document/api/845/34396)
+  - [UpgradeLicense](https://www.tencentcloud.com/document/api/845/34395)
+* Delete:
+  - [DeleteInstance](https://www.tencentcloud.com/document/api/845/32217)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/845/32214)
 
 ## Import
 

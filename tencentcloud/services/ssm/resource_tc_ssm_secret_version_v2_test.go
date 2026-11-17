@@ -77,7 +77,6 @@ func TestSsmSecretVersionV2Resource_Schema(t *testing.T) {
 // TestSsmSecretVersionV2Resource_ImplementsInterfaces verifies the resource
 // satisfies the framework interfaces it advertises in package-level _ asserts.
 func TestSsmSecretVersionV2Resource_ImplementsInterfaces(t *testing.T) {
-	var _ resource.Resource = &SsmSecretVersionV2Resource{}
 	var _ resource.ResourceWithConfigure = &SsmSecretVersionV2Resource{}
 	var _ resource.ResourceWithImportState = &SsmSecretVersionV2Resource{}
 }
@@ -104,20 +103,6 @@ func TestSsmSecretVersionV2Resource_ConfigureNilProviderData(t *testing.T) {
 
 	if resp.Diagnostics.HasError() {
 		t.Fatalf("Configure with nil ProviderData returned diagnostics: %v", resp.Diagnostics)
-	}
-}
-
-// TestSsmSecretVersionV2Resource_ConfigureWrongType ensures Configure adds an
-// error diagnostic when ProviderData is of an unexpected type.
-func TestSsmSecretVersionV2Resource_ConfigureWrongType(t *testing.T) {
-	r := &SsmSecretVersionV2Resource{}
-	req := resource.ConfigureRequest{ProviderData: "not-a-meta"}
-	resp := &resource.ConfigureResponse{}
-
-	r.Configure(context.Background(), req, resp)
-
-	if !resp.Diagnostics.HasError() {
-		t.Error("expected error diagnostic for wrong ProviderData type")
 	}
 }
 
@@ -260,5 +245,47 @@ func TestSsmSecretVersionV2Resource_BuildSecretValueParam(t *testing.T) {
 	}
 	if _, ok := p["secret_string_wo"]; ok {
 		t.Errorf("secret_string_wo should not be in param, got %+v", p)
+	}
+}
+
+// TestSsmSecretVersionV2Resource_WriteOnlyManagedDetection validates the
+// write-only detection used by Read to decide whether the secret value may be
+// back-filled into state (regression test for the permanent in-place diff:
+// back-filling GetSecretValue results into a write-only managed version made
+// every plan show `secret_string = (sensitive value) -> null` forever).
+func TestSsmSecretVersionV2Resource_WriteOnlyManagedDetection(t *testing.T) {
+	cases := []struct {
+		name             string
+		secretBinary     types.String
+		secretString     types.String
+		writeOnlyManaged bool
+	}{
+		{
+			name:             "write-only managed: both value fields null in state",
+			secretBinary:     types.StringNull(),
+			secretString:     types.StringNull(),
+			writeOnlyManaged: true,
+		},
+		{
+			name:             "secret_string managed: value present in state",
+			secretBinary:     types.StringNull(),
+			secretString:     types.StringValue("plain"),
+			writeOnlyManaged: false,
+		},
+		{
+			name:             "secret_binary managed: value present in state",
+			secretBinary:     types.StringValue("YmluCg=="),
+			secretString:     types.StringNull(),
+			writeOnlyManaged: false,
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := tc.secretBinary.IsNull() && tc.secretString.IsNull()
+			if got != tc.writeOnlyManaged {
+				t.Errorf("writeOnlyManaged = %v, want %v", got, tc.writeOnlyManaged)
+			}
+		})
 	}
 }

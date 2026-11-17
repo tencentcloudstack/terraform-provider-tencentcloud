@@ -384,12 +384,31 @@ func resourceTencentCloudServerlessHbaseInstanceUpdate(d *schema.ResourceData, m
 
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	immutableArgs := []string{"pay_mode", "disk_type", "disk_size", "node_type", "time_span", "time_unit", "auto_renew_flag"}
+	immutableArgs := []string{"pay_mode", "disk_type", "node_type", "time_span", "time_unit", "auto_renew_flag"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
+
+	// Only zone_settings.*.node_num can be changed. Check it before any API call so
+	// that a rejected change does not leave other fields (e.g. disk_size) half-applied.
+	needChange := false
+	if d.HasChange("zone_settings") {
+		for idx, zoneSetting := range d.Get("zone_settings").([]interface{}) {
+			for k := range zoneSetting.(map[string]interface{}) {
+				param := fmt.Sprintf("zone_settings.%d.%s", idx, k)
+				if d.HasChange(param) {
+					if k == "node_num" {
+						needChange = true
+					} else {
+						return fmt.Errorf("argument `%s` cannot be changed", param)
+					}
+				}
+			}
+		}
+	}
+
 	instanceId := d.Id()
 
 	if d.HasChange("instance_name") {
@@ -437,19 +456,44 @@ func resourceTencentCloudServerlessHbaseInstanceUpdate(d *schema.ResourceData, m
 			return err
 		}
 	}
-	needChange := false
-	if d.HasChange("zone_settings") {
-		for idx, zoneSetting := range d.Get("zone_settings").([]interface{}) {
-			for k := range zoneSetting.(map[string]interface{}) {
-				param := fmt.Sprintf("zone_settings.%d.%s", idx, k)
-				if d.HasChange(param) {
-					if k == "node_num" {
-						needChange = true
-					} else {
-						return fmt.Errorf("argument `%s` cannot be changed", param)
-					}
-				}
+	if d.HasChange("disk_size") {
+		// ModifySLInstance requires Zone; use the zone of the first zone_settings block.
+		var zone string
+		if zoneSettings, ok := d.Get("zone_settings").([]interface{}); ok && len(zoneSettings) > 0 {
+			if zoneSettingMap, ok := zoneSettings[0].(map[string]interface{}); ok {
+				zone, _ = zoneSettingMap["zone"].(string)
 			}
+		}
+		if zone == "" {
+			return fmt.Errorf("`zone_settings.0.zone` is required to update `disk_size`")
+		}
+
+		diskSize := d.Get("disk_size").(int)
+		request := emr.NewModifySLInstanceRequest()
+		request.InstanceId = helper.String(instanceId)
+		request.Zone = helper.String(zone)
+		request.DiskSize = helper.IntInt64(diskSize)
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ModifySLInstanceWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update serverless hbase instance disk_size failed, reason:%+v", logId, err)
+			return err
+		}
+
+		emrService := EMRService{
+			client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
+		}
+		conf := tccommon.BuildStateChangeConf([]string{"22"}, []string{"2"}, 10*tccommon.ReadRetryTimeout, time.Second, emrService.SLInstanceStateRefreshFunc(instanceId, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
 		}
 	}
 	if needChange {

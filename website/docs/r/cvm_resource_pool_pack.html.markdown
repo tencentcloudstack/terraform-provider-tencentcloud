@@ -66,6 +66,17 @@ In addition to all arguments above, the following attributes are exported:
 * `start_time` - Resource pool pack creation time. Format: YYYY-MM-DDThh:mm:ssZ.
 * `status` - Resource pool pack status. Values: CREATING (creating), ACTIVE (running), FAILED (creation failed), RETIRED (expired).
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeResourcePoolPacks](https://www.tencentcloud.com/search/?wd=DescribeResourcePoolPacks&type=document&lang=en)
+  - [PurchaseResourcePoolPacks](https://www.tencentcloud.com/search/?wd=PurchaseResourcePoolPacks&type=document&lang=en)
+* Read: [DescribeResourcePoolPacks](https://www.tencentcloud.com/search/?wd=DescribeResourcePoolPacks&type=document&lang=en)
+* Delete:
+  - [DescribeResourcePoolPacks](https://www.tencentcloud.com/search/?wd=DescribeResourcePoolPacks&type=document&lang=en)
+  - [TerminateResourcePoolPacks](https://www.tencentcloud.com/search/?wd=TerminateResourcePoolPacks&type=document&lang=en)
 
 ## Import
 

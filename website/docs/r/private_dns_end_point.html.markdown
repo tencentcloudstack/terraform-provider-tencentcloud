@@ -38,6 +38,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `end_point_vip_set` - Vip list of endpoint.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateEndPoint](https://www.tencentcloud.com/document/api/1097/65936)
+* Read: [DescribeEndPointList](https://www.tencentcloud.com/document/api/1097/65934)
+* Delete: [DeleteEndPoint](https://www.tencentcloud.com/document/api/1097/67598)
 
 ## Import
 

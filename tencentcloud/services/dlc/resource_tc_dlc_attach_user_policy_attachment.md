@@ -15,6 +15,7 @@ resource "tencentcloud_dlc_attach_user_policy_attachment" "example" {
     data_engine = "test_engine"
     operation   = "USE,MONITOR"
     source      = "USER"
+    re_auth     = true
   }
 }
 ```

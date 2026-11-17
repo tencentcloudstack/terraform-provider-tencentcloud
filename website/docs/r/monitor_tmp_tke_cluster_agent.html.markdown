@@ -218,5 +218,21 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `agents` object exports the following:
 
+* `cluster_name` - the name of the cluster.
+* `status` - agent state, `normal`, `abnormal`.
+
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreatePrometheusClusterAgent](https://www.tencentcloud.com/document/api/248/53774)
+  - [DescribePrometheusClusterAgents](https://www.tencentcloud.com/document/api/248/53770)
+* Read: [DescribePrometheusClusterAgents](https://www.tencentcloud.com/document/api/248/53770)
+* Update: [ModifyPrometheusAgentExternalLabels](https://www.tencentcloud.com/document/api/248/53766)
+* Delete:
+  - [DeletePrometheusClusterAgent](https://www.tencentcloud.com/document/api/248/53771)
+  - [DescribePrometheusClusterAgents](https://www.tencentcloud.com/document/api/248/53770)
 

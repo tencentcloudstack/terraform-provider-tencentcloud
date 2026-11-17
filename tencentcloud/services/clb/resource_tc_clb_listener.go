@@ -29,24 +29,22 @@ func ResourceTencentCloudClbListener() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"clb_id": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ForceNew:     true,
-				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 60),
-				Description:  "ID of the CLB.",
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of the CLB instance.",
 			},
 			"listener_name": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 60),
-				Description:  "Name of the CLB listener, and available values can only be Chinese characters, English letters, numbers, underscore and hyphen '-'.",
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Name of the CLB listener, 1-80 characters. Supports letters, Chinese and other common international language characters, digits, hyphen '-' and underscore '_' (Unicode supplementary characters such as emoji are not allowed).",
 			},
 			"port": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: tccommon.ValidateIntegerInRange(1, 65535),
-				Description:  "Port of the CLB listener.",
+				Description:  "Port of the CLB listener. Port range: [1 - 65535].",
 			},
 			"protocol": {
 				Type:         schema.TypeString,
@@ -66,119 +64,92 @@ func ResourceTencentCloudClbListener() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: tccommon.ValidateIntegerInRange(2, 60),
-				Description:  "Response timeout of health check. Valid value ranges: [2~60] sec. Default is 2 sec. Response timeout needs to be less than check interval. NOTES: Only supports listeners of `TCP`,`UDP`,`TCP_SSL` protocol.",
+				Description:  "Response timeout of health check in seconds. Value range: 2-60, default 2. The response timeout must be less than the check interval.",
 			},
 			"health_check_interval_time": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Computed:     true,
-				ValidateFunc: tccommon.ValidateIntegerInRange(2, 300),
-				Description:  "Interval time of health check. Valid value ranges: [2~300] sec. and the default is 5 sec. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Health check probe interval in seconds. Default 5. Value range: 2-300 for IPv4 CLB instances and 5-300 for IPv6 CLB instances. Note: some older IPv4 CLB instances have a range of 5-300.",
 			},
 			"health_check_health_num": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: tccommon.ValidateIntegerInRange(2, 10),
-				Description:  "Health threshold of health check, and the default is `3`. If a success result is returned for the health check for 3 consecutive times, the backend CVM is identified as healthy. The value range is 2-10. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
+				Description:  "Health threshold. Default 3, meaning the backend is considered healthy after 3 consecutive successful probes. Value range: 2-10.",
 			},
 			"health_check_unhealth_num": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: tccommon.ValidateIntegerInRange(2, 10),
-				Description: "Unhealthy threshold of health check, and the default is `3`. " +
-					"If a success result is returned for the health check 3 consecutive times, " +
-					"the CVM is identified as unhealthy. The value range is [2-10]. " +
-					"NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, " +
-					"HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.",
+				Description:  "Unhealthy threshold. Default 3, meaning the backend is considered unhealthy after 3 consecutive failed probes. Value range: 2-10.",
 			},
 			"health_check_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(HEALTH_CHECK_TYPE),
-				Description:  "Protocol used for health check. Valid values: `CUSTOM`, `TCP`, `HTTP`,`HTTPS`, `PING`, `GRPC`.",
+				Description:  "Health check protocol. Valid values: `TCP`, `HTTP`, `HTTPS`, `GRPC`, `PING`, `CUSTOM`. UDP listeners support `PING`/`CUSTOM`; TCP listeners support `TCP`/`HTTP`/`CUSTOM`; TCP_SSL/QUIC listeners support `TCP`/`HTTP`; HTTP rules support `HTTP`/`GRPC`; HTTPS rules support `HTTP`/`HTTPS`/`GRPC`. Defaults: `HTTP` for HTTP listeners, `TCP` for TCP/TCP_SSL/QUIC listeners, `PING` for UDP listeners; for HTTPS listeners the default matches the backend forwarding protocol.",
 			},
 			"health_check_port": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				ValidateFunc: tccommon.ValidateIntegerInRange(1, 65535),
-				Description: "The health check port is the port of the backend service by default. " +
-					"Unless you want to specify a specific port, it is recommended to leave it blank. " +
-					"Only applicable to TCP/UDP listener.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Health check port. Defaults to the backend service port; leave blank unless a specific port is required. Pass `-1` to restore the default. Only applicable to `TCP`/`UDP` listeners.",
 			},
 			"health_check_http_version": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(HTTP_VERSION),
-				Description: "The HTTP version of the backend service. When the value of `health_check_type` of " +
-					"the health check protocol is `HTTP`, this field is required. " +
-					"Valid values: `HTTP/1.0`, `HTTP/1.1`.",
+				Description:  "HTTP version of the backend service. Required when `health_check_type` is `HTTP`. Valid values: `HTTP/1.0`, `HTTP/1.1`. Only applicable to `TCP` listeners.",
 			},
 			"health_check_http_code": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: tccommon.ValidateIntegerInRange(1, 31),
-				Description: "HTTP health check code of TCP listener, Valid value ranges: [1~31]. When the value of `health_check_type` of " +
-					"the health check protocol is `HTTP`, this field is required. Valid values: `1`, `2`, `4`, `8`, `16`. " +
-					"`1` means http_1xx, `2` means http_2xx, `4` means http_3xx, `8` means http_4xx, `16` means http_5xx." +
-					"If you want multiple return codes to indicate health, need to add the corresponding values.",
+				Description:  "Health check status code (only applicable to HTTP/HTTPS forwarding rules and the HTTP health check method of TCP listeners). Value range: 1-31, default 31. `1`=1xx healthy, `2`=2xx, `4`=3xx, `8`=4xx, `16`=5xx. To treat multiple return codes as healthy, add the corresponding values together.",
 			},
 			"health_check_http_path": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "HTTP health check path of TCP listener.",
+				Description: "Health check path (only applicable to HTTP/HTTPS forwarding rules and the HTTP health check method of TCP listeners).",
 			},
 			"health_check_http_domain": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "HTTP health check domain of TCP listener.",
+				Description: "Health check domain, carried in the HTTP Host header (only applicable to HTTP/HTTPS listeners and the HTTP health check method of TCP listeners; for TCP listeners using HTTP health check, this field is required).",
 			},
 			"health_check_http_method": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(CLB_HTTP_METHOD),
-				Description:  "HTTP health check method of TCP listener. Valid values: `HEAD`, `GET`.",
+				Description:  "Health check method (only applicable to HTTP/HTTPS forwarding rules and the HTTP health check method of TCP listeners). Default `HEAD`. Valid values: `HEAD`, `GET`.",
 			},
 			"health_check_context_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(CONTEX_TYPE),
-				Description: "Health check protocol. When the value of `health_check_type` of the health check protocol is `CUSTOM`, " +
-					"this field is required, which represents the input format of the health check. " +
-					"Valid values: `HEX`, `TEXT`.",
+				Description:  "Custom probe parameter. Required when `health_check_type` is `CUSTOM`, representing the input format of the health check. Valid values: `HEX`, `TEXT`. When `HEX`, the characters of `send_context`/`recv_context` can only be selected from `0123456789ABCDEF` and the length must be even. Only applicable to `TCP`/`UDP` listeners.",
 			},
 			"health_check_send_context": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: tccommon.ValidateStringLengthInRange(0, 500),
-				Description: "It represents the content of the request sent by the health check. " +
-					"When the value of `health_check_type` of the health check protocol is `CUSTOM`, " +
-					"this field is required. Only visible ASCII characters are allowed and the maximum length is 500. " +
-					"When `health_check_context_type` value is `HEX`, " +
-					"the characters of SendContext and RecvContext can only be selected in `0123456789ABCDEF` " +
-					"and the length must be even digits.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Custom probe parameter. Required when `health_check_type` is `CUSTOM`, representing the request content sent by the health check. Only ASCII visible characters are allowed, max length 500. Only applicable to `TCP`/`UDP` listeners.",
 			},
 			"health_check_recv_context": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: tccommon.ValidateStringLengthInRange(0, 500),
-				Description: "It represents the result returned by the health check. " +
-					"When the value of `health_check_type` of the health check protocol is `CUSTOM`, " +
-					"this field is required. Only ASCII visible characters are allowed and the maximum length is 500. " +
-					"When `health_check_context_type` value is `HEX`, " +
-					"the characters of SendContext and RecvContext can only be selected in `0123456789ABCDEF` " +
-					"and the length must be even digits.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Custom probe parameter. Required when `health_check_type` is `CUSTOM`, representing the result returned by the health check. Only ASCII visible characters are allowed, max length 500. Only applicable to `TCP`/`UDP` listeners.",
 			},
 			"health_source_ip_type": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{0, 1}),
-				Description:  "Specifies the type of health check source IP. `0` (default): CLB VIP. `1`: 100.64 IP range.",
+				Description:  "Health check source IP type. `0`: use the CLB VIP as the source IP, `1`: use a 100.64 IP range as the source IP.",
 			},
 			"certificate_ssl_mode": {
 				Type:          schema.TypeString,
@@ -204,7 +175,7 @@ func ResourceTencentCloudClbListener() *schema.Resource {
 				Optional:      true,
 				MaxItems:      1,
 				ConflictsWith: []string{"certificate_ssl_mode", "certificate_id", "certificate_ca_id"},
-				Description:   "Certificate information. You can specify multiple server-side certificates with different algorithm types. This parameter is only applicable to HTTPS listeners with the SNI feature not enabled. Certificate and MultiCertInfo cannot be specified at the same time.",
+				Description:   "Certificate information, supporting multiple server certificates with different algorithm types at the same time. Only applicable to `TCP_SSL` listeners and `HTTPS` listeners with SNI disabled. When creating a `TCP_SSL` listener or an `HTTPS` listener with SNI disabled, at least one of `certificate`/`multi_cert_info` must be specified, but they cannot be specified at the same time.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"ssl_mode": {
@@ -226,40 +197,40 @@ func ResourceTencentCloudClbListener() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: tccommon.ValidateIntegerInRange(30, 3600),
-				Description:  "Time of session persistence within the CLB listener. NOTES: Available when scheduler is specified as `WRR`, and not available when listener protocol is `TCP_SSL`. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.",
+				Description:  "Session persistence time in seconds. Value range: 30-3600, default 0 (disabled). Only applicable to `TCP`/`UDP` listeners.",
 			},
 			"scheduler": {
 				Type:         schema.TypeString,
 				Default:      CLB_LISTENER_SCHEDULER_WRR,
 				Optional:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(CLB_LISTENER_SCHEDULER),
-				Description:  "Scheduling method of the CLB listener, and available values are 'WRR' and 'LEAST_CONN'. The default is 'WRR'. NOTES: The listener of `HTTP` and `HTTPS` protocol additionally supports the `IP Hash` method. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.",
+				Description:  "Scheduling method. Valid values: `WRR` (weighted round-robin), `LEAST_CONN` (least connections). Default is `WRR`. Only applicable to `TCP`/`UDP`/`TCP_SSL`/`QUIC` listeners.",
 			},
 			"sni_switch": {
 				Type:        schema.TypeBool,
 				ForceNew:    true,
 				Optional:    true,
-				Description: "Indicates whether SNI is enabled, and only supported with protocol `HTTPS`. If enabled, you can set a certificate for each rule in `tencentcloud_clb_listener_rule`, otherwise all rules have a certificate.",
+				Description: "Indicates whether SNI is enabled. Only applicable to `HTTPS` listeners. `0`: disabled, `1`: enabled.",
 			},
 			"target_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{CLB_TARGET_TYPE_NODE, CLB_TARGET_TYPE_TARGETGROUP, CLB_TARGET_TYPE_TARGETGROUP_V2}),
-				Description:  "Backend target type. Valid values: `NODE`, `TARGETGROUP`, `TARGETGROUP-V2`. `NODE` means to bind ordinary nodes, `TARGETGROUP` means to bind target group. NOTES: TCP/UDP/TCP_SSL listener must configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
+				Description:  "Backend target type. Valid values: `NODE`, `TARGETGROUP`, `TARGETGROUP-V2`. `NODE` means binding ordinary nodes, `TARGETGROUP` means binding a target group. Only applicable to `TCP`/`UDP` listeners; L7 listeners should be configured in the forwarding rule.",
 			},
 			"session_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{CLB_SESSION_TYPE_NORMAL, CLB_SESSION_TYPE_QUIC}),
-				Description:  "Session persistence type. Valid values: `NORMAL`: the default session persistence type; `QUIC_CID`: session persistence by QUIC connection ID. The `QUIC_CID` value can only be configured in UDP listeners. If this field is not specified, the default session persistence type will be used.",
+				Description:  "Session persistence type. `NORMAL` (default): default session persistence type; `QUIC_CID`: session persistence by QUIC connection ID. Only applicable to `TCP`/`UDP` listeners; L7 listeners should be configured in the forwarding rule. If `QUIC_CID` is selected, `protocol` must be `UDP`, `scheduler` must be `WRR`, and only IPv4 is supported.",
 			},
 			"keepalive_enable": {
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Optional:    true,
-				Description: "Whether to enable a persistent connection. This parameter is applicable only to HTTP and HTTPS listeners. Valid values: 0 (disable; default value) and 1 (enable).",
+				Description: "Whether to enable persistent connection (long connection). Only applicable to `HTTP`/`HTTPS` listeners. Valid values: `0` (disable, default), `1` (enable). This feature is currently in beta.",
 			},
 			"end_port": {
 				Type:        schema.TypeInt,
@@ -273,25 +244,49 @@ func ResourceTencentCloudClbListener() *schema.Resource {
 				ForceNew:    true,
 				Computed:    true,
 				Optional:    true,
-				Description: "Enable H2C switch for intranet HTTP listener.",
+				Description: "Whether to enable H2C for intranet `HTTP` listeners. `true`: enable, `false`: disable (default). When enabled, the listener only supports creating L7 rules with backend forwarding type `GRPC` or `GRPCS`; `GRPC` or `GRPCS` must be explicitly specified in the forwarding type when creating rules.",
 			},
 			"snat_enable": {
 				Type:        schema.TypeBool,
 				Computed:    true,
 				Optional:    true,
-				Description: "Whether to enable SNAT.",
+				Description: "Whether to enable SNAT (source IP replacement). `true`: enable, `false`: disable (default). Note: when SNAT is enabled, the client source IP is replaced and the pass-through client source IP option is disabled, and vice versa.",
 			},
 			"deregister_target_rst": {
 				Type:        schema.TypeBool,
 				Computed:    true,
 				Optional:    true,
-				Description: "Whether to send the TCP RST packet to the client when unbinding a real server. This parameter is applicable to TCP listeners only.",
+				Description: "Reschedule function: the switch for unbinding backend services. When enabled, rescheduling is triggered when a backend service is unbound. Only supported by `TCP`/`UDP` listeners.",
 			},
 			"idle_connect_timeout": {
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Optional:    true,
 				Description: "Idle connection timeout. This parameter is only available for TCP/UDP listeners, in seconds. Default: 900s for TCP listeners, 300s for UDP listeners. Value range: 10-900 for shared and dedicated instances; 10-1980 for LCU-supported CLB instances. To set a value beyond the range, please submit a ticket for application.",
+			},
+			"max_conn": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Listener-level maximum concurrent connections. Currently only supported for performance capacity-type CLB instances with TCP/UDP/TCP_SSL/QUIC listeners. Pass -1 to indicate no limit at the listener level. Basic network instances do not support this parameter.",
+			},
+			"max_cps": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Listener-level maximum new connections per second. Currently only supported for performance capacity-type CLB instances with TCP/UDP/TCP_SSL/QUIC listeners. Pass -1 to indicate no limit at the listener level. Basic network instances do not support this parameter.",
+			},
+			"proxy_protocol": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Enable proxy protocol for TCP_SSL and QUIC listeners. Note: this field is not returned by the DescribeListeners API, so it will not be refreshed in state after creation.",
+			},
+			"data_compress_mode": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Data compression mode. Valid values: `transparent`, `compatibility`.",
 			},
 			"reschedule_target_zero_weight": {
 				Type:        schema.TypeBool,
@@ -364,16 +359,11 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 	}
 
 	certificateSetFlag, certificateInput, certErr := checkCertificateInputPara(ctx, d, meta)
-
 	if certErr != nil {
 		return certErr
 	}
 	if certificateSetFlag {
 		request.Certificate = certificateInput
-	} else {
-		if protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
-			return fmt.Errorf("[CHECK][CLB listener][Create] check: certificated need to be set when protocol is TCPSSL")
-		}
 	}
 
 	multiCertificateSetFlag, multiCertInput, certErr := checkMultiCertificateInputPara(ctx, d, meta)
@@ -383,9 +373,11 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 
 	if multiCertificateSetFlag {
 		request.MultiCertInfo = multiCertInput
-	} else {
-		if protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
-			return fmt.Errorf("[CHECK][CLB listener][Create] check: certificated need to be set when protocol is TCPSSL")
+	}
+
+	if protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
+		if (certificateSetFlag && multiCertificateSetFlag) || (!certificateSetFlag && !multiCertificateSetFlag) {
+			return fmt.Errorf("[CHECK][CLB listener][Create] check: certificate and multi certificate can not be set at the same time when protocol is TCPSSL, must set one of them")
 		}
 	}
 
@@ -479,6 +471,22 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 
 	if v, ok := d.GetOkExists("reschedule_interval"); ok {
 		request.RescheduleInterval = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("max_conn"); ok {
+		request.MaxConn = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("max_cps"); ok {
+		request.MaxCps = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("proxy_protocol"); ok {
+		request.ProxyProtocol = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("data_compress_mode"); ok {
+		request.DataCompressMode = helper.String(v.(string))
 	}
 
 	var response *clb.CreateListenerResponse
@@ -677,7 +685,7 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("end_port", instance.EndPort)
 	}
 
-	if instance.AttrFlags != nil && len(instance.AttrFlags) > 0 {
+	if len(instance.AttrFlags) > 0 {
 		if tccommon.IsContains(helper.PStrings(instance.AttrFlags), "H2cSwitch") {
 			_ = d.Set("h2c_switch", true)
 		} else {
@@ -689,9 +697,15 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 		} else {
 			_ = d.Set("snat_enable", false)
 		}
+		if tccommon.IsContains(helper.PStrings(instance.AttrFlags), "ProxyProtocol") {
+			_ = d.Set("proxy_protocol", true)
+		} else {
+			_ = d.Set("proxy_protocol", false)
+		}
 	} else {
 		_ = d.Set("h2c_switch", false)
 		_ = d.Set("snat_enable", false)
+		_ = d.Set("proxy_protocol", false)
 	}
 
 	if instance.DeregisterTargetRst != nil {
@@ -727,6 +741,18 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 
 	if instance.RescheduleInterval != nil {
 		_ = d.Set("reschedule_interval", instance.RescheduleInterval)
+	}
+
+	if instance.MaxConn != nil {
+		_ = d.Set("max_conn", instance.MaxConn)
+	}
+
+	if instance.MaxCps != nil {
+		_ = d.Set("max_cps", instance.MaxCps)
+	}
+
+	if instance.DataCompressMode != nil {
+		_ = d.Set("data_compress_mode", instance.DataCompressMode)
 	}
 
 	return nil
@@ -787,7 +813,7 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		request.SessionExpireTime = &sessionExpireTime64
 	}
 
-	healthSetFlag, healthCheck, healthErr := checkHealthCheckPara(ctx, d, protocol, HEALTH_APPLY_TYPE_LISTENER)
+	healthSetFlag, healthCheck, healthErr := checkHealthCheckParaForUpdate(ctx, d, protocol, HEALTH_APPLY_TYPE_LISTENER)
 	if healthErr != nil {
 		return healthErr
 	}
@@ -886,6 +912,34 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		changed = true
 		if v, ok := d.GetOkExists("reschedule_interval"); ok {
 			request.RescheduleInterval = helper.IntInt64(v.(int))
+		}
+	}
+
+	if d.HasChange("max_conn") {
+		changed = true
+		if v, ok := d.GetOkExists("max_conn"); ok {
+			request.MaxConn = helper.IntInt64(v.(int))
+		}
+	}
+
+	if d.HasChange("max_cps") {
+		changed = true
+		if v, ok := d.GetOkExists("max_cps"); ok {
+			request.MaxCps = helper.IntInt64(v.(int))
+		}
+	}
+
+	if d.HasChange("proxy_protocol") {
+		changed = true
+		if v, ok := d.GetOkExists("proxy_protocol"); ok {
+			request.ProxyProtocol = helper.Bool(v.(bool))
+		}
+	}
+
+	if d.HasChange("data_compress_mode") {
+		changed = true
+		if v, ok := d.GetOkExists("data_compress_mode"); ok {
+			request.DataCompressMode = helper.String(v.(string))
 		}
 	}
 

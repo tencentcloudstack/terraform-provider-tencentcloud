@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_teo_load_balancer: add probe_cluster parameter to health_checker block and support HTTP_V2 type
+```

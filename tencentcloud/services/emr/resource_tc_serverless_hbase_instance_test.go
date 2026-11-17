@@ -154,6 +154,39 @@ func TestAccTencentCloudServerlessHbaseInstanceResource_multiZone(t *testing.T) 
 	})
 }
 
+func TestAccTencentCloudServerlessHbaseInstanceResource_diskSizeUpdate(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccStepSetRegion(t, "ap-shanghai")
+			tcacctest.AccPreCheck(t)
+		},
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccServerlessHbaseInstanceDiskSize,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_disk_size", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_disk_size", "disk_size", "100"),
+				),
+			},
+			{
+				Config: testAccServerlessHbaseInstanceDiskSizeUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_disk_size", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_serverless_hbase_instance.serverless_hbase_instance_disk_size", "disk_size", "200"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_serverless_hbase_instance.serverless_hbase_instance_disk_size",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"time_span", "time_unit"},
+			},
+		},
+	})
+}
+
 const testAccServerlessHbaseInstanceBasic = `
 resource "tencentcloud_serverless_hbase_instance" "serverless_hbase_instance" {
   instance_name = "tf-test"
@@ -291,6 +324,50 @@ resource "tencentcloud_serverless_hbase_instance" "serverless_hbase_instance_mul
       subnet_id = "subnet-koue2ynx"
     }
     node_num = 2
+  }
+  tags {
+    tag_key = "test"
+    tag_value = "test"
+  }
+}
+`
+
+const testAccServerlessHbaseInstanceDiskSize = `
+resource "tencentcloud_serverless_hbase_instance" "serverless_hbase_instance_disk_size" {
+  instance_name = "tf-test-disk-size"
+  pay_mode = 0
+  disk_type = "CLOUD_HSSD"
+  disk_size = 100
+  node_type = "4C16G"
+  zone_settings {
+    zone = "ap-shanghai-2"
+    vpc_settings {
+      vpc_id = "vpc-oxyg5hxg"
+      subnet_id = "subnet-9yg0eh05"
+    }
+    node_num = 3
+  }
+  tags {
+    tag_key = "test"
+    tag_value = "test"
+  }
+}
+`
+
+const testAccServerlessHbaseInstanceDiskSizeUpdate = `
+resource "tencentcloud_serverless_hbase_instance" "serverless_hbase_instance_disk_size" {
+  instance_name = "tf-test-disk-size"
+  pay_mode = 0
+  disk_type = "CLOUD_HSSD"
+  disk_size = 200
+  node_type = "4C16G"
+  zone_settings {
+    zone = "ap-shanghai-2"
+    vpc_settings {
+      vpc_id = "vpc-oxyg5hxg"
+      subnet_id = "subnet-9yg0eh05"
+    }
+    node_num = 3
   }
   tags {
     tag_key = "test"

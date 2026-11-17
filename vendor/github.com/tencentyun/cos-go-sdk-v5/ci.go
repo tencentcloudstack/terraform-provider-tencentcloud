@@ -719,9 +719,11 @@ type TextAuditingJobDetail struct {
 	Url           string               `xml:",omitempty"`
 	DataId        string               `xml:",omitempty"`
 	Content       string               `xml:",omitempty"`
+	ContextText   string               `xml:",omitempty"`
 	SectionCount  int                  `xml:",omitempty"`
 	Label         string               `xml:",omitempty"`
 	Result        int                  `xml:",omitempty"`
+	Score         int                  `xml:",omitempty"`
 	PornInfo      *TextRecognitionInfo `xml:",omitempty"`
 	TerrorismInfo *TextRecognitionInfo `xml:",omitempty"`
 	PoliticsInfo  *TextRecognitionInfo `xml:",omitempty"`
@@ -743,6 +745,20 @@ type TextLibResult struct {
 	Keywords []string `xml:"Keywords,omitempty"`
 }
 
+// TextPosition is the position of the hit keyword in the original text
+type TextPosition struct {
+	Start string `xml:",omitempty"`
+	End   string `xml:",omitempty"`
+}
+
+// TextHitInfo is the detail of hit sensitive content
+type TextHitInfo struct {
+	Keywords  string         `xml:",omitempty"`
+	LibName   string         `xml:",omitempty"`
+	Positions []TextPosition `xml:"Positions,omitempty"`
+	Type      string         `xml:",omitempty"`
+}
+
 // TextRecognitionInfo
 type TextRecognitionInfo struct {
 	Code       int             `xml:",omitempty"`
@@ -750,6 +766,7 @@ type TextRecognitionInfo struct {
 	Score      int             `xml:",omitempty"`
 	Count      int             `xml:",omitempty"`
 	Keywords   string          `xml:",omitempty"`
+	HitInfos   []TextHitInfo   `xml:"HitInfos,omitempty"`
 	LibResults []TextLibResult `xml:",omitempty"`
 	SubLabel   string          `xml:",omitempty"`
 }
@@ -1747,6 +1764,69 @@ func (s *CIService) CloseOriginProtect(ctx context.Context) (*Response, error) {
 		baseURL: s.client.BaseURL.CIURL,
 		method:  http.MethodDelete,
 		uri:     "/?origin-protect",
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return resp, err
+}
+
+// HDRImageProcessingOptions 开通 HDR 图片处理的请求体
+// 参考文档: https://cloud.tencent.com/document/product/460/118210
+type HDRImageProcessingOptions struct {
+	XMLName xml.Name `xml:"HdrImageProcessingConfiguration"`
+	// HdrMode HDR 图片处理模式，可选值：
+	//   - "API"：仅通过 API 调用支持对 HDR 图片进行处理
+	//   - "Auto"：无需携带 HDR 参数，使用万象基础处理参数时自动支持 HDR
+	//   - "Auto,API"：同时启用以上两种模式
+	HdrMode string `xml:"HdrMode"`
+}
+
+// HDRImageProcessingResult 查询 HDR 图片处理状态的响应体
+// 参考文档: https://cloud.tencent.com/document/product/460/118210
+type HDRImageProcessingResult struct {
+	XMLName xml.Name `xml:"HdrImageProcessingConfiguration"`
+	// Status HDR 图片处理服务状态，有效值："on"（已开启） / "off"（已关闭）
+	Status string `xml:"Status"`
+	// HdrMode HDR 图片处理模式，含义见 HDRImageProcessingOptions.HdrMode
+	HdrMode string `xml:"HdrMode"`
+}
+
+// PutHDRImageProcessing 开通 HDR 图片处理。
+// 子账号授权策略：ci:SetHDRImageProcess
+// 参考文档: https://cloud.tencent.com/document/product/460/118210
+func (s *CIService) PutHDRImageProcessing(ctx context.Context, opt *HDRImageProcessingOptions) (*Response, error) {
+	sendOpt := &sendOptions{
+		baseURL: s.client.BaseURL.CIURL,
+		uri:     "/?hdr-image-processing",
+		method:  http.MethodPut,
+		body:    opt,
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return resp, err
+}
+
+// GetHDRImageProcessing 查询 HDR 图片处理状态。
+// 子账号授权策略：ci:DescribeHDRImageProcess
+// 参考文档: https://cloud.tencent.com/document/product/460/118210
+func (s *CIService) GetHDRImageProcessing(ctx context.Context) (*HDRImageProcessingResult, *Response, error) {
+	var res HDRImageProcessingResult
+	sendOpt := &sendOptions{
+		baseURL: s.client.BaseURL.CIURL,
+		uri:     "/?hdr-image-processing",
+		method:  http.MethodGet,
+		result:  &res,
+	}
+	resp, err := s.client.send(ctx, sendOpt)
+	return &res, resp, err
+}
+
+// DeleteHDRImageProcessing 关闭 HDR 图片处理。
+// 子账号授权策略：ci:SetHDRImageProcess
+// 参考文档: https://cloud.tencent.com/document/product/460/118210
+func (s *CIService) DeleteHDRImageProcessing(ctx context.Context) (*Response, error) {
+	sendOpt := &sendOptions{
+		baseURL: s.client.BaseURL.CIURL,
+		uri:     "/?hdr-image-processing",
+		method:  http.MethodDelete,
 	}
 	resp, err := s.client.send(ctx, sendOpt)
 	return resp, err
@@ -2896,4 +2976,117 @@ type ImgTargetRecResult struct {
 
 type AIGCResult struct {
 	AIGC string `json:"AIGC,omitempty"`
+}
+
+// ============================================================
+// AIImageAnalysis 大模型批量图片分析
+// 接口文档: <待补 PRD#1010099441132813899 发布后的云文档链接>
+// ============================================================
+
+// CreateAIImageAnalysisOptions 请求选项
+type CreateAIImageAnalysisOptions struct {
+	XMLName xml.Name              `xml:"Request"`
+	Input   *AIImageAnalysisInput `xml:"Input,omitempty"`
+	Conf    *AIImageAnalysisConf  `xml:"Conf,omitempty"`
+}
+
+// AIImageAnalysisInput 输入
+type AIImageAnalysisInput struct {
+	Message *AIImageAnalysisMessage `xml:"Message,omitempty"`
+}
+
+// AIImageAnalysisMessage 消息（为多轮预留）
+type AIImageAnalysisMessage struct {
+	Content *AIImageAnalysisContent `xml:"Content,omitempty"`
+}
+
+// AIImageAnalysisContent 内容
+type AIImageAnalysisContent struct {
+	Part []AIImageAnalysisPart `xml:"Part,omitempty"`
+}
+
+// AIImageAnalysisPart 单元（文本或图片）
+// Type: Text / Image
+// Text:      Type=Text 时必填
+// ObjectKey: Type=Image 时与 Url 二选一
+// Url:       Type=Image 时与 ObjectKey 二选一
+type AIImageAnalysisPart struct {
+	Type      string `xml:"Type,omitempty"`
+	Text      string `xml:"Text,omitempty"`
+	ObjectKey string `xml:"ObjectKey,omitempty"`
+	Url       string `xml:"Url,omitempty"`
+}
+
+// AIImageAnalysisConf 配置
+// Type:         Description（默认）/ Custom
+// TemplateName: general（默认）/ ecommerce / 自定义模板名
+// AiModel:      默认 qwen3.5-4b
+type AIImageAnalysisConf struct {
+	Type         string `xml:"Type,omitempty"`
+	TemplateName string `xml:"TemplateName,omitempty"`
+	AiModel      string `xml:"AiModel,omitempty"`
+}
+
+// CreateAIImageAnalysisResult 响应结果
+type CreateAIImageAnalysisResult struct {
+	XMLName        xml.Name               `xml:"Response"`
+	Code           string                 `xml:"Code,omitempty"`
+	Message        string                 `xml:"Message,omitempty"`
+	State          string                 `xml:"State,omitempty"`
+	AnalysisResult *AIImageAnalysisResult `xml:"AnalysisResult,omitempty"`
+	RequestId      string                 `xml:"RequestId,omitempty"`
+}
+
+// AIImageAnalysisResult 分析结果（Description / Custom 二选一填充）
+type AIImageAnalysisResult struct {
+	Type              string                      `xml:"Type,omitempty"`
+	DescriptionResult *AIImageAnalysisDescription `xml:"DescriptionResult,omitempty"`
+	CustomResult      *AIImageAnalysisCustom      `xml:"CustomResult,omitempty"`
+}
+
+// AIImageAnalysisDescription Description 模式结果
+type AIImageAnalysisDescription struct {
+	Description string                      `xml:"Description,omitempty"`
+	LabelDetail *AIImageAnalysisLabelDetail `xml:"LabelDetail,omitempty"`
+}
+
+// AIImageAnalysisLabelDetail 标签容器（单容器，含多组 LabelInfos）
+type AIImageAnalysisLabelDetail struct {
+	LabelInfos []AIImageAnalysisLabelInfos `xml:"LabelInfos,omitempty"`
+}
+
+// AIImageAnalysisLabelInfos 一组标签
+// ConfidenceLevel: high / medium / low
+type AIImageAnalysisLabelInfos struct {
+	ConfidenceLevel string                     `xml:"ConfidenceLevel,omitempty"`
+	LabelInfo       []AIImageAnalysisLabelInfo `xml:"LabelInfo,omitempty"`
+}
+
+// AIImageAnalysisLabelInfo 标签项
+type AIImageAnalysisLabelInfo struct {
+	LabelName  string `xml:"LabelName,omitempty"`
+	LabelValue string `xml:"LabelValue,omitempty"`
+}
+
+// AIImageAnalysisCustom Custom 模式结果（CustomOutput 为明文 UTF-8）
+type AIImageAnalysisCustom struct {
+	CustomOutput string `xml:"CustomOutput,omitempty"`
+}
+
+// CreateAIImageAnalysis 大模型批量图片分析（同步）
+// POST /?ci-process=AIImageAnalysis
+//
+// 支持多图（含图文混排）的联合分析，Description / Custom 两种输出模式。
+// 接口文档: https://cloud.tencent.com/document/product/460/<待补>
+func (s *CIService) CreateAIImageAnalysis(ctx context.Context, opt *CreateAIImageAnalysisOptions) (*CreateAIImageAnalysisResult, *Response, error) {
+	var res CreateAIImageAnalysisResult
+	sendOpt := sendOptions{
+		baseURL: s.client.BaseURL.CIURL,
+		uri:     "/?ci-process=AIImageAnalysis",
+		method:  http.MethodPost,
+		body:    opt,
+		result:  &res,
+	}
+	resp, err := s.client.send(ctx, &sendOpt)
+	return &res, resp, err
 }

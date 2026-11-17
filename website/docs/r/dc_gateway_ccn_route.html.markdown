@@ -52,4 +52,23 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `as_path` - As path list of the BGP.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateDirectConnectGatewayCcnRoutes](https://www.tencentcloud.com/document/api/215/34777)
+  - [DescribeDirectConnectGatewayCcnRoutes](https://www.tencentcloud.com/document/api/215/34775)
+* Read: [DescribeDirectConnectGatewayCcnRoutes](https://www.tencentcloud.com/document/api/215/34775)
+* Delete:
+  - [DeleteDirectConnectGatewayCcnRoutes](https://www.tencentcloud.com/document/api/215/34776)
+  - [DescribeDirectConnectGatewayCcnRoutes](https://www.tencentcloud.com/document/api/215/34775)
+
+## Import
+
+dc_gateway_ccn_route can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_dc_gateway_ccn_route.example dcg-dr1y0hu7#192.1.1.0/32
+```
 

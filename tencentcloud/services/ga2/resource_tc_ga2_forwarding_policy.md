@@ -1,5 +1,7 @@
 Provides a resource to create a GA2 forwarding policy
 
+~> **NOTE:** Only Layer 7 listeners support the configuration of this resource.
+
 Example Usage
 
 ```hcl

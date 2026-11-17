@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
   * `project_id` - ID of the project within the GAAP realserver.
   * `tags` - Tags of the GAAP realserver.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRealServers](https://www.tencentcloud.com/document/api/608/33060)
 

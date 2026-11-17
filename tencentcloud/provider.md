@@ -6,6 +6,8 @@ Use the navigation on the left to read about the available resources.
 
 -> **Note:** From version 1.9.0 (June 18, 2019), the provider start to support Terraform 0.12.x.
 
+-> **Note:** When managing tag fields such as [`tag`, `tags`, `tag_list`...] for all of the Tencent Cloud resources, avoid using system-reserved fields, such as: [`qcs:`, `project_`, `项目`]. for details, please refer to the [Use Limits](https://www.tencentcloud.com/document/product/651/13354?lang=en&pg=).
+
 Example Usage
 
 ```hcl
@@ -52,6 +54,10 @@ tencentcloud_projects
 Resource
 tencentcloud_project
 
+Agent Sandbox(ags)
+Resource
+tencentcloud_ags_sandbox_tool
+
 Anti-DDoS(antiddos)
 Data Source
 tencentcloud_antiddos_basic_device_status
@@ -59,6 +65,7 @@ tencentcloud_antiddos_bgp_biz_trend
 tencentcloud_antiddos_list_listener
 tencentcloud_antiddos_overview_attack_trend
 tencentcloud_antiddos_bgp_instances
+tencentcloud_antiddos_ddos_block_records
 
 Resource
 tencentcloud_antiddos_bgp_instance
@@ -227,6 +234,7 @@ tencentcloud_ckafka_topic_subscribe_group
 tencentcloud_ckafka_topic_sync_replica
 tencentcloud_ckafka_zone
 tencentcloud_ckafka_version
+tencentcloud_ckafka_routes
 
 Resource
 tencentcloud_ckafka_instance
@@ -261,6 +269,7 @@ tencentcloud_cam_policy_granting_service_access
 tencentcloud_cam_oidc_config
 tencentcloud_cam_group_user_account
 tencentcloud_cam_sub_accounts
+tencentcloud_cam_accounts
 tencentcloud_cam_role_detail
 tencentcloud_cam_policy_detail
 
@@ -626,6 +635,9 @@ tencentcloud_elasticsearch_update_plugins_operation
 Global Accelerator(GA2)
 Resource
 tencentcloud_ga2_global_accelerator
+tencentcloud_ga2_global_accelerator_acl_policy
+tencentcloud_ga2_global_accelerator_acl_rule
+tencentcloud_ga2_global_accelerator_acl_rule_set
 tencentcloud_ga2_accelerate_area
 tencentcloud_ga2_listener
 tencentcloud_ga2_endpoint_group
@@ -702,6 +714,9 @@ tencentcloud_kms_white_box_key
 tencentcloud_kms_cloud_resource_attachment
 tencentcloud_kms_overwrite_white_box_device_fingerprints
 
+Action
+tencentcloud_kms_instance
+
 Tencent Kubernetes Engine(TKE)
 Data Source
 tencentcloud_kubernetes_clusters
@@ -719,6 +734,7 @@ tencentcloud_kubernetes_cluster_admin_role
 tencentcloud_kubernetes_upgrade_tasks
 tencentcloud_kubernetes_upgrade_task_detail
 tencentcloud_kubernetes_cluster_available_extra_args
+tencentcloud_kubernetes_addon_values
 
 Resource
 tencentcloud_kubernetes_cluster
@@ -791,6 +807,7 @@ tencentcloud_mongodb_instance_ssl
 tencentcloud_mongodb_readonly_instance
 tencentcloud_mongodb_audit_log_file
 tencentcloud_mongodb_audit_service
+tencentcloud_mongodb_scale_up_db_instance_cpu
 
 TencentDB for MySQL(cdb)
 Data Source
@@ -865,6 +882,7 @@ tencentcloud_mysql_ssl
 tencentcloud_mysql_cls_log_attachment
 tencentcloud_cdb_start_cpu_expand
 tencentcloud_mysql_audit_service
+tencentcloud_mysql_clone_instance
 
 Cloud Monitor(Monitor)
 Data Source
@@ -926,6 +944,7 @@ tencentcloud_monitor_tmp_multiple_writes_list
 TencentCloud Managed Service for Grafana(TCMG)
 Data Source
 tencentcloud_monitor_grafana_plugin_overviews
+tencentcloud_monitor_grafana_versions
 
 Resource
 tencentcloud_monitor_grafana_instance
@@ -960,10 +979,12 @@ tencentcloud_postgresql_zones
 tencentcloud_postgresql_account_privileges
 tencentcloud_postgresql_dedicated_clusters
 tencentcloud_postgresql_db_versions
+tencentcloud_postgresql_db_instance_security_groups
 
 Resource
 tencentcloud_postgresql_instance
 tencentcloud_postgresql_readonly_instance
+tencentcloud_postgresql_readonly_instance_v2
 tencentcloud_postgresql_readonly_group
 tencentcloud_postgresql_readonly_attachment
 tencentcloud_postgresql_parameter_template
@@ -991,6 +1012,8 @@ tencentcloud_postgresql_instance_ssl_config
 tencentcloud_postgresql_restore_db_instance_objects_operation
 tencentcloud_postgresql_time_window
 tencentcloud_postgres_audit_service
+tencentcloud_postgres_audit_log_file
+tencentcloud_postgresql_database
 
 TencentDB for Redis(crs)
 Data Source
@@ -1029,6 +1052,8 @@ tencentcloud_redis_security_group_attachment
 tencentcloud_redis_connection_config
 tencentcloud_redis_log_delivery
 tencentcloud_redis_audit_log
+tencentcloud_redis_instance_password_policy_config
+tencentcloud_redis_backup_encrypt
 
 Serverless Cloud Function(SCF)
 Data Source
@@ -1059,6 +1084,7 @@ tencentcloud_scf_namespace
 tencentcloud_scf_layer
 tencentcloud_scf_function_alias
 tencentcloud_scf_trigger_config
+tencentcloud_scf_trigger
 tencentcloud_scf_custom_domain
 
 SQLServer
@@ -1159,6 +1185,7 @@ tencentcloud_ssl_update_certificate_instance_operation
 tencentcloud_ssl_update_certificate_record_retry_operation
 tencentcloud_ssl_update_certificate_record_rollback_operation
 tencentcloud_ssl_upload_revoke_letter_operation
+tencentcloud_ssl_upload_certificate_instance
 tencentcloud_ssl_complete_certificate_operation
 tencentcloud_ssl_check_certificate_chain_operation
 tencentcloud_ssl_deploy_certificate_instance_operation
@@ -1187,6 +1214,9 @@ tencentcloud_ssm_rotate_product_secret
 
 Ephemeral Resource
 tencentcloud_ssm_secret_version
+
+Action
+tencentcloud_ssm_service
 
 TcaplusDB
 Data Source
@@ -1517,12 +1547,17 @@ tencentcloud_cls_cloud_product_log_task_v2
 tencentcloud_cls_open_service_operation
 tencentcloud_cls_dlc_deliver
 tencentcloud_cls_console
+tencentcloud_cls_metric_subscribe
+tencentcloud_cls_splunk_deliver
+tencentcloud_cls_remote_write_task
+tencentcloud_cls_deliver_task
 
 Data Source
 tencentcloud_cls_shipper_tasks
 tencentcloud_cls_machines
 tencentcloud_cls_notice_contents
 tencentcloud_cls_machine_group_configs
+tencentcloud_cls_machine_groups
 tencentcloud_cls_logsets
 tencentcloud_cls_topics
 tencentcloud_cls_alarm_notices
@@ -1584,11 +1619,13 @@ tencentcloud_teo_zones
 tencentcloud_teo_plans
 tencentcloud_teo_origin_acl
 tencentcloud_teo_default_certificate
+tencentcloud_teo_edge_kv_list
 tencentcloud_teo_environments
 tencentcloud_teo_config_group_versions
 tencentcloud_teo_config_group_version_detail
 tencentcloud_teo_deploy_config_version_history
 tencentcloud_teo_export_zone_config
+tencentcloud_teo_ip_group_references
 tencentcloud_teo_ip_region
 tencentcloud_teo_multi_path_gateways
 tencentcloud_teo_multi_path_gateway_region
@@ -1596,6 +1633,7 @@ tencentcloud_teo_multi_path_gateway_origin_acl
 tencentcloud_teo_security_ip_group_content
 tencentcloud_teo_web_security_templates
 tencentcloud_teo_content_quota
+tencentcloud_teo_billing_data
 
 Resource
 tencentcloud_teo_zone
@@ -1655,6 +1693,8 @@ tencentcloud_teo_edge_kv
 tencentcloud_teo_edge_kv_namespace
 Action
 tencentcloud_teo_plan_for_zone
+tencentcloud_teo_dns_records_status
+tencentcloud_teo_confirm_origin_acl_update
 
 TencentCloud ServiceMesh(TCM)
 Data Source
@@ -1734,11 +1774,20 @@ Resource
 tencentcloud_sms_sign
 tencentcloud_sms_template
 
+Captcha
+Resource
+tencentcloud_captcha_info_international
+tencentcloud_captcha_ip_white_list_international
+
 Cloud Automated Testing(CAT)
 Data Source
 tencentcloud_cat_probe_data
 tencentcloud_cat_node
+tencentcloud_cat_node_groups
 tencentcloud_cat_metric_data
+tencentcloud_cat_probe_metric_tag_values
+tencentcloud_cat_instant_tasks
+tencentcloud_cat_probe_tasks
 
 Resource
 tencentcloud_cat_task_set
@@ -1906,6 +1955,7 @@ tencentcloud_organization_org_share_unit_members
 tencentcloud_organization_org_share_unit_nodes
 tencentcloud_role_configuration_provisionings
 tencentcloud_organization_resource_to_share_member
+
 Resource
 tencentcloud_organization_instance
 tencentcloud_organization_org_node
@@ -1947,6 +1997,9 @@ tencentcloud_organization_member_auth_policy_attachment
 tencentcloud_organization_external_saml_identity_provider
 tencentcloud_organization_ip_whitelist_config
 
+Action
+tencentcloud_organization_provision_role_configuration
+
 TDSQL-C for PostgreSQL(TDCPG)
 Data Source
 tencentcloud_tdcpg_clusters
@@ -1954,6 +2007,10 @@ tencentcloud_tdcpg_instances
 Resource
 tencentcloud_tdcpg_cluster
 tencentcloud_tdcpg_instance
+
+TDSQL-C for MySQL(tdmysql)
+Resource
+tencentcloud_tdmysql_db_instance
 
 TencentDB for DBbrain(dbbrain)
 Data Source
@@ -1998,6 +2055,7 @@ tencentcloud_dts_migrate_db_instances
 Resource
 tencentcloud_dts_sync_job
 tencentcloud_dts_sync_config
+tencentcloud_dts_sync_job_config
 tencentcloud_dts_sync_check_job_operation
 tencentcloud_dts_sync_job_resume_operation
 tencentcloud_dts_sync_job_start_operation
@@ -2235,6 +2293,7 @@ tencentcloud_tse_cngw_network
 tencentcloud_tse_cngw_strategy
 tencentcloud_tse_cngw_strategy_bind_group
 tencentcloud_tse_cngw_network_access_control
+tencentcloud_tse_cloud_native_api_gateway_ip_restriction
 
 ClickHouse(CDWCH)
 Data Source
@@ -2263,6 +2322,7 @@ tencentcloud_tag_keys
 Resource
 tencentcloud_tag
 tencentcloud_tag_attachment
+tencentcloud_tag_attachment_v2
 
 EventBridge(EB)
 Data Source
@@ -2303,6 +2363,7 @@ tencentcloud_dlc_standard_engine_resource_group_config_information
 tencentcloud_dlc_data_engine_network
 tencentcloud_dlc_data_engine_session_parameters
 tencentcloud_dlc_session_image_version
+tencentcloud_dlc_tc_lake_meta_instance
 
 Resource
 tencentcloud_dlc_work_group
@@ -2330,6 +2391,7 @@ tencentcloud_dlc_attach_data_mask_policy
 tencentcloud_dlc_standard_engine_resource_group_config_info
 tencentcloud_dlc_datasource_house_attachment
 tencentcloud_dlc_attach_user_policy_attachment
+tencentcloud_dlc_meta_database
 
 Web Application Firewall(WAF)
 Data Source
@@ -2620,6 +2682,7 @@ tencentcloud_cdc_dedicated_cluster_image_cache
 
 CdwDoris
 Data Source
+tencentcloud_cdwdoris_instance_nodes
 tencentcloud_cdwdoris_instances
 Resource
 tencentcloud_cdwdoris_instance
@@ -2657,6 +2720,7 @@ tencentcloud_mqtt_message_enrichment_rule
 
 Billing
 Data Source
+tencentcloud_billing_bill_detail
 tencentcloud_billing_budget_operation_log
 Resource
 tencentcloud_billing_allocation_tag
@@ -2685,17 +2749,31 @@ tencentcloud_igtm_strategy
 tencentcloud_igtm_package_instance
 tencentcloud_igtm_package_task
 
+Identity and Access Management Open APIs(IOA)
+Resource
+tencentcloud_ioa_company_directory_config
+tencentcloud_ioa_delivery_server
+tencentcloud_ioa_delivery_strategy
+
 Database Dedicated Cluster(DBDC)
 Data Source
 tencentcloud_dbdc_db_custom_clusters
 tencentcloud_dbdc_db_custom_nodes
 tencentcloud_dbdc_db_custom_cluster_nodes
+tencentcloud_dbdc_db_custom_cluster_node_resources
+tencentcloud_dbdc_db_custom_cluster_node_config_list
 tencentcloud_dbdc_db_custom_images
+tencentcloud_dbdc_db_custom_node_types
+tencentcloud_dbdc_db_custom_node_security_groups
+tencentcloud_dbdc_db_custom_cluster_resources
+tencentcloud_dbdc_db_custom_zones
+tencentcloud_dbdc_db_custom_regions
 
 Resource
 tencentcloud_dbdc_db_custom_cluster
 tencentcloud_dbdc_db_custom_node
 tencentcloud_dbdc_node_to_db_custom_cluster_attachment
+tencentcloud_dbdc_db_custom_disaster_recover_group
 
 VCube
 Resource
@@ -2726,13 +2804,19 @@ tencentcloud_config_rule_evaluation_results
 tencentcloud_config_rules
 tencentcloud_config_discovered_resources
 tencentcloud_config_resource_types
+tencentcloud_config_list_aggregators
+tencentcloud_config_list_aggregate_compliance_packs
 
 Resource
 tencentcloud_config_compliance_pack
 tencentcloud_config_remediation
 tencentcloud_config_start_config_rule_evaluation_operation
 tencentcloud_config_deliver_config
+tencentcloud_config_update_config_deliver
+tencentcloud_config_update_aggregate_config_deliver
 tencentcloud_config_recorder_config
+tencentcloud_config_aggregator
+tencentcloud_config_aggregate_compliance_pack
 
 GS
 Data Source
@@ -2741,3 +2825,30 @@ tencentcloud_gs_android_instances
 KeeWiDB
 Data Source
 tencentcloud_keewidb_instances
+
+Backup and Disaster Recovery Center(BDRC)
+Resource
+tencentcloud_bdrc_disaster_recovery_site_pair
+tencentcloud_bdrc_disaster_recovery_protect_group
+tencentcloud_bdrc_disaster_recovery_vpc_mapping
+tencentcloud_bdrc_security_group_mapping
+tencentcloud_bdrc_instance_copy_pair
+
+Action
+tencentcloud_bdrc_run_copy_pair_tasks
+
+Firewall Manager(FWM)
+Resource
+tencentcloud_fwm_account_group
+tencentcloud_fwm_member_group_config
+tencentcloud_fwm_cfw_managed_config
+tencentcloud_fwm_cfw_share_role_config
+tencentcloud_fwm_rule_group
+tencentcloud_fwm_strategy
+tencentcloud_fwm_edge_acl_rule
+tencentcloud_fwm_security_group_rule
+tencentcloud_fwm_nat_acl_rule
+tencentcloud_fwm_vpc_acl_rule
+
+Action
+tencentcloud_fwm_dispatch_strategy

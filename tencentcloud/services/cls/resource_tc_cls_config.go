@@ -42,7 +42,7 @@ func ResourceTencentCloudClsConfig() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 				Description: "Type of the log to be collected. Valid values: json_log: log in JSON format; delimiter_log: log in delimited format; minimalist_log: minimalist log; multiline_log: log in multi-line format; " +
-					"fullregex_log: log in full regex format. Default value: minimalist_log.",
+					"fullregex_log: log in full regex format; multiline_fullregex_log: log in multi-line and full regex format. Default value: minimalist_log.",
 			},
 			"extract_rule": {
 				Type:        schema.TypeList,
@@ -197,6 +197,12 @@ func ResourceTencentCloudClsConfig() *schema.Resource {
 				Optional:    true,
 				Description: "Custom collection rule, which is a serialized JSON string. Required when LogType is user_define_log.",
 			},
+			"input_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Log input type. Valid values: file: file type collection; windows_event: Windows event collection; syslog: system log collection.",
+			},
 		},
 	}
 }
@@ -324,6 +330,9 @@ func resourceTencentCloudClsConfigCreate(d *schema.ResourceData, meta interface{
 	}
 	if v, ok := d.GetOk("user_define_rule"); ok {
 		request.UserDefineRule = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("input_type"); ok {
+		request.InputType = helper.String(v.(string))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -518,6 +527,10 @@ func resourceTencentCloudClsConfigRead(d *schema.ResourceData, meta interface{})
 		_ = d.Set("user_define_rule", config.UserDefineRule)
 	}
 
+	if config.InputType != nil {
+		_ = d.Set("input_type", config.InputType)
+	}
+
 	return nil
 }
 
@@ -652,6 +665,12 @@ func resourceTencentCloudClsConfigUpdate(d *schema.ResourceData, meta interface{
 	if d.HasChange("user_define_rule") {
 		if v, ok := d.GetOk("user_define_rule"); ok {
 			request.UserDefineRule = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("input_type") {
+		if v, ok := d.GetOk("input_type"); ok {
+			request.InputType = helper.String(v.(string))
 		}
 	}
 

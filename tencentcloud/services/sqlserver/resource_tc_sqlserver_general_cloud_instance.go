@@ -150,16 +150,6 @@ func ResourceTencentCloudSqlserverGeneralCloudInstance() *schema.Resource {
 				Deprecated:  "It has been deprecated from version 1.81.2.",
 				Description: "Upgrade the high-availability architecture of sqlserver, upgrade from mirror disaster recovery to always on cluster disaster recovery, only support 2017 and above and support always on high-availability instances, do not support downgrading to mirror disaster recovery, CLUSTER-upgrade to always on capacity Disaster, if not filled, the high-availability architecture will not be modified.",
 			},
-			"dns_pod_domain": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Internet address domain name.",
-			},
-			"tgw_wan_vport": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "External port number.",
-			},
 			"multi_zones": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -185,6 +175,27 @@ func ResourceTencentCloudSqlserverGeneralCloudInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Description: "Disk encryption identification, 0-not encrypted, 1-encrypted.",
+			},
+			// computed
+			"instance_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Instance ID.",
+			},
+			"uid": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Unique UID of the instance.",
+			},
+			"dns_pod_domain": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Internet address domain name.",
+			},
+			"tgw_wan_vport": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "External port number.",
 			},
 		},
 	}
@@ -344,6 +355,8 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceCreate(d *schema.ResourceD
 		return err
 	}
 
+	d.SetId(instanceId)
+
 	// set name
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		inErr := service.ModifySqlserverInstanceName(ctx, instanceId, instanceName)
@@ -357,8 +370,6 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceCreate(d *schema.ResourceD
 	if err != nil {
 		return err
 	}
-
-	d.SetId(instanceId)
 
 	return resourceTencentCloudSqlserverGeneralCloudInstanceRead(d, meta)
 }
@@ -380,8 +391,8 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceRead(d *schema.ResourceDat
 	}
 
 	if generalCloudInstance == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_sqlserver_general_cloud_instance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `SqlserverGeneralCloudInstance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -490,6 +501,14 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceRead(d *schema.ResourceDat
 		_ = d.Set("multi_nodes", false)
 	}
 
+	if generalCloudInstance.InstanceId != nil {
+		_ = d.Set("instance_id", generalCloudInstance.InstanceId)
+	}
+
+	if generalCloudInstance.Uid != nil {
+		_ = d.Set("uid", generalCloudInstance.Uid)
+	}
+
 	var insAttribute *sqlserver.DescribeDBInstancesAttributeResponseParams
 	paramMap := map[string]interface{}{
 		"InstanceId": helper.String(instanceId),
@@ -508,17 +527,18 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceRead(d *schema.ResourceDat
 		return err
 	}
 
-	if insAttribute.IsDiskEncryptFlag != nil {
+	if insAttribute != nil && insAttribute.IsDiskEncryptFlag != nil {
 		_ = d.Set("disk_encrypt_flag", insAttribute.IsDiskEncryptFlag)
 	}
+
 	maintenanceSpan, err := service.DescribeMaintenanceSpanById(ctx, instanceId)
 	if err != nil {
 		return err
 	}
 
 	if maintenanceSpan == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_sqlserver_general_cloud_instance` [%s] not found, please check if it has been deleted.", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `SqlservereMaintenanceSpan` [%s] not found, please check if it has been deleted.", logId, d.Id())
 		return nil
 	}
 
@@ -540,12 +560,10 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceRead(d *schema.ResourceDat
 	}
 
 	if securityGroupList == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_sqlserver_general_cloud_instance` [%s] not found, please check if it has been deleted.", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `SqlservereSecurityGroups` [%s] not found, please check if it has been deleted.", logId, d.Id())
 		return nil
-	}
-
-	if securityGroupList != nil {
+	} else {
 		_ = d.Set("security_group_list", securityGroupList)
 	}
 

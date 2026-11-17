@@ -15,10 +15,25 @@ func DataSourceTencentCloudDbdcDbCustomImages() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudDbdcDbCustomImagesRead,
 		Schema: map[string]*schema.Schema{
-			"result_output_file": {
-				Type:        schema.TypeString,
+			"filters": {
+				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "Used to save results.",
+				Description: "Filter conditions of the DescribeDBCustomImages API. Each filter combines a name with one or more values, and multiple filters are combined with AND logic.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Filter name. Valid values: `image-id`, `os-type`, `image-type`, `architecture`.",
+						},
+						"values": {
+							Type:        schema.TypeList,
+							Required:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "Filter values corresponding to the filter name.",
+						},
+					},
+				},
 			},
 
 			"image_set": {
@@ -47,8 +62,18 @@ func DataSourceTencentCloudDbdcDbCustomImages() *schema.Resource {
 							Computed:    true,
 							Description: "OS architecture. Values: x86_64, arm64.",
 						},
+						"os_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "OS type. Values: windows, linux.",
+						},
 					},
 				},
+			},
+			"result_output_file": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Used to save results.",
 			},
 		},
 	}
@@ -65,6 +90,31 @@ func dataSourceTencentCloudDbdcDbCustomImagesRead(d *schema.ResourceData, meta i
 	)
 
 	paramMap := make(map[string]interface{})
+
+	filters := d.Get("filters").([]interface{})
+	if len(filters) > 0 {
+		filterList := make([]*dbdcv20201029.Filter, 0, len(filters))
+		for _, f := range filters {
+			filterMap := f.(map[string]interface{})
+			name := filterMap["name"].(string)
+			if name == "" {
+				continue
+			}
+			filter := &dbdcv20201029.Filter{
+				Name: helper.String(name),
+			}
+			values := filterMap["values"].([]interface{})
+			valueList := make([]*string, 0, len(values))
+			for _, v := range values {
+				valueList = append(valueList, helper.String(v.(string)))
+			}
+			filter.Values = valueList
+			filterList = append(filterList, filter)
+		}
+		if len(filterList) > 0 {
+			paramMap["filters"] = filterList
+		}
+	}
 
 	var respData []*dbdcv20201029.DBCustomImage
 	reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -99,6 +149,10 @@ func dataSourceTencentCloudDbdcDbCustomImagesRead(d *schema.ResourceData, meta i
 
 			if image.Architecture != nil {
 				imageMap["architecture"] = image.Architecture
+			}
+
+			if image.OsType != nil {
+				imageMap["os_type"] = image.OsType
 			}
 
 			imageSetList = append(imageSetList, imageMap)

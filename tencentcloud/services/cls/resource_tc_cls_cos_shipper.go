@@ -228,6 +228,12 @@ func ResourceTencentCloudClsCosShipper() *schema.Resource {
 				Optional:    true,
 				Description: "COS bucket storage type. support: STANDARD_IA, ARCHIVE, DEEP_ARCHIVE, STANDARD, MAZ_STANDARD, MAZ_STANDARD_IA, INTELLIGENT_TIERING.",
 			},
+			"time_zone": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Timezone used to generate the time variable in the COS file path when shipping logs. Supports GMT and UTC timezone formats, e.g., `GMT+08:00`, `UTC+08:00`.",
+			},
 		},
 	}
 }
@@ -388,6 +394,10 @@ func resourceTencentCloudClsCosShipperCreate(d *schema.ResourceData, meta interf
 		request.StorageType = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("time_zone"); ok {
+		request.TimeZone = helper.String(v.(string))
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClsClient().CreateShipper(request)
 		if e != nil {
@@ -532,6 +542,10 @@ func resourceTencentCloudClsCosShipperRead(d *schema.ResourceData, meta interfac
 
 	if shipper.StorageType != nil {
 		_ = d.Set("storage_type", shipper.StorageType)
+	}
+
+	if shipper.TimeZone != nil {
+		_ = d.Set("time_zone", shipper.TimeZone)
 	}
 
 	return nil
@@ -705,6 +719,12 @@ func resourceTencentCloudClsCosShipperUpdate(d *schema.ResourceData, meta interf
 	if d.HasChange("storage_type") {
 		if v, ok := d.GetOk("storage_type"); ok {
 			request.StorageType = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("time_zone") {
+		if v, ok := d.GetOk("time_zone"); ok {
+			request.TimeZone = helper.String(v.(string))
 		}
 	}
 

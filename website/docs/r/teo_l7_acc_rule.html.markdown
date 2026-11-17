@@ -835,7 +835,25 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `rules` object exports the following:
 
+* `rule_id` - Rule ID. Unique identifier of the rule.
+* `rule_priority` - Rule priority. only used as an output parameter.
+
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeZoneConfigImportResult](https://www.tencentcloud.com/document/api/1145/67243)
+  - [ImportZoneConfig](https://www.tencentcloud.com/document/api/1145/67241)
+* Read: [DescribeL7AccRules](https://www.tencentcloud.com/document/api/1145/68150)
+* Update:
+  - [DescribeZoneConfigImportResult](https://www.tencentcloud.com/document/api/1145/67243)
+  - [ImportZoneConfig](https://www.tencentcloud.com/document/api/1145/67241)
+* Delete:
+  - [DescribeZoneConfigImportResult](https://www.tencentcloud.com/document/api/1145/67243)
+  - [ImportZoneConfig](https://www.tencentcloud.com/document/api/1145/67241)
 
 ## Import
 

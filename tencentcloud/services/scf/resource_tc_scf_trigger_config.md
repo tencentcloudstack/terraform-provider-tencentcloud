@@ -1,5 +1,7 @@
 Provides a resource to create a scf trigger_config
 
+~> **NOTE:** Use of the current resource is no longer recommended; `tencentcloud_scf_trigger` is recommended instead.
+
 Example Usage
 
 ```hcl

@@ -171,13 +171,13 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 													Type:        schema.TypeList,
 													Required:    true,
 													MaxItems:    1,
-													Description: "Execution actions for custom rules. the Name parameter value of SecurityAction supports: <li>Deny: block;</li> <li>Monitor: observe;</li> <li>ReturnCustomPage: block using a specified page;</li> <li>Redirect: Redirect to URL;</li> <li>BlockIP: IP blocking;</li> <li>JSChallenge: JavaScript challenge;</li> <li>ManagedChallenge: managed challenge;</li> <li>Allow: Allow.</li>.",
+													Description: "Execution actions for custom rules. the Name parameter value of SecurityAction supports: <li>Allow: allow, where AllowActionParameters supports MinDelayTime and MaxDelayTime configuration;</li> <li>Deny: block, where DenyActionParameters supports BlockIp, ReturnCustomPage, and Stall configuration;</li> <li>Monitor: observe;</li> <li>Challenge: challenge, where ChallengeActionParameters.ChallengeOption supports JSChallenge and ManagedChallenge;</li> <li>Redirect: redirect to a URL.</li>.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"name": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Specific actions for safe execution. valid values:.\n<li>Deny: block</li> <li>Monitor: Monitor</li> <li>ReturnCustomPage: use specified page to block</li> <li>Redirect: Redirect to URL</li> <li>BlockIP: IP block</li> <li>JSChallenge: JavaScript challenge</li> <li>ManagedChallenge: managed challenge</li> <li>Disabled: Disabled</li> <li>Allow: Allow</li>.",
+																Description: "Specific actions for safe execution. valid values:.\n<li>Deny: block, prevent requests from accessing site resources;</li> <li>Monitor: observe, only record logs; </li> <li>Redirect: redirect to URL;</li> <li>Disabled: not enabled, disable the specified rule;</li> <li>Allow: allow, skip the remaining rules of the current security module. Delay response when the AllowActionParameters parameter is configured;</li> <li>Challenge: challenge, respond with challenge content;</li> <li>BlockIP: to be deprecated, IP block;</li> <li>ReturnCustomPage: to be deprecated, use a specified page for interception;</li> <li>JSChallenge: to be deprecated, JavaScript challenge;</li><li>ManagedChallenge: to be deprecated, managed challenge.</li>.",
 															},
 															"block_ip_action_parameters": {
 																Type:        schema.TypeList,
@@ -218,7 +218,7 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 																Type:        schema.TypeList,
 																Optional:    true,
 																MaxItems:    1,
-																Description: "Additional parameter when Name is Redirect.",
+																Description: "Additional parameter for safe execution when the action is set to redirect.\n\nThis parameter is used to specify the extra handling action taken by the system when a security rule is hit and a redirection action is executed.\nDifferent handling actions are configured with different fixed parameter combinations. The system will determine the effective handling action type according to the configured parameter combination.\nOnly one handling action can be configured and made effective during the same redirection. Parameter composites corresponding to multiple handling actions cannot appear at the same time. Otherwise, it is deemed as an invalid configuration.\nRedirectActionParameters supports the following extra handling actions:\n\n<li>Redirect: redirect client requests to the specified destination URL. Corresponding parameter: URL.</li>.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"url": {
@@ -621,6 +621,60 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 															},
 														},
 													},
+												},
+											},
+										},
+									},
+									"frequent_scanning_protection": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Computed:    true,
+										MaxItems:    1,
+										Description: "High-frequency scan protection configuration option. When a visitor's frequent requests hit the managed rule configured as block within a period of time, all requests from that visitor are blocked.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"enabled": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Computed:    true,
+													Description: "Whether the high-frequency scan protection rule is enabled. Valid values: `on`, `off`.",
+												},
+												"id": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Rule ID of the high-frequency scan protection, output only.",
+												},
+												"action": {
+													Type:        schema.TypeList,
+													MaxItems:    1,
+													Optional:    true,
+													Computed:    true,
+													Description: "The disposal action. Required when `enabled` is `on`. SecurityAction Name supports `Deny`, `Monitor`, `JSChallenge`.",
+													Elem:        securityActionSchema(),
+												},
+												"count_by": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Computed:    true,
+													Description: "Request statistical matching method. Valid values: `http.request.xff_header_ip`, `http.request.ip`.",
+												},
+												"block_threshold": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Computed:    true,
+													Description: "Cumulative block count threshold within the counting period. Range 1-4294967294.",
+												},
+												"counting_period": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Computed:    true,
+													Description: "Statistics time window. Range 5-1800, unit seconds (s), e.g. `5s`.",
+												},
+												"action_duration": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Computed:    true,
+													Description: "Duration of the disposal action. Range 60-86400, unit seconds (s), e.g. `60s`.",
 												},
 											},
 										},
@@ -1325,19 +1379,19 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 													Type:        schema.TypeList,
 													Optional:    true,
 													MaxItems:    1,
-													Description: "The precise rate limit handling method. The values are: <li>Monitor: Observe; </li><li>Deny: Intercept, where DenyActionParameters.Name supports Deny and ReturnCustomPage; </li><li>Challenge: Challenge, where ChallengeActionParameters.Name supports JSChallenge and ManagedChallenge; </li><li>Redirect: Redirect to URL; </li>.",
+													Description: "The precise rate limit handling method. The values are: <li>Allow: allow, where AllowActionParameters supports MinDelayTime and MaxDelayTime configuration; </li><li>Deny: block, where DenyActionParameters supports ReturnCustomPage and Stall configuration; </li><li>Monitor: observe; </li><li>Challenge: challenge, where ChallengeActionParameters.ChallengeOption supports JSChallenge and ManagedChallenge; </li><li>Redirect: redirect to a URL.</li>.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"name": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "The specific action of security execution. The values are:\n<li>Deny: intercept, block the request to access site resources;</li>\n<li>Monitor: observe, only record logs;</li>\n<li>Redirect: redirect to URL;</li>\n<li>Disabled: disabled, do not enable the specified rule;</li>\n<li>Allow: allow access, but delay processing requests;</li>\n<li>Challenge: challenge, respond to challenge content;</li>\n<li>BlockIP: to be abandoned, IP ban;</li>\n<li>ReturnCustomPage: to be abandoned, use the specified page to intercept;</li>\n<li>JSChallenge: to be abandoned, JavaScript challenge;</li>\n<li>ManagedChallenge: to be abandoned, managed challenge.</li>.",
+																Description: "Specific actions for safe execution. valid values:.\n<li>Deny: block, prevent requests from accessing site resources;</li> <li>Monitor: observe, only record logs; </li> <li>Redirect: redirect to URL;</li> <li>Disabled: not enabled, disable the specified rule;</li> <li>Allow: allow, skip the remaining rules of the current security module. Delay response when the AllowActionParameters parameter is configured;</li> <li>Challenge: challenge, respond with challenge content;</li> <li>BlockIP: to be deprecated, IP block;</li> <li>ReturnCustomPage: to be deprecated, use a specified page for interception;</li> <li>JSChallenge: to be deprecated, JavaScript challenge;</li><li>ManagedChallenge: to be deprecated, managed challenge.</li>.",
 															},
 															"deny_action_parameters": {
 																Type:        schema.TypeList,
 																Optional:    true,
 																MaxItems:    1,
-																Description: "Additional parameters when Name is Deny.",
+																Description: "Additional parameter for the safe execution action when it is interception.\n\nThis parameter is used to specify the extra handling action taken by the system when a security rule is hit and an intercept action is executed.\nDifferent handling actions are configured with different fixed parameter combinations. The system will determine the actually effective handling action type according to the configured parameter combination.\nOnly one handling action can be configured and made effective during the same block execution. Parameters corresponding to multiple handling actions cannot appear simultaneously, otherwise the configuration is deemed invalid. If empty, the default block handling action is used.\nDenyActionParameters supports the following extra handling actions:\n\n<li>Default: When DenyActionParameters is empty or no extra handling action is enabled, the system will perform the default block, responding with an interception page.</li>\n<li>IP blocking: Continuously block the client source IP that triggers the rule. Corresponding parameters: BlockIp, BlockIpDuration.</li>\n<li>Custom page interception: Use the specified custom page content to respond to requests. Corresponding parameters: ReturnCustomPage, ResponseCode, ErrorPageId.</li>\n<li>Silence: Accept client requests but do not return. Corresponding parameter: Stall.</li>.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"block_ip": {
@@ -1377,7 +1431,7 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 																Type:        schema.TypeList,
 																Optional:    true,
 																MaxItems:    1,
-																Description: "Additional parameters when Name is Redirect.",
+																Description: "Additional parameter for safe execution when the action is set to redirect.\n\nThis parameter is used to specify the extra handling action taken by the system when a security rule is hit and a redirection action is executed.\nDifferent handling actions are configured with different fixed parameter combinations. The system will determine the effective handling action type according to the configured parameter combination.\nOnly one handling action can be configured and made effective during the same redirection. Parameter composites corresponding to multiple handling actions cannot appear at the same time. Otherwise, it is deemed as an invalid configuration.\nRedirectActionParameters supports the following extra handling actions:\n\n<li>Redirect: redirect client requests to the specified destination URL. Corresponding parameter: URL.</li>.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"url": {
@@ -1392,7 +1446,7 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 																Type:        schema.TypeList,
 																Optional:    true,
 																MaxItems:    1,
-																Description: "Additional parameters when Name is Challenge.",
+																Description: "Additional parameter for the safe execution action when it is a challenge.\n\nThis parameter is used to specify the extra handling action taken by the system when a security rule is hit and a challenge action is executed.\nChallenge disposal actions are segmented through ChallengeOption. Different challenge types correspond to different interaction forms and parameter requirements. The system will bring the corresponding parameter configuration into effect according to the selected challenge type.\nChallengeActionParameters supports the following challenge disposition types:\n\n<li>Interstitial challenge: responds with a new page and runs the authentication mechanism within the new page. The corresponding ChallengeOption value is InterstitialChallenge.</li>\n<li>Inline challenge: responds with an SDK challenge. The corresponding ChallengeOption value is InlineChallenge.</li>\n<li>JavaScript challenge: invisible verification in the browser. The browser automatically performs verification and shows the requested resource. The corresponding ChallengeOption value is JSChallenge.</li>\n<li>Managed challenge: responds with a redirect page containing a JavaScript program, used for verification of the browser runtime environment. The corresponding ChallengeOption value is ManagedChallenge.</li>.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"challenge_option": {
@@ -1510,6 +1564,15 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 													Type:        schema.TypeSet,
 													Optional:    true,
 													Description: "Specifies the security protection module for the exception rule. It is valid only when SkipScope is WebSecurityModules. The possible values are: <li>websec-mod-managed-rules: managed rules; </li><li>websec-mod-rate-limiting: rate limiting; </li><li>websec-mod-custom-rules: custom rules; </li><li>websec-mod-adaptive-control: adaptive frequency control, intelligent client filtering, slow attack protection, traffic theft protection; </li><li>websec-mod-bot: Bot management. </li>.",
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"web_security_submodules_for_exception": {
+													Type:        schema.TypeSet,
+													Optional:    true,
+													Computed:    true,
+													Description: "Specifies the security protection submodule for the exception rule. It is valid only when SkipScope is WebSecuritySubmodules. The possible values are: <ul><li>ManagedRules module: <ul><li>websec-mod-managed-rules/managed-rule-groups: rule set; </li><li>websec-mod-managed-rules/frequent-scanning-protection: high-frequency scanning protection; </li></ul></li><li>RateLimitingRules module: <ul><li>websec-mod-rate-limiting-rules: rate limiting rule; </li></ul></li><li>CustomRules module: <ul><li>websec-mod-custom-rules: custom rule; </li></ul></li><li>HttpDDoSProtection module: <ul><li>websec-mod-http-ddos-protection/adaptive-frequency-control: adaptive frequency control; </li><li>websec-mod-http-ddos-protection/client-filtering: intelligent client filtering; </li><li>websec-mod-http-ddos-protection/bandwidth-abuse-defense: traffic theft protection; </li></ul></li><li>BotManagement module: <ul><li>websec-mod-bot-management/basic-feature: basic feature management; </li><li>websec-mod-bot-management/ip-reputation: client portrait analysis; </li><li>websec-mod-bot-management/bot-intelligence: intelligent Bot analysis; </li><li>websec-mod-bot-management/custom-rules: custom rule; </li><li>websec-mod-bot-management/browser-impersonation-detection: active feature recognition; </li><li>websec-mod-bot-management/client-attestation-rules: client authentication; </li></ul></li><li>BotManagementLite module: <ul><li>websec-mod-bot-management-lite/ai-crawler-detection: AI crawler disposal; </li><li>websec-mod-bot-management-lite/captcha-page-challenge: human verification page. </li></ul></li></ul>.",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
@@ -1858,6 +1921,47 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 													MaxItems:    1,
 													Description: "Action when attestation is invalid.",
 													Elem:        securityActionSchema(),
+												},
+												"device_profiles": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Computed:    true,
+													Description: "Client device configurations. One profile per client type.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"client_type": {
+																Type:        schema.TypeString,
+																Required:    true,
+																Description: "Client device type. Valid values: `iOS`, `Android`, `WebView`, `WeChatMiniProgram`.",
+															},
+															"high_risk_min_score": {
+																Type:        schema.TypeInt,
+																Optional:    true,
+																Computed:    true,
+																Description: "Minimum score (1-99) for judging a request as high risk. Default 50.",
+															},
+															"high_risk_request_action": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																MaxItems:    1,
+																Description: "Action for high-risk requests, using the shared SecurityAction schema (Name supports `Deny`, `Monitor`, `Redirect`, `Challenge`; default `Monitor`).",
+																Elem:        securityActionSchema(),
+															},
+															"medium_risk_min_score": {
+																Type:        schema.TypeInt,
+																Optional:    true,
+																Computed:    true,
+																Description: "Minimum score (1-99) for judging a request as medium risk. Default 15.",
+															},
+															"medium_risk_request_action": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																MaxItems:    1,
+																Description: "Action for medium-risk requests, using the shared SecurityAction schema (default `Monitor`).",
+																Elem:        securityActionSchema(),
+															},
+														},
+													},
 												},
 											},
 										},
@@ -2639,7 +2743,7 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 							Optional:    true,
 							Computed:    true,
 							MaxItems:    1,
-							Description: "Layer-7 protection master switch.",
+							Description: "Security switch configuration.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"web_switch": {
@@ -2680,7 +2784,7 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 							Optional:    true,
 							Computed:    true,
 							MaxItems:    1,
-							Description: "Exception rules configuration.",
+							Description: "Exception rule configuration.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"switch": {
@@ -3241,6 +3345,35 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 			}
 
 			managedRulesMap["managed_rule_groups"] = managedRuleGroupsList
+		}
+
+		if respData.ManagedRules.FrequentScanningProtection != nil {
+			frequentScanningProtectionMap := map[string]interface{}{}
+			if respData.ManagedRules.FrequentScanningProtection.Enabled != nil {
+				frequentScanningProtectionMap["enabled"] = respData.ManagedRules.FrequentScanningProtection.Enabled
+			}
+			if respData.ManagedRules.FrequentScanningProtection.Id != nil {
+				frequentScanningProtectionMap["id"] = respData.ManagedRules.FrequentScanningProtection.Id
+			}
+			if respData.ManagedRules.FrequentScanningProtection.Action != nil {
+				actionMap := flattenSecurityAction(respData.ManagedRules.FrequentScanningProtection.Action)
+				if len(actionMap) > 0 {
+					frequentScanningProtectionMap["action"] = []interface{}{actionMap}
+				}
+			}
+			if respData.ManagedRules.FrequentScanningProtection.CountBy != nil {
+				frequentScanningProtectionMap["count_by"] = respData.ManagedRules.FrequentScanningProtection.CountBy
+			}
+			if respData.ManagedRules.FrequentScanningProtection.BlockThreshold != nil {
+				frequentScanningProtectionMap["block_threshold"] = respData.ManagedRules.FrequentScanningProtection.BlockThreshold
+			}
+			if respData.ManagedRules.FrequentScanningProtection.CountingPeriod != nil {
+				frequentScanningProtectionMap["counting_period"] = respData.ManagedRules.FrequentScanningProtection.CountingPeriod
+			}
+			if respData.ManagedRules.FrequentScanningProtection.ActionDuration != nil {
+				frequentScanningProtectionMap["action_duration"] = respData.ManagedRules.FrequentScanningProtection.ActionDuration
+			}
+			managedRulesMap["frequent_scanning_protection"] = []interface{}{frequentScanningProtectionMap}
 		}
 
 		securityPolicyMap["managed_rules"] = []interface{}{managedRulesMap}
@@ -3874,6 +4007,10 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 					rulesMap["web_security_modules_for_exception"] = rules.WebSecurityModulesForException
 				}
 
+				if rules.WebSecuritySubmodulesForException != nil {
+					rulesMap["web_security_submodules_for_exception"] = rules.WebSecuritySubmodulesForException
+				}
+
 				if rules.ManagedRulesForException != nil {
 					rulesMap["managed_rules_for_exception"] = rules.ManagedRulesForException
 				}
@@ -3980,7 +4117,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 				if basicBotSettings.SourceIDC.BotManagementActionOverrides != nil {
 					overridesList := []interface{}{}
 					for _, override := range basicBotSettings.SourceIDC.BotManagementActionOverrides {
-						overridesList = append(overridesList, flattenBotManagementActionOverride(override))
+						overridesList = append(overridesList, FlattenBotManagementActionOverride(override))
 					}
 					sourceIDCMap["action_overrides"] = overridesList
 				}
@@ -3996,7 +4133,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 				if basicBotSettings.SearchEngineBots.BotManagementActionOverrides != nil {
 					overridesList := []interface{}{}
 					for _, override := range basicBotSettings.SearchEngineBots.BotManagementActionOverrides {
-						overridesList = append(overridesList, flattenBotManagementActionOverride(override))
+						overridesList = append(overridesList, FlattenBotManagementActionOverride(override))
 					}
 					searchEngineBotsMap["action_overrides"] = overridesList
 				}
@@ -4012,7 +4149,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 				if basicBotSettings.KnownBotCategories.BotManagementActionOverrides != nil {
 					overridesList := []interface{}{}
 					for _, override := range basicBotSettings.KnownBotCategories.BotManagementActionOverrides {
-						overridesList = append(overridesList, flattenBotManagementActionOverride(override))
+						overridesList = append(overridesList, FlattenBotManagementActionOverride(override))
 					}
 					knownBotCategoriesMap["action_overrides"] = overridesList
 				}
@@ -4033,7 +4170,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 					if basicBotSettings.IPReputation.IPReputationGroup.BotManagementActionOverrides != nil {
 						overridesList := []interface{}{}
 						for _, override := range basicBotSettings.IPReputation.IPReputationGroup.BotManagementActionOverrides {
-							overridesList = append(overridesList, flattenBotManagementActionOverride(override))
+							overridesList = append(overridesList, FlattenBotManagementActionOverride(override))
 						}
 						ipReputationGroupMap["action_overrides"] = overridesList
 					}
@@ -4095,6 +4232,29 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 				}
 				if rule.InvalidAttestationAction != nil {
 					ruleMap["invalid_attestation_action"] = []interface{}{flattenSecurityAction(rule.InvalidAttestationAction)}
+				}
+				if rule.DeviceProfiles != nil {
+					deviceProfilesList := []interface{}{}
+					for _, deviceProfile := range rule.DeviceProfiles {
+						deviceProfileMap := map[string]interface{}{}
+						if deviceProfile.ClientType != nil {
+							deviceProfileMap["client_type"] = deviceProfile.ClientType
+						}
+						if deviceProfile.HighRiskMinScore != nil {
+							deviceProfileMap["high_risk_min_score"] = deviceProfile.HighRiskMinScore
+						}
+						if deviceProfile.MediumRiskMinScore != nil {
+							deviceProfileMap["medium_risk_min_score"] = deviceProfile.MediumRiskMinScore
+						}
+						if deviceProfile.HighRiskRequestAction != nil {
+							deviceProfileMap["high_risk_request_action"] = []interface{}{flattenSecurityAction(deviceProfile.HighRiskRequestAction)}
+						}
+						if deviceProfile.MediumRiskRequestAction != nil {
+							deviceProfileMap["medium_risk_request_action"] = []interface{}{flattenSecurityAction(deviceProfile.MediumRiskRequestAction)}
+						}
+						deviceProfilesList = append(deviceProfilesList, deviceProfileMap)
+					}
+					ruleMap["device_profiles"] = deviceProfilesList
 				}
 				rulesList = append(rulesList, ruleMap)
 			}
@@ -4636,6 +4796,29 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 
 					managedRules.ManagedRuleGroups = append(managedRules.ManagedRuleGroups, &managedRuleGroup)
 				}
+			}
+
+			if frequentScanningProtectionMap, ok := helper.ConvertInterfacesHeadToMap(managedRulesMap["frequent_scanning_protection"]); ok {
+				frequentScanningProtection := teov20220901.FrequentScanningProtection{}
+				if v, ok := frequentScanningProtectionMap["enabled"].(string); ok && v != "" {
+					frequentScanningProtection.Enabled = helper.String(v)
+				}
+				if actionMap, ok := helper.ConvertInterfacesHeadToMap(frequentScanningProtectionMap["action"]); ok && len(actionMap) > 0 {
+					frequentScanningProtection.Action = buildSecurityActionFromMap(actionMap)
+				}
+				if v, ok := frequentScanningProtectionMap["count_by"].(string); ok && v != "" {
+					frequentScanningProtection.CountBy = helper.String(v)
+				}
+				if v, ok := frequentScanningProtectionMap["block_threshold"].(int); ok && v != 0 {
+					frequentScanningProtection.BlockThreshold = helper.IntInt64(v)
+				}
+				if v, ok := frequentScanningProtectionMap["counting_period"].(string); ok && v != "" {
+					frequentScanningProtection.CountingPeriod = helper.String(v)
+				}
+				if v, ok := frequentScanningProtectionMap["action_duration"].(string); ok && v != "" {
+					frequentScanningProtection.ActionDuration = helper.String(v)
+				}
+				managedRules.FrequentScanningProtection = &frequentScanningProtection
 			}
 
 			securityPolicy.ManagedRules = &managedRules
@@ -5236,6 +5419,16 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 						}
 					}
 
+					if v, ok := rulesMap["web_security_submodules_for_exception"]; ok {
+						webSecuritySubmodulesForExceptionSet := v.(*schema.Set).List()
+						for i := range webSecuritySubmodulesForExceptionSet {
+							if webSecuritySubmodulesForExceptionSet[i] != nil {
+								webSecuritySubmodulesForException := webSecuritySubmodulesForExceptionSet[i].(string)
+								exceptionRule.WebSecuritySubmodulesForException = append(exceptionRule.WebSecuritySubmodulesForException, &webSecuritySubmodulesForException)
+							}
+						}
+					}
+
 					if v, ok := rulesMap["managed_rules_for_exception"]; ok {
 						managedRulesForExceptionSet := v.(*schema.Set).List()
 						for i := range managedRulesForExceptionSet {
@@ -5406,7 +5599,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 					if v, ok := sourceIDCMaps["action_overrides"]; ok {
 						for _, item := range v.([]interface{}) {
 							actionOverrideMap := item.(map[string]interface{})
-							actionOverride := buildBotManagementActionOverrideFromMap(actionOverrideMap)
+							actionOverride := BuildBotManagementActionOverrideFromMap(actionOverrideMap)
 							sourceIDC.BotManagementActionOverrides = append(sourceIDC.BotManagementActionOverrides, actionOverride)
 						}
 					}
@@ -5421,7 +5614,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 					if v, ok := searchEngineBotsMap["action_overrides"]; ok {
 						for _, item := range v.([]interface{}) {
 							actionOverrideMap := item.(map[string]interface{})
-							actionOverride := buildBotManagementActionOverrideFromMap(actionOverrideMap)
+							actionOverride := BuildBotManagementActionOverrideFromMap(actionOverrideMap)
 							searchEngineBots.BotManagementActionOverrides = append(searchEngineBots.BotManagementActionOverrides, actionOverride)
 						}
 					}
@@ -5436,7 +5629,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 					if v, ok := knownBotCategoriesMap["action_overrides"]; ok {
 						for _, item := range v.([]interface{}) {
 							actionOverrideMap := item.(map[string]interface{})
-							actionOverride := buildBotManagementActionOverrideFromMap(actionOverrideMap)
+							actionOverride := BuildBotManagementActionOverrideFromMap(actionOverrideMap)
 							knownBotCategories.BotManagementActionOverrides = append(knownBotCategories.BotManagementActionOverrides, actionOverride)
 						}
 					}
@@ -5456,7 +5649,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 						if v, ok := ipReputationGroupMap["action_overrides"]; ok {
 							for _, item := range v.([]interface{}) {
 								actionOverrideMap := item.(map[string]interface{})
-								actionOverride := buildBotManagementActionOverrideFromMap(actionOverrideMap)
+								actionOverride := BuildBotManagementActionOverrideFromMap(actionOverrideMap)
 								ipReputationGroup.BotManagementActionOverrides = append(ipReputationGroup.BotManagementActionOverrides, actionOverride)
 							}
 						}
@@ -5517,6 +5710,31 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 					}
 					if invalidActionMap, ok := helper.ConvertInterfacesHeadToMap(ruleMap["invalid_attestation_action"]); ok {
 						clientAttestationRule.InvalidAttestationAction = buildSecurityActionFromMap(invalidActionMap)
+					}
+					if deviceProfiles, ok := ruleMap["device_profiles"].([]interface{}); ok && len(deviceProfiles) > 0 {
+						for _, dpItem := range deviceProfiles {
+							deviceProfileMap, ok := dpItem.(map[string]interface{})
+							if !ok {
+								continue
+							}
+							deviceProfile := teov20220901.DeviceProfile{}
+							if v, ok := deviceProfileMap["client_type"].(string); ok && v != "" {
+								deviceProfile.ClientType = helper.String(v)
+							}
+							if v, ok := deviceProfileMap["high_risk_min_score"].(int); ok {
+								deviceProfile.HighRiskMinScore = helper.IntUint64(v)
+							}
+							if v, ok := deviceProfileMap["medium_risk_min_score"].(int); ok {
+								deviceProfile.MediumRiskMinScore = helper.IntUint64(v)
+							}
+							if highRiskActionMap, ok := helper.ConvertInterfacesHeadToMap(deviceProfileMap["high_risk_request_action"]); ok {
+								deviceProfile.HighRiskRequestAction = buildSecurityActionFromMap(highRiskActionMap)
+							}
+							if mediumRiskActionMap, ok := helper.ConvertInterfacesHeadToMap(deviceProfileMap["medium_risk_request_action"]); ok {
+								deviceProfile.MediumRiskRequestAction = buildSecurityActionFromMap(mediumRiskActionMap)
+							}
+							clientAttestationRule.DeviceProfiles = append(clientAttestationRule.DeviceProfiles, &deviceProfile)
+						}
 					}
 					botManagement.ClientAttestationRules = &teov20220901.ClientAttestationRules{
 						Rules: []*teov20220901.ClientAttestationRule{&clientAttestationRule},
@@ -6932,8 +7150,19 @@ func botManagementActionOverrideSchema() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"rule_id": {
 				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Rule ID or category ID for action override.",
+				Optional:    true,
+				Computed:    true,
+				Deprecated:  "It has been deprecated from version 1.83.31. Please use `rule_ids` instead.",
+				Description: "A single bot rule ID (or category ID) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids. Deprecated: use `rule_ids` to support one or more IDs.",
+			},
+			"rule_ids": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "One or more bot rule IDs (or category IDs) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids ([]*string). If both `rule_ids` and `rule_id` are set, `rule_ids` takes precedence.",
 			},
 			"action": {
 				Type:        schema.TypeList,
@@ -7010,14 +7239,25 @@ func buildSecurityActionFromMap(m map[string]interface{}) *teov20220901.Security
 	return action
 }
 
-// buildBotManagementActionOverrideFromMap converts a schema map to *teov20220901.BotManagementActionOverrides.
-func buildBotManagementActionOverrideFromMap(m map[string]interface{}) *teov20220901.BotManagementActionOverrides {
+// BuildBotManagementActionOverrideFromMap converts a schema map to *teov20220901.BotManagementActionOverrides.
+func BuildBotManagementActionOverrideFromMap(m map[string]interface{}) *teov20220901.BotManagementActionOverrides {
 	if len(m) == 0 {
 		return nil
 	}
 	override := &teov20220901.BotManagementActionOverrides{}
 	if v, ok := m["rule_id"].(string); ok && v != "" {
 		override.Ids = []*string{helper.String(v)}
+	}
+	if v, ok := m["rule_ids"].([]interface{}); ok {
+		ids := make([]*string, 0)
+		for _, item := range v {
+			if s, ok := item.(string); ok && s != "" {
+				ids = append(ids, helper.String(s))
+			}
+		}
+		if len(ids) > 0 {
+			override.Ids = ids
+		}
 	}
 	if actionMap, ok := helper.ConvertInterfacesHeadToMap(m["action"]); ok && len(actionMap) > 0 {
 		override.Action = buildSecurityActionFromMap(actionMap)
@@ -7097,14 +7337,25 @@ func flattenSecurityAction(action *teov20220901.SecurityAction) map[string]inter
 	return m
 }
 
-// flattenBotManagementActionOverride converts *teov20220901.BotManagementActionOverrides to a schema map.
-func flattenBotManagementActionOverride(override *teov20220901.BotManagementActionOverrides) map[string]interface{} {
+// FlattenBotManagementActionOverride converts *teov20220901.BotManagementActionOverrides to a schema map.
+func FlattenBotManagementActionOverride(override *teov20220901.BotManagementActionOverrides) map[string]interface{} {
 	m := map[string]interface{}{}
 	if override == nil {
 		return m
 	}
 	if len(override.Ids) > 0 && override.Ids[0] != nil {
 		m["rule_id"] = override.Ids[0]
+	}
+	if len(override.Ids) > 0 {
+		ruleIds := make([]interface{}, 0, len(override.Ids))
+		for _, id := range override.Ids {
+			if id != nil {
+				ruleIds = append(ruleIds, *id)
+			}
+		}
+		if len(ruleIds) > 0 {
+			m["rule_ids"] = ruleIds
+		}
 	}
 	if override.Action != nil {
 		m["action"] = []interface{}{flattenSecurityAction(override.Action)}

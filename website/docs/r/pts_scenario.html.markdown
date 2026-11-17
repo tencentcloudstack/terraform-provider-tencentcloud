@@ -270,6 +270,16 @@ In addition to all arguments above, the following attributes are exported:
 * `uin` - User ID Note: this field may return null, indicating that a valid value cannot be obtained.
 * `updated_at` - Scene modification time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateScenario](https://www.tencentcloud.com/document/api/1249/68531)
+  - [UpdateScenario](https://www.tencentcloud.com/document/api/1249/68493)
+* Read: [DescribeScenarios](https://www.tencentcloud.com/document/api/1249/68502)
+* Update: [UpdateScenario](https://www.tencentcloud.com/document/api/1249/68493)
+* Delete: [DeleteScenarios](https://www.tencentcloud.com/document/api/1249/68524)
 
 ## Import
 

@@ -34,4 +34,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/api/409/16772)
+  - [DescribeDBInstanceParameters](https://www.tencentcloud.com/document/api/409/43284)
+  - [DescribeParameterTemplateAttributes](https://www.tencentcloud.com/document/api/409/52652)
+  - [DescribeParamsEvent](https://www.tencentcloud.com/document/api/409/43283)
+  - [ModifyDBInstanceParameters](https://www.tencentcloud.com/document/api/409/43282)
 

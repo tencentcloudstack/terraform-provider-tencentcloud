@@ -73,4 +73,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `forward_rule_set` - Private domain list.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeForwardRuleList](https://www.tencentcloud.com/document/api/1097/65935)
 

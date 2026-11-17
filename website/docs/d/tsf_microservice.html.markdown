@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
     * `update_time` - last update time.  Note: This field may return null, indicating that no valid values can be obtained.
   * `total_count` - Microservice paging list information. Note: This field may return null, indicating that no valid value can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeMicroservices](https://www.tencentcloud.com/search/?wd=DescribeMicroservices&type=document&lang=en)
 

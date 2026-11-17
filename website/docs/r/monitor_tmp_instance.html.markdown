@@ -65,6 +65,24 @@ In addition to all arguments above, the following attributes are exported:
 * `proxy_address` - Proxy address.
 * `remote_write` - Prometheus remote write address.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreatePrometheusMultiTenantInstancePostPayMode](https://www.tencentcloud.com/document/api/248/48764)
+  - [DescribePrometheusInstances](https://www.tencentcloud.com/document/api/248/48753)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribePrometheusInstances](https://www.tencentcloud.com/document/api/248/48753)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [ModifyPrometheusInstanceAttributes](https://www.tencentcloud.com/document/api/248/48747)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete:
+  - [DescribePrometheusInstances](https://www.tencentcloud.com/document/api/248/48753)
+  - [DestroyPrometheusInstance](https://www.tencentcloud.com/document/api/248/48749)
+  - [TerminatePrometheusInstances](https://www.tencentcloud.com/document/api/248/48746)
 
 ## Import
 

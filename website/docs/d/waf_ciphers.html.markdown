@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
   * `cipher_name` - Encryption Suite NameNote: This field may return null, indicating that a valid value cannot be obtained.
   * `version_id` - TLS version IDNote: This field may return null, indicating that a valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCiphersDetail](https://www.tencentcloud.com/document/api/627/64566)
 

@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
   * `ratio` - The ratio of the number of slow logs of the source address to the total, in %.
   * `user_host` - source address.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSlowLogUserHostStats](https://www.tencentcloud.com/document/api/1035/41182)
 

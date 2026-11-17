@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_dbdc_node_to_db_custom_cluster_attachment: support labels, taints, host_name, host_name_type arguments and network_mode, eni_ip computed fields
+```

@@ -61,4 +61,9 @@ In addition to all arguments above, the following attributes are exported:
   * `subject_alt_name` - Certificate SAN domains.
   * `type` - Certificate type. Valid values: default (default certificate), upload (user uploaded), managed (Tencent Cloud managed).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDefaultCertificates](https://www.tencentcloud.com/document/api/1145/50541)
 

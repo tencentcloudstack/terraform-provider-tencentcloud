@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_fwm_security_group_rule
+```

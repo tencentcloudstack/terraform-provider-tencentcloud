@@ -73,6 +73,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateEmailTemplate](https://www.tencentcloud.com/document/api/1084/39400)
+* Read: [GetEmailTemplate](https://www.tencentcloud.com/document/api/1084/39398)
+* Update: [UpdateEmailTemplate](https://www.tencentcloud.com/document/api/1084/39396)
+* Delete: [DeleteEmailTemplate](https://www.tencentcloud.com/document/api/1084/39399)
 
 ## Import
 

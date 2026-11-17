@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
 * `config` - configuration information of the image.
 * `manifest` - Manifest information of the image.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeImageManifests](https://www.tencentcloud.com/document/api/1051/50722)
 

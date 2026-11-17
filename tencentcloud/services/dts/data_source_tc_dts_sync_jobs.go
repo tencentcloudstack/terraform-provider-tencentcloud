@@ -260,6 +260,11 @@ func DataSourceTencentCloudDtsSyncJobs() *schema.Resource {
 													Computed:    true,
 													Description: "new schema name.",
 												},
+												"schema_mode": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "schema selection mode, used by pg and sqlserver. enum values: All (all objects under the current object), Partial (partial objects).",
+												},
 												"table_mode": {
 													Type:        schema.TypeString,
 													Computed:    true,
@@ -1003,6 +1008,9 @@ func dataSourceTencentCloudDtsSyncJobsRead(d *schema.ResourceData, meta interfac
 						}
 						if databases.NewSchemaName != nil {
 							databasesMap["new_schema_name"] = databases.NewSchemaName
+						}
+						if databases.SchemaMode != nil {
+							databasesMap["schema_mode"] = databases.SchemaMode
 						}
 						if databases.TableMode != nil {
 							databasesMap["table_mode"] = databases.TableMode

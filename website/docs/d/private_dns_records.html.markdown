@@ -63,4 +63,9 @@ In addition to all arguments above, the following attributes are exported:
   * `weight` - Record weight, value is 1-100.
   * `zone_id` - Private zone id: zone-xxxxxx.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribePrivateZoneRecordList](https://www.tencentcloud.com/document/api/1097/42115)
 

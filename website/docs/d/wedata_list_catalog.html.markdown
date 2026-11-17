@@ -31,4 +31,9 @@ In addition to all arguments above, the following attributes are exported:
 * `items` - Catalog record list.
   * `name` - Catalog name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListCatalog](https://www.tencentcloud.com/document/api/1174/77950)
 

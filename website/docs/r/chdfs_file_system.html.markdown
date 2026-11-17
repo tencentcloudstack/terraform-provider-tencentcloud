@@ -50,6 +50,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateFileSystem](https://www.tencentcloud.com/document/api/1106/42446)
+  - [DescribeFileSystem](https://www.tencentcloud.com/document/api/1106/42444)
+* Read: [DescribeFileSystem](https://www.tencentcloud.com/document/api/1106/42444)
+* Update: [ModifyFileSystem](https://www.tencentcloud.com/document/api/1106/42442)
+* Delete: [DeleteFileSystem](https://www.tencentcloud.com/document/api/1106/42445)
 
 ## Import
 

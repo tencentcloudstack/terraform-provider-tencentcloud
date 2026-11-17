@@ -46,4 +46,9 @@ In addition to all arguments above, the following attributes are exported:
   * `security_group_id` - security group id.
   * `security_group_name` - security group name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBSecurityGroups](https://www.tencentcloud.com/document/api/1042/39459)
 

@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
   * `user_opened` - Whether the recipient has opened the email.
   * `user_unsubscribed` - Whether the recipient has unsubscribed from the email sent by the sender.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetSendEmailStatus](https://www.tencentcloud.com/document/api/1084/39502)
 

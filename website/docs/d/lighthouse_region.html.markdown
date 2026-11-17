@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
   * `region_state` - Region availability status.
   * `region` - Region name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRegions](https://www.tencentcloud.com/document/api/1103/42468)
 

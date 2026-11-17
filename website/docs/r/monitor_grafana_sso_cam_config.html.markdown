@@ -34,6 +34,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [EnableSSOCamCheck](https://www.tencentcloud.com/document/api/248/49751)
+* Read: [DescribeGrafanaInstances](https://www.tencentcloud.com/document/api/248/49759)
+* Update: [EnableSSOCamCheck](https://www.tencentcloud.com/document/api/248/49751)
 
 ## Import
 

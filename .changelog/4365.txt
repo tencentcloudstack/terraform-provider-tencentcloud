@@ -1,0 +1,3 @@
+```release-note:enhancement
+data-source/tencentcloud_dbdc_db_custom_cluster_nodes: add `network_mode` and `eni_ip` fields to node_set
+```

@@ -46,4 +46,9 @@ In addition to all arguments above, the following attributes are exported:
   * `min_disk_size` - Minimum cloud disk size.
   * `zone` - Availability zone.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDiskConfigs](https://www.tencentcloud.com/document/api/1103/44575)
 

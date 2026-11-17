@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_serverless_hbase_instance: support `disk_size` in-place expansion via `ModifySLInstance`
+```

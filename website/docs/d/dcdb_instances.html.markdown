@@ -104,4 +104,9 @@ In addition to all arguments above, the following attributes are exported:
   * `wan_status` - wan status, 0:nonactivated, 1:activated, 2:closed, 3:activating.
   * `wan_vip` - wan vip.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDCDBInstances](https://www.tencentcloud.com/document/api/1042/34442)
 

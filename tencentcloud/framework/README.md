@@ -6,10 +6,9 @@ resources and actions) are **co-located with the SDKv2 implementations**
 under `tencentcloud/services/<product>/` — there is no separate
 framework subtree for business code.
 
-> Current state: the framework Provider is wired into mux but **no
-> business references are registered yet**. The six factory slices in
-> `registry.go` are all empty. Add new references following the workflow
-> in [Adding a new framework reference](#adding-a-new-framework-reference).
+> Current state: the framework Provider is wired into mux and references are
+> registered in `registry.go`. Add new references following the workflow in
+> [Adding a new framework reference](#adding-a-new-framework-reference).
 
 ## Directory layout
 
@@ -17,10 +16,11 @@ framework subtree for business code.
 tencentcloud/
 ├── framework/                # framework entry only — no business code lives here
 │   ├── provider.go           # framework Provider implementation (Schema / Configure / Resources / DataSources / Functions / EphemeralResources / ListResources / Actions)
-│   ├── registry.go           # SDKv2-style central manifest: six append-only factory slices
+│   ├── registry.go           # SDKv2-style central manifest: six type-name → factory maps
+│   ├── registry_test.go      # registry invariants: key == Metadata type name, full exposure
 │   ├── provider_test.go      # in-package tests: mux startup sanity + no type-name collisions
 │   ├── testhelpers_test.go   # in-package test helpers
-│   ├── acctest/              # ProtoV5 test factories shared by acceptance tests
+│   ├── acctest/              # ProtoV6 test factories shared by acceptance tests
 │   ├── internal/             # framework-only helpers (Go-internal-visible to framework/...)
 │   └── README.md             # this file
 └── services/
@@ -90,26 +90,36 @@ per service directory and import paths stay simple.
 ## Wiring into main.go
 
 `main.go` merges the SDKv2 and the framework providers into a single
-provider binary via `tf5muxserver`:
+provider binary via `tf6muxserver`; the SDKv2 half is upgraded to
+protocol 6 with `tf5to6server` because nested attributes only exist in
+tfplugin6:
 
 ```go
 primary := tencentcloud.Provider()                  // SDKv2 entry
-fw := framework.NewProvider(primary)                // entry of this package
-providers := []func() tfprotov5.ProviderServer{
-    primary.GRPCProvider,
-    providerserver.NewProtocol5(fw),
+upgradedSdkv2, _ := tf5to6server.UpgradeServer(ctx, primary.GRPCProvider)
+providers := []func() tfprotov6.ProviderServer{
+    func() tfprotov6.ProviderServer { return upgradedSdkv2 },
+    providerserver.NewProtocol6(framework.NewProvider(primary)),
 }
-muxServer, _ := tf5muxserver.NewMuxServer(ctx, providers...)
+muxServer, _ := tf6muxserver.NewMuxServer(ctx, providers...)
 ```
 
 ## Adding a new framework reference
 
 The central manifest `tencentcloud/framework/registry.go` mirrors the
-SDKv2 `provider.go` style: each framework reference type owns an
-append-only factory slice (`resourceFactories`, `dataSourceFactories`,
-`functionFactories`, `ephemeralResourceFactories`,
-`listResourceFactories`, `actionFactories`). The six framework Provider
-callbacks return these slices verbatim.
+SDKv2 `provider.go` style: each framework reference type owns a map from
+the name users write in HCL to its factory (`resourcesMap`,
+`dataSourcesMap`, `functionsMap`, `ephemeralResourcesMap`,
+`listResourcesMap`, `actionsMap`). The six framework Provider callbacks
+return those factories through `registry.go`'s accessors. Registration
+order carries no meaning: the framework immediately re-keys the
+factories into maps by type name.
+
+A map (rather than a slice) buys two guarantees: the file is searchable
+by the Terraform type name, and a duplicate registration is a **compile
+error** (duplicate map key) instead of the runtime "Duplicate Resource
+Type Defined" diagnostic raised when the provider schema is first
+requested.
 
 ### Workflow
 
@@ -123,17 +133,25 @@ callbacks return these slices verbatim.
    // ... implement resource.Resource + resource.ResourceWithConfigure ...
    ```
 
-2. **Register the factory** by adding **one line** to the matching
-   slice in `framework/registry.go`:
+2. **Register the factory** by adding **one line** to the matching map
+   in `framework/registry.go`. The key is the Terraform type name the
+   resource reports from `Metadata`:
 
    ```go
-   var resourceFactories = []func() resource.Resource{
-       cvm.NewMyThingResource, // <- one line, alphabetically grouped by product
+   var resourcesMap = map[string]func() resource.Resource{
+       "tencentcloud_cvm_my_thing": cvm.NewMyThingResource, // <- one line
    }
    ```
 
    If the product subpackage is not yet imported in `registry.go`, add
    one import line as well. `provider.go` does not need to change.
+
+   `registry_test.go` then verifies that the key equals the type name the
+   factory reports (so a typo fails CI, not `terraform plan`) and that the
+   provider exposes every registry entry. Provider-defined functions are
+   the exception: their key is the bare function name (e.g.
+   `parse_resource_id`), because a function call already carries the
+   provider name.
 
 3. **Add the reference to the unified index** in
    `tencentcloud/provider.md` so `make doc` picks it up. Use the

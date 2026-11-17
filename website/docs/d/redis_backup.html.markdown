@@ -55,4 +55,9 @@ In addition to all arguments above, the following attributes are exported:
   * `start_time` - Backup start time.
   * `status` - Backup status.1: The backup is locked by another process.2: The backup is normal and not locked by any process.-1: The backup has expired.3: The backup is being exported.4: The backup export is successful.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstanceBackups](https://www.tencentcloud.com/document/api/239/32074)
 

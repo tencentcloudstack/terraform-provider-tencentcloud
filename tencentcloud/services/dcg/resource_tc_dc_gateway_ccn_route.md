@@ -26,3 +26,11 @@ resource "tencentcloud_dc_gateway_ccn_route" "route2" {
   cidr_block = "192.1.1.0/32"
 }
 ```
+
+Import
+
+dc_gateway_ccn_route can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_dc_gateway_ccn_route.example dcg-dr1y0hu7#192.1.1.0/32
+```

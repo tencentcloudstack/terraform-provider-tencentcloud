@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cls_scheduled_sql: support metric destination resource params (metric_names, metric_labels, custom_time, custom_metric_labels)
+```

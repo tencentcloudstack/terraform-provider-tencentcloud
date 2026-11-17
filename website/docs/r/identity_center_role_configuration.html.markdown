@@ -40,6 +40,14 @@ In addition to all arguments above, the following attributes are exported:
 * `role_configuration_id` - Role configuration id.
 * `update_time` - Update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRoleConfiguration](https://www.tencentcloud.com/document/api/1031/63602)
+* Read: [GetRoleConfiguration](https://www.tencentcloud.com/document/api/1031/63600)
+* Update: [UpdateRoleConfiguration](https://www.tencentcloud.com/document/api/1031/63595)
+* Delete: [DeleteRoleConfiguration](https://www.tencentcloud.com/document/api/1031/63601)
 
 ## Import
 

@@ -34,6 +34,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifySnapshotConfig](https://www.tencentcloud.com/search/?wd=ModifySnapshotConfig&type=document&lang=en)
+* Read: [DescribeSnapshotConfig](https://www.tencentcloud.com/search/?wd=DescribeSnapshotConfig&type=document&lang=en)
+* Update: [ModifySnapshotConfig](https://www.tencentcloud.com/search/?wd=ModifySnapshotConfig&type=document&lang=en)
 
 ## Import
 

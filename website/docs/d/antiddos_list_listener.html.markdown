@@ -64,4 +64,9 @@ In addition to all arguments above, the following attributes are exported:
     * `weight` - Weight: 1-100.
   * `vport` - Port.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeListListener](https://www.tencentcloud.com/document/api/1213/61346)
 

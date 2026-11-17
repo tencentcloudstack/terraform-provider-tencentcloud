@@ -41,8 +41,14 @@ const (
 	// 操作失败
 	FAILEDOPERATION_FAILEDOPERATIONWITHREASON = "FailedOperation.FailedOperationWithReason"
 
+	// 试运行的子查询条数超过上限
+	FAILEDOPERATION_JOBSPLITLIMITEXCEEDCODE = "FailedOperation.JobSplitLimitExceedCode"
+
 	// 查询数据开发资源锁状态-当前用户不持有锁
 	FAILEDOPERATION_NOLOCK = "FailedOperation.NoLock"
+
+	// 数据预览超时
+	FAILEDOPERATION_PREVIEWTIMEOUT = "FailedOperation.PreviewTimeOut"
 
 	// 内部错误。
 	INTERNALERROR = "InternalError"

@@ -267,6 +267,14 @@ resource "tencentcloud_teo_security_policy_config" "example" {
         web_security_modules_for_exception = ["websec-mod-adaptive-control"]
         enabled                            = "off"
       }
+
+      rules {
+        name                                  = "Skip managed rule set submodule"
+        condition                             = "$${http.request.uri.path} in ['/legacy/api']"
+        skip_scope                            = "WebSecuritySubmodules"
+        web_security_submodules_for_exception = ["websec-mod-managed-rules/managed-rule-groups", "websec-mod-rate-limiting-rules"]
+        enabled                               = "off"
+      }
     }
 
     bot_management_lite {
@@ -281,6 +289,74 @@ resource "tencentcloud_teo_security_policy_config" "example" {
           deny_action_parameters {
             block_ip          = "on"
             block_ip_duration = "120s"
+          }
+        }
+      }
+    }
+
+    bot_management {
+      basic_bot_settings {
+        source_idc {
+          base_action {
+            name = "Monitor"
+          }
+          action_overrides {
+            rule_ids = ["rule-a", "rule-b"]
+            action {
+              name = "Deny"
+            }
+          }
+        }
+
+        search_engine_bots {
+          base_action {
+            name = "Monitor"
+          }
+          action_overrides {
+            rule_ids = ["rule-c"]
+            action {
+              name = "Monitor"
+            }
+          }
+        }
+      }
+
+      client_attestation_rules {
+        name        = "client-attestation-rule"
+        enabled     = "on"
+        priority    = 10
+        condition   = "$${http.request.host} contain ['abc']"
+        attester_id = "attester-xxxx"
+        invalid_attestation_action {
+          name = "Monitor"
+        }
+        device_profiles {
+          client_type         = "iOS"
+          high_risk_min_score = 60
+          high_risk_request_action {
+            name = "Deny"
+            deny_action_parameters {
+              block_ip          = "on"
+              block_ip_duration = "120s"
+            }
+          }
+          medium_risk_min_score = 20
+          medium_risk_request_action {
+            name = "Monitor"
+          }
+        }
+        device_profiles {
+          client_type         = "Android"
+          high_risk_min_score = 50
+          high_risk_request_action {
+            name = "Challenge"
+            challenge_action_parameters {
+              challenge_option = "JSChallenge"
+            }
+          }
+          medium_risk_min_score = 15
+          medium_risk_request_action {
+            name = "Monitor"
           }
         }
       }
@@ -726,23 +802,27 @@ The `acl_user_rules` object of `acl_config` supports the following:
 
 The `action_overrides` object of `ip_reputation_group` supports the following:
 
-* `rule_id` - (Required, String) Rule ID or category ID for action override.
 * `action` - (Optional, List) Action override configuration.
+* `rule_id` - (Optional, String, **Deprecated**) It has been deprecated from version 1.83.31. Please use `rule_ids` instead. A single bot rule ID (or category ID) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids. Deprecated: use `rule_ids` to support one or more IDs.
+* `rule_ids` - (Optional, List) One or more bot rule IDs (or category IDs) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids ([]*string). If both `rule_ids` and `rule_id` are set, `rule_ids` takes precedence.
 
 The `action_overrides` object of `known_bot_categories` supports the following:
 
-* `rule_id` - (Required, String) Rule ID or category ID for action override.
 * `action` - (Optional, List) Action override configuration.
+* `rule_id` - (Optional, String, **Deprecated**) It has been deprecated from version 1.83.31. Please use `rule_ids` instead. A single bot rule ID (or category ID) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids. Deprecated: use `rule_ids` to support one or more IDs.
+* `rule_ids` - (Optional, List) One or more bot rule IDs (or category IDs) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids ([]*string). If both `rule_ids` and `rule_id` are set, `rule_ids` takes precedence.
 
 The `action_overrides` object of `search_engine_bots` supports the following:
 
-* `rule_id` - (Required, String) Rule ID or category ID for action override.
 * `action` - (Optional, List) Action override configuration.
+* `rule_id` - (Optional, String, **Deprecated**) It has been deprecated from version 1.83.31. Please use `rule_ids` instead. A single bot rule ID (or category ID) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids. Deprecated: use `rule_ids` to support one or more IDs.
+* `rule_ids` - (Optional, List) One or more bot rule IDs (or category IDs) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids ([]*string). If both `rule_ids` and `rule_id` are set, `rule_ids` takes precedence.
 
 The `action_overrides` object of `source_idc` supports the following:
 
-* `rule_id` - (Required, String) Rule ID or category ID for action override.
 * `action` - (Optional, List) Action override configuration.
+* `rule_id` - (Optional, String, **Deprecated**) It has been deprecated from version 1.83.31. Please use `rule_ids` instead. A single bot rule ID (or category ID) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids. Deprecated: use `rule_ids` to support one or more IDs.
+* `rule_ids` - (Optional, List) One or more bot rule IDs (or category IDs) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids ([]*string). If both `rule_ids` and `rule_id` are set, `rule_ids` takes precedence.
 
 The `action` object of `action_overrides` supports the following:
 
@@ -842,6 +922,14 @@ The `action` object of `custom_rules` supports the following:
 * `action` - (Required, List) Security action configuration.
 * `weight` - (Required, Int) Action weight (10-100, must be multiples of 10). Sum of all weights must equal 100.
 
+The `action` object of `frequent_scanning_protection` supports the following:
+
+* `allow_action_parameters` - (Optional, List) Additional parameters when Name is Allow.
+* `challenge_action_parameters` - (Optional, List) Additional parameters when Name is Challenge.
+* `deny_action_parameters` - (Optional, List) Additional parameters when Name is Deny.
+* `name` - (Optional, String) Action name. Valid values: `Deny`, `Monitor`, `Allow`, `Challenge`, `Disabled`.
+* `redirect_action_parameters` - (Optional, List) Additional parameters when Name is Redirect.
+
 The `action` object of `managed_rule_groups` supports the following:
 
 * `name` - (Required, String) Specific actions for safe execution. valid values:.
@@ -853,9 +941,16 @@ The `action` object of `managed_rule_groups` supports the following:
 The `action` object of `precise_match_rules` supports the following:
 
 * `name` - (Required, String) Specific actions for safe execution. valid values:.
-<li>Deny: block</li> <li>Monitor: Monitor</li> <li>ReturnCustomPage: use specified page to block</li> <li>Redirect: Redirect to URL</li> <li>BlockIP: IP block</li> <li>JSChallenge: JavaScript challenge</li> <li>ManagedChallenge: managed challenge</li> <li>Disabled: Disabled</li> <li>Allow: Allow</li>.
+<li>Deny: block, prevent requests from accessing site resources;</li> <li>Monitor: observe, only record logs; </li> <li>Redirect: redirect to URL;</li> <li>Disabled: not enabled, disable the specified rule;</li> <li>Allow: allow, skip the remaining rules of the current security module. Delay response when the AllowActionParameters parameter is configured;</li> <li>Challenge: challenge, respond with challenge content;</li> <li>BlockIP: to be deprecated, IP block;</li> <li>ReturnCustomPage: to be deprecated, use a specified page for interception;</li> <li>JSChallenge: to be deprecated, JavaScript challenge;</li><li>ManagedChallenge: to be deprecated, managed challenge.</li>.
 * `block_ip_action_parameters` - (Optional, List) Additional parameter when Name is BlockIP.
-* `redirect_action_parameters` - (Optional, List) Additional parameter when Name is Redirect.
+* `redirect_action_parameters` - (Optional, List) Additional parameter for safe execution when the action is set to redirect.
+
+This parameter is used to specify the extra handling action taken by the system when a security rule is hit and a redirection action is executed.
+Different handling actions are configured with different fixed parameter combinations. The system will determine the effective handling action type according to the configured parameter combination.
+Only one handling action can be configured and made effective during the same redirection. Parameter composites corresponding to multiple handling actions cannot appear at the same time. Otherwise, it is deemed as an invalid configuration.
+RedirectActionParameters supports the following extra handling actions:
+
+<li>Redirect: redirect client requests to the specified destination URL. Corresponding parameter: URL.</li>.
 * `return_custom_page_action_parameters` - (Optional, List) Additional parameter when Name is ReturnCustomPage.
 
 The `action` object of `rule_actions` supports the following:
@@ -869,29 +964,46 @@ The `action` object of `rule_actions` supports the following:
 The `action` object of `rules` supports the following:
 
 * `name` - (Required, String) Specific actions for safe execution. valid values:.
+<li>Deny: block, prevent requests from accessing site resources;</li> <li>Monitor: observe, only record logs; </li> <li>Redirect: redirect to URL;</li> <li>Disabled: not enabled, disable the specified rule;</li> <li>Allow: allow, skip the remaining rules of the current security module. Delay response when the AllowActionParameters parameter is configured;</li> <li>Challenge: challenge, respond with challenge content;</li> <li>BlockIP: to be deprecated, IP block;</li> <li>ReturnCustomPage: to be deprecated, use a specified page for interception;</li> <li>JSChallenge: to be deprecated, JavaScript challenge;</li><li>ManagedChallenge: to be deprecated, managed challenge.</li>.
+* `block_ip_action_parameters` - (Optional, List) To be deprecated, additional parameter when Name is BlockIP.
+* `challenge_action_parameters` - (Optional, List) Additional parameter for the safe execution action when it is a challenge.
+
+This parameter is used to specify the extra handling action taken by the system when a security rule is hit and a challenge action is executed.
+Challenge disposal actions are segmented through ChallengeOption. Different challenge types correspond to different interaction forms and parameter requirements. The system will bring the corresponding parameter configuration into effect according to the selected challenge type.
+ChallengeActionParameters supports the following challenge disposition types:
+
+<li>Interstitial challenge: responds with a new page and runs the authentication mechanism within the new page. The corresponding ChallengeOption value is InterstitialChallenge.</li>
+<li>Inline challenge: responds with an SDK challenge. The corresponding ChallengeOption value is InlineChallenge.</li>
+<li>JavaScript challenge: invisible verification in the browser. The browser automatically performs verification and shows the requested resource. The corresponding ChallengeOption value is JSChallenge.</li>
+<li>Managed challenge: responds with a redirect page containing a JavaScript program, used for verification of the browser runtime environment. The corresponding ChallengeOption value is ManagedChallenge.</li>.
+* `deny_action_parameters` - (Optional, List) Additional parameter for the safe execution action when it is interception.
+
+This parameter is used to specify the extra handling action taken by the system when a security rule is hit and an intercept action is executed.
+Different handling actions are configured with different fixed parameter combinations. The system will determine the actually effective handling action type according to the configured parameter combination.
+Only one handling action can be configured and made effective during the same block execution. Parameters corresponding to multiple handling actions cannot appear simultaneously, otherwise the configuration is deemed invalid. If empty, the default block handling action is used.
+DenyActionParameters supports the following extra handling actions:
+
+<li>Default: When DenyActionParameters is empty or no extra handling action is enabled, the system will perform the default block, responding with an interception page.</li>
+<li>IP blocking: Continuously block the client source IP that triggers the rule. Corresponding parameters: BlockIp, BlockIpDuration.</li>
+<li>Custom page interception: Use the specified custom page content to respond to requests. Corresponding parameters: ReturnCustomPage, ResponseCode, ErrorPageId.</li>
+<li>Silence: Accept client requests but do not return. Corresponding parameter: Stall.</li>.
+* `redirect_action_parameters` - (Optional, List) Additional parameter for safe execution when the action is set to redirect.
+
+This parameter is used to specify the extra handling action taken by the system when a security rule is hit and a redirection action is executed.
+Different handling actions are configured with different fixed parameter combinations. The system will determine the effective handling action type according to the configured parameter combination.
+Only one handling action can be configured and made effective during the same redirection. Parameter composites corresponding to multiple handling actions cannot appear at the same time. Otherwise, it is deemed as an invalid configuration.
+RedirectActionParameters supports the following extra handling actions:
+
+<li>Redirect: redirect client requests to the specified destination URL. Corresponding parameter: URL.</li>.
+* `return_custom_page_action_parameters` - (Optional, List) To be deprecated, additional parameter when Name is ReturnCustomPage.
+
+The `action` object of `rules` supports the following:
+
+* `name` - (Required, String) Specific actions for safe execution. valid values:.
 <li>Deny: block</li> <li>Monitor: Monitor</li> <li>ReturnCustomPage: use specified page to block</li> <li>Redirect: Redirect to URL</li> <li>BlockIP: IP block</li> <li>JSChallenge: JavaScript challenge</li> <li>ManagedChallenge: managed challenge</li> <li>Disabled: Disabled</li> <li>Allow: Allow</li>.
 * `block_ip_action_parameters` - (Optional, List) Additional parameter when Name is BlockIP.
 * `redirect_action_parameters` - (Optional, List) Additional parameter when Name is Redirect.
 * `return_custom_page_action_parameters` - (Optional, List) Additional parameter when Name is ReturnCustomPage.
-
-The `action` object of `rules` supports the following:
-
-* `name` - (Required, String) The specific action of security execution. The values are:
-<li>Deny: intercept, block the request to access site resources;</li>
-<li>Monitor: observe, only record logs;</li>
-<li>Redirect: redirect to URL;</li>
-<li>Disabled: disabled, do not enable the specified rule;</li>
-<li>Allow: allow access, but delay processing requests;</li>
-<li>Challenge: challenge, respond to challenge content;</li>
-<li>BlockIP: to be abandoned, IP ban;</li>
-<li>ReturnCustomPage: to be abandoned, use the specified page to intercept;</li>
-<li>JSChallenge: to be abandoned, JavaScript challenge;</li>
-<li>ManagedChallenge: to be abandoned, managed challenge.</li>.
-* `block_ip_action_parameters` - (Optional, List) To be deprecated, additional parameter when Name is BlockIP.
-* `challenge_action_parameters` - (Optional, List) Additional parameters when Name is Challenge.
-* `deny_action_parameters` - (Optional, List) Additional parameters when Name is Deny.
-* `redirect_action_parameters` - (Optional, List) Additional parameters when Name is Redirect.
-* `return_custom_page_action_parameters` - (Optional, List) To be deprecated, additional parameter when Name is ReturnCustomPage.
 
 The `action` object of `slow_attack_defense` supports the following:
 
@@ -993,6 +1105,11 @@ The `allow_action_parameters` object of `high_risk_bot_requests_action` supports
 * `max_delay_time` - (Optional, String) Maximum delay response time. Supported unit: seconds, range 5-10.
 * `min_delay_time` - (Optional, String) Minimum delay response time. Supported unit: seconds, range 0-5.
 
+The `allow_action_parameters` object of `high_risk_request_action` supports the following:
+
+* `max_delay_time` - (Optional, String) Maximum delay response time. Supported unit: seconds, range 5-10.
+* `min_delay_time` - (Optional, String) Minimum delay response time. Supported unit: seconds, range 0-5.
+
 The `allow_action_parameters` object of `human_requests_action` supports the following:
 
 * `max_delay_time` - (Optional, String) Maximum delay response time. Supported unit: seconds, range 5-10.
@@ -1009,6 +1126,11 @@ The `allow_action_parameters` object of `likely_bot_requests_action` supports th
 * `min_delay_time` - (Optional, String) Minimum delay response time. Supported unit: seconds, range 0-5.
 
 The `allow_action_parameters` object of `low_rate_session_action` supports the following:
+
+* `max_delay_time` - (Optional, String) Maximum delay response time. Supported unit: seconds, range 5-10.
+* `min_delay_time` - (Optional, String) Minimum delay response time. Supported unit: seconds, range 0-5.
+
+The `allow_action_parameters` object of `medium_risk_request_action` supports the following:
 
 * `max_delay_time` - (Optional, String) Maximum delay response time. Supported unit: seconds, range 5-10.
 * `min_delay_time` - (Optional, String) Minimum delay response time. Supported unit: seconds, range 0-5.
@@ -1247,6 +1369,12 @@ The `challenge_action_parameters` object of `high_risk_bot_requests_action` supp
 * `attester_id` - (Optional, String) Client authentication method ID.
 * `interval` - (Optional, String) The time interval for repeating the challenge.
 
+The `challenge_action_parameters` object of `high_risk_request_action` supports the following:
+
+* `challenge_option` - (Required, String) The specific challenge action to be executed safely. Valid values: `InterstitialChallenge`, `InlineChallenge`, `JSChallenge`, `ManagedChallenge`.
+* `attester_id` - (Optional, String) Client authentication method ID.
+* `interval` - (Optional, String) The time interval for repeating the challenge.
+
 The `challenge_action_parameters` object of `human_requests_action` supports the following:
 
 * `challenge_option` - (Required, String) The specific challenge action to be executed safely. Valid values: `InterstitialChallenge`, `InlineChallenge`, `JSChallenge`, `ManagedChallenge`.
@@ -1266,6 +1394,12 @@ The `challenge_action_parameters` object of `likely_bot_requests_action` support
 * `interval` - (Optional, String) The time interval for repeating the challenge.
 
 The `challenge_action_parameters` object of `low_rate_session_action` supports the following:
+
+* `challenge_option` - (Required, String) The specific challenge action to be executed safely. Valid values: `InterstitialChallenge`, `InlineChallenge`, `JSChallenge`, `ManagedChallenge`.
+* `attester_id` - (Optional, String) Client authentication method ID.
+* `interval` - (Optional, String) The time interval for repeating the challenge.
+
+The `challenge_action_parameters` object of `medium_risk_request_action` supports the following:
 
 * `challenge_option` - (Required, String) The specific challenge action to be executed safely. Valid values: `InterstitialChallenge`, `InlineChallenge`, `JSChallenge`, `ManagedChallenge`.
 * `attester_id` - (Optional, String) Client authentication method ID.
@@ -1317,6 +1451,7 @@ The `client_attestation_rules` object of `bot_management` supports the following
 * `enabled` - (Required, String) Whether the rule is enabled. Valid values: `on`, `off`.
 * `name` - (Required, String) Rule name.
 * `attester_id` - (Optional, String) Client authentication method ID.
+* `device_profiles` - (Optional, List) Client device configurations. One profile per client type.
 * `id` - (Optional, String) Rule ID.
 * `invalid_attestation_action` - (Optional, List) Action when attestation is invalid.
 * `priority` - (Optional, Int) Rule priority (0-100).
@@ -1482,6 +1617,15 @@ The `deny_action_parameters` object of `high_risk_bot_requests_action` supports 
 * `return_custom_page` - (Optional, String) Whether to use custom pages. Valid values: `on`, `off`.
 * `stall` - (Optional, String) Whether to ignore the request source suspension. Valid values: `on`, `off`.
 
+The `deny_action_parameters` object of `high_risk_request_action` supports the following:
+
+* `block_ip_duration` - (Optional, String) IP blocking duration when BlockIP is on.
+* `block_ip` - (Optional, String) Whether to extend the blocking of source IP. Valid values: `on`, `off`.
+* `error_page_id` - (Optional, String) The PageId of the custom page.
+* `response_code` - (Optional, String) Customize the status code of the page.
+* `return_custom_page` - (Optional, String) Whether to use custom pages. Valid values: `on`, `off`.
+* `stall` - (Optional, String) Whether to ignore the request source suspension. Valid values: `on`, `off`.
+
 The `deny_action_parameters` object of `human_requests_action` supports the following:
 
 * `block_ip_duration` - (Optional, String) IP blocking duration when BlockIP is on.
@@ -1510,6 +1654,15 @@ The `deny_action_parameters` object of `likely_bot_requests_action` supports the
 * `stall` - (Optional, String) Whether to ignore the request source suspension. Valid values: `on`, `off`.
 
 The `deny_action_parameters` object of `low_rate_session_action` supports the following:
+
+* `block_ip_duration` - (Optional, String) IP blocking duration when BlockIP is on.
+* `block_ip` - (Optional, String) Whether to extend the blocking of source IP. Valid values: `on`, `off`.
+* `error_page_id` - (Optional, String) The PageId of the custom page.
+* `response_code` - (Optional, String) Customize the status code of the page.
+* `return_custom_page` - (Optional, String) Whether to use custom pages. Valid values: `on`, `off`.
+* `stall` - (Optional, String) Whether to ignore the request source suspension. Valid values: `on`, `off`.
+
+The `deny_action_parameters` object of `medium_risk_request_action` supports the following:
 
 * `block_ip_duration` - (Optional, String) IP blocking duration when BlockIP is on.
 * `block_ip` - (Optional, String) Whether to extend the blocking of source IP. Valid values: `on`, `off`.
@@ -1559,6 +1712,14 @@ The `detect_length_limit_config` object of `security_config` supports the follow
 
 The `detect_length_limit_rules` object of `detect_length_limit_config` supports the following:
 
+
+The `device_profiles` object of `client_attestation_rules` supports the following:
+
+* `client_type` - (Required, String) Client device type. Valid values: `iOS`, `Android`, `WebView`, `WeChatMiniProgram`.
+* `high_risk_min_score` - (Optional, Int) Minimum score (1-99) for judging a request as high risk. Default 50.
+* `high_risk_request_action` - (Optional, List) Action for high-risk requests, using the shared SecurityAction schema (Name supports `Deny`, `Monitor`, `Redirect`, `Challenge`; default `Monitor`).
+* `medium_risk_min_score` - (Optional, Int) Minimum score (1-99) for judging a request as medium risk. Default 15.
+* `medium_risk_request_action` - (Optional, List) Action for medium-risk requests, using the shared SecurityAction schema (default `Monitor`).
 
 The `drop_page_config` object of `security_config` supports the following:
 
@@ -1613,6 +1774,15 @@ The `first_part_config` object of `slow_post_config` supports the following:
 * `stat_time` - (Optional, Int) First segment statistical duration in seconds (default 5).
 * `switch` - (Optional, String) Switch. Valid values: `on`, `off`.
 
+The `frequent_scanning_protection` object of `managed_rules` supports the following:
+
+* `action_duration` - (Optional, String) Duration of the disposal action. Range 60-86400, unit seconds (s), e.g. `60s`.
+* `action` - (Optional, List) The disposal action. Required when `enabled` is `on`. SecurityAction Name supports `Deny`, `Monitor`, `JSChallenge`.
+* `block_threshold` - (Optional, Int) Cumulative block count threshold within the counting period. Range 1-4294967294.
+* `count_by` - (Optional, String) Request statistical matching method. Valid values: `http.request.xff_header_ip`, `http.request.ip`.
+* `counting_period` - (Optional, String) Statistics time window. Range 5-1800, unit seconds (s), e.g. `5s`.
+* `enabled` - (Optional, String) Whether the high-frequency scan protection rule is enabled. Valid values: `on`, `off`.
+
 The `high_rate_session_action` object of `session_rate_control` supports the following:
 
 * `allow_action_parameters` - (Optional, List) Additional parameters when Name is Allow.
@@ -1622,6 +1792,14 @@ The `high_rate_session_action` object of `session_rate_control` supports the fol
 * `redirect_action_parameters` - (Optional, List) Additional parameters when Name is Redirect.
 
 The `high_risk_bot_requests_action` object of `bot_ratings` supports the following:
+
+* `allow_action_parameters` - (Optional, List) Additional parameters when Name is Allow.
+* `challenge_action_parameters` - (Optional, List) Additional parameters when Name is Challenge.
+* `deny_action_parameters` - (Optional, List) Additional parameters when Name is Deny.
+* `name` - (Optional, String) Action name. Valid values: `Deny`, `Monitor`, `Allow`, `Challenge`, `Disabled`.
+* `redirect_action_parameters` - (Optional, List) Additional parameters when Name is Redirect.
+
+The `high_risk_request_action` object of `device_profiles` supports the following:
 
 * `allow_action_parameters` - (Optional, List) Additional parameters when Name is Allow.
 * `challenge_action_parameters` - (Optional, List) Additional parameters when Name is Challenge.
@@ -1728,6 +1906,7 @@ The `managed_rules` object of `security_policy` supports the following:
 * `detection_only` - (Required, String) Indicates whether the evaluation mode is Enabled. it is valid only when the Enabled parameter is set to on. valid values: <li>on: Enabled. all managed rules take effect in observation mode.</li> <li>off: disabled. all managed rules take effect according to the actual configuration.</li>.
 * `enabled` - (Required, String) Indicates whether the managed rule is enabled. valid values: <li>on: enabled. all managed rules take effect as configured;</li> <li>off: disabled. all managed rules do not take effect.</li>.
 * `auto_update` - (Optional, List) Managed rule automatic update option.
+* `frequent_scanning_protection` - (Optional, List) High-frequency scan protection configuration option. When a visitor's frequent requests hit the managed rule configured as block within a period of time, all requests from that visitor are blocked.
 * `managed_rule_groups` - (Optional, Set) Configuration of the managed rule group. if this structure is passed as an empty array or the GroupId is not included in the list, it will be processed based on the default method.
 * `semantic_analysis` - (Optional, String) Whether the managed rule semantic analysis option is Enabled is valid only when the Enabled parameter is on. valid values: <li>on: enable. perform semantic analysis on requests before processing them;</li> <li>off: disable. process requests directly without semantic analysis.</li> <br/>default off.
 
@@ -1735,6 +1914,14 @@ The `max_new_session_trigger_config` object of `bot_session_validation` supports
 
 * `max_new_session_count_interval` - (Optional, String) Statistics time window for trigger threshold. Valid values: `5s`, `10s`, `15s`, `30s`, `60s`, `5m`, `10m`, `30m`, `60m`.
 * `max_new_session_count_threshold` - (Optional, Int) Cumulative count for trigger threshold. Range: 1-100000000.
+
+The `medium_risk_request_action` object of `device_profiles` supports the following:
+
+* `allow_action_parameters` - (Optional, List) Additional parameters when Name is Allow.
+* `challenge_action_parameters` - (Optional, List) Additional parameters when Name is Challenge.
+* `deny_action_parameters` - (Optional, List) Additional parameters when Name is Deny.
+* `name` - (Optional, String) Action name. Valid values: `Deny`, `Monitor`, `Allow`, `Challenge`, `Disabled`.
+* `redirect_action_parameters` - (Optional, List) Additional parameters when Name is Redirect.
 
 The `meta_data` object of `managed_rule_groups` supports the following:
 
@@ -1769,7 +1956,7 @@ The `partial_modules` object of `except_user_rule_scope` supports the following:
 
 The `precise_match_rules` object of `custom_rules` supports the following:
 
-* `action` - (Required, List) Execution actions for custom rules. the Name parameter value of SecurityAction supports: <li>Deny: block;</li> <li>Monitor: observe;</li> <li>ReturnCustomPage: block using a specified page;</li> <li>Redirect: Redirect to URL;</li> <li>BlockIP: IP blocking;</li> <li>JSChallenge: JavaScript challenge;</li> <li>ManagedChallenge: managed challenge;</li> <li>Allow: Allow.</li>.
+* `action` - (Required, List) Execution actions for custom rules. the Name parameter value of SecurityAction supports: <li>Allow: allow, where AllowActionParameters supports MinDelayTime and MaxDelayTime configuration;</li> <li>Deny: block, where DenyActionParameters supports BlockIp, ReturnCustomPage, and Stall configuration;</li> <li>Monitor: observe;</li> <li>Challenge: challenge, where ChallengeActionParameters.ChallengeOption supports JSChallenge and ManagedChallenge;</li> <li>Redirect: redirect to a URL.</li>.
 * `condition` - (Required, String) The specific content of the custom rule must comply with the expression grammar. please refer to the product document for detailed specifications.
 * `enabled` - (Required, String) Indicates whether the custom rule is enabled. valid values: <li>on: enabled</li> <li>off: disabled</li>.
 * `name` - (Required, String) The name of the custom rule.
@@ -1868,6 +2055,10 @@ The `redirect_action_parameters` object of `high_risk_bot_requests_action` suppo
 
 * `url` - (Required, String) The URL to redirect.
 
+The `redirect_action_parameters` object of `high_risk_request_action` supports the following:
+
+* `url` - (Required, String) The URL to redirect.
+
 The `redirect_action_parameters` object of `human_requests_action` supports the following:
 
 * `url` - (Required, String) The URL to redirect.
@@ -1881,6 +2072,10 @@ The `redirect_action_parameters` object of `likely_bot_requests_action` supports
 * `url` - (Required, String) The URL to redirect.
 
 The `redirect_action_parameters` object of `low_rate_session_action` supports the following:
+
+* `url` - (Required, String) The URL to redirect.
+
+The `redirect_action_parameters` object of `medium_risk_request_action` supports the following:
 
 * `url` - (Required, String) The URL to redirect.
 
@@ -1965,11 +2160,12 @@ The `rules` object of `exception_rules` supports the following:
 * `skip_option` - (Optional, String) The specific type of the skipped request. The possible values are: <li>SkipOnAllRequestFields: skip all requests; </li><li>SkipOnSpecifiedRequestFields: skip specified request fields. </li>. This option is only valid when SkipScope is ManagedRules.
 * `skip_scope` - (Optional, String) Exception rule execution options, the values are: <li>WebSecurityModules: Specifies the security protection module for the exception rule. </li>.<li>ManagedRules: Specifies the managed rules. </li>.
 * `web_security_modules_for_exception` - (Optional, Set) Specifies the security protection module for the exception rule. It is valid only when SkipScope is WebSecurityModules. The possible values are: <li>websec-mod-managed-rules: managed rules; </li><li>websec-mod-rate-limiting: rate limiting; </li><li>websec-mod-custom-rules: custom rules; </li><li>websec-mod-adaptive-control: adaptive frequency control, intelligent client filtering, slow attack protection, traffic theft protection; </li><li>websec-mod-bot: Bot management. </li>.
+* `web_security_submodules_for_exception` - (Optional, Set) Specifies the security protection submodule for the exception rule. It is valid only when SkipScope is WebSecuritySubmodules. The possible values are: <ul><li>ManagedRules module: <ul><li>websec-mod-managed-rules/managed-rule-groups: rule set; </li><li>websec-mod-managed-rules/frequent-scanning-protection: high-frequency scanning protection; </li></ul></li><li>RateLimitingRules module: <ul><li>websec-mod-rate-limiting-rules: rate limiting rule; </li></ul></li><li>CustomRules module: <ul><li>websec-mod-custom-rules: custom rule; </li></ul></li><li>HttpDDoSProtection module: <ul><li>websec-mod-http-ddos-protection/adaptive-frequency-control: adaptive frequency control; </li><li>websec-mod-http-ddos-protection/client-filtering: intelligent client filtering; </li><li>websec-mod-http-ddos-protection/bandwidth-abuse-defense: traffic theft protection; </li></ul></li><li>BotManagement module: <ul><li>websec-mod-bot-management/basic-feature: basic feature management; </li><li>websec-mod-bot-management/ip-reputation: client portrait analysis; </li><li>websec-mod-bot-management/bot-intelligence: intelligent Bot analysis; </li><li>websec-mod-bot-management/custom-rules: custom rule; </li><li>websec-mod-bot-management/browser-impersonation-detection: active feature recognition; </li><li>websec-mod-bot-management/client-attestation-rules: client authentication; </li></ul></li><li>BotManagementLite module: <ul><li>websec-mod-bot-management-lite/ai-crawler-detection: AI crawler disposal; </li><li>websec-mod-bot-management-lite/captcha-page-challenge: human verification page. </li></ul></li></ul>.
 
 The `rules` object of `rate_limiting_rules` supports the following:
 
 * `action_duration` - (Optional, String) Action The duration of the action. The supported units are: <li>s: seconds, with a value of 1 to 120; </li><li>m: minutes, with a value of 1 to 120; </li><li>h: hours, with a value of 1 to 48; </li><li>d: days, with a value of 1 to 30. </li>.
-* `action` - (Optional, List) The precise rate limit handling method. The values are: <li>Monitor: Observe; </li><li>Deny: Intercept, where DenyActionParameters.Name supports Deny and ReturnCustomPage; </li><li>Challenge: Challenge, where ChallengeActionParameters.Name supports JSChallenge and ManagedChallenge; </li><li>Redirect: Redirect to URL; </li>.
+* `action` - (Optional, List) The precise rate limit handling method. The values are: <li>Allow: allow, where AllowActionParameters supports MinDelayTime and MaxDelayTime configuration; </li><li>Deny: block, where DenyActionParameters supports ReturnCustomPage and Stall configuration; </li><li>Monitor: observe; </li><li>Challenge: challenge, where ChallengeActionParameters.ChallengeOption supports JSChallenge and ManagedChallenge; </li><li>Redirect: redirect to a URL.</li>.
 * `condition` - (Optional, String) The specific content of the precise rate limit must conform to the expression syntax. For detailed specifications, see the product documentation.
 * `count_by` - (Optional, Set) The matching method of the rate threshold request feature. When Enabled is on, this field is required. <br /><br />When there are multiple conditions, multiple conditions will be combined for statistical calculation. The number of conditions cannot exceed 5. The possible values are: <br/><li><b>http.request.ip</b>: client IP; </li><li><b>http.request.xff_header_ip</b>: client IP (matching XFF header first); </li><li><b>http.request.uri.path</b>: requested access path; </li><li><b>http.request.cookies['session']</b>: cookie named session, where session can be replaced by the parameter you specify; </li><li><b>http.request.headers['user-agent']</b>: HTTP header named user-agent, where user-agent can be replaced by the parameter you specify; </li><li><b>http.request.ja3</b>: requested JA3 fingerprint; </li><li><b>http.request.uri.query['test']</b>: URL query parameter named test, where test can be replaced by the parameter you specify. </li>.
 * `counting_period` - (Optional, String) The statistical time window, the possible values are: <li>1s: 1 second; </li><li>5s: 5 seconds; </li><li>10s: 10 seconds; </li><li>20s: 20 seconds; </li><li>30s: 30 seconds; </li><li>40s: 40 seconds; </li><li>50s: 50 seconds; </li><li>1m: 1 minute; </li><li>2m: 2 minutes; </li><li>5m: 5 minutes; </li><li>10m: 10 minutes; </li><li>1h: 1 hour. </li>.
@@ -1989,11 +2185,11 @@ The `security_config` object supports the following:
 * `acl_config` - (Optional, List) Custom rule configuration.
 * `bot_config` - (Optional, List) Bot configuration.
 * `drop_page_config` - (Optional, List) Drop page configuration.
-* `except_config` - (Optional, List) Exception rules configuration.
+* `except_config` - (Optional, List) Exception rule configuration.
 * `ip_table_config` - (Optional, List) Basic access control.
 * `rate_limit_config` - (Optional, List) Rate limit configuration.
 * `slow_post_config` - (Optional, List) Slow attack configuration.
-* `switch_config` - (Optional, List) Layer-7 protection master switch.
+* `switch_config` - (Optional, List) Security switch configuration.
 * `waf_config` - (Optional, List) Managed rules configuration.
 
 The `security_policy` object supports the following:
@@ -2107,7 +2303,133 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `acl_user_rules` object of `acl_config` exports the following:
 
+* `rule_id` - Rule ID. Output-only.
+* `update_time` - Update time. Output-only.
+
+The `alg_detect_rule` object of `bot_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+* `update_time` - Update time.
+
+The `auto_update` object of `managed_rules` exports the following:
+
+* `ruleset_version` - The currently used version, in the format compliant with ISO 8601 standard, such as 2023-12-21T12:00:32Z. it is empty by default and is only an output parameter.
+
+The `basic_access_rules` object of `custom_rules` exports the following:
+
+* `id` - The ID of a custom rule. <br> the rule ID supports different rule configuration operations: <br> - add a new rule: ID is empty or the ID parameter is not specified; <br> - modify an existing rule: specify the rule ID that needs to be updated/modified; <br> - delete an existing rule: existing Rules not included in the Rules list of the CustomRules parameter will be deleted.
+* `rule_type` - Type of custom rule. valid values: <li>BasicAccessRule: basic access control;</li> <li>PreciseMatchRule: exact matching rule, default;</li> <li>ManagedAccessRule: expert customized rule, for output only.</li> the default value is PreciseMatchRule.
+
+The `bot_intelligence` object of `basic_bot_settings` exports the following:
+
+* `id` - Rule ID. Output-only.
+
+The `bot_managed_rule` object of `bot_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+
+The `bot_portrait_rule` object of `bot_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+
+The `bot_user_rules` object of `bot_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+* `update_time` - Update time. Output-only.
+
+The `customizes` object of `acl_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+* `update_time` - Update time. Output-only.
+
+The `customizes` object of `bot_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+* `update_time` - Update time. Output-only.
+
+The `except_user_rules` object of `except_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+* `update_time` - Update time.
+
+The `frequent_scanning_protection` object of `managed_rules` exports the following:
+
+* `id` - Rule ID of the high-frequency scan protection, output only.
+
+The `ip_table_rules` object of `ip_table_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+* `update_time` - Update time. Output-only.
+
+The `managed_rule_groups` object of `managed_rules` exports the following:
+
+* `meta_data` - Managed rule group information, for output only.
+  * `group_detail` - Managed rule group description, for output only.
+  * `group_name` - Managed rule group name, for output only.
+  * `rule_details` - All sub-rule information under the current managed rule group, for output only.
+    * `description` - Rule description.
+    * `risk_level` - Protection level of managed rules. valid values: <li>low: low risk. this rule has a relatively low risk and is applicable to access scenarios in a very strict control environment. this level of rule may generate considerable false alarms.</li> <li>medium: medium risk. this means the risk of this rule is normal and it is suitable for protection scenarios with stricter requirements.</li> <li>high: high risk. this indicates that the risk of this rule is relatively high and it will not generate false alarms in most scenarios.</li> <li>extreme: ultra-high risk. this represents that the risk of this rule is extremely high and it will not generate false alarms basically.</li>.
+    * `rule_id` - Managed rule Id.
+    * `rule_version` - Rule ownership version.
+    * `tags` - Rule tag. some types of rules do not have tags.
+
+The `precise_match_rules` object of `custom_rules` exports the following:
+
+* `id` - The ID of a custom rule. <br> the rule ID supports different rule configuration operations: <br> - add a new rule: ID is empty or the ID parameter is not specified; <br> - modify an existing rule: specify the rule ID that needs to be updated/modified; <br> - delete an existing rule: existing Rules not included in the Rules list of the CustomRules parameter will be deleted.
+* `rule_type` - Type of custom rule. valid values: <li>BasicAccessRule: basic access control;</li> <li>PreciseMatchRule: exact matching rule, default;</li> <li>ManagedAccessRule: expert customized rule, for output only.</li> the default value is PreciseMatchRule.
+
+The `rate_limit_customizes` object of `rate_limit_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+* `update_time` - Update time. Output-only.
+
+The `rate_limit_intelligence` object of `rate_limit_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+
+The `rate_limit_template` object of `rate_limit_config` exports the following:
+
+* `rate_limit_template_detail` - Template detail. Output-only.
+  * `action` - Template action. Output-only.
+  * `id` - Template ID. Output-only.
+  * `mode` - Template level. Output-only.
+  * `period` - Statistical period in seconds. Output-only.
+  * `punish_time` - Penalty time in seconds. Output-only.
+  * `threshold` - Rate limit threshold. Output-only.
+
+The `rate_limit_user_rules` object of `rate_limit_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+* `update_time` - Update time. Output-only.
+
+The `security_config` object exports the following:
+
+* `detect_length_limit_config` - Detect length limit configuration.
+  * `detect_length_limit_rules` - Detect length limit rules.
+    * `action` - Action. Valid values: `skip`, `scan`. Output-only.
+    * `conditions` - Rule conditions. Output-only.
+      * `name` - Condition name. Valid values: `body_depth`. Output-only.
+      * `values` - Condition values. Valid values: `10KB`, `64KB`, `128KB`. Output-only.
+    * `description` - Rule description. Output-only.
+    * `rule_id` - Rule ID. Output-only.
+    * `rule_name` - Rule name. Output-only.
+* `template_config` - Template configuration.
+  * `template_id` - Template ID.
+  * `template_name` - Template name.
+
+The `slow_post_config` object of `security_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifySecurityPolicy](https://www.tencentcloud.com/document/api/1145/50950)
+* Read: [DescribeSecurityPolicy](https://www.tencentcloud.com/document/api/1145/50958)
+* Update: [ModifySecurityPolicy](https://www.tencentcloud.com/document/api/1145/50950)
 
 ## Import
 

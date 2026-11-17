@@ -26,6 +26,12 @@ const (
 	// 无审计配置信息。
 	FAILEDOPERATION_AUDITCONFIGNOTEXIST = "FailedOperation.AuditConfigNotExist"
 
+	// 提升连接数失败
+	FAILEDOPERATION_CONNECTIONUPDATEERROR = "FailedOperation.ConnectionUpdateError"
+
+	// 连接数提升次数已耗尽
+	FAILEDOPERATION_CONNECTIONUPDATEUSEDOFF = "FailedOperation.ConnectionUpdateUsedOff"
+
 	// 实例开启了销毁保护，不允许销毁
 	FAILEDOPERATION_DELETIONPROTECTIONENABLED = "FailedOperation.DeletionProtectionEnabled"
 
@@ -328,6 +334,9 @@ const (
 
 	// 资源不存在。
 	RESOURCENOTFOUND = "ResourceNotFound"
+
+	// 实例未查询到
+	RESOURCENOTFOUND_INSTANCENOTFUNDERROR = "ResourceNotFound.InstanceNotFundError"
 
 	// 资源不可用。
 	RESOURCEUNAVAILABLE = "ResourceUnavailable"

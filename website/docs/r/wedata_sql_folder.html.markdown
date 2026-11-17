@@ -39,6 +39,14 @@ In addition to all arguments above, the following attributes are exported:
 * `folder_id` - Folder ID.
 * `path` - Node path.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSQLFolder](https://www.tencentcloud.com/document/api/1174/73855)
+* Read: [GetSQLFolder](https://www.tencentcloud.com/document/api/1174/77903)
+* Update: [UpdateSQLFolder](https://www.tencentcloud.com/document/api/1174/73840)
+* Delete: [DeleteSQLFolder](https://www.tencentcloud.com/document/api/1174/73851)
 
 ## Import
 

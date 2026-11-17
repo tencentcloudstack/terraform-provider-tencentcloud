@@ -50,4 +50,9 @@ In addition to all arguments above, the following attributes are exported:
   * `time` - The operation duration of the thread, in seconds.
   * `user` - The operating account name of the thread.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeMySqlProcessList](https://www.tencentcloud.com/document/api/1035/41193)
 

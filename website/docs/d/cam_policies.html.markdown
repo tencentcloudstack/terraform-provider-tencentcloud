@@ -57,4 +57,9 @@ In addition to all arguments above, the following attributes are exported:
   * `service_type` - Name of attached products.
   * `type` - Type of the policy strategy. `1` means customer strategy and `2` means preset strategy.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListPolicies](https://www.tencentcloud.com/document/api/598/32240)
 

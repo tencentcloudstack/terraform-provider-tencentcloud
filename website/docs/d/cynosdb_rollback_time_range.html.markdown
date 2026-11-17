@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
 * `time_range_end` - Effective regression time range end time point (obsolete) Note: This field may return null, indicating that a valid value cannot be obtained.
 * `time_range_start` - Effective regression time range start time point (obsolete) Note: This field may return null, indicating that a valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRollbackTimeRange](https://www.tencentcloud.com/document/api/1098/40758)
 

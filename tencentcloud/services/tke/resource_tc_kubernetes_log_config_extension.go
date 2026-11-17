@@ -11,7 +11,7 @@ import (
 func resourceTencentCloudKubernetesLogConfigReadRequestOnSuccess0(ctx context.Context, resp *v20180525.DescribeLogConfigsResponseParams) *resource.RetryError {
 	if resp != nil {
 		if resp.Message != nil && *resp.Message != "" {
-			e := fmt.Errorf(*resp.Message)
+			e := fmt.Errorf("%s", *resp.Message)
 			return resource.NonRetryableError(e)
 		}
 	}
@@ -23,7 +23,7 @@ func resourceTencentCloudKubernetesLogConfigDeletePostRequest0(ctx context.Conte
 	if resp != nil && resp.Response != nil {
 		message := resp.Response.Message
 		if message != nil && *message != "" {
-			e := fmt.Errorf(*message)
+			e := fmt.Errorf("%s", *message)
 			return resource.NonRetryableError(e)
 		}
 	}

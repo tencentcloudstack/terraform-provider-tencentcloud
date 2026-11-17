@@ -64,4 +64,9 @@ In addition to all arguments above, the following attributes are exported:
       * `vpc_id` - Vpc ID.
   * `status` - Cluster status. `0`: Creating; `1`: Normal; `2`: Terminating; `3`: Deleted; `4`: Isolated; `5`: Creation failed; `6`: Deletion failed.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRocketMQClusters](https://www.tencentcloud.com/search/?wd=DescribeRocketMQClusters&type=document&lang=en)
 

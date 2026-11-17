@@ -42,6 +42,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateUserGroup](https://www.tencentcloud.com/search/?wd=CreateUserGroup&type=document&lang=en)
+* Read: [ListUserGroups](https://www.tencentcloud.com/search/?wd=ListUserGroups&type=document&lang=en)
+* Update: [UpdateUserGroup](https://www.tencentcloud.com/search/?wd=UpdateUserGroup&type=document&lang=en)
+* Delete: [DeleteUserGroups](https://www.tencentcloud.com/search/?wd=DeleteUserGroups&type=document&lang=en)
 
 ## Import
 
