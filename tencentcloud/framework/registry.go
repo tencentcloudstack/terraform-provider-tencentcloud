@@ -86,6 +86,7 @@ var actionsMap = map[string]func() action.Action{
 	"tencentcloud_ssl_upload_certificate_instance":           ssl.NewSslUploadCertificateInstance,
 	"tencentcloud_ssm_service":                               ssm.NewSsmServiceAction,
 	"tencentcloud_teo_confirm_origin_acl_update":             teo.NewTeoConfirmOriginAclUpdate,
+	"tencentcloud_teo_apply_free_certificate":                teo.NewTeoApplyFreeCertificate,
 }
 
 // factoriesOf converts a name → factory registry map into the factory slice the
