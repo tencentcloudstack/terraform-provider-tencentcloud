@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_makers_zone_custom_domain
+```
