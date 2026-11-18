@@ -2855,5 +2855,8 @@ Action
 tencentcloud_fwm_dispatch_strategy
 
 Web & Agents Development Platform(Makers)
+Resource
+tencentcloud_makers_zone_custom_domain
+
 Data Source
 tencentcloud_makers_deployment_log
