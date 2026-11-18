@@ -52,7 +52,9 @@ var resourcesMap = map[string]func() resource.Resource{
 	"tencentcloud_cam_update_password_rule_config":  cam.NewCamUpdatePasswordRuleConfigResource,
 	"tencentcloud_config_aggregate_compliance_pack": config.NewConfigAggregateCompliancePackResource,
 	"tencentcloud_ioa_delivery_server":              ioa.NewIoaDeliveryServerResource,
+	"tencentcloud_makers_zone_custom_domain":        makers.NewMakersZoneCustomDomainResource,
 	"tencentcloud_ioa_delivery_strategy":            ioa.NewIoaDeliveryStrategyResource,
+	"tencentcloud_makers_project":                   makers.NewMakersProjectResource,
 	"tencentcloud_makers_project_envs":              makers.NewMakersProjectEnvsResource,
 	"tencentcloud_ssm_secret_version_v2":            ssm.NewSsmSecretVersionV2Resource,
 }
