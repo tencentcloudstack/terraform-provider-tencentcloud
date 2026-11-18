@@ -6,11 +6,10 @@ import (
 	"testing"
 
 	"github.com/agiledragon/gomonkey/v2"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
-	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-go/tftypes"
 	makerssdk "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/sharedmeta"
@@ -26,34 +25,38 @@ func newTestMakersDeploymentLogDataSource(t *testing.T, client *connectivity.Ten
 	return ds
 }
 
-func testMakersDeploymentLogSchema() tfsdk.Schema {
-	resp := &schema.SchemaResponse{}
-	var ds datasource.DataSource = makers.NewMakersDeploymentLogDataSource()
-	ds.Schema(context.Background(), schema.SchemaRequest{}, resp)
+func testMakersDeploymentLogSchema(t *testing.T) schema.Schema {
+	t.Helper()
+	resp := &datasource.SchemaResponse{}
+	ds := makers.NewMakersDeploymentLogDataSource()
+	ds.Schema(context.Background(), datasource.SchemaRequest{}, resp)
+	if resp.Diagnostics.HasError() {
+		t.Fatalf("failed to build data source schema: %v", resp.Diagnostics)
+	}
 	return resp.Schema
 }
 
 func newMakersDeploymentLogReadRequest(t *testing.T, zoneId, projectId, deploymentId string) datasource.ReadRequest {
 	t.Helper()
-	obj, diags := types.ObjectValue(
-		map[string]attr.Type{
-			"zone_id":       types.StringType,
-			"project_id":    types.StringType,
-			"deployment_id": types.StringType,
+	raw := tftypes.NewValue(tftypes.Object{
+		AttributeTypes: map[string]tftypes.Type{
+			"zone_id":       tftypes.String,
+			"project_id":    tftypes.String,
+			"deployment_id": tftypes.String,
+			// Computed attributes are present as null in the config object,
+			// exactly like Terraform provides it at read time.
+			"log_url": tftypes.String,
 		},
-		map[string]attr.Value{
-			"zone_id":       types.StringValue(zoneId),
-			"project_id":    types.StringValue(projectId),
-			"deployment_id": types.StringValue(deploymentId),
-		},
-	)
-	if diags.HasError() {
-		t.Fatalf("failed to build config object: %v", diags)
-	}
+	}, map[string]tftypes.Value{
+		"zone_id":       tftypes.NewValue(tftypes.String, zoneId),
+		"project_id":    tftypes.NewValue(tftypes.String, projectId),
+		"deployment_id": tftypes.NewValue(tftypes.String, deploymentId),
+		"log_url":       tftypes.NewValue(tftypes.String, nil),
+	})
+
 	req := datasource.ReadRequest{}
-	req.Config = tfsdk.Config{}
-	req.Config.Schema = testMakersDeploymentLogSchema()
-	req.Config.Raw = obj
+	req.Config.Raw = raw
+	req.Config.Schema = testMakersDeploymentLogSchema(t)
 	return req
 }
 
@@ -61,7 +64,7 @@ func runMakersDeploymentLogRead(t *testing.T, ds *makers.MakersDeploymentLogData
 	t.Helper()
 	resp := &datasource.ReadResponse{
 		State: tfsdk.State{
-			Schema: testMakersDeploymentLogSchema(),
+			Schema: testMakersDeploymentLogSchema(t),
 		},
 	}
 	ds.Read(context.Background(), req, resp)
