@@ -286,9 +286,6 @@ var (
 	monitorDispenseGlobalTagObjectType = types.ObjectType{AttrTypes: monitorDispenseGlobalTagAttrTypes}
 	monitorDispenseFilterObjectType    = types.ObjectType{AttrTypes: monitorDispenseFilterAttrTypes}
 	monitorDispenseExtMetricObjectType = types.ObjectType{AttrTypes: monitorDispenseExtMetricAttrTypes}
-	monitorDispenseConditionObjectType = types.ObjectType{AttrTypes: monitorDispenseConditionAttrTypes}
-	monitorDispenseProducerObjectType  = types.ObjectType{AttrTypes: monitorDispenseProducerAttrTypes}
-	monitorDispenseConditionListNull   = types.ListNull(monitorDispenseConditionObjectType)
 	monitorDispenseGlobalTagListNull   = types.ListNull(monitorDispenseGlobalTagObjectType)
 	monitorDispenseExtMetricListNull   = types.ListNull(monitorDispenseExtMetricObjectType)
 	monitorDispenseFilterListNull      = types.ListNull(monitorDispenseFilterObjectType)
