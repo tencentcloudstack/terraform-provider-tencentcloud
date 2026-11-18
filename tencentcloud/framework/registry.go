@@ -40,6 +40,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/kms"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/makers"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mongodb"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssl"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tco"
@@ -62,6 +63,7 @@ var resourcesMap = map[string]func() resource.Resource{
 var dataSourcesMap = map[string]func() datasource.DataSource{
 	"tencentcloud_config_list_aggregate_compliance_packs": config.NewConfigListAggregateCompliancePacksDataSource,
 	"tencentcloud_makers_deployment_log":                  makers.NewMakersDeploymentLogDataSource,
+	"tencentcloud_monitor_ext_namespace":                  monitor.NewMonitorExtNamespaceDataSource,
 }
 
 // functionsMap maps every framework function name to its factory. Function

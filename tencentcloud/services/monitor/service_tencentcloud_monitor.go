@@ -2,6 +2,7 @@ package monitor
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"strconv"
@@ -25,6 +26,23 @@ import (
 
 func NewMonitorService(client *connectivity.TencentCloudClient) MonitorService {
 	return MonitorService{client: client}
+}
+
+// DescribeExtNamespace queries ext namespaces via monitor v20230616.
+func (me *MonitorService) DescribeExtNamespace(ctx context.Context) (names []*string, errRet error) {
+	request := monitorv20230616.NewDescribeExtNamespaceRequest()
+	response, errRet := me.client.UseMonitorV20230616Client().DescribeExtNamespaceWithContext(ctx, request)
+	if errRet != nil {
+		log.Printf("[CRITICAL] api[monitor][DescribeExtNamespace] error: %s", errRet)
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = errors.New("DescribeExtNamespace returned a nil response")
+		log.Printf("[CRITICAL] api[monitor][DescribeExtNamespace] error: %s", errRet)
+		return
+	}
+	names = response.Response.ExtNamespaceList
+	return
 }
 
 type MonitorService struct {
