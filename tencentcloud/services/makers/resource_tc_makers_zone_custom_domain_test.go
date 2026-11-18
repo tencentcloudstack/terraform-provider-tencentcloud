@@ -111,8 +111,8 @@ func testZoneDomain() *makersv20261113.ZoneDomain {
 		Ipv6:       &makersv20261113.SwitchConfig{Switch: mkString("off")},
 		Http2:      &makersv20261113.SwitchConfig{Switch: mkString("on")},
 		ForceRedirect: &makersv20261113.ForceRedirectConfig{
-			Switch:              mkString("on"),
-			RedirectStatusCode:  mkInt64(301),
+			Switch:             mkString("on"),
+			RedirectStatusCode: mkInt64(301),
 		},
 		Hsts: &makersv20261113.HstsConfig{
 			Switch:            mkString("on"),
@@ -444,7 +444,7 @@ func TestMakersZoneCustomDomainImportState(t *testing.T) {
 	var importResp resource.ImportStateResponse
 	emptyModel := svcmakers.MakersZoneCustomDomainResourceModel{}
 	importer.ImportState(context.Background(), resource.ImportStateRequest{
-		ID: testZoneId + "#" + testProjectId + "#" + testDomain,
+		ID:    testZoneId + "#" + testProjectId + "#" + testDomain,
 		State: c.state(t, emptyModel),
 	}, &importResp)
 	if importResp.Diagnostics.HasError() {
@@ -479,7 +479,7 @@ func TestMakersZoneCustomDomainImportStateInvalidId(t *testing.T) {
 
 	var importResp resource.ImportStateResponse
 	importer.ImportState(context.Background(), resource.ImportStateRequest{
-		ID: "only-one-segment",
+		ID:    "only-one-segment",
 		State: tfsdk.State{Schema: c.schema},
 	}, &importResp)
 	if !importResp.Diagnostics.HasError() {

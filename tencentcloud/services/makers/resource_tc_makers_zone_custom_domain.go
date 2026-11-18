@@ -43,30 +43,30 @@ type MakersZoneCustomDomainResource struct {
 
 // MakersZoneCustomDomainResourceModel maps the schema attributes.
 type MakersZoneCustomDomainResourceModel struct {
-	Id           types.String `tfsdk:"id"`
-	ZoneId       types.String `tfsdk:"zone_id"`
-	ProjectId    types.String `tfsdk:"project_id"`
-	Domain       types.String `tfsdk:"domain"`
-	Env          types.String `tfsdk:"env"`
+	Id           types.String       `tfsdk:"id"`
+	ZoneId       types.String       `tfsdk:"zone_id"`
+	ProjectId    types.String       `tfsdk:"project_id"`
+	Domain       types.String       `tfsdk:"domain"`
+	Env          types.String       `tfsdk:"env"`
 	PagesDomains []*ZoneDomainModel `tfsdk:"pages_domains"`
 }
 
 // ZoneDomainModel maps the computed pages_domains list element.
 type ZoneDomainModel struct {
-	Type                  types.String `tfsdk:"type"`
-	Domain                types.String `tfsdk:"domain"`
-	Status                types.String `tfsdk:"status"`
-	Env                   types.String `tfsdk:"env"`
-	ZoneId                types.String `tfsdk:"zone_id"`
-	Area                  types.String `tfsdk:"area"`
-	Cname                 types.String `tfsdk:"cname"`
-	MainDomain            types.String `tfsdk:"main_domain"`
-	Ipv6                  *SwitchConfigModel               `tfsdk:"ipv6"`
-	Http2                 *SwitchConfigModel               `tfsdk:"http2"`
-	OcspStapling          *SwitchConfigModel               `tfsdk:"ocsp_stapling"`
-	ForceRedirect         *ForceRedirectConfigModel        `tfsdk:"force_redirect"`
-	Hsts                  *HstsConfigModel                 `tfsdk:"hsts"`
-	OwnershipVerification *OwnershipVerificationModel      `tfsdk:"ownership_verification"`
+	Type                  types.String                `tfsdk:"type"`
+	Domain                types.String                `tfsdk:"domain"`
+	Status                types.String                `tfsdk:"status"`
+	Env                   types.String                `tfsdk:"env"`
+	ZoneId                types.String                `tfsdk:"zone_id"`
+	Area                  types.String                `tfsdk:"area"`
+	Cname                 types.String                `tfsdk:"cname"`
+	MainDomain            types.String                `tfsdk:"main_domain"`
+	Ipv6                  *SwitchConfigModel          `tfsdk:"ipv6"`
+	Http2                 *SwitchConfigModel          `tfsdk:"http2"`
+	OcspStapling          *SwitchConfigModel          `tfsdk:"ocsp_stapling"`
+	ForceRedirect         *ForceRedirectConfigModel   `tfsdk:"force_redirect"`
+	Hsts                  *HstsConfigModel            `tfsdk:"hsts"`
+	OwnershipVerification *OwnershipVerificationModel `tfsdk:"ownership_verification"`
 }
 
 // SwitchConfigModel maps the switch-only nested configs.
@@ -76,7 +76,7 @@ type SwitchConfigModel struct {
 
 // ForceRedirectConfigModel maps the force redirect nested config.
 type ForceRedirectConfigModel struct {
-	Switch              types.String `tfsdk:"switch"`
+	Switch             types.String `tfsdk:"switch"`
 	RedirectStatusCode types.Int64  `tfsdk:"redirect_status_code"`
 }
 
@@ -90,9 +90,9 @@ type HstsConfigModel struct {
 
 // OwnershipVerificationModel maps the ownership verification nested config.
 type OwnershipVerificationModel struct {
-	DnsVerification  *DnsVerificationModel   `tfsdk:"dns_verification"`
-	FileVerification *FileVerificationModel  `tfsdk:"file_verification"`
-	NsVerification   *NsVerificationModel    `tfsdk:"ns_verification"`
+	DnsVerification  *DnsVerificationModel  `tfsdk:"dns_verification"`
+	FileVerification *FileVerificationModel `tfsdk:"file_verification"`
+	NsVerification   *NsVerificationModel   `tfsdk:"ns_verification"`
 }
 
 // DnsVerificationModel maps the DNS ownership verification.
@@ -556,21 +556,21 @@ func refreshZoneCustomDomainModel(ctx context.Context, m *MakersZoneCustomDomain
 
 func zoneDomainModelFromSdk(ctx context.Context, item *makersv20261113.ZoneDomain) *ZoneDomainModel {
 	model := &ZoneDomainModel{
-		Type:       types.StringPointerValue(item.Type),
-		Domain:     types.StringPointerValue(item.Domain),
-		Status:     types.StringPointerValue(item.Status),
-		Env:        types.StringPointerValue(item.Env),
-		ZoneId:     types.StringPointerValue(item.ZoneId),
-		Area:       types.StringPointerValue(item.Area),
-		Cname:      types.StringPointerValue(item.Cname),
-		MainDomain: types.StringPointerValue(item.MainDomain),
-		Ipv6:       switchConfigModelFromSdk(item.Ipv6),
-		Http2:      switchConfigModelFromSdk(item.Http2),
+		Type:         types.StringPointerValue(item.Type),
+		Domain:       types.StringPointerValue(item.Domain),
+		Status:       types.StringPointerValue(item.Status),
+		Env:          types.StringPointerValue(item.Env),
+		ZoneId:       types.StringPointerValue(item.ZoneId),
+		Area:         types.StringPointerValue(item.Area),
+		Cname:        types.StringPointerValue(item.Cname),
+		MainDomain:   types.StringPointerValue(item.MainDomain),
+		Ipv6:         switchConfigModelFromSdk(item.Ipv6),
+		Http2:        switchConfigModelFromSdk(item.Http2),
 		OcspStapling: switchConfigModelFromSdk(item.OcspStapling),
 	}
 	if item.ForceRedirect != nil {
 		model.ForceRedirect = &ForceRedirectConfigModel{
-			Switch:              types.StringPointerValue(item.ForceRedirect.Switch),
+			Switch:             types.StringPointerValue(item.ForceRedirect.Switch),
 			RedirectStatusCode: types.Int64PointerValue(item.ForceRedirect.RedirectStatusCode),
 		}
 	}

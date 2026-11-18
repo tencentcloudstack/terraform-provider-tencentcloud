@@ -1,12 +1,3 @@
-subcategory: "Makers"
-layout: "tencentcloudstack"
-page_title: "TencentCloud: tencentcloud_makers_zone_custom_domain"
-description: |-
-  Provides a resource to bind a custom domain to a Makers (TEO-like pages service) zone.
----
-
-# tencentcloud_makers_zone_custom_domain
-
 Provides a resource to bind a custom domain to a Makers (TEO-like pages service) zone.
 
 The domain is identified by the composite key `zone_id#project_id#domain`, which is
@@ -16,7 +7,7 @@ also the import ID format. Only the `env` attribute supports in-place update
 Note: the `DescribeZoneCustomDomains` API does not echo back the `project_id`,
 so drift detection on `project_id` is limited to the value kept in state.
 
-## Example Usage
+Example Usage
 
 ```hcl
 resource "tencentcloud_makers_zone_custom_domain" "example" {
@@ -27,7 +18,7 @@ resource "tencentcloud_makers_zone_custom_domain" "example" {
 }
 ```
 
-## Import
+Import
 
 Makers zone custom domain can be imported using the id, e.g.
 
