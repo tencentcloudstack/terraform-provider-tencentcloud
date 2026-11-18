@@ -17,8 +17,8 @@ Use this data source to query the list of Makers deployment records (build histo
 
 ```hcl
 data "tencentcloud_makers_deployments" "example" {
-  zone_id    = "zone-abcdefg"
-  project_id = "prj-123456"
+  zone_id    = "zone-3hzk0ndvnnyp"
+  project_id = "makers-jw7jha6dktob"
 }
 ```
 
@@ -26,12 +26,12 @@ data "tencentcloud_makers_deployments" "example" {
 
 ```hcl
 data "tencentcloud_makers_deployments" "example" {
-  zone_id    = "zone-abcdefg"
-  project_id = "prj-123456"
-  filters {
+  zone_id    = "zone-3hzk0ndvnnyp"
+  project_id = "makers-jw7jha6dktob"
+  filters = [{
     name   = "Status"
     values = ["Success"]
-  }
+  }]
   order_by   = "CreatedOn"
   order_type = "Desc"
 }

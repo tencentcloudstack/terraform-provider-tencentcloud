@@ -6,8 +6,8 @@ Query all deployment records of a Makers project
 
 ```hcl
 data "tencentcloud_makers_deployments" "example" {
-  zone_id    = "zone-abcdefg"
-  project_id = "prj-123456"
+  zone_id    = "zone-3hzk0ndvnnyp"
+  project_id = "makers-jw7jha6dktob"
 }
 ```
 
@@ -15,12 +15,12 @@ Query deployment records with filters and sorting
 
 ```hcl
 data "tencentcloud_makers_deployments" "example" {
-  zone_id    = "zone-abcdefg"
-  project_id = "prj-123456"
-  filters {
+  zone_id    = "zone-3hzk0ndvnnyp"
+  project_id = "makers-jw7jha6dktob"
+  filters = [{
     name   = "Status"
     values = ["Success"]
-  }
+  }]
   order_by   = "CreatedOn"
   order_type = "Desc"
 }
