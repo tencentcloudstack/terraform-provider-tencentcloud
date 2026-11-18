@@ -3074,3 +3074,25 @@ func (me *MonitorService) DescribeExternalClusterRegisterCommandById(ctx context
 
 	return
 }
+
+func (me *MonitorService) DescribeExtMetric(ctx context.Context, request *monitorv20230616.DescribeExtMetricRequest) (response *monitorv20230616.DescribeExtMetricResponse, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorV20230616Client().DescribeExtMetricWithContext(ctx, request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
