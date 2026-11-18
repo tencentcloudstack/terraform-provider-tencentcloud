@@ -1,3 +1,28 @@
+## 1.83.42(November‌ 13, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_config_list_aggregate_compliance_packs` ([#4629](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4629))
+* **New Data Source:** `tencentcloud_kubernetes_addon_values` ([#4601](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4601))
+* **New Resource:** `tencentcloud_ags_sandbox_tool` ([#4636](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4636))
+* **New Resource:** `tencentcloud_cam_update_password_rule_config` ([#4646](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4646))
+* **New Resource:** `tencentcloud_config_aggregate_compliance_pack` ([#4628](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4628))
+* **New Resource:** `tencentcloud_ioa_company_directory_config` ([#4514](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4514))
+* **New Resource:** `tencentcloud_ioa_delivery_server` ([#4662](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4662))
+* **New Resource:** `tencentcloud_ioa_delivery_strategy` ([#4663](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4663))
+
+ENHANCEMENTS:
+
+* docs: update tencentcloud_redis_instance document ([#4660](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4660))
+* resource/tencentcloud_kubernetes_node_pool: optimize code logic ([#4655](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4655))
+* resource/tencentcloud_nat_gateway_snat: optimize code logic ([#4657](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4657))
+* resource/tencentcloud_tdmq_rabbitmq_vip_instance: update `resource_tags` ([#4651](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4651))
+* resource/tencentcloud_vod_aigc_api_token: support ext_info and action_type fields with an Update flow ([#4648](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4648))
+* tencentcloud_cbs_snapshot_policy: support day_of_month, interval_days, is_activated and is_permanent parameters ([#4652](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4652))
+* tencentcloud_cynosdb_cluster_slave_zone: add binlog_sync_way and semi_sync_timeout parameters ([#4649](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4649))
+* tencentcloud_kubernetes_cluster_attachment: support skip_validate_options, skip_options parameter ([#4650](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4650))
+* tencentcloud_vod_aigc_quota: support quota_period, reset_day and per-model quotas ([#4645](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4645))
+
 ## 1.83.41(November‌ 6, 2026)
 
 FEATURES:

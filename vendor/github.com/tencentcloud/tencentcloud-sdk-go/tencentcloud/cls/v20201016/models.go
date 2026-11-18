@@ -613,6 +613,9 @@ type AnonymousLoginInfo struct {
 	// <p>匿名登录账号secretKey</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SecretKey *string `json:"SecretKey,omitnil,omitempty" name:"SecretKey"`
+
+	// <p>角色的资源描述，可在<a href="https://console.cloud.tencent.com/cam/role">访问管理</a>，点击角色名获取。<br>普通角色：<br>qcs::cam::uin/12345678:role/4611686018427397919、qcs::cam::uin/12345678:roleName/testRoleName<br>服务角色：<br>qcs::cam::uin/12345678:role/tencentcloudServiceRole/4611686018427397920、qcs::cam::uin/12345678:role/tencentcloudServiceRoleName/testServiceRoleName</p><p>DataSight将扮演此角色，使用此角色的临时密钥来发起API请求。</p>
+	RoleArn *string `json:"RoleArn,omitnil,omitempty" name:"RoleArn"`
 }
 
 // Predefined struct for user
@@ -707,6 +710,9 @@ type AuthRoleInfo struct {
 	// <p>Auth角色对应权限SecretKey</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SecretKey *string `json:"SecretKey,omitnil,omitempty" name:"SecretKey"`
+
+	// <p>角色的资源描述，可在<a href="https://console.cloud.tencent.com/cam/role">访问管理</a>，点击角色名获取。<br>普通角色：<br>qcs::cam::uin/12345678:role/4611686018427397919、qcs::cam::uin/12345678:roleName/testRoleName<br>服务角色：<br>qcs::cam::uin/12345678:role/tencentcloudServiceRole/4611686018427397920、qcs::cam::uin/12345678:role/tencentcloudServiceRoleName/testServiceRoleName</p><p>DataSight将扮演此角色，使用此角色的临时密钥来发起API请求。</p>
+	RoleArn *string `json:"RoleArn,omitnil,omitempty" name:"RoleArn"`
 }
 
 type BaseMetricCollectConfig struct {
@@ -1269,6 +1275,50 @@ type CloudProductLogTaskInfo struct {
 	ApplicationId *string `json:"ApplicationId,omitnil,omitempty" name:"ApplicationId"`
 }
 
+type CloudProductTopicConfig struct {
+	// <p>加密相关参数。 支持加密地域并且开白用户可以传此参数，其他场景不能传递该参数。</p><p>枚举值：</p><ul><li>0： 不加密</li><li>1： kms-cls 云产品密钥加密</li></ul><p>默认值：0</p>
+	Encryption *uint64 `json:"Encryption,omitnil,omitempty" name:"Encryption"`
+
+	// <p>主题分区个数。默认创建1个，最大支持创建10个分区。</p>
+	PartitionCount *int64 `json:"PartitionCount,omitnil,omitempty" name:"PartitionCount"`
+
+	// <p>是否开启自动分裂，默认值为true</p>
+	AutoSplit *bool `json:"AutoSplit,omitnil,omitempty" name:"AutoSplit"`
+
+	// <p>开启自动分裂后，每个主题能够允许的最大分区数</p><p>默认值：50</p>
+	MaxSplitPartitions *int64 `json:"MaxSplitPartitions,omitnil,omitempty" name:"MaxSplitPartitions"`
+
+	// <p>日志主题的存储类型，可选值 hot（标准存储），cold（低频存储）。指标主题不支持该配置。</p><p>默认值：hot</p>
+	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
+
+	// <p>存储时间，单位天。</p><ul><li>日志主题：日志接入标准存储时，支持1至3600天，值为3640时代表永久保存。</li><li>日志主题：日志接入低频存储时，支持7至3600天，值为3640时代表永久保存。</li><li>指标主题：支持1至3600天，值为3640时代表永久保存。</li></ul>
+	Period *int64 `json:"Period,omitnil,omitempty" name:"Period"`
+
+	// <p>0：日志主题关闭日志沉降。<br>非0：日志主题开启日志沉降后标准存储的天数，HotPeriod需要大于等于7，且小于Period。<br>仅在StorageType为 hot 时生效，指标主题不支持该配置。</p>
+	HotPeriod *uint64 `json:"HotPeriod,omitnil,omitempty" name:"HotPeriod"`
+
+	// <p>计费模式</p><p>枚举值：</p><ul><li>0： 按使用功能计费</li><li>1： 按原始日志量计费（目前仅面向少部分客户支持）</li></ul>
+	BillingMode *uint64 `json:"BillingMode,omitnil,omitempty" name:"BillingMode"`
+
+	// <p>主题描述</p>
+	Describes *string `json:"Describes,omitnil,omitempty" name:"Describes"`
+
+	// <p>开启记录公网来源ip和服务端接收时间</p>
+	IsSourceFrom *bool `json:"IsSourceFrom,omitnil,omitempty" name:"IsSourceFrom"`
+
+	// <p>免鉴权开关。 false：关闭； true：开启。默认为false。 开启后将支持指定操作匿名访问该日志主题。</p>
+	IsWebTracking *bool `json:"IsWebTracking,omitnil,omitempty" name:"IsWebTracking"`
+
+	// <p>用户自定义 KMS 密钥信息；为空则使用默认密钥（别名 KMS-CLS）<br>当参数 Encryption为 1 时有效。</p>
+	CustomKmsInfo *CustomKmsInfo `json:"CustomKmsInfo,omitnil,omitempty" name:"CustomKmsInfo"`
+
+	// <p>主题自定义ID，格式为：用户自定义部分-用户APPID。未填写该参数时将自动生成ID。</p><ul><li>用户自定义部分仅支持小写字母、数字和-，且不能以-开头和结尾，长度为3至40字符</li><li>尾部需要使用-拼接用户APPID，APPID可在https://console.cloud.tencent.com/developer页面查询。</li><li>如果指定该字段，需保证全地域唯一</li></ul>
+	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
+
+	// <p>主题扩展信息</p>
+	Extends *TopicExtendInfo `json:"Extends,omitnil,omitempty" name:"Extends"`
+}
+
 type CollectConfig struct {
 	// 指定采集类型的采集配置名称信息。
 	// <li>当CollectInfo中Type为0：表示元数据配置，name为元数据名称。
@@ -1617,6 +1667,9 @@ type ConsoleAccount struct {
 	// <p>电子邮箱，用于发送验证码</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Email *string `json:"Email,omitnil,omitempty" name:"Email"`
+
+	// <p>角色的资源描述，可在<a href="https://console.cloud.tencent.com/cam/role">访问管理</a>，点击角色名获取。<br>普通角色：<br>qcs::cam::uin/12345678:role/4611686018427397919、qcs::cam::uin/12345678:roleName/testRoleName<br>服务角色：<br>qcs::cam::uin/12345678:role/tencentcloudServiceRole/4611686018427397920、qcs::cam::uin/12345678:role/tencentcloudServiceRoleName/testServiceRoleName</p><p>DataSight将扮演此角色，使用此角色的临时密钥来发起API请求。</p>
+	RoleArn *string `json:"RoleArn,omitnil,omitempty" name:"RoleArn"`
 }
 
 type ConsoleSharingConfig struct {
@@ -1984,6 +2037,9 @@ type CreateAgentApplicationRequestParams struct {
 
 	// <p>日志集Id。通过 <a href="https://cloud.tencent.com/document/product/614/58624">获取日志集列表</a>获取日志集Id。</p>
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
+
+	// <p>标签描述列表，通过指定该参数可以同时绑定标签到应用创建的主题和日志集。</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type CreateAgentApplicationRequest struct {
@@ -1997,6 +2053,9 @@ type CreateAgentApplicationRequest struct {
 
 	// <p>日志集Id。通过 <a href="https://cloud.tencent.com/document/product/614/58624">获取日志集列表</a>获取日志集Id。</p>
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
+
+	// <p>标签描述列表，通过指定该参数可以同时绑定标签到应用创建的主题和日志集。</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 func (r *CreateAgentApplicationRequest) ToJsonString() string {
@@ -2014,6 +2073,7 @@ func (r *CreateAgentApplicationRequest) FromJsonString(s string) error {
 	delete(f, "ApplicationName")
 	delete(f, "AccessType")
 	delete(f, "LogsetId")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateAgentApplicationRequest has unknown keys!", "")
 	}
@@ -2595,6 +2655,9 @@ type CreateCloudProductLogCollectionRequestParams struct {
 
 	// <p>标签描述列表，通过指定该参数可以同时绑定标签到相应的主题。最大支持10个标签键值对，同一个资源只能绑定到同一个标签键下。</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// <p>日志主题信息。当创建云产品投递任务并传递TopicName时，会创建具备这些属性的日志主题。</p>
+	TopicConfig *CloudProductTopicConfig `json:"TopicConfig,omitnil,omitempty" name:"TopicConfig"`
 }
 
 type CreateCloudProductLogCollectionRequest struct {
@@ -2632,6 +2695,9 @@ type CreateCloudProductLogCollectionRequest struct {
 
 	// <p>标签描述列表，通过指定该参数可以同时绑定标签到相应的主题。最大支持10个标签键值对，同一个资源只能绑定到同一个标签键下。</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// <p>日志主题信息。当创建云产品投递任务并传递TopicName时，会创建具备这些属性的日志主题。</p>
+	TopicConfig *CloudProductTopicConfig `json:"TopicConfig,omitnil,omitempty" name:"TopicConfig"`
 }
 
 func (r *CreateCloudProductLogCollectionRequest) ToJsonString() string {
@@ -2657,6 +2723,7 @@ func (r *CreateCloudProductLogCollectionRequest) FromJsonString(s string) error 
 	delete(f, "LogsetId")
 	delete(f, "TopicId")
 	delete(f, "Tags")
+	delete(f, "TopicConfig")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCloudProductLogCollectionRequest has unknown keys!", "")
 	}
@@ -2943,7 +3010,7 @@ func (r *CreateConfigExtraResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateConfigRequestParams struct {
-	// <p>采集配置名称</p><ul><li>名称种不得包含特殊字符｜</li><li>名称最长255字符，超过截断</li></ul>
+	// <p>采集配置名称- 名称中不得包含特殊字符&quot;|&quot;</p><p>名称最长255字符，超过截断</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// <p>采集配置所属日志主题ID即TopicId</p><ul><li>通过<a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a>获取日志主题Id。</li></ul>
@@ -2974,7 +3041,7 @@ type CreateConfigRequestParams struct {
 type CreateConfigRequest struct {
 	*tchttp.BaseRequest
 	
-	// <p>采集配置名称</p><ul><li>名称种不得包含特殊字符｜</li><li>名称最长255字符，超过截断</li></ul>
+	// <p>采集配置名称- 名称中不得包含特殊字符&quot;|&quot;</p><p>名称最长255字符，超过截断</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// <p>采集配置所属日志主题ID即TopicId</p><ul><li>通过<a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a>获取日志主题Id。</li></ul>
@@ -3065,10 +3132,10 @@ type CreateConsoleRequestParams struct {
 	// <p>自定义域名前缀</p>
 	DomainPrefix *string `json:"DomainPrefix,omitnil,omitempty" name:"DomainPrefix"`
 
-	// <p>用户账号信息</p><p>“账号密码鉴权”登录方式必传</p>
+	// <p>用户账号信息</p><p>“账号密码鉴权”登录方式必传。<br>SecretId + SecretKey 或 RoleArn需要传其中一种。</p>
 	Accounts []*ConsoleAccount `json:"Accounts,omitnil,omitempty" name:"Accounts"`
 
-	// <p>匿名登录账号信息</p><p>“匿名登录”登录方式必传</p>
+	// <p>匿名登录账号信息</p><p>“匿名登录”登录方式必传。<br>SecretId + SecretKey 或 RoleArn需要传其中一种。</p>
 	AnonymousLogin *AnonymousLoginInfo `json:"AnonymousLogin,omitnil,omitempty" name:"AnonymousLogin"`
 
 	// <p>内网类型，默认为0</p>
@@ -3083,7 +3150,7 @@ type CreateConsoleRequestParams struct {
 	// <p>内网子网SubnetId</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// <p>Auth角色信息</p><p>“第三方认证登录”登录方式必传</p>
+	// <p>Auth角色信息</p><p>“第三方认证登录”登录方式必传。<br>SecretId + SecretKey 或 RoleArn需要传其中一种。</p>
 	AuthRoles []*AuthRoleInfo `json:"AuthRoles,omitnil,omitempty" name:"AuthRoles"`
 
 	// <p>标签描述列表，通过指定该参数可以同时绑定标签到相应的日志主题。最大支持10个标签键值对，同一个资源只能绑定到同一个标签键下。</p>
@@ -3114,10 +3181,10 @@ type CreateConsoleRequest struct {
 	// <p>自定义域名前缀</p>
 	DomainPrefix *string `json:"DomainPrefix,omitnil,omitempty" name:"DomainPrefix"`
 
-	// <p>用户账号信息</p><p>“账号密码鉴权”登录方式必传</p>
+	// <p>用户账号信息</p><p>“账号密码鉴权”登录方式必传。<br>SecretId + SecretKey 或 RoleArn需要传其中一种。</p>
 	Accounts []*ConsoleAccount `json:"Accounts,omitnil,omitempty" name:"Accounts"`
 
-	// <p>匿名登录账号信息</p><p>“匿名登录”登录方式必传</p>
+	// <p>匿名登录账号信息</p><p>“匿名登录”登录方式必传。<br>SecretId + SecretKey 或 RoleArn需要传其中一种。</p>
 	AnonymousLogin *AnonymousLoginInfo `json:"AnonymousLogin,omitnil,omitempty" name:"AnonymousLogin"`
 
 	// <p>内网类型，默认为0</p>
@@ -3132,7 +3199,7 @@ type CreateConsoleRequest struct {
 	// <p>内网子网SubnetId</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// <p>Auth角色信息</p><p>“第三方认证登录”登录方式必传</p>
+	// <p>Auth角色信息</p><p>“第三方认证登录”登录方式必传。<br>SecretId + SecretKey 或 RoleArn需要传其中一种。</p>
 	AuthRoles []*AuthRoleInfo `json:"AuthRoles,omitnil,omitempty" name:"AuthRoles"`
 
 	// <p>标签描述列表，通过指定该参数可以同时绑定标签到相应的日志主题。最大支持10个标签键值对，同一个资源只能绑定到同一个标签键下。</p>
@@ -7244,7 +7311,7 @@ type DataTransformResouceInfo struct {
 	// <p>外部ID值，可以在被投递账号的角色-载体里找到该值</p>
 	ExternalId *string `json:"ExternalId,omitnil,omitempty" name:"ExternalId"`
 
-	// <p>topic名称</p>
+	// <p>目标日志主题的名称,当DataTransformType=1(前置加工任务)时, 该值和源日志主题名称的值相同.</p>
 	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
 
 	// <p>日志集的名称</p>
@@ -7273,82 +7340,76 @@ type DataTransformSqlDataSource struct {
 }
 
 type DataTransformTaskInfo struct {
-	// 数据加工任务名称
+	// <p>数据加工任务名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 数据加工任务id
+	// <p>数据加工任务id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// 任务启用状态，默认为1，正常开启,  2关闭
+	// <p>任务启用状态，默认为1，正常开启,  2关闭</p>
 	EnableFlag *int64 `json:"EnableFlag,omitnil,omitempty" name:"EnableFlag"`
 
-	// 加工任务类型，1： DSL(使用自定义加工语言的加工任务)， 2：SQL(使用sql的加工任务)
+	// <p>加工任务类型，1： DSL(使用自定义加工语言的加工任务)， 2：SQL(使用sql的加工任务)</p>
 	Type *int64 `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 源日志主题
+	// <p>源日志主题ID,当DataTransformType=1,代表当前任务的类型是前置加工任务,该值和目标日志主题的ID值相同.</p>
 	SrcTopicId *string `json:"SrcTopicId,omitnil,omitempty" name:"SrcTopicId"`
 
-	// 当前加工任务状态（1准备中/2运行中/3停止中/4已停止）
+	// <p>当前加工任务状态（1准备中/2运行中/3停止中/4已停止）</p>
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 创建时间
-	// 时间格式：yyyy-MM-dd HH:mm:ss
+	// <p>创建时间<br>时间格式：yyyy-MM-dd HH:mm:ss</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 最近修改时间
-	// 时间格式：yyyy-MM-dd HH:mm:ss
+	// <p>最近修改时间<br>时间格式：yyyy-MM-dd HH:mm:ss</p>
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
-	// 最后启用时间，如果需要重建集群，修改该时间
-	// 时间格式：yyyy-MM-dd HH:mm:ss
+	// <p>最后启用时间，如果需要重建集群，修改该时间<br>时间格式：yyyy-MM-dd HH:mm:ss</p>
 	LastEnableTime *string `json:"LastEnableTime,omitnil,omitempty" name:"LastEnableTime"`
 
-	// 日志主题名称
+	// <p>源日志主题名称,当DataTransformType=1,代表当前任务的类型是前置加工任务,该值和目标日志主题名称的值相同.</p>
 	SrcTopicName *string `json:"SrcTopicName,omitnil,omitempty" name:"SrcTopicName"`
 
-	// 日志集id
+	// <p>日志集id</p>
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
 
-	// 加工任务目的topic_id以及别名
+	// <p>加工任务目的topic_id以及别名</p>
 	DstResources []*DataTransformResouceInfo `json:"DstResources,omitnil,omitempty" name:"DstResources"`
 
-	// 加工逻辑函数。
+	// <p>加工逻辑函数。</p>
 	EtlContent *string `json:"EtlContent,omitnil,omitempty" name:"EtlContent"`
 
-	// 兜底topic_id
+	// <p>兜底topic_id</p>
 	BackupTopicID *string `json:"BackupTopicID,omitnil,omitempty" name:"BackupTopicID"`
 
-	// 超限之后是否丢弃日志数据
+	// <p>超限之后是否丢弃日志数据</p>
 	BackupGiveUpData *bool `json:"BackupGiveUpData,omitnil,omitempty" name:"BackupGiveUpData"`
 
-	// 是否开启投递服务日志。 1关闭,2开启
+	// <p>是否开启投递服务日志。 1关闭,2开启</p>
 	HasServicesLog *uint64 `json:"HasServicesLog,omitnil,omitempty" name:"HasServicesLog"`
 
-	// 任务目标日志主题数量
+	// <p>任务目标日志主题数量</p>
 	TaskDstCount *uint64 `json:"TaskDstCount,omitnil,omitempty" name:"TaskDstCount"`
 
-	// 数据加工类型。0：标准加工任务；1：前置加工任务。
+	// <p>数据加工类型。0：标准加工任务；1：前置加工任务。当该值=1时, 源日志主题和目标日志主题的名称和ID相同.</p><p>枚举值：</p><ul><li>1： 前置加工任务</li><li>0： 标准加工任务</li></ul>
 	DataTransformType *uint64 `json:"DataTransformType,omitnil,omitempty" name:"DataTransformType"`
 
-	// 保留失败日志状态。 1:不保留，2:保留
+	// <p>保留失败日志状态。 1:不保留，2:保留</p>
 	KeepFailureLog *uint64 `json:"KeepFailureLog,omitnil,omitempty" name:"KeepFailureLog"`
 
-	// 失败日志的字段名称
+	// <p>失败日志的字段名称</p>
 	FailureLogKey *string `json:"FailureLogKey,omitnil,omitempty" name:"FailureLogKey"`
 
-	// 指定加工数据的开始时间，秒级时间戳。
-	// - 日志主题生命周期内的任意时间范围，如果超出了生命周期,只处理生命周期内有数据的部分。
+	// <p>指定加工数据的开始时间，秒级时间戳。</p><ul><li>日志主题生命周期内的任意时间范围，如果超出了生命周期,只处理生命周期内有数据的部分。</li></ul>
 	ProcessFromTimestamp *uint64 `json:"ProcessFromTimestamp,omitnil,omitempty" name:"ProcessFromTimestamp"`
 
-	// 指定加工数据的结束时间，秒级时间戳。
-	// 1. 不可指定未来的时间
-	// 2. 不填则表示持续执行
+	// <p>指定加工数据的结束时间，秒级时间戳。</p><ol><li>不可指定未来的时间</li><li>不填则表示持续执行</li></ol>
 	ProcessToTimestamp *uint64 `json:"ProcessToTimestamp,omitnil,omitempty" name:"ProcessToTimestamp"`
 
-	// sql数据源信息
+	// <p>sql数据源信息</p>
 	DataTransformSqlDataSources []*DataTransformSqlDataSource `json:"DataTransformSqlDataSources,omitnil,omitempty" name:"DataTransformSqlDataSources"`
 
-	// 环境变量
+	// <p>环境变量</p>
 	EnvInfos []*EnvInfo `json:"EnvInfos,omitnil,omitempty" name:"EnvInfos"`
 }
 
@@ -16687,8 +16748,11 @@ type DlcTableInfo struct {
 }
 
 type DynamicIndex struct {
-	// 键值索引自动配置开关
+	// <p>键值索引自动配置开关</p>
 	Status *bool `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>索引的分词符，其中的每个字符代表一个分词符；<br>仅支持英文符号、\n\t\r及转义符\；<br>注意：\n\t\r本身已被转义，直接使用双引号包裹即可作为入参，无需再次转义。使用API Explorer进行调试时请使用JSON参数输入方式，以避免\n\t\r被重复转义</p>
+	Tokenizer *string `json:"Tokenizer,omitnil,omitempty" name:"Tokenizer"`
 }
 
 type EBPFCollectFilters struct {
@@ -19485,10 +19549,10 @@ type ModifyConsoleRequestParams struct {
 	// <p>自定义域名前缀</p>
 	DomainPrefix *string `json:"DomainPrefix,omitnil,omitempty" name:"DomainPrefix"`
 
-	// <p>用户账号信息</p><p>“账号密码鉴权”登录方式必传</p>
+	// <p>用户账号信息</p><p>“账号密码鉴权”登录方式必传。<br>如果SecretId、SecretKey、RoleArn都不传，表示不修改这部分鉴权信息。</p>
 	Accounts []*ConsoleAccount `json:"Accounts,omitnil,omitempty" name:"Accounts"`
 
-	// <p>匿名登录账号信息</p><p>“匿名登录”登录方式必传</p>
+	// <p>匿名登录账号信息</p><p>“匿名登录”登录方式必传。<br>如果SecretId、SecretKey、RoleArn都不传，表示不修改这部分鉴权信息。</p>
 	AnonymousLogin *AnonymousLoginInfo `json:"AnonymousLogin,omitnil,omitempty" name:"AnonymousLogin"`
 
 	// <p>内网类型，默认为0</p>
@@ -19503,7 +19567,7 @@ type ModifyConsoleRequestParams struct {
 	// <p>内网子网SubnetId</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// <p>Auth用户角色信息</p><p>“第三方认证登录”登录方式必传</p>
+	// <p>Auth用户角色信息</p><p>“第三方认证登录”登录方式必传。<br>如果SecretId、SecretKey、RoleArn都不传，表示不修改这部分鉴权信息。</p>
 	AuthRoles []*AuthRoleInfo `json:"AuthRoles,omitnil,omitempty" name:"AuthRoles"`
 
 	// <p>自定义隐藏参数</p>
@@ -19534,10 +19598,10 @@ type ModifyConsoleRequest struct {
 	// <p>自定义域名前缀</p>
 	DomainPrefix *string `json:"DomainPrefix,omitnil,omitempty" name:"DomainPrefix"`
 
-	// <p>用户账号信息</p><p>“账号密码鉴权”登录方式必传</p>
+	// <p>用户账号信息</p><p>“账号密码鉴权”登录方式必传。<br>如果SecretId、SecretKey、RoleArn都不传，表示不修改这部分鉴权信息。</p>
 	Accounts []*ConsoleAccount `json:"Accounts,omitnil,omitempty" name:"Accounts"`
 
-	// <p>匿名登录账号信息</p><p>“匿名登录”登录方式必传</p>
+	// <p>匿名登录账号信息</p><p>“匿名登录”登录方式必传。<br>如果SecretId、SecretKey、RoleArn都不传，表示不修改这部分鉴权信息。</p>
 	AnonymousLogin *AnonymousLoginInfo `json:"AnonymousLogin,omitnil,omitempty" name:"AnonymousLogin"`
 
 	// <p>内网类型，默认为0</p>
@@ -19552,7 +19616,7 @@ type ModifyConsoleRequest struct {
 	// <p>内网子网SubnetId</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// <p>Auth用户角色信息</p><p>“第三方认证登录”登录方式必传</p>
+	// <p>Auth用户角色信息</p><p>“第三方认证登录”登录方式必传。<br>如果SecretId、SecretKey、RoleArn都不传，表示不修改这部分鉴权信息。</p>
 	AuthRoles []*AuthRoleInfo `json:"AuthRoles,omitnil,omitempty" name:"AuthRoles"`
 
 	// <p>自定义隐藏参数</p>
@@ -21196,26 +21260,26 @@ func (r *ModifyLogResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyLogsetRequestParams struct {
-	// 日志集Id。通过 [获取日志集列表](https://cloud.tencent.com/document/product/614/58624)获取日志集Id。
+	// <p>日志集Id。通过 <a href="https://cloud.tencent.com/document/product/614/58624">获取日志集列表</a>获取日志集Id。</p>
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
 
-	// 日志集名字。- 最大支持255个字符。不支持`|`字符。
+	// <p>日志集名字。- 最大支持255个字符。不支持&quot;|&quot;字符。</p>
 	LogsetName *string `json:"LogsetName,omitnil,omitempty" name:"LogsetName"`
 
-	// 日志集的绑定的标签键值对。最大支持10个标签键值对，同一个资源只能同时绑定一个标签键。
+	// <p>日志集的绑定的标签键值对。最大支持10个标签键值对，同一个资源只能同时绑定一个标签键。</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type ModifyLogsetRequest struct {
 	*tchttp.BaseRequest
 	
-	// 日志集Id。通过 [获取日志集列表](https://cloud.tencent.com/document/product/614/58624)获取日志集Id。
+	// <p>日志集Id。通过 <a href="https://cloud.tencent.com/document/product/614/58624">获取日志集列表</a>获取日志集Id。</p>
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
 
-	// 日志集名字。- 最大支持255个字符。不支持`|`字符。
+	// <p>日志集名字。- 最大支持255个字符。不支持&quot;|&quot;字符。</p>
 	LogsetName *string `json:"LogsetName,omitnil,omitempty" name:"LogsetName"`
 
-	// 日志集的绑定的标签键值对。最大支持10个标签键值对，同一个资源只能同时绑定一个标签键。
+	// <p>日志集的绑定的标签键值对。最大支持10个标签键值对，同一个资源只能同时绑定一个标签键。</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 

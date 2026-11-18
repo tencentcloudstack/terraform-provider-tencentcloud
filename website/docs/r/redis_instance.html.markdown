@@ -379,7 +379,7 @@ The following arguments are supported:
 * `password` - (Optional, String) Password for a Redis user, which should be 8 to 16 characters. NOTE: Only `no_auth=true` specified can make password empty.
 * `port` - (Optional, Int) The port used to access a redis instance. The default value is 6379. When the `operation_network` is `changeVPort` or `changeVip`, this parameter needs to be configured.
 * `prepaid_period` - (Optional, Int) The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
-* `product_version` - (Optional, String) Specify the product version of the instance. `local`: Local disk version, `cloud`: Cloud disk version, `cdc`: Exclusive cluster version. Default is `local`.
+* `product_version` - (Optional, String) Specify the product version of the instance. `local`: common type I;`localv2 `: common type II; `cloud`: cloud native,Currently not available for sale; `cdc`: dedicated cluster type. Default is `local`.
 * `project_id` - (Optional, Int) Specifies which project the instance should belong to.
 * `recycle` - (Optional, Int) Original intranet IPv4 address retention time: unit: day, value range: `0`, `1`, `2`, `3`, `7`, `15`.
 * `redis_cluster_id` - (Optional, String) Exclusive cluster ID. When the `product_version` is set to `cdc`, this parameter must be set.

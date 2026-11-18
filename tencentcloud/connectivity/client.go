@@ -79,10 +79,12 @@ import (
 	gsv20191118 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gs/v20191118"
 	gwlb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb/v20240906"
 	igtmv20231024 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm/v20231024"
+	ioav20220601 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ioa/v20220601"
 	keewidbv20220308 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/keewidb/v20220308"
 	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
 	css "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801"
+	makers "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
@@ -163,6 +165,7 @@ type TencentCloudClient struct {
 	dcConn                *dc.Client
 	tagConn               *tag.Client
 	mongodbConn           *mongodb.Client
+	makersConn            *makers.Client
 	tkev20180525Conn      *tkev20180525.Client
 	tdmqConn              *tdmq.Client
 	tcrConn               *tcr.Client
@@ -272,6 +275,7 @@ type TencentCloudClient struct {
 	billingv20180709Conn        *billing.Client
 	bdrcv20260330Conn           *bdrcv20260330.Client
 	igtmv20231024Conn           *igtmv20231024.Client
+	ioaV20220601Conn            *ioav20220601.Client
 	ga2v20250115Conn            *ga2v20250115.Client
 	gsv20191118Conn             *gsv20191118.Client
 	keewidbv20220308Conn        *keewidbv20220308.Client
@@ -616,6 +620,18 @@ func (me *TencentCloudClient) UseMongodbClient(iacExtInfo ...IacExtInfo) *mongod
 	me.mongodbConn.WithHttpTransport(&logRoundTripper)
 
 	return me.mongodbConn
+}
+
+// UseMakersClient returns makers client for service
+func (me *TencentCloudClient) UseMakersClient() *makers.Client {
+	if me.makersConn != nil {
+		return me.makersConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.makersConn, _ = makers.NewClient(me.Credential, me.Region, cpf)
+
+	return me.makersConn
 }
 
 // UseClbClient returns clb client for service
@@ -2320,6 +2336,18 @@ func (me *TencentCloudClient) UseIgtmV20231024Client() *igtmv20231024.Client {
 	me.igtmv20231024Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.igtmv20231024Conn
+}
+
+// UseIoaV20220601Client return IOA client for service
+func (me *TencentCloudClient) UseIoaV20220601Client() *ioav20220601.Client {
+	if me.ioaV20220601Conn != nil {
+		return me.ioaV20220601Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.ioaV20220601Conn, _ = ioav20220601.NewClient(me.Credential, me.Region, cpf)
+	me.ioaV20220601Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.ioaV20220601Conn
 }
 
 // UseGa2V20250115Client return GA2 (Global Accelerator 2) client for service

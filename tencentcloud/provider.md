@@ -734,6 +734,7 @@ tencentcloud_kubernetes_cluster_admin_role
 tencentcloud_kubernetes_upgrade_tasks
 tencentcloud_kubernetes_upgrade_task_detail
 tencentcloud_kubernetes_cluster_available_extra_args
+tencentcloud_kubernetes_addon_values
 
 Resource
 tencentcloud_kubernetes_cluster
@@ -1694,6 +1695,7 @@ tencentcloud_teo_edge_kv_namespace
 tencentcloud_teo_dns_records_status
 
 Action
+tencentcloud_teo_apply_free_certificate
 tencentcloud_teo_confirm_origin_acl_update
 
 TencentCloud ServiceMesh(TCM)
@@ -2749,6 +2751,12 @@ tencentcloud_igtm_strategy
 tencentcloud_igtm_package_instance
 tencentcloud_igtm_package_task
 
+Identity and Access Management Open APIs(IOA)
+Resource
+tencentcloud_ioa_company_directory_config
+tencentcloud_ioa_delivery_server
+tencentcloud_ioa_delivery_strategy
+
 Database Dedicated Cluster(DBDC)
 Data Source
 tencentcloud_dbdc_db_custom_clusters
@@ -2846,3 +2854,10 @@ tencentcloud_fwm_vpc_acl_rule
 
 Action
 tencentcloud_fwm_dispatch_strategy
+
+Web & Agents Development Platform(Makers)
+Resource
+tencentcloud_makers_zone_custom_domain
+
+Data Source
+tencentcloud_makers_deployment_log

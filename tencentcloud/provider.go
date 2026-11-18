@@ -83,6 +83,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gwlb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/igtm"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ioa"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/keewidb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/kms"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/lighthouse"
@@ -618,6 +619,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_kubernetes_cluster_native_node_pools":                   tke.DataSourceTencentCloudKubernetesClusterNativeNodePools(),
 			"tencentcloud_kubernetes_upgrade_tasks":                               tke.DataSourceTencentCloudKubernetesUpgradeTasks(),
 			"tencentcloud_kubernetes_upgrade_task_detail":                         tke.DataSourceTencentCloudKubernetesUpgradeTaskDetail(),
+			"tencentcloud_kubernetes_addon_values":                                tke.DataSourceTencentCloudKubernetesAddonValues(),
 			"tencentcloud_mysql_backup_list":                                      cdb.DataSourceTencentCloudMysqlBackupList(),
 			"tencentcloud_mysql_zone_config":                                      cdb.DataSourceTencentCloudMysqlZoneConfig(),
 			"tencentcloud_mysql_parameter_list":                                   cdb.DataSourceTencentCloudMysqlParameterList(),
@@ -2799,6 +2801,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_igtm_strategy":                                                            igtm.ResourceTencentCloudIgtmStrategy(),
 			"tencentcloud_igtm_package_instance":                                                    igtm.ResourceTencentCloudIgtmPackageInstance(),
 			"tencentcloud_igtm_package_task":                                                        igtm.ResourceTencentCloudIgtmPackageTask(),
+			"tencentcloud_ioa_company_directory_config":                                             ioa.ResourceTencentCloudIoaCompanyDirectoryConfig(),
 			"tencentcloud_dbdc_db_custom_cluster":                                                   dbdc.ResourceTencentCloudDbdcDbCustomCluster(),
 			"tencentcloud_dbdc_db_custom_node":                                                      dbdc.ResourceTencentCloudDbdcDbCustomNode(),
 			"tencentcloud_dbdc_node_to_db_custom_cluster_attachment":                                dbdc.ResourceTencentCloudDbdcNodeToDbCustomClusterAttachment(),

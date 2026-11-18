@@ -522,10 +522,10 @@ func (r *MonitorDispenseExternalRuleResource) Update(ctx context.Context, req re
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	request.RuleId = helper.Int64(ruleId)
 
+	modifyRequest := monitorDispenseToModifyRequest(request, ruleId)
 	service := NewMonitorService(r.Client())
-	if err := service.ModifyDispenseExternalRule(ctx, request); err != nil {
+	if err := service.ModifyDispenseExternalRule(ctx, modifyRequest); err != nil {
 		resp.Diagnostics.AddError(
 			"Error updating monitor dispense external rule",
 			fmt.Sprintf("ModifyDispenseExternalRule failed for rule %d: %v", ruleId, err),
@@ -630,6 +630,23 @@ func (r *MonitorDispenseExternalRuleResource) buildRuleRequest(ctx context.Conte
 	request.DispenseConditions = conditions
 
 	return request, diags
+}
+
+// monitorDispenseToModifyRequest converts the shared rule payload built for
+// create into a ModifyDispenseExternalRuleRequest. The create API does not
+// carry RuleId, while the modify API does, so the two SDK request types are
+// not interchangeable.
+func monitorDispenseToModifyRequest(request *monitorv20230616.CreateDispenseExternalRuleRequest, ruleId int64) *monitorv20230616.ModifyDispenseExternalRuleRequest {
+	modifyRequest := monitorv20230616.NewModifyDispenseExternalRuleRequest()
+	modifyRequest.Name = request.Name
+	modifyRequest.ExtNamespace = request.ExtNamespace
+	modifyRequest.Producer = request.Producer
+	modifyRequest.DispenseRegions = request.DispenseRegions
+	modifyRequest.ExtMetrics = request.ExtMetrics
+	modifyRequest.Period = request.Period
+	modifyRequest.DispenseConditions = request.DispenseConditions
+	modifyRequest.RuleId = helper.Int64(ruleId)
+	return modifyRequest
 }
 
 // monitorDispenseCheckClearSemantics rejects updates that removed optional

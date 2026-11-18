@@ -10,10 +10,12 @@ import (
 	_ "github.com/katbyte/terrafmt"
 	_ "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bdrc/v20260330"
 	_ "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbdc/v20201029"
+	_ "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ioa/v20220601"
 	_ "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	_ "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mqtt/v20240516"
 	_ "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmysql/v20211122"
 	_ "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20250903"
 	_ "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/fwm/v20250611"
 	_ "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ags/v20250920"
+	_ "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
 )
