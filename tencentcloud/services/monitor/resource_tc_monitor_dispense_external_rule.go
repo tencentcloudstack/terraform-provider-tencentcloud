@@ -10,8 +10,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -58,6 +58,7 @@ type MonitorDispenseExternalRuleResourceModel struct {
 	ExtMetrics         types.Set    `tfsdk:"ext_metrics"`
 	Period             types.Set    `tfsdk:"period"`
 	DispenseConditions types.Object `tfsdk:"dispense_conditions"`
+	Status             types.Int64  `tfsdk:"status"`
 	Rule               types.Object `tfsdk:"rule"`
 }
 
@@ -276,25 +277,25 @@ var monitorDispenseRuleAttributes = map[string]schema.Attribute{
 }
 
 var (
-	monitorDispenseGlobalTagAttrTypes   = monitorAttrTypesOf(monitorDispenseGlobalTagAttributes)
-	monitorDispenseFilterAttrTypes      = monitorAttrTypesOf(monitorDispenseFilterAttributes)
-	monitorDispenseConditionAttrTypes   = monitorAttrTypesOf(monitorDispenseConditionAttributes)
-	monitorDispenseProducerAttrTypes    = monitorAttrTypesOf(monitorDispenseProducerAttributes)
-	monitorDispenseExtMetricAttrTypes   = monitorAttrTypesOf(monitorDispenseExtMetricAttributes)
-	monitorDispenseRuleAttrTypes        = monitorAttrTypesOf(monitorDispenseRuleAttributes)
-	monitorDispenseGlobalTagObjectType  = types.ObjectType{AttrTypes: monitorDispenseGlobalTagAttrTypes}
-	monitorDispenseFilterObjectType     = types.ObjectType{AttrTypes: monitorDispenseFilterAttrTypes}
-	monitorDispenseExtMetricObjectType  = types.ObjectType{AttrTypes: monitorDispenseExtMetricAttrTypes}
-	monitorDispenseConditionObjectType  = types.ObjectType{AttrTypes: monitorDispenseConditionAttrTypes}
-	monitorDispenseProducerObjectType   = types.ObjectType{AttrTypes: monitorDispenseProducerAttrTypes}
-	monitorDispenseConditionListNull    = types.ListNull(monitorDispenseConditionObjectType)
-	monitorDispenseGlobalTagListNull    = types.ListNull(monitorDispenseGlobalTagObjectType)
-	monitorDispenseExtMetricListNull    = types.ListNull(monitorDispenseExtMetricObjectType)
-	monitorDispenseFilterListNull       = types.ListNull(monitorDispenseFilterObjectType)
-	monitorDispenseStringSetNull        = types.SetNull(types.StringType)
-	monitorDispenseInt64SetNull         = types.SetNull(types.Int64Type)
-	monitorDispenseNullProducerObject   = types.ObjectNull(monitorDispenseProducerAttrTypes)
-	monitorDispenseNullConditionObject  = types.ObjectNull(monitorDispenseConditionAttrTypes)
+	monitorDispenseGlobalTagAttrTypes  = monitorAttrTypesOf(monitorDispenseGlobalTagAttributes)
+	monitorDispenseFilterAttrTypes     = monitorAttrTypesOf(monitorDispenseFilterAttributes)
+	monitorDispenseConditionAttrTypes  = monitorAttrTypesOf(monitorDispenseConditionAttributes)
+	monitorDispenseProducerAttrTypes   = monitorAttrTypesOf(monitorDispenseProducerAttributes)
+	monitorDispenseExtMetricAttrTypes  = monitorAttrTypesOf(monitorDispenseExtMetricAttributes)
+	monitorDispenseRuleAttrTypes       = monitorAttrTypesOf(monitorDispenseRuleAttributes)
+	monitorDispenseGlobalTagObjectType = types.ObjectType{AttrTypes: monitorDispenseGlobalTagAttrTypes}
+	monitorDispenseFilterObjectType    = types.ObjectType{AttrTypes: monitorDispenseFilterAttrTypes}
+	monitorDispenseExtMetricObjectType = types.ObjectType{AttrTypes: monitorDispenseExtMetricAttrTypes}
+	monitorDispenseConditionObjectType = types.ObjectType{AttrTypes: monitorDispenseConditionAttrTypes}
+	monitorDispenseProducerObjectType  = types.ObjectType{AttrTypes: monitorDispenseProducerAttrTypes}
+	monitorDispenseConditionListNull   = types.ListNull(monitorDispenseConditionObjectType)
+	monitorDispenseGlobalTagListNull   = types.ListNull(monitorDispenseGlobalTagObjectType)
+	monitorDispenseExtMetricListNull   = types.ListNull(monitorDispenseExtMetricObjectType)
+	monitorDispenseFilterListNull      = types.ListNull(monitorDispenseFilterObjectType)
+	monitorDispenseStringSetNull       = types.SetNull(types.StringType)
+	monitorDispenseInt64SetNull        = types.SetNull(types.Int64Type)
+	monitorDispenseNullProducerObject  = types.ObjectNull(monitorDispenseProducerAttrTypes)
+	monitorDispenseNullConditionObject = types.ObjectNull(monitorDispenseConditionAttrTypes)
 )
 
 // monitorAttrTypesOf mirrors the value types of a nested attribute map so the
@@ -376,6 +377,11 @@ func (r *MonitorDispenseExternalRuleResource) Schema(_ context.Context, _ resour
 					objectplanmodifier.UseStateForUnknown(),
 				},
 			},
+			"status": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Rule trigger status applied through `ModifyDispenseExternalRuleStatus` after the rule is created or updated. `0` means disabled, `1` means enabled. The effective status is always reported by `rule.status`.",
+			},
 			"rule": schema.SingleNestedAttribute{
 				Computed:    true,
 				Attributes:  monitorDispenseRuleAttributes,
@@ -420,6 +426,19 @@ func (r *MonitorDispenseExternalRuleResource) Create(ctx context.Context, req re
 		return
 	}
 
+	// Rules are created enabled (status = 1) by default, so only an explicit
+	// `status = 0` requires the extra disable call before the read back, so
+	// `rule.status` reflects the final state.
+	if !plan.Status.IsNull() && !plan.Status.IsUnknown() && plan.Status.ValueInt64() == 0 {
+		if err := service.ModifyDispenseExternalRuleStatus(ctx, ruleId, plan.Status.ValueInt64()); err != nil {
+			resp.Diagnostics.AddError(
+				"Error updating monitor dispense external rule status",
+				fmt.Sprintf("ModifyDispenseExternalRuleStatus failed for rule %d: %v", ruleId, err),
+			)
+			return
+		}
+	}
+
 	rule, err := service.DescribeDispenseExternalRuleById(ctx, ruleId)
 	if err != nil {
 		resp.Diagnostics.AddError(
@@ -440,6 +459,7 @@ func (r *MonitorDispenseExternalRuleResource) Create(ctx context.Context, req re
 	if resp.Diagnostics.HasError() {
 		return
 	}
+
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -533,6 +553,20 @@ func (r *MonitorDispenseExternalRuleResource) Update(ctx context.Context, req re
 		return
 	}
 
+	// Apply the trigger status after the rule payload update, before the read
+	// back, so `rule.status` reflects the final state. A removed attribute stops
+	// managing the status without changing the cloud-side value.
+	if !plan.Status.IsNull() && !plan.Status.IsUnknown() &&
+		(state.Status.IsNull() || plan.Status.ValueInt64() != state.Status.ValueInt64()) {
+		if err := service.ModifyDispenseExternalRuleStatus(ctx, ruleId, plan.Status.ValueInt64()); err != nil {
+			resp.Diagnostics.AddError(
+				"Error updating monitor dispense external rule status",
+				fmt.Sprintf("ModifyDispenseExternalRuleStatus failed for rule %d: %v", ruleId, err),
+			)
+			return
+		}
+	}
+
 	rule, err := service.DescribeDispenseExternalRuleById(ctx, ruleId)
 	if err != nil {
 		resp.Diagnostics.AddError(
@@ -554,6 +588,7 @@ func (r *MonitorDispenseExternalRuleResource) Update(ctx context.Context, req re
 	if resp.Diagnostics.HasError() {
 		return
 	}
+
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -750,15 +785,36 @@ func monitorDispenseRuleIdOf(model *MonitorDispenseExternalRuleResourceModel) (i
 	return 0, diags
 }
 
+// monitorDispenseEffectiveStatus resolves the effective trigger status. An
+// explicitly configured status is kept; otherwise the cloud-reported value is
+// used, falling back to `1` (rules are created enabled by default) when the
+// response does not carry a status.
+func monitorDispenseEffectiveStatus(configured types.Int64, rule *monitorv20230616.Rule) types.Int64 {
+	if !configured.IsNull() && !configured.IsUnknown() {
+		return configured
+	}
+	if rule != nil && rule.Status != nil {
+		return types.Int64Value(*rule.Status)
+	}
+	return types.Int64Value(1)
+}
+
 // refreshRuleBlock copies the cloud-reported rule into the computed `rule`
-// block of the model. Writable attributes are left untouched.
+// block of the model. Writable attributes are left untouched. The top-level
+// `status` attribute is Optional+Computed: when it is not declared in the
+// configuration it is unknown during create/update (and must be filled with
+// the cloud-reported value so the apply result stays known) and null after
+// import, so both are resolved here against `rule.status`.
 func refreshRuleBlock(ctx context.Context, model *MonitorDispenseExternalRuleResourceModel, rule *monitorv20230616.Rule) diag.Diagnostics {
 	var diags diag.Diagnostics
 
 	if rule == nil {
 		model.Rule = types.ObjectNull(monitorDispenseRuleAttrTypes)
+		model.Status = monitorDispenseEffectiveStatus(model.Status, nil)
 		return diags
 	}
+
+	model.Status = monitorDispenseEffectiveStatus(model.Status, rule)
 
 	ruleModel := monitorDispenseRuleModel{
 		RuleId:             monitorInt64Pointer(rule.RuleId),

@@ -3152,6 +3152,31 @@ func (me *MonitorService) ModifyDispenseExternalRule(ctx context.Context, reques
 	return
 }
 
+func (me *MonitorService) ModifyDispenseExternalRuleStatus(ctx context.Context, ruleId int64, status int64) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, ruleId[%d], status[%d], reason[%s]\n", logId, "ModifyDispenseExternalRuleStatus", ruleId, status, errRet.Error())
+		}
+	}()
+
+	ratelimit.Check("ModifyDispenseExternalRuleStatus")
+
+	request := monitorv20230616.NewModifyDispenseExternalRuleStatusRequest()
+	request.RuleIdList = []*int64{helper.Int64(ruleId)}
+	request.Status = helper.Int64(status)
+
+	response, err := me.client.UseMonitorV20230616Client().ModifyDispenseExternalRuleStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *MonitorService) DeleteDispenseExternalRule(ctx context.Context, ruleId int64) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
