@@ -2853,3 +2853,7 @@ tencentcloud_fwm_vpc_acl_rule
 
 Action
 tencentcloud_fwm_dispatch_strategy
+
+Makers
+Resource
+tencentcloud_makers_project

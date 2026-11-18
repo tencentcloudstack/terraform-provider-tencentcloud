@@ -83,6 +83,7 @@ import (
 	keewidbv20220308 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/keewidb/v20220308"
 	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
+	makersv20261113 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
 	css "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
@@ -283,6 +284,7 @@ type TencentCloudClient struct {
 	vcubev20220410Conn          *vcubev20220410.Client
 	advisorv20200721Conn        *advisorv20200721.Client
 	tdmysqlv20211122Conn        *tdmysqlv20211122.Client
+	makersv20261113Conn         *makersv20261113.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -2442,4 +2444,16 @@ func (me *TencentCloudClient) UseTdmysqlV20211122Client() *tdmysqlv20211122.Clie
 	me.tdmysqlv20211122Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.tdmysqlv20211122Conn
+}
+
+// UseMakersV20261113Client return Makers client for service
+func (me *TencentCloudClient) UseMakersV20261113Client() *makersv20261113.Client {
+	if me.makersv20261113Conn != nil {
+		return me.makersv20261113Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.makersv20261113Conn, _ = makersv20261113.NewClient(me.Credential, me.Region, cpf)
+	me.makersv20261113Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.makersv20261113Conn
 }
