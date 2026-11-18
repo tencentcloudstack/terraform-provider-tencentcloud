@@ -84,7 +84,7 @@ import (
 	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
 	css "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801"
-	makersv20261113 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
+	makers "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
@@ -165,6 +165,7 @@ type TencentCloudClient struct {
 	dcConn                *dc.Client
 	tagConn               *tag.Client
 	mongodbConn           *mongodb.Client
+	makersConn            *makers.Client
 	tkev20180525Conn      *tkev20180525.Client
 	tdmqConn              *tdmq.Client
 	tcrConn               *tcr.Client
@@ -190,7 +191,6 @@ type TencentCloudClient struct {
 	kmsConn               *kms.Client
 	ssmConn               *ssm.Client
 	agsConn               *agsv20250920.Client
-	makersConn            *makersv20261113.Client
 	apiConn               *api.Client
 	emrConn               *emr.Client
 	clsConn               *cls.Client
@@ -620,6 +620,18 @@ func (me *TencentCloudClient) UseMongodbClient(iacExtInfo ...IacExtInfo) *mongod
 	me.mongodbConn.WithHttpTransport(&logRoundTripper)
 
 	return me.mongodbConn
+}
+
+// UseMakersClient returns makers client for service
+func (me *TencentCloudClient) UseMakersClient() *makers.Client {
+	if me.makersConn != nil {
+		return me.makersConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.makersConn, _ = makers.NewClient(me.Credential, me.Region, cpf)
+
+	return me.makersConn
 }
 
 // UseClbClient returns clb client for service
@@ -1155,19 +1167,6 @@ func (me *TencentCloudClient) UseAgsClient() *agsv20250920.Client {
 	me.agsConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.agsConn
-}
-
-// UseMakersClient returns Makers client for service
-func (me *TencentCloudClient) UseMakersClient() *makersv20261113.Client {
-	if me.makersConn != nil {
-		return me.makersConn
-	}
-
-	cpf := me.NewClientProfile(300)
-	me.makersConn, _ = makersv20261113.NewClient(me.Credential, me.Region, cpf)
-	me.makersConn.WithHttpTransport(&LogRoundTripper{})
-
-	return me.makersConn
 }
 
 // UseApiClient return API client for service
