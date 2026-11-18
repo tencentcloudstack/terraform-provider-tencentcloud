@@ -19,9 +19,9 @@ import (
 	svcmakers "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/makers"
 )
 
-func ptrStrMakers(s string) *string  { return &s }
-func ptrInt64Makers(v int64) *int64  { return &v }
-func ptrBoolMakers(v bool) *bool     { return &v }
+func ptrStrMakers(s string) *string { return &s }
+func ptrInt64Makers(v int64) *int64 { return &v }
+func ptrBoolMakers(v bool) *bool    { return &v }
 
 // makersDeploymentsSchema returns the framework data source schema used to
 // build the raw config/state value.

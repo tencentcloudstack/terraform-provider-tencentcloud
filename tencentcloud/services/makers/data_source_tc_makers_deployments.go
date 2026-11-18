@@ -9,8 +9,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
 	makersv20261113 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
 )
 
 var _ datasource.DataSourceWithConfigure = &MakersDeploymentsDataSource{}
