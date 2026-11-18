@@ -2009,7 +2009,7 @@ Resource
 tencentcloud_tdcpg_cluster
 tencentcloud_tdcpg_instance
 
-TDSQL-C for MySQL(tdmysql)
+TDSQL Boundless(tdmysql)
 Resource
 tencentcloud_tdmysql_db_instance
 
