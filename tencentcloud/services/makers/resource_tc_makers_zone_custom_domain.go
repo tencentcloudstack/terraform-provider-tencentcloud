@@ -91,7 +91,7 @@ func (r *MakersZoneCustomDomainResource) Schema(ctx context.Context, _ resource.
 			"env": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Environment slug the domain is bound to. If omitted on create, the backend decides the environment.",
+				Description: "Environment slug the domain is bound to. If omitted on create, the backend decides the environment. Production environment: `Production`; Preview: `Preview`.",
 			},
 		},
 		// The timeouts definition uses a block (rather than an object

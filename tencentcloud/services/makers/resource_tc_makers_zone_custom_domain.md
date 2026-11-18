@@ -7,21 +7,18 @@ also the import ID format. Only the `env` attribute supports in-place update
 The binding, unbinding and environment switch operations are asynchronous on the
 cloud side: the provider polls `DescribeZoneCustomDomains` until the change is
 visible before the operation is reported as done. The waiting budgets are
-controlled through the standard `timeouts` block (`create`, `update`, `delete`
-and `read` attributes, duration strings such as `30m`); when unset they fall
+controlled through the standard `timeouts` block (`create`, `update` and `delete` 
+attributes, duration strings such as `30m`); when unset they fall
 back to the provider-level timeouts.
-
-Note: the `DescribeZoneCustomDomains` API does not echo back the `project_id`,
-so drift detection on `project_id` is limited to the value kept in state.
 
 Example Usage
 
 ```hcl
 resource "tencentcloud_makers_zone_custom_domain" "example" {
-  zone_id    = "zone-123456"
-  project_id = "proj-abcdef"
-  domain     = "www.example.com"
-  env        = "production"
+  zone_id       = "zone-3hzk0ndvnnyp"
+  project_id    = "makers-jw7jha6dktob"
+  domain     = "tf.example.cn"
+  env        = "Production"
 
   timeouts {
     create = "30m"
@@ -36,5 +33,5 @@ Import
 Makers zone custom domain can be imported using the id, e.g.
 
 ```sh
-$ terraform import tencentcloud_makers_zone_custom_domain.example zone-123456#proj-abcdef#www.example.com
+terraform import tencentcloud_makers_zone_custom_domain.example zone-123456#proj-abcdef#www.example.com
 ```
