@@ -78,7 +78,8 @@ func (d *MakersDeploymentLogDataSource) Read(ctx context.Context, req datasource
 	request.ProjectId = config.ProjectId.ValueStringPointer()
 	request.DeploymentId = config.DeploymentId.ValueStringPointer()
 
-	response, err := d.Client().UseMakersClient().DescribeDeploymentLogWithContext(ctx, request)
+	service := NewMakersService(d.Client())
+	logUrl, err := service.DescribeDeploymentLog(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error querying Makers deployment log",
@@ -86,14 +87,7 @@ func (d *MakersDeploymentLogDataSource) Read(ctx context.Context, req datasource
 		)
 		return
 	}
-	if response == nil || response.Response == nil {
-		resp.Diagnostics.AddError(
-			"Error querying Makers deployment log",
-			"DescribeDeploymentLog returned an empty response.",
-		)
-		return
-	}
 
-	config.LogUrl = types.StringPointerValue(response.Response.LogUrl)
+	config.LogUrl = types.StringPointerValue(logUrl)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &config)...)
 }

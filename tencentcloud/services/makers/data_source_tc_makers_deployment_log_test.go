@@ -12,7 +12,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	makerssdk "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
-
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/sharedmeta"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/makers"
@@ -74,9 +73,8 @@ func TestMakersDeploymentLog_Read_Success(t *testing.T) {
 	defer patches.Reset()
 
 	client := &connectivity.TencentCloudClient{}
-	makersClient := &makerssdk.Client{}
-	patches.ApplyMethodReturn(client, "UseMakersClient", makersClient)
-	patches.ApplyMethodFunc(makersClient, "DescribeDeploymentLogWithContext", func(ctx context.Context, request *makerssdk.DescribeDeploymentLogRequest) (*makerssdk.DescribeDeploymentLogResponse, error) {
+	service := &makers.MakersService{}
+	patches.ApplyMethodFunc(service, "DescribeDeploymentLog", func(ctx context.Context, request *makerssdk.DescribeDeploymentLogRequest) (*string, error) {
 		if request.ZoneId == nil || *request.ZoneId != "zone-1" {
 			t.Errorf("unexpected ZoneId: %v", request.ZoneId)
 		}
@@ -86,12 +84,7 @@ func TestMakersDeploymentLog_Read_Success(t *testing.T) {
 		if request.DeploymentId == nil || *request.DeploymentId != "deploy-1" {
 			t.Errorf("unexpected DeploymentId: %v", request.DeploymentId)
 		}
-		resp := makerssdk.NewDescribeDeploymentLogResponse()
-		resp.Response = &makerssdk.DescribeDeploymentLogResponseParams{
-			LogUrl:    ptrStrMakersDeploymentLog("https://log.example.com/build-1.log"),
-			RequestId: ptrStrMakersDeploymentLog("req-1"),
-		}
-		return resp, nil
+		return ptrStrMakersDeploymentLog("https://log.example.com/build-1.log"), nil
 	})
 
 	ds := newTestMakersDeploymentLogDataSource(t, client)
@@ -125,15 +118,9 @@ func TestMakersDeploymentLog_Read_NullLogUrl(t *testing.T) {
 	defer patches.Reset()
 
 	client := &connectivity.TencentCloudClient{}
-	makersClient := &makerssdk.Client{}
-	patches.ApplyMethodReturn(client, "UseMakersClient", makersClient)
-	patches.ApplyMethodFunc(makersClient, "DescribeDeploymentLogWithContext", func(ctx context.Context, request *makerssdk.DescribeDeploymentLogRequest) (*makerssdk.DescribeDeploymentLogResponse, error) {
-		resp := makerssdk.NewDescribeDeploymentLogResponse()
-		resp.Response = &makerssdk.DescribeDeploymentLogResponseParams{
-			LogUrl:    nil,
-			RequestId: ptrStrMakersDeploymentLog("req-2"),
-		}
-		return resp, nil
+	service := &makers.MakersService{}
+	patches.ApplyMethodFunc(service, "DescribeDeploymentLog", func(ctx context.Context, request *makerssdk.DescribeDeploymentLogRequest) (*string, error) {
+		return nil, nil
 	})
 
 	ds := newTestMakersDeploymentLogDataSource(t, client)
@@ -158,9 +145,8 @@ func TestMakersDeploymentLog_Read_ApiError(t *testing.T) {
 	defer patches.Reset()
 
 	client := &connectivity.TencentCloudClient{}
-	makersClient := &makerssdk.Client{}
-	patches.ApplyMethodReturn(client, "UseMakersClient", makersClient)
-	patches.ApplyMethodFunc(makersClient, "DescribeDeploymentLogWithContext", func(ctx context.Context, request *makerssdk.DescribeDeploymentLogRequest) (*makerssdk.DescribeDeploymentLogResponse, error) {
+	service := &makers.MakersService{}
+	patches.ApplyMethodFunc(service, "DescribeDeploymentLog", func(ctx context.Context, request *makerssdk.DescribeDeploymentLogRequest) (*string, error) {
 		return nil, fmt.Errorf("internal error")
 	})
 
@@ -178,12 +164,9 @@ func TestMakersDeploymentLog_Read_EmptyResponse(t *testing.T) {
 	defer patches.Reset()
 
 	client := &connectivity.TencentCloudClient{}
-	makersClient := &makerssdk.Client{}
-	patches.ApplyMethodReturn(client, "UseMakersClient", makersClient)
-	patches.ApplyMethodFunc(makersClient, "DescribeDeploymentLogWithContext", func(ctx context.Context, request *makerssdk.DescribeDeploymentLogRequest) (*makerssdk.DescribeDeploymentLogResponse, error) {
-		resp := makerssdk.NewDescribeDeploymentLogResponse()
-		resp.Response = nil
-		return resp, nil
+	service := &makers.MakersService{}
+	patches.ApplyMethodFunc(service, "DescribeDeploymentLog", func(ctx context.Context, request *makerssdk.DescribeDeploymentLogRequest) (*string, error) {
+		return nil, fmt.Errorf("DescribeDeploymentLog returned an empty response")
 	})
 
 	ds := newTestMakersDeploymentLogDataSource(t, client)
