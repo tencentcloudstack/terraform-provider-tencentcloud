@@ -56,7 +56,8 @@ func (d *MonitorExtNamespaceDataSource) Read(ctx context.Context, req datasource
 		return
 	}
 
-	names, err := NewMonitorService(d.Client()).DescribeExtNamespace(ctx)
+	svc := NewMonitorService(d.Client())
+	names, err := svc.DescribeExtNamespace(ctx)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error querying Monitor ext namespaces",
