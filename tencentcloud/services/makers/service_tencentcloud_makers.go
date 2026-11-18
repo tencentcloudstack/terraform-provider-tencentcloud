@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -247,10 +248,36 @@ func (me *MakersService) DeleteProjectCustomDomain(ctx context.Context, zoneId, 
 	return
 }
 
+// Zone domain status values reported by DescribeZoneCustomDomains.
+const (
+	// ZoneDomainStatusOnline is the terminal success status of a domain:
+	// the domain is bound and serving traffic.
+	ZoneDomainStatusOnline = "online"
+	// ZoneDomainStatusProcess means an async operation (binding, unbinding or
+	// environment switch) is still in progress.
+	ZoneDomainStatusProcess = "process"
+)
+
+// zoneCustomDomainInProgress reports whether the reported status means an
+// async operation is still running. A missing status is treated as in
+// progress: the domain row may be returned before all fields settle.
+func zoneCustomDomainInProgress(status *string) bool {
+	return status == nil || strings.EqualFold(*status, ZoneDomainStatusProcess)
+}
+
+// zoneCustomDomainStatusOf safely formats a possibly nil status value.
+func zoneCustomDomainStatusOf(status *string) string {
+	if status == nil {
+		return ""
+	}
+	return *status
+}
+
 // WaitForZoneCustomDomain polls DescribeZoneCustomDomains until the domain
-// is visible as a managed `Custom` domain. The binding operation is async on
-// the cloud side, so right after CreateZoneCustomDomain succeeds the domain
-// may not be readable yet.
+// is visible with a settled (non-process) status. The binding operation is
+// async on the cloud side: right after CreateZoneCustomDomain succeeds the
+// domain may not be readable yet, or may be readable with a `process`
+// status while the binding is still converging.
 func (me *MakersService) WaitForZoneCustomDomain(ctx context.Context, zoneId, projectId, domain string, timeout time.Duration) error {
 	logId := tccommon.GetLogId(ctx)
 
@@ -261,6 +288,12 @@ func (me *MakersService) WaitForZoneCustomDomain(ctx context.Context, zoneId, pr
 		}
 		if item == nil {
 			return resource.RetryableError(fmt.Errorf("makers zone custom domain [%s] is not ready yet", domain))
+		}
+		if zoneCustomDomainInProgress(item.Status) {
+			return resource.RetryableError(fmt.Errorf("makers zone custom domain [%s] is still processing, status [%s]", domain, zoneCustomDomainStatusOf(item.Status)))
+		}
+		if !strings.EqualFold(*item.Status, ZoneDomainStatusOnline) {
+			return resource.NonRetryableError(fmt.Errorf("makers zone custom domain [%s] reached unexpected status [%s]", domain, *item.Status))
 		}
 		return nil
 	})
@@ -273,8 +306,8 @@ func (me *MakersService) WaitForZoneCustomDomain(ctx context.Context, zoneId, pr
 
 // WaitForZoneCustomDomainDeleted polls DescribeZoneCustomDomains until the
 // domain is no longer visible. The unbinding operation is async on the cloud
-// side, so the domain may still be reported right after the delete call
-// returns.
+// side, so the domain may still be reported (possibly with a `process`
+// status) right after the delete call returns.
 func (me *MakersService) WaitForZoneCustomDomainDeleted(ctx context.Context, zoneId, projectId, domain string, timeout time.Duration) error {
 	logId := tccommon.GetLogId(ctx)
 
@@ -284,7 +317,7 @@ func (me *MakersService) WaitForZoneCustomDomainDeleted(ctx context.Context, zon
 			return tccommon.RetryError(e)
 		}
 		if item != nil {
-			return resource.RetryableError(fmt.Errorf("makers zone custom domain [%s] is still being deleted", domain))
+			return resource.RetryableError(fmt.Errorf("makers zone custom domain [%s] is still being deleted, status [%s]", domain, zoneCustomDomainStatusOf(item.Status)))
 		}
 		return nil
 	})
@@ -296,8 +329,8 @@ func (me *MakersService) WaitForZoneCustomDomainDeleted(ctx context.Context, zon
 }
 
 // WaitForZoneCustomDomainEnv polls DescribeZoneCustomDomains until the
-// domain reports the expected environment slug. The environment switch is
-// async on the cloud side.
+// domain reports the expected environment slug with a settled status. The
+// environment switch is async on the cloud side.
 func (me *MakersService) WaitForZoneCustomDomainEnv(ctx context.Context, zoneId, projectId, domain, env string, timeout time.Duration) error {
 	logId := tccommon.GetLogId(ctx)
 
@@ -308,6 +341,12 @@ func (me *MakersService) WaitForZoneCustomDomainEnv(ctx context.Context, zoneId,
 		}
 		if item == nil {
 			return resource.RetryableError(fmt.Errorf("makers zone custom domain [%s] is not readable while switching env", domain))
+		}
+		if zoneCustomDomainInProgress(item.Status) {
+			return resource.RetryableError(fmt.Errorf("makers zone custom domain [%s] env switch is still processing, status [%s]", domain, zoneCustomDomainStatusOf(item.Status)))
+		}
+		if !strings.EqualFold(*item.Status, ZoneDomainStatusOnline) {
+			return resource.NonRetryableError(fmt.Errorf("makers zone custom domain [%s] reached unexpected status [%s] while switching env", domain, *item.Status))
 		}
 		if item.Env == nil || *item.Env != env {
 			return resource.RetryableError(fmt.Errorf("makers zone custom domain [%s] env is not ready yet, expect [%s]", domain, env))

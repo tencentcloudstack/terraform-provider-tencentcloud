@@ -50,53 +50,13 @@ The following arguments are supported:
 * `project_id` - (Required, String) Project ID.
 * `zone_id` - (Required, String) Makers zone ID.
 * `env` - (Optional, String) Environment slug the domain is bound to. If omitted on create, the backend decides the environment.
-* `timeouts` - (Optional, Object) Framework attribute.
-
-The `timeouts` object supports the following:
-
-* `create` - (Optional, String) A string that can be parsed as a duration (https://pkg.go.dev/time#ParseDuration), e.g. `30m`. It limits how long to wait for the async custom domain binding to converge. Default is `60m`.
-* `delete` - (Optional, String) A string that can be parsed as a duration (https://pkg.go.dev/time#ParseDuration), e.g. `30m`. It limits how long to wait for the async custom domain unbinding to converge. Default is `60m`.
-* `read` - (Optional, String) A string that can be parsed as a duration (https://pkg.go.dev/time#ParseDuration), e.g. `10m`. Default is the provider-level read timeout.
-* `update` - (Optional, String) A string that can be parsed as a duration (https://pkg.go.dev/time#ParseDuration), e.g. `30m`. It limits how long to wait for the async environment switch to converge. Default is `60m`.
+* `timeouts` - (Optional, Object) The `timeouts` block.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
-      * `content` - Verification file content.
-      * `name_servers` - Name servers.
-      * `path` - Verification file path.
-      * `record_type` - Record type, e.g. TXT.
-      * `record_value` - Record value.
-      * `subdomain` - Host record.
-    * `dns_verification` - DNS verification.
-    * `file_verification` - File verification.
-    * `include_sub_domains` - Whether to include sub domains. Valid values: `on`, `off`.
-    * `max_age` - Validity period in seconds.
-    * `ns_verification` - NS verification.
-    * `preload` - Whether to preload. Valid values: `on`, `off`.
-    * `redirect_status_code` - Redirect status code. Valid values: 301, 302, 307, 308.
-    * `switch` - Switch state. Valid values: `on`, `off`.
-    * `switch` - Switch state. Valid values: `on`, `off`.
-    * `switch` - Switch state. Valid values: `on`, `off`.
-    * `switch` - Switch state. Valid values: `on`, `off`.
-    * `switch` - Switch state. Valid values: `on`, `off`.
-  * `area` - Acceleration area.
-  * `cname` - CNAME.
-  * `domain` - Domain name.
-  * `env` - Bound environment slug, defaults to Production.
-  * `force_redirect` - Force HTTPS redirect configuration.
-  * `hsts` - HSTS configuration.
-  * `http2` - HTTP/2 configuration.
-  * `ipv6` - IPv6 configuration.
-  * `main_domain` - Main domain.
-  * `ocsp_stapling` - OCSP stapling configuration.
-  * `ownership_verification` - Ownership verification information.
-  * `status` - Domain status.
-  * `type` - Domain type. Valid values: `Custom`, `Preset`.
-  * `zone_id` - Zone ID.
 * `id` - ID of the resource in the format `zone_id#project_id#domain`.
-* `pages_domains` - The current domain configuration returned by the cloud side. Only the managed custom domain is reported here.
 
 ## API Reference
 

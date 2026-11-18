@@ -2,7 +2,6 @@ package makers_test
 
 import (
 	"context"
-	"reflect"
 	"testing"
 	"time"
 
@@ -12,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-go/tftypes"
 	sdkerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	resourcetimeouts "github.com/hashicorp/terraform-plugin-framework-timeouts/resource/timeouts"
@@ -104,11 +104,19 @@ func (c *makersZoneCustomDomainTestContext) readState(t *testing.T, state tfsdk.
 	return model
 }
 
+// testZoneDomainWithStatus returns a settled test domain with the given
+// status, mirroring the cloud side while an async operation is running.
+func testZoneDomainWithStatus(status string) *makerssdk.ZoneDomain {
+	item := testZoneDomain()
+	item.Status = mkString(status)
+	return item
+}
+
 func testZoneDomain() *makerssdk.ZoneDomain {
 	return &makerssdk.ZoneDomain{
 		Type:       mkString("Custom"),
 		Domain:     mkString(testDomain),
-		Status:     mkString("Pass"),
+		Status:     mkString("online"),
 		Env:        mkString(testEnv),
 		ZoneId:     mkString(testZoneId),
 		Area:       mkString("mainland"),
@@ -143,15 +151,31 @@ func testZoneDomain() *makerssdk.ZoneDomain {
 	}
 }
 
+// nullTimeouts builds a null timeouts.Value matching the resource schema, so
+// model (de)serialization through tfsdk.Plan/State behaves exactly like a
+// configuration that does not set the timeouts block.
+func (c *makersZoneCustomDomainTestContext) nullTimeouts() resourcetimeouts.Value {
+	timeoutsBlock, ok := c.schema.Blocks["timeouts"]
+	if !ok {
+		panic("timeouts block not found in schema")
+	}
+	timeoutsType, ok := timeoutsBlock.Type().(resourcetimeouts.Type)
+	if !ok {
+		panic("unexpected timeouts block type")
+	}
+	return resourcetimeouts.Value{
+		Object: types.ObjectNull(timeoutsType.AttributeTypes()),
+	}
+}
+
 func (c *makersZoneCustomDomainTestContext) sampleModel() svcmakers.MakersZoneCustomDomainResourceModel {
 	return svcmakers.MakersZoneCustomDomainResourceModel{
-		Id:           types.StringNull(),
-		ZoneId:       types.StringValue(testZoneId),
-		ProjectId:    types.StringValue(testProjectId),
-		Domain:       types.StringValue(testDomain),
-		Env:          types.StringValue(testEnv),
-		PagesDomains: nil,
-		Timeouts:     nil,
+		Id:        types.StringNull(),
+		ZoneId:    types.StringValue(testZoneId),
+		ProjectId: types.StringValue(testProjectId),
+		Domain:    types.StringValue(testDomain),
+		Env:       types.StringValue(testEnv),
+		Timeouts:  c.nullTimeouts(),
 	}
 }
 
@@ -162,25 +186,32 @@ func TestMakersZoneCustomDomainCreate(t *testing.T) {
 	c := newMakersZoneCustomDomainTestContext(t, patches)
 
 	var createdRequest *makerssdk.CreateZoneCustomDomainRequest
-	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "CreateZoneCustomDomain", func(_ context.Context, request *makerssdk.CreateZoneCustomDomainRequest) (string, error) {
+	patches.ApplyMethodFunc(&svcmakers.MakersService{}, "CreateZoneCustomDomain", func(_ context.Context, request *makerssdk.CreateZoneCustomDomainRequest) (string, error) {
 		createdRequest = request
 		return testDomain, nil
 	})
 	describeCalls := 0
-	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, zoneId, projectId, domain string) (*makerssdk.ZoneDomain, error) {
+	patches.ApplyMethodFunc(&svcmakers.MakersService{}, "DescribeZoneCustomDomain", func(_ context.Context, zoneId, projectId, domain string) (*makerssdk.ZoneDomain, error) {
 		if zoneId != testZoneId || projectId != testProjectId || domain != testDomain {
 			t.Errorf("unexpected read-back locator: %s/%s/%s", zoneId, projectId, domain)
 		}
 		describeCalls++
 		// The binding is async: the first poll (the wait loop) sees the
-		// domain not yet visible, the second one (the final read back) sees it.
+		// domain not yet visible, the second one sees it with a `process`
+		// status while the binding converges, the third one (the final read
+		// back) sees the settled domain.
 		if describeCalls == 1 {
 			return nil, nil
+		}
+		if describeCalls == 2 {
+			return testZoneDomainWithStatus("process"), nil
 		}
 		return testZoneDomain(), nil
 	})
 
-	var createResp resource.CreateResponse
+	// The framework server normally pre-initializes the response state with
+	// the resource schema; mirror that here so State.Set works.
+	createResp := resource.CreateResponse{State: tfsdk.State{Schema: c.schema}}
 	c.resource.Create(context.Background(), resource.CreateRequest{Plan: c.plan(t, c.sampleModel())}, &createResp)
 	if createResp.Diagnostics.HasError() {
 		t.Fatalf("Create failed: %v", createResp.Diagnostics.Errors())
@@ -209,36 +240,8 @@ func TestMakersZoneCustomDomainCreate(t *testing.T) {
 	if model.Env.ValueString() != testEnv {
 		t.Errorf("unexpected env: %s", model.Env.ValueString())
 	}
-	if describeCalls < 2 {
-		t.Errorf("expected the async wait to poll at least twice, got %d calls", describeCalls)
-	}
-	if model.PagesDomains == nil || len(model.PagesDomains) != 1 {
-		t.Fatalf("expected one pages domain, got %v", model.PagesDomains)
-	}
-	pd := model.PagesDomains[0]
-	if pd.Type.ValueString() != "Custom" {
-		t.Errorf("unexpected pages domain type: %s", pd.Type.ValueString())
-	}
-	if pd.Status.ValueString() != "Pass" {
-		t.Errorf("unexpected pages domain status: %s", pd.Status.ValueString())
-	}
-	if pd.Cname.ValueString() != "cname.example.com" {
-		t.Errorf("unexpected cname: %s", pd.Cname.ValueString())
-	}
-	if pd.Ipv6 == nil || pd.Ipv6.Switch.ValueString() != "off" {
-		t.Errorf("unexpected ipv6 switch: %v", pd.Ipv6)
-	}
-	if pd.ForceRedirect == nil || pd.ForceRedirect.RedirectStatusCode.ValueInt64() != 301 {
-		t.Errorf("unexpected force redirect: %v", pd.ForceRedirect)
-	}
-	if pd.Hsts == nil || pd.Hsts.MaxAge.ValueInt64() != 3600 {
-		t.Errorf("unexpected hsts: %v", pd.Hsts)
-	}
-	if pd.OwnershipVerification == nil || pd.OwnershipVerification.NsVerification == nil {
-		t.Fatalf("missing ownership verification: %v", pd.OwnershipVerification)
-	}
-	if pd.OwnershipVerification.NsVerification.NameServers.IsNull() {
-		t.Errorf("name servers should not be null")
+	if describeCalls < 3 {
+		t.Errorf("expected the async wait to poll at least three times (invisible, process, settled), got %d calls", describeCalls)
 	}
 }
 
@@ -248,11 +251,11 @@ func TestMakersZoneCustomDomainCreateError(t *testing.T) {
 
 	c := newMakersZoneCustomDomainTestContext(t, patches)
 
-	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "CreateZoneCustomDomain", func(_ context.Context, _ *makerssdk.CreateZoneCustomDomainRequest) (string, error) {
+	patches.ApplyMethodFunc(&svcmakers.MakersService{}, "CreateZoneCustomDomain", func(_ context.Context, _ *makerssdk.CreateZoneCustomDomainRequest) (string, error) {
 		return "", &sdkerr.TencentCloudSDKError{}
 	})
 
-	var createResp resource.CreateResponse
+	createResp := resource.CreateResponse{State: tfsdk.State{Schema: c.schema}}
 	c.resource.Create(context.Background(), resource.CreateRequest{Plan: c.plan(t, c.sampleModel())}, &createResp)
 	if !createResp.Diagnostics.HasError() {
 		t.Fatalf("expected Create to fail on API error")
@@ -265,7 +268,7 @@ func TestMakersZoneCustomDomainReadNotFound(t *testing.T) {
 
 	c := newMakersZoneCustomDomainTestContext(t, patches)
 
-	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, zoneId, projectId, domain string) (*makerssdk.ZoneDomain, error) {
+	patches.ApplyMethodFunc(&svcmakers.MakersService{}, "DescribeZoneCustomDomain", func(_ context.Context, zoneId, projectId, domain string) (*makerssdk.ZoneDomain, error) {
 		if zoneId != testZoneId || projectId != testProjectId || domain != testDomain {
 			t.Errorf("unexpected read locator: %s/%s/%s", zoneId, projectId, domain)
 		}
@@ -275,7 +278,7 @@ func TestMakersZoneCustomDomainReadNotFound(t *testing.T) {
 	model := c.sampleModel()
 	model.Id = types.StringValue(testCompositeId)
 
-	var readResp resource.ReadResponse
+	readResp := resource.ReadResponse{State: tfsdk.State{Schema: c.schema}}
 	c.resource.Read(context.Background(), resource.ReadRequest{State: c.state(t, model)}, &readResp)
 	if readResp.Diagnostics.HasError() {
 		t.Fatalf("Read failed: %v", readResp.Diagnostics.Errors())
@@ -297,7 +300,7 @@ func TestMakersServiceDescribeZoneCustomDomainFiltersPreset(t *testing.T) {
 	preset.Domain = mkString("preset.example.com")
 
 	var queriedRequest *makerssdk.DescribeZoneCustomDomainsRequest
-	patches.ApplyMethodFunc(reflect.TypeOf(makerssdk.Client{}), "DescribeZoneCustomDomainsWithContext", func(_ context.Context, request *makerssdk.DescribeZoneCustomDomainsRequest) (*makerssdk.DescribeZoneCustomDomainsResponse, error) {
+	patches.ApplyMethodFunc(&makerssdk.Client{}, "DescribeZoneCustomDomainsWithContext", func(_ context.Context, request *makerssdk.DescribeZoneCustomDomainsRequest) (*makerssdk.DescribeZoneCustomDomainsResponse, error) {
 		queriedRequest = request
 		return &makerssdk.DescribeZoneCustomDomainsResponse{
 			Response: &makerssdk.DescribeZoneCustomDomainsResponseParams{
@@ -340,17 +343,19 @@ func TestMakersZoneCustomDomainUpdate(t *testing.T) {
 	c := newMakersZoneCustomDomainTestContext(t, patches)
 
 	var updatedRequest *makerssdk.ModifyZoneCustomDomainEnvRequest
-	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "ModifyZoneCustomDomainEnv", func(_ context.Context, request *makerssdk.ModifyZoneCustomDomainEnvRequest) error {
+	patches.ApplyMethodFunc(&svcmakers.MakersService{}, "ModifyZoneCustomDomainEnv", func(_ context.Context, request *makerssdk.ModifyZoneCustomDomainEnvRequest) error {
 		updatedRequest = request
 		return nil
 	})
 	describeCalls := 0
-	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, _ string, _ string, _ string) (*makerssdk.ZoneDomain, error) {
+	patches.ApplyMethodFunc(&svcmakers.MakersService{}, "DescribeZoneCustomDomain", func(_ context.Context, _ string, _ string, _ string) (*makerssdk.ZoneDomain, error) {
 		domain := testZoneDomain()
 		describeCalls++
-		// The env switch is async: the first poll still reports the old env.
+		// The env switch is async: the first poll still reports the old env
+		// with a `process` status while the switch is running.
 		if describeCalls == 1 {
 			domain.Env = mkString(testEnv)
+			domain.Status = mkString("process")
 		} else {
 			domain.Env = mkString("staging")
 		}
@@ -360,12 +365,11 @@ func TestMakersZoneCustomDomainUpdate(t *testing.T) {
 	state := c.sampleModel()
 	state.Id = types.StringValue(testCompositeId)
 	state.Env = types.StringValue(testEnv)
-	state.PagesDomains = nil
 
 	plan := state
 	plan.Env = types.StringValue("staging")
 
-	var updateResp resource.UpdateResponse
+	updateResp := resource.UpdateResponse{State: tfsdk.State{Schema: c.schema}}
 	c.resource.Update(context.Background(), resource.UpdateRequest{Plan: c.plan(t, plan), State: c.state(t, state)}, &updateResp)
 	if updateResp.Diagnostics.HasError() {
 		t.Fatalf("Update failed: %v", updateResp.Diagnostics.Errors())
@@ -404,13 +408,13 @@ func TestMakersZoneCustomDomainDelete(t *testing.T) {
 
 	var deletedZoneId, deletedProjectId, deletedDomain string
 	deleted := false
-	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DeleteProjectCustomDomain", func(_ context.Context, zoneId, projectId, domain string) error {
+	patches.ApplyMethodFunc(&svcmakers.MakersService{}, "DeleteProjectCustomDomain", func(_ context.Context, zoneId, projectId, domain string) error {
 		deleted = true
 		deletedZoneId, deletedProjectId, deletedDomain = zoneId, projectId, domain
 		return nil
 	})
 	describeCalls := 0
-	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, zoneId, projectId, domain string) (*makerssdk.ZoneDomain, error) {
+	patches.ApplyMethodFunc(&svcmakers.MakersService{}, "DescribeZoneCustomDomain", func(_ context.Context, zoneId, projectId, domain string) (*makerssdk.ZoneDomain, error) {
 		describeCalls++
 		// The unbinding is async: the first poll still sees the domain.
 		if describeCalls == 1 {
@@ -422,7 +426,7 @@ func TestMakersZoneCustomDomainDelete(t *testing.T) {
 	model := c.sampleModel()
 	model.Id = types.StringValue(testCompositeId)
 
-	var deleteResp resource.DeleteResponse
+	deleteResp := resource.DeleteResponse{}
 	c.resource.Delete(context.Background(), resource.DeleteRequest{State: c.state(t, model)}, &deleteResp)
 	if deleteResp.Diagnostics.HasError() {
 		t.Fatalf("Delete failed: %v", deleteResp.Diagnostics.Errors())
@@ -447,7 +451,7 @@ func TestMakersServiceWaitForZoneCustomDomainTimeout(t *testing.T) {
 	patches.ApplyMethodReturn(connectivityClient, "UseMakersClient", &makerssdk.Client{})
 
 	// The domain never becomes visible: the wait must fail after the timeout.
-	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, _ string, _ string, _ string) (*makerssdk.ZoneDomain, error) {
+	patches.ApplyMethodFunc(&svcmakers.MakersService{}, "DescribeZoneCustomDomain", func(_ context.Context, _ string, _ string, _ string) (*makerssdk.ZoneDomain, error) {
 		return nil, nil
 	})
 
@@ -465,30 +469,30 @@ func TestMakersZoneCustomDomainCreateTimeoutPassedToWait(t *testing.T) {
 
 	c := newMakersZoneCustomDomainTestContext(t, patches)
 
-	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "CreateZoneCustomDomain", func(_ context.Context, _ *makerssdk.CreateZoneCustomDomainRequest) (string, error) {
+	patches.ApplyMethodFunc(&svcmakers.MakersService{}, "CreateZoneCustomDomain", func(_ context.Context, _ *makerssdk.CreateZoneCustomDomainRequest) (string, error) {
 		return testDomain, nil
 	})
-	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, _ string, _ string, _ string) (*makerssdk.ZoneDomain, error) {
+	patches.ApplyMethodFunc(&svcmakers.MakersService{}, "DescribeZoneCustomDomain", func(_ context.Context, _ string, _ string, _ string) (*makerssdk.ZoneDomain, error) {
 		return testZoneDomain(), nil
 	})
 
 	model := c.sampleModel()
 	model.Timeouts = makersZoneCustomDomainTimeouts(t, "90m")
 
-	var createResp resource.CreateResponse
+	createResp := resource.CreateResponse{State: tfsdk.State{Schema: c.schema}}
 	c.resource.Create(context.Background(), resource.CreateRequest{Plan: c.plan(t, model)}, &createResp)
 	if createResp.Diagnostics.HasError() {
 		t.Fatalf("Create with custom timeout failed: %v", createResp.Diagnostics.Errors())
 	}
 
 	refreshed := c.readState(t, createResp.State)
-	if refreshed.Timeouts == nil {
+	if refreshed.Timeouts.IsNull() {
 		t.Fatalf("timeouts block should be kept in state")
 	}
 }
 
-// testSchemaAttributes returns the resource schema attributes.
-func testSchemaAttributes(t *testing.T) map[string]schema.Attribute {
+// testSchemaBlocks returns the resource schema blocks.
+func testSchemaBlocks(t *testing.T) map[string]schema.Block {
 	t.Helper()
 
 	var schemaResp resource.SchemaResponse
@@ -497,25 +501,26 @@ func testSchemaAttributes(t *testing.T) map[string]schema.Attribute {
 	if schemaResp.Diagnostics.HasError() {
 		t.Fatalf("failed to build schema: %v", schemaResp.Diagnostics.Errors())
 	}
-	return schemaResp.Schema.Attributes
+	return schemaResp.Schema.Blocks
 }
 
 // makersZoneCustomDomainTimeouts builds a resourcetimeouts.Value with the
 // given create duration, reusing the attribute types of the schema block.
-func makersZoneCustomDomainTimeouts(t *testing.T, create string) *resourcetimeouts.Value {
+func makersZoneCustomDomainTimeouts(t *testing.T, create string) resourcetimeouts.Value {
 	t.Helper()
 
-	block, ok := testSchemaAttributes(t)["timeouts"].(schema.SingleNestedAttribute)
+	timeoutsBlock, ok := testSchemaBlocks(t)["timeouts"]
 	if !ok {
-		t.Fatalf("timeouts is not a single nested attribute")
+		t.Fatalf("timeouts block not found in schema")
 	}
-	objectType, ok := block.GetType().(types.ObjectType)
+	timeoutsType, ok := timeoutsBlock.Type().(resourcetimeouts.Type)
 	if !ok {
-		t.Fatalf("timeouts does not have an object type")
+		t.Fatalf("timeouts does not have the framework timeouts type: %T", timeoutsBlock.Type())
 	}
 
+	attrTypes := timeoutsType.AttributeTypes()
 	attributes := map[string]attr.Value{}
-	for name := range objectType.AttrTypes {
+	for name := range attrTypes {
 		if name == "create" {
 			attributes[name] = types.StringValue(create)
 		} else {
@@ -523,13 +528,11 @@ func makersZoneCustomDomainTimeouts(t *testing.T, create string) *resourcetimeou
 		}
 	}
 
-	object, diags := types.ObjectValue(objectType.AttrTypes, attributes)
+	object, diags := types.ObjectValue(attrTypes, attributes)
 	if diags.HasError() {
 		t.Fatalf("failed to build timeouts object: %v", diags.Errors())
 	}
-	value, diags := resourcetimeouts.Type{
-		ObjectType: objectType,
-	}.ValueFromObject(context.Background(), object)
+	value, diags := timeoutsType.ValueFromObject(context.Background(), object)
 	if diags.HasError() {
 		t.Fatalf("failed to build timeouts value: %v", diags.Errors())
 	}
@@ -537,7 +540,7 @@ func makersZoneCustomDomainTimeouts(t *testing.T, create string) *resourcetimeou
 	if !ok {
 		t.Fatalf("timeouts value has unexpected type %T", value)
 	}
-	return &timeoutsValue
+	return timeoutsValue
 }
 
 func TestMakersZoneCustomDomainImportState(t *testing.T) {
@@ -552,6 +555,10 @@ func TestMakersZoneCustomDomainImportState(t *testing.T) {
 	}
 
 	importResp := resource.ImportStateResponse{State: tfsdk.State{Schema: c.schema}}
+	// The framework server initializes the import state raw value to a fully
+	// null object of the schema type before the provider ImportState runs;
+	// mirror that so SetAttribute can store into it.
+	importResp.State.Raw = tftypes.NewValue(c.schema.Type().TerraformType(context.Background()), nil)
 	importer.ImportState(context.Background(), resource.ImportStateRequest{
 		ID: testCompositeId,
 	}, &importResp)
@@ -586,6 +593,10 @@ func TestMakersZoneCustomDomainImportStateInvalidId(t *testing.T) {
 	}
 
 	importResp := resource.ImportStateResponse{State: tfsdk.State{Schema: c.schema}}
+	// The framework server initializes the import state raw value to a fully
+	// null object of the schema type before the provider ImportState runs;
+	// mirror that so SetAttribute can store into it.
+	importResp.State.Raw = tftypes.NewValue(c.schema.Type().TerraformType(context.Background()), nil)
 	importer.ImportState(context.Background(), resource.ImportStateRequest{
 		ID: "only-one-segment",
 	}, &importResp)
