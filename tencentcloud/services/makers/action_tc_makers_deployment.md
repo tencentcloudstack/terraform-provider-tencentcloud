@@ -2,17 +2,20 @@ Provides an action to trigger a Makers build via the CreateDeployment API. This 
 
 Example Usage
 
-~> **NOTE:** Actions are supported in HashiCorp Terraform version 1.14 and later.
+~> **NOTE:** Actions are supported in HashiCorp Terraform version 1.16 and later.
+
+~> **NOTE:** Repeating the invocation repeats the cloud-side side effect: each run submits a new build, and a build already accepted by the cloud is not rolled back when this action or its enclosing configuration is destroyed.
+
 
 ```hcl
 action "tencentcloud_makers_deployment" "example" {
   config {
-    zone_id     = "zone-123456"
-    project_id  = "project-123456"
-    via_meta    = "Api"
-    env         = "Production"
-    provider    = "Github"
-    repo_branch = "main"
+    zone_id       = "zone-123456"
+    project_id    = "project-123456"
+    via_meta      = "Upload"
+    env           = "Production"
+    code_provider = "Upload"
+    local_path    = "./projcet_path"
   }
 }
 ```
@@ -30,31 +33,47 @@ terraform apply -invoke=action.tencentcloud_makers_deployment.example
 Or trigger it automatically during apply through `lifecycle.action_trigger`:
 
 ```hcl
+
 resource "tencentcloud_makers_project" "example" {
-  # ...
-}
-
-action "tencentcloud_makers_deployment" "example" {
-  config {
-    zone_id     = "zone-123456"
-    project_id  = "project-123456"
-    via_meta    = "Api"
-    env         = "Production"
-    provider    = "Github"
-    repo_branch = "main"
-  }
-}
-
-resource "tencentcloud_makers_project" "with_trigger" {
-  # ...
-
+  zone_id         = "zone-3hzk0ndvnnyp"
+  name            = "tf-test-upload"
+  channel         = "Custom"
+  area            = "global"
+  code_provider   = "Upload"
+  node_js_version = "22.11.0"
   lifecycle {
     action_trigger {
       events  = [after_create, after_update]
-      actions = [action.tencentcloud_makers_deployment.example]
+      actions = [action.tencentcloud_makers_deployment.zip, action.tencentcloud_makers_deployment.folder]
+    }
+    action_trigger {
+      events  = [after_update]
+      actions = [action.tencentcloud_makers_deployment.folder]
     }
   }
 }
-```
 
-~> **NOTE:** Repeating the invocation repeats the cloud-side side effect: each run submits a new build, and a build already accepted by the cloud is not rolled back when this action or its enclosing configuration is destroyed. `on_failure` (available in Terraform CLI 1.16+) only controls whether the apply continues (`halt`/`continue`) or the resource is tainted (`taint`, only for `after_create`); it is not a destroy guard, and during a full destroy walk action errors are downgraded to warnings.
+action "tencentcloud_makers_deployment" "zip" {
+  config {
+    zone_id       = caller.zone_id
+    project_id    = caller.project_id
+    via_meta      = "Upload"
+    env           = "Production"
+    code_provider = "Upload"
+    dist_type     = "Zip"
+    local_path    = "./makers.zip"
+  }
+}
+
+action "tencentcloud_makers_deployment" "folder" {
+  config {
+    zone_id       = caller.zone_id
+    project_id    = caller.project_id
+    via_meta      = "Upload"
+    env           = "Production"
+    code_provider = "Upload"
+    dist_type     = "Folder"
+    local_path    = "./makers"
+  }
+}
+```

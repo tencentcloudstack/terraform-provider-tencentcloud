@@ -59,9 +59,10 @@ func makersDeploymentAttributeTypes() map[string]tftypes.Type {
 		"project_id":       tftypes.String,
 		"via_meta":         tftypes.String,
 		"env":              tftypes.String,
-		"provider":         tftypes.String,
+		"code_provider":    tftypes.String,
 		"dist_type":        tftypes.String,
 		"temp_bucket_path": tftypes.String,
+		"local_path":       tftypes.String,
 		"repo_branch":      tftypes.String,
 		"repo_commit_hash": tftypes.String,
 		"repo_commit_msg":  tftypes.String,
@@ -103,11 +104,11 @@ func newMakersDeploymentInvokeRequestWithTimeouts(t *testing.T, attrs map[string
 
 func baseMakersDeploymentAttrs() map[string]tftypes.Value {
 	return map[string]tftypes.Value{
-		"zone_id":    tftypes.NewValue(tftypes.String, "zone-1"),
-		"project_id": tftypes.NewValue(tftypes.String, "project-1"),
-		"via_meta":   tftypes.NewValue(tftypes.String, "Api"),
-		"env":        tftypes.NewValue(tftypes.String, "Production"),
-		"provider":   tftypes.NewValue(tftypes.String, "Github"),
+		"zone_id":       tftypes.NewValue(tftypes.String, "zone-1"),
+		"project_id":    tftypes.NewValue(tftypes.String, "project-1"),
+		"via_meta":      tftypes.NewValue(tftypes.String, "Api"),
+		"env":           tftypes.NewValue(tftypes.String, "Production"),
+		"code_provider": tftypes.NewValue(tftypes.String, "Github"),
 	}
 }
 
@@ -557,11 +558,12 @@ func TestMakersDeployment_MetadataAndSchema(t *testing.T) {
 	assert.False(t, schemaResp.Diagnostics.HasError())
 
 	attrs := schemaResp.Schema.Attributes
-	// The CreateDeployment API carries exactly these fields; no other business
+	// The CreateDeployment API carries exactly these fields plus local_path
+	// (the provider-side convenience upload input); no other business
 	// attribute is allowed to leak into the schema.
-	assert.Len(t, attrs, 13)
+	assert.Len(t, attrs, 14)
 
-	required := []string{"zone_id", "project_id", "via_meta", "env", "provider"}
+	required := []string{"zone_id", "project_id", "via_meta", "env", "code_provider"}
 	for _, name := range required {
 		assert.Contains(t, attrs, name)
 		assert.True(t, attrs[name].IsRequired(), "%s must be required", name)
@@ -569,7 +571,7 @@ func TestMakersDeployment_MetadataAndSchema(t *testing.T) {
 	}
 
 	optional := []string{
-		"dist_type", "temp_bucket_path", "repo_branch", "repo_commit_hash",
+		"dist_type", "temp_bucket_path", "local_path", "repo_branch", "repo_commit_hash",
 		"repo_commit_msg", "build_from", "template_id", "ci_spec",
 	}
 	for _, name := range optional {

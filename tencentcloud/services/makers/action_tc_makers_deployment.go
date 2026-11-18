@@ -9,11 +9,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/action"
 	"github.com/hashicorp/terraform-plugin-framework/action/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-
 	makerssdk "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 // _ action.Action is intentionally omitted: the factory function
@@ -71,9 +71,10 @@ type MakersDeploymentModel struct {
 	ProjectId      types.String `tfsdk:"project_id"`
 	ViaMeta        types.String `tfsdk:"via_meta"`
 	Env            types.String `tfsdk:"env"`
-	Provider       types.String `tfsdk:"provider"`
+	Provider       types.String `tfsdk:"code_provider"`
 	DistType       types.String `tfsdk:"dist_type"`
 	TempBucketPath types.String `tfsdk:"temp_bucket_path"`
+	LocalPath      types.String `tfsdk:"local_path"`
 	RepoBranch     types.String `tfsdk:"repo_branch"`
 	RepoCommitHash types.String `tfsdk:"repo_commit_hash"`
 	RepoCommitMsg  types.String `tfsdk:"repo_commit_msg"`
@@ -120,7 +121,9 @@ func (a *MakersDeployment) Schema(ctx context.Context, _ action.SchemaRequest, r
 				Required:    true,
 				Description: "Environment slug, e.g. `Production`, `Preview` or a custom environment.",
 			},
-			"provider": schema.StringAttribute{
+			// The attribute is named code_provider instead of provider because
+			// "provider" is a reserved root attribute name in Terraform.
+			"code_provider": schema.StringAttribute{
 				Required:    true,
 				Description: "Code source. Use `Upload` when building from an uploaded artifact.",
 			},
@@ -130,7 +133,13 @@ func (a *MakersDeployment) Schema(ctx context.Context, _ action.SchemaRequest, r
 			},
 			"temp_bucket_path": schema.StringAttribute{
 				Optional:    true,
-				Description: "Object path of the uploaded artifact in the temp bucket, used when `provider` is `Upload`.",
+				Description: "Object path of the uploaded artifact in the temp bucket, used when `provider` is `Upload`. Mutually exclusive with `local_path`.",
+			},
+			"local_path": schema.StringAttribute{
+				Optional: true,
+				Description: "Local path of the build artifact to deploy: either a zip file, or a folder (compressed into a zip " +
+					"automatically, typically with `dist_type` = `Folder`). The action uploads the artifact and passes the resulting " +
+					"path to the build. Mutually exclusive with `temp_bucket_path`.",
 			},
 			"repo_branch": schema.StringAttribute{
 				Optional:    true,
@@ -227,8 +236,45 @@ func (a *MakersDeployment) Invoke(ctx context.Context, req action.InvokeRequest,
 	if !data.DistType.IsNull() && !data.DistType.IsUnknown() {
 		request.DistType = data.DistType.ValueStringPointer()
 	}
+
+	// local_path and temp_bucket_path describe the same artifact at two
+	// stages; accepting both would leave the actually-used one ambiguous.
+	localPath := ""
+	if !data.LocalPath.IsNull() && !data.LocalPath.IsUnknown() {
+		localPath = data.LocalPath.ValueString()
+	}
+	tempBucketPath := ""
 	if !data.TempBucketPath.IsNull() && !data.TempBucketPath.IsUnknown() {
-		request.TempBucketPath = data.TempBucketPath.ValueStringPointer()
+		tempBucketPath = data.TempBucketPath.ValueString()
+	}
+	if localPath != "" && tempBucketPath != "" {
+		resp.Diagnostics.AddError(
+			"Conflicting artifact arguments",
+			"local_path and temp_bucket_path are mutually exclusive: set local_path to upload a local artifact automatically, or temp_bucket_path when the artifact is already in the temp bucket.",
+		)
+		return
+	}
+
+	service := NewMakersService(a.Client())
+	zoneId := data.ZoneId.ValueString()
+	projectId := data.ProjectId.ValueString()
+
+	if localPath != "" {
+		// Automatic upload flow: fetch a COS temporary credential, upload
+		// the local artifact to the temp bucket, then pass the resulting
+		// object path to the build.
+		progress(fmt.Sprintf("uploading local artifact %s to the Makers temp bucket", localPath))
+		uploadedPath, err := service.UploadMakersLocalArtifact(ctx, zoneId, projectId, localPath, progress)
+		if err != nil {
+			resp.Diagnostics.AddError(
+				fmt.Sprintf("uploading local artifact for Makers project (%s) of zone (%s)", projectId, zoneId),
+				err.Error(),
+			)
+			return
+		}
+		request.TempBucketPath = helper.String(uploadedPath)
+	} else if tempBucketPath != "" {
+		request.TempBucketPath = helper.String(tempBucketPath)
 	}
 	if !data.RepoBranch.IsNull() && !data.RepoBranch.IsUnknown() {
 		request.RepoBranch = data.RepoBranch.ValueStringPointer()
@@ -249,11 +295,7 @@ func (a *MakersDeployment) Invoke(ctx context.Context, req action.InvokeRequest,
 		request.CiSpec = data.CiSpec.ValueStringPointer()
 	}
 
-	zoneId := data.ZoneId.ValueString()
-	projectId := data.ProjectId.ValueString()
-
 	progress(fmt.Sprintf("calling CreateDeployment for Makers project (%s) of zone (%s)", projectId, zoneId))
-	service := NewMakersService(a.Client())
 	deploymentId, err := service.CreateDeployment(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError(

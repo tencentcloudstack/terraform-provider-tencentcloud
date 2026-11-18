@@ -1,9 +1,14 @@
 package makers
 
 import (
+	"archive/zip"
 	"context"
 	"fmt"
+	"io"
+	"io/fs"
 	"log"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -658,4 +663,158 @@ func (me *MakersService) WaitMakersDeploymentComplete(ctx context.Context, zoneI
 		}
 		time.Sleep(pollInterval)
 	}
+}
+
+// DescribeCosTempToken queries a temporary cos token for uploading files.
+// ZoneId and ProjectId scope the query. It returns the token object.
+func (me *MakersService) DescribeCosTempToken(ctx context.Context, zoneId, projectId string) (cosTempParam *makerssdk.DescribeCosTempTokenResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	project, err := me.DescribeProject(ctx, zoneId, projectId)
+	if err != nil {
+		errRet = fmt.Errorf("fetching the project: %w", err)
+		return
+	}
+	if project == nil || project.Name == nil {
+		errRet = fmt.Errorf("project %s does not exist or has no name", projectId)
+		return
+	}
+
+	request := makerssdk.NewDescribeCosTempTokenRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.ProjectId = helper.String(projectId)
+	request.ProjectName = project.Name
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *makerssdk.DescribeCosTempTokenResponse
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseMakersClient().DescribeCosTempTokenWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("DescribeCosTempToken returned an empty response")
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	cosTempParam = response.Response
+	return
+}
+
+// UploadMakersLocalArtifact uploads a local build artifact to the Makers temp
+// bucket using the temporary credential from DescribeCosTempToken, and
+// returns the object path to pass to CreateDeployment as TempBucketPath.
+//
+// A folder given as localPath is compressed into a zip archive first. The
+// cloud side scopes the credential to the TargetPath prefix returned by
+// DescribeCosTempToken (format: <appId>/<projectName>/<timestamp>); the
+// artifact is stored under that prefix using its base name.
+func (me *MakersService) UploadMakersLocalArtifact(ctx context.Context, zoneId, projectId, localPath string, progress func(string)) (string, error) {
+	token, err := me.DescribeCosTempToken(ctx, zoneId, projectId)
+	if err != nil {
+		return "", fmt.Errorf("fetching the COS temporary credential: %w", err)
+	}
+	if token.Bucket == nil || token.Region == nil || token.TargetPath == nil || token.Credentials == nil ||
+		token.Credentials.TmpSecretId == nil || token.Credentials.TmpSecretKey == nil || token.Credentials.Token == nil {
+		return "", fmt.Errorf("DescribeCosTempToken returned an incomplete credential: bucket, region, target path and the temporary key triplet must all be set")
+	}
+
+	// A folder is packaged into a zip first (the build expects an archive,
+	// typically with dist_type = Folder); a plain file is uploaded as-is.
+	uploadPath := localPath
+	objectName := filepath.Base(localPath)
+	info, err := os.Stat(localPath)
+	if err != nil {
+		return "", fmt.Errorf("reading the local artifact %s: %w", localPath, err)
+	}
+	if info.IsDir() {
+		progress("compressing the local folder into a zip archive")
+		zipPath, err := zipMakersDirectory(localPath)
+		if err != nil {
+			return "", err
+		}
+		defer func() {
+			_ = os.Remove(zipPath)
+		}()
+		uploadPath = zipPath
+		objectName += ".zip"
+	}
+
+	cosService := NewMakersCosService(
+		me.client,
+		*token.Region,
+		*token.Credentials.TmpSecretId,
+		*token.Credentials.TmpSecretKey,
+		*token.Credentials.Token)
+	objectKey := fmt.Sprintf("%s/%s", strings.Trim(*token.TargetPath, "/"), objectName)
+	if _, err := cosService.PutFile(ctx, *token.Bucket, objectKey, uploadPath); err != nil {
+		return "", fmt.Errorf("uploading the artifact to COS: %w", err)
+	}
+	return objectKey, nil
+}
+
+// zipMakersDirectory packages a local folder into a zip archive stored in a
+// temporary file and returns its path. The archive stores files with paths
+// relative to the folder root; directory entries are omitted (their paths
+// are implied by the file entries).
+func zipMakersDirectory(dir string) (string, error) {
+	tmp, err := os.CreateTemp("", "makers-artifact-*.zip")
+	if err != nil {
+		return "", fmt.Errorf("creating a temporary zip file: %w", err)
+	}
+	defer func() {
+		_ = tmp.Close()
+	}()
+
+	writer := zip.NewWriter(tmp)
+	err = filepath.WalkDir(dir, func(path string, entry fs.DirEntry, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		if entry.IsDir() {
+			return nil
+		}
+		rel, err := filepath.Rel(dir, path)
+		if err != nil {
+			return err
+		}
+		entryWriter, err := writer.Create(filepath.ToSlash(rel))
+		if err != nil {
+			return err
+		}
+		src, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer func() {
+			_ = src.Close()
+		}()
+		_, err = io.Copy(entryWriter, src)
+		return err
+	})
+	if closeErr := writer.Close(); err == nil {
+		err = closeErr
+	}
+	if err != nil {
+		_ = os.Remove(tmp.Name())
+		return "", fmt.Errorf("compressing the folder %s: %w", dir, err)
+	}
+	return tmp.Name(), nil
 }
