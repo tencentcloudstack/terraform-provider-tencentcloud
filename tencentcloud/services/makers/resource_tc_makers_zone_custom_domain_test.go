@@ -4,6 +4,7 @@ import (
 	"context"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -161,9 +162,16 @@ func TestMakersZoneCustomDomainCreate(t *testing.T) {
 		createdRequest = request
 		return testDomain, nil
 	})
+	describeCalls := 0
 	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, zoneId, projectId, domain string) (*makersv20261113.ZoneDomain, error) {
 		if zoneId != testZoneId || projectId != testProjectId || domain != testDomain {
 			t.Errorf("unexpected read-back locator: %s/%s/%s", zoneId, projectId, domain)
+		}
+		describeCalls++
+		// The binding is async: the first poll (the wait loop) sees the
+		// domain not yet visible, the second one (the final read back) sees it.
+		if describeCalls == 1 {
+			return nil, nil
 		}
 		return testZoneDomain(), nil
 	})
@@ -196,6 +204,9 @@ func TestMakersZoneCustomDomainCreate(t *testing.T) {
 	}
 	if model.Env.ValueString() != testEnv {
 		t.Errorf("unexpected env: %s", model.Env.ValueString())
+	}
+	if describeCalls < 2 {
+		t.Errorf("expected the async wait to poll at least twice, got %d calls", describeCalls)
 	}
 	if model.PagesDomains == nil || len(model.PagesDomains) != 1 {
 		t.Fatalf("expected one pages domain, got %v", model.PagesDomains)
@@ -329,9 +340,16 @@ func TestMakersZoneCustomDomainUpdate(t *testing.T) {
 		updatedRequest = request
 		return nil
 	})
+	describeCalls := 0
 	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, _ string, _ string, _ string) (*makersv20261113.ZoneDomain, error) {
 		domain := testZoneDomain()
-		domain.Env = mkString("staging")
+		describeCalls++
+		// The env switch is async: the first poll still reports the old env.
+		if describeCalls == 1 {
+			domain.Env = mkString(testEnv)
+		} else {
+			domain.Env = mkString("staging")
+		}
 		return domain, nil
 	})
 
@@ -369,6 +387,9 @@ func TestMakersZoneCustomDomainUpdate(t *testing.T) {
 	if refreshed.Env.ValueString() != "staging" {
 		t.Errorf("unexpected env after update: %s", refreshed.Env.ValueString())
 	}
+	if describeCalls < 2 {
+		t.Errorf("expected the async env wait to poll at least twice, got %d calls", describeCalls)
+	}
 }
 
 func TestMakersZoneCustomDomainDelete(t *testing.T) {
@@ -383,6 +404,15 @@ func TestMakersZoneCustomDomainDelete(t *testing.T) {
 		deleted = true
 		deletedZoneId, deletedProjectId, deletedDomain = zoneId, projectId, domain
 		return nil
+	})
+	describeCalls := 0
+	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, zoneId, projectId, domain string) (*makersv20261113.ZoneDomain, error) {
+		describeCalls++
+		// The unbinding is async: the first poll still sees the domain.
+		if describeCalls == 1 {
+			return testZoneDomain(), nil
+		}
+		return nil, nil
 	})
 
 	model := c.sampleModel()
@@ -399,6 +429,29 @@ func TestMakersZoneCustomDomainDelete(t *testing.T) {
 	}
 	if deletedZoneId != testZoneId || deletedProjectId != testProjectId || deletedDomain != testDomain {
 		t.Errorf("delete locator mismatch: %s/%s/%s", deletedZoneId, deletedProjectId, deletedDomain)
+	}
+	if describeCalls < 2 {
+		t.Errorf("expected the async deletion wait to poll at least twice, got %d calls", describeCalls)
+	}
+}
+
+func TestMakersServiceWaitForZoneCustomDomainTimeout(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	connectivityClient := &connectivity.TencentCloudClient{}
+	patches.ApplyMethodReturn(connectivityClient, "UseMakersV20261113Client", &makersv20261113.Client{})
+
+	// The domain never becomes visible: the wait must fail after the timeout.
+	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, _ string, _ string, _ string) (*makersv20261113.ZoneDomain, error) {
+		return nil, nil
+	})
+
+	service := svcmakers.NewMakersService(connectivityClient)
+	// gomonkey shortens nothing here: use a tiny timeout so the test is fast.
+	err := service.WaitForZoneCustomDomain(context.Background(), testZoneId, testProjectId, testDomain, 1*time.Second)
+	if err == nil {
+		t.Fatalf("expected the wait to time out when the domain never appears")
 	}
 }
 

@@ -339,12 +339,21 @@ func (r *MakersZoneCustomDomainResource) Create(ctx context.Context, req resourc
 		return
 	}
 
-	// The resource is addressed by the composite key everywhere, so build the
-	// Terraform id from the plan values and persist it before the read back.
+	// Persist the identity BEFORE any asynchronous wait: if the wait fails,
+	// the resource is still in state and `terraform destroy` can clean it up.
 	plan.Id = types.StringValue(buildZoneCustomDomainId(
 		plan.ZoneId.ValueString(), plan.ProjectId.ValueString(), plan.Domain.ValueString()))
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// The binding is async on the cloud side: poll until the domain becomes
+	// readable before the final read back.
+	if err := service.WaitForZoneCustomDomain(ctx,
+		plan.ZoneId.ValueString(), plan.ProjectId.ValueString(), plan.Domain.ValueString(),
+		tccommon.WriteRetryTimeout); err != nil {
+		resp.Diagnostics.AddError("Error waiting for Makers zone custom domain", err.Error())
 		return
 	}
 
@@ -420,6 +429,15 @@ func (r *MakersZoneCustomDomainResource) Update(ctx context.Context, req resourc
 			)
 			return
 		}
+
+		// The environment switch is async on the cloud side: poll until the
+		// domain reports the expected environment slug.
+		if err := service.WaitForZoneCustomDomainEnv(ctx,
+			plan.ZoneId.ValueString(), plan.ProjectId.ValueString(), plan.Domain.ValueString(),
+			plan.Env.ValueString(), tccommon.WriteRetryTimeout); err != nil {
+			resp.Diagnostics.AddError("Error waiting for Makers zone custom domain env", err.Error())
+			return
+		}
 	}
 
 	item, err := service.DescribeZoneCustomDomain(ctx, plan.ZoneId.ValueString(), plan.ProjectId.ValueString(), plan.Domain.ValueString())
@@ -448,15 +466,21 @@ func (r *MakersZoneCustomDomainResource) Delete(ctx context.Context, req resourc
 		return
 	}
 
-	request := makersv20261113.NewDeleteProjectCustomDomainsRequest()
-	request.ZoneId = state.ZoneId.ValueStringPointer()
-	request.ProjectId = state.ProjectId.ValueStringPointer()
 	service := NewMakersService(r.Client())
 	if err := service.DeleteProjectCustomDomain(ctx, state.ZoneId.ValueString(), state.ProjectId.ValueString(), state.Domain.ValueString()); err != nil {
 		resp.Diagnostics.AddError(
 			"Error deleting Makers zone custom domain",
 			fmt.Sprintf("DeleteProjectCustomDomains failed: %v", err),
 		)
+		return
+	}
+
+	// The unbinding is async on the cloud side: poll until the domain is no
+	// longer visible so destroy does not report success too early.
+	if err := service.WaitForZoneCustomDomainDeleted(ctx,
+		state.ZoneId.ValueString(), state.ProjectId.ValueString(), state.Domain.ValueString(),
+		tccommon.WriteRetryTimeout); err != nil {
+		resp.Diagnostics.AddError("Error waiting for Makers zone custom domain deletion", err.Error())
 		return
 	}
 }

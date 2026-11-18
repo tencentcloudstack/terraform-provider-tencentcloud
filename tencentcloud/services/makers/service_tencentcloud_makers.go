@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	makersv20261113 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
@@ -11,6 +12,12 @@ import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+)
+
+const (
+	// makersZoneCustomDomainRetryInterval is the polling interval used while
+	// waiting for the async custom domain operations to converge.
+	makersZoneCustomDomainRetryInterval = 5 * time.Second
 )
 
 func NewMakersService(client *connectivity.TencentCloudClient) MakersService {
@@ -205,4 +212,78 @@ func (me *MakersService) DeleteProjectCustomDomain(ctx context.Context, zoneId, 
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
+}
+
+// WaitForZoneCustomDomain polls DescribeZoneCustomDomains until the domain
+// is visible as a managed `Custom` domain. The binding operation is async on
+// the cloud side, so right after CreateZoneCustomDomain succeeds the domain
+// may not be readable yet.
+func (me *MakersService) WaitForZoneCustomDomain(ctx context.Context, zoneId, projectId, domain string, timeout time.Duration) error {
+	logId := tccommon.GetLogId(ctx)
+
+	err := resource.Retry(timeout, func() *resource.RetryError {
+		item, e := me.DescribeZoneCustomDomain(ctx, zoneId, projectId, domain)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		if item == nil {
+			return resource.RetryableError(fmt.Errorf("makers zone custom domain [%s] is not ready yet", domain))
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s wait for makers zone custom domain [%s] failed, reason:%+v", logId, domain, err)
+		return err
+	}
+	return nil
+}
+
+// WaitForZoneCustomDomainDeleted polls DescribeZoneCustomDomains until the
+// domain is no longer visible. The unbinding operation is async on the cloud
+// side, so the domain may still be reported right after the delete call
+// returns.
+func (me *MakersService) WaitForZoneCustomDomainDeleted(ctx context.Context, zoneId, projectId, domain string, timeout time.Duration) error {
+	logId := tccommon.GetLogId(ctx)
+
+	err := resource.Retry(timeout, func() *resource.RetryError {
+		item, e := me.DescribeZoneCustomDomain(ctx, zoneId, projectId, domain)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		if item != nil {
+			return resource.RetryableError(fmt.Errorf("makers zone custom domain [%s] is still being deleted", domain))
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s wait for makers zone custom domain [%s] deletion failed, reason:%+v", logId, domain, err)
+		return err
+	}
+	return nil
+}
+
+// WaitForZoneCustomDomainEnv polls DescribeZoneCustomDomains until the
+// domain reports the expected environment slug. The environment switch is
+// async on the cloud side.
+func (me *MakersService) WaitForZoneCustomDomainEnv(ctx context.Context, zoneId, projectId, domain, env string, timeout time.Duration) error {
+	logId := tccommon.GetLogId(ctx)
+
+	err := resource.Retry(timeout, func() *resource.RetryError {
+		item, e := me.DescribeZoneCustomDomain(ctx, zoneId, projectId, domain)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		if item == nil {
+			return resource.RetryableError(fmt.Errorf("makers zone custom domain [%s] is not readable while switching env", domain))
+		}
+		if item.Env == nil || *item.Env != env {
+			return resource.RetryableError(fmt.Errorf("makers zone custom domain [%s] env is not ready yet, expect [%s]", domain, env))
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s wait for makers zone custom domain [%s] env [%s] failed, reason:%+v", logId, domain, env, err)
+		return err
+	}
+	return nil
 }
