@@ -15,6 +15,10 @@ The domain is identified by the composite key `zone_id#project_id#domain`, which
 also the import ID format. Only the `env` attribute supports in-place update
 (via `ModifyZoneCustomDomainEnv`); any other change forces replacement.
 
+The binding, unbinding and environment switch operations are asynchronous on the
+cloud side: the provider polls `DescribeZoneCustomDomains` until the change is
+visible before the operation is reported as done.
+
 Note: the `DescribeZoneCustomDomains` API does not echo back the `project_id`,
 so drift detection on `project_id` is limited to the value kept in state.
 
@@ -88,7 +92,9 @@ This resource interacts with the following TencentCloud APIs:
 * Update:
   - [DescribeZoneCustomDomains](https://www.tencentcloud.com/search/?wd=DescribeZoneCustomDomains&type=document&lang=en)
   - [ModifyZoneCustomDomainEnv](https://www.tencentcloud.com/search/?wd=ModifyZoneCustomDomainEnv&type=document&lang=en)
-* Delete: [DeleteProjectCustomDomains](https://www.tencentcloud.com/search/?wd=DeleteProjectCustomDomains&type=document&lang=en)
+* Delete:
+  - [DeleteProjectCustomDomains](https://www.tencentcloud.com/search/?wd=DeleteProjectCustomDomains&type=document&lang=en)
+  - [DescribeZoneCustomDomains](https://www.tencentcloud.com/search/?wd=DescribeZoneCustomDomains&type=document&lang=en)
 
 ## Import
 
