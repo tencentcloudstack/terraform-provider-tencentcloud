@@ -2,10 +2,10 @@ package makers_test
 
 import (
 	"context"
+	"reflect"
 	"testing"
 
 	"github.com/agiledragon/gomonkey/v2"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
@@ -19,17 +19,19 @@ import (
 )
 
 const (
-	testZoneId    = "zone-123"
-	testProjectId = "proj-456"
-	testDomain    = "www.example.com"
-	testEnv       = "production"
+	testZoneId      = "zone-123"
+	testProjectId   = "proj-456"
+	testDomain      = "www.example.com"
+	testEnv         = "production"
+	testCompositeId = testZoneId + "#" + testProjectId + "#" + testDomain
 )
 
 func mkString(value string) *string { return &value }
 
 func mkInt64(value int64) *int64 { return &value }
 
-// makersZoneCustomDomainTestContext wires a resource instance to a patched SDK client.
+// makersZoneCustomDomainTestContext wires a resource instance to a patched
+// SDK client. Service layer methods are patched per test with gomonkey.
 type makersZoneCustomDomainTestContext struct {
 	resource resource.Resource
 	client   *makersv20261113.Client
@@ -137,28 +139,6 @@ func testZoneDomain() *makersv20261113.ZoneDomain {
 	}
 }
 
-func testSchemaAttributes(t *testing.T) map[string]schema.Attribute {
-	t.Helper()
-
-	var schemaResp resource.SchemaResponse
-	res := svcmakers.NewMakersZoneCustomDomainResource()
-	res.Schema(context.Background(), resource.SchemaRequest{}, &schemaResp)
-	if schemaResp.Diagnostics.HasError() {
-		t.Fatalf("failed to build schema: %v", schemaResp.Diagnostics.Errors())
-	}
-	return schemaResp.Schema.Attributes
-}
-
-func mustObject(t *testing.T, attributeTypes map[string]attr.Type, values map[string]attr.Value) types.Object {
-	t.Helper()
-
-	object, diags := types.ObjectValue(attributeTypes, values)
-	if diags.HasError() {
-		t.Fatalf("failed to build object value: %v", diags.Errors())
-	}
-	return object
-}
-
 func (c *makersZoneCustomDomainTestContext) sampleModel() svcmakers.MakersZoneCustomDomainResourceModel {
 	return svcmakers.MakersZoneCustomDomainResourceModel{
 		Id:           types.StringNull(),
@@ -177,22 +157,15 @@ func TestMakersZoneCustomDomainCreate(t *testing.T) {
 	c := newMakersZoneCustomDomainTestContext(t, patches)
 
 	var createdRequest *makersv20261113.CreateZoneCustomDomainRequest
-	patches.ApplyMethodFunc(c.client, "CreateZoneCustomDomainWithContext", func(_ context.Context, request *makersv20261113.CreateZoneCustomDomainRequest) (*makersv20261113.CreateZoneCustomDomainResponse, error) {
+	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "CreateZoneCustomDomain", func(_ context.Context, request *makersv20261113.CreateZoneCustomDomainRequest) (string, error) {
 		createdRequest = request
-		return &makersv20261113.CreateZoneCustomDomainResponse{
-			Response: &makersv20261113.CreateZoneCustomDomainResponseParams{
-				Domain: mkString(testDomain),
-				Id:     mkString("cd-001"),
-			},
-		}, nil
+		return testDomain, nil
 	})
-	patches.ApplyMethodFunc(c.client, "DescribeZoneCustomDomainsWithContext", func(_ context.Context, request *makersv20261113.DescribeZoneCustomDomainsRequest) (*makersv20261113.DescribeZoneCustomDomainsResponse, error) {
-		return &makersv20261113.DescribeZoneCustomDomainsResponse{
-			Response: &makersv20261113.DescribeZoneCustomDomainsResponseParams{
-				TotalCount:   mkInt64(1),
-				PagesDomains: []*makersv20261113.ZoneDomain{testZoneDomain()},
-			},
-		}, nil
+	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, zoneId, projectId, domain string) (*makersv20261113.ZoneDomain, error) {
+		if zoneId != testZoneId || projectId != testProjectId || domain != testDomain {
+			t.Errorf("unexpected read-back locator: %s/%s/%s", zoneId, projectId, domain)
+		}
+		return testZoneDomain(), nil
 	})
 
 	var createResp resource.CreateResponse
@@ -218,7 +191,7 @@ func TestMakersZoneCustomDomainCreate(t *testing.T) {
 	}
 
 	model := c.readState(t, createResp.State)
-	if model.Id.ValueString() != testZoneId+"#"+testProjectId+"#"+testDomain {
+	if model.Id.ValueString() != testCompositeId {
 		t.Errorf("unexpected id: %s", model.Id.ValueString())
 	}
 	if model.Env.ValueString() != testEnv {
@@ -260,8 +233,8 @@ func TestMakersZoneCustomDomainCreateError(t *testing.T) {
 
 	c := newMakersZoneCustomDomainTestContext(t, patches)
 
-	patches.ApplyMethodFunc(c.client, "CreateZoneCustomDomainWithContext", func(_ context.Context, _ *makersv20261113.CreateZoneCustomDomainRequest) (*makersv20261113.CreateZoneCustomDomainResponse, error) {
-		return nil, &sdkerr.TencentCloudSDKError{}
+	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "CreateZoneCustomDomain", func(_ context.Context, _ *makersv20261113.CreateZoneCustomDomainRequest) (string, error) {
+		return "", &sdkerr.TencentCloudSDKError{}
 	})
 
 	var createResp resource.CreateResponse
@@ -277,20 +250,15 @@ func TestMakersZoneCustomDomainReadNotFound(t *testing.T) {
 
 	c := newMakersZoneCustomDomainTestContext(t, patches)
 
-	patches.ApplyMethodFunc(c.client, "DescribeZoneCustomDomainsWithContext", func(_ context.Context, request *makersv20261113.DescribeZoneCustomDomainsRequest) (*makersv20261113.DescribeZoneCustomDomainsResponse, error) {
-		if request.CustomDomains == nil || len(request.CustomDomains) != 1 || *request.CustomDomains[0].Domain != testDomain {
-			t.Errorf("Read should query exactly the managed domain")
+	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, zoneId, projectId, domain string) (*makersv20261113.ZoneDomain, error) {
+		if zoneId != testZoneId || projectId != testProjectId || domain != testDomain {
+			t.Errorf("unexpected read locator: %s/%s/%s", zoneId, projectId, domain)
 		}
-		return &makersv20261113.DescribeZoneCustomDomainsResponse{
-			Response: &makersv20261113.DescribeZoneCustomDomainsResponseParams{
-				TotalCount:   mkInt64(0),
-				PagesDomains: nil,
-			},
-		}, nil
+		return nil, nil
 	})
 
 	model := c.sampleModel()
-	model.Id = types.StringValue(testZoneId + "#" + testProjectId + "#" + testDomain)
+	model.Id = types.StringValue(testCompositeId)
 
 	var readResp resource.ReadResponse
 	c.resource.Read(context.Background(), resource.ReadRequest{State: c.state(t, model)}, &readResp)
@@ -302,17 +270,20 @@ func TestMakersZoneCustomDomainReadNotFound(t *testing.T) {
 	}
 }
 
-func TestMakersZoneCustomDomainReadFiltersPreset(t *testing.T) {
+func TestMakersServiceDescribeZoneCustomDomainFiltersPreset(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	c := newMakersZoneCustomDomainTestContext(t, patches)
+	connectivityClient := &connectivity.TencentCloudClient{}
+	patches.ApplyMethodReturn(connectivityClient, "UseMakersV20261113Client", &makersv20261113.Client{})
 
 	preset := testZoneDomain()
 	preset.Type = mkString("Preset")
 	preset.Domain = mkString("preset.example.com")
 
-	patches.ApplyMethodFunc(c.client, "DescribeZoneCustomDomainsWithContext", func(_ context.Context, _ *makersv20261113.DescribeZoneCustomDomainsRequest) (*makersv20261113.DescribeZoneCustomDomainsResponse, error) {
+	var queriedRequest *makersv20261113.DescribeZoneCustomDomainsRequest
+	patches.ApplyMethodFunc(reflect.TypeOf(makersv20261113.Client{}), "DescribeZoneCustomDomainsWithContext", func(_ context.Context, request *makersv20261113.DescribeZoneCustomDomainsRequest) (*makersv20261113.DescribeZoneCustomDomainsResponse, error) {
+		queriedRequest = request
 		return &makersv20261113.DescribeZoneCustomDomainsResponse{
 			Response: &makersv20261113.DescribeZoneCustomDomainsResponseParams{
 				TotalCount:   mkInt64(2),
@@ -321,21 +292,29 @@ func TestMakersZoneCustomDomainReadFiltersPreset(t *testing.T) {
 		}, nil
 	})
 
-	model := c.sampleModel()
-	model.Id = types.StringValue(testZoneId + "#" + testProjectId + "#" + testDomain)
-
-	var readResp resource.ReadResponse
-	c.resource.Read(context.Background(), resource.ReadRequest{State: c.state(t, model)}, &readResp)
-	if readResp.Diagnostics.HasError() {
-		t.Fatalf("Read failed: %v", readResp.Diagnostics.Errors())
+	service := svcmakers.NewMakersService(connectivityClient)
+	item, err := service.DescribeZoneCustomDomain(context.Background(), testZoneId, testProjectId, testDomain)
+	if err != nil {
+		t.Fatalf("DescribeZoneCustomDomain failed: %v", err)
+	}
+	if item == nil {
+		t.Fatalf("expected the Custom domain to be selected, got nil")
+	}
+	if item.Type == nil || *item.Type != "Custom" {
+		t.Errorf("expected the Custom domain to be selected, got %v", item.Type)
 	}
 
-	refreshed := c.readState(t, readResp.State)
-	if len(refreshed.PagesDomains) != 1 {
-		t.Fatalf("expected one pages domain after filtering preset domains, got %d", len(refreshed.PagesDomains))
+	if queriedRequest == nil {
+		t.Fatalf("DescribeZoneCustomDomains was not called")
 	}
-	if refreshed.PagesDomains[0].Type.ValueString() != "Custom" {
-		t.Errorf("expected the Custom domain to be selected, got %s", refreshed.PagesDomains[0].Type.ValueString())
+	if queriedRequest.ZoneId == nil || *queriedRequest.ZoneId != testZoneId {
+		t.Errorf("query ZoneId mismatch: %v", queriedRequest.ZoneId)
+	}
+	if queriedRequest.ProjectId == nil || *queriedRequest.ProjectId != testProjectId {
+		t.Errorf("query ProjectId mismatch: %v", queriedRequest.ProjectId)
+	}
+	if len(queriedRequest.CustomDomains) != 1 || *queriedRequest.CustomDomains[0].Domain != testDomain {
+		t.Errorf("query should filter exactly the managed domain: %v", queriedRequest.CustomDomains)
 	}
 }
 
@@ -346,28 +325,18 @@ func TestMakersZoneCustomDomainUpdate(t *testing.T) {
 	c := newMakersZoneCustomDomainTestContext(t, patches)
 
 	var updatedRequest *makersv20261113.ModifyZoneCustomDomainEnvRequest
-	patches.ApplyMethodFunc(c.client, "ModifyZoneCustomDomainEnvWithContext", func(_ context.Context, request *makersv20261113.ModifyZoneCustomDomainEnvRequest) (*makersv20261113.ModifyZoneCustomDomainEnvResponse, error) {
+	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "ModifyZoneCustomDomainEnv", func(_ context.Context, request *makersv20261113.ModifyZoneCustomDomainEnvRequest) error {
 		updatedRequest = request
-		return &makersv20261113.ModifyZoneCustomDomainEnvResponse{
-			Response: &makersv20261113.ModifyZoneCustomDomainEnvResponseParams{
-				Domain: mkString(testDomain),
-				Env:    mkString("staging"),
-			},
-		}, nil
+		return nil
 	})
-	patches.ApplyMethodFunc(c.client, "DescribeZoneCustomDomainsWithContext", func(_ context.Context, _ *makersv20261113.DescribeZoneCustomDomainsRequest) (*makersv20261113.DescribeZoneCustomDomainsResponse, error) {
+	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, _ string, _ string, _ string) (*makersv20261113.ZoneDomain, error) {
 		domain := testZoneDomain()
 		domain.Env = mkString("staging")
-		return &makersv20261113.DescribeZoneCustomDomainsResponse{
-			Response: &makersv20261113.DescribeZoneCustomDomainsResponseParams{
-				TotalCount:   mkInt64(1),
-				PagesDomains: []*makersv20261113.ZoneDomain{domain},
-			},
-		}, nil
+		return domain, nil
 	})
 
 	state := c.sampleModel()
-	state.Id = types.StringValue(testZoneId + "#" + testProjectId + "#" + testDomain)
+	state.Id = types.StringValue(testCompositeId)
 	state.Env = types.StringValue(testEnv)
 	state.PagesDomains = nil
 
@@ -389,6 +358,12 @@ func TestMakersZoneCustomDomainUpdate(t *testing.T) {
 	if updatedRequest.ZoneId == nil || *updatedRequest.ZoneId != testZoneId {
 		t.Errorf("Update request ZoneId mismatch: %v", updatedRequest.ZoneId)
 	}
+	if updatedRequest.ProjectId == nil || *updatedRequest.ProjectId != testProjectId {
+		t.Errorf("Update request ProjectId mismatch: %v", updatedRequest.ProjectId)
+	}
+	if updatedRequest.Domain == nil || *updatedRequest.Domain != testDomain {
+		t.Errorf("Update request Domain mismatch: %v", updatedRequest.Domain)
+	}
 
 	refreshed := c.readState(t, updateResp.State)
 	if refreshed.Env.ValueString() != "staging" {
@@ -402,16 +377,16 @@ func TestMakersZoneCustomDomainDelete(t *testing.T) {
 
 	c := newMakersZoneCustomDomainTestContext(t, patches)
 
-	var deletedRequest *makersv20261113.DeleteProjectCustomDomainsRequest
-	patches.ApplyMethodFunc(c.client, "DeleteProjectCustomDomainsWithContext", func(_ context.Context, request *makersv20261113.DeleteProjectCustomDomainsRequest) (*makersv20261113.DeleteProjectCustomDomainsResponse, error) {
-		deletedRequest = request
-		return &makersv20261113.DeleteProjectCustomDomainsResponse{
-			Response: &makersv20261113.DeleteProjectCustomDomainsResponseParams{},
-		}, nil
+	var deletedZoneId, deletedProjectId, deletedDomain string
+	deleted := false
+	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DeleteProjectCustomDomain", func(_ context.Context, zoneId, projectId, domain string) error {
+		deleted = true
+		deletedZoneId, deletedProjectId, deletedDomain = zoneId, projectId, domain
+		return nil
 	})
 
 	model := c.sampleModel()
-	model.Id = types.StringValue(testZoneId + "#" + testProjectId + "#" + testDomain)
+	model.Id = types.StringValue(testCompositeId)
 
 	var deleteResp resource.DeleteResponse
 	c.resource.Delete(context.Background(), resource.DeleteRequest{State: c.state(t, model)}, &deleteResp)
@@ -419,14 +394,11 @@ func TestMakersZoneCustomDomainDelete(t *testing.T) {
 		t.Fatalf("Delete failed: %v", deleteResp.Diagnostics.Errors())
 	}
 
-	if deletedRequest == nil {
-		t.Fatalf("DeleteProjectCustomDomains was not called")
+	if !deleted {
+		t.Fatalf("DeleteProjectCustomDomain was not called")
 	}
-	if deletedRequest.CustomDomains == nil || len(deletedRequest.CustomDomains) != 1 || *deletedRequest.CustomDomains[0] != testDomain {
-		t.Errorf("delete should send exactly the managed domain, got %v", deletedRequest.CustomDomains)
-	}
-	if deletedRequest.ZoneId == nil || *deletedRequest.ZoneId != testZoneId {
-		t.Errorf("delete request ZoneId mismatch: %v", deletedRequest.ZoneId)
+	if deletedZoneId != testZoneId || deletedProjectId != testProjectId || deletedDomain != testDomain {
+		t.Errorf("delete locator mismatch: %s/%s/%s", deletedZoneId, deletedProjectId, deletedDomain)
 	}
 }
 
@@ -444,7 +416,7 @@ func TestMakersZoneCustomDomainImportState(t *testing.T) {
 	var importResp resource.ImportStateResponse
 	emptyModel := svcmakers.MakersZoneCustomDomainResourceModel{}
 	importer.ImportState(context.Background(), resource.ImportStateRequest{
-		ID:    testZoneId + "#" + testProjectId + "#" + testDomain,
+		ID:    testCompositeId,
 		State: c.state(t, emptyModel),
 	}, &importResp)
 	if importResp.Diagnostics.HasError() {
@@ -461,7 +433,7 @@ func TestMakersZoneCustomDomainImportState(t *testing.T) {
 	if model.Domain.ValueString() != testDomain {
 		t.Errorf("unexpected domain after import: %s", model.Domain.ValueString())
 	}
-	if model.Id.ValueString() != testZoneId+"#"+testProjectId+"#"+testDomain {
+	if model.Id.ValueString() != testCompositeId {
 		t.Errorf("unexpected id after import: %s", model.Id.ValueString())
 	}
 }
@@ -478,9 +450,10 @@ func TestMakersZoneCustomDomainImportStateInvalidId(t *testing.T) {
 	}
 
 	var importResp resource.ImportStateResponse
+	emptyModel := svcmakers.MakersZoneCustomDomainResourceModel{}
 	importer.ImportState(context.Background(), resource.ImportStateRequest{
 		ID:    "only-one-segment",
-		State: tfsdk.State{Schema: c.schema},
+		State: c.state(t, emptyModel),
 	}, &importResp)
 	if !importResp.Diagnostics.HasError() {
 		t.Fatalf("expected ImportState to fail for an invalid composite id")

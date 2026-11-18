@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	sdkresource "github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 
 	makersv20261113 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
 
@@ -323,23 +322,16 @@ func (r *MakersZoneCustomDomainResource) Create(ctx context.Context, req resourc
 		request.Env = plan.Env.ValueStringPointer()
 	}
 
-	var response *makersv20261113.CreateZoneCustomDomainResponse
-	retryErr := sdkresource.Retry(tccommon.WriteRetryTimeout, func() *sdkresource.RetryError {
-		result, e := r.Client().UseMakersV20261113Client().CreateZoneCustomDomainWithContext(ctx, request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		}
-		response = result
-		return nil
-	})
-	if retryErr != nil {
+	service := NewMakersService(r.Client())
+	domain, err := service.CreateZoneCustomDomain(ctx, request)
+	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error creating Makers zone custom domain",
-			fmt.Sprintf("CreateZoneCustomDomain failed: %v", retryErr),
+			fmt.Sprintf("CreateZoneCustomDomain failed: %v", err),
 		)
 		return
 	}
-	if response == nil || response.Response == nil || response.Response.Domain == nil {
+	if domain == "" {
 		resp.Diagnostics.AddError(
 			"Error creating Makers zone custom domain",
 			"CreateZoneCustomDomain returned an empty response.",
@@ -356,7 +348,7 @@ func (r *MakersZoneCustomDomainResource) Create(ctx context.Context, req resourc
 		return
 	}
 
-	item, err := r.readDomain(ctx, plan.ZoneId.ValueString(), plan.ProjectId.ValueString(), plan.Domain.ValueString())
+	item, err := service.DescribeZoneCustomDomain(ctx, plan.ZoneId.ValueString(), plan.ProjectId.ValueString(), plan.Domain.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError("Error reading Makers zone custom domain after create", err.Error())
 		return
@@ -380,7 +372,8 @@ func (r *MakersZoneCustomDomainResource) Read(ctx context.Context, req resource.
 		return
 	}
 
-	item, err := r.readDomain(ctx, state.ZoneId.ValueString(), state.ProjectId.ValueString(), state.Domain.ValueString())
+	service := NewMakersService(r.Client())
+	item, err := service.DescribeZoneCustomDomain(ctx, state.ZoneId.ValueString(), state.ProjectId.ValueString(), state.Domain.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError("Error reading Makers zone custom domain", err.Error())
 		return
@@ -411,6 +404,8 @@ func (r *MakersZoneCustomDomainResource) Update(ctx context.Context, req resourc
 		return
 	}
 
+	service := NewMakersService(r.Client())
+
 	if !plan.Env.IsNull() && !plan.Env.IsUnknown() && plan.Env != state.Env {
 		request := makersv20261113.NewModifyZoneCustomDomainEnvRequest()
 		request.ZoneId = plan.ZoneId.ValueStringPointer()
@@ -418,23 +413,16 @@ func (r *MakersZoneCustomDomainResource) Update(ctx context.Context, req resourc
 		request.Domain = plan.Domain.ValueStringPointer()
 		request.Env = plan.Env.ValueStringPointer()
 
-		retryErr := sdkresource.Retry(tccommon.WriteRetryTimeout, func() *sdkresource.RetryError {
-			_, e := r.Client().UseMakersV20261113Client().ModifyZoneCustomDomainEnvWithContext(ctx, request)
-			if e != nil {
-				return tccommon.RetryError(e)
-			}
-			return nil
-		})
-		if retryErr != nil {
+		if err := service.ModifyZoneCustomDomainEnv(ctx, request); err != nil {
 			resp.Diagnostics.AddError(
 				"Error updating Makers zone custom domain",
-				fmt.Sprintf("ModifyZoneCustomDomainEnv failed: %v", retryErr),
+				fmt.Sprintf("ModifyZoneCustomDomainEnv failed: %v", err),
 			)
 			return
 		}
 	}
 
-	item, err := r.readDomain(ctx, plan.ZoneId.ValueString(), plan.ProjectId.ValueString(), plan.Domain.ValueString())
+	item, err := service.DescribeZoneCustomDomain(ctx, plan.ZoneId.ValueString(), plan.ProjectId.ValueString(), plan.Domain.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError("Error reading Makers zone custom domain after update", err.Error())
 		return
@@ -463,19 +451,11 @@ func (r *MakersZoneCustomDomainResource) Delete(ctx context.Context, req resourc
 	request := makersv20261113.NewDeleteProjectCustomDomainsRequest()
 	request.ZoneId = state.ZoneId.ValueStringPointer()
 	request.ProjectId = state.ProjectId.ValueStringPointer()
-	request.CustomDomains = []*string{state.Domain.ValueStringPointer()}
-
-	retryErr := sdkresource.Retry(tccommon.WriteRetryTimeout, func() *sdkresource.RetryError {
-		_, e := r.Client().UseMakersV20261113Client().DeleteProjectCustomDomainsWithContext(ctx, request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		}
-		return nil
-	})
-	if retryErr != nil {
+	service := NewMakersService(r.Client())
+	if err := service.DeleteProjectCustomDomain(ctx, state.ZoneId.ValueString(), state.ProjectId.ValueString(), state.Domain.ValueString()); err != nil {
 		resp.Diagnostics.AddError(
 			"Error deleting Makers zone custom domain",
-			fmt.Sprintf("DeleteProjectCustomDomains failed: %v", retryErr),
+			fmt.Sprintf("DeleteProjectCustomDomains failed: %v", err),
 		)
 		return
 	}
@@ -495,48 +475,6 @@ func (r *MakersZoneCustomDomainResource) ImportState(ctx context.Context, req re
 	resp.State.SetAttribute(ctx, path.Root("zone_id"), parts[0])
 	resp.State.SetAttribute(ctx, path.Root("project_id"), parts[1])
 	resp.State.SetAttribute(ctx, path.Root("domain"), parts[2])
-}
-
-// readDomain queries the domain by zone/project/domain filter and returns the
-// matching managed custom domain. Only `Custom` type domains are considered;
-// Preset domains are platform built-ins and never managed by this resource.
-// A successful response without a match means the domain does not exist and
-// returns (nil, nil); any API failure is returned as an error.
-func (r *MakersZoneCustomDomainResource) readDomain(ctx context.Context, zoneId, projectId, domain string) (*makersv20261113.ZoneDomain, error) {
-	request := makersv20261113.NewDescribeZoneCustomDomainsRequest()
-	request.ZoneId = &zoneId
-	request.ProjectId = &projectId
-	request.CustomDomains = []*makersv20261113.CustomDomainInput{
-		{
-			Domain: &domain,
-		},
-	}
-
-	var response *makersv20261113.DescribeZoneCustomDomainsResponse
-	retryErr := sdkresource.Retry(tccommon.ReadRetryTimeout, func() *sdkresource.RetryError {
-		result, e := r.Client().UseMakersV20261113Client().DescribeZoneCustomDomainsWithContext(ctx, request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		}
-		response = result
-		return nil
-	})
-	if retryErr != nil {
-		return nil, retryErr
-	}
-	if response == nil || response.Response == nil {
-		return nil, fmt.Errorf("DescribeZoneCustomDomains returned an empty response for domain %s", domain)
-	}
-	for _, item := range response.Response.PagesDomains {
-		if item == nil || item.Domain == nil || *item.Domain != domain {
-			continue
-		}
-		if item.Type != nil && *item.Type != "Custom" {
-			continue
-		}
-		return item, nil
-	}
-	return nil, nil
 }
 
 // refreshZoneCustomDomainModel copies the cloud-side domain into the model.
