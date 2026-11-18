@@ -329,7 +329,8 @@ func (d *MakersDeploymentsDataSource) Read(ctx context.Context, req datasource.R
 		request.Offset = config.Offset.ValueInt64Pointer()
 	}
 
-	response, err := d.Client().UseMakersClient().DescribeDeploymentsWithContext(ctx, request)
+	service := NewMakersService(d.Client())
+	deployments, totalCount, err := service.DescribeDeployments(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error querying Makers deployments",
@@ -338,20 +339,10 @@ func (d *MakersDeploymentsDataSource) Read(ctx context.Context, req datasource.R
 		return
 	}
 
-	// Two different "empty" outcomes must stay distinguishable:
-	//   - nil response -> API failure -> error
-	//   - len == 0     -> genuinely nothing matched -> empty list, normal return
-	if response == nil || response.Response == nil {
-		resp.Diagnostics.AddError(
-			"Error querying Makers deployments",
-			"DescribeDeployments returned an empty response.",
-		)
-		return
-	}
+	config.TotalCount = types.Int64PointerValue(totalCount)
 
-	config.TotalCount = types.Int64PointerValue(response.Response.TotalCount)
-
-	deployments := response.Response.Deployments
+	// A nil response is reported by the service layer above; an empty
+	// deployments list is a genuinely empty result, not a failure.
 	items := make([]MakersDeploymentItemModel, 0, len(deployments))
 	for _, item := range deployments {
 		items = append(items, MakersDeploymentItemModel{

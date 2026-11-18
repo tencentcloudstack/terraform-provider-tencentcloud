@@ -196,44 +196,38 @@ func TestMakersDeployments_ReadBasic(t *testing.T) {
 	defer patches.Reset()
 
 	client := &connectivity.TencentCloudClient{}
-	makersClient := &makersv20261113.Client{}
-	patches.ApplyMethodReturn(client, "UseMakersClient", makersClient)
-
-	patches.ApplyMethodFunc(makersClient, "DescribeDeploymentsWithContext", func(_ context.Context, request *makersv20261113.DescribeDeploymentsRequest) (*makersv20261113.DescribeDeploymentsResponse, error) {
+	service := &svcmakers.MakersService{}
+	patches.ApplyMethodFunc(service, "DescribeDeployments", func(_ context.Context, request *makersv20261113.DescribeDeploymentsRequest) ([]*makersv20261113.Deployment, *int64, error) {
 		if request.ZoneId == nil || *request.ZoneId != "zone-abcdefg" {
 			t.Errorf("expected zone_id to be passed to the API request")
 		}
 		if request.ProjectId == nil || *request.ProjectId != "prj-123456" {
 			t.Errorf("expected project_id to be passed to the API request")
 		}
-		resp := &makersv20261113.DescribeDeploymentsResponse{Response: &makersv20261113.DescribeDeploymentsResponseParams{
-			TotalCount: ptrInt64Makers(1),
-			Deployments: []*makersv20261113.Deployment{
-				{
-					DeploymentId:   ptrStrMakers("dpl-abcdefg"),
-					ProjectId:      ptrStrMakers("prj-123456"),
-					Status:         ptrStrMakers("Success"),
-					OriginalStatus: ptrStrMakers("Process"),
-					Code:           ptrInt64Makers(0),
-					BuildCost:      ptrStrMakers("1200"),
-					ViaMeta:        ptrStrMakers("Github"),
-					Env:            ptrStrMakers("production"),
-					RepoBranch:     ptrStrMakers("main"),
-					RepoCommitHash: ptrStrMakers("abc123"),
-					RepoCommitMsg:  ptrStrMakers("fix bug"),
-					PreviewUrl:     ptrStrMakers("https://preview.example.com"),
-					ProjectUrl:     ptrStrMakers("https://example.com"),
-					UsedInProd:     ptrBoolMakers(true),
-					CoverUrl:       ptrStrMakers("https://cover.example.com"),
-					MetaData:       ptrStrMakers("{\"routes\":[]}"),
-					DplRepoUrl:     ptrStrMakers("https://github.com/example/repo"),
-					CreatedOn:      ptrStrMakers("2024-01-01 00:00:00"),
-					ModifiedOn:     ptrStrMakers("2024-01-02 00:00:00"),
-				},
+		deployments := []*makersv20261113.Deployment{
+			{
+				DeploymentId:   ptrStrMakers("dpl-abcdefg"),
+				ProjectId:      ptrStrMakers("prj-123456"),
+				Status:         ptrStrMakers("Success"),
+				OriginalStatus: ptrStrMakers("Process"),
+				Code:           ptrInt64Makers(0),
+				BuildCost:      ptrStrMakers("1200"),
+				ViaMeta:        ptrStrMakers("Github"),
+				Env:            ptrStrMakers("production"),
+				RepoBranch:     ptrStrMakers("main"),
+				RepoCommitHash: ptrStrMakers("abc123"),
+				RepoCommitMsg:  ptrStrMakers("fix bug"),
+				PreviewUrl:     ptrStrMakers("https://preview.example.com"),
+				ProjectUrl:     ptrStrMakers("https://example.com"),
+				UsedInProd:     ptrBoolMakers(true),
+				CoverUrl:       ptrStrMakers("https://cover.example.com"),
+				MetaData:       ptrStrMakers("{\"routes\":[]}"),
+				DplRepoUrl:     ptrStrMakers("https://github.com/example/repo"),
+				CreatedOn:      ptrStrMakers("2024-01-01 00:00:00"),
+				ModifiedOn:     ptrStrMakers("2024-01-02 00:00:00"),
 			},
-			RequestId: ptrStrMakers("fake-request-id"),
-		}}
-		return resp, nil
+		}
+		return deployments, ptrInt64Makers(1), nil
 	})
 
 	ds := svcmakers.NewMakersDeploymentsDataSource().(*svcmakers.MakersDeploymentsDataSource)
@@ -292,16 +286,9 @@ func TestMakersDeployments_ReadEmpty(t *testing.T) {
 	defer patches.Reset()
 
 	client := &connectivity.TencentCloudClient{}
-	makersClient := &makersv20261113.Client{}
-	patches.ApplyMethodReturn(client, "UseMakersClient", makersClient)
-
-	patches.ApplyMethodFunc(makersClient, "DescribeDeploymentsWithContext", func(_ context.Context, request *makersv20261113.DescribeDeploymentsRequest) (*makersv20261113.DescribeDeploymentsResponse, error) {
-		resp := &makersv20261113.DescribeDeploymentsResponse{Response: &makersv20261113.DescribeDeploymentsResponseParams{
-			TotalCount:  ptrInt64Makers(0),
-			Deployments: []*makersv20261113.Deployment{},
-			RequestId:   ptrStrMakers("fake-request-id"),
-		}}
-		return resp, nil
+	service := &svcmakers.MakersService{}
+	patches.ApplyMethodFunc(service, "DescribeDeployments", func(_ context.Context, request *makersv20261113.DescribeDeploymentsRequest) ([]*makersv20261113.Deployment, *int64, error) {
+		return []*makersv20261113.Deployment{}, ptrInt64Makers(0), nil
 	})
 
 	ds := svcmakers.NewMakersDeploymentsDataSource().(*svcmakers.MakersDeploymentsDataSource)
@@ -337,11 +324,9 @@ func TestMakersDeployments_ReadApiError(t *testing.T) {
 	defer patches.Reset()
 
 	client := &connectivity.TencentCloudClient{}
-	makersClient := &makersv20261113.Client{}
-	patches.ApplyMethodReturn(client, "UseMakersClient", makersClient)
-
-	patches.ApplyMethodFunc(makersClient, "DescribeDeploymentsWithContext", func(_ context.Context, request *makersv20261113.DescribeDeploymentsRequest) (*makersv20261113.DescribeDeploymentsResponse, error) {
-		return nil, fmt.Errorf("mocked API error")
+	service := &svcmakers.MakersService{}
+	patches.ApplyMethodFunc(service, "DescribeDeployments", func(_ context.Context, request *makersv20261113.DescribeDeploymentsRequest) ([]*makersv20261113.Deployment, *int64, error) {
+		return nil, nil, fmt.Errorf("mocked API error")
 	})
 
 	ds := svcmakers.NewMakersDeploymentsDataSource().(*svcmakers.MakersDeploymentsDataSource)
@@ -358,17 +343,16 @@ func TestMakersDeployments_ReadApiError(t *testing.T) {
 }
 
 // TestMakersDeployments_ReadNilResponse covers a nil response returned without
-// an error: this must be reported as an error, not treated as an empty result.
+// an error: the service layer reports it as a failure, which must surface as
+// an error diagnostic instead of being treated as an empty result.
 func TestMakersDeployments_ReadNilResponse(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	client := &connectivity.TencentCloudClient{}
-	makersClient := &makersv20261113.Client{}
-	patches.ApplyMethodReturn(client, "UseMakersClient", makersClient)
-
-	patches.ApplyMethodFunc(makersClient, "DescribeDeploymentsWithContext", func(_ context.Context, request *makersv20261113.DescribeDeploymentsRequest) (*makersv20261113.DescribeDeploymentsResponse, error) {
-		return nil, nil
+	service := &svcmakers.MakersService{}
+	patches.ApplyMethodFunc(service, "DescribeDeployments", func(_ context.Context, request *makersv20261113.DescribeDeploymentsRequest) ([]*makersv20261113.Deployment, *int64, error) {
+		return nil, nil, fmt.Errorf("DescribeDeployments returned an empty response")
 	})
 
 	ds := svcmakers.NewMakersDeploymentsDataSource().(*svcmakers.MakersDeploymentsDataSource)
