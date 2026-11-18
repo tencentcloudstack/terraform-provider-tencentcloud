@@ -52,31 +52,31 @@ type MakersProjectEnvVarModel struct {
 
 // MakersProjectResourceModel maps the schema attributes.
 type MakersProjectResourceModel struct {
-	Id             types.String `tfsdk:"id"`
-	ZoneId         types.String `tfsdk:"zone_id"`
-	Name           types.String `tfsdk:"name"`
-	Channel        types.String `tfsdk:"channel"`
-	Provider       types.String `tfsdk:"provider"`
-	Source         types.String `tfsdk:"source"`
-	Area           types.String `tfsdk:"area"`
-	NodeJsVersion  types.String `tfsdk:"node_js_version"`
-	RootDir        types.String `tfsdk:"root_dir"`
-	OutputDir      types.String `tfsdk:"output_dir"`
+	Id              types.String `tfsdk:"id"`
+	ZoneId          types.String `tfsdk:"zone_id"`
+	Name            types.String `tfsdk:"name"`
+	Channel         types.String `tfsdk:"channel"`
+	Provider        types.String `tfsdk:"provider"`
+	Source          types.String `tfsdk:"source"`
+	Area            types.String `tfsdk:"area"`
+	NodeJsVersion   types.String `tfsdk:"node_js_version"`
+	RootDir         types.String `tfsdk:"root_dir"`
+	OutputDir       types.String `tfsdk:"output_dir"`
 	BuildCmd        types.String `tfsdk:"build_cmd"`
-	InstallCmd     types.String `tfsdk:"install_cmd"`
-	Framework      types.String `tfsdk:"framework"`
-	TemplateId     types.String `tfsdk:"template_id"`
-	RepoUrl        types.String `tfsdk:"repo_url"`
-	RepoOwner      types.String `tfsdk:"repo_owner"`
-	RepoName       types.String `tfsdk:"repo_name"`
-	RepoBranch     types.String `tfsdk:"repo_branch"`
-	EnvVars        types.List   `tfsdk:"env_vars"`
-	Namespace      types.String `tfsdk:"namespace"`
-	CodingProjectId types.Int64 `tfsdk:"coding_project_id"`
-	Status         types.String `tfsdk:"status"`
-	PresetDomain   types.String `tfsdk:"preset_domain"`
-	CreatedOn      types.String `tfsdk:"created_on"`
-	ModifiedOn     types.String `tfsdk:"modified_on"`
+	InstallCmd      types.String `tfsdk:"install_cmd"`
+	Framework       types.String `tfsdk:"framework"`
+	TemplateId      types.String `tfsdk:"template_id"`
+	RepoUrl         types.String `tfsdk:"repo_url"`
+	RepoOwner       types.String `tfsdk:"repo_owner"`
+	RepoName        types.String `tfsdk:"repo_name"`
+	RepoBranch      types.String `tfsdk:"repo_branch"`
+	EnvVars         types.List   `tfsdk:"env_vars"`
+	Namespace       types.String `tfsdk:"namespace"`
+	CodingProjectId types.Int64  `tfsdk:"coding_project_id"`
+	Status          types.String `tfsdk:"status"`
+	PresetDomain    types.String `tfsdk:"preset_domain"`
+	CreatedOn       types.String `tfsdk:"created_on"`
+	ModifiedOn      types.String `tfsdk:"modified_on"`
 }
 
 func (r *MakersProjectResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -134,7 +134,7 @@ func (r *MakersProjectResource) Schema(_ context.Context, _ resource.SchemaReque
 				},
 			},
 			"node_js_version": schema.StringAttribute{
-				Optional:    true,
+				Optional: true,
 				Description: "Node.js version, for example `20.18.0`. The value is echoed back by the cloud API " +
 					"as `nodejs_version`.",
 			},
@@ -411,7 +411,7 @@ func (r *MakersProjectResource) Read(ctx context.Context, req resource.ReadReque
 	// Confirmed "not found" on the cloud side => drop it from state so
 	// Terraform plans a recreation.
 	if item == nil {
-		resp.Diagnostics.AppendWarning(
+		resp.Diagnostics.AddWarning(
 			"Resource not found",
 			fmt.Sprintf("Makers project %s not found, removing from state.", state.Id.ValueString()),
 		)
