@@ -83,6 +83,7 @@ var actionsMap = map[string]func() action.Action{
 	"tencentcloud_bdrc_run_copy_pair_tasks":                  bdrc.NewBdrcRunCopyPairTasks,
 	"tencentcloud_dlc_initialize_tc_lake":                    dlc.NewDlcInitializeTCLake,
 	"tencentcloud_kms_instance":                              kms.NewKmsInstance,
+	"tencentcloud_makers_deployment":                        makers.NewMakersDeployment,
 	"tencentcloud_mongodb_restore_db_instance":               mongodb.NewMongodbRestoreDbInstance,
 	"tencentcloud_organization_provision_role_configuration": tco.NewTcoProvisionRoleConfiguration,
 	"tencentcloud_ssl_upload_certificate_instance":           ssl.NewSslUploadCertificateInstance,
