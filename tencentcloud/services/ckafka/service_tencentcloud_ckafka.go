@@ -1751,7 +1751,9 @@ func (me *CkafkaService) DescribeCkafkaRouteById(ctx context.Context, instanceId
 	request := ckafka.NewDescribeRouteRequest()
 	request.InstanceId = &instanceId
 	request.RouteId = &routeId
-	request.MainRouteFlag = helper.Bool(true)
+	if routeId == 0 {
+		request.MainRouteFlag = helper.Bool(true)
+	}
 
 	defer func() {
 		if errRet != nil {
