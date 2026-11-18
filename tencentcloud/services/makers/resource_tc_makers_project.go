@@ -345,7 +345,7 @@ func (r *MakersProjectResource) Create(ctx context.Context, req resource.CreateR
 		request.CodingProjectId = plan.CodingProjectId.ValueInt64Pointer()
 	}
 
-	response, err := r.Client().UseMakersV20261113Client().CreateProjectWithContext(ctx, request)
+	response, err := r.Client().UseMakersClient().CreateProjectWithContext(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error creating Makers project",
@@ -498,7 +498,7 @@ func (r *MakersProjectResource) Update(ctx context.Context, req resource.UpdateR
 		request.NodeJsVersion = plan.NodeJsVersion.ValueStringPointer()
 	}
 
-	_, err := r.Client().UseMakersV20261113Client().ModifyProjectWithContext(ctx, request)
+	_, err := r.Client().UseMakersClient().ModifyProjectWithContext(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error updating Makers project",
@@ -536,7 +536,7 @@ func (r *MakersProjectResource) Delete(ctx context.Context, req resource.DeleteR
 	request.ZoneId = state.ZoneId.ValueStringPointer()
 	request.ProjectId = state.Id.ValueStringPointer()
 
-	_, err := r.Client().UseMakersV20261113Client().DeleteProjectWithContext(ctx, request)
+	_, err := r.Client().UseMakersClient().DeleteProjectWithContext(ctx, request)
 	if err != nil {
 		// No documented "already gone" error code exists for DeleteProject, so
 		// every failure is surfaced to keep the id in state for a retry.
@@ -561,7 +561,7 @@ func (r *MakersProjectResource) read(ctx context.Context, zoneId, projectId stri
 	request.ZoneId = helper.String(zoneId)
 	request.ProjectIds = []*string{helper.String(projectId)}
 
-	response, err := r.Client().UseMakersV20261113Client().DescribeProjectsWithContext(ctx, request)
+	response, err := r.Client().UseMakersClient().DescribeProjectsWithContext(ctx, request)
 	if err != nil {
 		return nil, err
 	}

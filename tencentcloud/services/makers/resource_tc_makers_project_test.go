@@ -190,7 +190,7 @@ func newMakersProjectTestContext(t *testing.T, patches *gomonkey.Patches) *maker
 
 	connectivityClient := &connectivity.TencentCloudClient{}
 	makersClient := &sdk.Client{}
-	patches.ApplyMethodReturn(connectivityClient, "UseMakersV20261113Client", makersClient)
+	patches.ApplyMethodReturn(connectivityClient, "UseMakersClient", makersClient)
 
 	res := svcmakers.NewMakersProjectResource()
 	configured, ok := res.(resource.ResourceWithConfigure)

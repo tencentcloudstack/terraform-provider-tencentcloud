@@ -2854,6 +2854,9 @@ tencentcloud_fwm_vpc_acl_rule
 Action
 tencentcloud_fwm_dispatch_strategy
 
-Makers
+Web & Agents Development Platform(Makers)
+Data Source
+tencentcloud_makers_deployment_log
+
 Resource
 tencentcloud_makers_project
