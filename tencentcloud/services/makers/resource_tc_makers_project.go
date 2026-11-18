@@ -345,7 +345,8 @@ func (r *MakersProjectResource) Create(ctx context.Context, req resource.CreateR
 		request.CodingProjectId = plan.CodingProjectId.ValueInt64Pointer()
 	}
 
-	response, err := r.Client().UseMakersClient().CreateProjectWithContext(ctx, request)
+	service := NewMakersService(r.Client())
+	projectId, err := service.CreateProject(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error creating Makers project",
@@ -354,17 +355,17 @@ func (r *MakersProjectResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 
-	// A nil response (or a nil id field) is an API failure, not an empty
-	// result. Never write an empty id into state.
-	if response == nil || response.Response == nil || response.Response.ProjectId == nil || *response.Response.ProjectId == "" {
+	// A nil id is an API failure, not an empty result. Never write an empty
+	// id into state.
+	if projectId == nil || *projectId == "" {
 		resp.Diagnostics.AddError(
 			"Error creating Makers project",
-			"CreateProject returned an empty response or an empty project id.",
+			"CreateProject returned an empty project id.",
 		)
 		return
 	}
 
-	plan.Id = types.StringValue(*response.Response.ProjectId)
+	plan.Id = types.StringValue(*projectId)
 
 	// Computed attributes are unknown at this point; a state cannot hold
 	// unknown values, so they are normalized to null before the defensive
@@ -498,7 +499,8 @@ func (r *MakersProjectResource) Update(ctx context.Context, req resource.UpdateR
 		request.NodeJsVersion = plan.NodeJsVersion.ValueStringPointer()
 	}
 
-	_, err := r.Client().UseMakersClient().ModifyProjectWithContext(ctx, request)
+	service := NewMakersService(r.Client())
+	err := service.ModifyProject(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error updating Makers project",
@@ -536,7 +538,8 @@ func (r *MakersProjectResource) Delete(ctx context.Context, req resource.DeleteR
 	request.ZoneId = state.ZoneId.ValueStringPointer()
 	request.ProjectId = state.Id.ValueStringPointer()
 
-	_, err := r.Client().UseMakersClient().DeleteProjectWithContext(ctx, request)
+	service := NewMakersService(r.Client())
+	err := service.DeleteProject(ctx, request)
 	if err != nil {
 		// No documented "already gone" error code exists for DeleteProject, so
 		// every failure is surfaced to keep the id in state for a retry.
@@ -561,22 +564,8 @@ func (r *MakersProjectResource) read(ctx context.Context, zoneId, projectId stri
 	request.ZoneId = helper.String(zoneId)
 	request.ProjectIds = []*string{helper.String(projectId)}
 
-	response, err := r.Client().UseMakersClient().DescribeProjectsWithContext(ctx, request)
-	if err != nil {
-		return nil, err
-	}
-	if response == nil || response.Response == nil {
-		return nil, fmt.Errorf("DescribeProjects returned an empty response for project %s", projectId)
-	}
-	if len(response.Response.Projects) == 0 {
-		return nil, nil
-	}
-	for _, project := range response.Response.Projects {
-		if project.ProjectId != nil && *project.ProjectId == projectId {
-			return project, nil
-		}
-	}
-	return nil, nil
+	service := NewMakersService(r.Client())
+	return service.DescribeProject(ctx, request)
 }
 
 // refreshModel copies cloud-owned fields into the model while keeping the

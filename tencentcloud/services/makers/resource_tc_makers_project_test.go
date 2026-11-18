@@ -3,7 +3,6 @@ package makers_test
 import (
 	"context"
 	"fmt"
-	"reflect"
 	"testing"
 
 	"github.com/agiledragon/gomonkey/v2"
@@ -178,10 +177,10 @@ func assertMakersProjectModel(t *testing.T, model svcmakers.MakersProjectResourc
 	}
 }
 
-// makersProjectTestContext wires the resource to a patched SDK client.
+// makersProjectTestContext wires the resource to a configured client. The
+// service layer methods are patched per test case.
 type makersProjectTestContext struct {
 	resource resource.Resource
-	client   *sdk.Client
 	schema   schema.Schema
 }
 
@@ -189,8 +188,6 @@ func newMakersProjectTestContext(t *testing.T, patches *gomonkey.Patches) *maker
 	t.Helper()
 
 	connectivityClient := &connectivity.TencentCloudClient{}
-	makersClient := &sdk.Client{}
-	patches.ApplyMethodReturn(connectivityClient, "UseMakersClient", makersClient)
 
 	res := svcmakers.NewMakersProjectResource()
 	configured, ok := res.(resource.ResourceWithConfigure)
@@ -214,7 +211,8 @@ func newMakersProjectTestContext(t *testing.T, patches *gomonkey.Patches) *maker
 		t.Fatalf("failed to build schema: %v", schemaResp.Diagnostics.Errors())
 	}
 
-	return &makersProjectTestContext{resource: res, client: makersClient, schema: schemaResp.Schema}
+	_ = patches
+	return &makersProjectTestContext{resource: res, schema: schemaResp.Schema}
 }
 
 func (c *makersProjectTestContext) plan(t *testing.T, model svcmakers.MakersProjectResourceModel) tfsdk.Plan {
@@ -237,6 +235,12 @@ func (c *makersProjectTestContext) state(t *testing.T, model svcmakers.MakersPro
 	return state
 }
 
+// patchMakersService patches the named MakersService method with fn.
+func patchMakersService(patches *gomonkey.Patches, method string, fn interface{}) *gomonkey.Patches {
+	patches.ApplyMethodFunc(&svcmakers.MakersService{}, method, fn)
+	return patches
+}
+
 // TestMakersProjectCreateSuccess verifies that Create sends all request
 // fields, tracks the returned project id and refreshes the state.
 func TestMakersProjectCreateSuccess(t *testing.T) {
@@ -244,25 +248,17 @@ func TestMakersProjectCreateSuccess(t *testing.T) {
 	defer patches.Reset()
 
 	var captured *sdk.CreateProjectRequest
-	patches.ApplyMethodFunc(reflect.TypeOf(&sdk.Client{}), "CreateProjectWithContext",
-		func(_ context.Context, req *sdk.CreateProjectRequest) (*sdk.CreateProjectResponse, error) {
+	patchMakersService(patches, "CreateProject",
+		func(_ context.Context, req *sdk.CreateProjectRequest) (*string, error) {
 			captured = req
-			return &sdk.CreateProjectResponse{
-				Response: &sdk.CreateProjectResponseParams{
-					ProjectId: makersStr(makersTestProjectId),
-				},
-			}, nil
+			return makersStr(makersTestProjectId), nil
 		})
-	patches.ApplyMethodFunc(reflect.TypeOf(&sdk.Client{}), "DescribeProjectsWithContext",
-		func(_ context.Context, req *sdk.DescribeProjectsRequest) (*sdk.DescribeProjectsResponse, error) {
+	patchMakersService(patches, "DescribeProject",
+		func(_ context.Context, req *sdk.DescribeProjectsRequest) (*sdk.Project, error) {
 			if req.ZoneId == nil || *req.ZoneId != makersTestZoneId {
 				t.Errorf("DescribeProjects request zone_id = %v, want %q", req.ZoneId, makersTestZoneId)
 			}
-			return &sdk.DescribeProjectsResponse{
-				Response: &sdk.DescribeProjectsResponseParams{
-					Projects: []*sdk.Project{makersTestProject()},
-				},
-			}, nil
+			return makersTestProject(), nil
 		})
 
 	ctx := newMakersProjectTestContext(t, patches)
@@ -318,11 +314,9 @@ func TestMakersProjectCreateEmptyId(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	patches.ApplyMethodFunc(reflect.TypeOf(&sdk.Client{}), "CreateProjectWithContext",
-		func(_ context.Context, _ *sdk.CreateProjectRequest) (*sdk.CreateProjectResponse, error) {
-			return &sdk.CreateProjectResponse{
-				Response: &sdk.CreateProjectResponseParams{},
-			}, nil
+	patchMakersService(patches, "CreateProject",
+		func(_ context.Context, _ *sdk.CreateProjectRequest) (*string, error) {
+			return nil, nil
 		})
 
 	ctx := newMakersProjectTestContext(t, patches)
@@ -339,8 +333,8 @@ func TestMakersProjectCreateApiError(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	patches.ApplyMethodFunc(reflect.TypeOf(&sdk.Client{}), "CreateProjectWithContext",
-		func(_ context.Context, _ *sdk.CreateProjectRequest) (*sdk.CreateProjectResponse, error) {
+	patchMakersService(patches, "CreateProject",
+		func(_ context.Context, _ *sdk.CreateProjectRequest) (*string, error) {
 			return nil, fmt.Errorf("create failed")
 		})
 
@@ -360,14 +354,10 @@ func TestMakersProjectReadSuccess(t *testing.T) {
 	defer patches.Reset()
 
 	var captured *sdk.DescribeProjectsRequest
-	patches.ApplyMethodFunc(reflect.TypeOf(&sdk.Client{}), "DescribeProjectsWithContext",
-		func(_ context.Context, req *sdk.DescribeProjectsRequest) (*sdk.DescribeProjectsResponse, error) {
+	patchMakersService(patches, "DescribeProject",
+		func(_ context.Context, req *sdk.DescribeProjectsRequest) (*sdk.Project, error) {
 			captured = req
-			return &sdk.DescribeProjectsResponse{
-				Response: &sdk.DescribeProjectsResponseParams{
-					Projects: []*sdk.Project{makersTestProject()},
-				},
-			}, nil
+			return makersTestProject(), nil
 		})
 
 	ctx := newMakersProjectTestContext(t, patches)
@@ -395,13 +385,9 @@ func TestMakersProjectReadNotFound(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	patches.ApplyMethodFunc(reflect.TypeOf(&sdk.Client{}), "DescribeProjectsWithContext",
-		func(_ context.Context, _ *sdk.DescribeProjectsRequest) (*sdk.DescribeProjectsResponse, error) {
-			return &sdk.DescribeProjectsResponse{
-				Response: &sdk.DescribeProjectsResponseParams{
-					Projects: []*sdk.Project{},
-				},
-			}, nil
+	patchMakersService(patches, "DescribeProject",
+		func(_ context.Context, _ *sdk.DescribeProjectsRequest) (*sdk.Project, error) {
+			return nil, nil
 		})
 
 	ctx := newMakersProjectTestContext(t, patches)
@@ -422,8 +408,8 @@ func TestMakersProjectReadApiError(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	patches.ApplyMethodFunc(reflect.TypeOf(&sdk.Client{}), "DescribeProjectsWithContext",
-		func(_ context.Context, _ *sdk.DescribeProjectsRequest) (*sdk.DescribeProjectsResponse, error) {
+	patchMakersService(patches, "DescribeProject",
+		func(_ context.Context, _ *sdk.DescribeProjectsRequest) (*sdk.Project, error) {
 			return nil, fmt.Errorf("describe failed")
 		})
 
@@ -446,20 +432,14 @@ func TestMakersProjectUpdateSuccess(t *testing.T) {
 	defer patches.Reset()
 
 	var captured *sdk.ModifyProjectRequest
-	patches.ApplyMethodFunc(reflect.TypeOf(&sdk.Client{}), "ModifyProjectWithContext",
-		func(_ context.Context, req *sdk.ModifyProjectRequest) (*sdk.ModifyProjectResponse, error) {
+	patchMakersService(patches, "ModifyProject",
+		func(_ context.Context, req *sdk.ModifyProjectRequest) error {
 			captured = req
-			return &sdk.ModifyProjectResponse{
-				Response: &sdk.ModifyProjectResponseParams{},
-			}, nil
+			return nil
 		})
-	patches.ApplyMethodFunc(reflect.TypeOf(&sdk.Client{}), "DescribeProjectsWithContext",
-		func(_ context.Context, _ *sdk.DescribeProjectsRequest) (*sdk.DescribeProjectsResponse, error) {
-			return &sdk.DescribeProjectsResponse{
-				Response: &sdk.DescribeProjectsResponseParams{
-					Projects: []*sdk.Project{makersTestProject()},
-				},
-			}, nil
+	patchMakersService(patches, "DescribeProject",
+		func(_ context.Context, _ *sdk.DescribeProjectsRequest) (*sdk.Project, error) {
+			return makersTestProject(), nil
 		})
 
 	ctx := newMakersProjectTestContext(t, patches)
@@ -502,9 +482,9 @@ func TestMakersProjectUpdateApiError(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	patches.ApplyMethodFunc(reflect.TypeOf(&sdk.Client{}), "ModifyProjectWithContext",
-		func(_ context.Context, _ *sdk.ModifyProjectRequest) (*sdk.ModifyProjectResponse, error) {
-			return nil, fmt.Errorf("modify failed")
+	patchMakersService(patches, "ModifyProject",
+		func(_ context.Context, _ *sdk.ModifyProjectRequest) error {
+			return fmt.Errorf("modify failed")
 		})
 
 	ctx := newMakersProjectTestContext(t, patches)
@@ -528,12 +508,10 @@ func TestMakersProjectUpdateClearRejected(t *testing.T) {
 	defer patches.Reset()
 
 	var modifyCalled bool
-	patches.ApplyMethodFunc(reflect.TypeOf(&sdk.Client{}), "ModifyProjectWithContext",
-		func(_ context.Context, _ *sdk.ModifyProjectRequest) (*sdk.ModifyProjectResponse, error) {
+	patchMakersService(patches, "ModifyProject",
+		func(_ context.Context, _ *sdk.ModifyProjectRequest) error {
 			modifyCalled = true
-			return &sdk.ModifyProjectResponse{
-				Response: &sdk.ModifyProjectResponseParams{},
-			}, nil
+			return nil
 		})
 
 	ctx := newMakersProjectTestContext(t, patches)
@@ -561,15 +539,11 @@ func TestMakersProjectReadEnvVarsNotEchoed(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	project := makersTestProject()
-	project.EnvVars = nil
-	patches.ApplyMethodFunc(reflect.TypeOf(&sdk.Client{}), "DescribeProjectsWithContext",
-		func(_ context.Context, _ *sdk.DescribeProjectsRequest) (*sdk.DescribeProjectsResponse, error) {
-			return &sdk.DescribeProjectsResponse{
-				Response: &sdk.DescribeProjectsResponseParams{
-					Projects: []*sdk.Project{project},
-				},
-			}, nil
+	patchMakersService(patches, "DescribeProject",
+		func(_ context.Context, _ *sdk.DescribeProjectsRequest) (*sdk.Project, error) {
+			project := makersTestProject()
+			project.EnvVars = nil
+			return project, nil
 		})
 
 	ctx := newMakersProjectTestContext(t, patches)
@@ -605,12 +579,10 @@ func TestMakersProjectDeleteSuccess(t *testing.T) {
 	defer patches.Reset()
 
 	var captured *sdk.DeleteProjectRequest
-	patches.ApplyMethodFunc(reflect.TypeOf(&sdk.Client{}), "DeleteProjectWithContext",
-		func(_ context.Context, req *sdk.DeleteProjectRequest) (*sdk.DeleteProjectResponse, error) {
+	patchMakersService(patches, "DeleteProject",
+		func(_ context.Context, req *sdk.DeleteProjectRequest) error {
 			captured = req
-			return &sdk.DeleteProjectResponse{
-				Response: &sdk.DeleteProjectResponseParams{},
-			}, nil
+			return nil
 		})
 
 	ctx := newMakersProjectTestContext(t, patches)
@@ -633,9 +605,9 @@ func TestMakersProjectDeleteError(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	patches.ApplyMethodFunc(reflect.TypeOf(&sdk.Client{}), "DeleteProjectWithContext",
-		func(_ context.Context, _ *sdk.DeleteProjectRequest) (*sdk.DeleteProjectResponse, error) {
-			return nil, fmt.Errorf("delete failed")
+	patchMakersService(patches, "DeleteProject",
+		func(_ context.Context, _ *sdk.DeleteProjectRequest) error {
+			return fmt.Errorf("delete failed")
 		})
 
 	ctx := newMakersProjectTestContext(t, patches)
