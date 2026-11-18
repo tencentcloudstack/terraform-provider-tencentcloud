@@ -4,12 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -41,15 +39,6 @@ type MakersProjectResource struct {
 	fw.WithImportByID
 }
 
-// MakersProjectEnvVarModel maps the nested env_vars attributes.
-type MakersProjectEnvVarModel struct {
-	Key     types.String `tfsdk:"key"`
-	Value   types.String `tfsdk:"value"`
-	Id      types.Int64  `tfsdk:"id"`
-	Comment types.String `tfsdk:"comment"`
-	Env     types.Set    `tfsdk:"env"`
-}
-
 // MakersProjectResourceModel maps the schema attributes.
 type MakersProjectResourceModel struct {
 	Id              types.String `tfsdk:"id"`
@@ -70,7 +59,6 @@ type MakersProjectResourceModel struct {
 	RepoOwner       types.String `tfsdk:"repo_owner"`
 	RepoName        types.String `tfsdk:"repo_name"`
 	RepoBranch      types.String `tfsdk:"repo_branch"`
-	EnvVars         types.List   `tfsdk:"env_vars"`
 	Namespace       types.String `tfsdk:"namespace"`
 	CodingProjectId types.Int64  `tfsdk:"coding_project_id"`
 	Status          types.String `tfsdk:"status"`
@@ -193,43 +181,6 @@ func (r *MakersProjectResource) Schema(_ context.Context, _ resource.SchemaReque
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"env_vars": schema.ListNestedAttribute{
-				Optional:    true,
-				Description: "Initial environment variables.",
-				PlanModifiers: []planmodifier.List{
-					listplanmodifier.RequiresReplace(),
-				},
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"key": schema.StringAttribute{
-							Required:    true,
-							Description: "Variable name, up to 255 characters.",
-						},
-						"value": schema.StringAttribute{
-							Required:    true,
-							Description: "Variable value, up to 1000 characters.",
-						},
-						"id": schema.Int64Attribute{
-							Optional:    true,
-							Computed:    true,
-							Description: "Variable ID. It is not sent on create.",
-							PlanModifiers: []planmodifier.Int64{
-								int64planmodifier.UseStateForUnknown(),
-							},
-						},
-						"comment": schema.StringAttribute{
-							Optional:    true,
-							Description: "Remark, up to 255 characters.",
-						},
-						"env": schema.SetAttribute{
-							Optional:    true,
-							ElementType: types.StringType,
-							Description: "Environment slugs the variable takes effect on, for example `Production`, " +
-								"`Preview`. Multiple rows of the same key cannot overlap environments.",
-						},
-					},
-				},
-			},
 			"namespace": schema.StringAttribute{
 				Optional:    true,
 				Description: "Coding namespace. Used when `provider` is `Coding`.",
@@ -329,14 +280,6 @@ func (r *MakersProjectResource) Create(ctx context.Context, req resource.CreateR
 	}
 	if !plan.RepoBranch.IsNull() && !plan.RepoBranch.IsUnknown() {
 		request.RepoBranch = plan.RepoBranch.ValueStringPointer()
-	}
-	if !plan.EnvVars.IsNull() && !plan.EnvVars.IsUnknown() {
-		envVars, diags := envVarModelsToSdk(ctx, plan.EnvVars)
-		resp.Diagnostics.Append(diags...)
-		if resp.Diagnostics.HasError() {
-			return
-		}
-		request.EnvVars = envVars
 	}
 	if !plan.Namespace.IsNull() && !plan.Namespace.IsUnknown() {
 		request.Namespace = plan.Namespace.ValueStringPointer()
@@ -599,127 +542,7 @@ func (r *MakersProjectResource) refreshModel(ctx context.Context, m *MakersProje
 	if item.NodejsVersion != nil {
 		m.NodeJsVersion = types.StringPointerValue(item.NodejsVersion)
 	}
-
-	// env_vars: the response only echoes Key/Value; Id, Comment and Env are
-	// preserved from the model so a partial response does not silently clear
-	// the user's configuration.
-	if item.EnvVars != nil {
-		envVars, diags := projectEnvVarsFromSdk(ctx, item.EnvVars, m.EnvVars)
-		if diags.HasError() {
-			return diags
-		}
-		m.EnvVars = envVars
-	} else if !m.EnvVars.IsNull() {
-		// The cloud returned no env vars: keep the configured list (the API
-		// response is known to omit the field) but normalize unknown leaf
-		// values so they can be persisted.
-		envVars, diags := normalizeEnvVarUnknowns(ctx, m.EnvVars)
-		if diags.HasError() {
-			return diags
-		}
-		m.EnvVars = envVars
-	}
 	return nil
-}
-
-// normalizeEnvVarUnknowns rewrites unknown id/comment/env values inside the
-// env_vars list to null so the list can be persisted into state.
-func normalizeEnvVarUnknowns(ctx context.Context, list types.List) (types.List, diag.Diagnostics) {
-	var models []MakersProjectEnvVarModel
-	if diags := list.ElementsAs(ctx, &models, false); diags.HasError() {
-		return types.ListNull(EnvVarObjectType()), diags
-	}
-	for i := range models {
-		if models[i].Id.IsUnknown() {
-			models[i].Id = types.Int64Null()
-		}
-		if models[i].Comment.IsUnknown() {
-			models[i].Comment = types.StringNull()
-		}
-		if models[i].Env.IsUnknown() {
-			models[i].Env = types.SetNull(types.StringType)
-		}
-	}
-	return types.ListValueFrom(ctx, EnvVarObjectType(), models)
-}
-
-// envVarModelsToSdk converts the terraform list into the SDK EnvVar slice.
-func envVarModelsToSdk(ctx context.Context, list types.List) ([]*sdk.EnvVar, diag.Diagnostics) {
-	var models []MakersProjectEnvVarModel
-	diags := list.ElementsAs(ctx, &models, false)
-	if diags.HasError() {
-		return nil, diags
-	}
-	envVars := make([]*sdk.EnvVar, 0, len(models))
-	for _, model := range models {
-		envVar := &sdk.EnvVar{
-			Key:   model.Key.ValueStringPointer(),
-			Value: model.Value.ValueStringPointer(),
-		}
-		if !model.Comment.IsNull() && !model.Comment.IsUnknown() {
-			envVar.Comment = model.Comment.ValueStringPointer()
-		}
-		if !model.Env.IsNull() && !model.Env.IsUnknown() {
-			envs := make([]*string, 0, len(model.Env.Elements()))
-			for _, e := range model.Env.Elements() {
-				envs = append(envs, helper.String(e.(types.String).ValueString()))
-			}
-			envVar.Env = envs
-		}
-		// Id is the cloud-assigned variable id: never sent on create.
-		envVars = append(envVars, envVar)
-	}
-	return envVars, diags
-}
-
-// projectEnvVarsFromSdk converts the SDK ProjectEnvVar slice into the
-// terraform list, preserving Id/Comment/Env from the previous model values
-// because DescribeProjects only returns Key and Value.
-func projectEnvVarsFromSdk(ctx context.Context, items []*sdk.ProjectEnvVar, previous types.List) (types.List, diag.Diagnostics) {
-	var prevModels []MakersProjectEnvVarModel
-	if !previous.IsNull() && !previous.IsUnknown() {
-		if diags := previous.ElementsAs(ctx, &prevModels, false); diags.HasError() {
-			return types.ListNull(EnvVarObjectType()), diags
-		}
-	}
-	prevByKey := make(map[string]MakersProjectEnvVarModel, len(prevModels))
-	for _, prev := range prevModels {
-		prevByKey[prev.Key.ValueString()] = prev
-	}
-
-	out := make([]MakersProjectEnvVarModel, 0, len(items))
-	for _, item := range items {
-		key := types.StringPointerValue(item.Key)
-		value := types.StringPointerValue(item.Value)
-		prev, ok := prevByKey[key.ValueString()]
-		next := MakersProjectEnvVarModel{
-			Key:   key,
-			Value: value,
-		}
-		if ok {
-			next.Id = prev.Id
-			next.Comment = prev.Comment
-			next.Env = prev.Env
-		} else {
-			next.Id = types.Int64Null()
-			next.Comment = types.StringNull()
-			next.Env = types.SetNull(types.StringType)
-		}
-		// The id is Optional+Computed: on create it is unknown in the plan and
-		// DescribeProjects does not echo it back, so it cannot be persisted as
-		// unknown — normalize to null.
-		if next.Id.IsUnknown() {
-			next.Id = types.Int64Null()
-		}
-		if next.Comment.IsUnknown() {
-			next.Comment = types.StringNull()
-		}
-		if next.Env.IsUnknown() {
-			next.Env = types.SetNull(types.StringType)
-		}
-		out = append(out, next)
-	}
-	return types.ListValueFrom(ctx, EnvVarObjectType(), out)
 }
 
 // normalizeComputedUnknowns rewrites unknown computed attributes to null so
@@ -737,18 +560,5 @@ func normalizeComputedUnknowns(m *MakersProjectResourceModel) {
 	}
 	if m.ModifiedOn.IsUnknown() {
 		m.ModifiedOn = types.StringNull()
-	}
-}
-
-// EnvVarObjectType returns the object type of one env_vars element.
-func EnvVarObjectType() types.ObjectType {
-	return types.ObjectType{
-		AttrTypes: map[string]attr.Type{
-			"key":     types.StringType,
-			"value":   types.StringType,
-			"id":      types.Int64Type,
-			"comment": types.StringType,
-			"env":     types.SetType{ElemType: types.StringType},
-		},
 	}
 }

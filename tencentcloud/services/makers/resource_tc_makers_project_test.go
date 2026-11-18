@@ -30,28 +30,6 @@ func makersStr(v string) *string { return &v }
 
 func makersInt64(v int64) *int64 { return &v }
 
-// makersTestEnvVarList builds a types.List carrying one env_vars element.
-func makersTestEnvVarList() types.List {
-	envSet, diags := types.SetValueFrom(context.Background(), types.StringType, []string{"Production"})
-	if diags.HasError() {
-		panic(fmt.Sprintf("failed to build env set: %v", diags.Errors()))
-	}
-	envVars := []svcmakers.MakersProjectEnvVarModel{
-		{
-			Key:     types.StringValue("API_KEY"),
-			Value:   types.StringValue("secret-value"),
-			Id:      types.Int64Value(1001),
-			Comment: types.StringValue("api key for production"),
-			Env:     envSet,
-		},
-	}
-	list, diags := types.ListValueFrom(context.Background(), svcmakers.EnvVarObjectType(), envVars)
-	if diags.HasError() {
-		panic(fmt.Sprintf("failed to build env list: %v", diags.Errors()))
-	}
-	return list
-}
-
 // makersTestProject builds the DescribeProjects response item.
 func makersTestProject() *sdk.Project {
 	return &sdk.Project{
@@ -73,11 +51,8 @@ func makersTestProject() *sdk.Project {
 		RepoOwner:     makersStr("example"),
 		RepoName:      makersStr("tf-example"),
 		RepoBranch:    makersStr("main"),
-		EnvVars: []*sdk.ProjectEnvVar{
-			{Key: makersStr("API_KEY"), Value: makersStr("secret-value")},
-		},
-		CreatedOn:  makersStr("2024-01-01T00:00:00Z"),
-		ModifiedOn: makersStr("2024-01-02T00:00:00Z"),
+		CreatedOn:     makersStr("2024-01-01T00:00:00Z"),
+		ModifiedOn:    makersStr("2024-01-02T00:00:00Z"),
 	}
 }
 
@@ -102,7 +77,6 @@ func makersTestModel(id string) svcmakers.MakersProjectResourceModel {
 		RepoOwner:       types.StringValue("example"),
 		RepoName:        types.StringValue("tf-example"),
 		RepoBranch:      types.StringValue("main"),
-		EnvVars:         makersTestEnvVarList(),
 		Namespace:       types.StringValue("tf-namespace"),
 		CodingProjectId: types.Int64Value(42),
 	}
@@ -147,33 +121,6 @@ func assertMakersProjectModel(t *testing.T, model svcmakers.MakersProjectResourc
 	}
 	if model.CodingProjectId.ValueInt64() != 42 {
 		t.Errorf("coding_project_id = %d, want 42", model.CodingProjectId.ValueInt64())
-	}
-	if model.EnvVars.IsNull() || model.EnvVars.IsUnknown() {
-		t.Fatal("env_vars is null or unknown, want a populated list")
-	}
-	var envVars []svcmakers.MakersProjectEnvVarModel
-	if diags := model.EnvVars.ElementsAs(context.Background(), &envVars, false); diags.HasError() {
-		t.Fatalf("failed to read env_vars: %v", diags.Errors())
-	}
-	if len(envVars) != 1 {
-		t.Fatalf("env_vars length = %d, want 1", len(envVars))
-	}
-	envVar := envVars[0]
-	if envVar.Key.ValueString() != "API_KEY" {
-		t.Errorf("env_vars[0].key = %q, want API_KEY", envVar.Key.ValueString())
-	}
-	if envVar.Value.ValueString() != "secret-value" {
-		t.Errorf("env_vars[0].value = %q, want secret-value", envVar.Value.ValueString())
-	}
-	// Id/Comment/Env are not echoed by DescribeProjects and must be preserved.
-	if envVar.Id.ValueInt64() != 1001 {
-		t.Errorf("env_vars[0].id = %d, want 1001 (preserved)", envVar.Id.ValueInt64())
-	}
-	if envVar.Comment.ValueString() != "api key for production" {
-		t.Errorf("env_vars[0].comment = %q, want preserved comment", envVar.Comment.ValueString())
-	}
-	if envVar.Env.IsNull() {
-		t.Error("env_vars[0].env is null, want preserved set")
 	}
 }
 
@@ -291,15 +238,6 @@ func TestMakersProjectCreateSuccess(t *testing.T) {
 	if captured.CodingProjectId == nil || *captured.CodingProjectId != 42 {
 		t.Errorf("create request coding_project_id = %v, want 42", captured.CodingProjectId)
 	}
-	if len(captured.EnvVars) != 1 {
-		t.Fatalf("create request env_vars length = %d, want 1", len(captured.EnvVars))
-	}
-	if captured.EnvVars[0].Id != nil {
-		t.Errorf("create request env_vars[0].id = %v, want nil (cloud-assigned on create)", captured.EnvVars[0].Id)
-	}
-	if captured.EnvVars[0].Comment == nil || *captured.EnvVars[0].Comment != "api key for production" {
-		t.Errorf("create request env_vars[0].comment = %v, want the configured comment", captured.EnvVars[0].Comment)
-	}
 
 	var got svcmakers.MakersProjectResourceModel
 	if diags := createResp.State.Get(context.Background(), &got); diags.HasError() {
@@ -347,8 +285,7 @@ func TestMakersProjectCreateApiError(t *testing.T) {
 	}
 }
 
-// TestMakersProjectReadSuccess verifies Read refreshes all leaf fields and
-// preserves env_vars metadata the cloud API does not echo back.
+// TestMakersProjectReadSuccess verifies Read refreshes all leaf fields.
 func TestMakersProjectReadSuccess(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
@@ -529,47 +466,6 @@ func TestMakersProjectUpdateClearRejected(t *testing.T) {
 	}
 	if modifyCalled {
 		t.Error("ModifyProject should not be called when the clear semantics check fails")
-	}
-}
-
-// TestMakersProjectReadEnvVarsNotEchoed verifies that a DescribeProjects
-// response without env vars keeps the configured list and normalizes unknown
-// leaf values so the state can be persisted.
-func TestMakersProjectReadEnvVarsNotEchoed(t *testing.T) {
-	patches := gomonkey.NewPatches()
-	defer patches.Reset()
-
-	patchMakersService(patches, "DescribeProject",
-		func(_ context.Context, _ *sdk.DescribeProjectsRequest) (*sdk.Project, error) {
-			project := makersTestProject()
-			project.EnvVars = nil
-			return project, nil
-		})
-
-	ctx := newMakersProjectTestContext(t, patches)
-	var readResp resource.ReadResponse
-	readResp.State = ctx.state(t, makersTestModel(makersTestProjectId))
-	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, makersTestModel(makersTestProjectId))}, &readResp)
-	if readResp.Diagnostics.HasError() {
-		t.Fatalf("Read failed: %v", readResp.Diagnostics.Errors())
-	}
-
-	var got svcmakers.MakersProjectResourceModel
-	if diags := readResp.State.Get(context.Background(), &got); diags.HasError() {
-		t.Fatalf("failed to read back state: %v", diags.Errors())
-	}
-	if got.EnvVars.IsNull() {
-		t.Fatal("env_vars should be preserved when the cloud does not echo it")
-	}
-	var envVars []svcmakers.MakersProjectEnvVarModel
-	if diags := got.EnvVars.ElementsAs(context.Background(), &envVars, false); diags.HasError() {
-		t.Fatalf("failed to read env_vars: %v", diags.Errors())
-	}
-	if len(envVars) != 1 {
-		t.Fatalf("env_vars length = %d, want 1", len(envVars))
-	}
-	if envVars[0].Key.ValueString() != "API_KEY" {
-		t.Errorf("env_vars[0].key = %q, want API_KEY", envVars[0].Key.ValueString())
 	}
 }
 
