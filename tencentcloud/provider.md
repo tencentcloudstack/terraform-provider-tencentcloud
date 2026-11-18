@@ -2756,6 +2756,10 @@ tencentcloud_ioa_company_directory_config
 tencentcloud_ioa_delivery_server
 tencentcloud_ioa_delivery_strategy
 
+Makers
+Resource
+tencentcloud_makers_project_envs
+
 Database Dedicated Cluster(DBDC)
 Data Source
 tencentcloud_dbdc_db_custom_clusters
