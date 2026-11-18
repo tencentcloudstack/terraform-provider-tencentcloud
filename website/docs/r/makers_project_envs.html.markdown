@@ -11,29 +11,44 @@ description: |-
 
 Provides a resource to manage environment variables of a Makers (TEO makers) project.
 
-~> **NOTE** The cloud API `ModifyProjectEnvs` writes the full desired set of environment
-variables for the project, and `DeleteProjectEnvs` deletes variables by key. Variables
-removed from the `env_vars` configuration are deleted explicitly on update; variables
-modified outside of Terraform are detected only through the read-back of the variable
-list. The `zone_id` and `project_id` locating fields are not echoed back by the describe
-API, so drift detection covers the variable list only.
+~> **NOTE** If you need to adjust the order of the `env_vars` entries, you must delete and recreate them.
 
 ## Example Usage
 
 ```hcl
 resource "tencentcloud_makers_project_envs" "example" {
-  zone_id    = "zone-xxxx"
-  project_id = "proj-yyyy"
-  env_vars {
-    key     = "API_KEY"
-    value   = "secret-value"
-    comment = "production key"
-    env     = ["Production"]
-  }
-  env_vars {
-    key   = "DEBUG"
-    value = jsonencode({ level = "info" })
-  }
+  zone_id    = "zone-3hzk0ndvnnyp"
+  project_id = "makers-jw7jha6dktob"
+
+  env_vars = [
+    # Variables specific to the production environment
+    {
+      key     = "API_KEY"
+      value   = "secret-value"
+      comment = "production api key"
+      env     = ["Production"]
+    },
+
+    # Variables specific to the preview environment (sets of environment variables with the same key cannot overlap)
+    {
+      key     = "API_KEY"
+      value   = "preview-key"
+      comment = "preview api key"
+      env     = ["Preview"]
+    },
+
+    # All environment variables
+    {
+      key     = "DEBUG"
+      value   = "1"
+      comment = "debug switch"
+      env     = ["Production", "Preview"]
+    },
+    {
+      key   = "DEBUG1"
+      value = "1"
+    }
+  ]
 }
 ```
 
@@ -51,7 +66,7 @@ The `env_vars` object supports the following:
 * `value` - (Required, String) Variable value, at most 1000 characters.
 * `comment` - (Optional, String) Comment, at most 255 characters.
 * `env` - (Optional, Set) Slugs of the environments the variable applies to, e.g. `Production`, `Preview`. Env sets of variables sharing the same key must not overlap.
-* `id` - (Optional, Int) Variable ID. Not required when creating.
+* `id` - (Optional, Int) Variable ID assigned by the cloud side. Not required when creating.
 
 ## Attributes Reference
 
@@ -68,7 +83,6 @@ This resource interacts with the following TencentCloud APIs:
   - [ModifyProjectEnvs](https://www.tencentcloud.com/search/?wd=ModifyProjectEnvs&type=document&lang=en)
 * Read: [DescribeProjectEnvs](https://www.tencentcloud.com/search/?wd=DescribeProjectEnvs&type=document&lang=en)
 * Update:
-  - [DeleteProjectEnvs](https://www.tencentcloud.com/search/?wd=DeleteProjectEnvs&type=document&lang=en)
   - [DescribeProjectEnvs](https://www.tencentcloud.com/search/?wd=DescribeProjectEnvs&type=document&lang=en)
   - [ModifyProjectEnvs](https://www.tencentcloud.com/search/?wd=ModifyProjectEnvs&type=document&lang=en)
 * Delete: [DeleteProjectEnvs](https://www.tencentcloud.com/search/?wd=DeleteProjectEnvs&type=document&lang=en)

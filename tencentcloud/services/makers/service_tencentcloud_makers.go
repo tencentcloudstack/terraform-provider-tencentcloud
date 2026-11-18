@@ -517,3 +517,115 @@ func (me *MakersService) DeleteProject(ctx context.Context, request *makerssdk.D
 
 	return
 }
+
+// DescribeProjectEnvs queries the environment variables of a project by zone
+// and project id.
+//
+// Two different "empty" outcomes must stay distinguishable:
+//   - API failure (nil response / nil Response) -> error
+//   - queried successfully but no variables exist -> (nil, nil), meaning "does not exist"
+func (me *MakersService) DescribeProjectEnvs(ctx context.Context, zoneId, projectId string) (envVars []*makerssdk.EnvVar, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := makerssdk.NewDescribeProjectEnvsRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.ProjectId = helper.String(projectId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *makerssdk.DescribeProjectEnvsResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseMakersClient().DescribeProjectEnvsWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("DescribeProjectEnvs returned an empty response for %s#%s", zoneId, projectId)
+		return
+	}
+
+	envVars = response.Response.EnvVars
+	if len(envVars) == 0 {
+		// No variables exist on the cloud side: report the "does not exist"
+		// outcome as (nil, nil) so the resource layer can remove the
+		// resource from state.
+		envVars = nil
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
+// ModifyProjectEnvs writes the full desired set of environment variables of a
+// project; the cloud API uses it for both create and update.
+func (me *MakersService) ModifyProjectEnvs(ctx context.Context, request *makerssdk.ModifyProjectEnvsRequest) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *makerssdk.ModifyProjectEnvsResponse
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseMakersClient().ModifyProjectEnvsWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
+// DeleteProjectEnvs removes the given environment variables of a project.
+func (me *MakersService) DeleteProjectEnvs(ctx context.Context, request *makerssdk.DeleteProjectEnvsRequest) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *makerssdk.DeleteProjectEnvsResponse
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseMakersClient().DeleteProjectEnvsWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}

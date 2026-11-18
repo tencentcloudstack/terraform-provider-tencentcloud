@@ -15,6 +15,7 @@ import (
 	makersv20261113 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 // Compile-time interface assertions.
@@ -40,19 +41,6 @@ type MakersProjectEnvsResource struct {
 	fw.ResourceWithConfigure
 }
 
-// envVarAttrTypes is the attribute type set of one `env_vars` element,
-// used to build object values when refreshing state from the cloud response.
-var envVarAttrTypes = map[string]attr.Type{
-	"key":     types.StringType,
-	"value":   types.StringType,
-	"id":      types.Int64Type,
-	"comment": types.StringType,
-	"env":     types.SetType{ElemType: types.StringType},
-}
-
-// envVarObjectType is the object type of one `env_vars` element.
-var envVarObjectType = types.ObjectType{AttrTypes: envVarAttrTypes}
-
 // MakersProjectEnvVarModel maps one element of the `env_vars` attribute.
 type MakersProjectEnvVarModel struct {
 	Key     types.String `tfsdk:"key"`
@@ -76,25 +64,7 @@ func (r *MakersProjectEnvsResource) Metadata(_ context.Context, _ resource.Metad
 
 func (r *MakersProjectEnvsResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Provides a resource to manage environment variables of a Makers project.\n\n" +
-			"Example Usage\n\n" +
-			"```hcl\n" +
-			"resource \"tencentcloud_makers_project_envs\" \"example\" {\n" +
-			"  zone_id    = \"zone-xxxx\"\n" +
-			"  project_id = \"proj-yyyy\"\n" +
-			"  env_vars {\n" +
-			"    key     = \"API_KEY\"\n" +
-			"    value   = \"secret-value\"\n" +
-			"    comment = \"production key\"\n" +
-			"    env     = [\"Production\"]\n" +
-			"  }\n" +
-			"}\n" +
-			"```\n\n" +
-			"Import\n\n" +
-			"tencentcloud_makers_project_envs can be imported using the `<zone_id>#<project_id>`, e.g.\n\n" +
-			"```\n" +
-			"$ terraform import tencentcloud_makers_project_envs.example zone-xxxx#proj-yyyy\n" +
-			"```",
+		Description: "Provides a resource to manage environment variables of a Makers project.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:    true,
@@ -107,18 +77,18 @@ func (r *MakersProjectEnvsResource) Schema(_ context.Context, _ resource.SchemaR
 			// scoped by ZoneId + ProjectId, and a different scope is a
 			// different managed object.
 			"zone_id": schema.StringAttribute{
-				Required:    true,
-				Description: "Makers site ID.",
+				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
+				Description: "Makers site ID.",
 			},
 			"project_id": schema.StringAttribute{
-				Required:    true,
-				Description: "Project ID.",
+				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
+				Description: "Project ID.",
 			},
 			"env_vars": schema.ListNestedAttribute{
 				Required:    true,
@@ -133,9 +103,17 @@ func (r *MakersProjectEnvsResource) Schema(_ context.Context, _ resource.SchemaR
 							Required:    true,
 							Description: "Variable value, at most 1000 characters.",
 						},
+						// id is assigned by the cloud side once the variable is
+						// created, so it is Optional (settable when updating an
+						// existing variable) and Computed (read back after apply
+						// even when not configured). Without Computed an unset id
+						// plans as null and the cloud-assigned value read back
+						// fails the post-apply consistency check with "was null,
+						// but now <id>".
 						"id": schema.Int64Attribute{
 							Optional:    true,
-							Description: "Variable ID. Not required when creating.",
+							Computed:    true,
+							Description: "Variable ID assigned by the cloud side. Not required when creating.",
 						},
 						"comment": schema.StringAttribute{
 							Optional:    true,
@@ -143,6 +121,7 @@ func (r *MakersProjectEnvsResource) Schema(_ context.Context, _ resource.SchemaR
 						},
 						"env": schema.SetAttribute{
 							Optional:    true,
+							Computed:    true,
 							ElementType: types.StringType,
 							Description: "Slugs of the environments the variable applies to, e.g. `Production`, `Preview`. Env sets of variables sharing the same key must not overlap.",
 						},
@@ -153,18 +132,170 @@ func (r *MakersProjectEnvsResource) Schema(_ context.Context, _ resource.SchemaR
 	}
 }
 
-// compositeID builds the resource id from its locating fields.
-func compositeID(zoneId, projectId string) string {
-	return fmt.Sprintf("%s#%s", zoneId, projectId)
+// Create handles `terraform apply` for new resources.
+func (r *MakersProjectEnvsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan MakersProjectEnvsResourceModel
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	request := makersv20261113.NewModifyProjectEnvsRequest()
+	request.ZoneId = plan.ZoneId.ValueStringPointer()
+	request.ProjectId = plan.ProjectId.ValueStringPointer()
+	request.EnvVars = requestEnvVars(plan.EnvVars)
+
+	service := NewMakersService(r.Client())
+	if err := service.ModifyProjectEnvs(ctx, request); err != nil {
+		resp.Diagnostics.AddError(
+			"Error creating Makers project envs",
+			fmt.Sprintf("ModifyProjectEnvs failed: %v", err),
+		)
+		return
+	}
+
+	// The API returns no resource-level id; the composite id comes from the
+	// locating fields. Persist the identity BEFORE the read-back so the
+	// resource stays destroyable even if the read fails.
+	plan.Id = types.StringValue(helper.IdFormat(plan.ZoneId.ValueString(), plan.ProjectId.ValueString()))
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	items, err := service.DescribeProjectEnvs(ctx, plan.ZoneId.ValueString(), plan.ProjectId.ValueString())
+	if err != nil {
+		resp.Diagnostics.AddError("Error reading makers project envs after create", err.Error())
+		return
+	}
+	if items == nil {
+		resp.Diagnostics.AddError(
+			"makers project envs not readable after create",
+			fmt.Sprintf("resource %s was created but cannot be read back", plan.Id.ValueString()),
+		)
+		return
+	}
+	r.refreshEnvVars(&plan, items)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
-// splitCompositeID parses a `<zone_id>#<project_id>` resource id.
-func splitCompositeID(id string) (string, string, error) {
-	var zoneId, projectId string
-	if n, err := fmt.Sscanf(id, "%[^#]#%s", &zoneId, &projectId); err != nil || n != 2 {
-		return "", "", fmt.Errorf("invalid id %q, expected format <zone_id>#<project_id>", id)
+// Read handles `terraform refresh` and post-apply state refresh.
+func (r *MakersProjectEnvsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state MakersProjectEnvsResourceModel
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	return zoneId, projectId, nil
+
+	parts, err := helper.IdParseErr(state.Id.ValueString(), 2)
+	if err != nil {
+		resp.Diagnostics.AddError("Invalid resource id", err.Error())
+		return
+	}
+	zoneId := parts[0]
+	projectId := parts[1]
+
+	service := NewMakersService(r.Client())
+	items, err := service.DescribeProjectEnvs(ctx, zoneId, projectId)
+	if err != nil {
+		resp.Diagnostics.AddError("Error reading Makers project envs", err.Error())
+		return
+	}
+
+	// Confirmed "no variables exist" => drop it from state so Terraform
+	// plans a recreation. A nil response is an API failure and must not
+	// land here.
+	if items == nil {
+		resp.Diagnostics.AddWarning(
+			"Resource not found",
+			fmt.Sprintf("Makers project envs %s not found, removing from state.", state.Id.ValueString()),
+		)
+		resp.State.RemoveResource(ctx)
+		return
+	}
+
+	r.refreshEnvVars(&state, items)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+}
+
+// Update handles in-place updates.
+func (r *MakersProjectEnvsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan MakersProjectEnvsResourceModel
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	var state MakersProjectEnvsResourceModel
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	request := makersv20261113.NewModifyProjectEnvsRequest()
+	request.ZoneId = plan.ZoneId.ValueStringPointer()
+	request.ProjectId = plan.ProjectId.ValueStringPointer()
+	request.EnvVars = requestEnvVars(plan.EnvVars)
+
+	service := NewMakersService(r.Client())
+	if err := service.ModifyProjectEnvs(ctx, request); err != nil {
+		resp.Diagnostics.AddError(
+			"Error updating Makers project envs",
+			fmt.Sprintf("ModifyProjectEnvs failed: %v", err),
+		)
+		return
+	}
+
+	items, err := service.DescribeProjectEnvs(ctx, plan.ZoneId.ValueString(), plan.ProjectId.ValueString())
+	if err != nil {
+		resp.Diagnostics.AddError("Error reading Makers project envs after update", err.Error())
+		return
+	}
+	if items == nil {
+		resp.Diagnostics.AddError(
+			"Makers project envs not readable after update",
+			fmt.Sprintf("resource %s was updated but cannot be read back", state.Id.ValueString()),
+		)
+		return
+	}
+	plan.Id = state.Id
+	r.refreshEnvVars(&plan, items)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+// Delete handles resource deletion.
+func (r *MakersProjectEnvsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state MakersProjectEnvsResourceModel
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	request := makersv20261113.NewDeleteProjectEnvsRequest()
+	request.ZoneId = state.ZoneId.ValueStringPointer()
+	request.ProjectId = state.ProjectId.ValueStringPointer()
+	request.EnvVars = requestEnvVars(state.EnvVars)
+
+	service := NewMakersService(r.Client())
+	if err := service.DeleteProjectEnvs(ctx, request); err != nil {
+		resp.Diagnostics.AddError(
+			"Error deleting Makers project envs",
+			fmt.Sprintf("DeleteProjectEnvs failed: %v", err),
+		)
+		return
+	}
+}
+
+// ImportState parses the composite `<zone_id>#<project_id>` id.
+func (r *MakersProjectEnvsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	parts, err := helper.IdParseErr(req.ID, 2)
+	if err != nil {
+		resp.Diagnostics.AddError("Invalid resource id", err.Error())
+		return
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), req.ID)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("zone_id"), parts[0])...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("project_id"), parts[1])...)
 }
 
 // requestEnvVars converts the plan/state list into SDK EnvVar items.
@@ -197,18 +328,26 @@ func requestEnvVars(models []MakersProjectEnvVarModel) []*makersv20261113.EnvVar
 // refreshEnvVars rebuilds the model list from the Describe response.
 // The response does not echo ZoneId/ProjectId back, so those keep the
 // state values.
+//
+// Every attribute is initialized to null first: a zero-value types.String /
+// types.Int64 / types.Set cannot be written into state, and the conditional
+// overwrites below only replace the null when the cloud actually reported a
+// value.
 func (r *MakersProjectEnvsResource) refreshEnvVars(m *MakersProjectEnvsResourceModel, items []*makersv20261113.EnvVar) {
 	models := make([]MakersProjectEnvVarModel, 0, len(items))
 	for _, item := range items {
 		model := MakersProjectEnvVarModel{
-			Key:     types.StringPointerValue(item.Key),
-			Value:   types.StringPointerValue(item.Value),
-			Id:      types.Int64PointerValue(item.Id),
-			Comment: types.StringPointerValue(item.Comment),
+			Id:      types.Int64Null(),
+			Comment: types.StringNull(),
+			Env:     types.SetNull(types.StringType),
 		}
-		if len(item.Env) == 0 {
-			model.Env = types.SetNull(types.StringType)
-		} else {
+		fw.OverwriteString(&model.Key, item.Key)
+		fw.OverwriteString(&model.Value, item.Value)
+		fw.OverwriteString(&model.Comment, item.Comment)
+		if item.Id != nil {
+			model.Id = types.Int64PointerValue(item.Id)
+		}
+		if len(item.Env) > 0 {
 			elems := make([]attr.Value, 0, len(item.Env))
 			for _, e := range item.Env {
 				elems = append(elems, types.StringPointerValue(e))
@@ -219,212 +358,4 @@ func (r *MakersProjectEnvsResource) refreshEnvVars(m *MakersProjectEnvsResourceM
 		models = append(models, model)
 	}
 	m.EnvVars = models
-}
-
-// read fetches the environment variables of the project.
-//
-//   - API failure (nil response / nil Response) -> error
-//   - queried successfully but no variables exist -> nil, meaning "does not exist"
-func (r *MakersProjectEnvsResource) read(ctx context.Context, zoneId, projectId string) ([]*makersv20261113.EnvVar, error) {
-	request := makersv20261113.NewDescribeProjectEnvsRequest()
-	request.ZoneId = &zoneId
-	request.ProjectId = &projectId
-
-	response, err := r.Client().UseMakersClient().DescribeProjectEnvsWithContext(ctx, request)
-	if err != nil {
-		return nil, err
-	}
-	if response == nil || response.Response == nil {
-		return nil, fmt.Errorf("DescribeProjectEnvs returned an empty response for %s", compositeID(zoneId, projectId))
-	}
-	if len(response.Response.EnvVars) == 0 {
-		return nil, nil
-	}
-	return response.Response.EnvVars, nil
-}
-
-// Create handles `terraform apply` for new resources.
-func (r *MakersProjectEnvsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan MakersProjectEnvsResourceModel
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	request := makersv20261113.NewModifyProjectEnvsRequest()
-	request.ZoneId = plan.ZoneId.ValueStringPointer()
-	request.ProjectId = plan.ProjectId.ValueStringPointer()
-	request.EnvVars = requestEnvVars(plan.EnvVars)
-
-	_, err := r.Client().UseMakersClient().ModifyProjectEnvsWithContext(ctx, request)
-	if err != nil {
-		resp.Diagnostics.AddError(
-			"Error creating makers project envs",
-			fmt.Sprintf("ModifyProjectEnvs failed: %v", err),
-		)
-		return
-	}
-
-	// The API returns no resource-level id; the composite id comes from the
-	// locating fields. Persist the identity BEFORE the read-back so the
-	// resource stays destroyable even if the read fails.
-	plan.Id = types.StringValue(compositeID(plan.ZoneId.ValueString(), plan.ProjectId.ValueString()))
-	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	items, err := r.read(ctx, plan.ZoneId.ValueString(), plan.ProjectId.ValueString())
-	if err != nil {
-		resp.Diagnostics.AddError("Error reading makers project envs after create", err.Error())
-		return
-	}
-	if items == nil {
-		resp.Diagnostics.AddError(
-			"makers project envs not readable after create",
-			fmt.Sprintf("resource %s was created but cannot be read back", plan.Id.ValueString()),
-		)
-		return
-	}
-	r.refreshEnvVars(&plan, items)
-	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
-}
-
-// Read handles `terraform refresh` and post-apply state refresh.
-func (r *MakersProjectEnvsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state MakersProjectEnvsResourceModel
-	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	items, err := r.read(ctx, state.ZoneId.ValueString(), state.ProjectId.ValueString())
-	if err != nil {
-		resp.Diagnostics.AddError("Error reading makers project envs", err.Error())
-		return
-	}
-
-	// Confirmed "no variables exist" => drop it from state so Terraform
-	// plans a recreation. A nil response is an API failure and must not
-	// land here.
-	if items == nil {
-		resp.Diagnostics.AddWarning(
-			"Resource not found",
-			fmt.Sprintf("makers project envs %s not found, removing from state.", state.Id.ValueString()),
-		)
-		resp.State.RemoveResource(ctx)
-		return
-	}
-
-	r.refreshEnvVars(&state, items)
-	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
-}
-
-// Update handles in-place updates.
-func (r *MakersProjectEnvsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan MakersProjectEnvsResourceModel
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	var state MakersProjectEnvsResourceModel
-	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	// ModifyProjectEnvs writes the full desired set of variables, so the
-	// plan list is sent as-is; variables removed from the configuration are
-	// not part of the write and should be removed explicitly beforehand.
-	// Variables present in state but dropped from the plan are deleted
-	// through DeleteProjectEnvs, using their cloud-assigned ids when known.
-	for _, old := range state.EnvVars {
-		found := false
-		for _, newVar := range plan.EnvVars {
-			if old.Key.Equal(newVar.Key) {
-				found = true
-				break
-			}
-		}
-		if !found {
-			delReq := makersv20261113.NewDeleteProjectEnvsRequest()
-			delReq.ZoneId = plan.ZoneId.ValueStringPointer()
-			delReq.ProjectId = plan.ProjectId.ValueStringPointer()
-			delReq.EnvVars = requestEnvVars([]MakersProjectEnvVarModel{old})
-			if _, err := r.Client().UseMakersClient().DeleteProjectEnvsWithContext(ctx, delReq); err != nil {
-				resp.Diagnostics.AddError(
-					"Error updating makers project envs",
-					fmt.Sprintf("DeleteProjectEnvs failed while removing variable %s: %v", old.Key.ValueString(), err),
-				)
-				return
-			}
-		}
-	}
-
-	request := makersv20261113.NewModifyProjectEnvsRequest()
-	request.ZoneId = plan.ZoneId.ValueStringPointer()
-	request.ProjectId = plan.ProjectId.ValueStringPointer()
-	request.EnvVars = requestEnvVars(plan.EnvVars)
-
-	if _, err := r.Client().UseMakersClient().ModifyProjectEnvsWithContext(ctx, request); err != nil {
-		resp.Diagnostics.AddError(
-			"Error updating makers project envs",
-			fmt.Sprintf("ModifyProjectEnvs failed: %v", err),
-		)
-		return
-	}
-
-	items, err := r.read(ctx, plan.ZoneId.ValueString(), plan.ProjectId.ValueString())
-	if err != nil {
-		resp.Diagnostics.AddError("Error reading makers project envs after update", err.Error())
-		return
-	}
-	if items == nil {
-		resp.Diagnostics.AddError(
-			"makers project envs not readable after update",
-			fmt.Sprintf("resource %s was updated but cannot be read back", state.Id.ValueString()),
-		)
-		return
-	}
-	plan.Id = state.Id
-	r.refreshEnvVars(&plan, items)
-	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
-}
-
-// Delete handles resource deletion.
-func (r *MakersProjectEnvsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state MakersProjectEnvsResourceModel
-	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	request := makersv20261113.NewDeleteProjectEnvsRequest()
-	request.ZoneId = state.ZoneId.ValueStringPointer()
-	request.ProjectId = state.ProjectId.ValueStringPointer()
-	request.EnvVars = requestEnvVars(state.EnvVars)
-
-	if _, err := r.Client().UseMakersClient().DeleteProjectEnvsWithContext(ctx, request); err != nil {
-		resp.Diagnostics.AddError(
-			"Error deleting makers project envs",
-			fmt.Sprintf("DeleteProjectEnvs failed: %v", err),
-		)
-		return
-	}
-}
-
-// ImportState parses the composite `<zone_id>#<project_id>` id.
-func (r *MakersProjectEnvsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	zoneId, projectId, err := splitCompositeID(req.ID)
-	if err != nil {
-		resp.Diagnostics.AddError(
-			"Unexpected Import Identifier",
-			fmt.Sprintf("Expected import identifier with format <zone_id>#<project_id>. Got: %q", req.ID),
-		)
-		return
-	}
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), req.ID)...)
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("zone_id"), zoneId)...)
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("project_id"), projectId)...)
 }

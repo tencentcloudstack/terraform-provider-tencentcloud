@@ -5,11 +5,11 @@ import (
 	"testing"
 
 	"github.com/agiledragon/gomonkey/v2"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-go/tftypes"
 	makersv20261113 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -18,8 +18,8 @@ import (
 )
 
 const (
-	testZoneId    = "zone-1234"
-	testProjectId = "proj-5678"
+	testEnvZoneId    = "zone-1234"
+	testEnvProjectId = "proj-5678"
 )
 
 func sdkString(value string) *string { return &value }
@@ -85,54 +85,6 @@ func (c *makersProjectEnvsTestContext) state(t *testing.T, model svcmakers.Maker
 	return state
 }
 
-func envVarObjectTypes(t *testing.T) map[string]attr.Type {
-	t.Helper()
-
-	nested, ok := testSchemaAttributes(t)["env_vars"].(schema.ListNestedAttribute)
-	if !ok {
-		t.Fatalf("attribute env_vars is not a list nested attribute")
-	}
-	return nested.NestedObject.GetType().(types.ObjectType).AttrTypes
-}
-
-func testSchemaAttributes(t *testing.T) map[string]schema.Attribute {
-	t.Helper()
-
-	var schemaResp resource.SchemaResponse
-	res := svcmakers.NewMakersProjectEnvsResource()
-	res.Schema(context.Background(), resource.SchemaRequest{}, &schemaResp)
-	if schemaResp.Diagnostics.HasError() {
-		t.Fatalf("failed to build schema: %v", schemaResp.Diagnostics.Errors())
-	}
-	return schemaResp.Schema.Attributes
-}
-
-func mustObject(t *testing.T, attributeTypes map[string]attr.Type, values map[string]attr.Value) types.Object {
-	t.Helper()
-
-	object, diags := types.ObjectValue(attributeTypes, values)
-	if diags.HasError() {
-		t.Fatalf("failed to build object value: %v", diags.Errors())
-	}
-	return object
-}
-
-func mustList(t *testing.T, elementTypes map[string]attr.Type, elements ...map[string]attr.Value) types.List {
-	t.Helper()
-
-	objectType := types.ObjectType{AttrTypes: elementTypes}
-	values := make([]attr.Value, 0, len(elements))
-	for _, element := range elements {
-		values = append(values, mustObject(t, elementTypes, element))
-	}
-
-	list, diags := types.ListValue(objectType, values)
-	if diags.HasError() {
-		t.Fatalf("failed to build list value: %v", diags.Errors())
-	}
-	return list
-}
-
 func mustStringSet(t *testing.T, values ...string) types.Set {
 	t.Helper()
 
@@ -148,8 +100,8 @@ func sampleModel(t *testing.T) svcmakers.MakersProjectEnvsResourceModel {
 
 	return svcmakers.MakersProjectEnvsResourceModel{
 		Id:        types.StringNull(),
-		ZoneId:    types.StringValue(testZoneId),
-		ProjectId: types.StringValue(testProjectId),
+		ZoneId:    types.StringValue(testEnvZoneId),
+		ProjectId: types.StringValue(testEnvProjectId),
 		EnvVars: []svcmakers.MakersProjectEnvVarModel{
 			{
 				Key:     types.StringValue("API_KEY"),
@@ -177,46 +129,6 @@ func modelFromState(t *testing.T, state tfsdk.State) svcmakers.MakersProjectEnvs
 		t.Fatalf("failed to read state: %v", diags.Errors())
 	}
 	return model
-}
-
-func attributesOf(t *testing.T, value attr.Value) map[string]attr.Value {
-	t.Helper()
-
-	object, ok := value.(types.Object)
-	if !ok {
-		t.Fatalf("value is not an object: %T", value)
-	}
-	return object.Attributes()
-}
-
-func assertString(t *testing.T, attributes map[string]attr.Value, name, expected string) {
-	t.Helper()
-
-	value, ok := attributes[name].(types.String)
-	if !ok {
-		t.Fatalf("attribute %q is not a string", name)
-	}
-	if value.IsNull() || value.IsUnknown() {
-		t.Fatalf("attribute %q has no value", name)
-	}
-	if value.ValueString() != expected {
-		t.Fatalf("attribute %q is %q, want %q", name, value.ValueString(), expected)
-	}
-}
-
-func assertInt64(t *testing.T, attributes map[string]attr.Value, name string, expected int64) {
-	t.Helper()
-
-	value, ok := attributes[name].(types.Int64)
-	if !ok {
-		t.Fatalf("attribute %q is not an int64", name)
-	}
-	if value.IsNull() || value.IsUnknown() {
-		t.Fatalf("attribute %q has no value", name)
-	}
-	if value.ValueInt64() != expected {
-		t.Fatalf("attribute %q is %d, want %d", name, value.ValueInt64(), expected)
-	}
 }
 
 func describeResponse(items ...*makersv20261113.EnvVar) *makersv20261113.DescribeProjectEnvsResponse {
@@ -280,8 +192,6 @@ func TestMakersProjectEnvsSchema(t *testing.T) {
 		t.Fatalf("env_vars.env must be optional")
 	}
 }
-
-// TestMakersProjectEnvsCreate verifies the create request and the read back state.
 func TestMakersProjectEnvsCreate(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
@@ -319,11 +229,11 @@ func TestMakersProjectEnvsCreate(t *testing.T) {
 	if capturedModify == nil {
 		t.Fatalf("ModifyProjectEnvs was not called")
 	}
-	if capturedModify.ZoneId == nil || *capturedModify.ZoneId != testZoneId {
-		t.Fatalf("ModifyProjectEnvs ZoneId is not %q", testZoneId)
+	if capturedModify.ZoneId == nil || *capturedModify.ZoneId != testEnvZoneId {
+		t.Fatalf("ModifyProjectEnvs ZoneId is not %q", testEnvZoneId)
 	}
-	if capturedModify.ProjectId == nil || *capturedModify.ProjectId != testProjectId {
-		t.Fatalf("ModifyProjectEnvs ProjectId is not %q", testProjectId)
+	if capturedModify.ProjectId == nil || *capturedModify.ProjectId != testEnvProjectId {
+		t.Fatalf("ModifyProjectEnvs ProjectId is not %q", testEnvProjectId)
 	}
 	if len(capturedModify.EnvVars) != 2 {
 		t.Fatalf("ModifyProjectEnvs EnvVars has %d elements, want 2", len(capturedModify.EnvVars))
@@ -352,8 +262,18 @@ func TestMakersProjectEnvsCreate(t *testing.T) {
 	}
 
 	stateModel := modelFromState(t, createResp.State)
-	if !stateModel.Id.Equal(types.StringValue(testZoneId + "#" + testProjectId)) {
-		t.Fatalf("state id is %s, want %s", stateModel.Id.ValueString(), testZoneId+"#"+testProjectId)
+	// The plan does not set the nested ids (null); the cloud-assigned ids
+	// read back after apply must land in state — this is exactly the
+	// Optional+Computed semantics that keeps Terraform's post-apply
+	// consistency check happy.
+	if stateModel.EnvVars[0].Id.ValueInt64() != 11 {
+		t.Fatalf("state env_vars[0].id is %d, want the cloud-assigned 11", stateModel.EnvVars[0].Id.ValueInt64())
+	}
+	if stateModel.EnvVars[1].Id.ValueInt64() != 12 {
+		t.Fatalf("state env_vars[1].id is %d, want the cloud-assigned 12", stateModel.EnvVars[1].Id.ValueInt64())
+	}
+	if !stateModel.Id.Equal(types.StringValue(testEnvZoneId + "#" + testEnvProjectId)) {
+		t.Fatalf("state id is %s, want %s", stateModel.Id.ValueString(), testEnvZoneId+"#"+testEnvProjectId)
 	}
 	if len(stateModel.EnvVars) != 2 {
 		t.Fatalf("state has %d env vars, want 2", len(stateModel.EnvVars))
@@ -392,7 +312,7 @@ func TestMakersProjectEnvsReadNotFound(t *testing.T) {
 	)
 
 	model := sampleModel(t)
-	model.Id = types.StringValue(testZoneId + "#" + testProjectId)
+	model.Id = types.StringValue(testEnvZoneId + "#" + testEnvProjectId)
 	readResp := &resource.ReadResponse{State: testContext.state(t, model)}
 	testContext.resource.Read(context.Background(), resource.ReadRequest{State: readResp.State}, readResp)
 	if readResp.Diagnostics.HasError() {
@@ -420,7 +340,7 @@ func TestMakersProjectEnvsDelete(t *testing.T) {
 	)
 
 	model := sampleModel(t)
-	model.Id = types.StringValue(testZoneId + "#" + testProjectId)
+	model.Id = types.StringValue(testEnvZoneId + "#" + testEnvProjectId)
 	model.EnvVars[0].Id = types.Int64Value(11)
 	deleteResp := &resource.DeleteResponse{}
 	testContext.resource.Delete(context.Background(), resource.DeleteRequest{State: testContext.state(t, model)}, deleteResp)
@@ -431,11 +351,11 @@ func TestMakersProjectEnvsDelete(t *testing.T) {
 	if capturedDelete == nil {
 		t.Fatalf("DeleteProjectEnvs was not called")
 	}
-	if capturedDelete.ZoneId == nil || *capturedDelete.ZoneId != testZoneId {
-		t.Fatalf("DeleteProjectEnvs ZoneId is not %q", testZoneId)
+	if capturedDelete.ZoneId == nil || *capturedDelete.ZoneId != testEnvZoneId {
+		t.Fatalf("DeleteProjectEnvs ZoneId is not %q", testEnvZoneId)
 	}
-	if capturedDelete.ProjectId == nil || *capturedDelete.ProjectId != testProjectId {
-		t.Fatalf("DeleteProjectEnvs ProjectId is not %q", testProjectId)
+	if capturedDelete.ProjectId == nil || *capturedDelete.ProjectId != testEnvProjectId {
+		t.Fatalf("DeleteProjectEnvs ProjectId is not %q", testEnvProjectId)
 	}
 	if len(capturedDelete.EnvVars) != 2 {
 		t.Fatalf("DeleteProjectEnvs EnvVars has %d elements, want 2", len(capturedDelete.EnvVars))
@@ -461,7 +381,11 @@ func TestMakersProjectEnvsImportState(t *testing.T) {
 	}
 
 	importResp := &resource.ImportStateResponse{State: tfsdk.State{Schema: testContext.schema}}
-	imported.ImportState(context.Background(), resource.ImportStateRequest{ID: testZoneId + "#" + testProjectId}, importResp)
+	// The framework server initializes the import state raw value to a fully
+	// null object of the schema type before the provider ImportState runs;
+	// mirror that so SetAttribute can store into it.
+	importResp.State.Raw = tftypes.NewValue(testContext.schema.Type().TerraformType(context.Background()), nil)
+	imported.ImportState(context.Background(), resource.ImportStateRequest{ID: testEnvZoneId + "#" + testEnvProjectId}, importResp)
 	if importResp.Diagnostics.HasError() {
 		t.Fatalf("unexpected error diagnostics: %v", importResp.Diagnostics.Errors())
 	}
@@ -470,11 +394,12 @@ func TestMakersProjectEnvsImportState(t *testing.T) {
 	if diags := importResp.State.Get(context.Background(), &model); diags.HasError() {
 		t.Fatalf("failed to read imported state: %v", diags.Errors())
 	}
-	if model.ZoneId.ValueString() != testZoneId || model.ProjectId.ValueString() != testProjectId {
+	if model.ZoneId.ValueString() != testEnvZoneId || model.ProjectId.ValueString() != testEnvProjectId {
 		t.Fatalf("imported zone/project ids are %s/%s", model.ZoneId.ValueString(), model.ProjectId.ValueString())
 	}
 
 	badResp := &resource.ImportStateResponse{State: tfsdk.State{Schema: testContext.schema}}
+	badResp.State.Raw = tftypes.NewValue(testContext.schema.Type().TerraformType(context.Background()), nil)
 	imported.ImportState(context.Background(), resource.ImportStateRequest{ID: "invalid-id"}, badResp)
 	if !badResp.Diagnostics.HasError() {
 		t.Fatalf("import with an invalid id must fail")
