@@ -24,6 +24,7 @@ import (
 	privatednsIntl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/privatedns/v20201028"
 	advisorv20200721 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor/v20200721"
 	v20200721 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor/v20200721"
+	makersv20261113 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
 	agsv20250920 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ags/v20250920"
 	antiddos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309"
 	antiddosv20250903 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20250903"
@@ -189,6 +190,7 @@ type TencentCloudClient struct {
 	kmsConn               *kms.Client
 	ssmConn               *ssm.Client
 	agsConn               *agsv20250920.Client
+	makersConn            *makersv20261113.Client
 	apiConn               *api.Client
 	emrConn               *emr.Client
 	clsConn               *cls.Client
@@ -1153,6 +1155,19 @@ func (me *TencentCloudClient) UseAgsClient() *agsv20250920.Client {
 	me.agsConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.agsConn
+}
+
+// UseMakersClient returns Makers client for service
+func (me *TencentCloudClient) UseMakersClient() *makersv20261113.Client {
+	if me.makersConn != nil {
+		return me.makersConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.makersConn, _ = makersv20261113.NewClient(me.Credential, me.Region, cpf)
+	me.makersConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.makersConn
 }
 
 // UseApiClient return API client for service
