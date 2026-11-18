@@ -2197,10 +2197,6 @@ tencentcloud_tsf_operate_container_group
 tencentcloud_tsf_operate_group
 tencentcloud_tsf_unit_namespace
 
-Makers(makers)
-Resource
-tencentcloud_makers_zone_custom_domain
-
 Media Processing Service(MPS)
 Data Source
 tencentcloud_mps_schedules
@@ -2859,5 +2855,8 @@ Action
 tencentcloud_fwm_dispatch_strategy
 
 Web & Agents Development Platform(Makers)
+Resource
+tencentcloud_makers_zone_custom_domain
+
 Data Source
 tencentcloud_makers_deployment_log

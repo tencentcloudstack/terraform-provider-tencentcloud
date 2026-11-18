@@ -12,7 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	sdkerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	makersv20261113 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
+	makerssdk "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/sharedmeta"
@@ -35,7 +35,7 @@ func mkInt64(value int64) *int64 { return &value }
 // SDK client. Service layer methods are patched per test with gomonkey.
 type makersZoneCustomDomainTestContext struct {
 	resource resource.Resource
-	client   *makersv20261113.Client
+	client   *makerssdk.Client
 	schema   schema.Schema
 }
 
@@ -43,8 +43,8 @@ func newMakersZoneCustomDomainTestContext(t *testing.T, patches *gomonkey.Patche
 	t.Helper()
 
 	connectivityClient := &connectivity.TencentCloudClient{}
-	makersClient := &makersv20261113.Client{}
-	patches.ApplyMethodReturn(connectivityClient, "UseMakersV20261113Client", makersClient)
+	makersClient := &makerssdk.Client{}
+	patches.ApplyMethodReturn(connectivityClient, "UseMakersClient", makersClient)
 
 	res := svcmakers.NewMakersZoneCustomDomainResource()
 	configured, ok := res.(resource.ResourceWithConfigure)
@@ -101,8 +101,8 @@ func (c *makersZoneCustomDomainTestContext) readState(t *testing.T, state tfsdk.
 	return model
 }
 
-func testZoneDomain() *makersv20261113.ZoneDomain {
-	return &makersv20261113.ZoneDomain{
+func testZoneDomain() *makerssdk.ZoneDomain {
+	return &makerssdk.ZoneDomain{
 		Type:       mkString("Custom"),
 		Domain:     mkString(testDomain),
 		Status:     mkString("Pass"),
@@ -111,29 +111,29 @@ func testZoneDomain() *makersv20261113.ZoneDomain {
 		Area:       mkString("mainland"),
 		Cname:      mkString("cname.example.com"),
 		MainDomain: mkString("example.com"),
-		Ipv6:       &makersv20261113.SwitchConfig{Switch: mkString("off")},
-		Http2:      &makersv20261113.SwitchConfig{Switch: mkString("on")},
-		ForceRedirect: &makersv20261113.ForceRedirectConfig{
+		Ipv6:       &makerssdk.SwitchConfig{Switch: mkString("off")},
+		Http2:      &makerssdk.SwitchConfig{Switch: mkString("on")},
+		ForceRedirect: &makerssdk.ForceRedirectConfig{
 			Switch:             mkString("on"),
 			RedirectStatusCode: mkInt64(301),
 		},
-		Hsts: &makersv20261113.HstsConfig{
+		Hsts: &makerssdk.HstsConfig{
 			Switch:            mkString("on"),
 			MaxAge:            mkInt64(3600),
 			IncludeSubDomains: mkString("on"),
 			Preload:           mkString("off"),
 		},
-		OwnershipVerification: &makersv20261113.OwnershipVerification{
-			DnsVerification: &makersv20261113.DnsVerification{
+		OwnershipVerification: &makerssdk.OwnershipVerification{
+			DnsVerification: &makerssdk.DnsVerification{
 				RecordType:  mkString("TXT"),
 				Subdomain:   mkString("_tcdns.www.example.com"),
 				RecordValue: mkString("verify-value"),
 			},
-			FileVerification: &makersv20261113.FileVerification{
+			FileVerification: &makerssdk.FileVerification{
 				Path:    mkString("/verify.txt"),
 				Content: mkString("file-content"),
 			},
-			NsVerification: &makersv20261113.NsVerification{
+			NsVerification: &makerssdk.NsVerification{
 				NameServers: []*string{mkString("ns1.example.com"), mkString("ns2.example.com")},
 			},
 		},
@@ -142,12 +142,15 @@ func testZoneDomain() *makersv20261113.ZoneDomain {
 
 func (c *makersZoneCustomDomainTestContext) sampleModel() svcmakers.MakersZoneCustomDomainResourceModel {
 	return svcmakers.MakersZoneCustomDomainResourceModel{
-		Id:           types.StringNull(),
-		ZoneId:       types.StringValue(testZoneId),
-		ProjectId:    types.StringValue(testProjectId),
-		Domain:       types.StringValue(testDomain),
-		Env:          types.StringValue(testEnv),
-		PagesDomains: nil,
+		Id:            types.StringNull(),
+		ZoneId:        types.StringValue(testZoneId),
+		ProjectId:     types.StringValue(testProjectId),
+		Domain:        types.StringValue(testDomain),
+		Env:           types.StringValue(testEnv),
+		PagesDomains:  nil,
+		CreateTimeout: types.Int64Null(),
+		UpdateTimeout: types.Int64Null(),
+		DeleteTimeout: types.Int64Null(),
 	}
 }
 
@@ -157,13 +160,13 @@ func TestMakersZoneCustomDomainCreate(t *testing.T) {
 
 	c := newMakersZoneCustomDomainTestContext(t, patches)
 
-	var createdRequest *makersv20261113.CreateZoneCustomDomainRequest
-	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "CreateZoneCustomDomain", func(_ context.Context, request *makersv20261113.CreateZoneCustomDomainRequest) (string, error) {
+	var createdRequest *makerssdk.CreateZoneCustomDomainRequest
+	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "CreateZoneCustomDomain", func(_ context.Context, request *makerssdk.CreateZoneCustomDomainRequest) (string, error) {
 		createdRequest = request
 		return testDomain, nil
 	})
 	describeCalls := 0
-	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, zoneId, projectId, domain string) (*makersv20261113.ZoneDomain, error) {
+	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, zoneId, projectId, domain string) (*makerssdk.ZoneDomain, error) {
 		if zoneId != testZoneId || projectId != testProjectId || domain != testDomain {
 			t.Errorf("unexpected read-back locator: %s/%s/%s", zoneId, projectId, domain)
 		}
@@ -244,7 +247,7 @@ func TestMakersZoneCustomDomainCreateError(t *testing.T) {
 
 	c := newMakersZoneCustomDomainTestContext(t, patches)
 
-	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "CreateZoneCustomDomain", func(_ context.Context, _ *makersv20261113.CreateZoneCustomDomainRequest) (string, error) {
+	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "CreateZoneCustomDomain", func(_ context.Context, _ *makerssdk.CreateZoneCustomDomainRequest) (string, error) {
 		return "", &sdkerr.TencentCloudSDKError{}
 	})
 
@@ -261,7 +264,7 @@ func TestMakersZoneCustomDomainReadNotFound(t *testing.T) {
 
 	c := newMakersZoneCustomDomainTestContext(t, patches)
 
-	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, zoneId, projectId, domain string) (*makersv20261113.ZoneDomain, error) {
+	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, zoneId, projectId, domain string) (*makerssdk.ZoneDomain, error) {
 		if zoneId != testZoneId || projectId != testProjectId || domain != testDomain {
 			t.Errorf("unexpected read locator: %s/%s/%s", zoneId, projectId, domain)
 		}
@@ -286,19 +289,19 @@ func TestMakersServiceDescribeZoneCustomDomainFiltersPreset(t *testing.T) {
 	defer patches.Reset()
 
 	connectivityClient := &connectivity.TencentCloudClient{}
-	patches.ApplyMethodReturn(connectivityClient, "UseMakersV20261113Client", &makersv20261113.Client{})
+	patches.ApplyMethodReturn(connectivityClient, "UseMakersClient", &makerssdk.Client{})
 
 	preset := testZoneDomain()
 	preset.Type = mkString("Preset")
 	preset.Domain = mkString("preset.example.com")
 
-	var queriedRequest *makersv20261113.DescribeZoneCustomDomainsRequest
-	patches.ApplyMethodFunc(reflect.TypeOf(makersv20261113.Client{}), "DescribeZoneCustomDomainsWithContext", func(_ context.Context, request *makersv20261113.DescribeZoneCustomDomainsRequest) (*makersv20261113.DescribeZoneCustomDomainsResponse, error) {
+	var queriedRequest *makerssdk.DescribeZoneCustomDomainsRequest
+	patches.ApplyMethodFunc(reflect.TypeOf(makerssdk.Client{}), "DescribeZoneCustomDomainsWithContext", func(_ context.Context, request *makerssdk.DescribeZoneCustomDomainsRequest) (*makerssdk.DescribeZoneCustomDomainsResponse, error) {
 		queriedRequest = request
-		return &makersv20261113.DescribeZoneCustomDomainsResponse{
-			Response: &makersv20261113.DescribeZoneCustomDomainsResponseParams{
+		return &makerssdk.DescribeZoneCustomDomainsResponse{
+			Response: &makerssdk.DescribeZoneCustomDomainsResponseParams{
 				TotalCount:   mkInt64(2),
-				PagesDomains: []*makersv20261113.ZoneDomain{preset, testZoneDomain()},
+				PagesDomains: []*makerssdk.ZoneDomain{preset, testZoneDomain()},
 			},
 		}, nil
 	})
@@ -335,13 +338,13 @@ func TestMakersZoneCustomDomainUpdate(t *testing.T) {
 
 	c := newMakersZoneCustomDomainTestContext(t, patches)
 
-	var updatedRequest *makersv20261113.ModifyZoneCustomDomainEnvRequest
-	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "ModifyZoneCustomDomainEnv", func(_ context.Context, request *makersv20261113.ModifyZoneCustomDomainEnvRequest) error {
+	var updatedRequest *makerssdk.ModifyZoneCustomDomainEnvRequest
+	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "ModifyZoneCustomDomainEnv", func(_ context.Context, request *makerssdk.ModifyZoneCustomDomainEnvRequest) error {
 		updatedRequest = request
 		return nil
 	})
 	describeCalls := 0
-	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, _ string, _ string, _ string) (*makersv20261113.ZoneDomain, error) {
+	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, _ string, _ string, _ string) (*makerssdk.ZoneDomain, error) {
 		domain := testZoneDomain()
 		describeCalls++
 		// The env switch is async: the first poll still reports the old env.
@@ -406,7 +409,7 @@ func TestMakersZoneCustomDomainDelete(t *testing.T) {
 		return nil
 	})
 	describeCalls := 0
-	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, zoneId, projectId, domain string) (*makersv20261113.ZoneDomain, error) {
+	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, zoneId, projectId, domain string) (*makerssdk.ZoneDomain, error) {
 		describeCalls++
 		// The unbinding is async: the first poll still sees the domain.
 		if describeCalls == 1 {
@@ -440,10 +443,10 @@ func TestMakersServiceWaitForZoneCustomDomainTimeout(t *testing.T) {
 	defer patches.Reset()
 
 	connectivityClient := &connectivity.TencentCloudClient{}
-	patches.ApplyMethodReturn(connectivityClient, "UseMakersV20261113Client", &makersv20261113.Client{})
+	patches.ApplyMethodReturn(connectivityClient, "UseMakersClient", &makerssdk.Client{})
 
 	// The domain never becomes visible: the wait must fail after the timeout.
-	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, _ string, _ string, _ string) (*makersv20261113.ZoneDomain, error) {
+	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, _ string, _ string, _ string) (*makerssdk.ZoneDomain, error) {
 		return nil, nil
 	})
 
@@ -452,6 +455,34 @@ func TestMakersServiceWaitForZoneCustomDomainTimeout(t *testing.T) {
 	err := service.WaitForZoneCustomDomain(context.Background(), testZoneId, testProjectId, testDomain, 1*time.Second)
 	if err == nil {
 		t.Fatalf("expected the wait to time out when the domain never appears")
+	}
+}
+
+func TestMakersZoneCustomDomainCreateTimeoutPassedToWait(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	c := newMakersZoneCustomDomainTestContext(t, patches)
+
+	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "CreateZoneCustomDomain", func(_ context.Context, _ *makerssdk.CreateZoneCustomDomainRequest) (string, error) {
+		return testDomain, nil
+	})
+	patches.ApplyMethodFunc(reflect.TypeOf(svcmakers.MakersService{}), "DescribeZoneCustomDomain", func(_ context.Context, _ string, _ string, _ string) (*makerssdk.ZoneDomain, error) {
+		return testZoneDomain(), nil
+	})
+
+	model := c.sampleModel()
+	model.CreateTimeout = types.Int64Value(30)
+
+	var createResp resource.CreateResponse
+	c.resource.Create(context.Background(), resource.CreateRequest{Plan: c.plan(t, model)}, &createResp)
+	if createResp.Diagnostics.HasError() {
+		t.Fatalf("Create with custom timeout failed: %v", createResp.Diagnostics.Errors())
+	}
+
+	refreshed := c.readState(t, createResp.State)
+	if refreshed.CreateTimeout.ValueInt64() != 30 {
+		t.Errorf("create_timeout should be kept in state, got %d", refreshed.CreateTimeout.ValueInt64())
 	}
 }
 
