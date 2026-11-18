@@ -336,5 +336,5 @@ func refreshZoneCustomDomainModel(m *MakersZoneCustomDomainResourceModel, item *
 }
 
 func buildZoneCustomDomainId(zoneId, projectId, domain string) string {
-	return zoneId + tccommon.FILED_SP + projectId + tccommon.FILED_SP + domain
+	return strings.Join([]string{zoneId, projectId, domain}, tccommon.FILED_SP)
 }

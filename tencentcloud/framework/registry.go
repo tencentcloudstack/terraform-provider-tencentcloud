@@ -54,6 +54,7 @@ var resourcesMap = map[string]func() resource.Resource{
 	"tencentcloud_ioa_delivery_server":              ioa.NewIoaDeliveryServerResource,
 	"tencentcloud_makers_zone_custom_domain":        makers.NewMakersZoneCustomDomainResource,
 	"tencentcloud_ioa_delivery_strategy":            ioa.NewIoaDeliveryStrategyResource,
+	"tencentcloud_makers_project":                   makers.NewMakersProjectResource,
 	"tencentcloud_ssm_secret_version_v2":            ssm.NewSsmSecretVersionV2Resource,
 }
 
