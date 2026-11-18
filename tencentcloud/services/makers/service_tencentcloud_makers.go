@@ -9,9 +9,11 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	makerssdk "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
+	sdk "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -400,8 +402,13 @@ func (me *MakersService) CreateProject(ctx context.Context, request *makerssdk.C
 // The two keys form an exact query, so no pagination is involved. A nil
 // project with a nil error means the project does not exist on the cloud
 // side.
-func (me *MakersService) DescribeProject(ctx context.Context, request *makerssdk.DescribeProjectsRequest) (project *makerssdk.Project, errRet error) {
+func (me *MakersService) DescribeProject(ctx context.Context, zoneId, projectId string) (project *makerssdk.Project, errRet error) {
 	logId := tccommon.GetLogId(ctx)
+
+	request := sdk.NewDescribeProjectsRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.ProjectIds = []*string{helper.String(projectId)}
+
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -431,9 +438,9 @@ func (me *MakersService) DescribeProject(ctx context.Context, request *makerssdk
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(request.ProjectIds) > 0 && request.ProjectIds[0] != nil {
+	if len(response.Response.Projects) > 0 {
 		for _, item := range response.Response.Projects {
-			if item.ProjectId != nil && *item.ProjectId == *request.ProjectIds[0] {
+			if item.ProjectId != nil && *item.ProjectId == projectId && item.ZoneId != nil && *item.ZoneId == zoneId {
 				return item, nil
 			}
 		}

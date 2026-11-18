@@ -11,36 +11,16 @@ description: |-
 
 Provides a resource to create a Makers project.
 
-The project id is returned by `CreateProject` and used as the resource `id`.
-`ModifyProject` only supports updating `name`, `root_dir`, `output_dir`,
-`build_cmd`, `install_cmd`, `framework` and `node_js_version`; every other
-configurable field (zone_id, channel, provider, source, area, template_id,
-repo_*, namespace, coding_project_id) forces resource replacement when changed.
-
-Note: the cloud API echoes `node_js_version` back as `nodejs_version`.
-Removing an updatable attribute from the configuration is rejected because the
-cloud API does not document whether `ModifyProject` keeps or clears omitted
-fields.
-
 ## Example Usage
 
 ```hcl
 resource "tencentcloud_makers_project" "example" {
-  zone_id         = "zone-12345"
-  name            = "tf-example-project"
+  zone_id         = "zone-3hzk0ndvnnyp"
+  name            = "tf-test5"
   channel         = "Custom"
-  provider        = "Github"
-  area            = "mainland"
-  node_js_version = "20.18.0"
-  framework       = "react"
-  root_dir        = "./"
-  output_dir      = "dist"
-  build_cmd       = "npm run build"
-  install_cmd     = "npm install"
-  repo_url        = "https://github.com/example/tf-example"
-  repo_owner      = "example"
-  repo_name       = "tf-example"
-  repo_branch     = "main"
+  area            = "global"
+  code_provider   = "Upload"
+  node_js_version = "22.11.0"
 }
 ```
 
@@ -53,13 +33,13 @@ The following arguments are supported:
 * `zone_id` - (Required, String) Makers zone ID.
 * `area` - (Optional, String) Acceleration area. Valid values: `mainland`, `overseas`, `global`.
 * `build_cmd` - (Optional, String) Build command.
-* `coding_project_id` - (Optional, Int) Coding project ID. Used when `code_provider` is `Coding`.
+* `code_provider` - (Optional, String) Code source. Valid values: `Upload`, `Github`, `Gitee`, `Gitlab`, `Coding`.
+* `coding_project_id` - (Optional, Int) Coding project ID. Used when `provider` is `Coding`.
 * `framework` - (Optional, String) Framework.
 * `install_cmd` - (Optional, String) Install command.
-* `namespace` - (Optional, String) Coding namespace. Used when `code_provider` is `Coding`.
+* `namespace` - (Optional, String) Coding namespace. Used when `provider` is `Coding`.
 * `node_js_version` - (Optional, String) Node.js version, for example `20.18.0`. The value is echoed back by the cloud API as `nodejs_version`.
 * `output_dir` - (Optional, String) Build output directory.
-* `code_provider` - (Optional, String) Code source. Valid values: `Upload`, `Github`, `Gitee`, `Gitlab`, `Coding`. The attribute cannot be named `provider` because that is a reserved Terraform root attribute name.
 * `repo_branch` - (Optional, String) Production branch.
 * `repo_name` - (Optional, String) Repository name.
 * `repo_owner` - (Optional, String) Repository owner.
@@ -76,6 +56,7 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource, the Makers project ID.
 * `modified_on` - Last modification time of the project.
 * `preset_domain` - Preset domain of the project.
+* `project_id` - Project ID.
 * `status` - Project status. Valid values: `Normal`, `Ban`, `Unlink`, `Process`, `Pending`, `Offline`.
 
 ## API Reference
@@ -93,9 +74,9 @@ This resource interacts with the following TencentCloud APIs:
 
 ## Import
 
-Makers project can be imported using the project id, e.g.
+Makers project can be imported using the composite id `zone_id#project_id`, e.g.
 
 ```
-terraform import tencentcloud_makers_project.example proj-67890
+terraform import tencentcloud_makers_project.example zone-12345#proj-67890
 ```
 

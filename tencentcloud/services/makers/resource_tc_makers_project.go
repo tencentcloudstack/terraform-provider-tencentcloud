@@ -3,8 +3,10 @@ package makers
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
@@ -14,6 +16,7 @@ import (
 
 	sdk "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -36,7 +39,6 @@ func NewMakersProjectResource() resource.Resource {
 // tencentcloud_makers_project.
 type MakersProjectResource struct {
 	fw.ResourceWithConfigure
-	fw.WithImportByID
 }
 
 // MakersProjectResourceModel maps the schema attributes.
@@ -65,6 +67,7 @@ type MakersProjectResourceModel struct {
 	PresetDomain    types.String `tfsdk:"preset_domain"`
 	CreatedOn       types.String `tfsdk:"created_on"`
 	ModifiedOn      types.String `tfsdk:"modified_on"`
+	ProjectId       types.String `tfsdk:"project_id"`
 }
 
 func (r *MakersProjectResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -221,9 +224,10 @@ func (r *MakersProjectResource) Schema(_ context.Context, _ resource.SchemaReque
 			"modified_on": schema.StringAttribute{
 				Computed:    true,
 				Description: "Last modification time of the project.",
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
+			},
+			"project_id": schema.StringAttribute{
+				Computed:    true,
+				Description: "Project ID.",
 			},
 		},
 	}
@@ -310,7 +314,10 @@ func (r *MakersProjectResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 
-	plan.Id = types.StringValue(*projectId)
+	// The resource identity is the composite `zone_id#project_id`: the
+	// describe, modify and delete APIs all address the project by this pair,
+	// and the project id alone is only unique within a zone.
+	plan.Id = types.StringValue(buildMakersProjectId(plan.ZoneId.ValueString(), *projectId))
 
 	// Computed attributes are unknown at this point; a state cannot hold
 	// unknown values, so they are normalized to null before the defensive
@@ -324,7 +331,7 @@ func (r *MakersProjectResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 
-	item, err := r.read(ctx, plan.ZoneId.ValueString(), plan.Id.ValueString())
+	item, err := service.DescribeProject(ctx, plan.ZoneId.ValueString(), *projectId)
 	if err != nil {
 		resp.Diagnostics.AddError("Error reading Makers project after create", err.Error())
 		return
@@ -348,7 +355,14 @@ func (r *MakersProjectResource) Read(ctx context.Context, req resource.ReadReque
 		return
 	}
 
-	item, err := r.read(ctx, state.ZoneId.ValueString(), state.Id.ValueString())
+	zoneId, projectId, err := parseMakersProjectId(state.Id.ValueString())
+	if err != nil {
+		resp.Diagnostics.AddError("Invalid resource id", err.Error())
+		return
+	}
+
+	service := NewMakersService(r.Client())
+	item, err := service.DescribeProject(ctx, zoneId, projectId)
 	if err != nil {
 		resp.Diagnostics.AddError("Error reading Makers project", err.Error())
 		return
@@ -383,9 +397,15 @@ func (r *MakersProjectResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 
+	zoneId, projectId, err := parseMakersProjectId(state.Id.ValueString())
+	if err != nil {
+		resp.Diagnostics.AddError("Invalid resource id", err.Error())
+		return
+	}
+
 	request := sdk.NewModifyProjectRequest()
-	request.ZoneId = plan.ZoneId.ValueStringPointer()
-	request.ProjectId = state.Id.ValueStringPointer()
+	request.ZoneId = helper.String(zoneId)
+	request.ProjectId = helper.String(projectId)
 	// ModifyProject only accepts a subset of the create-time fields; fields
 	// it does not support are marked RequiresReplace in the schema.
 	//
@@ -445,7 +465,7 @@ func (r *MakersProjectResource) Update(ctx context.Context, req resource.UpdateR
 	}
 
 	service := NewMakersService(r.Client())
-	err := service.ModifyProject(ctx, request)
+	err = service.ModifyProject(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error updating Makers project",
@@ -454,7 +474,7 @@ func (r *MakersProjectResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 
-	item, err := r.read(ctx, plan.ZoneId.ValueString(), state.Id.ValueString())
+	item, err := service.DescribeProject(ctx, zoneId, projectId)
 	if err != nil {
 		resp.Diagnostics.AddError("Error reading Makers project after update", err.Error())
 		return
@@ -479,12 +499,18 @@ func (r *MakersProjectResource) Delete(ctx context.Context, req resource.DeleteR
 		return
 	}
 
+	zoneId, projectId, err := parseMakersProjectId(state.Id.ValueString())
+	if err != nil {
+		resp.Diagnostics.AddError("Invalid resource id", err.Error())
+		return
+	}
+
 	request := sdk.NewDeleteProjectRequest()
-	request.ZoneId = state.ZoneId.ValueStringPointer()
-	request.ProjectId = state.Id.ValueStringPointer()
+	request.ZoneId = helper.String(zoneId)
+	request.ProjectId = helper.String(projectId)
 
 	service := NewMakersService(r.Client())
-	err := service.DeleteProject(ctx, request)
+	err = service.DeleteProject(ctx, request)
 	if err != nil {
 		// No documented "already gone" error code exists for DeleteProject, so
 		// every failure is surfaced to keep the id in state for a retry.
@@ -496,54 +522,54 @@ func (r *MakersProjectResource) Delete(ctx context.Context, req resource.DeleteR
 	}
 }
 
-// ImportState is embedded via fw.WithImportByID for `terraform import <id>`
-// passthrough.
-
-// read fetches the project by zone and project id.
-//
-// Two different "empty" outcomes must stay distinguishable:
-//   - API failure (nil response / nil Response) -> error
-//   - queried successfully but nothing matched  -> (nil, nil) => "does not exist"
-func (r *MakersProjectResource) read(ctx context.Context, zoneId, projectId string) (*sdk.Project, error) {
-	request := sdk.NewDescribeProjectsRequest()
-	request.ZoneId = helper.String(zoneId)
-	request.ProjectIds = []*string{helper.String(projectId)}
-
-	service := NewMakersService(r.Client())
-	return service.DescribeProject(ctx, request)
+// ImportState supports `terraform import` with the composite id
+// `zone_id#project_id`.
+func (r *MakersProjectResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	zoneId, projectId, err := parseMakersProjectId(req.ID)
+	if err != nil {
+		resp.Diagnostics.AddError("Invalid import ID", err.Error())
+		return
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), req.ID)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("zone_id"), zoneId)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("project_id"), projectId)...)
 }
 
 // refreshModel copies cloud-owned fields into the model while keeping the
 // user-supplied values for fields the cloud API does not echo back.
+//
+// Every cloud-reported field is only overwritten when the cloud actually
+// returned a value: the describe API marks most fields as "may return null",
+// and overwriting a configured value with null would fail Terraform's
+// post-apply consistency check ("was <value>, but now null").
 func (r *MakersProjectResource) refreshModel(ctx context.Context, m *MakersProjectResourceModel, item *sdk.Project) diag.Diagnostics {
 	if item == nil {
 		return nil
 	}
-	// Fields the cloud API returns: refresh them from the response.
-	m.Name = types.StringPointerValue(item.Name)
-	m.Area = types.StringPointerValue(item.Area)
-	m.Provider = types.StringPointerValue(item.Provider)
-	m.RootDir = types.StringPointerValue(item.RootDir)
-	m.OutputDir = types.StringPointerValue(item.OutputDir)
-	m.BuildCmd = types.StringPointerValue(item.BuildCmd)
-	m.InstallCmd = types.StringPointerValue(item.InstallCmd)
-	m.Framework = types.StringPointerValue(item.Framework)
-	m.RepoUrl = types.StringPointerValue(item.RepoUrl)
-	m.RepoOwner = types.StringPointerValue(item.RepoOwner)
-	m.RepoName = types.StringPointerValue(item.RepoName)
-	m.RepoBranch = types.StringPointerValue(item.RepoBranch)
-	m.Status = types.StringPointerValue(item.Status)
-	m.PresetDomain = types.StringPointerValue(item.PresetDomain)
-	m.CreatedOn = types.StringPointerValue(item.CreatedOn)
-	m.ModifiedOn = types.StringPointerValue(item.ModifiedOn)
+	fw.OverwriteString(&m.ZoneId, item.ZoneId)
+	fw.OverwriteString(&m.Name, item.Name)
+	fw.OverwriteString(&m.Channel, item.Channel)
+	fw.OverwriteString(&m.Area, item.Area)
+	fw.OverwriteString(&m.Provider, item.Provider)
+	fw.OverwriteString(&m.RootDir, item.RootDir)
+	fw.OverwriteString(&m.OutputDir, item.OutputDir)
+	fw.OverwriteString(&m.BuildCmd, item.BuildCmd)
+	fw.OverwriteString(&m.InstallCmd, item.InstallCmd)
+	fw.OverwriteString(&m.Framework, item.Framework)
+	fw.OverwriteString(&m.RepoUrl, item.RepoUrl)
+	fw.OverwriteString(&m.RepoOwner, item.RepoOwner)
+	fw.OverwriteString(&m.RepoName, item.RepoName)
+	fw.OverwriteString(&m.RepoBranch, item.RepoBranch)
+	fw.OverwriteString(&m.Status, item.Status)
+	fw.OverwriteString(&m.PresetDomain, item.PresetDomain)
+	fw.OverwriteString(&m.CreatedOn, item.CreatedOn)
+	fw.OverwriteString(&m.ModifiedOn, item.ModifiedOn)
+	fw.OverwriteString(&m.ProjectId, item.ProjectId)
 
 	// node_js_version: the create request field is NodeJsVersion while the
-	// response field is NodejsVersion (same value, different casing). Only
-	// overwrite when the cloud actually returned a value, otherwise keep the
-	// user-supplied value to avoid a spurious null.
-	if item.NodejsVersion != nil {
-		m.NodeJsVersion = types.StringPointerValue(item.NodejsVersion)
-	}
+	// response field is NodejsVersion (same value, different casing). It is
+	// handled by the same conditional overwrite as the fields above.
+	fw.OverwriteString(&m.NodeJsVersion, item.NodejsVersion)
 	return nil
 }
 
@@ -563,4 +589,19 @@ func normalizeComputedUnknowns(m *MakersProjectResourceModel) {
 	if m.ModifiedOn.IsUnknown() {
 		m.ModifiedOn = types.StringNull()
 	}
+}
+
+// buildMakersProjectId builds the composite resource id `zone_id#project_id`.
+func buildMakersProjectId(zoneId, projectId string) string {
+	return zoneId + tccommon.FILED_SP + projectId
+}
+
+// parseMakersProjectId splits the composite resource id back into the zone id
+// and the project id.
+func parseMakersProjectId(id string) (zoneId, projectId string, err error) {
+	parts := strings.Split(id, tccommon.FILED_SP)
+	if len(parts) != 2 || parts[0] == "" || parts[1] == "" {
+		return "", "", fmt.Errorf("Makers project id must be in the format `zone_id#project_id`, got %q", id)
+	}
+	return parts[0], parts[1], nil
 }

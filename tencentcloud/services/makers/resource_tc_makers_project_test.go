@@ -20,10 +20,11 @@ import (
 )
 
 const (
-	makersTestZoneId     = "zone-12345"
-	makersTestProjectId  = "proj-67890"
-	makersTestName       = "tf-example-project"
-	makersTestTemplateId = "tpl-abc"
+	makersTestZoneId      = "zone-12345"
+	makersTestProjectId   = "proj-67890"
+	makersTestCompositeId = makersTestZoneId + "#" + makersTestProjectId
+	makersTestName        = "tf-example-project"
+	makersTestTemplateId  = "tpl-abc"
 )
 
 func makersStr(v string) *string { return &v }
@@ -83,8 +84,8 @@ func makersTestModel(id string) svcmakers.MakersProjectResourceModel {
 func assertMakersProjectModel(t *testing.T, model svcmakers.MakersProjectResourceModel) {
 	t.Helper()
 
-	if model.Id.ValueString() != makersTestProjectId {
-		t.Errorf("id = %q, want %q", model.Id.ValueString(), makersTestProjectId)
+	if model.Id.ValueString() != makersTestCompositeId {
+		t.Errorf("id = %q, want %q", model.Id.ValueString(), makersTestCompositeId)
 	}
 	strFields := map[string]string{
 		"zone_id":         model.ZoneId.ValueString(),
@@ -199,9 +200,9 @@ func TestMakersProjectCreateSuccess(t *testing.T) {
 			return makersStr(makersTestProjectId), nil
 		})
 	patchMakersService(patches, "DescribeProject",
-		func(_ context.Context, req *sdk.DescribeProjectsRequest) (*sdk.Project, error) {
-			if req.ZoneId == nil || *req.ZoneId != makersTestZoneId {
-				t.Errorf("DescribeProjects request zone_id = %v, want %q", req.ZoneId, makersTestZoneId)
+		func(_ context.Context, zoneId, _ string) (*sdk.Project, error) {
+			if zoneId != makersTestZoneId {
+				t.Errorf("DescribeProject zone_id = %q, want %q", zoneId, makersTestZoneId)
 			}
 			return makersTestProject(), nil
 		})
@@ -242,6 +243,47 @@ func TestMakersProjectCreateSuccess(t *testing.T) {
 		t.Fatalf("failed to read back state: %v", diags.Errors())
 	}
 	assertMakersProjectModel(t, got)
+}
+
+// TestMakersProjectCreateNullCloudFields verifies that fields the describe
+// API reports as null keep the configured value instead of being overwritten
+// with null (which would fail Terraform's post-apply consistency check).
+func TestMakersProjectCreateNullCloudFields(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	patchMakersService(patches, "CreateProject",
+		func(_ context.Context, _ *sdk.CreateProjectRequest) (*string, error) {
+			return makersStr(makersTestProjectId), nil
+		})
+	// The describe response echoes only the project id; every other field is
+	// null, as the API documents for sparse projects.
+	patchMakersService(patches, "DescribeProject",
+		func(_ context.Context, _, _ string) (*sdk.Project, error) {
+			return &sdk.Project{ProjectId: makersStr(makersTestProjectId)}, nil
+		})
+
+	ctx := newMakersProjectTestContext(t, patches)
+	var createResp resource.CreateResponse
+	createResp.State = ctx.state(t, makersTestModel(""))
+	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, makersTestModel(""))}, &createResp)
+	if createResp.Diagnostics.HasError() {
+		t.Fatalf("Create failed: %v", createResp.Diagnostics.Errors())
+	}
+
+	var got svcmakers.MakersProjectResourceModel
+	if diags := createResp.State.Get(context.Background(), &got); diags.HasError() {
+		t.Fatalf("failed to read back state: %v", diags.Errors())
+	}
+	if got.Channel.ValueString() != "Custom" {
+		t.Errorf("channel = %q, want the configured value Custom", got.Channel.ValueString())
+	}
+	if got.Name.ValueString() != makersTestName {
+		t.Errorf("name = %q, want the configured value %q", got.Name.ValueString(), makersTestName)
+	}
+	if got.ZoneId.ValueString() != makersTestZoneId {
+		t.Errorf("zone_id = %q, want the configured value %q", got.ZoneId.ValueString(), makersTestZoneId)
+	}
 }
 
 // TestMakersProjectCreateEmptyId verifies that Create fails loudly when the
@@ -288,23 +330,23 @@ func TestMakersProjectReadSuccess(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	var captured *sdk.DescribeProjectsRequest
+	var gotZoneId, gotProjectId string
 	patchMakersService(patches, "DescribeProject",
-		func(_ context.Context, req *sdk.DescribeProjectsRequest) (*sdk.Project, error) {
-			captured = req
+		func(_ context.Context, zoneId, projectId string) (*sdk.Project, error) {
+			gotZoneId, gotProjectId = zoneId, projectId
 			return makersTestProject(), nil
 		})
 
 	ctx := newMakersProjectTestContext(t, patches)
 	var readResp resource.ReadResponse
-	readResp.State = ctx.state(t, makersTestModel(makersTestProjectId))
-	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, makersTestModel(makersTestProjectId))}, &readResp)
+	readResp.State = ctx.state(t, makersTestModel(makersTestCompositeId))
+	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, makersTestModel(makersTestCompositeId))}, &readResp)
 	if readResp.Diagnostics.HasError() {
 		t.Fatalf("Read failed: %v", readResp.Diagnostics.Errors())
 	}
 
-	if captured == nil || len(captured.ProjectIds) != 1 || captured.ProjectIds[0] == nil || *captured.ProjectIds[0] != makersTestProjectId {
-		t.Errorf("describe request project_ids = %v, want [%s]", captured, makersTestProjectId)
+	if gotZoneId != makersTestZoneId || gotProjectId != makersTestProjectId {
+		t.Errorf("DescribeProject called with (%q, %q), want (%q, %q)", gotZoneId, gotProjectId, makersTestZoneId, makersTestProjectId)
 	}
 
 	var got svcmakers.MakersProjectResourceModel
@@ -321,14 +363,14 @@ func TestMakersProjectReadNotFound(t *testing.T) {
 	defer patches.Reset()
 
 	patchMakersService(patches, "DescribeProject",
-		func(_ context.Context, _ *sdk.DescribeProjectsRequest) (*sdk.Project, error) {
+		func(_ context.Context, _, _ string) (*sdk.Project, error) {
 			return nil, nil
 		})
 
 	ctx := newMakersProjectTestContext(t, patches)
 	var readResp resource.ReadResponse
-	readResp.State = ctx.state(t, makersTestModel(makersTestProjectId))
-	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, makersTestModel(makersTestProjectId))}, &readResp)
+	readResp.State = ctx.state(t, makersTestModel(makersTestCompositeId))
+	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, makersTestModel(makersTestCompositeId))}, &readResp)
 	if readResp.Diagnostics.HasError() {
 		t.Fatalf("Read should not error on confirmed not-found: %v", readResp.Diagnostics.Errors())
 	}
@@ -344,14 +386,14 @@ func TestMakersProjectReadApiError(t *testing.T) {
 	defer patches.Reset()
 
 	patchMakersService(patches, "DescribeProject",
-		func(_ context.Context, _ *sdk.DescribeProjectsRequest) (*sdk.Project, error) {
+		func(_ context.Context, _, _ string) (*sdk.Project, error) {
 			return nil, fmt.Errorf("describe failed")
 		})
 
 	ctx := newMakersProjectTestContext(t, patches)
 	var readResp resource.ReadResponse
-	readResp.State = ctx.state(t, makersTestModel(makersTestProjectId))
-	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, makersTestModel(makersTestProjectId))}, &readResp)
+	readResp.State = ctx.state(t, makersTestModel(makersTestCompositeId))
+	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, makersTestModel(makersTestCompositeId))}, &readResp)
 	if !readResp.Diagnostics.HasError() {
 		t.Fatal("Read should fail on an API error")
 	}
@@ -373,17 +415,23 @@ func TestMakersProjectUpdateSuccess(t *testing.T) {
 			return nil
 		})
 	patchMakersService(patches, "DescribeProject",
-		func(_ context.Context, _ *sdk.DescribeProjectsRequest) (*sdk.Project, error) {
+		func(_ context.Context, _, _ string) (*sdk.Project, error) {
 			return makersTestProject(), nil
 		})
 
 	ctx := newMakersProjectTestContext(t, patches)
+	// modified_on is a plain Computed attribute without UseStateForUnknown:
+	// the plan value is unknown, so the fresh cloud-side timestamp written
+	// by ModifyProject flows straight into the state after the read back.
+	staleModifiedOn := "2026-11-18T09:34:36.022Z"
+	planModel := makersTestModel(makersTestCompositeId)
+	planModel.ModifiedOn = types.StringValue(staleModifiedOn)
 	var updateResp resource.UpdateResponse
-	updateResp.State = ctx.state(t, makersTestModel(makersTestProjectId))
+	updateResp.State = ctx.state(t, makersTestModel(makersTestCompositeId))
 	ctx.resource.Update(context.Background(),
 		resource.UpdateRequest{
-			Plan:  ctx.plan(t, makersTestModel(makersTestProjectId)),
-			State: ctx.state(t, makersTestModel(makersTestProjectId)),
+			Plan:  ctx.plan(t, planModel),
+			State: ctx.state(t, makersTestModel(makersTestCompositeId)),
 		}, &updateResp)
 	if updateResp.Diagnostics.HasError() {
 		t.Fatalf("Update failed: %v", updateResp.Diagnostics.Errors())
@@ -409,6 +457,14 @@ func TestMakersProjectUpdateSuccess(t *testing.T) {
 	if diags := updateResp.State.Get(context.Background(), &got); diags.HasError() {
 		t.Fatalf("failed to read back state: %v", diags.Errors())
 	}
+	// The stale planned value must be overwritten by the fresh timestamp the
+	// cloud side reported: modified_on is Computed and follows the API.
+	if got.ModifiedOn.ValueString() == staleModifiedOn {
+		t.Errorf("modified_on still holds the stale planned value %q", staleModifiedOn)
+	}
+	if got.ModifiedOn.ValueString() != *makersTestProject().ModifiedOn {
+		t.Errorf("modified_on = %q, want the cloud-side value %q", got.ModifiedOn.ValueString(), *makersTestProject().ModifiedOn)
+	}
 	assertMakersProjectModel(t, got)
 }
 
@@ -424,11 +480,11 @@ func TestMakersProjectUpdateApiError(t *testing.T) {
 
 	ctx := newMakersProjectTestContext(t, patches)
 	var updateResp resource.UpdateResponse
-	updateResp.State = ctx.state(t, makersTestModel(makersTestProjectId))
+	updateResp.State = ctx.state(t, makersTestModel(makersTestCompositeId))
 	ctx.resource.Update(context.Background(),
 		resource.UpdateRequest{
-			Plan:  ctx.plan(t, makersTestModel(makersTestProjectId)),
-			State: ctx.state(t, makersTestModel(makersTestProjectId)),
+			Plan:  ctx.plan(t, makersTestModel(makersTestCompositeId)),
+			State: ctx.state(t, makersTestModel(makersTestCompositeId)),
 		}, &updateResp)
 	if !updateResp.Diagnostics.HasError() {
 		t.Fatal("Update should fail on an API error")
@@ -450,14 +506,14 @@ func TestMakersProjectUpdateClearRejected(t *testing.T) {
 		})
 
 	ctx := newMakersProjectTestContext(t, patches)
-	planModel := makersTestModel(makersTestProjectId)
+	planModel := makersTestModel(makersTestCompositeId)
 	planModel.Framework = types.StringNull()
 	var updateResp resource.UpdateResponse
-	updateResp.State = ctx.state(t, makersTestModel(makersTestProjectId))
+	updateResp.State = ctx.state(t, makersTestModel(makersTestCompositeId))
 	ctx.resource.Update(context.Background(),
 		resource.UpdateRequest{
 			Plan:  ctx.plan(t, planModel),
-			State: ctx.state(t, makersTestModel(makersTestProjectId)),
+			State: ctx.state(t, makersTestModel(makersTestCompositeId)),
 		}, &updateResp)
 	if !updateResp.Diagnostics.HasError() {
 		t.Fatal("Update should reject clearing an attribute with unconfirmed clear semantics")
@@ -481,7 +537,7 @@ func TestMakersProjectDeleteSuccess(t *testing.T) {
 
 	ctx := newMakersProjectTestContext(t, patches)
 	var deleteResp resource.DeleteResponse
-	ctx.resource.Delete(context.Background(), resource.DeleteRequest{State: ctx.state(t, makersTestModel(makersTestProjectId))}, &deleteResp)
+	ctx.resource.Delete(context.Background(), resource.DeleteRequest{State: ctx.state(t, makersTestModel(makersTestCompositeId))}, &deleteResp)
 	if deleteResp.Diagnostics.HasError() {
 		t.Fatalf("Delete failed: %v", deleteResp.Diagnostics.Errors())
 	}
@@ -506,7 +562,7 @@ func TestMakersProjectDeleteError(t *testing.T) {
 
 	ctx := newMakersProjectTestContext(t, patches)
 	var deleteResp resource.DeleteResponse
-	ctx.resource.Delete(context.Background(), resource.DeleteRequest{State: ctx.state(t, makersTestModel(makersTestProjectId))}, &deleteResp)
+	ctx.resource.Delete(context.Background(), resource.DeleteRequest{State: ctx.state(t, makersTestModel(makersTestCompositeId))}, &deleteResp)
 	if !deleteResp.Diagnostics.HasError() {
 		t.Fatal("Delete should fail on an API error")
 	}
@@ -524,7 +580,7 @@ func TestMakersProjectImportState(t *testing.T) {
 	importResp.State.Schema = ctx.schema
 	importResp.State.Raw = tftypes.NewValue(ctx.schema.Type().TerraformType(context.Background()), nil)
 	importer.ImportState(context.Background(),
-		resource.ImportStateRequest{ID: makersTestProjectId}, &importResp)
+		resource.ImportStateRequest{ID: makersTestCompositeId}, &importResp)
 	if importResp.Diagnostics.HasError() {
 		t.Fatalf("ImportState failed: %v", importResp.Diagnostics.Errors())
 	}
@@ -533,7 +589,82 @@ func TestMakersProjectImportState(t *testing.T) {
 	if diags := importResp.State.GetAttribute(context.Background(), path.Root("id"), &id); diags.HasError() {
 		t.Fatalf("failed to read imported id: %v", diags.Errors())
 	}
-	if id.ValueString() != makersTestProjectId {
-		t.Errorf("imported id = %q, want %q", id.ValueString(), makersTestProjectId)
+	if id.ValueString() != makersTestCompositeId {
+		t.Errorf("imported id = %q, want %q", id.ValueString(), makersTestCompositeId)
+	}
+
+	// The zone id segment is backfilled so the state is usable directly.
+	var zoneId types.String
+	if diags := importResp.State.GetAttribute(context.Background(), path.Root("zone_id"), &zoneId); diags.HasError() {
+		t.Fatalf("failed to read imported zone_id: %v", diags.Errors())
+	}
+	if zoneId.ValueString() != makersTestZoneId {
+		t.Errorf("imported zone_id = %q, want %q", zoneId.ValueString(), makersTestZoneId)
+	}
+}
+
+// TestMakersProjectImportStateReadBack verifies the full import flow: after
+// ImportState stores the composite id, the Read that Terraform runs right
+// afterwards fills all cloud-reported fields into the state. Fields the
+// describe API does not echo back (source, template_id, namespace,
+// coding_project_id) stay null until they appear in the configuration.
+func TestMakersProjectImportStateReadBack(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	patchMakersService(patches, "DescribeProject",
+		func(_ context.Context, _, _ string) (*sdk.Project, error) {
+			return makersTestProject(), nil
+		})
+
+	ctx := newMakersProjectTestContext(t, patches)
+	importer, ok := ctx.resource.(resource.ResourceWithImportState)
+	if !ok {
+		t.Fatal("resource does not implement resource.ResourceWithImportState")
+	}
+
+	var importResp resource.ImportStateResponse
+	importResp.State.Schema = ctx.schema
+	importResp.State.Raw = tftypes.NewValue(ctx.schema.Type().TerraformType(context.Background()), nil)
+	importer.ImportState(context.Background(),
+		resource.ImportStateRequest{ID: makersTestCompositeId}, &importResp)
+	if importResp.Diagnostics.HasError() {
+		t.Fatalf("ImportState failed: %v", importResp.Diagnostics.Errors())
+	}
+
+	// Terraform refreshes the freshly imported state right away.
+	readReq := resource.ReadRequest{State: tfsdk.State{Schema: ctx.schema, Raw: importResp.State.Raw}}
+	var readResp resource.ReadResponse
+	readResp.State = tfsdk.State{Schema: ctx.schema}
+	ctx.resource.Read(context.Background(), readReq, &readResp)
+	if readResp.Diagnostics.HasError() {
+		t.Fatalf("Read after import failed: %v", readResp.Diagnostics.Errors())
+	}
+
+	var got svcmakers.MakersProjectResourceModel
+	if diags := readResp.State.Get(context.Background(), &got); diags.HasError() {
+		t.Fatalf("failed to read back state: %v", diags.Errors())
+	}
+
+	// Cloud-reported fields must be filled in.
+	for name, value := range map[string]string{
+		"id":            got.Id.ValueString(),
+		"zone_id":       got.ZoneId.ValueString(),
+		"name":          got.Name.ValueString(),
+		"channel":       got.Channel.ValueString(),
+		"status":        got.Status.ValueString(),
+		"repo_url":      got.RepoUrl.ValueString(),
+		"repo_branch":   got.RepoBranch.ValueString(),
+		"preset_domain": got.PresetDomain.ValueString(),
+	} {
+		if value == "" {
+			t.Errorf("%s is empty after import + read", name)
+		}
+	}
+	if got.Id.ValueString() != makersTestCompositeId {
+		t.Errorf("id = %q, want %q", got.Id.ValueString(), makersTestCompositeId)
+	}
+	if got.ZoneId.ValueString() != makersTestZoneId {
+		t.Errorf("zone_id = %q, want %q", got.ZoneId.ValueString(), makersTestZoneId)
 	}
 }
