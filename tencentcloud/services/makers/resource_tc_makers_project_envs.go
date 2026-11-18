@@ -230,7 +230,7 @@ func (r *MakersProjectEnvsResource) read(ctx context.Context, zoneId, projectId 
 	request.ZoneId = &zoneId
 	request.ProjectId = &projectId
 
-	response, err := r.Client().UseMakersV20261113Client().DescribeProjectEnvsWithContext(ctx, request)
+	response, err := r.Client().UseMakersClient().DescribeProjectEnvsWithContext(ctx, request)
 	if err != nil {
 		return nil, err
 	}
@@ -256,7 +256,7 @@ func (r *MakersProjectEnvsResource) Create(ctx context.Context, req resource.Cre
 	request.ProjectId = plan.ProjectId.ValueStringPointer()
 	request.EnvVars = requestEnvVars(plan.EnvVars)
 
-	_, err := r.Client().UseMakersV20261113Client().ModifyProjectEnvsWithContext(ctx, request)
+	_, err := r.Client().UseMakersClient().ModifyProjectEnvsWithContext(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error creating makers project envs",
@@ -352,7 +352,7 @@ func (r *MakersProjectEnvsResource) Update(ctx context.Context, req resource.Upd
 			delReq.ZoneId = plan.ZoneId.ValueStringPointer()
 			delReq.ProjectId = plan.ProjectId.ValueStringPointer()
 			delReq.EnvVars = requestEnvVars([]MakersProjectEnvVarModel{old})
-			if _, err := r.Client().UseMakersV20261113Client().DeleteProjectEnvsWithContext(ctx, delReq); err != nil {
+			if _, err := r.Client().UseMakersClient().DeleteProjectEnvsWithContext(ctx, delReq); err != nil {
 				resp.Diagnostics.AddError(
 					"Error updating makers project envs",
 					fmt.Sprintf("DeleteProjectEnvs failed while removing variable %s: %v", old.Key.ValueString(), err),
@@ -367,7 +367,7 @@ func (r *MakersProjectEnvsResource) Update(ctx context.Context, req resource.Upd
 	request.ProjectId = plan.ProjectId.ValueStringPointer()
 	request.EnvVars = requestEnvVars(plan.EnvVars)
 
-	if _, err := r.Client().UseMakersV20261113Client().ModifyProjectEnvsWithContext(ctx, request); err != nil {
+	if _, err := r.Client().UseMakersClient().ModifyProjectEnvsWithContext(ctx, request); err != nil {
 		resp.Diagnostics.AddError(
 			"Error updating makers project envs",
 			fmt.Sprintf("ModifyProjectEnvs failed: %v", err),
@@ -405,7 +405,7 @@ func (r *MakersProjectEnvsResource) Delete(ctx context.Context, req resource.Del
 	request.ProjectId = state.ProjectId.ValueStringPointer()
 	request.EnvVars = requestEnvVars(state.EnvVars)
 
-	if _, err := r.Client().UseMakersV20261113Client().DeleteProjectEnvsWithContext(ctx, request); err != nil {
+	if _, err := r.Client().UseMakersClient().DeleteProjectEnvsWithContext(ctx, request); err != nil {
 		resp.Diagnostics.AddError(
 			"Error deleting makers project envs",
 			fmt.Sprintf("DeleteProjectEnvs failed: %v", err),
