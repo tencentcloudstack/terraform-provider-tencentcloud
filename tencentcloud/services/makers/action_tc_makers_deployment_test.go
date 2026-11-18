@@ -64,7 +64,7 @@ func makersDeploymentAttributeTypes() map[string]tftypes.Type {
 		"temp_bucket_path": tftypes.String,
 		"repo_branch":      tftypes.String,
 		"repo_commit_hash": tftypes.String,
-		"repo_commit_msg":   tftypes.String,
+		"repo_commit_msg":  tftypes.String,
 		"build_from":       tftypes.String,
 		"template_id":      tftypes.String,
 		"ci_spec":          tftypes.String,
