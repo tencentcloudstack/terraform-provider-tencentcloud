@@ -7,17 +7,11 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	makersv20261113 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
+	makerssdk "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
-)
-
-const (
-	// makersZoneCustomDomainRetryInterval is the polling interval used while
-	// waiting for the async custom domain operations to converge.
-	makersZoneCustomDomainRetryInterval = 5 * time.Second
 )
 
 func NewMakersService(client *connectivity.TencentCloudClient) MakersService {
@@ -28,11 +22,11 @@ type MakersService struct {
 	client *connectivity.TencentCloudClient
 }
 
-// CreateZoneCustomDomain binds a custom domain to a Makers zone and returns
-// the domain echoed back by the cloud side. The cloud-side id is not used as
-// a resource identity: all follow-up APIs address the domain by the composite
-// key (zone id, project id, domain name).
-func (me *MakersService) CreateZoneCustomDomain(ctx context.Context, request *makersv20261113.CreateZoneCustomDomainRequest) (domain string, errRet error) {
+// DescribeDeploymentLog returns the build log of the deployment identified by
+// zoneId, projectId and deploymentId. The three keys form an exact query, so
+// no pagination is involved. A nil LogUrl with a nil error is a valid outcome:
+// the cloud side documents that LogUrl may be null when no log is available.
+func (me *MakersService) DescribeDeploymentLog(ctx context.Context, request *makerssdk.DescribeDeploymentLogRequest) (logUrl *string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	defer func() {
 		if errRet != nil {
@@ -41,10 +35,49 @@ func (me *MakersService) CreateZoneCustomDomain(ctx context.Context, request *ma
 		}
 	}()
 
-	var response *makersv20261113.CreateZoneCustomDomainResponse
+	var response *makerssdk.DescribeDeploymentLogResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseMakersClient().DescribeDeploymentLogWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("DescribeDeploymentLog returned an empty response")
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	logUrl = response.Response.LogUrl
+	return
+}
+
+// CreateZoneCustomDomain binds a custom domain to a Makers zone and returns
+// the domain echoed back by the cloud side. The cloud-side id is not used as
+// a resource identity: all follow-up APIs address the domain by the composite
+// key (zone id, project id, domain name).
+func (me *MakersService) CreateZoneCustomDomain(ctx context.Context, request *makerssdk.CreateZoneCustomDomainRequest) (domain string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *makerssdk.CreateZoneCustomDomainResponse
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		result, err := me.client.UseMakersV20261113Client().CreateZoneCustomDomainWithContext(ctx, request)
+		result, err := me.client.UseMakersClient().CreateZoneCustomDomainWithContext(ctx, request)
 		if err != nil {
 			return tccommon.RetryError(err)
 		}
@@ -79,13 +112,13 @@ func (me *MakersService) CreateZoneCustomDomain(ctx context.Context, request *ma
 // A nil result with a nil error means "queried successfully, no such domain";
 // an API failure is always reported as an error so the caller never confuses
 // a failed request with a deleted resource.
-func (me *MakersService) DescribeZoneCustomDomain(ctx context.Context, zoneId, projectId, domain string) (zoneDomain *makersv20261113.ZoneDomain, errRet error) {
+func (me *MakersService) DescribeZoneCustomDomain(ctx context.Context, zoneId, projectId, domain string) (zoneDomain *makerssdk.ZoneDomain, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	request := makersv20261113.NewDescribeZoneCustomDomainsRequest()
+	request := makerssdk.NewDescribeZoneCustomDomainsRequest()
 	request.ZoneId = &zoneId
 	request.ProjectId = &projectId
-	request.CustomDomains = []*makersv20261113.CustomDomainInput{
+	request.CustomDomains = []*makerssdk.CustomDomainInput{
 		{
 			Domain: &domain,
 		},
@@ -98,10 +131,10 @@ func (me *MakersService) DescribeZoneCustomDomain(ctx context.Context, zoneId, p
 		}
 	}()
 
-	var response *makersv20261113.DescribeZoneCustomDomainsResponse
+	var response *makerssdk.DescribeZoneCustomDomainsResponse
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		result, err := me.client.UseMakersV20261113Client().DescribeZoneCustomDomainsWithContext(ctx, request)
+		result, err := me.client.UseMakersClient().DescribeZoneCustomDomainsWithContext(ctx, request)
 		if err != nil {
 			return tccommon.RetryError(err)
 		}
@@ -137,7 +170,7 @@ func (me *MakersService) DescribeZoneCustomDomain(ctx context.Context, zoneId, p
 // ModifyZoneCustomDomainEnv switches the environment a custom domain is
 // bound to. This is the only in-place update the cloud API supports; any
 // other change is handled by replacement in the Terraform layer.
-func (me *MakersService) ModifyZoneCustomDomainEnv(ctx context.Context, request *makersv20261113.ModifyZoneCustomDomainEnvRequest) (errRet error) {
+func (me *MakersService) ModifyZoneCustomDomainEnv(ctx context.Context, request *makerssdk.ModifyZoneCustomDomainEnvRequest) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	defer func() {
 		if errRet != nil {
@@ -146,10 +179,10 @@ func (me *MakersService) ModifyZoneCustomDomainEnv(ctx context.Context, request 
 		}
 	}()
 
-	var response *makersv20261113.ModifyZoneCustomDomainEnvResponse
+	var response *makerssdk.ModifyZoneCustomDomainEnvResponse
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		result, err := me.client.UseMakersV20261113Client().ModifyZoneCustomDomainEnvWithContext(ctx, request)
+		result, err := me.client.UseMakersClient().ModifyZoneCustomDomainEnvWithContext(ctx, request)
 		if err != nil {
 			return tccommon.RetryError(err)
 		}
@@ -177,7 +210,7 @@ func (me *MakersService) ModifyZoneCustomDomainEnv(ctx context.Context, request 
 func (me *MakersService) DeleteProjectCustomDomain(ctx context.Context, zoneId, projectId, domain string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
-	request := makersv20261113.NewDeleteProjectCustomDomainsRequest()
+	request := makerssdk.NewDeleteProjectCustomDomainsRequest()
 	request.ZoneId = &zoneId
 	request.ProjectId = &projectId
 	request.CustomDomains = []*string{&domain}
@@ -189,10 +222,10 @@ func (me *MakersService) DeleteProjectCustomDomain(ctx context.Context, zoneId, 
 		}
 	}()
 
-	var response *makersv20261113.DeleteProjectCustomDomainsResponse
+	var response *makerssdk.DeleteProjectCustomDomainsResponse
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		result, err := me.client.UseMakersV20261113Client().DeleteProjectCustomDomainsWithContext(ctx, request)
+		result, err := me.client.UseMakersClient().DeleteProjectCustomDomainsWithContext(ctx, request)
 		if err != nil {
 			return tccommon.RetryError(err)
 		}
