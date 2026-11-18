@@ -1,5 +1,5 @@
 ---
-subcategory: "Makers(makers)"
+subcategory: "Web & Agents Development Platform(Makers)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_makers_deployments"
 sidebar_current: "docs-tencentcloud-data_source-makers_deployments"

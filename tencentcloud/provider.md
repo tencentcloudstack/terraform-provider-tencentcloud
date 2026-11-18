@@ -809,10 +809,6 @@ tencentcloud_mongodb_audit_log_file
 tencentcloud_mongodb_audit_service
 tencentcloud_mongodb_scale_up_db_instance_cpu
 
-Makers(makers)
-Data Source
-tencentcloud_makers_deployments
-
 TencentDB for MySQL(cdb)
 Data Source
 tencentcloud_mysql_backup_list
@@ -2861,3 +2857,4 @@ tencentcloud_fwm_dispatch_strategy
 Web & Agents Development Platform(Makers)
 Data Source
 tencentcloud_makers_deployment_log
+tencentcloud_makers_deployments
