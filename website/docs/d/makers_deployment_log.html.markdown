@@ -1,5 +1,5 @@
 ---
-subcategory: "Cloud Studio(Makers)"
+subcategory: "Web & Agents Development Platform(Makers)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_makers_deployment_log"
 sidebar_current: "docs-tencentcloud-data_source-makers_deployment_log"
