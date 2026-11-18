@@ -76,7 +76,30 @@ func (r *MakersProjectEnvsResource) Metadata(_ context.Context, _ resource.Metad
 
 func (r *MakersProjectEnvsResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Provides a resource to manage environment variables of a Makers project.",
+		Description: `Provides a resource to manage environment variables of a Makers project.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_makers_project_envs" "example" {
+  zone_id    = "zone-xxxx"
+  project_id = "proj-yyyy"
+  env_vars {
+    key     = "API_KEY"
+    value   = "secret-value"
+    comment = "production key"
+    env     = ["Production"]
+  }
+}
+```
+
+Import
+
+tencentcloud_makers_project_envs can be imported using the `<zone_id>#<project_id>`, e.g.
+
+```
+$ terraform import tencentcloud_makers_project_envs.example zone-xxxx#proj-yyyy
+````,
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:    true,
