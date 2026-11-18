@@ -6,6 +6,7 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
@@ -1750,6 +1751,7 @@ func (me *CkafkaService) DescribeCkafkaRouteById(ctx context.Context, instanceId
 	request := ckafka.NewDescribeRouteRequest()
 	request.InstanceId = &instanceId
 	request.RouteId = &routeId
+	request.MainRouteFlag = helper.Bool(true)
 
 	defer func() {
 		if errRet != nil {
@@ -1765,8 +1767,12 @@ func (me *CkafkaService) DescribeCkafkaRouteById(ctx context.Context, instanceId
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || response.Response == nil || response.Response.Result == nil || len(response.Response.Result.Routers) < 1 {
-			return nil
+		if response == nil || response.Response == nil || response.Response.Result == nil {
+			return resource.NonRetryableError(fmt.Errorf("describe ckafka route fail, response is nil"))
+		}
+
+		if len(response.Response.Result.Routers) < 1 {
+			return resource.NonRetryableError(fmt.Errorf("routers is empty"))
 		}
 
 		route = response.Response.Result.Routers[0]
@@ -1815,6 +1821,7 @@ func (me *CkafkaService) DeleteCkafkaRouteById(ctx context.Context, instanceId s
 	logId := tccommon.GetLogId(ctx)
 
 	request := ckafka.NewDeleteRouteRequest()
+	response := ckafka.NewDeleteRouteResponse()
 	request.InstanceId = &instanceId
 	request.RouteId = &routeId
 
@@ -1824,15 +1831,36 @@ func (me *CkafkaService) DeleteCkafkaRouteById(ctx context.Context, instanceId s
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseCkafkaClient().DeleteRoute(request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseCkafkaClient().DeleteRoute(request)
-	if err != nil {
-		errRet = err
-		return
+		if result == nil || result.Response == nil || result.Response.Result == nil {
+			return resource.NonRetryableError(fmt.Errorf("ckafka route delete failed, response is nil"))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		return errRet
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	// response.Response.Result.Data.FlowId
+
+	// if flowId is not nil, wait for flow to finish
+	if response.Response.Result.Data != nil && response.Response.Result.Data.FlowId != nil {
+		flowId := *response.Response.Result.Data.FlowId
+		conf := tccommon.BuildStateChangeConf([]string{}, []string{"0"}, tccommon.ReadRetryTimeout, time.Second, me.CkafkaRouteStateRefreshFunc(flowId, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+	}
+
 	return
 }
 
@@ -1841,10 +1869,10 @@ func (me *CkafkaService) CkafkaRouteStateRefreshFunc(flowId int64, failStates []
 		request := ckafka.NewDescribeTaskStatusRequest()
 		request.FlowId = helper.Int64(flowId)
 		object, err := me.client.UseCkafkaClient().DescribeTaskStatus(request)
-
 		if err != nil {
 			return nil, "", err
 		}
+
 		status := strconv.FormatInt(*object.Response.Result.Status, 10)
 		return object, status, nil
 	}
