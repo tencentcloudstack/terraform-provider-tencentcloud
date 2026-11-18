@@ -2861,3 +2861,6 @@ tencentcloud_makers_zone_custom_domain
 
 Data Source
 tencentcloud_makers_deployment_log
+
+Resource
+tencentcloud_makers_project

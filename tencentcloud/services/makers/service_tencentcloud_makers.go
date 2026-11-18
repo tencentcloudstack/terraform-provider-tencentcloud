@@ -9,9 +9,11 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	makerssdk "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
+	sdk "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -358,4 +360,160 @@ func (me *MakersService) WaitForZoneCustomDomainEnv(ctx context.Context, zoneId,
 		return err
 	}
 	return nil
+}
+
+// CreateProject creates a Makers project and returns the generated project id.
+func (me *MakersService) CreateProject(ctx context.Context, request *makerssdk.CreateProjectRequest) (projectId *string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *makerssdk.CreateProjectResponse
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseMakersClient().CreateProjectWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("CreateProject returned an empty response")
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	projectId = response.Response.ProjectId
+	return
+}
+
+// DescribeProject returns the project identified by zoneId and projectId.
+// The two keys form an exact query, so no pagination is involved. A nil
+// project with a nil error means the project does not exist on the cloud
+// side.
+func (me *MakersService) DescribeProject(ctx context.Context, zoneId, projectId string) (project *makerssdk.Project, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := sdk.NewDescribeProjectsRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.ProjectIds = []*string{helper.String(projectId)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *makerssdk.DescribeProjectsResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseMakersClient().DescribeProjectsWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("DescribeProjects returned an empty response")
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Projects) > 0 {
+		for _, item := range response.Response.Projects {
+			if item.ProjectId != nil && *item.ProjectId == projectId && item.ZoneId != nil && *item.ZoneId == zoneId {
+				return item, nil
+			}
+		}
+	}
+	return nil, nil
+}
+
+// ModifyProject updates the basic information of a Makers project.
+func (me *MakersService) ModifyProject(ctx context.Context, request *makerssdk.ModifyProjectRequest) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *makerssdk.ModifyProjectResponse
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseMakersClient().ModifyProjectWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("ModifyProject returned an empty response")
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+// DeleteProject deletes a Makers project.
+func (me *MakersService) DeleteProject(ctx context.Context, request *makerssdk.DeleteProjectRequest) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *makerssdk.DeleteProjectResponse
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseMakersClient().DeleteProjectWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("DeleteProject returned an empty response")
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
 }
