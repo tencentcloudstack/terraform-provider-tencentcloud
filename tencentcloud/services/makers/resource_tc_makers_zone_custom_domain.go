@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -14,6 +15,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	makerssdk "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
+
+	resourcetimeouts "github.com/hashicorp/terraform-plugin-framework-timeouts/resource/timeouts"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
@@ -43,15 +46,13 @@ type MakersZoneCustomDomainResource struct {
 
 // MakersZoneCustomDomainResourceModel maps the schema attributes.
 type MakersZoneCustomDomainResourceModel struct {
-	Id            types.String       `tfsdk:"id"`
-	ZoneId        types.String       `tfsdk:"zone_id"`
-	ProjectId     types.String       `tfsdk:"project_id"`
-	Domain        types.String       `tfsdk:"domain"`
-	Env           types.String       `tfsdk:"env"`
-	PagesDomains  []*ZoneDomainModel `tfsdk:"pages_domains"`
-	CreateTimeout types.Int64        `tfsdk:"create_timeout"`
-	UpdateTimeout types.Int64        `tfsdk:"update_timeout"`
-	DeleteTimeout types.Int64        `tfsdk:"delete_timeout"`
+	Id           types.String            `tfsdk:"id"`
+	ZoneId       types.String            `tfsdk:"zone_id"`
+	ProjectId    types.String            `tfsdk:"project_id"`
+	Domain       types.String            `tfsdk:"domain"`
+	Env          types.String            `tfsdk:"env"`
+	PagesDomains []*ZoneDomainModel      `tfsdk:"pages_domains"`
+	Timeouts     *resourcetimeouts.Value `tfsdk:"timeouts"`
 }
 
 // ZoneDomainModel maps the computed pages_domains list element.
@@ -120,7 +121,7 @@ func (r *MakersZoneCustomDomainResource) Metadata(_ context.Context, _ resource.
 	resp.TypeName = "tencentcloud_makers_zone_custom_domain"
 }
 
-func (r *MakersZoneCustomDomainResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *MakersZoneCustomDomainResource) Schema(ctx context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	switchConfigAttributes := func() map[string]schema.Attribute {
 		return map[string]schema.Attribute{
 			"switch": schema.StringAttribute{
@@ -166,18 +167,16 @@ func (r *MakersZoneCustomDomainResource) Schema(_ context.Context, _ resource.Sc
 				Computed:    true,
 				Description: "Environment slug the domain is bound to. If omitted on create, the backend decides the environment.",
 			},
-			"create_timeout": schema.Int64Attribute{
-				Optional:    true,
-				Description: "Total waiting time (in minutes) for the async custom domain binding to converge. Defaults to the provider-level write timeout.",
-			},
-			"update_timeout": schema.Int64Attribute{
-				Optional:    true,
-				Description: "Total waiting time (in minutes) for the async environment switch to converge. Defaults to the provider-level write timeout.",
-			},
-			"delete_timeout": schema.Int64Attribute{
-				Optional:    true,
-				Description: "Total waiting time (in minutes) for the async custom domain unbinding to converge. Defaults to the provider-level write timeout.",
-			},
+			"timeouts": resourcetimeouts.Attributes(ctx, resourcetimeouts.Opts{
+				Create:            true,
+				Read:              true,
+				Update:            true,
+				Delete:            true,
+				CreateDescription: "A string that can be parsed as a duration (https://pkg.go.dev/time#ParseDuration), e.g. `30m`. It limits how long to wait for the async custom domain binding to converge. Default is `60m`.",
+				ReadDescription:   "A string that can be parsed as a duration (https://pkg.go.dev/time#ParseDuration), e.g. `10m`. Default is the provider-level read timeout.",
+				UpdateDescription: "A string that can be parsed as a duration (https://pkg.go.dev/time#ParseDuration), e.g. `30m`. It limits how long to wait for the async environment switch to converge. Default is `60m`.",
+				DeleteDescription: "A string that can be parsed as a duration (https://pkg.go.dev/time#ParseDuration), e.g. `30m`. It limits how long to wait for the async custom domain unbinding to converge. Default is `60m`.",
+			}),
 			"pages_domains": schema.ListNestedAttribute{
 				Computed:    true,
 				Description: "The current domain configuration returned by the cloud side. Only the managed custom domain is reported here.",
@@ -366,9 +365,14 @@ func (r *MakersZoneCustomDomainResource) Create(ctx context.Context, req resourc
 
 	// The binding is async on the cloud side: poll until the domain becomes
 	// readable before the final read back.
+	createTimeout, timeoutDiags := zoneCustomDomainCreateTimeout(ctx, plan.Timeouts)
+	resp.Diagnostics.Append(timeoutDiags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	if err := service.WaitForZoneCustomDomain(ctx,
 		plan.ZoneId.ValueString(), plan.ProjectId.ValueString(), plan.Domain.ValueString(),
-		zoneCustomDomainTimeout(plan.CreateTimeout)); err != nil {
+		createTimeout); err != nil {
 		resp.Diagnostics.AddError("Error waiting for Makers zone custom domain", err.Error())
 		return
 	}
@@ -448,9 +452,14 @@ func (r *MakersZoneCustomDomainResource) Update(ctx context.Context, req resourc
 
 		// The environment switch is async on the cloud side: poll until the
 		// domain reports the expected environment slug.
+		updateTimeout, timeoutDiags := zoneCustomDomainUpdateTimeout(ctx, plan.Timeouts)
+		resp.Diagnostics.Append(timeoutDiags...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
 		if err := service.WaitForZoneCustomDomainEnv(ctx,
 			plan.ZoneId.ValueString(), plan.ProjectId.ValueString(), plan.Domain.ValueString(),
-			plan.Env.ValueString(), zoneCustomDomainTimeout(plan.UpdateTimeout)); err != nil {
+			plan.Env.ValueString(), updateTimeout); err != nil {
 			resp.Diagnostics.AddError("Error waiting for Makers zone custom domain env", err.Error())
 			return
 		}
@@ -493,9 +502,14 @@ func (r *MakersZoneCustomDomainResource) Delete(ctx context.Context, req resourc
 
 	// The unbinding is async on the cloud side: poll until the domain is no
 	// longer visible so destroy does not report success too early.
+	deleteTimeout, timeoutDiags := zoneCustomDomainDeleteTimeout(ctx, state.Timeouts)
+	resp.Diagnostics.Append(timeoutDiags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	if err := service.WaitForZoneCustomDomainDeleted(ctx,
 		state.ZoneId.ValueString(), state.ProjectId.ValueString(), state.Domain.ValueString(),
-		zoneCustomDomainTimeout(state.DeleteTimeout)); err != nil {
+		deleteTimeout); err != nil {
 		resp.Diagnostics.AddError("Error waiting for Makers zone custom domain deletion", err.Error())
 		return
 	}
@@ -601,14 +615,33 @@ func switchConfigModelFromSdk(item *makerssdk.SwitchConfig) *SwitchConfigModel {
 	}
 }
 
-// zoneCustomDomainTimeout converts the optional minute-granular timeout
-// attribute into a polling budget, falling back to the provider-level write
-// timeout when the attribute is not set.
-func zoneCustomDomainTimeout(minutes types.Int64) time.Duration {
-	if minutes.IsNull() || minutes.IsUnknown() || minutes.ValueInt64() <= 0 {
-		return tccommon.WriteRetryTimeout
+// zoneCustomDomainCreateTimeout reads the `timeouts.create` attribute and
+// falls back to the default write timeout when the block or the attribute is
+// unset. A malformed duration is reported as an error diagnostic; the schema
+// validator normally rejects it at plan time, this is the runtime safety net.
+func zoneCustomDomainCreateTimeout(ctx context.Context, timeouts *resourcetimeouts.Value) (time.Duration, diag.Diagnostics) {
+	if timeouts == nil {
+		return tccommon.WriteRetryTimeout, nil
 	}
-	return time.Duration(minutes.ValueInt64()) * time.Minute
+	return timeouts.Create(ctx, tccommon.WriteRetryTimeout)
+}
+
+// zoneCustomDomainUpdateTimeout reads the `timeouts.update` attribute and
+// falls back to the default write timeout when unset.
+func zoneCustomDomainUpdateTimeout(ctx context.Context, timeouts *resourcetimeouts.Value) (time.Duration, diag.Diagnostics) {
+	if timeouts == nil {
+		return tccommon.WriteRetryTimeout, nil
+	}
+	return timeouts.Update(ctx, tccommon.WriteRetryTimeout)
+}
+
+// zoneCustomDomainDeleteTimeout reads the `timeouts.delete` attribute and
+// falls back to the default write timeout when unset.
+func zoneCustomDomainDeleteTimeout(ctx context.Context, timeouts *resourcetimeouts.Value) (time.Duration, diag.Diagnostics) {
+	if timeouts == nil {
+		return tccommon.WriteRetryTimeout, nil
+	}
+	return timeouts.Delete(ctx, tccommon.WriteRetryTimeout)
 }
 
 func buildZoneCustomDomainId(zoneId, projectId, domain string) string {

@@ -7,11 +7,14 @@ import (
 	"time"
 
 	"github.com/agiledragon/gomonkey/v2"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	sdkerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+
+	resourcetimeouts "github.com/hashicorp/terraform-plugin-framework-timeouts/resource/timeouts"
 	makerssdk "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -142,15 +145,13 @@ func testZoneDomain() *makerssdk.ZoneDomain {
 
 func (c *makersZoneCustomDomainTestContext) sampleModel() svcmakers.MakersZoneCustomDomainResourceModel {
 	return svcmakers.MakersZoneCustomDomainResourceModel{
-		Id:            types.StringNull(),
-		ZoneId:        types.StringValue(testZoneId),
-		ProjectId:     types.StringValue(testProjectId),
-		Domain:        types.StringValue(testDomain),
-		Env:           types.StringValue(testEnv),
-		PagesDomains:  nil,
-		CreateTimeout: types.Int64Null(),
-		UpdateTimeout: types.Int64Null(),
-		DeleteTimeout: types.Int64Null(),
+		Id:           types.StringNull(),
+		ZoneId:       types.StringValue(testZoneId),
+		ProjectId:    types.StringValue(testProjectId),
+		Domain:       types.StringValue(testDomain),
+		Env:          types.StringValue(testEnv),
+		PagesDomains: nil,
+		Timeouts:     nil,
 	}
 }
 
@@ -472,7 +473,7 @@ func TestMakersZoneCustomDomainCreateTimeoutPassedToWait(t *testing.T) {
 	})
 
 	model := c.sampleModel()
-	model.CreateTimeout = types.Int64Value(30)
+	model.Timeouts = makersZoneCustomDomainTimeouts(t, "90m")
 
 	var createResp resource.CreateResponse
 	c.resource.Create(context.Background(), resource.CreateRequest{Plan: c.plan(t, model)}, &createResp)
@@ -481,9 +482,62 @@ func TestMakersZoneCustomDomainCreateTimeoutPassedToWait(t *testing.T) {
 	}
 
 	refreshed := c.readState(t, createResp.State)
-	if refreshed.CreateTimeout.ValueInt64() != 30 {
-		t.Errorf("create_timeout should be kept in state, got %d", refreshed.CreateTimeout.ValueInt64())
+	if refreshed.Timeouts == nil {
+		t.Fatalf("timeouts block should be kept in state")
 	}
+}
+
+// testSchemaAttributes returns the resource schema attributes.
+func testSchemaAttributes(t *testing.T) map[string]schema.Attribute {
+	t.Helper()
+
+	var schemaResp resource.SchemaResponse
+	res := svcmakers.NewMakersZoneCustomDomainResource()
+	res.Schema(context.Background(), resource.SchemaRequest{}, &schemaResp)
+	if schemaResp.Diagnostics.HasError() {
+		t.Fatalf("failed to build schema: %v", schemaResp.Diagnostics.Errors())
+	}
+	return schemaResp.Schema.Attributes
+}
+
+// makersZoneCustomDomainTimeouts builds a resourcetimeouts.Value with the
+// given create duration, reusing the attribute types of the schema block.
+func makersZoneCustomDomainTimeouts(t *testing.T, create string) *resourcetimeouts.Value {
+	t.Helper()
+
+	block, ok := testSchemaAttributes(t)["timeouts"].(schema.SingleNestedAttribute)
+	if !ok {
+		t.Fatalf("timeouts is not a single nested attribute")
+	}
+	objectType, ok := block.GetType().(types.ObjectType)
+	if !ok {
+		t.Fatalf("timeouts does not have an object type")
+	}
+
+	attributes := map[string]attr.Value{}
+	for name := range objectType.AttrTypes {
+		if name == "create" {
+			attributes[name] = types.StringValue(create)
+		} else {
+			attributes[name] = types.StringNull()
+		}
+	}
+
+	object, diags := types.ObjectValue(objectType.AttrTypes, attributes)
+	if diags.HasError() {
+		t.Fatalf("failed to build timeouts object: %v", diags.Errors())
+	}
+	value, diags := resourcetimeouts.Type{
+		ObjectType: objectType,
+	}.ValueFromObject(context.Background(), object)
+	if diags.HasError() {
+		t.Fatalf("failed to build timeouts value: %v", diags.Errors())
+	}
+	timeoutsValue, ok := value.(resourcetimeouts.Value)
+	if !ok {
+		t.Fatalf("timeouts value has unexpected type %T", value)
+	}
+	return &timeoutsValue
 }
 
 func TestMakersZoneCustomDomainImportState(t *testing.T) {
@@ -497,11 +551,9 @@ func TestMakersZoneCustomDomainImportState(t *testing.T) {
 		t.Fatalf("resource does not implement resource.ResourceWithImportState")
 	}
 
-	var importResp resource.ImportStateResponse
-	emptyModel := svcmakers.MakersZoneCustomDomainResourceModel{}
+	importResp := resource.ImportStateResponse{State: tfsdk.State{Schema: c.schema}}
 	importer.ImportState(context.Background(), resource.ImportStateRequest{
-		ID:    testCompositeId,
-		State: c.state(t, emptyModel),
+		ID: testCompositeId,
 	}, &importResp)
 	if importResp.Diagnostics.HasError() {
 		t.Fatalf("ImportState failed: %v", importResp.Diagnostics.Errors())
@@ -533,11 +585,9 @@ func TestMakersZoneCustomDomainImportStateInvalidId(t *testing.T) {
 		t.Fatalf("resource does not implement resource.ResourceWithImportState")
 	}
 
-	var importResp resource.ImportStateResponse
-	emptyModel := svcmakers.MakersZoneCustomDomainResourceModel{}
+	importResp := resource.ImportStateResponse{State: tfsdk.State{Schema: c.schema}}
 	importer.ImportState(context.Background(), resource.ImportStateRequest{
-		ID:    "only-one-segment",
-		State: c.state(t, emptyModel),
+		ID: "only-one-segment",
 	}, &importResp)
 	if !importResp.Diagnostics.HasError() {
 		t.Fatalf("expected ImportState to fail for an invalid composite id")

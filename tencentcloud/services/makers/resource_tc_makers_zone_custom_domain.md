@@ -6,9 +6,10 @@ also the import ID format. Only the `env` attribute supports in-place update
 
 The binding, unbinding and environment switch operations are asynchronous on the
 cloud side: the provider polls `DescribeZoneCustomDomains` until the change is
-visible before the operation is reported as done. The polling budgets are
-controlled by `create_timeout`, `update_timeout` and `delete_timeout`
-(in minutes); when unset they default to the provider-level write timeout.
+visible before the operation is reported as done. The waiting budgets are
+controlled through the standard `timeouts` block (`create`, `update`, `delete`
+and `read` attributes, duration strings such as `30m`); when unset they fall
+back to the provider-level timeouts.
 
 Note: the `DescribeZoneCustomDomains` API does not echo back the `project_id`,
 so drift detection on `project_id` is limited to the value kept in state.
@@ -17,13 +18,16 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_makers_zone_custom_domain" "example" {
-  zone_id        = "zone-123456"
-  project_id     = "proj-abcdef"
-  domain         = "www.example.com"
-  env            = "production"
-  create_timeout = 30
-  update_timeout = 30
-  delete_timeout = 30
+  zone_id    = "zone-123456"
+  project_id = "proj-abcdef"
+  domain     = "www.example.com"
+  env        = "production"
+
+  timeouts {
+    create = "30m"
+    update = "30m"
+    delete = "30m"
+  }
 }
 ```
 
