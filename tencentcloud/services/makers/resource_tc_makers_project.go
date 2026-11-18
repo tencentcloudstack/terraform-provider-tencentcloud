@@ -45,7 +45,7 @@ type MakersProjectResourceModel struct {
 	ZoneId          types.String `tfsdk:"zone_id"`
 	Name            types.String `tfsdk:"name"`
 	Channel         types.String `tfsdk:"channel"`
-	Provider        types.String `tfsdk:"provider"`
+	Provider        types.String `tfsdk:"code_provider"`
 	Source          types.String `tfsdk:"source"`
 	Area            types.String `tfsdk:"area"`
 	NodeJsVersion   types.String `tfsdk:"node_js_version"`
@@ -100,7 +100,9 @@ func (r *MakersProjectResource) Schema(_ context.Context, _ resource.SchemaReque
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"provider": schema.StringAttribute{
+			// The attribute is named code_provider instead of provider because
+			// "provider" is a reserved root attribute name in Terraform.
+			"code_provider": schema.StringAttribute{
 				Optional:    true,
 				Description: "Code source. Valid values: `Upload`, `Github`, `Gitee`, `Gitlab`, `Coding`.",
 				PlanModifiers: []planmodifier.String{

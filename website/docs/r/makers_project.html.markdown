@@ -53,13 +53,13 @@ The following arguments are supported:
 * `zone_id` - (Required, String) Makers zone ID.
 * `area` - (Optional, String) Acceleration area. Valid values: `mainland`, `overseas`, `global`.
 * `build_cmd` - (Optional, String) Build command.
-* `coding_project_id` - (Optional, Int) Coding project ID. Used when `provider` is `Coding`.
+* `coding_project_id` - (Optional, Int) Coding project ID. Used when `code_provider` is `Coding`.
 * `framework` - (Optional, String) Framework.
 * `install_cmd` - (Optional, String) Install command.
-* `namespace` - (Optional, String) Coding namespace. Used when `provider` is `Coding`.
+* `namespace` - (Optional, String) Coding namespace. Used when `code_provider` is `Coding`.
 * `node_js_version` - (Optional, String) Node.js version, for example `20.18.0`. The value is echoed back by the cloud API as `nodejs_version`.
 * `output_dir` - (Optional, String) Build output directory.
-* `provider` - (Optional, String) Code source. Valid values: `Upload`, `Github`, `Gitee`, `Gitlab`, `Coding`.
+* `code_provider` - (Optional, String) Code source. Valid values: `Upload`, `Github`, `Gitee`, `Gitlab`, `Coding`. The attribute cannot be named `provider` because that is a reserved Terraform root attribute name.
 * `repo_branch` - (Optional, String) Production branch.
 * `repo_name` - (Optional, String) Repository name.
 * `repo_owner` - (Optional, String) Repository owner.

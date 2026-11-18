@@ -28,8 +28,6 @@ const (
 
 func makersStr(v string) *string { return &v }
 
-func makersInt64(v int64) *int64 { return &v }
-
 // makersTestProject builds the DescribeProjects response item.
 func makersTestProject() *sdk.Project {
 	return &sdk.Project{
@@ -92,7 +90,7 @@ func assertMakersProjectModel(t *testing.T, model svcmakers.MakersProjectResourc
 		"zone_id":         model.ZoneId.ValueString(),
 		"name":            model.Name.ValueString(),
 		"channel":         model.Channel.ValueString(),
-		"provider":        model.Provider.ValueString(),
+		"code_provider":   model.Provider.ValueString(),
 		"source":          model.Source.ValueString(),
 		"area":            model.Area.ValueString(),
 		"node_js_version": model.NodeJsVersion.ValueString(),
