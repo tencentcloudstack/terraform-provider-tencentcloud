@@ -37,8 +37,6 @@ type MakersDeploymentsDataSourceModel struct {
 	OrderType     types.String `tfsdk:"order_type"`
 	StartTime     types.String `tfsdk:"start_time"`
 	EndTime       types.String `tfsdk:"end_time"`
-	Limit         types.Int64  `tfsdk:"limit"`
-	Offset        types.Int64  `tfsdk:"offset"`
 	TotalCount    types.Int64  `tfsdk:"total_count"`
 	Deployments   types.List   `tfsdk:"deployments"`
 }
@@ -149,14 +147,6 @@ func (d *MakersDeploymentsDataSource) Schema(_ context.Context, _ datasource.Sch
 			"end_time": schema.StringAttribute{
 				Optional:    true,
 				Description: "End time.",
-			},
-			"limit": schema.Int64Attribute{
-				Optional:    true,
-				Description: "Number of items per page, maximum 100.",
-			},
-			"offset": schema.Int64Attribute{
-				Optional:    true,
-				Description: "Pagination offset.",
 			},
 			// ---- Query outputs: Computed ----
 			"total_count": schema.Int64Attribute{
@@ -321,12 +311,6 @@ func (d *MakersDeploymentsDataSource) Read(ctx context.Context, req datasource.R
 	}
 	if !config.EndTime.IsNull() && !config.EndTime.IsUnknown() {
 		request.EndTime = config.EndTime.ValueStringPointer()
-	}
-	if !config.Limit.IsNull() && !config.Limit.IsUnknown() {
-		request.Limit = config.Limit.ValueInt64Pointer()
-	}
-	if !config.Offset.IsNull() && !config.Offset.IsUnknown() {
-		request.Offset = config.Offset.ValueInt64Pointer()
 	}
 
 	service := NewMakersService(d.Client())

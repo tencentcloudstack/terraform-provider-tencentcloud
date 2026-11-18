@@ -11,7 +11,7 @@ data "tencentcloud_makers_deployments" "example" {
 }
 ```
 
-Query deployment records with filters and pagination
+Query deployment records with filters and sorting
 
 ```hcl
 data "tencentcloud_makers_deployments" "example" {
@@ -23,7 +23,5 @@ data "tencentcloud_makers_deployments" "example" {
   }
   order_by   = "CreatedOn"
   order_type = "Desc"
-  limit      = 100
-  offset     = 0
 }
 ```

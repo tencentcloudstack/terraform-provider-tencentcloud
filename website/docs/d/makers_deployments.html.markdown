@@ -22,7 +22,7 @@ data "tencentcloud_makers_deployments" "example" {
 }
 ```
 
-### Query deployment records with filters and pagination
+### Query deployment records with filters and sorting
 
 ```hcl
 data "tencentcloud_makers_deployments" "example" {
@@ -34,8 +34,6 @@ data "tencentcloud_makers_deployments" "example" {
   }
   order_by   = "CreatedOn"
   order_type = "Desc"
-  limit      = 100
-  offset     = 0
 }
 ```
 
@@ -48,8 +46,6 @@ The following arguments are supported:
 * `deployment_ids` - (Optional, List) List of deployment IDs to query.
 * `end_time` - (Optional, String) End time.
 * `filters` - (Optional, List) Filter conditions. Supported filter names: ProjectId, DeploymentId, Name, Status, StartTime, EndTime, RepoBranch.
-* `limit` - (Optional, Int) Number of items per page, maximum 100.
-* `offset` - (Optional, Int) Pagination offset.
 * `order_by` - (Optional, String) Sort field. Valid values: CreatedOn, ModifiedOn.
 * `order_type` - (Optional, String) Sort type. Valid values: Asc, Desc.
 * `start_time` - (Optional, String) Start time.

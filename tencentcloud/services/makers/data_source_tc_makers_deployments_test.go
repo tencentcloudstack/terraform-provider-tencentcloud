@@ -48,8 +48,6 @@ func makersDeploymentsRootType() tftypes.Object {
 			"order_type":     tftypes.String,
 			"start_time":     tftypes.String,
 			"end_time":       tftypes.String,
-			"limit":          tftypes.Number,
-			"offset":         tftypes.Number,
 			"total_count":    tftypes.Number,
 			"deployments":    tftypes.List{ElementType: makersDeploymentItemType()},
 		},
@@ -106,8 +104,6 @@ func buildMakersDeploymentsRawValue(zoneId, projectId string) tftypes.Value {
 		"order_type":     tftypes.NewValue(tftypes.String, nil),
 		"start_time":     tftypes.NewValue(tftypes.String, nil),
 		"end_time":       tftypes.NewValue(tftypes.String, nil),
-		"limit":          tftypes.NewValue(tftypes.Number, nil),
-		"offset":         tftypes.NewValue(tftypes.Number, nil),
 		"total_count":    tftypes.NewValue(tftypes.Number, nil),
 		"deployments":    tftypes.NewValue(tftypes.List{ElementType: makersDeploymentItemType()}, nil),
 	}
@@ -165,9 +161,12 @@ func TestMakersDeployments_MetadataAndSchema(t *testing.T) {
 		assert.True(t, attr.Optional, "attribute %s should be Optional", opt)
 	}
 	assert.True(t, attrs["deployment_ids"].(schema.ListAttribute).Optional)
-	assert.True(t, attrs["limit"].(schema.Int64Attribute).Optional)
-	assert.True(t, attrs["offset"].(schema.Int64Attribute).Optional)
 	assert.True(t, attrs["filters"].(schema.ListNestedAttribute).Optional)
+
+	// limit and offset are intentionally not exposed: the service layer
+	// loops through all pages internally.
+	assert.NotContains(t, attrs, "limit")
+	assert.NotContains(t, attrs, "offset")
 
 	// Computed outputs
 	assert.True(t, attrs["total_count"].(schema.Int64Attribute).Computed)
@@ -366,4 +365,87 @@ func TestMakersDeployments_ReadNilResponse(t *testing.T) {
 	ds.Read(context.Background(), req, resp)
 
 	assert.True(t, resp.Diagnostics.HasError(), "expected error diagnostics for nil response")
+}
+
+// TestMakersDeploymentsService_ReadAllPages verifies that the service layer
+// loops through every DescribeDeployments page with the fixed page size and
+// returns the complete record set plus the total count from the cloud side.
+func TestMakersDeploymentsService_ReadAllPages(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	client := &connectivity.TencentCloudClient{}
+	makersClient := &makersv20261113.Client{}
+	patches.ApplyMethodReturn(client, "UseMakersClient", makersClient)
+
+	callCount := 0
+	patches.ApplyMethodFunc(makersClient, "DescribeDeploymentsWithContext", func(_ context.Context, request *makersv20261113.DescribeDeploymentsRequest) (*makersv20261113.DescribeDeploymentsResponse, error) {
+		callCount++
+		// The service must drive pagination itself with the page size 100.
+		if request.Limit == nil || *request.Limit != 100 {
+			t.Errorf("expected Limit 100 on call %d, got %v", callCount, request.Limit)
+		}
+		var offset int64
+		if request.Offset != nil {
+			offset = *request.Offset
+		}
+		switch callCount {
+		case 1:
+			if offset != 0 {
+				t.Errorf("expected offset 0 on first call, got %d", offset)
+			}
+			deployments := make([]*makersv20261113.Deployment, 0, 100)
+			for i := 0; i < 100; i++ {
+				deployments = append(deployments, &makersv20261113.Deployment{
+					DeploymentId: ptrStrMakers(fmt.Sprintf("dpl-page1-%d", i)),
+					Status:       ptrStrMakers("Success"),
+				})
+			}
+			return &makersv20261113.DescribeDeploymentsResponse{Response: &makersv20261113.DescribeDeploymentsResponseParams{
+				TotalCount:  ptrInt64Makers(101),
+				Deployments: deployments,
+				RequestId:   ptrStrMakers("fake-request-id"),
+			}}, nil
+		case 2:
+			if offset != 100 {
+				t.Errorf("expected offset 100 on second call, got %d", offset)
+			}
+			return &makersv20261113.DescribeDeploymentsResponse{Response: &makersv20261113.DescribeDeploymentsResponseParams{
+				TotalCount: ptrInt64Makers(101),
+				Deployments: []*makersv20261113.Deployment{
+					{DeploymentId: ptrStrMakers("dpl-page2-0"), Status: ptrStrMakers("Failed")},
+				},
+				RequestId: ptrStrMakers("fake-request-id"),
+			}}, nil
+		default:
+			t.Errorf("unexpected extra API call %d", callCount)
+			return &makersv20261113.DescribeDeploymentsResponse{}, nil
+		}
+	})
+
+	service := svcmakers.NewMakersService(client)
+	request := makersv20261113.NewDescribeDeploymentsRequest()
+	request.ZoneId = ptrStrMakers("zone-abcdefg")
+	request.ProjectId = ptrStrMakers("prj-123456")
+
+	deployments, totalCount, err := service.DescribeDeployments(context.Background(), request)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if callCount != 2 {
+		t.Errorf("expected 2 API calls, got %d", callCount)
+	}
+	if totalCount == nil || *totalCount != 101 {
+		t.Errorf("expected total count 101, got %v", totalCount)
+	}
+	if len(deployments) != 101 {
+		t.Fatalf("expected 101 deployments across pages, got %d", len(deployments))
+	}
+	if deployments[0].DeploymentId == nil || *deployments[0].DeploymentId != "dpl-page1-0" {
+		t.Errorf("unexpected first deployment id: %v", deployments[0].DeploymentId)
+	}
+	if deployments[100].DeploymentId == nil || *deployments[100].DeploymentId != "dpl-page2-0" {
+		t.Errorf("unexpected last deployment id: %v", deployments[100].DeploymentId)
+	}
 }
