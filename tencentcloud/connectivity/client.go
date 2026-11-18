@@ -80,6 +80,7 @@ import (
 	gwlb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb/v20240906"
 	igtmv20231024 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm/v20231024"
 	ioav20220601 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ioa/v20220601"
+	makersv20261113 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
 	keewidbv20220308 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/keewidb/v20220308"
 	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
@@ -274,6 +275,7 @@ type TencentCloudClient struct {
 	bdrcv20260330Conn           *bdrcv20260330.Client
 	igtmv20231024Conn           *igtmv20231024.Client
 	ioaV20220601Conn            *ioav20220601.Client
+	makersV20261113Conn         *makersv20261113.Client
 	ga2v20250115Conn            *ga2v20250115.Client
 	gsv20191118Conn             *gsv20191118.Client
 	keewidbv20220308Conn        *keewidbv20220308.Client
@@ -2334,6 +2336,18 @@ func (me *TencentCloudClient) UseIoaV20220601Client() *ioav20220601.Client {
 	me.ioaV20220601Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.ioaV20220601Conn
+}
+
+// UseMakersV20261113Client return Makers client for service
+func (me *TencentCloudClient) UseMakersV20261113Client() *makersv20261113.Client {
+	if me.makersV20261113Conn != nil {
+		return me.makersV20261113Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.makersV20261113Conn, _ = makersv20261113.NewClient(me.Credential, me.Region, cpf)
+	me.makersV20261113Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.makersV20261113Conn
 }
 
 // UseGa2V20250115Client return GA2 (Global Accelerator 2) client for service
