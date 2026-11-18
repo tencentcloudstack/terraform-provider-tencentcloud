@@ -1,5 +1,5 @@
 ---
-subcategory: "Makers(makers)"
+subcategory: "Web & Agents Development Platform(Makers)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_makers_zone_custom_domain"
 sidebar_current: "docs-tencentcloud-resource-makers_zone_custom_domain"
@@ -17,7 +17,9 @@ also the import ID format. Only the `env` attribute supports in-place update
 
 The binding, unbinding and environment switch operations are asynchronous on the
 cloud side: the provider polls `DescribeZoneCustomDomains` until the change is
-visible before the operation is reported as done.
+visible before the operation is reported as done. The polling budgets are
+controlled by `create_timeout`, `update_timeout` and `delete_timeout`
+(in minutes); when unset they default to the provider-level write timeout.
 
 Note: the `DescribeZoneCustomDomains` API does not echo back the `project_id`,
 so drift detection on `project_id` is limited to the value kept in state.
@@ -26,10 +28,13 @@ so drift detection on `project_id` is limited to the value kept in state.
 
 ```hcl
 resource "tencentcloud_makers_zone_custom_domain" "example" {
-  zone_id    = "zone-123456"
-  project_id = "proj-abcdef"
-  domain     = "www.example.com"
-  env        = "production"
+  zone_id        = "zone-123456"
+  project_id     = "proj-abcdef"
+  domain         = "www.example.com"
+  env            = "production"
+  create_timeout = 30
+  update_timeout = 30
+  delete_timeout = 30
 }
 ```
 
@@ -40,7 +45,10 @@ The following arguments are supported:
 * `domain` - (Required, String) Custom domain name.
 * `project_id` - (Required, String) Project ID.
 * `zone_id` - (Required, String) Makers zone ID.
+* `create_timeout` - (Optional, Int) Total waiting time (in minutes) for the async custom domain binding to converge. Defaults to the provider-level write timeout.
+* `delete_timeout` - (Optional, Int) Total waiting time (in minutes) for the async custom domain unbinding to converge. Defaults to the provider-level write timeout.
 * `env` - (Optional, String) Environment slug the domain is bound to. If omitted on create, the backend decides the environment.
+* `update_timeout` - (Optional, Int) Total waiting time (in minutes) for the async environment switch to converge. Defaults to the provider-level write timeout.
 
 ## Attributes Reference
 
