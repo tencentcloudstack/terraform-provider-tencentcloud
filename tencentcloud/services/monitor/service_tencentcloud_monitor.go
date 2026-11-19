@@ -3084,11 +3084,18 @@ func (me *MonitorService) CreateDispenseExternalRule(ctx context.Context, reques
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	var response *monitorv20230616.CreateDispenseExternalRuleResponse
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseMonitorV20230616Client().CreateDispenseExternalRule(request)
-	if err != nil {
-		errRet = err
+		var e error
+		response, e = me.client.UseMonitorV20230616Client().CreateDispenseExternalRule(request)
+		if e != nil {
+			return tccommon.RetryError(e, tccommon.InternalError)
+		}
+		return nil
+	})
+	if errRet != nil {
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -3111,22 +3118,24 @@ func (me *MonitorService) DescribeDispenseExternalRuleById(ctx context.Context, 
 		}
 	}()
 
-	ratelimit.Check("DescribeDispenseExternalRule")
-
 	request := monitorv20230616.NewDescribeDispenseExternalRuleRequest()
 	request.RuleId = helper.Int64(ruleId)
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseMonitorV20230616Client().DescribeDispenseExternalRule(request)
+		if e != nil {
+			return tccommon.RetryError(e, tccommon.InternalError)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, "DescribeDispenseExternalRule", request.ToJsonString(), response.ToJsonString())
+		}
 
-	response, err := me.client.UseMonitorV20230616Client().DescribeDispenseExternalRule(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		if response.Response == nil {
+			return nil
+		}
 
-	if response.Response == nil {
-		return
-	}
-	rule = response.Response.Rule
+		rule = response.Response.Rule
+		return nil
+	})
 
 	return
 }
@@ -3140,14 +3149,15 @@ func (me *MonitorService) ModifyDispenseExternalRule(ctx context.Context, reques
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, e := me.client.UseMonitorV20230616Client().ModifyDispenseExternalRule(request)
+		if e != nil {
+			return tccommon.RetryError(e, tccommon.InternalError)
+		}
 
-	response, err := me.client.UseMonitorV20230616Client().ModifyDispenseExternalRule(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		return nil
+	})
 
 	return
 }
@@ -3161,18 +3171,19 @@ func (me *MonitorService) ModifyDispenseExternalRuleStatus(ctx context.Context, 
 		}
 	}()
 
-	ratelimit.Check("ModifyDispenseExternalRuleStatus")
-
 	request := monitorv20230616.NewModifyDispenseExternalRuleStatusRequest()
 	request.RuleIdList = []*int64{helper.Int64(ruleId)}
 	request.Status = helper.Int64(status)
 
-	response, err := me.client.UseMonitorV20230616Client().ModifyDispenseExternalRuleStatus(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, e := me.client.UseMonitorV20230616Client().ModifyDispenseExternalRuleStatus(request)
+		if e != nil {
+			return tccommon.RetryError(e, tccommon.InternalError)
+		}
+
+		return nil
+	})
 
 	return
 }
@@ -3186,17 +3197,17 @@ func (me *MonitorService) DeleteDispenseExternalRule(ctx context.Context, ruleId
 		}
 	}()
 
-	ratelimit.Check("DeleteDispenseExternalRule")
-
 	request := monitorv20230616.NewDeleteDispenseExternalRuleRequest()
 	request.RuleIdList = []*int64{helper.Int64(ruleId)}
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, e := me.client.UseMonitorV20230616Client().DeleteDispenseExternalRule(request)
+		if e != nil {
+			return tccommon.RetryError(e, tccommon.InternalError)
+		}
 
-	response, err := me.client.UseMonitorV20230616Client().DeleteDispenseExternalRule(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		return nil
+	})
 
 	return
 }
