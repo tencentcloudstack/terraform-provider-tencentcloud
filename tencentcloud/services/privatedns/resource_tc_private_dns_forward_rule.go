@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -57,6 +58,7 @@ func resourceTencentCloudPrivateDnsForwardRuleCreate(d *schema.ResourceData, met
 	var (
 		logId    = tccommon.GetLogId(tccommon.ContextNil)
 		ctx      = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		service  = PrivatednsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request  = privatednsIntlv20201028.NewCreateForwardRuleRequest()
 		response = privatednsIntlv20201028.NewCreateForwardRuleResponse()
 		ruleId   string
@@ -105,6 +107,39 @@ func resourceTencentCloudPrivateDnsForwardRuleCreate(d *schema.ResourceData, met
 
 	ruleId = *response.Response.RuleId
 	d.SetId(ruleId)
+
+	// CreateForwardRule is a synchronous API, but due to master-slave replication
+	// the rule may not be visible via DescribeForwardRule for a few seconds.
+	// Poll with backoff until the rule can be read, otherwise the follow-up Read
+	// would mistakenly treat it as deleted (d.SetId("")). SDK errors are not
+	// reliable to distinguish "not yet visible" from real failures, so simply
+	// retry a fixed number of times and fail if the rule is still not found.
+	const (
+		maxAttempts   = 5
+		retryInterval = 2 * time.Second
+		backoffFactor = 2
+	)
+
+	delay := retryInterval
+	for attempt := 1; attempt <= maxAttempts; attempt++ {
+		respData, e := service.DescribePrivateDnsForwardRuleById(ctx, ruleId)
+		if e == nil && respData != nil {
+			break
+		}
+
+		if attempt == maxAttempts {
+			if e != nil {
+				return fmt.Errorf("wait for private dns forward rule [%s] to be readable failed after %d attempts: %+v", ruleId, maxAttempts, e)
+			}
+
+			return fmt.Errorf("private dns forward rule [%s] not found after %d attempts, may be still syncing", ruleId, maxAttempts)
+		}
+
+		log.Printf("[DEBUG]%s private dns forward rule [%s] is not readable yet (attempt %d/%d), retry in %s, reason: %+v", logId, ruleId, attempt, maxAttempts, delay, e)
+		time.Sleep(delay)
+		delay *= backoffFactor
+	}
+
 	return resourceTencentCloudPrivateDnsForwardRuleRead(d, meta)
 }
 
@@ -125,8 +160,8 @@ func resourceTencentCloudPrivateDnsForwardRuleRead(d *schema.ResourceData, meta 
 	}
 
 	if respData == nil {
-		d.SetId("")
 		log.Printf("[WARN]%s resource `tencentcloud_private_dns_forward_rule` [%s] not found, please check if it has been deleted.\n", logId, ruleId)
+		d.SetId("")
 		return nil
 	}
 
