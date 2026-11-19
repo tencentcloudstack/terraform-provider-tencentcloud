@@ -3690,8 +3690,6 @@ func (me *TeoService) DescribeTeoAvailableOriginACLFamilyByFilter(ctx context.Co
 		}
 	}
 
-	ratelimit.Check(request.GetAction())
-
 	var (
 		offset uint64 = 0
 		limit  uint64 = 100
