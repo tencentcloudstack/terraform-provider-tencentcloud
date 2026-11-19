@@ -1,6 +1,6 @@
 {
   "source": "https://www.tencentcloud.com",
-  "saved": "2026-11-17T12:20:15Z",
+  "saved": "2026-11-18T01:59:34Z",
   "entries": {
     " tclm.API Category": "https://www.tencentcloud.com/document/api/1284/75531",
     " tclm.ChatTranslations": "https://www.tencentcloud.com/document/api/1284/77188",
@@ -8805,10 +8805,12 @@
     "teo.DescribeSecurityPolicy": "https://www.tencentcloud.com/document/api/1145/50958",
     "teo.DescribeSecurityTemplateBindings": "https://www.tencentcloud.com/document/api/1145/57571",
     "teo.DescribeSharedCNAME": "https://www.tencentcloud.com/document/api/1145/78836",
+    "teo.DescribeTimingFunctionAnalysisData": "https://www.tencentcloud.com/document/api/1145/86187",
     "teo.DescribeTimingL4Data": "https://www.tencentcloud.com/document/api/1145/50514",
     "teo.DescribeTimingL7AnalysisData": "https://www.tencentcloud.com/document/api/1145/50513",
     "teo.DescribeTimingL7CacheData": "https://www.tencentcloud.com/document/api/1145/50512",
     "teo.DescribeTimingL7OriginPullData": "https://www.tencentcloud.com/document/api/1145/75544",
+    "teo.DescribeTopFunctionAnalysisData": "https://www.tencentcloud.com/document/api/1145/86186",
     "teo.DescribeTopL7AnalysisData": "https://www.tencentcloud.com/document/api/1145/50511",
     "teo.DescribeTopL7CacheData": "https://www.tencentcloud.com/document/api/1145/50510",
     "teo.DescribeWebSecurityTemplate": "https://www.tencentcloud.com/document/api/1145/71946",

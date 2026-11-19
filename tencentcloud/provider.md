@@ -1692,6 +1692,7 @@ tencentcloud_teo_domain_shared_cname_attachment
 tencentcloud_teo_edge_kv
 tencentcloud_teo_edge_kv_namespace
 Action
+tencentcloud_teo_apply_free_certificate
 tencentcloud_teo_plan_for_zone
 tencentcloud_teo_dns_records_status
 tencentcloud_teo_confirm_origin_acl_update
@@ -2852,3 +2853,13 @@ tencentcloud_fwm_vpc_acl_rule
 
 Action
 tencentcloud_fwm_dispatch_strategy
+
+Web & Agents Development Platform(Makers)
+Resource
+tencentcloud_makers_zone_custom_domain
+
+Data Source
+tencentcloud_makers_deployment_log
+
+Resource
+tencentcloud_makers_project
