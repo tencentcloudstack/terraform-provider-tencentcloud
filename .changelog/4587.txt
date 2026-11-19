@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_fwm_edge_acl_rule
+```

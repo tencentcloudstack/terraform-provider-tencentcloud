@@ -42,6 +42,22 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateWhiteBoxKey](https://www.tencentcloud.com/search/?wd=CreateWhiteBoxKey&type=document&lang=en)
+  - [DisableWhiteBoxKey](https://www.tencentcloud.com/search/?wd=DisableWhiteBoxKey&type=document&lang=en)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [DescribeWhiteBoxKey](https://www.tencentcloud.com/search/?wd=DescribeWhiteBoxKey&type=document&lang=en)
+* Update:
+  - [DisableWhiteBoxKey](https://www.tencentcloud.com/search/?wd=DisableWhiteBoxKey&type=document&lang=en)
+  - [EnableWhiteBoxKey](https://www.tencentcloud.com/search/?wd=EnableWhiteBoxKey&type=document&lang=en)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DeleteWhiteBoxKey](https://www.tencentcloud.com/search/?wd=DeleteWhiteBoxKey&type=document&lang=en)
 
 ## Import
 

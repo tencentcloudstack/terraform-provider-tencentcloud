@@ -287,6 +287,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `listener_id` - ID of this CLB listener.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateListener](https://www.tencentcloud.com/document/api/214/33842)
+* Read: [DescribeListeners](https://www.tencentcloud.com/document/api/214/33831)
+* Update: [ModifyListener](https://www.tencentcloud.com/document/api/214/33818)
+* Delete: [DeleteListener](https://www.tencentcloud.com/document/api/214/33838)
 
 ## Import
 

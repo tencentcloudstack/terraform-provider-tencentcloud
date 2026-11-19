@@ -49,4 +49,9 @@ In addition to all arguments above, the following attributes are exported:
   * `user_id` - User id.
   * `user_name` - Username.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeUserProjectList](https://www.tencentcloud.com/document/api/1270/72616)
 

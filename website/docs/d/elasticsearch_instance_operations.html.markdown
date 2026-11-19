@@ -68,4 +68,9 @@ In addition to all arguments above, the following attributes are exported:
       * `type` - Subtask type.
   * `type` - Type.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstanceOperations](https://www.tencentcloud.com/document/api/845/32215)
 

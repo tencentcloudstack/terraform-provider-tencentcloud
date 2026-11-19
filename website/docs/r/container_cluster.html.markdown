@@ -91,4 +91,19 @@ In addition to all arguments above, the following attributes are exported:
 * `total_cpu` - The total cpu of the cluster.
 * `total_mem` - The total memory of the cluster.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateCluster](https://www.tencentcloud.com/document/api/457/32027)
+  - [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+  - [DescribeZones](https://www.tencentcloud.com/document/api/213/35071)
+* Read:
+  - [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+* Delete: [DeleteCluster](https://www.tencentcloud.com/document/api/457/33870)
 

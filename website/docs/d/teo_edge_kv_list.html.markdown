@@ -58,4 +58,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `keys` - List of key names in the specified namespace.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [EdgeKVList](https://www.tencentcloud.com/document/api/1145/78825)
 

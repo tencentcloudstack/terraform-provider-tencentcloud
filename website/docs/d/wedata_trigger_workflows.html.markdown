@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - Paginated workflow query information.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListTriggerWorkflows](https://www.tencentcloud.com/document/api/1174/77918)
 

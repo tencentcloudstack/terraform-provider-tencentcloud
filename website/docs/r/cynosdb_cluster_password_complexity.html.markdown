@@ -47,6 +47,22 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CopyClusterPasswordComplexity](https://www.tencentcloud.com/document/api/1098/55920)
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+  - [OpenClusterPasswordComplexity](https://www.tencentcloud.com/document/api/1098/55917)
+* Read: [DescribeClusterPasswordComplexity](https://www.tencentcloud.com/document/api/1098/55919)
+* Update:
+  - [CopyClusterPasswordComplexity](https://www.tencentcloud.com/document/api/1098/55920)
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+  - [ModifyClusterPasswordComplexity](https://www.tencentcloud.com/document/api/1098/55918)
+* Delete:
+  - [CloseClusterPasswordComplexity](https://www.tencentcloud.com/document/api/1098/55921)
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
 
 ## Import
 

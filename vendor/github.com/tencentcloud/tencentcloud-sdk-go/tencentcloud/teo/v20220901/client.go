@@ -1701,6 +1701,78 @@ func (c *Client) CreateInferenceAPITokenWithContext(ctx context.Context, request
     return
 }
 
+func NewCreateInferenceDomainRequest() (request *CreateInferenceDomainRequest) {
+    request = &CreateInferenceDomainRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "CreateInferenceDomain")
+    
+    
+    return
+}
+
+func NewCreateInferenceDomainResponse() (response *CreateInferenceDomainResponse) {
+    response = &CreateInferenceDomainResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateInferenceDomain
+// 创建推理服务域名，用于通过自定义域名访问推理服务，一个推理服务下最多支持创建 5 个自定义域名。
+//
+// 创建成功后，还需完成以下步骤，域名才能正常对外提供访问：
+//
+// 1. 校验域名 CNAME 配置状态，请参考 [CheckCnameStatus](https://cloud.tencent.com/document/api/1552/94491) 接口；
+//
+// 2. 验证归属权，请参考 [VerifyOwnership](https://cloud.tencent.com/document/api/1552/98879) 接口；
+//
+// 3. 配置域名证书，请参考 [ModifyHostsCertificate](https://cloud.tencent.com/document/api/1552/80764) 接口。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_ZONENOTFOUND = "InvalidParameterValue.ZoneNotFound"
+//  RESOURCENOTFOUND_INFERENCEDOMAIN = "ResourceNotFound.InferenceDomain"
+//  RESOURCENOTFOUND_INFERENCESERVICE = "ResourceNotFound.InferenceService"
+func (c *Client) CreateInferenceDomain(request *CreateInferenceDomainRequest) (response *CreateInferenceDomainResponse, err error) {
+    return c.CreateInferenceDomainWithContext(context.Background(), request)
+}
+
+// CreateInferenceDomain
+// 创建推理服务域名，用于通过自定义域名访问推理服务，一个推理服务下最多支持创建 5 个自定义域名。
+//
+// 创建成功后，还需完成以下步骤，域名才能正常对外提供访问：
+//
+// 1. 校验域名 CNAME 配置状态，请参考 [CheckCnameStatus](https://cloud.tencent.com/document/api/1552/94491) 接口；
+//
+// 2. 验证归属权，请参考 [VerifyOwnership](https://cloud.tencent.com/document/api/1552/98879) 接口；
+//
+// 3. 配置域名证书，请参考 [ModifyHostsCertificate](https://cloud.tencent.com/document/api/1552/80764) 接口。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_ZONENOTFOUND = "InvalidParameterValue.ZoneNotFound"
+//  RESOURCENOTFOUND_INFERENCEDOMAIN = "ResourceNotFound.InferenceDomain"
+//  RESOURCENOTFOUND_INFERENCESERVICE = "ResourceNotFound.InferenceService"
+func (c *Client) CreateInferenceDomainWithContext(ctx context.Context, request *CreateInferenceDomainRequest) (response *CreateInferenceDomainResponse, err error) {
+    if request == nil {
+        request = NewCreateInferenceDomainRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "CreateInferenceDomain")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateInferenceDomain require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateInferenceDomainResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateInferenceServiceRequest() (request *CreateInferenceServiceRequest) {
     request = &CreateInferenceServiceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2939,21 +3011,37 @@ func NewCreateRealtimeLogDeliveryTaskResponse() (response *CreateRealtimeLogDeli
 }
 
 // CreateRealtimeLogDeliveryTask
-// 本接口用于创建实时日志投递任务。本接口有如下限制：
-//
-// - 当数据投递类型（LogType）为七层访问日志、四层代理日志、边缘函数运行日志时，同一个实体（七层域名、四层代理实例、边缘函数实例）在同种数据投递类型（LogType）和数据投递区域（Area）的组合下，只能被添加到如下实时日志投递任务类型（TaskType）组合中：
-//
-//     - 一个推送至腾讯云  CLS 的任务，加上另一个推送至自定义 HTTP(S) 地址的任务；
-//
-//     - 一个推送至腾讯云  CLS 的任务，加上另一个推送至 AWS S3 兼容对象存储的任务；
-//
-// - 当数据投递类型（LogType）为速率限制和 CC 攻击防护日志、托管规则日志、自定义规则日志、Bot 管理日志时，同一个实体在同种数据投递类型（LogType）和数据投递区域（Area）的组合下，只能被添加到一个实时日志投递任务中。
-//
-// - 当实时日志投递任务类型（TaskType）为 EdgeOne 日志分析（log_analysis）时，只支持数据投递类型（LogType）为七层访问日志（l7-access-logs）或托管规则日志（web-attack）；在同一站点（ZoneId）、同一数据投递区域（Area）和数据的组合下，每种数据投递类型（LogType）只能添加一个推送至 EdgeOne 日志分析的实时日志投递任务。
+// 本接口用于创建实时日志投递任务。
 //
 // 
 //
-// 建议先通过 [DescribeRealtimeLogDeliveryTasks](https://cloud.tencent.com/document/product/1552/104110)  接口根据实体查询实时日志投递任务列表，检查实体是否已经被添加到另一实时日志投递任务中。
+// **限制规则**
+//
+// 
+//
+// 同一实体（七层域名、四层代理实例、边缘函数实例）在同一 `LogType` + `Area` 组合下，每种 `TaskType` 仅允许创建一个任务。不同 `LogType` 的互斥规则如下：
+//
+// 
+//
+// | LogType | 互斥的 TaskType |
+//
+// | --- | --- |
+//
+// | 四层代理日志、边缘函数运行日志 | `custom_endpoint`、`s3`、`aws_s3` 三选一 |
+//
+// 
+//
+// 当 `TaskType` 为 `log_analysis` 时：
+//
+// 
+//
+// - 仅支持 `LogType` 为 `l7-access-logs` 或 `web-attack`。
+//
+// - 同一 `ZoneId` + `Area` 下，每种 `LogType` 仅允许创建一个任务。
+//
+// 
+//
+// **建议**：创建前先通过 [DescribeRealtimeLogDeliveryTasks](https://cloud.tencent.com/document/product/1552/104110) 接口查询已有任务，避免重复添加。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2983,21 +3071,37 @@ func (c *Client) CreateRealtimeLogDeliveryTask(request *CreateRealtimeLogDeliver
 }
 
 // CreateRealtimeLogDeliveryTask
-// 本接口用于创建实时日志投递任务。本接口有如下限制：
-//
-// - 当数据投递类型（LogType）为七层访问日志、四层代理日志、边缘函数运行日志时，同一个实体（七层域名、四层代理实例、边缘函数实例）在同种数据投递类型（LogType）和数据投递区域（Area）的组合下，只能被添加到如下实时日志投递任务类型（TaskType）组合中：
-//
-//     - 一个推送至腾讯云  CLS 的任务，加上另一个推送至自定义 HTTP(S) 地址的任务；
-//
-//     - 一个推送至腾讯云  CLS 的任务，加上另一个推送至 AWS S3 兼容对象存储的任务；
-//
-// - 当数据投递类型（LogType）为速率限制和 CC 攻击防护日志、托管规则日志、自定义规则日志、Bot 管理日志时，同一个实体在同种数据投递类型（LogType）和数据投递区域（Area）的组合下，只能被添加到一个实时日志投递任务中。
-//
-// - 当实时日志投递任务类型（TaskType）为 EdgeOne 日志分析（log_analysis）时，只支持数据投递类型（LogType）为七层访问日志（l7-access-logs）或托管规则日志（web-attack）；在同一站点（ZoneId）、同一数据投递区域（Area）和数据的组合下，每种数据投递类型（LogType）只能添加一个推送至 EdgeOne 日志分析的实时日志投递任务。
+// 本接口用于创建实时日志投递任务。
 //
 // 
 //
-// 建议先通过 [DescribeRealtimeLogDeliveryTasks](https://cloud.tencent.com/document/product/1552/104110)  接口根据实体查询实时日志投递任务列表，检查实体是否已经被添加到另一实时日志投递任务中。
+// **限制规则**
+//
+// 
+//
+// 同一实体（七层域名、四层代理实例、边缘函数实例）在同一 `LogType` + `Area` 组合下，每种 `TaskType` 仅允许创建一个任务。不同 `LogType` 的互斥规则如下：
+//
+// 
+//
+// | LogType | 互斥的 TaskType |
+//
+// | --- | --- |
+//
+// | 四层代理日志、边缘函数运行日志 | `custom_endpoint`、`s3`、`aws_s3` 三选一 |
+//
+// 
+//
+// 当 `TaskType` 为 `log_analysis` 时：
+//
+// 
+//
+// - 仅支持 `LogType` 为 `l7-access-logs` 或 `web-attack`。
+//
+// - 同一 `ZoneId` + `Area` 下，每种 `LogType` 仅允许创建一个任务。
+//
+// 
+//
+// **建议**：创建前先通过 [DescribeRealtimeLogDeliveryTasks](https://cloud.tencent.com/document/product/1552/104110) 接口查询已有任务，避免重复添加。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4349,8 +4453,12 @@ func NewDeleteAccelerationDomainsResponse() (response *DeleteAccelerationDomains
 //  INVALIDPARAMETER_ZONEISGRAYPUBLISHING = "InvalidParameter.ZoneIsGrayPublishing"
 //  INVALIDPARAMETER_ZONENOTFOUND = "InvalidParameter.ZoneNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDDOMAINSTATUS = "InvalidParameterValue.InvalidDomainStatus"
+//  INVALIDPARAMETERVALUE_RECORDNEEDDEFAULTLOCATION = "InvalidParameterValue.RecordNeedDefaultLocation"
+//  INVALIDPARAMETERVALUE_UNSUPPORTDELETEWEIGHTRECORD = "InvalidParameterValue.UnSupportDeleteWeightRecord"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_RESOURCELOCKEDTEMPORARY = "OperationDenied.ResourceLockedTemporary"
+//  OPERATIONDENIED_UNSUPPORTDELETELOCATIONRECORD = "OperationDenied.UnSupportDeleteLocationRecord"
+//  OPERATIONDENIED_UNSUPPORTDELETEWEIGHTRECORD = "OperationDenied.UnSupportDeleteWeightRecord"
 //  OPERATIONDENIED_VERSIONCONTROLISGRAYING = "OperationDenied.VersionControlIsGraying"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEUNAVAILABLE_DOMAINNOTFOUND = "ResourceUnavailable.DomainNotFound"
@@ -4366,8 +4474,12 @@ func (c *Client) DeleteAccelerationDomains(request *DeleteAccelerationDomainsReq
 //  INVALIDPARAMETER_ZONEISGRAYPUBLISHING = "InvalidParameter.ZoneIsGrayPublishing"
 //  INVALIDPARAMETER_ZONENOTFOUND = "InvalidParameter.ZoneNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDDOMAINSTATUS = "InvalidParameterValue.InvalidDomainStatus"
+//  INVALIDPARAMETERVALUE_RECORDNEEDDEFAULTLOCATION = "InvalidParameterValue.RecordNeedDefaultLocation"
+//  INVALIDPARAMETERVALUE_UNSUPPORTDELETEWEIGHTRECORD = "InvalidParameterValue.UnSupportDeleteWeightRecord"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_RESOURCELOCKEDTEMPORARY = "OperationDenied.ResourceLockedTemporary"
+//  OPERATIONDENIED_UNSUPPORTDELETELOCATIONRECORD = "OperationDenied.UnSupportDeleteLocationRecord"
+//  OPERATIONDENIED_UNSUPPORTDELETEWEIGHTRECORD = "OperationDenied.UnSupportDeleteWeightRecord"
 //  OPERATIONDENIED_VERSIONCONTROLISGRAYING = "OperationDenied.VersionControlIsGraying"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEUNAVAILABLE_DOMAINNOTFOUND = "ResourceUnavailable.DomainNotFound"
@@ -4795,7 +4907,7 @@ func NewDeleteFunctionResponse() (response *DeleteFunctionResponse) {
 }
 
 // DeleteFunction
-// 删除边缘函数，删除后函数无法恢复，关联的触发规则会一并删除。
+// 删除边缘函数，删除后函数无法恢复，关联的触发规则，环境变量和副本会一并删除。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4809,7 +4921,7 @@ func (c *Client) DeleteFunction(request *DeleteFunctionRequest) (response *Delet
 }
 
 // DeleteFunction
-// 删除边缘函数，删除后函数无法恢复，关联的触发规则会一并删除。
+// 删除边缘函数，删除后函数无法恢复，关联的触发规则，环境变量和副本会一并删除。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -6132,6 +6244,7 @@ func NewDeleteZoneResponse() (response *DeleteZoneResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_COMPLIANCEFORBIDDEN = "OperationDenied.ComplianceForbidden"
 //  OPERATIONDENIED_DELETEZONEPRECHECKFAILED = "OperationDenied.DeleteZonePreCheckFailed"
 //  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
 //  OPERATIONDENIED_ZONEISBINDINGSHAREDCNAME = "OperationDenied.ZoneIsBindingSharedCNAME"
@@ -6148,6 +6261,7 @@ func (c *Client) DeleteZone(request *DeleteZoneRequest) (response *DeleteZoneRes
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_COMPLIANCEFORBIDDEN = "OperationDenied.ComplianceForbidden"
 //  OPERATIONDENIED_DELETEZONEPRECHECKFAILED = "OperationDenied.DeleteZonePreCheckFailed"
 //  OPERATIONDENIED_DISABLEZONENOTCOMPLETED = "OperationDenied.DisableZoneNotCompleted"
 //  OPERATIONDENIED_ZONEISBINDINGSHAREDCNAME = "OperationDenied.ZoneIsBindingSharedCNAME"
@@ -8077,6 +8191,60 @@ func (c *Client) DescribeInferenceAPITokensWithContext(ctx context.Context, requ
     return
 }
 
+func NewDescribeInferenceDomainsRequest() (request *DescribeInferenceDomainsRequest) {
+    request = &DescribeInferenceDomainsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeInferenceDomains")
+    
+    
+    return
+}
+
+func NewDescribeInferenceDomainsResponse() (response *DescribeInferenceDomainsResponse) {
+    response = &DescribeInferenceDomainsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeInferenceDomains
+// 查询推理服务域名列表，返回域名的Cname地址、归属权验证和证书等相关信息。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_ZONENOTFOUND = "InvalidParameterValue.ZoneNotFound"
+//  RESOURCENOTFOUND_INFERENCESERVICE = "ResourceNotFound.InferenceService"
+func (c *Client) DescribeInferenceDomains(request *DescribeInferenceDomainsRequest) (response *DescribeInferenceDomainsResponse, err error) {
+    return c.DescribeInferenceDomainsWithContext(context.Background(), request)
+}
+
+// DescribeInferenceDomains
+// 查询推理服务域名列表，返回域名的Cname地址、归属权验证和证书等相关信息。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_ZONENOTFOUND = "InvalidParameterValue.ZoneNotFound"
+//  RESOURCENOTFOUND_INFERENCESERVICE = "ResourceNotFound.InferenceService"
+func (c *Client) DescribeInferenceDomainsWithContext(ctx context.Context, request *DescribeInferenceDomainsRequest) (response *DescribeInferenceDomainsResponse, err error) {
+    if request == nil {
+        request = NewDescribeInferenceDomainsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "DescribeInferenceDomains")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInferenceDomains require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInferenceDomainsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeInferenceHardwareSpecificationsRequest() (request *DescribeInferenceHardwareSpecificationsRequest) {
     request = &DescribeInferenceHardwareSpecificationsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -8797,6 +8965,58 @@ func (c *Client) DescribeLogAnalysisDownloadTasksWithContext(ctx context.Context
     request.SetContext(ctx)
     
     response = NewDescribeLogAnalysisDownloadTasksResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLogAnalysisStatisticsRequest() (request *DescribeLogAnalysisStatisticsRequest) {
+    request = &DescribeLogAnalysisStatisticsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeLogAnalysisStatistics")
+    
+    
+    return
+}
+
+func NewDescribeLogAnalysisStatisticsResponse() (response *DescribeLogAnalysisStatisticsResponse) {
+    response = &DescribeLogAnalysisStatisticsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeLogAnalysisStatistics
+// 本接口用于日志分析统计结果查询。用户在检索语句后追加 SQL 聚合语句（[检索条件] | [SQL语句]），后端执行聚合并返回列式统计结果（列定义 + 数据行）。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_REALTIMELOGLOGANALYSISNOTSUPPORT = "FailedOperation.RealtimeLogLogAnalysisNotSupport"
+//  INVALIDPARAMETER_INVALIDLOGANALYSISCONDITION = "InvalidParameter.InvalidLogAnalysisCondition"
+func (c *Client) DescribeLogAnalysisStatistics(request *DescribeLogAnalysisStatisticsRequest) (response *DescribeLogAnalysisStatisticsResponse, err error) {
+    return c.DescribeLogAnalysisStatisticsWithContext(context.Background(), request)
+}
+
+// DescribeLogAnalysisStatistics
+// 本接口用于日志分析统计结果查询。用户在检索语句后追加 SQL 聚合语句（[检索条件] | [SQL语句]），后端执行聚合并返回列式统计结果（列定义 + 数据行）。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_REALTIMELOGLOGANALYSISNOTSUPPORT = "FailedOperation.RealtimeLogLogAnalysisNotSupport"
+//  INVALIDPARAMETER_INVALIDLOGANALYSISCONDITION = "InvalidParameter.InvalidLogAnalysisCondition"
+func (c *Client) DescribeLogAnalysisStatisticsWithContext(ctx context.Context, request *DescribeLogAnalysisStatisticsRequest) (response *DescribeLogAnalysisStatisticsResponse, err error) {
+    if request == nil {
+        request = NewDescribeLogAnalysisStatisticsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "DescribeLogAnalysisStatistics")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLogAnalysisStatistics require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLogAnalysisStatisticsResponse()
     err = c.Send(request, response)
     return
 }
@@ -11829,7 +12049,7 @@ func NewHandleFunctionRuntimeEnvironmentResponse() (response *HandleFunctionRunt
 // HandleFunctionRuntimeEnvironment
 // 操作边缘函数运行环境，支持环境变量的相关设置。
 //
-// 设置环境变量后，可在函数代码中使用，具体参考 [边缘函数引入环境变量](https://cloud.tencent.com/document/product/1552/109151#0151fd9a-8b0e-407b-ae37-54553a60ded6)。
+// 设置环境变量后，可在函数代码和函数副本代码中使用，具体参考 [边缘函数引入环境变量](https://cloud.tencent.com/document/product/1552/109151#0151fd9a-8b0e-407b-ae37-54553a60ded6)。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -11845,7 +12065,7 @@ func (c *Client) HandleFunctionRuntimeEnvironment(request *HandleFunctionRuntime
 // HandleFunctionRuntimeEnvironment
 // 操作边缘函数运行环境，支持环境变量的相关设置。
 //
-// 设置环境变量后，可在函数代码中使用，具体参考 [边缘函数引入环境变量](https://cloud.tencent.com/document/product/1552/109151#0151fd9a-8b0e-407b-ae37-54553a60ded6)。
+// 设置环境变量后，可在函数代码和函数副本代码中使用，具体参考 [边缘函数引入环境变量](https://cloud.tencent.com/document/product/1552/109151#0151fd9a-8b0e-407b-ae37-54553a60ded6)。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -13289,6 +13509,7 @@ func NewModifyHostsCertificateResponse() (response *ModifyHostsCertificateRespon
 //  INVALIDPARAMETER_ACTIONINPROGRESS = "InvalidParameter.ActionInProgress"
 //  INVALIDPARAMETER_ALIASDOMAINNOTSUPPORTKEYLESS = "InvalidParameter.AliasDomainNotSupportKeyless"
 //  INVALIDPARAMETER_CERTNOTMATCHDOMAIN = "InvalidParameter.CertNotMatchDomain"
+//  INVALIDPARAMETER_CERTSANTOOLONG = "InvalidParameter.CertSANTooLong"
 //  INVALIDPARAMETER_CERTTOEXPIRE = "InvalidParameter.CertToExpire"
 //  INVALIDPARAMETER_CERTTOOSHORTKEYSIZE = "InvalidParameter.CertTooShortKeySize"
 //  INVALIDPARAMETER_CERTIFICATECONFLICTWITHKEYLESSSERVER = "InvalidParameter.CertificateConflictWithKeylessServer"
@@ -13373,6 +13594,7 @@ func (c *Client) ModifyHostsCertificate(request *ModifyHostsCertificateRequest) 
 //  INVALIDPARAMETER_ACTIONINPROGRESS = "InvalidParameter.ActionInProgress"
 //  INVALIDPARAMETER_ALIASDOMAINNOTSUPPORTKEYLESS = "InvalidParameter.AliasDomainNotSupportKeyless"
 //  INVALIDPARAMETER_CERTNOTMATCHDOMAIN = "InvalidParameter.CertNotMatchDomain"
+//  INVALIDPARAMETER_CERTSANTOOLONG = "InvalidParameter.CertSANTooLong"
 //  INVALIDPARAMETER_CERTTOEXPIRE = "InvalidParameter.CertToExpire"
 //  INVALIDPARAMETER_CERTTOOSHORTKEYSIZE = "InvalidParameter.CertTooShortKeySize"
 //  INVALIDPARAMETER_CERTIFICATECONFLICTWITHKEYLESSSERVER = "InvalidParameter.CertificateConflictWithKeylessServer"
@@ -16771,6 +16993,62 @@ func (c *Client) ModifyZoneWorkModeWithContext(ctx context.Context, request *Mod
     request.SetContext(ctx)
     
     response = NewModifyZoneWorkModeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewOperateInferenceDomainRequest() (request *OperateInferenceDomainRequest) {
+    request = &OperateInferenceDomainRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "OperateInferenceDomain")
+    
+    
+    return
+}
+
+func NewOperateInferenceDomainResponse() (response *OperateInferenceDomainResponse) {
+    response = &OperateInferenceDomainResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// OperateInferenceDomain
+// 操作推理服务域名，支持停止、启用和删除推理服务域名，删除后的资源不可恢复。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_ZONENOTFOUND = "InvalidParameterValue.ZoneNotFound"
+//  RESOURCENOTFOUND_INFERENCEDOMAIN = "ResourceNotFound.InferenceDomain"
+//  RESOURCENOTFOUND_INFERENCESERVICE = "ResourceNotFound.InferenceService"
+func (c *Client) OperateInferenceDomain(request *OperateInferenceDomainRequest) (response *OperateInferenceDomainResponse, err error) {
+    return c.OperateInferenceDomainWithContext(context.Background(), request)
+}
+
+// OperateInferenceDomain
+// 操作推理服务域名，支持停止、启用和删除推理服务域名，删除后的资源不可恢复。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_ZONENOTFOUND = "InvalidParameterValue.ZoneNotFound"
+//  RESOURCENOTFOUND_INFERENCEDOMAIN = "ResourceNotFound.InferenceDomain"
+//  RESOURCENOTFOUND_INFERENCESERVICE = "ResourceNotFound.InferenceService"
+func (c *Client) OperateInferenceDomainWithContext(ctx context.Context, request *OperateInferenceDomainRequest) (response *OperateInferenceDomainResponse, err error) {
+    if request == nil {
+        request = NewOperateInferenceDomainRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "OperateInferenceDomain")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("OperateInferenceDomain require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewOperateInferenceDomainResponse()
     err = c.Send(request, response)
     return
 }

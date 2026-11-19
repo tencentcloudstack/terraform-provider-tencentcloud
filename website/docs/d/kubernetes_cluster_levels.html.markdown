@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
   * `other_count` - Number of others.
   * `pod_count` - Number of pods.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeClusterLevelAttribute](https://www.tencentcloud.com/document/api/457/46754)
 

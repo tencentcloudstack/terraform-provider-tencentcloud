@@ -49,4 +49,9 @@ In addition to all arguments above, the following attributes are exported:
   * `project_id` - Project ID of the key pair.
   * `public_key` - public key of the key pair.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeKeyPairs](https://www.tencentcloud.com/document/api/213/33229)
 

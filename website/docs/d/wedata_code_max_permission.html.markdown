@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
 * `data` - User's recursive maximum permission type for CodeStudio files/folders.
   * `permission_type` - Authorization permission type (CAN_VIEW/CAN_RUN/CAN_EDIT/CAN_MANAGE).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetMyCodeMaxPermission](https://www.tencentcloud.com/document/api/1174/77904)
 

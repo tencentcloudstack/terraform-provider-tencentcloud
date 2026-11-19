@@ -49,4 +49,9 @@ In addition to all arguments above, the following attributes are exported:
     * `zone_name` - zone name(zh).
     * `zone` - zone name(en).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDCDBSaleInfo](https://www.tencentcloud.com/search/?wd=DescribeDCDBSaleInfo&type=document&lang=en)
 

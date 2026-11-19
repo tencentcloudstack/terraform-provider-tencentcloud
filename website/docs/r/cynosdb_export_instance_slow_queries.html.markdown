@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `file_content` - Slow query export content.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ExportInstanceSlowQueries](https://www.tencentcloud.com/document/api/1098/48589)
 

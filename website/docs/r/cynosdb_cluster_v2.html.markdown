@@ -219,6 +219,68 @@ In addition to all arguments above, the following attributes are exported:
     * `instance_name` - Name of instance.
 * `storage_used` - Used storage of CynosDB cluster, unit in MB.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateClusters](https://www.tencentcloud.com/document/api/1098/40753)
+  - [DescribeClusterDetail](https://www.tencentcloud.com/document/api/1098/40752)
+  - [DescribeClusterInstanceGrps](https://www.tencentcloud.com/document/api/1098/40751)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/1098/40750)
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+  - [DescribeInstanceDetail](https://www.tencentcloud.com/document/api/1098/40749)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1098/40747)
+  - [DescribeResourcesByDealName](https://www.tencentcloud.com/document/api/1098/40735)
+  - [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/document/api/1098/40734)
+  - [ModifyMaintainPeriodConfig](https://www.tencentcloud.com/document/api/1098/40743)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [OpenClusterReadOnlyInstanceGroupAccess](https://www.tencentcloud.com/document/api/1098/56548)
+  - [PauseServerless](https://www.tencentcloud.com/document/api/1098/45567)
+  - [ResumeServerless](https://www.tencentcloud.com/document/api/1098/45566)
+* Read:
+  - [DescribeClusterDetail](https://www.tencentcloud.com/document/api/1098/40752)
+  - [DescribeClusterInstanceGrps](https://www.tencentcloud.com/document/api/1098/40751)
+  - [DescribeClusterParams](https://www.tencentcloud.com/document/api/1098/50011)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/1098/40750)
+  - [DescribeDBSecurityGroups](https://www.tencentcloud.com/document/api/1098/40737)
+  - [DescribeInstanceDetail](https://www.tencentcloud.com/document/api/1098/40749)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1098/40747)
+  - [DescribeMaintainPeriod](https://www.tencentcloud.com/document/api/1098/40746)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [AddClusterSlaveZone](https://www.tencentcloud.com/document/api/1098/50016)
+  - [DescribeClusterDetail](https://www.tencentcloud.com/document/api/1098/40752)
+  - [DescribeClusterInstanceGrps](https://www.tencentcloud.com/document/api/1098/40751)
+  - [DescribeClusterParams](https://www.tencentcloud.com/document/api/1098/50011)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/1098/40750)
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+  - [DescribeInstanceDetail](https://www.tencentcloud.com/document/api/1098/40749)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/1098/40747)
+  - [DescribeResourcesByDealName](https://www.tencentcloud.com/document/api/1098/40735)
+  - [ModifyClusterName](https://www.tencentcloud.com/document/api/1098/46318)
+  - [ModifyClusterParam](https://www.tencentcloud.com/document/api/1098/42961)
+  - [ModifyClusterSlaveZone](https://www.tencentcloud.com/document/api/1098/50015)
+  - [ModifyClusterStorage](https://www.tencentcloud.com/search/?wd=ModifyClusterStorage&type=document&lang=en)
+  - [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/document/api/1098/40734)
+  - [ModifyInstanceName](https://www.tencentcloud.com/document/api/1098/46317)
+  - [ModifyMaintainPeriodConfig](https://www.tencentcloud.com/document/api/1098/40743)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [OpenClusterReadOnlyInstanceGroupAccess](https://www.tencentcloud.com/document/api/1098/56548)
+  - [PauseServerless](https://www.tencentcloud.com/document/api/1098/45567)
+  - [RemoveClusterSlaveZone](https://www.tencentcloud.com/document/api/1098/50014)
+  - [ResetAccountPassword](https://www.tencentcloud.com/document/api/1098/52496)
+  - [ResumeServerless](https://www.tencentcloud.com/document/api/1098/45566)
+  - [SetRenewFlag](https://www.tencentcloud.com/document/api/1098/40740)
+  - [SwitchClusterVpc](https://www.tencentcloud.com/document/api/1098/53647)
+  - [TransferStoragePrepayToPostpay](https://www.tencentcloud.com/document/api/1098/81950)
+  - [UpgradeClusterVersion](https://www.tencentcloud.com/document/api/1098/55916)
+  - [UpgradeInstance](https://www.tencentcloud.com/document/api/1098/40739)
+* Delete:
+  - [DescribeClusterDetail](https://www.tencentcloud.com/document/api/1098/40752)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/1098/40750)
+  - [IsolateCluster](https://www.tencentcloud.com/document/api/1098/40745)
+  - [OfflineCluster](https://www.tencentcloud.com/document/api/1098/40742)
 
 ## Import
 

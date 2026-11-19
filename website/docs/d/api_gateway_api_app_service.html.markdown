@@ -120,4 +120,9 @@ In addition to all arguments above, the following attributes are exported:
 * `usage_plan_total_count` - Total number of usage plans.Note: This field may return null, indicating that a valid value cannot be obtained.
 * `user_type` - The user type of this service.Note: This field may return null, indicating that a valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeServiceForApiApp](https://www.tencentcloud.com/search/?wd=DescribeServiceForApiApp&type=document&lang=en)
 

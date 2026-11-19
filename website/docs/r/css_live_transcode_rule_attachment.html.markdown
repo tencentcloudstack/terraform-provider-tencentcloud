@@ -61,6 +61,13 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - create time.
 * `update_time` - update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLiveTranscodeRule](https://www.tencentcloud.com/document/api/267/30791)
+* Read: [DescribeLiveTranscodeRules](https://www.tencentcloud.com/document/api/267/30787)
+* Delete: [DeleteLiveTranscodeRule](https://www.tencentcloud.com/document/api/267/30789)
 
 ## Import
 

@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_cluster_endpoint: update create code logic- #4568
+```
+
+```release-note:enhancement
+resource/tencentcloud_dcdb_account: update document
+```

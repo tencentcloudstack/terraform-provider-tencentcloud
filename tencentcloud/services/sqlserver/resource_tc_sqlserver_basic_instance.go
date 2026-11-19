@@ -168,6 +168,22 @@ func ResourceTencentCloudSqlserverBasicInstance() *schema.Resource {
 				Default:     "Chinese_PRC_CI_AS",
 				Description: "System character set sorting rule, default: Chinese_PRC_CI_AS.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "The tags of the SQL Server basic instance.",
+			},
+			// computed
+			"instance_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Instance ID.",
+			},
+			"uid": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Unique UID of the instance.",
+			},
 			"vip": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -187,11 +203,6 @@ func ResourceTencentCloudSqlserverBasicInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "Status of the SQL Server basic instance. 1 for applying, 2 for running, 3 for running with limit, 4 for isolated, 5 for recycling, 6 for recycled, 7 for running with task, 8 for off-line, 9 for expanding, 10 for migrating, 11 for readonly, 12 for rebooting.",
-			},
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "The tags of the SQL Server basic instance.",
 			},
 			"dns_pod_domain": {
 				Type:        schema.TypeString,
@@ -380,6 +391,14 @@ func resourceTencentCloudSqlserverBasicInstanceRead(d *schema.ResourceData, meta
 	// time_zone
 	if instance.TimeZone != nil {
 		_ = d.Set("time_zone", instance.TimeZone)
+	}
+
+	if instance.InstanceId != nil {
+		_ = d.Set("instance_id", instance.InstanceId)
+	}
+
+	if instance.Uid != nil {
+		_ = d.Set("uid", instance.Uid)
 	}
 
 	// Get disk encryption flag from attributes API

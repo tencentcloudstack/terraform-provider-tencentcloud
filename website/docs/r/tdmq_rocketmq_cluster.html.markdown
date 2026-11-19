@@ -44,6 +44,16 @@ In addition to all arguments above, the following attributes are exported:
   * `subnet_id` - Subnet ID.
   * `vpc_id` - Vpc ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateRocketMQCluster](https://www.tencentcloud.com/search/?wd=CreateRocketMQCluster&type=document&lang=en)
+  - [DescribeRocketMQCluster](https://www.tencentcloud.com/search/?wd=DescribeRocketMQCluster&type=document&lang=en)
+* Read: [DescribeRocketMQCluster](https://www.tencentcloud.com/search/?wd=DescribeRocketMQCluster&type=document&lang=en)
+* Update: [ModifyRocketMQCluster](https://www.tencentcloud.com/search/?wd=ModifyRocketMQCluster&type=document&lang=en)
+* Delete: [DeleteRocketMQCluster](https://www.tencentcloud.com/search/?wd=DeleteRocketMQCluster&type=document&lang=en)
 
 ## Import
 

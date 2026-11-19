@@ -114,4 +114,27 @@ In addition to all arguments above, the following attributes are exported:
 * `proxy_address_id` - Proxy address id.
 * `proxy_group_id` - Proxy group id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateCdbProxy](https://www.tencentcloud.com/document/api/236/55489)
+  - [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+  - [DescribeCdbProxyInfo](https://www.tencentcloud.com/document/api/236/55487)
+  - [ModifyCdbProxyAddressVipAndVPort](https://www.tencentcloud.com/document/api/236/55484)
+* Read:
+  - [DescribeCdbProxyInfo](https://www.tencentcloud.com/document/api/236/55487)
+  - [DescribeDBSecurityGroups](https://www.tencentcloud.com/document/api/236/15854)
+* Update:
+  - [AdjustCdbProxy](https://www.tencentcloud.com/document/api/236/55492)
+  - [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/api/236/34462)
+  - [DescribeCdbProxyInfo](https://www.tencentcloud.com/document/api/236/55487)
+  - [ModifyCdbProxyAddressDesc](https://www.tencentcloud.com/document/api/236/55485)
+  - [ModifyCdbProxyAddressVipAndVPort](https://www.tencentcloud.com/document/api/236/55484)
+  - [ModifyCdbProxyParam](https://www.tencentcloud.com/document/api/236/55483)
+  - [UpgradeCDBProxyVersion](https://www.tencentcloud.com/document/api/236/45186)
+* Delete:
+  - [CloseCDBProxy](https://www.tencentcloud.com/document/api/236/45198)
+  - [DescribeCdbProxyInfo](https://www.tencentcloud.com/document/api/236/55487)
 

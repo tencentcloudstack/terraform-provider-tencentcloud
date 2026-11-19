@@ -61,4 +61,19 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateDisks](https://www.tencentcloud.com/document/api/1103/57994)
+  - [DescribeDisks](https://www.tencentcloud.com/document/api/1103/44573)
+* Read: [DescribeDisks](https://www.tencentcloud.com/document/api/1103/44573)
+* Update:
+  - [ModifyDisksAttribute](https://www.tencentcloud.com/document/api/1103/44567)
+  - [ModifyDisksRenewFlag](https://www.tencentcloud.com/document/api/1103/44566)
+* Delete:
+  - [DescribeDisks](https://www.tencentcloud.com/document/api/1103/44573)
+  - [IsolateDisks](https://www.tencentcloud.com/document/api/1103/57993)
+  - [TerminateDisks](https://www.tencentcloud.com/document/api/1103/44565)
 

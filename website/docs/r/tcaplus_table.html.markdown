@@ -120,4 +120,20 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Status of the TcaplusDB table.
 * `table_size` - Size of the TcaplusDB table.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateTables](https://www.tencentcloud.com/document/api/1016/35039)
+  - [DescribeTasks](https://www.tencentcloud.com/document/api/1016/35045)
+* Read: [DescribeTables](https://www.tencentcloud.com/document/api/1016/35036)
+* Update:
+  - [DescribeTasks](https://www.tencentcloud.com/document/api/1016/35045)
+  - [ModifyTableMemos](https://www.tencentcloud.com/document/api/1016/35034)
+  - [ModifyTables](https://www.tencentcloud.com/document/api/1016/35032)
+* Delete:
+  - [DeleteTables](https://www.tencentcloud.com/document/api/1016/35038)
+  - [DescribeTables](https://www.tencentcloud.com/document/api/1016/35036)
+  - [DescribeTasks](https://www.tencentcloud.com/document/api/1016/35045)
 

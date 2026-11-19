@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [RenewDataEngine](https://www.tencentcloud.com/document/api/1155/62690)
 

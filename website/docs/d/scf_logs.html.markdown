@@ -63,4 +63,9 @@ In addition to all arguments above, the following attributes are exported:
   * `source` - Log source.
   * `start_time` - Point in time at which the function begins execution.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetFunctionLogs](https://www.tencentcloud.com/document/api/583/18583)
 

@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
   * `task_status` - task status.
   * `task_uuid` - task UUID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeReplicationInstanceCreateTasks](https://www.tencentcloud.com/document/api/1051/42672)
 

@@ -50,6 +50,14 @@ The `js_injection_rules` object exports the following:
 
 * `rule_id` - Rule ID, e.g. `injection-xxxxxxxx`.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSecurityJSInjectionRule](https://www.tencentcloud.com/document/api/1145/72288)
+* Read: [DescribeSecurityJSInjectionRule](https://www.tencentcloud.com/document/api/1145/72282)
+* Update: [ModifySecurityJSInjectionRule](https://www.tencentcloud.com/document/api/1145/72279)
+* Delete: [DeleteSecurityJSInjectionRule](https://www.tencentcloud.com/document/api/1145/72286)
 
 ## Import
 

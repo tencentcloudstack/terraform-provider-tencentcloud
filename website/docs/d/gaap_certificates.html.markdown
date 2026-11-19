@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
   * `subject_cn` - Subject name of the certificate.
   * `type` - Type of the certificate.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCertificates](https://www.tencentcloud.com/document/api/608/33115)
 

@@ -55,6 +55,18 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [AddAntiInfoLeakRules](https://www.tencentcloud.com/document/api/627/64531)
+  - [ModifyAntiInfoLeakRuleStatus](https://www.tencentcloud.com/document/api/627/64515)
+* Read: [DescribeAntiInfoLeakageRules](https://www.tencentcloud.com/document/api/627/64526)
+* Update:
+  - [ModifyAntiInfoLeakRuleStatus](https://www.tencentcloud.com/document/api/627/64515)
+  - [ModifyAntiInfoLeakRules](https://www.tencentcloud.com/document/api/627/64514)
+* Delete: [DeleteAntiInfoLeakRule](https://www.tencentcloud.com/document/api/627/64552)
 
 ## Import
 

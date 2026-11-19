@@ -1629,3 +1629,181 @@ func TestEsInstanceCoordinatingNode_Update_Remove(t *testing.T) {
 	assert.Len(t, coordResult.BaseNodeList, 1)
 	assert.Equal(t, "hotData", coordResult.BaseNodeList[0]["type"])
 }
+
+// go test ./tencentcloud/services/es/ -run "TestEsInstanceSubProductCode" -v -count=1 -gcflags="all=-l"
+
+// TestEsInstanceSubProductCode_Schema verifies the sub_product_code schema definition.
+func TestEsInstanceSubProductCode_Schema(t *testing.T) {
+	res := svces.ResourceTencentCloudElasticsearchInstance()
+	assert.NotNil(t, res)
+	assert.Contains(t, res.Schema, "sub_product_code")
+
+	field := res.Schema["sub_product_code"]
+	assert.Equal(t, schema.TypeString, field.Type)
+	assert.True(t, field.Optional)
+	assert.True(t, field.Computed)
+	assert.True(t, field.ForceNew)
+	// no provider side enum whitelist validation, values are validated by the cloud API
+	assert.Nil(t, field.ValidateFunc)
+	assert.NotEmpty(t, field.Description)
+}
+
+// TestEsInstanceSubProductCode_Read verifies the read flow sets sub_product_code from
+// InstanceInfo.SubProductCode when the API returns a non-nil value.
+func TestEsInstanceSubProductCode_Read(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	esClient := &es.Client{}
+	patches.ApplyMethodReturn(newMockMetaEs().client, "UseEsClient", esClient)
+
+	patches.ApplyMethodFunc(esClient, "DescribeInstances", func(request *es.DescribeInstancesRequest) (*es.DescribeInstancesResponse, error) {
+		resp := es.NewDescribeInstancesResponse()
+		resp.Response = &es.DescribeInstancesResponseParams{
+			InstanceList: []*es.InstanceInfo{
+				{
+					InstanceId:     ptrStringEs("es-sub-product-code-test"),
+					InstanceName:   ptrStringEs("tf-test-instance"),
+					Zone:           ptrStringEs("ap-guangzhou-3"),
+					EsVersion:      ptrStringEs("7.10.1"),
+					VpcUid:         ptrStringEs("vpc-test"),
+					SubnetUid:      ptrStringEs("subnet-test"),
+					ChargeType:     ptrStringEs("POSTPAID_BY_HOUR"),
+					Status:         ptrInt64Es(1),
+					LicenseType:    ptrStringEs("platinum"),
+					SubProductCode: ptrStringEs("sp_es_platinum"),
+				},
+			},
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaEs()
+	res := svces.ResourceTencentCloudElasticsearchInstance()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"version":  "7.10.1",
+		"vpc_id":   "vpc-test",
+		"password": "Test1234",
+	})
+	d.SetId("es-sub-product-code-test")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "sp_es_platinum", d.Get("sub_product_code").(string))
+}
+
+// TestEsInstanceSubProductCode_Read_Nil verifies the read flow does not fail when the API
+// returns a nil SubProductCode and keeps the configured value in state.
+func TestEsInstanceSubProductCode_Read_Nil(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	esClient := &es.Client{}
+	patches.ApplyMethodReturn(newMockMetaEs().client, "UseEsClient", esClient)
+
+	patches.ApplyMethodFunc(esClient, "DescribeInstances", func(request *es.DescribeInstancesRequest) (*es.DescribeInstancesResponse, error) {
+		resp := es.NewDescribeInstancesResponse()
+		resp.Response = &es.DescribeInstancesResponseParams{
+			InstanceList: []*es.InstanceInfo{
+				{
+					InstanceId:   ptrStringEs("es-sub-product-code-nil-test"),
+					InstanceName: ptrStringEs("tf-test-instance"),
+					Zone:         ptrStringEs("ap-guangzhou-3"),
+					EsVersion:    ptrStringEs("7.10.1"),
+					VpcUid:       ptrStringEs("vpc-test"),
+					SubnetUid:    ptrStringEs("subnet-test"),
+					ChargeType:   ptrStringEs("POSTPAID_BY_HOUR"),
+					Status:       ptrInt64Es(1),
+					LicenseType:  ptrStringEs("platinum"),
+				},
+			},
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaEs()
+	res := svces.ResourceTencentCloudElasticsearchInstance()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"version":          "7.10.1",
+		"vpc_id":           "vpc-test",
+		"password":         "Test1234",
+		"sub_product_code": "sp_es_basic",
+	})
+	d.SetId("es-sub-product-code-nil-test")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "sp_es_basic", d.Get("sub_product_code").(string))
+}
+
+// TestEsInstanceSubProductCode_Create verifies the create flow passes sub_product_code to
+// CreateInstance.
+func TestEsInstanceSubProductCode_Create(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	esClient := &es.Client{}
+	patches.ApplyMethodReturn(newMockMetaEs().client, "UseEsClient", esClient)
+
+	var capturedSubProductCode *string
+	patches.ApplyMethodFunc(esClient, "CreateInstance", func(request *es.CreateInstanceRequest) (*es.CreateInstanceResponse, error) {
+		capturedSubProductCode = request.SubProductCode
+		resp := es.NewCreateInstanceResponse()
+		resp.Response = &es.CreateInstanceResponseParams{
+			InstanceId: ptrStringEs("es-create-sub-product-code"),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(esClient, "DescribeInstances", func(request *es.DescribeInstancesRequest) (*es.DescribeInstancesResponse, error) {
+		resp := es.NewDescribeInstancesResponse()
+		resp.Response = &es.DescribeInstancesResponseParams{
+			InstanceList: []*es.InstanceInfo{
+				{
+					InstanceId:     ptrStringEs("es-create-sub-product-code"),
+					InstanceName:   ptrStringEs("tf-test-instance"),
+					Zone:           ptrStringEs("ap-guangzhou-3"),
+					EsVersion:      ptrStringEs("7.10.1"),
+					VpcUid:         ptrStringEs("vpc-test"),
+					SubnetUid:      ptrStringEs("subnet-test"),
+					ChargeType:     ptrStringEs("POSTPAID_BY_HOUR"),
+					Status:         ptrInt64Es(1),
+					LicenseType:    ptrStringEs("platinum"),
+					SubProductCode: ptrStringEs("sp_es_platinum"),
+				},
+			},
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaEs()
+	res := svces.ResourceTencentCloudElasticsearchInstance()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"instance_name":     "tf-test-instance",
+		"availability_zone": "ap-guangzhou-3",
+		"version":           "7.10.1",
+		"vpc_id":            "vpc-test",
+		"subnet_id":         "subnet-test",
+		"password":          "Test1234",
+		"charge_type":       "POSTPAID_BY_HOUR",
+		"license_type":      "platinum",
+		"sub_product_code":  "sp_es_platinum",
+		"node_info_list": []interface{}{
+			map[string]interface{}{
+				"node_num":  2,
+				"node_type": "ES.S1.MEDIUM8",
+				"type":      "hotData",
+				"disk_type": "CLOUD_SSD",
+				"disk_size": 100,
+				"encrypt":   false,
+			},
+		},
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "es-create-sub-product-code", d.Id())
+	assert.NotNil(t, capturedSubProductCode)
+	assert.Equal(t, "sp_es_platinum", *capturedSubProductCode)
+	assert.Equal(t, "sp_es_platinum", d.Get("sub_product_code").(string))
+}

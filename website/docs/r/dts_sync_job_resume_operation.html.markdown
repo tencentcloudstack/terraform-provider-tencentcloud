@@ -32,4 +32,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeSyncJobs](https://www.tencentcloud.com/document/api/571/51793)
+  - [ResumeSyncJob](https://www.tencentcloud.com/document/api/571/51788)
 

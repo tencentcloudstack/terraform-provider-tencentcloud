@@ -52,4 +52,9 @@ In addition to all arguments above, the following attributes are exported:
 * `start_time` - Starting time.
 * `suggestions` - A diagnostic suggestion, or empty if there is no suggestion.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBDiagEvent](https://www.tencentcloud.com/document/api/1035/41211)
 

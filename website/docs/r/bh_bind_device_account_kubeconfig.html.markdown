@@ -42,4 +42,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [BindDeviceAccountKubeconfig](https://www.tencentcloud.com/search/?wd=BindDeviceAccountKubeconfig&type=document&lang=en)
+* Update: [BindDeviceAccountKubeconfig](https://www.tencentcloud.com/search/?wd=BindDeviceAccountKubeconfig&type=document&lang=en)
 

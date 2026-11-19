@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
   * `cert_id` - Certificate ID.
   * `domain` - domain name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeHostVodInstanceList](https://www.tencentcloud.com/search/?wd=DescribeHostVodInstanceList&type=document&lang=en)
 

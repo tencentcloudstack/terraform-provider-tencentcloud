@@ -15,6 +15,8 @@ Provides an elasticsearch instance resource.
 
 ~> **NOTE:** Currently, Once the `enable_cerebro` field is `true`, it cannot be `false`.
 
+~> **NOTE:** `sub_product_code` specifies the sub-product of the instance (e.g. `sp_es_enterprise` for enterprise edition). It can only be set at creation time. If omitted, the backend maps it from `license_type`.
+
 ## Example Usage
 
 ### Create a basic version of elasticsearch instance paid by the hour
@@ -391,6 +393,7 @@ The following arguments are supported:
 * `public_access` - (Optional, String) ES cluster public network access status. Valid values are `OPEN` and `CLOSE`. Cannot be changed at the same time as `es_acl`.
 * `renew_flag` - (Optional, String, ForceNew) When enabled, the instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `RENEW_FLAG_AUTO` and `RENEW_FLAG_MANUAL`. NOTE: it only works when charge_type is set to `PREPAID`.
 * `scene_type` - (Optional, Int) Scenario based template type. 0: Not enabled; 1: Universal; 2: Log; 3: Search.
+* `sub_product_code` - (Optional, String, ForceNew) Sub-product code of the instance. Valid values: `sp_es_io2` (open source), `sp_es_basic` (basic), `sp_es_platinum` (platinum), `sp_es_enterprise` (enterprise), `sp_es_cdc_platinum` (CDC platinum), `sp_es_enlogging` (logging enhanced), `sp_es_aisearch` (AI search enhanced), `sp_tsearch_io2` (tsearch), `sp_es_logstash` (logstash). If omitted, the value is mapped from `license_type` by the backend. NOTE: this field can only be set when creating the instance.
 * `subnet_id` - (Optional, String, ForceNew) The ID of a VPC subnetwork. When create multi-az es, this parameter must be the subnet in the primary availability zone.
 * `tags` - (Optional, Map) A mapping of tags to assign to the instance. For tag limits, please refer to [Use Limits](https://intl.cloud.tencent.com/document/product/651/13354).
 * `web_node_type_info` - (Optional, List) Visual node configuration.
@@ -441,6 +444,23 @@ In addition to all arguments above, the following attributes are exported:
 * `kibana_private_url` - Kibana private URL.
 * `kibana_url` - Kibana access URL.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateInstance](https://www.tencentcloud.com/document/api/845/32218)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/845/32214)
+  - [UpdateInstance](https://www.tencentcloud.com/document/api/845/32212)
+* Read: [DescribeInstances](https://www.tencentcloud.com/document/api/845/32214)
+* Update:
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [UpdateInstance](https://www.tencentcloud.com/document/api/845/32212)
+  - [UpgradeInstance](https://www.tencentcloud.com/document/api/845/34396)
+  - [UpgradeLicense](https://www.tencentcloud.com/document/api/845/34395)
+* Delete:
+  - [DeleteInstance](https://www.tencentcloud.com/document/api/845/32217)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/845/32214)
 
 ## Import
 

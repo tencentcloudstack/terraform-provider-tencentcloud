@@ -29,4 +29,9 @@ The following arguments are supported:
 * `result_output_file` - (Optional, String) Used to save results.
 * `user_account_id` - (Optional, Set: [`String`]) filter by ccn ids, like: ['12345678'].
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTenantCcns](https://www.tencentcloud.com/search/?wd=DescribeTenantCcns&type=document&lang=en)
 

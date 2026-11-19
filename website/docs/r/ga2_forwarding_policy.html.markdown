@@ -81,6 +81,20 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `5m`) Used when creating the resource.
 * `update` - (Defaults to `5m`) Used when updating the resource.
 * `delete` - (Defaults to `5m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateForwardingPolicy](https://www.tencentcloud.com/document/api/1299/83837)
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+* Read: [DescribeForwardingPolicy](https://www.tencentcloud.com/document/api/1299/83746)
+* Update:
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
+  - [ModifyForwardingPolicy](https://www.tencentcloud.com/document/api/1299/83809)
+* Delete:
+  - [DeleteForwardingPolicy](https://www.tencentcloud.com/document/api/1299/83829)
+  - [DescribeTaskResult](https://www.tencentcloud.com/document/api/1299/83730)
 
 ## Import
 

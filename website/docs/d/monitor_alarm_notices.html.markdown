@@ -77,4 +77,9 @@ In addition to all arguments above, the following attributes are exported:
     * `user_ids` - User UID List.
     * `weekday` - Notification period 1-7 indicates Monday to Sunday.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAlarmNotices](https://www.tencentcloud.com/document/api/248/39300)
 

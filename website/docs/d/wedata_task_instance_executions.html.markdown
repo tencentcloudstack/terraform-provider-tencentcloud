@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - Instance details.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListTaskInstanceExecutions](https://www.tencentcloud.com/document/api/1174/73818)
 

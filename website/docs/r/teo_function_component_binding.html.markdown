@@ -58,6 +58,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyFunctionComponentBindings](https://www.tencentcloud.com/document/api/1145/78831)
+* Read: [DescribeFunctionComponentBindings](https://www.tencentcloud.com/document/api/1145/78832)
+* Update: [ModifyFunctionComponentBindings](https://www.tencentcloud.com/document/api/1145/78831)
+* Delete: [ModifyFunctionComponentBindings](https://www.tencentcloud.com/document/api/1145/78831)
 
 ## Import
 

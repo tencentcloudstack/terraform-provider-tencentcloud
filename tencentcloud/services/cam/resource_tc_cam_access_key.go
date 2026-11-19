@@ -27,26 +27,33 @@ func ResourceTencentCloudCamAccessKey() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"target_uin": {
-				Optional:    true,
 				Type:        schema.TypeInt,
+				Optional:    true,
 				Description: "Specify user Uin, if not filled, the access key is created for the current user by default.",
 			},
 			"access_key": {
+				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Type:        schema.TypeString,
 				Description: "Access_key is the access key identification, required when updating.",
 			},
 			"pgp_key": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Either a base-64 encoded PGP public key, or a keybase username in the form keybase:some_person_that_exists, for use in the encrypted_secret output attribute. If providing a base-64 encoded PGP public key, make sure to provide the \"raw\" version and not the \"armored\" one (e.g. avoid passing the -a option to gpg --export).",
 			},
+			"status": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Key status, activated (Active) or inactive (Inactive), required when updating.",
+			},
+			// computed
 			"secret_access_key": {
+				Type:        schema.TypeString,
 				Computed:    true,
 				Sensitive:   true,
-				Type:        schema.TypeString,
 				Description: "Access key (key is only visible when created, please keep it properly).",
 			},
 			"encrypted_secret_access_key": {
@@ -59,12 +66,6 @@ func ResourceTencentCloudCamAccessKey() *schema.Resource {
 				Computed:    true,
 				Description: "Fingerprint of the PGP key used to encrypt the secret. This attribute is not available for imported resources.",
 			},
-			"status": {
-				Optional:    true,
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Key status, activated (Active) or inactive (Inactive), required when updating.",
-			},
 		},
 	}
 }
@@ -73,16 +74,17 @@ func resourceTencentCloudCamAccessKeyCreate(d *schema.ResourceData, meta interfa
 	defer tccommon.LogElapsed("resource.tencentcloud_cam_access_key.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
-		request   = cam.NewCreateAccessKeyRequest()
-		response  = cam.NewCreateAccessKeyResponse()
-		targetUin int64
+		logId       = tccommon.GetLogId(tccommon.ContextNil)
+		request     = cam.NewCreateAccessKeyRequest()
+		response    = cam.NewCreateAccessKeyResponse()
+		targetUin   int
+		accessKeyId string
 	)
+
 	if v, ok := d.GetOkExists("target_uin"); ok {
-		targetUin = int64(v.(int))
-		request.TargetUin = helper.IntUint64(v.(int))
+		targetUin = v.(int)
+		request.TargetUin = helper.IntUint64(targetUin)
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -92,9 +94,11 @@ func resourceTencentCloudCamAccessKeyCreate(d *schema.ResourceData, meta interfa
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create cam AccessKey failed, reason:%+v", logId, err)
 		return err
@@ -102,15 +106,17 @@ func resourceTencentCloudCamAccessKeyCreate(d *schema.ResourceData, meta interfa
 	if response == nil || response.Response == nil || response.Response.AccessKey == nil || response.Response.AccessKey.SecretAccessKey == nil {
 		return fmt.Errorf("CAM AccessKey id is nil")
 	}
-	d.SetId(helper.Int64ToStr(targetUin) + tccommon.FILED_SP + *response.Response.AccessKey.AccessKeyId)
+
+	accessKeyId = *response.Response.AccessKey.AccessKeyId
+	d.SetId(strings.Join([]string{helper.IntToStr(targetUin), accessKeyId}, tccommon.FILED_SP))
 
 	if v, ok := d.GetOk("pgp_key"); ok {
 		pgpKey := v.(string)
-
 		encryptionKey, err := retrieveGPGKey(pgpKey)
 		if err != nil {
 			return fmt.Errorf("creating IAM Access Key (%v): %s", targetUin, err)
 		}
+
 		fingerprint, encrypted, err := encryptValue(encryptionKey, *response.Response.AccessKey.SecretAccessKey, "IAM Access Key Secret")
 		if err != nil {
 			return fmt.Errorf("creating IAM Access Key (%v): %s", targetUin, err)
@@ -123,6 +129,31 @@ func resourceTencentCloudCamAccessKeyCreate(d *schema.ResourceData, meta interfa
 		_ = d.Set("secret_access_key", response.Response.AccessKey.SecretAccessKey)
 	}
 
+	if v, ok := d.GetOk("status"); ok {
+		if v.(string) == "Inactive" {
+			request := cam.NewUpdateAccessKeyRequest()
+			request.TargetUin = helper.IntUint64(targetUin)
+			request.AccessKeyId = helper.String(accessKeyId)
+			request.Status = helper.String(v.(string))
+
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCamClient().UpdateAccessKey(request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s update cam AccessKey failed, reason:%+v", logId, err)
+				return err
+			}
+		}
+
+	}
+
 	return resourceTencentCloudCamAccessKeyRead(d, meta)
 }
 
@@ -130,16 +161,17 @@ func resourceTencentCloudCamAccessKeyRead(d *schema.ResourceData, meta interface
 	defer tccommon.LogElapsed("resource.tencentcloud_cam_access_key.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := CamService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CamService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
+
 	uin := idSplit[0]
 	accessKey := idSplit[1]
 
@@ -149,17 +181,19 @@ func resourceTencentCloudCamAccessKeyRead(d *schema.ResourceData, meta interface
 	}
 
 	if AccessKey == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_cam_access_key` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `CamAccessKey` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
 	if AccessKey.AccessKeyId != nil {
 		_ = d.Set("access_key", AccessKey.AccessKeyId)
 	}
+
 	if AccessKey.Status != nil {
 		_ = d.Set("status", AccessKey.Status)
 	}
+
 	_ = d.Set("target_uin", helper.StrToUInt64(uin))
 
 	return nil
@@ -169,37 +203,40 @@ func resourceTencentCloudCamAccessKeyUpdate(d *schema.ResourceData, meta interfa
 	defer tccommon.LogElapsed("resource.tencentcloud_cam_access_key.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	request := cam.NewUpdateAccessKeyRequest()
+	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
+
 	uin := idSplit[0]
 	accessKey := idSplit[1]
-	request.TargetUin = helper.StrToUint64Point(uin)
-	request.AccessKeyId = &accessKey
 
 	if d.HasChange("status") {
+		request := cam.NewUpdateAccessKeyRequest()
+		request.TargetUin = helper.StrToUint64Point(uin)
+		request.AccessKeyId = &accessKey
 		if v, ok := d.GetOkExists("status"); ok {
 			request.Status = helper.String(v.(string))
 		}
-	}
 
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCamClient().UpdateAccessKey(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCamClient().UpdateAccessKey(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update cam AccessKey failed, reason:%+v", logId, err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s update cam AccessKey failed, reason:%+v", logId, err)
-		return err
 	}
 
 	return resourceTencentCloudCamAccessKeyRead(d, meta)
@@ -209,11 +246,17 @@ func resourceTencentCloudCamAccessKeyDelete(d *schema.ResourceData, meta interfa
 	defer tccommon.LogElapsed("resource.tencentcloud_cam_access_key.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CamService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
-	service := CamService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", idSplit)
+	}
+
 	uin := idSplit[0]
 	accessKey := idSplit[1]
 
@@ -225,7 +268,6 @@ func resourceTencentCloudCamAccessKeyDelete(d *schema.ResourceData, meta interfa
 }
 
 func retrieveGPGKey(pgpKey string) (string, error) {
-
 	encryptionKey := pgpKey
 	if strings.HasPrefix(pgpKey, kbPrefix) {
 		publicKeys, err := FetchKeybasePubkeys([]string{pgpKey})

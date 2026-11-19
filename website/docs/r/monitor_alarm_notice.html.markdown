@@ -121,6 +121,14 @@ In addition to all arguments above, the following attributes are exported:
 * `updated_at` - Last modified time.
 * `updated_by` - Last Modified By.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAlarmNotice](https://www.tencentcloud.com/document/api/248/39304)
+* Read: [DescribeAlarmNotices](https://www.tencentcloud.com/document/api/248/39300)
+* Update: [ModifyAlarmNotice](https://www.tencentcloud.com/document/api/248/39299)
+* Delete: [DeleteAlarmNotices](https://www.tencentcloud.com/document/api/248/39303)
 
 ## Import
 

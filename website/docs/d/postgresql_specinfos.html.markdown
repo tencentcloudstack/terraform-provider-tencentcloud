@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
   * `storage_max` - The maximum volume size(in GB).
   * `storage_min` - The minimum volume size(in GB).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeProductConfig](https://www.tencentcloud.com/document/api/409/16776)
 

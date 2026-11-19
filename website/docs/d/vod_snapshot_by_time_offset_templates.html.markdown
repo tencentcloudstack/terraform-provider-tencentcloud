@@ -56,4 +56,9 @@ In addition to all arguments above, the following attributes are exported:
   * `update_time` - Last modified time of template in ISO date format.
   * `width` - Maximum value of the `width` (or long side) of a screenshot in px. Value range: 0 and [128, 4,096]. If both `width` and `height` are `0`, the resolution will be the same as that of the source video; If `width` is `0`, but `height` is not `0`, width will be proportionally scaled; If `width` is not `0`, but `height` is `0`, `height` will be proportionally scaled; If both `width` and `height` are not `0`, the custom resolution will be used.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSnapshotByTimeOffsetTemplates](https://www.tencentcloud.com/document/api/266/34145)
 

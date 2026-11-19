@@ -178,6 +178,13 @@ func ResourceTencentCloudElasticsearchInstance() *schema.Resource {
 				ValidateFunc: tccommon.ValidateAllowedStringValue(ES_LICENSE_TYPE),
 				Description:  "License type. Valid values are `oss`, `basic` and `platinum`. The default value is `platinum`.",
 			},
+			"sub_product_code": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Sub-product code of the instance. Valid values: `sp_es_io2` (open source), `sp_es_basic` (basic), `sp_es_platinum` (platinum), `sp_es_enterprise` (enterprise), `sp_es_cdc_platinum` (CDC platinum), `sp_es_enlogging` (logging enhanced), `sp_es_aisearch` (AI search enhanced), `sp_tsearch_io2` (tsearch), `sp_es_logstash` (logstash). If omitted, the value is mapped from `license_type` by the backend. NOTE: this field can only be set when creating the instance.",
+			},
 			"node_info_list": {
 				Type:        schema.TypeSet,
 				Optional:    true,
@@ -455,6 +462,9 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 	if v, ok := d.GetOk("license_type"); ok {
 		licenseType = v.(string)
 		request.LicenseType = helper.String(licenseType)
+	}
+	if v, ok := d.GetOk("sub_product_code"); ok {
+		request.SubProductCode = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("basic_security_type"); ok {
 		if licenseType == ES_LICENSE_TYPE_BASIC { // this field is only valid for the basic edition
@@ -857,6 +867,9 @@ func resourceTencentCloudElasticsearchInstanceRead(d *schema.ResourceData, meta 
 	_ = d.Set("renew_flag", instance.RenewFlag)
 	_ = d.Set("deploy_mode", instance.DeployMode)
 	_ = d.Set("license_type", instance.LicenseType)
+	if instance.SubProductCode != nil {
+		_ = d.Set("sub_product_code", instance.SubProductCode)
+	}
 	licenseType := instance.LicenseType
 	if licenseType != nil && *licenseType == ES_LICENSE_TYPE_BASIC { // this field is only valid for the basic edition
 		_ = d.Set("basic_security_type", instance.SecurityType)

@@ -119,6 +119,24 @@ func TestAccTencentCloudCfsFileSystemResource_Basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudCfsFileSystemResource_Encrypted(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckCfsFileSystemDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCfsFileSystemEncrypted,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCfsFileSystemExists("tencentcloud_cfs_file_system.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_cfs_file_system.foo", "encrypted", "true"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckCfsFileSystemDestroy(s *terraform.State) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
@@ -202,6 +220,31 @@ resource "tencentcloud_cfs_file_system" "foo" {
   vpc_id = tencentcloud_vpc.vpc.id
   subnet_id = tencentcloud_subnet.subnet.id
   storage_type = "SD"
+}
+`
+
+const testAccCfsFileSystemEncrypted = DefaultCfsAccessGroup + `
+resource "tencentcloud_vpc" "vpc" {
+  name       = "test-cfs-vpc-encrypted"
+  cidr_block = "10.2.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  name              = "test-cfs-subnet-encrypted"
+  cidr_block        = "10.2.11.0/24"
+  availability_zone = "ap-guangzhou-3"
+}
+
+resource "tencentcloud_cfs_file_system" "foo" {
+  name = "test_cfs_file_system_encrypted"
+  availability_zone = "ap-guangzhou-3"
+  access_group_id = local.cfs_access_group_id
+  protocol = "NFS"
+  vpc_id = tencentcloud_vpc.vpc.id
+  subnet_id = tencentcloud_subnet.subnet.id
+  storage_type = "SD"
+  encrypted = true
 }
 `
 

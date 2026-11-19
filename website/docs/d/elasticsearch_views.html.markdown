@@ -83,4 +83,9 @@ In addition to all arguments above, the following attributes are exported:
   * `visible` - Whether the node is visible.
   * `zone` - Zone.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeViews](https://www.tencentcloud.com/document/api/845/44349)
 

@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
   * `enable` - Indicate that the token is enabled or not.
   * `token_id` - Id of TCR token.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstanceToken](https://www.tencentcloud.com/document/api/1051/50704)
 

@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
   * `quote_uin` - Other primary account IDs referenced when activating TDE encryption
 Note: This field may return null, indicating that a valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBInstancesAttribute](https://www.tencentcloud.com/document/api/238/54811)
 

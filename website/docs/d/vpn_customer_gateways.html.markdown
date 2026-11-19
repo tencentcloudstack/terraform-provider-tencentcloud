@@ -53,4 +53,11 @@ In addition to all arguments above, the following attributes are exported:
   * `public_ip_address` - Public ip address of the VPN customer gateway.
   * `tags` - Tags of the VPN customer gateway.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read:
+  - [DescribeCustomerGateways](https://www.tencentcloud.com/document/api/215/17516)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
 

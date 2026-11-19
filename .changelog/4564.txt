@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_ssm_secret: support `encrypt_type` parameter to declare secret encryption type (0 = KMS key encryption, 1 = soft key encryption)
+```
+
+```release-note:bug
+resource/tencentcloud_ssm_secret: treat `encrypt_type` as immutable and reject changes with an error instead of force-new to avoid accidental secret destruction
+```

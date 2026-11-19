@@ -34,6 +34,19 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateMultiPathGatewaySecretKey](https://www.tencentcloud.com/document/api/1145/72303)
+  - [DescribeMultiPathGatewaySecretKey](https://www.tencentcloud.com/document/api/1145/72297)
+  - [ModifyMultiPathGatewaySecretKey](https://www.tencentcloud.com/document/api/1145/72293)
+* Read: [DescribeMultiPathGatewaySecretKey](https://www.tencentcloud.com/document/api/1145/72297)
+* Update:
+  - [CreateMultiPathGatewaySecretKey](https://www.tencentcloud.com/document/api/1145/72303)
+  - [DescribeMultiPathGatewaySecretKey](https://www.tencentcloud.com/document/api/1145/72297)
+  - [ModifyMultiPathGatewaySecretKey](https://www.tencentcloud.com/document/api/1145/72293)
 
 ## Import
 

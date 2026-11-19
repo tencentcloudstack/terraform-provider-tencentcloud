@@ -85,4 +85,9 @@ DOWN: Down
 UNKNOWN: Unknown.
 * `system_access_enabled` - Whether system domain access is supported: true supported; false not supported.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstanceList](https://www.tencentcloud.com/search/?wd=DescribeInstanceList&type=document&lang=en)
 

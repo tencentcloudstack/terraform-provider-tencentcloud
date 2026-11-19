@@ -133,4 +133,9 @@ In addition to all arguments above, the following attributes are exported:
   * `zone_name` - Zone.
 * `total` - Total record count.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBillDetail](https://www.tencentcloud.com/search/?wd=DescribeBillDetail&type=document&lang=en)
 

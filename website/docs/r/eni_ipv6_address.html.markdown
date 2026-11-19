@@ -82,6 +82,18 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [AssignIpv6Addresses](https://www.tencentcloud.com/document/api/215/34769)
+  - [DescribeVpcTaskResult](https://www.tencentcloud.com/document/api/215/41567)
+* Read: [DescribeNetworkInterfaces](https://www.tencentcloud.com/document/api/215/15817)
+* Delete:
+  - [DescribeNetworkInterfaces](https://www.tencentcloud.com/document/api/215/15817)
+  - [DescribeVpcTaskResult](https://www.tencentcloud.com/document/api/215/41567)
+  - [UnassignIpv6Addresses](https://www.tencentcloud.com/document/api/215/34766)
 
 ## Import
 

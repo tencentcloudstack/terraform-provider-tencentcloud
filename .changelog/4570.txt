@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_vpn_gateway: fix provider panic (nil pointer dereference) when Read encounters ResourceNotFound, so refresh can properly remove deleted resources from state
+```

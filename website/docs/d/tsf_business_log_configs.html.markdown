@@ -65,4 +65,9 @@ In addition to all arguments above, the following attributes are exported:
     * `config_update_time` - Update time of configuration item.Note: This field may return null, indicating that no valid values can be obtained.
   * `total_count` - Total Count.Note: This field may return null, indicating that no valid values can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBusinessLogConfigs](https://www.tencentcloud.com/search/?wd=DescribeBusinessLogConfigs&type=document&lang=en)
 

@@ -121,6 +121,37 @@ func TestAccKmsKey_asymmetricKey(t *testing.T) {
 	})
 }
 
+func TestAccKmsKey_rotateDays(t *testing.T) {
+	t.Parallel()
+	rName := fmt.Sprintf("tf-testacc-kms-key-%s", acctest.RandString(13))
+	resourceName := "tencentcloud_kms_key.test"
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckKmsKeyDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccKmsKey_rotateDays(rName, 30),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckKmsKeyExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "key_rotation_enabled", "true"),
+					resource.TestCheckResourceAttr(resourceName, "key_usage", "ENCRYPT_DECRYPT"),
+					resource.TestCheckResourceAttr(resourceName, "rotate_days", "30"),
+				),
+			},
+			{
+				Config: testAccKmsKey_rotateDays(rName, 60),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckKmsKeyExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "key_rotation_enabled", "true"),
+					resource.TestCheckResourceAttr(resourceName, "rotate_days", "60"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckKmsKeyDestroy(s *terraform.State) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
@@ -206,4 +237,21 @@ resource "tencentcloud_kms_key" "test" {
   	}
 }
 `, rName)
+}
+
+func testAccKmsKey_rotateDays(rName string, rotateDays int) string {
+	return fmt.Sprintf(`
+resource "tencentcloud_kms_key" "test" {
+	alias                = %[1]q
+	description          = %[1]q
+	key_usage            = "ENCRYPT_DECRYPT"
+	key_rotation_enabled = true
+	rotate_days          = %[2]d
+	is_enabled           = true
+
+	tags = {
+    "test-tag" = "unit-test"
+  }
+}
+`, rName, rotateDays)
 }

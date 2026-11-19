@@ -27,4 +27,9 @@ The following arguments are supported:
 
 
 
+## API Reference
+
+This action invokes the following TencentCloud APIs:
+
+* Invoke: [InitializeTCLake](https://www.tencentcloud.com/search/?wd=InitializeTCLake&type=document&lang=en)
 

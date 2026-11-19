@@ -36,6 +36,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyBackupTime](https://www.tencentcloud.com/document/api/237/16173)
+* Read: [DescribeBackupTime](https://www.tencentcloud.com/document/api/237/16182)
+* Update: [ModifyBackupTime](https://www.tencentcloud.com/document/api/237/16173)
 
 ## Import
 

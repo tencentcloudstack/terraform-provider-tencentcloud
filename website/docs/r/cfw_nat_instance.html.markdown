@@ -79,6 +79,19 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `nat_instance_id` - Nat instance ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateNatFwInstanceWithDomain](https://www.tencentcloud.com/document/api/1160/51348)
+  - [DescribeNatFwInstancesInfo](https://www.tencentcloud.com/document/api/1160/51384)
+* Read:
+  - [DescribeCfwEips](https://www.tencentcloud.com/search/?wd=DescribeCfwEips&type=document&lang=en)
+  - [DescribeNatFwInstancesInfo](https://www.tencentcloud.com/document/api/1160/51384)
+  - [DescribeNatFwVpcDnsLst](https://www.tencentcloud.com/document/api/1160/51383)
+* Update: [ModifyNatInstance](https://www.tencentcloud.com/search/?wd=ModifyNatInstance&type=document&lang=en)
+* Delete: [DeleteNatFwInstance](https://www.tencentcloud.com/search/?wd=DeleteNatFwInstance&type=document&lang=en)
 
 ## Import
 

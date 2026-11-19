@@ -68,6 +68,20 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeLogstashPipelines](https://www.tencentcloud.com/search/?wd=DescribeLogstashPipelines&type=document&lang=en)
+  - [SaveAndDeployLogstashPipeline](https://www.tencentcloud.com/search/?wd=SaveAndDeployLogstashPipeline&type=document&lang=en)
+* Read: [DescribeLogstashPipelines](https://www.tencentcloud.com/search/?wd=DescribeLogstashPipelines&type=document&lang=en)
+* Update:
+  - [DescribeLogstashPipelines](https://www.tencentcloud.com/search/?wd=DescribeLogstashPipelines&type=document&lang=en)
+  - [SaveAndDeployLogstashPipeline](https://www.tencentcloud.com/search/?wd=SaveAndDeployLogstashPipeline&type=document&lang=en)
+* Delete:
+  - [DeleteLogstashPipelines](https://www.tencentcloud.com/search/?wd=DeleteLogstashPipelines&type=document&lang=en)
+  - [DescribeLogstashPipelines](https://www.tencentcloud.com/search/?wd=DescribeLogstashPipelines&type=document&lang=en)
 
 ## Import
 

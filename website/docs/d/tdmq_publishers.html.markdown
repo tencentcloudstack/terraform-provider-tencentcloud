@@ -65,4 +65,9 @@ In addition to all arguments above, the following attributes are exported:
   * `producer_id` - producer idNote: This field may return null, indicating that no valid value can be obtained.
   * `producer_name` - producer nameNote: This field may return null, indicating that no valid value can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribePublishers](https://www.tencentcloud.com/search/?wd=DescribePublishers&type=document&lang=en)
 

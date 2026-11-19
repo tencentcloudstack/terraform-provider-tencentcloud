@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `urls` - List of COS links to export results. When the result set is large, it may be divided into multiple urls for download.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSecurityAuditLogDownloadUrls](https://www.tencentcloud.com/document/api/1035/41192)
 

@@ -68,6 +68,14 @@ In addition to all arguments above, the following attributes are exported:
 * `enable` - Enabled state, True-enabled, False-disabled, the default is True.
 * `snapshot_policy_id` - Snapshot policy Id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSnapshotPolicies](https://www.tencentcloud.com/document/api/215/55059)
+* Read: [DescribeSnapshotPolicies](https://www.tencentcloud.com/document/api/215/55054)
+* Update: [ModifySnapshotPolicies](https://www.tencentcloud.com/document/api/215/55050)
+* Delete: [DeleteSnapshotPolicies](https://www.tencentcloud.com/document/api/215/55058)
 
 ## Import
 

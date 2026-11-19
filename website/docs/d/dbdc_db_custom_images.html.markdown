@@ -58,4 +58,9 @@ In addition to all arguments above, the following attributes are exported:
   * `os_name` - OS name.
   * `os_type` - OS type. Values: windows, linux.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBCustomImages](https://www.tencentcloud.com/search/?wd=DescribeDBCustomImages&type=document&lang=en)
 

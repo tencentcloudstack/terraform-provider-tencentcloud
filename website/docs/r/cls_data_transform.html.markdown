@@ -162,6 +162,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDataTransform](https://www.tencentcloud.com/document/api/614/56119)
+* Read: [DescribeDataTransformInfo](https://www.tencentcloud.com/document/api/614/56117)
+* Update: [ModifyDataTransform](https://www.tencentcloud.com/document/api/614/56116)
+* Delete: [DeleteDataTransform](https://www.tencentcloud.com/document/api/614/56118)
 
 ## Import
 

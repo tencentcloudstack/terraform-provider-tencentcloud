@@ -30,6 +30,7 @@ func TestAccTencentCloudEmrClusterV2_basic(t *testing.T) {
 				ImportStateVerifyIgnore: []string{
 					"login_settings",
 					"meta_db_info",
+					"meta_db_group_info",
 					"custom_conf",
 					"zone_resource_configuration",
 					"script_bootstrap_action_config",

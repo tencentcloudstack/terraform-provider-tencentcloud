@@ -33,4 +33,9 @@ In addition to all arguments above, the following attributes are exported:
   * `region_state` - Sale status. Values: SELL (normal sale), SOLD_OUT (sold out).
   * `region` - Region name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBCustomRegions](https://www.tencentcloud.com/search/?wd=DescribeDBCustomRegions&type=document&lang=en)
 

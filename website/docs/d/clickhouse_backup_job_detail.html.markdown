@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `v_cluster` - Virtual cluster.
   * `zoo_path` - ZK path.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBackUpJobDetail](https://www.tencentcloud.com/search/?wd=DescribeBackUpJobDetail&type=document&lang=en)
 

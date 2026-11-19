@@ -40,4 +40,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCfsRule](https://www.tencentcloud.com/document/api/582/34508)
+* Read: [DescribeCfsRules](https://www.tencentcloud.com/document/api/582/34504)
+* Update: [UpdateCfsRule](https://www.tencentcloud.com/document/api/582/34502)
+* Delete: [DeleteCfsRule](https://www.tencentcloud.com/document/api/582/34506)
 

@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `user_type` - Types of users. ADMIN: administrators; COMMON: general users.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeUserType](https://www.tencentcloud.com/document/api/1155/62669)
 

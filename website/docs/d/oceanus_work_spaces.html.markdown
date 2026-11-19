@@ -88,4 +88,9 @@ In addition to all arguments above, the following attributes are exported:
   * `work_space_id` - Workspace SerialId.
   * `work_space_name` - Workspace name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeWorkSpaces](https://www.tencentcloud.com/search/?wd=DescribeWorkSpaces&type=document&lang=en)
 

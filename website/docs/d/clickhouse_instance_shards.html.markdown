@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `instance_shards_list` - Instance shard information.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstanceShards](https://www.tencentcloud.com/search/?wd=DescribeInstanceShards&type=document&lang=en)
 

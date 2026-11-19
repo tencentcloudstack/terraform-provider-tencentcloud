@@ -86,4 +86,9 @@ In addition to all arguments above, the following attributes are exported:
   * `time_unit` - Dedicated Cluster Order Pay Time Unit.
   * `weight` - Dedicated Cluster Supported Weight.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDedicatedClusterOrders](https://www.tencentcloud.com/document/api/1226/66391)
 

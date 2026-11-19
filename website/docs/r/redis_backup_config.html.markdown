@@ -66,6 +66,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Read: [DescribeAutoBackupConfig](https://www.tencentcloud.com/document/api/239/32068)
+* Update: [ModifyAutoBackupConfig](https://www.tencentcloud.com/document/api/239/32058)
+* Delete: [ModifyAutoBackupConfig](https://www.tencentcloud.com/document/api/239/32058)
 
 ## Import
 

@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
   * `modify_time` - The last modify time of the CAM SAML provider.
   * `name` - Name of CAM SAML provider.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListSAMLProviders](https://www.tencentcloud.com/document/api/598/32234)
 

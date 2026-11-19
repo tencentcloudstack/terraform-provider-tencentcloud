@@ -54,6 +54,8 @@ func (me *VdbService) DescribeVdbInstanceById(ctx context.Context, instanceId st
 
 	request := vdb.NewDescribeInstancesRequest()
 	request.InstanceIds = []*string{helper.String(instanceId)}
+	var limit uint64 = 100
+	request.Limit = &limit
 
 	defer func() {
 		if errRet != nil {

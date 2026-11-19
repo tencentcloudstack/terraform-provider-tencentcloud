@@ -45,6 +45,21 @@ In addition to all arguments above, the following attributes are exported:
 * `license_id` - license id.
 * `resource_id` - resource id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateLicenseOrder](https://www.tencentcloud.com/document/api/296/63791)
+  - [ModifyLicenseOrder](https://www.tencentcloud.com/document/api/296/63774)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeLicenseList](https://www.tencentcloud.com/document/api/296/63781)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [ModifyLicenseOrder](https://www.tencentcloud.com/document/api/296/63774)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Delete: [DestroyOrder](https://www.tencentcloud.com/document/api/296/63777)
 
 ## Import
 

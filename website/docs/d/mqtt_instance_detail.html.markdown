@@ -54,4 +54,9 @@ In addition to all arguments above, the following attributes are exported:
 * `tps_limit` - Elastic TPS current limit value.
 * `x509_mode` - TLS, Unidirectional authentication mTLS, bidirectional authentication BYOC; One machine, one certificate.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstance](https://www.tencentcloud.com/document/api/1294/76523)
 

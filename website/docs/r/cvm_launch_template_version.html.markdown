@@ -181,6 +181,13 @@ The `system_disk` object exports the following:
 
 * `disk_id` - System disk ID. System disks whose type is LOCAL_BASIC or LOCAL_SSD do not have an ID and do not support this parameter. It is only used as a response parameter for APIs such as DescribeInstances, and cannot be used as a request parameter for APIs such as RunInstances.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLaunchTemplateVersion](https://www.tencentcloud.com/document/api/213/45361)
+* Read: [DescribeLaunchTemplateVersions](https://www.tencentcloud.com/document/api/213/45358)
+* Delete: [DeleteLaunchTemplateVersions](https://www.tencentcloud.com/document/api/213/45359)
 
 ## Import
 

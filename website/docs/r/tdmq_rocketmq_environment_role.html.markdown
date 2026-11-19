@@ -55,6 +55,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateEnvironmentRole](https://www.tencentcloud.com/search/?wd=CreateEnvironmentRole&type=document&lang=en)
+* Read: [DescribeEnvironmentRoles](https://www.tencentcloud.com/search/?wd=DescribeEnvironmentRoles&type=document&lang=en)
+* Update: [ModifyEnvironmentRole](https://www.tencentcloud.com/search/?wd=ModifyEnvironmentRole&type=document&lang=en)
+* Delete: [DeleteEnvironmentRoles](https://www.tencentcloud.com/search/?wd=DeleteEnvironmentRoles&type=document&lang=en)
 
 ## Import
 

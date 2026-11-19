@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_bh_resource: support modifying web_access and client_access fields in-place without recreating the resource
+```

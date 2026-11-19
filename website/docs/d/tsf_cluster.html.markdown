@@ -80,4 +80,9 @@ In addition to all arguments above, the following attributes are exported:
     * `vpc_id` - Private network ID of the cluster. Note: This field may return null, indicating no valid value.
   * `total_count` - Total number of items. Note: This field may return null, indicating that no valid value was found.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSimpleClusters](https://www.tencentcloud.com/search/?wd=DescribeSimpleClusters&type=document&lang=en)
 

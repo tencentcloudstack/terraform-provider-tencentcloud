@@ -48,6 +48,21 @@ In addition to all arguments above, the following attributes are exported:
 * `pay_uin` - UIN on behalf of the payer.Note: This field may return NULL, indicating that the valid value cannot be obtained.
 * `root_node_id` - Organize the root node ID.Note: This field may return NULL, indicating that the valid value cannot be obtained.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateOrganization](https://www.tencentcloud.com/document/api/1031/66415)
+  - [DescribeOrganization](https://www.tencentcloud.com/document/api/1031/52049)
+  - [UpdateOrganizationNode](https://www.tencentcloud.com/document/api/1031/52059)
+* Read:
+  - [DescribeOrganization](https://www.tencentcloud.com/document/api/1031/52049)
+  - [DescribeOrganizationNodes](https://www.tencentcloud.com/document/api/1031/52061)
+* Update:
+  - [DescribeOrganization](https://www.tencentcloud.com/document/api/1031/52049)
+  - [UpdateOrganizationNode](https://www.tencentcloud.com/document/api/1031/52059)
+* Delete: [DeleteOrganization](https://www.tencentcloud.com/document/api/1031/66414)
 
 ## Import
 

@@ -53,6 +53,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeBackupRules](https://www.tencentcloud.com/document/api/240/74803)
+  - [SetBackupRules](https://www.tencentcloud.com/search/?wd=SetBackupRules&type=document&lang=en)
+* Read: [DescribeBackupRules](https://www.tencentcloud.com/document/api/240/74803)
+* Update:
+  - [DescribeBackupRules](https://www.tencentcloud.com/document/api/240/74803)
+  - [SetBackupRules](https://www.tencentcloud.com/search/?wd=SetBackupRules&type=document&lang=en)
 
 ## Import
 

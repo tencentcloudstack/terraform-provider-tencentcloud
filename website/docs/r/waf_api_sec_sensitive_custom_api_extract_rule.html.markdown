@@ -42,6 +42,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `update_time` - Update timestamp.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyApiSecSensitiveRule](https://www.tencentcloud.com/search/?wd=ModifyApiSecSensitiveRule&type=document&lang=en)
+* Read: [DescribeApiSecSensitiveRuleList](https://www.tencentcloud.com/search/?wd=DescribeApiSecSensitiveRuleList&type=document&lang=en)
+* Update: [ModifyApiSecSensitiveRule](https://www.tencentcloud.com/search/?wd=ModifyApiSecSensitiveRule&type=document&lang=en)
+* Delete: [ModifyApiSecSensitiveRule](https://www.tencentcloud.com/search/?wd=ModifyApiSecSensitiveRule&type=document&lang=en)
 
 ## Import
 

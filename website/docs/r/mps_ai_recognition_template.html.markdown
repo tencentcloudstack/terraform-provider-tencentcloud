@@ -94,6 +94,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAIRecognitionTemplate](https://www.tencentcloud.com/document/api/1041/33677)
+* Read: [DescribeAIRecognitionTemplates](https://www.tencentcloud.com/document/api/1041/33661)
+* Update: [ModifyAIRecognitionTemplate](https://www.tencentcloud.com/document/api/1041/33653)
+* Delete: [DeleteAIRecognitionTemplate](https://www.tencentcloud.com/document/api/1041/33669)
 
 ## Import
 

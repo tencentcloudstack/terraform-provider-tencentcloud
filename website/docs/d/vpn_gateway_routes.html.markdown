@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Route type. Default value: Static.
   * `update_time` - Update time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeVpnGatewayRoutes](https://www.tencentcloud.com/document/api/215/41055)
 

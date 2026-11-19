@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
   * `product_chinese_name` - Chinese name of this product.
   * `product_name` - English name of this product.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeProductList](https://www.tencentcloud.com/search/?wd=DescribeProductList&type=document&lang=en)
 

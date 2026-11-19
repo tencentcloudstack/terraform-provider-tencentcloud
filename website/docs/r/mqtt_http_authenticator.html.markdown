@@ -67,6 +67,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateHttpAuthenticator](https://www.tencentcloud.com/search/?wd=CreateHttpAuthenticator&type=document&lang=en)
+* Read: [DescribeAuthenticator](https://www.tencentcloud.com/search/?wd=DescribeAuthenticator&type=document&lang=en)
+* Update: [ModifyHttpAuthenticator](https://www.tencentcloud.com/search/?wd=ModifyHttpAuthenticator&type=document&lang=en)
+* Delete: [DeleteAuthenticator](https://www.tencentcloud.com/search/?wd=DeleteAuthenticator&type=document&lang=en)
 
 ## Import
 

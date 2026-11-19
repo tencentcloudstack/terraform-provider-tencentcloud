@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_mysql_instance: support `disk_encryption` parameter to enable disk encryption when creating cloud-disk edition CDB instances
+```

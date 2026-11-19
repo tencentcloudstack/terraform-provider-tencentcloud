@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `status` - Status. 0: not ready; 1: ready.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSubdomainValidateStatus](https://www.tencentcloud.com/search/?wd=DescribeSubdomainValidateStatus&type=document&lang=en)
 

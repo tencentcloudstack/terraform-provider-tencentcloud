@@ -29,4 +29,9 @@ The following arguments are supported:
 
 * `zone_id` - (Required, String) Zone ID.
 
+## API Reference
+
+This action invokes the following TencentCloud APIs:
+
+* Invoke: [ConfirmOriginACLUpdate](https://www.tencentcloud.com/document/api/1145/71119)
 

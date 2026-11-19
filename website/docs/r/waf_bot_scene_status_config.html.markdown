@@ -38,6 +38,13 @@ In addition to all arguments above, the following attributes are exported:
 * `scene_name` - Scene name.
 * `type` - Scene type, default: Default scenario, custom: Non default scenario.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyBotSceneStatus](https://www.tencentcloud.com/search/?wd=ModifyBotSceneStatus&type=document&lang=en)
+* Read: [DescribeBotSceneList](https://www.tencentcloud.com/search/?wd=DescribeBotSceneList&type=document&lang=en)
+* Update: [ModifyBotSceneStatus](https://www.tencentcloud.com/search/?wd=ModifyBotSceneStatus&type=document&lang=en)
 
 ## Import
 

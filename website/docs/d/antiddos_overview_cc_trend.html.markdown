@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - Data.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeOverviewCCTrend](https://www.tencentcloud.com/search/?wd=DescribeOverviewCCTrend&type=document&lang=en)
 

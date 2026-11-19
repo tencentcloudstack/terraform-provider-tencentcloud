@@ -51,6 +51,15 @@ In addition to all arguments above, the following attributes are exported:
 * `security_group_mapping_id` - Security group mapping ID.
 * `source_security_group_id` - Production end security group ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateSecurityGroupMapping](https://www.tencentcloud.com/search/?wd=CreateSecurityGroupMapping&type=document&lang=en)
+  - [DescribeSecurityGroupMappings](https://www.tencentcloud.com/search/?wd=DescribeSecurityGroupMappings&type=document&lang=en)
+* Read: [DescribeSecurityGroupMappings](https://www.tencentcloud.com/search/?wd=DescribeSecurityGroupMappings&type=document&lang=en)
+* Delete: [DeleteSecurityGroupMapping](https://www.tencentcloud.com/search/?wd=DeleteSecurityGroupMapping&type=document&lang=en)
 
 ## Import
 

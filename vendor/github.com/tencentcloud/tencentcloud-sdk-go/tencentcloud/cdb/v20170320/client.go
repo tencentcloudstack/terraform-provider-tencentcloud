@@ -3294,6 +3294,7 @@ func NewDescribeAuditInstanceListResponse() (response *DescribeAuditInstanceList
 // 本接口（DescribeAuditInstanceList）用于获取审计实例列表。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION_AUDITCONFIGNOTEXIST = "FailedOperation.AuditConfigNotExist"
 //  FAILEDOPERATION_QUERYINSTANCEERROR = "FailedOperation.QueryInstanceError"
 //  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
@@ -3316,6 +3317,7 @@ func (c *Client) DescribeAuditInstanceList(request *DescribeAuditInstanceListReq
 // 本接口（DescribeAuditInstanceList）用于获取审计实例列表。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION_AUDITCONFIGNOTEXIST = "FailedOperation.AuditConfigNotExist"
 //  FAILEDOPERATION_QUERYINSTANCEERROR = "FailedOperation.QueryInstanceError"
 //  INTERNALERROR_HTTPERROR = "InternalError.HttpError"

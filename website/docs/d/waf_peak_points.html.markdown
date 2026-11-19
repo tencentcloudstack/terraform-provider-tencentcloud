@@ -67,4 +67,9 @@ In addition to all arguments above, the following attributes are exported:
   * `upstream_redirect` - Trend chart of the number of status codes returned to WAF by the origin site.
   * `upstream_server_error` - Trend chart of the number of status codes returned to WAF by the origin site.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribePeakPoints](https://www.tencentcloud.com/document/api/627/64501)
 

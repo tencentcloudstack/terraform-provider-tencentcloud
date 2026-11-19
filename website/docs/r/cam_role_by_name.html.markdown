@@ -82,6 +82,23 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Create time of the CAM role.
 * `update_time` - The last update time of the CAM role.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateRole](https://www.tencentcloud.com/document/api/598/33561)
+  - [DescribeRoleList](https://www.tencentcloud.com/document/api/598/33559)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+* Read:
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+  - [DescribeRoleList](https://www.tencentcloud.com/document/api/598/33559)
+* Update:
+  - [DescribeRoleList](https://www.tencentcloud.com/document/api/598/33559)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [UpdateAssumeRolePolicy](https://www.tencentcloud.com/document/api/598/33555)
+  - [UpdateRoleDescription](https://www.tencentcloud.com/document/api/598/33554)
+* Delete: [DeleteRole](https://www.tencentcloud.com/document/api/598/33560)
 
 ## Import
 

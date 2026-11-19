@@ -109,6 +109,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateBudget](https://www.tencentcloud.com/search/?wd=CreateBudget&type=document&lang=en)
+* Read: [DescribeBudget](https://www.tencentcloud.com/search/?wd=DescribeBudget&type=document&lang=en)
+* Update: [ModifyBudget](https://www.tencentcloud.com/search/?wd=ModifyBudget&type=document&lang=en)
+* Delete: [DeleteBudget](https://www.tencentcloud.com/search/?wd=DeleteBudget&type=document&lang=en)
 
 ## Import
 

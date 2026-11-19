@@ -75,6 +75,14 @@ The `exclusions` object exports the following:
 
 * `id` - Maintenance exclusion ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateGlobalMaintenanceWindowAndExclusions](https://www.tencentcloud.com/search/?wd=CreateGlobalMaintenanceWindowAndExclusions&type=document&lang=en)
+* Read: [DescribeGlobalMaintenanceWindowAndExclusions](https://www.tencentcloud.com/search/?wd=DescribeGlobalMaintenanceWindowAndExclusions&type=document&lang=en)
+* Update: [ModifyGlobalMaintenanceWindowAndExclusions](https://www.tencentcloud.com/search/?wd=ModifyGlobalMaintenanceWindowAndExclusions&type=document&lang=en)
+* Delete: [DeleteGlobalMaintenanceWindowAndExclusion](https://www.tencentcloud.com/search/?wd=DeleteGlobalMaintenanceWindowAndExclusion&type=document&lang=en)
 
 ## Import
 

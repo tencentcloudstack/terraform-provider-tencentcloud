@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
   * `guid` - Schema GUID.
   * `name` - Schema name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListSchema](https://www.tencentcloud.com/document/api/1174/77945)
 

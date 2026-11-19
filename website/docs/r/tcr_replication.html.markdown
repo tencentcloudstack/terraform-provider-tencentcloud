@@ -107,6 +107,7 @@ The `rule` object supports the following:
 * `name` - (Required, String, ForceNew) Name of synchronization rule.
 * `override` - (Required, Bool) Whether to override.
 * `deletion` - (Optional, Bool) Whether synchronous deletion event.
+* `enabled` - (Optional, Bool) Whether to enable the rule.
 
 ## Attributes Reference
 
@@ -115,4 +116,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ManageReplication](https://www.tencentcloud.com/document/api/1051/42669)
+* Read: [DescribeReplicationPolicies](https://www.tencentcloud.com/search/?wd=DescribeReplicationPolicies&type=document&lang=en)
+* Update: [ModifyReplication](https://www.tencentcloud.com/search/?wd=ModifyReplication&type=document&lang=en)
+* Delete: [DeleteReplicationRule](https://www.tencentcloud.com/search/?wd=DeleteReplicationRule&type=document&lang=en)
 

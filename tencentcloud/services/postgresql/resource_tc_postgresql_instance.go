@@ -762,7 +762,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 				_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().CreateBackupPlan(request0)
 				if e != nil {
-					return tccommon.RetryError(err, postgresql.OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR)
+					return tccommon.RetryError(e, postgresql.OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR)
 				}
 				return nil
 			})

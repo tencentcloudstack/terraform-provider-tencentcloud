@@ -76,4 +76,21 @@ In addition to all arguments above, the following attributes are exported:
 * `lb_type` - LB type of the rule. Valid values: `1`, `2`. `1` for weight cycling and `2` for IP hash.
 * `rule_id` - ID of the layer 4 rule.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateL4HealthConfig](https://www.tencentcloud.com/search/?wd=CreateL4HealthConfig&type=document&lang=en)
+  - [CreateL4Rules](https://www.tencentcloud.com/search/?wd=CreateL4Rules&type=document&lang=en)
+  - [DescribleL4Rules](https://www.tencentcloud.com/search/?wd=DescribleL4Rules&type=document&lang=en)
+  - [ModifyL4KeepTime](https://www.tencentcloud.com/search/?wd=ModifyL4KeepTime&type=document&lang=en)
+* Read: [DescribleL4Rules](https://www.tencentcloud.com/search/?wd=DescribleL4Rules&type=document&lang=en)
+* Update:
+  - [CreateL4HealthConfig](https://www.tencentcloud.com/search/?wd=CreateL4HealthConfig&type=document&lang=en)
+  - [ModifyL4KeepTime](https://www.tencentcloud.com/search/?wd=ModifyL4KeepTime&type=document&lang=en)
+  - [ModifyL4Rules](https://www.tencentcloud.com/search/?wd=ModifyL4Rules&type=document&lang=en)
+* Delete:
+  - [DeleteL4Rules](https://www.tencentcloud.com/search/?wd=DeleteL4Rules&type=document&lang=en)
+  - [DescribleL4Rules](https://www.tencentcloud.com/search/?wd=DescribleL4Rules&type=document&lang=en)
 

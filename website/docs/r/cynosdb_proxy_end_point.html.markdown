@@ -184,4 +184,23 @@ In addition to all arguments above, the following attributes are exported:
 * `instance_group_id` - Instance Group ID.
 * `proxy_group_id` - Proxy Group ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateProxyEndPoint](https://www.tencentcloud.com/document/api/1098/56559)
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+  - [DescribeProxies](https://www.tencentcloud.com/document/api/1098/56558)
+  - [ModifyVipVport](https://www.tencentcloud.com/document/api/1098/53955)
+* Read: [DescribeProxies](https://www.tencentcloud.com/document/api/1098/56558)
+* Update:
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
+  - [ModifyProxyDesc](https://www.tencentcloud.com/document/api/1098/56554)
+  - [ModifyProxyRwSplit](https://www.tencentcloud.com/document/api/1098/56553)
+  - [ModifyVipVport](https://www.tencentcloud.com/document/api/1098/53955)
+  - [SwitchProxyVpc](https://www.tencentcloud.com/document/api/1098/52493)
+* Delete:
+  - [CloseProxy](https://www.tencentcloud.com/document/api/1098/56561)
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/1098/53463)
 

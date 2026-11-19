@@ -50,4 +50,9 @@ In addition to all arguments above, the following attributes are exported:
   * `target_domain` - The domain name corresponding to the cname.
   * `type` - Domain Type: 0: push stream. 1: Play.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeLiveDomains](https://www.tencentcloud.com/document/api/267/35186)
 

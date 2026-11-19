@@ -51,6 +51,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateWebCallback](https://www.tencentcloud.com/document/api/614/80578)
+* Read: [DescribeWebCallbacks](https://www.tencentcloud.com/document/api/614/80574)
+* Update: [ModifyWebCallback](https://www.tencentcloud.com/document/api/614/80572)
+* Delete: [DeleteWebCallback](https://www.tencentcloud.com/document/api/614/80576)
 
 ## Import
 

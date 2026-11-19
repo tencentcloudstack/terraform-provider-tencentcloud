@@ -39,6 +39,14 @@ In addition to all arguments above, the following attributes are exported:
 * `line_group_id` - Line group ID.
 * `updated_on` - Update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLineGroup](https://www.tencentcloud.com/search/?wd=CreateLineGroup&type=document&lang=en)
+* Read: [DescribeLineGroupList](https://www.tencentcloud.com/search/?wd=DescribeLineGroupList&type=document&lang=en)
+* Update: [ModifyLineGroup](https://www.tencentcloud.com/search/?wd=ModifyLineGroup&type=document&lang=en)
+* Delete: [DeleteLineGroup](https://www.tencentcloud.com/search/?wd=DeleteLineGroup&type=document&lang=en)
 
 ## Import
 

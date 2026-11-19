@@ -64,6 +64,18 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateDDoSSpeedLimitConfig](https://www.tencentcloud.com/document/api/1213/61379)
+  - [DescribeListDDoSSpeedLimitConfig](https://www.tencentcloud.com/document/api/1213/61361)
+* Read: [DescribeListDDoSSpeedLimitConfig](https://www.tencentcloud.com/document/api/1213/61361)
+* Update: [ModifyDDoSSpeedLimitConfig](https://www.tencentcloud.com/document/api/1213/61354)
+* Delete:
+  - [DeleteDDoSSpeedLimitConfig](https://www.tencentcloud.com/document/api/1213/61371)
+  - [DescribeListDDoSSpeedLimitConfig](https://www.tencentcloud.com/document/api/1213/61361)
 
 ## Import
 

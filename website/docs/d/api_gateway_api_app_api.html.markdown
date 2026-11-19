@@ -134,4 +134,9 @@ In addition to all arguments above, the following attributes are exported:
     * `key` - Key of the label.
     * `value` - The value of the note.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeApiForApiApp](https://www.tencentcloud.com/search/?wd=DescribeApiForApiApp&type=document&lang=en)
 

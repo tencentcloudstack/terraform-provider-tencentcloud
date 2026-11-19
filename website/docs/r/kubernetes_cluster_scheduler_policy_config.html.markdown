@@ -168,6 +168,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `policy` - Raw scheduler policy JSON string.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
+  - [ModifyClusterSchedulerPolicy](https://www.tencentcloud.com/search/?wd=ModifyClusterSchedulerPolicy&type=document&lang=en)
+* Read: [DescribeClusterSchedulerPolicy](https://www.tencentcloud.com/search/?wd=DescribeClusterSchedulerPolicy&type=document&lang=en)
+* Update:
+  - [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
+  - [ModifyClusterSchedulerPolicy](https://www.tencentcloud.com/search/?wd=ModifyClusterSchedulerPolicy&type=document&lang=en)
 
 ## Import
 

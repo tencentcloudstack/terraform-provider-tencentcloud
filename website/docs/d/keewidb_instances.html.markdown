@@ -89,4 +89,9 @@ In addition to all arguments above, the following attributes are exported:
   * `wan_ip` - Instance VIP.
   * `zone_id` - Availability zone ID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstances](https://www.tencentcloud.com/search/?wd=DescribeInstances&type=document&lang=en)
 

@@ -74,4 +74,9 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc` - VPC, only CVM has.
 * `warning` - Remarks.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBasicAlarmList](https://www.tencentcloud.com/document/api/248/35981)
 

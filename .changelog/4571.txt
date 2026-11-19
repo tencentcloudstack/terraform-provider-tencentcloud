@@ -1,0 +1,3 @@
+```release-note:bugfix
+resource/tencentcloud_ssm_secret_version_v2: fix permanent in-place plan diff when the version is managed via the write-only attribute secret_string_wo; the secret value is no longer back-filled into state on refresh
+```

@@ -72,4 +72,9 @@ ISOLATED: Isolated
 DESTROYED: Destroyed
 REFUNDED: Refunded.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDetectTaskPackageList](https://www.tencentcloud.com/search/?wd=DescribeDetectTaskPackageList&type=document&lang=en)
 

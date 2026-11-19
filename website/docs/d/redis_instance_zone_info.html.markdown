@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
   * `role` - The node group type, master is the primary node, and replica is the replica node.
   * `zone_id` - he availability zone ID of the node, such as ap-guangzhou-1.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstanceZoneInfo](https://www.tencentcloud.com/document/api/239/39091)
 

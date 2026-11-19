@@ -112,6 +112,13 @@ func ResourceTencentCloudCfsFileSystem() *schema.Resource {
 				Computed:    true,
 				Description: "File system capacity, in GiB (required for the Turbo series). For Standard Turbo, the minimum purchase required is 40,960 GiB (40 TiB) and the expansion increment is 20,480 GiB (20 TiB). For High-Performance Turbo, the minimum purchase required is 20,480 GiB (20 TiB) and the expansion increment is 10,240 GiB (10 TiB).",
 			},
+			"encrypted": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Indicates whether the cfs_file_system is encrypted. true means encrypted, false means not encrypted. Modifying this parameter will trigger a rebuild.",
+			},
 			// computed
 			"create_time": {
 				Type:        schema.TypeString,
@@ -172,6 +179,10 @@ func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interf
 			}
 			request.ResourceTags = append(request.ResourceTags, &tag)
 		}
+	}
+
+	if v, ok := d.GetOkExists("encrypted"); ok {
+		request.Encrypted = helper.Bool(v.(bool))
 	}
 
 	fsId := ""
@@ -264,6 +275,9 @@ func resourceTencentCloudCfsFileSystemRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("create_time", fileSystem.CreationTime)
 	_ = d.Set("storage_type", fileSystem.StorageType)
 	_ = d.Set("capacity", fileSystem.SizeLimit)
+	if fileSystem.Encrypted != nil {
+		_ = d.Set("encrypted", *fileSystem.Encrypted)
+	}
 
 	var mountTarget *cfs.MountInfo
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -310,7 +324,7 @@ func resourceTencentCloudCfsFileSystemUpdate(d *schema.ResourceData, meta interf
 		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
-	immutableArgs := []string{"ccn_id", "cidr_block", "net_interface"}
+	immutableArgs := []string{"ccn_id", "cidr_block", "net_interface", "encrypted"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {

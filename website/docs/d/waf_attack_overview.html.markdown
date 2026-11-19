@@ -59,4 +59,9 @@ In addition to all arguments above, the following attributes are exported:
 * `bot_count` - Bot attack count.
 * `cc_count` - CC attack count.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAttackOverview](https://www.tencentcloud.com/document/api/627/66357)
 

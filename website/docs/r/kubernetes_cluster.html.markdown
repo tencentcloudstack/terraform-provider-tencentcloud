@@ -1075,6 +1075,36 @@ In addition to all arguments above, the following attributes are exported:
   * `instance_state` - State of the cvm.
   * `lan_ip` - LAN IP of the cvm.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCluster](https://www.tencentcloud.com/document/api/457/32027)
+* Read:
+  - [DescribeClusterExtraArgs](https://www.tencentcloud.com/search/?wd=DescribeClusterExtraArgs&type=document&lang=en)
+  - [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
+  - [DescribeClusterSecurity](https://www.tencentcloud.com/search/?wd=DescribeClusterSecurity&type=document&lang=en)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
+* Update:
+  - [AddVpcCniSubnets](https://www.tencentcloud.com/document/api/457/40679)
+  - [DescribeBatchModifyTagsStatus](https://www.tencentcloud.com/search/?wd=DescribeBatchModifyTagsStatus&type=document&lang=en)
+  - [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
+  - [DescribeIPAMD](https://www.tencentcloud.com/document/api/457/66011)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+  - [DescribeTasks](https://www.tencentcloud.com/search/?wd=DescribeTasks&type=document&lang=en)
+  - [DisableVpcCniNetworkType](https://www.tencentcloud.com/search/?wd=DisableVpcCniNetworkType&type=document&lang=en)
+  - [EnableVpcCniNetworkType](https://www.tencentcloud.com/document/api/457/41569)
+  - [ModifyClusterAsGroupOptionAttribute](https://www.tencentcloud.com/document/api/457/39252)
+  - [ModifyClusterAttribute](https://www.tencentcloud.com/document/api/457/35615)
+  - [ModifyClusterEndpointSP](https://www.tencentcloud.com/document/api/457/33864)
+  - [ModifyClusterExtraArgs](https://www.tencentcloud.com/search/?wd=ModifyClusterExtraArgs&type=document&lang=en)
+  - [ModifyClusterImage](https://www.tencentcloud.com/search/?wd=ModifyClusterImage&type=document&lang=en)
+  - [ScaleInClusterMaster](https://www.tencentcloud.com/search/?wd=ScaleInClusterMaster&type=document&lang=en)
+  - [ScaleOutClusterMaster](https://www.tencentcloud.com/search/?wd=ScaleOutClusterMaster&type=document&lang=en)
+  - [Send](https://www.tencentcloud.com/search/?wd=Send&type=document&lang=en)
+  - [UpdateClusterVersion](https://www.tencentcloud.com/document/api/457/39567)
+* Delete: [DeleteCluster](https://www.tencentcloud.com/document/api/457/33870)
 
 ## Import
 

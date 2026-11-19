@@ -83,4 +83,9 @@ In addition to all arguments above, the following attributes are exported:
   * `transaction` - 1: transaction queue; 0: general queue.
   * `visibility_timeout` - Message visibility timeout period. Value range: 1-43200 seconds (i.e., 12 hours). Default value: 30.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCmqQueues](https://www.tencentcloud.com/search/?wd=DescribeCmqQueues&type=document&lang=en)
 

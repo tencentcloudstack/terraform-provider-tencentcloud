@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
 * `roles` - The number of role.
 * `user` - The number of Sub-user.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetAccountSummary](https://www.tencentcloud.com/document/api/598/41292)
 

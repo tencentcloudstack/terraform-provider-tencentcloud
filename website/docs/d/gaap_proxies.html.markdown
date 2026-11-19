@@ -62,4 +62,9 @@ In addition to all arguments above, the following attributes are exported:
   * `tags` - Tags of the GAAP proxy.
   * `version` - Version of the GAAP proxy.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeProxies](https://www.tencentcloud.com/document/api/608/33101)
 

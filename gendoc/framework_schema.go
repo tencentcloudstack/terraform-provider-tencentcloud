@@ -192,7 +192,7 @@ func renderNestedExports(parentK, name string, nested []fwAttrSpec) []string {
 		// 只收集纯 Computed 字段；Optional/Required(+Computed) 字段
 		// 已经作为参数在 renderNested 的 supports 节中列出，避免重复。
 		if a.Computed && !a.Optional && !a.Required {
-			line := fmt.Sprintf("* `%s` - %s", a.Name, a.Description)
+			line := fmt.Sprintf("* `%s` - %s", a.Name, sanitizeInlineFences(a.Description))
 			if len(a.Nested) > 0 {
 				line += "\n" + strings.Join(renderNestedAttrs(1, a.Nested), "\n")
 			}
@@ -235,7 +235,7 @@ func renderNestedAttrs(depth int, nested []fwAttrSpec) []string {
 		if a.Description == "" {
 			continue
 		}
-		out = append(out, fmt.Sprintf("%s* `%s` - %s", indent, a.Name, a.Description))
+		out = append(out, fmt.Sprintf("%s* `%s` - %s", indent, a.Name, sanitizeInlineFences(a.Description)))
 		if len(a.Nested) > 0 {
 			out = append(out, renderNestedAttrs(depth+1, a.Nested)...)
 		}

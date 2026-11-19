@@ -50,4 +50,9 @@ In addition to all arguments above, the following attributes are exported:
     * `zone_zh` - Zone name in Chinesee.
     * `zone` - Zone name in English.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeZones](https://www.tencentcloud.com/document/api/1098/53648)
 

@@ -67,6 +67,14 @@ In addition to all arguments above, the following attributes are exported:
 - Custom: user-defined templates.
 * `update_time` - Last modified time of template in ISO date format.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateImageSpriteTemplate](https://www.tencentcloud.com/document/api/266/34168)
+* Read: [DescribeImageSpriteTemplates](https://www.tencentcloud.com/document/api/266/34148)
+* Update: [ModifyImageSpriteTemplate](https://www.tencentcloud.com/document/api/266/34139)
+* Delete: [DeleteImageSpriteTemplate](https://www.tencentcloud.com/document/api/266/34159)
 
 ## Import
 

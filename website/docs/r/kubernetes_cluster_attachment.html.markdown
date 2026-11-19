@@ -120,6 +120,8 @@ The following arguments are supported:
 * `labels` - (Optional, Map, ForceNew) Labels of tke attachment exits CVM.
 * `password` - (Optional, String, ForceNew) Password to access, should be set if `key_ids` not set.
 * `security_groups` - (Optional, List: [`String`], ForceNew) A list of security group IDs after attach to cluster.
+* `skip_options` - (Optional, List: [`String`], ForceNew) Steps to skip when adding existing instances into the cluster. Default is empty. Valid values: `ResetCVM` (skip CVM reinstallation, make sure the TKE UserData has been written into the CVM), `InstallRuntime` (skip container runtime installation), `ConfigRuntime` (skip container runtime configuration file distribution), `InstallKubelet` (skip kubelet installation), `ConfigKubelet` (skip kubelet configuration file distribution).
+* `skip_validate_options` - (Optional, List: [`String`], ForceNew) Validation rule related options, which can be configured to skip certain validation rules. Currently supported values: `GlobalRouteCIDRCheck` (skip GlobalRouter related validations), `VpcCniCIDRCheck` (skip VpcCni related validations).
 * `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is `0`, which means it participates in scheduling. Non-zero(eg: `1`) number means it does not participate in scheduling.
 * `worker_config_overrides` - (Optional, List, ForceNew) Override variable worker_config, commonly used to attach existing instances.
 * `worker_config` - (Optional, List, ForceNew) Deploy the machine configuration information of the 'WORKER', commonly used to attach existing instances.
@@ -202,4 +204,14 @@ In addition to all arguments above, the following attributes are exported:
 The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
 
 * `create` - (Defaults to `30m`) Used when creating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddExistedInstances](https://www.tencentcloud.com/document/api/457/32039)
+* Read:
+  - [DescribeClusterInstances](https://www.tencentcloud.com/document/api/457/66315)
+  - [DescribeClusters](https://www.tencentcloud.com/document/api/457/32025)
+  - [DescribeInstances](https://www.tencentcloud.com/document/api/213/33258)
+* Delete: [DeleteClusterInstances](https://www.tencentcloud.com/document/api/457/32038)
 

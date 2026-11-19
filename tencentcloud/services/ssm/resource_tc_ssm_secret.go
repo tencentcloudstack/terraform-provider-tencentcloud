@@ -79,6 +79,12 @@ func ResourceTencentCloudSsmSecret() *schema.Resource {
 				Computed:    true,
 				Description: "Status of secret.",
 			},
+			"encrypt_type": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Encryption type of secret. `0`: KMS key encryption. `1`: soft key encryption. Default is `0`. Once created, it cannot be modified.",
+			},
 		},
 	}
 }
@@ -117,6 +123,10 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 
 	if v, ok := d.GetOk("additional_config"); ok {
 		request.AdditionalConfig = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("encrypt_type"); ok {
+		request.EncryptType = helper.IntUint64(v.(int))
 	}
 
 	if secretType == 0 {
@@ -232,6 +242,7 @@ func resourceTencentCloudSsmSecretRead(d *schema.ResourceData, meta interface{})
 	_ = d.Set("secret_type", secretInfo.secretType)
 	_ = d.Set("additional_config", secretInfo.additionalConfig)
 	_ = d.Set("status", secretInfo.status)
+	_ = d.Set("encrypt_type", secretInfo.encryptType)
 
 	if secretInfo.status == SSM_STATUS_ENABLED {
 		_ = d.Set("is_enabled", true)
@@ -265,6 +276,7 @@ func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{
 	immutableArgs := []string{
 		"secret_type",
 		"additional_config",
+		"encrypt_type",
 	}
 
 	for _, v := range immutableArgs {

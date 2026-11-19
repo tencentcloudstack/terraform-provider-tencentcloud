@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
 * `global_supported_privileges` - Global permissions supported by the instance.
 * `table_supported_privileges` - Database table permissions supported by the instance.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSupportedPrivileges](https://www.tencentcloud.com/document/api/236/34488)
 

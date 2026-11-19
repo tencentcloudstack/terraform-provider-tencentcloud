@@ -33,12 +33,13 @@
 ## Architecture
 
 This provider serves both [`terraform-plugin-sdk/v2`][sdkv2] and
-[`terraform-plugin-framework`][framework] resources from a single binary,
-combined via [`tf5muxserver`][mux]. New resources and data sources are
-written using the framework, while existing SDKv2 resources continue to be
-maintained in place. The two stacks share credentials and the underlying
-TencentCloud SDK client, so users do not need to configure the provider
-twice.
+[`terraform-plugin-framework`][framework] resources from a single binary.
+The SDKv2 half is upgraded to protocol 6 by `tf5to6server` and the two
+halves are combined by `tf6muxserver`, both from [`terraform-plugin-mux`][mux].
+New resources and data sources are written using the framework, while
+existing SDKv2 resources continue to be maintained in place. The two stacks
+share credentials and the underlying TencentCloud SDK client, so users do not
+need to configure the provider twice.
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for the rules on which stack to
 use and how to add new resources.

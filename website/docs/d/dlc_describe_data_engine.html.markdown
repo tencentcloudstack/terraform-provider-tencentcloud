@@ -105,4 +105,9 @@ In addition to all arguments above, the following attributes are exported:
   * `user_app_id` - User appid.
   * `user_uin` - User uin.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDataEngines](https://www.tencentcloud.com/search/?wd=DescribeDataEngines&type=document&lang=en)
 

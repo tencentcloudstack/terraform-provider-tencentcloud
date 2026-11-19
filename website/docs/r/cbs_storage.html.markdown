@@ -156,6 +156,30 @@ In addition to all arguments above, the following attributes are exported:
 * `attached` - Indicates whether the CBS is mounted the CVM.
 * `storage_status` - Status of CBS. Valid values: UNATTACHED, ATTACHING, ATTACHED, DETACHING, EXPANDING, ROLLBACKING, TORECYCLE and DUMPING.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateDisks](https://www.tencentcloud.com/document/api/362/16312)
+  - [DescribeDisks](https://www.tencentcloud.com/document/api/362/16315)
+  - [ModifyDiskBackupQuota](https://www.tencentcloud.com/document/api/362/50786)
+* Read:
+  - [DescribeDisks](https://www.tencentcloud.com/document/api/362/16315)
+  - [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/api/651/33022)
+* Update:
+  - [ApplySnapshot](https://www.tencentcloud.com/document/api/362/15643)
+  - [DescribeDisks](https://www.tencentcloud.com/document/api/362/16315)
+  - [ModifyDiskAttributes](https://www.tencentcloud.com/document/api/362/15659)
+  - [ModifyDiskBackupQuota](https://www.tencentcloud.com/document/api/362/50786)
+  - [ModifyDiskExtraPerformance](https://www.tencentcloud.com/document/api/362/40191)
+  - [ModifyDisksChargeType](https://www.tencentcloud.com/search/?wd=ModifyDisksChargeType&type=document&lang=en)
+  - [ModifyDisksRenewFlag](https://www.tencentcloud.com/search/?wd=ModifyDisksRenewFlag&type=document&lang=en)
+  - [ModifyResourceTags](https://www.tencentcloud.com/document/api/651/33012)
+  - [ResizeDisk](https://www.tencentcloud.com/document/api/362/16310)
+* Delete:
+  - [DescribeDisks](https://www.tencentcloud.com/document/api/362/16315)
+  - [TerminateDisks](https://www.tencentcloud.com/document/api/362/16321)
 
 ## Import
 

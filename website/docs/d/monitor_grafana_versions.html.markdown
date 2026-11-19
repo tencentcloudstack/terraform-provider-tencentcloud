@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
   * `alias` - Grafana version alias.
   * `version` - Grafana version number.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeGrafanaVersions](https://www.tencentcloud.com/search/?wd=DescribeGrafanaVersions&type=document&lang=en)
 

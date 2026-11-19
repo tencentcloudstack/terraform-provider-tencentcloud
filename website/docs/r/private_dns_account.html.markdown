@@ -55,4 +55,11 @@ In addition to all arguments above, the following attributes are exported:
 * `account` - Email of the associated account.
 * `nickname` - Nickname of the associated account.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePrivateDNSAccount](https://www.tencentcloud.com/document/api/1097/44057)
+* Read: [DescribePrivateDNSAccountList](https://www.tencentcloud.com/document/api/1097/42527)
+* Delete: [DeletePrivateDNSAccount](https://www.tencentcloud.com/document/api/1097/44056)
 

@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Database version status. Valid values:`AVAILABLE`.`DEPRECATED`.
   * `supported_feature_names` - List of features supported by the database kernel, such as:TDE: Supports data encryption.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBVersions](https://www.tencentcloud.com/document/api/409/54337)
 

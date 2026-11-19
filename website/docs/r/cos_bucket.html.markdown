@@ -780,8 +780,10 @@ The `transition` object of `lifecycle_rules` supports the following:
 
 The `website` object supports the following:
 
+* `charity_404` - (Optional, String) To configure whether to display the 404 public welfare page when the error code is 404, the optional values are `Enabled` or `Disabled`, with the default set to `Disabled`.
 * `error_document` - (Optional, String) An absolute path to the document to return in case of a 4XX error.
 * `index_document` - (Optional, String) COS returns this index document when requests are made to the root domain or any of the subfolders.
+* `original_http_status` - (Optional, String) The HTTP status code for configuring hit error documents, with optional values of `Enabled` or `Disabled`, defaulting to `Enabled`.
 * `redirect_all_requests_to` - (Optional, String) Redirects all request configurations. Valid values: http, https. Default is `http`.
 * `routing_rules` - (Optional, List) Routing rule configuration. A RoutingRules container can contain up to 100 RoutingRule elements.
 

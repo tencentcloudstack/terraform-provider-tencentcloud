@@ -38,4 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeTaskInfo](https://www.tencentcloud.com/document/api/239/32064)
+  - [UpgradeSmallVersion](https://www.tencentcloud.com/document/api/239/47723)
 

@@ -38,6 +38,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDDoSBlackWhiteIpList](https://www.tencentcloud.com/search/?wd=CreateDDoSBlackWhiteIpList&type=document&lang=en)
+* Read: [DescribeDDoSBlackWhiteIpList](https://www.tencentcloud.com/search/?wd=DescribeDDoSBlackWhiteIpList&type=document&lang=en)
+* Update: [ModifyDDoSBlackWhiteIpList](https://www.tencentcloud.com/search/?wd=ModifyDDoSBlackWhiteIpList&type=document&lang=en)
+* Delete: [DeleteDDoSBlackWhiteIpList](https://www.tencentcloud.com/search/?wd=DeleteDDoSBlackWhiteIpList&type=document&lang=en)
 
 ## Import
 

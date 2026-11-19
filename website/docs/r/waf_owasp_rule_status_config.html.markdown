@@ -42,6 +42,13 @@ In addition to all arguments above, the following attributes are exported:
 * `locked` - Whether the user is locked.
 * `vul_level` - Threat level. valid values: 0 (unknown), 100 (low risk), 200 (medium risk), 300 (high risk), 400 (critical).
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyOwaspRuleStatus](https://www.tencentcloud.com/document/api/627/73180)
+* Read: [DescribeOwaspRules](https://www.tencentcloud.com/document/api/627/73182)
+* Update: [ModifyOwaspRuleStatus](https://www.tencentcloud.com/document/api/627/73180)
 
 ## Import
 

@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
 * `is_default` - Whether or not the default VPC.
 * `is_multicast` - Whether or not the VPC has Multicast support.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeVpcs](https://www.tencentcloud.com/document/api/215/15778)
 

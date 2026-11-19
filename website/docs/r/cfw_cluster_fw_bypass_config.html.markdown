@@ -50,6 +50,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [DescribeClusterNatCcnFwSwitchList](https://www.tencentcloud.com/search/?wd=DescribeClusterNatCcnFwSwitchList&type=document&lang=en)
+  - [ModifyClusterFwBypass](https://www.tencentcloud.com/search/?wd=ModifyClusterFwBypass&type=document&lang=en)
+* Read: [DescribeClusterNatCcnFwSwitchList](https://www.tencentcloud.com/search/?wd=DescribeClusterNatCcnFwSwitchList&type=document&lang=en)
+* Update:
+  - [DescribeClusterNatCcnFwSwitchList](https://www.tencentcloud.com/search/?wd=DescribeClusterNatCcnFwSwitchList&type=document&lang=en)
+  - [ModifyClusterFwBypass](https://www.tencentcloud.com/search/?wd=ModifyClusterFwBypass&type=document&lang=en)
 
 ## Import
 

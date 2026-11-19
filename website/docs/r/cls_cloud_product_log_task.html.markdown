@@ -62,6 +62,20 @@ In addition to all arguments above, the following attributes are exported:
 * `logset_id` - Log set ID.
 * `topic_id` - Log theme ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create:
+  - [CreateCloudProductLogCollection](https://www.tencentcloud.com/document/api/614/80568)
+  - [DescribeCloudProductLogTasks](https://www.tencentcloud.com/document/api/614/80566)
+* Read: [DescribeCloudProductLogTasks](https://www.tencentcloud.com/document/api/614/80566)
+* Update: [ModifyCloudProductLogCollection](https://www.tencentcloud.com/document/api/614/80565)
+* Delete:
+  - [DeleteCloudProductLogCollection](https://www.tencentcloud.com/document/api/614/80567)
+  - [DeleteLogset](https://www.tencentcloud.com/document/api/614/42779)
+  - [DeleteTopic](https://www.tencentcloud.com/document/api/614/42784)
+  - [DescribeCloudProductLogTasks](https://www.tencentcloud.com/document/api/614/80566)
 
 ## Import
 

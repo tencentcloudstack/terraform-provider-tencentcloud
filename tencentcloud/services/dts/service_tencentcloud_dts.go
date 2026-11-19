@@ -1108,6 +1108,59 @@ func (me *DtsService) DescribeDtsSyncConfigById(ctx context.Context, jobId strin
 	return
 }
 
+func (me *DtsService) DescribeDtsSyncJobConfigById(ctx context.Context, jobId string) (syncConfig *dts.SyncJobInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := dts.NewDescribeSyncJobsRequest()
+	request.JobId = &jobId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
+		response, err := me.client.UseDtsClient().DescribeSyncJobs(request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.JobList) < 1 {
+			return nil
+		}
+
+		syncConfig = response.Response.JobList[0]
+		return nil
+	})
+
+	return
+}
+
+func (me *DtsService) ModifyDtsSyncJobConfig(ctx context.Context, request *dts.ModifySyncJobConfigRequest) (response *dts.ModifySyncJobConfigResponse, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDtsClient().ModifySyncJobConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *DtsService) DtsSyncJobConfigIsolateStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		ctx := tccommon.ContextNil

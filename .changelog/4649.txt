@@ -1,0 +1,3 @@
+```release-note:enhancement
+tencentcloud_cynosdb_cluster_slave_zone: add binlog_sync_way and semi_sync_timeout parameters
+```

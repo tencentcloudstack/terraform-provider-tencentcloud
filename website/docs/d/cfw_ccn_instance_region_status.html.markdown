@@ -45,4 +45,9 @@ In addition to all arguments above, the following attributes are exported:
 3. `Auto` Firewall cluster deployed, and traffic steering network created with automatically selected network segment.
 4. `Custom` Firewall cluster deployed, and traffic steering network created with user-defined network segment.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCcnInstanceRegionStatus](https://www.tencentcloud.com/search/?wd=DescribeCcnInstanceRegionStatus&type=document&lang=en)
 

@@ -120,95 +120,107 @@ type AttachCBSSpec struct {
 }
 
 type BackUpJobDisplay struct {
-	// 备份实例id
+	// <p>备份实例id</p>
 	JobId *int64 `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 备份实例名
+	// <p>备份实例名</p>
 	Snapshot *string `json:"Snapshot,omitnil,omitempty" name:"Snapshot"`
 
-	// 备份数据量
+	// <p>备份数据量</p>
 	BackUpSize *int64 `json:"BackUpSize,omitnil,omitempty" name:"BackUpSize"`
 
-	// 备份单副本数据量
+	// <p>备份单副本数据量</p>
 	BackUpSingleSize *int64 `json:"BackUpSingleSize,omitnil,omitempty" name:"BackUpSingleSize"`
 
-	// 实例创建时间
+	// <p>实例创建时间</p>
 	BackUpTime *string `json:"BackUpTime,omitnil,omitempty" name:"BackUpTime"`
 
-	// 实例过期时间
+	// <p>实例过期时间</p>
 	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 
-	// 实例状态
+	// <p>实例状态</p>
 	JobStatus *string `json:"JobStatus,omitnil,omitempty" name:"JobStatus"`
 
-	// 0为默认。1时是对远端的doris进行备份，不周期，一次性
+	// <p>0为默认。1时是对远端的doris进行备份，不周期，一次性</p>
 	BackupType *int64 `json:"BackupType,omitnil,omitempty" name:"BackupType"`
 
-	// 0为默认。1时是立即备份。2时是迁移
+	// <p>0为默认。1时是立即备份。2时是迁移</p>
 	BackupTimeType *int64 `json:"BackupTimeType,omitnil,omitempty" name:"BackupTimeType"`
 
-	// 远端doris的连接信息
+	// <p>远端doris的连接信息</p>
 	DorisSourceInfo *DorisSourceInfo `json:"DorisSourceInfo,omitnil,omitempty" name:"DorisSourceInfo"`
 
-	// 实例状态对应的数值
+	// <p>实例状态对应的数值</p>
 	JobStatusNum *int64 `json:"JobStatusNum,omitnil,omitempty" name:"JobStatusNum"`
 
-	// 备份实例中关于cos的信息	
+	// <p>备份实例中关于cos的信息</p>
 	BackupCosInfo *BackupCosInfo `json:"BackupCosInfo,omitnil,omitempty" name:"BackupCosInfo"`
 
-	// 是否使用的自定义桶
+	// <p>是否使用的自定义桶</p>
 	IsUserDefineBucket *bool `json:"IsUserDefineBucket,omitnil,omitempty" name:"IsUserDefineBucket"`
 
-	// 错误原因
+	// <p>错误原因</p>
 	ErrorReason *string `json:"ErrorReason,omitnil,omitempty" name:"ErrorReason"`
 
-	// 快照保留策略
+	// <p>快照保留策略</p>
 	SnapshotRemainPolicy *SnapshotRemainPolicy `json:"SnapshotRemainPolicy,omitnil,omitempty" name:"SnapshotRemainPolicy"`
 
-	// 隔离次数
+	// <p>隔离次数</p>
 	IsolationCount *int64 `json:"IsolationCount,omitnil,omitempty" name:"IsolationCount"`
 
-	// 是否开启安全锁
+	// <p>是否开启安全锁</p>
 	EnableSecurityLock *uint64 `json:"EnableSecurityLock,omitnil,omitempty" name:"EnableSecurityLock"`
 
-	// 宽限期天数
+	// <p>宽限期天数</p>
 	GracePeriod *uint64 `json:"GracePeriod,omitnil,omitempty" name:"GracePeriod"`
 
-	// 宽限期开始时间
+	// <p>宽限期开始时间</p>
 	GraceStartTime *string `json:"GraceStartTime,omitnil,omitempty" name:"GraceStartTime"`
 
-	// 是否在宽限期内
+	// <p>是否在宽限期内</p>
 	IsWithinGracePeriod *bool `json:"IsWithinGracePeriod,omitnil,omitempty" name:"IsWithinGracePeriod"`
 
-	// 是否使用托管桶
+	// <p>是否使用托管桶</p>
 	UseManagedBucket *bool `json:"UseManagedBucket,omitnil,omitempty" name:"UseManagedBucket"`
 
-	// 实例ID
+	// <p>实例ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 实例名称
+	// <p>实例名称</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 实例状态
+	// <p>实例状态</p>
 	InstanceStatus *string `json:"InstanceStatus,omitnil,omitempty" name:"InstanceStatus"`
 
-	// 实例状态描述
+	// <p>实例状态描述</p>
 	InstanceStatusDesc *string `json:"InstanceStatusDesc,omitnil,omitempty" name:"InstanceStatusDesc"`
 
-	// 备份远程桶地域
+	// <p>备份远程桶地域</p>
 	DataRemoteRegion *string `json:"DataRemoteRegion,omitnil,omitempty" name:"DataRemoteRegion"`
 
-	// 桶加密状态信息
+	// <p>桶加密状态信息</p>
 	BucketEncryption *BucketEncryptionInfo `json:"BucketEncryption,omitnil,omitempty" name:"BucketEncryption"`
 
-	// 备份任务创建时记录的加密类型：SSE-COS/SSE-KMS/disabled
+	// <p>备份任务创建时记录的加密类型：SSE-COS/SSE-KMS/disabled</p>
 	Encryption *string `json:"Encryption,omitnil,omitempty" name:"Encryption"`
 
-	// 是否开通加密存储：0-未开通，1-已开通
+	// <p>是否开通加密存储：0-未开通，1-已开通</p>
 	EncryptionEnabled *bool `json:"EncryptionEnabled,omitnil,omitempty" name:"EncryptionEnabled"`
 
-	// 任务调度id
+	// <p>任务调度id</p>
 	ScheduleId *int64 `json:"ScheduleId,omitnil,omitempty" name:"ScheduleId"`
+
+	// <p>总任务数（库数）</p>
+	TotalTasks *int64 `json:"TotalTasks,omitnil,omitempty" name:"TotalTasks"`
+
+	// <p>已完成任务数</p>
+	CompletedTasks *int64 `json:"CompletedTasks,omitnil,omitempty" name:"CompletedTasks"`
+
+	// <p>失败任务数</p>
+	FailedTasks *int64 `json:"FailedTasks,omitnil,omitempty" name:"FailedTasks"`
+
+	// <p>备份进度描述，如 3/5</p>
+	BackupProgress *string `json:"BackupProgress,omitnil,omitempty" name:"BackupProgress"`
 }
 
 type BackupCosInfo struct {
@@ -226,56 +238,55 @@ type BackupCosInfo struct {
 }
 
 type BackupScheduleInfo struct {
-	// 迁移类型：
-	// 1-远端集群迁移；2-COS迁移
+	// <p>迁移类型：<br>1-远端集群迁移；2-COS迁移</p>
 	BackupType *int64 `json:"BackupType,omitnil,omitempty" name:"BackupType"`
 
-	// 当前任务现存实例数
+	// <p>当前任务现存实例数</p>
 	ExistCount *int64 `json:"ExistCount,omitnil,omitempty" name:"ExistCount"`
 
-	// cos信息
+	// <p>cos信息</p>
 	CosSourceInfo *string `json:"CosSourceInfo,omitnil,omitempty" name:"CosSourceInfo"`
 
-	// doris信息
+	// <p>doris信息</p>
 	DorisSourceInfo *string `json:"DorisSourceInfo,omitnil,omitempty" name:"DorisSourceInfo"`
 
-	// 恢复类型
+	// <p>恢复类型</p>
 	RestoreType *int64 `json:"RestoreType,omitnil,omitempty" name:"RestoreType"`
 
-	// 快照保留策略
+	// <p>快照保留策略</p>
 	SnapshotRemainPolicy *SnapshotRemainPolicy `json:"SnapshotRemainPolicy,omitnil,omitempty" name:"SnapshotRemainPolicy"`
 
-	// 远程备份地域
+	// <p>远程备份地域</p>
 	DataRemoteRegion *string `json:"DataRemoteRegion,omitnil,omitempty" name:"DataRemoteRegion"`
 
-	// 是否在宽限期内
+	// <p>是否在宽限期内</p>
 	IsWithinGracePeriod *bool `json:"IsWithinGracePeriod,omitnil,omitempty" name:"IsWithinGracePeriod"`
 
-	// 宽限期（天数）
+	// <p>宽限期（天数）</p>
 	GracePeriod *int64 `json:"GracePeriod,omitnil,omitempty" name:"GracePeriod"`
 
-	// 宽限开始时间
+	// <p>宽限开始时间</p>
 	GraceStartTime *string `json:"GraceStartTime,omitnil,omitempty" name:"GraceStartTime"`
 
-	// 托管桶类型：standard-标准，多可用区-MAZ
+	// <p>托管桶类型：standard-标准，多可用区-MAZ</p>
 	BucketType *string `json:"BucketType,omitnil,omitempty" name:"BucketType"`
 
-	// 是否开启安全锁：0-未开启，1-已开启
+	// <p>是否开启安全锁：0-未开启，1-已开启</p>
 	EnableSecurityLock *uint64 `json:"EnableSecurityLock,omitnil,omitempty" name:"EnableSecurityLock"`
 
-	// 实例ID
+	// <p>实例ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 实例名
+	// <p>实例名</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 实例状态
+	// <p>实例状态</p>
 	InstanceStatus *string `json:"InstanceStatus,omitnil,omitempty" name:"InstanceStatus"`
 
-	// 实例状态描述
+	// <p>实例状态描述</p>
 	InstanceStatusDesc *string `json:"InstanceStatusDesc,omitnil,omitempty" name:"InstanceStatusDesc"`
 
-	// 桶加密状态信息
+	// <p>桶加密状态信息</p>
 	BucketEncryption *BucketEncryptionInfo `json:"BucketEncryption,omitnil,omitempty" name:"BucketEncryption"`
 }
 
@@ -949,139 +960,139 @@ func (r *CreateCoolDownPolicyResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateInstanceNewRequestParams struct {
-	// 可用区
+	// <p>可用区</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// FE规格
+	// <p>FE规格</p>
 	FeSpec *CreateInstanceSpec `json:"FeSpec,omitnil,omitempty" name:"FeSpec"`
 
-	// BE规格
+	// <p>BE规格</p>
 	BeSpec *CreateInstanceSpec `json:"BeSpec,omitnil,omitempty" name:"BeSpec"`
 
-	// 是否高可用
+	// <p>是否高可用</p>
 	HaFlag *bool `json:"HaFlag,omitnil,omitempty" name:"HaFlag"`
 
-	// 用户VPCID
+	// <p>用户VPCID</p>
 	UserVPCId *string `json:"UserVPCId,omitnil,omitempty" name:"UserVPCId"`
 
-	// 用户子网ID
+	// <p>用户子网ID</p>
 	UserSubnetId *string `json:"UserSubnetId,omitnil,omitempty" name:"UserSubnetId"`
 
-	// 产品版本号
+	// <p>产品版本号</p>
 	ProductVersion *string `json:"ProductVersion,omitnil,omitempty" name:"ProductVersion"`
 
-	// 付费类型
+	// <p>付费类型</p>
 	ChargeProperties *ChargeProperties `json:"ChargeProperties,omitnil,omitempty" name:"ChargeProperties"`
 
-	// 实例名字
+	// <p>实例名字</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 数据库密码
+	// <p>数据库密码</p>
 	DorisUserPwd *string `json:"DorisUserPwd,omitnil,omitempty" name:"DorisUserPwd"`
 
-	// 标签列表
+	// <p>标签列表</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 高可用类型：
-	// 0：非高可用（只有1个FE，FeSpec.CreateInstanceSpec.Count=1），
-	// 1：读高可用（至少需部署3个FE，FeSpec.CreateInstanceSpec.Count>=3，且为奇数），
-	// 2：读写高可用（至少需部署5个FE，FeSpec.CreateInstanceSpec.Count>=5，且为奇数）。
+	// <p>高可用类型：<br>0：非高可用（只有1个FE，FeSpec.CreateInstanceSpec.Count=1），<br>1：读高可用（至少需部署3个FE，FeSpec.CreateInstanceSpec.Count&gt;=3，且为奇数），<br>2：读写高可用（至少需部署5个FE，FeSpec.CreateInstanceSpec.Count&gt;=5，且为奇数）。</p>
 	HaType *int64 `json:"HaType,omitnil,omitempty" name:"HaType"`
 
-	// 表名大小写是否敏感，0：敏感；1：不敏感，以小写进行比较；2：不敏感，表名改为以小写存储
+	// <p>表名大小写是否敏感，0：敏感；1：不敏感，以小写进行比较；2：不敏感，表名改为以小写存储</p>
 	CaseSensitive *int64 `json:"CaseSensitive,omitnil,omitempty" name:"CaseSensitive"`
 
-	// 是否开启多可用区
+	// <p>是否开启多可用区</p>
 	EnableMultiZones *bool `json:"EnableMultiZones,omitnil,omitempty" name:"EnableMultiZones"`
 
-	// 开启多可用区后，用户的所有可用区和子网信息
+	// <p>开启多可用区后，用户的所有可用区和子网信息</p>
 	//
 	// Deprecated: UserMultiZoneInfos is deprecated.
 	UserMultiZoneInfos *NetworkInfo `json:"UserMultiZoneInfos,omitnil,omitempty" name:"UserMultiZoneInfos"`
 
-	// 开启多可用区后，用户的所有可用区和子网信息
+	// <p>开启多可用区后，用户的所有可用区和子网信息</p>
 	UserMultiZoneInfoArr []*NetworkInfo `json:"UserMultiZoneInfoArr,omitnil,omitempty" name:"UserMultiZoneInfoArr"`
 
-	// 是否存算分离
+	// <p>是否存算分离</p>
 	IsSSC *bool `json:"IsSSC,omitnil,omitempty" name:"IsSSC"`
 
-	// CU数
+	// <p>CU数</p>
 	SSCCU *int64 `json:"SSCCU,omitnil,omitempty" name:"SSCCU"`
 
-	// 缓存盘大小
+	// <p>缓存盘大小</p>
 	//
 	// Deprecated: CacheDiskSize is deprecated.
 	CacheDiskSize *string `json:"CacheDiskSize,omitnil,omitempty" name:"CacheDiskSize"`
 
-	// 缓存盘大小
+	// <p>缓存盘大小</p>
 	CacheDataDiskSize *int64 `json:"CacheDataDiskSize,omitnil,omitempty" name:"CacheDataDiskSize"`
+
+	// <p>磁盘加密</p>
+	DiskEncrypt *int64 `json:"DiskEncrypt,omitnil,omitempty" name:"DiskEncrypt"`
 }
 
 type CreateInstanceNewRequest struct {
 	*tchttp.BaseRequest
 	
-	// 可用区
+	// <p>可用区</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// FE规格
+	// <p>FE规格</p>
 	FeSpec *CreateInstanceSpec `json:"FeSpec,omitnil,omitempty" name:"FeSpec"`
 
-	// BE规格
+	// <p>BE规格</p>
 	BeSpec *CreateInstanceSpec `json:"BeSpec,omitnil,omitempty" name:"BeSpec"`
 
-	// 是否高可用
+	// <p>是否高可用</p>
 	HaFlag *bool `json:"HaFlag,omitnil,omitempty" name:"HaFlag"`
 
-	// 用户VPCID
+	// <p>用户VPCID</p>
 	UserVPCId *string `json:"UserVPCId,omitnil,omitempty" name:"UserVPCId"`
 
-	// 用户子网ID
+	// <p>用户子网ID</p>
 	UserSubnetId *string `json:"UserSubnetId,omitnil,omitempty" name:"UserSubnetId"`
 
-	// 产品版本号
+	// <p>产品版本号</p>
 	ProductVersion *string `json:"ProductVersion,omitnil,omitempty" name:"ProductVersion"`
 
-	// 付费类型
+	// <p>付费类型</p>
 	ChargeProperties *ChargeProperties `json:"ChargeProperties,omitnil,omitempty" name:"ChargeProperties"`
 
-	// 实例名字
+	// <p>实例名字</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 数据库密码
+	// <p>数据库密码</p>
 	DorisUserPwd *string `json:"DorisUserPwd,omitnil,omitempty" name:"DorisUserPwd"`
 
-	// 标签列表
+	// <p>标签列表</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 高可用类型：
-	// 0：非高可用（只有1个FE，FeSpec.CreateInstanceSpec.Count=1），
-	// 1：读高可用（至少需部署3个FE，FeSpec.CreateInstanceSpec.Count>=3，且为奇数），
-	// 2：读写高可用（至少需部署5个FE，FeSpec.CreateInstanceSpec.Count>=5，且为奇数）。
+	// <p>高可用类型：<br>0：非高可用（只有1个FE，FeSpec.CreateInstanceSpec.Count=1），<br>1：读高可用（至少需部署3个FE，FeSpec.CreateInstanceSpec.Count&gt;=3，且为奇数），<br>2：读写高可用（至少需部署5个FE，FeSpec.CreateInstanceSpec.Count&gt;=5，且为奇数）。</p>
 	HaType *int64 `json:"HaType,omitnil,omitempty" name:"HaType"`
 
-	// 表名大小写是否敏感，0：敏感；1：不敏感，以小写进行比较；2：不敏感，表名改为以小写存储
+	// <p>表名大小写是否敏感，0：敏感；1：不敏感，以小写进行比较；2：不敏感，表名改为以小写存储</p>
 	CaseSensitive *int64 `json:"CaseSensitive,omitnil,omitempty" name:"CaseSensitive"`
 
-	// 是否开启多可用区
+	// <p>是否开启多可用区</p>
 	EnableMultiZones *bool `json:"EnableMultiZones,omitnil,omitempty" name:"EnableMultiZones"`
 
-	// 开启多可用区后，用户的所有可用区和子网信息
+	// <p>开启多可用区后，用户的所有可用区和子网信息</p>
 	UserMultiZoneInfos *NetworkInfo `json:"UserMultiZoneInfos,omitnil,omitempty" name:"UserMultiZoneInfos"`
 
-	// 开启多可用区后，用户的所有可用区和子网信息
+	// <p>开启多可用区后，用户的所有可用区和子网信息</p>
 	UserMultiZoneInfoArr []*NetworkInfo `json:"UserMultiZoneInfoArr,omitnil,omitempty" name:"UserMultiZoneInfoArr"`
 
-	// 是否存算分离
+	// <p>是否存算分离</p>
 	IsSSC *bool `json:"IsSSC,omitnil,omitempty" name:"IsSSC"`
 
-	// CU数
+	// <p>CU数</p>
 	SSCCU *int64 `json:"SSCCU,omitnil,omitempty" name:"SSCCU"`
 
-	// 缓存盘大小
+	// <p>缓存盘大小</p>
 	CacheDiskSize *string `json:"CacheDiskSize,omitnil,omitempty" name:"CacheDiskSize"`
 
-	// 缓存盘大小
+	// <p>缓存盘大小</p>
 	CacheDataDiskSize *int64 `json:"CacheDataDiskSize,omitnil,omitempty" name:"CacheDataDiskSize"`
+
+	// <p>磁盘加密</p>
+	DiskEncrypt *int64 `json:"DiskEncrypt,omitnil,omitempty" name:"DiskEncrypt"`
 }
 
 func (r *CreateInstanceNewRequest) ToJsonString() string {
@@ -1116,6 +1127,7 @@ func (r *CreateInstanceNewRequest) FromJsonString(s string) error {
 	delete(f, "SSCCU")
 	delete(f, "CacheDiskSize")
 	delete(f, "CacheDataDiskSize")
+	delete(f, "DiskEncrypt")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateInstanceNewRequest has unknown keys!", "")
 	}
@@ -1124,13 +1136,13 @@ func (r *CreateInstanceNewRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateInstanceNewResponseParams struct {
-	// 流程ID
+	// <p>流程ID</p>
 	FlowId *string `json:"FlowId,omitnil,omitempty" name:"FlowId"`
 
-	// 实例ID
+	// <p>实例ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 错误信息
+	// <p>错误信息</p>
 	ErrorMsg *string `json:"ErrorMsg,omitnil,omitempty" name:"ErrorMsg"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。

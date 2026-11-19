@@ -706,7 +706,7 @@ func TestVdbInstanceNetworkSubFields(t *testing.T) {
 	assert.NotNil(t, networksSchema)
 
 	elemResource := networksSchema.Elem.(*schema.Resource)
-	expectedSubFields := []string{"vpc_id", "subnet_id", "vip", "port", "preserve_duration", "expire_time"}
+	expectedSubFields := []string{"vpc_id", "subnet_id", "vip", "port", "preserve_duration", "expire_time", "is_ssl"}
 	for _, field := range expectedSubFields {
 		s, ok := elemResource.Schema[field]
 		assert.True(t, ok, "networks should contain sub-field: %s", field)

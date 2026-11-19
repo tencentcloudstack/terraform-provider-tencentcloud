@@ -131,6 +131,7 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 			"multi_zone_subnet_policy": {
 				Type:         schema.TypeString,
 				Optional:     true,
+				Computed:     true,
 				Description:  "Multi-availability zone/subnet policy. Valid values: PRIORITY and EQUALITY. Default value: PRIORITY.",
 				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{svcas.MultiZoneSubnetPolicyPriority, svcas.MultiZoneSubnetPolicyEquality}),
 			},
@@ -138,6 +139,7 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 			"node_config": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Node config.",
 				Elem: &schema.Resource{
@@ -211,6 +213,7 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 						"extra_args": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "Custom parameter information related to the node. This is a white-list parameter. It can be modified via the `ModifyClusterNodePool` API.",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
@@ -219,11 +222,13 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 						"user_data": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Base64-encoded User Data text, the length limit is 16KB.",
 						},
 						"pre_start_user_script": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.",
 						},
 						"is_schedule": {
@@ -236,12 +241,14 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 						"desired_pod_num": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							ForceNew:    true,
 							Description: "Indicate to set desired pod number in node. valid when the cluster is podCIDR.",
 						},
 						"gpu_args": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							ForceNew:    true,
 							MaxItems:    1,
 							Description: "GPU driver parameters.",
@@ -256,24 +263,28 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 									"driver": {
 										Type:         schema.TypeMap,
 										Optional:     true,
+										Computed:     true,
 										Description:  "GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.",
 										ValidateFunc: tccommon.ValidateTkeGpuDriverVersion,
 									},
 									"cuda": {
 										Type:         schema.TypeMap,
 										Optional:     true,
+										Computed:     true,
 										Description:  "CUDA  version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.",
 										ValidateFunc: tccommon.ValidateTkeGpuDriverVersion,
 									},
 									"cudnn": {
 										Type:         schema.TypeMap,
 										Optional:     true,
+										Computed:     true,
 										Description:  "cuDNN version. Format like: `{ version: String, name: String, doc_name: String, dev_name: String }`. `version`: cuDNN version; `name`: cuDNN name; `doc_name`: Doc name of cuDNN; `dev_name`: Dev name of cuDNN.",
 										ValidateFunc: tccommon.ValidateTkeGpuDriverVersion,
 									},
 									"custom_driver": {
 										Type:        schema.TypeMap,
 										Optional:    true,
+										Computed:    true,
 										Description: "Custom GPU driver. Format like: `{address: String}`. `address`: URL of custom GPU driver address.",
 									},
 								},

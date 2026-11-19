@@ -24,6 +24,10 @@ resource "tencentcloud_teo_bind_security_template" "example" {
   entity      = "tf.example.com"
   operate     = "unbind-use-default"
 }
+
+output "bind_message" {
+  value = tencentcloud_teo_bind_security_template.example.message
+}
 ```
 
 ## Argument Reference
@@ -50,6 +54,7 @@ Note: When set to `false`, if the passed-in domain name is already bound to a po
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `message` - Instance configuration delivery message. This field provides human-readable information about the delivery status (e.g., failure reasons).
 * `status` - Instance configuration delivery status, the possible values are: `online`: the configuration has taken effect; `fail`: the configuration failed; `process`: the configuration is being delivered.
 
 ## Timeouts
@@ -58,6 +63,15 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `10m`) Used when creating the resource.
 * `delete` - (Defaults to `10m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [BindSecurityTemplateToEntity](https://www.tencentcloud.com/document/api/1145/57572)
+* Read:
+  - [DescribeWebSecurityTemplates](https://www.tencentcloud.com/document/api/1145/71945)
+  - [DescribeZones](https://www.tencentcloud.com/document/api/1145/50481)
+* Delete: [BindSecurityTemplateToEntity](https://www.tencentcloud.com/document/api/1145/57572)
 
 ## Import
 

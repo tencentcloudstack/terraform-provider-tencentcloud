@@ -20,6 +20,9 @@ const (
 	// CAM签名/鉴权错误。
 	AUTHFAILURE = "AuthFailure"
 
+	// 鉴权失败，无权限操作
+	AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
@@ -85,6 +88,9 @@ const (
 
 	// Proxy校验失败：{{1}}。
 	FAILEDOPERATION_PROXYCHECKERROR = "FailedOperation.ProxyCheckError"
+
+	// 代理组设置只读模式时，集群下必须包含至少一个只读实例
+	FAILEDOPERATION_PROXYGROUPRWSPLITNOROINSTANCEERROR = "FailedOperation.ProxyGroupRwSplitNoRoInstanceError"
 
 	// 查询资源包消耗明细失败
 	FAILEDOPERATION_QUERYSOURCEPACKAGEDETAILERROR = "FailedOperation.QuerySourcePackageDetailError"
@@ -224,6 +230,9 @@ const (
 	// 内置账号不允许操作。
 	INVALIDPARAMETERVALUE_INTERNALACCOUNT = "InvalidParameterValue.InternalAccount"
 
+	// 存在内网域名，旧 IP 保留时间需大于 {{1}} 小时
+	INVALIDPARAMETERVALUE_INTERNALDOMAINRESERVETOOSHORTERROR = "InvalidParameterValue.InternalDomainReserveTooShortError"
+
 	// 实例版本非法。
 	INVALIDPARAMETERVALUE_INVALIDDBVERSION = "InvalidParameterValue.InvalidDBVersion"
 
@@ -269,6 +278,9 @@ const (
 	// 找不到所选子网。
 	INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
 
+	// 接入组 {{1}} 所属子网与目标子网一致，无需更换
+	INVALIDPARAMETERVALUE_SUBNETUNCHANGEDERROR = "InvalidParameterValue.SubnetUnchangedError"
+
 	// 未找到该数据。
 	INVALIDPARAMETERVALUE_VALUENOTFOUND = "InvalidParameterValue.ValueNotFound"
 
@@ -286,6 +298,9 @@ const (
 
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
+
+	// 云账号权限不足，不支持该操作。
+	OPERATIONDENIED_ACCOUNTOPERATIONDENIED = "OperationDenied.AccountOperationDenied"
 
 	// 审计日志文件数超过最大限制数
 	OPERATIONDENIED_AUDITFILEOVERQUOTAERROR = "OperationDenied.AuditFileOverQuotaError"
@@ -350,8 +365,14 @@ const (
 	// 传入了无效的地域
 	OPERATIONDENIED_INVALIDREGIONFORROLLBACKNEWCLUSTER = "OperationDenied.InvalidRegionForRollbackNewCluster"
 
+	// 该集群有创建中或恢复中的实例，暂不支持转为serverless
+	OPERATIONDENIED_INVALIDSTATUSINSTANCENOTSWITCHSLSERROR = "OperationDenied.InvalidStatusInstanceNotSwitchSlsError"
+
 	// 不是{{1}}的回档集群
 	OPERATIONDENIED_ISNOTROLLBACKCLUSTERERROR = "OperationDenied.IsNotRollbackClusterError"
+
+	// 集群有隔离中或已隔离的实例，暂不支持转为serverless。请先下线隔离中或已隔离的实例
+	OPERATIONDENIED_ISOLATEDINSTANCENOTSWITCHSLSERROR = "OperationDenied.IsolatedInstanceNotSwitchSlsError"
 
 	// 响应大小超限制:{{1}}， 请减少查询数量。
 	OPERATIONDENIED_LENGTHOVERLIMIT = "OperationDenied.LengthOverLimit"
@@ -368,11 +389,17 @@ const (
 	// 没有可用资源。
 	OPERATIONDENIED_NOAVALIABLERESOUCEERROR = "OperationDenied.NoAvaliableResouceError"
 
+	// 该集群因开启了{{1}}功能，暂不支持转为serverless。如需转serverless请先关闭相关服务特性。
+	OPERATIONDENIED_NOTSWITCHSLSERROR = "OperationDenied.NotSwitchSlsError"
+
 	// 仅新存储架构2.0支持存储压缩功能
 	OPERATIONDENIED_ONLYNEWSTORAGESUPPORTSTORAGECOMPRESSIONERROR = "OperationDenied.OnlyNewStorageSupportStorageCompressionError"
 
 	// 您没有权限操作该资源（进行该操作）。
 	OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+
+	// 规格{{1}}库存售罄
+	OPERATIONDENIED_OUTOFSTOCKERROR = "OperationDenied.OutOfStockError"
 
 	// 暂停状态的serverless不允许修改多可用区。
 	OPERATIONDENIED_PAUSEDSLSNOTALLOWMODIFYSLAVE = "OperationDenied.PausedSlsNotAllowModifySlave"
@@ -398,6 +425,9 @@ const (
 	// proxy可用区校验失败
 	OPERATIONDENIED_PROXYZONECHECKERROR = "OperationDenied.ProxyZoneCheckError"
 
+	// 实例不存在
+	OPERATIONDENIED_RESOURCENOTFUNDERROR = "OperationDenied.ResourceNotFundError"
+
 	// 未知异常。请联系客服进行处理。{{1}}
 	OPERATIONDENIED_SECONDARYCACHEUNKNOWNERROR = "OperationDenied.SecondaryCacheUnknownError"
 
@@ -407,6 +437,15 @@ const (
 	// serverless实例当前状态不允许该操作。
 	OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
 
+	// 备可用区不支持sls
+	OPERATIONDENIED_SLAVENOTSUPPORTSERVERLESSERROR = "OperationDenied.SlaveNotSupportServerlessError"
+
+	// 获取库存失败。
+	OPERATIONDENIED_SPECSTOCKCHECKERROR = "OperationDenied.SpecStockCheckError"
+
+	// 规格{{1}}库存不足。实际库存:{{2}}，期望库存:{{3}}。
+	OPERATIONDENIED_STOCKOUTSERROR = "OperationDenied.StockoutsError"
+
 	// 任务冲突检查不通过。
 	OPERATIONDENIED_TASKCONFLICTERROR = "OperationDenied.TaskConflictError"
 
@@ -415,6 +454,9 @@ const (
 
 	// 不支持该类型规格售卖
 	OPERATIONDENIED_UNSUPPORTSALESPECERROR = "OperationDenied.UnSupportSaleSpecError"
+
+	// 不支持开启审计
+	OPERATIONDENIED_UNSUPPORTOPENAUDITERROR = "OperationDenied.UnsupportOpenAuditError"
 
 	// 用户未进行实名认证，请先进行实名认证才可购买。
 	OPERATIONDENIED_USERNOTAUTHENTICATEDERROR = "OperationDenied.UserNotAuthenticatedError"
