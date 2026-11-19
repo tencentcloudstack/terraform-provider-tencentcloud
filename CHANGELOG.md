@@ -1,3 +1,28 @@
+## 1.83.43(November‌ 19, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_makers_deployment_log` ([#4670](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4670))
+* **New Data Source:** `tencentcloud_makers_deployments` ([#4669](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4669))
+* **New Resource:** `tencentcloud_makers_project` ([#4672](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4672))
+* **New Resource:** `tencentcloud_makers_project_envs` ([#4671](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4671))
+* **New Resource:** `tencentcloud_makers_zone_custom_domain` ([#4668](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4668))
+* **New Resource:** `tencentcloud_teo_apply_free_certificate` ([#4615](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4615))
+* **New Resource:** `tencentcloud_monitor_dispense_external_rule` ([#4658](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4658))
+
+ENHANCEMENTS:
+
+* action/tencentcloud_organization_provision_role_configuration: optimize code logic. ([#4674](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4674))
+* action/tencentcloud_redis_valkey_module: update ([#4665](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4665))
+* resource/tencentcloud_cdn_domain: support new parameter ([#4661](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4661))
+* resource/tencentcloud_ckafka_route: optimize code logic ([#4673](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4673))
+* resource/tencentcloud_cls_ckafka_consumer: support new parameter ([#4659](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4659))
+* resource/tencentcloud_mongodb_instance: update doc. ([#4667](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4667))
+* resource/tencentcloud_mongodb_instance: update schema. ([#4675](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4675))
+* resource/tencentcloud_private_dns_forward_rule: optimize code logic ([#4677](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4677))
+* resource/tencentcloud_provision_role_configuration_operation: update doc. ([#4674](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4674))
+* resource/tencentcloud_tdmysql_db_instance: update doc. ([#4678](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4678))
+
 ## 1.83.42(November‌ 13, 2026)
 
 FEATURES:
