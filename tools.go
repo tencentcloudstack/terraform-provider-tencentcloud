@@ -17,4 +17,5 @@ import (
 	_ "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20250903"
 	_ "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/fwm/v20250611"
 	_ "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ags/v20250920"
+	_ "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
 )

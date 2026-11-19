@@ -730,6 +730,7 @@ github.com/hashicorp/terraform-plugin-framework/types/basetypes
 ## explicit; go 1.24.0
 github.com/hashicorp/terraform-plugin-framework-timeouts/action/timeouts
 github.com/hashicorp/terraform-plugin-framework-timeouts/internal/validators
+github.com/hashicorp/terraform-plugin-framework-timeouts/resource/timeouts
 # github.com/hashicorp/terraform-plugin-go v0.31.0
 ## explicit; go 1.25.0
 github.com/hashicorp/terraform-plugin-go/internal/logging
@@ -1265,7 +1266,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc v1.0.1149
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc/v20201214
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.3.154
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.3.173
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch v1.1.7
@@ -1298,10 +1299,10 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.3.40
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.186
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.212
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.212
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.213
 ## explicit; go 1.11
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
@@ -1399,6 +1400,9 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.3.95
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers v1.3.213
+## explicit; go 1.14
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb v1.3.102
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312

@@ -39,6 +39,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dlc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ioa"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/kms"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/makers"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mongodb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssl"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssm"
@@ -51,13 +52,17 @@ var resourcesMap = map[string]func() resource.Resource{
 	"tencentcloud_ags_sandbox_tool":                 ags.NewAgsSandboxToolResource,
 	"tencentcloud_cam_update_password_rule_config":  cam.NewCamUpdatePasswordRuleConfigResource,
 	"tencentcloud_config_aggregate_compliance_pack": config.NewConfigAggregateCompliancePackResource,
-	"tencentcloud_ssm_secret_version_v2":            ssm.NewSsmSecretVersionV2Resource,
 	"tencentcloud_ioa_delivery_server":              ioa.NewIoaDeliveryServerResource,
+	"tencentcloud_makers_zone_custom_domain":        makers.NewMakersZoneCustomDomainResource,
+	"tencentcloud_ioa_delivery_strategy":            ioa.NewIoaDeliveryStrategyResource,
+	"tencentcloud_makers_project":                   makers.NewMakersProjectResource,
+	"tencentcloud_ssm_secret_version_v2":            ssm.NewSsmSecretVersionV2Resource,
 }
 
 // dataSourcesMap maps every framework data source type name to its factory.
 var dataSourcesMap = map[string]func() datasource.DataSource{
 	"tencentcloud_config_list_aggregate_compliance_packs": config.NewConfigListAggregateCompliancePacksDataSource,
+	"tencentcloud_makers_deployment_log":                  makers.NewMakersDeploymentLogDataSource,
 }
 
 // functionsMap maps every framework function name to its factory. Function
@@ -87,6 +92,7 @@ var actionsMap = map[string]func() action.Action{
 	"tencentcloud_ssl_upload_certificate_instance":           ssl.NewSslUploadCertificateInstance,
 	"tencentcloud_ssm_service":                               ssm.NewSsmServiceAction,
 	"tencentcloud_teo_confirm_origin_acl_update":             teo.NewTeoConfirmOriginAclUpdate,
+	"tencentcloud_teo_apply_free_certificate":                teo.NewTeoApplyFreeCertificate,
 }
 
 // factoriesOf converts a name → factory registry map into the factory slice the
