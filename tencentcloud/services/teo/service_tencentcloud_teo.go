@@ -2839,6 +2839,40 @@ func (me *TeoService) TeoIdentifyZone(zoneName, domain string) (ascription *teov
 	return
 }
 
+func (me *TeoService) TeoPlanForZone(zoneId, planType string) (resourceNames, dealNames []*string, errRet error) {
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+
+	request := teov20220901.NewCreatePlanForZoneRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.PlanType = helper.String(planType)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTeoV20220901Client().CreatePlanForZone(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	resourceNames = response.Response.ResourceNames
+	dealNames = response.Response.DealNames
+
+	return
+}
+
 // DescribeTeoSecurityAPIResourceById paginates DescribeSecurityAPIResource and
 // returns the APIResource whose Id matches apiResourceId, or nil if not found.
 func (me *TeoService) DescribeTeoSecurityAPIResourceById(ctx context.Context, zoneId, apiResourceId string) (apiResource *teo.APIResource, errRet error) {
@@ -3772,6 +3806,73 @@ func (me *TeoService) CheckFreeCertificateVerification(ctx context.Context, zone
 
 		return nil
 	})
+
+	return
+}
+
+func (me *TeoService) DescribeTeoAvailableOriginACLFamilyByFilter(ctx context.Context, param map[string]interface{}) (ret []*teov20220901.OriginACLFamilyInfo, totalCount *int64, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = teov20220901.NewDescribeAvailableOriginACLFamilyRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ZoneId" {
+			request.ZoneId = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*teov20220901.Filter)
+		}
+	}
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response := teo.NewDescribeAvailableOriginACLFamilyResponse()
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseTeoClient().DescribeAvailableOriginACLFamily(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil {
+			errRet = fmt.Errorf("[CRITAL]%s api[%s] fail, response is nil", logId, request.GetAction())
+			return
+		}
+
+		if response.Response.TotalCount != nil {
+			totalCount = response.Response.TotalCount
+		}
+
+		if len(response.Response.OriginACLFamilyInfos) < 1 {
+			break
+		}
+		ret = append(ret, response.Response.OriginACLFamilyInfos...)
+		if len(response.Response.OriginACLFamilyInfos) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
 
 	return
 }

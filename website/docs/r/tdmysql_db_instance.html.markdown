@@ -1,15 +1,15 @@
 ---
-subcategory: "TDSQL-C for MySQL(tdmysql)"
+subcategory: "TDSQL Boundless(tdmysql)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tdmysql_db_instance"
 sidebar_current: "docs-tencentcloud-resource-tdmysql_db_instance"
 description: |-
-  Provides a resource to create a TDSQL-C for MySQL (tdmysql) database instance.
+  Provides a resource to create a TDSQL Boundless(tdmysql) database instance.
 ---
 
 # tencentcloud_tdmysql_db_instance
 
-Provides a resource to create a TDSQL-C for MySQL (tdmysql) database instance.
+Provides a resource to create a TDSQL Boundless(tdmysql) database instance.
 
 ## Example Usage
 

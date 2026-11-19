@@ -2,6 +2,7 @@ package tco
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/action"
 	"github.com/hashicorp/terraform-plugin-framework/action/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
 )
@@ -171,6 +173,15 @@ func (a *TcoProvisionRoleConfiguration) Invoke(ctx context.Context, req action.I
 	service := NewOrganizationService(a.Client())
 	taskId, err := service.ProvisionRoleConfiguration(ctx, zoneId, roleConfigurationId, targetType, targetUin)
 	if err != nil {
+		// The role configuration provisioning record does not exist; treat the
+		// provisioning as already completed (nothing to do) and end successfully.
+		var sdkErr *sdkErrors.TencentCloudSDKError
+		if errors.As(err, &sdkErr) &&
+			sdkErr.GetCode() == "FailedOperation.RoleConfigurationProvisioningStatusError" &&
+			sdkErr.GetMessage() == "role configuration provisioning not need re-deploy" {
+			return
+		}
+
 		resp.Diagnostics.AddError(
 			fmt.Sprintf("provisioning role configuration (%s) to target account (%d)", roleConfigurationId, targetUin),
 			err.Error(),

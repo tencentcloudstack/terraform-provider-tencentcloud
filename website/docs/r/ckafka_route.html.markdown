@@ -72,7 +72,9 @@ This resource interacts with the following TencentCloud APIs:
   - [DescribeRoute](https://www.tencentcloud.com/document/api/597/37090)
   - [DescribeSecurityGroupRoutes](https://www.tencentcloud.com/document/api/597/74257)
 * Update: [ModifyRouteSecurityGroups](https://www.tencentcloud.com/search/?wd=ModifyRouteSecurityGroups&type=document&lang=en)
-* Delete: [DeleteRoute](https://www.tencentcloud.com/document/api/597/47140)
+* Delete:
+  - [DeleteRoute](https://www.tencentcloud.com/document/api/597/47140)
+  - [DescribeTaskStatus](https://www.tencentcloud.com/document/api/597/55881)
 
 ## Import
 

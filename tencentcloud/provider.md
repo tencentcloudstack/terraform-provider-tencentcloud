@@ -1054,6 +1054,8 @@ tencentcloud_redis_log_delivery
 tencentcloud_redis_audit_log
 tencentcloud_redis_instance_password_policy_config
 tencentcloud_redis_backup_encrypt
+Action
+tencentcloud_redis_valkey_module
 
 Serverless Cloud Function(SCF)
 Data Source
@@ -1613,6 +1615,7 @@ tencentcloud_tem_application_service
 
 TencentCloud EdgeOne(TEO)
 Data Source
+tencentcloud_teo_available_origin_acl_family
 tencentcloud_teo_zone_available_plans
 tencentcloud_teo_rule_engine_settings
 tencentcloud_teo_zones
@@ -1691,10 +1694,10 @@ tencentcloud_teo_shared_cname
 tencentcloud_teo_domain_shared_cname_attachment
 tencentcloud_teo_edge_kv
 tencentcloud_teo_edge_kv_namespace
-tencentcloud_teo_dns_records_status
-
 Action
 tencentcloud_teo_apply_free_certificate
+tencentcloud_teo_plan_for_zone
+tencentcloud_teo_dns_records_status
 tencentcloud_teo_confirm_origin_acl_update
 
 TencentCloud ServiceMesh(TCM)
@@ -2009,7 +2012,7 @@ Resource
 tencentcloud_tdcpg_cluster
 tencentcloud_tdcpg_instance
 
-TDSQL-C for MySQL(tdmysql)
+TDSQL Boundless(tdmysql)
 Resource
 tencentcloud_tdmysql_db_instance
 
@@ -2755,6 +2758,10 @@ Resource
 tencentcloud_ioa_company_directory_config
 tencentcloud_ioa_delivery_server
 tencentcloud_ioa_delivery_strategy
+
+Makers
+Resource
+tencentcloud_makers_project_envs
 
 Database Dedicated Cluster(DBDC)
 Data Source

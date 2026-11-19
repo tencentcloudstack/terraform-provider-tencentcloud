@@ -2,6 +2,7 @@ package tco
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"strings"
@@ -9,6 +10,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -56,29 +58,24 @@ func resourceTencentCloudProvisionRoleConfigurationOperationCreate(d *schema.Res
 	defer tccommon.LogElapsed("resource.tencentcloud_provision_role_configuration_operation.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-
 	var (
+		logId               = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                 = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request             = organization.NewProvisionRoleConfigurationRequest()
+		response            = organization.NewProvisionRoleConfigurationResponse()
 		zoneId              string
 		roleConfigurationId string
-	)
-	var (
-		request  = organization.NewProvisionRoleConfigurationRequest()
-		response = organization.NewProvisionRoleConfigurationResponse()
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
 		zoneId = v.(string)
+		request.ZoneId = helper.String(zoneId)
 	}
+
 	if v, ok := d.GetOk("role_configuration_id"); ok {
 		roleConfigurationId = v.(string)
+		request.RoleConfigurationId = helper.String(roleConfigurationId)
 	}
-
-	request.ZoneId = helper.String(zoneId)
-
-	request.RoleConfigurationId = helper.String(roleConfigurationId)
 
 	if v, ok := d.GetOk("target_type"); ok {
 		request.TargetType = helper.String(v.(string))
@@ -88,24 +85,50 @@ func resourceTencentCloudProvisionRoleConfigurationOperationCreate(d *schema.Res
 		request.TargetUin = helper.IntInt64(v.(int))
 	}
 
+	// skipped indicates that the provisioning is not needed (already in the
+	// desired state), in which case the operation ends successfully.
+	var skipped bool
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseOrganizationClient().ProvisionRoleConfigurationWithContext(ctx, request)
 		if e != nil {
+			// The role configuration is already deployed to the target and does
+			// not need re-deployment; treat it as success and end the operation.
+			var sdkErr *sdkErrors.TencentCloudSDKError
+			if errors.As(e, &sdkErr) &&
+				sdkErr.GetCode() == "FailedOperation.RoleConfigurationProvisioningStatusError" &&
+				sdkErr.GetMessage() == "role configuration provisioning not need re-deploy" {
+				skipped = true
+				return nil
+			}
+
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("create provision role configuration operation failed, response is nil"))
+		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create provision role configuration operation failed, reason:%+v", logId, err)
 		return err
 	}
 
-	if response.Response.Task == nil || response.Response.Task.TaskId == nil {
-		return fmt.Errorf("can not find taskId")
+	d.SetId(strings.Join([]string{zoneId, roleConfigurationId}, tccommon.FILED_SP))
+
+	if skipped {
+		return nil
 	}
+
+	if response.Response.Task == nil || response.Response.Task.TaskId == nil {
+		return fmt.Errorf("TaskId is nil")
+	}
+
 	if _, err := (&resource.StateChangeConf{
 		Delay:      10 * time.Second,
 		MinTimeout: 3 * time.Second,
@@ -116,9 +139,6 @@ func resourceTencentCloudProvisionRoleConfigurationOperationCreate(d *schema.Res
 	}).WaitForStateContext(ctx); err != nil {
 		return err
 	}
-	d.SetId(strings.Join([]string{zoneId, roleConfigurationId}, tccommon.FILED_SP))
-
-	_ = response
 
 	return resourceTencentCloudProvisionRoleConfigurationOperationRead(d, meta)
 }
