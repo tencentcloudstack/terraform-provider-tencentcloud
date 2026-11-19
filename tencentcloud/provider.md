@@ -2759,10 +2759,6 @@ tencentcloud_ioa_company_directory_config
 tencentcloud_ioa_delivery_server
 tencentcloud_ioa_delivery_strategy
 
-Makers
-Resource
-tencentcloud_makers_project_envs
-
 Database Dedicated Cluster(DBDC)
 Data Source
 tencentcloud_dbdc_db_custom_clusters
@@ -2862,11 +2858,14 @@ Action
 tencentcloud_fwm_dispatch_strategy
 
 Web & Agents Development Platform(Makers)
+Action
+tencentcloud_makers_deployment
+
 Data Source
 tencentcloud_makers_deployment_log
 tencentcloud_makers_deployments
 
 Resource
 tencentcloud_makers_project
+tencentcloud_makers_project_envs
 tencentcloud_makers_zone_custom_domain
-
