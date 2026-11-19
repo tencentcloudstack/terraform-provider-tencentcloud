@@ -58,4 +58,9 @@ In addition to all arguments above, the following attributes are exported:
   * `origin_acl_family` - Origin acl control domain. Values: gaz/mlc/emc/plat-gaz/plat-mlc/plat-emc.
   * `version` - Origin protection version number. Format description: standard version: gaz-xxxxx/mlc-xxxxx/emc-xxxxx; streamlined version: plat-gaz-xxxxxx/plat-mlc-xxxxxx/plat-emc-xxxxxx.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAvailableOriginACLFamily](https://www.tencentcloud.com/document/api/1145/85467)
 
