@@ -1,0 +1,7 @@
+```release-note:enhancement
+action/tencentcloud_organization_provision_role_configuration: optimize code logic.
+```
+
+```release-note:enhancement
+resource/tencentcloud_provision_role_configuration_operation: update doc.
+```
