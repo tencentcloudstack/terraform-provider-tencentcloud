@@ -8,6 +8,7 @@ FEATURES:
 * **New Resource:** `tencentcloud_makers_project_envs` ([#4671](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4671))
 * **New Resource:** `tencentcloud_makers_zone_custom_domain` ([#4668](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4668))
 * **New Resource:** `tencentcloud_teo_apply_free_certificate` ([#4615](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4615))
+* **New Resource:** `tencentcloud_monitor_dispense_external_rule` ([#4658](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4658))
 
 ENHANCEMENTS:
 
