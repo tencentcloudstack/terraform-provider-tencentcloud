@@ -3075,6 +3075,72 @@ func (me *MonitorService) DescribeExternalClusterRegisterCommandById(ctx context
 	return
 }
 
+func (me *MonitorService) DescribeExtMetric(ctx context.Context, request *monitorv20230616.DescribeExtMetricRequest) (response *monitorv20230616.DescribeExtMetricResponse, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMonitorV20230616Client().DescribeExtMetricWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e, tccommon.InternalError)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
+// DescribeExtNamespace queries ext namespaces via monitor v20230616.
+func (me *MonitorService) DescribeExtNamespace(ctx context.Context) (names []*string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := monitorv20230616.NewDescribeExtNamespaceRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *monitorv20230616.DescribeExtNamespaceResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMonitorV20230616Client().DescribeExtNamespaceWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e, tccommon.InternalError)
+		}
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("DescribeExtNamespace failed, Response is nil"))
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	names = response.Response.ExtNamespaceList
+	return
+}
+
 func (me *MonitorService) CreateDispenseExternalRule(ctx context.Context, request *monitorv20230616.CreateDispenseExternalRuleRequest) (ruleId int64, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 

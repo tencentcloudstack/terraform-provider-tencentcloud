@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
+	fwHelper "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/helper"
 )
 
 var _ datasource.DataSourceWithConfigure = &MonitorDispenseRegionDataSource{}
@@ -28,7 +29,8 @@ type MonitorDispenseRegionDataSource struct {
 
 // MonitorDispenseRegionDataSourceModel maps the schema attributes.
 type MonitorDispenseRegionDataSourceModel struct {
-	RegionList types.List `tfsdk:"region_list"`
+	Id         types.String `tfsdk:"id"`
+	RegionList types.List   `tfsdk:"region_list"`
 }
 
 // MonitorDispenseRegionItemModel is the element type of region_list.
@@ -56,6 +58,12 @@ func (d *MonitorDispenseRegionDataSource) Schema(_ context.Context, _ datasource
 	resp.Schema = schema.Schema{
 		Description: "Use this data source to query the dispense (forwarding) deployment regions of the Monitor product.",
 		Attributes: map[string]schema.Attribute{
+			// The id carries no cloud meaning — it is a random
+			// token generated at read time (see the end of Read).
+			"id": schema.StringAttribute{
+				Computed:    true,
+				Description: "ID of the data source, a random token.",
+			},
 			"region_list": schema.ListNestedAttribute{
 				Computed:    true,
 				Description: "List of dispense deployment regions.",
@@ -92,6 +100,14 @@ func (d *MonitorDispenseRegionDataSource) Read(ctx context.Context, req datasour
 		return
 	}
 
+	if d.Client() == nil {
+		resp.Diagnostics.AddError(
+			"Provider not configured",
+			"The provider client is not available. This is unexpected; please report it.",
+		)
+		return
+	}
+
 	service := NewMonitorService(d.Client())
 	regions, err := service.DescribeDispenseRegions(ctx)
 	if err != nil {
@@ -114,12 +130,18 @@ func (d *MonitorDispenseRegionDataSource) Read(ctx context.Context, req datasour
 		})
 	}
 
-	list, diags := types.ListValueFrom(ctx, types.ObjectType{AttrTypes: MonitorDispenseRegionItemAttrTypes}, items)
+	list, diags := types.ListValueFrom(ctx, types.ObjectType{
+		AttrTypes: MonitorDispenseRegionItemAttrTypes,
+	}, items)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+
 	config.RegionList = list
+
+	// The state id is a random token (JSON resource_id = fwHelper.BuildToken()).
+	config.Id = types.StringValue(fwHelper.BuildToken())
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &config)...)
 }

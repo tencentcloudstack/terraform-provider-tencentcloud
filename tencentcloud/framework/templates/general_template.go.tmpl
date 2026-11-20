@@ -1,0 +1,442 @@
+// TEMPLATE: framework managed-resource skeleton — codegen subtype "general"
+// (full CRUD with a real cloud id).
+// Golden source: tencentcloud/services/makers/resource_tc_makers_project.go
+// (typical CRUD resource with composite id and import support).
+//
+// Location: tencentcloud/services/<product>/resource_tc_<name>.go
+// Package:  the product package (same as SDKv2 references of that product).
+// Factory naming: New<Product><Name>Resource — referenced by registry.go.
+//
+// Decision points to resolve before writing code (marked with TEMPLATE):
+//   - the state id comes from the codegen JSON's resource_id (the create
+//     response field, e.g. "InstanceId"): use it directly, or join it with
+//     fwHelper.IdFormat when the describe/modify/delete APIs need more values
+//   - which attributes are Required / Optional / Optional+Computed / Computed
+//   - which attributes RequiresReplace (no Update API coverage)
+//   - import support (fw.WithImportByID or custom ImportState)
+
+package demo
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	demov20230101 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/demo/v20230101"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
+	fwHelper "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/helper"
+)
+
+// Compile-time interface assertions. Only assert the extension interfaces;
+// the base resource.Resource interface is checked implicitly by the factory
+// return value. Keep ResourceWithImportState only when import is supported.
+var (
+	_ resource.ResourceWithConfigure   = &DemoWidgetResource{}
+	_ resource.ResourceWithImportState = &DemoWidgetResource{}
+)
+
+// NewDemoWidgetResource is the factory referenced by
+// tencentcloud/framework/registry.go to register this resource.
+func NewDemoWidgetResource() resource.Resource {
+	return &DemoWidgetResource{}
+}
+
+// DemoWidgetResource implements resource.Resource for
+// tencentcloud_demo_widget.
+type DemoWidgetResource struct {
+	fw.ResourceWithConfigure
+	// TEMPLATE: embed fw.WithImportByID when import is supported AND the id
+	// is a single value passable straight into state ("id" only). Use a
+	// custom ImportState method instead when the id is composite.
+}
+
+// DemoWidgetResourceModel maps the schema attributes; each attribute appears
+// exactly once. Keep the struct fields in the same order as the schema.
+type DemoWidgetResourceModel struct {
+	Id types.String `tfsdk:"id"`
+	// TEMPLATE: user-facing attributes. One representative of each kind:
+	Name     types.String `tfsdk:"name"`      // Required
+	ZoneId   types.String `tfsdk:"zone_id"`   // Required + RequiresReplace
+	Remark   types.String `tfsdk:"remark"`    // Optional
+	Tags     types.List   `tfsdk:"tags"`      // Optional, list of string
+	Status   types.String `tfsdk:"status"`    // Computed
+	CreateOn types.String `tfsdk:"create_on"` // Computed
+}
+
+func (r *DemoWidgetResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
+	// TEMPLATE: must equal the registry key character-for-character;
+	// registry_test.go enforces this at CI time.
+	resp.TypeName = "tencentcloud_demo_widget"
+}
+
+func (r *DemoWidgetResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		Description: "Provides a resource to manage a Demo widget.",
+		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
+				Computed:    true,
+				Description: "ID of the resource.",
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
+			},
+			"name": schema.StringAttribute{
+				Required:    true,
+				Description: "Name of the widget.",
+			},
+			// TEMPLATE: attributes without Update API coverage must carry
+			// RequiresReplace so Terraform recreates instead of diffing
+			// forever.
+			"zone_id": schema.StringAttribute{
+				Required:    true,
+				Description: "Zone ID.",
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+			},
+			"remark": schema.StringAttribute{
+				Optional:    true,
+				Description: "Remark of the widget.",
+			},
+			"tags": schema.ListAttribute{
+				Optional:    true,
+				ElementType: types.StringType,
+				Description: "Tag list.",
+			},
+			// TEMPLATE: every Computed attribute that is set by the cloud on
+			// create needs UseStateForUnknown so plan/apply stay consistent.
+			"status": schema.StringAttribute{
+				Computed:    true,
+				Description: "Status of the widget.",
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
+			},
+			"create_on": schema.StringAttribute{
+				Computed:    true,
+				Description: "Creation time.",
+			},
+		},
+	}
+}
+
+// Create handles `terraform apply` for new resources.
+func (r *DemoWidgetResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan DemoWidgetResourceModel
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// TEMPLATE: request naming — EVERY initialized request/response is named
+	// after its actual API (camelCase + Request suffix: CreateWidget ->
+	// createWidgetRequest), with NO exceptions for single-API methods or
+	// if-scopes: the name alone tells you which API it serves. NEVER
+	// `request`, `request1`, or `readRequest`.
+	createWidgetRequest := demov20230101.NewCreateWidgetRequest()
+	createWidgetRequest.Name = plan.Name.ValueStringPointer()
+	createWidgetRequest.ZoneId = plan.ZoneId.ValueStringPointer()
+	// TEMPLATE: optional attributes are only sent when known; keep this
+	// null/unknown guard for every Optional field.
+	if !plan.Remark.IsNull() && !plan.Remark.IsUnknown() {
+		createWidgetRequest.Remark = plan.Remark.ValueStringPointer()
+	}
+
+	// TEMPLATE: optional lists expand with ElementsAs:
+	if !plan.Tags.IsNull() && !plan.Tags.IsUnknown() {
+		var tags []types.String
+		resp.Diagnostics.Append(plan.Tags.ElementsAs(ctx, &tags, false)...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+
+		createWidgetRequest.Tags = make([]*string, 0, len(tags))
+		for _, v := range tags {
+			if v.IsNull() || v.IsUnknown() {
+				continue
+			}
+
+			val := v.ValueString()
+			createWidgetRequest.Tags = append(createWidgetRequest.Tags, &val)
+		}
+	}
+
+	// TEMPLATE: never dereference r.Client() without the nil guard; report
+	// "Provider not configured" exactly like this.
+	if r.Client() == nil {
+		resp.Diagnostics.AddError(
+			"Provider not configured",
+			"The provider client is not available. This is unexpected; please report it.",
+		)
+
+		return
+	}
+
+	service := NewDemoService(r.Client())
+	// TEMPLATE: widgetId below is the value of the JSON resource_id field
+	// from the create response — the service method returns it.
+	widgetId, err := service.CreateWidget(ctx, createWidgetRequest)
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Error creating Demo widget",
+			fmt.Sprintf("CreateWidget failed: %v", err),
+		)
+
+		return
+	}
+
+	// TEMPLATE: never write an empty id into state.
+	if widgetId == "" {
+		resp.Diagnostics.AddError(
+			"Error creating Demo widget",
+			"CreateWidget returned an empty widget id.",
+		)
+
+		return
+	}
+
+	// TEMPLATE: composite id when several values address the resource on the
+	// cloud side: fwHelper.IdFormat(a, b). Use the single id otherwise.
+	plan.Id = types.StringValue(widgetId)
+
+	// TEMPLATE: Computed attributes are unknown at this point and a state
+	// cannot hold unknown values — normalize them to null before the
+	// defensive persist below (see normalizeComputedUnknowns).
+	normalizeDemoWidgetComputedUnknowns(&plan)
+
+	// Persist the identity before reading back so a partial failure still
+	// leaves a destroyable resource in state.
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// TEMPLATE: async API — when the JSON input carries async_info for the
+	// create API, the service method returns a task id that must be waited
+	// on BEFORE reading back. The wait takes a timeout parameter: pass the
+	// product's dedicated tccommon wait constant when one exists, or a
+	// sensible default agreed with the user:
+	//   if err := service.WaitDemoTaskResult(ctx, taskId, tccommon.DefaultWaitTimeout); err != nil { ... }
+
+	// TEMPLATE: read-back — same request form as Read; the caller picks
+	// its own item from the list.
+	describeWidgetsRequest := demov20230101.NewDescribeWidgetsRequest()
+	describeWidgetsRequest.WidgetIds = []*string{fwHelper.String(widgetId)}
+	widgets, _, err := service.DescribeWidgets(ctx, describeWidgetsRequest)
+	if err != nil {
+		resp.Diagnostics.AddError("Error reading Demo widget after create", err.Error())
+		return
+	}
+
+	item := findDemoWidget(widgets, widgetId)
+	if item == nil {
+		resp.Diagnostics.AddError(
+			"Demo widget not readable after create",
+			fmt.Sprintf("widget %s was created but cannot be read back", plan.Id.ValueString()),
+		)
+
+		return
+	}
+
+	resp.Diagnostics.Append(refreshDemoWidgetModel(ctx, &plan, item)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+// Read handles `terraform refresh` and post-apply state refresh.
+func (r *DemoWidgetResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state DemoWidgetResourceModel
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// TEMPLATE: composite ids are split with fwHelper.IdParseErr(id, n);
+	// single ids are used as-is.
+	widgetId := state.Id.ValueString()
+
+	// TEMPLATE: read — build the describe request HERE (id -> request),
+	// call the service with (ctx, request), pick this resource's own item
+	// from the returned list, then map it into state (refresh + Set).
+	// "No match in the list" is not-found -> RemoveResource.
+	describeWidgetsRequest := demov20230101.NewDescribeWidgetsRequest()
+	describeWidgetsRequest.WidgetIds = []*string{fwHelper.String(widgetId)}
+
+	service := NewDemoService(r.Client())
+	widgets, _, err := service.DescribeWidgets(ctx, describeWidgetsRequest)
+	if err != nil {
+		resp.Diagnostics.AddError("Error reading Demo widget", err.Error())
+		return
+	}
+
+	item := findDemoWidget(widgets, widgetId)
+
+	// Confirmed "not found" on the cloud side => drop it from state so
+	// Terraform plans a recreation.
+	if item == nil {
+		resp.Diagnostics.AddWarning(
+			"Resource not found",
+			fmt.Sprintf("Demo widget %s not found, removing from state.", state.Id.ValueString()),
+		)
+
+		resp.State.RemoveResource(ctx)
+		return
+	}
+
+	resp.Diagnostics.Append(refreshDemoWidgetModel(ctx, &state, item)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+}
+
+// Update handles in-place modifications. TEMPLATE: when the cloud has no
+// update API at all, implement Update as a no-op return and mark every
+// mutable attribute RequiresReplace; when update is only partial, mark the
+// non-updatable attributes RequiresReplace.
+func (r *DemoWidgetResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan DemoWidgetResourceModel
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	var state DemoWidgetResourceModel
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	widgetId := state.Id.ValueString()
+
+	modifyWidgetRequest := demov20230101.NewModifyWidgetRequest()
+	modifyWidgetRequest.WidgetId = fwHelper.String(widgetId)
+	if !plan.Name.IsNull() && !plan.Name.IsUnknown() {
+		modifyWidgetRequest.Name = plan.Name.ValueStringPointer()
+	}
+
+	if !plan.Remark.IsNull() && !plan.Remark.IsUnknown() {
+		modifyWidgetRequest.Remark = plan.Remark.ValueStringPointer()
+	}
+
+	service := NewDemoService(r.Client())
+	if err := service.ModifyWidget(ctx, modifyWidgetRequest); err != nil {
+		resp.Diagnostics.AddError(
+			"Error updating Demo widget",
+			fmt.Sprintf("ModifyWidget failed: %v", err),
+		)
+
+		return
+	}
+
+	// TEMPLATE: when the update API is async (async_info present), wait for
+	// the task here before the read-back.
+
+	describeWidgetsRequest := demov20230101.NewDescribeWidgetsRequest()
+	describeWidgetsRequest.WidgetIds = []*string{fwHelper.String(widgetId)}
+	widgets, _, err := service.DescribeWidgets(ctx, describeWidgetsRequest)
+	if err != nil {
+		resp.Diagnostics.AddError("Error reading Demo widget after update", err.Error())
+		return
+	}
+
+	item := findDemoWidget(widgets, widgetId)
+	if item == nil {
+		resp.Diagnostics.AddError(
+			"Demo widget not readable after update",
+			fmt.Sprintf("widget %s was updated but cannot be read back", state.Id.ValueString()),
+		)
+
+		return
+	}
+
+	plan.Id = state.Id
+	resp.Diagnostics.Append(refreshDemoWidgetModel(ctx, &plan, item)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+// Delete handles resource deletion.
+func (r *DemoWidgetResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state DemoWidgetResourceModel
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	widgetId := state.Id.ValueString()
+
+	// TEMPLATE: delete — build the delete request HERE (id -> request),
+	// then call the service with (ctx, request).
+	deleteWidgetRequest := demov20230101.NewDeleteWidgetRequest()
+	deleteWidgetRequest.WidgetId = fwHelper.String(widgetId)
+
+	service := NewDemoService(r.Client())
+	if err := service.DeleteWidget(ctx, deleteWidgetRequest); err != nil {
+		resp.Diagnostics.AddError(
+			"Error deleting Demo widget",
+			fmt.Sprintf("DeleteWidget failed: %v", err),
+		)
+
+		return
+	}
+	// TEMPLATE: async delete — wait for the task here when async_info is
+	// present on the delete API.
+}
+
+// TEMPLATE: custom ImportState only for composite ids. For single-value ids,
+// delete this method and embed fw.WithImportByID instead.
+func (r *DemoWidgetResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), req.ID)...)
+}
+
+// refreshDemoWidgetModel copies cloud-owned fields into the model while
+// keeping the user-supplied values for fields the cloud API does not echo
+// back. Every cloud-reported field is only overwritten when the cloud
+// actually returned a value (fw.OverwriteString keeps the previous value on
+// nil), otherwise Terraform fails the post-apply consistency check with
+// "was <value>, but now null".
+func refreshDemoWidgetModel(ctx context.Context, m *DemoWidgetResourceModel, item *demov20230101.Widget) diag.Diagnostics {
+	if item == nil {
+		return nil
+	}
+
+	// TEMPLATE: read-direction anti-diff conversions come from
+	// fwHelper.StringValueOrPrev — a cloud-omitted field keeps the previous
+	// value (see framework/helper types.go).
+	m.Name = fwHelper.StringValueOrPrev(item.Name, m.Name)
+	m.ZoneId = fwHelper.StringValueOrPrev(item.ZoneId, m.ZoneId)
+	m.Remark = fwHelper.StringValueOrPrev(item.Remark, m.Remark)
+	m.Status = fwHelper.StringValueOrPrev(item.Status, m.Status)
+	m.CreateOn = fwHelper.StringValueOrPrev(item.CreateOn, m.CreateOn)
+	return nil
+}
+
+// normalizeDemoWidgetComputedUnknowns rewrites unknown computed attributes to
+// null so the model can be persisted into state before the read-back fills
+// them with the cloud-side values.
+func normalizeDemoWidgetComputedUnknowns(m *DemoWidgetResourceModel) {
+	if m.Status.IsUnknown() {
+		m.Status = types.StringNull()
+	}
+
+	if m.CreateOn.IsUnknown() {
+		m.CreateOn = types.StringNull()
+	}
+}
+
+// findDemoWidget picks this resource's own item from a describe list.
+// TEMPLATE: business-side picking belongs to the resource file — the service
+// layer only returns the raw list. "No match" is not-found.
+func findDemoWidget(widgets []*demov20230101.Widget, widgetId string) *demov20230101.Widget {
+	for _, w := range widgets {
+		if w.WidgetId != nil && *w.WidgetId == widgetId {
+			return w
+		}
+	}
+
+	return nil
+}

@@ -1,5 +1,5 @@
 ---
-subcategory: "Provider Meta"
+subcategory: "TencentDB for MongoDB(mongodb)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mongodb_restore_db_instance"
 sidebar_current: "docs-tencentcloud-action-mongodb_restore_db_instance"

@@ -1,5 +1,5 @@
 ---
-subcategory: "Provider Meta"
+subcategory: "Data Lake Compute(DLC)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dlc_initialize_tc_lake"
 sidebar_current: "docs-tencentcloud-action-dlc_initialize_tc_lake"

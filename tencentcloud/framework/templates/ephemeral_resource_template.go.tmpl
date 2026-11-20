@@ -1,0 +1,165 @@
+// TEMPLATE: framework ephemeral-resource skeleton.
+// Golden source: tencentcloud/services/ssm/ephemeral_tc_ssm_secret_version.go
+//
+// Location: tencentcloud/services/<product>/ephemeral_tc_<name>.go
+// Factory naming: New<Product><Name>EphemeralResource.
+//
+// Ephemeral resources produce short-lived values (credentials, tokens) that
+// never persist in state: Open reads the value; optional Renew (narrow
+// semantics in this framework version — extends a remote object's lifetime
+// only, cannot return new data) and optional Close revoke/clean it up when
+// the cloud API supports it. Sensitive output attributes MUST be marked
+// Sensitive.
+
+package demo
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/hashicorp/terraform-plugin-framework/ephemeral"
+	"github.com/hashicorp/terraform-plugin-framework/ephemeral/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	demov20230101 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/demo/v20230101"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
+	fwHelper "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/helper"
+)
+
+// Only the extension-interface assertion is kept; the base
+// ephemeral.EphemeralResource interface is checked implicitly by the factory
+// return value.
+var _ ephemeral.EphemeralResourceWithConfigure = &DemoTempCredentialEphemeralResource{}
+
+// NewDemoTempCredentialEphemeralResource is the factory referenced by
+// tencentcloud/framework/registry.go to register this ephemeral resource.
+func NewDemoTempCredentialEphemeralResource() ephemeral.EphemeralResource {
+	return &DemoTempCredentialEphemeralResource{}
+}
+
+// DemoTempCredentialEphemeralResource implements ephemeral.EphemeralResource
+// for tencentcloud_demo_temp_credential.
+type DemoTempCredentialEphemeralResource struct {
+	fw.EphemeralResourceWithConfigure
+}
+
+// DemoTempCredentialEphemeralResourceModel maps the schema attributes.
+type DemoTempCredentialEphemeralResourceModel struct {
+	WidgetId    types.String `tfsdk:"widget_id"`
+	Duration    types.Int64  `tfsdk:"duration"`
+	SecretToken types.String `tfsdk:"secret_token"`
+	ExpiredAt   types.String `tfsdk:"expired_at"`
+}
+
+func (e *DemoTempCredentialEphemeralResource) Metadata(_ context.Context, _ ephemeral.MetadataRequest, resp *ephemeral.MetadataResponse) {
+	resp.TypeName = "tencentcloud_demo_temp_credential"
+}
+
+func (e *DemoTempCredentialEphemeralResource) Schema(_ context.Context, _ ephemeral.SchemaRequest, resp *ephemeral.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		Description: "Retrieves a temporary credential for a Demo widget. " +
+			"The value is not persisted in state and expires after use.",
+		Attributes: map[string]schema.Attribute{
+			"widget_id": schema.StringAttribute{
+				Required:    true,
+				Description: "ID of the widget.",
+			},
+			"duration": schema.Int64Attribute{
+				Optional:    true,
+				Description: "Validity duration in seconds. Default: 3600.",
+			},
+			// TEMPLATE: Sensitive on every secret-bearing Computed attribute.
+			"secret_token": schema.StringAttribute{
+				Computed:    true,
+				Sensitive:   true,
+				Description: "The temporary token.",
+			},
+			"expired_at": schema.StringAttribute{
+				Computed:    true,
+				Description: "Expiration time of the token.",
+			},
+		},
+	}
+}
+
+// Open is invoked once per plan/apply. It reads the ephemeral value from the
+// cloud API and writes it back to resp.Result.
+func (e *DemoTempCredentialEphemeralResource) Open(ctx context.Context, req ephemeral.OpenRequest, resp *ephemeral.OpenResponse) {
+	var data DemoTempCredentialEphemeralResourceModel
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	widgetId := data.WidgetId.ValueString()
+	if widgetId == "" {
+		resp.Diagnostics.AddError("Missing widget_id", "widget_id is required and cannot be empty.")
+		return
+	}
+
+	if e.Client() == nil {
+		resp.Diagnostics.AddError(
+			"Provider not configured",
+			"The provider client is not available. This is unexpected; please report it.",
+		)
+
+		return
+	}
+
+	// TEMPLATE: read — build the request HERE (lookup id -> request), call
+	// the service with (ctx, request); the returned values MUST be set into
+	// the result model below. Requests are ALWAYS named after their API.
+	describeTempCredentialRequest := demov20230101.NewDescribeTempCredentialRequest()
+	describeTempCredentialRequest.WidgetId = fwHelper.String(widgetId)
+
+	service := NewDemoService(e.Client())
+	token, expiredAt, err := service.DescribeTempCredential(ctx, describeTempCredentialRequest)
+	if err != nil {
+		// TEMPLATE: distinguish confirmed not-found from transport errors so
+		// the user gets an actionable message.
+		resp.Diagnostics.AddError(
+			"Error reading Demo temp credential",
+			fmt.Sprintf("Could not read temp credential for widget %q: %v", widgetId, err),
+		)
+
+		return
+	}
+
+	data.SecretToken = types.StringValue(token)
+	data.ExpiredAt = types.StringValue(expiredAt)
+
+	resp.Diagnostics.Append(resp.Result.Set(ctx, &data)...)
+}
+
+// TEMPLATE: Renew is optional (interface ephemeral.EphemeralResourceWithRenew,
+// vendored framework version). Its semantics in this framework version are
+// NARROW: Renew cannot return new result data — it only extends the lifetime
+// of a remote object (Vault-lease style) and must set resp.RenewAt to the
+// next expiry.
+//
+// Renew is NOT expressed in the codegen JSON (api.read maps to Open) — do
+// not implement it during generation. When the API set looks
+// renewal-capable, mention it in the summary so the user can request it
+// explicitly; only then map the user-provided renewal API to this call,
+// reading lookup keys from req.Private.GetKey.
+//
+// Do NOT use Renew to re-read changing values (e.g. a rotating token) — that
+// requires a fresh Open, which Terraform drives, not the provider.
+//
+// func (e *DemoTempCredentialEphemeralResource) Renew(ctx context.Context, req ephemeral.RenewRequest, resp *ephemeral.RenewResponse) {
+//     // 1. Read the lookup keys (e.g. widget_id) from req.Private.GetKey.
+//     // 2. Call the renewal API via the service layer.
+//     // 3. Set resp.RenewAt to the new expiry (plus a small safety margin).
+// }
+
+// TEMPLATE: Close is optional (interface ephemeral.EphemeralResourceWithClose).
+// Implement it only when the cloud API supports revocation; a Close that
+// simply frees local resources is unnecessary. Lookup keys come from
+// req.Private.GetKey (set in Open via resp.Private.SetKey); CloseResponse
+// carries Diagnostics only.
+//
+// func (e *DemoTempCredentialEphemeralResource) Close(ctx context.Context, req ephemeral.CloseRequest, resp *ephemeral.CloseResponse) {
+//     // Revoke the credential via the revoke API (map the JSON input's
+//     // api.delete[0] to this call), reading the lookup keys from req.Private.
+// }

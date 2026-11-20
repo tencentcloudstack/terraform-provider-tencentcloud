@@ -31,6 +31,7 @@ In addition to all arguments above, the following attributes are exported:
   * `region_en_name` - English name of the region.
   * `region` - Region abbreviation, e.g. `ap-guangzhou`.
   * `rule_number` - Number of rules deployed in this region.
+* `id` - ID of the data source, a random token.
 * `region_list` - List of dispense deployment regions.
 
 

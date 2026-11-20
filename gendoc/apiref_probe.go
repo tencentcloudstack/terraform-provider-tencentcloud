@@ -16,6 +16,7 @@ import (
 	"runtime"
 	"sort"
 	"strings"
+	"sync"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
@@ -161,19 +162,63 @@ func findResourceFile(repoRoot, resName string) string {
 		fmt.Sprintf("resource_tc_%s_operation.go", short),
 		fmt.Sprintf("resource_tc_%s_config.go", short),
 	}
-	var found string
-	filepath.Walk(filepath.Join(repoRoot, "tencentcloud", "services"), func(path string, fi os.FileInfo, err error) error {
-		if err != nil || found != "" || fi.IsDir() {
-			return nil
+	idx := resourceFileIndex(filepath.Join(repoRoot, "tencentcloud", "services"))
+	// The previous implementation walked the whole services tree per
+	// call and stopped matching at the first hit ("found != \"\""
+	// early-return), i.e. the FIRST file in walk order matching any
+	// candidate wins; the seq field of the index entries reproduces
+	// exactly that resolution.
+	var best resFileEntry
+	for _, c := range candidates {
+		if e, ok := idx[c]; ok && (best.path == "" || e.seq < best.seq) {
+			best = e
 		}
-		for _, c := range candidates {
-			if filepath.Base(path) == c {
-				found = path
+	}
+	return best.path
+}
+
+// resFileEntry records a file's path and its position in the one-time
+// index walk, so lookups can reproduce "last match in walk order wins".
+type resFileEntry struct {
+	path string
+	seq  int
+}
+
+// resFileIdxState caches the services-tree filename index, built by a
+// single walk on first use (the old code re-walked the whole tree once
+// per resource — the dominant cost of a full 'make doc' run).
+var resFileIdxState struct {
+	mu    sync.Mutex
+	root  string
+	byName map[string]resFileEntry
+}
+
+// resourceFileIndex returns (and lazily builds) the
+// base-name -> entry index for every file under servicesRoot. Only the
+// first occurrence of a base name is kept, matching the first-match
+// semantics of the original per-call walk.
+func resourceFileIndex(servicesRoot string) map[string]resFileEntry {
+	st := &resFileIdxState
+	st.mu.Lock()
+	defer st.mu.Unlock()
+	if st.byName == nil || st.root != servicesRoot {
+		byName := map[string]resFileEntry{}
+		seq := 0
+		_ = filepath.Walk(servicesRoot, func(path string, fi os.FileInfo, err error) error {
+			if err != nil || fi.IsDir() {
+				return nil
 			}
-		}
-		return nil
-	})
-	return found
+			base := filepath.Base(path)
+			if _, dup := byName[base]; dup {
+				return nil
+			}
+			seq++
+			byName[base] = resFileEntry{path: path, seq: seq}
+			return nil
+		})
+		st.root, st.byName = servicesRoot, byName
+	}
+	return st.byName
 }
 
 func relToRepo(repoRoot, path string) string {

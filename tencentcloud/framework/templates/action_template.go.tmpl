@@ -1,0 +1,118 @@
+// TEMPLATE: framework action skeleton.
+// Golden sources:
+//   - simple: tencentcloud/services/antiddos/action_tc_antiddos_unblock_resources.go
+//   - complex (write + wait + echo result):
+//     tencentcloud/services/ssl/action_tc_ssl_upload_certificate_instance.go
+//
+// Location: tencentcloud/services/<product>/action_tc_<product>_<name>.go
+// Factory naming: New<Product><Name> (no "Action" suffix — repo convention
+// varies, keep the name aligned with the registry key).
+//
+// Actions are one-shot operations: they have Invoke only, no state. Typical
+// use cases: batch operations, apply-for-unblock, upload-certificate-like
+// flows that return a value but manage no lifecycle.
+
+package demo
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/hashicorp/terraform-plugin-framework/action"
+	"github.com/hashicorp/terraform-plugin-framework/action/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	demov20230101 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/demo/v20230101"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
+)
+
+var _ action.ActionWithConfigure = &DemoRestartWidget{}
+
+// NewDemoRestartWidget is the factory referenced by
+// tencentcloud/framework/registry.go to register this action.
+func NewDemoRestartWidget() action.Action {
+	return &DemoRestartWidget{}
+}
+
+// DemoRestartWidget implements action.Action for
+// tencentcloud_demo_restart_widget.
+type DemoRestartWidget struct {
+	fw.ActionWithConfigure
+}
+
+// DemoRestartWidgetModel maps the schema attributes.
+type DemoRestartWidgetModel struct {
+	WidgetId types.String `tfsdk:"widget_id"`
+	// TEMPLATE: actions may declare Computed output attributes; Invoke writes
+	// them into resp.State so the HCL `on` block can echo the API result.
+	FlowId types.String `tfsdk:"flow_id"`
+}
+
+func (a *DemoRestartWidget) Metadata(_ context.Context, _ action.MetadataRequest, resp *action.MetadataResponse) {
+	resp.TypeName = "tencentcloud_demo_restart_widget"
+}
+
+func (a *DemoRestartWidget) Schema(_ context.Context, _ action.SchemaRequest, resp *action.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		Description: "Provides an action to restart a Demo widget via the " +
+			"RestartWidget API. This is a one-time operation; no cloud-side state is persisted.",
+		Attributes: map[string]schema.Attribute{
+			"widget_id": schema.StringAttribute{
+				Required:    true,
+				Description: "ID of the widget to restart.",
+			},
+			"flow_id": schema.StringAttribute{
+				Computed:    true,
+				Description: "Flow ID returned by the API, for tracing the operation.",
+			},
+		},
+	}
+}
+
+// Invoke is called to run the logic of the action.
+func (a *DemoRestartWidget) Invoke(ctx context.Context, req action.InvokeRequest, resp *action.InvokeResponse) {
+	var data DemoRestartWidgetModel
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	widgetId := data.WidgetId.ValueString()
+	if widgetId == "" {
+		resp.Diagnostics.AddError("Missing widget_id", "widget_id is required and cannot be empty.")
+		return
+	}
+
+	if a.Client() == nil {
+		resp.Diagnostics.AddError(
+			"Provider not configured",
+			"The provider client is not available. This is unexpected; please report it.",
+		)
+
+		return
+	}
+
+	restartWidgetRequest := demov20230101.NewRestartWidgetRequest()
+	restartWidgetRequest.WidgetId = &widgetId
+
+	service := NewDemoService(a.Client())
+	flowId, err := service.RestartWidget(ctx, restartWidgetRequest)
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Error restarting Demo widget",
+			fmt.Sprintf("RestartWidget failed: %v", err),
+		)
+
+		return
+	}
+
+	// TEMPLATE: async action — when the JSON input carries async_info, wait
+	// for the task BEFORE writing the final state. The wait takes a timeout
+	// parameter: pass the product's dedicated tccommon wait constant when
+	// one exists, or a sensible default agreed with the user:
+	//   if err := service.WaitDemoTaskResult(ctx, taskId, tccommon.DefaultWaitTimeout); err != nil { ... }
+
+	data.FlowId = types.StringValue(flowId)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+}
