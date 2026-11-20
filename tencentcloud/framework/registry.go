@@ -35,6 +35,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bdrc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cam"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/config"
+	crs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/crs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dlc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ioa"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/kms"
@@ -53,17 +54,20 @@ var resourcesMap = map[string]func() resource.Resource{
 	"tencentcloud_cam_update_password_rule_config":  cam.NewCamUpdatePasswordRuleConfigResource,
 	"tencentcloud_config_aggregate_compliance_pack": config.NewConfigAggregateCompliancePackResource,
 	"tencentcloud_ioa_delivery_server":              ioa.NewIoaDeliveryServerResource,
-	"tencentcloud_makers_zone_custom_domain":        makers.NewMakersZoneCustomDomainResource,
 	"tencentcloud_ioa_delivery_strategy":            ioa.NewIoaDeliveryStrategyResource,
+	"tencentcloud_monitor_dispense_external_rule":   monitor.NewMonitorDispenseExternalRuleResource,
+	"tencentcloud_makers_zone_custom_domain":        makers.NewMakersZoneCustomDomainResource,
 	"tencentcloud_makers_project":                   makers.NewMakersProjectResource,
+	"tencentcloud_makers_project_envs":              makers.NewMakersProjectEnvsResource,
 	"tencentcloud_ssm_secret_version_v2":            ssm.NewSsmSecretVersionV2Resource,
 }
 
 // dataSourcesMap maps every framework data source type name to its factory.
 var dataSourcesMap = map[string]func() datasource.DataSource{
 	"tencentcloud_config_list_aggregate_compliance_packs": config.NewConfigListAggregateCompliancePacksDataSource,
-	"tencentcloud_makers_deployment_log":                  makers.NewMakersDeploymentLogDataSource,
 	"tencentcloud_monitor_ext_metric":                     monitor.NewMonitorExtMetricDataSource,
+	"tencentcloud_makers_deployment_log":                  makers.NewMakersDeploymentLogDataSource,
+	"tencentcloud_makers_deployments":                     makers.NewMakersDeploymentsDataSource,
 }
 
 // functionsMap maps every framework function name to its factory. Function
@@ -87,12 +91,15 @@ var actionsMap = map[string]func() action.Action{
 	"tencentcloud_bdrc_run_copy_pair_tasks":                  bdrc.NewBdrcRunCopyPairTasks,
 	"tencentcloud_dlc_initialize_tc_lake":                    dlc.NewDlcInitializeTCLake,
 	"tencentcloud_kms_instance":                              kms.NewKmsInstance,
+	"tencentcloud_redis_valkey_module":                       crs.NewRedisValkeyModule,
+	"tencentcloud_makers_deployment":                         makers.NewMakersDeployment,
 	"tencentcloud_mongodb_restore_db_instance":               mongodb.NewMongodbRestoreDbInstance,
 	"tencentcloud_organization_provision_role_configuration": tco.NewTcoProvisionRoleConfiguration,
 	"tencentcloud_ssl_upload_certificate_instance":           ssl.NewSslUploadCertificateInstance,
 	"tencentcloud_ssm_service":                               ssm.NewSsmServiceAction,
 	"tencentcloud_teo_confirm_origin_acl_update":             teo.NewTeoConfirmOriginAclUpdate,
 	"tencentcloud_teo_apply_free_certificate":                teo.NewTeoApplyFreeCertificate,
+	"tencentcloud_teo_plan_for_zone":                         teo.NewTeoPlanForZoneAction,
 }
 
 // factoriesOf converts a name → factory registry map into the factory slice the

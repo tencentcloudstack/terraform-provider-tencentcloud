@@ -4,6 +4,6 @@ Example Usage
 
 ```hcl
 data "tencentcloud_monitor_ext_metric" "example" {
-  ext_namespace = "qcs::monitor:my-namespace"
+  ext_namespace = "QCE/CVM"
 }
 ```

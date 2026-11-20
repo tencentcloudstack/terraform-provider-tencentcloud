@@ -148,13 +148,14 @@ func resourceTencentCloudCkafkaRouteCreate(d *schema.ResourceData, meta interfac
 	defer tccommon.LogElapsed("resource.tencentcloud_ckafka_route.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		service    = CkafkaService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request    = ckafka.NewCreateRouteRequest()
 		response   = ckafka.NewCreateRouteResponse()
 		instanceId string
 	)
+
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
 		request.InstanceId = helper.String(instanceId)
@@ -208,23 +209,37 @@ func resourceTencentCloudCkafkaRouteCreate(d *schema.ResourceData, meta interfac
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil || result.Response.Result == nil {
+			return resource.NonRetryableError(fmt.Errorf("ckafka route create failed, response is nil"))
+		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create ckafka route failed, reason:%+v", logId, err)
 		return err
 	}
+
+	if response.Response.Result.Data == nil ||
+		response.Response.Result.Data.RouteDTO == nil ||
+		response.Response.Result.Data.RouteDTO.RouteId == nil {
+		return fmt.Errorf("RouteId is nil")
+	}
+
 	log.Printf("Result.Data: %+v", response.Response.Result.Data)
 	routeIdInt64 := *response.Response.Result.Data.RouteDTO.RouteId
-	flowIdInt64 := *response.Response.Result.Data.FlowId
 	reouteIdString := strconv.FormatInt(routeIdInt64, 10)
 	d.SetId(instanceId + tccommon.FILED_SP + reouteIdString)
 
-	service := CkafkaService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	if response.Response.Result.Data.FlowId == nil {
+		return fmt.Errorf("FlowId is nil")
+	}
 
+	flowIdInt64 := *response.Response.Result.Data.FlowId
 	conf := tccommon.BuildStateChangeConf([]string{}, []string{"0"}, tccommon.ReadRetryTimeout, time.Second, service.CkafkaRouteStateRefreshFunc(flowIdInt64, []string{}))
-
 	if _, e := conf.WaitForState(); e != nil {
 		return e
 	}
@@ -236,22 +251,24 @@ func resourceTencentCloudCkafkaRouteRead(d *schema.ResourceData, meta interface{
 	defer tccommon.LogElapsed("resource.tencentcloud_ckafka_route.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := CkafkaService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CkafkaService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	items := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(items) < 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+
 	instanceId := items[0]
 	routeId := items[1]
 	routeIdInt64, err := strconv.ParseInt(routeId, 10, 64)
 	if err != nil {
 		return err
 	}
+
 	route, err := service.DescribeCkafkaRouteById(ctx, instanceId, routeIdInt64)
 	if err != nil {
 		return err
@@ -288,6 +305,7 @@ func resourceTencentCloudCkafkaRouteRead(d *schema.ResourceData, meta interface{
 	if len(route.VipList) > 0 {
 		_ = d.Set("ip", route.VipList[0].Vip)
 	}
+
 	vipList := make([]map[string]interface{}, 0)
 	for _, vip := range route.VipList {
 		vipList = append(vipList, map[string]interface{}{
@@ -295,6 +313,7 @@ func resourceTencentCloudCkafkaRouteRead(d *schema.ResourceData, meta interface{
 			"vport": vip.Vport,
 		})
 	}
+
 	_ = d.Set("vip_list", vipList)
 	brokerVipList := make([]map[string]interface{}, 0)
 	for _, brokerVip := range route.BrokerVipList {
@@ -328,7 +347,6 @@ func resourceTencentCloudCkafkaRouteUpdate(d *schema.ResourceData, meta interfac
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	immutableArgs := []string{"instance_id", "vip_type", "vpc_id", "subnet_id", "access_type", "auth_flag", "caller_appid", "public_network", "ip"}
-
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -336,14 +354,17 @@ func resourceTencentCloudCkafkaRouteUpdate(d *schema.ResourceData, meta interfac
 	}
 
 	if d.HasChange("security_group_ids") {
-		logId := tccommon.GetLogId(tccommon.ContextNil)
-		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		var (
+			logId   = tccommon.GetLogId(tccommon.ContextNil)
+			ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+			service = CkafkaService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		)
 
-		service := CkafkaService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		items := strings.Split(d.Id(), tccommon.FILED_SP)
 		if len(items) < 2 {
 			return fmt.Errorf("id is broken,%s", d.Id())
 		}
+
 		instanceId := items[0]
 		routeId := items[1]
 		routeIdInt64, err := strconv.ParseInt(routeId, 10, 64)
@@ -357,6 +378,7 @@ func resourceTencentCloudCkafkaRouteUpdate(d *schema.ResourceData, meta interfac
 			for _, item := range securityGroupIds {
 				tmp = append(tmp, helper.String(item.(string)))
 			}
+
 			if err := service.ModifyCkafkaRouteSecurityGroups(ctx, instanceId, routeIdInt64, tmp); err != nil {
 				return err
 			}
@@ -374,20 +396,24 @@ func resourceTencentCloudCkafkaRouteDelete(d *schema.ResourceData, meta interfac
 	defer tccommon.LogElapsed("resource.tencentcloud_ckafka_route.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CkafkaService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
-	service := CkafkaService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	items := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(items) < 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+
 	instanceId := items[0]
 	routeId := items[1]
 	routeIdInt64, err := strconv.ParseInt(routeId, 10, 64)
 	if err != nil {
 		return err
 	}
+
 	if err := service.DeleteCkafkaRouteById(ctx, instanceId, routeIdInt64); err != nil {
 		return err
 	}

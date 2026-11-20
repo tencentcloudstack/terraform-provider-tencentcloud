@@ -15,7 +15,7 @@ Use this data source to query Cloud Monitor external metrics of an external name
 
 ```hcl
 data "tencentcloud_monitor_ext_metric" "example" {
-  ext_namespace = "qcs::monitor:my-namespace"
+  ext_namespace = "QCE/CVM"
 }
 ```
 

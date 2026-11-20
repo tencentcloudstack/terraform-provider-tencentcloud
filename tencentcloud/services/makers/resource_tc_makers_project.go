@@ -3,7 +3,6 @@ package makers
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -16,7 +15,6 @@ import (
 
 	sdk "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers/v20261113"
 
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -317,7 +315,7 @@ func (r *MakersProjectResource) Create(ctx context.Context, req resource.CreateR
 	// The resource identity is the composite `zone_id#project_id`: the
 	// describe, modify and delete APIs all address the project by this pair,
 	// and the project id alone is only unique within a zone.
-	plan.Id = types.StringValue(buildMakersProjectId(plan.ZoneId.ValueString(), *projectId))
+	plan.Id = types.StringValue(helper.IdFormat(plan.ZoneId.ValueString(), *projectId))
 
 	// Computed attributes are unknown at this point; a state cannot hold
 	// unknown values, so they are normalized to null before the defensive
@@ -355,11 +353,13 @@ func (r *MakersProjectResource) Read(ctx context.Context, req resource.ReadReque
 		return
 	}
 
-	zoneId, projectId, err := parseMakersProjectId(state.Id.ValueString())
+	parts, err := helper.IdParseErr(state.Id.ValueString(), 2)
 	if err != nil {
 		resp.Diagnostics.AddError("Invalid resource id", err.Error())
 		return
 	}
+	zoneId := parts[0]
+	projectId := parts[1]
 
 	service := NewMakersService(r.Client())
 	item, err := service.DescribeProject(ctx, zoneId, projectId)
@@ -397,11 +397,13 @@ func (r *MakersProjectResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 
-	zoneId, projectId, err := parseMakersProjectId(state.Id.ValueString())
+	parts, err := helper.IdParseErr(state.Id.ValueString(), 2)
 	if err != nil {
 		resp.Diagnostics.AddError("Invalid resource id", err.Error())
 		return
 	}
+	zoneId := parts[0]
+	projectId := parts[1]
 
 	request := sdk.NewModifyProjectRequest()
 	request.ZoneId = helper.String(zoneId)
@@ -499,11 +501,13 @@ func (r *MakersProjectResource) Delete(ctx context.Context, req resource.DeleteR
 		return
 	}
 
-	zoneId, projectId, err := parseMakersProjectId(state.Id.ValueString())
+	parts, err := helper.IdParseErr(state.Id.ValueString(), 2)
 	if err != nil {
 		resp.Diagnostics.AddError("Invalid resource id", err.Error())
 		return
 	}
+	zoneId := parts[0]
+	projectId := parts[1]
 
 	request := sdk.NewDeleteProjectRequest()
 	request.ZoneId = helper.String(zoneId)
@@ -525,14 +529,15 @@ func (r *MakersProjectResource) Delete(ctx context.Context, req resource.DeleteR
 // ImportState supports `terraform import` with the composite id
 // `zone_id#project_id`.
 func (r *MakersProjectResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	zoneId, projectId, err := parseMakersProjectId(req.ID)
+	parts, err := helper.IdParseErr(req.ID, 2)
 	if err != nil {
-		resp.Diagnostics.AddError("Invalid import ID", err.Error())
+		resp.Diagnostics.AddError("Invalid resource id", err.Error())
 		return
 	}
+
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), req.ID)...)
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("zone_id"), zoneId)...)
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("project_id"), projectId)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("zone_id"), parts[0])...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("project_id"), parts[1])...)
 }
 
 // refreshModel copies cloud-owned fields into the model while keeping the
@@ -589,19 +594,4 @@ func normalizeComputedUnknowns(m *MakersProjectResourceModel) {
 	if m.ModifiedOn.IsUnknown() {
 		m.ModifiedOn = types.StringNull()
 	}
-}
-
-// buildMakersProjectId builds the composite resource id `zone_id#project_id`.
-func buildMakersProjectId(zoneId, projectId string) string {
-	return zoneId + tccommon.FILED_SP + projectId
-}
-
-// parseMakersProjectId splits the composite resource id back into the zone id
-// and the project id.
-func parseMakersProjectId(id string) (zoneId, projectId string, err error) {
-	parts := strings.Split(id, tccommon.FILED_SP)
-	if len(parts) != 2 || parts[0] == "" || parts[1] == "" {
-		return "", "", fmt.Errorf("Makers project id must be in the format `zone_id#project_id`, got %q", id)
-	}
-	return parts[0], parts[1], nil
 }
