@@ -1,4 +1,4 @@
-## 1.83.43(November‌ 19, 2026)
+## 1.83.44(November‌ 20, 2026)
 
 FEATURES:
 
