@@ -3075,6 +3075,36 @@ func (me *MonitorService) DescribeExternalClusterRegisterCommandById(ctx context
 	return
 }
 
+func (me *MonitorService) DescribeExtMetric(ctx context.Context, request *monitorv20230616.DescribeExtMetricRequest) (response *monitorv20230616.DescribeExtMetricResponse, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseMonitorV20230616Client().DescribeExtMetricWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e, tccommon.InternalError)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
 func (me *MonitorService) CreateDispenseExternalRule(ctx context.Context, request *monitorv20230616.CreateDispenseExternalRuleRequest) (ruleId int64, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
