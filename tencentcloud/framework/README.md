@@ -22,6 +22,7 @@ tencentcloud/
 │   ├── testhelpers_test.go   # in-package test helpers
 │   ├── acctest/              # ProtoV6 test factories shared by acceptance tests
 │   ├── internal/             # framework-only helpers (Go-internal-visible to framework/...)
+│   ├── templates/            # code convention templates for the four reference types (AI codegen assets, *.tmpl — not compiled)
 │   └── README.md             # this file
 └── services/
     ├── common/               # cross-product / provider-meta references (package common)
