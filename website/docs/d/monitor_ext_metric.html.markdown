@@ -36,5 +36,6 @@ In addition to all arguments above, the following attributes are exported:
   * `metric_name` - Metric name. This field may return null, which means no valid value is available.
   * `unit` - Metric unit. This field may return null, which means no valid value is available.
 * `ext_metric_list` - List of external metrics under the namespace.
+* `id` - ID of the data source, a random token.
 
 

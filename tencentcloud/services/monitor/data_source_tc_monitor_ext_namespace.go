@@ -2,6 +2,7 @@ package monitor
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
@@ -9,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
+	fwHelper "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/helper"
 )
 
 var _ datasource.DataSourceWithConfigure = &MonitorExtNamespaceDataSource{}
@@ -27,7 +29,8 @@ type MonitorExtNamespaceDataSource struct {
 
 // MonitorExtNamespaceDataSourceModel maps the schema attributes.
 type MonitorExtNamespaceDataSourceModel struct {
-	ExtNamespaceList types.Set `tfsdk:"ext_namespace_list"`
+	Id               types.String `tfsdk:"id"`
+	ExtNamespaceList types.Set    `tfsdk:"ext_namespace_list"`
 }
 
 func (d *MonitorExtNamespaceDataSource) Metadata(_ context.Context, _ datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -38,6 +41,12 @@ func (d *MonitorExtNamespaceDataSource) Schema(_ context.Context, _ datasource.S
 	resp.Schema = schema.Schema{
 		Description: "Use this data source to query Monitor ext namespaces.",
 		Attributes: map[string]schema.Attribute{
+			// The id carries no cloud meaning — it is a random
+			// token generated at read time (see the end of Read).
+			"id": schema.StringAttribute{
+				Computed:    true,
+				Description: "ID of the data source, a random token.",
+			},
 			// ---- Query outputs: Computed (DescribeExtNamespace has no request parameters) ----
 			"ext_namespace_list": schema.SetAttribute{
 				Computed:    true,
@@ -56,19 +65,30 @@ func (d *MonitorExtNamespaceDataSource) Read(ctx context.Context, req datasource
 		return
 	}
 
-	svc := NewMonitorService(d.Client())
-	names, err := svc.DescribeExtNamespace(ctx)
-	if err != nil {
+	if d.Client() == nil {
 		resp.Diagnostics.AddError(
-			"Error querying Monitor ext namespaces",
-			"DescribeExtNamespace failed: "+err.Error(),
+			"Provider not configured",
+			"The provider client is not available. This is unexpected; please report it.",
 		)
 		return
 	}
+
+	service := NewMonitorService(d.Client())
+	names, err := service.DescribeExtNamespace(ctx)
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Error querying Monitor ext namespaces",
+			fmt.Sprintf("DescribeExtNamespace failed: %v", err),
+		)
+		return
+	}
+
+	// An empty result is a genuinely empty list, not a failure.
 	extNamespaceItems := make([]attr.Value, 0, len(names))
 	for _, name := range names {
 		extNamespaceItems = append(extNamespaceItems, types.StringPointerValue(name))
 	}
+
 	extNamespaceList, diags := types.SetValue(types.StringType, extNamespaceItems)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
@@ -76,5 +96,9 @@ func (d *MonitorExtNamespaceDataSource) Read(ctx context.Context, req datasource
 	}
 
 	config.ExtNamespaceList = extNamespaceList
+
+	// The state id is a random token (JSON resource_id = fwHelper.BuildToken()).
+	config.Id = types.StringValue(fwHelper.BuildToken())
+
 	resp.Diagnostics.Append(resp.State.Set(ctx, &config)...)
 }

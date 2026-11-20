@@ -12,6 +12,7 @@ import (
 	monitorv20230616 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20230616"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
+	fwHelper "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/helper"
 )
 
 var _ datasource.DataSourceWithConfigure = &MonitorExtMetricDataSource{}
@@ -30,6 +31,7 @@ type MonitorExtMetricDataSource struct {
 
 // MonitorExtMetricDataSourceModel maps the schema attributes.
 type MonitorExtMetricDataSourceModel struct {
+	Id            types.String `tfsdk:"id"`
 	ExtNamespace  types.String `tfsdk:"ext_namespace"`
 	ExtMetricList types.List   `tfsdk:"ext_metric_list"`
 }
@@ -44,6 +46,16 @@ type MonitorExtMetricItemModel struct {
 	DimensionFlag types.Bool   `tfsdk:"dimension_flag"`
 }
 
+// MonitorExtMetricItemAttrTypes is the object type of the ext_metric_list elements.
+var MonitorExtMetricItemAttrTypes = map[string]attr.Type{
+	"metric_name":    types.StringType,
+	"metric_c_name":  types.StringType,
+	"cn_meaning":     types.StringType,
+	"en_meaning":     types.StringType,
+	"unit":           types.StringType,
+	"dimension_flag": types.BoolType,
+}
+
 func (d *MonitorExtMetricDataSource) Metadata(_ context.Context, _ datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = "tencentcloud_monitor_ext_metric"
 }
@@ -52,6 +64,12 @@ func (d *MonitorExtMetricDataSource) Schema(_ context.Context, _ datasource.Sche
 	resp.Schema = schema.Schema{
 		Description: "Use this data source to query Cloud Monitor external metrics of an external namespace.",
 		Attributes: map[string]schema.Attribute{
+			// The id carries no cloud meaning — it is a random
+			// token generated at read time (see the end of Read).
+			"id": schema.StringAttribute{
+				Computed:    true,
+				Description: "ID of the data source, a random token.",
+			},
 			// ---- Query inputs ----
 			"ext_namespace": schema.StringAttribute{
 				Required:    true,
@@ -105,6 +123,14 @@ func (d *MonitorExtMetricDataSource) Read(ctx context.Context, req datasource.Re
 	request := monitorv20230616.NewDescribeExtMetricRequest()
 	request.ExtNamespace = config.ExtNamespace.ValueStringPointer()
 
+	if d.Client() == nil {
+		resp.Diagnostics.AddError(
+			"Provider not configured",
+			"The provider client is not available. This is unexpected; please report it.",
+		)
+		return
+	}
+
 	service := NewMonitorService(d.Client())
 	response, err := service.DescribeExtMetric(ctx, request)
 	if err != nil {
@@ -142,14 +168,7 @@ func (d *MonitorExtMetricDataSource) Read(ctx context.Context, req datasource.Re
 	}
 
 	list, diags := types.ListValueFrom(ctx, types.ObjectType{
-		AttrTypes: map[string]attr.Type{
-			"metric_name":    types.StringType,
-			"metric_c_name":  types.StringType,
-			"cn_meaning":     types.StringType,
-			"en_meaning":     types.StringType,
-			"unit":           types.StringType,
-			"dimension_flag": types.BoolType,
-		},
+		AttrTypes: MonitorExtMetricItemAttrTypes,
 	}, items)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
@@ -157,5 +176,9 @@ func (d *MonitorExtMetricDataSource) Read(ctx context.Context, req datasource.Re
 	}
 
 	config.ExtMetricList = list
+
+	// The state id is a random token (JSON resource_id = fwHelper.BuildToken()).
+	config.Id = types.StringValue(fwHelper.BuildToken())
+
 	resp.Diagnostics.Append(resp.State.Set(ctx, &config)...)
 }

@@ -4,17 +4,17 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_monitor_ext_namespace"
 sidebar_current: "docs-tencentcloud-data_source-monitor_ext_namespace"
 description: |-
-  Use this data source to query detailed information of monitor ext_namespace
+  Use this data source to query detailed information of monitor ext namespace
 ---
 
 # tencentcloud_monitor_ext_namespace
 
-Use this data source to query detailed information of monitor ext_namespace
+Use this data source to query detailed information of monitor ext namespace
 
 ## Example Usage
 
 ```hcl
-data "tencentcloud_monitor_ext_namespace" "ext_namespace" {}
+data "tencentcloud_monitor_ext_namespace" "example" {}
 ```
 
 ## Argument Reference
@@ -28,5 +28,6 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `ext_namespace_list` - List of ext namespaces.
+* `id` - ID of the data source, a random token.
 
 

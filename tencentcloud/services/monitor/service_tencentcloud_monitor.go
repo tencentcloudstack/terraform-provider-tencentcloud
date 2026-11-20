@@ -3102,9 +3102,8 @@ func (me *MonitorService) DescribeExtMetric(ctx context.Context, request *monito
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseMonitorV20230616Client().DescribeExtMetricWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e, tccommon.InternalError)
