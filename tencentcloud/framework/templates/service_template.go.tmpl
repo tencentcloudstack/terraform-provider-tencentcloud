@@ -1,0 +1,248 @@
+// TEMPLATE: service layer skeleton — shared by ALL four framework reference
+// types (resource / data source / action / ephemeral resource).
+//
+// Location: tencentcloud/services/<product>/service_tencentcloud_<product>.go
+// If the file already exists (SDKv2 or framework references of the same
+// product), APPEND the new service struct and methods to it instead of
+// creating a new file.
+//
+// Golden rules (see the shipped example
+// tencentcloud/services/antiddos/service_tencentcloud_antiddos.go):
+//   1. SDK calls NEVER appear directly in framework lifecycle methods
+//      (Create/Read/Update/Delete/Invoke/Open...). Every API call is wrapped
+//      in a service method with retry + logging.
+//   2. HARD RULE — ONE parameter standard for every lifecycle verb
+//      (create/read/update/delete, data-source queries, action invokes):
+//      the resource file builds the SDK request (schema get -> request
+//      aggregation, or id -> request for read/delete), initializes the
+//      service (New<Thing>Service(r.Client())), and calls
+//      service.<Method>(ctx, request). NEVER loose parameters; NEVER build
+//      schema-driven requests inside the service layer. The caller picks
+//      its own item from a describe list; "no match in the list" is
+//      not-found.
+//   3. Read APIs retry with tccommon.ReadRetryTimeout, write APIs with
+//      tccommon.WriteRetryTimeout. ALL retry lives in the service layer.
+//   4. Call ratelimit.Check(request.GetAction()) before the retry loop.
+//   5. Failures are logged with the "[CRITAL]" prefix (repo convention,
+//      spelling included) carrying logId / action / request body / reason.
+//   6. "Not found" is reported as (nil, nil): the caller treats a nil result
+//      as not-found instead of an error. Describe methods return the FULL
+//      list, shared by resource reads and data-source queries alike.
+
+package demo // TEMPLATE: the product package name, e.g. cvm, ssm, makers
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"time"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	demov20230101 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/demo/v20230101"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+)
+
+// TEMPLATE: constructor + struct. One struct per product, methods per API.
+// When the struct already exists, only append methods.
+//
+// TEMPLATE: client accessor naming — legacy accessors exist in two styles
+// (UseDemoClient without version, UseDemoV20230101Client with version).
+// Keep existing ones untouched; NEW resources always use the versioned form
+// Use<Server>V<Version>Client (version from the JSON input, hyphens
+// stripped). Reuse it when present; create it (import alias + conn field +
+// method, see vendor-locating.md §3) when absent. See
+// tencentcloud/connectivity/client.go UseWedataV20250806Client for a
+// shipped example.
+func NewDemoService(client *connectivity.TencentCloudClient) DemoService {
+	return DemoService{client: client}
+}
+
+type DemoService struct {
+	client *connectivity.TencentCloudClient
+}
+
+// TEMPLATE: WRITE method (create / update / delete / invoke). Returns the
+// created resource id for create, plain error otherwise.
+func (me *DemoService) CreateWidget(ctx context.Context, request *demov20230101.CreateWidgetRequest) (widgetId string, err error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		response *demov20230101.CreateWidgetResponse
+	)
+
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDemoV20230101Client().CreateWidget(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("create widget failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s create widget failed, reason:%+v", logId, err)
+		return
+	}
+
+	if response.Response.WidgetId == nil {
+		err = fmt.Errorf("api %s returns empty widget id", request.GetAction())
+		return
+	}
+
+	widgetId = *response.Response.WidgetId
+	return
+}
+
+// TEMPLATE: READ method — the caller (resource read or data source) builds
+// the filter request; this method returns the FULL list + totalCount.
+// Resource reads and data-source queries of the same describe API share
+// THIS ONE method.
+//
+// TEMPLATE: pagination — when the SDK request struct carries pagination
+// fields (Offset/Limit or similar), build the for loop below INTO the
+// method with NO caller-side branching: a unique-id filter terminates
+// after the first round, a data-source filter keeps paging until the full
+// set is fetched. When the API has no pagination fields, drop the loop and
+// keep a single retried call. Every API call inside the loop MUST be
+// wrapped in resource.Retry, with ratelimit.Check inside the retry closure
+// and a [DEBUG] success log — this is the repo-standard paging shape
+// (golden source: ListReceiver in tencentcloud/services/cam).
+func (me *DemoService) DescribeWidgets(ctx context.Context, request *demov20230101.DescribeWidgetsRequest) (widgets []*demov20230101.Widget, totalCount int64, err error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		response *demov20230101.DescribeWidgetsResponse
+		widgets  = make([]*demov20230101.Widget, 0)
+		offset   = int64(0)
+		limit    = int64(100) // TEMPLATE: the maximum Limit documented by the API (commonly 100); match the SDK field types.
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		errRet := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseDemoV20230101Client().DescribeWidgets(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("describe widgets failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if errRet != nil {
+			log.Printf("[CRITAL]%s describe widgets failed, reason:%+v", logId, errRet)
+			return nil, errRet
+		}
+
+		if len(response.Response.WidgetSet) < 1 {
+			break
+		}
+
+		widgets = append(widgets, response.Response.WidgetSet...)
+		if response.Response.TotalCount != nil {
+			totalCount = *response.Response.TotalCount
+		}
+
+		if len(response.Response.WidgetSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+// TEMPLATE: DELETE method — the caller builds the delete request; this
+// method only performs the retried call (same retry-closure shape as
+// create: ratelimit.Check inside, [DEBUG] success log, tccommon.RetryError).
+func (me *DemoService) DeleteWidget(ctx context.Context, request *demov20230101.DeleteWidgetRequest) (err error) {
+	logId := tccommon.GetLogId(ctx)
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDemoV20230101Client().DeleteWidget(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s delete widget failed, reason:%+v", logId, err)
+	}
+
+	return
+}
+
+// TEMPLATE: ASYNC TASK WAIT. Only needed when the JSON input marks an API
+// with async_info (the API returns a task id that must be polled to a
+// terminal state). No shipped framework reference uses this pattern yet, so
+// follow the repo-standard resource.Retry polling loop below and reference
+// SDKv2 service files for product-specific terminal status values.
+//
+// The wait takes a `timeout time.Duration` parameter: the caller passes the
+// product's dedicated wait constant from tccommon when one exists (e.g.
+// tccommon.DefaultWaitTimeout), or a sensible default agreed with the user.
+//
+// The async query API itself (e.g. GetAsyncStatus) is a normal READ service
+// method as shown above; this helper wraps it in a wait loop. Call it right
+// after the async write API returned a taskId.
+func (me *DemoService) WaitDemoTaskResult(ctx context.Context, taskId string, timeout time.Duration) (err error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = demov20230101.NewGetAsyncStatusRequest()
+	)
+
+	request.TaskId = &taskId
+	// TEMPLATE: prefer a dedicated wait timeout constant from tccommon when
+	// the product has one (e.g. tccommon.DefaultWaitTimeout); fall back to
+	// WriteRetryTimeout otherwise.
+	err = resource.Retry(timeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseDemoV20230101Client().GetAsyncStatus(request)
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+
+		if response == nil || response.Response == nil || response.Response.Status == nil {
+			return resource.NonRetryableError(fmt.Errorf("GetAsyncStatus task %s returns empty status", taskId))
+		}
+
+		switch *response.Response.Status {
+		case "SUCCESS":
+			return nil
+		case "FAILED":
+			// TEMPLATE: use the product's real terminal-failure status values.
+			return resource.NonRetryableError(fmt.Errorf("task %s failed", taskId))
+		default:
+			return resource.RetryableError(fmt.Errorf("task %s status is %s", taskId, *response.Response.Status))
+		}
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, task[%s], reason[%s]\n", logId, request.GetAction(), taskId, err.Error())
+	}
+
+	return
+}

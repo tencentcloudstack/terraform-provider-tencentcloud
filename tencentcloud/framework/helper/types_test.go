@@ -191,6 +191,31 @@ func TestStringValueOrPrev(t *testing.T) {
 }
 
 func TestInt64ValueOrPrev(t *testing.T) {
+	cloud := int64(2)
+
+	cases := []struct {
+		name string
+		in   *int64
+		prev types.Int64
+		want types.Int64
+	}{
+		{"cloud wins", &cloud, types.Int64Value(1), types.Int64Value(2)},
+		{"nil keeps prev", nil, types.Int64Value(1), types.Int64Value(1)},
+		{"nil and null prev becomes null", nil, types.Int64Null(), types.Int64Null()},
+		{"unknown prev becomes null", nil, types.Int64Unknown(), types.Int64Null()},
+	}
+
+	for _, c := range cases {
+		c := c
+		t.Run(c.name, func(t *testing.T) {
+			if got := Int64ValueOrPrev(c.in, c.prev); !got.Equal(c.want) {
+				t.Fatalf("got %s, want %s", got, c.want)
+			}
+		})
+	}
+}
+
+func TestInt64ValueFromUintOrPrev(t *testing.T) {
 	cloud := uint64(2)
 
 	cases := []struct {
@@ -208,9 +233,43 @@ func TestInt64ValueOrPrev(t *testing.T) {
 	for _, c := range cases {
 		c := c
 		t.Run(c.name, func(t *testing.T) {
-			if got := Int64ValueOrPrev(c.in, c.prev); !got.Equal(c.want) {
+			if got := Int64ValueFromUintOrPrev(c.in, c.prev); !got.Equal(c.want) {
 				t.Fatalf("got %s, want %s", got, c.want)
 			}
 		})
+	}
+}
+
+func TestBoolValueOrPrev(t *testing.T) {
+	cloud := true
+
+	cases := []struct {
+		name string
+		in   *bool
+		prev types.Bool
+		want types.Bool
+	}{
+		{"cloud wins", &cloud, types.BoolValue(false), types.BoolValue(true)},
+		{"nil keeps prev", nil, types.BoolValue(false), types.BoolValue(false)},
+		{"nil and null prev becomes null", nil, types.BoolNull(), types.BoolNull()},
+		{"unknown prev becomes null", nil, types.BoolUnknown(), types.BoolNull()},
+	}
+
+	for _, c := range cases {
+		c := c
+		t.Run(c.name, func(t *testing.T) {
+			if got := BoolValueOrPrev(c.in, c.prev); !got.Equal(c.want) {
+				t.Fatalf("got %s, want %s", got, c.want)
+			}
+		})
+	}
+}
+
+func TestStringOrEmpty(t *testing.T) {
+	if got := StringOrEmpty(nil); got != "" {
+		t.Fatalf("nil should yield empty, got %q", got)
+	}
+	if got := StringOrEmpty(String("x")); got != "x" {
+		t.Fatalf("got %q, want %q", got, "x")
 	}
 }

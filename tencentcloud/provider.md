@@ -893,6 +893,7 @@ tencentcloud_monitor_binding_objects
 tencentcloud_monitor_policy_groups
 tencentcloud_monitor_product_namespace
 tencentcloud_monitor_alarm_notices
+tencentcloud_monitor_ext_metric
 tencentcloud_monitor_alarm_history
 tencentcloud_monitor_alarm_metric
 tencentcloud_monitor_alarm_policy
@@ -915,6 +916,7 @@ tencentcloud_monitor_alarm_notice
 tencentcloud_monitor_alarm_policy_set_default
 tencentcloud_monitor_notice_content_tmpl
 tencentcloud_monitor_external_cluster
+tencentcloud_monitor_dispense_external_rule
 
 Managed Service for Prometheus(TMP)
 Data Source
@@ -1055,6 +1057,8 @@ tencentcloud_redis_log_delivery
 tencentcloud_redis_audit_log
 tencentcloud_redis_instance_password_policy_config
 tencentcloud_redis_backup_encrypt
+Action
+tencentcloud_redis_valkey_module
 
 Serverless Cloud Function(SCF)
 Data Source
@@ -1614,6 +1618,7 @@ tencentcloud_tem_application_service
 
 TencentCloud EdgeOne(TEO)
 Data Source
+tencentcloud_teo_available_origin_acl_family
 tencentcloud_teo_zone_available_plans
 tencentcloud_teo_rule_engine_settings
 tencentcloud_teo_zones
@@ -1692,10 +1697,10 @@ tencentcloud_teo_shared_cname
 tencentcloud_teo_domain_shared_cname_attachment
 tencentcloud_teo_edge_kv
 tencentcloud_teo_edge_kv_namespace
-tencentcloud_teo_dns_records_status
-
 Action
 tencentcloud_teo_apply_free_certificate
+tencentcloud_teo_plan_for_zone
+tencentcloud_teo_dns_records_status
 tencentcloud_teo_confirm_origin_acl_update
 
 TencentCloud ServiceMesh(TCM)
@@ -2010,7 +2015,7 @@ Resource
 tencentcloud_tdcpg_cluster
 tencentcloud_tdcpg_instance
 
-TDSQL-C for MySQL(tdmysql)
+TDSQL Boundless(tdmysql)
 Resource
 tencentcloud_tdmysql_db_instance
 
@@ -2856,11 +2861,14 @@ Action
 tencentcloud_fwm_dispatch_strategy
 
 Web & Agents Development Platform(Makers)
-Resource
-tencentcloud_makers_zone_custom_domain
+Action
+tencentcloud_makers_deployment
 
 Data Source
 tencentcloud_makers_deployment_log
+tencentcloud_makers_deployments
 
 Resource
 tencentcloud_makers_project
+tencentcloud_makers_project_envs
+tencentcloud_makers_zone_custom_domain

@@ -3,7 +3,6 @@ package makers
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -18,6 +17,7 @@ import (
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 var (
@@ -146,7 +146,7 @@ func (r *MakersZoneCustomDomainResource) Create(ctx context.Context, req resourc
 
 	// Persist the identity BEFORE any asynchronous wait: if the wait fails,
 	// the resource is still in state and `terraform destroy` can clean it up.
-	plan.Id = types.StringValue(buildZoneCustomDomainId(
+	plan.Id = types.StringValue(helper.IdFormat(
 		plan.ZoneId.ValueString(), plan.ProjectId.ValueString(), plan.Domain.ValueString()))
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
@@ -307,8 +307,8 @@ func (r *MakersZoneCustomDomainResource) Delete(ctx context.Context, req resourc
 
 // ImportState parses the composite id `zone_id#project_id#domain`.
 func (r *MakersZoneCustomDomainResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	parts := strings.Split(req.ID, tccommon.FILED_SP)
-	if len(parts) != 3 || parts[0] == "" || parts[1] == "" || parts[2] == "" {
+	parts, err := helper.IdParseErr(req.ID, 3)
+	if err != nil {
 		resp.Diagnostics.AddError(
 			"Invalid import ID",
 			fmt.Sprintf("Makers zone custom domain id must be in the format `zone_id#project_id#domain`, got %q", req.ID),
@@ -333,8 +333,4 @@ func refreshZoneCustomDomainModel(m *MakersZoneCustomDomainResourceModel, item *
 	} else {
 		m.Env = fallbackEnv
 	}
-}
-
-func buildZoneCustomDomainId(zoneId, projectId, domain string) string {
-	return strings.Join([]string{zoneId, projectId, domain}, tccommon.FILED_SP)
 }

@@ -1,9 +1,14 @@
 package makers
 
 import (
+	"archive/zip"
 	"context"
 	"fmt"
+	"io"
+	"io/fs"
 	"log"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -516,4 +521,480 @@ func (me *MakersService) DeleteProject(ctx context.Context, request *makerssdk.D
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
+}
+
+// DescribeProjectEnvs queries the environment variables of a project by zone
+// and project id.
+//
+// Two different "empty" outcomes must stay distinguishable:
+//   - API failure (nil response / nil Response) -> error
+//   - queried successfully but no variables exist -> (nil, nil), meaning "does not exist"
+func (me *MakersService) DescribeProjectEnvs(ctx context.Context, zoneId, projectId string) (envVars []*makerssdk.EnvVar, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := makerssdk.NewDescribeProjectEnvsRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.ProjectId = helper.String(projectId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *makerssdk.DescribeProjectEnvsResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseMakersClient().DescribeProjectEnvsWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("DescribeProjectEnvs returned an empty response for %s#%s", zoneId, projectId)
+		return
+	}
+
+	envVars = response.Response.EnvVars
+	if len(envVars) == 0 {
+		// No variables exist on the cloud side: report the "does not exist"
+		// outcome as (nil, nil) so the resource layer can remove the
+		// resource from state.
+		envVars = nil
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
+// ModifyProjectEnvs writes the full desired set of environment variables of a
+// project; the cloud API uses it for both create and update.
+func (me *MakersService) ModifyProjectEnvs(ctx context.Context, request *makerssdk.ModifyProjectEnvsRequest) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *makerssdk.ModifyProjectEnvsResponse
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseMakersClient().ModifyProjectEnvsWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
+// DeleteProjectEnvs removes the given environment variables of a project.
+func (me *MakersService) DeleteProjectEnvs(ctx context.Context, request *makerssdk.DeleteProjectEnvsRequest) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *makerssdk.DeleteProjectEnvsResponse
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseMakersClient().DeleteProjectEnvsWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
+// DescribeDeployments returns the deployment list of the site project. The
+// query supports filters. Pagination is handled internally: the service keeps
+// fetching pages of makersDeploymentsPageSize records until the cloud side
+// returns fewer records than the page size, so callers always get the full
+// result set. A nil Deployments with a nil error is a valid outcome: the cloud
+// side documents that the field may return null when there is no deployment
+// record available.
+func (me *MakersService) DescribeDeployments(ctx context.Context, request *makerssdk.DescribeDeploymentsRequest) (deployments []*makerssdk.Deployment, totalCount *int64, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset int64 = 0
+		limit  int64 = makersDeploymentsPageSize
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		var response *makerssdk.DescribeDeploymentsResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, err := me.client.UseMakersClient().DescribeDeploymentsWithContext(ctx, request)
+			if err != nil {
+				return tccommon.RetryError(err)
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			errRet = err
+			return
+		}
+		if response == nil || response.Response == nil {
+			errRet = fmt.Errorf("DescribeDeployments returned an empty response")
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response.Response.TotalCount != nil {
+			totalCount = response.Response.TotalCount
+		}
+		if len(response.Response.Deployments) < 1 {
+			break
+		}
+		deployments = append(deployments, response.Response.Deployments...)
+		if int64(len(response.Response.Deployments)) < limit {
+			break
+		}
+		offset += limit
+	}
+
+	return
+}
+
+// makersDeploymentsPageSize is the page size used when the service loops
+// through DescribeDeployments pages. The cloud API documents 100 as the
+// maximum value of Limit.
+const makersDeploymentsPageSize int64 = 100
+
+// Deployment terminal statuses reported by the DescribeDeployments API.
+const (
+	// DeploymentStatusSuccess means the build finished successfully.
+	DeploymentStatusSuccess = "Success"
+	// DeploymentStatusFailed means the build finished with an error.
+	DeploymentStatusFailed = "Failed"
+	// DeploymentStatusProcess means the build is still running.
+	DeploymentStatusProcess = "Process"
+	// DeploymentStatusInvalid means the deployment is invalid.
+	DeploymentStatusInvalid = "Invalid"
+	// DeploymentStatusPending means the build is queued and not started yet.
+	DeploymentStatusPending = "Pending"
+	// DeploymentStatusTimeout means the build exceeded the cloud-side time limit.
+	DeploymentStatusTimeout = "Timeout"
+	// DeploymentStatusCancelled means the build was cancelled.
+	DeploymentStatusCancelled = "Cancelled"
+)
+
+// CreateDeployment triggers a new Makers build via the CreateDeployment API.
+// The API is asynchronous: it returns a DeploymentId as soon as the build is
+// accepted, and the build result must be confirmed separately through
+// DescribeDeployments. DeploymentId may legitimately be nil on the wire; the
+// caller decides whether that is acceptable.
+func (me *MakersService) CreateDeployment(ctx context.Context, request *makerssdk.CreateDeploymentRequest) (deploymentId *string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *makerssdk.CreateDeploymentResponse
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseMakersClient().CreateDeploymentWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("CreateDeployment returned an empty response")
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	deploymentId = response.Response.DeploymentId
+	return
+}
+
+// DescribeDeploymentById queries a single deployment by its exact DeploymentId.
+// ZoneId and ProjectId scope the query. It returns the deployment object, or
+// (nil, nil) when no deployment matches the id.
+func (me *MakersService) DescribeDeploymentById(ctx context.Context, zoneId, projectId, deploymentId string) (deployment *makerssdk.Deployment, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := makerssdk.NewDescribeDeploymentsRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.ProjectId = helper.String(projectId)
+	request.DeploymentIds = []*string{helper.String(deploymentId)}
+	request.Limit = helper.Int64(1)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *makerssdk.DescribeDeploymentsResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseMakersClient().DescribeDeploymentsWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("DescribeDeployments returned an empty response")
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	// The query filters by an exact deployment id, so at most one entry can
+	// match. An empty list is a legitimate "not found" outcome, not an error.
+	for _, item := range response.Response.Deployments {
+		if item != nil && item.DeploymentId != nil && *item.DeploymentId == deploymentId {
+			deployment = item
+			break
+		}
+	}
+	return
+}
+
+// WaitMakersDeploymentComplete polls DescribeDeployments until the deployment
+// reaches a terminal state (Success / Failed / Invalid / Timeout / Cancelled),
+// or the timeout budget is exhausted. It returns the last observed deployment
+// snapshot so the caller can attach it to a timeout diagnostic. A nil
+// deployment is treated as "not visible yet" and keeps the loop polling.
+func (me *MakersService) WaitMakersDeploymentComplete(ctx context.Context, zoneId, projectId, deploymentId string, timeout time.Duration, pollInterval time.Duration) (last *makerssdk.Deployment, err error) {
+	deadline := time.Now().Add(timeout)
+	for {
+		latest, e := me.DescribeDeploymentById(ctx, zoneId, projectId, deploymentId)
+		if e != nil {
+			err = e
+			return
+		}
+		last = latest
+		if latest != nil && latest.Status != nil {
+			switch *latest.Status {
+			case DeploymentStatusSuccess:
+				return
+			case DeploymentStatusFailed, DeploymentStatusInvalid, DeploymentStatusTimeout, DeploymentStatusCancelled:
+				err = fmt.Errorf("deployment %s ended in status %s", deploymentId, *latest.Status)
+				return
+			}
+		}
+
+		if time.Now().After(deadline) {
+			err = fmt.Errorf("deployment %s did not converge within %s", deploymentId, timeout)
+			return
+		}
+		time.Sleep(pollInterval)
+	}
+}
+
+// DescribeCosTempToken queries a temporary cos token for uploading files.
+// ZoneId and ProjectId scope the query. It returns the token object.
+func (me *MakersService) DescribeCosTempToken(ctx context.Context, zoneId, projectId string) (cosTempParam *makerssdk.DescribeCosTempTokenResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	project, err := me.DescribeProject(ctx, zoneId, projectId)
+	if err != nil {
+		errRet = fmt.Errorf("fetching the project: %w", err)
+		return
+	}
+	if project == nil || project.Name == nil {
+		errRet = fmt.Errorf("project %s does not exist or has no name", projectId)
+		return
+	}
+
+	request := makerssdk.NewDescribeCosTempTokenRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.ProjectId = helper.String(projectId)
+	request.ProjectName = project.Name
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *makerssdk.DescribeCosTempTokenResponse
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseMakersClient().DescribeCosTempTokenWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("DescribeCosTempToken returned an empty response")
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	cosTempParam = response.Response
+	return
+}
+
+// UploadMakersLocalArtifact uploads a local build artifact to the Makers temp
+// bucket using the temporary credential from DescribeCosTempToken, and
+// returns the object path to pass to CreateDeployment as TempBucketPath.
+//
+// A folder given as localPath is compressed into a zip archive first. The
+// cloud side scopes the credential to the TargetPath prefix returned by
+// DescribeCosTempToken (format: <appId>/<projectName>/<timestamp>); the
+// artifact is stored under that prefix using its base name.
+func (me *MakersService) UploadMakersLocalArtifact(ctx context.Context, zoneId, projectId, localPath string, progress func(string)) (string, error) {
+	token, err := me.DescribeCosTempToken(ctx, zoneId, projectId)
+	if err != nil {
+		return "", fmt.Errorf("fetching the COS temporary credential: %w", err)
+	}
+	if token.Bucket == nil || token.Region == nil || token.TargetPath == nil || token.Credentials == nil ||
+		token.Credentials.TmpSecretId == nil || token.Credentials.TmpSecretKey == nil || token.Credentials.Token == nil {
+		return "", fmt.Errorf("DescribeCosTempToken returned an incomplete credential: bucket, region, target path and the temporary key triplet must all be set")
+	}
+
+	// A folder is packaged into a zip first (the build expects an archive,
+	// typically with dist_type = Folder); a plain file is uploaded as-is.
+	uploadPath := localPath
+	objectName := filepath.Base(localPath)
+	info, err := os.Stat(localPath)
+	if err != nil {
+		return "", fmt.Errorf("reading the local artifact %s: %w", localPath, err)
+	}
+	if info.IsDir() {
+		progress("compressing the local folder into a zip archive")
+		zipPath, err := zipMakersDirectory(localPath)
+		if err != nil {
+			return "", err
+		}
+		defer func() {
+			_ = os.Remove(zipPath)
+		}()
+		uploadPath = zipPath
+		objectName += ".zip"
+	}
+
+	cosService := NewMakersCosService(
+		me.client,
+		*token.Region,
+		*token.Credentials.TmpSecretId,
+		*token.Credentials.TmpSecretKey,
+		*token.Credentials.Token)
+	objectKey := fmt.Sprintf("%s/%s", strings.Trim(*token.TargetPath, "/"), objectName)
+	if _, err := cosService.PutFile(ctx, *token.Bucket, objectKey, uploadPath); err != nil {
+		return "", fmt.Errorf("uploading the artifact to COS: %w", err)
+	}
+	return objectKey, nil
+}
+
+// zipMakersDirectory packages a local folder into a zip archive stored in a
+// temporary file and returns its path. The archive stores files with paths
+// relative to the folder root; directory entries are omitted (their paths
+// are implied by the file entries).
+func zipMakersDirectory(dir string) (string, error) {
+	tmp, err := os.CreateTemp("", "makers-artifact-*.zip")
+	if err != nil {
+		return "", fmt.Errorf("creating a temporary zip file: %w", err)
+	}
+	defer func() {
+		_ = tmp.Close()
+	}()
+
+	writer := zip.NewWriter(tmp)
+	err = filepath.WalkDir(dir, func(path string, entry fs.DirEntry, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		if entry.IsDir() {
+			return nil
+		}
+		rel, err := filepath.Rel(dir, path)
+		if err != nil {
+			return err
+		}
+		entryWriter, err := writer.Create(filepath.ToSlash(rel))
+		if err != nil {
+			return err
+		}
+		src, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer func() {
+			_ = src.Close()
+		}()
+		_, err = io.Copy(entryWriter, src)
+		return err
+	})
+	if closeErr := writer.Close(); err == nil {
+		err = closeErr
+	}
+	if err != nil {
+		_ = os.Remove(tmp.Name())
+		return "", fmt.Errorf("compressing the folder %s: %w", dir, err)
+	}
+	return tmp.Name(), nil
 }

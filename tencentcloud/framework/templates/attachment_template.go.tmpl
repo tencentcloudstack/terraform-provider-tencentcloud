@@ -1,0 +1,383 @@
+// TEMPLATE: framework ATTACHMENT-resource skeleton — codegen subtype
+// "attachment" (bind/unbind relation with a composite parent#child id).
+//
+// Structural skeleton shared with general_template.go.tmpl; the differences
+// are all attachment-specific and marked with TEMPLATE notes below:
+//   - Create = bind API(s); Delete = unbind API(s); Update is a no-op body
+//     (every mutable attribute is RequiresReplace — attachments are
+//     force-recreated, never updated in place);
+//   - the composite id comes from the codegen JSON's resource_id
+//     (`#`-joined SDK field names, e.g. "InstanceId#DiskId"): one Required
+//     id attribute per segment, joined via fwHelper.IdFormat in the given
+//     order — the segment order is ALWAYS parent-first (largest to
+//     smallest): in A#B#C, A is the parent of B and B is the parent of C
+//     (e.g. "InstanceId#DiskId" because the CVM instance owns the disk —
+//     never the reverse order);
+//   - Read queries a parent-level describe API and treats "binding absent
+//     in the response" as not-found.
+//
+// Location: tencentcloud/services/<product>/resource_tc_<name>_attachment.go
+// (keep the conventional `_attachment` suffix when resource_name ends with
+// `_attachment`). Factory naming: New<Product><Name>AttachmentResource.
+
+package demo
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	demov20230101 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/demo/v20230101"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
+	fwHelper "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/helper"
+)
+
+// Compile-time interface assertions. Only assert the extension interfaces;
+// the base resource.Resource interface is checked implicitly by the factory
+// return value. ResourceWithImportState is kept: attachments import by
+// their composite id.
+var (
+	_ resource.ResourceWithConfigure   = &DemoWidgetAttachmentResource{}
+	_ resource.ResourceWithImportState = &DemoWidgetAttachmentResource{}
+)
+
+// NewDemoWidgetAttachmentResource is the factory referenced by
+// tencentcloud/framework/registry.go to register this resource.
+func NewDemoWidgetAttachmentResource() resource.Resource {
+	return &DemoWidgetAttachmentResource{}
+}
+
+// DemoWidgetAttachmentResource implements resource.Resource for
+// tencentcloud_demo_widget_attachment.
+type DemoWidgetAttachmentResource struct {
+	fw.ResourceWithConfigure
+}
+
+// DemoWidgetAttachmentResourceModel maps the schema attributes.
+// TEMPLATE: parent id + child id Required; every mutable attribute carries
+// RequiresReplace in the schema; cloud-echoed metadata Computed.
+type DemoWidgetAttachmentResourceModel struct {
+	Id          types.String `tfsdk:"id"`
+	GadgetId    types.String `tfsdk:"gadget_id"`
+	WidgetId    types.String `tfsdk:"widget_id"`
+	BindMode    types.String `tfsdk:"bind_mode"`
+	BoundAt     types.String `tfsdk:"bound_at"`
+	BoundStatus types.String `tfsdk:"bound_status"`
+}
+
+func (r *DemoWidgetAttachmentResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = "tencentcloud_demo_widget_attachment"
+}
+
+func (r *DemoWidgetAttachmentResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		Description: "Provides a resource to attach a Demo widget to a gadget.",
+		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
+				Computed:    true,
+				Description: "ID of the attachment, formatted as `gadget_id#widget_id`.",
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
+			},
+			"gadget_id": schema.StringAttribute{
+				Required:    true,
+				Description: "ID of the gadget (parent).",
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+			},
+			"widget_id": schema.StringAttribute{
+				Required:    true,
+				Description: "ID of the widget (child) to attach.",
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+			},
+			// TEMPLATE: every bind-time option also RequiresReplace — there
+			// is no in-place update for attachments.
+			"bind_mode": schema.StringAttribute{
+				Optional:    true,
+				Description: "Bind mode. Valid values: `standard`, `exclusive`.",
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+			},
+			"bound_at": schema.StringAttribute{
+				Computed:    true,
+				Description: "Time when the widget was bound.",
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
+			},
+			"bound_status": schema.StringAttribute{
+				Computed:    true,
+				Description: "Bind status reported by the cloud.",
+			},
+		},
+	}
+}
+
+// Create binds the widget to the gadget (the api.create bind APIs in array
+// order).
+func (r *DemoWidgetAttachmentResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan DemoWidgetAttachmentResourceModel
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	gadgetId := plan.GadgetId.ValueString()
+	widgetId := plan.WidgetId.ValueString()
+	if gadgetId == "" || widgetId == "" {
+		resp.Diagnostics.AddError(
+			"Missing attachment identifiers",
+			"Both gadget_id and widget_id are required.",
+		)
+
+		return
+	}
+
+	// TEMPLATE: request naming — several method-scope requests coexist here
+	// (bind + read-back), so name each one after its API (never request1/2).
+	attachWidgetRequest := demov20230101.NewAttachWidgetRequest()
+	attachWidgetRequest.GadgetId = fwHelper.String(gadgetId)
+	attachWidgetRequest.WidgetId = fwHelper.String(widgetId)
+	if !plan.BindMode.IsNull() && !plan.BindMode.IsUnknown() {
+		attachWidgetRequest.BindMode = plan.BindMode.ValueStringPointer()
+	}
+
+	if r.Client() == nil {
+		resp.Diagnostics.AddError(
+			"Provider not configured",
+			"The provider client is not available. This is unexpected; please report it.",
+		)
+
+		return
+	}
+
+	service := NewDemoService(r.Client())
+	if err := service.AttachWidget(ctx, attachWidgetRequest); err != nil {
+		resp.Diagnostics.AddError(
+			"Error attaching Demo widget",
+			fmt.Sprintf("AttachWidget failed: %v", err),
+		)
+
+		return
+	}
+
+	// TEMPLATE: async bind — when the create entry carries a non-empty
+	// async_info, the service method returns a task id; wait for it BEFORE
+	// the read-back (service_template.go.tmpl wait method).
+	//
+	// TEMPLATE: composite id — exactly the segments the unbind/describe
+	// APIs address, joined parent-first (largest to smallest, matching the
+	// JSON resource_id order).
+	plan.Id = types.StringValue(fwHelper.IdFormat(gadgetId, widgetId))
+
+	normalizeDemoWidgetAttachmentComputedUnknowns(&plan)
+
+	// Persist the identity before reading back so a partial failure still
+	// leaves a destroyable resource in state.
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// TEMPLATE: read-back — build the parent-level describe request HERE,
+	// call the service with (ctx, request), then pick this attachment's
+	// own binding from the response.
+	describeGadgetsRequest := demov20230101.NewDescribeGadgetsRequest()
+	describeGadgetsRequest.GadgetIds = []*string{fwHelper.String(gadgetId)}
+	gadgets, _, err := service.DescribeGadgets(ctx, describeGadgetsRequest)
+	if err != nil {
+		resp.Diagnostics.AddError("Error reading Demo widget attachment after create", err.Error())
+		return
+	}
+
+	item := findDemoWidgetBinding(gadgets, gadgetId, widgetId)
+	if item == nil {
+		resp.Diagnostics.AddError(
+			"Demo widget attachment not readable after create",
+			fmt.Sprintf("attachment %s was created but cannot be read back", plan.Id.ValueString()),
+		)
+
+		return
+	}
+
+	resp.Diagnostics.Append(refreshDemoWidgetAttachmentModel(ctx, &plan, item)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+// Read refreshes the binding from a parent-level describe API.
+func (r *DemoWidgetAttachmentResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state DemoWidgetAttachmentResourceModel
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	parts, err := fwHelper.IdParseErr(state.Id.ValueString(), 2)
+	if err != nil {
+		resp.Diagnostics.AddError("Invalid resource id", err.Error())
+		return
+	}
+
+	gadgetId := parts[0]
+	widgetId := parts[1]
+
+	// TEMPLATE: read — build the parent-level describe request HERE
+	// (ids -> request), call the service with (ctx, request), then pick
+	// this attachment's own binding — "binding absent in the response" is
+	// not-found. Map the returned value into state below.
+	describeGadgetsRequest := demov20230101.NewDescribeGadgetsRequest()
+	describeGadgetsRequest.GadgetIds = []*string{fwHelper.String(gadgetId)}
+
+	service := NewDemoService(r.Client())
+	gadgets, _, err := service.DescribeGadgets(ctx, describeGadgetsRequest)
+	if err != nil {
+		resp.Diagnostics.AddError("Error reading Demo widget attachment", err.Error())
+		return
+	}
+
+	item := findDemoWidgetBinding(gadgets, gadgetId, widgetId)
+
+	// "Binding absent in the response" => not found => drop from state so
+	// Terraform plans a recreation. Never error in this case.
+	if item == nil {
+		resp.Diagnostics.AddWarning(
+			"Resource not found",
+			fmt.Sprintf("Demo widget attachment %s not found, removing from state.", state.Id.ValueString()),
+		)
+
+		resp.State.RemoveResource(ctx)
+		return
+	}
+
+	resp.Diagnostics.Append(refreshDemoWidgetAttachmentModel(ctx, &state, item)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+}
+
+// Update is a no-op body: every mutable attribute is RequiresReplace, so
+// Terraform destroys and recreates the attachment instead of calling this.
+func (r *DemoWidgetAttachmentResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan DemoWidgetAttachmentResourceModel
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+// Delete unbinds the widget (the api.delete unbind APIs in array order).
+func (r *DemoWidgetAttachmentResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state DemoWidgetAttachmentResourceModel
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	parts, err := fwHelper.IdParseErr(state.Id.ValueString(), 2)
+	if err != nil {
+		resp.Diagnostics.AddError("Invalid resource id", err.Error())
+		return
+	}
+
+	gadgetId := parts[0]
+	widgetId := parts[1]
+
+	// TEMPLATE: delete — build the detach request HERE (ids -> request),
+	// then call the service with (ctx, request).
+	detachWidgetRequest := demov20230101.NewDetachWidgetRequest()
+	detachWidgetRequest.GadgetId = fwHelper.String(gadgetId)
+	detachWidgetRequest.WidgetId = fwHelper.String(widgetId)
+
+	service := NewDemoService(r.Client())
+	if err := service.DetachWidget(ctx, detachWidgetRequest); err != nil {
+		// TEMPLATE: when the unbind API documents "not bound" error codes,
+		// treat them as delete success for idempotency — swallow them in
+		// the service layer.
+		resp.Diagnostics.AddError(
+			"Error detaching Demo widget",
+			fmt.Sprintf("DetachWidget failed: %v", err),
+		)
+
+		return
+	}
+	// TEMPLATE: async unbind — wait for the task when the delete entry
+	// carries a non-empty async_info.
+}
+
+// ImportState supports `terraform import` with the composite id
+// `gadget_id#widget_id`, setting each segment attribute.
+func (r *DemoWidgetAttachmentResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	parts, err := fwHelper.IdParseErr(req.ID, 2)
+	if err != nil {
+		resp.Diagnostics.AddError("Invalid resource id", err.Error())
+		return
+	}
+
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), req.ID)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("gadget_id"), parts[0])...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("widget_id"), parts[1])...)
+}
+
+// refreshDemoWidgetAttachmentModel copies cloud-owned fields into the model
+// while keeping the user-supplied values for fields the cloud API does not
+// echo back (fw.OverwriteString keeps the previous value on nil).
+func refreshDemoWidgetAttachmentModel(ctx context.Context, m *DemoWidgetAttachmentResourceModel, item *demov20230101.WidgetBinding) diag.Diagnostics {
+	if item == nil {
+		return nil
+	}
+
+	// TEMPLATE: read-direction anti-diff conversions come from
+	// fwHelper.StringValueOrPrev — a cloud-omitted field keeps the previous
+	// value (see framework/helper types.go).
+	m.GadgetId = fwHelper.StringValueOrPrev(item.GadgetId, m.GadgetId)
+	m.WidgetId = fwHelper.StringValueOrPrev(item.WidgetId, m.WidgetId)
+	m.BindMode = fwHelper.StringValueOrPrev(item.BindMode, m.BindMode)
+	m.BoundAt = fwHelper.StringValueOrPrev(item.BoundAt, m.BoundAt)
+	m.BoundStatus = fwHelper.StringValueOrPrev(item.BoundStatus, m.BoundStatus)
+	return nil
+}
+
+// normalizeDemoWidgetAttachmentComputedUnknowns rewrites unknown computed
+// attributes to null so the model can be persisted into state before the
+// read-back fills them with the cloud-side values.
+func normalizeDemoWidgetAttachmentComputedUnknowns(m *DemoWidgetAttachmentResourceModel) {
+	if m.BoundAt.IsUnknown() {
+		m.BoundAt = types.StringNull()
+	}
+
+	if m.BoundStatus.IsUnknown() {
+		m.BoundStatus = types.StringNull()
+	}
+}
+
+// findDemoWidgetBinding picks this attachment's own binding entry from the
+// parent-level describe response. Business-side picking belongs to the
+// resource file — the service layer only returns the raw list.
+func findDemoWidgetBinding(gadgets []*demov20230101.Gadget, gadgetId string, widgetId string) *demov20230101.WidgetBinding {
+	for _, g := range gadgets {
+		if g.GadgetId == nil || *g.GadgetId != gadgetId {
+			continue
+		}
+
+		for _, b := range g.WidgetBindings {
+			if b.WidgetId != nil && *b.WidgetId == widgetId {
+				return b
+			}
+		}
+	}
+
+	return nil
+}

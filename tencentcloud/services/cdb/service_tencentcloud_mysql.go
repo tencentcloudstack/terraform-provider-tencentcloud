@@ -2298,20 +2298,21 @@ func (me *MysqlService) DescribeMysqlInstanceInfoById(ctx context.Context, insta
 	}()
 
 	request.InstanceId = &instanceId
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseMysqlClient().DescribeDBInstanceInfo(request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseMysqlClient().DescribeDBInstanceInfo(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		if response == nil || response.Response == nil {
+			return nil
+		}
 
-	if response == nil || response.Response == nil {
-		return
-	}
-
-	instanceInfo = response.Response
+		instanceInfo = response.Response
+		return nil
+	})
 
 	return
 }
