@@ -54,17 +54,39 @@ type catalog struct {
 // site's search URL per action — generation never fails on this.
 func loadCatalog() *catalog {
 	c := &catalog{urlIdx: map[string]string{}}
-	urls, productPages, err := fetchIntlActionURLs()
-	if err != nil {
-		message("[WARN]international doc catalogue unavailable (%v); falling back to bundled snapshot %s\n", err, catalogSnapshotPath)
+	// The catalogue page and the product-slug endpoint are independent:
+	// fetch them concurrently (the slug result is only consulted when
+	// the catalogue fetch succeeded, matching the previous sequential
+	// semantics).
+	var (
+		urls         map[string]string
+		productPages map[int64]map[string]bool
+		urlsErr      error
+		slugs        map[int64]string
+		slugErr      error
+		urlsDone     = make(chan struct{})
+		slugDone     = make(chan struct{})
+	)
+	go func() {
+		urls, productPages, urlsErr = fetchIntlActionURLs()
+		close(urlsDone)
+	}()
+	go func() {
+		slugs, slugErr = fetchIntlProductSlugs()
+		close(slugDone)
+	}()
+	<-urlsDone
+	if urlsErr != nil {
+		message("[WARN]international doc catalogue unavailable (%v); falling back to bundled snapshot %s\n", urlsErr, catalogSnapshotPath)
 		if loadErr := c.loadSnapshot(catalogSnapshotPath); loadErr != nil {
 			message("[WARN]snapshot unavailable (%v); actions will link to the search page\n", loadErr)
 		}
+		<-slugDone // let the in-flight slug fetch finish before returning
 		return c
 	}
-	slugs, err := fetchIntlProductSlugs()
-	if err != nil {
-		message("[WARN]international product slugs unavailable (%v); product alignment by action sets only\n", err)
+	<-slugDone
+	if slugErr != nil {
+		message("[WARN]international product slugs unavailable (%v); product alignment by action sets only\n", slugErr)
 	}
 	c.build(urls, productPages, slugs)
 	// Refresh the bundled snapshot only from a fully-resolved live catalog
@@ -72,7 +94,7 @@ func loadCatalog() *catalog {
 	// meaningless "product-<id>" keys. Skip the write when the entries
 	// are unchanged, so a plain 'make doc' run does not dirty the file
 	// with a fresh timestamp.
-	if err != nil {
+	if slugErr != nil {
 		return c
 	}
 	existing := &catalog{urlIdx: map[string]string{}}

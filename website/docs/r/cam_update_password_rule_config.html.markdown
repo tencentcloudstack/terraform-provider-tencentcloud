@@ -1,5 +1,5 @@
 ---
-subcategory: "Provider Meta"
+subcategory: "Cloud Access Management(CAM)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cam_update_password_rule_config"
 sidebar_current: "docs-tencentcloud-resource-cam_update_password_rule_config"

@@ -1,5 +1,5 @@
 ---
-subcategory: "Provider Meta"
+subcategory: "SSL Certificates(ssl)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_ssl_upload_certificate_instance"
 sidebar_current: "docs-tencentcloud-action-ssl_upload_certificate_instance"

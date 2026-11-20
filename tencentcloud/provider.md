@@ -70,6 +70,9 @@ tencentcloud_antiddos_ddos_block_records
 Resource
 tencentcloud_antiddos_bgp_instance
 
+Action
+tencentcloud_antiddos_unblock_resources
+
 Anti-DDoS(DayuV2)
 Data Source
 tencentcloud_dayu_eip
@@ -298,6 +301,7 @@ tencentcloud_cam_set_policy_version_config
 tencentcloud_cam_user_permission_boundary_attachment
 tencentcloud_cam_role_permission_boundary_attachment
 tencentcloud_cam_message_receiver
+tencentcloud_cam_update_password_rule_config
 
 Customer Identity and Access Management(CIAM)
 Resource
@@ -809,6 +813,9 @@ tencentcloud_mongodb_audit_log_file
 tencentcloud_mongodb_audit_service
 tencentcloud_mongodb_scale_up_db_instance_cpu
 
+Action
+tencentcloud_mongodb_restore_db_instance
+
 TencentDB for MySQL(cdb)
 Data Source
 tencentcloud_mysql_backup_list
@@ -1057,6 +1064,7 @@ tencentcloud_redis_log_delivery
 tencentcloud_redis_audit_log
 tencentcloud_redis_instance_password_policy_config
 tencentcloud_redis_backup_encrypt
+
 Action
 tencentcloud_redis_valkey_module
 
@@ -1190,7 +1198,6 @@ tencentcloud_ssl_update_certificate_instance_operation
 tencentcloud_ssl_update_certificate_record_retry_operation
 tencentcloud_ssl_update_certificate_record_rollback_operation
 tencentcloud_ssl_upload_revoke_letter_operation
-tencentcloud_ssl_upload_certificate_instance
 tencentcloud_ssl_complete_certificate_operation
 tencentcloud_ssl_check_certificate_chain_operation
 tencentcloud_ssl_deploy_certificate_instance_operation
@@ -1198,6 +1205,9 @@ tencentcloud_ssl_deploy_certificate_record_retry_operation
 tencentcloud_ssl_deploy_certificate_record_rollback_operation
 tencentcloud_ssl_download_certificate_operation
 tencentcloud_ssl_check_certificate_domain_verification_operation
+
+Action
+tencentcloud_ssl_upload_certificate_instance
 
 Secrets Manager(SSM)
 Data Source
@@ -1697,15 +1707,17 @@ tencentcloud_teo_shared_cname
 tencentcloud_teo_domain_shared_cname_attachment
 tencentcloud_teo_edge_kv
 tencentcloud_teo_edge_kv_namespace
+tencentcloud_teo_dns_records_status
+
 Action
 tencentcloud_teo_apply_free_certificate
 tencentcloud_teo_plan_for_zone
-tencentcloud_teo_dns_records_status
 tencentcloud_teo_confirm_origin_acl_update
 
 TencentCloud ServiceMesh(TCM)
 Data Source
 tencentcloud_tcm_mesh
+
 Resource
 tencentcloud_tcm_mesh
 tencentcloud_tcm_cluster_attachment
@@ -1735,6 +1747,7 @@ tencentcloud_ses_black_list_delete
 Security Token Service(STS)
 Data Source
 tencentcloud_sts_caller_identity
+
 Resource
 tencentcloud_sts_assume_role_operation
 
@@ -1935,6 +1948,7 @@ tencentcloud_tat_invoker
 tencentcloud_tat_invoker_records
 tencentcloud_tat_agent
 tencentcloud_tat_invocation_task
+
 Resource
 tencentcloud_tat_command
 tencentcloud_tat_invoker
@@ -2011,6 +2025,7 @@ TDSQL-C for PostgreSQL(TDCPG)
 Data Source
 tencentcloud_tdcpg_clusters
 tencentcloud_tdcpg_instances
+
 Resource
 tencentcloud_tdcpg_cluster
 tencentcloud_tdcpg_instance
@@ -2326,6 +2341,7 @@ tencentcloud_clickhouse_xml_config
 Tag
 Data Source
 tencentcloud_tag_keys
+
 Resource
 tencentcloud_tag
 tencentcloud_tag_attachment
@@ -2399,6 +2415,9 @@ tencentcloud_dlc_standard_engine_resource_group_config_info
 tencentcloud_dlc_datasource_house_attachment
 tencentcloud_dlc_attach_user_policy_attachment
 tencentcloud_dlc_meta_database
+
+Action
+tencentcloud_dlc_initialize_tc_lake
 
 Web Application Firewall(WAF)
 Data Source
@@ -2601,6 +2620,7 @@ Data Source
 tencentcloud_bh_account_groups
 tencentcloud_bh_source_types
 tencentcloud_bh_devices
+
 Resource
 tencentcloud_bh_acl
 tencentcloud_bh_bind_device_account_kubeconfig
@@ -2691,6 +2711,7 @@ CdwDoris
 Data Source
 tencentcloud_cdwdoris_instance_nodes
 tencentcloud_cdwdoris_instances
+
 Resource
 tencentcloud_cdwdoris_instance
 tencentcloud_cdwdoris_workload_group
@@ -2698,6 +2719,7 @@ tencentcloud_cdwdoris_workload_group
 ControlCenter
 Data Source
 tencentcloud_controlcenter_account_factory_baseline_items
+
 Resource
 tencentcloud_batch_apply_account_baselines
 tencentcloud_controlcenter_account_factory_baseline_config
@@ -2712,6 +2734,7 @@ tencentcloud_mqtt_registration_code
 tencentcloud_mqtt_instances
 tencentcloud_mqtt_instance_detail
 tencentcloud_mqtt_topics
+
 Resource
 tencentcloud_mqtt_instance
 tencentcloud_mqtt_instance_public_endpoint
@@ -2729,6 +2752,7 @@ Billing
 Data Source
 tencentcloud_billing_bill_detail
 tencentcloud_billing_budget_operation_log
+
 Resource
 tencentcloud_billing_allocation_tag
 tencentcloud_billing_budget
@@ -2748,6 +2772,7 @@ tencentcloud_igtm_detectors
 tencentcloud_igtm_strategy_list
 tencentcloud_igtm_instance_package_list
 tencentcloud_igtm_detect_task_package_list
+
 Resource
 tencentcloud_igtm_instance
 tencentcloud_igtm_address_pool
@@ -2856,9 +2881,6 @@ tencentcloud_fwm_edge_acl_rule
 tencentcloud_fwm_security_group_rule
 tencentcloud_fwm_nat_acl_rule
 tencentcloud_fwm_vpc_acl_rule
-
-Action
-tencentcloud_fwm_dispatch_strategy
 
 Web & Agents Development Platform(Makers)
 Action
