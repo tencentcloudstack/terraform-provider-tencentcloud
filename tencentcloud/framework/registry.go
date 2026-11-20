@@ -35,6 +35,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bdrc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cam"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/config"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cosvectors"
 	crs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/crs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dlc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ioa"
@@ -53,6 +54,9 @@ var resourcesMap = map[string]func() resource.Resource{
 	"tencentcloud_ags_sandbox_tool":                 ags.NewAgsSandboxToolResource,
 	"tencentcloud_cam_update_password_rule_config":  cam.NewCamUpdatePasswordRuleConfigResource,
 	"tencentcloud_config_aggregate_compliance_pack": config.NewConfigAggregateCompliancePackResource,
+	"tencentcloud_cos_vector_bucket":                cosvectors.NewCosVectorBucketResource,
+	"tencentcloud_cos_vector_index":                 cosvectors.NewCosVectorIndexResource,
+	"tencentcloud_cos_vector_bucket_policy":         cosvectors.NewCosVectorBucketPolicyResource,
 	"tencentcloud_ioa_delivery_server":              ioa.NewIoaDeliveryServerResource,
 	"tencentcloud_ioa_delivery_strategy":            ioa.NewIoaDeliveryStrategyResource,
 	"tencentcloud_monitor_dispense_external_rule":   monitor.NewMonitorDispenseExternalRuleResource,

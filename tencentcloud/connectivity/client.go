@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"os"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -149,6 +150,9 @@ type TencentCloudClient struct {
 	Protocol   string
 	Domain     string
 	CosDomain  string
+
+	cosVectorMu   sync.Mutex
+	cosVectorConn *cosVectorClientState
 
 	cosConn               *s3.S3
 	tencentCosConn        *cos.Client
