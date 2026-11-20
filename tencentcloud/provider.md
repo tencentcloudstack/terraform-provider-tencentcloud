@@ -895,6 +895,7 @@ Cloud Monitor(Monitor)
 Data Source
 tencentcloud_monitor_policy_conditions
 tencentcloud_monitor_data
+tencentcloud_monitor_dispense_region
 tencentcloud_monitor_product_event
 tencentcloud_monitor_binding_objects
 tencentcloud_monitor_policy_groups
