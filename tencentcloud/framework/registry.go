@@ -66,6 +66,7 @@ var resourcesMap = map[string]func() resource.Resource{
 var dataSourcesMap = map[string]func() datasource.DataSource{
 	"tencentcloud_config_list_aggregate_compliance_packs": config.NewConfigListAggregateCompliancePacksDataSource,
 	"tencentcloud_monitor_ext_metric":                     monitor.NewMonitorExtMetricDataSource,
+	"tencentcloud_monitor_ext_namespace":                  monitor.NewMonitorExtNamespaceDataSource,
 	"tencentcloud_makers_deployment_log":                  makers.NewMakersDeploymentLogDataSource,
 	"tencentcloud_makers_deployments":                     makers.NewMakersDeploymentsDataSource,
 }
