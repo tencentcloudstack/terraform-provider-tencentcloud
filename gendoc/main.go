@@ -60,26 +60,67 @@ func main() {
 	//    registries (see step 2 + step 3).
 	products := genIdx(filePath)
 
+	// Pre-initialise the shared API analyzer (catalog + service-method
+	// AST index) before any concurrent rendering starts: after this
+	// call the analyzer is immutable and safe for parallel readers.
+	_ = getSharedAPIAnalyzer()
+
 	// 2) sdkv2 phase: emit r/<...> + d/<...> for every entry that the
 	//    SDKv2 provider knows about. Anything that is *not* present in
 	//    provider.ResourcesMap / provider.DataSourcesMap is silently
 	//    skipped here — those are framework references and step 3 will
-	//    pick them up.
+	//    pick them up. Jobs render independent output files, so they are
+	//    dispatched through a bounded worker pool.
+	type sdkDocJob struct {
+		product string
+		dtype   string
+		name    string
+		res     *schema.Resource
+	}
+	var sdkJobs []sdkDocJob
+	// A name may be listed twice in provider.md (under two products).
+	// The sequential generator rendered it twice — the second render
+	// overwrote the first, so the LAST product listing wins. Deduped
+	// jobs below render once and update the product label on
+	// re-listing to reproduce that final state byte-for-byte. Data
+	// sources and resources are tracked separately because the same
+	// name (e.g. tencentcloud_vpc) legitimately exists as both.
+	dsIdx := map[string]int{}
+	resIdx := map[string]int{}
 	for _, product := range products {
 		for _, dataSource := range product.DataSources {
 			if _, ok := provider.DataSourcesMap[dataSource]; !ok {
 				continue
 			}
-			genDoc(product.Name, "data_source", filePath, dataSource, provider.DataSourcesMap[dataSource])
+			if idx, ok := dsIdx[dataSource]; ok {
+				sdkJobs[idx].product = product.Name // last listing wins
+				continue
+			}
+			dsIdx[dataSource] = len(sdkJobs)
+			sdkJobs = append(sdkJobs, sdkDocJob{product.Name, "data_source", dataSource, provider.DataSourcesMap[dataSource]})
 		}
 
 		for _, resource := range product.Resources {
 			if _, ok := provider.ResourcesMap[resource]; !ok {
 				continue
 			}
-			genDoc(product.Name, "resource", filePath, resource, provider.ResourcesMap[resource])
+			if idx, ok := resIdx[resource]; ok {
+				sdkJobs[idx].product = product.Name // last listing wins
+				continue
+			}
+			resIdx[resource] = len(sdkJobs)
+			sdkJobs = append(sdkJobs, sdkDocJob{product.Name, "resource", resource, provider.ResourcesMap[resource]})
 		}
 	}
+	jobs := make([]func(), 0, len(sdkJobs))
+	for _, j := range sdkJobs {
+		jobs = append(jobs, func(j sdkDocJob) func() {
+			return func() {
+				genDoc(j.product, j.dtype, filePath, j.name, j.res)
+			}
+		}(j))
+	}
+	runDocFuncs(jobs)
 
 	// 3) framework phase: render r / d / f / e / l / a / ... documents
 	//    for every framework reference type registered in
@@ -191,15 +232,13 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 
 	raw, err := os.ReadFile(filepath.Join(fpath, filename))
 	if err != nil {
-		message("[FAIL!]get description failed: %s", err)
-		os.Exit(1)
+		failf("get description failed: %s", err)
 	}
 	description := string(raw)
 
 	description = balanceFences(strings.TrimSpace(description))
 	if description == "" {
-		message("[FAIL!]description empty: %s\n", filename)
-		os.Exit(1)
+		failf("description empty: %s\n", filename)
 	}
 
 	// Optional Import section. Import sits at the tail of the file; when
@@ -286,8 +325,7 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 		data["example"] = formatHCL(description[pos+15:])
 		description = strings.TrimSpace(description[:pos])
 	} else {
-		message("[FAIL!]example usage missing: %s\n", filename)
-		os.Exit(1)
+		failf("example usage missing: %s\n", filename)
 	}
 
 	data["description"] = description
@@ -310,25 +348,21 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 		if resource.DeprecationMessage != "" {
 			message("[SKIP!]argument 'result_output_file' is missing, skip: %s", filename)
 		} else {
-			message("[FAIL!]argument 'result_output_file' is missing: %s", filename)
-			os.Exit(1)
+			failf("argument 'result_output_file' is missing: %s", filename)
 		}
 	}
 
 	for k, v := range resource.Schema {
 		if v.Description == "" {
-			message("[FAIL!]description for '%s' is missing: %s\n", k, filename)
-			os.Exit(1)
+			failf("description for '%s' is missing: %s\n", k, filename)
 		} else {
 			checkDescription(k, v.Description)
 		}
 		if dtype == "data_source" && v.ForceNew {
-			message("[FAIL!]Don't set ForceNew on data source: '%s'", k)
-			os.Exit(1)
+			failf("Don't set ForceNew on data source: '%s'", k)
 		}
 		if v.Required && v.Optional {
-			message("[FAIL!]Don't set Required and Optional at the same time: '%s'", k)
-			os.Exit(1)
+			failf("Don't set Required and Optional at the same time: '%s'", k)
 		}
 		if v.Required {
 			opt := "Required"
@@ -434,8 +468,7 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 
 	fd, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
-		message("[FAIL!]open file %s failed: %s", filename, err)
-		os.Exit(1)
+		failf("open file %s failed: %s", filename, err)
 	}
 
 	defer func() {
@@ -446,8 +479,7 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 	t := template.Must(template.New("t").Parse(docTPL))
 	err = t.Execute(fd, data)
 	if err != nil {
-		message("[FAIL!]write file %s failed: %s", filename, err)
-		os.Exit(1)
+		failf("write file %s failed: %s", filename, err)
 	}
 
 	message("[SUCC.]write doc to file success: %s", filename)
@@ -648,29 +680,24 @@ func checkDescription(k, s string) {
 	}
 
 	if strings.TrimLeft(s, " ") != s {
-		message("[FAIL!]There is space on the left of description: '%s': '%s'", k, s)
-		os.Exit(1)
+		failf("There is space on the left of description: '%s': '%s'", k, s)
 	}
 
 	if strings.TrimRight(s, " ") != s {
-		message("[FAIL!]There is space on the right of description: '%s': '%s'", k, s)
-		os.Exit(1)
+		failf("There is space on the right of description: '%s': '%s'", k, s)
 	}
 
 	if s[len(s)-1] != '.' && s[len(s)-1] != ':' {
-		message("[FAIL!]There is no ending charset(. or :) on the description: '%s': '%s'", k, s)
-		os.Exit(1)
+		failf("There is no ending charset(. or :) on the description: '%s': '%s'", k, s)
 	}
 
 	if c := containsBigSymbol(s); c != "" {
-		message("[FAIL!]There is unexcepted symbol '%s' on the description: '%s': '%s'", c, k, s)
-		os.Exit(1)
+		failf("There is unexcepted symbol '%s' on the description: '%s': '%s'", c, k, s)
 	}
 
 	for _, v := range []string{",", ".", ";", ":", "?", "!"} {
 		if strings.Contains(s, " "+v) {
-			message("[FAIL!]There is space before '%s' on the description: '%s': '%s'", v, k, s)
-			os.Exit(1)
+			failf("There is space before '%s' on the description: '%s': '%s'", v, k, s)
 		}
 	}
 }
@@ -687,6 +714,8 @@ func containsBigSymbol(s string) string {
 
 // message print color message
 func message(msg string, v ...interface{}) {
+	messageMu.Lock()
+	defer messageMu.Unlock()
 	if strings.Contains(msg, "FAIL") {
 		color.Red(fmt.Sprintf(msg, v...))
 	} else if strings.Contains(msg, "SUCC") {
