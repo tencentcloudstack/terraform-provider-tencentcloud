@@ -3109,6 +3109,37 @@ func (me *MonitorService) CreateDispenseExternalRule(ctx context.Context, reques
 	return
 }
 
+func (me *MonitorService) DescribeDispenseRegions(ctx context.Context) (regions []*monitorv20230616.DispenseRegion, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "DescribeDispenseRegion", "", errRet.Error())
+		}
+	}()
+
+	request := monitorv20230616.NewDescribeDispenseRegionRequest()
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
+		response, e := me.client.UseMonitorV20230616Client().DescribeDispenseRegionWithContext(ctx, request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil {
+			e = fmt.Errorf("DescribeDispenseRegion returned an empty response")
+			return tccommon.RetryError(e)
+		}
+		regions = response.Response.RegionList
+		return nil
+	})
+
+	return
+}
+
 func (me *MonitorService) DescribeDispenseExternalRuleById(ctx context.Context, ruleId int64) (rule *monitorv20230616.Rule, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 

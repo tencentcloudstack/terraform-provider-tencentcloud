@@ -67,6 +67,7 @@ var dataSourcesMap = map[string]func() datasource.DataSource{
 	"tencentcloud_config_list_aggregate_compliance_packs": config.NewConfigListAggregateCompliancePacksDataSource,
 	"tencentcloud_makers_deployment_log":                  makers.NewMakersDeploymentLogDataSource,
 	"tencentcloud_makers_deployments":                     makers.NewMakersDeploymentsDataSource,
+	"tencentcloud_monitor_dispense_region":                monitor.NewMonitorDispenseRegionDataSource,
 }
 
 // functionsMap maps every framework function name to its factory. Function
