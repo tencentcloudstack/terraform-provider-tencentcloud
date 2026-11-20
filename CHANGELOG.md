@@ -1,3 +1,11 @@
+## 1.83.44(November‌ 20, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_monitor_dispense_region` ([#4684](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4684))
+* **New Data Source:** `tencentcloud_monitor_ext_metric` ([#4679](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4679))
+* **New Data Source:** `tencentcloud_monitor_ext_namespace` ([#4680](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4680))
+
 ## 1.83.43(November‌ 19, 2026)
 
 FEATURES:
