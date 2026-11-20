@@ -30,8 +30,10 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"sort"
 	"strings"
+	"sync"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -90,6 +92,9 @@ type apiAnalyzer struct {
 
 	// parsedFiles caches ASTs by path.
 	parsedFiles map[string]*ast.File
+	// parseMu guards parsedFiles (and serialises cache-miss parses)
+	// because doc jobs run concurrently.
+	parseMu sync.Mutex
 }
 
 func newAPIAnalyzer(repoRoot string, cat *catalog) (*apiAnalyzer, error) {
@@ -188,16 +193,68 @@ func (a *apiAnalyzer) scanFuncForClientActions(fd *ast.FuncDecl) {
 // indexServiceMethods walks the services tree once and records every method
 // declared with a receiver, plus package-level helper functions that contain
 // direct client calls (common in older resources). Test files are skipped.
+// The files are parsed with a worker pool (parse results are per-file and
+// independent); indexing itself stays sequential in walk order so the
+// method index remains deterministic.
 func (a *apiAnalyzer) indexServiceMethods() error {
-	return filepath.Walk(a.servicesRoot, func(path string, fi os.FileInfo, err error) error {
+	var paths []string
+	if err := filepath.Walk(a.servicesRoot, func(path string, fi os.FileInfo, err error) error {
 		if err != nil || fi.IsDir() || !strings.HasSuffix(path, ".go") ||
 			strings.HasSuffix(path, "_test.go") {
 			return nil
 		}
-		f, err := a.parseFile(path)
-		if err != nil {
-			return nil // unparseable files are simply not indexed
+		paths = append(paths, path)
+		return nil
+	}); err != nil {
+		return err
+	}
+
+	// Parse in parallel; token.FileSet is safe for concurrent use and
+	// each file produces an independent AST.
+	parsed := make([]*ast.File, len(paths))
+	workers := runtime.NumCPU()
+	if workers > len(paths) {
+		workers = len(paths)
+	}
+	if workers > 1 {
+		var wg sync.WaitGroup
+		sem := make(chan struct{}, workers)
+		for i, path := range paths {
+			wg.Add(1)
+			sem <- struct{}{}
+			go func(i int, path string) {
+				defer wg.Done()
+				defer func() { <-sem }()
+				f, err := parser.ParseFile(a.fset, path, nil, 0)
+				if err != nil {
+					return // unparseable files are simply not indexed
+				}
+				parsed[i] = f
+			}(i, path)
 		}
+		wg.Wait()
+	} else {
+		for i, path := range paths {
+			if f, err := parser.ParseFile(a.fset, path, nil, 0); err == nil {
+				parsed[i] = f
+			}
+		}
+	}
+
+	// Populate the shared AST cache (init is single-goroutine here) so
+	// later lookupFuncDecl / lookupMethodByReceiver calls hit the cache.
+	for i, f := range parsed {
+		if f != nil {
+			a.parsedFiles[paths[i]] = f
+		}
+	}
+
+	// Index declarations sequentially, in the original walk order.
+	for i, f := range parsed {
+		if f == nil {
+			continue
+		}
+		path := paths[i]
 		for _, d := range f.Decls {
 			fd, ok := d.(*ast.FuncDecl)
 			if !ok {
@@ -241,11 +298,13 @@ func (a *apiAnalyzer) indexServiceMethods() error {
 				}
 			}
 		}
-		return nil
-	})
+	}
+	return nil
 }
 
 func (a *apiAnalyzer) parseFile(path string) (*ast.File, error) {
+	a.parseMu.Lock()
+	defer a.parseMu.Unlock()
 	if f, ok := a.parsedFiles[path]; ok {
 		return f, nil
 	}

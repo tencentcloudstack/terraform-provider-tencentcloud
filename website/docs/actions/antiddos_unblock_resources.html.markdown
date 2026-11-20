@@ -1,5 +1,5 @@
 ---
-subcategory: "Provider Meta"
+subcategory: "Anti-DDoS(antiddos)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_antiddos_unblock_resources"
 sidebar_current: "docs-tencentcloud-action-antiddos_unblock_resources"

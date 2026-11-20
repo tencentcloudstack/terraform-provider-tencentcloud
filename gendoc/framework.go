@@ -28,6 +28,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"text/template"
 
 	frameworkaction "github.com/hashicorp/terraform-plugin-framework/action"
@@ -109,36 +110,45 @@ func genFrameworkDocs(repoRoot string, products []Product) {
 	prov := tcfw.NewProvider(primary)
 	ctx := context.Background()
 
-	// 2) Render each reference type.
+	// 2) Render each reference type. Each job writes an independent
+	//    output file, so they are dispatched through the shared worker
+	//    pool.
+	var jobs []func()
 	for _, fac := range prov.Resources(ctx) {
 		r := fac()
 		name := frameworkResourceTypeName(ctx, primary, r)
-		genFrameworkDoc(servicesRoot, fwResource, name, productOf(products, name, fwResource), func(out *map[string]fwAttrSpec) string {
-			resp := resource.SchemaResponse{}
-			r.Schema(ctx, resource.SchemaRequest{}, &resp)
-			*out = flattenResourceSchema(resp.Schema)
-			return strings.TrimSpace(resp.Schema.Description)
+		jobs = append(jobs, func() {
+			genFrameworkDoc(servicesRoot, fwResource, name, productOf(products, name, fwResource), func(out *map[string]fwAttrSpec) string {
+				resp := resource.SchemaResponse{}
+				r.Schema(ctx, resource.SchemaRequest{}, &resp)
+				*out = flattenResourceSchema(resp.Schema)
+				return strings.TrimSpace(resp.Schema.Description)
+			})
 		})
 	}
 	for _, fac := range prov.DataSources(ctx) {
 		ds := fac()
 		name := frameworkDataSourceTypeName(ctx, primary, ds)
-		genFrameworkDoc(servicesRoot, fwDataSrc, name, productOf(products, name, fwDataSrc), func(out *map[string]fwAttrSpec) string {
-			resp := datasource.SchemaResponse{}
-			ds.Schema(ctx, datasource.SchemaRequest{}, &resp)
-			*out = flattenDataSourceSchema(resp.Schema)
-			return strings.TrimSpace(resp.Schema.Description)
+		jobs = append(jobs, func() {
+			genFrameworkDoc(servicesRoot, fwDataSrc, name, productOf(products, name, fwDataSrc), func(out *map[string]fwAttrSpec) string {
+				resp := datasource.SchemaResponse{}
+				ds.Schema(ctx, datasource.SchemaRequest{}, &resp)
+				*out = flattenDataSourceSchema(resp.Schema)
+				return strings.TrimSpace(resp.Schema.Description)
+			})
 		})
 	}
 	if pf, ok := prov.(frameworkprovider.ProviderWithFunctions); ok {
 		for _, fac := range pf.Functions(ctx) {
 			fn := fac()
 			name := frameworkFunctionName(ctx, primary, fn)
-			genFrameworkDoc(servicesRoot, fwFunction, name, productOf(products, name, fwFunction), func(out *map[string]fwAttrSpec) string {
-				resp := function.DefinitionResponse{}
-				fn.Definition(ctx, function.DefinitionRequest{}, &resp)
-				*out = flattenFunctionDefinition(resp.Definition)
-				return strings.TrimSpace(firstNonEmpty(resp.Definition.MarkdownDescription, resp.Definition.Description, resp.Definition.Summary))
+			jobs = append(jobs, func() {
+				genFrameworkDoc(servicesRoot, fwFunction, name, productOf(products, name, fwFunction), func(out *map[string]fwAttrSpec) string {
+					resp := function.DefinitionResponse{}
+					fn.Definition(ctx, function.DefinitionRequest{}, &resp)
+					*out = flattenFunctionDefinition(resp.Definition)
+					return strings.TrimSpace(firstNonEmpty(resp.Definition.MarkdownDescription, resp.Definition.Description, resp.Definition.Summary))
+				})
 			})
 		}
 	}
@@ -146,11 +156,13 @@ func genFrameworkDocs(repoRoot string, products []Product) {
 		for _, fac := range pe.EphemeralResources(ctx) {
 			er := fac()
 			name := frameworkEphemeralName(ctx, primary, er)
-			genFrameworkDoc(servicesRoot, fwEphemeral, name, productOf(products, name, fwEphemeral), func(out *map[string]fwAttrSpec) string {
-				resp := ephemeral.SchemaResponse{}
-				er.Schema(ctx, ephemeral.SchemaRequest{}, &resp)
-				*out = flattenEphemeralSchema(resp.Schema)
-				return strings.TrimSpace(resp.Schema.Description)
+			jobs = append(jobs, func() {
+				genFrameworkDoc(servicesRoot, fwEphemeral, name, productOf(products, name, fwEphemeral), func(out *map[string]fwAttrSpec) string {
+					resp := ephemeral.SchemaResponse{}
+					er.Schema(ctx, ephemeral.SchemaRequest{}, &resp)
+					*out = flattenEphemeralSchema(resp.Schema)
+					return strings.TrimSpace(resp.Schema.Description)
+				})
 			})
 		}
 	}
@@ -161,21 +173,26 @@ func genFrameworkDocs(repoRoot string, products []Product) {
 	// so that, once the real list reference is wired up, the
 	// documentation pipeline keeps working with no changes.
 	for _, name := range allListNames(products) {
-		genFrameworkListPlaceholder(servicesRoot, name, productOf(products, name, fwList))
+		jobs = append(jobs, func() {
+			genFrameworkListPlaceholder(servicesRoot, name, productOf(products, name, fwList))
+		})
 	}
 	_ = frameworklist.ListResource(nil) // keep the import alive for future use
 	if pa, ok := prov.(frameworkprovider.ProviderWithActions); ok {
 		for _, fac := range pa.Actions(ctx) {
 			a := fac()
 			name := frameworkActionName(ctx, primary, a)
-			genFrameworkDoc(servicesRoot, fwAction, name, productOf(products, name, fwAction), func(out *map[string]fwAttrSpec) string {
-				resp := frameworkaction.SchemaResponse{}
-				a.Schema(ctx, frameworkaction.SchemaRequest{}, &resp)
-				*out = flattenActionSchema(resp.Schema)
-				return strings.TrimSpace(resp.Schema.Description)
+			jobs = append(jobs, func() {
+				genFrameworkDoc(servicesRoot, fwAction, name, productOf(products, name, fwAction), func(out *map[string]fwAttrSpec) string {
+					resp := frameworkaction.SchemaResponse{}
+					a.Schema(ctx, frameworkaction.SchemaRequest{}, &resp)
+					*out = flattenActionSchema(resp.Schema)
+					return strings.TrimSpace(resp.Schema.Description)
+				})
 			})
 		}
 	}
+	runDocFuncs(jobs)
 }
 
 // schemaExtractor is the closure passed to genFrameworkDoc to delay the
@@ -419,8 +436,11 @@ func relMdPath(absPath string) string {
 //	services/<product>/<prefix><productSegment>_<resName>.md
 //
 // where <prefix> is dtype.mdFilePrefix() (e.g. "action_tc_"). The
-// product label hint is currently unused; we walk the tree once and
-// match by file name. The walk stops at the first hit.
+// product label hint is currently unused; the tree is indexed once (see
+// fwMdIndex) and matches are resolved by filename. The exact shape wins
+// over the prefix+suffix shape; among prefix+suffix matches the first
+// in walk order wins — identical to the previous per-call full-tree
+// walk.
 func lookupFrameworkMd(servicesRoot string, dtype fwDocType, resName, _ string) string {
 	prefix := dtype.mdFilePrefix()
 	if prefix == "" {
@@ -432,26 +452,67 @@ func lookupFrameworkMd(servicesRoot string, dtype fwDocType, resName, _ string) 
 	exact := prefix + resName + ".md"
 	suffix := "_" + resName + ".md"
 
-	var found string
-	_ = filepath.Walk(servicesRoot, func(p string, info os.FileInfo, err error) error {
-		if err != nil || info.IsDir() {
-			return nil
+	paths, byPrefix := fwMdIndex(servicesRoot)
+	if p, ok := paths[exact]; ok {
+		return p
+	}
+	for _, fn := range byPrefix[prefix] {
+		if strings.HasSuffix(fn, suffix) {
+			return paths[fn]
 		}
-		fn := info.Name()
-		if fn == exact {
-			found = p
-			return filepath.SkipDir
-		}
-		if strings.HasPrefix(fn, prefix) && strings.HasSuffix(fn, suffix) {
-			// Avoid matching unrelated names where the suffix coincides
-			// (e.g. "*_reboot_instance.md" should not match "instance.md").
-			if found == "" {
-				found = p
+	}
+	return ""
+}
+
+// fwMdIndexState guards the one-time scan of the services tree for
+// colocated framework .md files.
+var fwMdIndexState struct {
+	mu    sync.Mutex
+	root  string
+	paths map[string]string
+	byPfx map[string][]string
+}
+
+// fwMdIndex scans servicesRoot once and returns
+// (filename -> path, prefix -> filenames in walk order). Concurrent
+// lookups only read the shared result.
+func fwMdIndex(servicesRoot string) (map[string]string, map[string][]string) {
+	st := &fwMdIndexState
+	st.mu.Lock()
+	defer st.mu.Unlock()
+	if st.paths == nil || st.root != servicesRoot {
+		paths := map[string]string{}
+		byPrefix := map[string][]string{}
+		_ = filepath.Walk(servicesRoot, func(p string, info os.FileInfo, err error) error {
+			if err != nil || info.IsDir() {
+				return nil
 			}
-		}
-		return nil
-	})
-	return found
+			fn := info.Name()
+			if !strings.HasSuffix(fn, ".md") {
+				return nil
+			}
+			paths[fn] = p
+			for _, pre := range knownMdPrefixes {
+				if strings.HasPrefix(fn, pre) {
+					byPrefix[pre] = append(byPrefix[pre], fn)
+				}
+			}
+			return nil
+		})
+		st.root, st.paths, st.byPfx = servicesRoot, paths, byPrefix
+	}
+	return st.paths, st.byPfx
+}
+
+// knownMdPrefixes are the doc-type filename prefixes that
+// lookupFrameworkMd matches against (see fwDocType.mdFilePrefix).
+var knownMdPrefixes = []string{
+	fwResource.mdFilePrefix(),
+	fwDataSrc.mdFilePrefix(),
+	fwFunction.mdFilePrefix(),
+	fwEphemeral.mdFilePrefix(),
+	fwList.mdFilePrefix(),
+	fwAction.mdFilePrefix(),
 }
 
 // productOf returns the product label of a typed framework reference
@@ -542,10 +603,11 @@ func frameworkActionName(ctx context.Context, primary frameworkProviderTypeNamer
 type frameworkProviderTypeNamer interface{}
 
 // fail centralises the error path so framework_schema.go and
-// framework.go both abort the same way as the sdkv2 generator does.
+// framework.go both abort the same way as the sdkv2 generator does:
+// print the [FAIL!] message and abort the current doc job (which
+// terminates the process with exit code 1 — see runDocFuncs).
 func fail(msg string) {
-	message("[FAIL!]%s", msg)
-	os.Exit(1)
+	failf("%s", msg)
 }
 
 // keep frameworkprovider import alive — the var assertion makes the
