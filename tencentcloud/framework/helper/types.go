@@ -93,9 +93,21 @@ func StringValueOrPrev(cloud *string, prev types.String) types.String {
 	}
 }
 
-// Int64ValueOrPrev is StringValueOrPrev for the *uint64 integer fields that are
-// common in the TencentCloud SDK.
-func Int64ValueOrPrev(cloud *uint64, prev types.Int64) types.Int64 {
+// Int64ValueOrPrev is StringValueOrPrev for the *int64 integer fields.
+func Int64ValueOrPrev(cloud *int64, prev types.Int64) types.Int64 {
+	switch {
+	case cloud != nil:
+		return types.Int64Value(*cloud)
+	case !prev.IsNull() && !prev.IsUnknown():
+		return prev
+	default:
+		return types.Int64Null()
+	}
+}
+
+// Int64ValueFromUintOrPrev is Int64ValueOrPrev for the *uint64 integer fields
+// that are common in the TencentCloud SDK.
+func Int64ValueFromUintOrPrev(cloud *uint64, prev types.Int64) types.Int64 {
 	switch {
 	case cloud != nil:
 		return types.Int64Value(int64(*cloud))
@@ -106,12 +118,33 @@ func Int64ValueOrPrev(cloud *uint64, prev types.Int64) types.Int64 {
 	}
 }
 
+// BoolValueOrPrev is StringValueOrPrev for *bool fields.
+func BoolValueOrPrev(cloud *bool, prev types.Bool) types.Bool {
+	switch {
+	case cloud != nil:
+		return types.BoolValue(*cloud)
+	case !prev.IsNull() && !prev.IsUnknown():
+		return prev
+	default:
+		return types.BoolNull()
+	}
+}
+
 // BoolValueOrNull converts a *bool to types.Bool.
 func BoolValueOrNull(p *bool) types.Bool {
 	if p == nil {
 		return types.BoolNull()
 	}
 	return types.BoolValue(*p)
+}
+
+// StringOrEmpty dereferences an optional string for diagnostics: nil yields
+// the empty string.
+func StringOrEmpty(v *string) string {
+	if v == nil {
+		return ""
+	}
+	return *v
 }
 
 // StringPointerFromValue converts a types.String back to *string:

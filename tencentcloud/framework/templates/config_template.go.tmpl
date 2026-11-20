@@ -1,0 +1,417 @@
+// TEMPLATE: framework CONFIG-resource skeleton — codegen subtype "config"
+// (singleton account-wide configuration). Golden source:
+// tencentcloud/services/cam/resource_tc_cam_update_password_rule_config.go
+//
+// Location: tencentcloud/services/<product>/resource_tc_<name>.go
+// Factory naming: New<Product><Name>Resource.
+//
+// Use this template when the codegen JSON has resource_type = "config":
+//   - the cloud side holds ONE account-wide configuration;
+//   - the state id comes from the JSON's resource_id: either a fixed
+//     constant string (cam-style, when the config has no cloud identifier)
+//     or an SDK response field name whose read value is used as the id;
+//   - Create and Update share ONE apply path (write via the api.update
+//     write API, then read the configuration back);
+//   - Delete only removes the resource from state; the cloud-side config
+//     stays untouched.
+
+package demo
+
+import (
+	"context"
+	"errors"
+	"fmt"
+
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+
+	demov20230101 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/demo/v20230101"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
+	fwHelper "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/helper"
+)
+
+// Compile-time interface assertions. The base resource.Resource interface is
+// checked implicitly by the factory return value.
+var (
+	_ resource.ResourceWithConfigure   = &DemoWidgetConfigResource{}
+	_ resource.ResourceWithImportState = &DemoWidgetConfigResource{}
+)
+
+// widgetConfigId is the constant state id of this singleton resource: the
+// widget configuration is a single account-wide setting, so there is no
+// cloud-side identifier to model.
+const widgetConfigId = "demo-widget-config"
+
+// errWidgetConfigNotFound marks a read response that carries no
+// configuration object. It is reported separately from transport and API
+// failures so the caller can describe the situation precisely.
+var errWidgetConfigNotFound = errors.New("DescribeWidgetConfig returned no configuration")
+
+// NewDemoWidgetConfigResource is the factory referenced by
+// tencentcloud/framework/registry.go to register this resource.
+func NewDemoWidgetConfigResource() resource.Resource {
+	return &DemoWidgetConfigResource{}
+}
+
+// DemoWidgetConfigResource implements resource.Resource for
+// tencentcloud_demo_widget_config.
+type DemoWidgetConfigResource struct {
+	fw.ResourceWithConfigure
+	fw.WithImportByID
+}
+
+// DemoWidgetConfigSettingsModel maps the settings nested attribute.
+type DemoWidgetConfigSettingsModel struct {
+	RetentionDays types.Int64  `tfsdk:"retention_days"`
+	Enabled       types.Bool   `tfsdk:"enabled"`
+	NotifyEmail   types.String `tfsdk:"notify_email"`
+}
+
+// DemoWidgetConfigResourceModel maps every top-level schema attribute; each
+// one appears here exactly once.
+type DemoWidgetConfigResourceModel struct {
+	Id         types.String `tfsdk:"id"`
+	Settings   types.Object `tfsdk:"settings"`
+	UpdateTime types.String `tfsdk:"update_time"`
+	Modifier   types.String `tfsdk:"modifier"`
+}
+
+// widgetSettingsAttrTypes returns the attribute types of the settings
+// object. It is shared by every conversion so the schema-facing shape never
+// drifts.
+func widgetSettingsAttrTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"retention_days": types.Int64Type,
+		"enabled":        types.BoolType,
+		"notify_email":   types.StringType,
+	}
+}
+
+// Metadata reports the Terraform type name.
+func (r *DemoWidgetConfigResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = "tencentcloud_demo_widget_config"
+}
+
+// Schema declares the widget configuration.
+func (r *DemoWidgetConfigResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		Description: "Provides a resource to manage the Demo widget configuration. " +
+			"Create and update both call the UpdateWidgetConfig API, read calls DescribeWidgetConfig. " +
+			"Destroying this resource only removes it from state; the cloud-side configuration is left unchanged.",
+		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
+				Computed:    true,
+				Description: "ID of the widget configuration, always `" + widgetConfigId + "` because the widget configuration is a single account-wide setting.",
+			},
+			// TEMPLATE: model the configuration body as a SingleNestedAttribute;
+			// every leaf Optional+Computed so unset leaves keep cloud values.
+			"settings": schema.SingleNestedAttribute{
+				Required:    true,
+				Description: "Widget configuration settings.",
+				Attributes: map[string]schema.Attribute{
+					"retention_days": schema.Int64Attribute{
+						Optional:    true,
+						Computed:    true,
+						Description: "Log retention days.",
+					},
+					"enabled": schema.BoolAttribute{
+						Optional:    true,
+						Computed:    true,
+						Description: "Whether the widget feature is enabled.",
+					},
+					"notify_email": schema.StringAttribute{
+						Optional:    true,
+						Computed:    true,
+						Description: "Notification email.",
+					},
+				},
+			},
+			"update_time": schema.StringAttribute{
+				Computed:    true,
+				Description: "Last modification time of the configuration.",
+			},
+			"modifier": schema.StringAttribute{
+				Computed:    true,
+				Description: "Last modifier of the configuration.",
+			},
+		},
+	}
+}
+
+// Create writes the configuration for the first time. It shares the write
+// path with Update because the cloud API exposes a single write operation.
+func (r *DemoWidgetConfigResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan DemoWidgetConfigResourceModel
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	service, ok := r.widgetService(&resp.Diagnostics)
+	if !ok {
+		return
+	}
+
+	// Warn instead of error when the cloud-side config looks like it is
+	// already managed: the config is account-wide, so two configurations
+	// would silently overwrite each other instead of showing up as a plan
+	// diff. TEMPLATE: use whatever signal the describe API exposes that a
+	// real modification happened (non-zero sentinel UpdateTime, non-empty
+	// Modifier, ...); when no such signal exists, drop this check.
+	//
+	// TEMPLATE: read — build the describe request HERE (the singleton
+	// config has no per-resource id, so the request stays empty) and call
+	// the service with (ctx, request). Requests are ALWAYS named after
+	// their API.
+	describeWidgetConfigRequest := demov20230101.NewDescribeWidgetConfigRequest()
+	current, err := service.DescribeWidgetConfig(ctx, describeWidgetConfigRequest)
+	if err != nil && !errors.Is(err, errWidgetConfigNotFound) {
+		resp.Diagnostics.AddError("Error reading Demo widget config before create", err.Error())
+		return
+	}
+
+	if err == nil && widgetConfigTouched(current) {
+		resp.Diagnostics.AddWarning(
+			"Existing Demo widget config detected",
+			fmt.Sprintf("The Demo widget config looks like it has already been modified (last modifier %q, last update time %q). "+
+				"Applying this configuration will overwrite it. Run `terraform import %s.example %s` "+
+				"and inspect the plan first if the existing values should be kept.",
+				// TEMPLATE: nil-safe deref helpers (StringOrEmpty) and pointer
+			// conversions all live in tencentcloud/framework/helper — add a
+			// missing variant THERE (with unit tests), never locally.
+			fwHelper.StringOrEmpty(current.Modifier), fwHelper.StringOrEmpty(current.UpdateTime), "tencentcloud_demo_widget_config", widgetConfigId),
+		)
+	}
+
+	r.applyWidgetConfig(ctx, service, &plan, &resp.Diagnostics)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	plan.Id = types.StringValue(widgetConfigId)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+// Read refreshes the configuration from the cloud.
+func (r *DemoWidgetConfigResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state DemoWidgetConfigResourceModel
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	service, ok := r.widgetService(&resp.Diagnostics)
+	if !ok {
+		return
+	}
+
+	describeWidgetConfigRequest := demov20230101.NewDescribeWidgetConfigRequest()
+	params, err := service.DescribeWidgetConfig(ctx, describeWidgetConfigRequest)
+	if err != nil {
+		resp.Diagnostics.AddError("Error reading Demo widget config", err.Error())
+		return
+	}
+
+	state.Id = types.StringValue(widgetConfigId)
+	state.UpdateTime = fwHelper.StringPointerValueOrNull(params.UpdateTime)
+	state.Modifier = fwHelper.StringPointerValueOrNull(params.Modifier)
+	state.Settings = flattenWidgetSettings(ctx, params.Settings, state.Settings, &resp.Diagnostics)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+}
+
+// Update applies the planned configuration. Shares the write path with
+// Create.
+func (r *DemoWidgetConfigResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan DemoWidgetConfigResourceModel
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	service, ok := r.widgetService(&resp.Diagnostics)
+	if !ok {
+		return
+	}
+
+	r.applyWidgetConfig(ctx, service, &plan, &resp.Diagnostics)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	plan.Id = types.StringValue(widgetConfigId)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
+}
+
+// Delete is required by the resource.Resource interface. The widget
+// configuration is an account-wide setting that always exists, so destroying
+// the resource only removes it from state and leaves the cloud-side config
+// unchanged.
+func (r *DemoWidgetConfigResource) Delete(_ context.Context, _ resource.DeleteRequest, _ *resource.DeleteResponse) {
+	return
+}
+
+// widgetService returns the product service bound to the shared client.
+// When the provider has not been configured it records a diagnostic and
+// reports false, so the lifecycle callbacks never dereference a nil SDK
+// client.
+func (r *DemoWidgetConfigResource) widgetService(diags *diag.Diagnostics) (DemoService, bool) {
+	if r.Client() == nil {
+		diags.AddError(
+			"Provider not configured",
+			"The provider client is not available. This is unexpected; please report it.",
+		)
+
+		return DemoService{}, false
+	}
+
+	return NewDemoService(r.Client()), true
+}
+
+// applyWidgetConfig writes the planned settings through the write API and
+// then reads the configuration back, so every Optional+Computed value is
+// known when the state is saved. The state always records the
+// cloud-reported values: the cloud may normalize a write (see the CAM
+// must_contain example), and such differences are surfaced by the next plan
+// as a regular diff instead of being second-guessed here.
+//
+// TEMPLATE: async write API — when the create entry carries a non-empty
+// async_info, wait for the task inside the service layer's write method
+// (service_template.go.tmpl) BEFORE the read-back below.
+func (r *DemoWidgetConfigResource) applyWidgetConfig(ctx context.Context, service DemoService, plan *DemoWidgetConfigResourceModel, diags *diag.Diagnostics) {
+	settings := expandWidgetSettings(ctx, plan.Settings, diags)
+	if diags.HasError() {
+		return
+	}
+
+	// TEMPLATE: update form — the resource file aggregates the settings
+	// into the SDK request; the service only receives (ctx, request).
+	// Requests are ALWAYS named after their API (never request1/2 or
+	// plain request).
+	updateWidgetConfigRequest := demov20230101.NewUpdateWidgetConfigRequest()
+	updateWidgetConfigRequest.Settings = settings
+	if err := service.UpdateWidgetConfig(ctx, updateWidgetConfigRequest); err != nil {
+		diags.AddError("Error updating Demo widget config", err.Error())
+		return
+	}
+
+	describeWidgetConfigRequest := demov20230101.NewDescribeWidgetConfigRequest()
+	params, err := service.DescribeWidgetConfig(ctx, describeWidgetConfigRequest)
+	if err != nil {
+		diags.AddError("Error reading Demo widget config after update", err.Error())
+		return
+	}
+
+	observed := flattenWidgetSettings(ctx, params.Settings, plan.Settings, diags)
+	if diags.HasError() {
+		return
+	}
+
+	plan.Id = types.StringValue(widgetConfigId)
+	plan.Settings = observed
+	plan.UpdateTime = fwHelper.StringPointerValueOrNull(params.UpdateTime)
+	plan.Modifier = fwHelper.StringPointerValueOrNull(params.Modifier)
+}
+
+// widgetConfigTouched reports whether the cloud-side config has ever been
+// modified, using the API's own signal (here: a real UpdateTime).
+// TEMPLATE: adapt the sentinel to the product's documented zero values.
+func widgetConfigTouched(params *demov20230101.DescribeWidgetConfigResponseParams) bool {
+	if params == nil {
+		return false
+	}
+
+	if params.UpdateTime == nil || *params.UpdateTime == "" || *params.UpdateTime == "0000-00-00 00:00:00" {
+		return false
+	}
+
+	return true
+}
+
+// expandWidgetSettings converts the settings object into the SDK request
+// struct. Fields left unset in the plan are omitted from the request, so the
+// cloud side keeps its current value for them.
+func expandWidgetSettings(ctx context.Context, value types.Object, diags *diag.Diagnostics) *demov20230101.WidgetSettings {
+	settings := &demov20230101.WidgetSettings{}
+	if value.IsNull() || value.IsUnknown() {
+		return settings
+	}
+
+	var model DemoWidgetConfigSettingsModel
+	diags.Append(value.As(ctx, &model, basetypes.ObjectAsOptions{})...)
+	if diags.HasError() {
+		return nil
+	}
+
+	// TEMPLATE: write-direction conversions use fwHelper.XPointerFromValue —
+	// null/unknown yields nil ("do not send this field") so the manual
+	// IsNull/IsUnknown guard is unnecessary.
+	settings.RetentionDays = fwHelper.Int64PointerFromValue(model.RetentionDays)
+	settings.Enabled = fwHelper.BoolPointerFromValue(model.Enabled)
+	settings.NotifyEmail = fwHelper.StringPointerFromValue(model.NotifyEmail)
+
+	return settings
+}
+
+// flattenWidgetSettings converts the cloud-side settings into the settings
+// object. The cloud may omit a field; the previously configured value is
+// then kept so an Optional+Computed attribute never flips to null after
+// apply.
+func flattenWidgetSettings(ctx context.Context, settings *demov20230101.WidgetSettings, prev types.Object, diags *diag.Diagnostics) types.Object {
+	var previous DemoWidgetConfigSettingsModel
+	if !prev.IsNull() && !prev.IsUnknown() {
+		diags.Append(prev.As(ctx, &previous, basetypes.ObjectAsOptions{})...)
+		if diags.HasError() {
+			return types.ObjectNull(widgetSettingsAttrTypes())
+		}
+	} else {
+		previous = DemoWidgetConfigSettingsModel{
+			RetentionDays: types.Int64Null(),
+			Enabled:       types.BoolNull(),
+			NotifyEmail:   types.StringNull(),
+		}
+	}
+
+	current := DemoWidgetConfigSettingsModel{
+		RetentionDays: types.Int64Null(),
+		Enabled:       types.BoolNull(),
+		NotifyEmail:   types.StringNull(),
+	}
+
+	if settings != nil {
+		current.RetentionDays = fwHelper.Int64ValueOrNull(settings.RetentionDays)
+		current.Enabled = fwHelper.BoolValueOrNull(settings.Enabled)
+		current.NotifyEmail = fwHelper.StringPointerValueOrNull(settings.NotifyEmail)
+	}
+
+	// TEMPLATE: read-direction anti-diff conversions use the OrPrev family
+	// from fwHelper — a cloud-omitted field keeps the previously configured
+	// value. Missing variants (BoolValueOrPrev, the *int64 flavour of
+	// Int64ValueOrPrev) are ADDED to framework/helper, never implemented
+	// locally.
+	merged := DemoWidgetConfigSettingsModel{
+		RetentionDays: fwHelper.Int64ValueOrPrev(settings.RetentionDays, previous.RetentionDays),
+		Enabled:       fwHelper.BoolValueOrPrev(settings.Enabled, previous.Enabled),
+		NotifyEmail:   fwHelper.StringValueOrPrev(settings.NotifyEmail, previous.NotifyEmail),
+	}
+
+	result, objectDiags := types.ObjectValueFrom(ctx, widgetSettingsAttrTypes(), merged)
+	diags.Append(objectDiags...)
+
+	return result
+}
+
+// TEMPLATE: NO local conversion helpers in the resource file — pointer/null
+// conversions, OrPrev anti-diff merges and nil-safe derefs all come from
+// tencentcloud/framework/helper (fwHelper). When a variant is missing there
+// (e.g. BoolValueOrPrev, the *int64 flavour of Int64ValueOrPrev,
+// StringOrEmpty), ADD it to framework/helper with unit tests — never
+// re-implement it locally.

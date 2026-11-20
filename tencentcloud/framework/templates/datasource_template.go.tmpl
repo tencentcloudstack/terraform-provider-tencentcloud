@@ -1,0 +1,223 @@
+// TEMPLATE: framework data-source skeleton — codegen type "datasource".
+// Golden source: tencentcloud/services/makers/data_source_tc_makers_deployments.go
+// (query data source with filters and computed list output).
+//
+// Location: tencentcloud/services/<product>/data_source_tc_<name>.go
+// Factory naming: New<Product><Name>DataSource.
+//
+// Decision points:
+//   - single-result (query by id) vs list-result (query set): single-result
+//     exposes one computed object; list-result exposes `xxx_list` + `total_count`
+//   - which query inputs map to request filters / ids
+//   - pagination: when the SDK request has Offset/Limit fields, the SERVICE
+//     method itself carries the for-loop paging — this file just calls it
+//     once and gets the full list
+//   - the state id is ALWAYS a random token (the JSON resource_id is the
+//     fixed literal fwHelper.BuildToken()): set it at the end of a successful
+//     Read via config.Id = types.StringValue(fwHelper.BuildToken())
+
+package demo
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/datasource"
+	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	demov20230101 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/demo/v20230101"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
+	fwHelper "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/helper"
+)
+
+var _ datasource.DataSourceWithConfigure = &DemoWidgetsDataSource{}
+
+// NewDemoWidgetsDataSource is the factory referenced by
+// tencentcloud/framework/registry.go to register this data source.
+func NewDemoWidgetsDataSource() datasource.DataSource {
+	return &DemoWidgetsDataSource{}
+}
+
+// DemoWidgetsDataSource implements datasource.DataSource for
+// tencentcloud_demo_widgets.
+type DemoWidgetsDataSource struct {
+	fw.DataSourceWithConfigure
+}
+
+// DemoWidgetsDataSourceModel maps the schema attributes.
+type DemoWidgetsDataSourceModel struct {
+	Id               types.String `tfsdk:"id"`
+	Name             types.String `tfsdk:"name"`
+	WidgetIds        types.List   `tfsdk:"widget_ids"`
+	ResultOutputFile types.String `tfsdk:"result_output_file"`
+	TotalCount       types.Int64  `tfsdk:"total_count"`
+	WidgetList       types.List   `tfsdk:"widget_list"`
+}
+
+// DemoWidgetItemModel is the element type of widget_list.
+type DemoWidgetItemModel struct {
+	WidgetId types.String `tfsdk:"widget_id"`
+	Name     types.String `tfsdk:"name"`
+	Status   types.String `tfsdk:"status"`
+	CreateOn types.String `tfsdk:"create_on"`
+}
+
+// DemoWidgetItemAttrTypes is the object type of the widget_list elements.
+var DemoWidgetItemAttrTypes = map[string]attr.Type{
+	"widget_id": types.StringType,
+	"name":      types.StringType,
+	"status":    types.StringType,
+	"create_on": types.StringType,
+}
+
+func (d *DemoWidgetsDataSource) Metadata(_ context.Context, _ datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = "tencentcloud_demo_widgets"
+}
+
+func (d *DemoWidgetsDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		Description: "Use this data source to query the list of Demo widgets.",
+		Attributes: map[string]schema.Attribute{
+			// TEMPLATE: the id carries no cloud meaning — it is a random
+			// token generated at read time (see the end of Read).
+			"id": schema.StringAttribute{
+				Computed:    true,
+				Description: "ID of the data source, a random token.",
+			},
+			// ---- Query inputs ----
+			"name": schema.StringAttribute{
+				Optional:    true,
+				Description: "Name of the widget to query.",
+			},
+			"widget_ids": schema.ListAttribute{
+				Optional:    true,
+				ElementType: types.StringType,
+				Description: "List of widget IDs to query.",
+			},
+			// TEMPLATE: SDKv2-era convention kept for compatibility: an
+			// optional result_output_file attribute that writes the query
+			// result to a local file. Implement the write after Read fills
+			// the list when present.
+			"result_output_file": schema.StringAttribute{
+				Optional:    true,
+				Description: "Used to save results.",
+			},
+			// ---- Query outputs: Computed ----
+			"total_count": schema.Int64Attribute{
+				Computed:    true,
+				Description: "Total number of widgets.",
+			},
+			"widget_list": schema.ListNestedAttribute{
+				Computed:    true,
+				Description: "Widget list.",
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"widget_id": schema.StringAttribute{
+							Computed:    true,
+							Description: "Widget ID.",
+						},
+						"name": schema.StringAttribute{
+							Computed:    true,
+							Description: "Name of the widget.",
+						},
+						"status": schema.StringAttribute{
+							Computed:    true,
+							Description: "Status of the widget.",
+						},
+						"create_on": schema.StringAttribute{
+							Computed:    true,
+							Description: "Creation time.",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+// Read queries the cloud API and writes the result into resp.State.
+func (d *DemoWidgetsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config DemoWidgetsDataSourceModel
+	resp.Diagnostics.Append(req.Config.Get(ctx, &config)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	describeWidgetsRequest := demov20230101.NewDescribeWidgetsRequest()
+	if !config.Name.IsNull() && !config.Name.IsUnknown() {
+		describeWidgetsRequest.Name = config.Name.ValueStringPointer()
+	}
+
+	if !config.WidgetIds.IsNull() && !config.WidgetIds.IsUnknown() {
+		var ids []types.String
+		resp.Diagnostics.Append(config.WidgetIds.ElementsAs(ctx, &ids, false)...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+
+		describeWidgetsRequest.WidgetIds = make([]*string, 0, len(ids))
+		for _, v := range ids {
+			if v.IsNull() || v.IsUnknown() {
+				continue
+			}
+
+			val := v.ValueString()
+			describeWidgetsRequest.WidgetIds = append(describeWidgetsRequest.WidgetIds, &val)
+		}
+	}
+
+	if d.Client() == nil {
+		resp.Diagnostics.AddError(
+			"Provider not configured",
+			"The provider client is not available. This is unexpected; please report it.",
+		)
+
+		return
+	}
+
+	service := NewDemoService(d.Client())
+	// TEMPLATE: when the API pages, the service method internally loops
+	// (Offset/Limit) and returns the full list + totalCount — this file
+	// never loops by itself.
+	widgets, totalCount, err := service.DescribeWidgets(ctx, describeWidgetsRequest)
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Error querying Demo widgets",
+			fmt.Sprintf("DescribeWidgets failed: %v", err),
+		)
+
+		return
+	}
+
+	config.TotalCount = types.Int64PointerValue(totalCount)
+
+	// An empty result is a genuinely empty list, not a failure.
+	items := make([]DemoWidgetItemModel, 0, len(widgets))
+	for _, item := range widgets {
+		items = append(items, DemoWidgetItemModel{
+			WidgetId: types.StringPointerValue(item.WidgetId),
+			Name:     types.StringPointerValue(item.Name),
+			Status:   types.StringPointerValue(item.Status),
+			CreateOn: types.StringPointerValue(item.CreateOn),
+		})
+	}
+
+	list, diags := types.ListValueFrom(ctx, types.ObjectType{AttrTypes: DemoWidgetItemAttrTypes}, items)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	config.WidgetList = list
+
+	// TEMPLATE: result_output_file — when provided, marshal the list to JSON
+	// and write it to the file path before state.Set.
+
+	// The state id is a random token (JSON resource_id = fwHelper.BuildToken()).
+	config.Id = types.StringValue(fwHelper.BuildToken())
+
+	resp.Diagnostics.Append(resp.State.Set(ctx, &config)...)
+}

@@ -632,7 +632,7 @@ func refreshAggregateCompliancePackModel(ctx context.Context, m *ConfigAggregate
 
 	m.CompliancePackName = fwhelper.StringValueOrPrev(item.CompliancePackName, m.CompliancePackName)
 	m.Description = fwhelper.StringValueOrPrev(item.Description, m.Description)
-	m.RiskLevel = fwhelper.Int64ValueOrPrev(item.RiskLevel, m.RiskLevel)
+	m.RiskLevel = fwhelper.Int64ValueFromUintOrPrev(item.RiskLevel, m.RiskLevel)
 	m.Status = types.StringPointerValue(item.Status)
 	m.CreateTime = types.StringPointerValue(item.CreateTime)
 
@@ -785,7 +785,7 @@ func flattenAggregateComplianceConfigRules(ctx context.Context, rules []*configv
 
 		ruleModel := aggregateCompliancePackRuleModel{
 			RuleName:              fwhelper.StringValueOrPrev(rule.RuleName, prior.RuleName),
-			RiskLevel:             fwhelper.Int64ValueOrPrev(rule.RiskLevel, prior.RiskLevel),
+			RiskLevel:             fwhelper.Int64ValueFromUintOrPrev(rule.RiskLevel, prior.RiskLevel),
 			Identifier:            fwhelper.StringValueOrPrev(rule.Identifier, prior.Identifier),
 			Description:           fwhelper.StringValueOrPrev(rule.Description, prior.Description),
 			ConfigRuleId:          fwhelper.StringValueOrPrev(rule.ConfigRuleId, prior.ConfigRuleId),
