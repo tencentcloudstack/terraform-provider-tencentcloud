@@ -2,7 +2,7 @@
 
 Provides a resource to create a manual backup set for a TDSQL-C (TDSQL Boundless, tdmysql) instance.
 
-## Example Usage
+Example Usage
 
 ```hcl
 resource "tencentcloud_tdmysql_dbs_backup" "example" {
@@ -13,7 +13,7 @@ resource "tencentcloud_tdmysql_dbs_backup" "example" {
 }
 ```
 
-## Import
+Import
 
 A tdmysql backup set can be imported using the `instance_id#backup_set_id` format, e.g.
 
