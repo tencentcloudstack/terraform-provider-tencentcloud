@@ -45,8 +45,8 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssl"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tco"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdmysql"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 )
 
 // resourcesMap maps every framework managed resource type name to its factory.

@@ -29,13 +29,13 @@ type TdmysqlSpecsDataSource struct {
 
 // TdmysqlSpecsDataSourceModel maps the schema attributes.
 type TdmysqlSpecsDataSourceModel struct {
-	FullReplications     types.Int64 `tfsdk:"full_replications"`
-	IsExclusiveInstance  types.Int64 `tfsdk:"is_exclusive_instance"`
-	Zones                types.Set   `tfsdk:"zones"`
-	InstanceId           types.String `tfsdk:"instance_id"`
-	HybridNodeSpecs      types.List  `tfsdk:"hybrid_node_specs"`
-	ServerlessCcuSpec    types.List  `tfsdk:"serverless_ccu_spec"`
-	ServerlessNodeNumSpec types.List `tfsdk:"serverless_node_num_spec"`
+	FullReplications      types.Int64  `tfsdk:"full_replications"`
+	IsExclusiveInstance   types.Int64  `tfsdk:"is_exclusive_instance"`
+	Zones                 types.Set    `tfsdk:"zones"`
+	InstanceId            types.String `tfsdk:"instance_id"`
+	HybridNodeSpecs       types.List   `tfsdk:"hybrid_node_specs"`
+	ServerlessCcuSpec     types.List   `tfsdk:"serverless_ccu_spec"`
+	ServerlessNodeNumSpec types.List   `tfsdk:"serverless_node_num_spec"`
 }
 
 // TdmysqlSpecsHybridNodeSpecModel is the element type of hybrid_node_specs.

@@ -17,8 +17,8 @@ import (
 	svctdmysql "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdmysql"
 )
 
-func ptrStrTdmysql(s string) *string   { return &s }
-func ptrInt64Tdmysql(v int64) *int64   { return &v }
+func ptrStrTdmysql(s string) *string       { return &s }
+func ptrInt64Tdmysql(v int64) *int64       { return &v }
 func ptrFloat64Tdmysql(v float64) *float64 { return &v }
 
 // tdmysqlSpecsSchema returns the framework data source schema used to build
@@ -99,12 +99,12 @@ func buildTdmysqlSpecsRawValue(fullReplications int64, isExclusive int64, zones 
 		zoneValues = append(zoneValues, tftypes.NewValue(tftypes.String, z))
 	}
 	attrs := map[string]tftypes.Value{
-		"full_replications":     tftypes.NewValue(tftypes.Number, fullReplications),
-		"is_exclusive_instance": tftypes.NewValue(tftypes.Number, isExclusive),
-		"zones":                 tftypes.NewValue(tftypes.Set{ElementType: tftypes.String}, zoneValues),
-		"instance_id":           tftypes.NewValue(tftypes.String, instanceId),
-		"hybrid_node_specs":     tftypes.NewValue(tftypes.List{ElementType: tdmysqlSpecsHybridItemType()}, nil),
-		"serverless_ccu_spec":   tftypes.NewValue(tftypes.List{ElementType: tdmysqlSpecsServerlessCcuItemType()}, nil),
+		"full_replications":        tftypes.NewValue(tftypes.Number, fullReplications),
+		"is_exclusive_instance":    tftypes.NewValue(tftypes.Number, isExclusive),
+		"zones":                    tftypes.NewValue(tftypes.Set{ElementType: tftypes.String}, zoneValues),
+		"instance_id":              tftypes.NewValue(tftypes.String, instanceId),
+		"hybrid_node_specs":        tftypes.NewValue(tftypes.List{ElementType: tdmysqlSpecsHybridItemType()}, nil),
+		"serverless_ccu_spec":      tftypes.NewValue(tftypes.List{ElementType: tdmysqlSpecsServerlessCcuItemType()}, nil),
 		"serverless_node_num_spec": tftypes.NewValue(tftypes.List{ElementType: tdmysqlSpecsServerlessNodeNumItemType()}, nil),
 	}
 	return tftypes.NewValue(tdmysqlSpecsRootType(), attrs)
