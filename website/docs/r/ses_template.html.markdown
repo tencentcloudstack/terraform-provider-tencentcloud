@@ -17,9 +17,9 @@ Provides a resource to create a ses template.
 
 ```hcl
 resource "tencentcloud_ses_template" "example" {
-  template_name = "tf_example_ses_temp" "
+  template_name = "tf_example_ses_temp"
   template_content {
-    text = " example for the ses template "
+    text = "example for the ses template"
   }
 }
 ```
@@ -85,7 +85,8 @@ This resource interacts with the following TencentCloud APIs:
 ## Import
 
 ses template can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_ses_template.example template_id
+terraform import tencentcloud_ses_template.example template_id
 ```
 

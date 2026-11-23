@@ -1,11 +1,11 @@
-Use this data source to query detailed information of rum taw_area
+Use this data source to query detailed information of rum taw area
 
 Example Usage
 
 ```hcl
-data "tencentcloud_rum_taw_area" "taw_area" {
-  area_ids      =
-  area_keys     =
-  area_statuses =
+data "tencentcloud_rum_taw_area" "example" {
+  area_ids      = [1]
+  area_keys     = ["ap-guangzhou"]
+  area_statuses = [1]
 }
 ```

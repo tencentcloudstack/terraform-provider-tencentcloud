@@ -9,6 +9,6 @@ resource "tencentcloud_provision_role_configuration_operation" "example" {
   zone_id               = "z-1os7c9znogct"
   role_configuration_id = "rc-ihogrs0e6ceg"
   target_type           = "MemberUin"
-  target_uin            = 100043****45
+  target_uin            = 100043000045
 }
 ```

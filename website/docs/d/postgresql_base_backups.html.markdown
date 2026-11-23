@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_postgresql_base_backups"
 sidebar_current: "docs-tencentcloud-datasource-postgresql_base_backups"
 description: |-
-  Use this data source to query detailed information of postgresql base_backups
+  Use this data source to query detailed information of postgresql base backups
 ---
 
 # tencentcloud_postgresql_base_backups
 
-Use this data source to query detailed information of postgresql base_backups
+Use this data source to query detailed information of postgresql base backups
 
 ## Example Usage
 
@@ -22,10 +22,10 @@ data "tencentcloud_postgresql_base_backups" "base_backups" {
   order_by_type = "asc"
 }
 
-data "tencentcloud_postgresql_base_backups" "base_backups" {
+data "tencentcloud_postgresql_base_backups" "base_backups_2" {
   filters {
     name   = "db-instance-id"
-    values = [local.pgsql_id]
+    values = ["postgres-gzg9jb2n"]
   }
 
   order_by      = "Size"

@@ -24,14 +24,8 @@ data "tencentcloud_ssl_certificates" "example" {}
 ```hcl
 data "tencentcloud_ssl_certificates" "example" {
   name = "tf-example"
-}
-
-data "tencentcloud_ssl_certificates" "example" {
   type = "CA"
-}
-
-data "tencentcloud_ssl_certificates" "example" {
-  id = "LCYouprI"
+  id   = "LCYouprI"
 }
 ```
 

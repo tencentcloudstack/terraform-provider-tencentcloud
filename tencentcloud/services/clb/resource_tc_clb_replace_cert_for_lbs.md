@@ -3,6 +3,7 @@ Provides a resource to create a clb replace_cert_for_lbs
 Example Usage
 
 Replace Server Cert By Cert ID
+
 ```hcl
 resource "tencentcloud_clb_replace_cert_for_lbs" "replace_cert_for_lbs" {
   old_certificate_id = "zjUMifFK"
@@ -13,6 +14,7 @@ resource "tencentcloud_clb_replace_cert_for_lbs" "replace_cert_for_lbs" {
 ```
 
 Replace Server Cert By Cert Content
+
 ```hcl
 data "tencentcloud_ssl_certificates" "foo" {
   name = "keep-ssl-ca"
@@ -37,6 +39,7 @@ EOT
 ```
 
 Replace Client Cert By Cert Content
+
 ```hcl
 resource "tencentcloud_clb_replace_cert_for_lbs" "replace_cert_for_lbs" {
   old_certificate_id = "zjUMifFK"
@@ -49,8 +52,4 @@ xxxxxxxxContentxxxxxxxxxxxxxx
 EOT
   }
 }
-```
-
-```
-terraform import tencentcloud_clb_replace_cert_for_lbs.replace_cert_for_lbs replace_cert_for_lbs_id
 ```

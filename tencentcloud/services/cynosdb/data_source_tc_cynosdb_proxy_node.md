@@ -7,8 +7,8 @@ data "tencentcloud_cynosdb_proxy_node" "proxy_node" {
   order_by      = "CREATETIME"
   order_by_type = "DESC"
   filters {
-    names       = "ClusterId"
-    values      = "cynosdbmysql-cgd2gpwr"
+    names       = ["ClusterId"]
+    values      = ["cynosdbmysql-cgd2gpwr"]
     exact_match = false
     name        = "ClusterId"
   }

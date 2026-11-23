@@ -21,7 +21,7 @@ resource "tencentcloud_antiddos_packet_filter_config" "packet_filter_config" {
     sport_end   = 8080
     str         = "a"
   }
-}s
+}
 ```
 
 Import

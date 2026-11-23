@@ -95,7 +95,7 @@ data "tencentcloud_instance_types" "local_disk" {
 
 output "local_disk_types" {
   value = [for instance in data.tencentcloud_instance_types.local_disk.instance_types :
-    instance.local_disk_type_list if length(instance.local_disk_type_list) > 0
+    instance.local_disk_type_lists if length(instance.local_disk_type_lists) > 0
   ]
 }
 ```
@@ -111,8 +111,8 @@ data "tencentcloud_instance_types" "with_pricing" {
 
 output "pricing_info" {
   value = [for instance in data.tencentcloud_instance_types.with_pricing.instance_types : {
-    type  = instance.instance_type
-    price = length(instance.price) > 0 ? instance.price[0] : null
+    type   = instance.instance_type
+    prices = length(instance.prices) > 0 ? instance.prices[0] : null
   }]
 }
 ```

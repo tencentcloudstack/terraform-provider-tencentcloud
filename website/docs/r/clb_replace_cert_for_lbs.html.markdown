@@ -65,12 +65,6 @@ EOT
 }
 ```
 
-
-
-```hcl
-terraform import tencentcloud_clb_replace_cert_for_lbs.replace_cert_for_lbs replace_cert_for_lbs_id
-```
-
 ## Argument Reference
 
 The following arguments are supported:

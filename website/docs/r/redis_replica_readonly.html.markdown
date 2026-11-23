@@ -34,20 +34,50 @@ resource "tencentcloud_security_group" "security_group" {
   name = "tf-redis-sg"
 }
 
-resource "tencentcloud_security_group_lite_rule" "example" {
+resource "tencentcloud_security_group_rule_set" "example" {
   security_group_id = tencentcloud_security_group.security_group.id
 
-  ingress = [
-    "ACCEPT#192.168.1.0/24#80#TCP",
-    "DROP#8.8.8.8#80,90#UDP",
-    "DROP#0.0.0.0/0#80-90#TCP",
-  ]
+  ingress {
+    action     = "ACCEPT"
+    cidr_block = "192.168.1.0/24"
+    protocol   = "TCP"
+    port       = "80"
+  }
 
-  egress = [
-    "ACCEPT#192.168.0.0/16#ALL#TCP",
-    "ACCEPT#10.0.0.0/8#ALL#ICMP",
-    "DROP#0.0.0.0/0#ALL#ALL",
-  ]
+  ingress {
+    action     = "DROP"
+    cidr_block = "8.8.8.8"
+    protocol   = "UDP"
+    port       = "80,90"
+  }
+
+  ingress {
+    action     = "DROP"
+    cidr_block = "0.0.0.0/0"
+    protocol   = "TCP"
+    port       = "80-90"
+  }
+
+  egress {
+    action     = "ACCEPT"
+    cidr_block = "192.168.0.0/16"
+    protocol   = "TCP"
+    port       = "ALL"
+  }
+
+  egress {
+    action     = "ACCEPT"
+    cidr_block = "10.0.0.0/8"
+    protocol   = "ICMP"
+    port       = "ALL"
+  }
+
+  egress {
+    action     = "DROP"
+    cidr_block = "0.0.0.0/0"
+    protocol   = "ALL"
+    port       = "ALL"
+  }
 }
 
 resource "tencentcloud_redis_instance" "example" {
@@ -61,7 +91,7 @@ resource "tencentcloud_redis_instance" "example" {
   port               = 6379
   vpc_id             = tencentcloud_vpc.vpc.id
   subnet_id          = tencentcloud_subnet.subnet.id
-  security_groups    = [tencentcloud_security_group.security_group.id]
+  security_groups    = [tencentcloud_security_group_rule_set.example.id]
 }
 
 resource "tencentcloud_redis_replica_readonly" "example" {

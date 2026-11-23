@@ -31,7 +31,7 @@ data "tencentcloud_cls_logsets" "logsets" {
 }
 
 # Query by `logsetId`
-data "tencentcloud_cls_logsets" "logsets" {
+data "tencentcloud_cls_logsets" "logsets_2" {
   filters {
     key    = "logsetId"
     values = ["50d499a8-c4c0-4442-aa04-e8aa8a02437d"]
@@ -39,7 +39,7 @@ data "tencentcloud_cls_logsets" "logsets" {
 }
 
 # Query by `tagKey`
-data "tencentcloud_cls_logsets" "logsets" {
+data "tencentcloud_cls_logsets" "logsets_3" {
   filters {
     key    = "tagKey"
     values = ["createdBy"]
@@ -47,7 +47,7 @@ data "tencentcloud_cls_logsets" "logsets" {
 }
 
 # Query by `tag:tagKey`
-data "tencentcloud_cls_logsets" "logsets" {
+data "tencentcloud_cls_logsets" "logsets_4" {
   filters {
     key    = "tag:createdBy"
     values = ["terraform"]

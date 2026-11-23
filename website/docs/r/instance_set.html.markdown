@@ -35,7 +35,8 @@ data "tencentcloud_instance_types" "my_favorite_instance_types" {
   memory_size    = 1
 }
 
-data "tencentcloud_availability_zones" "my_favorite_zones" {
+data "tencentcloud_availability_zones_by_product" "my_favorite_zones" {
+  product = "cvm"
 }
 
 // Create VPC resource
@@ -46,7 +47,7 @@ resource "tencentcloud_vpc" "app" {
 
 resource "tencentcloud_subnet" "app" {
   vpc_id            = tencentcloud_vpc.app.id
-  availability_zone = data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name
+  availability_zone = data.tencentcloud_availability_zones_by_product.my_favorite_zones.zones.0.name
   name              = "awesome_app_subnet"
   cidr_block        = "10.0.1.0/24"
 }
@@ -61,7 +62,7 @@ resource "tencentcloud_instance_set" "my_awesome_app" {
 
   instance_count    = 10
   instance_name     = "awesome_app"
-  availability_zone = data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name
+  availability_zone = data.tencentcloud_availability_zones_by_product.my_favorite_zones.zones.0.name
   image_id          = data.tencentcloud_images.my_favorite_image.images.0.image_id
   instance_type     = data.tencentcloud_instance_types.my_favorite_instance_types.instance_types.0.instance_type
   system_disk_type  = "CLOUD_PREMIUM"

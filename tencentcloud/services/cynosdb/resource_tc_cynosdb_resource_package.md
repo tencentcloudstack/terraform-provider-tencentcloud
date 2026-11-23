@@ -8,7 +8,7 @@ resource "tencentcloud_cynosdb_resource_package" "resource_package" {
   package_region = "china"
   package_type = "CCU"
   package_version = "base"
-  package_spec =
+  package_spec = 1
   expire_day = 180
   package_count = 1
   package_name = "PackageName"

@@ -18,7 +18,9 @@ Provide a resource to create a VPC subnet.
 ### Create a normal VPC subnet
 
 ```hcl
-data "tencentcloud_availability_zones" "zones" {}
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "vpc"
+}
 
 resource "tencentcloud_vpc" "vpc" {
   name         = "vpc-example"
@@ -30,7 +32,7 @@ resource "tencentcloud_subnet" "subnet" {
   vpc_id            = tencentcloud_vpc.vpc.id
   name              = "subnet-example"
   cidr_block        = "10.0.0.0/16"
-  availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
   is_multicast      = false
 }
 ```
@@ -38,7 +40,9 @@ resource "tencentcloud_subnet" "subnet" {
 ### Create a CDC instance VPC subnet
 
 ```hcl
-data "tencentcloud_availability_zones" "zones" {}
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "vpc"
+}
 
 resource "tencentcloud_vpc" "vpc" {
   name         = "vpc-example"
@@ -51,7 +55,7 @@ resource "tencentcloud_subnet" "subnet" {
   name              = "subnet-example"
   cidr_block        = "10.0.0.0/16"
   cdc_id            = "cluster-lchwgxhs"
-  availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
   is_multicast      = false
 }
 ```

@@ -101,6 +101,7 @@ tencentcloud_antiddos_packet_filter_config
 tencentcloud_antiddos_port_acl_config
 tencentcloud_antiddos_cc_black_white_ip
 tencentcloud_antiddos_cc_precision_policy
+tencentcloud_dayu_l4_rule_v2
 
 Anti-DDoS(Dayu)
 Data Source
@@ -275,6 +276,7 @@ tencentcloud_cam_sub_accounts
 tencentcloud_cam_accounts
 tencentcloud_cam_role_detail
 tencentcloud_cam_policy_detail
+tencentcloud_cam_list_attached_user_policy
 
 Resource
 tencentcloud_cam_role
@@ -378,6 +380,7 @@ tencentcloud_cfs_auto_snapshot_policy
 tencentcloud_cfs_auto_snapshot_policy_attachment
 tencentcloud_cfs_snapshot
 tencentcloud_cfs_sign_up_cfs_service
+tencentcloud_cfs_user_quota
 
 Container Cluster(tke)
 Data Source
@@ -517,6 +520,10 @@ tencentcloud_cvm_sync_image
 tencentcloud_cvm_export_images
 tencentcloud_cvm_image_share_permission
 tencentcloud_cvm_action_timer
+tencentcloud_cvm_import_image
+tencentcloud_cvm_modify_instance_disk_type
+tencentcloud_cvm_program_fpga_image
+tencentcloud_cvm_renew_host
 
 TDSQL-C MySQL(CynosDB)
 Data Source
@@ -543,6 +550,7 @@ tencentcloud_cynosdb_zone
 tencentcloud_cynosdb_instance_slow_queries
 tencentcloud_cynosdb_proxy_node
 tencentcloud_cynosdb_proxy_version
+tencentcloud_cynosdb_backup_download_url
 
 Resource
 tencentcloud_cynosdb_cluster_resource_packages_attachment
@@ -576,6 +584,7 @@ tencentcloud_cynosdb_cluster_transparent_encrypt
 tencentcloud_cynosdb_audit_service
 tencentcloud_cynosdb_cls_delivery
 tencentcloud_cynosdb_libra_db_instance
+tencentcloud_cynosdb_resource_package
 
 Direct Connect(DC)
 Data Source
@@ -812,6 +821,7 @@ tencentcloud_mongodb_readonly_instance
 tencentcloud_mongodb_audit_log_file
 tencentcloud_mongodb_audit_service
 tencentcloud_mongodb_scale_up_db_instance_cpu
+tencentcloud_mongodb_instance_backup_download_task
 
 Action
 tencentcloud_mongodb_restore_db_instance
@@ -845,6 +855,7 @@ tencentcloud_mysql_databases
 tencentcloud_mysql_error_log
 tencentcloud_mysql_project_security_group
 tencentcloud_mysql_ro_min_scale
+tencentcloud_mysql_proxy_custom
 
 Resource
 tencentcloud_mysql_instance
@@ -890,6 +901,8 @@ tencentcloud_mysql_cls_log_attachment
 tencentcloud_cdb_start_cpu_expand
 tencentcloud_mysql_audit_service
 tencentcloud_mysql_clone_instance
+tencentcloud_mysql_db_import_job_operation
+tencentcloud_mysql_switch_proxy
 
 Cloud Monitor(Monitor)
 Data Source
@@ -914,6 +927,7 @@ tencentcloud_monitor_alarm_all_namespaces
 tencentcloud_monitor_alarm_monitor_type
 tencentcloud_monitor_external_cluster_register_command
 tencentcloud_monitor_notice_content_tmpls
+tencentcloud_monitor_statistic_data
 
 Resource
 tencentcloud_monitor_binding_object
@@ -1025,6 +1039,7 @@ tencentcloud_postgresql_time_window
 tencentcloud_postgres_audit_service
 tencentcloud_postgres_audit_log_file
 tencentcloud_postgresql_database
+tencentcloud_postgresql_account_privileges_operation
 
 TencentDB for Redis(crs)
 Data Source
@@ -1125,6 +1140,9 @@ tencentcloud_sqlserver_upload_backup_info
 tencentcloud_sqlserver_upload_incremental_info
 tencentcloud_sqlserver_query_xevent
 tencentcloud_sqlserver_ins_attribute
+tencentcloud_sqlserver_backups
+tencentcloud_sqlserver_collation_time_zone
+tencentcloud_sqlserver_desc_ha_log
 
 Resource
 tencentcloud_sqlserver_instance
@@ -1164,6 +1182,8 @@ tencentcloud_sqlserver_database_tde
 tencentcloud_sqlserver_general_cloud_ro_instance
 tencentcloud_sqlserver_wan_ip_config
 tencentcloud_sqlserver_db_instance_ssl_config
+tencentcloud_sqlserver_config_instance_security_groups
+tencentcloud_sqlserver_instance_ssl
 
 SSL Certificates(ssl)
 Data Source
@@ -1300,6 +1320,7 @@ tencentcloud_vod_watermark_template
 tencentcloud_vod_event_config
 tencentcloud_vod_aigc_api_token
 tencentcloud_vod_aigc_quota
+tencentcloud_vod_super_player_config
 
 Oceanus
 Data Source
@@ -1434,6 +1455,10 @@ tencentcloud_vpc_route_policy
 tencentcloud_vpc_route_policy_entries
 tencentcloud_vpc_route_policy_association
 tencentcloud_vpc_replace_routes_with_route_policy_config
+tencentcloud_security_group_rule
+tencentcloud_vpc_classic_link_attachment
+tencentcloud_vpc_dhcp_associate_address
+tencentcloud_vpc_network_acl_quintuple
 
 Private Link(PLS)
 Resource
@@ -1517,6 +1542,7 @@ tencentcloud_dnspod_record_line_list
 tencentcloud_dnspod_record_list
 tencentcloud_dnspod_record_type
 tencentcloud_subdomain_validate_status
+tencentcloud_dnspod_domain_instances
 
 PrivateDNS
 Resource
@@ -1709,6 +1735,8 @@ tencentcloud_teo_domain_shared_cname_attachment
 tencentcloud_teo_edge_kv
 tencentcloud_teo_edge_kv_namespace
 tencentcloud_teo_dns_records_status
+tencentcloud_teo_application_proxy
+tencentcloud_teo_plan
 
 Action
 tencentcloud_teo_apply_free_certificate
@@ -1789,6 +1817,7 @@ tencentcloud_dcdb_activate_hour_instance_operation
 tencentcloud_dcdb_isolate_hour_instance_operation
 tencentcloud_dcdb_flush_binlog_operation
 tencentcloud_dcdb_switch_db_instance_ha_operation
+tencentcloud_dcdb_db_instance
 
 Short Message Service(SMS)
 Resource
@@ -1833,6 +1862,7 @@ tencentcloud_mariadb_renewal_price
 tencentcloud_mariadb_sale_info
 tencentcloud_mariadb_slow_logs
 tencentcloud_mariadb_upgrade_price
+tencentcloud_mariadb_instance_node_info
 
 Resource
 tencentcloud_mariadb_dedicatedcluster_db_instance
@@ -1851,6 +1881,7 @@ tencentcloud_mariadb_switch_ha
 tencentcloud_mariadb_restart_instance
 tencentcloud_mariadb_renew_instance
 tencentcloud_mariadb_instance_config
+tencentcloud_mariadb_encrypt_attributes
 
 Real User Monitoring(RUM)
 Data Source
@@ -1876,6 +1907,10 @@ tencentcloud_rum_static_resource
 tencentcloud_rum_static_url
 tencentcloud_rum_web_vitals_page
 tencentcloud_rum_log_export_list
+tencentcloud_rum_log_export
+tencentcloud_rum_log_list
+tencentcloud_rum_log_stats_log_list
+tencentcloud_rum_taw_area
 
 Resource
 tencentcloud_rum_project
@@ -1884,6 +1919,7 @@ tencentcloud_rum_whitelist
 tencentcloud_rum_offline_log_config_attachment
 tencentcloud_rum_instance_status_config
 tencentcloud_rum_project_status_config
+tencentcloud_rum_release_file
 
 Cloud Streaming Services(CSS)
 Resource
@@ -1913,6 +1949,7 @@ tencentcloud_css_stream_monitor
 tencentcloud_css_start_stream_monitor
 tencentcloud_css_pull_stream_task_restart
 tencentcloud_css_origin_stream_info
+tencentcloud_css_record_template
 
 Data Source
 tencentcloud_css_domains
@@ -1925,6 +1962,7 @@ tencentcloud_css_time_shift_record_detail
 tencentcloud_css_time_shift_stream_list
 tencentcloud_css_watermarks
 tencentcloud_css_xp2p_detail_info_list
+tencentcloud_css_deliver_log_down_list
 
 Performance Testing Service(PTS)
 Data Source
@@ -2105,6 +2143,7 @@ tencentcloud_tdmq_rocketmq_role
 tencentcloud_tdmq_rocketmq_group
 tencentcloud_tdmq_rocketmq_messages
 tencentcloud_trocket_rocketmq_instances
+tencentcloud_tdmq_vip_instance
 
 Resource
 tencentcloud_tdmq_rocketmq_cluster
@@ -2125,6 +2164,10 @@ Resource
 tencentcloud_tdmq_rabbitmq_user
 tencentcloud_tdmq_rabbitmq_user_permission
 tencentcloud_tdmq_rabbitmq_virtual_host
+tencentcloud_tdmq_rabbitmq_vip_instance
+
+Data Source
+tencentcloud_tdmq_rabbitmq_node_list
 tencentcloud_tdmq_rabbitmq_vip_instance
 
 Cloud Infinite(CI)
@@ -2218,6 +2261,7 @@ tencentcloud_tsf_release_api_group
 tencentcloud_tsf_operate_container_group
 tencentcloud_tsf_operate_group
 tencentcloud_tsf_unit_namespace
+tencentcloud_tsf_repository
 
 Media Processing Service(MPS)
 Data Source
@@ -2356,6 +2400,7 @@ tencentcloud_eb_platform_event_names
 tencentcloud_eb_platform_event_patterns
 tencentcloud_eb_platform_products
 tencentcloud_eb_plateform_event_template
+tencentcloud_eb_search
 
 Resource
 tencentcloud_eb_event_transform
@@ -2416,6 +2461,10 @@ tencentcloud_dlc_standard_engine_resource_group_config_info
 tencentcloud_dlc_datasource_house_attachment
 tencentcloud_dlc_attach_user_policy_attachment
 tencentcloud_dlc_meta_database
+tencentcloud_dlc_attach_user_policy_operation
+tencentcloud_dlc_attach_work_group_policy_operation
+tencentcloud_dlc_detach_user_policy_operation
+tencentcloud_dlc_detach_work_group_policy_operation
 
 Action
 tencentcloud_dlc_initialize_tc_lake
@@ -2538,6 +2587,7 @@ tencentcloud_wedata_quality_rule_group_exec_results
 tencentcloud_wedata_quality_rule_templates
 tencentcloud_wedata_workflow_max_permission
 tencentcloud_wedata_code_max_permission
+tencentcloud_wedata_ops_async_job
 
 Resource
 tencentcloud_wedata_submit_task_operation
@@ -2583,6 +2633,8 @@ tencentcloud_wedata_rerun_trigger_workflow_run_async
 tencentcloud_wedata_authorize_data_source
 tencentcloud_wedata_workflow_permissions
 tencentcloud_wedata_data_backfill_plan
+tencentcloud_wedata_code_permissions
+tencentcloud_wedata_data_source
 
 Cloud Firewall(CFW)
 Data Source
@@ -2850,6 +2902,8 @@ tencentcloud_config_update_aggregate_config_deliver
 tencentcloud_config_recorder_config
 tencentcloud_config_aggregator
 tencentcloud_config_aggregate_compliance_pack
+tencentcloud_config_alarm_policy
+tencentcloud_config_rule
 
 GS
 Data Source

@@ -18,7 +18,9 @@ Provides a resource to create a tdmq rocketmq_vip_instance
 
 ```hcl
 # query availability zones
-data "tencentcloud_availability_zones" "zones" {}
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "vpc"
+}
 
 # create vpc
 resource "tencentcloud_vpc" "vpc" {
@@ -28,7 +30,7 @@ resource "tencentcloud_vpc" "vpc" {
 
 # create subnet
 resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones.zones.zones.1.name
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.1.name
   name              = "subnet-example"
   vpc_id            = tencentcloud_vpc.vpc.id
   cidr_block        = "10.0.0.0/16"
@@ -42,8 +44,8 @@ resource "tencentcloud_tdmq_rocketmq_vip_instance" "example" {
   node_count   = 2
   storage_size = 200
   zone_ids = [
-    data.tencentcloud_availability_zones.zones.zones.0.id,
-    data.tencentcloud_availability_zones.zones.zones.1.id
+    data.tencentcloud_availability_zones_by_product.zones.zones.0.id,
+    data.tencentcloud_availability_zones_by_product.zones.zones.1.id
   ]
 
   vpc_info {

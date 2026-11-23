@@ -17,6 +17,6 @@ Import
 
 Config delivery settings can be imported using the region, e.g.
 
-```hcl
+```
 terraform import tencentcloud_config_update_config_deliver.example ap-guangzhou
 ```

@@ -133,7 +133,7 @@ func ResourceTencentCloudVpcNetworkAclQuintuple() *schema.Resource {
 									"source_cidr": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "源CIDR。.",
+										Description: "Source CIDR.",
 									},
 									"destination_port": {
 										Type:        schema.TypeString,

@@ -4,21 +4,21 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dcdb_account_privileges"
 sidebar_current: "docs-tencentcloud-resource-dcdb_account_privileges"
 description: |-
-  Provides a resource to create a dcdb account_privileges
+  Provides a resource to create a dcdb account privileges
 ---
 
 # tencentcloud_dcdb_account_privileges
 
-Provides a resource to create a dcdb account_privileges
+Provides a resource to create a dcdb account privileges
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_dcdb_account_privileges" "account_privileges" {
-  instance_id = "%s"
+resource "tencentcloud_dcdb_account_privileges" "example" {
+  instance_id = "tdsqlshard-xxxxxxxx"
   account {
     user = "tf_test"
-    host = "%s"
+    host = "127.0.0.1"
   }
   global_privileges = ["SHOW DATABASES", "SHOW VIEW"]
   database_privileges {
@@ -30,8 +30,8 @@ resource "tencentcloud_dcdb_account_privileges" "account_privileges" {
     database   = "tf_test_db"
     table      = "tf_test_table"
     privileges = ["SELECT", "INSERT", "UPDATE", "DELETE", "CREATE"]
-
   }
+}
 ```
 
 ## Argument Reference
@@ -103,6 +103,6 @@ This resource interacts with the following TencentCloud APIs:
 dcdb account_privileges can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_dcdb_account_privileges.account_privileges instanceId#userName#host#dbName#tabName#viewName#colName
+terraform import tencentcloud_dcdb_account_privileges.example instanceId#userName#host#dbName#tabName#viewName#colName
 ```
 

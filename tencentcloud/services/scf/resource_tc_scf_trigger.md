@@ -192,7 +192,7 @@ terraform import tencentcloud_scf_trigger.timer tf-example-function#default#tf-e
 
 Or use Terraform 1.5+ `import` block:
 
-```hcl
+```
 import {
   to = tencentcloud_scf_trigger.http
   id = "tf-example-function#default#tf-example-trigger"

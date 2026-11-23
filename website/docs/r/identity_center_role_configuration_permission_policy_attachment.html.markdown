@@ -4,20 +4,20 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_identity_center_role_configuration_permission_policy_attachment"
 sidebar_current: "docs-tencentcloud-resource-identity_center_role_configuration_permission_policy_attachment"
 description: |-
-  Provides a resource to create a organization identity_center_role_configuration_permission_policy_attachment
+  Provides a resource to create a organization identity center role configuration permission policy attachment
 ---
 
 # tencentcloud_identity_center_role_configuration_permission_policy_attachment
 
-Provides a resource to create a organization identity_center_role_configuration_permission_policy_attachment
+Provides a resource to create a organization identity center role configuration permission policy attachment
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_identity_center_role_configuration_permission_policy_attachment" "identity_center_role_configuration_permission_policy_attachment" {
+resource "tencentcloud_identity_center_role_configuration_permission_policy_attachment" "example" {
   zone_id               = "z-xxxxxx"
   role_configuration_id = "rc-xxxxxx"
-  role_policy_id        = xxxxxx
+  role_policy_id        = 12345
 }
 ```
 
@@ -49,9 +49,9 @@ This resource interacts with the following TencentCloud APIs:
 
 ## Import
 
-organization identity_center_role_configuration_permission_policy_attachment can be imported using the id, e.g.
+organization identity center role configuration permission policy attachment can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_identity_center_role_configuration_permission_policy_attachment.identity_center_role_configuration_permission_policy_attachment ${zoneId}#${roleConfigurationId}#${rolePolicyIdString}
+terraform import tencentcloud_identity_center_role_configuration_permission_policy_attachment.example ${zoneId}#${roleConfigurationId}#${rolePolicyIdString}
 ```
 

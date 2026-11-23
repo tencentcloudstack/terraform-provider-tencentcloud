@@ -54,7 +54,7 @@ This resource interacts with the following TencentCloud APIs:
 
 Config delivery settings can be imported using the region, e.g.
 
-```hcl
+```
 terraform import tencentcloud_config_update_config_deliver.example ap-guangzhou
 ```
 

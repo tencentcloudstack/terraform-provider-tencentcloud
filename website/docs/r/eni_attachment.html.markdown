@@ -29,7 +29,9 @@ data "tencentcloud_instance_types" "instance_types" {
   memory_size    = 1
 }
 
-data "tencentcloud_availability_zones" "zones" {}
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "vpc"
+}
 
 resource "tencentcloud_vpc" "vpc" {
   name       = "ci-test-eni-vpc"
@@ -54,7 +56,7 @@ resource "tencentcloud_eni" "eni" {
 
 resource "tencentcloud_instance" "example" {
   instance_name            = "ci-test-eni-attach"
-  availability_zone        = data.tencentcloud_availability_zones.zones.zones.0.name
+  availability_zone        = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
   image_id                 = data.tencentcloud_images.images.images.0.image_id
   instance_type            = data.tencentcloud_instance_types.instance_types.instance_types.0.instance_type
   system_disk_type         = "CLOUD_PREMIUM"

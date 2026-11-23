@@ -14,7 +14,7 @@ Query the specified one.
 
 ```hcl
 data "tencentcloud_mps_schedules" "schedules" {
-  schedule_ids = [%d]
+  schedule_ids = [12345]
   trigger_type = "CosFileUpload"
   status       = "Enabled"
 }
