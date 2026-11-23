@@ -169,3 +169,38 @@ func (me *TdmysqlService) DescribeTdmysqlDBSecurityGroupsById(ctx context.Contex
 	ret = response.Response
 	return
 }
+
+func (me *TdmysqlService) DescribeTdmysqlSpecs(ctx context.Context, request *tdmysqlv20211122.DescribeSpecsRequest) (ret *tdmysqlv20211122.DescribeSpecsResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	var response *tdmysqlv20211122.DescribeSpecsResponse
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTdmysqlV20211122Client().DescribeSpecsWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe tdmysql specs failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response
+	return
+}
