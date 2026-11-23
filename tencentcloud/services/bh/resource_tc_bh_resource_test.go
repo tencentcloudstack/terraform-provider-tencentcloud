@@ -223,6 +223,81 @@ func TestBhResource_UpdateWebAccessDisable(t *testing.T) {
 	assert.True(t, disableCalled)
 }
 
+func TestBhResource_UpdateIOAFields(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	bhClient := &bhv20230418.Client{}
+	patches.ApplyMethodReturn(newMockMetaBhResource().client, "UseBhV20230418Client", bhClient)
+
+	modifyCalled := false
+	patches.ApplyMethodFunc(bhClient, "ModifyResourceWithContext", func(_ context.Context, request *bhv20230418.ModifyResourceRequest) (*bhv20230418.ModifyResourceResponse, error) {
+		assert.NotNil(t, request.ResourceId)
+		assert.Equal(t, "bh-saas-abc123", *request.ResourceId)
+		assert.NotNil(t, request.IOAResource)
+		assert.Equal(t, uint64(1), *request.IOAResource)
+		assert.NotNil(t, request.PackageIOAUserCount)
+		assert.Equal(t, uint64(2), *request.PackageIOAUserCount)
+		assert.NotNil(t, request.PackageIOABandwidth)
+		assert.Equal(t, uint64(1), *request.PackageIOABandwidth)
+		modifyCalled = true
+		resp := bhv20230418.NewModifyResourceResponse()
+		resp.Response = &bhv20230418.ModifyResourceResponseParams{
+			RequestId: ptrStringBhRes("fake-request-id-modify"),
+		}
+		return resp, nil
+	})
+
+	resourceItem := &bhv20230418.Resource{
+		ResourceId:          ptrStringBhRes("bh-saas-abc123"),
+		Status:              ptrUint64BhRes(1),
+		IOAResource:         ptrUint64BhRes(1),
+		PackageIOAUserCount: ptrUint64BhRes(2),
+		PackageIOABandwidth: ptrUint64BhRes(1),
+	}
+	patches.ApplyMethodFunc(bhClient, "DescribeResourcesWithContext", func(_ context.Context, request *bhv20230418.DescribeResourcesRequest) (*bhv20230418.DescribeResourcesResponse, error) {
+		resp := bhv20230418.NewDescribeResourcesResponse()
+		resp.Response = &bhv20230418.DescribeResourcesResponseParams{
+			ResourceSet: []*bhv20230418.Resource{resourceItem},
+			TotalCount:  ptrUint64BhRes(1),
+			RequestId:   ptrStringBhRes("fake-request-id"),
+		}
+		return resp, nil
+	})
+	patches.ApplyMethodFunc(bhClient, "DescribeResources", func(request *bhv20230418.DescribeResourcesRequest) (*bhv20230418.DescribeResourcesResponse, error) {
+		resp := bhv20230418.NewDescribeResourcesResponse()
+		resp.Response = &bhv20230418.DescribeResourcesResponseParams{
+			ResourceSet: []*bhv20230418.Resource{resourceItem},
+			TotalCount:  ptrUint64BhRes(1),
+			RequestId:   ptrStringBhRes("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	oldState := map[string]string{
+		"id":                  "bh-saas-abc123",
+		"web_access":          "1",
+		"client_access":       "1",
+		"IOAResource":         "0",
+		"PackageIOAUserCount": "0",
+		"PackageIOABandwidth": "0",
+	}
+	newConfig := map[string]interface{}{
+		"IOAResource":         1,
+		"PackageIOAUserCount": 2,
+		"PackageIOABandwidth": 1,
+	}
+	d := buildBhResourceData(t, oldState, newConfig)
+
+	meta := newMockMetaBhResource()
+	err := bh.ResourceTencentCloudBhResource().Update(d, meta)
+	assert.NoError(t, err)
+	assert.True(t, modifyCalled)
+	assert.Equal(t, 1, d.Get("IOAResource").(int))
+	assert.Equal(t, 2, d.Get("PackageIOAUserCount").(int))
+	assert.Equal(t, 1, d.Get("PackageIOABandwidth").(int))
+}
+
 func TestBhResource_UpdateClientAccessEnable(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()

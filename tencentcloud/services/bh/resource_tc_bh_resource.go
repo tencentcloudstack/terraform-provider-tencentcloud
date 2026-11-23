@@ -106,6 +106,27 @@ func ResourceTencentCloudBhResource() *schema.Resource {
 				Description: "Whether to share CLB, 0: not shared, 1: shared.",
 			},
 
+			"IOAResource": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "IOA resource. 0 - default value, free (trial) IOA version, 1 - paid IOA version.",
+			},
+
+			"PackageIOAUserCount": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Number of zero trust bastion host user extension packages. One extension package corresponds to 20 users.",
+			},
+
+			"PackageIOABandwidth": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Number of zero trust bastion host bandwidth extension packages. One extension package represents 4M bandwidth.",
+			},
+
 			// deploy params
 			"cidr_block": {
 				Type:        schema.TypeString,
@@ -231,6 +252,18 @@ func resourceTencentCloudBhResourceCreate(d *schema.ResourceData, meta interface
 
 	if v, ok := d.GetOkExists("share_clb"); ok {
 		request.ShareClb = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("IOAResource"); ok {
+		request.IOAResource = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("PackageIOAUserCount"); ok {
+		request.PackageIOAUserCount = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("PackageIOABandwidth"); ok {
+		request.PackageIOABandwidth = helper.IntUint64(v.(int))
 	}
 
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -465,6 +498,18 @@ func resourceTencentCloudBhResourceRead(d *schema.ResourceData, meta interface{}
 		_ = d.Set("private_ip_set", respData.PrivateIpSet)
 	}
 
+	if respData.IOAResource != nil {
+		_ = d.Set("IOAResource", respData.IOAResource)
+	}
+
+	if respData.PackageIOAUserCount != nil {
+		_ = d.Set("PackageIOAUserCount", respData.PackageIOAUserCount)
+	}
+
+	if respData.PackageIOABandwidth != nil {
+		_ = d.Set("PackageIOABandwidth", respData.PackageIOABandwidth)
+	}
+
 	return nil
 }
 
@@ -479,7 +524,7 @@ func resourceTencentCloudBhResourceUpdate(d *schema.ResourceData, meta interface
 	)
 
 	needChange := false
-	mutableArgs := []string{"resource_edition", "resource_node", "auto_renew_flag"}
+	mutableArgs := []string{"resource_edition", "resource_node", "auto_renew_flag", "IOAResource", "PackageIOAUserCount", "PackageIOABandwidth"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -499,6 +544,18 @@ func resourceTencentCloudBhResourceUpdate(d *schema.ResourceData, meta interface
 
 		if v, ok := d.GetOkExists("auto_renew_flag"); ok {
 			request.AutoRenewFlag = helper.IntInt64(v.(int))
+		}
+
+		if v, ok := d.GetOkExists("IOAResource"); ok {
+			request.IOAResource = helper.IntUint64(v.(int))
+		}
+
+		if v, ok := d.GetOkExists("PackageIOAUserCount"); ok {
+			request.PackageIOAUserCount = helper.IntUint64(v.(int))
+		}
+
+		if v, ok := d.GetOkExists("PackageIOABandwidth"); ok {
+			request.PackageIOABandwidth = helper.IntUint64(v.(int))
 		}
 
 		request.ResourceId = helper.String(resourceId)

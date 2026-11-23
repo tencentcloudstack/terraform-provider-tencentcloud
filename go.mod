@@ -118,7 +118,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor v1.3.37
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ags v1.3.209
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bdrc v1.3.169
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bh v1.3.193
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bh v1.3.209
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.3.39
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc v1.0.1149
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwdoris v1.3.188
