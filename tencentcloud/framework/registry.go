@@ -44,6 +44,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssl"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssm"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdmysql"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tco"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 )
@@ -55,6 +56,7 @@ var resourcesMap = map[string]func() resource.Resource{
 	"tencentcloud_config_aggregate_compliance_pack": config.NewConfigAggregateCompliancePackResource,
 	"tencentcloud_ioa_delivery_server":              ioa.NewIoaDeliveryServerResource,
 	"tencentcloud_ioa_delivery_strategy":            ioa.NewIoaDeliveryStrategyResource,
+	"tencentcloud_tdmysql_dbs_backup":               tdmysql.NewTdmysqlDbsBackupResource,
 	"tencentcloud_monitor_dispense_external_rule":   monitor.NewMonitorDispenseExternalRuleResource,
 	"tencentcloud_makers_zone_custom_domain":        makers.NewMakersZoneCustomDomainResource,
 	"tencentcloud_makers_project":                   makers.NewMakersProjectResource,
