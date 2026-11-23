@@ -4,7 +4,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tcmq_subscribe" "subscribe" {
-  topic_name = "topic_name"
-  subscription_name = "subscription_name";
+  topic_name        = "topic_name"
+  subscription_name = "subscription_name"
 }
 ```

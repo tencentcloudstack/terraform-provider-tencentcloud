@@ -28,12 +28,12 @@ data "tencentcloud_cdwdoris_instances" "example" {
 }
 
 # by instance name
-data "tencentcloud_cdwdoris_instances" "example" {
+data "tencentcloud_cdwdoris_instances" "example_2" {
   search_instance_name = "tf-example"
 }
 
 # by instance tags
-data "tencentcloud_cdwdoris_instances" "example" {
+data "tencentcloud_cdwdoris_instances" "example_3" {
   search_tags {
     tag_key   = "createBy"
     tag_value = "Terraform"

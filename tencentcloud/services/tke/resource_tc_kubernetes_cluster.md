@@ -37,7 +37,7 @@ locals {
   first_subnet_id  = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.subnet_id
   second_vpc_id    = data.tencentcloud_vpc_subnets.vpc_two.instance_list.0.vpc_id
   second_subnet_id = data.tencentcloud_vpc_subnets.vpc_two.instance_list.0.subnet_id
-  sg_id            = tencentcloud_security_group.sg.id
+  sg_id            = tencentcloud_security_group_rule_set.sg_rule.id
   image_id         = data.tencentcloud_images.default.image_id
 }
 
@@ -55,18 +55,36 @@ resource "tencentcloud_security_group" "sg" {
   name = "tf-example-sg"
 }
 
-resource "tencentcloud_security_group_lite_rule" "sg_rule" {
+resource "tencentcloud_security_group_rule_set" "sg_rule" {
   security_group_id = tencentcloud_security_group.sg.id
 
-  ingress = [
-    "ACCEPT#10.0.0.0/16#ALL#ALL",
-    "ACCEPT#172.16.0.0/22#ALL#ALL",
-    "DROP#0.0.0.0/0#ALL#ALL",
-  ]
+  ingress {
+    action     = "ACCEPT"
+    cidr_block = "10.0.0.0/16"
+    protocol   = "ALL"
+    port       = "ALL"
+  }
 
-  egress = [
-    "ACCEPT#172.16.0.0/22#ALL#ALL",
-  ]
+  ingress {
+    action     = "ACCEPT"
+    cidr_block = "172.16.0.0/22"
+    protocol   = "ALL"
+    port       = "ALL"
+  }
+
+  ingress {
+    action     = "DROP"
+    cidr_block = "0.0.0.0/0"
+    protocol   = "ALL"
+    port       = "ALL"
+  }
+
+  egress {
+    action     = "ACCEPT"
+    cidr_block = "172.16.0.0/22"
+    protocol   = "ALL"
+    port       = "ALL"
+  }
 }
 
 data "tencentcloud_images" "default" {
@@ -117,7 +135,7 @@ variable "example_cluster_cidr" {
 locals {
   first_vpc_id    = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.vpc_id
   first_subnet_id = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.subnet_id
-  sg_id           = tencentcloud_security_group.sg.id
+  sg_id           = tencentcloud_security_group_rule_set.sg_rule.id
 }
 
 data "tencentcloud_vpc_subnets" "vpc_one" {
@@ -134,18 +152,36 @@ resource "tencentcloud_security_group" "sg" {
   name = "tf-example-np-sg"
 }
 
-resource "tencentcloud_security_group_lite_rule" "sg_rule" {
+resource "tencentcloud_security_group_rule_set" "sg_rule" {
   security_group_id = tencentcloud_security_group.sg.id
 
-  ingress = [
-    "ACCEPT#10.0.0.0/16#ALL#ALL",
-    "ACCEPT#172.16.0.0/22#ALL#ALL",
-    "DROP#0.0.0.0/0#ALL#ALL",
-  ]
+  ingress {
+    action     = "ACCEPT"
+    cidr_block = "10.0.0.0/16"
+    protocol   = "ALL"
+    port       = "ALL"
+  }
 
-  egress = [
-    "ACCEPT#172.16.0.0/22#ALL#ALL",
-  ]
+  ingress {
+    action     = "ACCEPT"
+    cidr_block = "172.16.0.0/22"
+    protocol   = "ALL"
+    port       = "ALL"
+  }
+
+  ingress {
+    action     = "DROP"
+    cidr_block = "0.0.0.0/0"
+    protocol   = "ALL"
+    port       = "ALL"
+  }
+
+  egress {
+    action     = "ACCEPT"
+    cidr_block = "172.16.0.0/22"
+    protocol   = "ALL"
+    port       = "ALL"
+  }
 }
 
 resource "tencentcloud_kubernetes_cluster" "example" {
@@ -241,7 +277,7 @@ variable "example_cluster_cidr" {
 locals {
   first_vpc_id    = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.vpc_id
   first_subnet_id = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.subnet_id
-  sg_id           = tencentcloud_security_group.sg.id
+  sg_id           = tencentcloud_security_group_rule_set.sg_rule.id
 }
 
 data "tencentcloud_vpc_subnets" "vpc_one" {
@@ -258,18 +294,36 @@ resource "tencentcloud_security_group" "sg" {
   name = "tf-example-np-ep-sg"
 }
 
-resource "tencentcloud_security_group_lite_rule" "sg_rule" {
+resource "tencentcloud_security_group_rule_set" "sg_rule" {
   security_group_id = tencentcloud_security_group.sg.id
 
-  ingress = [
-    "ACCEPT#10.0.0.0/16#ALL#ALL",
-    "ACCEPT#172.16.0.0/22#ALL#ALL",
-    "DROP#0.0.0.0/0#ALL#ALL",
-  ]
+  ingress {
+    action     = "ACCEPT"
+    cidr_block = "10.0.0.0/16"
+    protocol   = "ALL"
+    port       = "ALL"
+  }
 
-  egress = [
-    "ACCEPT#172.16.0.0/22#ALL#ALL",
-  ]
+  ingress {
+    action     = "ACCEPT"
+    cidr_block = "172.16.0.0/22"
+    protocol   = "ALL"
+    port       = "ALL"
+  }
+
+  ingress {
+    action     = "DROP"
+    cidr_block = "0.0.0.0/0"
+    protocol   = "ALL"
+    port       = "ALL"
+  }
+
+  egress {
+    action     = "ACCEPT"
+    cidr_block = "172.16.0.0/22"
+    protocol   = "ALL"
+    port       = "ALL"
+  }
 }
 
 resource "tencentcloud_kubernetes_cluster" "example" {
@@ -378,7 +432,7 @@ locals {
   first_subnet_id  = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.subnet_id
   second_vpc_id    = data.tencentcloud_vpc_subnets.vpc_two.instance_list.0.vpc_id
   second_subnet_id = data.tencentcloud_vpc_subnets.vpc_two.instance_list.0.subnet_id
-  sg_id            = tencentcloud_security_group.sg.id
+  sg_id            = tencentcloud_security_group_rule_set.sg_rule.id
   image_id         = data.tencentcloud_images.default.image_id
 }
 
@@ -396,18 +450,36 @@ resource "tencentcloud_security_group" "sg" {
   name = "tf-example-sg"
 }
 
-resource "tencentcloud_security_group_lite_rule" "sg_rule" {
+resource "tencentcloud_security_group_rule_set" "sg_rule" {
   security_group_id = tencentcloud_security_group.sg.id
 
-  ingress = [
-    "ACCEPT#10.0.0.0/16#ALL#ALL",
-    "ACCEPT#172.16.0.0/22#ALL#ALL",
-    "DROP#0.0.0.0/0#ALL#ALL",
-  ]
+  ingress {
+    action     = "ACCEPT"
+    cidr_block = "10.0.0.0/16"
+    protocol   = "ALL"
+    port       = "ALL"
+  }
 
-  egress = [
-    "ACCEPT#172.16.0.0/22#ALL#ALL",
-  ]
+  ingress {
+    action     = "ACCEPT"
+    cidr_block = "172.16.0.0/22"
+    protocol   = "ALL"
+    port       = "ALL"
+  }
+
+  ingress {
+    action     = "DROP"
+    cidr_block = "0.0.0.0/0"
+    protocol   = "ALL"
+    port       = "ALL"
+  }
+
+  egress {
+    action     = "ACCEPT"
+    cidr_block = "172.16.0.0/22"
+    protocol   = "ALL"
+    port       = "ALL"
+  }
 }
 
 data "tencentcloud_images" "default" {

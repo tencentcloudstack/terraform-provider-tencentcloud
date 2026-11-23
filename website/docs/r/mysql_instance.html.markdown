@@ -122,7 +122,7 @@ resource "tencentcloud_mysql_instance" "example" {
   slave_deploy_mode = 1
   availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
   first_slave_zone  = data.tencentcloud_availability_zones_by_product.zones.zones.1.name
-  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.1.name
+  second_slave_zone = data.tencentcloud_availability_zones_by_product.zones.zones.1.name
   slave_sync_mode   = 1
   instance_name     = "tf-example-mysql"
   mem_size          = 4000
@@ -377,6 +377,6 @@ This resource interacts with the following TencentCloud APIs:
 MySQL instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_mysql_instance.example cdb-12345678
+terraform import tencentcloud_mysql_instance.example cdb-12345678
 ```
 

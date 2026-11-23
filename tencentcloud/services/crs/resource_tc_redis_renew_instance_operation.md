@@ -9,12 +9,12 @@ data "tencentcloud_redis_zone_config" "zone" {
   type_id = 7
 }
 
-data "tencentcloud_vpc" "vpc" {
+data "tencentcloud_vpc_instances" "vpc" {
   name = "Default-VPC"
 }
 
 data "tencentcloud_vpc_subnets" "subnet" {
-  vpc_id = data.tencentcloud_vpc.vpc.id
+  vpc_id = data.tencentcloud_vpc_instances.vpc.instance_list.0.vpc_id
   availability_zone = data.tencentcloud_redis_zone_config.zone.list[1].zone
 }
 
@@ -22,20 +22,50 @@ resource "tencentcloud_security_group" "security_group" {
   name = "tf-redis-sg"
 }
 
-resource "tencentcloud_security_group_lite_rule" "example" {
+resource "tencentcloud_security_group_rule_set" "example" {
   security_group_id = tencentcloud_security_group.security_group.id
 
-  ingress = [
-    "ACCEPT#192.168.1.0/24#80#TCP",
-    "DROP#8.8.8.8#80,90#UDP",
-    "DROP#0.0.0.0/0#80-90#TCP",
-  ]
+  ingress {
+    action     = "ACCEPT"
+    cidr_block = "192.168.1.0/24"
+    protocol   = "TCP"
+    port       = "80"
+  }
 
-  egress = [
-    "ACCEPT#192.168.0.0/16#ALL#TCP",
-    "ACCEPT#10.0.0.0/8#ALL#ICMP",
-    "DROP#0.0.0.0/0#ALL#ALL",
-  ]
+  ingress {
+    action     = "DROP"
+    cidr_block = "8.8.8.8"
+    protocol   = "UDP"
+    port       = "80,90"
+  }
+
+  ingress {
+    action     = "DROP"
+    cidr_block = "0.0.0.0/0"
+    protocol   = "TCP"
+    port       = "80-90"
+  }
+
+  egress {
+    action     = "ACCEPT"
+    cidr_block = "192.168.0.0/16"
+    protocol   = "TCP"
+    port       = "ALL"
+  }
+
+  egress {
+    action     = "ACCEPT"
+    cidr_block = "10.0.0.0/8"
+    protocol   = "ICMP"
+    port       = "ALL"
+  }
+
+  egress {
+    action     = "DROP"
+    cidr_block = "0.0.0.0/0"
+    protocol   = "ALL"
+    port       = "ALL"
+  }
 }
 
 resource "tencentcloud_redis_instance" "example" {
@@ -47,9 +77,9 @@ resource "tencentcloud_redis_instance" "example" {
   redis_replicas_num = data.tencentcloud_redis_zone_config.zone.list[0].redis_replicas_nums[0]
   name               = "tf_example"
   port               = 6379
-  vpc_id             = data.tencentcloud_vpc.vpc.id
+  vpc_id             = data.tencentcloud_vpc_instances.vpc.instance_list.0.vpc_id
   subnet_id          = data.tencentcloud_vpc_subnets.subnet.instance_list[0].subnet_id
-  security_groups    = [tencentcloud_security_group.security_group.id]
+  security_groups    = [tencentcloud_security_group_rule_set.example.id]
   charge_type        = "PREPAID"
   prepaid_period     = 1
 }

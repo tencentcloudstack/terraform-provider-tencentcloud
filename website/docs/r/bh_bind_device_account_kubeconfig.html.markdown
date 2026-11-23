@@ -22,7 +22,7 @@ Provides a resource to bind a kubeconfig credential to an existing BH (Bastion H
 ```hcl
 resource "tencentcloud_bh_bind_device_account_kubeconfig" "example" {
   account_id       = 12345
-  kubeconfig       = file("${path.module}/kubeconfig.yaml")
+  kubeconfig       = file("kubeconfig.yaml")
   manage_dimension = 1
 }
 ```

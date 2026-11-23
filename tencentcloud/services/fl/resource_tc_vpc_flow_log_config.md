@@ -1,11 +1,13 @@
-Provides a resource to create a vpc flow_log_config
+Provides a resource to create a vpc flow log config
 
 Example Usage
 
 If disable FlowLogs
 
 ```hcl
-data "tencentcloud_availability_zones" "zones" {}
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "cvm"
+}
 
 data "tencentcloud_images" "image" {
   image_type       = ["PUBLIC_IMAGE"]
@@ -15,7 +17,7 @@ data "tencentcloud_images" "image" {
 data "tencentcloud_instance_types" "instance_types" {
   filter {
     name   = "zone"
-    values = [data.tencentcloud_availability_zones.zones.zones.0.name]
+    values = [data.tencentcloud_availability_zones_by_product.zones.zones.0.name]
   }
 
   filter {
@@ -53,7 +55,7 @@ resource "tencentcloud_vpc" "vpc" {
 }
 
 resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
   name              = "vpc-flow-log-subnet"
   vpc_id            = tencentcloud_vpc.vpc.id
   cidr_block        = "10.0.0.0/16"
@@ -70,7 +72,7 @@ resource "tencentcloud_eni" "example" {
 
 resource "tencentcloud_instance" "example" {
   instance_name            = "ci-test-eni-attach"
-  availability_zone        = data.tencentcloud_availability_zones.zones.zones.0.name
+  availability_zone        = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
   image_id                 = data.tencentcloud_images.image.images.0.image_id
   instance_type            = data.tencentcloud_instance_types.instance_types.instance_types.0.instance_type
   system_disk_type         = "CLOUD_PREMIUM"

@@ -23,14 +23,8 @@ data "tencentcloud_kubernetes_charts" "example" {}
 
 ```hcl
 data "tencentcloud_kubernetes_charts" "example" {
-  kind = "network"
-}
-
-data "tencentcloud_kubernetes_charts" "example" {
-  arch = "amd64"
-}
-
-data "tencentcloud_kubernetes_charts" "example" {
+  kind         = "network"
+  arch         = "amd64"
   cluster_type = "tke"
 }
 ```

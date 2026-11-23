@@ -48,13 +48,13 @@ func ResourceTencentCloudDcdbDbInstance() *schema.Resource {
 			"shard_storage": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: " Shard storage size, unit: GB, can pass DescribeShardSpec  Query the instance specification to obtain.",
+				Description: "Shard storage size, unit: GB, can pass DescribeShardSpec  Query the instance specification to obtain.",
 			},
 
 			"shard_node_count": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: " Number of single shard nodes, can pass DescribeShardSpec  Query the instance specification to obtain.",
+				Description: "Number of single shard nodes, can pass DescribeShardSpec  Query the instance specification to obtain.",
 			},
 
 			"shard_count": {
@@ -90,7 +90,7 @@ func ResourceTencentCloudDcdbDbInstance() *schema.Resource {
 			"db_version_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: " Database engine version, currently available: 8.0.18, 10.1.9, 5.7.17.  8.0.18 - MySQL 8.0.18;  10.1.9 - Mariadb 10.1.9;  5.7.17 - Percona 5.7.17  If not filled, the default is 5.7.17, which means Percona 5.7.17.",
+				Description: "Database engine version, currently available: 8.0.18, 10.1.9, 5.7.17.  8.0.18 - MySQL 8.0.18;  10.1.9 - Mariadb 10.1.9;  5.7.17 - Percona 5.7.17  If not filled, the default is 5.7.17, which means Percona 5.7.17.",
 			},
 
 			"auto_voucher": {
@@ -169,7 +169,7 @@ func ResourceTencentCloudDcdbDbInstance() *schema.Resource {
 			"init_params": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: " parameter list. The optional values of this interface are:  character_set_server (character set, must be passed),  lower_case_table_names (table name is case sensitive, must be passed, 0 - sensitive; 1 - insensitive),  innodb_page_size (innodb data page, default 16K),  sync_mode ( Synchronous mode: 0 - asynchronous; 1 - strong synchronous; 2 - strong synchronous degenerate. The default is strong synchronous degenerate) .",
+				Description: "Parameter list. The optional values of this interface are:  character_set_server (character set, must be passed),  lower_case_table_names (table name is case sensitive, must be passed, 0 - sensitive; 1 - insensitive),  innodb_page_size (innodb data page, default 16K),  sync_mode (Synchronous mode: 0 - asynchronous; 1 - strong synchronous; 2 - strong synchronous degenerate. The default is strong synchronous degenerate).",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"param": {
@@ -201,7 +201,7 @@ func ResourceTencentCloudDcdbDbInstance() *schema.Resource {
 			"auto_renew_flag": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: " Automatic renewal flag, 0 means the default state (the user has not set it, that is, the initial state is manual renewal, and the user has activated the prepaid non-stop privilege and will also perform automatic renewal).  1 means automatic renewal, 2 means no automatic renewal (user setting).  if the business has no concept of renewal or automatic renewal is not required, it needs to be set to 0.",
+				Description: "Automatic renewal flag, 0 means the default state (the user has not set it, that is, the initial state is manual renewal, and the user has activated the prepaid non-stop privilege and will also perform automatic renewal).  1 means automatic renewal, 2 means no automatic renewal (user setting).  if the business has no concept of renewal or automatic renewal is not required, it needs to be set to 0.",
 			},
 
 			"security_group_ids": {

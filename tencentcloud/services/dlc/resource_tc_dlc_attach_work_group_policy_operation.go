@@ -70,7 +70,7 @@ func ResourceTencentCloudDlcAttachWorkGroupPolicyOperation() *schema.Resource {
 						"column": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: " The name of the target column. `*` represents all columns. To grant admin permissions, it must be `*`.",
+							Description: "The name of the target column. `*` represents all columns. To grant admin permissions, it must be `*`.",
 						},
 						"data_engine": {
 							Type:        schema.TypeString,
@@ -105,7 +105,7 @@ func ResourceTencentCloudDlcAttachWorkGroupPolicyOperation() *schema.Resource {
 						"source_id": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: " The ID of the work group, which applies only when the value of the `Source` field is `WORKGROUP`.",
+							Description: "The ID of the work group, which applies only when the value of the `Source` field is `WORKGROUP`.",
 						},
 						"source_name": {
 							Type:        schema.TypeString,

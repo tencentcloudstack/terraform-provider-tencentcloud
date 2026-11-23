@@ -57,7 +57,7 @@ resource "tencentcloud_ccn_route_table" "example" {
 }
 
 # attachment instance
-resource "tencentcloud_ccn_attachment" "attachment" {
+resource "tencentcloud_ccn_attachment_v2" "attachment" {
   ccn_id          = tencentcloud_ccn.example.id
   instance_id     = tencentcloud_vpc.vpc.id
   instance_type   = "VPC"
@@ -74,7 +74,7 @@ resource "tencentcloud_ccn_route_table_associate_instance_config" "example" {
     instance_type = "VPC"
   }
 
-  depends_on = [tencentcloud_ccn_attachment.attachment]
+  depends_on = [tencentcloud_ccn_attachment_v2.attachment]
 }
 ```
 

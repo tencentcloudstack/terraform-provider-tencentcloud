@@ -72,7 +72,7 @@ resource "tencentcloud_monitor_tmp_instance" "example" {
 }
 
 # Integration Center: CVM Scrape Job
-resource "tencentcloud_monitor_tmp_exporter_integration" "example" {
+resource "tencentcloud_monitor_tmp_exporter_integration_v2" "example" {
   instance_id = tencentcloud_monitor_tmp_instance.example.id 
   kind        = "cvm-http-sd-exporter"
   content = jsonencode({

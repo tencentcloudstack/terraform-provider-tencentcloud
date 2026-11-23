@@ -39,7 +39,7 @@ func ResourceTencentCloudMysqlDbImportJobOperation() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "file name. This file refers to the file that the user has uploaded to Tencent Cloud, and only .sql files are supported.",
+				Description: "file name. This file refers to the file that the user has uploaded to Tencent Cloud, and only `.sql` files are supported.",
 			},
 
 			"password": {

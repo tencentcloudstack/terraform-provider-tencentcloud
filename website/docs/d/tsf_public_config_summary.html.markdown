@@ -4,21 +4,20 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tsf_public_config_summary"
 sidebar_current: "docs-tencentcloud-datasource-tsf_public_config_summary"
 description: |-
-  Use this data source to query detailed information of tsf public_config_summary
+  Use this data source to query detailed information of tsf public config summary
 ---
 
 # tencentcloud_tsf_public_config_summary
 
-Use this data source to query detailed information of tsf public_config_summary
+Use this data source to query detailed information of tsf public config summary
 
 ## Example Usage
 
 ```hcl
-data "tencentcloud_tsf_describe_public_config_summary" "describe_public_config_summary" {
-  search_word = "test"
-  order_by    = "last_update_time"
-  order_type  = 0
-  # config_tag_list = [""]
+data "tencentcloud_tsf_public_config_summary" "example" {
+  search_word                = "test"
+  order_by                   = "last_update_time"
+  order_type                 = 0
   disable_program_auth_check = true
   config_id_list             = ["dcfg-p-ygbdw5mv"]
 }

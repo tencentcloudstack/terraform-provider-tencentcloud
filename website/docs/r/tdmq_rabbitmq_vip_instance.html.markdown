@@ -14,8 +14,9 @@ Provides a resource to create a TDMQ rabbitmq vip instance
 ## Example Usage
 
 ```hcl
-data "tencentcloud_availability_zones" "zones" {
-  name = "ap-guangzhou-6"
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "vpc"
+  name    = "ap-guangzhou-6"
 }
 
 # create vpc
@@ -35,7 +36,7 @@ resource "tencentcloud_subnet" "subnet" {
 
 # create rabbitmq instance
 resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
-  zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  zone_ids                              = [data.tencentcloud_availability_zones_by_product.zones.zones.0.id]
   vpc_id                                = tencentcloud_vpc.vpc.id
   subnet_id                             = tencentcloud_subnet.subnet.id
   cluster_name                          = "tf-example-rabbitmq-vip-instance"
@@ -49,7 +50,7 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
 
 # create postpaid rabbitmq instance
 resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example2" {
-  zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
+  zone_ids                              = [data.tencentcloud_availability_zones_by_product.zones.zones.0.id]
   vpc_id                                = tencentcloud_vpc.vpc.id
   subnet_id                             = tencentcloud_subnet.subnet.id
   cluster_name                          = "tf-example-rabbitmq-vip-instance"

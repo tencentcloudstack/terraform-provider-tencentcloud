@@ -85,7 +85,7 @@ func ResourceTencentCloudCvmModifyInstanceDiskType() *schema.Resource {
 						"kms_key_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "ID of the custom CMK in the format of UUID or “kms-abcd1234”. This parameter is used to encrypt cloud disks.",
+							Description: "ID of the custom CMK in the format of UUID or `kms-abcd1234`. This parameter is used to encrypt cloud disks.",
 						},
 						"throughput_performance": {
 							Type:        schema.TypeInt,

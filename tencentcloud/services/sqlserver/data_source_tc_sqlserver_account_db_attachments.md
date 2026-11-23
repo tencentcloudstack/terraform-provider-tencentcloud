@@ -3,7 +3,9 @@ Use this data source to query the list of SQL Server account DB privileges.
 Example Usage
 
 ```hcl
-data "tencentcloud_availability_zones" "zones" {}
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
 
 data "tencentcloud_sqlserver_account_db_attachments" "test" {
   instance_id  = tencentcloud_sqlserver_instance.example.id
@@ -16,7 +18,7 @@ resource "tencentcloud_vpc" "vpc" {
 }
 
 resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
   name              = "example-vpc"
   vpc_id            = tencentcloud_vpc.vpc.id
   cidr_block        = "10.0.0.0/16"
@@ -30,7 +32,7 @@ resource "tencentcloud_security_group" "security_group" {
 
 resource "tencentcloud_sqlserver_instance" "example" {
   name                   = "tf_example_sql"
-  availability_zone      = data.tencentcloud_availability_zones.zones.zones.0.name
+  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
   charge_type            = "POSTPAID_BY_HOUR"
   period                 = 1
   vpc_id                 = tencentcloud_vpc.vpc.id

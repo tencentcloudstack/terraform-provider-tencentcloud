@@ -16,7 +16,7 @@ data "tencentcloud_api_gateway_upstreams" "example" {
 
   filters {
     name   = "ServiceId"
-    values = "service-hvg0uueg"
+    values = ["service-hvg0uueg"]
   }
 }
 ```

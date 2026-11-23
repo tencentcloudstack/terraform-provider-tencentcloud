@@ -16,23 +16,23 @@ data "tencentcloud_cbs_snapshots" "snapshots" {
   result_output_file = "my_snapshots"
 }
 
-data "tencentcloud_cbs_snapshots" "snapshots" {
+data "tencentcloud_cbs_snapshots" "snapshots_2" {
   snapshot_name = "tf-example"
 }
 
-data "tencentcloud_cbs_snapshots" "snapshots" {
+data "tencentcloud_cbs_snapshots" "snapshots_3" {
   storage_id = "disk-12j0fk1w"
 }
 
-data "tencentcloud_cbs_snapshots" "snapshots" {
+data "tencentcloud_cbs_snapshots" "snapshots_4" {
   storage_usage = "SYSTEM_DISK"
 }
 
-data "tencentcloud_cbs_snapshots" "snapshots" {
+data "tencentcloud_cbs_snapshots" "snapshots_5" {
   project_id = "0"
 }
 
-data "tencentcloud_cbs_snapshots" "snapshots" {
+data "tencentcloud_cbs_snapshots" "snapshots_6" {
   availability_zone = "ap-guangzhou-4"
 }
 ```

@@ -4,6 +4,6 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cynosdb_cluster_instance_groups" "cluster_instance_groups" {
-  cluster_id = xxxxxx;
+  cluster_id = "cynosdbmysql-xxxxxx"
 }
 ```
