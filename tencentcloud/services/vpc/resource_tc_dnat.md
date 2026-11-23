@@ -4,7 +4,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "zones" {
-  product = "vpc"
+  product = "cvm"
 }
 
 data "tencentcloud_images" "example" {

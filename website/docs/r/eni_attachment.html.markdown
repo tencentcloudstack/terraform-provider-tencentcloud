@@ -30,7 +30,7 @@ data "tencentcloud_instance_types" "instance_types" {
 }
 
 data "tencentcloud_availability_zones_by_product" "zones" {
-  product = "vpc"
+  product = "cvm"
 }
 
 resource "tencentcloud_vpc" "vpc" {

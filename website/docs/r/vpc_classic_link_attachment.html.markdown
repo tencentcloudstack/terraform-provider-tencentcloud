@@ -15,7 +15,7 @@ Provides a resource to create a vpc classic link attachment
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "zones" {
-  product = "vpc"
+  product = "cvm"
 }
 
 data "tencentcloud_images" "image" {
@@ -63,7 +63,7 @@ resource "tencentcloud_instance" "example" {
   subnet_id                = tencentcloud_subnet.subnet.id
 }
 
-resource "tencentcloud_vpc_classic_link_attachment" "classic_link_attachment" {
+resource "tencentcloud_vpc_classic_link_attachment" "example" {
   vpc_id       = tencentcloud_vpc.vpc.id
   instance_ids = [tencentcloud_instance.example.id]
 }
@@ -93,9 +93,9 @@ This resource interacts with the following TencentCloud APIs:
 
 ## Import
 
-vpc classic_link_attachment can be imported using the id, e.g.
+vpc classic link attachment can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_vpc_classic_link_attachment.classic_link_attachment classic_link_attachment_id
+terraform import tencentcloud_vpc_classic_link_attachment.example classic_link_attachment_id
 ```
 

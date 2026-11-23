@@ -67,7 +67,6 @@ data-source/tencentcloud_api_gateway_upstreams: update doc.
 data-source/tencentcloud_cbs_snapshots: update doc.
 data-source/tencentcloud_cdc_dedicated_clusters: update doc.
 data-source/tencentcloud_cdwdoris_instances: update doc.
-data-source/tencentcloud_clickhouse_instances: update doc.
 data-source/tencentcloud_cls_logsets: update doc.
 data-source/tencentcloud_cynosdb_cluster_instance_groups: update doc.
 data-source/tencentcloud_cynosdb_proxy_node: update doc.
@@ -94,4 +93,13 @@ data-source/tencentcloud_tsf_application_config: update doc.
 data-source/tencentcloud_tsf_public_config_summary: update doc.
 data-source/tencentcloud_vpc_subnets: update doc.
 data-source/tencentcloud_rum_taw_area: update doc.
+resource/tencentcloud_postgresql_account_privileges_operation: update doc.
+resource/tencentcloud_rum_release_file: update doc.
+resource/tencentcloud_security_group_rule: update doc.
+resource/tencentcloud_teo_application_proxy: update doc.
+resource/tencentcloud_teo_plan: update doc.
+resource/tencentcloud_tsf_repository: update doc.
+resource/tencentcloud_vpc_classic_link_attachment: update doc.
+resource/tencentcloud_vpc_dhcp_associate_address: update doc.
+data-source/tencentcloud_dnspod_domain_instances: update doc.
 ```

@@ -1,4 +1,4 @@
-Provides a resource to create a vpc flow_log
+Provides a resource to create a vpc flow log
 
 ~> **NOTE:** The cloud server instance specifications that support stream log collection include: M6ce, M6p, SA3se, S4m, DA3, ITA3, I6t, I6, S5se, SA2, SK1, S4, S5, SN3ne, S3ne, S2ne, SA2a, S3ne, SW3a, SW3b, SW3ne, ITA3, IT5c, IT5, IT5c, IT3, I3, D3, DA2, D2, M6, MA2, M4, C6, IT3a, IT3b, IT3c, C4ne, CN3ne, C3ne, GI1, PNV4, GNV4v, GNV4, GT4, GI3X, GN7, GN7vw.
 
@@ -8,7 +8,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "zones" {
-  product = "vpc"
+  product = "cvm"
 }
 
 data "tencentcloud_images" "image" {

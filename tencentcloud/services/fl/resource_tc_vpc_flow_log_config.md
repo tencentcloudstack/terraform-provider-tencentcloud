@@ -1,4 +1,4 @@
-Provides a resource to create a vpc flow_log_config
+Provides a resource to create a vpc flow log config
 
 Example Usage
 
@@ -6,7 +6,7 @@ If disable FlowLogs
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "zones" {
-  product = "vpc"
+  product = "cvm"
 }
 
 data "tencentcloud_images" "image" {

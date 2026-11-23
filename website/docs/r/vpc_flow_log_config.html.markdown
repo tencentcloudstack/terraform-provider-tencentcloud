@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_vpc_flow_log_config"
 sidebar_current: "docs-tencentcloud-resource-vpc_flow_log_config"
 description: |-
-  Provides a resource to create a vpc flow_log_config
+  Provides a resource to create a vpc flow log config
 ---
 
 # tencentcloud_vpc_flow_log_config
 
-Provides a resource to create a vpc flow_log_config
+Provides a resource to create a vpc flow log config
 
 ## Example Usage
 
@@ -17,7 +17,7 @@ Provides a resource to create a vpc flow_log_config
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "zones" {
-  product = "vpc"
+  product = "cvm"
 }
 
 data "tencentcloud_images" "image" {
