@@ -405,7 +405,7 @@ func (r *TdmysqlDbsBackupResource) ImportState(ctx context.Context, req resource
 // read-back path.
 func newDescribeDBSBackupSetsRequest(instanceId string, backupSetId int64) *tdmysqlv20211122.DescribeDBSBackupSetsRequest {
 	request := tdmysqlv20211122.NewDescribeDBSBackupSetsRequest()
-	request.InstanceId = tccommon.String(instanceId)
+	request.InstanceId = helper.String(instanceId)
 	request.BackupSetId = helper.Int64(backupSetId)
 	return request
 }
