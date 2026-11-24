@@ -165,9 +165,10 @@ type agsPortModel struct {
 }
 
 type agsResourceModel struct {
-	Cpu     types.String `tfsdk:"cpu"`
-	Memory  types.String `tfsdk:"memory"`
-	Storage types.String `tfsdk:"storage"`
+	Cpu              types.String `tfsdk:"cpu"`
+	Memory           types.String `tfsdk:"memory"`
+	Storage          types.String `tfsdk:"storage"`
+	GpuResourceGroup types.String `tfsdk:"gpu_resource_group_id"`
 }
 
 type agsProbeModel struct {
@@ -438,6 +439,10 @@ var agsResourceAttributes = map[string]schema.Attribute{
 	"storage": schema.StringAttribute{
 		Optional:    true,
 		Description: "Custom disk size. Valid values: `1Gi`, `5Gi`, `10Gi`, `20Gi`.",
+	},
+	"gpu_resource_group_id": schema.StringAttribute{
+		Optional:    true,
+		Description: "Id of the GPU resource group associated with the sandbox.",
 	},
 }
 
@@ -2240,6 +2245,9 @@ func expandResources(ctx context.Context, object types.Object) (*agsv20250920.Re
 	if !model.Storage.IsNull() && !model.Storage.IsUnknown() {
 		resources.Storage = model.Storage.ValueStringPointer()
 	}
+	if !model.GpuResourceGroup.IsNull() && !model.GpuResourceGroup.IsUnknown() {
+		resources.GPUResourceGroupId = model.GpuResourceGroup.ValueStringPointer()
+	}
 
 	return resources, diags
 }
@@ -2250,9 +2258,10 @@ func flattenResources(ctx context.Context, item *agsv20250920.ResourceConfigurat
 	}
 
 	model := agsResourceModel{
-		Cpu:     stringPointerValue(item.CPU),
-		Memory:  stringPointerValue(item.Memory),
-		Storage: stringPointerValue(item.Storage),
+		Cpu:              stringPointerValue(item.CPU),
+		Memory:           stringPointerValue(item.Memory),
+		Storage:          stringPointerValue(item.Storage),
+		GpuResourceGroup: stringPointerValue(item.GPUResourceGroupId),
 	}
 	// The cloud side reports an unset storage as an empty string instead of
 	// omitting the field. A null configuration then ends up as "" in state,
