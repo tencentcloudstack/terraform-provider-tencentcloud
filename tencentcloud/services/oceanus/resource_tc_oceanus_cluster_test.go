@@ -610,3 +610,214 @@ func TestOceanusClusterImportState(t *testing.T) {
 		t.Errorf("imported id = %q, want %q", got.Id.ValueString(), oceanusTestClusterId)
 	}
 }
+
+// TestOceanusClusterReadRefreshesReadableFields verifies that Read refreshes
+// the attributes with a confirmed read-back path and preserves every attribute
+// that DescribeClusters cannot echo back.
+func TestOceanusClusterReadRefreshesReadableFields(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	cluster := &oceanussdk.Cluster{
+		ClusterId:        strOrNil(true, oceanusTestClusterId),
+		Name:             strOrNil(true, "cloud-side-name"),
+		Status:           int64OrNil(2),
+		CuNum:            uint64OrNil(19),
+		Remark:           strOrNil(true, "cloud-side-remark"),
+		DefaultCOSBucket: strOrNil(true, "cloud-side-bucket-1250000000"),
+	}
+	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "DescribeClustersWithContext",
+		func(_ context.Context, _ *oceanussdk.DescribeClustersRequest) (*oceanussdk.DescribeClustersResponse, error) {
+			return oceanusTestDescribeResponse(cluster), nil
+		})
+
+	ctx := newOceanusClusterTestContext(t, patches)
+	period := int64(12)
+	stateModel := ctx.oceanusClusterTestModel(t, oceanusTestClusterId, false, 12, &period)
+	var readResp resource.ReadResponse
+	readResp.State = ctx.state(t, stateModel)
+	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, stateModel)}, &readResp)
+	if readResp.Diagnostics.HasError() {
+		t.Fatalf("Read failed: %v", readResp.Diagnostics.Errors())
+	}
+
+	var got OceanusClusterResourceModel
+	if diags := readResp.State.Get(context.Background(), &got); diags.HasError() {
+		t.Fatalf("failed to read back state: %v", diags.Errors())
+	}
+	if got.Id.ValueString() != oceanusTestClusterId {
+		t.Errorf("id = %q, want %q", got.Id.ValueString(), oceanusTestClusterId)
+	}
+	if got.ClusterName.ValueString() != "cloud-side-name" {
+		t.Errorf("cluster_name = %q, want cloud-side-name", got.ClusterName.ValueString())
+	}
+	if got.Cu.ValueInt64() != 19 {
+		t.Errorf("cu = %d, want 19", got.Cu.ValueInt64())
+	}
+	if got.Remark.ValueString() != "cloud-side-remark" {
+		t.Errorf("remark = %q, want cloud-side-remark", got.Remark.ValueString())
+	}
+	if got.DefaultCosBucket.ValueString() != "cloud-side-bucket-1250000000" {
+		t.Errorf("default_cos_bucket = %q, want cloud-side-bucket-1250000000", got.DefaultCosBucket.ValueString())
+	}
+	if !got.LoginPassword.IsNull() {
+		t.Errorf("login_password = %v, want null (write-only)", got.LoginPassword)
+	}
+	if got.RegionId.ValueInt64() != 1 {
+		t.Errorf("region_id = %d, want 1 (preserved from state)", got.RegionId.ValueInt64())
+	}
+	if got.ZoneId.ValueInt64() != 100001 {
+		t.Errorf("zone_id = %d, want 100001 (preserved from state)", got.ZoneId.ValueInt64())
+	}
+	if got.Period.ValueInt64() != 12 {
+		t.Errorf("period = %d, want 12 (preserved from state)", got.Period.ValueInt64())
+	}
+	if got.InstanceChargeType.ValueString() != "POSTPAID_BY_SECOND" {
+		t.Errorf("instance_charge_type = %q, want POSTPAID_BY_SECOND (preserved from state)", got.InstanceChargeType.ValueString())
+	}
+}
+
+// TestOceanusClusterReadApiError verifies Read surfaces the API error.
+func TestOceanusClusterReadApiError(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "DescribeClustersWithContext",
+		func(_ context.Context, _ *oceanussdk.DescribeClustersRequest) (*oceanussdk.DescribeClustersResponse, error) {
+			return nil, fmt.Errorf("describe failed")
+		})
+
+	ctx := newOceanusClusterTestContext(t, patches)
+	stateModel := ctx.oceanusClusterTestModel(t, oceanusTestClusterId, false, 12, nil)
+	var readResp resource.ReadResponse
+	readResp.State = ctx.state(t, stateModel)
+	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, stateModel)}, &readResp)
+	if !readResp.Diagnostics.HasError() {
+		t.Fatal("Read should fail when the API returns an error")
+	}
+}
+
+// TestOceanusClusterUpdateNoChanges verifies that an update which changes
+// neither cu nor period does not call any mutation API.
+func TestOceanusClusterUpdateNoChanges(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	scaleCalled := false
+	renewCalled := false
+	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "ScaleOceanusClusterWithContext",
+		func(_ context.Context, _ *oceanussdk.ScaleOceanusClusterRequest) (*oceanussdk.ScaleOceanusClusterResponse, error) {
+			scaleCalled = true
+			return nil, fmt.Errorf("ScaleOceanusCluster must not be called")
+		})
+	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "RenewOceanusClusterWithContext",
+		func(_ context.Context, _ *oceanussdk.RenewOceanusClusterRequest) (*oceanussdk.RenewOceanusClusterResponse, error) {
+			renewCalled = true
+			return nil, fmt.Errorf("RenewOceanusCluster must not be called")
+		})
+	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "DescribeClustersWithContext",
+		func(_ context.Context, _ *oceanussdk.DescribeClustersRequest) (*oceanussdk.DescribeClustersResponse, error) {
+			return oceanusTestDescribeResponse(oceanusClusterTestItem(2)), nil
+		})
+
+	ctx := newOceanusClusterTestContext(t, patches)
+	stateModel := ctx.oceanusClusterTestModel(t, oceanusTestClusterId, false, 12, nil)
+	planModel := ctx.oceanusClusterTestModel(t, oceanusTestClusterId, true, 12, nil)
+	var updateResp resource.UpdateResponse
+	updateResp.State = ctx.state(t, stateModel)
+	ctx.resource.Update(context.Background(), resource.UpdateRequest{
+		Plan:  ctx.plan(t, planModel),
+		State: ctx.state(t, stateModel),
+	}, &updateResp)
+	if updateResp.Diagnostics.HasError() {
+		t.Fatalf("Update failed: %v", updateResp.Diagnostics.Errors())
+	}
+	if scaleCalled {
+		t.Error("ScaleOceanusCluster should not be called when cu is unchanged")
+	}
+	if renewCalled {
+		t.Error("RenewOceanusCluster should not be called when period is unchanged")
+	}
+
+	var got OceanusClusterResourceModel
+	if diags := updateResp.State.Get(context.Background(), &got); diags.HasError() {
+		t.Fatalf("failed to read back state: %v", diags.Errors())
+	}
+	if !got.LoginPassword.IsNull() {
+		t.Errorf("login_password = %v, want null (write-only)", got.LoginPassword)
+	}
+	if got.Cu.ValueInt64() != 12 {
+		t.Errorf("cu = %d, want 12", got.Cu.ValueInt64())
+	}
+}
+
+// TestOceanusClusterUpdateScaleTaskFailure verifies that a non-successful
+// TaskExecResult fails the update instead of silently continuing.
+func TestOceanusClusterUpdateScaleTaskFailure(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "ScaleOceanusClusterWithContext",
+		func(_ context.Context, _ *oceanussdk.ScaleOceanusClusterRequest) (*oceanussdk.ScaleOceanusClusterResponse, error) {
+			return &oceanussdk.ScaleOceanusClusterResponse{
+				Response: &oceanussdk.ScaleOceanusClusterResponseParams{
+					TaskExecResult: strOrNil(true, "failed"),
+				},
+			}, nil
+		})
+
+	ctx := newOceanusClusterTestContext(t, patches)
+	stateModel := ctx.oceanusClusterTestModel(t, oceanusTestClusterId, false, 12, nil)
+	planModel := ctx.oceanusClusterTestModel(t, oceanusTestClusterId, true, 19, nil)
+	var updateResp resource.UpdateResponse
+	updateResp.State = ctx.state(t, stateModel)
+	ctx.resource.Update(context.Background(), resource.UpdateRequest{
+		Plan:  ctx.plan(t, planModel),
+		State: ctx.state(t, stateModel),
+	}, &updateResp)
+	if !updateResp.Diagnostics.HasError() {
+		t.Fatal("Update should fail when ScaleOceanusCluster does not report success")
+	}
+}
+
+// TestOceanusClusterCreateNilResponse verifies Create fails when the API
+// returns no usable payload.
+func TestOceanusClusterCreateNilResponse(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "CreateOceanusClusterWithContext",
+		func(_ context.Context, _ *oceanussdk.CreateOceanusClusterRequest) (*oceanussdk.CreateOceanusClusterResponse, error) {
+			return &oceanussdk.CreateOceanusClusterResponse{}, nil
+		})
+
+	ctx := newOceanusClusterTestContext(t, patches)
+	model := ctx.oceanusClusterTestModel(t, "", true, 12, nil)
+	var createResp resource.CreateResponse
+	createResp.State = ctx.state(t, model)
+	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, model)}, &createResp)
+	if !createResp.Diagnostics.HasError() {
+		t.Fatal("Create should fail when the API returns no ClusterId")
+	}
+}
+
+// TestOceanusClusterDeleteTaskFailure verifies that a non-successful
+// TaskExecResult fails the deletion instead of treating it as done.
+func TestOceanusClusterDeleteTaskFailure(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "DeleteOceanusClusterWithContext",
+		func(_ context.Context, _ *oceanussdk.DeleteOceanusClusterRequest) (*oceanussdk.DeleteOceanusClusterResponse, error) {
+			return &oceanussdk.DeleteOceanusClusterResponse{
+				Response: &oceanussdk.DeleteOceanusClusterResponseParams{
+					TaskExecResult: strOrNil(true, "failed"),
+				},
+			}, nil
+		})
+
+	ctx := newOceanusClusterTestContext(t, patches)
+	stateModel := ctx.oceanusClusterTestModel(t, oceanusTestClusterId, false, 12, nil)
+	var deleteResp resource.DeleteResponse
+	deleteResp.State = ctx.state(t, stateModel)
+	ctx.resource.Delete(context.Background(), resource.DeleteRequest{State: ctx.state(t, stateModel)}, &deleteResp)
+	if !deleteResp.Diagnostics.HasError() {
+		t.Fatal("Delete should fail when DeleteOceanusCluster does not report success")
+	}
+}

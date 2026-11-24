@@ -32,6 +32,21 @@ var (
 	oceanusClusterPollTimeout    = 30 * time.Minute
 )
 
+// Oceanus cluster status values reported by DescribeClusters. Only 1
+// (not initialized), 3 (initializing) and 2 (running) are documented by the
+// cloud API; any other value is treated as an unknown transition state and
+// keeps the caller waiting until the poll timeout.
+const (
+	oceanusClusterStatusNotInitialized = 1
+	oceanusClusterStatusInitializing   = 3
+	oceanusClusterStatusRunning        = 2
+
+	oceanusClusterScaleModeUp   = "ScaleUp"
+	oceanusClusterScaleModeDown = "ScaleDown"
+
+	oceanusClusterTaskSuccess = "success"
+)
+
 // NewOceanusClusterResource is the factory referenced by
 // tencentcloud/framework/registry.go to register this resource.
 func NewOceanusClusterResource() resource.Resource {
@@ -132,7 +147,7 @@ func (r *OceanusClusterResource) Schema(_ context.Context, _ resource.SchemaRequ
 				Required:    true,
 				Sensitive:   true,
 				WriteOnly:   true,
-				Description: "Flink UI access password. The cluster user name is admin. This value is write-only and never persisted in state. Requires Terraform CLI 1.11+. Changing it forces recreation.",
+				Description: "Flink UI access password. The cluster user name is admin. This value is write-only and never persisted in state. Changing it forces recreation.",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
@@ -153,9 +168,14 @@ func (r *OceanusClusterResource) Schema(_ context.Context, _ resource.SchemaRequ
 				},
 			},
 			"cu": schema.Int64Attribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Number of cluster CUs. 12 CU is the minimal computing and billing unit; 1 CU contains 1 CPU and 4 GB memory. Management node fees are waived when the CU number is greater than or equal to 48. The cluster CU must satisfy 12 + 7*n (n >= 0). Updated in place via ScaleOceanusCluster.",
+				Optional: true,
+				Computed: true,
+				Description: "Number of cluster CUs. 12 CU is the minimal computing and billing unit; 1 CU contains 1 CPU and 4 GB memory. " +
+					"Management node fees are waived when the CU number is greater than or equal to 48. " +
+					"The cluster CU must satisfy 12 + 7*n (n >= 0). Resizing an existing cluster is applied in place via ScaleOceanusCluster.",
+				PlanModifiers: []planmodifier.Int64{
+					int64planmodifier.UseStateForUnknown(),
+				},
 			},
 			"remark": schema.StringAttribute{
 				Optional:    true,
@@ -166,7 +186,7 @@ func (r *OceanusClusterResource) Schema(_ context.Context, _ resource.SchemaRequ
 			},
 			"period": schema.Int64Attribute{
 				Optional:    true,
-				Description: "Purchase duration in months. Valid range: [1, 48]. Only takes effect for prepaid (PREPAID) clusters. Updated in place via RenewOceanusCluster.",
+				Description: "Purchase duration in months. Only effective for prepaid (PREPAID) clusters. Create accepts [1, 48]; renewal accepts [1, 36]. Changed in place via RenewOceanusCluster.",
 			},
 			"instance_charge_type": schema.StringAttribute{
 				Optional:    true,
@@ -278,7 +298,8 @@ func (r *OceanusClusterResource) Create(ctx context.Context, req resource.Create
 	}
 
 	plan.Id = types.StringValue(*response.Response.ClusterId)
-	// login_password is write-only and must never be persisted in state.
+	// login_password is write-only, but it is normalised here as well so the
+	// same model can be reused for the final state write.
 	plan.LoginPassword = types.StringNull()
 	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
 	if resp.Diagnostics.HasError() {
@@ -290,22 +311,23 @@ func (r *OceanusClusterResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 
-	cluster, err := r.describeCluster(ctx, plan.Id.ValueString())
+	final, err := r.refreshClusterState(ctx, plan, plan.Id.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError("Read Oceanus cluster failed", err.Error())
 		return
 	}
-	if cluster != nil {
-		oceanusClusterRefreshReadBack(&plan, cluster)
+	if final == nil {
+		resp.Diagnostics.AddError(
+			"Read Oceanus cluster failed",
+			fmt.Sprintf("cluster %s was created but is no longer returned by DescribeClusters", plan.Id.ValueString()),
+		)
+		return
 	}
-	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, final)...)
 }
 
-// Read refreshes the read-back fields from DescribeClusters. Fields without a
-// reliable read-back path (region_id, zone_id, login_password, period,
-// instance_charge_type, cluster_type, renew_flag,
-// flink_web_ui_network_access_type, cu_memory and the VPC lists) are preserved
-// from state; drift on those fields cannot be detected and is documented.
+// Read refreshes the resource state from DescribeClusters. The whole model is
+// rebuilt once and written with a single State.Set call.
 func (r *OceanusClusterResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var state OceanusClusterResourceModel
 	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
@@ -313,42 +335,70 @@ func (r *OceanusClusterResource) Read(ctx context.Context, req resource.ReadRequ
 		return
 	}
 
-	cluster, err := r.describeCluster(ctx, state.Id.ValueString())
+	final, err := r.refreshClusterState(ctx, state, state.Id.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError("Read Oceanus cluster failed", err.Error())
 		return
 	}
-	if cluster == nil {
+	if final == nil {
 		resp.State.RemoveResource(ctx)
 		return
 	}
-
-	oceanusClusterRefreshReadBack(&state, cluster)
-	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, final)...)
 }
 
-// oceanusClusterRefreshReadBack copies the cloud-side values that have a
-// confirmed read-back path into the model. Values the user configured but the
-// Describe API cannot echo back are preserved unchanged.
-func oceanusClusterRefreshReadBack(model *OceanusClusterResourceModel, cluster *oceanus.Cluster) {
-	if cluster == nil {
-		return
+// refreshClusterState reads the cluster and returns a complete model. A nil
+// model with a nil error means the cluster no longer exists.
+//
+// Only the attributes with a confirmed read-back path are refreshed:
+//   - cluster_name        <- Cluster.Name
+//   - cu                  <- Cluster.CuNum
+//   - remark              <- Cluster.Remark (only when configured)
+//   - default_cos_bucket  <- Cluster.DefaultCOSBucket (only when configured)
+//
+// Every other attribute keeps the value carried by base. Those attributes are
+// either write-only (login_password) or have no single-valued read-back path
+// in DescribeClusters (region_id, zone_id, period, instance_charge_type,
+// cluster_type, renew_flag, flink_web_ui_network_access_type, cu_memory and the
+// VPC lists), so drift on them cannot be detected by the provider.
+func (r *OceanusClusterResource) refreshClusterState(
+	ctx context.Context,
+	base OceanusClusterResourceModel,
+	clusterId string,
+) (*OceanusClusterResourceModel, error) {
+	cluster, err := r.describeCluster(ctx, clusterId)
+	if err != nil {
+		return nil, err
 	}
+	if cluster == nil {
+		return nil, nil
+	}
+
+	result := base
+	result.Id = types.StringValue(clusterId)
+	if cluster.ClusterId != nil && *cluster.ClusterId != "" {
+		result.Id = types.StringValue(*cluster.ClusterId)
+	}
+	// A write-only attribute is always absent from state.
+	result.LoginPassword = types.StringNull()
+
 	if cluster.Name != nil {
-		model.ClusterName = types.StringValue(*cluster.Name)
+		result.ClusterName = types.StringValue(*cluster.Name)
 	}
 	if cluster.CuNum != nil {
-		model.Cu = types.Int64Value(int64(*cluster.CuNum))
+		result.Cu = types.Int64Value(int64(*cluster.CuNum))
 	}
-	// remark and default_cos_bucket: only refresh when the state holds a
-	// user-configured value, so an empty cloud echo does not rewrite a null
-	// plan value into a non-null state value.
-	if cluster.Remark != nil && !model.Remark.IsNull() {
-		model.Remark = types.StringValue(*cluster.Remark)
+	// remark and default_cos_bucket are only refreshed when the model holds a
+	// configured value, so an empty cloud echo cannot turn a null attribute
+	// into a non-null state value.
+	if cluster.Remark != nil && !result.Remark.IsNull() && !result.Remark.IsUnknown() {
+		result.Remark = types.StringValue(*cluster.Remark)
 	}
-	if cluster.DefaultCOSBucket != nil && !model.DefaultCosBucket.IsNull() {
-		model.DefaultCosBucket = types.StringValue(*cluster.DefaultCOSBucket)
+	if cluster.DefaultCOSBucket != nil && !result.DefaultCosBucket.IsNull() && !result.DefaultCosBucket.IsUnknown() {
+		result.DefaultCosBucket = types.StringValue(*cluster.DefaultCOSBucket)
 	}
+
+	return &result, nil
 }
 
 // Update supports two in-place operations only:
@@ -366,14 +416,20 @@ func (r *OceanusClusterResource) Update(ctx context.Context, req resource.Update
 		return
 	}
 
+	clusterId := state.Id.ValueString()
+	if clusterId == "" {
+		resp.Diagnostics.AddError("Update Oceanus cluster failed", "cluster id is missing from state")
+		return
+	}
+
 	if !plan.Cu.IsNull() && !plan.Cu.IsUnknown() && (state.Cu.IsNull() || !plan.Cu.Equal(state.Cu)) {
 		newCU := plan.Cu.ValueInt64()
-		scaleMode := "ScaleUp"
-		if !state.Cu.IsNull() && newCU < state.Cu.ValueInt64() {
-			scaleMode = "ScaleDown"
+		scaleMode := oceanusClusterScaleModeUp
+		if !state.Cu.IsNull() && !state.Cu.IsUnknown() && newCU < state.Cu.ValueInt64() {
+			scaleMode = oceanusClusterScaleModeDown
 		}
 		request := oceanus.NewScaleOceanusClusterRequest()
-		request.ClusterId = state.Id.ValueStringPointer()
+		request.ClusterId = oceanusClusterStrPtr(clusterId)
 		request.NewCU = oceanusClusterInt64Ptr(newCU)
 		request.ScaleMode = oceanusClusterStrPtr(scaleMode)
 		response, err := r.Client().UseOceanusClient().ScaleOceanusClusterWithContext(ctx, request)
@@ -381,11 +437,15 @@ func (r *OceanusClusterResource) Update(ctx context.Context, req resource.Update
 			resp.Diagnostics.AddError("Scale Oceanus cluster failed", "API ScaleOceanusCluster returned error: "+err.Error())
 			return
 		}
-		if response == nil || response.Response == nil || response.Response.TaskExecResult == nil || *response.Response.TaskExecResult != "success" {
-			resp.Diagnostics.AddError("Scale Oceanus cluster failed", fmt.Sprintf("API ScaleOceanusCluster did not report success, got TaskExecResult %v", response))
+		if response == nil || response.Response == nil || response.Response.TaskExecResult == nil ||
+			*response.Response.TaskExecResult != oceanusClusterTaskSuccess {
+			resp.Diagnostics.AddError(
+				"Scale Oceanus cluster failed",
+				"API ScaleOceanusCluster did not report a successful task execution result",
+			)
 			return
 		}
-		if err := r.waitForClusterReady(ctx, state.Id.ValueString()); err != nil {
+		if err := r.waitForClusterReady(ctx, clusterId); err != nil {
 			resp.Diagnostics.AddError("Wait for Oceanus cluster ready failed", err.Error())
 			return
 		}
@@ -393,21 +453,35 @@ func (r *OceanusClusterResource) Update(ctx context.Context, req resource.Update
 
 	if !plan.Period.IsNull() && !plan.Period.IsUnknown() && (state.Period.IsNull() || !plan.Period.Equal(state.Period)) {
 		request := oceanus.NewRenewOceanusClusterRequest()
-		request.ClusterId = state.Id.ValueStringPointer()
+		request.ClusterId = oceanusClusterStrPtr(clusterId)
 		request.Period = oceanusClusterInt64Ptr(plan.Period.ValueInt64())
 		if _, err := r.Client().UseOceanusClient().RenewOceanusClusterWithContext(ctx, request); err != nil {
 			resp.Diagnostics.AddError("Renew Oceanus cluster failed", "API RenewOceanusCluster returned error: "+err.Error())
 			return
 		}
-		if err := r.waitForClusterReady(ctx, state.Id.ValueString()); err != nil {
+		if err := r.waitForClusterReady(ctx, clusterId); err != nil {
 			resp.Diagnostics.AddError("Wait for Oceanus cluster ready failed", err.Error())
 			return
 		}
 	}
 
-	// login_password is write-only and must never be persisted in state.
+	// login_password is write-only, but it is normalised here as well so the
+	// same model can be reused for the final state write.
 	plan.LoginPassword = types.StringNull()
-	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
+
+	final, err := r.refreshClusterState(ctx, plan, clusterId)
+	if err != nil {
+		resp.Diagnostics.AddError("Read Oceanus cluster failed", err.Error())
+		return
+	}
+	if final == nil {
+		resp.Diagnostics.AddError(
+			"Read Oceanus cluster failed",
+			fmt.Sprintf("cluster %s is no longer returned by DescribeClusters", clusterId),
+		)
+		return
+	}
+	resp.Diagnostics.Append(resp.State.Set(ctx, final)...)
 }
 
 // Delete destroys the cluster via DeleteOceanusCluster and waits until
@@ -419,19 +493,29 @@ func (r *OceanusClusterResource) Delete(ctx context.Context, req resource.Delete
 		return
 	}
 
+	clusterId := state.Id.ValueString()
+	if clusterId == "" {
+		resp.Diagnostics.AddError("Delete Oceanus cluster failed", "cluster id is missing from state")
+		return
+	}
+
 	request := oceanus.NewDeleteOceanusClusterRequest()
-	request.ClusterId = state.Id.ValueStringPointer()
+	request.ClusterId = oceanusClusterStrPtr(clusterId)
 	response, err := r.Client().UseOceanusClient().DeleteOceanusClusterWithContext(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("Delete Oceanus cluster failed", "API DeleteOceanusCluster returned error: "+err.Error())
 		return
 	}
-	if response == nil || response.Response == nil || response.Response.TaskExecResult == nil || *response.Response.TaskExecResult != "success" {
-		resp.Diagnostics.AddError("Delete Oceanus cluster failed", fmt.Sprintf("API DeleteOceanusCluster did not report success, got TaskExecResult %v", response))
+	if response == nil || response.Response == nil || response.Response.TaskExecResult == nil ||
+		*response.Response.TaskExecResult != oceanusClusterTaskSuccess {
+		resp.Diagnostics.AddError(
+			"Delete Oceanus cluster failed",
+			"API DeleteOceanusCluster did not report a successful task execution result",
+		)
 		return
 	}
 
-	if err := r.waitForClusterDeleted(ctx, state.Id.ValueString()); err != nil {
+	if err := r.waitForClusterDeleted(ctx, clusterId); err != nil {
 		resp.Diagnostics.AddError("Wait for Oceanus cluster deletion failed", err.Error())
 	}
 }
@@ -451,7 +535,15 @@ func (r *OceanusClusterResource) describeCluster(ctx context.Context, clusterId 
 	if len(response.Response.ClusterSet) == 0 {
 		return nil, nil
 	}
-	return response.Response.ClusterSet[0], nil
+	for _, cluster := range response.Response.ClusterSet {
+		if cluster == nil {
+			continue
+		}
+		if cluster.ClusterId == nil || *cluster.ClusterId == clusterId {
+			return cluster, nil
+		}
+	}
+	return nil, nil
 }
 
 // waitForClusterReady polls DescribeClusters until the cluster reports
@@ -472,11 +564,13 @@ func (r *OceanusClusterResource) waitForClusterReady(ctx context.Context, cluste
 				return cluster, "INITIALIZING", nil
 			}
 			switch *cluster.Status {
-			case 2:
+			case oceanusClusterStatusRunning:
 				return cluster, "RUNNING", nil
-			case 1, 3:
+			case oceanusClusterStatusNotInitialized, oceanusClusterStatusInitializing:
 				return cluster, "INITIALIZING", nil
 			default:
+				// Undocumented transition state: keep waiting instead of
+				// guessing an extra enum value.
 				return cluster, "INITIALIZING", nil
 			}
 		},
