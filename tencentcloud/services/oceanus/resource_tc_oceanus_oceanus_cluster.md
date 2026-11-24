@@ -1,14 +1,3 @@
----
-subcategory: ""
-layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_oceanus_oceanus_cluster"
-sidebar_current: "docs-tencentcloud-resource-oceanus-oceanus-cluster"
-description: |-
-  Provides a resource to create an Oceanus (Stream Compute) cluster.
----
-
-# tencentcloud_oceanus_oceanus_cluster
-
 Provides a resource to create an Oceanus (Stream Compute) cluster.
 
 Cluster creation is asynchronous: the provider persists the returned ClusterId
@@ -22,7 +11,7 @@ any other attribute forces the cluster to be recreated. Note that
 reliable read-back path in DescribeClusters, so drift on those attributes
 cannot be detected and their values are preserved from state.
 
-## Example Usage
+Example Usage
 
 ```hcl
 resource "tencentcloud_oceanus_oceanus_cluster" "example" {
@@ -46,7 +35,7 @@ resource "tencentcloud_oceanus_oceanus_cluster" "example" {
 }
 ```
 
-## Import
+Import
 
 Oceanus cluster can be imported using the cluster ID, e.g.
 
