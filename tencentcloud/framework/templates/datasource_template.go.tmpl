@@ -149,22 +149,11 @@ func (d *DemoWidgetsDataSource) Read(ctx context.Context, req datasource.ReadReq
 		describeWidgetsRequest.Name = config.Name.ValueStringPointer()
 	}
 
-	if !config.WidgetIds.IsNull() && !config.WidgetIds.IsUnknown() {
-		var ids []types.String
-		resp.Diagnostics.Append(config.WidgetIds.ElementsAs(ctx, &ids, false)...)
-		if resp.Diagnostics.HasError() {
-			return
-		}
-
-		describeWidgetsRequest.WidgetIds = make([]*string, 0, len(ids))
-		for _, v := range ids {
-			if v.IsNull() || v.IsUnknown() {
-				continue
-			}
-
-			val := v.ValueString()
-			describeWidgetsRequest.WidgetIds = append(describeWidgetsRequest.WidgetIds, &val)
-		}
+	// TEMPLATE: an optional list filter that the SDK takes as []*string —
+	// fwHelper.PointersFromList[string] (null/unknown -> nil, i.e. no filter).
+	describeWidgetsRequest.WidgetIds = fwHelper.PointersFromList[string](ctx, config.WidgetIds, &resp.Diagnostics)
+	if resp.Diagnostics.HasError() {
+		return
 	}
 
 	service := NewDemoService(d.Client())

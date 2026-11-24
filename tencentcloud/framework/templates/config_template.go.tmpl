@@ -403,9 +403,10 @@ func expandWidgetSettings(ctx context.Context, value types.Object, diags *diag.D
 		return nil
 	}
 
-	// TEMPLATE: write-direction conversions use fwHelper.XPointerFromValue —
-	// null/unknown yields nil ("do not send this field") so the manual
-	// IsNull/IsUnknown guard is unnecessary.
+	// TEMPLATE: write-direction conversions use the *PointerFromValue family
+	// (String/Int64/Uint64/Bool/Float64) and PointersFromList/Set[E] for
+	// collections: null/unknown yields nil ("do not send this field"), so
+	// the manual IsNull/IsUnknown guard is unnecessary.
 	settings.RetentionDays = fwHelper.Int64PointerFromValue(model.RetentionDays)
 	settings.Enabled = fwHelper.BoolPointerFromValue(model.Enabled)
 	settings.NotifyEmail = fwHelper.StringPointerFromValue(model.NotifyEmail)
@@ -455,6 +456,8 @@ func flattenWidgetSettings(ctx context.Context, settings *demov20230101.WidgetSe
 }
 
 // TEMPLATE: NO local conversion helpers in the resource file — pointer/null
-// conversions, OrPrev anti-diff merges and nil-safe derefs all come from
-// tencentcloud/framework/helper (fwHelper). When a variant is missing there,
-// ADD it to framework/helper with unit tests — never re-implement it locally.
+// conversions, OrPrev anti-diff merges, nil-safe derefs and the []*E <->
+// List/Set conversions (PointersFromList, ListFromPointersOrPrev, ...) all
+// come from tencentcloud/framework/helper (fwHelper). When a variant is
+// missing there, ADD it to framework/helper with unit tests — never
+// re-implement it locally.

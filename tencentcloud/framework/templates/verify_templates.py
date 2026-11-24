@@ -38,7 +38,8 @@ SVDEMO_ORIG = "github.com/tencentcloudstack/terraform-provider-tencentcloud/tenc
 
 STRUCTS = {
     "Widget": [("WidgetId", "*string"), ("Name", "*string"), ("ZoneId", "*string"),
-               ("Remark", "*string"), ("Status", "*string"), ("CreateOn", "*string")],
+               ("Remark", "*string"), ("Status", "*string"), ("CreateOn", "*string"),
+               ("Tags", "[]*string")],
     "WidgetSettings": [("RetentionDays", "*int64"), ("Enabled", "*bool"), ("NotifyEmail", "*string")],
     "WidgetBinding": [("GadgetId", "*string"), ("WidgetId", "*string"), ("BindMode", "*string"),
                       ("BoundAt", "*string"), ("BoundStatus", "*string")],
@@ -397,6 +398,51 @@ def check_validator():
     return proc.returncode
 
 
+def check_helper_docs():
+    """The helper table in conventions section 3.2 must match the helper
+    package: every exported function is listed, and every `fwHelper.X` the
+    skills / templates / README mention exists. A helper that is not in the
+    table is invisible to the generator (it hand-rolls the conversion
+    instead); a documented name that does not exist is a compile error in the
+    generated code."""
+    import re
+
+    helper_dir = REPO / "tencentcloud/framework/helper"
+    exported = set()
+    funcs = set()
+    for f in helper_dir.glob("*.go"):
+        if f.name.endswith("_test.go"):
+            continue
+        src = f.read_text()
+        funcs |= set(re.findall(r"^func ([A-Z]\w*)", src, re.M))
+        exported |= set(re.findall(r"^func ([A-Z]\w*)", src, re.M))
+        exported |= set(re.findall(r"^(?:var|const|type) ([A-Z]\w*)", src, re.M))
+        for blk in re.findall(r"^(?:var|const) \(\n(.*?)^\)", src, re.M | re.S):
+            exported |= set(re.findall(r"^\t([A-Z]\w*)", blk, re.M))
+
+    skills = REPO / ".codebuddy/skills"
+    conv_path = skills / "tf-fw-codegen-common/references/conventions.md"
+    if not conv_path.exists():
+        print("--- helper docs vs helper package: skipped (skills directory not present)")
+        return 0
+    conv = conv_path.read_text()
+
+    problems = []
+    docs = [p for p in skills.rglob("*.md") if "tf-fw-codegen" in str(p)] + [TPL / "README.md"]
+    for p in docs + sorted(TPL.glob("*.tmpl")):
+        for m in re.finditer(r"fwHelper\.([A-Za-z0-9_*]+)", p.read_text()):
+            name = m.group(1)
+            if "*" not in name and name not in exported:
+                problems.append(f"{p.name}: fwHelper.{name} does not exist")
+    for name in sorted(funcs):
+        if name not in conv:
+            problems.append(f"helper function `{name}` is not documented in conventions section 3.2")
+    print(f"--- helper docs vs helper package: {len(problems)} problem(s)")
+    for line in problems:
+        print("   ", line)
+    return len(problems)
+
+
 def run(args, label):
     proc = subprocess.run(args, cwd=REPO, capture_output=True, text=True)
     out = (proc.stdout + proc.stderr).replace(MOD + "/", "").replace("tencentcloud/framework/zz_tmplcheck/", "")
@@ -425,6 +471,7 @@ def main():
         failed += check_gofmt() != 0
         failed += check_sibling_md() != 0
         failed += check_validator() != 0
+        failed += check_helper_docs() != 0
         # Runs the two TEST templates (gomonkey needs -l: no inlining) AND the
         # behavioural probes — what the compiler cannot prove: nil safety,
         # import decoding, action schema shape, the wait/timeouts paths,

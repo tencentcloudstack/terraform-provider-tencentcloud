@@ -222,23 +222,15 @@ func (r *DemoWidgetResource) Create(ctx context.Context, req resource.CreateRequ
 		createWidgetRequest.Remark = plan.Remark.ValueStringPointer()
 	}
 
-	// TEMPLATE: optional lists expand with ElementsAs:
-	if !plan.Tags.IsNull() && !plan.Tags.IsUnknown() {
-		var tags []types.String
-		resp.Diagnostics.Append(plan.Tags.ElementsAs(ctx, &tags, false)...)
-		if resp.Diagnostics.HasError() {
-			return
-		}
-
-		createWidgetRequest.Tags = make([]*string, 0, len(tags))
-		for _, v := range tags {
-			if v.IsNull() || v.IsUnknown() {
-				continue
-			}
-
-			val := v.ValueString()
-			createWidgetRequest.Tags = append(createWidgetRequest.Tags, &val)
-		}
+	// TEMPLATE: an Optional collection that the SDK takes as []*string is
+	// expanded with fwHelper.PointersFromList[E] (PointersFromSet for a Set;
+	// E = the SDK element type: string / int64 / uint64 / float64 / bool).
+	// null/unknown yields nil ("do not send this field"); null elements are
+	// skipped; an unknown element or an element E cannot represent is an error
+	// diagnostic. Never hand-roll this loop.
+	createWidgetRequest.Tags = fwHelper.PointersFromList[string](ctx, plan.Tags, &resp.Diagnostics)
+	if resp.Diagnostics.HasError() {
+		return
 	}
 
 	service := NewDemoService(r.Client())
@@ -533,18 +525,29 @@ func (r *DemoWidgetResource) Delete(ctx context.Context, req resource.DeleteRequ
 //     recorded as-is (fwHelper.StringPointerValueOrNull). StringValueOrPrev
 //     is NOT for these: its own documentation excludes attributes whose
 //     truthful refreshed value may be null.
-func refreshDemoWidgetModel(_ context.Context, m *DemoWidgetResourceModel, item *demov20230101.Widget) diag.Diagnostics {
+func refreshDemoWidgetModel(ctx context.Context, m *DemoWidgetResourceModel, item *demov20230101.Widget) diag.Diagnostics {
 	if item == nil {
 		return nil
 	}
 
+	var diags diag.Diagnostics
+
 	m.Name = fwHelper.StringValueOrPrev(item.Name, m.Name)
 	m.ZoneId = fwHelper.StringValueOrPrev(item.ZoneId, m.ZoneId)
 	m.Remark = fwHelper.StringValueOrPrev(item.Remark, m.Remark)
+
+	// TEMPLATE: collections follow the same two families. A user-configurable
+	// collection uses the *OrPrev form (cloud omitted -> keep prev; cloud
+	// empty while the practitioner never set it -> null, avoiding "was null,
+	// but now []"); a Computed-only collection uses fwHelper.ListFromPointers /
+	// SetFromPointers (nil -> null, empty -> empty). elemType is the framework
+	// type of the elements (types.StringType, types.Int64Type, ...).
+	m.Tags = fwHelper.ListFromPointersOrPrev(ctx, types.StringType, item.Tags, m.Tags, &diags)
+
 	m.Status = fwHelper.StringPointerValueOrNull(item.Status)
 	m.CreateOn = fwHelper.StringPointerValueOrNull(item.CreateOn)
 
-	return nil
+	return diags
 }
 
 // normalizeDemoWidgetComputedUnknowns rewrites unknown computed attributes to

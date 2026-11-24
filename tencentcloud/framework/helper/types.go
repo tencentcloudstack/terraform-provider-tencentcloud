@@ -214,3 +214,29 @@ func BoolPointerFromValue(v types.Bool) *bool {
 	b := v.ValueBool()
 	return &b
 }
+
+// Float64PointerFromValue converts a types.Float64 back to *float64:
+// null/unknown returns nil ("do not send this field").
+func Float64PointerFromValue(v types.Float64) *float64 {
+	if v.IsNull() || v.IsUnknown() {
+		return nil
+	}
+	f := v.ValueFloat64()
+	return &f
+}
+
+// Float64ValueOrPrev is StringValueOrPrev for the *float64 fields: a
+// cloud-omitted (nil) field keeps the previous plan/state value, and an
+// unknown previous value becomes null. Use it for user-configurable
+// attributes; for Computed-only attributes use the native
+// types.Float64PointerValue, which records the truthful value including null.
+func Float64ValueOrPrev(cloud *float64, prev types.Float64) types.Float64 {
+	switch {
+	case cloud != nil:
+		return types.Float64Value(*cloud)
+	case !prev.IsNull() && !prev.IsUnknown():
+		return prev
+	default:
+		return types.Float64Null()
+	}
+}

@@ -53,6 +53,9 @@ const (
 	demoWidgetTestNormalizedName = "tf-example-widget-normalized"
 	demoWidgetTestZoneId         = "zone-12345"
 	demoWidgetTestTaskId         = "task-12345"
+	demoWidgetTestTagA           = "tag-a"
+	demoWidgetTestTagB           = "tag-b"
+	demoWidgetTestDriftedTag     = "tag-drifted"
 )
 
 // TEMPLATE: stub helpers (ptrXxx / buildXxx) and constants — keep ONLY the
@@ -70,6 +73,7 @@ func demoWidgetTestItem() *demov20230101.Widget {
 		ZoneId:   demoWidgetStr(demoWidgetTestZoneId),
 		Status:   demoWidgetStr("Running"),
 		CreateOn: demoWidgetStr("2024-01-01T00:00:00Z"),
+		Tags:     []*string{demoWidgetStr(demoWidgetTestTagA), demoWidgetStr(demoWidgetTestTagB)},
 	}
 }
 
@@ -100,7 +104,7 @@ func demoWidgetTestModel() svdemo.DemoWidgetResourceModel {
 		// Every remaining model field gets an explicit typed null — one per
 		// field, none skipped (Computed ones are filled by the refresh).
 		Remark:   types.StringNull(),
-		Tags:     types.ListNull(types.StringType),
+		Tags:     types.ListValueMust(types.StringType, []attr.Value{types.StringValue(demoWidgetTestTagA), types.StringValue(demoWidgetTestTagB)}),
 		Status:   types.StringNull(),
 		CreateOn: types.StringNull(),
 		// TEMPLATE: CONDITIONAL (async only) — a short (e.g. 5s) user value
@@ -143,6 +147,14 @@ func assertDemoWidgetModel(t *testing.T, m svdemo.DemoWidgetResourceModel) {
 	}
 	if m.Status.ValueString() != "Running" {
 		t.Errorf("status = %q, want Running", m.Status.ValueString())
+	}
+
+	var tags []string
+	if diags := m.Tags.ElementsAs(context.Background(), &tags, false); diags.HasError() {
+		t.Fatalf("tags: %v", diags.Errors())
+	}
+	if len(tags) != 2 || tags[0] != demoWidgetTestTagA || tags[1] != demoWidgetTestTagB {
+		t.Errorf("tags = %v, want [%q %q]", tags, demoWidgetTestTagA, demoWidgetTestTagB)
 	}
 }
 
@@ -274,6 +286,9 @@ func TestDemoWidgetCreateSuccess(t *testing.T) {
 	if captured.ZoneId == nil || *captured.ZoneId != demoWidgetTestZoneId {
 		t.Errorf("create request zone_id = %v, want %q", captured.ZoneId, demoWidgetTestZoneId)
 	}
+	if len(captured.Tags) != 2 || captured.Tags[0] == nil || *captured.Tags[0] != demoWidgetTestTagA || captured.Tags[1] == nil || *captured.Tags[1] != demoWidgetTestTagB {
+		t.Errorf("create request tags = %v, want [%q %q]", captured.Tags, demoWidgetTestTagA, demoWidgetTestTagB)
+	}
 
 	var got svdemo.DemoWidgetResourceModel
 	if diags := createResp.State.Get(context.Background(), &got); diags.HasError() {
@@ -389,6 +404,49 @@ func TestDemoWidgetReadSuccess(t *testing.T) {
 		t.Fatalf("failed to read back state: %v", diags.Errors())
 	}
 	assertDemoWidgetModel(t, got)
+}
+
+// TestDemoWidgetReadDetectsTagsDrift verifies a user-configurable collection
+// is refreshed from the cloud: the state holds [tag-a tag-b], the cloud now
+// answers [tag-drifted], and Read must record the cloud value (not keep the
+// previous one), so a change made outside Terraform shows up in the next plan.
+// TEMPLATE: this case is what proves the *OrPrev read path — a stub that
+// echoes the state value could not tell "refreshed" from "kept".
+func TestDemoWidgetReadDetectsTagsDrift(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetTestContext(t)
+	demoClient := patchDemoWidgetSdkClient(patches, ctx.client)
+	patches.ApplyMethodFunc(demoClient, "DescribeWidgets", func(req *demov20230101.DescribeWidgetsRequest) (*demov20230101.DescribeWidgetsResponse, error) {
+		drifted := demoWidgetTestItem()
+		drifted.Tags = []*string{demoWidgetStr(demoWidgetTestDriftedTag)}
+
+		return &demov20230101.DescribeWidgetsResponse{Response: &demov20230101.DescribeWidgetsResponseParams{
+			WidgetSet: []*demov20230101.Widget{drifted},
+			RequestId: demoWidgetStr("fake-request-id"),
+		}}, nil
+	})
+
+	var readResp resource.ReadResponse
+	readResp.State = ctx.state(t, demoWidgetTestModel())
+	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, demoWidgetTestModel())}, &readResp)
+	if readResp.Diagnostics.HasError() {
+		t.Fatalf("Read failed: %v", readResp.Diagnostics.Errors())
+	}
+
+	var got svdemo.DemoWidgetResourceModel
+	if diags := readResp.State.Get(context.Background(), &got); diags.HasError() {
+		t.Fatalf("failed to read back state: %v", diags.Errors())
+	}
+
+	var tags []string
+	if diags := got.Tags.ElementsAs(context.Background(), &tags, false); diags.HasError() {
+		t.Fatalf("tags: %v", diags.Errors())
+	}
+	if len(tags) != 1 || tags[0] != demoWidgetTestDriftedTag {
+		t.Errorf("tags = %v, want the cloud value [%q]", tags, demoWidgetTestDriftedTag)
+	}
 }
 
 // TestDemoWidgetReadNotFound verifies that a describe list without the
