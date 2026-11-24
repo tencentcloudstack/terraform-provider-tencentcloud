@@ -116,9 +116,10 @@ func (r *DemoWidgetConfigResource) Metadata(_ context.Context, _ resource.Metada
 func (r *DemoWidgetConfigResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	// TEMPLATE: every attribute Description below is a PLACEHOLDER — in
 	// generated code it is the faithful professional EN translation of the
-	// API doc / SDK field description. NO embellishment, NO extra wording,
-	// NO fixing of doc mistakes: stay consistent with the doc even when
-	// the doc is wrong (see conventions.md section 2).
+	// IACP CapiParam.Document field description (HTML stripped). NO
+	// embellishment, NO extra wording, NO fixing of metadata mistakes: stay
+	// consistent with the IACP metadata even when it is wrong (see
+	// conventions.md section 2).
 	resp.Schema = schema.Schema{
 		Description: "Provides a resource to manage the Demo widget configuration on an instance. " +
 			"Create and update both call the UpdateWidgetConfig API, read calls DescribeWidgetConfig. " +
