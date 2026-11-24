@@ -93,9 +93,12 @@ func demoTestModel() svdemo.DemoWidgetResourceModel {
 		Id:     types.StringValue(demoTestWidgetId),
 		Name:   types.StringValue(demoTestName),
 		ZoneId: types.StringValue(demoTestZoneId),
-		// TEMPLATE: CONDITIONAL (async only) — a short (e.g. 5s) user
-		// value for the wait-path cases; ObjectNull for unrelated ones.
-		Timeouts: resourcetimeouts.Value{Object: types.ObjectValue(
+		// TEMPLATE: CONDITIONAL (async only) — a short (e.g. 5s) user value
+		// for the wait-path cases; ObjectNull for unrelated ones. Use
+		// ObjectValueMust: the plain ObjectValue returns (value, diags) and
+		// does NOT compile inline (verified: tdmysql v2, 2026-11).
+		// Update-case stubs must reflect the POST-change cloud state.
+		Timeouts: resourcetimeouts.Value{Object: types.ObjectValueMust(
 			demoWidgetTimeoutsAttrTypes(),
 			map[string]attr.Value{
 				"create": types.StringValue("5s"),

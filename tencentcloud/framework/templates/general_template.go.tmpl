@@ -344,6 +344,10 @@ func (r *DemoWidgetResource) Read(ctx context.Context, req resource.ReadRequest,
 
 	// Confirmed "not found" on the cloud side => drop it from state so
 	// Terraform plans a recreation.
+	// TEMPLATE: the not-found judgement stays INLINE in Read (RemoveResource
+	// followed by an immediate return). Never move it into a shared refresh
+	// helper: a later unconditional State.Set would overwrite the removal
+	// (verified bug: tdmysql v2, 2026-11).
 	if item == nil {
 		resp.Diagnostics.AddWarning(
 			"Resource not found",

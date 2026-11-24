@@ -208,7 +208,15 @@ func (me *DemoService) DeleteWidget(ctx context.Context, request *demov20230101.
 //   - instance-status shape: the polling API takes the RESOURCE id instead
 //     (e.g. DescribeDBInstanceDetail) — poll until the expected terminal
 //     status, or until a confirmed not-found (destroy completed); the write
-//     API may return NO task id at all in this shape.
+//     API may return NO task id at all in this shape. VERIFIED code form
+//     (tdmysql v2, 2026-11): the wait talks to the SDK client directly, so
+//     the service-layer ErrNotFound sentinel never surfaces here — treat an
+//     EMPTY detail response as the not-found terminal state yourself:
+//
+//	if result == nil || result.Response == nil || result.Response.InstanceId == nil {
+//		return nil // destroyed: terminal state
+//	}
+//
 // The task id FIELD NAME in write responses is NOT uniform (FlowId / TaskId /
 // TaskID, *int64) — always verify against the vendored SDK struct, never
 // trust the IACP metadata.
