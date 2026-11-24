@@ -149,7 +149,10 @@ func (r *DemoWidgetResource) Schema(_ context.Context, _ resource.SchemaRequest,
 			// TEMPLATE: the `timeouts` block — REQUIRED whenever any CUD API
 			// is async (async_info), dropped for purely synchronous resources.
 			// Only declare the stages that actually wait (the verbs whose
-			// JSON entries carry async_info).
+			// JSON entries carry async_info). A block is NOT an attribute:
+			// it lives in the schema Blocks map, never in Attributes.
+		},
+		Blocks: map[string]schema.Block{
 			"timeouts": demoWidgetTimeoutsBlock(ctx),
 		},
 	}

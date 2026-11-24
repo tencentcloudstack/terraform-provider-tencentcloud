@@ -182,7 +182,10 @@ func (r *DemoWidgetAttachmentResource) Create(ctx context.Context, req resource.
 
 	// TEMPLATE: async bind — when the create entry carries a non-empty
 	// async_info, the service method returns a task id; wait for it BEFORE
-	// the read-back (service_template.go.tmpl wait method). Declare the
+	// the read-back (service_template.go.tmpl wait method). TWO wait shapes
+	// exist — task-id polling OR instance-status polling (the polling API
+	// decides; the task id field name follows the vendored SDK, see
+	// service_template.go.tmpl). Declare the
 	// user-facing `timeouts` block (resourcetimeouts, create/delete stages,
 	// see the general template) and thread the timeout from
 	// plan.Timeouts.Create/Delete(ctx, defaultXxxTimeout) into the wait.
@@ -326,7 +329,9 @@ func (r *DemoWidgetAttachmentResource) Delete(ctx context.Context, req resource.
 		return
 	}
 	// TEMPLATE: async unbind — wait for the task when the delete entry
-	// carries a non-empty async_info.
+	// carries a non-empty async_info. The instance-status wait shape is
+	// common here: poll the parent describe until the binding disappears
+	// (not-found is a terminal state).
 }
 
 // ImportState supports `terraform import` with the composite id

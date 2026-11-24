@@ -16,7 +16,9 @@
 // the input of the async task-query API. They NEVER appear in the schema and
 // NEVER serve as the resource id. When no input attribute can serve as the
 // unique id, generate a random token id exactly like a data source does
-// (fwHelper.BuildToken()).
+// (fwHelper.BuildToken()). TWO wait shapes exist — task-id OR
+// instance-status polling (the polling API decides; the task id field name
+// follows the vendored SDK, see service_template.go.tmpl).
 
 package demo
 

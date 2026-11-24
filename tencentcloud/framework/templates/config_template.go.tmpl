@@ -331,7 +331,9 @@ func (r *DemoWidgetConfigResource) Delete(_ context.Context, _ resource.DeleteRe
 //
 // TEMPLATE: async write API — when the create entry carries a non-empty
 // async_info, wait for the task inside the service layer's write method
-// (service_template.go.tmpl) BEFORE the read-back below. Declare the
+// (TWO wait shapes — task-id OR instance-status polling, see
+// service_template.go.tmpl; the task id field name follows the vendored
+// SDK) BEFORE the read-back below. Declare the
 // user-facing `timeouts` block (resourcetimeouts, create/update stages,
 // see the general template) and thread the timeout from
 // plan.Timeouts.Create/Update(ctx, defaultXxxTimeout) into the wait.

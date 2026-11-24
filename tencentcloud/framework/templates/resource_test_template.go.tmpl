@@ -66,6 +66,13 @@ func demoTestWidget() *demov20230101.Widget {
 }
 
 // demoTestModel builds the terraform model used for plan/state.
+// TEMPLATE: every unset attribute carries an EXPLICIT TYPED null value —
+// the raw zero value (types.List{} etc.) breaks tfsdk Plan/State
+// reflection with "Value Conversion Error". Populate one typed null per
+// model field: Int64Null/StringNull/BoolNull/Float64Null for scalars,
+// ListNull(ElementType) for lists, ListNull(ObjectType{AttrTypes}) for
+// nested lists, plus the timeouts null below. A single missing typed
+// null fails the whole test context.
 func demoTestModel() svdemo.DemoWidgetResourceModel {
 	return svdemo.DemoWidgetResourceModel{
 		Id:     types.StringValue(demoTestWidgetId),

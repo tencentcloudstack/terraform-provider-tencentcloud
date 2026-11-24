@@ -203,6 +203,16 @@ func (me *DemoService) DeleteWidget(ctx context.Context, request *demov20230101.
 // follow the repo-standard resource.Retry polling loop below and reference
 // SDKv2 service files for product-specific terminal status values.
 //
+// TEMPLATE: TWO wait shapes exist — pick by the POLLING API's input form:
+//   - task-id shape (shown below): the polling API takes FlowId/TaskId;
+//   - instance-status shape: the polling API takes the RESOURCE id instead
+//     (e.g. DescribeDBInstanceDetail) — poll until the expected terminal
+//     status, or until a confirmed not-found (destroy completed); the write
+//     API may return NO task id at all in this shape.
+// The task id FIELD NAME in write responses is NOT uniform (FlowId / TaskId /
+// TaskID, *int64) — always verify against the vendored SDK struct, never
+// trust the IACP metadata.
+//
 // The wait takes a `timeout time.Duration` parameter: the caller reads it
 // from the user-facing `timeouts` block (plan/state/data.Timeouts.Xxx(ctx,
 // defaultXxxTimeout), see the resource templates) and passes it in.
