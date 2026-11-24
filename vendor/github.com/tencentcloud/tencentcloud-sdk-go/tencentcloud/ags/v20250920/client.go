@@ -262,7 +262,6 @@ func NewApproveRegistryRecordResponse() (response *ApproveRegistryRecordResponse
 //  INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -284,7 +283,6 @@ func (c *Client) ApproveRegistryRecord(request *ApproveRegistryRecordRequest) (r
 //  INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -338,7 +336,6 @@ func NewCancelRegistryRecordResponse() (response *CancelRegistryRecordResponse) 
 //  INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -360,7 +357,6 @@ func (c *Client) CancelRegistryRecord(request *CancelRegistryRecordRequest) (res
 //  INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -505,6 +501,60 @@ func (c *Client) CreateDeploymentWithContext(ctx context.Context, request *Creat
     return
 }
 
+func NewCreatePreCacheImageCleanupPolicyRequest() (request *CreatePreCacheImageCleanupPolicyRequest) {
+    request = &CreatePreCacheImageCleanupPolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ags", APIVersion, "CreatePreCacheImageCleanupPolicy")
+    
+    
+    return
+}
+
+func NewCreatePreCacheImageCleanupPolicyResponse() (response *CreatePreCacheImageCleanupPolicyResponse) {
+    response = &CreatePreCacheImageCleanupPolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreatePreCacheImageCleanupPolicy
+// 创建镜像预热自动清理策略
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_PRECACHEIMAGECLEANUPPOLICY = "LimitExceeded.PreCacheImageCleanupPolicy"
+func (c *Client) CreatePreCacheImageCleanupPolicy(request *CreatePreCacheImageCleanupPolicyRequest) (response *CreatePreCacheImageCleanupPolicyResponse, err error) {
+    return c.CreatePreCacheImageCleanupPolicyWithContext(context.Background(), request)
+}
+
+// CreatePreCacheImageCleanupPolicy
+// 创建镜像预热自动清理策略
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_PRECACHEIMAGECLEANUPPOLICY = "LimitExceeded.PreCacheImageCleanupPolicy"
+func (c *Client) CreatePreCacheImageCleanupPolicyWithContext(ctx context.Context, request *CreatePreCacheImageCleanupPolicyRequest) (response *CreatePreCacheImageCleanupPolicyResponse, err error) {
+    if request == nil {
+        request = NewCreatePreCacheImageCleanupPolicyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ags", APIVersion, "CreatePreCacheImageCleanupPolicy")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreatePreCacheImageCleanupPolicy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreatePreCacheImageCleanupPolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreatePreCacheImageTaskRequest() (request *CreatePreCacheImageTaskRequest) {
     request = &CreatePreCacheImageTaskRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -539,7 +589,6 @@ func NewCreatePreCacheImageTaskResponse() (response *CreatePreCacheImageTaskResp
 //  INVALIDPARAMETERVALUE_IMAGE = "InvalidParameterValue.Image"
 //  INVALIDPARAMETERVALUE_IMAGEREGISTRY = "InvalidParameterValue.ImageRegistry"
 //  INVALIDPARAMETERVALUE_SCOPE = "InvalidParameterValue.Scope"
-//  MISSINGPARAMETER = "MissingParameter"
 //  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  RESOURCENOTFOUND_IMAGE = "ResourceNotFound.Image"
 //  RESOURCEUNAVAILABLE_IMAGEPREHEATING = "ResourceUnavailable.ImagePreheating"
@@ -564,7 +613,6 @@ func (c *Client) CreatePreCacheImageTask(request *CreatePreCacheImageTaskRequest
 //  INVALIDPARAMETERVALUE_IMAGE = "InvalidParameterValue.Image"
 //  INVALIDPARAMETERVALUE_IMAGEREGISTRY = "InvalidParameterValue.ImageRegistry"
 //  INVALIDPARAMETERVALUE_SCOPE = "InvalidParameterValue.Scope"
-//  MISSINGPARAMETER = "MissingParameter"
 //  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  RESOURCENOTFOUND_IMAGE = "ResourceNotFound.Image"
 //  RESOURCEUNAVAILABLE_IMAGEPREHEATING = "ResourceUnavailable.ImagePreheating"
@@ -619,7 +667,6 @@ func NewCreateRegistryResponse() (response *CreateRegistryResponse) {
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_APPROVALMODE = "InvalidParameterValue.ApprovalMode"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
@@ -641,7 +688,6 @@ func (c *Client) CreateRegistry(request *CreateRegistryRequest) (response *Creat
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_APPROVALMODE = "InvalidParameterValue.ApprovalMode"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
@@ -683,7 +729,7 @@ func NewCreateRegistryRecordResponse() (response *CreateRegistryRecordResponse) 
 }
 
 // CreateRegistryRecord
-// 统一创建 Registry Record（含 revision 1）。请求通过 DescriptorType 与严格内容输入 Union 选择底层类型：MCPSource / AgentSource / SkillSource / CustomDescriptors 四选一，必须与 DescriptorType 对应。不接受 RecordId 或 ChangeLog；同名 Record 返回冲突，不隐式追加 Version。追加 Version 请使用 UpdateRegistryRecord。
+// 统一创建 Registry Record（含 revision 1）。MCPSource / AgentSource / SkillSource / CustomDescriptors / FileSource 五选一，必须与 DescriptorType 对应。PLUGIN 使用 FileSource.Type=FILE 上传通用文件，Registry 不校验插件内容格式和语义，运行端负责解析和加载。SupportedHarnessVersions 为该版本支持的 HarnessVersionReference 对象列表，每项同时包含 HarnessEngine 和 HarnessEngineVersion，原样使用 DescribeHarnessEngineList 返回的选项；Metadata 为 Name/Value 字符串数组，Name 非空、小写且唯一，服务内部保存 map[string]string；两项属性省略时均保存空列表，不继承其他版本。不接受 RecordId 或 ChangeLog；同名 Record 返回冲突，不隐式追加 Version。追加 Version 请使用 UpdateRegistryRecord。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -702,7 +748,6 @@ func NewCreateRegistryRecordResponse() (response *CreateRegistryRecordResponse) 
 //  INVALIDPARAMETERVALUE_MCPSOURCETYPE = "InvalidParameterValue.MCPSourceType"
 //  INVALIDPARAMETERVALUE_SKILLSOURCETYPE = "InvalidParameterValue.SkillSourceType"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_AGENTSOURCEENDPOINTURL = "MissingParameter.AgentSourceEndpointURL"
 //  MISSINGPARAMETER_MCPSOURCEDESCRIPTORS = "MissingParameter.MCPSourceDescriptors"
 //  MISSINGPARAMETER_RECORDSOURCE = "MissingParameter.RecordSource"
@@ -717,7 +762,7 @@ func (c *Client) CreateRegistryRecord(request *CreateRegistryRecordRequest) (res
 }
 
 // CreateRegistryRecord
-// 统一创建 Registry Record（含 revision 1）。请求通过 DescriptorType 与严格内容输入 Union 选择底层类型：MCPSource / AgentSource / SkillSource / CustomDescriptors 四选一，必须与 DescriptorType 对应。不接受 RecordId 或 ChangeLog；同名 Record 返回冲突，不隐式追加 Version。追加 Version 请使用 UpdateRegistryRecord。
+// 统一创建 Registry Record（含 revision 1）。MCPSource / AgentSource / SkillSource / CustomDescriptors / FileSource 五选一，必须与 DescriptorType 对应。PLUGIN 使用 FileSource.Type=FILE 上传通用文件，Registry 不校验插件内容格式和语义，运行端负责解析和加载。SupportedHarnessVersions 为该版本支持的 HarnessVersionReference 对象列表，每项同时包含 HarnessEngine 和 HarnessEngineVersion，原样使用 DescribeHarnessEngineList 返回的选项；Metadata 为 Name/Value 字符串数组，Name 非空、小写且唯一，服务内部保存 map[string]string；两项属性省略时均保存空列表，不继承其他版本。不接受 RecordId 或 ChangeLog；同名 Record 返回冲突，不隐式追加 Version。追加 Version 请使用 UpdateRegistryRecord。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -736,7 +781,6 @@ func (c *Client) CreateRegistryRecord(request *CreateRegistryRecordRequest) (res
 //  INVALIDPARAMETERVALUE_MCPSOURCETYPE = "InvalidParameterValue.MCPSourceType"
 //  INVALIDPARAMETERVALUE_SKILLSOURCETYPE = "InvalidParameterValue.SkillSourceType"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_AGENTSOURCEENDPOINTURL = "MissingParameter.AgentSourceEndpointURL"
 //  MISSINGPARAMETER_MCPSOURCEDESCRIPTORS = "MissingParameter.MCPSourceDescriptors"
 //  MISSINGPARAMETER_RECORDSOURCE = "MissingParameter.RecordSource"
@@ -804,7 +848,6 @@ func NewCreateSandboxSnapshotResponse() (response *CreateSandboxSnapshotResponse
 //  INVALIDPARAMETERVALUE_MCPSOURCETYPE = "InvalidParameterValue.MCPSourceType"
 //  INVALIDPARAMETERVALUE_SKILLSOURCETYPE = "InvalidParameterValue.SkillSourceType"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_AGENTSOURCEENDPOINTURL = "MissingParameter.AgentSourceEndpointURL"
 //  MISSINGPARAMETER_MCPSOURCEDESCRIPTORS = "MissingParameter.MCPSourceDescriptors"
 //  MISSINGPARAMETER_RECORDSOURCE = "MissingParameter.RecordSource"
@@ -840,7 +883,6 @@ func (c *Client) CreateSandboxSnapshot(request *CreateSandboxSnapshotRequest) (r
 //  INVALIDPARAMETERVALUE_MCPSOURCETYPE = "InvalidParameterValue.MCPSourceType"
 //  INVALIDPARAMETERVALUE_SKILLSOURCETYPE = "InvalidParameterValue.SkillSourceType"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_AGENTSOURCEENDPOINTURL = "MissingParameter.AgentSourceEndpointURL"
 //  MISSINGPARAMETER_MCPSOURCEDESCRIPTORS = "MissingParameter.MCPSourceDescriptors"
 //  MISSINGPARAMETER_RECORDSOURCE = "MissingParameter.RecordSource"
@@ -907,7 +949,6 @@ func NewCreateSandboxToolResponse() (response *CreateSandboxToolResponse) {
 //  INVALIDPARAMETERVALUE_SUBNETID = "InvalidParameterValue.SubnetId"
 //  INVALIDPARAMETERVALUE_TIMEOUT = "InvalidParameterValue.Timeout"
 //  INVALIDPARAMETERVALUE_TOOLTYPE = "InvalidParameterValue.ToolType"
-//  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_ROLEARN = "MissingParameter.RoleArn"
 //  MISSINGPARAMETER_VPCPARAMETERS = "MissingParameter.VPCParameters"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -941,7 +982,6 @@ func (c *Client) CreateSandboxTool(request *CreateSandboxToolRequest) (response 
 //  INVALIDPARAMETERVALUE_SUBNETID = "InvalidParameterValue.SubnetId"
 //  INVALIDPARAMETERVALUE_TIMEOUT = "InvalidParameterValue.Timeout"
 //  INVALIDPARAMETERVALUE_TOOLTYPE = "InvalidParameterValue.ToolType"
-//  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_ROLEARN = "MissingParameter.RoleArn"
 //  MISSINGPARAMETER_VPCPARAMETERS = "MissingParameter.VPCParameters"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -1203,6 +1243,68 @@ func (c *Client) DeleteDeploymentWithContext(ctx context.Context, request *Delet
     return
 }
 
+func NewDeleteGPUResourceGroupRequest() (request *DeleteGPUResourceGroupRequest) {
+    request = &DeleteGPUResourceGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ags", APIVersion, "DeleteGPUResourceGroup")
+    
+    
+    return
+}
+
+func NewDeleteGPUResourceGroupResponse() (response *DeleteGPUResourceGroupResponse) {
+    response = &DeleteGPUResourceGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteGPUResourceGroup
+// 同步删除当前租户的空 GPU 资源组。资源组内不能存在交付中、已生效、已隔离、销毁中或其他未完成清理的 GPU 实例，也不能有剩余占用绑定或未删除的关联沙箱工具，否则返回 ResourceInUse。已销毁或补偿清理完成的历史记录不阻止删除。同租户重复删除已删除的资源组返回成功；资源组不存在或不属于当前租户时返回 ResourceNotFound。本接口仅软删除资源组，不执行退订退款、停止沙箱或释放底层 VM，历史计费记录保留。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteGPUResourceGroup(request *DeleteGPUResourceGroupRequest) (response *DeleteGPUResourceGroupResponse, err error) {
+    return c.DeleteGPUResourceGroupWithContext(context.Background(), request)
+}
+
+// DeleteGPUResourceGroup
+// 同步删除当前租户的空 GPU 资源组。资源组内不能存在交付中、已生效、已隔离、销毁中或其他未完成清理的 GPU 实例，也不能有剩余占用绑定或未删除的关联沙箱工具，否则返回 ResourceInUse。已销毁或补偿清理完成的历史记录不阻止删除。同租户重复删除已删除的资源组返回成功；资源组不存在或不属于当前租户时返回 ResourceNotFound。本接口仅软删除资源组，不执行退订退款、停止沙箱或释放底层 VM，历史计费记录保留。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteGPUResourceGroupWithContext(ctx context.Context, request *DeleteGPUResourceGroupRequest) (response *DeleteGPUResourceGroupResponse, err error) {
+    if request == nil {
+        request = NewDeleteGPUResourceGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ags", APIVersion, "DeleteGPUResourceGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteGPUResourceGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteGPUResourceGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeletePreCacheImageRequest() (request *DeletePreCacheImageRequest) {
     request = &DeletePreCacheImageRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1267,6 +1369,60 @@ func (c *Client) DeletePreCacheImageWithContext(ctx context.Context, request *De
     return
 }
 
+func NewDeletePreCacheImageCleanupPolicyRequest() (request *DeletePreCacheImageCleanupPolicyRequest) {
+    request = &DeletePreCacheImageCleanupPolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ags", APIVersion, "DeletePreCacheImageCleanupPolicy")
+    
+    
+    return
+}
+
+func NewDeletePreCacheImageCleanupPolicyResponse() (response *DeletePreCacheImageCleanupPolicyResponse) {
+    response = &DeletePreCacheImageCleanupPolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeletePreCacheImageCleanupPolicy
+// 删除镜像预热自动卸载策略
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeletePreCacheImageCleanupPolicy(request *DeletePreCacheImageCleanupPolicyRequest) (response *DeletePreCacheImageCleanupPolicyResponse, err error) {
+    return c.DeletePreCacheImageCleanupPolicyWithContext(context.Background(), request)
+}
+
+// DeletePreCacheImageCleanupPolicy
+// 删除镜像预热自动卸载策略
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeletePreCacheImageCleanupPolicyWithContext(ctx context.Context, request *DeletePreCacheImageCleanupPolicyRequest) (response *DeletePreCacheImageCleanupPolicyResponse, err error) {
+    if request == nil {
+        request = NewDeletePreCacheImageCleanupPolicyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ags", APIVersion, "DeletePreCacheImageCleanupPolicy")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeletePreCacheImageCleanupPolicy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeletePreCacheImageCleanupPolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteRegistryRequest() (request *DeleteRegistryRequest) {
     request = &DeleteRegistryRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1296,7 +1452,6 @@ func NewDeleteRegistryResponse() (response *DeleteRegistryResponse) {
 //  INVALIDPARAMETER_REGISTRYID = "InvalidParameter.RegistryId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
@@ -1315,7 +1470,6 @@ func (c *Client) DeleteRegistry(request *DeleteRegistryRequest) (response *Delet
 //  INVALIDPARAMETER_REGISTRYID = "InvalidParameter.RegistryId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
@@ -1368,7 +1522,6 @@ func NewDeleteRegistryRecordResponse() (response *DeleteRegistryRecordResponse) 
 //  INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_REASON = "MissingParameter.Reason"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
@@ -1391,7 +1544,6 @@ func (c *Client) DeleteRegistryRecord(request *DeleteRegistryRecordRequest) (res
 //  INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_REASON = "MissingParameter.Reason"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
@@ -1448,7 +1600,6 @@ func NewDeleteSandboxSnapshotResponse() (response *DeleteSandboxSnapshotResponse
 //  INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_REASON = "MissingParameter.Reason"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
@@ -1473,7 +1624,6 @@ func (c *Client) DeleteSandboxSnapshot(request *DeleteSandboxSnapshotRequest) (r
 //  INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_REASON = "MissingParameter.Reason"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
@@ -1827,6 +1977,70 @@ func (c *Client) DescribeDeploymentListWithContext(ctx context.Context, request 
     return
 }
 
+func NewDescribeEventCenterEventsRequest() (request *DescribeEventCenterEventsRequest) {
+    request = &DescribeEventCenterEventsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ags", APIVersion, "DescribeEventCenterEvents")
+    
+    
+    return
+}
+
+func NewDescribeEventCenterEventsResponse() (response *DescribeEventCenterEventsResponse) {
+    response = &DescribeEventCenterEventsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeEventCenterEvents
+// 本接口用于查询当前账号在指定地域的事件列表，支持按事件来源、资源对象、事件类型、事件级别及时间范围等条件筛选，并支持分页和时间排序。默认查询最近 1 小时的事件，支持查询最近 7 天内的事件。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_FILTERS = "InvalidParameterValue.Filters"
+//  INVALIDPARAMETERVALUE_LIMIT = "InvalidParameterValue.Limit"
+//  INVALIDPARAMETERVALUE_OFFSET = "InvalidParameterValue.Offset"
+//  INVALIDPARAMETERVALUE_TIMERANGE = "InvalidParameterValue.TimeRange"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeEventCenterEvents(request *DescribeEventCenterEventsRequest) (response *DescribeEventCenterEventsResponse, err error) {
+    return c.DescribeEventCenterEventsWithContext(context.Background(), request)
+}
+
+// DescribeEventCenterEvents
+// 本接口用于查询当前账号在指定地域的事件列表，支持按事件来源、资源对象、事件类型、事件级别及时间范围等条件筛选，并支持分页和时间排序。默认查询最近 1 小时的事件，支持查询最近 7 天内的事件。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_FILTERS = "InvalidParameterValue.Filters"
+//  INVALIDPARAMETERVALUE_LIMIT = "InvalidParameterValue.Limit"
+//  INVALIDPARAMETERVALUE_OFFSET = "InvalidParameterValue.Offset"
+//  INVALIDPARAMETERVALUE_TIMERANGE = "InvalidParameterValue.TimeRange"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeEventCenterEventsWithContext(ctx context.Context, request *DescribeEventCenterEventsRequest) (response *DescribeEventCenterEventsResponse, err error) {
+    if request == nil {
+        request = NewDescribeEventCenterEventsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ags", APIVersion, "DescribeEventCenterEvents")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeEventCenterEvents require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeEventCenterEventsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeEventsRequest() (request *DescribeEventsRequest) {
     request = &DescribeEventsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1895,6 +2109,246 @@ func (c *Client) DescribeEventsWithContext(ctx context.Context, request *Describ
     return
 }
 
+func NewDescribeGPUResourceGroupsRequest() (request *DescribeGPUResourceGroupsRequest) {
+    request = &DescribeGPUResourceGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ags", APIVersion, "DescribeGPUResourceGroups")
+    
+    
+    return
+}
+
+func NewDescribeGPUResourceGroupsResponse() (response *DescribeGPUResourceGroupsResponse) {
+    response = &DescribeGPUResourceGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeGPUResourceGroups
+// 查询当前地域、当前租户的 GPU 资源组及统计。通过 resource-group-id 精确过滤可查询组详情，仍返回数组；无匹配项返回空数组。资源组可以为空，商业期限和续费标记逐台保存。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeGPUResourceGroups(request *DescribeGPUResourceGroupsRequest) (response *DescribeGPUResourceGroupsResponse, err error) {
+    return c.DescribeGPUResourceGroupsWithContext(context.Background(), request)
+}
+
+// DescribeGPUResourceGroups
+// 查询当前地域、当前租户的 GPU 资源组及统计。通过 resource-group-id 精确过滤可查询组详情，仍返回数组；无匹配项返回空数组。资源组可以为空，商业期限和续费标记逐台保存。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeGPUResourceGroupsWithContext(ctx context.Context, request *DescribeGPUResourceGroupsRequest) (response *DescribeGPUResourceGroupsResponse, err error) {
+    if request == nil {
+        request = NewDescribeGPUResourceGroupsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ags", APIVersion, "DescribeGPUResourceGroups")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGPUResourceGroups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGPUResourceGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeGPUResourceSpecsRequest() (request *DescribeGPUResourceSpecsRequest) {
+    request = &DescribeGPUResourceSpecsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ags", APIVersion, "DescribeGPUResourceSpecs")
+    
+    
+    return
+}
+
+func NewDescribeGPUResourceSpecsResponse() (response *DescribeGPUResourceSpecsResponse) {
+    response = &DescribeGPUResourceSpecsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeGPUResourceSpecs
+// 查询当前地域可售 GPU 规格与当前租户可购买额度。GPUType、CPU、Memory、GPUNum 必须同时提供或同时省略；精确过滤时按四项匹配。不返回底层机型、资源池或计费标签。总显存为单台全部 GPU 的显存之和。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeGPUResourceSpecs(request *DescribeGPUResourceSpecsRequest) (response *DescribeGPUResourceSpecsResponse, err error) {
+    return c.DescribeGPUResourceSpecsWithContext(context.Background(), request)
+}
+
+// DescribeGPUResourceSpecs
+// 查询当前地域可售 GPU 规格与当前租户可购买额度。GPUType、CPU、Memory、GPUNum 必须同时提供或同时省略；精确过滤时按四项匹配。不返回底层机型、资源池或计费标签。总显存为单台全部 GPU 的显存之和。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeGPUResourceSpecsWithContext(ctx context.Context, request *DescribeGPUResourceSpecsRequest) (response *DescribeGPUResourceSpecsResponse, err error) {
+    if request == nil {
+        request = NewDescribeGPUResourceSpecsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ags", APIVersion, "DescribeGPUResourceSpecs")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGPUResourceSpecs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGPUResourceSpecsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeGPUResourcesRequest() (request *DescribeGPUResourcesRequest) {
+    request = &DescribeGPUResourcesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ags", APIVersion, "DescribeGPUResources")
+    
+    
+    return
+}
+
+func NewDescribeGPUResourcesResponse() (response *DescribeGPUResourcesResponse) {
+    response = &DescribeGPUResourcesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeGPUResources
+// 查询当前地域、当前租户的逐台 GPU 商业资源及占用状态。仅展示当前资源，不展示已销毁或补偿完成的失败资源；先筛选（含占用状态）再统计和分页。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeGPUResources(request *DescribeGPUResourcesRequest) (response *DescribeGPUResourcesResponse, err error) {
+    return c.DescribeGPUResourcesWithContext(context.Background(), request)
+}
+
+// DescribeGPUResources
+// 查询当前地域、当前租户的逐台 GPU 商业资源及占用状态。仅展示当前资源，不展示已销毁或补偿完成的失败资源；先筛选（含占用状态）再统计和分页。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeGPUResourcesWithContext(ctx context.Context, request *DescribeGPUResourcesRequest) (response *DescribeGPUResourcesResponse, err error) {
+    if request == nil {
+        request = NewDescribeGPUResourcesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ags", APIVersion, "DescribeGPUResources")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGPUResources require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGPUResourcesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribePreCacheImageCleanupPolicyListRequest() (request *DescribePreCacheImageCleanupPolicyListRequest) {
+    request = &DescribePreCacheImageCleanupPolicyListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ags", APIVersion, "DescribePreCacheImageCleanupPolicyList")
+    
+    
+    return
+}
+
+func NewDescribePreCacheImageCleanupPolicyListResponse() (response *DescribePreCacheImageCleanupPolicyListResponse) {
+    response = &DescribePreCacheImageCleanupPolicyListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribePreCacheImageCleanupPolicyList
+// 查询镜像预热自动卸载策略
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+func (c *Client) DescribePreCacheImageCleanupPolicyList(request *DescribePreCacheImageCleanupPolicyListRequest) (response *DescribePreCacheImageCleanupPolicyListResponse, err error) {
+    return c.DescribePreCacheImageCleanupPolicyListWithContext(context.Background(), request)
+}
+
+// DescribePreCacheImageCleanupPolicyList
+// 查询镜像预热自动卸载策略
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+func (c *Client) DescribePreCacheImageCleanupPolicyListWithContext(ctx context.Context, request *DescribePreCacheImageCleanupPolicyListRequest) (response *DescribePreCacheImageCleanupPolicyListResponse, err error) {
+    if request == nil {
+        request = NewDescribePreCacheImageCleanupPolicyListRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ags", APIVersion, "DescribePreCacheImageCleanupPolicyList")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribePreCacheImageCleanupPolicyList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribePreCacheImageCleanupPolicyListResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribePreCacheImageListRequest() (request *DescribePreCacheImageListRequest) {
     request = &DescribePreCacheImageListRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1922,7 +2376,6 @@ func NewDescribePreCacheImageListResponse() (response *DescribePreCacheImageList
 //  FAILEDOPERATION_DEPENDENCYUNAVAILABLE = "FailedOperation.DependencyUnavailable"
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) DescribePreCacheImageList(request *DescribePreCacheImageListRequest) (response *DescribePreCacheImageListResponse, err error) {
     return c.DescribePreCacheImageListWithContext(context.Background(), request)
 }
@@ -1935,7 +2388,6 @@ func (c *Client) DescribePreCacheImageList(request *DescribePreCacheImageListReq
 //  FAILEDOPERATION_DEPENDENCYUNAVAILABLE = "FailedOperation.DependencyUnavailable"
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) DescribePreCacheImageListWithContext(ctx context.Context, request *DescribePreCacheImageListRequest) (response *DescribePreCacheImageListResponse, err error) {
     if request == nil {
         request = NewDescribePreCacheImageListRequest()
@@ -1981,7 +2433,6 @@ func NewDescribePreCacheImageTaskResponse() (response *DescribePreCacheImageTask
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETERVALUE_IMAGE = "InvalidParameterValue.Image"
 //  INVALIDPARAMETERVALUE_SCOPE = "InvalidParameterValue.Scope"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_IMAGE = "ResourceNotFound.Image"
 func (c *Client) DescribePreCacheImageTask(request *DescribePreCacheImageTaskRequest) (response *DescribePreCacheImageTaskResponse, err error) {
     return c.DescribePreCacheImageTaskWithContext(context.Background(), request)
@@ -1996,7 +2447,6 @@ func (c *Client) DescribePreCacheImageTask(request *DescribePreCacheImageTaskReq
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETERVALUE_IMAGE = "InvalidParameterValue.Image"
 //  INVALIDPARAMETERVALUE_SCOPE = "InvalidParameterValue.Scope"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_IMAGE = "ResourceNotFound.Image"
 func (c *Client) DescribePreCacheImageTaskWithContext(ctx context.Context, request *DescribePreCacheImageTaskRequest) (response *DescribePreCacheImageTaskResponse, err error) {
     if request == nil {
@@ -2043,7 +2493,6 @@ func NewDescribeQuotaOverviewResponse() (response *DescribeQuotaOverviewResponse
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETERVALUE_IMAGE = "InvalidParameterValue.Image"
 //  INVALIDPARAMETERVALUE_SCOPE = "InvalidParameterValue.Scope"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_IMAGE = "ResourceNotFound.Image"
 func (c *Client) DescribeQuotaOverview(request *DescribeQuotaOverviewRequest) (response *DescribeQuotaOverviewResponse, err error) {
     return c.DescribeQuotaOverviewWithContext(context.Background(), request)
@@ -2058,7 +2507,6 @@ func (c *Client) DescribeQuotaOverview(request *DescribeQuotaOverviewRequest) (r
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETERVALUE_IMAGE = "InvalidParameterValue.Image"
 //  INVALIDPARAMETERVALUE_SCOPE = "InvalidParameterValue.Scope"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_IMAGE = "ResourceNotFound.Image"
 func (c *Client) DescribeQuotaOverviewWithContext(ctx context.Context, request *DescribeQuotaOverviewRequest) (response *DescribeQuotaOverviewResponse, err error) {
     if request == nil {
@@ -2106,7 +2554,6 @@ func NewDescribeRegistryResponse() (response *DescribeRegistryResponse) {
 //  INVALIDPARAMETER_REGISTRYID = "InvalidParameter.RegistryId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
@@ -2125,7 +2572,6 @@ func (c *Client) DescribeRegistry(request *DescribeRegistryRequest) (response *D
 //  INVALIDPARAMETER_REGISTRYID = "InvalidParameter.RegistryId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
@@ -2182,7 +2628,6 @@ func NewDescribeRegistryAuditLogListResponse() (response *DescribeRegistryAuditL
 //  INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
@@ -2207,7 +2652,6 @@ func (c *Client) DescribeRegistryAuditLogList(request *DescribeRegistryAuditLogL
 //  INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
@@ -2260,7 +2704,6 @@ func NewDescribeRegistryListResponse() (response *DescribeRegistryListResponse) 
 //  INVALIDPARAMETER_OFFSET = "InvalidParameter.Offset"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
@@ -2281,7 +2724,6 @@ func (c *Client) DescribeRegistryList(request *DescribeRegistryListRequest) (res
 //  INVALIDPARAMETER_OFFSET = "InvalidParameter.Offset"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
@@ -2323,7 +2765,7 @@ func NewDescribeRegistryRecordResponse() (response *DescribeRegistryRecordRespon
 }
 
 // DescribeRegistryRecord
-// 查询 Record 详情和其中一个 Version。请求可通过互斥的 VersionId 或 Label 选择 Version；均省略时默认 Label=stable。取代原 DescribeRegistryRecordVersion。
+// RegistryId 必填。大写常量 MARKETPLACE 表示服务端主 YAML marketplace.registry_ids 配置的工具市场；真实 reg-xxx 表示具体 Registry。省略、空字符串、null 或其他大小写均拒绝。市场读取要求已认证身份，只返回配置来源内未删除、已审批的可读版本，文件还须 READY 和有效制品；不回退私有目录。 RecordId 必填，VersionId/Label 互斥，均省略解析 stable；市场无可读 stable 返回 ResourceNotFound，不回退 latest。市场 Record/Version 使用公开字段投影，隐藏创建者、租户、审批动作和 SourceConfig。普通模式保留原 AppID/归属，由后端执行 Record 级 CAM batch 检查。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2335,9 +2777,9 @@ func NewDescribeRegistryRecordResponse() (response *DescribeRegistryRecordRespon
 //  INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -2346,7 +2788,7 @@ func (c *Client) DescribeRegistryRecord(request *DescribeRegistryRecordRequest) 
 }
 
 // DescribeRegistryRecord
-// 查询 Record 详情和其中一个 Version。请求可通过互斥的 VersionId 或 Label 选择 Version；均省略时默认 Label=stable。取代原 DescribeRegistryRecordVersion。
+// RegistryId 必填。大写常量 MARKETPLACE 表示服务端主 YAML marketplace.registry_ids 配置的工具市场；真实 reg-xxx 表示具体 Registry。省略、空字符串、null 或其他大小写均拒绝。市场读取要求已认证身份，只返回配置来源内未删除、已审批的可读版本，文件还须 READY 和有效制品；不回退私有目录。 RecordId 必填，VersionId/Label 互斥，均省略解析 stable；市场无可读 stable 返回 ResourceNotFound，不回退 latest。市场 Record/Version 使用公开字段投影，隐藏创建者、租户、审批动作和 SourceConfig。普通模式保留原 AppID/归属，由后端执行 Record 级 CAM batch 检查。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2358,9 +2800,9 @@ func (c *Client) DescribeRegistryRecord(request *DescribeRegistryRecordRequest) 
 //  INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -2401,7 +2843,7 @@ func NewDescribeRegistryRecordListResponse() (response *DescribeRegistryRecordLi
 }
 
 // DescribeRegistryRecordList
-// 分页查询 Registry 下的 Record 列表。list 类接口不接入 CAM 转发鉴权；业务侧按 CAM 二次过滤。
+// RegistryId 必填。大写常量 MARKETPLACE 表示服务端主 YAML marketplace.registry_ids 配置的工具市场；真实 reg-xxx 表示具体 Registry。省略、空字符串、null 或其他大小写均拒绝。市场读取要求已认证身份，只返回配置来源内未删除、已审批的可读版本，文件还须 READY 和有效制品；不回退私有目录。 返回至少有一个市场可读版本的 Record；去重、过滤、计数后分页，VersionCount/LabelSet 只反映市场可读版本，隐藏租户及创建者信息。真实 RegistryId 保留原 AppID/CAM 资源过滤，接口由后端自行鉴权。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2413,8 +2855,8 @@ func NewDescribeRegistryRecordListResponse() (response *DescribeRegistryRecordLi
 //  INVALIDPARAMETER_REGISTRYID = "InvalidParameter.RegistryId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -2423,7 +2865,7 @@ func (c *Client) DescribeRegistryRecordList(request *DescribeRegistryRecordListR
 }
 
 // DescribeRegistryRecordList
-// 分页查询 Registry 下的 Record 列表。list 类接口不接入 CAM 转发鉴权；业务侧按 CAM 二次过滤。
+// RegistryId 必填。大写常量 MARKETPLACE 表示服务端主 YAML marketplace.registry_ids 配置的工具市场；真实 reg-xxx 表示具体 Registry。省略、空字符串、null 或其他大小写均拒绝。市场读取要求已认证身份，只返回配置来源内未删除、已审批的可读版本，文件还须 READY 和有效制品；不回退私有目录。 返回至少有一个市场可读版本的 Record；去重、过滤、计数后分页，VersionCount/LabelSet 只反映市场可读版本，隐藏租户及创建者信息。真实 RegistryId 保留原 AppID/CAM 资源过滤，接口由后端自行鉴权。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2435,8 +2877,8 @@ func (c *Client) DescribeRegistryRecordList(request *DescribeRegistryRecordListR
 //  INVALIDPARAMETER_REGISTRYID = "InvalidParameter.RegistryId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
@@ -2490,7 +2932,6 @@ func NewDescribeRegistryRecordVersionListResponse() (response *DescribeRegistryR
 //  INVALIDPARAMETER_REGISTRYID = "InvalidParameter.RegistryId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -2514,7 +2955,6 @@ func (c *Client) DescribeRegistryRecordVersionList(request *DescribeRegistryReco
 //  INVALIDPARAMETER_REGISTRYID = "InvalidParameter.RegistryId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -2564,7 +3004,6 @@ func NewDescribeSandboxInstanceListResponse() (response *DescribeSandboxInstance
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETERVALUE_INSTANCEIDS = "InvalidParameterValue.InstanceIds"
 //  INVALIDPARAMETERVALUE_OFFSETTOOLARGE = "InvalidParameterValue.OffsetTooLarge"
-//  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) DescribeSandboxInstanceList(request *DescribeSandboxInstanceListRequest) (response *DescribeSandboxInstanceListResponse, err error) {
     return c.DescribeSandboxInstanceListWithContext(context.Background(), request)
 }
@@ -2577,7 +3016,6 @@ func (c *Client) DescribeSandboxInstanceList(request *DescribeSandboxInstanceLis
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETERVALUE_INSTANCEIDS = "InvalidParameterValue.InstanceIds"
 //  INVALIDPARAMETERVALUE_OFFSETTOOLARGE = "InvalidParameterValue.OffsetTooLarge"
-//  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) DescribeSandboxInstanceListWithContext(ctx context.Context, request *DescribeSandboxInstanceListRequest) (response *DescribeSandboxInstanceListResponse, err error) {
     if request == nil {
         request = NewDescribeSandboxInstanceListRequest()
@@ -2620,7 +3058,6 @@ func NewDescribeSandboxInstancesResponse() (response *DescribeSandboxInstancesRe
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE_INSTANCEIDS = "InvalidParameterValue.InstanceIds"
-//  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) DescribeSandboxInstances(request *DescribeSandboxInstancesRequest) (response *DescribeSandboxInstancesResponse, err error) {
     return c.DescribeSandboxInstancesWithContext(context.Background(), request)
 }
@@ -2631,7 +3068,6 @@ func (c *Client) DescribeSandboxInstances(request *DescribeSandboxInstancesReque
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE_INSTANCEIDS = "InvalidParameterValue.InstanceIds"
-//  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) DescribeSandboxInstancesWithContext(ctx context.Context, request *DescribeSandboxInstancesRequest) (response *DescribeSandboxInstancesResponse, err error) {
     if request == nil {
         request = NewDescribeSandboxInstancesRequest()
@@ -2676,7 +3112,6 @@ func NewDescribeSandboxSnapshotListResponse() (response *DescribeSandboxSnapshot
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE_INSTANCEIDS = "InvalidParameterValue.InstanceIds"
-//  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) DescribeSandboxSnapshotList(request *DescribeSandboxSnapshotListRequest) (response *DescribeSandboxSnapshotListResponse, err error) {
     return c.DescribeSandboxSnapshotListWithContext(context.Background(), request)
 }
@@ -2689,7 +3124,6 @@ func (c *Client) DescribeSandboxSnapshotList(request *DescribeSandboxSnapshotLis
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE_INSTANCEIDS = "InvalidParameterValue.InstanceIds"
-//  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) DescribeSandboxSnapshotListWithContext(ctx context.Context, request *DescribeSandboxSnapshotListRequest) (response *DescribeSandboxSnapshotListResponse, err error) {
     if request == nil {
         request = NewDescribeSandboxSnapshotListRequest()
@@ -2733,7 +3167,6 @@ func NewDescribeSandboxToolListResponse() (response *DescribeSandboxToolListResp
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETERVALUE_TOOLIDS = "InvalidParameterValue.ToolIds"
-//  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) DescribeSandboxToolList(request *DescribeSandboxToolListRequest) (response *DescribeSandboxToolListResponse, err error) {
     return c.DescribeSandboxToolListWithContext(context.Background(), request)
 }
@@ -2745,7 +3178,6 @@ func (c *Client) DescribeSandboxToolList(request *DescribeSandboxToolListRequest
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETERVALUE_TOOLIDS = "InvalidParameterValue.ToolIds"
-//  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) DescribeSandboxToolListWithContext(ctx context.Context, request *DescribeSandboxToolListRequest) (response *DescribeSandboxToolListResponse, err error) {
     if request == nil {
         request = NewDescribeSandboxToolListRequest()
@@ -3025,7 +3457,6 @@ func NewGetSkillPackageDownloadURLResponse() (response *GetSkillPackageDownloadU
 //  INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -3049,7 +3480,6 @@ func (c *Client) GetSkillPackageDownloadURL(request *GetSkillPackageDownloadURLR
 //  INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -3104,7 +3534,6 @@ func NewGetSkillPackageUploadURLResponse() (response *GetSkillPackageUploadURLRe
 //  INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -3127,7 +3556,6 @@ func (c *Client) GetSkillPackageUploadURL(request *GetSkillPackageUploadURLReque
 //  INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -3207,6 +3635,68 @@ func (c *Client) ModifyDeploymentWithContext(ctx context.Context, request *Modif
     request.SetContext(ctx)
     
     response = NewModifyDeploymentResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyGPUResourceGroupRequest() (request *ModifyGPUResourceGroupRequest) {
+    request = &ModifyGPUResourceGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ags", APIVersion, "ModifyGPUResourceGroup")
+    
+    
+    return
+}
+
+func NewModifyGPUResourceGroupResponse() (response *ModifyGPUResourceGroupResponse) {
+    response = &ModifyGPUResourceGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyGPUResourceGroup
+// 仅同步修改当前租户 GPU 资源组的名称，允许重名、同名重试；不修改规格、数量、计费期限或续费标记。不存在或不属于当前租户的资源组返回 ResourceNotFound。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyGPUResourceGroup(request *ModifyGPUResourceGroupRequest) (response *ModifyGPUResourceGroupResponse, err error) {
+    return c.ModifyGPUResourceGroupWithContext(context.Background(), request)
+}
+
+// ModifyGPUResourceGroup
+// 仅同步修改当前租户 GPU 资源组的名称，允许重名、同名重试；不修改规格、数量、计费期限或续费标记。不存在或不属于当前租户的资源组返回 ResourceNotFound。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyGPUResourceGroupWithContext(ctx context.Context, request *ModifyGPUResourceGroupRequest) (response *ModifyGPUResourceGroupResponse, err error) {
+    if request == nil {
+        request = NewModifyGPUResourceGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ags", APIVersion, "ModifyGPUResourceGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyGPUResourceGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyGPUResourceGroupResponse()
     err = c.Send(request, response)
     return
 }
@@ -3351,7 +3841,6 @@ func NewPauseSandboxInstanceResponse() (response *PauseSandboxInstanceResponse) 
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_SANDBOXINSTANCE = "ResourceNotFound.SandboxInstance"
 func (c *Client) PauseSandboxInstance(request *PauseSandboxInstanceRequest) (response *PauseSandboxInstanceResponse, err error) {
     return c.PauseSandboxInstanceWithContext(context.Background(), request)
@@ -3362,7 +3851,6 @@ func (c *Client) PauseSandboxInstance(request *PauseSandboxInstanceRequest) (res
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_SANDBOXINSTANCE = "ResourceNotFound.SandboxInstance"
 func (c *Client) PauseSandboxInstanceWithContext(ctx context.Context, request *PauseSandboxInstanceRequest) (response *PauseSandboxInstanceResponse, err error) {
     if request == nil {
@@ -3413,7 +3901,6 @@ func NewPreviewRegistryRecordResponse() (response *PreviewRegistryRecordResponse
 //  INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -3437,7 +3924,6 @@ func (c *Client) PreviewRegistryRecord(request *PreviewRegistryRecordRequest) (r
 //  INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -3492,7 +3978,6 @@ func NewRejectRegistryRecordResponse() (response *RejectRegistryRecordResponse) 
 //  INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -3514,7 +3999,6 @@ func (c *Client) RejectRegistryRecord(request *RejectRegistryRecordRequest) (res
 //  INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -3561,7 +4045,6 @@ func NewResumeSandboxInstanceResponse() (response *ResumeSandboxInstanceResponse
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_SANDBOXINSTANCE = "ResourceNotFound.SandboxInstance"
 func (c *Client) ResumeSandboxInstance(request *ResumeSandboxInstanceRequest) (response *ResumeSandboxInstanceResponse, err error) {
     return c.ResumeSandboxInstanceWithContext(context.Background(), request)
@@ -3572,7 +4055,6 @@ func (c *Client) ResumeSandboxInstance(request *ResumeSandboxInstanceRequest) (r
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_SANDBOXINSTANCE = "ResourceNotFound.SandboxInstance"
 func (c *Client) ResumeSandboxInstanceWithContext(ctx context.Context, request *ResumeSandboxInstanceRequest) (response *ResumeSandboxInstanceResponse, err error) {
     if request == nil {
@@ -3629,12 +4111,12 @@ func NewStartSandboxInstanceResponse() (response *StartSandboxInstanceResponse) 
 //  INVALIDPARAMETERVALUE_STORAGEMOUNT = "InvalidParameterValue.StorageMount"
 //  INVALIDPARAMETERVALUE_TIMEOUT = "InvalidParameterValue.Timeout"
 //  LIMITEXCEEDED_SANDBOXINSTANCE = "LimitExceeded.SandboxInstance"
-//  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_ROLEARN = "MissingParameter.RoleArn"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_SANDBOXTOOL = "ResourceNotFound.SandboxTool"
 //  RESOURCENOTFOUND_STORAGEMOUNT = "ResourceNotFound.StorageMount"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCEUNAVAILABLE_IMAGEPREHEATING = "ResourceUnavailable.ImagePreheating"
 //  RESOURCEUNAVAILABLE_SANDBOXTOOL = "ResourceUnavailable.SandboxTool"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) StartSandboxInstance(request *StartSandboxInstanceRequest) (response *StartSandboxInstanceResponse, err error) {
@@ -3660,12 +4142,12 @@ func (c *Client) StartSandboxInstance(request *StartSandboxInstanceRequest) (res
 //  INVALIDPARAMETERVALUE_STORAGEMOUNT = "InvalidParameterValue.StorageMount"
 //  INVALIDPARAMETERVALUE_TIMEOUT = "InvalidParameterValue.Timeout"
 //  LIMITEXCEEDED_SANDBOXINSTANCE = "LimitExceeded.SandboxInstance"
-//  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_ROLEARN = "MissingParameter.RoleArn"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_SANDBOXTOOL = "ResourceNotFound.SandboxTool"
 //  RESOURCENOTFOUND_STORAGEMOUNT = "ResourceNotFound.StorageMount"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCEUNAVAILABLE_IMAGEPREHEATING = "ResourceUnavailable.ImagePreheating"
 //  RESOURCEUNAVAILABLE_SANDBOXTOOL = "ResourceUnavailable.SandboxTool"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) StartSandboxInstanceWithContext(ctx context.Context, request *StartSandboxInstanceRequest) (response *StartSandboxInstanceResponse, err error) {
@@ -3709,7 +4191,6 @@ func NewStopSandboxInstanceResponse() (response *StopSandboxInstanceResponse) {
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_SANDBOXINSTANCE = "ResourceNotFound.SandboxInstance"
 func (c *Client) StopSandboxInstance(request *StopSandboxInstanceRequest) (response *StopSandboxInstanceResponse, err error) {
     return c.StopSandboxInstanceWithContext(context.Background(), request)
@@ -3720,7 +4201,6 @@ func (c *Client) StopSandboxInstance(request *StopSandboxInstanceRequest) (respo
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_SANDBOXINSTANCE = "ResourceNotFound.SandboxInstance"
 func (c *Client) StopSandboxInstanceWithContext(ctx context.Context, request *StopSandboxInstanceRequest) (response *StopSandboxInstanceResponse, err error) {
     if request == nil {
@@ -3771,7 +4251,6 @@ func NewSyncRegistryRecordResponse() (response *SyncRegistryRecordResponse) {
 //  INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -3795,7 +4274,6 @@ func (c *Client) SyncRegistryRecord(request *SyncRegistryRecordRequest) (respons
 //  INVALIDPARAMETER_VERSIONID = "InvalidParameter.VersionId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_REGISTRYRECORD = "ResourceNotFound.RegistryRecord"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -3815,6 +4293,60 @@ func (c *Client) SyncRegistryRecordWithContext(ctx context.Context, request *Syn
     request.SetContext(ctx)
     
     response = NewSyncRegistryRecordResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdatePreCacheImageCleanupPolicyRequest() (request *UpdatePreCacheImageCleanupPolicyRequest) {
+    request = &UpdatePreCacheImageCleanupPolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ags", APIVersion, "UpdatePreCacheImageCleanupPolicy")
+    
+    
+    return
+}
+
+func NewUpdatePreCacheImageCleanupPolicyResponse() (response *UpdatePreCacheImageCleanupPolicyResponse) {
+    response = &UpdatePreCacheImageCleanupPolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpdatePreCacheImageCleanupPolicy
+// 更新镜像预热自动卸载策略
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) UpdatePreCacheImageCleanupPolicy(request *UpdatePreCacheImageCleanupPolicyRequest) (response *UpdatePreCacheImageCleanupPolicyResponse, err error) {
+    return c.UpdatePreCacheImageCleanupPolicyWithContext(context.Background(), request)
+}
+
+// UpdatePreCacheImageCleanupPolicy
+// 更新镜像预热自动卸载策略
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) UpdatePreCacheImageCleanupPolicyWithContext(ctx context.Context, request *UpdatePreCacheImageCleanupPolicyRequest) (response *UpdatePreCacheImageCleanupPolicyResponse, err error) {
+    if request == nil {
+        request = NewUpdatePreCacheImageCleanupPolicyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ags", APIVersion, "UpdatePreCacheImageCleanupPolicy")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdatePreCacheImageCleanupPolicy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdatePreCacheImageCleanupPolicyResponse()
     err = c.Send(request, response)
     return
 }
@@ -3848,7 +4380,6 @@ func NewUpdateRegistryResponse() (response *UpdateRegistryResponse) {
 //  INVALIDPARAMETER_REGISTRYID = "InvalidParameter.RegistryId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
@@ -3867,7 +4398,6 @@ func (c *Client) UpdateRegistry(request *UpdateRegistryRequest) (response *Updat
 //  INVALIDPARAMETER_REGISTRYID = "InvalidParameter.RegistryId"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
@@ -3909,7 +4439,7 @@ func NewUpdateRegistryRecordResponse() (response *UpdateRegistryRecordResponse) 
 }
 
 // UpdateRegistryRecord
-// 更新 Registry Record。两种互斥模式：①Record 更新模式：不提交任何 Source / CustomDescriptors，可通过 Description、LabelMutations 修改元数据与 Label（至少提交一项）；②Version 创建模式：提交且仅提交一种与现有 DescriptorType 匹配的内容输入，可选 VersionName / ChangeLog，禁止 Description / LabelMutations，服务端在 Record 下创建下一个 Revision。取代原 ChangeRegistryRecordStableVersion / RollbackRegistryRecordVersion / Create*RegistryRecordVersion。
+// 更新 Registry Record。两种互斥模式：①Record 更新模式：不提交任何 Source / CustomDescriptors，可通过 Description、LabelMutations 修改元数据与 Label（至少提交一项）；②Version 创建模式：提交且仅提交一种与现有 DescriptorType 匹配的内容输入，可选 VersionName / ChangeLog / SupportedHarnessVersions / Metadata，禁止 Description / LabelMutations，服务端创建下一个 Revision。PLUGIN 使用 FileSource.Type=FILE 上传原始文件；FileSource.Type=VERSION 可为 Skill 或 Plugin 复用同一 Record 下未删除且 READY 的文件版本，填写 SourceVersionId，不复制来源版本的 Metadata 或 SupportedHarnessVersions。Metadata 以 Name/Value 字符串数组传输，所有层级 key 必须小写；两项版本属性省略时分别为空对象和空列表，不继承上一版本。取代原 ChangeRegistryRecordStableVersion / RollbackRegistryRecordVersion / Create*RegistryRecordVersion。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3929,7 +4459,6 @@ func NewUpdateRegistryRecordResponse() (response *UpdateRegistryRecordResponse) 
 //  INVALIDPARAMETERVALUE_SKILLSOURCETYPE = "InvalidParameterValue.SkillSourceType"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_RECORDLABELCOUNT = "LimitExceeded.RecordLabelCount"
-//  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_AGENTSOURCEENDPOINTURL = "MissingParameter.AgentSourceEndpointURL"
 //  MISSINGPARAMETER_MCPSOURCEDESCRIPTORS = "MissingParameter.MCPSourceDescriptors"
 //  MISSINGPARAMETER_RECORDSOURCE = "MissingParameter.RecordSource"
@@ -3945,7 +4474,7 @@ func (c *Client) UpdateRegistryRecord(request *UpdateRegistryRecordRequest) (res
 }
 
 // UpdateRegistryRecord
-// 更新 Registry Record。两种互斥模式：①Record 更新模式：不提交任何 Source / CustomDescriptors，可通过 Description、LabelMutations 修改元数据与 Label（至少提交一项）；②Version 创建模式：提交且仅提交一种与现有 DescriptorType 匹配的内容输入，可选 VersionName / ChangeLog，禁止 Description / LabelMutations，服务端在 Record 下创建下一个 Revision。取代原 ChangeRegistryRecordStableVersion / RollbackRegistryRecordVersion / Create*RegistryRecordVersion。
+// 更新 Registry Record。两种互斥模式：①Record 更新模式：不提交任何 Source / CustomDescriptors，可通过 Description、LabelMutations 修改元数据与 Label（至少提交一项）；②Version 创建模式：提交且仅提交一种与现有 DescriptorType 匹配的内容输入，可选 VersionName / ChangeLog / SupportedHarnessVersions / Metadata，禁止 Description / LabelMutations，服务端创建下一个 Revision。PLUGIN 使用 FileSource.Type=FILE 上传原始文件；FileSource.Type=VERSION 可为 Skill 或 Plugin 复用同一 Record 下未删除且 READY 的文件版本，填写 SourceVersionId，不复制来源版本的 Metadata 或 SupportedHarnessVersions。Metadata 以 Name/Value 字符串数组传输，所有层级 key 必须小写；两项版本属性省略时分别为空对象和空列表，不继承上一版本。取代原 ChangeRegistryRecordStableVersion / RollbackRegistryRecordVersion / Create*RegistryRecordVersion。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3965,7 +4494,6 @@ func (c *Client) UpdateRegistryRecord(request *UpdateRegistryRecordRequest) (res
 //  INVALIDPARAMETERVALUE_SKILLSOURCETYPE = "InvalidParameterValue.SkillSourceType"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_RECORDLABELCOUNT = "LimitExceeded.RecordLabelCount"
-//  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_AGENTSOURCEENDPOINTURL = "MissingParameter.AgentSourceEndpointURL"
 //  MISSINGPARAMETER_MCPSOURCEDESCRIPTORS = "MissingParameter.MCPSourceDescriptors"
 //  MISSINGPARAMETER_RECORDSOURCE = "MissingParameter.RecordSource"
@@ -4023,7 +4551,6 @@ func NewUpdateSandboxInstanceResponse() (response *UpdateSandboxInstanceResponse
 //  INVALIDPARAMETERVALUE_AUTOPAUSENOTALLOWED = "InvalidParameterValue.AutoPauseNotAllowed"
 //  INVALIDPARAMETERVALUE_AUTORESUMENOTALLOWED = "InvalidParameterValue.AutoResumeNotAllowed"
 //  INVALIDPARAMETERVALUE_TIMEOUT = "InvalidParameterValue.Timeout"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_SANDBOXINSTANCE = "ResourceNotFound.SandboxInstance"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -4043,7 +4570,6 @@ func (c *Client) UpdateSandboxInstance(request *UpdateSandboxInstanceRequest) (r
 //  INVALIDPARAMETERVALUE_AUTOPAUSENOTALLOWED = "InvalidParameterValue.AutoPauseNotAllowed"
 //  INVALIDPARAMETERVALUE_AUTORESUMENOTALLOWED = "InvalidParameterValue.AutoResumeNotAllowed"
 //  INVALIDPARAMETERVALUE_TIMEOUT = "InvalidParameterValue.Timeout"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_SANDBOXINSTANCE = "ResourceNotFound.SandboxInstance"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -4094,7 +4620,6 @@ func NewUpdateSandboxToolResponse() (response *UpdateSandboxToolResponse) {
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETERVALUE_SECURITYCONTEXT = "InvalidParameterValue.SecurityContext"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_SANDBOXTOOL = "ResourceNotFound.SandboxTool"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -4112,7 +4637,6 @@ func (c *Client) UpdateSandboxTool(request *UpdateSandboxToolRequest) (response 
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETERVALUE_SECURITYCONTEXT = "InvalidParameterValue.SecurityContext"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_SANDBOXTOOL = "ResourceNotFound.SandboxTool"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
