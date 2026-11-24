@@ -22,12 +22,17 @@
 //      not-found.
 //   3. Read APIs retry with tccommon.ReadRetryTimeout, write APIs with
 //      tccommon.WriteRetryTimeout. ALL retry lives in the service layer.
-//   4. Call ratelimit.Check(request.GetAction()) before the retry loop.
+//   4. Call ratelimit.Check(request.GetAction()) INSIDE the retry closure —
+//      every actual API attempt must consume a token, otherwise a retry
+//      storm bypasses the rate limiter.
 //   5. Failures are logged with the "[CRITAL]" prefix (repo convention,
 //      spelling included) carrying logId / action / request body / reason.
-//   6. "Not found" is reported as (nil, nil): the caller treats a nil result
-//      as not-found instead of an error. Describe methods return the FULL
-//      list, shared by resource reads and data-source queries alike.
+//   6. "Not found" is a STRUCTURAL judgement, never an error-code special
+//      case: list-shaped describe APIs return normally (empty list / no
+//      matching item — the caller's picking decides not-found); singleton
+//      describes (config style) return the shared fwHelper.ErrNotFound
+//      sentinel. Error codes get ZERO second-guessing — retry classification
+//      is tccommon.RetryError's job, everything else surfaces as-is.
 
 package demo // TEMPLATE: the product package name, e.g. cvm, ssm, makers
 
@@ -105,20 +110,20 @@ func (me *DemoService) CreateWidget(ctx context.Context, request *demov20230101.
 }
 
 // TEMPLATE: READ method — the caller (resource read or data source) builds
-// the filter request; this method returns the FULL list + totalCount.
-// Resource reads and data-source queries of the same describe API share
-// THIS ONE method.
+// the filter request; this method returns the FULL list. Resource reads and
+// data-source queries of the same describe API share THIS ONE method.
 //
 // TEMPLATE: pagination — when the SDK request struct carries pagination
 // fields (Offset/Limit or similar), build the for loop below INTO the
 // method with NO caller-side branching: a unique-id filter terminates
 // after the first round, a data-source filter keeps paging until the full
 // set is fetched. When the API has no pagination fields, drop the loop and
-// keep a single retried call. Every API call inside the loop MUST be
-// wrapped in resource.Retry, with ratelimit.Check inside the retry closure
-// and a [DEBUG] success log — this is the repo-standard paging shape
-// (golden source: ListReceiver in tencentcloud/services/cam).
-func (me *DemoService) DescribeWidgets(ctx context.Context, request *demov20230101.DescribeWidgetsRequest) (widgets []*demov20230101.Widget, totalCount int64, err error) {
+// keep a single retried call. The API's TotalCount is an INTERNAL paging
+// detail — never part of the return value. Every API call inside the loop
+// MUST be wrapped in resource.Retry, with ratelimit.Check inside the retry
+// closure and a [DEBUG] success log — this is the repo-standard paging
+// shape (golden source: ListReceiver in tencentcloud/services/cam).
+func (me *DemoService) DescribeWidgets(ctx context.Context, request *demov20230101.DescribeWidgetsRequest) (widgets []*demov20230101.Widget, err error) {
 	var (
 		logId    = tccommon.GetLogId(ctx)
 		response *demov20230101.DescribeWidgetsResponse
@@ -157,9 +162,6 @@ func (me *DemoService) DescribeWidgets(ctx context.Context, request *demov202301
 		}
 
 		widgets = append(widgets, response.Response.WidgetSet...)
-		if response.Response.TotalCount != nil {
-			totalCount = *response.Response.TotalCount
-		}
 
 		if len(response.Response.WidgetSet) < int(limit) {
 			break
@@ -201,9 +203,9 @@ func (me *DemoService) DeleteWidget(ctx context.Context, request *demov20230101.
 // follow the repo-standard resource.Retry polling loop below and reference
 // SDKv2 service files for product-specific terminal status values.
 //
-// The wait takes a `timeout time.Duration` parameter: the caller passes the
-// product's dedicated wait constant from tccommon when one exists (e.g.
-// tccommon.DefaultWaitTimeout), or a sensible default agreed with the user.
+// The wait takes a `timeout time.Duration` parameter: the caller reads it
+// from the user-facing `timeouts` block (plan/state/data.Timeouts.Xxx(ctx,
+// defaultXxxTimeout), see the resource templates) and passes it in.
 //
 // The async query API itself (e.g. GetAsyncStatus) is a normal READ service
 // method as shown above; this helper wraps it in a wait loop. Call it right
@@ -215,9 +217,9 @@ func (me *DemoService) WaitDemoTaskResult(ctx context.Context, taskId string, ti
 	)
 
 	request.TaskId = &taskId
-	// TEMPLATE: prefer a dedicated wait timeout constant from tccommon when
-	// the product has one (e.g. tccommon.DefaultWaitTimeout); fall back to
-	// WriteRetryTimeout otherwise.
+	// TEMPLATE: the timeout comes from the caller — it was read from the
+	// user-facing `timeouts` block in the resource/action code (falling
+	// back to the resource's default constant there).
 	err = resource.Retry(timeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseDemoV20230101Client().GetAsyncStatus(request)

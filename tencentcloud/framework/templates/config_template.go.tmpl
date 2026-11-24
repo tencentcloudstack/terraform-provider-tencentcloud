@@ -1,19 +1,30 @@
 // TEMPLATE: framework CONFIG-resource skeleton — codegen subtype "config"
-// (singleton account-wide configuration). Golden source:
-// tencentcloud/services/cam/resource_tc_cam_update_password_rule_config.go
+// (configuration living on a parent resource, addressed by a locator input).
+// Golden source (SDKv2, same logic):
+// tencentcloud/services/sqlserver/resource_tc_sqlserver_wan_ip_config.go
 //
 // Location: tencentcloud/services/<product>/resource_tc_<name>.go
 // Factory naming: New<Product><Name>Resource.
 //
-// Use this template when the codegen JSON has resource_type = "config":
-//   - the cloud side holds ONE account-wide configuration;
-//   - the state id comes from the JSON's resource_id: either a fixed
-//     constant string (cam-style, when the config has no cloud identifier)
-//     or an SDK response field name whose read value is used as the id;
+// TEMPLATE: this skeleton demonstrates the CODING CONVENTIONS (naming,
+// structure, retry shape, diagnostics, formatting) — every concrete field
+// below is a PLACEHOLDER to be replaced by the real resource's analysis.
+//
+// Use this template when the codegen JSON has resource_type = "config".
+// The essence of config: the API REQUEST parameters carry BOTH the locator
+// of the parent resource (whatever its real name is — InstanceId,
+// ResourceId, DiskId, ... — the JSON resource_id names it) AND the
+// configuration values; the write APIs update the configuration of exactly
+// that locator, and the state id IS the locator input value:
+//   - Create sets the id straight from the locator input — NEVER from a
+//     fixed constant. Golden source (SDKv2, same logic):
+//     tencentcloud/services/sqlserver/resource_tc_sqlserver_wan_ip_config.go
+//     (instance_id + optional ro_group_id; composite locators join with
+//     fwHelper.IdFormat);
 //   - Create and Update share ONE apply path (write via the api.update
 //     write API, then read the configuration back);
 //   - Delete only removes the resource from state; the cloud-side config
-//     stays untouched.
+//     lives and dies with its parent resource.
 
 package demo
 
@@ -42,15 +53,14 @@ var (
 	_ resource.ResourceWithImportState = &DemoWidgetConfigResource{}
 )
 
-// widgetConfigId is the constant state id of this singleton resource: the
-// widget configuration is a single account-wide setting, so there is no
-// cloud-side identifier to model.
-const widgetConfigId = "demo-widget-config"
+// TEMPLATE: the locator attribute from the codegen JSON's resource_id —
+// the value the user supplies there IS the state id. There is no fixed
+// constant id for config resources.
 
-// errWidgetConfigNotFound marks a read response that carries no
-// configuration object. It is reported separately from transport and API
-// failures so the caller can describe the situation precisely.
-var errWidgetConfigNotFound = errors.New("DescribeWidgetConfig returned no configuration")
+// TEMPLATE: "confirmed absent" is signalled with the SHARED sentinel
+// fwHelper.ErrNotFound — the service method returns it when the describe
+// response carries no configuration object; NEVER declare a per-resource
+// errors.New sentinel for this.
 
 // NewDemoWidgetConfigResource is the factory referenced by
 // tencentcloud/framework/registry.go to register this resource.
@@ -62,6 +72,10 @@ func NewDemoWidgetConfigResource() resource.Resource {
 // tencentcloud_demo_widget_config.
 type DemoWidgetConfigResource struct {
 	fw.ResourceWithConfigure
+	// TEMPLATE: fw.WithImportByID is right here because the state id IS
+	// the single locator value — `terraform import ... ins-12345`.
+	// Composite locators need a custom ImportState that splits the id and
+	// sets every segment attribute (see the attachment template).
 	fw.WithImportByID
 }
 
@@ -76,6 +90,7 @@ type DemoWidgetConfigSettingsModel struct {
 // one appears here exactly once.
 type DemoWidgetConfigResourceModel struct {
 	Id         types.String `tfsdk:"id"`
+	InstanceId types.String `tfsdk:"instance_id"`
 	Settings   types.Object `tfsdk:"settings"`
 	UpdateTime types.String `tfsdk:"update_time"`
 	Modifier   types.String `tfsdk:"modifier"`
@@ -99,14 +114,31 @@ func (r *DemoWidgetConfigResource) Metadata(_ context.Context, _ resource.Metada
 
 // Schema declares the widget configuration.
 func (r *DemoWidgetConfigResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	// TEMPLATE: every attribute Description below is a PLACEHOLDER — in
+	// generated code it is the faithful professional EN translation of the
+	// API doc / SDK field description. NO embellishment, NO extra wording,
+	// NO fixing of doc mistakes: stay consistent with the doc even when
+	// the doc is wrong (see conventions.md section 2).
 	resp.Schema = schema.Schema{
-		Description: "Provides a resource to manage the Demo widget configuration. " +
+		Description: "Provides a resource to manage the Demo widget configuration on an instance. " +
 			"Create and update both call the UpdateWidgetConfig API, read calls DescribeWidgetConfig. " +
-			"Destroying this resource only removes it from state; the cloud-side configuration is left unchanged.",
+			"Destroying this resource only removes it from state; the cloud-side configuration lives and dies with its instance.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:    true,
-				Description: "ID of the widget configuration, always `" + widgetConfigId + "` because the widget configuration is a single account-wide setting.",
+				Description: "ID of the widget configuration, same as the locator attribute.",
+			},
+			// TEMPLATE: the LOCATOR attribute named by the codegen JSON's
+			// resource_id (e.g. InstanceId) — Required + RequiresReplace:
+			// moving the configuration to another parent means a new
+			// resource. Composite locators (InstanceId#RoGroupId) declare
+			// one attribute per segment, all Required + RequiresReplace.
+			"instance_id": schema.StringAttribute{
+				Required:    true,
+				Description: "Instance ID the widget configuration belongs to.",
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			// TEMPLATE: model the configuration body as a SingleNestedAttribute;
 			// every leaf Optional+Computed so unset leaves keep cloud values.
@@ -131,6 +163,10 @@ func (r *DemoWidgetConfigResource) Schema(_ context.Context, _ resource.SchemaRe
 					},
 				},
 			},
+			// TEMPLATE: HARD RULE — Computed MINIMALISM. Extra read-back
+			// metadata (update_time/modifier below) is added ONLY on explicit
+			// user request; async task ids are NEVER exposed as Computed
+			// attributes.
 			"update_time": schema.StringAttribute{
 				Computed:    true,
 				Description: "Last modification time of the configuration.",
@@ -152,39 +188,40 @@ func (r *DemoWidgetConfigResource) Create(ctx context.Context, req resource.Crea
 		return
 	}
 
-	service, ok := r.widgetService(&resp.Diagnostics)
-	if !ok {
-		return
-	}
+	// TEMPLATE: the state id comes straight from the LOCATOR input —
+	// never from a fixed constant and never from a create response
+	// (golden source: sqlserver wan_ip_config). Composite locators join
+	// the segments parent-first with fwHelper.IdFormat.
+	instanceId := plan.InstanceId.ValueString()
+	plan.Id = types.StringValue(instanceId)
 
-	// Warn instead of error when the cloud-side config looks like it is
-	// already managed: the config is account-wide, so two configurations
-	// would silently overwrite each other instead of showing up as a plan
-	// diff. TEMPLATE: use whatever signal the describe API exposes that a
-	// real modification happened (non-zero sentinel UpdateTime, non-empty
-	// Modifier, ...); when no such signal exists, drop this check.
-	//
-	// TEMPLATE: read — build the describe request HERE (the singleton
-	// config has no per-resource id, so the request stays empty) and call
-	// the service with (ctx, request). Requests are ALWAYS named after
-	// their API.
+	service := NewDemoService(r.Client())
+
+	// TEMPLATE: warn instead of error when the configuration looks like it
+	// is already managed outside of Terraform: two resource blocks with
+	// the same locator would silently overwrite each other. Use whatever
+	// signal the describe API exposes that a real modification happened
+	// (non-zero sentinel UpdateTime, non-empty Modifier, ...); when no
+	// such signal exists, drop this check entirely.
 	describeWidgetConfigRequest := demov20230101.NewDescribeWidgetConfigRequest()
+	describeWidgetConfigRequest.InstanceId = fwHelper.String(instanceId)
 	current, err := service.DescribeWidgetConfig(ctx, describeWidgetConfigRequest)
-	if err != nil && !errors.Is(err, errWidgetConfigNotFound) {
+	if err != nil && !errors.Is(err, fwHelper.ErrNotFound) {
 		resp.Diagnostics.AddError("Error reading Demo widget config before create", err.Error())
+
 		return
 	}
 
 	if err == nil && widgetConfigTouched(current) {
+		// TEMPLATE: nil-safe deref helpers (StringOrEmpty) and pointer
+		// conversions all live in tencentcloud/framework/helper — add a
+		// missing variant THERE (with unit tests), never locally.
 		resp.Diagnostics.AddWarning(
 			"Existing Demo widget config detected",
-			fmt.Sprintf("The Demo widget config looks like it has already been modified (last modifier %q, last update time %q). "+
-				"Applying this configuration will overwrite it. Run `terraform import %s.example %s` "+
+			fmt.Sprintf("The Demo widget config on instance %s looks like it has already been modified (last modifier %q, last update time %q). "+
+				"Applying this configuration will overwrite it. Run `terraform import tencentcloud_demo_widget_config.example %s` "+
 				"and inspect the plan first if the existing values should be kept.",
-				// TEMPLATE: nil-safe deref helpers (StringOrEmpty) and pointer
-			// conversions all live in tencentcloud/framework/helper — add a
-			// missing variant THERE (with unit tests), never locally.
-			fwHelper.StringOrEmpty(current.Modifier), fwHelper.StringOrEmpty(current.UpdateTime), "tencentcloud_demo_widget_config", widgetConfigId),
+				instanceId, fwHelper.StringOrEmpty(current.Modifier), fwHelper.StringOrEmpty(current.UpdateTime), instanceId),
 		)
 	}
 
@@ -193,7 +230,6 @@ func (r *DemoWidgetConfigResource) Create(ctx context.Context, req resource.Crea
 		return
 	}
 
-	plan.Id = types.StringValue(widgetConfigId)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -205,19 +241,35 @@ func (r *DemoWidgetConfigResource) Read(ctx context.Context, req resource.ReadRe
 		return
 	}
 
-	service, ok := r.widgetService(&resp.Diagnostics)
-	if !ok {
-		return
-	}
+	// TEMPLATE: split the locator back out of the state id. Composite ids
+	// use fwHelper.IdParseErr(state.Id.ValueString(), n) and address the
+	// configuration with every segment.
+	instanceId := state.Id.ValueString()
+
+	service := NewDemoService(r.Client())
 
 	describeWidgetConfigRequest := demov20230101.NewDescribeWidgetConfigRequest()
+	describeWidgetConfigRequest.InstanceId = fwHelper.String(instanceId)
 	params, err := service.DescribeWidgetConfig(ctx, describeWidgetConfigRequest)
 	if err != nil {
+		// "Parent/ configuration gone" => drop from state so Terraform
+		// plans a recreation; transport errors still surface as errors.
+		if errors.Is(err, fwHelper.ErrNotFound) {
+			resp.Diagnostics.AddWarning(
+				"Resource not found",
+				fmt.Sprintf("Demo widget config %s not found, removing from state.", state.Id.ValueString()),
+			)
+
+			resp.State.RemoveResource(ctx)
+			return
+		}
+
 		resp.Diagnostics.AddError("Error reading Demo widget config", err.Error())
+
 		return
 	}
 
-	state.Id = types.StringValue(widgetConfigId)
+	state.InstanceId = types.StringValue(instanceId)
 	state.UpdateTime = fwHelper.StringPointerValueOrNull(params.UpdateTime)
 	state.Modifier = fwHelper.StringPointerValueOrNull(params.Modifier)
 	state.Settings = flattenWidgetSettings(ctx, params.Settings, state.Settings, &resp.Diagnostics)
@@ -237,44 +289,37 @@ func (r *DemoWidgetConfigResource) Update(ctx context.Context, req resource.Upda
 		return
 	}
 
-	service, ok := r.widgetService(&resp.Diagnostics)
-	if !ok {
+	var state DemoWidgetConfigResourceModel
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+	if resp.Diagnostics.HasError() {
 		return
 	}
+
+	// The locator is RequiresReplace, so the id can never change here.
+	plan.Id = state.Id
+
+	service := NewDemoService(r.Client())
 
 	r.applyWidgetConfig(ctx, service, &plan, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	plan.Id = types.StringValue(widgetConfigId)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
-// Delete is required by the resource.Resource interface. The widget
-// configuration is an account-wide setting that always exists, so destroying
-// the resource only removes it from state and leaves the cloud-side config
-// unchanged.
+// Delete is required by the resource.Resource interface. The configuration
+// lives on its parent resource, so destroying the config resource only
+// removes it from state — the cloud-side configuration dies with its parent
+// (golden source: sqlserver wan_ip_config's no-op Delete).
 func (r *DemoWidgetConfigResource) Delete(_ context.Context, _ resource.DeleteRequest, _ *resource.DeleteResponse) {
 	return
 }
 
-// widgetService returns the product service bound to the shared client.
-// When the provider has not been configured it records a diagnostic and
-// reports false, so the lifecycle callbacks never dereference a nil SDK
-// client.
-func (r *DemoWidgetConfigResource) widgetService(diags *diag.Diagnostics) (DemoService, bool) {
-	if r.Client() == nil {
-		diags.AddError(
-			"Provider not configured",
-			"The provider client is not available. This is unexpected; please report it.",
-		)
-
-		return DemoService{}, false
-	}
-
-	return NewDemoService(r.Client()), true
-}
+// TEMPLATE: the service is constructed directly in each lifecycle method
+// (NewDemoService(r.Client())) — the official framework pattern: the client
+// is injected by Configure (fw.ResourceWithConfigure handles the nil
+// ProviderData guard there), lifecycle methods simply use it.
 
 // applyWidgetConfig writes the planned settings through the write API and
 // then reads the configuration back, so every Optional+Computed value is
@@ -285,7 +330,10 @@ func (r *DemoWidgetConfigResource) widgetService(diags *diag.Diagnostics) (DemoS
 //
 // TEMPLATE: async write API — when the create entry carries a non-empty
 // async_info, wait for the task inside the service layer's write method
-// (service_template.go.tmpl) BEFORE the read-back below.
+// (service_template.go.tmpl) BEFORE the read-back below. Declare the
+// user-facing `timeouts` block (resourcetimeouts, create/update stages,
+// see the general template) and thread the timeout from
+// plan.Timeouts.Create/Update(ctx, defaultXxxTimeout) into the wait.
 func (r *DemoWidgetConfigResource) applyWidgetConfig(ctx context.Context, service DemoService, plan *DemoWidgetConfigResourceModel, diags *diag.Diagnostics) {
 	settings := expandWidgetSettings(ctx, plan.Settings, diags)
 	if diags.HasError() {
@@ -295,8 +343,9 @@ func (r *DemoWidgetConfigResource) applyWidgetConfig(ctx context.Context, servic
 	// TEMPLATE: update form — the resource file aggregates the settings
 	// into the SDK request; the service only receives (ctx, request).
 	// Requests are ALWAYS named after their API (never request1/2 or
-	// plain request).
+	// plain request). Every write/read request carries the locator.
 	updateWidgetConfigRequest := demov20230101.NewUpdateWidgetConfigRequest()
+	updateWidgetConfigRequest.InstanceId = fwHelper.String(plan.InstanceId.ValueString())
 	updateWidgetConfigRequest.Settings = settings
 	if err := service.UpdateWidgetConfig(ctx, updateWidgetConfigRequest); err != nil {
 		diags.AddError("Error updating Demo widget config", err.Error())
@@ -304,6 +353,7 @@ func (r *DemoWidgetConfigResource) applyWidgetConfig(ctx context.Context, servic
 	}
 
 	describeWidgetConfigRequest := demov20230101.NewDescribeWidgetConfigRequest()
+	describeWidgetConfigRequest.InstanceId = fwHelper.String(plan.InstanceId.ValueString())
 	params, err := service.DescribeWidgetConfig(ctx, describeWidgetConfigRequest)
 	if err != nil {
 		diags.AddError("Error reading Demo widget config after update", err.Error())
@@ -315,7 +365,8 @@ func (r *DemoWidgetConfigResource) applyWidgetConfig(ctx context.Context, servic
 		return
 	}
 
-	plan.Id = types.StringValue(widgetConfigId)
+	// The id is the locator input — set once in Create, carried through
+	// Update from state; this apply helper never touches it.
 	plan.Settings = observed
 	plan.UpdateTime = fwHelper.StringPointerValueOrNull(params.UpdateTime)
 	plan.Modifier = fwHelper.StringPointerValueOrNull(params.Modifier)

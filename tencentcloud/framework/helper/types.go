@@ -14,8 +14,27 @@
 package helper
 
 import (
+	"context"
+
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
+
+// ListFromStrings builds a types.List of string elements from the given
+// plain Go string slice (the common data-source output shape: a flat list
+// of names/ids). An empty slice yields an EMPTY list (not null), matching
+// the "empty result is a legitimate empty list" data-source semantics.
+// Conversion diagnostics are appended to diags.
+func ListFromStrings(ctx context.Context, values []string, diags *diag.Diagnostics) types.List {
+	if values == nil {
+		values = []string{}
+	}
+
+	list, listDiags := types.ListValueFrom(ctx, types.StringType, values)
+	diags.Append(listDiags...)
+
+	return list
+}
 
 // StringValueOrNull safely converts a Go string to the framework's
 // types.String:

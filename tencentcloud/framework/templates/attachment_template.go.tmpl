@@ -78,6 +78,11 @@ func (r *DemoWidgetAttachmentResource) Metadata(_ context.Context, _ resource.Me
 }
 
 func (r *DemoWidgetAttachmentResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	// TEMPLATE: every attribute Description below is a PLACEHOLDER — in
+	// generated code it is the faithful professional EN translation of the
+	// API doc / SDK field description. NO embellishment, NO extra wording,
+	// NO fixing of doc mistakes: stay consistent with the doc even when
+	// the doc is wrong (see conventions.md section 2).
 	resp.Schema = schema.Schema{
 		Description: "Provides a resource to attach a Demo widget to a gadget.",
 		Attributes: map[string]schema.Attribute{
@@ -111,6 +116,11 @@ func (r *DemoWidgetAttachmentResource) Schema(_ context.Context, _ resource.Sche
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
+			// TEMPLATE: HARD RULE — Computed MINIMALISM. The DEFAULT Computed
+			// attribute set is ONLY the resource id. Extra read-back fields
+			// (bound_at/bound_status below) are added ONLY on explicit user
+			// request; async task ids (FlowId/TaskId from bind/unbind APIs)
+			// are NEVER exposed as Computed attributes.
 			"bound_at": schema.StringAttribute{
 				Computed:    true,
 				Description: "Time when the widget was bound.",
@@ -155,16 +165,11 @@ func (r *DemoWidgetAttachmentResource) Create(ctx context.Context, req resource.
 		attachWidgetRequest.BindMode = plan.BindMode.ValueStringPointer()
 	}
 
-	if r.Client() == nil {
-		resp.Diagnostics.AddError(
-			"Provider not configured",
-			"The provider client is not available. This is unexpected; please report it.",
-		)
-
-		return
-	}
-
+	// TEMPLATE: the service is ALWAYS obtained through the guarded
+	// constructor from the service file — resource code never constructs
+	// it directly and never re-implements the nil-client guard.
 	service := NewDemoService(r.Client())
+
 	if err := service.AttachWidget(ctx, attachWidgetRequest); err != nil {
 		resp.Diagnostics.AddError(
 			"Error attaching Demo widget",
@@ -176,7 +181,10 @@ func (r *DemoWidgetAttachmentResource) Create(ctx context.Context, req resource.
 
 	// TEMPLATE: async bind — when the create entry carries a non-empty
 	// async_info, the service method returns a task id; wait for it BEFORE
-	// the read-back (service_template.go.tmpl wait method).
+	// the read-back (service_template.go.tmpl wait method). Declare the
+	// user-facing `timeouts` block (resourcetimeouts, create/delete stages,
+	// see the general template) and thread the timeout from
+	// plan.Timeouts.Create/Delete(ctx, defaultXxxTimeout) into the wait.
 	//
 	// TEMPLATE: composite id — exactly the segments the unbind/describe
 	// APIs address, joined parent-first (largest to smallest, matching the
@@ -197,7 +205,7 @@ func (r *DemoWidgetAttachmentResource) Create(ctx context.Context, req resource.
 	// own binding from the response.
 	describeGadgetsRequest := demov20230101.NewDescribeGadgetsRequest()
 	describeGadgetsRequest.GadgetIds = []*string{fwHelper.String(gadgetId)}
-	gadgets, _, err := service.DescribeGadgets(ctx, describeGadgetsRequest)
+	gadgets, err := service.DescribeGadgets(ctx, describeGadgetsRequest)
 	if err != nil {
 		resp.Diagnostics.AddError("Error reading Demo widget attachment after create", err.Error())
 		return
@@ -242,7 +250,8 @@ func (r *DemoWidgetAttachmentResource) Read(ctx context.Context, req resource.Re
 	describeGadgetsRequest.GadgetIds = []*string{fwHelper.String(gadgetId)}
 
 	service := NewDemoService(r.Client())
-	gadgets, _, err := service.DescribeGadgets(ctx, describeGadgetsRequest)
+
+	gadgets, err := service.DescribeGadgets(ctx, describeGadgetsRequest)
 	if err != nil {
 		resp.Diagnostics.AddError("Error reading Demo widget attachment", err.Error())
 		return
@@ -302,10 +311,12 @@ func (r *DemoWidgetAttachmentResource) Delete(ctx context.Context, req resource.
 	detachWidgetRequest.WidgetId = fwHelper.String(widgetId)
 
 	service := NewDemoService(r.Client())
+
 	if err := service.DetachWidget(ctx, detachWidgetRequest); err != nil {
-		// TEMPLATE: when the unbind API documents "not bound" error codes,
-		// treat them as delete success for idempotency — swallow them in
-		// the service layer.
+		// TEMPLATE: error codes get ZERO second-guessing in generated code —
+		// retry classification is handled by tccommon.RetryError, everything
+		// else surfaces as-is. "not bound" idempotency special-casing is a
+		// human-maintained follow-up, never generated.
 		resp.Diagnostics.AddError(
 			"Error detaching Demo widget",
 			fmt.Sprintf("DetachWidget failed: %v", err),
@@ -333,7 +344,7 @@ func (r *DemoWidgetAttachmentResource) ImportState(ctx context.Context, req reso
 
 // refreshDemoWidgetAttachmentModel copies cloud-owned fields into the model
 // while keeping the user-supplied values for fields the cloud API does not
-// echo back (fw.OverwriteString keeps the previous value on nil).
+// echo back (fwHelper.StringValueOrPrev keeps the previous value on nil).
 func refreshDemoWidgetAttachmentModel(ctx context.Context, m *DemoWidgetAttachmentResourceModel, item *demov20230101.WidgetBinding) diag.Diagnostics {
 	if item == nil {
 		return nil
@@ -366,6 +377,13 @@ func normalizeDemoWidgetAttachmentComputedUnknowns(m *DemoWidgetAttachmentResour
 // findDemoWidgetBinding picks this attachment's own binding entry from the
 // parent-level describe response. Business-side picking belongs to the
 // resource file — the service layer only returns the raw list.
+//
+// TEMPLATE: this picking helper is the demo for the LIST-QUERY shape —
+// the describe API answers with a parent-level list and the exact binding
+// must be found by traversal. When the product's describe API supports
+// EXACT lookup (returns the single addressed item directly), DROP this
+// helper and use the returned item straight away — picking is not a
+// mandatory pattern, it follows the real API shape.
 func findDemoWidgetBinding(gadgets []*demov20230101.Gadget, gadgetId string, widgetId string) *demov20230101.WidgetBinding {
 	for _, g := range gadgets {
 		if g.GadgetId == nil || *g.GadgetId != gadgetId {

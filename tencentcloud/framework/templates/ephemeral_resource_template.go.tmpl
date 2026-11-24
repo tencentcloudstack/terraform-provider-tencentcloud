@@ -57,6 +57,11 @@ func (e *DemoTempCredentialEphemeralResource) Metadata(_ context.Context, _ ephe
 }
 
 func (e *DemoTempCredentialEphemeralResource) Schema(_ context.Context, _ ephemeral.SchemaRequest, resp *ephemeral.SchemaResponse) {
+	// TEMPLATE: every attribute Description below is a PLACEHOLDER — in
+	// generated code it is the faithful professional EN translation of the
+	// API doc / SDK field description. NO embellishment, NO extra wording,
+	// NO fixing of doc mistakes: stay consistent with the doc even when
+	// the doc is wrong (see conventions.md section 2).
 	resp.Schema = schema.Schema{
 		Description: "Retrieves a temporary credential for a Demo widget. " +
 			"The value is not persisted in state and expires after use.",
@@ -98,15 +103,6 @@ func (e *DemoTempCredentialEphemeralResource) Open(ctx context.Context, req ephe
 		return
 	}
 
-	if e.Client() == nil {
-		resp.Diagnostics.AddError(
-			"Provider not configured",
-			"The provider client is not available. This is unexpected; please report it.",
-		)
-
-		return
-	}
-
 	// TEMPLATE: read — build the request HERE (lookup id -> request), call
 	// the service with (ctx, request); the returned values MUST be set into
 	// the result model below. Requests are ALWAYS named after their API.
@@ -114,6 +110,7 @@ func (e *DemoTempCredentialEphemeralResource) Open(ctx context.Context, req ephe
 	describeTempCredentialRequest.WidgetId = fwHelper.String(widgetId)
 
 	service := NewDemoService(e.Client())
+
 	token, expiredAt, err := service.DescribeTempCredential(ctx, describeTempCredentialRequest)
 	if err != nil {
 		// TEMPLATE: distinguish confirmed not-found from transport errors so

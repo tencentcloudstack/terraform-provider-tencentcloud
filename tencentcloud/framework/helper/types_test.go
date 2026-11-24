@@ -1,8 +1,10 @@
 package helper
 
 import (
+	"context"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
@@ -272,4 +274,51 @@ func TestStringOrEmpty(t *testing.T) {
 	if got := StringOrEmpty(String("x")); got != "x" {
 		t.Fatalf("got %q, want %q", got, "x")
 	}
+}
+
+func TestListFromStrings(t *testing.T) {
+	ctx := context.Background()
+
+	t.Run("values become a string list", func(t *testing.T) {
+		var diags diag.Diagnostics
+		got := ListFromStrings(ctx, []string{"a", "b"}, &diags)
+		if diags.HasError() {
+			t.Fatalf("unexpected diagnostics: %v", diags)
+		}
+		if got.IsNull() {
+			t.Fatal("list must not be null")
+		}
+		var out []string
+		if d := got.ElementsAs(ctx, &out, false); d.HasError() {
+			t.Fatalf("unexpected diagnostics: %v", d)
+		}
+		if len(out) != 2 || out[0] != "a" || out[1] != "b" {
+			t.Fatalf("got %v, want [a b]", out)
+		}
+	})
+
+	t.Run("empty slice yields an empty list, not null", func(t *testing.T) {
+		var diags diag.Diagnostics
+		got := ListFromStrings(ctx, []string{}, &diags)
+		if diags.HasError() {
+			t.Fatalf("unexpected diagnostics: %v", diags)
+		}
+		if got.IsNull() {
+			t.Fatal("empty slice must produce an EMPTY list, not null")
+		}
+		if len(got.Elements()) != 0 {
+			t.Fatalf("got %d elements, want 0", len(got.Elements()))
+		}
+	})
+
+	t.Run("nil slice yields an empty list, not null", func(t *testing.T) {
+		var diags diag.Diagnostics
+		got := ListFromStrings(ctx, nil, &diags)
+		if diags.HasError() {
+			t.Fatalf("unexpected diagnostics: %v", diags)
+		}
+		if got.IsNull() {
+			t.Fatal("nil slice must produce an EMPTY list, not null")
+		}
+	})
 }

@@ -9,6 +9,14 @@ import (
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
+// ErrNotFound is the shared sentinel error a service method returns when the
+// cloud side CONFIRMS the addressed target does not exist (a singleton
+// describe API answered with no configuration object, for example).
+// Lifecycle code distinguishes "confirmed absent" from transport/API
+// failures with errors.Is(err, ErrNotFound) — resources NEVER declare their
+// own per-file sentinel for this.
+var ErrNotFound = errors.New("not found")
+
 // WrapSDKError translates an arbitrary error into a structured framework
 // diag.Diagnostic.
 //

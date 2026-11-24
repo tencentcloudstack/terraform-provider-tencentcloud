@@ -21,8 +21,10 @@ from picking them up.
 | `config_template.go.tmpl` | `config` | Singleton account-wide configuration: fixed constant id, Create/Update share one apply path, no-op Delete, pre-write existence warning. |
 | `attachment_template.go.tmpl` | `attachment` | Bind/unbind relation: bind APIs in create, unbind APIs in delete, composite `parent#child` id, no-op Update (force-recreate). |
 | `datasource_template.go.tmpl` | `datasource` | Query data source: query inputs + computed list outputs. |
+| `datasource_test_template.go.tmpl` | `datasource` | Unit test (gomonkey): tftypes raw config + ReadRequest stubs + service pagination test. |
 | `action_template.go.tmpl` | `action` | One-shot operation: Invoke, stateless. |
 | `ephemeral_resource_template.go.tmpl` | `ephemeral_resource` | Ephemeral resource: Open (from `api.read`), sensitive values, optional Close. |
+| `resource_test_template.go.tmpl` | `general` (+ other resource subtypes) | Unit test (gomonkey): tfsdk plan/state helpers + full CRUD case matrix. |
 | `sibling_md_template.md` | (shared by all) | Format of the mandatory sibling `<stem>.md` file consumed by `make doc`. |
 
 One template per codegen `resource_type` — the file names match the six

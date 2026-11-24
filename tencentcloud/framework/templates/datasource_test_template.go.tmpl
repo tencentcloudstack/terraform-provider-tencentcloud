@@ -1,0 +1,362 @@
+// TEMPLATE: framework data-source UNIT TEST skeleton (gomonkey stubbed
+// style — no real cloud credentials, no TF_ACC).
+// Golden source: tencentcloud/services/makers/data_source_tc_makers_deployments_test.go
+//
+// Location: tencentcloud/services/<product>/data_source_tc_<name>_test.go
+// Package:  external test package <product>_test, importing the service
+//           package as sv<product>.
+//
+// Run command (the -gcflags disable inlining, which gomonkey needs):
+//   go test ./tencentcloud/services/<product>/ -run "Test<Name>" -v -count=1 -gcflags="all=-l"
+//
+// Key shape (differs from the resource test template!):
+//   - config is built as a RAW tftypes.Value mirroring every schema
+//     attribute (unset attributes get nil values), not a tfsdk model;
+//   - req.Config.Raw / req.Config.Schema drive ReadRequest;
+//   - resp.State.Schema is set so State.Set reflects into a raw value.
+//
+// Stubbing mode (MANDATORY): the versioned client accessor + the SDK client
+// method are stubbed in TWO levels — the service method itself is NEVER
+// patched (patching service methods SIGBUS-crashes on darwin/arm64, and
+// client-level stubbing lets the real service logic run under test). Stub
+// signatures follow the SDK client methods (the NON-context flavour when the
+// service calls client.Xxx(req)).
+
+package demo_test // TEMPLATE: <product>_test
+
+import (
+	"context"
+	"fmt"
+	"testing"
+
+	"github.com/agiledragon/gomonkey/v2"
+	"github.com/hashicorp/terraform-plugin-framework/datasource"
+	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-go/tftypes"
+	"github.com/stretchr/testify/assert"
+
+	demov20230101 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/demo/v20230101"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/sharedmeta"
+	svdemo "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/demo"
+)
+
+func ptrStrDemo(s string) *string { return &s }
+func ptrInt64Demo(v int64) *int64 { return &v }
+
+// TEMPLATE: keep one ptr helper per type actually used by the fake data.
+
+// demoWidgetsSchema returns the framework data source schema used to build
+// the raw config/state value.
+func demoWidgetsSchema(t *testing.T) schema.Schema {
+	d := svdemo.NewDemoWidgetsDataSource()
+	resp := &datasource.SchemaResponse{}
+	d.Schema(context.Background(), datasource.SchemaRequest{}, resp)
+	if resp.Diagnostics.HasError() {
+		t.Fatalf("failed to build data source schema: %v", resp.Diagnostics)
+	}
+
+	return resp.Schema
+}
+
+// demoWidgetsRootType builds the tftypes.Object type for the data source
+// root, mirroring every schema attribute.
+// TEMPLATE: every attribute of the generated schema MUST appear here with
+// its tftypes counterpart (String -> tftypes.String, Int64 -> tftypes.Number,
+// Bool -> tftypes.Bool, list -> tftypes.List, nested object -> tftypes.Object).
+func demoWidgetsRootType() tftypes.Object {
+	return tftypes.Object{
+		AttributeTypes: map[string]tftypes.Type{
+			"id":         tftypes.String,
+			"name":       tftypes.String,
+			"widget_ids": tftypes.List{ElementType: tftypes.String},
+			"widget_set": tftypes.List{ElementType: demoWidgetItemType()},
+		},
+	}
+}
+
+// demoWidgetItemType builds the tftypes.Object type for a widget_set element.
+func demoWidgetItemType() tftypes.Object {
+	return tftypes.Object{
+		AttributeTypes: map[string]tftypes.Type{
+			"widget_id": tftypes.String,
+			"name":      tftypes.String,
+			"status":    tftypes.String,
+			"create_on": tftypes.String,
+		},
+	}
+}
+
+// buildDemoWidgetsRawValue builds the raw config value with the given query
+// inputs; every other attribute is unset (nil).
+func buildDemoWidgetsRawValue(name string) tftypes.Value {
+	attrs := map[string]tftypes.Value{
+		"id":         tftypes.NewValue(tftypes.String, nil),
+		"name":       tftypes.NewValue(tftypes.String, name),
+		"widget_ids": tftypes.NewValue(tftypes.List{ElementType: tftypes.String}, nil),
+		"widget_set": tftypes.NewValue(tftypes.List{ElementType: demoWidgetItemType()}, nil),
+	}
+
+	return tftypes.NewValue(demoWidgetsRootType(), attrs)
+}
+
+// setDemoWidgetsClient injects a mock connectivity client into the data
+// source instance via the Configure method.
+func setDemoWidgetsClient(d *svdemo.DemoWidgetsDataSource, client *connectivity.TencentCloudClient) {
+	meta := &sharedmeta.ProviderMeta{Client: client}
+	configureReq := datasource.ConfigureRequest{ProviderData: meta}
+	configureResp := &datasource.ConfigureResponse{}
+	d.Configure(context.Background(), configureReq, configureResp)
+}
+
+func newDemoWidgetsReadRequest(sch schema.Schema, raw tftypes.Value) datasource.ReadRequest {
+	req := datasource.ReadRequest{}
+	req.Config.Raw = raw
+	req.Config.Schema = sch
+
+	return req
+}
+
+func newDemoWidgetsReadResponse(sch schema.Schema) *datasource.ReadResponse {
+	resp := &datasource.ReadResponse{}
+	resp.State.Schema = sch
+
+	return resp
+}
+
+// TestDemoWidgets_MetadataAndSchema validates metadata and schema definition.
+func TestDemoWidgets_MetadataAndSchema(t *testing.T) {
+	d := svdemo.NewDemoWidgetsDataSource()
+
+	metaResp := &datasource.MetadataResponse{}
+	d.Metadata(context.Background(), datasource.MetadataRequest{}, metaResp)
+	assert.Equal(t, "tencentcloud_demo_widgets", metaResp.TypeName)
+
+	sch := demoWidgetsSchema(t)
+	attrs := sch.Attributes
+
+	// TEMPLATE: assert Required / Optional / Computed for every input and
+	// output attribute, and the nested leaf attributes.
+	assert.True(t, attrs["name"].(schema.StringAttribute).Optional)
+	assert.True(t, attrs["widget_ids"].(schema.ListAttribute).Optional)
+	assert.True(t, attrs["widget_set"].(schema.ListNestedAttribute).Computed)
+
+	// TEMPLATE: paging knobs and total-count aggregates are NEVER exposed.
+	assert.NotContains(t, attrs, "limit")
+	assert.NotContains(t, attrs, "offset")
+	assert.NotContains(t, attrs, "total_count")
+}
+
+// TestDemoWidgets_ReadBasic tests a successful read with one record and
+// asserts every leaf field is read back.
+func TestDemoWidgets_ReadBasic(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	client := &connectivity.TencentCloudClient{}
+	demoClient := &demov20230101.Client{}
+	patches.ApplyMethodReturn(client, "UseDemoV20230101Client", demoClient)
+	// TEMPLATE: stub signatures follow the SDK client methods (the NON-context
+	// flavour when the service calls client.DescribeWidgets(req)) — the service
+	// method itself is NEVER patched (darwin/arm64 SIGBUS); the two-level
+	// client stubbing lets the real service logic (paging, retry) run under
+	// test.
+	patches.ApplyMethodFunc(demoClient, "DescribeWidgets", func(request *demov20230101.DescribeWidgetsRequest) (*demov20230101.DescribeWidgetsResponse, error) {
+		if request.Name == nil || *request.Name != "tf-test" {
+			t.Errorf("expected name to be passed to the API request")
+		}
+
+		return &demov20230101.DescribeWidgetsResponse{Response: &demov20230101.DescribeWidgetsResponseParams{
+			WidgetSet: []*demov20230101.Widget{
+				{
+					WidgetId: ptrStrDemo("widget-12345"),
+					Name:     ptrStrDemo("tf-test"),
+					Status:   ptrStrDemo("Running"),
+					CreateOn: ptrStrDemo("2024-01-01 00:00:00"),
+				},
+			},
+			RequestId: ptrStrDemo("fake-request-id"),
+		}}, nil
+	})
+
+	ds := svdemo.NewDemoWidgetsDataSource().(*svdemo.DemoWidgetsDataSource)
+	setDemoWidgetsClient(ds, client)
+
+	sch := demoWidgetsSchema(t)
+	raw := buildDemoWidgetsRawValue("tf-test")
+	req := newDemoWidgetsReadRequest(sch, raw)
+	resp := newDemoWidgetsReadResponse(sch)
+
+	ds.Read(context.Background(), req, resp)
+
+	assert.False(t, resp.Diagnostics.HasError(), "expected no error diagnostics, got: %v", resp.Diagnostics)
+
+	var result svdemo.DemoWidgetsDataSourceModel
+	resp.Diagnostics.Append(resp.State.Get(context.Background(), &result)...)
+	assert.False(t, resp.Diagnostics.HasError())
+
+	// TEMPLATE: assert the state id is a random token.
+	assert.NotEmpty(t, result.Id.ValueString())
+
+	assert.False(t, result.WidgetSet.IsNull())
+
+	var items []svdemo.DemoWidgetItemModel
+	resp.Diagnostics.Append(result.WidgetSet.ElementsAs(context.Background(), &items, false)...)
+	assert.False(t, resp.Diagnostics.HasError())
+	assert.Len(t, items, 1)
+
+	// TEMPLATE: assert every leaf field.
+	assert.Equal(t, "widget-12345", items[0].WidgetId.ValueString())
+	assert.Equal(t, "tf-test", items[0].Name.ValueString())
+	assert.Equal(t, "Running", items[0].Status.ValueString())
+	assert.Equal(t, "2024-01-01 00:00:00", items[0].CreateOn.ValueString())
+}
+
+// TestDemoWidgets_ReadEmpty covers an empty result: a legitimate answer, not
+// a failure — the data source must succeed with an empty list.
+func TestDemoWidgets_ReadEmpty(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	client := &connectivity.TencentCloudClient{}
+	demoClient := &demov20230101.Client{}
+	patches.ApplyMethodReturn(client, "UseDemoV20230101Client", demoClient)
+	patches.ApplyMethodFunc(demoClient, "DescribeWidgets", func(request *demov20230101.DescribeWidgetsRequest) (*demov20230101.DescribeWidgetsResponse, error) {
+		return &demov20230101.DescribeWidgetsResponse{Response: &demov20230101.DescribeWidgetsResponseParams{}}, nil
+	})
+
+	ds := svdemo.NewDemoWidgetsDataSource().(*svdemo.DemoWidgetsDataSource)
+	setDemoWidgetsClient(ds, client)
+
+	sch := demoWidgetsSchema(t)
+	raw := buildDemoWidgetsRawValue("tf-empty")
+	req := newDemoWidgetsReadRequest(sch, raw)
+	resp := newDemoWidgetsReadResponse(sch)
+
+	ds.Read(context.Background(), req, resp)
+
+	assert.False(t, resp.Diagnostics.HasError(), "expected no error diagnostics, got: %v", resp.Diagnostics)
+
+	var result svdemo.DemoWidgetsDataSourceModel
+	resp.Diagnostics.Append(resp.State.Get(context.Background(), &result)...)
+	assert.False(t, resp.Diagnostics.HasError())
+
+	assert.False(t, result.WidgetSet.IsNull())
+
+	var items []svdemo.DemoWidgetItemModel
+	resp.Diagnostics.Append(result.WidgetSet.ElementsAs(context.Background(), &items, false)...)
+	assert.False(t, resp.Diagnostics.HasError())
+	assert.Len(t, items, 0)
+}
+
+// TestDemoWidgets_ReadApiError covers an API-level failure: the error must
+// surface through diagnostics instead of silently persisting empty state.
+func TestDemoWidgets_ReadApiError(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	client := &connectivity.TencentCloudClient{}
+	demoClient := &demov20230101.Client{}
+	patches.ApplyMethodReturn(client, "UseDemoV20230101Client", demoClient)
+	patches.ApplyMethodFunc(demoClient, "DescribeWidgets", func(request *demov20230101.DescribeWidgetsRequest) (*demov20230101.DescribeWidgetsResponse, error) {
+		return nil, fmt.Errorf("mocked API error")
+	})
+
+	ds := svdemo.NewDemoWidgetsDataSource().(*svdemo.DemoWidgetsDataSource)
+	setDemoWidgetsClient(ds, client)
+
+	sch := demoWidgetsSchema(t)
+	raw := buildDemoWidgetsRawValue("tf-test")
+	req := newDemoWidgetsReadRequest(sch, raw)
+	resp := newDemoWidgetsReadResponse(sch)
+
+	ds.Read(context.Background(), req, resp)
+
+	assert.True(t, resp.Diagnostics.HasError(), "expected error diagnostics for API failure")
+}
+
+// TestDemoWidgetsService_ReadAllPages verifies that the service layer loops
+// through every page with the fixed page size and returns the complete set
+// (the total count stays internal). Generate this test ONLY when the
+// describe API pages (the service method carries the internal for loop).
+func TestDemoWidgetsService_ReadAllPages(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	client := &connectivity.TencentCloudClient{}
+	demoClient := &demov20230101.Client{}
+	patches.ApplyMethodReturn(client, "UseDemoV20230101Client", demoClient)
+
+	callCount := 0
+	// TEMPLATE: stub the SDK client method the service layer calls — the
+	// NON-context flavour when the service calls client.DescribeWidgets(req).
+	patches.ApplyMethodFunc(demoClient, "DescribeWidgets", func(request *demov20230101.DescribeWidgetsRequest) (*demov20230101.DescribeWidgetsResponse, error) {
+		callCount++
+		// The service must drive pagination itself with the page size 100.
+		if request.Limit == nil || *request.Limit != 100 {
+			t.Errorf("expected Limit 100 on call %d, got %v", callCount, request.Limit)
+		}
+		var offset int64
+		if request.Offset != nil {
+			offset = *request.Offset
+		}
+		switch callCount {
+		case 1:
+			if offset != 0 {
+				t.Errorf("expected offset 0 on first call, got %d", offset)
+			}
+			widgets := make([]*demov20230101.Widget, 0, 100)
+			for i := 0; i < 100; i++ {
+				widgets = append(widgets, &demov20230101.Widget{
+					WidgetId: ptrStrDemo(fmt.Sprintf("widget-page1-%d", i)),
+					Status:   ptrStrDemo("Running"),
+				})
+			}
+
+			return &demov20230101.DescribeWidgetsResponse{Response: &demov20230101.DescribeWidgetsResponseParams{
+				TotalCount: ptrInt64Demo(101),
+				WidgetSet:  widgets,
+				RequestId:  ptrStrDemo("fake-request-id"),
+			}}, nil
+		case 2:
+			if offset != 100 {
+				t.Errorf("expected offset 100 on second call, got %d", offset)
+			}
+
+			return &demov20230101.DescribeWidgetsResponse{Response: &demov20230101.DescribeWidgetsResponseParams{
+				TotalCount: ptrInt64Demo(101),
+				WidgetSet: []*demov20230101.Widget{
+					{WidgetId: ptrStrDemo("widget-page2-0"), Status: ptrStrDemo("Failed")},
+				},
+				RequestId: ptrStrDemo("fake-request-id"),
+			}}, nil
+		default:
+			t.Errorf("unexpected extra API call %d", callCount)
+
+			return &demov20230101.DescribeWidgetsResponse{}, nil
+		}
+	})
+
+	service := svdemo.NewDemoService(client)
+	describeWidgetsRequest := demov20230101.NewDescribeWidgetsRequest()
+	describeWidgetsRequest.Name = ptrStrDemo("tf-test")
+
+	widgets, err := service.DescribeWidgets(context.Background(), describeWidgetsRequest)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if callCount != 2 {
+		t.Errorf("expected 2 API calls, got %d", callCount)
+	}
+	if len(widgets) != 101 {
+		t.Fatalf("expected 101 widgets across pages, got %d", len(widgets))
+	}
+	if widgets[0].WidgetId == nil || *widgets[0].WidgetId != "widget-page1-0" {
+		t.Errorf("unexpected first widget id: %v", widgets[0].WidgetId)
+	}
+	if widgets[100].WidgetId == nil || *widgets[100].WidgetId != "widget-page2-0" {
+		t.Errorf("unexpected last widget id: %v", widgets[100].WidgetId)
+	}
+}
