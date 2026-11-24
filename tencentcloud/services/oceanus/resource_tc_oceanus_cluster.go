@@ -458,8 +458,8 @@ func (r *OceanusClusterResource) describeCluster(ctx context.Context, clusterId 
 // status 2 (running).
 func (r *OceanusClusterResource) waitForClusterReady(ctx context.Context, clusterId string) error {
 	stateConf := &sdkresource.StateChangeConf{
-		Pending:    []string{"INITIALIZING"},
-		Target:     []string{"RUNNING"},
+		Pending: []string{"INITIALIZING"},
+		Target:  []string{"RUNNING"},
 		Refresh: func() (interface{}, string, error) {
 			cluster, err := r.describeCluster(ctx, clusterId)
 			if err != nil {
@@ -491,8 +491,8 @@ func (r *OceanusClusterResource) waitForClusterReady(ctx context.Context, cluste
 // waitForClusterDeleted polls DescribeClusters until the cluster disappears.
 func (r *OceanusClusterResource) waitForClusterDeleted(ctx context.Context, clusterId string) error {
 	stateConf := &sdkresource.StateChangeConf{
-		Pending:    []string{"DELETING"},
-		Target:     []string{"DELETED"},
+		Pending: []string{"DELETING"},
+		Target:  []string{"DELETED"},
 		Refresh: func() (interface{}, string, error) {
 			cluster, err := r.describeCluster(ctx, clusterId)
 			if err != nil {
@@ -527,7 +527,7 @@ func oceanusClusterVpcItems(vpcs []OceanusClusterVpcDescriptionModel) []*oceanus
 			SubnetId: v.SubnetId.ValueStringPointer(),
 		}
 		if !v.AppId.IsNull() && !v.AppId.IsUnknown() {
-			item.AppId = oceanusClusterUint64Ptr(v.AppId.ValueInt64())
+			item.AppId = oceanusClusterInt64Ptr(v.AppId.ValueInt64())
 		}
 		if !v.OwnerUin.IsNull() && !v.OwnerUin.IsUnknown() {
 			item.OwnerUin = v.OwnerUin.ValueStringPointer()
@@ -545,7 +545,7 @@ func oceanusClusterSlaveItems(slaves []OceanusClusterVpcDescriptionModel) []*oce
 			SubnetId: v.SubnetId.ValueStringPointer(),
 		}
 		if !v.AppId.IsNull() && !v.AppId.IsUnknown() {
-			item.AppId = oceanusClusterUint64Ptr(v.AppId.ValueInt64())
+			item.AppId = oceanusClusterInt64Ptr(v.AppId.ValueInt64())
 		}
 		if !v.OwnerUin.IsNull() && !v.OwnerUin.IsUnknown() {
 			item.OwnerUin = v.OwnerUin.ValueStringPointer()
@@ -555,7 +555,6 @@ func oceanusClusterSlaveItems(slaves []OceanusClusterVpcDescriptionModel) []*oce
 	return items
 }
 
-func oceanusClusterUint64Ptr(v int64) *uint64 {
-	u := uint64(v)
-	return &u
+func oceanusClusterInt64Ptr(v int64) *int64 {
+	return &v
 }
