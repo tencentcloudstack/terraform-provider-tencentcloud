@@ -1,0 +1,383 @@
+// TEMPLATE: framework CONFIG-resource UNIT TEST skeleton (gomonkey stubbed
+// style — no real cloud credentials, no TF_ACC).
+// Golden source (shape): tencentcloud/services/makers/resource_tc_makers_project_test.go
+//
+// Location: tencentcloud/services/<product>/resource_tc_<name>_test.go
+// Package:  external test package <product>_test, importing the service
+//           package as sv<product>.
+//
+// Run command (the -gcflags disable inlining, which gomonkey needs):
+//   go test ./tencentcloud/services/<product>/ -run "Test<Name>" -v -count=1 -gcflags="all=-l"
+//
+// Key shape (same as the general resource test, different lifecycle):
+//   - plan/state are built via tfsdk.Plan / tfsdk.State carrying the schema,
+//     populated from the MODEL struct;
+//   - a config resource has NO create API: Create and Update share ONE apply
+//     path (write API, then read back), Delete is a no-op, and the state id
+//     IS the locator input;
+//   - every package-level name carries the RESOURCE-qualified prefix
+//     (demoWidgetConfig...): the product directory shares one external test
+//     package across all generated resources, bare names collide.
+//
+// Stubbing mode (MANDATORY): the versioned client accessor + the SDK client
+// method are stubbed in TWO levels — the service method itself is NEVER
+// patched (patching service methods SIGBUS-crashes on darwin/arm64).
+
+package demo_test // TEMPLATE: <product>_test
+
+import (
+	"context"
+	"fmt"
+	"testing"
+
+	"github.com/agiledragon/gomonkey/v2"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	demov20230101 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/demo/v20230101"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/sharedmeta"
+	svdemo "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/demo"
+)
+
+const (
+	demoWidgetConfigTestInstanceId = "ins-12345"
+	demoWidgetConfigTestEmail      = "ops@example.com"
+	demoWidgetConfigTestUpdateTime = "2024-01-01 00:00:00"
+	demoWidgetConfigTestModifier   = "tf-user"
+)
+
+func demoWidgetConfigStr(v string) *string { return &v }
+
+func demoWidgetConfigInt64(v int64) *int64 { return &v }
+
+func demoWidgetConfigBool(v bool) *bool { return &v }
+
+// demoWidgetConfigTestSettings builds the settings object the cloud reports.
+func demoWidgetConfigTestSettings() *demov20230101.WidgetSettings {
+	return &demov20230101.WidgetSettings{
+		RetentionDays: demoWidgetConfigInt64(30),
+		Enabled:       demoWidgetConfigBool(true),
+		NotifyEmail:   demoWidgetConfigStr(demoWidgetConfigTestEmail),
+	}
+}
+
+// demoWidgetConfigTestModel builds the terraform model used for plan/state.
+// TEMPLATE: every unset attribute carries an EXPLICIT TYPED null value — the
+// raw zero value breaks tfsdk Plan/State reflection with "Value Conversion
+// Error". One typed null per model field, none skipped; a nested object is
+// types.ObjectNull(<AttrTypes map>) or a real value built with
+// types.ObjectValueMust (test-only: the literal is known to be valid).
+func demoWidgetConfigTestModel() svdemo.DemoWidgetConfigResourceModel {
+	return svdemo.DemoWidgetConfigResourceModel{
+		Id:         types.StringValue(demoWidgetConfigTestInstanceId),
+		InstanceId: types.StringValue(demoWidgetConfigTestInstanceId),
+		Settings: types.ObjectValueMust(svdemo.DemoWidgetConfigSettingsAttrTypes(), map[string]attr.Value{
+			"retention_days": types.Int64Value(30),
+			"enabled":        types.BoolValue(true),
+			"notify_email":   types.StringValue(demoWidgetConfigTestEmail),
+		}),
+		UpdateTime: types.StringNull(),
+		Modifier:   types.StringNull(),
+	}
+}
+
+// patchDemoWidgetConfigSdkClient stubs the versioned client accessor and
+// returns the mock SDK client whose methods the test patches next.
+func patchDemoWidgetConfigSdkClient(patches *gomonkey.Patches, client *connectivity.TencentCloudClient) *demov20230101.Client {
+	demoClient := &demov20230101.Client{}
+	patches.ApplyMethodReturn(client, "UseDemoV20230101Client", demoClient)
+
+	return demoClient
+}
+
+// stubDemoWidgetConfigDescribe stubs the describe API with the given
+// settings (nil = the cloud answers without a configuration object, which the
+// service layer turns into fwHelper.ErrNotFound).
+func stubDemoWidgetConfigDescribe(patches *gomonkey.Patches, demoClient *demov20230101.Client, settings *demov20230101.WidgetSettings) {
+	patches.ApplyMethodFunc(demoClient, "DescribeWidgetConfig", func(request *demov20230101.DescribeWidgetConfigRequest) (*demov20230101.DescribeWidgetConfigResponse, error) {
+		return &demov20230101.DescribeWidgetConfigResponse{Response: &demov20230101.DescribeWidgetConfigResponseParams{
+			Settings:   settings,
+			UpdateTime: demoWidgetConfigStr(demoWidgetConfigTestUpdateTime),
+			Modifier:   demoWidgetConfigStr(demoWidgetConfigTestModifier),
+			RequestId:  demoWidgetConfigStr("fake-request-id"),
+		}}, nil
+	})
+}
+
+// demoWidgetConfigTestContext wires the resource to a configured client.
+type demoWidgetConfigTestContext struct {
+	resource resource.Resource
+	schema   schema.Schema
+	client   *connectivity.TencentCloudClient
+}
+
+func newDemoWidgetConfigTestContext(t *testing.T) *demoWidgetConfigTestContext {
+	t.Helper()
+
+	client := &connectivity.TencentCloudClient{}
+
+	res := svdemo.NewDemoWidgetConfigResource()
+	configured, ok := res.(resource.ResourceWithConfigure)
+	if !ok {
+		t.Fatalf("resource does not implement resource.ResourceWithConfigure")
+	}
+
+	var configureResp resource.ConfigureResponse
+	configured.Configure(
+		context.Background(),
+		resource.ConfigureRequest{ProviderData: &sharedmeta.ProviderMeta{Client: client}},
+		&configureResp,
+	)
+	if configureResp.Diagnostics.HasError() {
+		t.Fatalf("failed to configure resource: %v", configureResp.Diagnostics.Errors())
+	}
+
+	var schemaResp resource.SchemaResponse
+	res.Schema(context.Background(), resource.SchemaRequest{}, &schemaResp)
+	if schemaResp.Diagnostics.HasError() {
+		t.Fatalf("failed to build schema: %v", schemaResp.Diagnostics.Errors())
+	}
+
+	return &demoWidgetConfigTestContext{resource: res, schema: schemaResp.Schema, client: client}
+}
+
+func (c *demoWidgetConfigTestContext) plan(t *testing.T, m svdemo.DemoWidgetConfigResourceModel) tfsdk.Plan {
+	t.Helper()
+
+	plan := tfsdk.Plan{Schema: c.schema}
+	if diags := plan.Set(context.Background(), m); diags.HasError() {
+		t.Fatalf("failed to build plan: %v", diags.Errors())
+	}
+
+	return plan
+}
+
+func (c *demoWidgetConfigTestContext) state(t *testing.T, m svdemo.DemoWidgetConfigResourceModel) tfsdk.State {
+	t.Helper()
+
+	state := tfsdk.State{Schema: c.schema}
+	if diags := state.Set(context.Background(), m); diags.HasError() {
+		t.Fatalf("failed to build state: %v", diags.Errors())
+	}
+
+	return state
+}
+
+// TestDemoWidgetConfigCreateSuccess verifies Create takes the state id from
+// the locator input, sends the settings, and records the cloud-reported
+// values.
+func TestDemoWidgetConfigCreateSuccess(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetConfigTestContext(t)
+	demoClient := patchDemoWidgetConfigSdkClient(patches, ctx.client)
+
+	var captured *demov20230101.UpdateWidgetConfigRequest
+	patches.ApplyMethodFunc(demoClient, "UpdateWidgetConfig", func(request *demov20230101.UpdateWidgetConfigRequest) (*demov20230101.UpdateWidgetConfigResponse, error) {
+		captured = request
+
+		return &demov20230101.UpdateWidgetConfigResponse{Response: &demov20230101.UpdateWidgetConfigResponseParams{
+			RequestId: demoWidgetConfigStr("fake-request-id"),
+		}}, nil
+	})
+	stubDemoWidgetConfigDescribe(patches, demoClient, demoWidgetConfigTestSettings())
+
+	model := demoWidgetConfigTestModel()
+	var createResp resource.CreateResponse
+	createResp.State = ctx.state(t, model)
+	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, model)}, &createResp)
+	if createResp.Diagnostics.HasError() {
+		t.Fatalf("Create failed: %v", createResp.Diagnostics.Errors())
+	}
+
+	if captured == nil {
+		t.Fatal("UpdateWidgetConfig request is nil")
+	}
+	if captured.InstanceId == nil || *captured.InstanceId != demoWidgetConfigTestInstanceId {
+		t.Errorf("request instance_id = %v, want %q: the locator must be sent", captured.InstanceId, demoWidgetConfigTestInstanceId)
+	}
+	if captured.Settings == nil || captured.Settings.NotifyEmail == nil || *captured.Settings.NotifyEmail != demoWidgetConfigTestEmail {
+		t.Errorf("request settings = %+v, want notify_email %q", captured.Settings, demoWidgetConfigTestEmail)
+	}
+
+	var got svdemo.DemoWidgetConfigResourceModel
+	if diags := createResp.State.Get(context.Background(), &got); diags.HasError() {
+		t.Fatalf("failed to read back state: %v", diags.Errors())
+	}
+	if got.Id.ValueString() != demoWidgetConfigTestInstanceId {
+		t.Errorf("id = %q, want the locator value %q", got.Id.ValueString(), demoWidgetConfigTestInstanceId)
+	}
+	if got.UpdateTime.ValueString() != demoWidgetConfigTestUpdateTime {
+		t.Errorf("update_time = %q, want %q", got.UpdateTime.ValueString(), demoWidgetConfigTestUpdateTime)
+	}
+	if got.Modifier.ValueString() != demoWidgetConfigTestModifier {
+		t.Errorf("modifier = %q, want %q", got.Modifier.ValueString(), demoWidgetConfigTestModifier)
+	}
+}
+
+// TestDemoWidgetConfigCreateApiError verifies a write failure surfaces as an
+// error diagnostic (a plain fmt.Errorf is non-retryable: no waiting).
+func TestDemoWidgetConfigCreateApiError(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetConfigTestContext(t)
+	demoClient := patchDemoWidgetConfigSdkClient(patches, ctx.client)
+	stubDemoWidgetConfigDescribe(patches, demoClient, demoWidgetConfigTestSettings())
+	patches.ApplyMethodFunc(demoClient, "UpdateWidgetConfig", func(request *demov20230101.UpdateWidgetConfigRequest) (*demov20230101.UpdateWidgetConfigResponse, error) {
+		return nil, fmt.Errorf("update failed")
+	})
+
+	model := demoWidgetConfigTestModel()
+	var createResp resource.CreateResponse
+	createResp.State = ctx.state(t, model)
+	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, model)}, &createResp)
+	if !createResp.Diagnostics.HasError() {
+		t.Fatal("Create should fail on an API error")
+	}
+}
+
+// TestDemoWidgetConfigReadSuccess verifies Read addresses the configuration by
+// the state id and refreshes every field.
+func TestDemoWidgetConfigReadSuccess(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetConfigTestContext(t)
+	demoClient := patchDemoWidgetConfigSdkClient(patches, ctx.client)
+
+	var gotInstanceId string
+	patches.ApplyMethodFunc(demoClient, "DescribeWidgetConfig", func(request *demov20230101.DescribeWidgetConfigRequest) (*demov20230101.DescribeWidgetConfigResponse, error) {
+		if request.InstanceId != nil {
+			gotInstanceId = *request.InstanceId
+		}
+
+		return &demov20230101.DescribeWidgetConfigResponse{Response: &demov20230101.DescribeWidgetConfigResponseParams{
+			Settings:   demoWidgetConfigTestSettings(),
+			UpdateTime: demoWidgetConfigStr(demoWidgetConfigTestUpdateTime),
+			Modifier:   demoWidgetConfigStr(demoWidgetConfigTestModifier),
+			RequestId:  demoWidgetConfigStr("fake-request-id"),
+		}}, nil
+	})
+
+	var readResp resource.ReadResponse
+	readResp.State = ctx.state(t, demoWidgetConfigTestModel())
+	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, demoWidgetConfigTestModel())}, &readResp)
+	if readResp.Diagnostics.HasError() {
+		t.Fatalf("Read failed: %v", readResp.Diagnostics.Errors())
+	}
+
+	if gotInstanceId != demoWidgetConfigTestInstanceId {
+		t.Errorf("DescribeWidgetConfig called with %q, want %q", gotInstanceId, demoWidgetConfigTestInstanceId)
+	}
+
+	var got svdemo.DemoWidgetConfigResourceModel
+	if diags := readResp.State.Get(context.Background(), &got); diags.HasError() {
+		t.Fatalf("failed to read back state: %v", diags.Errors())
+	}
+	if got.Modifier.ValueString() != demoWidgetConfigTestModifier {
+		t.Errorf("modifier = %q, want %q", got.Modifier.ValueString(), demoWidgetConfigTestModifier)
+	}
+}
+
+// TestDemoWidgetConfigReadNotFound verifies that a describe answer without a
+// configuration object (fwHelper.ErrNotFound) drops the resource from state.
+func TestDemoWidgetConfigReadNotFound(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetConfigTestContext(t)
+	demoClient := patchDemoWidgetConfigSdkClient(patches, ctx.client)
+	stubDemoWidgetConfigDescribe(patches, demoClient, nil)
+
+	var readResp resource.ReadResponse
+	readResp.State = ctx.state(t, demoWidgetConfigTestModel())
+	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, demoWidgetConfigTestModel())}, &readResp)
+	if readResp.Diagnostics.HasError() {
+		t.Fatalf("Read should not error on confirmed not-found: %v", readResp.Diagnostics.Errors())
+	}
+	if !readResp.State.Raw.IsNull() {
+		t.Error("state should be removed after the configuration is confirmed gone")
+	}
+}
+
+// TestDemoWidgetConfigReadApiError verifies a describe failure surfaces as an
+// error diagnostic and keeps the state.
+func TestDemoWidgetConfigReadApiError(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetConfigTestContext(t)
+	demoClient := patchDemoWidgetConfigSdkClient(patches, ctx.client)
+	patches.ApplyMethodFunc(demoClient, "DescribeWidgetConfig", func(request *demov20230101.DescribeWidgetConfigRequest) (*demov20230101.DescribeWidgetConfigResponse, error) {
+		return nil, fmt.Errorf("describe failed")
+	})
+
+	var readResp resource.ReadResponse
+	readResp.State = ctx.state(t, demoWidgetConfigTestModel())
+	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, demoWidgetConfigTestModel())}, &readResp)
+	if !readResp.Diagnostics.HasError() {
+		t.Fatal("Read should fail on a transport error")
+	}
+}
+
+// TestDemoWidgetConfigUpdateSuccess verifies Update shares the write path and
+// keeps the id of the existing state.
+func TestDemoWidgetConfigUpdateSuccess(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetConfigTestContext(t)
+	demoClient := patchDemoWidgetConfigSdkClient(patches, ctx.client)
+
+	var captured *demov20230101.UpdateWidgetConfigRequest
+	patches.ApplyMethodFunc(demoClient, "UpdateWidgetConfig", func(request *demov20230101.UpdateWidgetConfigRequest) (*demov20230101.UpdateWidgetConfigResponse, error) {
+		captured = request
+
+		return &demov20230101.UpdateWidgetConfigResponse{Response: &demov20230101.UpdateWidgetConfigResponseParams{
+			RequestId: demoWidgetConfigStr("fake-request-id"),
+		}}, nil
+	})
+	stubDemoWidgetConfigDescribe(patches, demoClient, demoWidgetConfigTestSettings())
+
+	var updateResp resource.UpdateResponse
+	updateResp.State = ctx.state(t, demoWidgetConfigTestModel())
+	ctx.resource.Update(context.Background(),
+		resource.UpdateRequest{
+			Plan:  ctx.plan(t, demoWidgetConfigTestModel()),
+			State: ctx.state(t, demoWidgetConfigTestModel()),
+		}, &updateResp)
+	if updateResp.Diagnostics.HasError() {
+		t.Fatalf("Update failed: %v", updateResp.Diagnostics.Errors())
+	}
+
+	if captured == nil {
+		t.Fatal("UpdateWidgetConfig request is nil")
+	}
+
+	var got svdemo.DemoWidgetConfigResourceModel
+	if diags := updateResp.State.Get(context.Background(), &got); diags.HasError() {
+		t.Fatalf("failed to read back state: %v", diags.Errors())
+	}
+	if got.Id.ValueString() != demoWidgetConfigTestInstanceId {
+		t.Errorf("id = %q, want %q", got.Id.ValueString(), demoWidgetConfigTestInstanceId)
+	}
+}
+
+// TestDemoWidgetConfigDeleteIsNoop verifies Delete calls no API: the
+// configuration lives and dies with its parent resource.
+func TestDemoWidgetConfigDeleteIsNoop(t *testing.T) {
+	ctx := newDemoWidgetConfigTestContext(t)
+
+	var deleteResp resource.DeleteResponse
+	ctx.resource.Delete(context.Background(), resource.DeleteRequest{State: ctx.state(t, demoWidgetConfigTestModel())}, &deleteResp)
+	if deleteResp.Diagnostics.HasError() {
+		t.Fatalf("Delete failed: %v", deleteResp.Diagnostics.Errors())
+	}
+}

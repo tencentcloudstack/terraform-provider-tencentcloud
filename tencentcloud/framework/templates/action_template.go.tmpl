@@ -1,26 +1,45 @@
 // TEMPLATE: framework action skeleton.
 // Golden sources:
 //   - simple: tencentcloud/services/antiddos/action_tc_antiddos_unblock_resources.go
-//   - complex (write + wait + echo result):
+//   - complex (write + wait):
 //     tencentcloud/services/ssl/action_tc_ssl_upload_certificate_instance.go
 //
 // Location: tencentcloud/services/<product>/action_tc_<product>_<name>.go
-// Factory naming: New<Product><Name> (no "Action" suffix — repo convention
-// varies, keep the name aligned with the registry key).
+// Factory naming: New<Product><Name> (no "Action" suffix).
 //
-// Actions are one-shot operations: they have Invoke only, no state. Typical
-// use cases: batch operations, apply-for-unblock, upload-certificate-like
-// flows that return a value but manage no lifecycle.
+// Actions are one-shot operations: they have Invoke only, no cloud-side
+// lifecycle and NO STATE. Typical use cases: batch operations,
+// apply-for-unblock, upload-certificate-like flows.
+//
+// TEMPLATE: HARD FACTS about the framework action API (verified against the
+// vendored terraform-plugin-framework — generated code that violates any of
+// them does not compile):
+//   - action.InvokeResponse has NO State field: an action never writes
+//     state, so there is NO `id` attribute and NO resp.State.Set call;
+//   - action/schema attributes have NO Computed / Default / PlanModifiers:
+//     an action schema holds ONLY input attributes (Required / Optional /
+//     Sensitive) — never output attributes;
+//   - the `timeouts` block lives in schema.Blocks, never in Attributes;
+//   - every Invoke result is communicated through resp.Diagnostics only.
+//
+// TEMPLATE: async ids (FlowId/TaskId) have EXACTLY ONE purpose — serving as
+// the input of the async task-query API. They NEVER appear in the schema or
+// the model. TWO wait shapes exist — task-id OR instance-status polling
+// (the polling API decides; the task id field name follows the vendored SDK,
+// see service_template.go.tmpl).
 
 package demo
 
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/action"
 	"github.com/hashicorp/terraform-plugin-framework/action/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	actiontimeouts "github.com/hashicorp/terraform-plugin-framework-timeouts/action/timeouts"
 
 	demov20230101 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/demo/v20230101"
 
@@ -41,19 +60,29 @@ type DemoRestartWidget struct {
 	fw.ActionWithConfigure
 }
 
-// DemoRestartWidgetModel maps the schema attributes.
+// DemoRestartWidgetModel maps the schema attributes: INPUT attributes only
+// (an action has no state, hence no id and no output attributes).
 type DemoRestartWidgetModel struct {
 	WidgetId types.String `tfsdk:"widget_id"`
-	// TEMPLATE: actions may declare Computed output attributes; Invoke writes
-	// them into resp.State so the HCL `on` block can echo the API result.
-	FlowId types.String `tfsdk:"flow_id"`
+	// TEMPLATE: the `timeouts` block from the official
+	// terraform-plugin-framework-timeouts module — declared whenever the
+	// invoke involves an async API (async_info), so the wait deadline is
+	// user-configurable. Purely synchronous actions drop it (field, block,
+	// constant, wait).
+	Timeouts actiontimeouts.Value `tfsdk:"timeouts"`
 }
 
 func (a *DemoRestartWidget) Metadata(_ context.Context, _ action.MetadataRequest, resp *action.MetadataResponse) {
 	resp.TypeName = "tencentcloud_demo_restart_widget"
 }
 
-func (a *DemoRestartWidget) Schema(_ context.Context, _ action.SchemaRequest, resp *action.SchemaResponse) {
+func (a *DemoRestartWidget) Schema(ctx context.Context, _ action.SchemaRequest, resp *action.SchemaResponse) {
+	// TEMPLATE: every attribute Description below is a PLACEHOLDER — in
+	// generated code it is the faithful professional EN translation of the
+	// IACP CapiParam.Document field description (HTML stripped). NO
+	// embellishment, NO extra wording, NO fixing of metadata mistakes: stay
+	// consistent with the IACP metadata even when it is wrong (see
+	// conventions.md section 2).
 	resp.Schema = schema.Schema{
 		Description: "Provides an action to restart a Demo widget via the " +
 			"RestartWidget API. This is a one-time operation; no cloud-side state is persisted.",
@@ -62,12 +91,39 @@ func (a *DemoRestartWidget) Schema(_ context.Context, _ action.SchemaRequest, re
 				Required:    true,
 				Description: "ID of the widget to restart.",
 			},
-			"flow_id": schema.StringAttribute{
-				Computed:    true,
-				Description: "Flow ID returned by the API, for tracing the operation.",
-			},
+		},
+		// TEMPLATE: the `timeouts` block — REQUIRED when the invoke
+		// involves an async API (async_info), dropped for purely
+		// synchronous actions. A block is NOT an attribute: it lives in
+		// the schema Blocks map.
+		Blocks: map[string]schema.Block{
+			"timeouts": demoRestartWidgetTimeoutsBlock(ctx),
 		},
 	}
+}
+
+// defaultDemoRestartWidgetInvokeTimeout is the built-in maximum duration to
+// wait for the async restart task when the user does not override it through
+// the `timeouts` block, e.g. `timeouts { invoke = "30m" }`.
+// TEMPLATE: choose the default per the product documentation or agreement
+// with the user.
+const defaultDemoRestartWidgetInvokeTimeout = 15 * time.Minute
+
+// demoRestartWidgetTimeoutsBlock builds the `timeouts` block from the
+// official terraform-plugin-framework-timeouts module (golden source:
+// sslUploadCertificateInstanceTimeoutsBlock).
+func demoRestartWidgetTimeoutsBlock(ctx context.Context) schema.Block {
+	block := actiontimeouts.BlockWithOpts(ctx, actiontimeouts.Opts{
+		InvokeDescription: "A string that can be parsed as a duration (https://pkg.go.dev/time#ParseDuration), e.g. `15m`. " +
+			"It limits how long the action waits for the asynchronous restart task to complete. Default is `15m`.",
+	})
+
+	if nested, ok := block.(schema.SingleNestedBlock); ok {
+		nested.Description = "The timeouts block allows you to specify the timeout for the invoke operation."
+		return nested
+	}
+
+	return block
 }
 
 // Invoke is called to run the logic of the action.
@@ -84,12 +140,13 @@ func (a *DemoRestartWidget) Invoke(ctx context.Context, req action.InvokeRequest
 		return
 	}
 
-	if a.Client() == nil {
-		resp.Diagnostics.AddError(
-			"Provider not configured",
-			"The provider client is not available. This is unexpected; please report it.",
-		)
-
+	// TEMPLATE: an unset/null timeouts block falls back to the default
+	// constant — the SAME constant the schema description mentions. The
+	// resolve happens BEFORE the write API so a malformed duration fails
+	// the action without any cloud-side effect.
+	timeout, timeoutDiags := data.Timeouts.Invoke(ctx, defaultDemoRestartWidgetInvokeTimeout)
+	resp.Diagnostics.Append(timeoutDiags...)
+	if resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -97,6 +154,10 @@ func (a *DemoRestartWidget) Invoke(ctx context.Context, req action.InvokeRequest
 	restartWidgetRequest.WidgetId = &widgetId
 
 	service := NewDemoService(a.Client())
+
+	// TEMPLATE: the flow/task id returned by the API is a LOCAL variable
+	// with exactly one purpose — feeding the async task-query API below.
+	// It NEVER lands in the schema or the model.
 	flowId, err := service.RestartWidget(ctx, restartWidgetRequest)
 	if err != nil {
 		resp.Diagnostics.AddError(
@@ -107,12 +168,16 @@ func (a *DemoRestartWidget) Invoke(ctx context.Context, req action.InvokeRequest
 		return
 	}
 
-	// TEMPLATE: async action — when the JSON input carries async_info, wait
-	// for the task BEFORE writing the final state. The wait takes a timeout
-	// parameter: pass the product's dedicated tccommon wait constant when
-	// one exists, or a sensible default agreed with the user:
-	//   if err := service.WaitDemoTaskResult(ctx, taskId, tccommon.DefaultWaitTimeout); err != nil { ... }
+	// TEMPLATE: async action — wait for the task before Invoke returns.
+	// Purely synchronous actions delete this block AND the flowId local
+	// (use `_, err := ...` or a single-value service signature), otherwise
+	// the compiler reports "declared and not used".
+	if err := service.WaitDemoTaskResult(ctx, flowId, timeout); err != nil {
+		resp.Diagnostics.AddError(
+			"Error waiting for Demo widget restart task",
+			fmt.Sprintf("restart task wait failed: %v", err),
+		)
 
-	data.FlowId = types.StringValue(flowId)
-	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+		return
+	}
 }

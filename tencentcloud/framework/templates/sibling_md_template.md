@@ -1,4 +1,4 @@
-Provides a resource to manage a Demo widget. <!-- TEMPLATE: one-line description, no heading. -->
+Provides a resource to manage a Demo widget. <!-- TEMPLATE: one-line description, no heading. Human-readable resource name ONLY: split the resource name on underscores into separate words (api_gateway_service_release -> "API gateway service release"); NEVER keep underscores in prose — they break markdown rendering and read like code. Product acronyms (API, SSL, VPC, ...) stay uppercase. Golden source: tencentcloud/services/apigateway/resource_tc_api_gateway_service_release.md. -->
 
 <!-- TEMPLATE: HARD RULE — the generated md contains ONLY the standard
      structure: one-line description, the type-specific version note
@@ -17,6 +17,16 @@ Provides a resource to manage a Demo widget. <!-- TEMPLATE: one-line description
 
 Example Usage
 
+<!-- TEMPLATE: a minimal, realistic HCL example with obviously-fake values
+     (tf-test, example) — never real credentials. When the resource/action
+     declares a `timeouts` block (async scenarios), SHOW it in the example
+     with the default values (golden source: mongodb action md), e.g.
+
+       timeouts {
+         create = "15m"
+       }
+-->
+
 ```hcl
 resource "tencentcloud_demo_widget" "example" {
   name    = "tf-test-widget"
@@ -32,7 +42,14 @@ resource "tencentcloud_demo_widget" "example" {
      - composite-id resources (attachment, or general with a joined id):
        "... using the composite id, e.g." + document the segment names in
        parent-first order (e.g. instance_id#disk_id) and show a realistic
-       joined value in the example, e.g. ins-12345#disk-67890. -->
+       joined value in the example, e.g. ins-12345#disk-67890.
+     The SUBJECT of the sentence uses the human-readable resource name
+     (underscores split into words, same rule as the first line):
+       "API gateway service release can be imported using the id, e.g."
+     NEVER "API gateway_service_release can be imported ...".
+     Underscores stay ONLY in code references: the terraform import command
+     (tencentcloud_demo_widget.example) and the composite id segment names
+     (instance_id#disk_id) — those are literal identifiers, not prose. -->
 
 Import
 

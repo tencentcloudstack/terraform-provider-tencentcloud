@@ -14,8 +14,27 @@
 package helper
 
 import (
+	"context"
+
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
+
+// ListFromStrings builds a types.List of string elements from the given
+// plain Go string slice (the common data-source output shape: a flat list
+// of names/ids). An empty slice yields an EMPTY list (not null), matching
+// the "empty result is a legitimate empty list" data-source semantics.
+// Conversion diagnostics are appended to diags.
+func ListFromStrings(ctx context.Context, values []string, diags *diag.Diagnostics) types.List {
+	if values == nil {
+		values = []string{}
+	}
+
+	list, listDiags := types.ListValueFrom(ctx, types.StringType, values)
+	diags.Append(listDiags...)
+
+	return list
+}
 
 // StringValueOrNull safely converts a Go string to the framework's
 // types.String:
@@ -194,4 +213,30 @@ func BoolPointerFromValue(v types.Bool) *bool {
 	}
 	b := v.ValueBool()
 	return &b
+}
+
+// Float64PointerFromValue converts a types.Float64 back to *float64:
+// null/unknown returns nil ("do not send this field").
+func Float64PointerFromValue(v types.Float64) *float64 {
+	if v.IsNull() || v.IsUnknown() {
+		return nil
+	}
+	f := v.ValueFloat64()
+	return &f
+}
+
+// Float64ValueOrPrev is StringValueOrPrev for the *float64 fields: a
+// cloud-omitted (nil) field keeps the previous plan/state value, and an
+// unknown previous value becomes null. Use it for user-configurable
+// attributes; for Computed-only attributes use the native
+// types.Float64PointerValue, which records the truthful value including null.
+func Float64ValueOrPrev(cloud *float64, prev types.Float64) types.Float64 {
+	switch {
+	case cloud != nil:
+		return types.Float64Value(*cloud)
+	case !prev.IsNull() && !prev.IsUnknown():
+		return prev
+	default:
+		return types.Float64Null()
+	}
 }

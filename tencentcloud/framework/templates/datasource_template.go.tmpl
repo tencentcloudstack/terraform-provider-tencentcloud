@@ -7,11 +7,15 @@
 //
 // Decision points:
 //   - single-result (query by id) vs list-result (query set): single-result
-//     exposes one computed object; list-result exposes `xxx_list` + `total_count`
+//     exposes one computed object; list-result exposes the response key
+//     directly (e.g. Tables -> `tables`) — NEVER invent keys like `xxx_list`
 //   - which query inputs map to request filters / ids
 //   - pagination: when the SDK request has Offset/Limit fields, the SERVICE
 //     method itself carries the for-loop paging — this file just calls it
-//     once and gets the full list
+//     once and gets the full list. NEVER expose offset/limit (or any paging
+//     knob) as user-facing schema attributes.
+//   - the total count from the API is an implementation detail of the
+//     paging loop — NEVER expose total_count/xxx_count as a schema attribute
 //   - the state id is ALWAYS a random token (the JSON resource_id is the
 //     fixed literal fwHelper.BuildToken()): set it at the end of a successful
 //     Read via config.Id = types.StringValue(fwHelper.BuildToken())
@@ -49,15 +53,13 @@ type DemoWidgetsDataSource struct {
 
 // DemoWidgetsDataSourceModel maps the schema attributes.
 type DemoWidgetsDataSourceModel struct {
-	Id               types.String `tfsdk:"id"`
-	Name             types.String `tfsdk:"name"`
-	WidgetIds        types.List   `tfsdk:"widget_ids"`
-	ResultOutputFile types.String `tfsdk:"result_output_file"`
-	TotalCount       types.Int64  `tfsdk:"total_count"`
-	WidgetList       types.List   `tfsdk:"widget_list"`
+	Id        types.String `tfsdk:"id"`
+	Name      types.String `tfsdk:"name"`
+	WidgetIds types.List   `tfsdk:"widget_ids"`
+	WidgetSet types.List   `tfsdk:"widget_set"`
 }
 
-// DemoWidgetItemModel is the element type of widget_list.
+// DemoWidgetItemModel is the element type of widget_set.
 type DemoWidgetItemModel struct {
 	WidgetId types.String `tfsdk:"widget_id"`
 	Name     types.String `tfsdk:"name"`
@@ -65,7 +67,7 @@ type DemoWidgetItemModel struct {
 	CreateOn types.String `tfsdk:"create_on"`
 }
 
-// DemoWidgetItemAttrTypes is the object type of the widget_list elements.
+// DemoWidgetItemAttrTypes is the object type of the widget_set elements.
 var DemoWidgetItemAttrTypes = map[string]attr.Type{
 	"widget_id": types.StringType,
 	"name":      types.StringType,
@@ -78,6 +80,12 @@ func (d *DemoWidgetsDataSource) Metadata(_ context.Context, _ datasource.Metadat
 }
 
 func (d *DemoWidgetsDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+	// TEMPLATE: every attribute Description below is a PLACEHOLDER — in
+	// generated code it is the faithful professional EN translation of the
+	// IACP CapiParam.Document field description (HTML stripped). NO
+	// embellishment, NO extra wording, NO fixing of metadata mistakes: stay
+	// consistent with the IACP metadata even when it is wrong (see
+	// conventions.md section 2).
 	resp.Schema = schema.Schema{
 		Description: "Use this data source to query the list of Demo widgets.",
 		Attributes: map[string]schema.Attribute{
@@ -97,20 +105,10 @@ func (d *DemoWidgetsDataSource) Schema(_ context.Context, _ datasource.SchemaReq
 				ElementType: types.StringType,
 				Description: "List of widget IDs to query.",
 			},
-			// TEMPLATE: SDKv2-era convention kept for compatibility: an
-			// optional result_output_file attribute that writes the query
-			// result to a local file. Implement the write after Read fills
-			// the list when present.
-			"result_output_file": schema.StringAttribute{
-				Optional:    true,
-				Description: "Used to save results.",
-			},
 			// ---- Query outputs: Computed ----
-			"total_count": schema.Int64Attribute{
-				Computed:    true,
-				Description: "Total number of widgets.",
-			},
-			"widget_list": schema.ListNestedAttribute{
+			// TEMPLATE: outputs carry the RESOURCE data only — never a
+			// total_count / xxx_count aggregate, never paging knobs.
+			"widget_set": schema.ListNestedAttribute{
 				Computed:    true,
 				Description: "Widget list.",
 				NestedObject: schema.NestedAttributeObject{
@@ -151,38 +149,19 @@ func (d *DemoWidgetsDataSource) Read(ctx context.Context, req datasource.ReadReq
 		describeWidgetsRequest.Name = config.Name.ValueStringPointer()
 	}
 
-	if !config.WidgetIds.IsNull() && !config.WidgetIds.IsUnknown() {
-		var ids []types.String
-		resp.Diagnostics.Append(config.WidgetIds.ElementsAs(ctx, &ids, false)...)
-		if resp.Diagnostics.HasError() {
-			return
-		}
-
-		describeWidgetsRequest.WidgetIds = make([]*string, 0, len(ids))
-		for _, v := range ids {
-			if v.IsNull() || v.IsUnknown() {
-				continue
-			}
-
-			val := v.ValueString()
-			describeWidgetsRequest.WidgetIds = append(describeWidgetsRequest.WidgetIds, &val)
-		}
-	}
-
-	if d.Client() == nil {
-		resp.Diagnostics.AddError(
-			"Provider not configured",
-			"The provider client is not available. This is unexpected; please report it.",
-		)
-
+	// TEMPLATE: an optional list filter that the SDK takes as []*string —
+	// fwHelper.PointersFromList[string] (null/unknown -> nil, i.e. no filter).
+	describeWidgetsRequest.WidgetIds = fwHelper.PointersFromList[string](ctx, config.WidgetIds, &resp.Diagnostics)
+	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	service := NewDemoService(d.Client())
+
 	// TEMPLATE: when the API pages, the service method internally loops
-	// (Offset/Limit) and returns the full list + totalCount — this file
-	// never loops by itself.
-	widgets, totalCount, err := service.DescribeWidgets(ctx, describeWidgetsRequest)
+	// (Offset/Limit) and returns the full list — this file never loops by
+	// itself and never surfaces the total count.
+	widgets, err := service.DescribeWidgets(ctx, describeWidgetsRequest)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error querying Demo widgets",
@@ -192,11 +171,13 @@ func (d *DemoWidgetsDataSource) Read(ctx context.Context, req datasource.ReadReq
 		return
 	}
 
-	config.TotalCount = types.Int64PointerValue(totalCount)
-
 	// An empty result is a genuinely empty list, not a failure.
 	items := make([]DemoWidgetItemModel, 0, len(widgets))
 	for _, item := range widgets {
+		if item == nil {
+			continue
+		}
+
 		items = append(items, DemoWidgetItemModel{
 			WidgetId: types.StringPointerValue(item.WidgetId),
 			Name:     types.StringPointerValue(item.Name),
@@ -211,10 +192,7 @@ func (d *DemoWidgetsDataSource) Read(ctx context.Context, req datasource.ReadReq
 		return
 	}
 
-	config.WidgetList = list
-
-	// TEMPLATE: result_output_file — when provided, marshal the list to JSON
-	// and write it to the file path before state.Set.
+	config.WidgetSet = list
 
 	// The state id is a random token (JSON resource_id = fwHelper.BuildToken()).
 	config.Id = types.StringValue(fwHelper.BuildToken())

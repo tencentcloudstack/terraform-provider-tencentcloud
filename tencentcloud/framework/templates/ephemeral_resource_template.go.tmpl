@@ -57,6 +57,12 @@ func (e *DemoTempCredentialEphemeralResource) Metadata(_ context.Context, _ ephe
 }
 
 func (e *DemoTempCredentialEphemeralResource) Schema(_ context.Context, _ ephemeral.SchemaRequest, resp *ephemeral.SchemaResponse) {
+	// TEMPLATE: every attribute Description below is a PLACEHOLDER — in
+	// generated code it is the faithful professional EN translation of the
+	// IACP CapiParam.Document field description (HTML stripped). NO
+	// embellishment, NO extra wording, NO fixing of metadata mistakes: stay
+	// consistent with the IACP metadata even when it is wrong (see
+	// conventions.md section 2).
 	resp.Schema = schema.Schema{
 		Description: "Retrieves a temporary credential for a Demo widget. " +
 			"The value is not persisted in state and expires after use.",
@@ -98,26 +104,21 @@ func (e *DemoTempCredentialEphemeralResource) Open(ctx context.Context, req ephe
 		return
 	}
 
-	if e.Client() == nil {
-		resp.Diagnostics.AddError(
-			"Provider not configured",
-			"The provider client is not available. This is unexpected; please report it.",
-		)
-
-		return
-	}
-
 	// TEMPLATE: read — build the request HERE (lookup id -> request), call
 	// the service with (ctx, request); the returned values MUST be set into
 	// the result model below. Requests are ALWAYS named after their API.
 	describeTempCredentialRequest := demov20230101.NewDescribeTempCredentialRequest()
 	describeTempCredentialRequest.WidgetId = fwHelper.String(widgetId)
+	// TEMPLATE: every schema input must reach the request — an attribute the
+	// schema accepts but the code silently drops is a logic bug.
+	if !data.Duration.IsNull() && !data.Duration.IsUnknown() {
+		describeTempCredentialRequest.Duration = data.Duration.ValueInt64Pointer()
+	}
 
 	service := NewDemoService(e.Client())
+
 	token, expiredAt, err := service.DescribeTempCredential(ctx, describeTempCredentialRequest)
 	if err != nil {
-		// TEMPLATE: distinguish confirmed not-found from transport errors so
-		// the user gets an actionable message.
 		resp.Diagnostics.AddError(
 			"Error reading Demo temp credential",
 			fmt.Sprintf("Could not read temp credential for widget %q: %v", widgetId, err),
@@ -132,34 +133,23 @@ func (e *DemoTempCredentialEphemeralResource) Open(ctx context.Context, req ephe
 	resp.Diagnostics.Append(resp.Result.Set(ctx, &data)...)
 }
 
-// TEMPLATE: Renew is optional (interface ephemeral.EphemeralResourceWithRenew,
-// vendored framework version). Its semantics in this framework version are
-// NARROW: Renew cannot return new result data — it only extends the lifetime
-// of a remote object (Vault-lease style) and must set resp.RenewAt to the
-// next expiry.
-//
-// Renew is NOT expressed in the codegen JSON (api.read maps to Open) — do
-// not implement it during generation. When the API set looks
+// TEMPLATE: Renew is NOT generated. The codegen JSON does not express it
+// (api.read maps to Open). Its semantics in this framework version are
+// narrow: Renew (interface ephemeral.EphemeralResourceWithRenew) cannot
+// return new result data, it only extends the lifetime of a remote object
+// (Vault-lease style) and sets resp.RenewAt. When the API set looks
 // renewal-capable, mention it in the summary so the user can request it
-// explicitly; only then map the user-provided renewal API to this call,
-// reading lookup keys from req.Private.GetKey.
-//
-// Do NOT use Renew to re-read changing values (e.g. a rotating token) — that
-// requires a fresh Open, which Terraform drives, not the provider.
-//
-// func (e *DemoTempCredentialEphemeralResource) Renew(ctx context.Context, req ephemeral.RenewRequest, resp *ephemeral.RenewResponse) {
-//     // 1. Read the lookup keys (e.g. widget_id) from req.Private.GetKey.
-//     // 2. Call the renewal API via the service layer.
-//     // 3. Set resp.RenewAt to the new expiry (plus a small safety margin).
-// }
+// explicitly. Never use Renew to re-read a changing value such as a
+// rotating token: that needs a fresh Open, which Terraform drives.
 
-// TEMPLATE: Close is optional (interface ephemeral.EphemeralResourceWithClose).
-// Implement it only when the cloud API supports revocation; a Close that
-// simply frees local resources is unnecessary. Lookup keys come from
-// req.Private.GetKey (set in Open via resp.Private.SetKey); CloseResponse
-// carries Diagnostics only.
+// TEMPLATE: Close (interface ephemeral.EphemeralResourceWithClose) is NOT
+// generated. When the JSON carries api.delete (the revocation API), the
+// service method for it is generated as usual, and the end of Open carries
 //
-// func (e *DemoTempCredentialEphemeralResource) Close(ctx context.Context, req ephemeral.CloseRequest, resp *ephemeral.CloseResponse) {
-//     // Revoke the credential via the revoke API (map the JSON input's
-//     // api.delete[0] to this call), reading the lookup keys from req.Private.
-// }
+//	// TODO(human): implement Close with the api.delete service method
+//
+// so a human wires it. Reason: Close reads its lookup keys from
+// req.Private, whose type lives in a framework-internal package — a unit
+// test cannot construct it, so generated Close/SetKey code could never be
+// verified (and SetKey needs valid-JSON values). List the TODO in the
+// summary.

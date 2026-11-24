@@ -1,0 +1,262 @@
+// TEMPLATE: framework EPHEMERAL-RESOURCE UNIT TEST skeleton (gomonkey stubbed
+// style — no real cloud credentials, no TF_ACC).
+// Golden source: tencentcloud/services/ssm/ephemeral_tc_ssm_secret_version_test.go
+//
+// Location: tencentcloud/services/<product>/ephemeral_tc_<name>_test.go
+// Package:  external test package <product>_test, importing the service
+//           package as sv<product>.
+//
+// Run command (the -gcflags disable inlining, which gomonkey needs):
+//   go test ./tencentcloud/services/<product>/ -run "Test<Name>" -v -count=1 -gcflags="all=-l"
+//
+// Key shape (an ephemeral resource has NO state and NO id):
+//   - the input is a tfsdk.Config whose Raw value is a tftypes object
+//     mirroring EVERY schema attribute (unset ones are nil);
+//   - Open writes its output into resp.Result, which the test seeds with a
+//     null value of the schema type and reads back into the model;
+//   - every package-level name carries the RESOURCE-qualified prefix
+//     (demoTempCredential...): the product directory shares one external test
+//     package across all generated resources, bare names collide.
+//
+// Stubbing mode (MANDATORY): the versioned client accessor + the SDK client
+// method are stubbed in TWO levels — the service method itself is NEVER
+// patched (patching service methods SIGBUS-crashes on darwin/arm64).
+
+package demo_test // TEMPLATE: <product>_test
+
+import (
+	"context"
+	"fmt"
+	"testing"
+
+	"github.com/agiledragon/gomonkey/v2"
+	"github.com/hashicorp/terraform-plugin-framework/ephemeral"
+	"github.com/hashicorp/terraform-plugin-framework/ephemeral/schema"
+	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
+	"github.com/hashicorp/terraform-plugin-go/tftypes"
+
+	demov20230101 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/demo/v20230101"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/sharedmeta"
+	svdemo "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/demo"
+)
+
+const (
+	demoTempCredentialTestWidgetId  = "widget-12345"
+	demoTempCredentialTestToken     = "fake-secret-token"
+	demoTempCredentialTestExpiredAt = "2030-01-01T00:00:00Z"
+	demoTempCredentialTestDuration  = int64(600)
+)
+
+func demoTempCredentialStr(v string) *string { return &v }
+
+// demoTempCredentialConfigType mirrors EVERY attribute of the schema (derive
+// it from the generated schema attribute by attribute).
+func demoTempCredentialConfigType() tftypes.Object {
+	return tftypes.Object{AttributeTypes: map[string]tftypes.Type{
+		"widget_id":    tftypes.String,
+		"duration":     tftypes.Number,
+		"secret_token": tftypes.String,
+		"expired_at":   tftypes.String,
+	}}
+}
+
+// buildDemoTempCredentialConfig builds the raw config: a nil widgetId leaves
+// the attribute unset; the computed outputs are always unset in a config.
+func buildDemoTempCredentialConfig(widgetId *string, duration *int64) tftypes.Value {
+	var id interface{}
+	if widgetId != nil {
+		id = *widgetId
+	}
+
+	var dur interface{}
+	if duration != nil {
+		dur = *duration
+	}
+
+	return tftypes.NewValue(demoTempCredentialConfigType(), map[string]tftypes.Value{
+		"widget_id":    tftypes.NewValue(tftypes.String, id),
+		"duration":     tftypes.NewValue(tftypes.Number, dur),
+		"secret_token": tftypes.NewValue(tftypes.String, nil),
+		"expired_at":   tftypes.NewValue(tftypes.String, nil),
+	})
+}
+
+// patchDemoTempCredentialSdkClient stubs the versioned client accessor and
+// returns the mock SDK client whose methods the test patches next.
+func patchDemoTempCredentialSdkClient(patches *gomonkey.Patches, client *connectivity.TencentCloudClient) *demov20230101.Client {
+	demoClient := &demov20230101.Client{}
+	patches.ApplyMethodReturn(client, "UseDemoV20230101Client", demoClient)
+
+	return demoClient
+}
+
+// demoTempCredentialTestContext wires the ephemeral resource to a configured
+// client.
+type demoTempCredentialTestContext struct {
+	resource ephemeral.EphemeralResource
+	schema   schema.Schema
+	client   *connectivity.TencentCloudClient
+}
+
+func newDemoTempCredentialTestContext(t *testing.T) *demoTempCredentialTestContext {
+	t.Helper()
+
+	client := &connectivity.TencentCloudClient{}
+
+	res := svdemo.NewDemoTempCredentialEphemeralResource()
+	configured, ok := res.(ephemeral.EphemeralResourceWithConfigure)
+	if !ok {
+		t.Fatalf("ephemeral resource does not implement ephemeral.EphemeralResourceWithConfigure")
+	}
+
+	var configureResp ephemeral.ConfigureResponse
+	configured.Configure(
+		context.Background(),
+		ephemeral.ConfigureRequest{ProviderData: &sharedmeta.ProviderMeta{Client: client}},
+		&configureResp,
+	)
+	if configureResp.Diagnostics.HasError() {
+		t.Fatalf("failed to configure ephemeral resource: %v", configureResp.Diagnostics.Errors())
+	}
+
+	var schemaResp ephemeral.SchemaResponse
+	res.Schema(context.Background(), ephemeral.SchemaRequest{}, &schemaResp)
+	if schemaResp.Diagnostics.HasError() {
+		t.Fatalf("failed to build schema: %v", schemaResp.Diagnostics.Errors())
+	}
+
+	return &demoTempCredentialTestContext{resource: res, schema: schemaResp.Schema, client: client}
+}
+
+// open runs Open against the given raw config; the result starts as a null
+// value of the schema type, exactly like the framework seeds it.
+func (c *demoTempCredentialTestContext) open(raw tftypes.Value) *ephemeral.OpenResponse {
+	resp := &ephemeral.OpenResponse{
+		Result: tfsdk.EphemeralResultData{
+			Schema: c.schema,
+			Raw:    tftypes.NewValue(c.schema.Type().TerraformType(context.Background()), nil),
+		},
+	}
+	c.resource.Open(context.Background(), ephemeral.OpenRequest{Config: tfsdk.Config{Schema: c.schema, Raw: raw}}, resp)
+
+	return resp
+}
+
+// TestDemoTempCredentialMetadataAndSchema verifies the type name and the
+// schema shape: Required lookup key, Sensitive Computed secret, no id.
+func TestDemoTempCredentialMetadataAndSchema(t *testing.T) {
+	ctx := newDemoTempCredentialTestContext(t)
+
+	var metaResp ephemeral.MetadataResponse
+	ctx.resource.Metadata(context.Background(), ephemeral.MetadataRequest{}, &metaResp)
+	if metaResp.TypeName != "tencentcloud_demo_temp_credential" {
+		t.Errorf("type name = %q, want tencentcloud_demo_temp_credential", metaResp.TypeName)
+	}
+
+	widgetId, ok := ctx.schema.Attributes["widget_id"].(schema.StringAttribute)
+	if !ok || !widgetId.Required {
+		t.Errorf("widget_id must be a Required string attribute")
+	}
+
+	secret, ok := ctx.schema.Attributes["secret_token"].(schema.StringAttribute)
+	if !ok || !secret.Computed || !secret.Sensitive {
+		t.Errorf("secret_token must be a Computed + Sensitive string attribute")
+	}
+
+	if _, ok := ctx.schema.Attributes["id"]; ok {
+		t.Error("an ephemeral resource has no state: the schema must not declare an id attribute")
+	}
+}
+
+// TestDemoTempCredentialOpenSuccess verifies every input reaches the API
+// request and the secret lands in the result.
+func TestDemoTempCredentialOpenSuccess(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoTempCredentialTestContext(t)
+	demoClient := patchDemoTempCredentialSdkClient(patches, ctx.client)
+
+	var captured *demov20230101.DescribeTempCredentialRequest
+	patches.ApplyMethodFunc(demoClient, "DescribeTempCredential", func(request *demov20230101.DescribeTempCredentialRequest) (*demov20230101.DescribeTempCredentialResponse, error) {
+		captured = request
+
+		return &demov20230101.DescribeTempCredentialResponse{Response: &demov20230101.DescribeTempCredentialResponseParams{
+			Token:     demoTempCredentialStr(demoTempCredentialTestToken),
+			ExpiredAt: demoTempCredentialStr(demoTempCredentialTestExpiredAt),
+			RequestId: demoTempCredentialStr("fake-request-id"),
+		}}, nil
+	})
+
+	duration := demoTempCredentialTestDuration
+	resp := ctx.open(buildDemoTempCredentialConfig(demoTempCredentialStr(demoTempCredentialTestWidgetId), &duration))
+	if resp.Diagnostics.HasError() {
+		t.Fatalf("Open failed: %v", resp.Diagnostics.Errors())
+	}
+
+	if captured == nil {
+		t.Fatal("DescribeTempCredential request is nil")
+	}
+	if captured.WidgetId == nil || *captured.WidgetId != demoTempCredentialTestWidgetId {
+		t.Errorf("request widget_id = %v, want %q", captured.WidgetId, demoTempCredentialTestWidgetId)
+	}
+	if captured.Duration == nil || *captured.Duration != demoTempCredentialTestDuration {
+		t.Errorf("request duration = %v, want %d: every schema input must reach the request", captured.Duration, demoTempCredentialTestDuration)
+	}
+
+	var got svdemo.DemoTempCredentialEphemeralResourceModel
+	if diags := resp.Result.Get(context.Background(), &got); diags.HasError() {
+		t.Fatalf("failed to read back the result: %v", diags.Errors())
+	}
+	if got.SecretToken.ValueString() != demoTempCredentialTestToken {
+		t.Errorf("secret_token = %q, want %q", got.SecretToken.ValueString(), demoTempCredentialTestToken)
+	}
+	if got.ExpiredAt.ValueString() != demoTempCredentialTestExpiredAt {
+		t.Errorf("expired_at = %q, want %q", got.ExpiredAt.ValueString(), demoTempCredentialTestExpiredAt)
+	}
+}
+
+// TestDemoTempCredentialOpenMissingWidgetId verifies a missing lookup key
+// fails before any API is called.
+func TestDemoTempCredentialOpenMissingWidgetId(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoTempCredentialTestContext(t)
+	demoClient := patchDemoTempCredentialSdkClient(patches, ctx.client)
+
+	called := false
+	patches.ApplyMethodFunc(demoClient, "DescribeTempCredential", func(request *demov20230101.DescribeTempCredentialRequest) (*demov20230101.DescribeTempCredentialResponse, error) {
+		called = true
+
+		return nil, fmt.Errorf("must not be called")
+	})
+
+	resp := ctx.open(buildDemoTempCredentialConfig(nil, nil))
+	if !resp.Diagnostics.HasError() {
+		t.Fatal("Open should fail without widget_id")
+	}
+	if called {
+		t.Error("no API may be called when the lookup key is missing")
+	}
+}
+
+// TestDemoTempCredentialOpenApiError verifies an API failure surfaces as an
+// error diagnostic (a plain fmt.Errorf is non-retryable: no waiting).
+func TestDemoTempCredentialOpenApiError(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoTempCredentialTestContext(t)
+	demoClient := patchDemoTempCredentialSdkClient(patches, ctx.client)
+	patches.ApplyMethodFunc(demoClient, "DescribeTempCredential", func(request *demov20230101.DescribeTempCredentialRequest) (*demov20230101.DescribeTempCredentialResponse, error) {
+		return nil, fmt.Errorf("describe failed")
+	})
+
+	resp := ctx.open(buildDemoTempCredentialConfig(demoTempCredentialStr(demoTempCredentialTestWidgetId), nil))
+	if !resp.Diagnostics.HasError() {
+		t.Fatal("Open should fail on an API error")
+	}
+}

@@ -1,0 +1,281 @@
+// TEMPLATE: framework ACTION UNIT TEST skeleton (gomonkey stubbed style — no
+// real cloud credentials, no TF_ACC).
+// Golden source: tencentcloud/services/mongodb/action_tc_mongodb_restore_db_instance_test.go
+//
+// Location: tencentcloud/services/<product>/action_tc_<product>_<name>_test.go
+// Package:  external test package <product>_test, importing the service
+//           package as sv<product>.
+//
+// Run command (the -gcflags disable inlining, which gomonkey needs):
+//   go test ./tencentcloud/services/<product>/ -run "Test<Name>" -v -count=1 -gcflags="all=-l"
+//
+// Key shape (an action has NO plan and NO state):
+//   - the input is a tfsdk.Config whose Raw value is a tftypes object
+//     mirroring EVERY schema attribute and block (unset ones are nil);
+//   - the only observable outcome of Invoke is resp.Diagnostics plus the
+//     captured SDK requests — there is no output to assert;
+//   - every package-level name carries the RESOURCE-qualified prefix
+//     (demoRestartWidget...): the product directory shares one external test
+//     package across all generated resources, bare names collide.
+//
+// Stubbing mode (MANDATORY): the versioned client accessor + the SDK client
+// method are stubbed in TWO levels — the service method itself is NEVER
+// patched (patching service methods SIGBUS-crashes on darwin/arm64, and
+// client-level stubbing lets the real service logic run under test).
+
+package demo_test // TEMPLATE: <product>_test
+
+import (
+	"context"
+	"fmt"
+	"testing"
+
+	"github.com/agiledragon/gomonkey/v2"
+	"github.com/hashicorp/terraform-plugin-framework/action"
+	"github.com/hashicorp/terraform-plugin-framework/action/schema"
+	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
+	"github.com/hashicorp/terraform-plugin-go/tftypes"
+
+	demov20230101 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/demo/v20230101"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/sharedmeta"
+	svdemo "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/demo"
+)
+
+const (
+	demoRestartWidgetTestWidgetId = "widget-12345"
+	demoRestartWidgetTestTaskId   = "task-12345"
+	// TEMPLATE: second-scale user timeout for every case that reaches the
+	// wait path — the test verifies the path is REACHED and never hard-waits
+	// the minute-scale default. Purely synchronous actions drop the whole
+	// timeouts story (this constant, the block type, the wait cases).
+	demoRestartWidgetTestInvokeTimeout = "5s"
+)
+
+func demoRestartWidgetStr(v string) *string { return &v }
+
+// demoRestartWidgetTimeoutsType mirrors the `timeouts` block of the schema.
+func demoRestartWidgetTimeoutsType() tftypes.Object {
+	return tftypes.Object{AttributeTypes: map[string]tftypes.Type{"invoke": tftypes.String}}
+}
+
+// demoRestartWidgetConfigType mirrors EVERY attribute and block of the
+// schema (derive it from the generated schema attribute by attribute).
+func demoRestartWidgetConfigType() tftypes.Object {
+	return tftypes.Object{AttributeTypes: map[string]tftypes.Type{
+		"widget_id": tftypes.String,
+		"timeouts":  demoRestartWidgetTimeoutsType(),
+	}}
+}
+
+// buildDemoRestartWidgetConfig builds the raw config: a nil widgetId leaves
+// the attribute unset, a nil invoke leaves the timeouts block null.
+func buildDemoRestartWidgetConfig(widgetId *string, invoke *string) tftypes.Value {
+	timeouts := tftypes.NewValue(demoRestartWidgetTimeoutsType(), nil)
+	if invoke != nil {
+		timeouts = tftypes.NewValue(demoRestartWidgetTimeoutsType(), map[string]tftypes.Value{
+			"invoke": tftypes.NewValue(tftypes.String, *invoke),
+		})
+	}
+
+	var id interface{}
+	if widgetId != nil {
+		id = *widgetId
+	}
+
+	return tftypes.NewValue(demoRestartWidgetConfigType(), map[string]tftypes.Value{
+		"widget_id": tftypes.NewValue(tftypes.String, id),
+		"timeouts":  timeouts,
+	})
+}
+
+// patchDemoRestartWidgetSdkClient stubs the versioned client accessor and
+// returns the mock SDK client whose methods the test patches next.
+func patchDemoRestartWidgetSdkClient(patches *gomonkey.Patches, client *connectivity.TencentCloudClient) *demov20230101.Client {
+	demoClient := &demov20230101.Client{}
+	patches.ApplyMethodReturn(client, "UseDemoV20230101Client", demoClient)
+
+	return demoClient
+}
+
+// stubDemoRestartWidgetTaskStatus stubs the async task-query API with a fixed
+// status. A stub reporting the terminal state on the FIRST call finishes
+// immediately; a stub that never does ends at the short user timeout. Stub
+// errors are plain fmt.Errorf values: tccommon.RetryError classifies them as
+// non-retryable, so error cases finish immediately too.
+func stubDemoRestartWidgetTaskStatus(patches *gomonkey.Patches, demoClient *demov20230101.Client, status string) {
+	patches.ApplyMethodFunc(demoClient, "GetAsyncStatus", func(request *demov20230101.GetAsyncStatusRequest) (*demov20230101.GetAsyncStatusResponse, error) {
+		return &demov20230101.GetAsyncStatusResponse{Response: &demov20230101.GetAsyncStatusResponseParams{
+			Status:    demoRestartWidgetStr(status),
+			RequestId: demoRestartWidgetStr("fake-request-id"),
+		}}, nil
+	})
+}
+
+// demoRestartWidgetTestContext wires the action to a configured client.
+type demoRestartWidgetTestContext struct {
+	action action.Action
+	schema schema.Schema
+	client *connectivity.TencentCloudClient
+}
+
+func newDemoRestartWidgetTestContext(t *testing.T) *demoRestartWidgetTestContext {
+	t.Helper()
+
+	client := &connectivity.TencentCloudClient{}
+
+	act := svdemo.NewDemoRestartWidget()
+	configured, ok := act.(action.ActionWithConfigure)
+	if !ok {
+		t.Fatalf("action does not implement action.ActionWithConfigure")
+	}
+
+	var configureResp action.ConfigureResponse
+	configured.Configure(
+		context.Background(),
+		action.ConfigureRequest{ProviderData: &sharedmeta.ProviderMeta{Client: client}},
+		&configureResp,
+	)
+	if configureResp.Diagnostics.HasError() {
+		t.Fatalf("failed to configure action: %v", configureResp.Diagnostics.Errors())
+	}
+
+	var schemaResp action.SchemaResponse
+	act.Schema(context.Background(), action.SchemaRequest{}, &schemaResp)
+	if schemaResp.Diagnostics.HasError() {
+		t.Fatalf("failed to build schema: %v", schemaResp.Diagnostics.Errors())
+	}
+
+	return &demoRestartWidgetTestContext{action: act, schema: schemaResp.Schema, client: client}
+}
+
+// invoke runs the action against the given raw config.
+func (c *demoRestartWidgetTestContext) invoke(raw tftypes.Value) *action.InvokeResponse {
+	var resp action.InvokeResponse
+	c.action.Invoke(context.Background(), action.InvokeRequest{Config: tfsdk.Config{Schema: c.schema, Raw: raw}}, &resp)
+
+	return &resp
+}
+
+// TestDemoRestartWidgetMetadataAndSchema verifies the type name and the
+// action-specific schema shape: Required input, no id, timeouts in Blocks.
+func TestDemoRestartWidgetMetadataAndSchema(t *testing.T) {
+	ctx := newDemoRestartWidgetTestContext(t)
+
+	var metaResp action.MetadataResponse
+	ctx.action.Metadata(context.Background(), action.MetadataRequest{}, &metaResp)
+	if metaResp.TypeName != "tencentcloud_demo_restart_widget" {
+		t.Errorf("type name = %q, want tencentcloud_demo_restart_widget", metaResp.TypeName)
+	}
+
+	widgetId, ok := ctx.schema.Attributes["widget_id"].(schema.StringAttribute)
+	if !ok || !widgetId.Required {
+		t.Errorf("widget_id must be a Required string attribute")
+	}
+	if _, ok := ctx.schema.Attributes["id"]; ok {
+		t.Error("an action has no state: the schema must not declare an id attribute")
+	}
+	if _, ok := ctx.schema.Blocks["timeouts"]; !ok {
+		t.Error("the timeouts block must live in Blocks")
+	}
+}
+
+// TestDemoRestartWidgetInvokeSuccess verifies the input reaches the API
+// request and the async task is waited on.
+func TestDemoRestartWidgetInvokeSuccess(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoRestartWidgetTestContext(t)
+	demoClient := patchDemoRestartWidgetSdkClient(patches, ctx.client)
+
+	var captured *demov20230101.RestartWidgetRequest
+	patches.ApplyMethodFunc(demoClient, "RestartWidget", func(request *demov20230101.RestartWidgetRequest) (*demov20230101.RestartWidgetResponse, error) {
+		captured = request
+
+		return &demov20230101.RestartWidgetResponse{Response: &demov20230101.RestartWidgetResponseParams{
+			TaskId:    demoRestartWidgetStr(demoRestartWidgetTestTaskId),
+			RequestId: demoRestartWidgetStr("fake-request-id"),
+		}}, nil
+	})
+	stubDemoRestartWidgetTaskStatus(patches, demoClient, "SUCCESS")
+
+	resp := ctx.invoke(buildDemoRestartWidgetConfig(demoRestartWidgetStr(demoRestartWidgetTestWidgetId), demoRestartWidgetStr(demoRestartWidgetTestInvokeTimeout)))
+	if resp.Diagnostics.HasError() {
+		t.Fatalf("Invoke failed: %v", resp.Diagnostics.Errors())
+	}
+
+	if captured == nil {
+		t.Fatal("RestartWidget request is nil")
+	}
+	if captured.WidgetId == nil || *captured.WidgetId != demoRestartWidgetTestWidgetId {
+		t.Errorf("request widget_id = %v, want %q", captured.WidgetId, demoRestartWidgetTestWidgetId)
+	}
+}
+
+// TestDemoRestartWidgetInvokeMissingWidgetId verifies a missing required
+// input fails before any API is called.
+func TestDemoRestartWidgetInvokeMissingWidgetId(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoRestartWidgetTestContext(t)
+	demoClient := patchDemoRestartWidgetSdkClient(patches, ctx.client)
+
+	called := false
+	patches.ApplyMethodFunc(demoClient, "RestartWidget", func(request *demov20230101.RestartWidgetRequest) (*demov20230101.RestartWidgetResponse, error) {
+		called = true
+
+		return nil, fmt.Errorf("must not be called")
+	})
+
+	resp := ctx.invoke(buildDemoRestartWidgetConfig(nil, nil))
+	if !resp.Diagnostics.HasError() {
+		t.Fatal("Invoke should fail without widget_id")
+	}
+	if called {
+		t.Error("no API may be called when the required input is missing")
+	}
+}
+
+// TestDemoRestartWidgetInvokeApiError verifies an API failure surfaces as an
+// error diagnostic.
+func TestDemoRestartWidgetInvokeApiError(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoRestartWidgetTestContext(t)
+	demoClient := patchDemoRestartWidgetSdkClient(patches, ctx.client)
+	patches.ApplyMethodFunc(demoClient, "RestartWidget", func(request *demov20230101.RestartWidgetRequest) (*demov20230101.RestartWidgetResponse, error) {
+		return nil, fmt.Errorf("restart failed")
+	})
+
+	resp := ctx.invoke(buildDemoRestartWidgetConfig(demoRestartWidgetStr(demoRestartWidgetTestWidgetId), nil))
+	if !resp.Diagnostics.HasError() {
+		t.Fatal("Invoke should fail on an API error")
+	}
+}
+
+// TestDemoRestartWidgetInvokeWaitTimeout verifies a task that never reaches
+// its terminal state ends the action with an error once the short user
+// timeout elapses — this exercises the `timeouts` block end to end.
+func TestDemoRestartWidgetInvokeWaitTimeout(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoRestartWidgetTestContext(t)
+	demoClient := patchDemoRestartWidgetSdkClient(patches, ctx.client)
+	patches.ApplyMethodFunc(demoClient, "RestartWidget", func(request *demov20230101.RestartWidgetRequest) (*demov20230101.RestartWidgetResponse, error) {
+		return &demov20230101.RestartWidgetResponse{Response: &demov20230101.RestartWidgetResponseParams{
+			TaskId:    demoRestartWidgetStr(demoRestartWidgetTestTaskId),
+			RequestId: demoRestartWidgetStr("fake-request-id"),
+		}}, nil
+	})
+	stubDemoRestartWidgetTaskStatus(patches, demoClient, "RUNNING")
+
+	resp := ctx.invoke(buildDemoRestartWidgetConfig(demoRestartWidgetStr(demoRestartWidgetTestWidgetId), demoRestartWidgetStr(demoRestartWidgetTestInvokeTimeout)))
+	if !resp.Diagnostics.HasError() {
+		t.Fatal("Invoke should fail when the task never reaches its terminal state")
+	}
+}

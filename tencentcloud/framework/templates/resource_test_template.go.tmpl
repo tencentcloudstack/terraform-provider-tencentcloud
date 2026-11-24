@@ -1,0 +1,640 @@
+// TEMPLATE: framework managed-resource UNIT TEST skeleton (gomonkey
+// stubbed style — no real cloud credentials, no TF_ACC).
+// Golden source: tencentcloud/services/makers/resource_tc_makers_project_test.go
+//
+// Location: tencentcloud/services/<product>/resource_tc_<name>_test.go
+// Package:  external test package <product>_test, importing the service
+//           package as sv<product>.
+//
+// Run command (the -gcflags disable inlining, which gomonkey needs):
+//   go test ./tencentcloud/services/<product>/ -run "Test<Name>" -v -count=1 -gcflags="all=-l"
+//
+// Key shape (differs from the data-source test template!):
+//   - plan/state are built via tfsdk.Plan / tfsdk.State carrying the schema,
+//     populated from the MODEL struct (not raw tftypes values);
+//   - request variables follow the interface-name convention
+//     (describeWidgetsRequest, createWidgetRequest, ...) everywhere,
+//     including inside test code.
+//
+// Stubbing mode (MANDATORY): the versioned client accessor + the SDK client
+// method are stubbed in TWO levels — the service method itself is NEVER
+// patched (patching service methods SIGBUS-crashes on darwin/arm64, and
+// client-level stubbing lets the real service logic run under test). Stub
+// signatures follow the SDK client methods (the NON-context flavour when the
+// service calls client.Xxx(req)).
+
+package demo_test // TEMPLATE: <product>_test
+
+import (
+	"context"
+	"fmt"
+	"testing"
+
+	"github.com/agiledragon/gomonkey/v2"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	resourcetimeouts "github.com/hashicorp/terraform-plugin-framework-timeouts/resource/timeouts"
+
+	demov20230101 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/demo/v20230101"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/sharedmeta"
+	svdemo "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/demo"
+)
+
+const (
+	demoWidgetTestId             = "widget-12345"
+	demoWidgetTestName           = "tf-example-widget"
+	demoWidgetTestRenamedName    = "tf-example-widget-renamed"
+	demoWidgetTestNormalizedName = "tf-example-widget-normalized"
+	demoWidgetTestZoneId         = "zone-12345"
+	demoWidgetTestTaskId         = "task-12345"
+	demoWidgetTestTagA           = "tag-a"
+	demoWidgetTestTagB           = "tag-b"
+	demoWidgetTestDriftedTag     = "tag-drifted"
+)
+
+// TEMPLATE: stub helpers (ptrXxx / buildXxx) and constants — keep ONLY the
+// ones the test cases reference; the file must contain ZERO unused private
+// functions/variables/constants (verify_templates.py and staticcheck U1000
+// both enforce it). After fixing a bug, re-check helpers the fix made
+// obsolete.
+func demoWidgetStr(v string) *string { return &v }
+
+// demoWidgetTestItem builds the DescribeWidgets response item.
+func demoWidgetTestItem() *demov20230101.Widget {
+	return &demov20230101.Widget{
+		WidgetId: demoWidgetStr(demoWidgetTestId),
+		Name:     demoWidgetStr(demoWidgetTestName),
+		ZoneId:   demoWidgetStr(demoWidgetTestZoneId),
+		Status:   demoWidgetStr("Running"),
+		CreateOn: demoWidgetStr("2024-01-01T00:00:00Z"),
+		Tags:     []*string{demoWidgetStr(demoWidgetTestTagA), demoWidgetStr(demoWidgetTestTagB)},
+	}
+}
+
+// demoWidgetTestModel builds the terraform model used for plan/state.
+// TEMPLATE: every unset attribute carries an EXPLICIT TYPED null value —
+// the raw zero value (types.List{} etc.) breaks tfsdk Plan/State
+// reflection with "Value Conversion Error". Populate one typed null per
+// model field: Int64Null/StringNull/BoolNull/Float64Null for scalars,
+// ListNull(ElementType) for lists, ListNull(ObjectType{AttrTypes}) for
+// nested lists, plus the Timeouts value below. A single missing typed
+// null fails the whole test context.
+// TEMPLATE: CONDITIONAL — generate the Timeouts initialization and the
+// attrTypes helper ONLY when the resource schema declares the `timeouts`
+// block (async scenarios); purely synchronous resources drop the field,
+// the helper and the attr/resourcetimeouts imports. The value itself:
+// cases exercising a wait path pass a SECOND-SCALE short user value (5s
+// below is a recommended example, not a fixed answer — the test verifies
+// the code path is REACHED, never hard-waits a realistic minute-scale
+// default; a stub that misses its terminal state would otherwise hang
+// the test for the whole default). Cases unrelated to timeouts keep the
+// plain null form (types.ObjectNull(...)). The widget create/delete
+// cases below wait for async tasks, hence the short-value form here.
+func demoWidgetTestModel() svdemo.DemoWidgetResourceModel {
+	return svdemo.DemoWidgetResourceModel{
+		Id:     types.StringValue(demoWidgetTestId),
+		Name:   types.StringValue(demoWidgetTestName),
+		ZoneId: types.StringValue(demoWidgetTestZoneId),
+		// Every remaining model field gets an explicit typed null — one per
+		// field, none skipped (Computed ones are filled by the refresh).
+		Remark:   types.StringNull(),
+		Tags:     types.ListValueMust(types.StringType, []attr.Value{types.StringValue(demoWidgetTestTagA), types.StringValue(demoWidgetTestTagB)}),
+		Status:   types.StringNull(),
+		CreateOn: types.StringNull(),
+		// TEMPLATE: CONDITIONAL (async only) — a short (e.g. 5s) user value
+		// for the wait-path cases; ObjectNull for unrelated ones. Use
+		// ObjectValueMust: the plain ObjectValue returns (value, diags) and
+		// does NOT compile inline (verified: tdmysql v2, 2026-11).
+		// Update-case stubs must reflect the POST-change cloud state.
+		Timeouts: resourcetimeouts.Value{Object: types.ObjectValueMust(
+			demoWidgetTimeoutsAttrTypes(),
+			map[string]attr.Value{
+				"create": types.StringValue("5s"),
+				"update": types.StringValue("5s"),
+				"delete": types.StringValue("5s"),
+			},
+		)},
+	}
+}
+
+// demoWidgetTimeoutsAttrTypes mirrors the attribute types of the timeouts
+// block declared by the resource schema.
+// TEMPLATE: CONDITIONAL — only for resources with a timeouts block; the
+// stages MUST match the resource's resourcetimeouts.Block Opts.
+func demoWidgetTimeoutsAttrTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"create": types.StringType,
+		"update": types.StringType,
+		"delete": types.StringType,
+	}
+}
+
+// assertDemoWidgetModel asserts every model field.
+func assertDemoWidgetModel(t *testing.T, m svdemo.DemoWidgetResourceModel) {
+	t.Helper()
+
+	if m.Id.ValueString() != demoWidgetTestId {
+		t.Errorf("id = %q, want %q", m.Id.ValueString(), demoWidgetTestId)
+	}
+	if m.Name.ValueString() != demoWidgetTestName {
+		t.Errorf("name = %q, want %q", m.Name.ValueString(), demoWidgetTestName)
+	}
+	if m.Status.ValueString() != "Running" {
+		t.Errorf("status = %q, want Running", m.Status.ValueString())
+	}
+
+	var tags []string
+	if diags := m.Tags.ElementsAs(context.Background(), &tags, false); diags.HasError() {
+		t.Fatalf("tags: %v", diags.Errors())
+	}
+	if len(tags) != 2 || tags[0] != demoWidgetTestTagA || tags[1] != demoWidgetTestTagB {
+		t.Errorf("tags = %v, want [%q %q]", tags, demoWidgetTestTagA, demoWidgetTestTagB)
+	}
+}
+
+// patchDemoWidgetSdkClient stubs the versioned client accessor and returns the
+// mock SDK client whose methods the test patches next (the two-level mode).
+func patchDemoWidgetSdkClient(patches *gomonkey.Patches, client *connectivity.TencentCloudClient) *demov20230101.Client {
+	demoClient := &demov20230101.Client{}
+	patches.ApplyMethodReturn(client, "UseDemoV20230101Client", demoClient)
+
+	return demoClient
+}
+
+// stubDemoWidgetTaskStatus stubs the async task-query API with a fixed status.
+// TEMPLATE: a wait case whose stub reports the terminal state on the FIRST
+// call finishes immediately; a stub that never reports it ends at the
+// short user timeout of demoWidgetTestModel instead of the minute-scale default.
+// Stub errors are plain fmt.Errorf values: tccommon.RetryError classifies
+// them as non-retryable, so error cases finish immediately too.
+func stubDemoWidgetTaskStatus(patches *gomonkey.Patches, demoClient *demov20230101.Client, status string) {
+	patches.ApplyMethodFunc(demoClient, "GetAsyncStatus", func(req *demov20230101.GetAsyncStatusRequest) (*demov20230101.GetAsyncStatusResponse, error) {
+		return &demov20230101.GetAsyncStatusResponse{Response: &demov20230101.GetAsyncStatusResponseParams{
+			Status:    demoWidgetStr(status),
+			RequestId: demoWidgetStr("fake-request-id"),
+		}}, nil
+	})
+}
+
+// demoWidgetTestContext wires the resource to a configured client; the SDK
+// client methods are stubbed per test case.
+type demoWidgetTestContext struct {
+	resource resource.Resource
+	schema   schema.Schema
+	client   *connectivity.TencentCloudClient
+}
+
+func newDemoWidgetTestContext(t *testing.T) *demoWidgetTestContext {
+	t.Helper()
+
+	connectivityClient := &connectivity.TencentCloudClient{}
+
+	res := svdemo.NewDemoWidgetResource()
+	configured, ok := res.(resource.ResourceWithConfigure)
+	if !ok {
+		t.Fatalf("resource does not implement resource.ResourceWithConfigure")
+	}
+
+	var configureResp resource.ConfigureResponse
+	configured.Configure(
+		context.Background(),
+		resource.ConfigureRequest{ProviderData: &sharedmeta.ProviderMeta{Client: connectivityClient}},
+		&configureResp,
+	)
+	if configureResp.Diagnostics.HasError() {
+		t.Fatalf("failed to configure resource: %v", configureResp.Diagnostics.Errors())
+	}
+
+	var schemaResp resource.SchemaResponse
+	res.Schema(context.Background(), resource.SchemaRequest{}, &schemaResp)
+	if schemaResp.Diagnostics.HasError() {
+		t.Fatalf("failed to build schema: %v", schemaResp.Diagnostics.Errors())
+	}
+
+	return &demoWidgetTestContext{resource: res, schema: schemaResp.Schema, client: connectivityClient}
+}
+
+func (c *demoWidgetTestContext) plan(t *testing.T, m svdemo.DemoWidgetResourceModel) tfsdk.Plan {
+	t.Helper()
+
+	plan := tfsdk.Plan{Schema: c.schema}
+	if diags := plan.Set(context.Background(), m); diags.HasError() {
+		t.Fatalf("failed to build plan: %v", diags.Errors())
+	}
+
+	return plan
+}
+
+func (c *demoWidgetTestContext) state(t *testing.T, m svdemo.DemoWidgetResourceModel) tfsdk.State {
+	t.Helper()
+
+	state := tfsdk.State{Schema: c.schema}
+	if diags := state.Set(context.Background(), m); diags.HasError() {
+		t.Fatalf("failed to build state: %v", diags.Errors())
+	}
+
+	return state
+}
+
+// TestDemoWidgetCreateSuccess verifies that Create sends all request fields,
+// tracks the returned widget id and refreshes the state.
+func TestDemoWidgetCreateSuccess(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetTestContext(t)
+	demoClient := patchDemoWidgetSdkClient(patches, ctx.client)
+
+	var captured *demov20230101.CreateWidgetRequest
+	patches.ApplyMethodFunc(demoClient, "CreateWidget", func(req *demov20230101.CreateWidgetRequest) (*demov20230101.CreateWidgetResponse, error) {
+		captured = req
+
+		return &demov20230101.CreateWidgetResponse{Response: &demov20230101.CreateWidgetResponseParams{
+			WidgetId:  demoWidgetStr(demoWidgetTestId),
+			TaskId:    demoWidgetStr(demoWidgetTestTaskId),
+			RequestId: demoWidgetStr("fake-request-id"),
+		}}, nil
+	})
+	stubDemoWidgetTaskStatus(patches, demoClient, "SUCCESS")
+	patches.ApplyMethodFunc(demoClient, "DescribeWidgets", func(req *demov20230101.DescribeWidgetsRequest) (*demov20230101.DescribeWidgetsResponse, error) {
+		return &demov20230101.DescribeWidgetsResponse{Response: &demov20230101.DescribeWidgetsResponseParams{
+			WidgetSet: []*demov20230101.Widget{demoWidgetTestItem()},
+			RequestId: demoWidgetStr("fake-request-id"),
+		}}, nil
+	})
+
+	model := demoWidgetTestModel()
+	var createResp resource.CreateResponse
+	createResp.State = ctx.state(t, model)
+	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, model)}, &createResp)
+	if createResp.Diagnostics.HasError() {
+		t.Fatalf("Create failed: %v", createResp.Diagnostics.Errors())
+	}
+
+	if captured == nil {
+		t.Fatal("CreateWidget request is nil")
+	}
+	if captured.Name == nil || *captured.Name != demoWidgetTestName {
+		t.Errorf("create request name = %v, want %q", captured.Name, demoWidgetTestName)
+	}
+	if captured.ZoneId == nil || *captured.ZoneId != demoWidgetTestZoneId {
+		t.Errorf("create request zone_id = %v, want %q", captured.ZoneId, demoWidgetTestZoneId)
+	}
+	if len(captured.Tags) != 2 || captured.Tags[0] == nil || *captured.Tags[0] != demoWidgetTestTagA || captured.Tags[1] == nil || *captured.Tags[1] != demoWidgetTestTagB {
+		t.Errorf("create request tags = %v, want [%q %q]", captured.Tags, demoWidgetTestTagA, demoWidgetTestTagB)
+	}
+
+	var got svdemo.DemoWidgetResourceModel
+	if diags := createResp.State.Get(context.Background(), &got); diags.HasError() {
+		t.Fatalf("failed to read back state: %v", diags.Errors())
+	}
+	assertDemoWidgetModel(t, got)
+}
+
+// TestDemoWidgetCreateEmptyId verifies that Create fails loudly when the API
+// returns no widget id.
+func TestDemoWidgetCreateEmptyId(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetTestContext(t)
+	demoClient := patchDemoWidgetSdkClient(patches, ctx.client)
+	patches.ApplyMethodFunc(demoClient, "CreateWidget", func(req *demov20230101.CreateWidgetRequest) (*demov20230101.CreateWidgetResponse, error) {
+		return &demov20230101.CreateWidgetResponse{Response: &demov20230101.CreateWidgetResponseParams{
+			RequestId: demoWidgetStr("fake-request-id"),
+		}}, nil
+	})
+
+	var createResp resource.CreateResponse
+	createResp.State = ctx.state(t, demoWidgetTestModel())
+	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, demoWidgetTestModel())}, &createResp)
+	if !createResp.Diagnostics.HasError() {
+		t.Fatal("Create should fail when the API returns an empty widget id")
+	}
+}
+
+// TestDemoWidgetCreateWaitTimeout verifies that a task which never reaches
+// its terminal state ends the apply with an error once the (short) user
+// timeout elapses — this exercises the `timeouts` block end to end.
+func TestDemoWidgetCreateWaitTimeout(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetTestContext(t)
+	demoClient := patchDemoWidgetSdkClient(patches, ctx.client)
+	patches.ApplyMethodFunc(demoClient, "CreateWidget", func(req *demov20230101.CreateWidgetRequest) (*demov20230101.CreateWidgetResponse, error) {
+		return &demov20230101.CreateWidgetResponse{Response: &demov20230101.CreateWidgetResponseParams{
+			WidgetId:  demoWidgetStr(demoWidgetTestId),
+			TaskId:    demoWidgetStr(demoWidgetTestTaskId),
+			RequestId: demoWidgetStr("fake-request-id"),
+		}}, nil
+	})
+	stubDemoWidgetTaskStatus(patches, demoClient, "RUNNING")
+
+	var createResp resource.CreateResponse
+	createResp.State = ctx.state(t, demoWidgetTestModel())
+	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, demoWidgetTestModel())}, &createResp)
+	if !createResp.Diagnostics.HasError() {
+		t.Fatal("Create should fail when the task never reaches its terminal state")
+	}
+}
+
+// TestDemoWidgetCreateApiError verifies API failures surface as errors.
+// TEMPLATE: the Update / Delete error paths follow the same shape — stub the
+// respective SDK method to return a plain fmt.Errorf and assert HasError.
+func TestDemoWidgetCreateApiError(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetTestContext(t)
+	demoClient := patchDemoWidgetSdkClient(patches, ctx.client)
+	patches.ApplyMethodFunc(demoClient, "CreateWidget", func(req *demov20230101.CreateWidgetRequest) (*demov20230101.CreateWidgetResponse, error) {
+		return nil, fmt.Errorf("create failed")
+	})
+
+	var createResp resource.CreateResponse
+	createResp.State = ctx.state(t, demoWidgetTestModel())
+	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, demoWidgetTestModel())}, &createResp)
+	if !createResp.Diagnostics.HasError() {
+		t.Fatal("Create should fail on an API error")
+	}
+}
+
+// TestDemoWidgetReadSuccess verifies Read refreshes all leaf fields.
+func TestDemoWidgetReadSuccess(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetTestContext(t)
+	demoClient := patchDemoWidgetSdkClient(patches, ctx.client)
+
+	var gotWidgetId string
+	patches.ApplyMethodFunc(demoClient, "DescribeWidgets", func(req *demov20230101.DescribeWidgetsRequest) (*demov20230101.DescribeWidgetsResponse, error) {
+		if len(req.WidgetIds) != 1 || req.WidgetIds[0] == nil {
+			t.Errorf("expected the widget id filter to be passed")
+		} else {
+			gotWidgetId = *req.WidgetIds[0]
+		}
+
+		return &demov20230101.DescribeWidgetsResponse{Response: &demov20230101.DescribeWidgetsResponseParams{
+			WidgetSet: []*demov20230101.Widget{demoWidgetTestItem()},
+			RequestId: demoWidgetStr("fake-request-id"),
+		}}, nil
+	})
+
+	var readResp resource.ReadResponse
+	readResp.State = ctx.state(t, demoWidgetTestModel())
+	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, demoWidgetTestModel())}, &readResp)
+	if readResp.Diagnostics.HasError() {
+		t.Fatalf("Read failed: %v", readResp.Diagnostics.Errors())
+	}
+
+	if gotWidgetId != demoWidgetTestId {
+		t.Errorf("DescribeWidgets called with %q, want %q", gotWidgetId, demoWidgetTestId)
+	}
+
+	var got svdemo.DemoWidgetResourceModel
+	if diags := readResp.State.Get(context.Background(), &got); diags.HasError() {
+		t.Fatalf("failed to read back state: %v", diags.Errors())
+	}
+	assertDemoWidgetModel(t, got)
+}
+
+// TestDemoWidgetReadDetectsTagsDrift verifies a user-configurable collection
+// is refreshed from the cloud: the state holds [tag-a tag-b], the cloud now
+// answers [tag-drifted], and Read must record the cloud value (not keep the
+// previous one), so a change made outside Terraform shows up in the next plan.
+// TEMPLATE: this case is what proves the *OrPrev read path — a stub that
+// echoes the state value could not tell "refreshed" from "kept".
+func TestDemoWidgetReadDetectsTagsDrift(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetTestContext(t)
+	demoClient := patchDemoWidgetSdkClient(patches, ctx.client)
+	patches.ApplyMethodFunc(demoClient, "DescribeWidgets", func(req *demov20230101.DescribeWidgetsRequest) (*demov20230101.DescribeWidgetsResponse, error) {
+		drifted := demoWidgetTestItem()
+		drifted.Tags = []*string{demoWidgetStr(demoWidgetTestDriftedTag)}
+
+		return &demov20230101.DescribeWidgetsResponse{Response: &demov20230101.DescribeWidgetsResponseParams{
+			WidgetSet: []*demov20230101.Widget{drifted},
+			RequestId: demoWidgetStr("fake-request-id"),
+		}}, nil
+	})
+
+	var readResp resource.ReadResponse
+	readResp.State = ctx.state(t, demoWidgetTestModel())
+	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, demoWidgetTestModel())}, &readResp)
+	if readResp.Diagnostics.HasError() {
+		t.Fatalf("Read failed: %v", readResp.Diagnostics.Errors())
+	}
+
+	var got svdemo.DemoWidgetResourceModel
+	if diags := readResp.State.Get(context.Background(), &got); diags.HasError() {
+		t.Fatalf("failed to read back state: %v", diags.Errors())
+	}
+
+	var tags []string
+	if diags := got.Tags.ElementsAs(context.Background(), &tags, false); diags.HasError() {
+		t.Fatalf("tags: %v", diags.Errors())
+	}
+	if len(tags) != 1 || tags[0] != demoWidgetTestDriftedTag {
+		t.Errorf("tags = %v, want the cloud value [%q]", tags, demoWidgetTestDriftedTag)
+	}
+}
+
+// TestDemoWidgetReadNotFound verifies that a describe list without the
+// tracked widget drops the resource from state (confirmed not-found).
+func TestDemoWidgetReadNotFound(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetTestContext(t)
+	demoClient := patchDemoWidgetSdkClient(patches, ctx.client)
+	patches.ApplyMethodFunc(demoClient, "DescribeWidgets", func(req *demov20230101.DescribeWidgetsRequest) (*demov20230101.DescribeWidgetsResponse, error) {
+		return &demov20230101.DescribeWidgetsResponse{Response: &demov20230101.DescribeWidgetsResponseParams{
+			RequestId: demoWidgetStr("fake-request-id"),
+		}}, nil
+	})
+
+	var readResp resource.ReadResponse
+	readResp.State = ctx.state(t, demoWidgetTestModel())
+	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, demoWidgetTestModel())}, &readResp)
+	if readResp.Diagnostics.HasError() {
+		t.Fatalf("Read should not error on confirmed not-found: %v", readResp.Diagnostics.Errors())
+	}
+	if !readResp.State.Raw.IsNull() {
+		t.Error("state should be removed after the widget is confirmed gone")
+	}
+}
+
+// TestDemoWidgetUpdateSuccess verifies Update sends the PLANNED value to the
+// modify request, waits for the task, and records the POST-update cloud state
+// from the read-back — not the plan.
+// TEMPLATE: the describe stub reports a value DIFFERENT from the plan (the
+// cloud normalized it). Only a state built from the read-back can equal it: an
+// Update that skips the read-back would persist the plan value and fail the
+// final assertion. A stub that merely echoes the plan could not tell the two
+// apart.
+func TestDemoWidgetUpdateSuccess(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetTestContext(t)
+	demoClient := patchDemoWidgetSdkClient(patches, ctx.client)
+
+	var captured *demov20230101.ModifyWidgetRequest
+	patches.ApplyMethodFunc(demoClient, "ModifyWidget", func(req *demov20230101.ModifyWidgetRequest) (*demov20230101.ModifyWidgetResponse, error) {
+		captured = req
+
+		return &demov20230101.ModifyWidgetResponse{Response: &demov20230101.ModifyWidgetResponseParams{
+			TaskId:    demoWidgetStr(demoWidgetTestTaskId),
+			RequestId: demoWidgetStr("fake-request-id"),
+		}}, nil
+	})
+	stubDemoWidgetTaskStatus(patches, demoClient, "SUCCESS")
+	patches.ApplyMethodFunc(demoClient, "DescribeWidgets", func(req *demov20230101.DescribeWidgetsRequest) (*demov20230101.DescribeWidgetsResponse, error) {
+		normalized := demoWidgetTestItem()
+		normalized.Name = demoWidgetStr(demoWidgetTestNormalizedName)
+
+		return &demov20230101.DescribeWidgetsResponse{Response: &demov20230101.DescribeWidgetsResponseParams{
+			WidgetSet: []*demov20230101.Widget{normalized},
+			RequestId: demoWidgetStr("fake-request-id"),
+		}}, nil
+	})
+
+	plannedModel := demoWidgetTestModel()
+	plannedModel.Name = types.StringValue(demoWidgetTestRenamedName)
+
+	var updateResp resource.UpdateResponse
+	updateResp.State = ctx.state(t, demoWidgetTestModel())
+	ctx.resource.Update(context.Background(),
+		resource.UpdateRequest{
+			Plan:  ctx.plan(t, plannedModel),
+			State: ctx.state(t, demoWidgetTestModel()),
+		}, &updateResp)
+	if updateResp.Diagnostics.HasError() {
+		t.Fatalf("Update failed: %v", updateResp.Diagnostics.Errors())
+	}
+
+	if captured == nil {
+		t.Fatal("ModifyWidget request is nil")
+	}
+	if captured.WidgetId == nil || *captured.WidgetId != demoWidgetTestId {
+		t.Errorf("update request widget_id = %v, want %q", captured.WidgetId, demoWidgetTestId)
+	}
+	if captured.Name == nil || *captured.Name != demoWidgetTestRenamedName {
+		t.Errorf("update request name = %v, want the planned %q", captured.Name, demoWidgetTestRenamedName)
+	}
+
+	var got svdemo.DemoWidgetResourceModel
+	if diags := updateResp.State.Get(context.Background(), &got); diags.HasError() {
+		t.Fatalf("failed to read back state: %v", diags.Errors())
+	}
+	if got.Id.ValueString() != demoWidgetTestId {
+		t.Errorf("id = %q, want the unchanged %q", got.Id.ValueString(), demoWidgetTestId)
+	}
+	if got.Name.ValueString() != demoWidgetTestNormalizedName {
+		t.Errorf("name = %q, want the read-back cloud value %q", got.Name.ValueString(), demoWidgetTestNormalizedName)
+	}
+}
+
+// TestDemoWidgetUpdateTimeoutsOnly verifies that a plan differing from the
+// state in the `timeouts` block alone calls NO write API: no attribute the
+// modify API covers changed, so the call would be a pointless no-change
+// request. The read-back still runs and the new timeouts are persisted.
+func TestDemoWidgetUpdateTimeoutsOnly(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetTestContext(t)
+	demoClient := patchDemoWidgetSdkClient(patches, ctx.client)
+
+	modifyCalls := 0
+	patches.ApplyMethodFunc(demoClient, "ModifyWidget", func(req *demov20230101.ModifyWidgetRequest) (*demov20230101.ModifyWidgetResponse, error) {
+		modifyCalls++
+
+		return nil, fmt.Errorf("the modify API must not be called")
+	})
+	patches.ApplyMethodFunc(demoClient, "DescribeWidgets", func(req *demov20230101.DescribeWidgetsRequest) (*demov20230101.DescribeWidgetsResponse, error) {
+		return &demov20230101.DescribeWidgetsResponse{Response: &demov20230101.DescribeWidgetsResponseParams{
+			WidgetSet: []*demov20230101.Widget{demoWidgetTestItem()},
+			RequestId: demoWidgetStr("fake-request-id"),
+		}}, nil
+	})
+
+	plannedModel := demoWidgetTestModel()
+	plannedModel.Timeouts = resourcetimeouts.Value{Object: types.ObjectValueMust(
+		demoWidgetTimeoutsAttrTypes(),
+		map[string]attr.Value{
+			"create": types.StringValue("5s"),
+			"update": types.StringValue("7s"),
+			"delete": types.StringValue("5s"),
+		},
+	)}
+
+	var updateResp resource.UpdateResponse
+	updateResp.State = ctx.state(t, demoWidgetTestModel())
+	ctx.resource.Update(context.Background(),
+		resource.UpdateRequest{
+			Plan:  ctx.plan(t, plannedModel),
+			State: ctx.state(t, demoWidgetTestModel()),
+		}, &updateResp)
+	if updateResp.Diagnostics.HasError() {
+		t.Fatalf("Update failed: %v", updateResp.Diagnostics.Errors())
+	}
+	if modifyCalls != 0 {
+		t.Errorf("ModifyWidget was called %d time(s) for a timeouts-only change", modifyCalls)
+	}
+
+	var got svdemo.DemoWidgetResourceModel
+	if diags := updateResp.State.Get(context.Background(), &got); diags.HasError() {
+		t.Fatalf("failed to read back state: %v", diags.Errors())
+	}
+	assertDemoWidgetModel(t, got)
+}
+
+// TestDemoWidgetDeleteSuccess verifies Delete sends the delete request with
+// the tracked id and then waits until the widget is gone.
+func TestDemoWidgetDeleteSuccess(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetTestContext(t)
+	demoClient := patchDemoWidgetSdkClient(patches, ctx.client)
+
+	var captured *demov20230101.DeleteWidgetRequest
+	patches.ApplyMethodFunc(demoClient, "DeleteWidget", func(req *demov20230101.DeleteWidgetRequest) (*demov20230101.DeleteWidgetResponse, error) {
+		captured = req
+
+		return &demov20230101.DeleteWidgetResponse{Response: &demov20230101.DeleteWidgetResponseParams{
+			RequestId: demoWidgetStr("fake-request-id"),
+		}}, nil
+	})
+	// The instance-status wait polls the describe API; an empty answer is
+	// the terminal "destroyed" state, reported on the first call.
+	patches.ApplyMethodFunc(demoClient, "DescribeWidgets", func(req *demov20230101.DescribeWidgetsRequest) (*demov20230101.DescribeWidgetsResponse, error) {
+		return &demov20230101.DescribeWidgetsResponse{Response: &demov20230101.DescribeWidgetsResponseParams{
+			RequestId: demoWidgetStr("fake-request-id"),
+		}}, nil
+	})
+
+	var deleteResp resource.DeleteResponse
+	ctx.resource.Delete(context.Background(), resource.DeleteRequest{State: ctx.state(t, demoWidgetTestModel())}, &deleteResp)
+	if deleteResp.Diagnostics.HasError() {
+		t.Fatalf("Delete failed: %v", deleteResp.Diagnostics.Errors())
+	}
+
+	if captured == nil {
+		t.Fatal("DeleteWidget request is nil")
+	}
+	if captured.WidgetId == nil || *captured.WidgetId != demoWidgetTestId {
+		t.Errorf("delete request widget_id = %v, want %q", captured.WidgetId, demoWidgetTestId)
+	}
+}

@@ -78,6 +78,12 @@ func (r *DemoWidgetAttachmentResource) Metadata(_ context.Context, _ resource.Me
 }
 
 func (r *DemoWidgetAttachmentResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+	// TEMPLATE: every attribute Description below is a PLACEHOLDER — in
+	// generated code it is the faithful professional EN translation of the
+	// IACP CapiParam.Document field description (HTML stripped). NO
+	// embellishment, NO extra wording, NO fixing of metadata mistakes: stay
+	// consistent with the IACP metadata even when it is wrong (see
+	// conventions.md section 2).
 	resp.Schema = schema.Schema{
 		Description: "Provides a resource to attach a Demo widget to a gadget.",
 		Attributes: map[string]schema.Attribute{
@@ -111,6 +117,14 @@ func (r *DemoWidgetAttachmentResource) Schema(_ context.Context, _ resource.Sche
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
+			// TEMPLATE: HARD RULE — Computed MINIMALISM. The DEFAULT Computed
+			// attribute set is ONLY the resource id. Extra read-back fields
+			// (bound_at/bound_status below) are added ONLY on explicit user
+			// request; async task ids (FlowId/TaskId from bind/unbind APIs)
+			// are NEVER exposed as Computed attributes.
+			// TEMPLATE: UseStateForUnknown only on values that never change
+			// after creation (bound_at); a cloud-driven value (bound_status)
+			// carries none.
 			"bound_at": schema.StringAttribute{
 				Computed:    true,
 				Description: "Time when the widget was bound.",
@@ -155,16 +169,8 @@ func (r *DemoWidgetAttachmentResource) Create(ctx context.Context, req resource.
 		attachWidgetRequest.BindMode = plan.BindMode.ValueStringPointer()
 	}
 
-	if r.Client() == nil {
-		resp.Diagnostics.AddError(
-			"Provider not configured",
-			"The provider client is not available. This is unexpected; please report it.",
-		)
-
-		return
-	}
-
 	service := NewDemoService(r.Client())
+
 	if err := service.AttachWidget(ctx, attachWidgetRequest); err != nil {
 		resp.Diagnostics.AddError(
 			"Error attaching Demo widget",
@@ -174,10 +180,6 @@ func (r *DemoWidgetAttachmentResource) Create(ctx context.Context, req resource.
 		return
 	}
 
-	// TEMPLATE: async bind — when the create entry carries a non-empty
-	// async_info, the service method returns a task id; wait for it BEFORE
-	// the read-back (service_template.go.tmpl wait method).
-	//
 	// TEMPLATE: composite id — exactly the segments the unbind/describe
 	// APIs address, joined parent-first (largest to smallest, matching the
 	// JSON resource_id order).
@@ -185,19 +187,28 @@ func (r *DemoWidgetAttachmentResource) Create(ctx context.Context, req resource.
 
 	normalizeDemoWidgetAttachmentComputedUnknowns(&plan)
 
-	// Persist the identity before reading back so a partial failure still
-	// leaves a destroyable resource in state.
+	// Persist the identity before waiting and reading back so a partial
+	// failure still leaves a destroyable resource in state.
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+
+	// TEMPLATE: async bind — when the create entry carries a non-empty
+	// async_info, the service method returns a task id and the wait goes
+	// HERE (after the persist above, before the read-back), with the
+	// `timeouts` block's create stage resolved exactly as in the general
+	// template (copy its compile-verified Timeouts.Create + Wait form).
+	// TWO wait shapes exist — task-id polling OR instance-status polling
+	// (the polling API decides; the task id field name follows the vendored
+	// SDK, see service_template.go.tmpl).
 
 	// TEMPLATE: read-back — build the parent-level describe request HERE,
 	// call the service with (ctx, request), then pick this attachment's
 	// own binding from the response.
 	describeGadgetsRequest := demov20230101.NewDescribeGadgetsRequest()
 	describeGadgetsRequest.GadgetIds = []*string{fwHelper.String(gadgetId)}
-	gadgets, _, err := service.DescribeGadgets(ctx, describeGadgetsRequest)
+	gadgets, err := service.DescribeGadgets(ctx, describeGadgetsRequest)
 	if err != nil {
 		resp.Diagnostics.AddError("Error reading Demo widget attachment after create", err.Error())
 		return
@@ -242,7 +253,8 @@ func (r *DemoWidgetAttachmentResource) Read(ctx context.Context, req resource.Re
 	describeGadgetsRequest.GadgetIds = []*string{fwHelper.String(gadgetId)}
 
 	service := NewDemoService(r.Client())
-	gadgets, _, err := service.DescribeGadgets(ctx, describeGadgetsRequest)
+
+	gadgets, err := service.DescribeGadgets(ctx, describeGadgetsRequest)
 	if err != nil {
 		resp.Diagnostics.AddError("Error reading Demo widget attachment", err.Error())
 		return
@@ -266,8 +278,13 @@ func (r *DemoWidgetAttachmentResource) Read(ctx context.Context, req resource.Re
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
 
-// Update is a no-op body: every mutable attribute is RequiresReplace, so
-// Terraform destroys and recreates the attachment instead of calling this.
+// Update is required by the resource.Resource interface. Every mutable
+// attribute is RequiresReplace, so Terraform destroys and recreates the
+// attachment instead of calling this; it persists the plan unchanged.
+// TEMPLATE: fw.WithNoUpdate (embed it INSTEAD of writing this method) is the
+// alternative that turns an unexpected Update call into an explicit error
+// diagnostic; keep the no-op body below when a silent plan-persisting Update
+// is preferred.
 func (r *DemoWidgetAttachmentResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan DemoWidgetAttachmentResourceModel
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
@@ -302,10 +319,12 @@ func (r *DemoWidgetAttachmentResource) Delete(ctx context.Context, req resource.
 	detachWidgetRequest.WidgetId = fwHelper.String(widgetId)
 
 	service := NewDemoService(r.Client())
+
 	if err := service.DetachWidget(ctx, detachWidgetRequest); err != nil {
-		// TEMPLATE: when the unbind API documents "not bound" error codes,
-		// treat them as delete success for idempotency — swallow them in
-		// the service layer.
+		// TEMPLATE: error codes get ZERO second-guessing in generated code —
+		// retry classification is handled by tccommon.RetryError, everything
+		// else surfaces as-is. "not bound" idempotency special-casing is a
+		// human-maintained follow-up, never generated.
 		resp.Diagnostics.AddError(
 			"Error detaching Demo widget",
 			fmt.Sprintf("DetachWidget failed: %v", err),
@@ -313,8 +332,11 @@ func (r *DemoWidgetAttachmentResource) Delete(ctx context.Context, req resource.
 
 		return
 	}
-	// TEMPLATE: async unbind — wait for the task when the delete entry
-	// carries a non-empty async_info.
+
+	// TEMPLATE: async unbind — when the delete entry carries a non-empty
+	// async_info, wait here with the `timeouts` block's delete stage (general
+	// template form). The instance-status shape is common: poll the parent
+	// describe until the binding disappears (an empty answer is terminal).
 }
 
 // ImportState supports `terraform import` with the composite id
@@ -331,22 +353,21 @@ func (r *DemoWidgetAttachmentResource) ImportState(ctx context.Context, req reso
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("widget_id"), parts[1])...)
 }
 
-// refreshDemoWidgetAttachmentModel copies cloud-owned fields into the model
-// while keeping the user-supplied values for fields the cloud API does not
-// echo back (fw.OverwriteString keeps the previous value on nil).
-func refreshDemoWidgetAttachmentModel(ctx context.Context, m *DemoWidgetAttachmentResourceModel, item *demov20230101.WidgetBinding) diag.Diagnostics {
+// refreshDemoWidgetAttachmentModel copies cloud-owned fields into the model.
+// User-configurable attributes keep the previous value when the cloud omits
+// them (fwHelper.StringValueOrPrev); Computed-only attributes (bound_at /
+// bound_status) record the truthful refreshed value, including null.
+func refreshDemoWidgetAttachmentModel(_ context.Context, m *DemoWidgetAttachmentResourceModel, item *demov20230101.WidgetBinding) diag.Diagnostics {
 	if item == nil {
 		return nil
 	}
 
-	// TEMPLATE: read-direction anti-diff conversions come from
-	// fwHelper.StringValueOrPrev — a cloud-omitted field keeps the previous
-	// value (see framework/helper types.go).
 	m.GadgetId = fwHelper.StringValueOrPrev(item.GadgetId, m.GadgetId)
 	m.WidgetId = fwHelper.StringValueOrPrev(item.WidgetId, m.WidgetId)
 	m.BindMode = fwHelper.StringValueOrPrev(item.BindMode, m.BindMode)
-	m.BoundAt = fwHelper.StringValueOrPrev(item.BoundAt, m.BoundAt)
-	m.BoundStatus = fwHelper.StringValueOrPrev(item.BoundStatus, m.BoundStatus)
+	m.BoundAt = fwHelper.StringPointerValueOrNull(item.BoundAt)
+	m.BoundStatus = fwHelper.StringPointerValueOrNull(item.BoundStatus)
+
 	return nil
 }
 
@@ -366,6 +387,13 @@ func normalizeDemoWidgetAttachmentComputedUnknowns(m *DemoWidgetAttachmentResour
 // findDemoWidgetBinding picks this attachment's own binding entry from the
 // parent-level describe response. Business-side picking belongs to the
 // resource file — the service layer only returns the raw list.
+//
+// TEMPLATE: this picking helper is the demo for the LIST-QUERY shape —
+// the describe API answers with a parent-level list and the exact binding
+// must be found by traversal. When the product's describe API supports
+// EXACT lookup (returns the single addressed item directly), DROP this
+// helper and use the returned item straight away — picking is not a
+// mandatory pattern, it follows the real API shape.
 func findDemoWidgetBinding(gadgets []*demov20230101.Gadget, gadgetId string, widgetId string) *demov20230101.WidgetBinding {
 	for _, g := range gadgets {
 		if g.GadgetId == nil || *g.GadgetId != gadgetId {
