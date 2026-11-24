@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=https://mirrors.tencent.com/repository/generic/qeri/qeri-schema/stable/schema/verifier-schema.json
+# 对齐 GitHub Actions 的 checks（docs / changelog-lint / gofmt 三个 workflow）
+# 对齐 GitHub Actions 的 docs 检查（.github/workflows/mkdocs.yml）：
+#   1. make doc 生成文档（gendoc）
+#   2. website/ 不允许存在未提交的 diff，否则判 FAIL
+version: 1
+verifiers:
+  - name: tencentcloud-doc-check
+    description: '文档生成检查：make doc 后 website/ 下不允许出现未提交的变更（对齐 Actions docs workflow）'
+    stages:
+      - pre-commit
+      - merge-request
+    timeout: '900s' # gendoc 需编译整个 provider（vendor 模式），冷启动较慢，放宽 timeout
+    watch:
+      includeFiles: 'tencentcloud/**' # 与 Actions 触发路径保持一致
+    runner:
+      outputFormat: grep
+      command:
+        run: sh -c 'make doc >/dev/null 2>&1 || { echo "doc generate failed"; exit 1; }; diff=$(git diff --name-only website/); if [ -n "$diff" ]; then echo "$diff"; exit 1; fi'
+    suggestion: '重新执行 make doc，并将 website/ 下新生成的文档一并 git add 提交（"There are docs updated when checking, ''git add'' it first."）'
+
+  # 对齐 Actions changelog-lint workflow（.github/workflows/changelog-lint.yml）：
+  #   misspell -error -source text CHANGELOG.md .changelog
+  # misspell 从 .ci/tools 依赖安装（与 Actions 一致）；退出码：发现拼写错误→1(FAIL)，符合 lint 语义
+  - name: changelog-misspell
+    description: 'Changelog 拼写检查：misspell 检查 CHANGELOG.md 与 .changelog/（对齐 Actions changelog-lint workflow）'
+    stages:
+      - pre-commit
+      - merge-request
+    timeout: '300s' # 首次需 go install misspell
+    watch:
+      includeFiles:
+        - '.changelog/**'
+        - 'CHANGELOG.md' # 与 Actions 触发路径保持一致
+    runner:
+      outputFormat: grep # misspell 输出 file:line:col: "x" should be "y"
+      setup:
+        run: sh -c 'command -v misspell >/dev/null 2>&1 || (cd .ci/tools && go install github.com/client9/misspell/cmd/misspell)'
+      command:
+        # misspell -error 发现拼写错误时退出码是 2，需归一化到 lint 语义：2→1(FAIL)，其余非 0 保持（≥2=ERROR）
+        run: sh -c 'export PATH="$PATH:$(go env GOPATH 2>/dev/null || echo $HOME/go)/bin"; misspell -error -source text CHANGELOG.md .changelog; rc=$?; if [ $rc -eq 2 ]; then exit 1; else exit $rc; fi'
+    suggestion: '根据 misspell 输出修正拼写错误（file:line:col: "word" should be "correction"）'
+
+  # 对齐 Actions gofmt workflow（.github/workflows/fmt.yml，make fmtcheck）：
+  # gofmt -l 检查 tencentcloud/ 下非 vendor 的 Go 文件；内置验证器自动解析退出码
+  - name: qeri-builtin-gofmt
+    stages:
+      - pre-commit
+      - merge-request
+    timeout: '60s'
+    watch:
+      includeFiles: 'tencentcloud/**/*.go'
+      excludeFiles:
+        - '**/vendor/**'
+    suggestion: '执行 make fmt（gofmt -s -w）格式化后重新提交'

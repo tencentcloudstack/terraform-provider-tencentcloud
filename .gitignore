@@ -22,3 +22,5 @@ dist/
 gendoc/gendoc
 .vscode/
 .codebuddy/
+# Qeri local overrides (personal, not committed)
+.qeri/verifiers.local/
