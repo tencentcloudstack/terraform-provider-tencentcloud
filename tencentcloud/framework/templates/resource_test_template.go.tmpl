@@ -93,6 +93,12 @@ func demoTestModel() svdemo.DemoWidgetResourceModel {
 		Id:     types.StringValue(demoTestWidgetId),
 		Name:   types.StringValue(demoTestName),
 		ZoneId: types.StringValue(demoTestZoneId),
+		// Every remaining model field gets an explicit typed null — one per
+		// field, none skipped (Computed ones are filled by the refresh).
+		Remark:   types.StringNull(),
+		Tags:     types.ListNull(types.StringType),
+		Status:   types.StringNull(),
+		CreateOn: types.StringNull(),
 		// TEMPLATE: CONDITIONAL (async only) — a short (e.g. 5s) user value
 		// for the wait-path cases; ObjectNull for unrelated ones. Use
 		// ObjectValueMust: the plain ObjectValue returns (value, diags) and

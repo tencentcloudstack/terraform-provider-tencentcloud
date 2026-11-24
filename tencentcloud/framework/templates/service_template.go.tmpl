@@ -33,6 +33,19 @@
 //      describes (config style) return the shared fwHelper.ErrNotFound
 //      sentinel. Error codes get ZERO second-guessing — retry classification
 //      is tccommon.RetryError's job, everything else surfaces as-is.
+//
+// Shape map — every service method called by the six type templates follows
+// one of the shapes demonstrated in THIS file:
+//   - WRITE shape (CreateWidget: returns the id; ModifyWidget / DeleteWidget:
+//     plain error; +task id when async): general Create/Modify/Delete,
+//     config UpdateWidgetConfig, attachment AttachWidget / DetachWidget,
+//     action RestartWidget (returns the task id).
+//   - LIST describe shape (DescribeWidgets: full list, built-in paging):
+//     general/datasource DescribeWidgets, attachment DescribeGadgets.
+//   - SINGLETON describe shape (exact lookup): same retry closure, but a
+//     response without the object returns fwHelper.ErrNotFound — config
+//     DescribeWidgetConfig, ephemeral DescribeTempCredential.
+//   - WAIT shape (WaitDemoTaskResult): task-id OR instance-status polling.
 
 package demo // TEMPLATE: the product package name, e.g. cvm, ssm, makers
 
@@ -173,9 +186,40 @@ func (me *DemoService) DescribeWidgets(ctx context.Context, request *demov202301
 	return
 }
 
+// TEMPLATE: UPDATE method — the caller builds the modify request; this
+// method only performs the retried call (same retry-closure shape as
+// create: ratelimit.Check inside, [DEBUG] success log, nil-response guard,
+// tccommon.RetryError). When the modify API is async, return the task id
+// as an extra value (field name verified against the vendored SDK).
+func (me *DemoService) ModifyWidget(ctx context.Context, request *demov20230101.ModifyWidgetRequest) (err error) {
+	logId := tccommon.GetLogId(ctx)
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDemoV20230101Client().ModifyWidget(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("modify widget failed, Response is nil."))
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s modify widget failed, reason:%+v", logId, err)
+	}
+
+	return
+}
+
 // TEMPLATE: DELETE method — the caller builds the delete request; this
 // method only performs the retried call (same retry-closure shape as
-// create: ratelimit.Check inside, [DEBUG] success log, tccommon.RetryError).
+// create: ratelimit.Check inside, [DEBUG] success log, nil-response guard,
+// tccommon.RetryError).
 func (me *DemoService) DeleteWidget(ctx context.Context, request *demov20230101.DeleteWidgetRequest) (err error) {
 	logId := tccommon.GetLogId(ctx)
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -185,6 +229,10 @@ func (me *DemoService) DeleteWidget(ctx context.Context, request *demov20230101.
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("delete widget failed, Response is nil."))
 		}
 
 		return nil
