@@ -52,6 +52,10 @@ const (
 	demoTestZoneId   = "zone-12345"
 )
 
+// TEMPLATE: stub helpers (ptrXxx / buildXxx) — only keep the ones actually
+// referenced by the test cases; staticcheck U1000 (or a manual reference
+// count) must find ZERO unused private functions/variables/constants in the
+// final file. After fixing a bug, re-check helpers the fix made obsolete.
 func demoStr(v string) *string { return &v }
 
 // demoTestWidget builds the DescribeWidgets response item.
@@ -71,21 +75,34 @@ func demoTestWidget() *demov20230101.Widget {
 // reflection with "Value Conversion Error". Populate one typed null per
 // model field: Int64Null/StringNull/BoolNull/Float64Null for scalars,
 // ListNull(ElementType) for lists, ListNull(ObjectType{AttrTypes}) for
-// nested lists, plus the timeouts null below. A single missing typed
+// nested lists, plus the Timeouts value below. A single missing typed
 // null fails the whole test context.
+// TEMPLATE: CONDITIONAL — generate the Timeouts initialization and the
+// attrTypes helper ONLY when the resource schema declares the `timeouts`
+// block (async scenarios); purely synchronous resources drop the field,
+// the helper and the attr/resourcetimeouts imports. The value itself:
+// cases exercising a wait path pass a SECOND-SCALE short user value (5s
+// below is a recommended example, not a fixed answer — the test verifies
+// the code path is REACHED, never hard-waits a realistic minute-scale
+// default; a stub that misses its terminal state would otherwise hang
+// the test for the whole default). Cases unrelated to timeouts keep the
+// plain null form (types.ObjectNull(...)). The widget create/delete
+// cases below wait for async tasks, hence the short-value form here.
 func demoTestModel() svdemo.DemoWidgetResourceModel {
 	return svdemo.DemoWidgetResourceModel{
 		Id:     types.StringValue(demoTestWidgetId),
 		Name:   types.StringValue(demoTestName),
 		ZoneId: types.StringValue(demoTestZoneId),
-		// TEMPLATE: CONDITIONAL — generate the Timeouts initialization and
-		// the attrTypes helper ONLY when the resource schema declares the
-		// `timeouts` block (async scenarios). A zero-value
-		// resourcetimeouts.Value would break tfsdk Plan/State reflection,
-		// so tests of async resources carry a valid null value; tests of
-		// purely synchronous resources drop the field, the helper and the
-		// attr/resourcetimeouts imports.
-		Timeouts: resourcetimeouts.Value{Object: types.ObjectNull(demoWidgetTimeoutsAttrTypes())},
+		// TEMPLATE: CONDITIONAL (async only) — a short (e.g. 5s) user
+		// value for the wait-path cases; ObjectNull for unrelated ones.
+		Timeouts: resourcetimeouts.Value{Object: types.ObjectValue(
+			demoWidgetTimeoutsAttrTypes(),
+			map[string]attr.Value{
+				"create": types.StringValue("5s"),
+				"update": types.StringValue("5s"),
+				"delete": types.StringValue("5s"),
+			},
+		)},
 	}
 }
 
