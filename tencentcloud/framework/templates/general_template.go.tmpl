@@ -23,9 +23,9 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -56,9 +56,13 @@ func NewDemoWidgetResource() resource.Resource {
 // tencentcloud_demo_widget.
 type DemoWidgetResource struct {
 	fw.ResourceWithConfigure
-	// TEMPLATE: embed fw.WithImportByID when import is supported AND the id
-	// is a single value passable straight into state ("id" only). Use a
-	// custom ImportState method instead when the id is composite.
+	// TEMPLATE: this skeleton demonstrates a SINGLE-value id, so it embeds
+	// fw.WithImportByID (passes the import id straight into state "id").
+	// A COMPOSITE id (several segments) drops this embedding and writes a
+	// custom ImportState that splits the id and sets every segment
+	// attribute (see the attachment template). Resources without import
+	// support drop the embedding AND the ResourceWithImportState assertion.
+	fw.WithImportByID
 }
 
 // DemoWidgetResourceModel maps the schema attributes; each attribute appears
@@ -86,7 +90,7 @@ func (r *DemoWidgetResource) Metadata(_ context.Context, _ resource.MetadataRequ
 	resp.TypeName = "tencentcloud_demo_widget"
 }
 
-func (r *DemoWidgetResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *DemoWidgetResource) Schema(ctx context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	// TEMPLATE: attribute Descriptions below are PLACEHOLDERS — in
 	// generated code they are the faithful EN translation of the IACP
 	// CapiParam.Document field description (HTML stripped), with zero
@@ -125,26 +129,36 @@ func (r *DemoWidgetResource) Schema(_ context.Context, _ resource.SchemaRequest,
 			// structs use schema.ListNestedAttribute (see the data-source
 			// template) or schema.SingleNestedAttribute for a single object
 			// (see the config template).
+			// TEMPLATE: the modify API does not carry tags, so they have no
+			// Update coverage and MUST be RequiresReplace — otherwise a tags
+			// change would be silently dropped while the state records it.
 			"tags": schema.ListAttribute{
 				Optional:    true,
 				ElementType: types.StringType,
 				Description: "Tag list.",
+				PlanModifiers: []planmodifier.List{
+					listplanmodifier.RequiresReplace(),
+				},
 			},
 			// TEMPLATE: HARD RULE — Computed MINIMALISM: default Computed is
 			// ONLY the resource id; extra read-back fields (status/create_on
 			// below) only on explicit user request; async task ids NEVER
-			// (conventions.md section 2). Cloud-set Computed attributes need
-			// UseStateForUnknown.
+			// (conventions.md section 2).
+			// TEMPLATE: UseStateForUnknown ONLY on Computed values that never
+			// change after creation (id, create_on). A value the cloud
+			// changes on its own or after an update (status) must NOT carry
+			// it: the plan would promise the old value and Terraform would
+			// fail the apply with "inconsistent result after apply".
 			"status": schema.StringAttribute{
 				Computed:    true,
 				Description: "Status of the widget.",
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
 			},
 			"create_on": schema.StringAttribute{
 				Computed:    true,
 				Description: "Creation time.",
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
 			},
 			// TEMPLATE: the `timeouts` block — REQUIRED whenever any CUD API
 			// is async (async_info), dropped for purely synchronous resources.
@@ -229,9 +243,24 @@ func (r *DemoWidgetResource) Create(ctx context.Context, req resource.CreateRequ
 
 	service := NewDemoService(r.Client())
 
+	// TEMPLATE: the timeout is resolved BEFORE the write API, so a malformed
+	// duration fails the apply without any cloud-side effect. Timeouts.Create
+	// resolves "user value wins, default fallback" in one call — the default
+	// passed here MUST be the SAME constant the schema description mentions
+	// (defaultDemoWidgetAsyncTimeout, `15m`). A resource whose create API is
+	// synchronous drops the timeout, the taskId result and the wait below.
+	timeout, timeoutDiags := plan.Timeouts.Create(ctx, defaultDemoWidgetAsyncTimeout)
+	resp.Diagnostics.Append(timeoutDiags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
 	// TEMPLATE: widgetId below is the value of the JSON resource_id field
-	// from the create response — the service method returns it.
-	widgetId, err := service.CreateWidget(ctx, createWidgetRequest)
+	// from the create response — the service method returns it. taskId is
+	// the async task id (LOCAL variable: it only feeds the wait below and
+	// never lands in the schema or the model); a SYNCHRONOUS create API
+	// drops taskId from the service signature and the wait block below.
+	widgetId, taskId, err := service.CreateWidget(ctx, createWidgetRequest)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error creating Demo widget",
@@ -267,27 +296,17 @@ func (r *DemoWidgetResource) Create(ctx context.Context, req resource.CreateRequ
 		return
 	}
 
-	// TEMPLATE: async create — when the JSON entry carries async_info, the
-	// service method returns (widgetId, taskId, err) and the task MUST be
-	// waited on BEFORE reading back. The wait timeout is user-configurable
-	// through the `timeouts` block: the Timeouts.Create helper resolves
-	// "user value wins, default fallback" in one call — the default passed
-	// here MUST be the SAME constant the schema description mentions
-	// (defaultDemoWidgetAsyncTimeout, e.g. `15m`). Full sample:
-	//
-	//   timeout, timeoutDiags := plan.Timeouts.Create(ctx, defaultDemoWidgetAsyncTimeout)
-	//   resp.Diagnostics.Append(timeoutDiags...)
-	//   if resp.Diagnostics.HasError() {
-	//       return
-	//   }
-	//   if err := service.WaitDemoTaskResult(ctx, taskId, timeout); err != nil {
-	//       resp.Diagnostics.AddError(
-	//           "Error waiting for Demo widget task",
-	//           fmt.Sprintf("widget task wait failed: %v", err),
-	//       )
-	//
-	//       return
-	//   }
+	// TEMPLATE: async create — the task MUST be waited on BEFORE reading
+	// back, and AFTER the identity was persisted above (a failed or
+	// timed-out wait must still leave a destroyable resource in state).
+	if err := service.WaitDemoTaskResult(ctx, taskId, timeout); err != nil {
+		resp.Diagnostics.AddError(
+			"Error waiting for Demo widget task",
+			fmt.Sprintf("widget task wait failed: %v", err),
+		)
+
+		return
+	}
 
 	// TEMPLATE: read-back — same request form as Read; the caller picks
 	// its own item from the list.
@@ -381,35 +400,54 @@ func (r *DemoWidgetResource) Update(ctx context.Context, req resource.UpdateRequ
 
 	widgetId := state.Id.ValueString()
 
-	modifyWidgetRequest := demov20230101.NewModifyWidgetRequest()
-	modifyWidgetRequest.WidgetId = fwHelper.String(widgetId)
-	if !plan.Name.IsNull() && !plan.Name.IsUnknown() {
-		modifyWidgetRequest.Name = plan.Name.ValueStringPointer()
-	}
-
-	if !plan.Remark.IsNull() && !plan.Remark.IsUnknown() {
-		modifyWidgetRequest.Remark = plan.Remark.ValueStringPointer()
-	}
-
 	service := NewDemoService(r.Client())
 
-	if err := service.ModifyWidget(ctx, modifyWidgetRequest); err != nil {
-		resp.Diagnostics.AddError(
-			"Error updating Demo widget",
-			fmt.Sprintf("ModifyWidget failed: %v", err),
-		)
+	// TEMPLATE: call a write API ONLY when an attribute it covers changed. A
+	// plan that differs from the state in the `timeouts` block alone also
+	// reaches Update; sending the write API then is a pointless no-change
+	// request that many cloud APIs reject. With several update APIs, guard
+	// EACH call with the attributes that API is responsible for. The
+	// read-back below runs either way, so Computed values are always known.
+	if !plan.Name.Equal(state.Name) || !plan.Remark.Equal(state.Remark) {
+		// TEMPLATE: the timeout is resolved BEFORE the write API, so a
+		// malformed duration fails the apply without any cloud-side effect. A
+		// resource whose update API is synchronous drops the timeout, the
+		// taskId result and the wait.
+		timeout, timeoutDiags := plan.Timeouts.Update(ctx, defaultDemoWidgetAsyncTimeout)
+		resp.Diagnostics.Append(timeoutDiags...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
 
-		return
+		modifyWidgetRequest := demov20230101.NewModifyWidgetRequest()
+		modifyWidgetRequest.WidgetId = fwHelper.String(widgetId)
+		if !plan.Name.IsNull() && !plan.Name.IsUnknown() {
+			modifyWidgetRequest.Name = plan.Name.ValueStringPointer()
+		}
+
+		if !plan.Remark.IsNull() && !plan.Remark.IsUnknown() {
+			modifyWidgetRequest.Remark = plan.Remark.ValueStringPointer()
+		}
+
+		taskId, err := service.ModifyWidget(ctx, modifyWidgetRequest)
+		if err != nil {
+			resp.Diagnostics.AddError(
+				"Error updating Demo widget",
+				fmt.Sprintf("ModifyWidget failed: %v", err),
+			)
+
+			return
+		}
+
+		if err := service.WaitDemoTaskResult(ctx, taskId, timeout); err != nil {
+			resp.Diagnostics.AddError(
+				"Error waiting for Demo widget update task",
+				fmt.Sprintf("widget update task wait failed: %v", err),
+			)
+
+			return
+		}
 	}
-
-	// TEMPLATE: when the update API is async (async_info present), wait for
-	// the task here before the read-back — same "user value wins, default
-	// fallback" resolution as in Create, with the SAME default constant the
-	// schema description mentions:
-	//   timeout, timeoutDiags := plan.Timeouts.Update(ctx, defaultDemoWidgetAsyncTimeout)
-	//   resp.Diagnostics.Append(timeoutDiags...)
-	//   if resp.Diagnostics.HasError() { return }
-	//   if err := service.WaitDemoTaskResult(ctx, taskId, timeout); err != nil { ... }
 
 	describeWidgetsRequest := demov20230101.NewDescribeWidgetsRequest()
 	describeWidgetsRequest.WidgetIds = []*string{fwHelper.String(widgetId)}
@@ -451,6 +489,14 @@ func (r *DemoWidgetResource) Delete(ctx context.Context, req resource.DeleteRequ
 
 	service := NewDemoService(r.Client())
 
+	// TEMPLATE: resolved BEFORE the write API (see Update). A synchronous
+	// delete API drops the timeout and the wait.
+	timeout, timeoutDiags := state.Timeouts.Delete(ctx, defaultDemoWidgetAsyncTimeout)
+	resp.Diagnostics.Append(timeoutDiags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
 	if err := service.DeleteWidget(ctx, deleteWidgetRequest); err != nil {
 		resp.Diagnostics.AddError(
 			"Error deleting Demo widget",
@@ -459,26 +505,35 @@ func (r *DemoWidgetResource) Delete(ctx context.Context, req resource.DeleteRequ
 
 		return
 	}
-	// TEMPLATE: async delete — wait for the task here when async_info is
-	// present on the delete API, with the same user-wins/default-fallback
-	// timeout resolution (state.Timeouts.Delete + the same default constant):
-	//   timeout, timeoutDiags := state.Timeouts.Delete(ctx, defaultDemoWidgetAsyncTimeout)
-	//   resp.Diagnostics.Append(timeoutDiags...)
-	//   if resp.Diagnostics.HasError() { return }
-	//   if err := service.WaitDemoTaskResult(ctx, taskId, timeout); err != nil { ... }
+
+	// TEMPLATE: the wait shape follows the polling API named by async_info:
+	// task-id polling (WaitDemoTaskResult, as in Create/Update) or, shown
+	// here, instance-status polling until the resource is gone
+	// (WaitDemoWidgetDestroyed — an empty describe answer is the terminal
+	// state, see service_template.go.tmpl).
+	if err := service.WaitDemoWidgetDestroyed(ctx, widgetId, timeout); err != nil {
+		resp.Diagnostics.AddError(
+			"Error waiting for Demo widget deletion",
+			fmt.Sprintf("widget deletion wait failed: %v", err),
+		)
+
+		return
+	}
 }
 
-// TEMPLATE: custom ImportState only for composite ids. For single-value ids,
-// delete this method and embed fw.WithImportByID instead.
-func (r *DemoWidgetResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), req.ID)...)
-}
-
-// refreshDemoWidgetModel copies cloud-owned fields into the model. A
-// cloud-omitted field keeps the previous value (fwHelper.StringValueOrPrev),
-// otherwise Terraform fails the post-apply consistency check with
-// "was <value>, but now null".
-func refreshDemoWidgetModel(ctx context.Context, m *DemoWidgetResourceModel, item *demov20230101.Widget) diag.Diagnostics {
+// refreshDemoWidgetModel copies cloud-owned fields into the model.
+//
+// TEMPLATE: two conversion families, chosen per attribute kind:
+//   - USER-CONFIGURABLE attributes (Required, or Optional): a cloud-omitted
+//     field keeps the previous value (fwHelper.StringValueOrPrev), otherwise
+//     Terraform fails the post-apply consistency check with
+//     "was <value>, but now null";
+//   - COMPUTED-only attributes (status/create_on): they are never
+//     configured, so the truthful refreshed value — including null — is
+//     recorded as-is (fwHelper.StringPointerValueOrNull). StringValueOrPrev
+//     is NOT for these: its own documentation excludes attributes whose
+//     truthful refreshed value may be null.
+func refreshDemoWidgetModel(_ context.Context, m *DemoWidgetResourceModel, item *demov20230101.Widget) diag.Diagnostics {
 	if item == nil {
 		return nil
 	}
@@ -486,8 +541,9 @@ func refreshDemoWidgetModel(ctx context.Context, m *DemoWidgetResourceModel, ite
 	m.Name = fwHelper.StringValueOrPrev(item.Name, m.Name)
 	m.ZoneId = fwHelper.StringValueOrPrev(item.ZoneId, m.ZoneId)
 	m.Remark = fwHelper.StringValueOrPrev(item.Remark, m.Remark)
-	m.Status = fwHelper.StringValueOrPrev(item.Status, m.Status)
-	m.CreateOn = fwHelper.StringValueOrPrev(item.CreateOn, m.CreateOn)
+	m.Status = fwHelper.StringPointerValueOrNull(item.Status)
+	m.CreateOn = fwHelper.StringPointerValueOrNull(item.CreateOn)
+
 	return nil
 }
 

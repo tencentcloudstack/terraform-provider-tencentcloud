@@ -185,6 +185,10 @@ func (d *DemoWidgetsDataSource) Read(ctx context.Context, req datasource.ReadReq
 	// An empty result is a genuinely empty list, not a failure.
 	items := make([]DemoWidgetItemModel, 0, len(widgets))
 	for _, item := range widgets {
+		if item == nil {
+			continue
+		}
+
 		items = append(items, DemoWidgetItemModel{
 			WidgetId: types.StringPointerValue(item.WidgetId),
 			Name:     types.StringPointerValue(item.Name),

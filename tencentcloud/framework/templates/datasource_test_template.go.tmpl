@@ -42,8 +42,8 @@ import (
 	svdemo "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/demo"
 )
 
-func ptrStrDemo(s string) *string { return &s }
-func ptrInt64Demo(v int64) *int64 { return &v }
+func demoWidgetsStr(s string) *string { return &s }
+func demoWidgetsInt64(v int64) *int64 { return &v }
 
 // TEMPLATE: keep one ptr helper per type actually used by the fake data.
 
@@ -170,13 +170,13 @@ func TestDemoWidgets_ReadBasic(t *testing.T) {
 		return &demov20230101.DescribeWidgetsResponse{Response: &demov20230101.DescribeWidgetsResponseParams{
 			WidgetSet: []*demov20230101.Widget{
 				{
-					WidgetId: ptrStrDemo("widget-12345"),
-					Name:     ptrStrDemo("tf-test"),
-					Status:   ptrStrDemo("Running"),
-					CreateOn: ptrStrDemo("2024-01-01 00:00:00"),
+					WidgetId: demoWidgetsStr("widget-12345"),
+					Name:     demoWidgetsStr("tf-test"),
+					Status:   demoWidgetsStr("Running"),
+					CreateOn: demoWidgetsStr("2024-01-01 00:00:00"),
 				},
 			},
-			RequestId: ptrStrDemo("fake-request-id"),
+			RequestId: demoWidgetsStr("fake-request-id"),
 		}}, nil
 	})
 
@@ -309,15 +309,15 @@ func TestDemoWidgetsService_ReadAllPages(t *testing.T) {
 			widgets := make([]*demov20230101.Widget, 0, 100)
 			for i := 0; i < 100; i++ {
 				widgets = append(widgets, &demov20230101.Widget{
-					WidgetId: ptrStrDemo(fmt.Sprintf("widget-page1-%d", i)),
-					Status:   ptrStrDemo("Running"),
+					WidgetId: demoWidgetsStr(fmt.Sprintf("widget-page1-%d", i)),
+					Status:   demoWidgetsStr("Running"),
 				})
 			}
 
 			return &demov20230101.DescribeWidgetsResponse{Response: &demov20230101.DescribeWidgetsResponseParams{
-				TotalCount: ptrInt64Demo(101),
+				TotalCount: demoWidgetsInt64(101),
 				WidgetSet:  widgets,
-				RequestId:  ptrStrDemo("fake-request-id"),
+				RequestId:  demoWidgetsStr("fake-request-id"),
 			}}, nil
 		case 2:
 			if offset != 100 {
@@ -325,11 +325,11 @@ func TestDemoWidgetsService_ReadAllPages(t *testing.T) {
 			}
 
 			return &demov20230101.DescribeWidgetsResponse{Response: &demov20230101.DescribeWidgetsResponseParams{
-				TotalCount: ptrInt64Demo(101),
+				TotalCount: demoWidgetsInt64(101),
 				WidgetSet: []*demov20230101.Widget{
-					{WidgetId: ptrStrDemo("widget-page2-0"), Status: ptrStrDemo("Failed")},
+					{WidgetId: demoWidgetsStr("widget-page2-0"), Status: demoWidgetsStr("Failed")},
 				},
-				RequestId: ptrStrDemo("fake-request-id"),
+				RequestId: demoWidgetsStr("fake-request-id"),
 			}}, nil
 		default:
 			t.Errorf("unexpected extra API call %d", callCount)
@@ -340,7 +340,7 @@ func TestDemoWidgetsService_ReadAllPages(t *testing.T) {
 
 	service := svdemo.NewDemoService(client)
 	describeWidgetsRequest := demov20230101.NewDescribeWidgetsRequest()
-	describeWidgetsRequest.Name = ptrStrDemo("tf-test")
+	describeWidgetsRequest.Name = demoWidgetsStr("tf-test")
 
 	widgets, err := service.DescribeWidgets(context.Background(), describeWidgetsRequest)
 	if err != nil {

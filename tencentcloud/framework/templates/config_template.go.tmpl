@@ -37,6 +37,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
@@ -52,10 +54,6 @@ var (
 	_ resource.ResourceWithConfigure   = &DemoWidgetConfigResource{}
 	_ resource.ResourceWithImportState = &DemoWidgetConfigResource{}
 )
-
-// TEMPLATE: the locator attribute from the codegen JSON's resource_id —
-// the value the user supplies there IS the state id. There is no fixed
-// constant id for config resources.
 
 // TEMPLATE: "confirmed absent" is signalled with the SHARED sentinel
 // fwHelper.ErrNotFound — the service method returns it when the describe
@@ -96,10 +94,11 @@ type DemoWidgetConfigResourceModel struct {
 	Modifier   types.String `tfsdk:"modifier"`
 }
 
-// widgetSettingsAttrTypes returns the attribute types of the settings
+// DemoWidgetConfigSettingsAttrTypes returns the attribute types of the settings
 // object. It is shared by every conversion so the schema-facing shape never
-// drifts.
-func widgetSettingsAttrTypes() map[string]attr.Type {
+// drifts, and it is exported so the external test package can build the same
+// object value.
+func DemoWidgetConfigSettingsAttrTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"retention_days": types.Int64Type,
 		"enabled":        types.BoolType,
@@ -128,6 +127,9 @@ func (r *DemoWidgetConfigResource) Schema(_ context.Context, _ resource.SchemaRe
 			"id": schema.StringAttribute{
 				Computed:    true,
 				Description: "ID of the widget configuration, same as the locator attribute.",
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
 			},
 			// TEMPLATE: the LOCATOR attribute named by the codegen JSON's
 			// resource_id (e.g. InstanceId) — Required + RequiresReplace:
@@ -168,6 +170,9 @@ func (r *DemoWidgetConfigResource) Schema(_ context.Context, _ resource.SchemaRe
 			// metadata (update_time/modifier below) is added ONLY on explicit
 			// user request; async task ids are NEVER exposed as Computed
 			// attributes.
+			// TEMPLATE: cloud-refreshed Computed values change on EVERY write,
+			// so they deliberately carry NO UseStateForUnknown — the plan must
+			// show them as "known after apply" on updates.
 			"update_time": schema.StringAttribute{
 				Computed:    true,
 				Description: "Last modification time of the configuration.",
@@ -314,29 +319,22 @@ func (r *DemoWidgetConfigResource) Update(ctx context.Context, req resource.Upda
 // removes it from state — the cloud-side configuration dies with its parent
 // (golden source: sqlserver wan_ip_config's no-op Delete).
 func (r *DemoWidgetConfigResource) Delete(_ context.Context, _ resource.DeleteRequest, _ *resource.DeleteResponse) {
-	return
 }
-
-// TEMPLATE: the service is constructed directly in each lifecycle method
-// (NewDemoService(r.Client())) — the official framework pattern: the client
-// is injected by Configure (fw.ResourceWithConfigure handles the nil
-// ProviderData guard there), lifecycle methods simply use it.
 
 // applyWidgetConfig writes the planned settings through the write API and
 // then reads the configuration back, so every Optional+Computed value is
 // known when the state is saved. The state always records the
-// cloud-reported values: the cloud may normalize a write (see the CAM
-// must_contain example), and such differences are surfaced by the next plan
-// as a regular diff instead of being second-guessed here.
+// cloud-reported values: when the cloud normalizes a write, the difference
+// surfaces in the next plan instead of being second-guessed here.
 //
-// TEMPLATE: async write API — when the create entry carries a non-empty
-// async_info, wait for the task inside the service layer's write method
-// (TWO wait shapes — task-id OR instance-status polling, see
-// service_template.go.tmpl; the task id field name follows the vendored
-// SDK) BEFORE the read-back below. Declare the
-// user-facing `timeouts` block (resourcetimeouts, create/update stages,
-// see the general template) and thread the timeout from
-// plan.Timeouts.Create/Update(ctx, defaultXxxTimeout) into the wait.
+// TEMPLATE: async write API — when the update entry carries a non-empty
+// async_info, the write returns a task id and the wait goes HERE, between
+// the write and the read-back, with the `timeouts` block's create/update
+// stage resolved exactly as in the general template (copy its
+// compile-verified Timeouts + Wait form; the block, the stage constants and
+// the Timeouts model field are then declared like there). TWO wait shapes —
+// task-id OR instance-status polling, see service_template.go.tmpl; the
+// task id field name follows the vendored SDK.
 func (r *DemoWidgetConfigResource) applyWidgetConfig(ctx context.Context, service DemoService, plan *DemoWidgetConfigResourceModel, diags *diag.Diagnostics) {
 	settings := expandWidgetSettings(ctx, plan.Settings, diags)
 	if diags.HasError() {
@@ -424,7 +422,7 @@ func flattenWidgetSettings(ctx context.Context, settings *demov20230101.WidgetSe
 	if !prev.IsNull() && !prev.IsUnknown() {
 		diags.Append(prev.As(ctx, &previous, basetypes.ObjectAsOptions{})...)
 		if diags.HasError() {
-			return types.ObjectNull(widgetSettingsAttrTypes())
+			return types.ObjectNull(DemoWidgetConfigSettingsAttrTypes())
 		}
 	} else {
 		previous = DemoWidgetConfigSettingsModel{
@@ -434,30 +432,23 @@ func flattenWidgetSettings(ctx context.Context, settings *demov20230101.WidgetSe
 		}
 	}
 
-	current := DemoWidgetConfigSettingsModel{
-		RetentionDays: types.Int64Null(),
-		Enabled:       types.BoolNull(),
-		NotifyEmail:   types.StringNull(),
+	// The cloud may answer without a settings object at all: every field
+	// is then "omitted", so the previously configured values are kept. The
+	// nil guard MUST precede every settings.Xxx dereference below.
+	if settings == nil {
+		settings = &demov20230101.WidgetSettings{}
 	}
 
-	if settings != nil {
-		current.RetentionDays = fwHelper.Int64ValueOrNull(settings.RetentionDays)
-		current.Enabled = fwHelper.BoolValueOrNull(settings.Enabled)
-		current.NotifyEmail = fwHelper.StringPointerValueOrNull(settings.NotifyEmail)
-	}
-
-	// TEMPLATE: read-direction anti-diff conversions use the OrPrev family
-	// from fwHelper — a cloud-omitted field keeps the previously configured
-	// value. Missing variants (BoolValueOrPrev, the *int64 flavour of
-	// Int64ValueOrPrev) are ADDED to framework/helper, never implemented
-	// locally.
+	// TEMPLATE: the settings leaves are user-configurable (Optional+Computed),
+	// so the read-direction anti-diff conversions use the OrPrev family from
+	// fwHelper — a cloud-omitted field keeps the previously configured value.
 	merged := DemoWidgetConfigSettingsModel{
 		RetentionDays: fwHelper.Int64ValueOrPrev(settings.RetentionDays, previous.RetentionDays),
 		Enabled:       fwHelper.BoolValueOrPrev(settings.Enabled, previous.Enabled),
 		NotifyEmail:   fwHelper.StringValueOrPrev(settings.NotifyEmail, previous.NotifyEmail),
 	}
 
-	result, objectDiags := types.ObjectValueFrom(ctx, widgetSettingsAttrTypes(), merged)
+	result, objectDiags := types.ObjectValueFrom(ctx, DemoWidgetConfigSettingsAttrTypes(), merged)
 	diags.Append(objectDiags...)
 
 	return result
@@ -465,7 +456,5 @@ func flattenWidgetSettings(ctx context.Context, settings *demov20230101.WidgetSe
 
 // TEMPLATE: NO local conversion helpers in the resource file — pointer/null
 // conversions, OrPrev anti-diff merges and nil-safe derefs all come from
-// tencentcloud/framework/helper (fwHelper). When a variant is missing there
-// (e.g. BoolValueOrPrev, the *int64 flavour of Int64ValueOrPrev,
-// StringOrEmpty), ADD it to framework/helper with unit tests — never
-// re-implement it locally.
+// tencentcloud/framework/helper (fwHelper). When a variant is missing there,
+// ADD it to framework/helper with unit tests — never re-implement it locally.

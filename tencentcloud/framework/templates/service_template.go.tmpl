@@ -36,16 +36,18 @@
 //
 // Shape map — every service method called by the six type templates follows
 // one of the shapes demonstrated in THIS file:
-//   - WRITE shape (CreateWidget: returns the id; ModifyWidget / DeleteWidget:
-//     plain error; +task id when async): general Create/Modify/Delete,
-//     config UpdateWidgetConfig, attachment AttachWidget / DetachWidget,
-//     action RestartWidget (returns the task id).
+//   - WRITE shape (CreateWidget: returns the id + task id; ModifyWidget:
+//     returns the task id; DeleteWidget: plain error — an async write
+//     returns its task id, a synchronous one drops it): general
+//     Create/Modify/Delete, config UpdateWidgetConfig, attachment
+//     AttachWidget / DetachWidget, action RestartWidget (returns the task id).
 //   - LIST describe shape (DescribeWidgets: full list, built-in paging):
 //     general/datasource DescribeWidgets, attachment DescribeGadgets.
 //   - SINGLETON describe shape (exact lookup): same retry closure, but a
 //     response without the object returns fwHelper.ErrNotFound — config
 //     DescribeWidgetConfig, ephemeral DescribeTempCredential.
-//   - WAIT shape (WaitDemoTaskResult): task-id OR instance-status polling.
+//   - WAIT shape: task-id polling (WaitDemoTaskResult) OR instance-status
+//     polling (WaitDemoWidgetDestroyed) — both demonstrated below.
 
 package demo // TEMPLATE: the product package name, e.g. cvm, ssm, makers
 
@@ -83,9 +85,13 @@ type DemoService struct {
 	client *connectivity.TencentCloudClient
 }
 
-// TEMPLATE: WRITE method (create / update / delete / invoke). Returns the
-// created resource id for create, plain error otherwise.
-func (me *DemoService) CreateWidget(ctx context.Context, request *demov20230101.CreateWidgetRequest) (widgetId string, err error) {
+// TEMPLATE: WRITE method (create / update / delete / invoke). Create returns
+// the created resource id and, because this demo create API is async, the
+// task id the wait helper below polls (a SYNCHRONOUS create API drops the
+// taskId result). The task id field name and Go type come from the vendored
+// SDK response struct (FlowId / TaskId / TaskID, *string or *int64) — keep
+// the service signature and WaitDemoTaskResult's parameter type in line.
+func (me *DemoService) CreateWidget(ctx context.Context, request *demov20230101.CreateWidgetRequest) (widgetId string, taskId string, err error) {
 	var (
 		logId    = tccommon.GetLogId(ctx)
 		response *demov20230101.CreateWidgetResponse
@@ -119,6 +125,10 @@ func (me *DemoService) CreateWidget(ctx context.Context, request *demov20230101.
 	}
 
 	widgetId = *response.Response.WidgetId
+	if response.Response.TaskId != nil {
+		taskId = *response.Response.TaskId
+	}
+
 	return
 }
 
@@ -140,10 +150,13 @@ func (me *DemoService) DescribeWidgets(ctx context.Context, request *demov202301
 	var (
 		logId    = tccommon.GetLogId(ctx)
 		response *demov20230101.DescribeWidgetsResponse
-		widgets  = make([]*demov20230101.Widget, 0)
 		offset   = int64(0)
 		limit    = int64(100) // TEMPLATE: the maximum Limit documented by the API (commonly 100); match the SDK field types.
 	)
+
+	// The named result is initialised here (NOT in the var block above): a
+	// named result and a body-level var of the same name do not compile.
+	widgets = make([]*demov20230101.Widget, 0)
 
 	for {
 		request.Offset = &offset
@@ -189,9 +202,10 @@ func (me *DemoService) DescribeWidgets(ctx context.Context, request *demov202301
 // TEMPLATE: UPDATE method — the caller builds the modify request; this
 // method only performs the retried call (same retry-closure shape as
 // create: ratelimit.Check inside, [DEBUG] success log, nil-response guard,
-// tccommon.RetryError). When the modify API is async, return the task id
-// as an extra value (field name verified against the vendored SDK).
-func (me *DemoService) ModifyWidget(ctx context.Context, request *demov20230101.ModifyWidgetRequest) (err error) {
+// tccommon.RetryError). This demo modify API is async, so the task id is
+// returned as an extra value (field name and type verified against the
+// vendored SDK); a SYNCHRONOUS modify API returns a plain error.
+func (me *DemoService) ModifyWidget(ctx context.Context, request *demov20230101.ModifyWidgetRequest) (taskId string, err error) {
 	logId := tccommon.GetLogId(ctx)
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -204,6 +218,10 @@ func (me *DemoService) ModifyWidget(ctx context.Context, request *demov20230101.
 
 		if result == nil || result.Response == nil {
 			return resource.NonRetryableError(fmt.Errorf("modify widget failed, Response is nil."))
+		}
+
+		if result.Response.TaskId != nil {
+			taskId = *result.Response.TaskId
 		}
 
 		return nil
@@ -256,14 +274,9 @@ func (me *DemoService) DeleteWidget(ctx context.Context, request *demov20230101.
 //   - instance-status shape: the polling API takes the RESOURCE id instead
 //     (e.g. DescribeDBInstanceDetail) — poll until the expected terminal
 //     status, or until a confirmed not-found (destroy completed); the write
-//     API may return NO task id at all in this shape. VERIFIED code form
-//     (tdmysql v2, 2026-11): the wait talks to the SDK client directly, so
-//     the service-layer ErrNotFound sentinel never surfaces here — treat an
-//     EMPTY detail response as the not-found terminal state yourself:
-//
-//	if result == nil || result.Response == nil || result.Response.InstanceId == nil {
-//		return nil // destroyed: terminal state
-//	}
+//     API may return NO task id at all in this shape. Compilable example:
+//     WaitDemoWidgetDestroyed below (an EMPTY describe response is the
+//     not-found terminal state — see its comment for the verified reason).
 //
 // The task id FIELD NAME in write responses is NOT uniform (FlowId / TaskId /
 // TaskID, *int64) — always verify against the vendored SDK struct, never
@@ -288,9 +301,11 @@ func (me *DemoService) WaitDemoTaskResult(ctx context.Context, taskId string, ti
 	// back to the resource's default constant there).
 	err = resource.Retry(timeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseDemoV20230101Client().GetAsyncStatus(request)
-		if err != nil {
-			return resource.RetryableError(err)
+		response, e := me.client.UseDemoV20230101Client().GetAsyncStatus(request)
+		if e != nil {
+			// Error codes get ZERO second-guessing: retry classification is
+			// tccommon.RetryError's job (never hand-wrap in RetryableError).
+			return tccommon.RetryError(e)
 		}
 
 		if response == nil || response.Response == nil || response.Response.Status == nil {
@@ -310,6 +325,47 @@ func (me *DemoService) WaitDemoTaskResult(ctx context.Context, taskId string, ti
 
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, task[%s], reason[%s]\n", logId, request.GetAction(), taskId, err.Error())
+	}
+
+	return
+}
+
+// WaitDemoWidgetDestroyed is the INSTANCE-STATUS wait shape (compare the
+// task-id shape above): the polling API takes the RESOURCE id, and "the
+// resource is gone" is the terminal state. VERIFIED rule (tdmysql v2,
+// 2026-11): this helper talks to the SDK client directly, so the
+// service-layer fwHelper.ErrNotFound sentinel NEVER surfaces here — an EMPTY
+// describe response (no object / nil id) IS the not-found terminal state and
+// must be judged explicitly. Forgetting that branch makes every destroy wait
+// spin until the timeout.
+//
+// For an "expected status" terminal (e.g. isolated) replace the nil-id
+// branch with a status comparison; the empty-response guard stays NON-terminal
+// there (the resource must still exist).
+func (me *DemoService) WaitDemoWidgetDestroyed(ctx context.Context, widgetId string, timeout time.Duration) (err error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = demov20230101.NewDescribeWidgetsRequest()
+	)
+
+	request.WidgetIds = []*string{&widgetId}
+	err = resource.Retry(timeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseDemoV20230101Client().DescribeWidgets(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		// Empty answer = the widget no longer exists = destroy completed.
+		if response == nil || response.Response == nil || len(response.Response.WidgetSet) == 0 {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("widget %s still exists, waiting for destroyed", widgetId))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, widget[%s], reason[%s]\n", logId, request.GetAction(), widgetId, err.Error())
 	}
 
 	return

@@ -1,0 +1,403 @@
+// TEMPLATE: framework ATTACHMENT-resource UNIT TEST skeleton (gomonkey
+// stubbed style — no real cloud credentials, no TF_ACC).
+// Golden source (shape): tencentcloud/services/makers/resource_tc_makers_project_test.go
+//
+// Location: tencentcloud/services/<product>/resource_tc_<name>_attachment_test.go
+// Package:  external test package <product>_test, importing the service
+//           package as sv<product>.
+//
+// Run command (the -gcflags disable inlining, which gomonkey needs):
+//   go test ./tencentcloud/services/<product>/ -run "Test<Name>" -v -count=1 -gcflags="all=-l"
+//
+// Key shape (same as the general resource test, different lifecycle):
+//   - plan/state are built via tfsdk.Plan / tfsdk.State carrying the schema,
+//     populated from the MODEL struct;
+//   - the state id is the composite `parent#child`; Create binds, Delete
+//     unbinds, Update is a no-op, ImportState splits the id into segments;
+//   - every package-level name carries the RESOURCE-qualified prefix
+//     (demoWidgetAttachment...): the product directory shares one external
+//     test package across all generated resources, bare names collide.
+//
+// Stubbing mode (MANDATORY): the versioned client accessor + the SDK client
+// method are stubbed in TWO levels — the service method itself is NEVER
+// patched (patching service methods SIGBUS-crashes on darwin/arm64).
+
+package demo_test // TEMPLATE: <product>_test
+
+import (
+	"context"
+	"fmt"
+	"testing"
+
+	"github.com/agiledragon/gomonkey/v2"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-go/tftypes"
+
+	demov20230101 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/demo/v20230101"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/sharedmeta"
+	svdemo "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/demo"
+)
+
+const (
+	demoWidgetAttachmentTestGadgetId    = "gadget-12345"
+	demoWidgetAttachmentTestWidgetId    = "widget-12345"
+	demoWidgetAttachmentTestId          = "gadget-12345#widget-12345"
+	demoWidgetAttachmentTestBoundAt     = "2024-01-01T00:00:00Z"
+	demoWidgetAttachmentTestBoundStatus = "Bound"
+)
+
+func demoWidgetAttachmentStr(v string) *string { return &v }
+
+// demoWidgetAttachmentTestGadget builds the parent-level describe answer: a
+// gadget carrying the binding of the widget under test.
+func demoWidgetAttachmentTestGadget() *demov20230101.Gadget {
+	return &demov20230101.Gadget{
+		GadgetId: demoWidgetAttachmentStr(demoWidgetAttachmentTestGadgetId),
+		WidgetBindings: []*demov20230101.WidgetBinding{{
+			GadgetId:    demoWidgetAttachmentStr(demoWidgetAttachmentTestGadgetId),
+			WidgetId:    demoWidgetAttachmentStr(demoWidgetAttachmentTestWidgetId),
+			BoundAt:     demoWidgetAttachmentStr(demoWidgetAttachmentTestBoundAt),
+			BoundStatus: demoWidgetAttachmentStr(demoWidgetAttachmentTestBoundStatus),
+		}},
+	}
+}
+
+// demoWidgetAttachmentTestModel builds the terraform model used for
+// plan/state.
+// TEMPLATE: every unset attribute carries an EXPLICIT TYPED null value — the
+// raw zero value breaks tfsdk Plan/State reflection with "Value Conversion
+// Error". One typed null per model field, none skipped.
+func demoWidgetAttachmentTestModel() svdemo.DemoWidgetAttachmentResourceModel {
+	return svdemo.DemoWidgetAttachmentResourceModel{
+		Id:          types.StringValue(demoWidgetAttachmentTestId),
+		GadgetId:    types.StringValue(demoWidgetAttachmentTestGadgetId),
+		WidgetId:    types.StringValue(demoWidgetAttachmentTestWidgetId),
+		BindMode:    types.StringNull(),
+		BoundAt:     types.StringNull(),
+		BoundStatus: types.StringNull(),
+	}
+}
+
+// patchDemoWidgetAttachmentSdkClient stubs the versioned client accessor and
+// returns the mock SDK client whose methods the test patches next.
+func patchDemoWidgetAttachmentSdkClient(patches *gomonkey.Patches, client *connectivity.TencentCloudClient) *demov20230101.Client {
+	demoClient := &demov20230101.Client{}
+	patches.ApplyMethodReturn(client, "UseDemoV20230101Client", demoClient)
+
+	return demoClient
+}
+
+// stubDemoWidgetAttachmentDescribe stubs the parent-level describe API with
+// the given gadgets.
+func stubDemoWidgetAttachmentDescribe(patches *gomonkey.Patches, demoClient *demov20230101.Client, gadgets []*demov20230101.Gadget) {
+	patches.ApplyMethodFunc(demoClient, "DescribeGadgets", func(request *demov20230101.DescribeGadgetsRequest) (*demov20230101.DescribeGadgetsResponse, error) {
+		return &demov20230101.DescribeGadgetsResponse{Response: &demov20230101.DescribeGadgetsResponseParams{
+			GadgetSet: gadgets,
+			RequestId: demoWidgetAttachmentStr("fake-request-id"),
+		}}, nil
+	})
+}
+
+// demoWidgetAttachmentTestContext wires the resource to a configured client.
+type demoWidgetAttachmentTestContext struct {
+	resource resource.Resource
+	schema   schema.Schema
+	client   *connectivity.TencentCloudClient
+}
+
+func newDemoWidgetAttachmentTestContext(t *testing.T) *demoWidgetAttachmentTestContext {
+	t.Helper()
+
+	client := &connectivity.TencentCloudClient{}
+
+	res := svdemo.NewDemoWidgetAttachmentResource()
+	configured, ok := res.(resource.ResourceWithConfigure)
+	if !ok {
+		t.Fatalf("resource does not implement resource.ResourceWithConfigure")
+	}
+
+	var configureResp resource.ConfigureResponse
+	configured.Configure(
+		context.Background(),
+		resource.ConfigureRequest{ProviderData: &sharedmeta.ProviderMeta{Client: client}},
+		&configureResp,
+	)
+	if configureResp.Diagnostics.HasError() {
+		t.Fatalf("failed to configure resource: %v", configureResp.Diagnostics.Errors())
+	}
+
+	var schemaResp resource.SchemaResponse
+	res.Schema(context.Background(), resource.SchemaRequest{}, &schemaResp)
+	if schemaResp.Diagnostics.HasError() {
+		t.Fatalf("failed to build schema: %v", schemaResp.Diagnostics.Errors())
+	}
+
+	return &demoWidgetAttachmentTestContext{resource: res, schema: schemaResp.Schema, client: client}
+}
+
+func (c *demoWidgetAttachmentTestContext) plan(t *testing.T, m svdemo.DemoWidgetAttachmentResourceModel) tfsdk.Plan {
+	t.Helper()
+
+	plan := tfsdk.Plan{Schema: c.schema}
+	if diags := plan.Set(context.Background(), m); diags.HasError() {
+		t.Fatalf("failed to build plan: %v", diags.Errors())
+	}
+
+	return plan
+}
+
+func (c *demoWidgetAttachmentTestContext) state(t *testing.T, m svdemo.DemoWidgetAttachmentResourceModel) tfsdk.State {
+	t.Helper()
+
+	state := tfsdk.State{Schema: c.schema}
+	if diags := state.Set(context.Background(), m); diags.HasError() {
+		t.Fatalf("failed to build state: %v", diags.Errors())
+	}
+
+	return state
+}
+
+// TestDemoWidgetAttachmentCreateSuccess verifies Create sends the bind
+// request, composes the parent-first composite id and records the binding
+// read back from the parent describe.
+func TestDemoWidgetAttachmentCreateSuccess(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetAttachmentTestContext(t)
+	demoClient := patchDemoWidgetAttachmentSdkClient(patches, ctx.client)
+
+	var captured *demov20230101.AttachWidgetRequest
+	patches.ApplyMethodFunc(demoClient, "AttachWidget", func(request *demov20230101.AttachWidgetRequest) (*demov20230101.AttachWidgetResponse, error) {
+		captured = request
+
+		return &demov20230101.AttachWidgetResponse{Response: &demov20230101.AttachWidgetResponseParams{
+			RequestId: demoWidgetAttachmentStr("fake-request-id"),
+		}}, nil
+	})
+	stubDemoWidgetAttachmentDescribe(patches, demoClient, []*demov20230101.Gadget{demoWidgetAttachmentTestGadget()})
+
+	model := demoWidgetAttachmentTestModel()
+	var createResp resource.CreateResponse
+	createResp.State = ctx.state(t, model)
+	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, model)}, &createResp)
+	if createResp.Diagnostics.HasError() {
+		t.Fatalf("Create failed: %v", createResp.Diagnostics.Errors())
+	}
+
+	if captured == nil {
+		t.Fatal("AttachWidget request is nil")
+	}
+	if captured.GadgetId == nil || *captured.GadgetId != demoWidgetAttachmentTestGadgetId {
+		t.Errorf("bind request gadget_id = %v, want %q", captured.GadgetId, demoWidgetAttachmentTestGadgetId)
+	}
+	if captured.WidgetId == nil || *captured.WidgetId != demoWidgetAttachmentTestWidgetId {
+		t.Errorf("bind request widget_id = %v, want %q", captured.WidgetId, demoWidgetAttachmentTestWidgetId)
+	}
+
+	var got svdemo.DemoWidgetAttachmentResourceModel
+	if diags := createResp.State.Get(context.Background(), &got); diags.HasError() {
+		t.Fatalf("failed to read back state: %v", diags.Errors())
+	}
+	if got.Id.ValueString() != demoWidgetAttachmentTestId {
+		t.Errorf("id = %q, want the parent-first composite %q", got.Id.ValueString(), demoWidgetAttachmentTestId)
+	}
+	if got.BoundStatus.ValueString() != demoWidgetAttachmentTestBoundStatus {
+		t.Errorf("bound_status = %q, want %q", got.BoundStatus.ValueString(), demoWidgetAttachmentTestBoundStatus)
+	}
+}
+
+// TestDemoWidgetAttachmentCreateApiError verifies a bind failure surfaces as
+// an error diagnostic (a plain fmt.Errorf is non-retryable: no waiting).
+func TestDemoWidgetAttachmentCreateApiError(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetAttachmentTestContext(t)
+	demoClient := patchDemoWidgetAttachmentSdkClient(patches, ctx.client)
+	patches.ApplyMethodFunc(demoClient, "AttachWidget", func(request *demov20230101.AttachWidgetRequest) (*demov20230101.AttachWidgetResponse, error) {
+		return nil, fmt.Errorf("attach failed")
+	})
+
+	model := demoWidgetAttachmentTestModel()
+	var createResp resource.CreateResponse
+	createResp.State = ctx.state(t, model)
+	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, model)}, &createResp)
+	if !createResp.Diagnostics.HasError() {
+		t.Fatal("Create should fail on an API error")
+	}
+}
+
+// TestDemoWidgetAttachmentReadSuccess verifies Read splits the composite id
+// into the parent query and picks the binding out of the parent describe.
+func TestDemoWidgetAttachmentReadSuccess(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetAttachmentTestContext(t)
+	demoClient := patchDemoWidgetAttachmentSdkClient(patches, ctx.client)
+
+	var gotGadgetId string
+	patches.ApplyMethodFunc(demoClient, "DescribeGadgets", func(request *demov20230101.DescribeGadgetsRequest) (*demov20230101.DescribeGadgetsResponse, error) {
+		if len(request.GadgetIds) != 1 || request.GadgetIds[0] == nil {
+			t.Errorf("expected the parent id filter to be passed")
+		} else {
+			gotGadgetId = *request.GadgetIds[0]
+		}
+
+		return &demov20230101.DescribeGadgetsResponse{Response: &demov20230101.DescribeGadgetsResponseParams{
+			GadgetSet: []*demov20230101.Gadget{demoWidgetAttachmentTestGadget()},
+			RequestId: demoWidgetAttachmentStr("fake-request-id"),
+		}}, nil
+	})
+
+	var readResp resource.ReadResponse
+	readResp.State = ctx.state(t, demoWidgetAttachmentTestModel())
+	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, demoWidgetAttachmentTestModel())}, &readResp)
+	if readResp.Diagnostics.HasError() {
+		t.Fatalf("Read failed: %v", readResp.Diagnostics.Errors())
+	}
+
+	if gotGadgetId != demoWidgetAttachmentTestGadgetId {
+		t.Errorf("DescribeGadgets called with %q, want the parent %q", gotGadgetId, demoWidgetAttachmentTestGadgetId)
+	}
+
+	var got svdemo.DemoWidgetAttachmentResourceModel
+	if diags := readResp.State.Get(context.Background(), &got); diags.HasError() {
+		t.Fatalf("failed to read back state: %v", diags.Errors())
+	}
+	if got.BoundAt.ValueString() != demoWidgetAttachmentTestBoundAt {
+		t.Errorf("bound_at = %q, want %q", got.BoundAt.ValueString(), demoWidgetAttachmentTestBoundAt)
+	}
+}
+
+// TestDemoWidgetAttachmentReadNotFound verifies that a parent describe
+// without the binding drops the resource from state.
+func TestDemoWidgetAttachmentReadNotFound(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetAttachmentTestContext(t)
+	demoClient := patchDemoWidgetAttachmentSdkClient(patches, ctx.client)
+	stubDemoWidgetAttachmentDescribe(patches, demoClient, []*demov20230101.Gadget{{
+		GadgetId: demoWidgetAttachmentStr(demoWidgetAttachmentTestGadgetId),
+	}})
+
+	var readResp resource.ReadResponse
+	readResp.State = ctx.state(t, demoWidgetAttachmentTestModel())
+	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, demoWidgetAttachmentTestModel())}, &readResp)
+	if readResp.Diagnostics.HasError() {
+		t.Fatalf("Read should not error on a binding that is gone: %v", readResp.Diagnostics.Errors())
+	}
+	if !readResp.State.Raw.IsNull() {
+		t.Error("state should be removed after the binding is confirmed gone")
+	}
+}
+
+// TestDemoWidgetAttachmentReadApiError verifies a describe failure surfaces
+// as an error diagnostic.
+func TestDemoWidgetAttachmentReadApiError(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetAttachmentTestContext(t)
+	demoClient := patchDemoWidgetAttachmentSdkClient(patches, ctx.client)
+	patches.ApplyMethodFunc(demoClient, "DescribeGadgets", func(request *demov20230101.DescribeGadgetsRequest) (*demov20230101.DescribeGadgetsResponse, error) {
+		return nil, fmt.Errorf("describe failed")
+	})
+
+	var readResp resource.ReadResponse
+	readResp.State = ctx.state(t, demoWidgetAttachmentTestModel())
+	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, demoWidgetAttachmentTestModel())}, &readResp)
+	if !readResp.Diagnostics.HasError() {
+		t.Fatal("Read should fail on a transport error")
+	}
+}
+
+// TestDemoWidgetAttachmentDeleteSuccess verifies Delete splits the composite
+// id into the unbind request.
+func TestDemoWidgetAttachmentDeleteSuccess(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newDemoWidgetAttachmentTestContext(t)
+	demoClient := patchDemoWidgetAttachmentSdkClient(patches, ctx.client)
+
+	var captured *demov20230101.DetachWidgetRequest
+	patches.ApplyMethodFunc(demoClient, "DetachWidget", func(request *demov20230101.DetachWidgetRequest) (*demov20230101.DetachWidgetResponse, error) {
+		captured = request
+
+		return &demov20230101.DetachWidgetResponse{Response: &demov20230101.DetachWidgetResponseParams{
+			RequestId: demoWidgetAttachmentStr("fake-request-id"),
+		}}, nil
+	})
+
+	var deleteResp resource.DeleteResponse
+	ctx.resource.Delete(context.Background(), resource.DeleteRequest{State: ctx.state(t, demoWidgetAttachmentTestModel())}, &deleteResp)
+	if deleteResp.Diagnostics.HasError() {
+		t.Fatalf("Delete failed: %v", deleteResp.Diagnostics.Errors())
+	}
+
+	if captured == nil {
+		t.Fatal("DetachWidget request is nil")
+	}
+	if captured.GadgetId == nil || *captured.GadgetId != demoWidgetAttachmentTestGadgetId {
+		t.Errorf("unbind request gadget_id = %v, want %q", captured.GadgetId, demoWidgetAttachmentTestGadgetId)
+	}
+	if captured.WidgetId == nil || *captured.WidgetId != demoWidgetAttachmentTestWidgetId {
+		t.Errorf("unbind request widget_id = %v, want %q", captured.WidgetId, demoWidgetAttachmentTestWidgetId)
+	}
+}
+
+// TestDemoWidgetAttachmentImportState verifies the composite id is split into
+// the id and both segment attributes.
+func TestDemoWidgetAttachmentImportState(t *testing.T) {
+	ctx := newDemoWidgetAttachmentTestContext(t)
+
+	importer, ok := ctx.resource.(resource.ResourceWithImportState)
+	if !ok {
+		t.Fatal("resource does not implement resource.ResourceWithImportState")
+	}
+
+	resp := resource.ImportStateResponse{State: tfsdk.State{
+		Schema: ctx.schema,
+		Raw:    tftypes.NewValue(ctx.schema.Type().TerraformType(context.Background()), nil),
+	}}
+	importer.ImportState(context.Background(), resource.ImportStateRequest{ID: demoWidgetAttachmentTestId}, &resp)
+	if resp.Diagnostics.HasError() {
+		t.Fatalf("ImportState failed: %v", resp.Diagnostics.Errors())
+	}
+
+	var got svdemo.DemoWidgetAttachmentResourceModel
+	if diags := resp.State.Get(context.Background(), &got); diags.HasError() {
+		t.Fatalf("failed to read back state: %v", diags.Errors())
+	}
+	if got.GadgetId.ValueString() != demoWidgetAttachmentTestGadgetId || got.WidgetId.ValueString() != demoWidgetAttachmentTestWidgetId {
+		t.Errorf("segments = %q / %q, want %q / %q", got.GadgetId.ValueString(), got.WidgetId.ValueString(), demoWidgetAttachmentTestGadgetId, demoWidgetAttachmentTestWidgetId)
+	}
+}
+
+// TestDemoWidgetAttachmentImportStateInvalidId verifies a malformed id is
+// rejected instead of producing a half-filled state.
+func TestDemoWidgetAttachmentImportStateInvalidId(t *testing.T) {
+	ctx := newDemoWidgetAttachmentTestContext(t)
+
+	importer, ok := ctx.resource.(resource.ResourceWithImportState)
+	if !ok {
+		t.Fatal("resource does not implement resource.ResourceWithImportState")
+	}
+
+	resp := resource.ImportStateResponse{State: tfsdk.State{
+		Schema: ctx.schema,
+		Raw:    tftypes.NewValue(ctx.schema.Type().TerraformType(context.Background()), nil),
+	}}
+	importer.ImportState(context.Background(), resource.ImportStateRequest{ID: "only-one-segment"}, &resp)
+	if !resp.Diagnostics.HasError() {
+		t.Fatal("ImportState should reject an id without both segments")
+	}
+}
