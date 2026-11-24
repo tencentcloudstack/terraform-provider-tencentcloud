@@ -149,6 +149,7 @@ The `http_get` object of `probe` supports the following:
 The `resources` object of `custom_configuration` supports the following:
 
 * `cpu` - (Optional, String) Amount of cpu resources.
+* `gpu_resource_group_id` - (Optional, String) Id of the GPU resource group associated with the sandbox.
 * `memory` - (Optional, String) Amount of memory resources.
 * `storage` - (Optional, String) Custom disk size. Valid values: `1Gi`, `5Gi`, `10Gi`, `20Gi`.
 
