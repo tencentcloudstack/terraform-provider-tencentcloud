@@ -134,7 +134,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ioa v1.3.202
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/makers v1.3.213
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mqtt v1.3.104
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.831
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.3.214
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/region v1.3.40
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcss v1.1.50
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmysql v1.3.211

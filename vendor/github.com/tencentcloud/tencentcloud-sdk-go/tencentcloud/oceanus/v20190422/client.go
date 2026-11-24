@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -45,6 +45,60 @@ func NewClient(credential common.CredentialIface, region string, clientProfile *
 }
 
 
+func NewCheckConnectorNameRequest() (request *CheckConnectorNameRequest) {
+    request = &CheckConnectorNameRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("oceanus", APIVersion, "CheckConnectorName")
+    
+    
+    return
+}
+
+func NewCheckConnectorNameResponse() (response *CheckConnectorNameResponse) {
+    response = &CheckConnectorNameResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CheckConnectorName
+// 查询资源名是否重复
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) CheckConnectorName(request *CheckConnectorNameRequest) (response *CheckConnectorNameResponse, err error) {
+    return c.CheckConnectorNameWithContext(context.Background(), request)
+}
+
+// CheckConnectorName
+// 查询资源名是否重复
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) CheckConnectorNameWithContext(ctx context.Context, request *CheckConnectorNameRequest) (response *CheckConnectorNameResponse, err error) {
+    if request == nil {
+        request = NewCheckConnectorNameRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "CheckConnectorName")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CheckConnectorName require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCheckConnectorNameResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCheckSavepointRequest() (request *CheckSavepointRequest) {
     request = &CheckSavepointRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -84,6 +138,7 @@ func (c *Client) CheckSavepointWithContext(ctx context.Context, request *CheckSa
     if request == nil {
         request = NewCheckSavepointRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "CheckSavepoint")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CheckSavepoint require credential")
@@ -153,6 +208,7 @@ func (c *Client) CopyJobsWithContext(ctx context.Context, request *CopyJobsReque
     if request == nil {
         request = NewCopyJobsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "CopyJobs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CopyJobs require credential")
@@ -161,6 +217,56 @@ func (c *Client) CopyJobsWithContext(ctx context.Context, request *CopyJobsReque
     request.SetContext(ctx)
     
     response = NewCopyJobsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateConnectorRequest() (request *CreateConnectorRequest) {
+    request = &CreateConnectorRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("oceanus", APIVersion, "CreateConnector")
+    
+    
+    return
+}
+
+func NewCreateConnectorResponse() (response *CreateConnectorResponse) {
+    response = &CreateConnectorResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateConnector
+// 创建Connector
+//
+// 可能返回的错误码:
+//  RESOURCEINUSE_RESOURCECONNECTORDUPLICATENAME = "ResourceInUse.ResourceConnectorDuplicateName"
+func (c *Client) CreateConnector(request *CreateConnectorRequest) (response *CreateConnectorResponse, err error) {
+    return c.CreateConnectorWithContext(context.Background(), request)
+}
+
+// CreateConnector
+// 创建Connector
+//
+// 可能返回的错误码:
+//  RESOURCEINUSE_RESOURCECONNECTORDUPLICATENAME = "ResourceInUse.ResourceConnectorDuplicateName"
+func (c *Client) CreateConnectorWithContext(ctx context.Context, request *CreateConnectorRequest) (response *CreateConnectorResponse, err error) {
+    if request == nil {
+        request = NewCreateConnectorRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "CreateConnector")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateConnector require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateConnectorResponse()
     err = c.Send(request, response)
     return
 }
@@ -190,6 +296,7 @@ func NewCreateFolderResponse() (response *CreateFolderResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_DUPLICATEDFOLDERNAME = "InvalidParameter.DuplicatedFolderName"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
 func (c *Client) CreateFolder(request *CreateFolderRequest) (response *CreateFolderResponse, err error) {
@@ -202,12 +309,14 @@ func (c *Client) CreateFolder(request *CreateFolderRequest) (response *CreateFol
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_DUPLICATEDFOLDERNAME = "InvalidParameter.DuplicatedFolderName"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
 func (c *Client) CreateFolderWithContext(ctx context.Context, request *CreateFolderRequest) (response *CreateFolderResponse, err error) {
     if request == nil {
         request = NewCreateFolderRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "CreateFolder")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateFolder require credential")
@@ -247,6 +356,7 @@ func NewCreateJobResponse() (response *CreateJobResponse) {
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DUPLICATEDJOBNAME = "FailedOperation.DuplicatedJobName"
+//  FAILEDOPERATION_JOBBINDDEFAULTMONITORFAILED = "FailedOperation.JobBindDefaultMonitorFailed"
 //  FAILEDOPERATION_USERNOTAUTHENTICATED = "FailedOperation.UserNotAuthenticated"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DB = "InternalError.DB"
@@ -260,6 +370,7 @@ func NewCreateJobResponse() (response *CreateJobResponse) {
 //  INVALIDPARAMETERVALUE_UNSUPPORTEDCOMPOSITE = "InvalidParameterValue.UnSupportedComposite"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_JOB = "LimitExceeded.Job"
+//  LIMITEXCEEDED_JOBDEFAULTMONITORLIMITEXCEEDED = "LimitExceeded.JobDefaultMonitorLimitExceeded"
 //  RESOURCENOTFOUND_CLUSTERID = "ResourceNotFound.ClusterId"
 //  RESOURCEUNAVAILABLE_CLUSTER = "ResourceUnavailable.Cluster"
 //  RESOURCEUNAVAILABLE_CLUSTERGROUPSTATUS = "ResourceUnavailable.ClusterGroupStatus"
@@ -277,6 +388,7 @@ func (c *Client) CreateJob(request *CreateJobRequest) (response *CreateJobRespon
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DUPLICATEDJOBNAME = "FailedOperation.DuplicatedJobName"
+//  FAILEDOPERATION_JOBBINDDEFAULTMONITORFAILED = "FailedOperation.JobBindDefaultMonitorFailed"
 //  FAILEDOPERATION_USERNOTAUTHENTICATED = "FailedOperation.UserNotAuthenticated"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DB = "InternalError.DB"
@@ -290,6 +402,7 @@ func (c *Client) CreateJob(request *CreateJobRequest) (response *CreateJobRespon
 //  INVALIDPARAMETERVALUE_UNSUPPORTEDCOMPOSITE = "InvalidParameterValue.UnSupportedComposite"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_JOB = "LimitExceeded.Job"
+//  LIMITEXCEEDED_JOBDEFAULTMONITORLIMITEXCEEDED = "LimitExceeded.JobDefaultMonitorLimitExceeded"
 //  RESOURCENOTFOUND_CLUSTERID = "ResourceNotFound.ClusterId"
 //  RESOURCEUNAVAILABLE_CLUSTER = "ResourceUnavailable.Cluster"
 //  RESOURCEUNAVAILABLE_CLUSTERGROUPSTATUS = "ResourceUnavailable.ClusterGroupStatus"
@@ -299,6 +412,7 @@ func (c *Client) CreateJobWithContext(ctx context.Context, request *CreateJobReq
     if request == nil {
         request = NewCreateJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "CreateJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateJob require credential")
@@ -359,6 +473,8 @@ func NewCreateJobConfigResponse() (response *CreateJobConfigResponse) {
 //  RESOURCENOTFOUND_JOB = "ResourceNotFound.Job"
 //  RESOURCENOTFOUND_JOBID = "ResourceNotFound.JobId"
 //  UNSUPPORTEDOPERATION_INVALIDCHECKPOINTINTERVALERROR = "UnsupportedOperation.InvalidCheckpointIntervalError"
+//  UNSUPPORTEDOPERATION_MULTIEXTERNALCATALOGUNSUPPORTED = "UnsupportedOperation.MultiExternalCatalogUnsupported"
+//  UNSUPPORTEDOPERATION_MULTIEXTERNALEMRORHIVECATALOGUNSUPPORTED = "UnsupportedOperation.MultiExternalEmrOrHiveCatalogUnsupported"
 //  UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
 func (c *Client) CreateJobConfig(request *CreateJobConfigRequest) (response *CreateJobConfigResponse, err error) {
     return c.CreateJobConfigWithContext(context.Background(), request)
@@ -393,11 +509,14 @@ func (c *Client) CreateJobConfig(request *CreateJobConfigRequest) (response *Cre
 //  RESOURCENOTFOUND_JOB = "ResourceNotFound.Job"
 //  RESOURCENOTFOUND_JOBID = "ResourceNotFound.JobId"
 //  UNSUPPORTEDOPERATION_INVALIDCHECKPOINTINTERVALERROR = "UnsupportedOperation.InvalidCheckpointIntervalError"
+//  UNSUPPORTEDOPERATION_MULTIEXTERNALCATALOGUNSUPPORTED = "UnsupportedOperation.MultiExternalCatalogUnsupported"
+//  UNSUPPORTEDOPERATION_MULTIEXTERNALEMRORHIVECATALOGUNSUPPORTED = "UnsupportedOperation.MultiExternalEmrOrHiveCatalogUnsupported"
 //  UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
 func (c *Client) CreateJobConfigWithContext(ctx context.Context, request *CreateJobConfigRequest) (response *CreateJobConfigResponse, err error) {
     if request == nil {
         request = NewCreateJobConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "CreateJobConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateJobConfig require credential")
@@ -406,6 +525,190 @@ func (c *Client) CreateJobConfigWithContext(ctx context.Context, request *Create
     request.SetContext(ctx)
     
     response = NewCreateJobConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateMetaDatabaseRequest() (request *CreateMetaDatabaseRequest) {
+    request = &CreateMetaDatabaseRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("oceanus", APIVersion, "CreateMetaDatabase")
+    
+    
+    return
+}
+
+func NewCreateMetaDatabaseResponse() (response *CreateMetaDatabaseResponse) {
+    response = &CreateMetaDatabaseResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateMetaDatabase
+// 创建元数据库
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DB = "InternalError.DB"
+//  INVALIDPARAMETERVALUE_METADATABASEEXISTED = "InvalidParameterValue.MetaDatabaseExisted"
+//  INVALIDPARAMETERVALUE_METADATABASENAME = "InvalidParameterValue.MetaDatabaseName"
+//  LIMITEXCEEDED_METADATABASE = "LimitExceeded.MetaDatabase"
+//  UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
+func (c *Client) CreateMetaDatabase(request *CreateMetaDatabaseRequest) (response *CreateMetaDatabaseResponse, err error) {
+    return c.CreateMetaDatabaseWithContext(context.Background(), request)
+}
+
+// CreateMetaDatabase
+// 创建元数据库
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DB = "InternalError.DB"
+//  INVALIDPARAMETERVALUE_METADATABASEEXISTED = "InvalidParameterValue.MetaDatabaseExisted"
+//  INVALIDPARAMETERVALUE_METADATABASENAME = "InvalidParameterValue.MetaDatabaseName"
+//  LIMITEXCEEDED_METADATABASE = "LimitExceeded.MetaDatabase"
+//  UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
+func (c *Client) CreateMetaDatabaseWithContext(ctx context.Context, request *CreateMetaDatabaseRequest) (response *CreateMetaDatabaseResponse, err error) {
+    if request == nil {
+        request = NewCreateMetaDatabaseRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "CreateMetaDatabase")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateMetaDatabase require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateMetaDatabaseResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateMetaTableRequest() (request *CreateMetaTableRequest) {
+    request = &CreateMetaTableRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("oceanus", APIVersion, "CreateMetaTable")
+    
+    
+    return
+}
+
+func NewCreateMetaTableResponse() (response *CreateMetaTableResponse) {
+    response = &CreateMetaTableResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateMetaTable
+// 创建元数据表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CHECKDDLGRAMMAR = "FailedOperation.CheckDdlGrammar"
+//  FAILEDOPERATION_DDLPARSEFAILURE = "FailedOperation.DDLParseFailure"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DB = "InternalError.DB"
+//  INVALIDPARAMETERVALUE_METATABLEEXISTED = "InvalidParameterValue.MetaTableExisted"
+//  LIMITEXCEEDED_METATABLE = "LimitExceeded.MetaTable"
+//  UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
+func (c *Client) CreateMetaTable(request *CreateMetaTableRequest) (response *CreateMetaTableResponse, err error) {
+    return c.CreateMetaTableWithContext(context.Background(), request)
+}
+
+// CreateMetaTable
+// 创建元数据表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CHECKDDLGRAMMAR = "FailedOperation.CheckDdlGrammar"
+//  FAILEDOPERATION_DDLPARSEFAILURE = "FailedOperation.DDLParseFailure"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DB = "InternalError.DB"
+//  INVALIDPARAMETERVALUE_METATABLEEXISTED = "InvalidParameterValue.MetaTableExisted"
+//  LIMITEXCEEDED_METATABLE = "LimitExceeded.MetaTable"
+//  UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
+func (c *Client) CreateMetaTableWithContext(ctx context.Context, request *CreateMetaTableRequest) (response *CreateMetaTableResponse, err error) {
+    if request == nil {
+        request = NewCreateMetaTableRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "CreateMetaTable")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateMetaTable require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateMetaTableResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateOceanusClusterRequest() (request *CreateOceanusClusterRequest) {
+    request = &CreateOceanusClusterRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("oceanus", APIVersion, "CreateOceanusCluster")
+    
+    
+    return
+}
+
+func NewCreateOceanusClusterResponse() (response *CreateOceanusClusterResponse) {
+    response = &CreateOceanusClusterResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateOceanusCluster
+// 创建Oceanus集群
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_CAMNOTAUTHORIZED = "AuthFailure.CAMNotAuthorized"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+func (c *Client) CreateOceanusCluster(request *CreateOceanusClusterRequest) (response *CreateOceanusClusterResponse, err error) {
+    return c.CreateOceanusClusterWithContext(context.Background(), request)
+}
+
+// CreateOceanusCluster
+// 创建Oceanus集群
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_CAMNOTAUTHORIZED = "AuthFailure.CAMNotAuthorized"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+func (c *Client) CreateOceanusClusterWithContext(ctx context.Context, request *CreateOceanusClusterRequest) (response *CreateOceanusClusterResponse, err error) {
+    if request == nil {
+        request = NewCreateOceanusClusterRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "CreateOceanusCluster")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateOceanusCluster require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateOceanusClusterResponse()
     err = c.Send(request, response)
     return
 }
@@ -471,6 +774,7 @@ func (c *Client) CreateResourceWithContext(ctx context.Context, request *CreateR
     if request == nil {
         request = NewCreateResourceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "CreateResource")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateResource require credential")
@@ -536,6 +840,7 @@ func (c *Client) CreateResourceConfigWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCreateResourceConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "CreateResourceConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateResourceConfig require credential")
@@ -544,6 +849,74 @@ func (c *Client) CreateResourceConfigWithContext(ctx context.Context, request *C
     request.SetContext(ctx)
     
     response = NewCreateResourceConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateVariableRequest() (request *CreateVariableRequest) {
+    request = &CreateVariableRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("oceanus", APIVersion, "CreateVariable")
+    
+    
+    return
+}
+
+func NewCreateVariableResponse() (response *CreateVariableResponse) {
+    response = &CreateVariableResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateVariable
+// 创建变量
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_CREATEVARIABLEEXISTS = "InvalidParameter.CreateVariableExists"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_VARIABLENAME = "InvalidParameterValue.VariableName"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_VARIABLES = "LimitExceeded.Variables"
+//  UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
+func (c *Client) CreateVariable(request *CreateVariableRequest) (response *CreateVariableResponse, err error) {
+    return c.CreateVariableWithContext(context.Background(), request)
+}
+
+// CreateVariable
+// 创建变量
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_CREATEVARIABLEEXISTS = "InvalidParameter.CreateVariableExists"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_VARIABLENAME = "InvalidParameterValue.VariableName"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_VARIABLES = "LimitExceeded.Variables"
+//  UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
+func (c *Client) CreateVariableWithContext(ctx context.Context, request *CreateVariableRequest) (response *CreateVariableResponse, err error) {
+    if request == nil {
+        request = NewCreateVariableRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "CreateVariable")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateVariable require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateVariableResponse()
     err = c.Send(request, response)
     return
 }
@@ -599,6 +972,7 @@ func (c *Client) CreateWorkSpaceWithContext(ctx context.Context, request *Create
     if request == nil {
         request = NewCreateWorkSpaceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "CreateWorkSpace")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateWorkSpace require credential")
@@ -656,6 +1030,7 @@ func (c *Client) DeleteFoldersWithContext(ctx context.Context, request *DeleteFo
     if request == nil {
         request = NewDeleteFoldersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DeleteFolders")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteFolders require credential")
@@ -721,6 +1096,7 @@ func (c *Client) DeleteJobConfigsWithContext(ctx context.Context, request *Delet
     if request == nil {
         request = NewDeleteJobConfigsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DeleteJobConfigs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteJobConfigs require credential")
@@ -794,6 +1170,7 @@ func (c *Client) DeleteJobsWithContext(ctx context.Context, request *DeleteJobsR
     if request == nil {
         request = NewDeleteJobsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DeleteJobs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteJobs require credential")
@@ -802,6 +1179,66 @@ func (c *Client) DeleteJobsWithContext(ctx context.Context, request *DeleteJobsR
     request.SetContext(ctx)
     
     response = NewDeleteJobsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteOceanusClusterRequest() (request *DeleteOceanusClusterRequest) {
+    request = &DeleteOceanusClusterRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("oceanus", APIVersion, "DeleteOceanusCluster")
+    
+    
+    return
+}
+
+func NewDeleteOceanusClusterResponse() (response *DeleteOceanusClusterResponse) {
+    response = &DeleteOceanusClusterResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteOceanusCluster
+// 销毁Oceanus集群
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_CAMNOTAUTHORIZED = "AuthFailure.CAMNotAuthorized"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  LIMITEXCEEDED = "LimitExceeded"
+func (c *Client) DeleteOceanusCluster(request *DeleteOceanusClusterRequest) (response *DeleteOceanusClusterResponse, err error) {
+    return c.DeleteOceanusClusterWithContext(context.Background(), request)
+}
+
+// DeleteOceanusCluster
+// 销毁Oceanus集群
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_CAMNOTAUTHORIZED = "AuthFailure.CAMNotAuthorized"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  LIMITEXCEEDED = "LimitExceeded"
+func (c *Client) DeleteOceanusClusterWithContext(ctx context.Context, request *DeleteOceanusClusterRequest) (response *DeleteOceanusClusterResponse, err error) {
+    if request == nil {
+        request = NewDeleteOceanusClusterRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DeleteOceanusCluster")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteOceanusCluster require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteOceanusClusterResponse()
     err = c.Send(request, response)
     return
 }
@@ -867,6 +1304,7 @@ func (c *Client) DeleteResourceConfigsWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDeleteResourceConfigsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DeleteResourceConfigs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteResourceConfigs require credential")
@@ -934,6 +1372,7 @@ func (c *Client) DeleteResourcesWithContext(ctx context.Context, request *Delete
     if request == nil {
         request = NewDeleteResourcesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DeleteResources")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteResources require credential")
@@ -989,6 +1428,7 @@ func (c *Client) DeleteTableConfigWithContext(ctx context.Context, request *Dele
     if request == nil {
         request = NewDeleteTableConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DeleteTableConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteTableConfig require credential")
@@ -1027,6 +1467,8 @@ func NewDeleteWorkSpaceResponse() (response *DeleteWorkSpaceResponse) {
 //  AUTHFAILURE = "AuthFailure"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DEFAULTSPACECANNOTOPERATE = "FailedOperation.DefaultSpaceCanNotOperate"
+//  FAILEDOPERATION_DELETEWEDATAITEMSPACE = "FailedOperation.DeleteWedataItemspace"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  UNSUPPORTEDOPERATION_CANNOTDELETE = "UnsupportedOperation.CanNotDelete"
@@ -1041,6 +1483,8 @@ func (c *Client) DeleteWorkSpace(request *DeleteWorkSpaceRequest) (response *Del
 //  AUTHFAILURE = "AuthFailure"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DEFAULTSPACECANNOTOPERATE = "FailedOperation.DefaultSpaceCanNotOperate"
+//  FAILEDOPERATION_DELETEWEDATAITEMSPACE = "FailedOperation.DeleteWedataItemspace"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  UNSUPPORTEDOPERATION_CANNOTDELETE = "UnsupportedOperation.CanNotDelete"
@@ -1048,6 +1492,7 @@ func (c *Client) DeleteWorkSpaceWithContext(ctx context.Context, request *Delete
     if request == nil {
         request = NewDeleteWorkSpaceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DeleteWorkSpace")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteWorkSpace require credential")
@@ -1087,6 +1532,7 @@ func NewDescribeClustersResponse() (response *DescribeClustersResponse) {
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_GETRESOURCETAGSBYRESOURCEIDS = "FailedOperation.GetResourceTagsByResourceIds"
+//  FAILEDOPERATION_GETRESOURCESBYTAGSUNION = "FailedOperation.GetResourcesByTagsUnion"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE_CLUSTERIDS = "InvalidParameterValue.ClusterIds"
 //  INVALIDPARAMETERVALUE_ORDERTYPE = "InvalidParameterValue.OrderType"
@@ -1105,6 +1551,7 @@ func (c *Client) DescribeClusters(request *DescribeClustersRequest) (response *D
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_GETRESOURCETAGSBYRESOURCEIDS = "FailedOperation.GetResourceTagsByResourceIds"
+//  FAILEDOPERATION_GETRESOURCESBYTAGSUNION = "FailedOperation.GetResourcesByTagsUnion"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE_CLUSTERIDS = "InvalidParameterValue.ClusterIds"
 //  INVALIDPARAMETERVALUE_ORDERTYPE = "InvalidParameterValue.OrderType"
@@ -1115,6 +1562,7 @@ func (c *Client) DescribeClustersWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeClustersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DescribeClusters")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeClusters require credential")
@@ -1154,6 +1602,7 @@ func NewDescribeFolderResponse() (response *DescribeFolderResponse) {
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_GETRESOURCETAGSBYRESOURCEIDS = "FailedOperation.GetResourceTagsByResourceIds"
+//  FAILEDOPERATION_GETRESOURCESBYTAGSUNION = "FailedOperation.GetResourcesByTagsUnion"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE_CLUSTERIDS = "InvalidParameterValue.ClusterIds"
 //  INVALIDPARAMETERVALUE_ORDERTYPE = "InvalidParameterValue.OrderType"
@@ -1172,6 +1621,7 @@ func (c *Client) DescribeFolder(request *DescribeFolderRequest) (response *Descr
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_GETRESOURCETAGSBYRESOURCEIDS = "FailedOperation.GetResourceTagsByResourceIds"
+//  FAILEDOPERATION_GETRESOURCESBYTAGSUNION = "FailedOperation.GetResourcesByTagsUnion"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE_CLUSTERIDS = "InvalidParameterValue.ClusterIds"
 //  INVALIDPARAMETERVALUE_ORDERTYPE = "InvalidParameterValue.OrderType"
@@ -1182,6 +1632,7 @@ func (c *Client) DescribeFolderWithContext(ctx context.Context, request *Describ
     if request == nil {
         request = NewDescribeFolderRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DescribeFolder")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeFolder require credential")
@@ -1251,6 +1702,7 @@ func (c *Client) DescribeJobConfigsWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeJobConfigsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DescribeJobConfigs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeJobConfigs require credential")
@@ -1259,6 +1711,58 @@ func (c *Client) DescribeJobConfigsWithContext(ctx context.Context, request *Des
     request.SetContext(ctx)
     
     response = NewDescribeJobConfigsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeJobDetailRequest() (request *DescribeJobDetailRequest) {
+    request = &DescribeJobDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("oceanus", APIVersion, "DescribeJobDetail")
+    
+    
+    return
+}
+
+func NewDescribeJobDetailResponse() (response *DescribeJobDetailResponse) {
+    response = &DescribeJobDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeJobDetail
+// 显示flink作业的Dag图，以及算子、subtask等信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER_JOBDETAILURINOTVALIDCODE = "InvalidParameter.JobDetailUriNotValidCode"
+func (c *Client) DescribeJobDetail(request *DescribeJobDetailRequest) (response *DescribeJobDetailResponse, err error) {
+    return c.DescribeJobDetailWithContext(context.Background(), request)
+}
+
+// DescribeJobDetail
+// 显示flink作业的Dag图，以及算子、subtask等信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER_JOBDETAILURINOTVALIDCODE = "InvalidParameter.JobDetailUriNotValidCode"
+func (c *Client) DescribeJobDetailWithContext(ctx context.Context, request *DescribeJobDetailRequest) (response *DescribeJobDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeJobDetailRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DescribeJobDetail")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeJobDetail require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeJobDetailResponse()
     err = c.Send(request, response)
     return
 }
@@ -1283,7 +1787,7 @@ func NewDescribeJobEventsResponse() (response *DescribeJobEventsResponse) {
 }
 
 // DescribeJobEvents
-// 获取指定作业的事件，包括作业启动停止、运行失败、快照失败、作业异常等各种事件类型
+// 请求参数不包含 "RunningOrderIds"时，接口获取指定作业的事件，包括作业启动停止、运行失败、快照失败、作业异常等各种事件类型;请求参数不包含 "RunningOrderIds"时，接口为查询作业实例ID接口,获取作业实例
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1301,7 +1805,7 @@ func (c *Client) DescribeJobEvents(request *DescribeJobEventsRequest) (response 
 }
 
 // DescribeJobEvents
-// 获取指定作业的事件，包括作业启动停止、运行失败、快照失败、作业异常等各种事件类型
+// 请求参数不包含 "RunningOrderIds"时，接口获取指定作业的事件，包括作业启动停止、运行失败、快照失败、作业异常等各种事件类型;请求参数不包含 "RunningOrderIds"时，接口为查询作业实例ID接口,获取作业实例
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1318,6 +1822,7 @@ func (c *Client) DescribeJobEventsWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeJobEventsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DescribeJobEvents")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeJobEvents require credential")
@@ -1326,6 +1831,74 @@ func (c *Client) DescribeJobEventsWithContext(ctx context.Context, request *Desc
     request.SetContext(ctx)
     
     response = NewDescribeJobEventsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeJobRuntimeInfoRequest() (request *DescribeJobRuntimeInfoRequest) {
+    request = &DescribeJobRuntimeInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("oceanus", APIVersion, "DescribeJobRuntimeInfo")
+    
+    
+    return
+}
+
+func NewDescribeJobRuntimeInfoResponse() (response *DescribeJobRuntimeInfoResponse) {
+    response = &DescribeJobRuntimeInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeJobRuntimeInfo
+// 获取作业运行时的信息
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETERVALUE_JOBIDVALUEERROR = "InvalidParameterValue.JobIdValueError"
+//  INVALIDPARAMETERVALUE_TIMESTAMP = "InvalidParameterValue.Timestamp"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  RESOURCENOTFOUND_JOB = "ResourceNotFound.Job"
+//  UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
+func (c *Client) DescribeJobRuntimeInfo(request *DescribeJobRuntimeInfoRequest) (response *DescribeJobRuntimeInfoResponse, err error) {
+    return c.DescribeJobRuntimeInfoWithContext(context.Background(), request)
+}
+
+// DescribeJobRuntimeInfo
+// 获取作业运行时的信息
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETERVALUE_JOBIDVALUEERROR = "InvalidParameterValue.JobIdValueError"
+//  INVALIDPARAMETERVALUE_TIMESTAMP = "InvalidParameterValue.Timestamp"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  RESOURCENOTFOUND_JOB = "ResourceNotFound.Job"
+//  UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
+func (c *Client) DescribeJobRuntimeInfoWithContext(ctx context.Context, request *DescribeJobRuntimeInfoRequest) (response *DescribeJobRuntimeInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribeJobRuntimeInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DescribeJobRuntimeInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeJobRuntimeInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeJobRuntimeInfoResponse()
     err = c.Send(request, response)
     return
 }
@@ -1373,6 +1946,7 @@ func (c *Client) DescribeJobSavepointWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeJobSavepointRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DescribeJobSavepoint")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeJobSavepoint require credential")
@@ -1418,6 +1992,7 @@ func NewDescribeJobSubmissionLogResponse() (response *DescribeJobSubmissionLogRe
 //  INVALIDPARAMETERVALUE_INVALIDLIMIT = "InvalidParameterValue.InvalidLimit"
 //  INVALIDPARAMETERVALUE_INVALIDTIME = "InvalidParameterValue.InvalidTime"
 //  RESOURCENOTFOUND_JOB = "ResourceNotFound.Job"
+//  RESOURCENOTFOUND_JOBID = "ResourceNotFound.JobId"
 //  RESOURCENOTFOUND_LOGTOPIC = "ResourceNotFound.LogTopic"
 //  UNSUPPORTEDOPERATION_CLSSQLNOTENABLED = "UnsupportedOperation.ClsSqlNotEnabled"
 func (c *Client) DescribeJobSubmissionLog(request *DescribeJobSubmissionLogRequest) (response *DescribeJobSubmissionLogResponse, err error) {
@@ -1438,12 +2013,14 @@ func (c *Client) DescribeJobSubmissionLog(request *DescribeJobSubmissionLogReque
 //  INVALIDPARAMETERVALUE_INVALIDLIMIT = "InvalidParameterValue.InvalidLimit"
 //  INVALIDPARAMETERVALUE_INVALIDTIME = "InvalidParameterValue.InvalidTime"
 //  RESOURCENOTFOUND_JOB = "ResourceNotFound.Job"
+//  RESOURCENOTFOUND_JOBID = "ResourceNotFound.JobId"
 //  RESOURCENOTFOUND_LOGTOPIC = "ResourceNotFound.LogTopic"
 //  UNSUPPORTEDOPERATION_CLSSQLNOTENABLED = "UnsupportedOperation.ClsSqlNotEnabled"
 func (c *Client) DescribeJobSubmissionLogWithContext(ctx context.Context, request *DescribeJobSubmissionLogRequest) (response *DescribeJobSubmissionLogResponse, err error) {
     if request == nil {
         request = NewDescribeJobSubmissionLogRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DescribeJobSubmissionLog")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeJobSubmissionLog require credential")
@@ -1511,6 +2088,7 @@ func (c *Client) DescribeJobsWithContext(ctx context.Context, request *DescribeJ
     if request == nil {
         request = NewDescribeJobsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DescribeJobs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeJobs require credential")
@@ -1584,6 +2162,7 @@ func (c *Client) DescribeResourceConfigsWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeResourceConfigsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DescribeResourceConfigs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeResourceConfigs require credential")
@@ -1647,6 +2226,7 @@ func (c *Client) DescribeResourceRelatedJobsWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeResourceRelatedJobsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DescribeResourceRelatedJobs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeResourceRelatedJobs require credential")
@@ -1714,6 +2294,7 @@ func (c *Client) DescribeResourcesWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeResourcesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DescribeResources")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeResources require credential")
@@ -1779,6 +2360,7 @@ func (c *Client) DescribeSystemResourcesWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeSystemResourcesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DescribeSystemResources")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSystemResources require credential")
@@ -1834,6 +2416,7 @@ func (c *Client) DescribeTreeJobsWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeTreeJobsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DescribeTreeJobs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTreeJobs require credential")
@@ -1895,6 +2478,7 @@ func (c *Client) DescribeTreeResourcesWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeTreeResourcesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DescribeTreeResources")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTreeResources require credential")
@@ -1903,6 +2487,128 @@ func (c *Client) DescribeTreeResourcesWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewDescribeTreeResourcesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeVariablesRequest() (request *DescribeVariablesRequest) {
+    request = &DescribeVariablesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("oceanus", APIVersion, "DescribeVariables")
+    
+    
+    return
+}
+
+func NewDescribeVariablesResponse() (response *DescribeVariablesResponse) {
+    response = &DescribeVariablesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeVariables
+// 变量列表展示
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DATASOURCECONNECTIONFAILED = "FailedOperation.DataSourceConnectionFailed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
+func (c *Client) DescribeVariables(request *DescribeVariablesRequest) (response *DescribeVariablesResponse, err error) {
+    return c.DescribeVariablesWithContext(context.Background(), request)
+}
+
+// DescribeVariables
+// 变量列表展示
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DATASOURCECONNECTIONFAILED = "FailedOperation.DataSourceConnectionFailed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
+func (c *Client) DescribeVariablesWithContext(ctx context.Context, request *DescribeVariablesRequest) (response *DescribeVariablesResponse, err error) {
+    if request == nil {
+        request = NewDescribeVariablesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DescribeVariables")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeVariables require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeVariablesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeWorkSpaceUsersRequest() (request *DescribeWorkSpaceUsersRequest) {
+    request = &DescribeWorkSpaceUsersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("oceanus", APIVersion, "DescribeWorkSpaceUsers")
+    
+    
+    return
+}
+
+func NewDescribeWorkSpaceUsersResponse() (response *DescribeWorkSpaceUsersResponse) {
+    response = &DescribeWorkSpaceUsersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeWorkSpaceUsers
+// 工作空间用户列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeWorkSpaceUsers(request *DescribeWorkSpaceUsersRequest) (response *DescribeWorkSpaceUsersResponse, err error) {
+    return c.DescribeWorkSpaceUsersWithContext(context.Background(), request)
+}
+
+// DescribeWorkSpaceUsers
+// 工作空间用户列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeWorkSpaceUsersWithContext(ctx context.Context, request *DescribeWorkSpaceUsersRequest) (response *DescribeWorkSpaceUsersResponse, err error) {
+    if request == nil {
+        request = NewDescribeWorkSpaceUsersRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DescribeWorkSpaceUsers")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeWorkSpaceUsers require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeWorkSpaceUsersResponse()
     err = c.Send(request, response)
     return
 }
@@ -1952,6 +2658,7 @@ func (c *Client) DescribeWorkSpacesWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeWorkSpacesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "DescribeWorkSpaces")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWorkSpaces require credential")
@@ -2001,6 +2708,7 @@ func (c *Client) FetchSqlGatewayStatementResultWithContext(ctx context.Context, 
     if request == nil {
         request = NewFetchSqlGatewayStatementResultRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "FetchSqlGatewayStatementResult")
     
     if c.GetCredential() == nil {
         return nil, errors.New("FetchSqlGatewayStatementResult require credential")
@@ -2054,6 +2762,7 @@ func (c *Client) GetMetaTableWithContext(ctx context.Context, request *GetMetaTa
     if request == nil {
         request = NewGetMetaTableRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "GetMetaTable")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetMetaTable require credential")
@@ -2062,6 +2771,56 @@ func (c *Client) GetMetaTableWithContext(ctx context.Context, request *GetMetaTa
     request.SetContext(ctx)
     
     response = NewGetMetaTableResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyConnectorRequest() (request *ModifyConnectorRequest) {
+    request = &ModifyConnectorRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("oceanus", APIVersion, "ModifyConnector")
+    
+    
+    return
+}
+
+func NewModifyConnectorResponse() (response *ModifyConnectorResponse) {
+    response = &ModifyConnectorResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyConnector
+// 修改Connector
+//
+// 可能返回的错误码:
+//  RESOURCEINUSE_RESOURCECONNECTORDUPLICATENAME = "ResourceInUse.ResourceConnectorDuplicateName"
+func (c *Client) ModifyConnector(request *ModifyConnectorRequest) (response *ModifyConnectorResponse, err error) {
+    return c.ModifyConnectorWithContext(context.Background(), request)
+}
+
+// ModifyConnector
+// 修改Connector
+//
+// 可能返回的错误码:
+//  RESOURCEINUSE_RESOURCECONNECTORDUPLICATENAME = "ResourceInUse.ResourceConnectorDuplicateName"
+func (c *Client) ModifyConnectorWithContext(ctx context.Context, request *ModifyConnectorRequest) (response *ModifyConnectorResponse, err error) {
+    if request == nil {
+        request = NewModifyConnectorRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "ModifyConnector")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyConnector require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyConnectorResponse()
     err = c.Send(request, response)
     return
 }
@@ -2091,6 +2850,7 @@ func NewModifyFolderResponse() (response *ModifyFolderResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_DUPLICATEDFOLDERNAME = "InvalidParameter.DuplicatedFolderName"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
 func (c *Client) ModifyFolder(request *ModifyFolderRequest) (response *ModifyFolderResponse, err error) {
@@ -2103,12 +2863,14 @@ func (c *Client) ModifyFolder(request *ModifyFolderRequest) (response *ModifyFol
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_DUPLICATEDFOLDERNAME = "InvalidParameter.DuplicatedFolderName"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
 func (c *Client) ModifyFolderWithContext(ctx context.Context, request *ModifyFolderRequest) (response *ModifyFolderResponse, err error) {
     if request == nil {
         request = NewModifyFolderRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "ModifyFolder")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyFolder require credential")
@@ -2206,6 +2968,7 @@ func (c *Client) ModifyJobWithContext(ctx context.Context, request *ModifyJobReq
     if request == nil {
         request = NewModifyJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "ModifyJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyJob require credential")
@@ -2214,6 +2977,74 @@ func (c *Client) ModifyJobWithContext(ctx context.Context, request *ModifyJobReq
     request.SetContext(ctx)
     
     response = NewModifyJobResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyMetaTableRequest() (request *ModifyMetaTableRequest) {
+    request = &ModifyMetaTableRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("oceanus", APIVersion, "ModifyMetaTable")
+    
+    
+    return
+}
+
+func NewModifyMetaTableResponse() (response *ModifyMetaTableResponse) {
+    response = &ModifyMetaTableResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyMetaTable
+// 修改元数据表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLUSTERNOTFOUND = "FailedOperation.ClusterNotFound"
+//  FAILEDOPERATION_DDLPARSEFAILURE = "FailedOperation.DDLParseFailure"
+//  FAILEDOPERATION_MODIFYCONNECTORFAILEDOPERATION = "FailedOperation.ModifyConnectorFailedOperation"
+//  FAILEDOPERATION_MODIFYTABLEFAILEDOPERATION = "FailedOperation.ModifyTableFailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_UNSUPPORTEDOPTIONS = "InvalidParameter.UnsupportedOptions"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCENOTFOUND_METADATANOTFOUND = "ResourceNotFound.MetaDataNotFound"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) ModifyMetaTable(request *ModifyMetaTableRequest) (response *ModifyMetaTableResponse, err error) {
+    return c.ModifyMetaTableWithContext(context.Background(), request)
+}
+
+// ModifyMetaTable
+// 修改元数据表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLUSTERNOTFOUND = "FailedOperation.ClusterNotFound"
+//  FAILEDOPERATION_DDLPARSEFAILURE = "FailedOperation.DDLParseFailure"
+//  FAILEDOPERATION_MODIFYCONNECTORFAILEDOPERATION = "FailedOperation.ModifyConnectorFailedOperation"
+//  FAILEDOPERATION_MODIFYTABLEFAILEDOPERATION = "FailedOperation.ModifyTableFailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_UNSUPPORTEDOPTIONS = "InvalidParameter.UnsupportedOptions"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCENOTFOUND_METADATANOTFOUND = "ResourceNotFound.MetaDataNotFound"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) ModifyMetaTableWithContext(ctx context.Context, request *ModifyMetaTableRequest) (response *ModifyMetaTableResponse, err error) {
+    if request == nil {
+        request = NewModifyMetaTableRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "ModifyMetaTable")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyMetaTable require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyMetaTableResponse()
     err = c.Send(request, response)
     return
 }
@@ -2269,6 +3100,7 @@ func (c *Client) ModifyWorkSpaceWithContext(ctx context.Context, request *Modify
     if request == nil {
         request = NewModifyWorkSpaceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "ModifyWorkSpace")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyWorkSpace require credential")
@@ -2277,6 +3109,114 @@ func (c *Client) ModifyWorkSpaceWithContext(ctx context.Context, request *Modify
     request.SetContext(ctx)
     
     response = NewModifyWorkSpaceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewParseConnectorRequest() (request *ParseConnectorRequest) {
+    request = &ParseConnectorRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("oceanus", APIVersion, "ParseConnector")
+    
+    
+    return
+}
+
+func NewParseConnectorResponse() (response *ParseConnectorResponse) {
+    response = &ParseConnectorResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ParseConnector
+// 解析用户上传connector
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_PARSECONNECTORCLUSTERNOTFOUND = "ResourceNotFound.ParseConnectorClusterNotFound"
+func (c *Client) ParseConnector(request *ParseConnectorRequest) (response *ParseConnectorResponse, err error) {
+    return c.ParseConnectorWithContext(context.Background(), request)
+}
+
+// ParseConnector
+// 解析用户上传connector
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_PARSECONNECTORCLUSTERNOTFOUND = "ResourceNotFound.ParseConnectorClusterNotFound"
+func (c *Client) ParseConnectorWithContext(ctx context.Context, request *ParseConnectorRequest) (response *ParseConnectorResponse, err error) {
+    if request == nil {
+        request = NewParseConnectorRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "ParseConnector")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ParseConnector require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewParseConnectorResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRenewOceanusClusterRequest() (request *RenewOceanusClusterRequest) {
+    request = &RenewOceanusClusterRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("oceanus", APIVersion, "RenewOceanusCluster")
+    
+    
+    return
+}
+
+func NewRenewOceanusClusterResponse() (response *RenewOceanusClusterResponse) {
+    response = &RenewOceanusClusterResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RenewOceanusCluster
+// 续费Oceanus集群
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_CAMNOTAUTHORIZED = "AuthFailure.CAMNotAuthorized"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  LIMITEXCEEDED = "LimitExceeded"
+func (c *Client) RenewOceanusCluster(request *RenewOceanusClusterRequest) (response *RenewOceanusClusterResponse, err error) {
+    return c.RenewOceanusClusterWithContext(context.Background(), request)
+}
+
+// RenewOceanusCluster
+// 续费Oceanus集群
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_CAMNOTAUTHORIZED = "AuthFailure.CAMNotAuthorized"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  LIMITEXCEEDED = "LimitExceeded"
+func (c *Client) RenewOceanusClusterWithContext(ctx context.Context, request *RenewOceanusClusterRequest) (response *RenewOceanusClusterResponse, err error) {
+    if request == nil {
+        request = NewRenewOceanusClusterRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "RenewOceanusCluster")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RenewOceanusCluster require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRenewOceanusClusterResponse()
     err = c.Send(request, response)
     return
 }
@@ -2370,6 +3310,7 @@ func (c *Client) RunJobsWithContext(ctx context.Context, request *RunJobsRequest
     if request == nil {
         request = NewRunJobsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "RunJobs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RunJobs require credential")
@@ -2419,6 +3360,7 @@ func (c *Client) RunSqlGatewayStatementWithContext(ctx context.Context, request 
     if request == nil {
         request = NewRunSqlGatewayStatementRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "RunSqlGatewayStatement")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RunSqlGatewayStatement require credential")
@@ -2427,6 +3369,64 @@ func (c *Client) RunSqlGatewayStatementWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewRunSqlGatewayStatementResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewScaleOceanusClusterRequest() (request *ScaleOceanusClusterRequest) {
+    request = &ScaleOceanusClusterRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("oceanus", APIVersion, "ScaleOceanusCluster")
+    
+    
+    return
+}
+
+func NewScaleOceanusClusterResponse() (response *ScaleOceanusClusterResponse) {
+    response = &ScaleOceanusClusterResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ScaleOceanusCluster
+// 扩缩容Oceanus集群
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_CAMNOTAUTHORIZED = "AuthFailure.CAMNotAuthorized"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  LIMITEXCEEDED = "LimitExceeded"
+func (c *Client) ScaleOceanusCluster(request *ScaleOceanusClusterRequest) (response *ScaleOceanusClusterResponse, err error) {
+    return c.ScaleOceanusClusterWithContext(context.Background(), request)
+}
+
+// ScaleOceanusCluster
+// 扩缩容Oceanus集群
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_CAMNOTAUTHORIZED = "AuthFailure.CAMNotAuthorized"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  LIMITEXCEEDED = "LimitExceeded"
+func (c *Client) ScaleOceanusClusterWithContext(ctx context.Context, request *ScaleOceanusClusterRequest) (response *ScaleOceanusClusterResponse, err error) {
+    if request == nil {
+        request = NewScaleOceanusClusterRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "ScaleOceanusCluster")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ScaleOceanusCluster require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewScaleOceanusClusterResponse()
     err = c.Send(request, response)
     return
 }
@@ -2496,6 +3496,7 @@ func (c *Client) StopJobsWithContext(ctx context.Context, request *StopJobsReque
     if request == nil {
         request = NewStopJobsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "StopJobs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopJobs require credential")
@@ -2551,6 +3552,7 @@ func (c *Client) TriggerJobSavepointWithContext(ctx context.Context, request *Tr
     if request == nil {
         request = NewTriggerJobSavepointRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "oceanus", APIVersion, "TriggerJobSavepoint")
     
     if c.GetCredential() == nil {
         return nil, errors.New("TriggerJobSavepoint require credential")

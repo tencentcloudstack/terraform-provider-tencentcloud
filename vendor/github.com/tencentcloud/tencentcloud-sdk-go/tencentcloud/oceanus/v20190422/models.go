@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,51 +21,108 @@ import (
 )
 
 type CCN struct {
-	// 私有网络 ID
-	VpcId *string `json:"VpcId,omitnil" name:"VpcId"`
+	// <p>私有网络 ID</p>
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 子网 ID
-	SubnetId *string `json:"SubnetId,omitnil" name:"SubnetId"`
+	// <p>子网 ID</p>
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 云联网 ID，如 ccn-rahigzjd
-	CcnId *string `json:"CcnId,omitnil" name:"CcnId"`
+	// <p>云联网 ID，如 ccn-rahigzjd</p>
+	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
+}
+
+// Predefined struct for user
+type CheckConnectorNameRequestParams struct {
+	// 资源名
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+}
+
+type CheckConnectorNameRequest struct {
+	*tchttp.BaseRequest
+	
+	// 资源名
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+}
+
+func (r *CheckConnectorNameRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CheckConnectorNameRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Name")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CheckConnectorNameRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CheckConnectorNameResponseParams struct {
+	// 是否存在
+	Exists *bool `json:"Exists,omitnil,omitempty" name:"Exists"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CheckConnectorNameResponse struct {
+	*tchttp.BaseResponse
+	Response *CheckConnectorNameResponseParams `json:"Response"`
+}
+
+func (r *CheckConnectorNameResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CheckConnectorNameResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
 type CheckSavepointRequestParams struct {
-	// 作业 id
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	// <p>作业 id</p>
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 快照资源 id
-	SerialId *string `json:"SerialId,omitnil" name:"SerialId"`
+	// <p>快照资源 id</p>
+	SerialId *string `json:"SerialId,omitnil,omitempty" name:"SerialId"`
 
-	// 快照类型 1: savepoint；2: checkpoint；3: cancelWithSavepoint
-	RecordType *int64 `json:"RecordType,omitnil" name:"RecordType"`
+	// <p>快照类型 1: savepoint；2: checkpoint；3: cancelWithSavepoint</p>
+	RecordType *int64 `json:"RecordType,omitnil,omitempty" name:"RecordType"`
 
-	// 快照路径，目前只支持 cos 路径
-	SavepointPath *string `json:"SavepointPath,omitnil" name:"SavepointPath"`
+	// <p>快照路径，目前只支持 cos 路径</p>
+	SavepointPath *string `json:"SavepointPath,omitnil,omitempty" name:"SavepointPath"`
 
-	// 工作空间 id
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	// <p>工作空间 id</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 type CheckSavepointRequest struct {
 	*tchttp.BaseRequest
 	
-	// 作业 id
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	// <p>作业 id</p>
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 快照资源 id
-	SerialId *string `json:"SerialId,omitnil" name:"SerialId"`
+	// <p>快照资源 id</p>
+	SerialId *string `json:"SerialId,omitnil,omitempty" name:"SerialId"`
 
-	// 快照类型 1: savepoint；2: checkpoint；3: cancelWithSavepoint
-	RecordType *int64 `json:"RecordType,omitnil" name:"RecordType"`
+	// <p>快照类型 1: savepoint；2: checkpoint；3: cancelWithSavepoint</p>
+	RecordType *int64 `json:"RecordType,omitnil,omitempty" name:"RecordType"`
 
-	// 快照路径，目前只支持 cos 路径
-	SavepointPath *string `json:"SavepointPath,omitnil" name:"SavepointPath"`
+	// <p>快照路径，目前只支持 cos 路径</p>
+	SavepointPath *string `json:"SavepointPath,omitnil,omitempty" name:"SavepointPath"`
 
-	// 工作空间 id
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	// <p>工作空间 id</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 func (r *CheckSavepointRequest) ToJsonString() string {
@@ -93,14 +150,14 @@ func (r *CheckSavepointRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CheckSavepointResponseParams struct {
-	// 资源 id
-	SerialId *string `json:"SerialId,omitnil" name:"SerialId"`
+	// <p>资源 id</p>
+	SerialId *string `json:"SerialId,omitnil,omitempty" name:"SerialId"`
 
-	// 1=可用，2=不可用
-	SavepointStatus *int64 `json:"SavepointStatus,omitnil" name:"SavepointStatus"`
+	// <p>1=可用，2=不可用</p>
+	SavepointStatus *int64 `json:"SavepointStatus,omitnil,omitempty" name:"SavepointStatus"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CheckSavepointResponse struct {
@@ -122,357 +179,593 @@ func (r *CheckSavepointResponse) FromJsonString(s string) error {
 type ClazzLevel struct {
 	// java类全路径
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Clazz *string `json:"Clazz,omitnil" name:"Clazz"`
+	Clazz *string `json:"Clazz,omitnil,omitempty" name:"Clazz"`
 
 	// 日志级别  TRACE，DEBUG、INFO、WARN、ERROR
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Level *string `json:"Level,omitnil" name:"Level"`
+	Level *string `json:"Level,omitnil,omitempty" name:"Level"`
 }
 
 type Cluster struct {
-	// 集群 ID
-	ClusterId *string `json:"ClusterId,omitnil" name:"ClusterId"`
+	// <p>集群 ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 集群名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	// <p>集群名称</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 地域
-	Region *string `json:"Region,omitnil" name:"Region"`
+	// <p>地域</p>
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
-	// 用户 AppID
-	AppId *uint64 `json:"AppId,omitnil" name:"AppId"`
+	// <p>用户 AppID</p>
+	AppId *uint64 `json:"AppId,omitnil,omitempty" name:"AppId"`
 
-	// 主账号 UIN
-	OwnerUin *string `json:"OwnerUin,omitnil" name:"OwnerUin"`
+	// <p>主账号 UIN</p>
+	OwnerUin *string `json:"OwnerUin,omitnil,omitempty" name:"OwnerUin"`
 
-	// 创建者 UIN
-	CreatorUin *string `json:"CreatorUin,omitnil" name:"CreatorUin"`
+	// <p>创建者 UIN</p>
+	CreatorUin *string `json:"CreatorUin,omitnil,omitempty" name:"CreatorUin"`
 
-	// 集群状态, 1 未初始化,，3 初始化中，2 运行中
-	Status *int64 `json:"Status,omitnil" name:"Status"`
+	// <p>集群状态, 1 未初始化,3 初始化中，2 运行中</p>
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 描述
-	Remark *string `json:"Remark,omitnil" name:"Remark"`
+	// <p>描述</p>
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
-	// 集群创建时间
-	CreateTime *string `json:"CreateTime,omitnil" name:"CreateTime"`
+	// <p>集群创建时间</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 最后一次操作集群的时间
-	UpdateTime *string `json:"UpdateTime,omitnil" name:"UpdateTime"`
+	// <p>最后一次操作集群的时间</p><p>默认值：-</p>
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
-	// CU 数量
-	CuNum *uint64 `json:"CuNum,omitnil" name:"CuNum"`
+	// <p>CU 数量</p>
+	CuNum *uint64 `json:"CuNum,omitnil,omitempty" name:"CuNum"`
 
-	// CU 内存规格
-	CuMem *uint64 `json:"CuMem,omitnil" name:"CuMem"`
+	// <p>CU 内存规格</p>
+	CuMem *uint64 `json:"CuMem,omitnil,omitempty" name:"CuMem"`
 
-	// 可用区
-	Zone *string `json:"Zone,omitnil" name:"Zone"`
+	// <p>可用区</p>
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 状态描述
-	StatusDesc *string `json:"StatusDesc,omitnil" name:"StatusDesc"`
+	// <p>状态描述</p>
+	StatusDesc *string `json:"StatusDesc,omitnil,omitempty" name:"StatusDesc"`
 
-	// 网络
-	CCNs []*CCN `json:"CCNs,omitnil" name:"CCNs"`
+	// <p>网络</p>
+	CCNs []*CCN `json:"CCNs,omitnil,omitempty" name:"CCNs"`
 
-	// 网络
-	NetEnvironmentType *uint64 `json:"NetEnvironmentType,omitnil" name:"NetEnvironmentType"`
+	// <p>网络</p>
+	NetEnvironmentType *uint64 `json:"NetEnvironmentType,omitnil,omitempty" name:"NetEnvironmentType"`
 
-	// 空闲 CU
-	FreeCuNum *int64 `json:"FreeCuNum,omitnil" name:"FreeCuNum"`
+	// <p>空闲 CU</p>
+	FreeCuNum *int64 `json:"FreeCuNum,omitnil,omitempty" name:"FreeCuNum"`
 
-	// 集群绑定的标签
+	// <p>集群绑定的标签</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Tags []*Tag `json:"Tags,omitnil" name:"Tags"`
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 集群隔离时间; 没隔离时间，则为 -
+	// <p>集群隔离时间; 没隔离时间，则为 -</p><p>默认值：-</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	IsolatedTime *string `json:"IsolatedTime,omitnil" name:"IsolatedTime"`
+	IsolatedTime *string `json:"IsolatedTime,omitnil,omitempty" name:"IsolatedTime"`
 
-	// 集群过期时间; 没过期概念，则为 -
+	// <p>集群过期时间; 没过期概念，则为 -</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ExpireTime *string `json:"ExpireTime,omitnil" name:"ExpireTime"`
+	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 
-	// 距离过期还有多少秒; 没过期概念，则为 -
+	// <p>距离过期还有多少秒; 没过期概念，则为 -</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	SecondsUntilExpiry *string `json:"SecondsUntilExpiry,omitnil" name:"SecondsUntilExpiry"`
+	SecondsUntilExpiry *string `json:"SecondsUntilExpiry,omitnil,omitempty" name:"SecondsUntilExpiry"`
 
-	// 自动续费标记，0 表示默认状态 (用户未设置，即初始状态，用户开通了预付费不停服特权会进行自动续费)， 1 表示自动续费，2表示明确不自动续费(用户设置)
+	// <p>自动续费标记，0 表示默认状态 (用户未设置，即初始状态，用户开通了预付费不停服特权会进行自动续费)， 1 表示自动续费，2表示明确不自动续费(用户设置)</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil" name:"AutoRenewFlag"`
+	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
-	// 集群的默认 COS 存储桶
+	// <p>集群的默认 COS 存储桶</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	DefaultCOSBucket *string `json:"DefaultCOSBucket,omitnil" name:"DefaultCOSBucket"`
+	DefaultCOSBucket *string `json:"DefaultCOSBucket,omitnil,omitempty" name:"DefaultCOSBucket"`
 
-	// 集群的CLS 日志集 LogSet
+	// <p>集群的CLS 日志集 LogSet</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	CLSLogSet *string `json:"CLSLogSet,omitnil" name:"CLSLogSet"`
+	CLSLogSet *string `json:"CLSLogSet,omitnil,omitempty" name:"CLSLogSet"`
 
-	// 集群的CLS 日志主题 TopicId
+	// <p>集群的CLS 日志主题 TopicId</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	CLSTopicId *string `json:"CLSTopicId,omitnil" name:"CLSTopicId"`
+	CLSTopicId *string `json:"CLSTopicId,omitnil,omitempty" name:"CLSTopicId"`
 
-	// 集群的CLS 日志集  名字
+	// <p>集群的CLS 日志集  名字</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	CLSLogName *string `json:"CLSLogName,omitnil" name:"CLSLogName"`
+	CLSLogName *string `json:"CLSLogName,omitnil,omitempty" name:"CLSLogName"`
 
-	// 集群的CLS 日志主题  名字
+	// <p>集群的CLS 日志主题  名字</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	CLSTopicName *string `json:"CLSTopicName,omitnil" name:"CLSTopicName"`
+	CLSTopicName *string `json:"CLSTopicName,omitnil,omitempty" name:"CLSTopicName"`
 
-	// 集群的版本信息
+	// <p>集群的版本信息</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Version *ClusterVersion `json:"Version,omitnil" name:"Version"`
+	Version *ClusterVersion `json:"Version,omitnil,omitempty" name:"Version"`
 
-	// 细粒度资源下的空闲CU
+	// <p>细粒度资源下的空闲CU</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	FreeCu *float64 `json:"FreeCu,omitnil" name:"FreeCu"`
+	FreeCu *float64 `json:"FreeCu,omitnil,omitempty" name:"FreeCu"`
 
-	// 集群的默认日志采集配置
+	// <p>集群的默认日志采集配置</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	DefaultLogCollectConf *string `json:"DefaultLogCollectConf,omitnil" name:"DefaultLogCollectConf"`
+	DefaultLogCollectConf *string `json:"DefaultLogCollectConf,omitnil,omitempty" name:"DefaultLogCollectConf"`
 
-	// 取值：0-没有设置，1-已设置，2-不允许设置
+	// <p>取值：0-没有设置，1-已设置，2-不允许设置</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	CustomizedDNSEnabled *int64 `json:"CustomizedDNSEnabled,omitnil" name:"CustomizedDNSEnabled"`
+	CustomizedDNSEnabled *int64 `json:"CustomizedDNSEnabled,omitnil,omitempty" name:"CustomizedDNSEnabled"`
 
-	// 空间信息
+	// <p>空间信息</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Correlations []*WorkSpaceClusterItem `json:"Correlations,omitnil" name:"Correlations"`
+	Correlations []*WorkSpaceClusterItem `json:"Correlations,omitnil,omitempty" name:"Correlations"`
 
-	// 运行CU
+	// <p>运行CU</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	RunningCu *float64 `json:"RunningCu,omitnil" name:"RunningCu"`
+	RunningCu *float64 `json:"RunningCu,omitnil,omitempty" name:"RunningCu"`
 
-	// 0 后付费,1 预付费
+	// <p>0 后付费,1 预付费</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	PayMode *int64 `json:"PayMode,omitnil" name:"PayMode"`
+	PayMode *int64 `json:"PayMode,omitnil,omitempty" name:"PayMode"`
 
-	// 前端区分 集群是否需要2CU逻辑 因为历史集群 变配不需要, default 1  新集群都需要
+	// <p>前端区分 集群是否需要2CU逻辑 因为历史集群 变配不需要, default 1  新集群都需要</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	IsNeedManageNode *int64 `json:"IsNeedManageNode,omitnil" name:"IsNeedManageNode"`
+	IsNeedManageNode *int64 `json:"IsNeedManageNode,omitnil,omitempty" name:"IsNeedManageNode"`
 
-	// session集群信息
+	// <p>session集群信息</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ClusterSessions []*ClusterSession `json:"ClusterSessions,omitnil" name:"ClusterSessions"`
+	ClusterSessions []*ClusterSession `json:"ClusterSessions,omitnil,omitempty" name:"ClusterSessions"`
 
-	// V3版本 = 2
+	// <p>V3版本 = 2</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ArchGeneration *uint64 `json:"ArchGeneration,omitnil" name:"ArchGeneration"`
+	ArchGeneration *uint64 `json:"ArchGeneration,omitnil,omitempty" name:"ArchGeneration"`
 
-	// 0:TKE, 1:EKS
+	// <p>0:TKE, 1:EKS</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ClusterType *uint64 `json:"ClusterType,omitnil" name:"ClusterType"`
+	ClusterType *uint64 `json:"ClusterType,omitnil,omitempty" name:"ClusterType"`
 
-	// 订单信息
+	// <p>订单信息</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Orders []*Order `json:"Orders,omitnil" name:"Orders"`
+	Orders []*Order `json:"Orders,omitnil,omitempty" name:"Orders"`
 
-	// Gateway信息
+	// <p>Gateway信息</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	SqlGateways []*SqlGatewayItem `json:"SqlGateways,omitnil" name:"SqlGateways"`
+	SqlGateways []*SqlGatewayItem `json:"SqlGateways,omitnil,omitempty" name:"SqlGateways"`
 
-	// 0 公网访问 // 1 内网访问	
+	// <p>0 公网访问 // 1 内网访问</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	WebUIType *int64 `json:"WebUIType,omitnil" name:"WebUIType"`
+	WebUIType *int64 `json:"WebUIType,omitnil,omitempty" name:"WebUIType"`
+
+	// <p>2 独享集群</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Type *int64 `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// <p>子eks集群</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SubEks *SubEks `json:"SubEks,omitnil,omitempty" name:"SubEks"`
+
+	// <p>上级集群</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AgentSerialId *string `json:"AgentSerialId,omitnil,omitempty" name:"AgentSerialId"`
+
+	// <p>资源类型</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResourceType *int64 `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
+
+	// <p>集群类型</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BillingResourceMode *string `json:"BillingResourceMode,omitnil,omitempty" name:"BillingResourceMode"`
+
+	// <p>Cu比例</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MemRatio *int64 `json:"MemRatio,omitnil,omitempty" name:"MemRatio"`
+
+	// <p>是否开启跨租户弹性网卡</p>
+	CrossTenantEniMode *int64 `json:"CrossTenantEniMode,omitnil,omitempty" name:"CrossTenantEniMode"`
+
+	// <p>总的CPU</p>
+	TotalCpu *float64 `json:"TotalCpu,omitnil,omitempty" name:"TotalCpu"`
+
+	// <p>总的内存</p>
+	TotalMem *float64 `json:"TotalMem,omitnil,omitempty" name:"TotalMem"`
+
+	// <p>运行的CPU</p>
+	RunningCpu *float64 `json:"RunningCpu,omitnil,omitempty" name:"RunningCpu"`
+
+	// <p>运行的内存</p>
+	RunningMem *float64 `json:"RunningMem,omitnil,omitempty" name:"RunningMem"`
+
+	// <p>setats集群</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Setats *Setats `json:"Setats,omitnil,omitempty" name:"Setats"`
+
+	// <p>[]</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Yarns []*HadoopYarnItem `json:"Yarns,omitnil,omitempty" name:"Yarns"`
+
+	// <p>0 单可用区 1多可用区</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DeploymentMode *int64 `json:"DeploymentMode,omitnil,omitempty" name:"DeploymentMode"`
+
+	// <p>备可用区</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SlaveZones []*SlaveZone `json:"SlaveZones,omitnil,omitempty" name:"SlaveZones"`
+
+	// <p>集群的日志cos存储</p>
+	LogCOSBucket *string `json:"LogCOSBucket,omitnil,omitempty" name:"LogCOSBucket"`
+
+	// <p>Cdc集群Id</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CdcId *string `json:"CdcId,omitnil,omitempty" name:"CdcId"`
+
+	// <p>集群进度</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClusterProcessMsg *string `json:"ClusterProcessMsg,omitnil,omitempty" name:"ClusterProcessMsg"`
+
+	// <p>单作业最大可配置 CU 数</p>
+	MaxCuPerJob *int64 `json:"MaxCuPerJob,omitnil,omitempty" name:"MaxCuPerJob"`
+
+	// <p>元数据服务信息</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HiveMetastore *HiveMetastoreInfo `json:"HiveMetastore,omitnil,omitempty" name:"HiveMetastore"`
+
+	// <p>安全组</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
+
+	// <p>弹性网卡方案，0：POD弹性网卡，1：Node弹性网卡。</p><p>枚举值：</p><ul><li>0： POD弹性网卡</li><li>1： Node弹性网卡</li></ul>
+	NetEniType *int64 `json:"NetEniType,omitnil,omitempty" name:"NetEniType"`
+
+	// <p>桶列表信息</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClusterBuckets []*ClusterBucketInfo `json:"ClusterBuckets,omitnil,omitempty" name:"ClusterBuckets"`
+
+	// <p>集群隔离时间，0为7天，1为15天</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsolationPolicyVersion *int64 `json:"IsolationPolicyVersion,omitnil,omitempty" name:"IsolationPolicyVersion"`
+}
+
+type ClusterBucketInfo struct {
+	// <p>桶唯一id</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SerialId *string `json:"SerialId,omitnil,omitempty" name:"SerialId"`
+
+	// <p>集群id</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClusterId *int64 `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>桶名字</p>
+	Bucket *string `json:"Bucket,omitnil,omitempty" name:"Bucket"`
+
+	// <p>桶类型</p><p>枚举值：</p><ul><li>0： 普通桶</li><li>1： 加速桶</li></ul>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BucketType *int64 `json:"BucketType,omitnil,omitempty" name:"BucketType"`
+
+	// <p>鉴权类型</p><p>枚举值：</p><ul><li>0： 不鉴权</li><li>1： 鉴权</li></ul>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AuthMode *int64 `json:"AuthMode,omitnil,omitempty" name:"AuthMode"`
+
+	// <p>是否默认属性</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsDefault *int64 `json:"IsDefault,omitnil,omitempty" name:"IsDefault"`
+
+	// <p>桶状态</p><p>枚举值：</p><ul><li>1： 正常</li><li>0： 禁用</li></ul>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>作业数量</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	JobCount *int64 `json:"JobCount,omitnil,omitempty" name:"JobCount"`
+
+	// <p>地域</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
+
+	// <p>创建时间</p><p>参数格式：yyyy-MM-dd HH:mm:ss</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>更新时间</p><p>参数格式：yyyy-MM-dd HH:mm:ss</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 }
 
 type ClusterGroupSetItem struct {
 	// clusterGroup 的 SerialId
-	ClusterId *string `json:"ClusterId,omitnil" name:"ClusterId"`
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
 	// 集群名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 地域
-	Region *string `json:"Region,omitnil" name:"Region"`
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
 	// 区
-	Zone *string `json:"Zone,omitnil" name:"Zone"`
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
 	// 账号 APPID
-	AppId *int64 `json:"AppId,omitnil" name:"AppId"`
+	AppId *int64 `json:"AppId,omitnil,omitempty" name:"AppId"`
 
 	// 主账号 UIN
-	OwnerUin *string `json:"OwnerUin,omitnil" name:"OwnerUin"`
+	OwnerUin *string `json:"OwnerUin,omitnil,omitempty" name:"OwnerUin"`
 
 	// 创建账号 UIN
-	CreatorUin *string `json:"CreatorUin,omitnil" name:"CreatorUin"`
+	CreatorUin *string `json:"CreatorUin,omitnil,omitempty" name:"CreatorUin"`
 
 	// CU 数量
-	CuNum *int64 `json:"CuNum,omitnil" name:"CuNum"`
+	CuNum *int64 `json:"CuNum,omitnil,omitempty" name:"CuNum"`
 
 	// CU 内存规格
-	CuMem *int64 `json:"CuMem,omitnil" name:"CuMem"`
+	CuMem *int64 `json:"CuMem,omitnil,omitempty" name:"CuMem"`
 
 	// 集群状态, 1 未初始化,，3 初始化中，2 运行中
-	Status *int64 `json:"Status,omitnil" name:"Status"`
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 状态描述
-	StatusDesc *string `json:"StatusDesc,omitnil" name:"StatusDesc"`
+	StatusDesc *string `json:"StatusDesc,omitnil,omitempty" name:"StatusDesc"`
 
 	// 集群创建时间
-	CreateTime *string `json:"CreateTime,omitnil" name:"CreateTime"`
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 最后一次操作集群的时间
-	UpdateTime *string `json:"UpdateTime,omitnil" name:"UpdateTime"`
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
 	// 描述
-	Remark *string `json:"Remark,omitnil" name:"Remark"`
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
 	// 网络
-	NetEnvironmentType *int64 `json:"NetEnvironmentType,omitnil" name:"NetEnvironmentType"`
+	NetEnvironmentType *int64 `json:"NetEnvironmentType,omitnil,omitempty" name:"NetEnvironmentType"`
 
 	// 空闲 CU
-	FreeCuNum *int64 `json:"FreeCuNum,omitnil" name:"FreeCuNum"`
+	FreeCuNum *int64 `json:"FreeCuNum,omitnil,omitempty" name:"FreeCuNum"`
 
 	// 细粒度资源下的空闲CU
-	FreeCu *float64 `json:"FreeCu,omitnil" name:"FreeCu"`
+	FreeCu *float64 `json:"FreeCu,omitnil,omitempty" name:"FreeCu"`
 
 	// 运行中CU
-	RunningCu *float64 `json:"RunningCu,omitnil" name:"RunningCu"`
+	RunningCu *float64 `json:"RunningCu,omitnil,omitempty" name:"RunningCu"`
 
 	// 付费模式
-	PayMode *int64 `json:"PayMode,omitnil" name:"PayMode"`
+	PayMode *int64 `json:"PayMode,omitnil,omitempty" name:"PayMode"`
+
+	// 弹性
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SubEks *SubEks `json:"SubEks,omitnil,omitempty" name:"SubEks"`
+
+	// 默认 "" 包销模式 "exclusiveSale"
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BillingResourceMode *string `json:"BillingResourceMode,omitnil,omitempty" name:"BillingResourceMode"`
+
+	// TotalCpu
+	TotalCpu *float64 `json:"TotalCpu,omitnil,omitempty" name:"TotalCpu"`
+
+	// TotalMem
+	TotalMem *float64 `json:"TotalMem,omitnil,omitempty" name:"TotalMem"`
+
+	// RunningCpu
+	RunningCpu *float64 `json:"RunningCpu,omitnil,omitempty" name:"RunningCpu"`
+
+	// RunningMem
+	RunningMem *float64 `json:"RunningMem,omitnil,omitempty" name:"RunningMem"`
 }
 
 type ClusterSession struct {
-	// 集群SerialId
-	ClusterGroupSerialId *string `json:"ClusterGroupSerialId,omitnil" name:"ClusterGroupSerialId"`
+	// <p>集群SerialId</p>
+	ClusterGroupSerialId *string `json:"ClusterGroupSerialId,omitnil,omitempty" name:"ClusterGroupSerialId"`
 
-	// 创建者appId
-	AppId *int64 `json:"AppId,omitnil" name:"AppId"`
+	// <p>创建者appId</p>
+	AppId *int64 `json:"AppId,omitnil,omitempty" name:"AppId"`
 
-	// 创建者主账号
-	OwnerUin *string `json:"OwnerUin,omitnil" name:"OwnerUin"`
+	// <p>创建者主账号</p>
+	OwnerUin *string `json:"OwnerUin,omitnil,omitempty" name:"OwnerUin"`
 
-	// 创建者账号
-	CreatorUin *string `json:"CreatorUin,omitnil" name:"CreatorUin"`
+	// <p>创建者账号</p>
+	CreatorUin *string `json:"CreatorUin,omitnil,omitempty" name:"CreatorUin"`
 
-	// 区域
-	Region *string `json:"Region,omitnil" name:"Region"`
+	// <p>区域</p>
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
-	// zone
-	Zone *string `json:"Zone,omitnil" name:"Zone"`
+	// <p>zone</p>
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// Session集群状态
-	Status *int64 `json:"Status,omitnil" name:"Status"`
+	// <p>Session集群状态</p>
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// Session集群消耗的cu数量
-	CuNum *float64 `json:"CuNum,omitnil" name:"CuNum"`
+	// <p>Session集群消耗的cu数量</p>
+	CuNum *float64 `json:"CuNum,omitnil,omitempty" name:"CuNum"`
 
-	// Session集群的Flink版本
-	FlinkVersion *string `json:"FlinkVersion,omitnil" name:"FlinkVersion"`
+	// <p>Session集群的Flink版本</p>
+	FlinkVersion *string `json:"FlinkVersion,omitnil,omitempty" name:"FlinkVersion"`
 
-	// session集群FlinkUi地址
-	WebUIUrl *string `json:"WebUIUrl,omitnil" name:"WebUIUrl"`
+	// <p>session集群FlinkUi地址</p>
+	WebUIUrl *string `json:"WebUIUrl,omitnil,omitempty" name:"WebUIUrl"`
 
-	// session集群高级参数
+	// <p>session集群高级参数</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Properties []*Property `json:"Properties,omitnil" name:"Properties"`
+	Properties []*Property `json:"Properties,omitnil,omitempty" name:"Properties"`
 
-	// JobManager的规格
-	JobManagerCuSpec *float64 `json:"JobManagerCuSpec,omitnil" name:"JobManagerCuSpec"`
+	// <p>引用资源</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResourceRefs []*SessionClusterRefItem `json:"ResourceRefs,omitnil,omitempty" name:"ResourceRefs"`
 
-	// TaskManager的规格
-	TaskManagerCuSpec *float64 `json:"TaskManagerCuSpec,omitnil" name:"TaskManagerCuSpec"`
+	// <p>JobManager的规格</p>
+	JobManagerCuSpec *float64 `json:"JobManagerCuSpec,omitnil,omitempty" name:"JobManagerCuSpec"`
 
-	// TaskManager启动的数量
-	TaskManagerNum *int64 `json:"TaskManagerNum,omitnil" name:"TaskManagerNum"`
+	// <p>TaskManager的规格</p>
+	TaskManagerCuSpec *float64 `json:"TaskManagerCuSpec,omitnil,omitempty" name:"TaskManagerCuSpec"`
 
-	// 创建时间
-	CreateTime *string `json:"CreateTime,omitnil" name:"CreateTime"`
+	// <p>TaskManager启动的数量</p>
+	TaskManagerNum *int64 `json:"TaskManagerNum,omitnil,omitempty" name:"TaskManagerNum"`
 
-	// 更新时间
-	UpdateTime *string `json:"UpdateTime,omitnil" name:"UpdateTime"`
+	// <p>创建时间</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>更新时间</p>
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+
+	// <p>JobManagerCpu</p>
+	JobManagerCpu *float64 `json:"JobManagerCpu,omitnil,omitempty" name:"JobManagerCpu"`
+
+	// <p>JobManagerMem</p>
+	JobManagerMem *float64 `json:"JobManagerMem,omitnil,omitempty" name:"JobManagerMem"`
+
+	// <p>TaskManagerCpu</p>
+	TaskManagerCpu *float64 `json:"TaskManagerCpu,omitnil,omitempty" name:"TaskManagerCpu"`
+
+	// <p>TaskManagerMem</p>
+	TaskManagerMem *float64 `json:"TaskManagerMem,omitnil,omitempty" name:"TaskManagerMem"`
+
+	// <p>jdk版本</p>
+	JdkVersion *string `json:"JdkVersion,omitnil,omitempty" name:"JdkVersion"`
+
+	// <p>描述</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>名称</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>session集群SerialId</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SerialId *string `json:"SerialId,omitnil,omitempty" name:"SerialId"`
+
+	// <p>集群名称</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClusterGroupName *string `json:"ClusterGroupName,omitnil,omitempty" name:"ClusterGroupName"`
+
+	// <p>cu</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TotalCpu *float64 `json:"TotalCpu,omitnil,omitempty" name:"TotalCpu"`
+
+	// <p>使用Mem</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TotalMem *float64 `json:"TotalMem,omitnil,omitempty" name:"TotalMem"`
+
+	// <p>空间Id</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// <p>空间名称</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	WorkSpaceName *string `json:"WorkSpaceName,omitnil,omitempty" name:"WorkSpaceName"`
+
+	// <p>标签列表</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// <p>采集日志配置</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LogConfig *string `json:"LogConfig,omitnil,omitempty" name:"LogConfig"`
+
+	// <p>更新用户</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpdateUin *string `json:"UpdateUin,omitnil,omitempty" name:"UpdateUin"`
 }
 
 type ClusterVersion struct {
 	// 集群的Flink版本
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Flink *string `json:"Flink,omitnil" name:"Flink"`
+	Flink *string `json:"Flink,omitnil,omitempty" name:"Flink"`
 
 	// 集群支持的Flink版本
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	SupportedFlink []*string `json:"SupportedFlink,omitnil" name:"SupportedFlink"`
+	SupportedFlink []*string `json:"SupportedFlink,omitnil,omitempty" name:"SupportedFlink"`
+
+	// jdk支持版本
+	JdkSupportVersion []*FlinkJdkVersion `json:"JdkSupportVersion,omitnil,omitempty" name:"JdkSupportVersion"`
+}
+
+type Connectors struct {
+	// 连接方式
+	ConnectionMethod *string `json:"ConnectionMethod,omitnil,omitempty" name:"ConnectionMethod"`
+
+	// 连接器名称
+	Connector *string `json:"Connector,omitnil,omitempty" name:"Connector"`
+
+	// 是否已经被使用
+	Existed *bool `json:"Existed,omitnil,omitempty" name:"Existed"`
 }
 
 type CopyJobItem struct {
-	// 需要复制的作业serial id
-	SourceId *string `json:"SourceId,omitnil" name:"SourceId"`
+	// <p>需要复制的作业serial id</p>
+	SourceId *string `json:"SourceId,omitnil,omitempty" name:"SourceId"`
 
-	// 目标集群的cluster serial id
-	TargetClusterId *string `json:"TargetClusterId,omitnil" name:"TargetClusterId"`
+	// <p>目标集群的cluster serial id</p>
+	TargetClusterId *string `json:"TargetClusterId,omitnil,omitempty" name:"TargetClusterId"`
 
-	// 需要复制的作业名称
-	SourceName *string `json:"SourceName,omitnil" name:"SourceName"`
+	// <p>需要复制的作业名称</p>
+	SourceName *string `json:"SourceName,omitnil,omitempty" name:"SourceName"`
 
-	// 新作业的名称
-	TargetName *string `json:"TargetName,omitnil" name:"TargetName"`
+	// <p>新作业的名称</p>
+	TargetName *string `json:"TargetName,omitnil,omitempty" name:"TargetName"`
 
-	// 新作业的目录id
-	TargetFolderId *string `json:"TargetFolderId,omitnil" name:"TargetFolderId"`
+	// <p>新作业的目录id</p>
+	TargetFolderId *string `json:"TargetFolderId,omitnil,omitempty" name:"TargetFolderId"`
 
-	// 源作业类型
-	JobType *int64 `json:"JobType,omitnil" name:"JobType"`
+	// <p>作业类型</p><p>枚举值：</p><ul><li>1： sql作业</li><li>2： jar作业</li><li>4： python作业</li></ul>
+	JobType *int64 `json:"JobType,omitnil,omitempty" name:"JobType"`
 }
 
 type CopyJobResult struct {
 	// 原作业id
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
 	// 原作业名称
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	JobName *string `json:"JobName,omitnil" name:"JobName"`
+	JobName *string `json:"JobName,omitnil,omitempty" name:"JobName"`
 
 	// 新作业名称
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	TargetJobName *string `json:"TargetJobName,omitnil" name:"TargetJobName"`
+	TargetJobName *string `json:"TargetJobName,omitnil,omitempty" name:"TargetJobName"`
 
 	// 新作业id
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	TargetJobId *string `json:"TargetJobId,omitnil" name:"TargetJobId"`
+	TargetJobId *string `json:"TargetJobId,omitnil,omitempty" name:"TargetJobId"`
 
 	// 失败时候的信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Message *string `json:"Message,omitnil" name:"Message"`
+	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
 
 	// 0 成功  -1 失败
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Result *int64 `json:"Result,omitnil" name:"Result"`
+	Result *int64 `json:"Result,omitnil,omitempty" name:"Result"`
 
 	// 目标集群名称
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ClusterName *string `json:"ClusterName,omitnil" name:"ClusterName"`
+	ClusterName *string `json:"ClusterName,omitnil,omitempty" name:"ClusterName"`
 
 	// 目标集群id
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ClusterId *string `json:"ClusterId,omitnil" name:"ClusterId"`
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
 	// 作业类型
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	JobType *int64 `json:"JobType,omitnil" name:"JobType"`
+	JobType *int64 `json:"JobType,omitnil,omitempty" name:"JobType"`
 }
 
 // Predefined struct for user
 type CopyJobsRequestParams struct {
 	// 复制明细列表
-	JobItems []*CopyJobItem `json:"JobItems,omitnil" name:"JobItems"`
+	JobItems []*CopyJobItem `json:"JobItems,omitnil,omitempty" name:"JobItems"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// 目标工作空间 SerialId
+	TargetWorkspaceId *string `json:"TargetWorkspaceId,omitnil,omitempty" name:"TargetWorkspaceId"`
 }
 
 type CopyJobsRequest struct {
 	*tchttp.BaseRequest
 	
 	// 复制明细列表
-	JobItems []*CopyJobItem `json:"JobItems,omitnil" name:"JobItems"`
+	JobItems []*CopyJobItem `json:"JobItems,omitnil,omitempty" name:"JobItems"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// 目标工作空间 SerialId
+	TargetWorkspaceId *string `json:"TargetWorkspaceId,omitnil,omitempty" name:"TargetWorkspaceId"`
 }
 
 func (r *CopyJobsRequest) ToJsonString() string {
@@ -489,6 +782,7 @@ func (r *CopyJobsRequest) FromJsonString(s string) error {
 	}
 	delete(f, "JobItems")
 	delete(f, "WorkSpaceId")
+	delete(f, "TargetWorkspaceId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CopyJobsRequest has unknown keys!", "")
 	}
@@ -499,18 +793,18 @@ func (r *CopyJobsRequest) FromJsonString(s string) error {
 type CopyJobsResponseParams struct {
 	// 成功条数
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	SuccessCount *int64 `json:"SuccessCount,omitnil" name:"SuccessCount"`
+	SuccessCount *int64 `json:"SuccessCount,omitnil,omitempty" name:"SuccessCount"`
 
 	// 失败条数
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	FailCount *int64 `json:"FailCount,omitnil" name:"FailCount"`
+	FailCount *int64 `json:"FailCount,omitnil,omitempty" name:"FailCount"`
 
 	// 结果列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	CopyJobsResults []*CopyJobResult `json:"CopyJobsResults,omitnil" name:"CopyJobsResults"`
+	CopyJobsResults []*CopyJobResult `json:"CopyJobsResults,omitnil,omitempty" name:"CopyJobsResults"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CopyJobsResponse struct {
@@ -530,34 +824,116 @@ func (r *CopyJobsResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type CreateConnectorRequestParams struct {
+	// 资源id
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
+
+	// 空间
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// 资源版本
+	VersionId *int64 `json:"VersionId,omitnil,omitempty" name:"VersionId"`
+
+	// 连接器名称
+	Connector *string `json:"Connector,omitnil,omitempty" name:"Connector"`
+
+	// 连接方式
+	ConnectionMethod *string `json:"ConnectionMethod,omitnil,omitempty" name:"ConnectionMethod"`
+}
+
+type CreateConnectorRequest struct {
+	*tchttp.BaseRequest
+	
+	// 资源id
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
+
+	// 空间
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// 资源版本
+	VersionId *int64 `json:"VersionId,omitnil,omitempty" name:"VersionId"`
+
+	// 连接器名称
+	Connector *string `json:"Connector,omitnil,omitempty" name:"Connector"`
+
+	// 连接方式
+	ConnectionMethod *string `json:"ConnectionMethod,omitnil,omitempty" name:"ConnectionMethod"`
+}
+
+func (r *CreateConnectorRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateConnectorRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ResourceId")
+	delete(f, "WorkSpaceId")
+	delete(f, "VersionId")
+	delete(f, "Connector")
+	delete(f, "ConnectionMethod")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateConnectorRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateConnectorResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateConnectorResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateConnectorResponseParams `json:"Response"`
+}
+
+func (r *CreateConnectorResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateConnectorResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateFolderRequestParams struct {
 	// 新建文件夹名
-	FolderName *string `json:"FolderName,omitnil" name:"FolderName"`
+	FolderName *string `json:"FolderName,omitnil,omitempty" name:"FolderName"`
 
-	// 新建文件夹的父目录ID
-	ParentId *string `json:"ParentId,omitnil" name:"ParentId"`
+	// 新建文件夹的父目录ID（根目录为"root"）
+	ParentId *string `json:"ParentId,omitnil,omitempty" name:"ParentId"`
 
 	// 文件夹类型，0是任务文件夹，1是依赖文件夹
-	FolderType *int64 `json:"FolderType,omitnil" name:"FolderType"`
+	FolderType *int64 `json:"FolderType,omitnil,omitempty" name:"FolderType"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 type CreateFolderRequest struct {
 	*tchttp.BaseRequest
 	
 	// 新建文件夹名
-	FolderName *string `json:"FolderName,omitnil" name:"FolderName"`
+	FolderName *string `json:"FolderName,omitnil,omitempty" name:"FolderName"`
 
-	// 新建文件夹的父目录ID
-	ParentId *string `json:"ParentId,omitnil" name:"ParentId"`
+	// 新建文件夹的父目录ID（根目录为"root"）
+	ParentId *string `json:"ParentId,omitnil,omitempty" name:"ParentId"`
 
 	// 文件夹类型，0是任务文件夹，1是依赖文件夹
-	FolderType *int64 `json:"FolderType,omitnil" name:"FolderType"`
+	FolderType *int64 `json:"FolderType,omitnil,omitempty" name:"FolderType"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 func (r *CreateFolderRequest) ToJsonString() string {
@@ -585,10 +961,10 @@ func (r *CreateFolderRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type CreateFolderResponseParams struct {
 	// 新建文件夹的唯一ID
-	FolderId *string `json:"FolderId,omitnil" name:"FolderId"`
+	FolderId *string `json:"FolderId,omitnil,omitempty" name:"FolderId"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CreateFolderResponse struct {
@@ -609,177 +985,261 @@ func (r *CreateFolderResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateJobConfigRequestParams struct {
-	// 作业Id
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	// <p>作业Id</p>
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 主类
-	EntrypointClass *string `json:"EntrypointClass,omitnil" name:"EntrypointClass"`
+	// <p>主类</p>
+	EntrypointClass *string `json:"EntrypointClass,omitnil,omitempty" name:"EntrypointClass"`
 
-	// 主类入参
-	ProgramArgs *string `json:"ProgramArgs,omitnil" name:"ProgramArgs"`
+	// <p>主类入参，需要区分下Sql作业配置，Jar作业配置，Python作业配置，具体参考下面的示例值</p>
+	ProgramArgs *string `json:"ProgramArgs,omitnil,omitempty" name:"ProgramArgs"`
 
-	// 备注
-	Remark *string `json:"Remark,omitnil" name:"Remark"`
+	// <p>备注</p>
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
-	// 资源引用数组
-	ResourceRefs []*ResourceRef `json:"ResourceRefs,omitnil" name:"ResourceRefs"`
+	// <p>资源引用数组</p>
+	ResourceRefs []*ResourceRef `json:"ResourceRefs,omitnil,omitempty" name:"ResourceRefs"`
 
-	// 作业默认并行度
-	DefaultParallelism *uint64 `json:"DefaultParallelism,omitnil" name:"DefaultParallelism"`
+	// <p>作业默认并行度</p>
+	DefaultParallelism *uint64 `json:"DefaultParallelism,omitnil,omitempty" name:"DefaultParallelism"`
 
-	// 系统参数
-	Properties []*Property `json:"Properties,omitnil" name:"Properties"`
+	// <p>系统参数</p>
+	Properties []*Property `json:"Properties,omitnil,omitempty" name:"Properties"`
 
-	// 1: 作业配置达到上限之后，自动删除可删除的最早版本
-	AutoDelete *int64 `json:"AutoDelete,omitnil" name:"AutoDelete"`
+	// <p>1: 作业配置达到上限之后，自动删除可删除的最早版本</p>
+	AutoDelete *int64 `json:"AutoDelete,omitnil,omitempty" name:"AutoDelete"`
 
-	// 作业使用的 COS 存储桶名
-	COSBucket *string `json:"COSBucket,omitnil" name:"COSBucket"`
+	// <p>作业使用的 COS 存储桶名</p>
+	COSBucket *string `json:"COSBucket,omitnil,omitempty" name:"COSBucket"`
 
-	// 是否采集作业日志
-	LogCollect *bool `json:"LogCollect,omitnil" name:"LogCollect"`
+	// <p>是否采集作业日志</p>
+	LogCollect *bool `json:"LogCollect,omitnil,omitempty" name:"LogCollect"`
 
-	// JobManager规格
-	JobManagerSpec *float64 `json:"JobManagerSpec,omitnil" name:"JobManagerSpec"`
+	// <p>JobManager规格</p>
+	JobManagerSpec *float64 `json:"JobManagerSpec,omitnil,omitempty" name:"JobManagerSpec"`
 
-	// TaskManager规格
-	TaskManagerSpec *float64 `json:"TaskManagerSpec,omitnil" name:"TaskManagerSpec"`
+	// <p>TaskManager规格</p>
+	TaskManagerSpec *float64 `json:"TaskManagerSpec,omitnil,omitempty" name:"TaskManagerSpec"`
 
-	// CLS日志集ID
-	ClsLogsetId *string `json:"ClsLogsetId,omitnil" name:"ClsLogsetId"`
+	// <p>CLS日志集ID</p>
+	ClsLogsetId *string `json:"ClsLogsetId,omitnil,omitempty" name:"ClsLogsetId"`
 
-	// CLS日志主题ID
-	ClsTopicId *string `json:"ClsTopicId,omitnil" name:"ClsTopicId"`
+	// <p>CLS日志主题ID</p>
+	ClsTopicId *string `json:"ClsTopicId,omitnil,omitempty" name:"ClsTopicId"`
 
-	// 日志采集类型 2：CLS；3：COS
-	LogCollectType *int64 `json:"LogCollectType,omitnil" name:"LogCollectType"`
+	// <p>日志采集类型 2：CLS；3：COS</p>
+	LogCollectType *int64 `json:"LogCollectType,omitnil,omitempty" name:"LogCollectType"`
 
-	// pyflink作业运行时使用的python版本
-	PythonVersion *string `json:"PythonVersion,omitnil" name:"PythonVersion"`
+	// <p>pyflink作业运行时使用的python版本</p>
+	PythonVersion *string `json:"PythonVersion,omitnil,omitempty" name:"PythonVersion"`
 
-	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	// <p>工作空间 SerialId</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 
-	// 日志级别
-	LogLevel *string `json:"LogLevel,omitnil" name:"LogLevel"`
+	// <p>日志级别</p>
+	LogLevel *string `json:"LogLevel,omitnil,omitempty" name:"LogLevel"`
 
-	// Oceanus 平台恢复作业开关 1:开启 -1: 关闭
-	AutoRecover *int64 `json:"AutoRecover,omitnil" name:"AutoRecover"`
+	// <p>Oceanus 平台恢复作业开关 1:开启 -1: 关闭</p>
+	AutoRecover *int64 `json:"AutoRecover,omitnil,omitempty" name:"AutoRecover"`
 
-	// 类日志级别
-	ClazzLevels []*ClazzLevel `json:"ClazzLevels,omitnil" name:"ClazzLevels"`
+	// <p>类日志级别</p>
+	ClazzLevels []*ClazzLevel `json:"ClazzLevels,omitnil,omitempty" name:"ClazzLevels"`
 
-	// 是否打开专家模式
-	ExpertModeOn *bool `json:"ExpertModeOn,omitnil" name:"ExpertModeOn"`
+	// <p>是否打开专家模式</p>
+	ExpertModeOn *bool `json:"ExpertModeOn,omitnil,omitempty" name:"ExpertModeOn"`
 
-	// 专家模式的配置
-	ExpertModeConfiguration *ExpertModeConfiguration `json:"ExpertModeConfiguration,omitnil" name:"ExpertModeConfiguration"`
+	// <p>专家模式的配置</p>
+	ExpertModeConfiguration *ExpertModeConfiguration `json:"ExpertModeConfiguration,omitnil,omitempty" name:"ExpertModeConfiguration"`
 
-	// trace链路
-	TraceModeOn *bool `json:"TraceModeOn,omitnil" name:"TraceModeOn"`
+	// <p>trace链路</p>
+	TraceModeOn *bool `json:"TraceModeOn,omitnil,omitempty" name:"TraceModeOn"`
 
-	// trace链路配置
-	TraceModeConfiguration *TraceModeConfiguration `json:"TraceModeConfiguration,omitnil" name:"TraceModeConfiguration"`
+	// <p>trace链路配置</p>
+	TraceModeConfiguration *TraceModeConfiguration `json:"TraceModeConfiguration,omitnil,omitempty" name:"TraceModeConfiguration"`
 
-	// checkpoint保留个数
-	CheckpointRetainedNum *int64 `json:"CheckpointRetainedNum,omitnil" name:"CheckpointRetainedNum"`
+	// <p>checkpoint保留个数</p>
+	CheckpointRetainedNum *int64 `json:"CheckpointRetainedNum,omitnil,omitempty" name:"CheckpointRetainedNum"`
 
-	// 算子拓扑图
-	JobGraph *JobGraph `json:"JobGraph,omitnil" name:"JobGraph"`
+	// <p>算子拓扑图</p>
+	JobGraph *JobGraph `json:"JobGraph,omitnil,omitempty" name:"JobGraph"`
 
-	// es索引名称
-	EsServerlessIndex *string `json:"EsServerlessIndex,omitnil" name:"EsServerlessIndex"`
+	// <p>es索引名称</p>
+	EsServerlessIndex *string `json:"EsServerlessIndex,omitnil,omitempty" name:"EsServerlessIndex"`
 
-	// es索引空间
-	EsServerlessSpace *string `json:"EsServerlessSpace,omitnil" name:"EsServerlessSpace"`
+	// <p>es索引空间</p>
+	EsServerlessSpace *string `json:"EsServerlessSpace,omitnil,omitempty" name:"EsServerlessSpace"`
+
+	// <p>flink版本</p>
+	FlinkVersion *string `json:"FlinkVersion,omitnil,omitempty" name:"FlinkVersion"`
+
+	// <p>JobManager cpu</p>
+	JobManagerCpu *float64 `json:"JobManagerCpu,omitnil,omitempty" name:"JobManagerCpu"`
+
+	// <p>JobManager 内存</p>
+	JobManagerMem *float64 `json:"JobManagerMem,omitnil,omitempty" name:"JobManagerMem"`
+
+	// <p>jdk版本</p>
+	JdkVersion *string `json:"JdkVersion,omitnil,omitempty" name:"JdkVersion"`
+
+	// <p>TaskManager cpu</p>
+	TaskManagerCpu *float64 `json:"TaskManagerCpu,omitnil,omitempty" name:"TaskManagerCpu"`
+
+	// <p>TaskManager 内存</p>
+	TaskManagerMem *float64 `json:"TaskManagerMem,omitnil,omitempty" name:"TaskManagerMem"`
+
+	// <p>0=默认使用老的 1=使用新的</p>
+	UseOldSystemConnector *int64 `json:"UseOldSystemConnector,omitnil,omitempty" name:"UseOldSystemConnector"`
+
+	// <p>压缩参数</p>
+	ProgramArgsAfterGzip *string `json:"ProgramArgsAfterGzip,omitnil,omitempty" name:"ProgramArgsAfterGzip"`
+
+	// <p>checkpoint 超时时间</p><p>单位：秒</p>
+	CheckpointTimeoutSecond *int64 `json:"CheckpointTimeoutSecond,omitnil,omitempty" name:"CheckpointTimeoutSecond"`
+
+	// <p>checkpoint 间隔时间</p><p>单位：秒</p>
+	CheckpointIntervalSecond *int64 `json:"CheckpointIntervalSecond,omitnil,omitempty" name:"CheckpointIntervalSecond"`
+
+	// <p>变量替换模式</p><p>枚举值：</p><ul><li>0： 表变量替换</li><li>1： SQL全局变量替换</li></ul><p>默认值：1</p>
+	VariableReplaceMode *int64 `json:"VariableReplaceMode,omitnil,omitempty" name:"VariableReplaceMode"`
+
+	// <p>user</p>
+	OperatorName *string `json:"OperatorName,omitnil,omitempty" name:"OperatorName"`
+
+	// <p>配置更新范围 0=全量(默认) 1=仅开发 2=仅运维</p>
+	ConfigScope *int64 `json:"ConfigScope,omitnil,omitempty" name:"ConfigScope"`
+
+	// <p>状态桶名字</p>
+	StateCOSBucket *string `json:"StateCOSBucket,omitnil,omitempty" name:"StateCOSBucket"`
 }
 
 type CreateJobConfigRequest struct {
 	*tchttp.BaseRequest
 	
-	// 作业Id
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	// <p>作业Id</p>
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 主类
-	EntrypointClass *string `json:"EntrypointClass,omitnil" name:"EntrypointClass"`
+	// <p>主类</p>
+	EntrypointClass *string `json:"EntrypointClass,omitnil,omitempty" name:"EntrypointClass"`
 
-	// 主类入参
-	ProgramArgs *string `json:"ProgramArgs,omitnil" name:"ProgramArgs"`
+	// <p>主类入参，需要区分下Sql作业配置，Jar作业配置，Python作业配置，具体参考下面的示例值</p>
+	ProgramArgs *string `json:"ProgramArgs,omitnil,omitempty" name:"ProgramArgs"`
 
-	// 备注
-	Remark *string `json:"Remark,omitnil" name:"Remark"`
+	// <p>备注</p>
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
-	// 资源引用数组
-	ResourceRefs []*ResourceRef `json:"ResourceRefs,omitnil" name:"ResourceRefs"`
+	// <p>资源引用数组</p>
+	ResourceRefs []*ResourceRef `json:"ResourceRefs,omitnil,omitempty" name:"ResourceRefs"`
 
-	// 作业默认并行度
-	DefaultParallelism *uint64 `json:"DefaultParallelism,omitnil" name:"DefaultParallelism"`
+	// <p>作业默认并行度</p>
+	DefaultParallelism *uint64 `json:"DefaultParallelism,omitnil,omitempty" name:"DefaultParallelism"`
 
-	// 系统参数
-	Properties []*Property `json:"Properties,omitnil" name:"Properties"`
+	// <p>系统参数</p>
+	Properties []*Property `json:"Properties,omitnil,omitempty" name:"Properties"`
 
-	// 1: 作业配置达到上限之后，自动删除可删除的最早版本
-	AutoDelete *int64 `json:"AutoDelete,omitnil" name:"AutoDelete"`
+	// <p>1: 作业配置达到上限之后，自动删除可删除的最早版本</p>
+	AutoDelete *int64 `json:"AutoDelete,omitnil,omitempty" name:"AutoDelete"`
 
-	// 作业使用的 COS 存储桶名
-	COSBucket *string `json:"COSBucket,omitnil" name:"COSBucket"`
+	// <p>作业使用的 COS 存储桶名</p>
+	COSBucket *string `json:"COSBucket,omitnil,omitempty" name:"COSBucket"`
 
-	// 是否采集作业日志
-	LogCollect *bool `json:"LogCollect,omitnil" name:"LogCollect"`
+	// <p>是否采集作业日志</p>
+	LogCollect *bool `json:"LogCollect,omitnil,omitempty" name:"LogCollect"`
 
-	// JobManager规格
-	JobManagerSpec *float64 `json:"JobManagerSpec,omitnil" name:"JobManagerSpec"`
+	// <p>JobManager规格</p>
+	JobManagerSpec *float64 `json:"JobManagerSpec,omitnil,omitempty" name:"JobManagerSpec"`
 
-	// TaskManager规格
-	TaskManagerSpec *float64 `json:"TaskManagerSpec,omitnil" name:"TaskManagerSpec"`
+	// <p>TaskManager规格</p>
+	TaskManagerSpec *float64 `json:"TaskManagerSpec,omitnil,omitempty" name:"TaskManagerSpec"`
 
-	// CLS日志集ID
-	ClsLogsetId *string `json:"ClsLogsetId,omitnil" name:"ClsLogsetId"`
+	// <p>CLS日志集ID</p>
+	ClsLogsetId *string `json:"ClsLogsetId,omitnil,omitempty" name:"ClsLogsetId"`
 
-	// CLS日志主题ID
-	ClsTopicId *string `json:"ClsTopicId,omitnil" name:"ClsTopicId"`
+	// <p>CLS日志主题ID</p>
+	ClsTopicId *string `json:"ClsTopicId,omitnil,omitempty" name:"ClsTopicId"`
 
-	// 日志采集类型 2：CLS；3：COS
-	LogCollectType *int64 `json:"LogCollectType,omitnil" name:"LogCollectType"`
+	// <p>日志采集类型 2：CLS；3：COS</p>
+	LogCollectType *int64 `json:"LogCollectType,omitnil,omitempty" name:"LogCollectType"`
 
-	// pyflink作业运行时使用的python版本
-	PythonVersion *string `json:"PythonVersion,omitnil" name:"PythonVersion"`
+	// <p>pyflink作业运行时使用的python版本</p>
+	PythonVersion *string `json:"PythonVersion,omitnil,omitempty" name:"PythonVersion"`
 
-	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	// <p>工作空间 SerialId</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 
-	// 日志级别
-	LogLevel *string `json:"LogLevel,omitnil" name:"LogLevel"`
+	// <p>日志级别</p>
+	LogLevel *string `json:"LogLevel,omitnil,omitempty" name:"LogLevel"`
 
-	// Oceanus 平台恢复作业开关 1:开启 -1: 关闭
-	AutoRecover *int64 `json:"AutoRecover,omitnil" name:"AutoRecover"`
+	// <p>Oceanus 平台恢复作业开关 1:开启 -1: 关闭</p>
+	AutoRecover *int64 `json:"AutoRecover,omitnil,omitempty" name:"AutoRecover"`
 
-	// 类日志级别
-	ClazzLevels []*ClazzLevel `json:"ClazzLevels,omitnil" name:"ClazzLevels"`
+	// <p>类日志级别</p>
+	ClazzLevels []*ClazzLevel `json:"ClazzLevels,omitnil,omitempty" name:"ClazzLevels"`
 
-	// 是否打开专家模式
-	ExpertModeOn *bool `json:"ExpertModeOn,omitnil" name:"ExpertModeOn"`
+	// <p>是否打开专家模式</p>
+	ExpertModeOn *bool `json:"ExpertModeOn,omitnil,omitempty" name:"ExpertModeOn"`
 
-	// 专家模式的配置
-	ExpertModeConfiguration *ExpertModeConfiguration `json:"ExpertModeConfiguration,omitnil" name:"ExpertModeConfiguration"`
+	// <p>专家模式的配置</p>
+	ExpertModeConfiguration *ExpertModeConfiguration `json:"ExpertModeConfiguration,omitnil,omitempty" name:"ExpertModeConfiguration"`
 
-	// trace链路
-	TraceModeOn *bool `json:"TraceModeOn,omitnil" name:"TraceModeOn"`
+	// <p>trace链路</p>
+	TraceModeOn *bool `json:"TraceModeOn,omitnil,omitempty" name:"TraceModeOn"`
 
-	// trace链路配置
-	TraceModeConfiguration *TraceModeConfiguration `json:"TraceModeConfiguration,omitnil" name:"TraceModeConfiguration"`
+	// <p>trace链路配置</p>
+	TraceModeConfiguration *TraceModeConfiguration `json:"TraceModeConfiguration,omitnil,omitempty" name:"TraceModeConfiguration"`
 
-	// checkpoint保留个数
-	CheckpointRetainedNum *int64 `json:"CheckpointRetainedNum,omitnil" name:"CheckpointRetainedNum"`
+	// <p>checkpoint保留个数</p>
+	CheckpointRetainedNum *int64 `json:"CheckpointRetainedNum,omitnil,omitempty" name:"CheckpointRetainedNum"`
 
-	// 算子拓扑图
-	JobGraph *JobGraph `json:"JobGraph,omitnil" name:"JobGraph"`
+	// <p>算子拓扑图</p>
+	JobGraph *JobGraph `json:"JobGraph,omitnil,omitempty" name:"JobGraph"`
 
-	// es索引名称
-	EsServerlessIndex *string `json:"EsServerlessIndex,omitnil" name:"EsServerlessIndex"`
+	// <p>es索引名称</p>
+	EsServerlessIndex *string `json:"EsServerlessIndex,omitnil,omitempty" name:"EsServerlessIndex"`
 
-	// es索引空间
-	EsServerlessSpace *string `json:"EsServerlessSpace,omitnil" name:"EsServerlessSpace"`
+	// <p>es索引空间</p>
+	EsServerlessSpace *string `json:"EsServerlessSpace,omitnil,omitempty" name:"EsServerlessSpace"`
+
+	// <p>flink版本</p>
+	FlinkVersion *string `json:"FlinkVersion,omitnil,omitempty" name:"FlinkVersion"`
+
+	// <p>JobManager cpu</p>
+	JobManagerCpu *float64 `json:"JobManagerCpu,omitnil,omitempty" name:"JobManagerCpu"`
+
+	// <p>JobManager 内存</p>
+	JobManagerMem *float64 `json:"JobManagerMem,omitnil,omitempty" name:"JobManagerMem"`
+
+	// <p>jdk版本</p>
+	JdkVersion *string `json:"JdkVersion,omitnil,omitempty" name:"JdkVersion"`
+
+	// <p>TaskManager cpu</p>
+	TaskManagerCpu *float64 `json:"TaskManagerCpu,omitnil,omitempty" name:"TaskManagerCpu"`
+
+	// <p>TaskManager 内存</p>
+	TaskManagerMem *float64 `json:"TaskManagerMem,omitnil,omitempty" name:"TaskManagerMem"`
+
+	// <p>0=默认使用老的 1=使用新的</p>
+	UseOldSystemConnector *int64 `json:"UseOldSystemConnector,omitnil,omitempty" name:"UseOldSystemConnector"`
+
+	// <p>压缩参数</p>
+	ProgramArgsAfterGzip *string `json:"ProgramArgsAfterGzip,omitnil,omitempty" name:"ProgramArgsAfterGzip"`
+
+	// <p>checkpoint 超时时间</p><p>单位：秒</p>
+	CheckpointTimeoutSecond *int64 `json:"CheckpointTimeoutSecond,omitnil,omitempty" name:"CheckpointTimeoutSecond"`
+
+	// <p>checkpoint 间隔时间</p><p>单位：秒</p>
+	CheckpointIntervalSecond *int64 `json:"CheckpointIntervalSecond,omitnil,omitempty" name:"CheckpointIntervalSecond"`
+
+	// <p>变量替换模式</p><p>枚举值：</p><ul><li>0： 表变量替换</li><li>1： SQL全局变量替换</li></ul><p>默认值：1</p>
+	VariableReplaceMode *int64 `json:"VariableReplaceMode,omitnil,omitempty" name:"VariableReplaceMode"`
+
+	// <p>user</p>
+	OperatorName *string `json:"OperatorName,omitnil,omitempty" name:"OperatorName"`
+
+	// <p>配置更新范围 0=全量(默认) 1=仅开发 2=仅运维</p>
+	ConfigScope *int64 `json:"ConfigScope,omitnil,omitempty" name:"ConfigScope"`
+
+	// <p>状态桶名字</p>
+	StateCOSBucket *string `json:"StateCOSBucket,omitnil,omitempty" name:"StateCOSBucket"`
 }
 
 func (r *CreateJobConfigRequest) ToJsonString() string {
@@ -822,6 +1282,20 @@ func (r *CreateJobConfigRequest) FromJsonString(s string) error {
 	delete(f, "JobGraph")
 	delete(f, "EsServerlessIndex")
 	delete(f, "EsServerlessSpace")
+	delete(f, "FlinkVersion")
+	delete(f, "JobManagerCpu")
+	delete(f, "JobManagerMem")
+	delete(f, "JdkVersion")
+	delete(f, "TaskManagerCpu")
+	delete(f, "TaskManagerMem")
+	delete(f, "UseOldSystemConnector")
+	delete(f, "ProgramArgsAfterGzip")
+	delete(f, "CheckpointTimeoutSecond")
+	delete(f, "CheckpointIntervalSecond")
+	delete(f, "VariableReplaceMode")
+	delete(f, "OperatorName")
+	delete(f, "ConfigScope")
+	delete(f, "StateCOSBucket")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateJobConfigRequest has unknown keys!", "")
 	}
@@ -830,11 +1304,11 @@ func (r *CreateJobConfigRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateJobConfigResponseParams struct {
-	// 作业配置版本号
-	Version *uint64 `json:"Version,omitnil" name:"Version"`
+	// <p>作业配置版本号</p>
+	Version *uint64 `json:"Version,omitnil,omitempty" name:"Version"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CreateJobConfigResponse struct {
@@ -855,69 +1329,93 @@ func (r *CreateJobConfigResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateJobRequestParams struct {
-	// 作业名称，允许输入长度小于等于50个字符的中文、英文、数字、-（横线）、_（下划线）、.（点），且符号必须半角字符。注意作业名不能和现有作业同名
-	Name *string `json:"Name,omitnil" name:"Name"`
+	// 作业名称，允许输入长度小于50个字符的中文、英文、数字、-（横线）、_（下划线）、.（点），且符号必须半角字符。注意作业名不能和现有作业同名
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 作业的类型，1 表示 SQL 作业，2 表示 JAR 作业
-	JobType *int64 `json:"JobType,omitnil" name:"JobType"`
+	JobType *int64 `json:"JobType,omitnil,omitempty" name:"JobType"`
 
 	// 集群的类型，1 表示共享集群，2 表示独享集群
-	ClusterType *int64 `json:"ClusterType,omitnil" name:"ClusterType"`
+	ClusterType *int64 `json:"ClusterType,omitnil,omitempty" name:"ClusterType"`
 
 	// 当 ClusterType=2 时，必选，用来指定该作业提交的独享集群 ID
-	ClusterId *string `json:"ClusterId,omitnil" name:"ClusterId"`
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
 	// 设置每 CU 的内存规格，单位为 GB，支持 2、4、8、16（需申请开通白名单后使用）。默认为 4，即 1 CU 对应 4 GB 的运行内存
-	CuMem *uint64 `json:"CuMem,omitnil" name:"CuMem"`
+	CuMem *uint64 `json:"CuMem,omitnil,omitempty" name:"CuMem"`
 
 	// 作业的备注信息，可以随意设置
-	Remark *string `json:"Remark,omitnil" name:"Remark"`
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
 	// 作业名所属文件夹ID，根目录为"root"
-	FolderId *string `json:"FolderId,omitnil" name:"FolderId"`
+	FolderId *string `json:"FolderId,omitnil,omitempty" name:"FolderId"`
 
 	// 作业运行的Flink版本
-	FlinkVersion *string `json:"FlinkVersion,omitnil" name:"FlinkVersion"`
+	FlinkVersion *string `json:"FlinkVersion,omitnil,omitempty" name:"FlinkVersion"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 
 	// 作业标签
-	Tags []*Tag `json:"Tags,omitnil" name:"Tags"`
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 作业描述
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 开启默认告警
+	OpenJobDefaultAlarm *int64 `json:"OpenJobDefaultAlarm,omitnil,omitempty" name:"OpenJobDefaultAlarm"`
+
+	// 用户Uid
+	Uid *int64 `json:"Uid,omitnil,omitempty" name:"Uid"`
+
+	// jdk版本
+	JdkVersion *string `json:"JdkVersion,omitnil,omitempty" name:"JdkVersion"`
 }
 
 type CreateJobRequest struct {
 	*tchttp.BaseRequest
 	
-	// 作业名称，允许输入长度小于等于50个字符的中文、英文、数字、-（横线）、_（下划线）、.（点），且符号必须半角字符。注意作业名不能和现有作业同名
-	Name *string `json:"Name,omitnil" name:"Name"`
+	// 作业名称，允许输入长度小于50个字符的中文、英文、数字、-（横线）、_（下划线）、.（点），且符号必须半角字符。注意作业名不能和现有作业同名
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 作业的类型，1 表示 SQL 作业，2 表示 JAR 作业
-	JobType *int64 `json:"JobType,omitnil" name:"JobType"`
+	JobType *int64 `json:"JobType,omitnil,omitempty" name:"JobType"`
 
 	// 集群的类型，1 表示共享集群，2 表示独享集群
-	ClusterType *int64 `json:"ClusterType,omitnil" name:"ClusterType"`
+	ClusterType *int64 `json:"ClusterType,omitnil,omitempty" name:"ClusterType"`
 
 	// 当 ClusterType=2 时，必选，用来指定该作业提交的独享集群 ID
-	ClusterId *string `json:"ClusterId,omitnil" name:"ClusterId"`
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
 	// 设置每 CU 的内存规格，单位为 GB，支持 2、4、8、16（需申请开通白名单后使用）。默认为 4，即 1 CU 对应 4 GB 的运行内存
-	CuMem *uint64 `json:"CuMem,omitnil" name:"CuMem"`
+	CuMem *uint64 `json:"CuMem,omitnil,omitempty" name:"CuMem"`
 
 	// 作业的备注信息，可以随意设置
-	Remark *string `json:"Remark,omitnil" name:"Remark"`
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
 	// 作业名所属文件夹ID，根目录为"root"
-	FolderId *string `json:"FolderId,omitnil" name:"FolderId"`
+	FolderId *string `json:"FolderId,omitnil,omitempty" name:"FolderId"`
 
 	// 作业运行的Flink版本
-	FlinkVersion *string `json:"FlinkVersion,omitnil" name:"FlinkVersion"`
+	FlinkVersion *string `json:"FlinkVersion,omitnil,omitempty" name:"FlinkVersion"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 
 	// 作业标签
-	Tags []*Tag `json:"Tags,omitnil" name:"Tags"`
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 作业描述
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 开启默认告警
+	OpenJobDefaultAlarm *int64 `json:"OpenJobDefaultAlarm,omitnil,omitempty" name:"OpenJobDefaultAlarm"`
+
+	// 用户Uid
+	Uid *int64 `json:"Uid,omitnil,omitempty" name:"Uid"`
+
+	// jdk版本
+	JdkVersion *string `json:"JdkVersion,omitnil,omitempty" name:"JdkVersion"`
 }
 
 func (r *CreateJobRequest) ToJsonString() string {
@@ -942,6 +1440,10 @@ func (r *CreateJobRequest) FromJsonString(s string) error {
 	delete(f, "FlinkVersion")
 	delete(f, "WorkSpaceId")
 	delete(f, "Tags")
+	delete(f, "Description")
+	delete(f, "OpenJobDefaultAlarm")
+	delete(f, "Uid")
+	delete(f, "JdkVersion")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateJobRequest has unknown keys!", "")
 	}
@@ -951,10 +1453,10 @@ func (r *CreateJobRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type CreateJobResponseParams struct {
 	// 作业Id
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CreateJobResponse struct {
@@ -974,40 +1476,386 @@ func (r *CreateJobResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
-type CreateResourceConfigRequestParams struct {
-	// 资源ID
-	ResourceId *string `json:"ResourceId,omitnil" name:"ResourceId"`
+type CreateMetaDatabaseRequestParams struct {
+	// 无
+	CatalogId *int64 `json:"CatalogId,omitnil,omitempty" name:"CatalogId"`
 
-	// 位置信息
-	ResourceLoc *ResourceLoc `json:"ResourceLoc,omitnil" name:"ResourceLoc"`
+	// 库名
+	DatabaseName *string `json:"DatabaseName,omitnil,omitempty" name:"DatabaseName"`
 
-	// 资源描述信息
-	Remark *string `json:"Remark,omitnil" name:"Remark"`
-
-	// 1： 资源版本达到上限，自动删除最早可删除的版本
-	AutoDelete *int64 `json:"AutoDelete,omitnil" name:"AutoDelete"`
+	// 备注
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+}
+
+type CreateMetaDatabaseRequest struct {
+	*tchttp.BaseRequest
+	
+	// 无
+	CatalogId *int64 `json:"CatalogId,omitnil,omitempty" name:"CatalogId"`
+
+	// 库名
+	DatabaseName *string `json:"DatabaseName,omitnil,omitempty" name:"DatabaseName"`
+
+	// 备注
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// 工作空间 SerialId
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+}
+
+func (r *CreateMetaDatabaseRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateMetaDatabaseRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "CatalogId")
+	delete(f, "DatabaseName")
+	delete(f, "Comment")
+	delete(f, "WorkSpaceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateMetaDatabaseRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateMetaDatabaseResponseParams struct {
+	// 无
+	DatabaseId *int64 `json:"DatabaseId,omitnil,omitempty" name:"DatabaseId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateMetaDatabaseResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateMetaDatabaseResponseParams `json:"Response"`
+}
+
+func (r *CreateMetaDatabaseResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateMetaDatabaseResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateMetaTableRequestParams struct {
+	// <p>Catalog Id</p>
+	CatalogId *int64 `json:"CatalogId,omitnil,omitempty" name:"CatalogId"`
+
+	// <p>库Id</p>
+	DatabaseId *int64 `json:"DatabaseId,omitnil,omitempty" name:"DatabaseId"`
+
+	// <p>建表语句</p><p>参数格式：需要base64加密</p>
+	SqlCode *string `json:"SqlCode,omitnil,omitempty" name:"SqlCode"`
+
+	// <p>备注</p>
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// <p>集群id</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>引用资源</p>
+	ResourceRefs []*ResourceRef `json:"ResourceRefs,omitnil,omitempty" name:"ResourceRefs"`
+
+	// <p>Flink版本</p>
+	FlinkVersion *string `json:"FlinkVersion,omitnil,omitempty" name:"FlinkVersion"`
+
+	// <p>工作空间 SerialId</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// <p>异步id</p>
+	AsyncTaskId *string `json:"AsyncTaskId,omitnil,omitempty" name:"AsyncTaskId"`
+}
+
+type CreateMetaTableRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>Catalog Id</p>
+	CatalogId *int64 `json:"CatalogId,omitnil,omitempty" name:"CatalogId"`
+
+	// <p>库Id</p>
+	DatabaseId *int64 `json:"DatabaseId,omitnil,omitempty" name:"DatabaseId"`
+
+	// <p>建表语句</p><p>参数格式：需要base64加密</p>
+	SqlCode *string `json:"SqlCode,omitnil,omitempty" name:"SqlCode"`
+
+	// <p>备注</p>
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
+
+	// <p>集群id</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>引用资源</p>
+	ResourceRefs []*ResourceRef `json:"ResourceRefs,omitnil,omitempty" name:"ResourceRefs"`
+
+	// <p>Flink版本</p>
+	FlinkVersion *string `json:"FlinkVersion,omitnil,omitempty" name:"FlinkVersion"`
+
+	// <p>工作空间 SerialId</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// <p>异步id</p>
+	AsyncTaskId *string `json:"AsyncTaskId,omitnil,omitempty" name:"AsyncTaskId"`
+}
+
+func (r *CreateMetaTableRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateMetaTableRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "CatalogId")
+	delete(f, "DatabaseId")
+	delete(f, "SqlCode")
+	delete(f, "Comment")
+	delete(f, "ClusterId")
+	delete(f, "ResourceRefs")
+	delete(f, "FlinkVersion")
+	delete(f, "WorkSpaceId")
+	delete(f, "AsyncTaskId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateMetaTableRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateMetaTableResponseParams struct {
+	// <p>表Id</p>
+	TableId *int64 `json:"TableId,omitnil,omitempty" name:"TableId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateMetaTableResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateMetaTableResponseParams `json:"Response"`
+}
+
+func (r *CreateMetaTableResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateMetaTableResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateOceanusClusterRequestParams struct {
+	// <p>集群名称</p><p>入参限制：支持1-50个英文、汉字、数字、连接线-或下划线_</p>
+	ClusterName *string `json:"ClusterName,omitnil,omitempty" name:"ClusterName"`
+
+	// <p>地域Id，可通过地域管理系统<a href="https://cloud.tencent.com/document/api/1596/77930"> DescribeRegions</a>查询Product参数设置 oceanus</p>
+	RegionId *int64 `json:"RegionId,omitnil,omitempty" name:"RegionId"`
+
+	// <p>可用区Id，可通过地域管理系统<a href="https://cloud.tencent.com/document/api/1596/77929"> DescribeZones</a>查询<br>Product参数设置 oceanus</p>
+	ZoneId *int64 `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// <p>FlinkUI访问密码</p><p>用户名与密码将用于登录查看作业的 Flink UI 界面，集群用户名:admin</p>
+	LoginPassword *string `json:"LoginPassword,omitnil,omitempty" name:"LoginPassword"`
+
+	// <p>流计算通过 VPC 和弹性网卡来访问同地域中的其他云产品资源，并需要占用一定的子网 IP 数量，请确保所选子网的可用 IP 数量充足 如现有网络不符合您的要求，请前往 VPC 控制台<a href="https://console.cloud.tencent.com/vpc/vpc?rid=undefined">新建私有网络</a> 或 <a href="https://console.cloud.tencent.com/vpc/subnet?rid=undefined">新建子网</a></p>
+	VpcDescriptions []*VPCDescription `json:"VpcDescriptions,omitnil,omitempty" name:"VpcDescriptions"`
+
+	// <p>流计算使用对象存储 COS 来保存作业的 checkpoint、jar 包、或投递日志等，如本地域无可用存储桶，请前往<a href="https://console.cloud.tencent.com/cos5">对象存储控制台</a>新建 为了保证您的正常使用，对应COS的生命周期配置请参考<a href="https://cloud.tencent.com/document/product/436/33417?from=console_document_search">文档</a></p>
+	DefaultCOSBucket *string `json:"DefaultCOSBucket,omitnil,omitempty" name:"DefaultCOSBucket"`
+
+	// <p>集群CU数， 12 CU 是流计算的最小计算资源和计费单位，1CU 包含1个 CPU 和 4GB 内存。 当CU数大于等于 48 时，减免管理节点费用。</p>
+	CU *int64 `json:"CU,omitnil,omitempty" name:"CU"`
+
+	// <p>集群描述</p><p>入参限制：支持1-50个英文、汉字、数字、连接线-或下划线_</p>
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
+
+	// <p>购买时长，以月为单位</p><p>取值范围：[1, 48]</p>
+	Period *int64 `json:"Period,omitnil,omitempty" name:"Period"`
+
+	// <p>集群计费类型</p><p>枚举值：</p><ul><li>PREPAID： 包年包月</li><li>POSTPAID_BY_SECOND： 按量计费</li></ul><p>默认值：POSTPAID_BY_SECOND</p>
+	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
+
+	// <p>集群类型</p><p>枚举值：</p><ul><li>MULTI_AZ_CLUSTER： 多可用区集群</li></ul>
+	ClusterType *string `json:"ClusterType,omitnil,omitempty" name:"ClusterType"`
+
+	// <p>自动续费标识</p><p>枚举值：</p><ul><li>NOTIFY_AND_MANUAL_RENEW： 通知并手动续费</li><li>NOTIFY_AND_AUTO_RENEW： 通知并自动续费</li><li>DISABLE_NOTIFY_AND_MANUAL_RENEW： 不通知并不自动续费</li></ul><p>默认值：NOTIFY_AND_MANUAL_RENEW</p><p>InstanceChargeType设置PREPAID时，对应包年包月集群，需要设置自动续费标识，按量计费集群不需要设置</p>
+	RenewFlag *string `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`
+
+	// <p>Flink UI访问类型设置</p><p>枚举值：</p><ul><li>NetworkAccess_INTERNAL： 内网访问</li><li>NetworkAccess_EXTERNAL： 公网访问</li></ul><p>默认值：NetworkAccess_EXTERNAL</p>
+	FlinkWebUINetworkAccessType *string `json:"FlinkWebUINetworkAccessType,omitnil,omitempty" name:"FlinkWebUINetworkAccessType"`
+
+	// <p>多可用区VPC</p>
+	SlaveVpcDescriptions []*SlaveVpcDescriptions `json:"SlaveVpcDescriptions,omitnil,omitempty" name:"SlaveVpcDescriptions"`
+
+	// <p>核心内存比值，只支持 [0，2，4，8]</p>
+	CUMemory *int64 `json:"CUMemory,omitnil,omitempty" name:"CUMemory"`
+}
+
+type CreateOceanusClusterRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>集群名称</p><p>入参限制：支持1-50个英文、汉字、数字、连接线-或下划线_</p>
+	ClusterName *string `json:"ClusterName,omitnil,omitempty" name:"ClusterName"`
+
+	// <p>地域Id，可通过地域管理系统<a href="https://cloud.tencent.com/document/api/1596/77930"> DescribeRegions</a>查询Product参数设置 oceanus</p>
+	RegionId *int64 `json:"RegionId,omitnil,omitempty" name:"RegionId"`
+
+	// <p>可用区Id，可通过地域管理系统<a href="https://cloud.tencent.com/document/api/1596/77929"> DescribeZones</a>查询<br>Product参数设置 oceanus</p>
+	ZoneId *int64 `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// <p>FlinkUI访问密码</p><p>用户名与密码将用于登录查看作业的 Flink UI 界面，集群用户名:admin</p>
+	LoginPassword *string `json:"LoginPassword,omitnil,omitempty" name:"LoginPassword"`
+
+	// <p>流计算通过 VPC 和弹性网卡来访问同地域中的其他云产品资源，并需要占用一定的子网 IP 数量，请确保所选子网的可用 IP 数量充足 如现有网络不符合您的要求，请前往 VPC 控制台<a href="https://console.cloud.tencent.com/vpc/vpc?rid=undefined">新建私有网络</a> 或 <a href="https://console.cloud.tencent.com/vpc/subnet?rid=undefined">新建子网</a></p>
+	VpcDescriptions []*VPCDescription `json:"VpcDescriptions,omitnil,omitempty" name:"VpcDescriptions"`
+
+	// <p>流计算使用对象存储 COS 来保存作业的 checkpoint、jar 包、或投递日志等，如本地域无可用存储桶，请前往<a href="https://console.cloud.tencent.com/cos5">对象存储控制台</a>新建 为了保证您的正常使用，对应COS的生命周期配置请参考<a href="https://cloud.tencent.com/document/product/436/33417?from=console_document_search">文档</a></p>
+	DefaultCOSBucket *string `json:"DefaultCOSBucket,omitnil,omitempty" name:"DefaultCOSBucket"`
+
+	// <p>集群CU数， 12 CU 是流计算的最小计算资源和计费单位，1CU 包含1个 CPU 和 4GB 内存。 当CU数大于等于 48 时，减免管理节点费用。</p>
+	CU *int64 `json:"CU,omitnil,omitempty" name:"CU"`
+
+	// <p>集群描述</p><p>入参限制：支持1-50个英文、汉字、数字、连接线-或下划线_</p>
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
+
+	// <p>购买时长，以月为单位</p><p>取值范围：[1, 48]</p>
+	Period *int64 `json:"Period,omitnil,omitempty" name:"Period"`
+
+	// <p>集群计费类型</p><p>枚举值：</p><ul><li>PREPAID： 包年包月</li><li>POSTPAID_BY_SECOND： 按量计费</li></ul><p>默认值：POSTPAID_BY_SECOND</p>
+	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
+
+	// <p>集群类型</p><p>枚举值：</p><ul><li>MULTI_AZ_CLUSTER： 多可用区集群</li></ul>
+	ClusterType *string `json:"ClusterType,omitnil,omitempty" name:"ClusterType"`
+
+	// <p>自动续费标识</p><p>枚举值：</p><ul><li>NOTIFY_AND_MANUAL_RENEW： 通知并手动续费</li><li>NOTIFY_AND_AUTO_RENEW： 通知并自动续费</li><li>DISABLE_NOTIFY_AND_MANUAL_RENEW： 不通知并不自动续费</li></ul><p>默认值：NOTIFY_AND_MANUAL_RENEW</p><p>InstanceChargeType设置PREPAID时，对应包年包月集群，需要设置自动续费标识，按量计费集群不需要设置</p>
+	RenewFlag *string `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`
+
+	// <p>Flink UI访问类型设置</p><p>枚举值：</p><ul><li>NetworkAccess_INTERNAL： 内网访问</li><li>NetworkAccess_EXTERNAL： 公网访问</li></ul><p>默认值：NetworkAccess_EXTERNAL</p>
+	FlinkWebUINetworkAccessType *string `json:"FlinkWebUINetworkAccessType,omitnil,omitempty" name:"FlinkWebUINetworkAccessType"`
+
+	// <p>多可用区VPC</p>
+	SlaveVpcDescriptions []*SlaveVpcDescriptions `json:"SlaveVpcDescriptions,omitnil,omitempty" name:"SlaveVpcDescriptions"`
+
+	// <p>核心内存比值，只支持 [0，2，4，8]</p>
+	CUMemory *int64 `json:"CUMemory,omitnil,omitempty" name:"CUMemory"`
+}
+
+func (r *CreateOceanusClusterRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateOceanusClusterRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterName")
+	delete(f, "RegionId")
+	delete(f, "ZoneId")
+	delete(f, "LoginPassword")
+	delete(f, "VpcDescriptions")
+	delete(f, "DefaultCOSBucket")
+	delete(f, "CU")
+	delete(f, "Remark")
+	delete(f, "Period")
+	delete(f, "InstanceChargeType")
+	delete(f, "ClusterType")
+	delete(f, "RenewFlag")
+	delete(f, "FlinkWebUINetworkAccessType")
+	delete(f, "SlaveVpcDescriptions")
+	delete(f, "CUMemory")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateOceanusClusterRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateOceanusClusterResponseParams struct {
+	// <p>创建的集群ID</p><p>参数格式：cluster-xxx</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateOceanusClusterResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateOceanusClusterResponseParams `json:"Response"`
+}
+
+func (r *CreateOceanusClusterResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateOceanusClusterResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateResourceConfigRequestParams struct {
+	// 资源ID
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
+
+	// 位置信息
+	ResourceLoc *ResourceLoc `json:"ResourceLoc,omitnil,omitempty" name:"ResourceLoc"`
+
+	// 资源描述信息
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
+
+	// 1： 资源版本达到上限，自动删除最早可删除的版本
+	AutoDelete *int64 `json:"AutoDelete,omitnil,omitempty" name:"AutoDelete"`
+
+	// 工作空间 SerialId
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 type CreateResourceConfigRequest struct {
 	*tchttp.BaseRequest
 	
 	// 资源ID
-	ResourceId *string `json:"ResourceId,omitnil" name:"ResourceId"`
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
 	// 位置信息
-	ResourceLoc *ResourceLoc `json:"ResourceLoc,omitnil" name:"ResourceLoc"`
+	ResourceLoc *ResourceLoc `json:"ResourceLoc,omitnil,omitempty" name:"ResourceLoc"`
 
 	// 资源描述信息
-	Remark *string `json:"Remark,omitnil" name:"Remark"`
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
 	// 1： 资源版本达到上限，自动删除最早可删除的版本
-	AutoDelete *int64 `json:"AutoDelete,omitnil" name:"AutoDelete"`
+	AutoDelete *int64 `json:"AutoDelete,omitnil,omitempty" name:"AutoDelete"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 func (r *CreateResourceConfigRequest) ToJsonString() string {
@@ -1036,10 +1884,10 @@ func (r *CreateResourceConfigRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type CreateResourceConfigResponseParams struct {
 	// 资源版本ID
-	Version *int64 `json:"Version,omitnil" name:"Version"`
+	Version *int64 `json:"Version,omitnil,omitempty" name:"Version"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CreateResourceConfigResponse struct {
@@ -1061,50 +1909,50 @@ func (r *CreateResourceConfigResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type CreateResourceRequestParams struct {
 	// 资源位置
-	ResourceLoc *ResourceLoc `json:"ResourceLoc,omitnil" name:"ResourceLoc"`
+	ResourceLoc *ResourceLoc `json:"ResourceLoc,omitnil,omitempty" name:"ResourceLoc"`
 
 	// 资源类型。目前只支持 JAR，取值为 1
-	ResourceType *int64 `json:"ResourceType,omitnil" name:"ResourceType"`
+	ResourceType *int64 `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
 
 	// 资源描述
-	Remark *string `json:"Remark,omitnil" name:"Remark"`
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
 	// 资源名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 资源版本描述
-	ResourceConfigRemark *string `json:"ResourceConfigRemark,omitnil" name:"ResourceConfigRemark"`
+	ResourceConfigRemark *string `json:"ResourceConfigRemark,omitnil,omitempty" name:"ResourceConfigRemark"`
 
 	// 目录ID
-	FolderId *string `json:"FolderId,omitnil" name:"FolderId"`
+	FolderId *string `json:"FolderId,omitnil,omitempty" name:"FolderId"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 type CreateResourceRequest struct {
 	*tchttp.BaseRequest
 	
 	// 资源位置
-	ResourceLoc *ResourceLoc `json:"ResourceLoc,omitnil" name:"ResourceLoc"`
+	ResourceLoc *ResourceLoc `json:"ResourceLoc,omitnil,omitempty" name:"ResourceLoc"`
 
 	// 资源类型。目前只支持 JAR，取值为 1
-	ResourceType *int64 `json:"ResourceType,omitnil" name:"ResourceType"`
+	ResourceType *int64 `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
 
 	// 资源描述
-	Remark *string `json:"Remark,omitnil" name:"Remark"`
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
 	// 资源名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 资源版本描述
-	ResourceConfigRemark *string `json:"ResourceConfigRemark,omitnil" name:"ResourceConfigRemark"`
+	ResourceConfigRemark *string `json:"ResourceConfigRemark,omitnil,omitempty" name:"ResourceConfigRemark"`
 
 	// 目录ID
-	FolderId *string `json:"FolderId,omitnil" name:"FolderId"`
+	FolderId *string `json:"FolderId,omitnil,omitempty" name:"FolderId"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 func (r *CreateResourceRequest) ToJsonString() string {
@@ -1135,13 +1983,13 @@ func (r *CreateResourceRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type CreateResourceResponseParams struct {
 	// 资源ID
-	ResourceId *string `json:"ResourceId,omitnil" name:"ResourceId"`
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
 	// 资源版本
-	Version *int64 `json:"Version,omitnil" name:"Version"`
+	Version *int64 `json:"Version,omitnil,omitempty" name:"Version"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CreateResourceResponse struct {
@@ -1161,22 +2009,142 @@ func (r *CreateResourceResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type CreateVariableRequestParams struct {
+	// <p>变量名</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>变量值</p>
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+
+	// <p>变量类型  1：显式   2：隐藏</p>
+	Type *int64 `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// <p>描述信息</p>
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
+
+	// <p>工作空间 SerialId</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// <p>变量值类型</p><p>枚举值：</p><ul><li>0： 自定义变量</li><li>1： 凭据值</li></ul>
+	ValueType *int64 `json:"ValueType,omitnil,omitempty" name:"ValueType"`
+
+	// <p>凭据所在地域</p>
+	SecretRegion *string `json:"SecretRegion,omitnil,omitempty" name:"SecretRegion"`
+
+	// <p>凭据名称</p>
+	SecretName *string `json:"SecretName,omitnil,omitempty" name:"SecretName"`
+
+	// <p>凭据版本</p>
+	SecretVersionId *string `json:"SecretVersionId,omitnil,omitempty" name:"SecretVersionId"`
+
+	// <p>凭据值md5</p>
+	SecretValueMd5 *string `json:"SecretValueMd5,omitnil,omitempty" name:"SecretValueMd5"`
+}
+
+type CreateVariableRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>变量名</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>变量值</p>
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+
+	// <p>变量类型  1：显式   2：隐藏</p>
+	Type *int64 `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// <p>描述信息</p>
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
+
+	// <p>工作空间 SerialId</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// <p>变量值类型</p><p>枚举值：</p><ul><li>0： 自定义变量</li><li>1： 凭据值</li></ul>
+	ValueType *int64 `json:"ValueType,omitnil,omitempty" name:"ValueType"`
+
+	// <p>凭据所在地域</p>
+	SecretRegion *string `json:"SecretRegion,omitnil,omitempty" name:"SecretRegion"`
+
+	// <p>凭据名称</p>
+	SecretName *string `json:"SecretName,omitnil,omitempty" name:"SecretName"`
+
+	// <p>凭据版本</p>
+	SecretVersionId *string `json:"SecretVersionId,omitnil,omitempty" name:"SecretVersionId"`
+
+	// <p>凭据值md5</p>
+	SecretValueMd5 *string `json:"SecretValueMd5,omitnil,omitempty" name:"SecretValueMd5"`
+}
+
+func (r *CreateVariableRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateVariableRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Name")
+	delete(f, "Value")
+	delete(f, "Type")
+	delete(f, "Remark")
+	delete(f, "WorkSpaceId")
+	delete(f, "ValueType")
+	delete(f, "SecretRegion")
+	delete(f, "SecretName")
+	delete(f, "SecretVersionId")
+	delete(f, "SecretValueMd5")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateVariableRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateVariableResponseParams struct {
+	// <p>变量Id</p>
+	VariableId *string `json:"VariableId,omitnil,omitempty" name:"VariableId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateVariableResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateVariableResponseParams `json:"Response"`
+}
+
+func (r *CreateVariableResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateVariableResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateWorkSpaceRequestParams struct {
 	// 工作空间名称
-	WorkSpaceName *string `json:"WorkSpaceName,omitnil" name:"WorkSpaceName"`
+	WorkSpaceName *string `json:"WorkSpaceName,omitnil,omitempty" name:"WorkSpaceName"`
 
 	// 项目空间备注
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 }
 
 type CreateWorkSpaceRequest struct {
 	*tchttp.BaseRequest
 	
 	// 工作空间名称
-	WorkSpaceName *string `json:"WorkSpaceName,omitnil" name:"WorkSpaceName"`
+	WorkSpaceName *string `json:"WorkSpaceName,omitnil,omitempty" name:"WorkSpaceName"`
 
 	// 项目空间备注
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 }
 
 func (r *CreateWorkSpaceRequest) ToJsonString() string {
@@ -1202,10 +2170,10 @@ func (r *CreateWorkSpaceRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type CreateWorkSpaceResponseParams struct {
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CreateWorkSpaceResponse struct {
@@ -1227,26 +2195,26 @@ func (r *CreateWorkSpaceResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DeleteFoldersRequestParams struct {
 	// 需删除的文件夹唯一ID
-	FolderIds []*string `json:"FolderIds,omitnil" name:"FolderIds"`
+	FolderIds []*string `json:"FolderIds,omitnil,omitempty" name:"FolderIds"`
 
 	// 文件夹类型，0是任务文件夹，1是依赖文件夹
-	FolderType *int64 `json:"FolderType,omitnil" name:"FolderType"`
+	FolderType *int64 `json:"FolderType,omitnil,omitempty" name:"FolderType"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 type DeleteFoldersRequest struct {
 	*tchttp.BaseRequest
 	
 	// 需删除的文件夹唯一ID
-	FolderIds []*string `json:"FolderIds,omitnil" name:"FolderIds"`
+	FolderIds []*string `json:"FolderIds,omitnil,omitempty" name:"FolderIds"`
 
 	// 文件夹类型，0是任务文件夹，1是依赖文件夹
-	FolderType *int64 `json:"FolderType,omitnil" name:"FolderType"`
+	FolderType *int64 `json:"FolderType,omitnil,omitempty" name:"FolderType"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 func (r *DeleteFoldersRequest) ToJsonString() string {
@@ -1272,8 +2240,8 @@ func (r *DeleteFoldersRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteFoldersResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DeleteFoldersResponse struct {
@@ -1294,27 +2262,33 @@ func (r *DeleteFoldersResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteJobConfigsRequestParams struct {
-	// 作业ID
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	// <p>作业ID</p>
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 作业配置版本数组
-	JobConfigVersions []*int64 `json:"JobConfigVersions,omitnil" name:"JobConfigVersions"`
+	// <p>作业配置版本数组</p>
+	JobConfigVersions []*int64 `json:"JobConfigVersions,omitnil,omitempty" name:"JobConfigVersions"`
 
-	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	// <p>工作空间 SerialId</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// <p>配置更新范围 0=全量(默认) 1=仅开发 2=仅运维</p><p>取值范围：[0, 2]</p>
+	ConfigScope *int64 `json:"ConfigScope,omitnil,omitempty" name:"ConfigScope"`
 }
 
 type DeleteJobConfigsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 作业ID
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	// <p>作业ID</p>
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 作业配置版本数组
-	JobConfigVersions []*int64 `json:"JobConfigVersions,omitnil" name:"JobConfigVersions"`
+	// <p>作业配置版本数组</p>
+	JobConfigVersions []*int64 `json:"JobConfigVersions,omitnil,omitempty" name:"JobConfigVersions"`
 
-	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	// <p>工作空间 SerialId</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// <p>配置更新范围 0=全量(默认) 1=仅开发 2=仅运维</p><p>取值范围：[0, 2]</p>
+	ConfigScope *int64 `json:"ConfigScope,omitnil,omitempty" name:"ConfigScope"`
 }
 
 func (r *DeleteJobConfigsRequest) ToJsonString() string {
@@ -1332,6 +2306,7 @@ func (r *DeleteJobConfigsRequest) FromJsonString(s string) error {
 	delete(f, "JobId")
 	delete(f, "JobConfigVersions")
 	delete(f, "WorkSpaceId")
+	delete(f, "ConfigScope")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteJobConfigsRequest has unknown keys!", "")
 	}
@@ -1340,8 +2315,8 @@ func (r *DeleteJobConfigsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteJobConfigsResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DeleteJobConfigsResponse struct {
@@ -1363,20 +2338,26 @@ func (r *DeleteJobConfigsResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DeleteJobsRequestParams struct {
 	// 作业Id列表
-	JobIds []*string `json:"JobIds,omitnil" name:"JobIds"`
+	JobIds []*string `json:"JobIds,omitnil,omitempty" name:"JobIds"`
 
 	// 工作空间Id
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// 作业名称列表
+	JobNames []*string `json:"JobNames,omitnil,omitempty" name:"JobNames"`
 }
 
 type DeleteJobsRequest struct {
 	*tchttp.BaseRequest
 	
 	// 作业Id列表
-	JobIds []*string `json:"JobIds,omitnil" name:"JobIds"`
+	JobIds []*string `json:"JobIds,omitnil,omitempty" name:"JobIds"`
 
 	// 工作空间Id
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// 作业名称列表
+	JobNames []*string `json:"JobNames,omitnil,omitempty" name:"JobNames"`
 }
 
 func (r *DeleteJobsRequest) ToJsonString() string {
@@ -1393,6 +2374,7 @@ func (r *DeleteJobsRequest) FromJsonString(s string) error {
 	}
 	delete(f, "JobIds")
 	delete(f, "WorkSpaceId")
+	delete(f, "JobNames")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteJobsRequest has unknown keys!", "")
 	}
@@ -1401,8 +2383,8 @@ func (r *DeleteJobsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteJobsResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DeleteJobsResponse struct {
@@ -1422,28 +2404,85 @@ func (r *DeleteJobsResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DeleteOceanusClusterRequestParams struct {
+	// <p>集群ID</p><p>参数格式：cluster-xxxx</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+}
+
+type DeleteOceanusClusterRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>集群ID</p><p>参数格式：cluster-xxxx</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+}
+
+func (r *DeleteOceanusClusterRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteOceanusClusterRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteOceanusClusterRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteOceanusClusterResponseParams struct {
+	// <p>参数值success代表操作执行成功</p>
+	TaskExecResult *string `json:"TaskExecResult,omitnil,omitempty" name:"TaskExecResult"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteOceanusClusterResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteOceanusClusterResponseParams `json:"Response"`
+}
+
+func (r *DeleteOceanusClusterResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteOceanusClusterResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DeleteResourceConfigsRequestParams struct {
-	// 资源ID
-	ResourceId *string `json:"ResourceId,omitnil" name:"ResourceId"`
+	// <p>资源ID</p>
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 资源版本数组
-	ResourceConfigVersions []*int64 `json:"ResourceConfigVersions,omitnil" name:"ResourceConfigVersions"`
+	// <p>资源版本数组</p>
+	ResourceConfigVersions []*int64 `json:"ResourceConfigVersions,omitnil,omitempty" name:"ResourceConfigVersions"`
 
-	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	// <p>工作空间 SerialId</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 type DeleteResourceConfigsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 资源ID
-	ResourceId *string `json:"ResourceId,omitnil" name:"ResourceId"`
+	// <p>资源ID</p>
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 资源版本数组
-	ResourceConfigVersions []*int64 `json:"ResourceConfigVersions,omitnil" name:"ResourceConfigVersions"`
+	// <p>资源版本数组</p>
+	ResourceConfigVersions []*int64 `json:"ResourceConfigVersions,omitnil,omitempty" name:"ResourceConfigVersions"`
 
-	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	// <p>工作空间 SerialId</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 func (r *DeleteResourceConfigsRequest) ToJsonString() string {
@@ -1469,8 +2508,8 @@ func (r *DeleteResourceConfigsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteResourceConfigsResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DeleteResourceConfigsResponse struct {
@@ -1492,20 +2531,20 @@ func (r *DeleteResourceConfigsResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DeleteResourcesRequestParams struct {
 	// 待删除资源ID列表
-	ResourceIds []*string `json:"ResourceIds,omitnil" name:"ResourceIds"`
+	ResourceIds []*string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 type DeleteResourcesRequest struct {
 	*tchttp.BaseRequest
 	
 	// 待删除资源ID列表
-	ResourceIds []*string `json:"ResourceIds,omitnil" name:"ResourceIds"`
+	ResourceIds []*string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 func (r *DeleteResourcesRequest) ToJsonString() string {
@@ -1530,8 +2569,8 @@ func (r *DeleteResourcesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteResourcesResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DeleteResourcesResponse struct {
@@ -1552,33 +2591,33 @@ func (r *DeleteResourcesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteTableConfigRequestParams struct {
-	// 作业ID
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	// <p>作业ID</p>
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 调试作业ID
-	DebugId *int64 `json:"DebugId,omitnil" name:"DebugId"`
+	// <p>调试作业ID</p>
+	DebugId *int64 `json:"DebugId,omitnil,omitempty" name:"DebugId"`
 
-	// 表名
-	TableName *string `json:"TableName,omitnil" name:"TableName"`
+	// <p>表名</p>
+	TableName *string `json:"TableName,omitnil,omitempty" name:"TableName"`
 
-	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	// <p>工作空间 SerialId</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 type DeleteTableConfigRequest struct {
 	*tchttp.BaseRequest
 	
-	// 作业ID
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	// <p>作业ID</p>
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 调试作业ID
-	DebugId *int64 `json:"DebugId,omitnil" name:"DebugId"`
+	// <p>调试作业ID</p>
+	DebugId *int64 `json:"DebugId,omitnil,omitempty" name:"DebugId"`
 
-	// 表名
-	TableName *string `json:"TableName,omitnil" name:"TableName"`
+	// <p>表名</p>
+	TableName *string `json:"TableName,omitnil,omitempty" name:"TableName"`
 
-	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	// <p>工作空间 SerialId</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 func (r *DeleteTableConfigRequest) ToJsonString() string {
@@ -1605,8 +2644,8 @@ func (r *DeleteTableConfigRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteTableConfigResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DeleteTableConfigResponse struct {
@@ -1628,14 +2667,14 @@ func (r *DeleteTableConfigResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DeleteWorkSpaceRequestParams struct {
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 type DeleteWorkSpaceRequest struct {
 	*tchttp.BaseRequest
 	
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 func (r *DeleteWorkSpaceRequest) ToJsonString() string {
@@ -1660,10 +2699,10 @@ func (r *DeleteWorkSpaceRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DeleteWorkSpaceResponseParams struct {
 	// 是否删除
-	Delete *bool `json:"Delete,omitnil" name:"Delete"`
+	Delete *bool `json:"Delete,omitnil,omitempty" name:"Delete"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DeleteWorkSpaceResponse struct {
@@ -1684,45 +2723,45 @@ func (r *DeleteWorkSpaceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeClustersRequestParams struct {
-	// 按照一个或者多个集群 ID 查询，每次请求的集群上限为 100
-	ClusterIds []*string `json:"ClusterIds,omitnil" name:"ClusterIds"`
+	// <p>按照一个或者多个集群 ID 查询，每次请求的集群上限为 100</p>
+	ClusterIds []*string `json:"ClusterIds,omitnil,omitempty" name:"ClusterIds"`
 
-	// 偏移量，默认 0
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	// <p>偏移量，默认 0</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 请求的集群数量，默认 20，最大值 100
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	// <p>请求的集群数量，默认 20，最大值 100</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 集群信息结果排序规则，1 按时间降序，2 按照时间升序，3  按照状态排序
-	OrderType *int64 `json:"OrderType,omitnil" name:"OrderType"`
+	// <p>集群信息结果排序规则，1 按时间降序，2 按照时间升序，3  按照状态排序</p>
+	OrderType *int64 `json:"OrderType,omitnil,omitempty" name:"OrderType"`
 
-	// 过滤规则
-	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+	// <p>过滤规则</p><ul><li>Name<br>  按照集群的名字进行模糊查询。例如：测试<br>  类型： String<br>  必选： 否</li></ul>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	// <p>工作空间 SerialId</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 type DescribeClustersRequest struct {
 	*tchttp.BaseRequest
 	
-	// 按照一个或者多个集群 ID 查询，每次请求的集群上限为 100
-	ClusterIds []*string `json:"ClusterIds,omitnil" name:"ClusterIds"`
+	// <p>按照一个或者多个集群 ID 查询，每次请求的集群上限为 100</p>
+	ClusterIds []*string `json:"ClusterIds,omitnil,omitempty" name:"ClusterIds"`
 
-	// 偏移量，默认 0
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	// <p>偏移量，默认 0</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 请求的集群数量，默认 20，最大值 100
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	// <p>请求的集群数量，默认 20，最大值 100</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 集群信息结果排序规则，1 按时间降序，2 按照时间升序，3  按照状态排序
-	OrderType *int64 `json:"OrderType,omitnil" name:"OrderType"`
+	// <p>集群信息结果排序规则，1 按时间降序，2 按照时间升序，3  按照状态排序</p>
+	OrderType *int64 `json:"OrderType,omitnil,omitempty" name:"OrderType"`
 
-	// 过滤规则
-	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+	// <p>过滤规则</p><ul><li>Name<br>  按照集群的名字进行模糊查询。例如：测试<br>  类型： String<br>  必选： 否</li></ul>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	// <p>工作空间 SerialId</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 func (r *DescribeClustersRequest) ToJsonString() string {
@@ -1751,14 +2790,14 @@ func (r *DescribeClustersRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeClustersResponseParams struct {
-	// 集群总数
-	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	// <p>集群总数</p>
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 集群列表
-	ClusterSet []*Cluster `json:"ClusterSet,omitnil" name:"ClusterSet"`
+	// <p>集群列表</p>
+	ClusterSet []*Cluster `json:"ClusterSet,omitnil,omitempty" name:"ClusterSet"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeClustersResponse struct {
@@ -1780,28 +2819,28 @@ func (r *DescribeClustersResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeFolderRequestParams struct {
 	// folder id
-	FolderId *string `json:"FolderId,omitnil" name:"FolderId"`
+	FolderId *string `json:"FolderId,omitnil,omitempty" name:"FolderId"`
 
 	// workspace id
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 
 	// 1:资源文件夹
 	// 其他:作业文件夹
-	FolderType *int64 `json:"FolderType,omitnil" name:"FolderType"`
+	FolderType *int64 `json:"FolderType,omitnil,omitempty" name:"FolderType"`
 }
 
 type DescribeFolderRequest struct {
 	*tchttp.BaseRequest
 	
 	// folder id
-	FolderId *string `json:"FolderId,omitnil" name:"FolderId"`
+	FolderId *string `json:"FolderId,omitnil,omitempty" name:"FolderId"`
 
 	// workspace id
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 
 	// 1:资源文件夹
 	// 其他:作业文件夹
-	FolderType *int64 `json:"FolderType,omitnil" name:"FolderType"`
+	FolderType *int64 `json:"FolderType,omitnil,omitempty" name:"FolderType"`
 }
 
 func (r *DescribeFolderRequest) ToJsonString() string {
@@ -1828,26 +2867,26 @@ func (r *DescribeFolderRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeFolderResponseParams struct {
 	// folder id
-	FolderId *string `json:"FolderId,omitnil" name:"FolderId"`
+	FolderId *string `json:"FolderId,omitnil,omitempty" name:"FolderId"`
 
 	// folder name
-	FolderName *string `json:"FolderName,omitnil" name:"FolderName"`
+	FolderName *string `json:"FolderName,omitnil,omitempty" name:"FolderName"`
 
 	// 父文件夹id
-	ParentId *string `json:"ParentId,omitnil" name:"ParentId"`
+	ParentId *string `json:"ParentId,omitnil,omitempty" name:"ParentId"`
 
 	// 文件夹类型
-	FolderType *int64 `json:"FolderType,omitnil" name:"FolderType"`
+	FolderType *int64 `json:"FolderType,omitnil,omitempty" name:"FolderType"`
 
 	// workspace id
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 
 	// 子文件夹信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	SubFolderInfo []*SubFolderInfo `json:"SubFolderInfo,omitnil" name:"SubFolderInfo"`
+	SubFolderInfo []*SubFolderInfo `json:"SubFolderInfo,omitnil,omitempty" name:"SubFolderInfo"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeFolderResponse struct {
@@ -1869,50 +2908,50 @@ func (r *DescribeFolderResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeJobConfigsRequestParams struct {
 	// 作业Id
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
 	// 作业配置版本
-	JobConfigVersions []*uint64 `json:"JobConfigVersions,omitnil" name:"JobConfigVersions"`
+	JobConfigVersions []*uint64 `json:"JobConfigVersions,omitnil,omitempty" name:"JobConfigVersions"`
 
 	// 偏移量，默认0
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 分页大小，默认20，最大100
-	Limit *uint64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 过滤条件
-	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// true 表示只展示草稿
-	OnlyDraft *bool `json:"OnlyDraft,omitnil" name:"OnlyDraft"`
+	OnlyDraft *bool `json:"OnlyDraft,omitnil,omitempty" name:"OnlyDraft"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 type DescribeJobConfigsRequest struct {
 	*tchttp.BaseRequest
 	
 	// 作业Id
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
 	// 作业配置版本
-	JobConfigVersions []*uint64 `json:"JobConfigVersions,omitnil" name:"JobConfigVersions"`
+	JobConfigVersions []*uint64 `json:"JobConfigVersions,omitnil,omitempty" name:"JobConfigVersions"`
 
 	// 偏移量，默认0
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 分页大小，默认20，最大100
-	Limit *uint64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 过滤条件
-	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// true 表示只展示草稿
-	OnlyDraft *bool `json:"OnlyDraft,omitnil" name:"OnlyDraft"`
+	OnlyDraft *bool `json:"OnlyDraft,omitnil,omitempty" name:"OnlyDraft"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 func (r *DescribeJobConfigsRequest) ToJsonString() string {
@@ -1943,13 +2982,13 @@ func (r *DescribeJobConfigsRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeJobConfigsResponseParams struct {
 	// 总的配置版本数量
-	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 作业配置列表
-	JobConfigSet []*JobConfig `json:"JobConfigSet,omitnil" name:"JobConfigSet"`
+	JobConfigSet []*JobConfig `json:"JobConfigSet,omitnil,omitempty" name:"JobConfigSet"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeJobConfigsResponse struct {
@@ -1969,46 +3008,129 @@ func (r *DescribeJobConfigsResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeJobDetailRequestParams struct {
+	// flink rest api 路径
+	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
+
+	// 作业id
+	JobSerialId *string `json:"JobSerialId,omitnil,omitempty" name:"JobSerialId"`
+
+	// 请求rest api 方法
+	Method *string `json:"Method,omitnil,omitempty" name:"Method"`
+}
+
+type DescribeJobDetailRequest struct {
+	*tchttp.BaseRequest
+	
+	// flink rest api 路径
+	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
+
+	// 作业id
+	JobSerialId *string `json:"JobSerialId,omitnil,omitempty" name:"JobSerialId"`
+
+	// 请求rest api 方法
+	Method *string `json:"Method,omitnil,omitempty" name:"Method"`
+}
+
+func (r *DescribeJobDetailRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeJobDetailRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Path")
+	delete(f, "JobSerialId")
+	delete(f, "Method")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeJobDetailRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeJobDetailResponseParams struct {
+	// flink rest api 响应
+	Data *string `json:"Data,omitnil,omitempty" name:"Data"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeJobDetailResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeJobDetailResponseParams `json:"Response"`
+}
+
+func (r *DescribeJobDetailResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeJobDetailResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeJobEventsRequestParams struct {
-	// 作业的 ID
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	// <p>作业的 ID</p>
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 筛选条件：起始 Unix 时间戳（秒）
-	StartTimestamp *uint64 `json:"StartTimestamp,omitnil" name:"StartTimestamp"`
+	// <p>筛选条件：起始 Unix 时间戳（秒）</p>
+	StartTimestamp *uint64 `json:"StartTimestamp,omitnil,omitempty" name:"StartTimestamp"`
 
-	// 筛选条件：结束 Unix 时间戳（秒）
-	EndTimestamp *uint64 `json:"EndTimestamp,omitnil" name:"EndTimestamp"`
+	// <p>筛选条件：结束 Unix 时间戳（秒）</p>
+	EndTimestamp *uint64 `json:"EndTimestamp,omitnil,omitempty" name:"EndTimestamp"`
 
-	// 事件类型。如果不传则返回所有类型的数据
-	Types []*string `json:"Types,omitnil" name:"Types"`
+	// <p>事件类型。如果不传则返回所有类型的数据</p>
+	Types []*string `json:"Types,omitnil,omitempty" name:"Types"`
 
-	// 运行实例 ID 数组
-	RunningOrderIds []*uint64 `json:"RunningOrderIds,omitnil" name:"RunningOrderIds"`
+	// <p>运行实例 ID 数组</p>
+	RunningOrderIds []*uint64 `json:"RunningOrderIds,omitnil,omitempty" name:"RunningOrderIds"`
 
-	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	// <p>工作空间 SerialId</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// <p>返回条数</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>起始偏移个数</p>
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 type DescribeJobEventsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 作业的 ID
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	// <p>作业的 ID</p>
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 筛选条件：起始 Unix 时间戳（秒）
-	StartTimestamp *uint64 `json:"StartTimestamp,omitnil" name:"StartTimestamp"`
+	// <p>筛选条件：起始 Unix 时间戳（秒）</p>
+	StartTimestamp *uint64 `json:"StartTimestamp,omitnil,omitempty" name:"StartTimestamp"`
 
-	// 筛选条件：结束 Unix 时间戳（秒）
-	EndTimestamp *uint64 `json:"EndTimestamp,omitnil" name:"EndTimestamp"`
+	// <p>筛选条件：结束 Unix 时间戳（秒）</p>
+	EndTimestamp *uint64 `json:"EndTimestamp,omitnil,omitempty" name:"EndTimestamp"`
 
-	// 事件类型。如果不传则返回所有类型的数据
-	Types []*string `json:"Types,omitnil" name:"Types"`
+	// <p>事件类型。如果不传则返回所有类型的数据</p>
+	Types []*string `json:"Types,omitnil,omitempty" name:"Types"`
 
-	// 运行实例 ID 数组
-	RunningOrderIds []*uint64 `json:"RunningOrderIds,omitnil" name:"RunningOrderIds"`
+	// <p>运行实例 ID 数组</p>
+	RunningOrderIds []*uint64 `json:"RunningOrderIds,omitnil,omitempty" name:"RunningOrderIds"`
 
-	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	// <p>工作空间 SerialId</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// <p>返回条数</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>起始偏移个数</p>
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 func (r *DescribeJobEventsRequest) ToJsonString() string {
@@ -2029,6 +3151,8 @@ func (r *DescribeJobEventsRequest) FromJsonString(s string) error {
 	delete(f, "Types")
 	delete(f, "RunningOrderIds")
 	delete(f, "WorkSpaceId")
+	delete(f, "Limit")
+	delete(f, "Offset")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeJobEventsRequest has unknown keys!", "")
 	}
@@ -2037,20 +3161,24 @@ func (r *DescribeJobEventsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeJobEventsResponseParams struct {
-	// 该作业指定范围内的事件列表
+	// <p>该作业指定范围内的事件列表</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Events []*JobEvent `json:"Events,omitnil" name:"Events"`
+	Events []*JobEvent `json:"Events,omitnil,omitempty" name:"Events"`
 
-	// 该作业指定范围内运行实例 ID 数组，仅当入参没有传入 RunningOrderIds 参数时才会返回。倒序输出
+	// <p>该作业指定范围内运行实例 ID 数组，仅当入参没有传入 RunningOrderIds 参数时才会返回。倒序输出</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	RunningOrderIds []*uint64 `json:"RunningOrderIds,omitnil" name:"RunningOrderIds"`
+	RunningOrderIds []*uint64 `json:"RunningOrderIds,omitnil,omitempty" name:"RunningOrderIds"`
 
-	// 事件的总数
+	// <p>事件的总数</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	TotalCount *uint64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// <p>实例对应的版本</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Versions []*uint64 `json:"Versions,omitnil,omitempty" name:"Versions"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeJobEventsResponse struct {
@@ -2070,44 +3198,115 @@ func (r *DescribeJobEventsResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeJobRuntimeInfoRequestParams struct {
+	// 作业ID
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 工作空间ID
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// 作业运行信息 key
+	IncludeInfo []*string `json:"IncludeInfo,omitnil,omitempty" name:"IncludeInfo"`
+}
+
+type DescribeJobRuntimeInfoRequest struct {
+	*tchttp.BaseRequest
+	
+	// 作业ID
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 工作空间ID
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// 作业运行信息 key
+	IncludeInfo []*string `json:"IncludeInfo,omitnil,omitempty" name:"IncludeInfo"`
+}
+
+func (r *DescribeJobRuntimeInfoRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeJobRuntimeInfoRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "JobId")
+	delete(f, "WorkSpaceId")
+	delete(f, "IncludeInfo")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeJobRuntimeInfoRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeJobRuntimeInfoResponseParams struct {
+	// 作业运行时信息
+	JobRuntimeInfo []*JobRuntimeInfo `json:"JobRuntimeInfo,omitnil,omitempty" name:"JobRuntimeInfo"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeJobRuntimeInfoResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeJobRuntimeInfoResponseParams `json:"Response"`
+}
+
+func (r *DescribeJobRuntimeInfoResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeJobRuntimeInfoResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeJobSavepointRequestParams struct {
 	// 作业 SerialId
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
 	// 分页参数，单页总数
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 分页参数，偏移量
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 
 	// 2 是checkpoint
 	// 1 是触发savepoint
 	// 3 停止触发的savepoint
-	RecordTypes []*int64 `json:"RecordTypes,omitnil" name:"RecordTypes"`
+	RecordTypes []*int64 `json:"RecordTypes,omitnil,omitempty" name:"RecordTypes"`
 }
 
 type DescribeJobSavepointRequest struct {
 	*tchttp.BaseRequest
 	
 	// 作业 SerialId
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
 	// 分页参数，单页总数
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 分页参数，偏移量
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 
 	// 2 是checkpoint
 	// 1 是触发savepoint
 	// 3 停止触发的savepoint
-	RecordTypes []*int64 `json:"RecordTypes,omitnil" name:"RecordTypes"`
+	RecordTypes []*int64 `json:"RecordTypes,omitnil,omitempty" name:"RecordTypes"`
 }
 
 func (r *DescribeJobSavepointRequest) ToJsonString() string {
@@ -2137,22 +3336,22 @@ func (r *DescribeJobSavepointRequest) FromJsonString(s string) error {
 type DescribeJobSavepointResponseParams struct {
 	// 快照列表总数
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	TotalNumber *int64 `json:"TotalNumber,omitnil" name:"TotalNumber"`
+	TotalNumber *int64 `json:"TotalNumber,omitnil,omitempty" name:"TotalNumber"`
 
 	// 快照列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Savepoint []*Savepoint `json:"Savepoint,omitnil" name:"Savepoint"`
+	Savepoint []*Savepoint `json:"Savepoint,omitnil,omitempty" name:"Savepoint"`
 
 	// 进行中的快照列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	RunningSavepoint []*Savepoint `json:"RunningSavepoint,omitnil" name:"RunningSavepoint"`
+	RunningSavepoint []*Savepoint `json:"RunningSavepoint,omitnil,omitempty" name:"RunningSavepoint"`
 
 	// 进行中的快照列表总数
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	RunningTotalNumber *int64 `json:"RunningTotalNumber,omitnil" name:"RunningTotalNumber"`
+	RunningTotalNumber *int64 `json:"RunningTotalNumber,omitnil,omitempty" name:"RunningTotalNumber"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeJobSavepointResponse struct {
@@ -2173,57 +3372,69 @@ func (r *DescribeJobSavepointResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeJobSubmissionLogRequestParams struct {
-	// 作业ID，例如：cql-6v1jkxrn
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	// <p>作业ID，例如：cql-6v1jkxrn</p>
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 起始时间，unix时间戳，毫秒级，例如：1611754219108
-	StartTime *int64 `json:"StartTime,omitnil" name:"StartTime"`
+	// <p>起始时间，unix时间戳，毫秒级，例如：1611754219108</p>
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 结束时间，unix时间戳，毫秒级，例如：1611754219108
-	EndTime *int64 `json:"EndTime,omitnil" name:"EndTime"`
+	// <p>结束时间，unix时间戳，毫秒级，例如：1611754219108</p>
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 作业运行的实例ID, 例如：1,2,3。默认为0，表示未选中任何实例，搜索该时间段内最近的一个实例的日志
-	RunningOrderId *int64 `json:"RunningOrderId,omitnil" name:"RunningOrderId"`
+	// <p>作业运行的实例ID, 例如：1,2,3。默认为0，表示未选中任何实例，搜索该时间段内最近的一个实例的日志</p>
+	RunningOrderId *int64 `json:"RunningOrderId,omitnil,omitempty" name:"RunningOrderId"`
 
-	// 日志搜索的关键词，默认为空
-	Keyword *string `json:"Keyword,omitnil" name:"Keyword"`
+	// <p>日志搜索的关键词，默认为空</p>
+	Keyword *string `json:"Keyword,omitnil,omitempty" name:"Keyword"`
 
-	// 日志搜索的游标，可透传上次返回的值，默认为空
-	Cursor *string `json:"Cursor,omitnil" name:"Cursor"`
+	// <p>日志搜索的游标，可透传上次返回的值，默认为空</p>
+	Cursor *string `json:"Cursor,omitnil,omitempty" name:"Cursor"`
 
-	// 时间戳排序规则，asc - 升序，desc - 降序。默认为升序
-	OrderType *string `json:"OrderType,omitnil" name:"OrderType"`
+	// <p>时间戳排序规则，asc - 升序，desc - 降序。默认为升序</p>
+	OrderType *string `json:"OrderType,omitnil,omitempty" name:"OrderType"`
 
-	// 搜索的日志条数上限值，最大为100
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	// <p>搜索的日志条数上限值，最大为100</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>分页偏移</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>过滤</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 type DescribeJobSubmissionLogRequest struct {
 	*tchttp.BaseRequest
 	
-	// 作业ID，例如：cql-6v1jkxrn
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	// <p>作业ID，例如：cql-6v1jkxrn</p>
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 起始时间，unix时间戳，毫秒级，例如：1611754219108
-	StartTime *int64 `json:"StartTime,omitnil" name:"StartTime"`
+	// <p>起始时间，unix时间戳，毫秒级，例如：1611754219108</p>
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 结束时间，unix时间戳，毫秒级，例如：1611754219108
-	EndTime *int64 `json:"EndTime,omitnil" name:"EndTime"`
+	// <p>结束时间，unix时间戳，毫秒级，例如：1611754219108</p>
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 作业运行的实例ID, 例如：1,2,3。默认为0，表示未选中任何实例，搜索该时间段内最近的一个实例的日志
-	RunningOrderId *int64 `json:"RunningOrderId,omitnil" name:"RunningOrderId"`
+	// <p>作业运行的实例ID, 例如：1,2,3。默认为0，表示未选中任何实例，搜索该时间段内最近的一个实例的日志</p>
+	RunningOrderId *int64 `json:"RunningOrderId,omitnil,omitempty" name:"RunningOrderId"`
 
-	// 日志搜索的关键词，默认为空
-	Keyword *string `json:"Keyword,omitnil" name:"Keyword"`
+	// <p>日志搜索的关键词，默认为空</p>
+	Keyword *string `json:"Keyword,omitnil,omitempty" name:"Keyword"`
 
-	// 日志搜索的游标，可透传上次返回的值，默认为空
-	Cursor *string `json:"Cursor,omitnil" name:"Cursor"`
+	// <p>日志搜索的游标，可透传上次返回的值，默认为空</p>
+	Cursor *string `json:"Cursor,omitnil,omitempty" name:"Cursor"`
 
-	// 时间戳排序规则，asc - 升序，desc - 降序。默认为升序
-	OrderType *string `json:"OrderType,omitnil" name:"OrderType"`
+	// <p>时间戳排序规则，asc - 升序，desc - 降序。默认为升序</p>
+	OrderType *string `json:"OrderType,omitnil,omitempty" name:"OrderType"`
 
-	// 搜索的日志条数上限值，最大为100
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	// <p>搜索的日志条数上限值，最大为100</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>分页偏移</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>过滤</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 func (r *DescribeJobSubmissionLogRequest) ToJsonString() string {
@@ -2246,6 +3457,8 @@ func (r *DescribeJobSubmissionLogRequest) FromJsonString(s string) error {
 	delete(f, "Cursor")
 	delete(f, "OrderType")
 	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "Filters")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeJobSubmissionLogRequest has unknown keys!", "")
 	}
@@ -2254,30 +3467,33 @@ func (r *DescribeJobSubmissionLogRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeJobSubmissionLogResponseParams struct {
-	// 日志搜索的游标，需要搜索更多时透传这个值
-	Cursor *string `json:"Cursor,omitnil" name:"Cursor"`
+	// <p>日志搜索的游标，需要搜索更多时透传这个值</p>
+	Cursor *string `json:"Cursor,omitnil,omitempty" name:"Cursor"`
 
-	// 是否返回了所有的日志记录
-	ListOver *bool `json:"ListOver,omitnil" name:"ListOver"`
+	// <p>是否返回了所有的日志记录</p>
+	ListOver *bool `json:"ListOver,omitnil,omitempty" name:"ListOver"`
 
-	// 作业启动的requestId
+	// <p>作业启动的requestId</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	JobRequestId *string `json:"JobRequestId,omitnil" name:"JobRequestId"`
+	JobRequestId *string `json:"JobRequestId,omitnil,omitempty" name:"JobRequestId"`
 
-	// 该时间段内符合关键字的所有的作业实例列表
+	// <p>该时间段内符合关键字的所有的作业实例列表</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	JobInstanceList []*JobInstanceForSubmissionLog `json:"JobInstanceList,omitnil" name:"JobInstanceList"`
+	JobInstanceList []*JobInstanceForSubmissionLog `json:"JobInstanceList,omitnil,omitempty" name:"JobInstanceList"`
 
-	// 废弃，请使用LogContentList
+	// <p>废弃，请使用LogContentList</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	LogList []*string `json:"LogList,omitnil" name:"LogList"`
+	LogList []*string `json:"LogList,omitnil,omitempty" name:"LogList"`
 
-	// 日志列表
+	// <p>日志列表</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	LogContentList []*LogContent `json:"LogContentList,omitnil" name:"LogContentList"`
+	LogContentList []*LogContent `json:"LogContentList,omitnil,omitempty" name:"LogContentList"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// <p>分页偏移</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeJobSubmissionLogResponse struct {
@@ -2298,45 +3514,51 @@ func (r *DescribeJobSubmissionLogResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeJobsRequestParams struct {
-	// 按照一个或者多个作业ID查询。作业ID形如：cql-11112222，每次请求的作业上限为100。参数不支持同时指定JobIds和Filters。
-	JobIds []*string `json:"JobIds,omitnil" name:"JobIds"`
+	// <p>按照一个或者多个作业ID查询。作业ID形如：cql-11112222，每次请求的作业上限为100。参数不支持同时指定JobIds和Filters。</p>
+	JobIds []*string `json:"JobIds,omitnil,omitempty" name:"JobIds"`
 
-	// 过滤条件，支持的 Filter.Name 为：作业名 Name、作业状态 Status、所属集群 ClusterId、作业id JobId、集群名称 ClusterName。 每次请求的 Filters 个数的上限为 5，Filter.Values 的个数上限为 5。参数不支持同时指定 JobIds 和 Filters。
-	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+	// <p>过滤条件，支持的 Filter.Name 为：作业名 Name、作业状态 Status、所属集群 ClusterId、作业id JobId、集群名称 ClusterName。 每次请求的 Filters 个数的上限为 5，Filter.Values 的个数上限为 5。参数不支持同时指定 JobIds 和 Filters。</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 偏移量，默认为0
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	// <p>偏移量，默认为0</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 分页大小，默认为20，最大值为100
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	// <p>分页大小，默认为20，最大值为100</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	// <p>工作空间 SerialId</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 
-	// 查询额外的作业信息,例如 JobEventInfo	
-	ExtraResult []*string `json:"ExtraResult,omitnil" name:"ExtraResult"`
+	// <p>查询额外的作业信息,例如 JobEventInfo</p>
+	ExtraResult []*string `json:"ExtraResult,omitnil,omitempty" name:"ExtraResult"`
+
+	// <p>查询引用connector</p>
+	ConnectorOptions *string `json:"ConnectorOptions,omitnil,omitempty" name:"ConnectorOptions"`
 }
 
 type DescribeJobsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 按照一个或者多个作业ID查询。作业ID形如：cql-11112222，每次请求的作业上限为100。参数不支持同时指定JobIds和Filters。
-	JobIds []*string `json:"JobIds,omitnil" name:"JobIds"`
+	// <p>按照一个或者多个作业ID查询。作业ID形如：cql-11112222，每次请求的作业上限为100。参数不支持同时指定JobIds和Filters。</p>
+	JobIds []*string `json:"JobIds,omitnil,omitempty" name:"JobIds"`
 
-	// 过滤条件，支持的 Filter.Name 为：作业名 Name、作业状态 Status、所属集群 ClusterId、作业id JobId、集群名称 ClusterName。 每次请求的 Filters 个数的上限为 5，Filter.Values 的个数上限为 5。参数不支持同时指定 JobIds 和 Filters。
-	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+	// <p>过滤条件，支持的 Filter.Name 为：作业名 Name、作业状态 Status、所属集群 ClusterId、作业id JobId、集群名称 ClusterName。 每次请求的 Filters 个数的上限为 5，Filter.Values 的个数上限为 5。参数不支持同时指定 JobIds 和 Filters。</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 偏移量，默认为0
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	// <p>偏移量，默认为0</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 分页大小，默认为20，最大值为100
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	// <p>分页大小，默认为20，最大值为100</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	// <p>工作空间 SerialId</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 
-	// 查询额外的作业信息,例如 JobEventInfo	
-	ExtraResult []*string `json:"ExtraResult,omitnil" name:"ExtraResult"`
+	// <p>查询额外的作业信息,例如 JobEventInfo</p>
+	ExtraResult []*string `json:"ExtraResult,omitnil,omitempty" name:"ExtraResult"`
+
+	// <p>查询引用connector</p>
+	ConnectorOptions *string `json:"ConnectorOptions,omitnil,omitempty" name:"ConnectorOptions"`
 }
 
 func (r *DescribeJobsRequest) ToJsonString() string {
@@ -2357,6 +3579,7 @@ func (r *DescribeJobsRequest) FromJsonString(s string) error {
 	delete(f, "Limit")
 	delete(f, "WorkSpaceId")
 	delete(f, "ExtraResult")
+	delete(f, "ConnectorOptions")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeJobsRequest has unknown keys!", "")
 	}
@@ -2365,14 +3588,14 @@ func (r *DescribeJobsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeJobsResponseParams struct {
-	// 作业总数
-	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	// <p>作业总数</p>
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 作业列表
-	JobSet []*JobV1 `json:"JobSet,omitnil" name:"JobSet"`
+	// <p>作业列表</p>
+	JobSet []*JobV1 `json:"JobSet,omitnil,omitempty" name:"JobSet"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeJobsResponse struct {
@@ -2394,50 +3617,50 @@ func (r *DescribeJobsResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeResourceConfigsRequestParams struct {
 	// 资源ID
-	ResourceId *string `json:"ResourceId,omitnil" name:"ResourceId"`
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
 	// 偏移量，仅当设置 Limit 时该参数有效
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 返回值大小，不填则返回全量数据
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 资源配置Versions集合
-	ResourceConfigVersions []*int64 `json:"ResourceConfigVersions,omitnil" name:"ResourceConfigVersions"`
+	ResourceConfigVersions []*int64 `json:"ResourceConfigVersions,omitnil,omitempty" name:"ResourceConfigVersions"`
 
 	// 作业配置版本
-	JobConfigVersion *int64 `json:"JobConfigVersion,omitnil" name:"JobConfigVersion"`
+	JobConfigVersion *int64 `json:"JobConfigVersion,omitnil,omitempty" name:"JobConfigVersion"`
 
 	// 作业ID
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 type DescribeResourceConfigsRequest struct {
 	*tchttp.BaseRequest
 	
 	// 资源ID
-	ResourceId *string `json:"ResourceId,omitnil" name:"ResourceId"`
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
 	// 偏移量，仅当设置 Limit 时该参数有效
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 返回值大小，不填则返回全量数据
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 资源配置Versions集合
-	ResourceConfigVersions []*int64 `json:"ResourceConfigVersions,omitnil" name:"ResourceConfigVersions"`
+	ResourceConfigVersions []*int64 `json:"ResourceConfigVersions,omitnil,omitempty" name:"ResourceConfigVersions"`
 
 	// 作业配置版本
-	JobConfigVersion *int64 `json:"JobConfigVersion,omitnil" name:"JobConfigVersion"`
+	JobConfigVersion *int64 `json:"JobConfigVersion,omitnil,omitempty" name:"JobConfigVersion"`
 
 	// 作业ID
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 func (r *DescribeResourceConfigsRequest) ToJsonString() string {
@@ -2468,13 +3691,13 @@ func (r *DescribeResourceConfigsRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeResourceConfigsResponseParams struct {
 	// 资源配置描述数组
-	ResourceConfigSet []*ResourceConfigItem `json:"ResourceConfigSet,omitnil" name:"ResourceConfigSet"`
+	ResourceConfigSet []*ResourceConfigItem `json:"ResourceConfigSet,omitnil,omitempty" name:"ResourceConfigSet"`
 
 	// 资源配置数量
-	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeResourceConfigsResponse struct {
@@ -2496,44 +3719,44 @@ func (r *DescribeResourceConfigsResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeResourceRelatedJobsRequestParams struct {
 	// 资源ID
-	ResourceId *string `json:"ResourceId,omitnil" name:"ResourceId"`
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
 	// 默认0;   1： 按照作业版本创建时间降序
-	DESCByJobConfigCreateTime *int64 `json:"DESCByJobConfigCreateTime,omitnil" name:"DESCByJobConfigCreateTime"`
+	DESCByJobConfigCreateTime *int64 `json:"DESCByJobConfigCreateTime,omitnil,omitempty" name:"DESCByJobConfigCreateTime"`
 
 	// 偏移量，默认为0
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 分页大小，默认为20，最大值为100
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 资源版本号
-	ResourceConfigVersion *int64 `json:"ResourceConfigVersion,omitnil" name:"ResourceConfigVersion"`
+	ResourceConfigVersion *int64 `json:"ResourceConfigVersion,omitnil,omitempty" name:"ResourceConfigVersion"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 type DescribeResourceRelatedJobsRequest struct {
 	*tchttp.BaseRequest
 	
 	// 资源ID
-	ResourceId *string `json:"ResourceId,omitnil" name:"ResourceId"`
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
 	// 默认0;   1： 按照作业版本创建时间降序
-	DESCByJobConfigCreateTime *int64 `json:"DESCByJobConfigCreateTime,omitnil" name:"DESCByJobConfigCreateTime"`
+	DESCByJobConfigCreateTime *int64 `json:"DESCByJobConfigCreateTime,omitnil,omitempty" name:"DESCByJobConfigCreateTime"`
 
 	// 偏移量，默认为0
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 分页大小，默认为20，最大值为100
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 资源版本号
-	ResourceConfigVersion *int64 `json:"ResourceConfigVersion,omitnil" name:"ResourceConfigVersion"`
+	ResourceConfigVersion *int64 `json:"ResourceConfigVersion,omitnil,omitempty" name:"ResourceConfigVersion"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 func (r *DescribeResourceRelatedJobsRequest) ToJsonString() string {
@@ -2563,13 +3786,13 @@ func (r *DescribeResourceRelatedJobsRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeResourceRelatedJobsResponseParams struct {
 	// 总数
-	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 关联作业信息
-	RefJobInfos []*ResourceRefJobInfo `json:"RefJobInfos,omitnil" name:"RefJobInfos"`
+	RefJobInfos []*ResourceRefJobInfo `json:"RefJobInfos,omitnil,omitempty" name:"RefJobInfos"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeResourceRelatedJobsResponse struct {
@@ -2591,40 +3814,46 @@ func (r *DescribeResourceRelatedJobsResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeResourcesRequestParams struct {
 	// 需要查询的资源ID数组，数量不超过100个。如果填写了该参数则忽略Filters参数。
-	ResourceIds []*string `json:"ResourceIds,omitnil" name:"ResourceIds"`
+	ResourceIds []*string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
 
 	// 偏移量，仅当设置 Limit 参数时有效
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 条数限制。如果不填，默认返回 20 条
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// <li><strong>ResourceName</strong></li>
 	// <p style="padding-left: 30px;">按照资源名字过滤，支持模糊过滤。传入的过滤名字不超过5个</p><p style="padding-left: 30px;">类型: String</p><p style="padding-left: 30px;">必选: 否</p>
-	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// 资源类型，0=用户，1系统connector，2=用户自定义connector
+	SystemResource *uint64 `json:"SystemResource,omitnil,omitempty" name:"SystemResource"`
 }
 
 type DescribeResourcesRequest struct {
 	*tchttp.BaseRequest
 	
 	// 需要查询的资源ID数组，数量不超过100个。如果填写了该参数则忽略Filters参数。
-	ResourceIds []*string `json:"ResourceIds,omitnil" name:"ResourceIds"`
+	ResourceIds []*string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
 
 	// 偏移量，仅当设置 Limit 参数时有效
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 条数限制。如果不填，默认返回 20 条
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// <li><strong>ResourceName</strong></li>
 	// <p style="padding-left: 30px;">按照资源名字过滤，支持模糊过滤。传入的过滤名字不超过5个</p><p style="padding-left: 30px;">类型: String</p><p style="padding-left: 30px;">必选: 否</p>
-	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// 资源类型，0=用户，1系统connector，2=用户自定义connector
+	SystemResource *uint64 `json:"SystemResource,omitnil,omitempty" name:"SystemResource"`
 }
 
 func (r *DescribeResourcesRequest) ToJsonString() string {
@@ -2644,6 +3873,7 @@ func (r *DescribeResourcesRequest) FromJsonString(s string) error {
 	delete(f, "Limit")
 	delete(f, "Filters")
 	delete(f, "WorkSpaceId")
+	delete(f, "SystemResource")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourcesRequest has unknown keys!", "")
 	}
@@ -2653,13 +3883,13 @@ func (r *DescribeResourcesRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeResourcesResponseParams struct {
 	// 资源详细信息集合
-	ResourceSet []*ResourceItem `json:"ResourceSet,omitnil" name:"ResourceSet"`
+	ResourceSet []*ResourceItem `json:"ResourceSet,omitnil,omitempty" name:"ResourceSet"`
 
 	// 总数量
-	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeResourcesResponse struct {
@@ -2681,44 +3911,50 @@ func (r *DescribeResourcesResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeSystemResourcesRequestParams struct {
 	// 需要查询的资源ID数组
-	ResourceIds []*string `json:"ResourceIds,omitnil" name:"ResourceIds"`
+	ResourceIds []*string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
 
 	// 偏移量，仅当设置 Limit 参数时有效
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 条数限制，默认返回 20 条
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 查询资源配置列表， 如果不填写，返回该 ResourceIds.N 下所有作业配置列表
-	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 集群ID
-	ClusterId *string `json:"ClusterId,omitnil" name:"ClusterId"`
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
 	// 查询对应Flink版本的内置connector
-	FlinkVersion *string `json:"FlinkVersion,omitnil" name:"FlinkVersion"`
+	FlinkVersion *string `json:"FlinkVersion,omitnil,omitempty" name:"FlinkVersion"`
+
+	// 空间
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 type DescribeSystemResourcesRequest struct {
 	*tchttp.BaseRequest
 	
 	// 需要查询的资源ID数组
-	ResourceIds []*string `json:"ResourceIds,omitnil" name:"ResourceIds"`
+	ResourceIds []*string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
 
 	// 偏移量，仅当设置 Limit 参数时有效
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 条数限制，默认返回 20 条
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 查询资源配置列表， 如果不填写，返回该 ResourceIds.N 下所有作业配置列表
-	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 集群ID
-	ClusterId *string `json:"ClusterId,omitnil" name:"ClusterId"`
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
 	// 查询对应Flink版本的内置connector
-	FlinkVersion *string `json:"FlinkVersion,omitnil" name:"FlinkVersion"`
+	FlinkVersion *string `json:"FlinkVersion,omitnil,omitempty" name:"FlinkVersion"`
+
+	// 空间
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 func (r *DescribeSystemResourcesRequest) ToJsonString() string {
@@ -2739,6 +3975,7 @@ func (r *DescribeSystemResourcesRequest) FromJsonString(s string) error {
 	delete(f, "Filters")
 	delete(f, "ClusterId")
 	delete(f, "FlinkVersion")
+	delete(f, "WorkSpaceId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSystemResourcesRequest has unknown keys!", "")
 	}
@@ -2748,13 +3985,13 @@ func (r *DescribeSystemResourcesRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeSystemResourcesResponseParams struct {
 	// 资源详细信息集合
-	ResourceSet []*SystemResourceItem `json:"ResourceSet,omitnil" name:"ResourceSet"`
+	ResourceSet []*SystemResourceItem `json:"ResourceSet,omitnil,omitempty" name:"ResourceSet"`
 
 	// 总数量
-	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeSystemResourcesResponse struct {
@@ -2775,21 +4012,27 @@ func (r *DescribeSystemResourcesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTreeJobsRequestParams struct {
-	// 筛选条件字段
-	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+	// <p>筛选条件字段，使用了筛选字段后不支持分页，最多返回2000条记录</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 工作空间 Serialid
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	// <p>工作空间 Serialid</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// <p>返回形式</p><p>枚举值：</p><ul><li>0： 树形结构</li><li>1： 平铺结构</li></ul>
+	FlatMode *int64 `json:"FlatMode,omitnil,omitempty" name:"FlatMode"`
 }
 
 type DescribeTreeJobsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 筛选条件字段
-	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+	// <p>筛选条件字段，使用了筛选字段后不支持分页，最多返回2000条记录</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 工作空间 Serialid
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	// <p>工作空间 Serialid</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// <p>返回形式</p><p>枚举值：</p><ul><li>0： 树形结构</li><li>1： 平铺结构</li></ul>
+	FlatMode *int64 `json:"FlatMode,omitnil,omitempty" name:"FlatMode"`
 }
 
 func (r *DescribeTreeJobsRequest) ToJsonString() string {
@@ -2806,6 +4049,7 @@ func (r *DescribeTreeJobsRequest) FromJsonString(s string) error {
 	}
 	delete(f, "Filters")
 	delete(f, "WorkSpaceId")
+	delete(f, "FlatMode")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTreeJobsRequest has unknown keys!", "")
 	}
@@ -2814,28 +4058,28 @@ func (r *DescribeTreeJobsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTreeJobsResponseParams struct {
-	// 父节点ID
+	// <p>父节点ID</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ParentId *string `json:"ParentId,omitnil" name:"ParentId"`
+	ParentId *string `json:"ParentId,omitnil,omitempty" name:"ParentId"`
 
-	// 当前文件夹ID
+	// <p>当前文件夹ID</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
-	// 当前文件夹名
+	// <p>当前文件夹名</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 当前文件夹下的作业列表
+	// <p>当前文件夹下的作业列表</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	JobSet []*TreeJobSets `json:"JobSet,omitnil" name:"JobSet"`
+	JobSet []*TreeJobSets `json:"JobSet,omitnil,omitempty" name:"JobSet"`
 
-	// 迭代子目录
+	// <p>迭代子目录</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Children []*DescribeTreeJobsRsp `json:"Children,omitnil" name:"Children"`
+	Children []*DescribeTreeJobsRsp `json:"Children,omitnil,omitempty" name:"Children"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeTreeJobsResponse struct {
@@ -2857,58 +4101,66 @@ func (r *DescribeTreeJobsResponse) FromJsonString(s string) error {
 type DescribeTreeJobsRsp struct {
 	// 父节点ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ParentId *string `json:"ParentId,omitnil" name:"ParentId"`
+	ParentId *string `json:"ParentId,omitnil,omitempty" name:"ParentId"`
 
 	// 当前文件夹ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// 当前文件夹名
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 当前文件夹下的作业集合
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	JobSet []*TreeJobSets `json:"JobSet,omitnil" name:"JobSet"`
+	JobSet []*TreeJobSets `json:"JobSet,omitnil,omitempty" name:"JobSet"`
 
 	// 迭代子目录
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Children []*DescribeTreeJobsRsp `json:"Children,omitnil" name:"Children"`
+	Children []*DescribeTreeJobsRsp `json:"Children,omitnil,omitempty" name:"Children"`
 
 	// 请求ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+
+	// attach-000
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PageAttach *string `json:"PageAttach,omitnil,omitempty" name:"PageAttach"`
+
+	// bool
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HasMore *bool `json:"HasMore,omitnil,omitempty" name:"HasMore"`
 }
 
 // Predefined struct for user
 type DescribeTreeResourcesRequestParams struct {
 	// 筛选条件字段
-	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 
 	// 分页游标
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 单页显示数
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
 type DescribeTreeResourcesRequest struct {
 	*tchttp.BaseRequest
 	
 	// 筛选条件字段
-	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 
 	// 分页游标
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 单页显示数
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
 func (r *DescribeTreeResourcesRequest) ToJsonString() string {
@@ -2937,30 +4189,30 @@ func (r *DescribeTreeResourcesRequest) FromJsonString(s string) error {
 type DescribeTreeResourcesResponseParams struct {
 	// 父节点ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ParentId *string `json:"ParentId,omitnil" name:"ParentId"`
+	ParentId *string `json:"ParentId,omitnil,omitempty" name:"ParentId"`
 
 	// 文件夹ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// 文件夹名
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 文件列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Items []*TreeResourceItem `json:"Items,omitnil" name:"Items"`
+	Items []*TreeResourceItem `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 子目录列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Children []*DescribeTreeResourcesRsp `json:"Children,omitnil" name:"Children"`
+	Children []*DescribeTreeResourcesRsp `json:"Children,omitnil,omitempty" name:"Children"`
 
 	// 资源总数
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeTreeResourcesResponse struct {
@@ -2981,56 +4233,177 @@ func (r *DescribeTreeResourcesResponse) FromJsonString(s string) error {
 
 type DescribeTreeResourcesRsp struct {
 	// 父节点ID
-	ParentId *string `json:"ParentId,omitnil" name:"ParentId"`
+	ParentId *string `json:"ParentId,omitnil,omitempty" name:"ParentId"`
 
 	// 文件夹ID
-	Id *string `json:"Id,omitnil" name:"Id"`
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// 文件夹名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 文件夹下资源数字
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Items []*TreeResourceItem `json:"Items,omitnil" name:"Items"`
+	Items []*TreeResourceItem `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 子节点
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Children []*DescribeTreeResourcesRsp `json:"Children,omitnil" name:"Children"`
+	Children []*DescribeTreeResourcesRsp `json:"Children,omitnil,omitempty" name:"Children"`
 
 	// 资源总数
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+}
+
+// Predefined struct for user
+type DescribeVariablesRequestParams struct {
+	// 工作空间 SerialId
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+}
+
+type DescribeVariablesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 工作空间 SerialId
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+}
+
+func (r *DescribeVariablesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeVariablesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "WorkSpaceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeVariablesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeVariablesResponseParams struct {
+	// ["x","y"]
+	VariableSet []*VariableItem `json:"VariableSet,omitnil,omitempty" name:"VariableSet"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeVariablesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeVariablesResponseParams `json:"Response"`
+}
+
+func (r *DescribeVariablesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeVariablesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeWorkSpaceUsersRequestParams struct {
+	// 工作空间 SerialId
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// 子用户
+	AuthSubAccountUin *string `json:"AuthSubAccountUin,omitnil,omitempty" name:"AuthSubAccountUin"`
+}
+
+type DescribeWorkSpaceUsersRequest struct {
+	*tchttp.BaseRequest
+	
+	// 工作空间 SerialId
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// 子用户
+	AuthSubAccountUin *string `json:"AuthSubAccountUin,omitnil,omitempty" name:"AuthSubAccountUin"`
+}
+
+func (r *DescribeWorkSpaceUsersRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeWorkSpaceUsersRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "WorkSpaceId")
+	delete(f, "AuthSubAccountUin")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeWorkSpaceUsersRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeWorkSpaceUsersResponseParams struct {
+	// 空间用户列表
+	RoleAuths []*RoleAuth `json:"RoleAuths,omitnil,omitempty" name:"RoleAuths"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeWorkSpaceUsersResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeWorkSpaceUsersResponseParams `json:"Response"`
+}
+
+func (r *DescribeWorkSpaceUsersResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeWorkSpaceUsersResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
 type DescribeWorkSpacesRequestParams struct {
 	// 偏移量，默认 0
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 1 按照创建时间降序排序(默认) 2.按照创建时间升序排序，3. 按照状态降序排序 4. 按照状态升序排序 默认为0
-	OrderType *int64 `json:"OrderType,omitnil" name:"OrderType"`
+	OrderType *int64 `json:"OrderType,omitnil,omitempty" name:"OrderType"`
 
 	// 请求的集群数量，默认 20
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 过滤规则
-	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 type DescribeWorkSpacesRequest struct {
 	*tchttp.BaseRequest
 	
 	// 偏移量，默认 0
-	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 1 按照创建时间降序排序(默认) 2.按照创建时间升序排序，3. 按照状态降序排序 4. 按照状态升序排序 默认为0
-	OrderType *int64 `json:"OrderType,omitnil" name:"OrderType"`
+	OrderType *int64 `json:"OrderType,omitnil,omitempty" name:"OrderType"`
 
 	// 请求的集群数量，默认 20
-	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
 	// 过滤规则
-	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 func (r *DescribeWorkSpacesRequest) ToJsonString() string {
@@ -3059,13 +4432,13 @@ func (r *DescribeWorkSpacesRequest) FromJsonString(s string) error {
 type DescribeWorkSpacesResponseParams struct {
 	// 空间详情列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	WorkSpaceSetItem []*WorkSpaceSetItem `json:"WorkSpaceSetItem,omitnil" name:"WorkSpaceSetItem"`
+	WorkSpaceSetItem []*WorkSpaceSetItem `json:"WorkSpaceSetItem,omitnil,omitempty" name:"WorkSpaceSetItem"`
 
 	// 空间总数
-	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeWorkSpacesResponse struct {
@@ -3087,46 +4460,46 @@ func (r *DescribeWorkSpacesResponse) FromJsonString(s string) error {
 type ExpertModeConfiguration struct {
 	// Job graph
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	JobGraph *JobGraph `json:"JobGraph,omitnil" name:"JobGraph"`
+	JobGraph *JobGraph `json:"JobGraph,omitnil,omitempty" name:"JobGraph"`
 
 	// Node configuration
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	NodeConfig []*NodeConfig `json:"NodeConfig,omitnil" name:"NodeConfig"`
+	NodeConfig []*NodeConfig `json:"NodeConfig,omitnil,omitempty" name:"NodeConfig"`
 
 	// Slot sharing groups
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	SlotSharingGroups []*SlotSharingGroup `json:"SlotSharingGroups,omitnil" name:"SlotSharingGroups"`
+	SlotSharingGroups []*SlotSharingGroup `json:"SlotSharingGroups,omitnil,omitempty" name:"SlotSharingGroups"`
 }
 
 // Predefined struct for user
 type FetchSqlGatewayStatementResultRequestParams struct {
 	// 集群ID
-	ClusterId *string `json:"ClusterId,omitnil" name:"ClusterId"`
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
 	// Sql Gateway会话ID
-	SessionId *string `json:"SessionId,omitnil" name:"SessionId"`
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
 
 	// sql的查询id
-	OperationHandleId *string `json:"OperationHandleId,omitnil" name:"OperationHandleId"`
+	OperationHandleId *string `json:"OperationHandleId,omitnil,omitempty" name:"OperationHandleId"`
 
 	// 下一条结果的获取url，首次获取执行结果时可以为空，当获取下一批查询结果时需要传递
-	ResultUri *string `json:"ResultUri,omitnil" name:"ResultUri"`
+	ResultUri *string `json:"ResultUri,omitnil,omitempty" name:"ResultUri"`
 }
 
 type FetchSqlGatewayStatementResultRequest struct {
 	*tchttp.BaseRequest
 	
 	// 集群ID
-	ClusterId *string `json:"ClusterId,omitnil" name:"ClusterId"`
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
 	// Sql Gateway会话ID
-	SessionId *string `json:"SessionId,omitnil" name:"SessionId"`
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
 
 	// sql的查询id
-	OperationHandleId *string `json:"OperationHandleId,omitnil" name:"OperationHandleId"`
+	OperationHandleId *string `json:"OperationHandleId,omitnil,omitempty" name:"OperationHandleId"`
 
 	// 下一条结果的获取url，首次获取执行结果时可以为空，当获取下一批查询结果时需要传递
-	ResultUri *string `json:"ResultUri,omitnil" name:"ResultUri"`
+	ResultUri *string `json:"ResultUri,omitnil,omitempty" name:"ResultUri"`
 }
 
 func (r *FetchSqlGatewayStatementResultRequest) ToJsonString() string {
@@ -3155,30 +4528,30 @@ func (r *FetchSqlGatewayStatementResultRequest) FromJsonString(s string) error {
 type FetchSqlGatewayStatementResultResponseParams struct {
 	// 错误信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ErrorMessage []*string `json:"ErrorMessage,omitnil" name:"ErrorMessage"`
+	ErrorMessage []*string `json:"ErrorMessage,omitnil,omitempty" name:"ErrorMessage"`
 
 	// 返回类型
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ResultType *string `json:"ResultType,omitnil" name:"ResultType"`
+	ResultType *string `json:"ResultType,omitnil,omitempty" name:"ResultType"`
 
 	// 是否DQL结果
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	IsQueryResult *bool `json:"IsQueryResult,omitnil" name:"IsQueryResult"`
+	IsQueryResult *bool `json:"IsQueryResult,omitnil,omitempty" name:"IsQueryResult"`
 
 	// 结果类型
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ResultKind *string `json:"ResultKind,omitnil" name:"ResultKind"`
+	ResultKind *string `json:"ResultKind,omitnil,omitempty" name:"ResultKind"`
 
 	// 结果
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Results *StatementResult `json:"Results,omitnil" name:"Results"`
+	Results *StatementResult `json:"Results,omitnil,omitempty" name:"Results"`
 
 	// 下一次请求的uri
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	NextResultUri *string `json:"NextResultUri,omitnil" name:"NextResultUri"`
+	NextResultUri *string `json:"NextResultUri,omitnil,omitempty" name:"NextResultUri"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type FetchSqlGatewayStatementResultResponse struct {
@@ -3199,59 +4572,67 @@ func (r *FetchSqlGatewayStatementResultResponse) FromJsonString(s string) error 
 
 type Filter struct {
 	// 要过滤的字段
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 字段的过滤值
-	Values []*string `json:"Values,omitnil" name:"Values"`
+	Values []*string `json:"Values,omitnil,omitempty" name:"Values"`
+}
+
+type FlinkJdkVersion struct {
+	// flink版本
+	FlinkVersion *string `json:"FlinkVersion,omitnil,omitempty" name:"FlinkVersion"`
+
+	// jdk版本
+	JdkVersions []*string `json:"JdkVersions,omitnil,omitempty" name:"JdkVersions"`
 }
 
 type GatewayRefItem struct {
 	// 空间唯一标识
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	WorkspaceId *string `json:"WorkspaceId,omitnil" name:"WorkspaceId"`
+	WorkspaceId *string `json:"WorkspaceId,omitnil,omitempty" name:"WorkspaceId"`
 
 	// 资源唯一标识
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ResourceId *string `json:"ResourceId,omitnil" name:"ResourceId"`
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
 	// 版本号
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Version *int64 `json:"Version,omitnil" name:"Version"`
+	Version *int64 `json:"Version,omitnil,omitempty" name:"Version"`
 
 	// 引用类型，0:用户资源
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Type *uint64 `json:"Type,omitnil" name:"Type"`
+	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
 }
 
 // Predefined struct for user
 type GetMetaTableRequestParams struct {
-	// Catalog名
-	Catalog *string `json:"Catalog,omitnil" name:"Catalog"`
+	// 目录名
+	Catalog *string `json:"Catalog,omitnil,omitempty" name:"Catalog"`
 
-	// Database名
-	Database *string `json:"Database,omitnil" name:"Database"`
+	// 库名
+	Database *string `json:"Database,omitnil,omitempty" name:"Database"`
 
-	// Table名
-	Table *string `json:"Table,omitnil" name:"Table"`
+	// 表名
+	Table *string `json:"Table,omitnil,omitempty" name:"Table"`
 
 	// 空间唯一标识
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 type GetMetaTableRequest struct {
 	*tchttp.BaseRequest
 	
-	// Catalog名
-	Catalog *string `json:"Catalog,omitnil" name:"Catalog"`
+	// 目录名
+	Catalog *string `json:"Catalog,omitnil,omitempty" name:"Catalog"`
 
-	// Database名
-	Database *string `json:"Database,omitnil" name:"Database"`
+	// 库名
+	Database *string `json:"Database,omitnil,omitempty" name:"Database"`
 
-	// Table名
-	Table *string `json:"Table,omitnil" name:"Table"`
+	// 表名
+	Table *string `json:"Table,omitnil,omitempty" name:"Table"`
 
 	// 空间唯一标识
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 func (r *GetMetaTableRequest) ToJsonString() string {
@@ -3279,27 +4660,27 @@ func (r *GetMetaTableRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type GetMetaTableResponseParams struct {
 	// 元数据表唯一标识
-	SerialId *string `json:"SerialId,omitnil" name:"SerialId"`
+	SerialId *string `json:"SerialId,omitnil,omitempty" name:"SerialId"`
 
-	// Catalog名
-	Catalog *string `json:"Catalog,omitnil" name:"Catalog"`
+	// 目录名
+	Catalog *string `json:"Catalog,omitnil,omitempty" name:"Catalog"`
 
-	// Database名
-	Database *string `json:"Database,omitnil" name:"Database"`
+	// 库名
+	Database *string `json:"Database,omitnil,omitempty" name:"Database"`
 
-	// Table名
-	Table *string `json:"Table,omitnil" name:"Table"`
+	// 表名
+	Table *string `json:"Table,omitnil,omitempty" name:"Table"`
 
 	// 建表语句,使用 Base64 编码。
 	// 例如
 	// Q1JFQVRFIFRBQkxFIGRhdGFnZW5fc291cmNlX3RhYmxlICggCiAgICBpZCBJTlQsIAogICAgbmFtZSBTVFJJTkcgCikgV0lUSCAoCidjb25uZWN0b3InPSdkYXRhZ2VuJywKJ3Jvd3MtcGVyLXNlY29uZCcgPSAnMScKKTs=
-	DDL *string `json:"DDL,omitnil" name:"DDL"`
+	DDL *string `json:"DDL,omitnil,omitempty" name:"DDL"`
 
-	// 场景时间
-	CreateTime *string `json:"CreateTime,omitnil" name:"CreateTime"`
+	// 创建时间
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type GetMetaTableResponse struct {
@@ -3318,413 +4699,718 @@ func (r *GetMetaTableResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type HadoopYarnItem struct {
+	// <p>ClusterGroupSerialId</p>
+	ClusterGroupSerialId *string `json:"ClusterGroupSerialId,omitnil,omitempty" name:"ClusterGroupSerialId"`
+
+	// <p>状态</p><p>枚举值：</p><ul><li>1： 停止</li><li>2： 开启中</li><li>3： 启动</li><li>4： 开启失败</li><li>5： 停止中</li></ul>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>cpu</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Cpu *float64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
+
+	// <p>mem</p>
+	Mem *float64 `json:"Mem,omitnil,omitempty" name:"Mem"`
+
+	// <p>创建时间</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>更新时间</p>
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+
+	// <p>配置文件内容</p>
+	Config *string `json:"Config,omitnil,omitempty" name:"Config"`
+
+	// <p>CreatorUin</p>
+	CreatorUin *string `json:"CreatorUin,omitnil,omitempty" name:"CreatorUin"`
+}
+
+type HiveMetastoreInfo struct {
+	// <p>hms serialId</p>
+	HiveMetastoreSerialId *string `json:"HiveMetastoreSerialId,omitnil,omitempty" name:"HiveMetastoreSerialId"`
+
+	// <p>集群SerialId</p>
+	ClusterGroupSerialId *string `json:"ClusterGroupSerialId,omitnil,omitempty" name:"ClusterGroupSerialId"`
+
+	// <p>状态枚举</p><p>枚举值：</p><ul><li>3： 运行中</li><li>1： 初始化中</li><li>2： 部署中</li><li>-2： 已删除</li></ul>
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>使用核数</p><p>单位：cu</p>
+	Cpu *int64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
+
+	// <p>使用内存资源</p><p>单位：GB</p>
+	MemGB *int64 `json:"MemGB,omitnil,omitempty" name:"MemGB"`
+
+	// <p>副本数</p>
+	Replica *int64 `json:"Replica,omitnil,omitempty" name:"Replica"`
+
+	// <p>hms 访问uri</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HiveUri *string `json:"HiveUri,omitnil,omitempty" name:"HiveUri"`
+
+	// <p>命名空间</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HiveNamespace *string `json:"HiveNamespace,omitnil,omitempty" name:"HiveNamespace"`
+
+	// <p>创建时间</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>更新时间</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+
+	// <p>Warehouse地址</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HiveMetastoreWarehouseDir *string `json:"HiveMetastoreWarehouseDir,omitnil,omitempty" name:"HiveMetastoreWarehouseDir"`
+
+	// <p>高级参数</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Config []*Property `json:"Config,omitnil,omitempty" name:"Config"`
+}
+
 type JobConfig struct {
-	// 作业Id
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	// <p>作业Id</p>
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 主类
+	// <p>主类</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	EntrypointClass *string `json:"EntrypointClass,omitnil" name:"EntrypointClass"`
+	EntrypointClass *string `json:"EntrypointClass,omitnil,omitempty" name:"EntrypointClass"`
 
-	// 主类入参
+	// <p>主类入参</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ProgramArgs *string `json:"ProgramArgs,omitnil" name:"ProgramArgs"`
+	ProgramArgs *string `json:"ProgramArgs,omitnil,omitempty" name:"ProgramArgs"`
 
-	// 备注
+	// <p>备注</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Remark *string `json:"Remark,omitnil" name:"Remark"`
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
-	// 作业配置创建时间
-	CreateTime *string `json:"CreateTime,omitnil" name:"CreateTime"`
+	// <p>作业配置创建时间</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 作业配置的版本号
-	Version *int64 `json:"Version,omitnil" name:"Version"`
+	// <p>作业配置的版本号</p>
+	Version *int64 `json:"Version,omitnil,omitempty" name:"Version"`
 
-	// 作业默认并行度
+	// <p>作业默认并行度</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	DefaultParallelism *uint64 `json:"DefaultParallelism,omitnil" name:"DefaultParallelism"`
+	DefaultParallelism *uint64 `json:"DefaultParallelism,omitnil,omitempty" name:"DefaultParallelism"`
 
-	// 系统参数
+	// <p>系统参数</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Properties []*Property `json:"Properties,omitnil" name:"Properties"`
+	Properties []*Property `json:"Properties,omitnil,omitempty" name:"Properties"`
 
-	// 引用资源
+	// <p>引用资源</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ResourceRefDetails []*ResourceRefDetail `json:"ResourceRefDetails,omitnil" name:"ResourceRefDetails"`
+	ResourceRefDetails []*ResourceRefDetail `json:"ResourceRefDetails,omitnil,omitempty" name:"ResourceRefDetails"`
 
-	// 创建者uin
+	// <p>创建者uin</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	CreatorUin *string `json:"CreatorUin,omitnil" name:"CreatorUin"`
+	CreatorUin *string `json:"CreatorUin,omitnil,omitempty" name:"CreatorUin"`
 
-	// 作业配置上次启动时间
+	// <p>作业配置上次启动时间</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	UpdateTime *string `json:"UpdateTime,omitnil" name:"UpdateTime"`
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
-	// 作业绑定的存储桶
+	// <p>作业绑定的存储桶</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	COSBucket *string `json:"COSBucket,omitnil" name:"COSBucket"`
+	COSBucket *string `json:"COSBucket,omitnil,omitempty" name:"COSBucket"`
 
-	// 是否启用日志收集，0-未启用，1-已启用，2-历史集群未设置日志集，3-历史集群已开启
+	// <p>是否启用日志收集，0-未启用，1-采集到cls，4-采集到cos，5-采集到es</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	LogCollect *int64 `json:"LogCollect,omitnil" name:"LogCollect"`
+	LogCollect *int64 `json:"LogCollect,omitnil,omitempty" name:"LogCollect"`
 
-	// 作业的最大并行度
+	// <p>作业的最大并行度</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	MaxParallelism *uint64 `json:"MaxParallelism,omitnil" name:"MaxParallelism"`
+	MaxParallelism *uint64 `json:"MaxParallelism,omitnil,omitempty" name:"MaxParallelism"`
 
-	// JobManager规格
+	// <p>JobManager规格</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	JobManagerSpec *float64 `json:"JobManagerSpec,omitnil" name:"JobManagerSpec"`
+	JobManagerSpec *float64 `json:"JobManagerSpec,omitnil,omitempty" name:"JobManagerSpec"`
 
-	// TaskManager规格
+	// <p>TaskManager规格</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	TaskManagerSpec *float64 `json:"TaskManagerSpec,omitnil" name:"TaskManagerSpec"`
+	TaskManagerSpec *float64 `json:"TaskManagerSpec,omitnil,omitempty" name:"TaskManagerSpec"`
 
-	// CLS日志集ID
+	// <p>CLS日志集ID</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ClsLogsetId *string `json:"ClsLogsetId,omitnil" name:"ClsLogsetId"`
+	ClsLogsetId *string `json:"ClsLogsetId,omitnil,omitempty" name:"ClsLogsetId"`
 
-	// CLS日志主题ID
+	// <p>CLS日志主题ID</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ClsTopicId *string `json:"ClsTopicId,omitnil" name:"ClsTopicId"`
+	ClsTopicId *string `json:"ClsTopicId,omitnil,omitempty" name:"ClsTopicId"`
 
-	// pyflink作业运行的python版本
+	// <p>pyflink作业运行的python版本</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	PythonVersion *string `json:"PythonVersion,omitnil" name:"PythonVersion"`
+	PythonVersion *string `json:"PythonVersion,omitnil,omitempty" name:"PythonVersion"`
 
-	// Oceanus 平台恢复作业开关 1:开启 -1: 关闭
+	// <p>Oceanus 平台恢复作业开关 1:开启 -1: 关闭</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	AutoRecover *int64 `json:"AutoRecover,omitnil" name:"AutoRecover"`
+	AutoRecover *int64 `json:"AutoRecover,omitnil,omitempty" name:"AutoRecover"`
 
-	// 日志级别
+	// <p>日志级别</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	LogLevel *string `json:"LogLevel,omitnil" name:"LogLevel"`
+	LogLevel *string `json:"LogLevel,omitnil,omitempty" name:"LogLevel"`
 
-	// 类日志级别
+	// <p>类日志级别</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ClazzLevels []*ClazzLevel `json:"ClazzLevels,omitnil" name:"ClazzLevels"`
+	ClazzLevels []*ClazzLevel `json:"ClazzLevels,omitnil,omitempty" name:"ClazzLevels"`
 
-	// 是否开启专家模式
+	// <p>是否开启专家模式</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ExpertModeOn *bool `json:"ExpertModeOn,omitnil" name:"ExpertModeOn"`
+	ExpertModeOn *bool `json:"ExpertModeOn,omitnil,omitempty" name:"ExpertModeOn"`
 
-	// 专家模式的配置
+	// <p>专家模式的配置</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ExpertModeConfiguration *ExpertModeConfiguration `json:"ExpertModeConfiguration,omitnil" name:"ExpertModeConfiguration"`
+	ExpertModeConfiguration *ExpertModeConfiguration `json:"ExpertModeConfiguration,omitnil,omitempty" name:"ExpertModeConfiguration"`
 
-	// trace链路
+	// <p>trace链路</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	TraceModeOn *bool `json:"TraceModeOn,omitnil" name:"TraceModeOn"`
+	TraceModeOn *bool `json:"TraceModeOn,omitnil,omitempty" name:"TraceModeOn"`
 
-	// trace链路配置
+	// <p>trace链路配置</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	TraceModeConfiguration *TraceModeConfiguration `json:"TraceModeConfiguration,omitnil" name:"TraceModeConfiguration"`
+	TraceModeConfiguration *TraceModeConfiguration `json:"TraceModeConfiguration,omitnil,omitempty" name:"TraceModeConfiguration"`
 
-	// checkpoint保留个数
+	// <p>checkpoint保留个数</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	CheckpointRetainedNum *int64 `json:"CheckpointRetainedNum,omitnil" name:"CheckpointRetainedNum"`
+	CheckpointRetainedNum *int64 `json:"CheckpointRetainedNum,omitnil,omitempty" name:"CheckpointRetainedNum"`
 
-	// 算子拓扑图
+	// <p>算子拓扑图</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	JobGraph *JobGraph `json:"JobGraph,omitnil" name:"JobGraph"`
+	JobGraph *JobGraph `json:"JobGraph,omitnil,omitempty" name:"JobGraph"`
 
-	// es索引
+	// <p>es索引</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	EsServerlessIndex *string `json:"EsServerlessIndex,omitnil" name:"EsServerlessIndex"`
+	EsServerlessIndex *string `json:"EsServerlessIndex,omitnil,omitempty" name:"EsServerlessIndex"`
 
-	// es空间
+	// <p>es空间</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	EsServerlessSpace *string `json:"EsServerlessSpace,omitnil" name:"EsServerlessSpace"`
+	EsServerlessSpace *string `json:"EsServerlessSpace,omitnil,omitempty" name:"EsServerlessSpace"`
+
+	// <p>es索引中文</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IndexName *string `json:"IndexName,omitnil,omitempty" name:"IndexName"`
+
+	// <p>es空间中文</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	WorkspaceName *string `json:"WorkspaceName,omitnil,omitempty" name:"WorkspaceName"`
+
+	// <p>flink 版本</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FlinkVersion *string `json:"FlinkVersion,omitnil,omitempty" name:"FlinkVersion"`
+
+	// <p>jdk版本</p>
+	JdkVersion *string `json:"JdkVersion,omitnil,omitempty" name:"JdkVersion"`
+
+	// <p>jm使用cpu数目</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	JobManagerCpu *float64 `json:"JobManagerCpu,omitnil,omitempty" name:"JobManagerCpu"`
+
+	// <p>jm使用内存数目</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	JobManagerMem *float64 `json:"JobManagerMem,omitnil,omitempty" name:"JobManagerMem"`
+
+	// <p>tm使用cpu数</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TaskManagerCpu *float64 `json:"TaskManagerCpu,omitnil,omitempty" name:"TaskManagerCpu"`
+
+	// <p>tm使用mem数</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TaskManagerMem *float64 `json:"TaskManagerMem,omitnil,omitempty" name:"TaskManagerMem"`
+
+	// <p>运行中配置</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	JobConfigItem *JobConfig `json:"JobConfigItem,omitnil,omitempty" name:"JobConfigItem"`
+
+	// <p>checkpoint 超时时间</p><p>单位：秒</p>
+	CheckpointTimeoutSecond *int64 `json:"CheckpointTimeoutSecond,omitnil,omitempty" name:"CheckpointTimeoutSecond"`
+
+	// <p>checkpoint 间隔时间</p><p>单位：秒</p>
+	CheckpointIntervalSecond *int64 `json:"CheckpointIntervalSecond,omitnil,omitempty" name:"CheckpointIntervalSecond"`
+
+	// <p>变量替换模式</p><p>枚举值：</p><ul><li>0： 表变量替换</li><li>1： 全局SQL变量替换</li></ul><p>默认值：0</p>
+	VariableReplaceMode *int64 `json:"VariableReplaceMode,omitnil,omitempty" name:"VariableReplaceMode"`
+
+	// <p>快照桶</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StateCOSBucket *string `json:"StateCOSBucket,omitnil,omitempty" name:"StateCOSBucket"`
+
+	// <p>日志桶</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LogCOSBucket *string `json:"LogCOSBucket,omitnil,omitempty" name:"LogCOSBucket"`
+
+	// <p>是否支持滚动删除，0，手动删除，1，自动滚动删除</p>
+	IsLocked *int64 `json:"IsLocked,omitnil,omitempty" name:"IsLocked"`
 }
 
 type JobEvent struct {
-	// 内部定义的事件类型
-	Type *string `json:"Type,omitnil" name:"Type"`
+	// <p>内部定义的事件类型</p>
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 事件类型的说明文字
-	Description *string `json:"Description,omitnil" name:"Description"`
+	// <p>事件类型的说明文字</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// 事件发生的 Unix 时间戳（秒）
-	Timestamp *uint64 `json:"Timestamp,omitnil" name:"Timestamp"`
+	// <p>事件发生的 Unix 时间戳（秒）</p>
+	Timestamp *uint64 `json:"Timestamp,omitnil,omitempty" name:"Timestamp"`
 
-	// 事件发生时的运行 ID
+	// <p>事件发生时的运行 ID</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	RunningOrderId *uint64 `json:"RunningOrderId,omitnil" name:"RunningOrderId"`
+	RunningOrderId *uint64 `json:"RunningOrderId,omitnil,omitempty" name:"RunningOrderId"`
 
-	// 事件的一些可选说明
+	// <p>事件的一些可选说明</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Message *string `json:"Message,omitnil" name:"Message"`
+	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
 
-	// 异常事件的排查手册链接
+	// <p>异常事件的排查手册链接</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	SolutionLink *string `json:"SolutionLink,omitnil" name:"SolutionLink"`
+	SolutionLink *string `json:"SolutionLink,omitnil,omitempty" name:"SolutionLink"`
+
+	// <p>异常事件原因分析</p>
+	CauseAnalysis *string `json:"CauseAnalysis,omitnil,omitempty" name:"CauseAnalysis"`
+
+	// <p>异常事件处理的参考方案</p>
+	Solution *string `json:"Solution,omitnil,omitempty" name:"Solution"`
 }
 
 type JobEventInfo struct {
 	// 异常事件总数
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ErrorEventTotal *int64 `json:"ErrorEventTotal,omitnil" name:"ErrorEventTotal"`
+	ErrorEventTotal *int64 `json:"ErrorEventTotal,omitnil,omitempty" name:"ErrorEventTotal"`
 }
 
 type JobGraph struct {
 	// 运行图的点集合
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Nodes []*JobGraphNode `json:"Nodes,omitnil" name:"Nodes"`
+	Nodes []*JobGraphNode `json:"Nodes,omitnil,omitempty" name:"Nodes"`
 
 	// 运行图的边集合
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Edges []*JobGraphEdge `json:"Edges,omitnil" name:"Edges"`
+	Edges []*JobGraphEdge `json:"Edges,omitnil,omitempty" name:"Edges"`
 }
 
 type JobGraphEdge struct {
 	// 边的起始节点ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Source *int64 `json:"Source,omitnil" name:"Source"`
+	Source *int64 `json:"Source,omitnil,omitempty" name:"Source"`
 
 	// 边的目标节点ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Target *int64 `json:"Target,omitnil" name:"Target"`
+	Target *int64 `json:"Target,omitnil,omitempty" name:"Target"`
 }
 
 type JobGraphNode struct {
 	// 节点ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Id *int64 `json:"Id,omitnil" name:"Id"`
+	Id *int64 `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// 节点描述
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 节点名称
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 节点并行度
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Parallelism *int64 `json:"Parallelism,omitnil" name:"Parallelism"`
+	Parallelism *int64 `json:"Parallelism,omitnil,omitempty" name:"Parallelism"`
 }
 
 type JobInstanceForSubmissionLog struct {
 	// 实例的Id, 按照启动的时间顺序，从1开始
-	RunningOrderId *int64 `json:"RunningOrderId,omitnil" name:"RunningOrderId"`
+	RunningOrderId *int64 `json:"RunningOrderId,omitnil,omitempty" name:"RunningOrderId"`
 
 	// 作业实例的启动时间
-	JobInstanceStartTime *string `json:"JobInstanceStartTime,omitnil" name:"JobInstanceStartTime"`
+	JobInstanceStartTime *string `json:"JobInstanceStartTime,omitnil,omitempty" name:"JobInstanceStartTime"`
 
 	// 作业实例启动的时间（毫秒）
-	StartingMillis *int64 `json:"StartingMillis,omitnil" name:"StartingMillis"`
+	StartingMillis *int64 `json:"StartingMillis,omitnil,omitempty" name:"StartingMillis"`
+}
+
+type JobRuntimeInfo struct {
+	// 运行信息的key，目前支持：TaskManagers：taskmanager pod 列表； StreamGraph：作业对应的 StreamGraph；SubTasks：作业的 subtask 列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+
+	// 运行信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
 }
 
 type JobV1 struct {
-	// 作业ID
+	// <p>作业ID</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 地域
+	// <p>地域</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Region *string `json:"Region,omitnil" name:"Region"`
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
-	// 可用区
+	// <p>可用区</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Zone *string `json:"Zone,omitnil" name:"Zone"`
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 用户AppId
+	// <p>用户AppId</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	AppId *int64 `json:"AppId,omitnil" name:"AppId"`
+	AppId *int64 `json:"AppId,omitnil,omitempty" name:"AppId"`
 
-	// 用户UIN
+	// <p>用户UIN</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	OwnerUin *string `json:"OwnerUin,omitnil" name:"OwnerUin"`
+	OwnerUin *string `json:"OwnerUin,omitnil,omitempty" name:"OwnerUin"`
 
-	// 创建者UIN
+	// <p>创建者UIN</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	CreatorUin *string `json:"CreatorUin,omitnil" name:"CreatorUin"`
+	CreatorUin *string `json:"CreatorUin,omitnil,omitempty" name:"CreatorUin"`
 
-	// 作业名字
+	// <p>作业名字</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 作业类型，1：sql作业，2：Jar作业
+	// <p>作业类型，1：sql作业，2：Jar作业</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	JobType *int64 `json:"JobType,omitnil" name:"JobType"`
+	JobType *int64 `json:"JobType,omitnil,omitempty" name:"JobType"`
 
-	// 作业状态，1：未初始化，2：未发布，3：操作中，4：运行中，5：停止，6：暂停，-1：故障
+	// <p>作业状态，1：未初始化，2：未发布，3：操作中，4：运行中，5：停止，6：暂停，-1：故障</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Status *int64 `json:"Status,omitnil" name:"Status"`
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 作业创建时间
+	// <p>作业创建时间</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	CreateTime *string `json:"CreateTime,omitnil" name:"CreateTime"`
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 作业启动时间
+	// <p>作业启动时间</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	StartTime *string `json:"StartTime,omitnil" name:"StartTime"`
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 作业停止时间
+	// <p>作业停止时间</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	StopTime *string `json:"StopTime,omitnil" name:"StopTime"`
+	StopTime *string `json:"StopTime,omitnil,omitempty" name:"StopTime"`
 
-	// 作业更新时间
+	// <p>作业更新时间</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	UpdateTime *string `json:"UpdateTime,omitnil" name:"UpdateTime"`
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
-	// 作业累计运行时间
+	// <p>作业累计运行时间</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	TotalRunMillis *int64 `json:"TotalRunMillis,omitnil" name:"TotalRunMillis"`
+	TotalRunMillis *int64 `json:"TotalRunMillis,omitnil,omitempty" name:"TotalRunMillis"`
 
-	// 备注信息
+	// <p>备注信息</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Remark *string `json:"Remark,omitnil" name:"Remark"`
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
-	// 操作错误提示信息
+	// <p>操作错误提示信息</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	LastOpResult *string `json:"LastOpResult,omitnil" name:"LastOpResult"`
+	LastOpResult *string `json:"LastOpResult,omitnil,omitempty" name:"LastOpResult"`
 
-	// 集群名字
+	// <p>集群名字</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ClusterName *string `json:"ClusterName,omitnil" name:"ClusterName"`
+	ClusterName *string `json:"ClusterName,omitnil,omitempty" name:"ClusterName"`
 
-	// 最新配置版本号
+	// <p>最新配置版本号，包括已经删除的版本</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	LatestJobConfigVersion *int64 `json:"LatestJobConfigVersion,omitnil" name:"LatestJobConfigVersion"`
+	LatestJobConfigVersion *int64 `json:"LatestJobConfigVersion,omitnil,omitempty" name:"LatestJobConfigVersion"`
 
-	// 已发布的配置版本
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	PublishedJobConfigVersion *int64 `json:"PublishedJobConfigVersion,omitnil" name:"PublishedJobConfigVersion"`
+	// <p>最新的版本号，不包括已经删除的版本号</p>
+	LatestValidJobConfigVersion *int64 `json:"LatestValidJobConfigVersion,omitnil,omitempty" name:"LatestValidJobConfigVersion"`
 
-	// 运行的CU数量
+	// <p>已发布的配置版本</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	RunningCuNum *int64 `json:"RunningCuNum,omitnil" name:"RunningCuNum"`
+	PublishedJobConfigVersion *int64 `json:"PublishedJobConfigVersion,omitnil,omitempty" name:"PublishedJobConfigVersion"`
 
-	// 作业内存规格
+	// <p>运行的CU数量</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	CuMem *int64 `json:"CuMem,omitnil" name:"CuMem"`
+	RunningCuNum *int64 `json:"RunningCuNum,omitnil,omitempty" name:"RunningCuNum"`
 
-	// 作业状态描述
+	// <p>作业内存规格</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	StatusDesc *string `json:"StatusDesc,omitnil" name:"StatusDesc"`
+	CuMem *int64 `json:"CuMem,omitnil,omitempty" name:"CuMem"`
 
-	// 运行状态时表示单次运行时间
+	// <p>作业状态描述</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	CurrentRunMillis *int64 `json:"CurrentRunMillis,omitnil" name:"CurrentRunMillis"`
+	StatusDesc *string `json:"StatusDesc,omitnil,omitempty" name:"StatusDesc"`
 
-	// 作业所在的集群ID
+	// <p>运行状态时表示单次运行时间</p><p>单位：毫秒</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ClusterId *string `json:"ClusterId,omitnil" name:"ClusterId"`
+	CurrentRunMillis *int64 `json:"CurrentRunMillis,omitnil,omitempty" name:"CurrentRunMillis"`
 
-	// 作业管理WEB UI 入口
+	// <p>作业所在的集群ID</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	WebUIUrl *string `json:"WebUIUrl,omitnil" name:"WebUIUrl"`
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 作业所在集群类型
+	// <p>作业管理WEB UI 入口</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	SchedulerType *int64 `json:"SchedulerType,omitnil" name:"SchedulerType"`
+	WebUIUrl *string `json:"WebUIUrl,omitnil,omitempty" name:"WebUIUrl"`
 
-	// 作业所在集群状态
+	// <p>作业所在集群类型</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ClusterStatus *int64 `json:"ClusterStatus,omitnil" name:"ClusterStatus"`
+	SchedulerType *int64 `json:"SchedulerType,omitnil,omitempty" name:"SchedulerType"`
 
-	// 细粒度下的运行的CU数量
+	// <p>作业所在集群状态</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	RunningCu *float64 `json:"RunningCu,omitnil" name:"RunningCu"`
+	ClusterStatus *int64 `json:"ClusterStatus,omitnil,omitempty" name:"ClusterStatus"`
 
-	// 作业运行的 Flink 版本
+	// <p>细粒度下的运行的CU数量</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	FlinkVersion *string `json:"FlinkVersion,omitnil" name:"FlinkVersion"`
+	RunningCu *float64 `json:"RunningCu,omitnil,omitempty" name:"RunningCu"`
 
-	// 工作空间 SerialId
+	// <p>作业运行的 Flink 版本</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	FlinkVersion *string `json:"FlinkVersion,omitnil,omitempty" name:"FlinkVersion"`
 
-	// 工作空间名称
+	// <p>工作空间 SerialId</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	WorkSpaceName *string `json:"WorkSpaceName,omitnil" name:"WorkSpaceName"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 
-	// 作业标签
+	// <p>工作空间名称</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Tags []*Tag `json:"Tags,omitnil" name:"Tags"`
+	WorkSpaceName *string `json:"WorkSpaceName,omitnil,omitempty" name:"WorkSpaceName"`
 
-	// 作业异常事件信息	
+	// <p>作业标签</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	EventInfo *JobEventInfo `json:"EventInfo,omitnil" name:"EventInfo"`
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// <p>作业异常事件信息</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EventInfo *JobEventInfo `json:"EventInfo,omitnil,omitempty" name:"EventInfo"`
+
+	// <p>描述信息</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>0:代表没开启调优任务，1:开启智能调优，2:代表定时调优</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ScalingType *int64 `json:"ScalingType,omitnil,omitempty" name:"ScalingType"`
+
+	// <p>使用CPU数目</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RunningCpu *float64 `json:"RunningCpu,omitnil,omitempty" name:"RunningCpu"`
+
+	// <p>使用内存数量</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RunningMem *float64 `json:"RunningMem,omitnil,omitempty" name:"RunningMem"`
+
+	// <p>是否开了默认告警</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OpenJobDefaultAlarm *int64 `json:"OpenJobDefaultAlarm,omitnil,omitempty" name:"OpenJobDefaultAlarm"`
+
+	// <p>操作中描述</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ProgressDesc *string `json:"ProgressDesc,omitnil,omitempty" name:"ProgressDesc"`
+
+	// <p>停止持续告警</p>
+	ContinueAlarm *int64 `json:"ContinueAlarm,omitnil,omitempty" name:"ContinueAlarm"`
+
+	// <p>作业重启次数</p>
+	RestartCount *int64 `json:"RestartCount,omitnil,omitempty" name:"RestartCount"`
+
+	// <p>期望是开启默认告警</p>
+	ExpectJobDefaultAlarmStatus *int64 `json:"ExpectJobDefaultAlarmStatus,omitnil,omitempty" name:"ExpectJobDefaultAlarmStatus"`
+
+	// <p>jdk版本</p>
+	JdkVersion *string `json:"JdkVersion,omitnil,omitempty" name:"JdkVersion"`
+
+	// <p>状态桶名字</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StateCOSBucket *string `json:"StateCOSBucket,omitnil,omitempty" name:"StateCOSBucket"`
+
+	// <p>新的状态桶名字</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NewStateCOSBucket *string `json:"NewStateCOSBucket,omitnil,omitempty" name:"NewStateCOSBucket"`
+
+	// <p>同类型</p><p>枚举值：</p><ul><li>0： 普通桶</li><li>1： 加速桶</li></ul>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StateCOSBucketType *int64 `json:"StateCOSBucketType,omitnil,omitempty" name:"StateCOSBucketType"`
+
+	// <p>新的桶类型</p><p>枚举值：</p><ul><li>0： 普通桶</li><li>1： 加速桶</li></ul>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NewStateCOSBucketType *int64 `json:"NewStateCOSBucketType,omitnil,omitempty" name:"NewStateCOSBucketType"`
+
+	// <p>健康分数</p>
+	HealthScore *int64 `json:"HealthScore,omitnil,omitempty" name:"HealthScore"`
+
+	// <p>最新诊断时间</p><p>参数格式：RFC3339</p>
+	LastDiagnoseTime *string `json:"LastDiagnoseTime,omitnil,omitempty" name:"LastDiagnoseTime"`
+
+	// <p>负责人Uin</p>
+	ManagerUin *string `json:"ManagerUin,omitnil,omitempty" name:"ManagerUin"`
+
+	// <p>启动位点</p>
+	StartupPoint *string `json:"StartupPoint,omitnil,omitempty" name:"StartupPoint"`
+
+	// <p>是否有事件</p>
+	IsEvent *bool `json:"IsEvent,omitnil,omitempty" name:"IsEvent"`
+
+	// <p>是否告警</p>
+	IsAlarm *bool `json:"IsAlarm,omitnil,omitempty" name:"IsAlarm"`
 }
 
 type LogContent struct {
 	// 日志内容
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Log *string `json:"Log,omitnil" name:"Log"`
+	Log *string `json:"Log,omitnil,omitempty" name:"Log"`
 
 	// 毫秒级时间戳
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Time *int64 `json:"Time,omitnil" name:"Time"`
+	Time *int64 `json:"Time,omitnil,omitempty" name:"Time"`
 
 	// 日志组Id
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	PkgId *string `json:"PkgId,omitnil" name:"PkgId"`
+	PkgId *string `json:"PkgId,omitnil,omitempty" name:"PkgId"`
 
 	// 日志Id，在日志组范围里唯一
-	PkgLogId *int64 `json:"PkgLogId,omitnil" name:"PkgLogId"`
+	PkgLogId *int64 `json:"PkgLogId,omitnil,omitempty" name:"PkgLogId"`
 
 	// 日志所属的容器名
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ContainerName *string `json:"ContainerName,omitnil" name:"ContainerName"`
+	ContainerName *string `json:"ContainerName,omitnil,omitempty" name:"ContainerName"`
 }
 
 type LogicalType struct {
-	// 类型
+	// <p>类型</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Type *string `json:"Type,omitnil" name:"Type"`
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 是否允许为空
+	// <p>是否允许为空</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	NullAble *bool `json:"NullAble,omitnil" name:"NullAble"`
+	NullAble *bool `json:"NullAble,omitnil,omitempty" name:"NullAble"`
 
-	// 长度
+	// <p>长度</p><p>单位：字符数</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Length *int64 `json:"Length,omitnil" name:"Length"`
+	Length *int64 `json:"Length,omitnil,omitempty" name:"Length"`
+}
+
+// Predefined struct for user
+type ModifyConnectorRequestParams struct {
+	// 空间
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// connector ID
+	ConnectorResourceId *string `json:"ConnectorResourceId,omitnil,omitempty" name:"ConnectorResourceId"`
+
+	// 资源id
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
+
+	// 资源版本
+	VersionId *int64 `json:"VersionId,omitnil,omitempty" name:"VersionId"`
+
+	// 连接器名称
+	Connector *string `json:"Connector,omitnil,omitempty" name:"Connector"`
+
+	// 连接方式
+	ConnectionMethod *string `json:"ConnectionMethod,omitnil,omitempty" name:"ConnectionMethod"`
+}
+
+type ModifyConnectorRequest struct {
+	*tchttp.BaseRequest
+	
+	// 空间
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// connector ID
+	ConnectorResourceId *string `json:"ConnectorResourceId,omitnil,omitempty" name:"ConnectorResourceId"`
+
+	// 资源id
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
+
+	// 资源版本
+	VersionId *int64 `json:"VersionId,omitnil,omitempty" name:"VersionId"`
+
+	// 连接器名称
+	Connector *string `json:"Connector,omitnil,omitempty" name:"Connector"`
+
+	// 连接方式
+	ConnectionMethod *string `json:"ConnectionMethod,omitnil,omitempty" name:"ConnectionMethod"`
+}
+
+func (r *ModifyConnectorRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyConnectorRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "WorkSpaceId")
+	delete(f, "ConnectorResourceId")
+	delete(f, "ResourceId")
+	delete(f, "VersionId")
+	delete(f, "Connector")
+	delete(f, "ConnectionMethod")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyConnectorRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyConnectorResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyConnectorResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyConnectorResponseParams `json:"Response"`
+}
+
+func (r *ModifyConnectorResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyConnectorResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
 type ModifyFolderRequestParams struct {
-	// 文件夹ID（必填）
-	SourceFolderId *string `json:"SourceFolderId,omitnil" name:"SourceFolderId"`
+	// 只有移动文件夹的场景必填，如果是批量移动作业的场景，非必填。
+	SourceFolderId *string `json:"SourceFolderId,omitnil,omitempty" name:"SourceFolderId"`
 
 	// 如需拖拽文件夹，需传入目标文件夹ID
-	TargetFolderId *string `json:"TargetFolderId,omitnil" name:"TargetFolderId"`
+	TargetFolderId *string `json:"TargetFolderId,omitnil,omitempty" name:"TargetFolderId"`
 
 	// 如需修改文件夹名，需传入FolderName字段
-	FolderName *string `json:"FolderName,omitnil" name:"FolderName"`
+	FolderName *string `json:"FolderName,omitnil,omitempty" name:"FolderName"`
 
 	// 文件夹类型，0是任务文件夹，1是依赖文件夹
-	FolderType *int64 `json:"FolderType,omitnil" name:"FolderType"`
+	FolderType *int64 `json:"FolderType,omitnil,omitempty" name:"FolderType"`
 
 	// 批量移动的作业serial id 列表
-	SourceJobIds []*string `json:"SourceJobIds,omitnil" name:"SourceJobIds"`
+	SourceJobIds []*string `json:"SourceJobIds,omitnil,omitempty" name:"SourceJobIds"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 type ModifyFolderRequest struct {
 	*tchttp.BaseRequest
 	
-	// 文件夹ID（必填）
-	SourceFolderId *string `json:"SourceFolderId,omitnil" name:"SourceFolderId"`
+	// 只有移动文件夹的场景必填，如果是批量移动作业的场景，非必填。
+	SourceFolderId *string `json:"SourceFolderId,omitnil,omitempty" name:"SourceFolderId"`
 
 	// 如需拖拽文件夹，需传入目标文件夹ID
-	TargetFolderId *string `json:"TargetFolderId,omitnil" name:"TargetFolderId"`
+	TargetFolderId *string `json:"TargetFolderId,omitnil,omitempty" name:"TargetFolderId"`
 
 	// 如需修改文件夹名，需传入FolderName字段
-	FolderName *string `json:"FolderName,omitnil" name:"FolderName"`
+	FolderName *string `json:"FolderName,omitnil,omitempty" name:"FolderName"`
 
 	// 文件夹类型，0是任务文件夹，1是依赖文件夹
-	FolderType *int64 `json:"FolderType,omitnil" name:"FolderType"`
+	FolderType *int64 `json:"FolderType,omitnil,omitempty" name:"FolderType"`
 
 	// 批量移动的作业serial id 列表
-	SourceJobIds []*string `json:"SourceJobIds,omitnil" name:"SourceJobIds"`
+	SourceJobIds []*string `json:"SourceJobIds,omitnil,omitempty" name:"SourceJobIds"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 func (r *ModifyFolderRequest) ToJsonString() string {
@@ -3753,8 +5439,8 @@ func (r *ModifyFolderRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyFolderResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type ModifyFolderResponse struct {
@@ -3776,38 +5462,50 @@ func (r *ModifyFolderResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type ModifyJobRequestParams struct {
 	// 作业Id
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
 	// 作业名称，支持长度小于50的中文/英文/数字/”-”/”_”/”.”，不能重名
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 描述
-	Remark *string `json:"Remark,omitnil" name:"Remark"`
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
 	// 拖拽文件需传入此参数
-	TargetFolderId *string `json:"TargetFolderId,omitnil" name:"TargetFolderId"`
+	TargetFolderId *string `json:"TargetFolderId,omitnil,omitempty" name:"TargetFolderId"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// 作业描述
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 停止持续告警
+	ContinueAlarm *int64 `json:"ContinueAlarm,omitnil,omitempty" name:"ContinueAlarm"`
 }
 
 type ModifyJobRequest struct {
 	*tchttp.BaseRequest
 	
 	// 作业Id
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
 	// 作业名称，支持长度小于50的中文/英文/数字/”-”/”_”/”.”，不能重名
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 描述
-	Remark *string `json:"Remark,omitnil" name:"Remark"`
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
 	// 拖拽文件需传入此参数
-	TargetFolderId *string `json:"TargetFolderId,omitnil" name:"TargetFolderId"`
+	TargetFolderId *string `json:"TargetFolderId,omitnil,omitempty" name:"TargetFolderId"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// 作业描述
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// 停止持续告警
+	ContinueAlarm *int64 `json:"ContinueAlarm,omitnil,omitempty" name:"ContinueAlarm"`
 }
 
 func (r *ModifyJobRequest) ToJsonString() string {
@@ -3827,6 +5525,8 @@ func (r *ModifyJobRequest) FromJsonString(s string) error {
 	delete(f, "Remark")
 	delete(f, "TargetFolderId")
 	delete(f, "WorkSpaceId")
+	delete(f, "Description")
+	delete(f, "ContinueAlarm")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyJobRequest has unknown keys!", "")
 	}
@@ -3835,8 +5535,8 @@ func (r *ModifyJobRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyJobResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type ModifyJobResponse struct {
@@ -3856,28 +5556,117 @@ func (r *ModifyJobResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyMetaTableRequestParams struct {
+	// <p>集群唯一id</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>元数据表唯一id</p>
+	TableId *string `json:"TableId,omitnil,omitempty" name:"TableId"`
+
+	// <p>SQL</p><p>参数格式：base64加密</p>
+	SqlCode *string `json:"SqlCode,omitnil,omitempty" name:"SqlCode"`
+
+	// <p>Flink版本</p>
+	FlinkVersion *string `json:"FlinkVersion,omitnil,omitempty" name:"FlinkVersion"`
+
+	// <p>空间唯一id</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// <p>备注</p>
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
+}
+
+type ModifyMetaTableRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>集群唯一id</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>元数据表唯一id</p>
+	TableId *string `json:"TableId,omitnil,omitempty" name:"TableId"`
+
+	// <p>SQL</p><p>参数格式：base64加密</p>
+	SqlCode *string `json:"SqlCode,omitnil,omitempty" name:"SqlCode"`
+
+	// <p>Flink版本</p>
+	FlinkVersion *string `json:"FlinkVersion,omitnil,omitempty" name:"FlinkVersion"`
+
+	// <p>空间唯一id</p>
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+
+	// <p>备注</p>
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
+}
+
+func (r *ModifyMetaTableRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyMetaTableRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "TableId")
+	delete(f, "SqlCode")
+	delete(f, "FlinkVersion")
+	delete(f, "WorkSpaceId")
+	delete(f, "Remark")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyMetaTableRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyMetaTableResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyMetaTableResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyMetaTableResponseParams `json:"Response"`
+}
+
+func (r *ModifyMetaTableResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyMetaTableResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyWorkSpaceRequestParams struct {
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 
 	// 待修改的工作空间名称
-	WorkSpaceName *string `json:"WorkSpaceName,omitnil" name:"WorkSpaceName"`
+	WorkSpaceName *string `json:"WorkSpaceName,omitnil,omitempty" name:"WorkSpaceName"`
 
 	// 待修改的工作空间备注
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 }
 
 type ModifyWorkSpaceRequest struct {
 	*tchttp.BaseRequest
 	
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 
 	// 待修改的工作空间名称
-	WorkSpaceName *string `json:"WorkSpaceName,omitnil" name:"WorkSpaceName"`
+	WorkSpaceName *string `json:"WorkSpaceName,omitnil,omitempty" name:"WorkSpaceName"`
 
 	// 待修改的工作空间备注
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 }
 
 func (r *ModifyWorkSpaceRequest) ToJsonString() string {
@@ -3903,8 +5692,8 @@ func (r *ModifyWorkSpaceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyWorkSpaceResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type ModifyWorkSpaceResponse struct {
@@ -3926,341 +5715,531 @@ func (r *ModifyWorkSpaceResponse) FromJsonString(s string) error {
 type NodeConfig struct {
 	// Node ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Id *int64 `json:"Id,omitnil" name:"Id"`
+	Id *int64 `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// Node parallelism
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Parallelism *int64 `json:"Parallelism,omitnil" name:"Parallelism"`
+	Parallelism *int64 `json:"Parallelism,omitnil,omitempty" name:"Parallelism"`
 
 	// Slot sharing group
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	SlotSharingGroup *string `json:"SlotSharingGroup,omitnil" name:"SlotSharingGroup"`
+	SlotSharingGroup *string `json:"SlotSharingGroup,omitnil,omitempty" name:"SlotSharingGroup"`
 
 	// Configuration properties
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Configuration []*Property `json:"Configuration,omitnil" name:"Configuration"`
+	Configuration []*Property `json:"Configuration,omitnil,omitempty" name:"Configuration"`
 
 	// 节点的状态ttl配置, 多个用 ; 分割
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	StateTTL *string `json:"StateTTL,omitnil" name:"StateTTL"`
+	StateTTL *string `json:"StateTTL,omitnil,omitempty" name:"StateTTL"`
 }
 
 type Order struct {
 	// 创建、续费、扩缩容 1 2 3
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Type *int64 `json:"Type,omitnil" name:"Type"`
+	Type *int64 `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 自动续费 1
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil" name:"AutoRenewFlag"`
+	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
 	// 操作人的UIN
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	OperateUin *string `json:"OperateUin,omitnil" name:"OperateUin"`
+	OperateUin *string `json:"OperateUin,omitnil,omitempty" name:"OperateUin"`
 
 	// 最终集群的CU数量
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ComputeCu *int64 `json:"ComputeCu,omitnil" name:"ComputeCu"`
+	ComputeCu *int64 `json:"ComputeCu,omitnil,omitempty" name:"ComputeCu"`
 
 	// 订单的时间
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	OrderTime *string `json:"OrderTime,omitnil" name:"OrderTime"`
+	OrderTime *string `json:"OrderTime,omitnil,omitempty" name:"OrderTime"`
+}
+
+// Predefined struct for user
+type ParseConnectorRequestParams struct {
+	// 资源id
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
+
+	// 资源版本
+	VersionId *int64 `json:"VersionId,omitnil,omitempty" name:"VersionId"`
+
+	// 空间
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+}
+
+type ParseConnectorRequest struct {
+	*tchttp.BaseRequest
+	
+	// 资源id
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
+
+	// 资源版本
+	VersionId *int64 `json:"VersionId,omitnil,omitempty" name:"VersionId"`
+
+	// 空间
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
+}
+
+func (r *ParseConnectorRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ParseConnectorRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ResourceId")
+	delete(f, "VersionId")
+	delete(f, "WorkSpaceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ParseConnectorRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ParseConnectorResponseParams struct {
+	// 连接器
+	Connectors []*Connectors `json:"Connectors,omitnil,omitempty" name:"Connectors"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ParseConnectorResponse struct {
+	*tchttp.BaseResponse
+	Response *ParseConnectorResponseParams `json:"Response"`
+}
+
+func (r *ParseConnectorResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ParseConnectorResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type Property struct {
 	// 系统配置的Key
-	Key *string `json:"Key,omitnil" name:"Key"`
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
 
 	// 系统配置的Value
-	Value *string `json:"Value,omitnil" name:"Value"`
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
 }
 
 type RefJobStatusCountItem struct {
 	// 作业状态
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	JobStatus *int64 `json:"JobStatus,omitnil" name:"JobStatus"`
+	JobStatus *int64 `json:"JobStatus,omitnil,omitempty" name:"JobStatus"`
 
 	// 作业数量
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Count *int64 `json:"Count,omitnil" name:"Count"`
+	Count *int64 `json:"Count,omitnil,omitempty" name:"Count"`
+}
+
+// Predefined struct for user
+type RenewOceanusClusterRequestParams struct {
+	// <p>集群ID</p><p>参数格式：cluster-xxx</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>续费的时长，单位为月，只支持包年包月集群</p><p>取值范围：[1, 36]</p>
+	Period *int64 `json:"Period,omitnil,omitempty" name:"Period"`
+}
+
+type RenewOceanusClusterRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>集群ID</p><p>参数格式：cluster-xxx</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>续费的时长，单位为月，只支持包年包月集群</p><p>取值范围：[1, 36]</p>
+	Period *int64 `json:"Period,omitnil,omitempty" name:"Period"`
+}
+
+func (r *RenewOceanusClusterRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RenewOceanusClusterRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "Period")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RenewOceanusClusterRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RenewOceanusClusterResponseParams struct {
+	// <p>参数值success代表操作执行成功</p>
+	TaskExecResult *string `json:"TaskExecResult,omitnil,omitempty" name:"TaskExecResult"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type RenewOceanusClusterResponse struct {
+	*tchttp.BaseResponse
+	Response *RenewOceanusClusterResponseParams `json:"Response"`
+}
+
+func (r *RenewOceanusClusterResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RenewOceanusClusterResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type ResourceConfigItem struct {
 	// 资源ID
-	ResourceId *string `json:"ResourceId,omitnil" name:"ResourceId"`
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
 	// 资源类型
-	ResourceType *int64 `json:"ResourceType,omitnil" name:"ResourceType"`
+	ResourceType *int64 `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
 
 	// 资源所属地域
-	Region *string `json:"Region,omitnil" name:"Region"`
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
 	// 资源所属AppId
-	AppId *int64 `json:"AppId,omitnil" name:"AppId"`
+	AppId *int64 `json:"AppId,omitnil,omitempty" name:"AppId"`
 
 	// 主账号Uin
-	OwnerUin *string `json:"OwnerUin,omitnil" name:"OwnerUin"`
+	OwnerUin *string `json:"OwnerUin,omitnil,omitempty" name:"OwnerUin"`
 
 	// 子账号Uin
-	CreatorUin *string `json:"CreatorUin,omitnil" name:"CreatorUin"`
+	CreatorUin *string `json:"CreatorUin,omitnil,omitempty" name:"CreatorUin"`
 
 	// 资源位置描述
-	ResourceLoc *ResourceLoc `json:"ResourceLoc,omitnil" name:"ResourceLoc"`
+	ResourceLoc *ResourceLoc `json:"ResourceLoc,omitnil,omitempty" name:"ResourceLoc"`
 
 	// 资源创建时间
-	CreateTime *string `json:"CreateTime,omitnil" name:"CreateTime"`
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 资源版本
-	Version *int64 `json:"Version,omitnil" name:"Version"`
+	Version *int64 `json:"Version,omitnil,omitempty" name:"Version"`
 
 	// 资源描述
-	Remark *string `json:"Remark,omitnil" name:"Remark"`
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
 	// 资源状态：0: 资源同步中，1:资源已就绪
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Status *int64 `json:"Status,omitnil" name:"Status"`
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 关联作业个数
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	RefJobCount *int64 `json:"RefJobCount,omitnil" name:"RefJobCount"`
+	RefJobCount *int64 `json:"RefJobCount,omitnil,omitempty" name:"RefJobCount"`
 
 	// 分状态统计关联作业数
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	RefJobStatusCountSet []*RefJobStatusCountItem `json:"RefJobStatusCountSet,omitnil" name:"RefJobStatusCountSet"`
+	RefJobStatusCountSet []*RefJobStatusCountItem `json:"RefJobStatusCountSet,omitnil,omitempty" name:"RefJobStatusCountSet"`
 }
 
 type ResourceItem struct {
 	// 资源ID
-	ResourceId *string `json:"ResourceId,omitnil" name:"ResourceId"`
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
 	// 资源名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 资源类型
-	ResourceType *uint64 `json:"ResourceType,omitnil" name:"ResourceType"`
+	ResourceType *uint64 `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
 
 	// 资源位置
-	ResourceLoc *ResourceLoc `json:"ResourceLoc,omitnil" name:"ResourceLoc"`
+	ResourceLoc *ResourceLoc `json:"ResourceLoc,omitnil,omitempty" name:"ResourceLoc"`
 
 	// 资源地域
-	Region *string `json:"Region,omitnil" name:"Region"`
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
 	// 应用ID
-	AppId *uint64 `json:"AppId,omitnil" name:"AppId"`
+	AppId *uint64 `json:"AppId,omitnil,omitempty" name:"AppId"`
 
 	// 主账号Uin
-	OwnerUin *string `json:"OwnerUin,omitnil" name:"OwnerUin"`
+	OwnerUin *string `json:"OwnerUin,omitnil,omitempty" name:"OwnerUin"`
 
 	// 子账号Uin
-	CreatorUin *string `json:"CreatorUin,omitnil" name:"CreatorUin"`
+	CreatorUin *string `json:"CreatorUin,omitnil,omitempty" name:"CreatorUin"`
 
 	// 资源创建时间
-	CreateTime *string `json:"CreateTime,omitnil" name:"CreateTime"`
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 资源最后更新时间
-	UpdateTime *string `json:"UpdateTime,omitnil" name:"UpdateTime"`
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
 	// 资源的资源版本ID
-	LatestResourceConfigVersion *int64 `json:"LatestResourceConfigVersion,omitnil" name:"LatestResourceConfigVersion"`
+	LatestResourceConfigVersion *int64 `json:"LatestResourceConfigVersion,omitnil,omitempty" name:"LatestResourceConfigVersion"`
 
 	// 资源备注
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Remark *string `json:"Remark,omitnil" name:"Remark"`
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
 	// 版本个数
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	VersionCount *int64 `json:"VersionCount,omitnil" name:"VersionCount"`
+	VersionCount *int64 `json:"VersionCount,omitnil,omitempty" name:"VersionCount"`
 
 	// 关联作业数
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	RefJobCount *int64 `json:"RefJobCount,omitnil" name:"RefJobCount"`
+	RefJobCount *int64 `json:"RefJobCount,omitnil,omitempty" name:"RefJobCount"`
 
 	// 作业运行状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	IsJobRun *int64 `json:"IsJobRun,omitnil" name:"IsJobRun"`
+	IsJobRun *int64 `json:"IsJobRun,omitnil,omitempty" name:"IsJobRun"`
 
 	// 文件名
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	FileName *string `json:"FileName,omitnil" name:"FileName"`
+	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
 
 	// 工作空间ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	WorkSpaceId *int64 `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *int64 `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 
 	// 分状态统计关联作业数
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	RefJobStatusCountSet []*RefJobStatusCountItem `json:"RefJobStatusCountSet,omitnil" name:"RefJobStatusCountSet"`
+	RefJobStatusCountSet []*RefJobStatusCountItem `json:"RefJobStatusCountSet,omitnil,omitempty" name:"RefJobStatusCountSet"`
+
+	// 连接器名称
+	Connector *string `json:"Connector,omitnil,omitempty" name:"Connector"`
+
+	// 连接器版本
+	ConnectorVersion *string `json:"ConnectorVersion,omitnil,omitempty" name:"ConnectorVersion"`
+
+	// 连接方式
+	ConnectionMethod *string `json:"ConnectionMethod,omitnil,omitempty" name:"ConnectionMethod"`
+
+	// connector关联的资源id
+	RelatedResourceId *string `json:"RelatedResourceId,omitnil,omitempty" name:"RelatedResourceId"`
+
+	// 图标
+	Icon *string `json:"Icon,omitnil,omitempty" name:"Icon"`
+
+	// 连接器中文名
+	ConnectorName *string `json:"ConnectorName,omitnil,omitempty" name:"ConnectorName"`
+
+	// 连接器官网链接
+	ConnectorUrl *string `json:"ConnectorUrl,omitnil,omitempty" name:"ConnectorUrl"`
 }
 
 type ResourceLoc struct {
 	// 资源位置的存储类型，目前只支持1:COS
-	StorageType *int64 `json:"StorageType,omitnil" name:"StorageType"`
+	StorageType *int64 `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 
 	// 描述资源位置的json
-	Param *ResourceLocParam `json:"Param,omitnil" name:"Param"`
+	Param *ResourceLocParam `json:"Param,omitnil,omitempty" name:"Param"`
 }
 
 type ResourceLocParam struct {
 	// 资源bucket
-	Bucket *string `json:"Bucket,omitnil" name:"Bucket"`
+	Bucket *string `json:"Bucket,omitnil,omitempty" name:"Bucket"`
 
 	// 资源路径
-	Path *string `json:"Path,omitnil" name:"Path"`
+	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
 
 	// 资源所在地域，如果不填，则使用Resource的Region
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Region *string `json:"Region,omitnil" name:"Region"`
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 }
 
 type ResourceRef struct {
 	// 资源ID
-	ResourceId *string `json:"ResourceId,omitnil" name:"ResourceId"`
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 资源版本ID，-1表示使用最新版本
-	Version *int64 `json:"Version,omitnil" name:"Version"`
+	// 资源版本
+	Version *int64 `json:"Version,omitnil,omitempty" name:"Version"`
 
-	// 引用资源类型，例如主资源设置为1，代表main class所在的jar包
-	Type *int64 `json:"Type,omitnil" name:"Type"`
+	// 0-引用 JAR 程序包，1-主程序包，2-引用配置文件，3-Python程序包，4-Python数据文件
+	Type *int64 `json:"Type,omitnil,omitempty" name:"Type"`
 }
 
 type ResourceRefDetail struct {
 	// 资源id
-	ResourceId *string `json:"ResourceId,omitnil" name:"ResourceId"`
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
 	// 资源版本，-1表示使用最新版本
-	Version *int64 `json:"Version,omitnil" name:"Version"`
+	Version *int64 `json:"Version,omitnil,omitempty" name:"Version"`
 
 	// 资源名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 1: 主资源
-	Type *int64 `json:"Type,omitnil" name:"Type"`
+	Type *int64 `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 1: 系统内置资源
-	SystemProvide *int64 `json:"SystemProvide,omitnil" name:"SystemProvide"`
+	SystemProvide *int64 `json:"SystemProvide,omitnil,omitempty" name:"SystemProvide"`
+
+	// Connector
+	Connector *string `json:"Connector,omitnil,omitempty" name:"Connector"`
+
+	// Connector版本
+	ConnectorVersion *string `json:"ConnectorVersion,omitnil,omitempty" name:"ConnectorVersion"`
 }
 
 type ResourceRefJobInfo struct {
 	// Job id
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
 	// Job配置版本
-	JobConfigVersion *int64 `json:"JobConfigVersion,omitnil" name:"JobConfigVersion"`
+	JobConfigVersion *int64 `json:"JobConfigVersion,omitnil,omitempty" name:"JobConfigVersion"`
 
 	// 资源版本
-	ResourceVersion *int64 `json:"ResourceVersion,omitnil" name:"ResourceVersion"`
+	ResourceVersion *int64 `json:"ResourceVersion,omitnil,omitempty" name:"ResourceVersion"`
+}
+
+type ResourceRefLatest struct {
+	// <p>资源id</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
+
+	// <p>版本号</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Version *int64 `json:"Version,omitnil,omitempty" name:"Version"`
+
+	// <p>资源类型</p><p>枚举值：</p><ul><li>1： Main资源</li><li>2： 依赖资源</li><li>3： python文件</li><li>4： 数据文件</li></ul>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Type *int64 `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// <p>状态</p><p>枚举值：</p><ul><li>1： 活跃</li><li>-2： 删除</li></ul>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>空间id</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	WorkspaceId *string `json:"WorkspaceId,omitnil,omitempty" name:"WorkspaceId"`
+
+	// <p>资源名称</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 }
 
 type ResultColumn struct {
 	// 名称
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 本地类型描述
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	LogicalType *LogicalType `json:"LogicalType,omitnil" name:"LogicalType"`
+	LogicalType *LogicalType `json:"LogicalType,omitnil,omitempty" name:"LogicalType"`
 
 	// 备注
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Comment *string `json:"Comment,omitnil" name:"Comment"`
+	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
 }
 
 type ResultData struct {
 	// 操作类型
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Kind *string `json:"Kind,omitnil" name:"Kind"`
+	Kind *string `json:"Kind,omitnil,omitempty" name:"Kind"`
 
 	// 结果
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Fields []*string `json:"Fields,omitnil" name:"Fields"`
+	Fields []*string `json:"Fields,omitnil,omitempty" name:"Fields"`
 }
 
 type RoleAuth struct {
 	// 用户 AppID
-	AppId *int64 `json:"AppId,omitnil" name:"AppId"`
+	AppId *int64 `json:"AppId,omitnil,omitempty" name:"AppId"`
 
 	// 工作空间 SerialId
-	WorkSpaceSerialId *string `json:"WorkSpaceSerialId,omitnil" name:"WorkSpaceSerialId"`
+	WorkSpaceSerialId *string `json:"WorkSpaceSerialId,omitnil,omitempty" name:"WorkSpaceSerialId"`
 
 	// 主账号 UIN
-	OwnerUin *string `json:"OwnerUin,omitnil" name:"OwnerUin"`
+	OwnerUin *string `json:"OwnerUin,omitnil,omitempty" name:"OwnerUin"`
 
 	// 创建者 UIN
-	CreatorUin *string `json:"CreatorUin,omitnil" name:"CreatorUin"`
+	CreatorUin *string `json:"CreatorUin,omitnil,omitempty" name:"CreatorUin"`
 
 	// 绑定授权的 UIN
-	AuthSubAccountUin *string `json:"AuthSubAccountUin,omitnil" name:"AuthSubAccountUin"`
+	AuthSubAccountUin *string `json:"AuthSubAccountUin,omitnil,omitempty" name:"AuthSubAccountUin"`
 
 	// 对应 role表的id
-	Permission *int64 `json:"Permission,omitnil" name:"Permission"`
+	Permission *int64 `json:"Permission,omitnil,omitempty" name:"Permission"`
 
 	// 创建时间
-	CreateTime *string `json:"CreateTime,omitnil" name:"CreateTime"`
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 最后一次操作时间
-	UpdateTime *string `json:"UpdateTime,omitnil" name:"UpdateTime"`
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
 	// 2 启用 1 停用
-	Status *int64 `json:"Status,omitnil" name:"Status"`
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// id
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Id *int64 `json:"Id,omitnil" name:"Id"`
+	Id *int64 `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// 工作空间id
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	WorkSpaceId *int64 `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *int64 `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 
 	// 权限名称
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	RoleName *string `json:"RoleName,omitnil" name:"RoleName"`
+	RoleName *string `json:"RoleName,omitnil,omitempty" name:"RoleName"`
 }
 
 type RunJobDescription struct {
 	// 作业Id
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
 	// 运行类型，1：启动，2：恢复
-	RunType *int64 `json:"RunType,omitnil" name:"RunType"`
+	RunType *int64 `json:"RunType,omitnil,omitempty" name:"RunType"`
 
 	// 兼容旧版 SQL 类型作业启动参数：指定数据源消费起始时间点（建议传值）
 	// 保证参数为 LATEST、EARLIEST、T+Timestamp （例:T1557394288000）
-	StartMode *string `json:"StartMode,omitnil" name:"StartMode"`
+	StartMode *string `json:"StartMode,omitnil,omitempty" name:"StartMode"`
 
 	// 当前作业的某个版本
 	// （不传默认为非草稿的作业版本）
-	JobConfigVersion *uint64 `json:"JobConfigVersion,omitnil" name:"JobConfigVersion"`
+	JobConfigVersion *uint64 `json:"JobConfigVersion,omitnil,omitempty" name:"JobConfigVersion"`
 
 	// Savepoint路径
-	SavepointPath *string `json:"SavepointPath,omitnil" name:"SavepointPath"`
+	SavepointPath *string `json:"SavepointPath,omitnil,omitempty" name:"SavepointPath"`
 
 	// Savepoint的Id
-	SavepointId *string `json:"SavepointId,omitnil" name:"SavepointId"`
+	SavepointId *string `json:"SavepointId,omitnil,omitempty" name:"SavepointId"`
 
 	// 使用历史版本系统依赖
-	UseOldSystemConnector *bool `json:"UseOldSystemConnector,omitnil" name:"UseOldSystemConnector"`
+	UseOldSystemConnector *bool `json:"UseOldSystemConnector,omitnil,omitempty" name:"UseOldSystemConnector"`
 
 	// 自定义时间戳
-	CustomTimestamp *int64 `json:"CustomTimestamp,omitnil" name:"CustomTimestamp"`
+	CustomTimestamp *int64 `json:"CustomTimestamp,omitnil,omitempty" name:"CustomTimestamp"`
+
+	// timestamp; latest-offset;  earliest-offset; 任选一种
+	KafkaScanMode *string `json:"KafkaScanMode,omitnil,omitempty" name:"KafkaScanMode"`
 }
 
 // Predefined struct for user
 type RunJobsRequestParams struct {
 	// 批量启动作业的描述信息
-	RunJobDescriptions []*RunJobDescription `json:"RunJobDescriptions,omitnil" name:"RunJobDescriptions"`
+	RunJobDescriptions []*RunJobDescription `json:"RunJobDescriptions,omitnil,omitempty" name:"RunJobDescriptions"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 type RunJobsRequest struct {
 	*tchttp.BaseRequest
 	
 	// 批量启动作业的描述信息
-	RunJobDescriptions []*RunJobDescription `json:"RunJobDescriptions,omitnil" name:"RunJobDescriptions"`
+	RunJobDescriptions []*RunJobDescription `json:"RunJobDescriptions,omitnil,omitempty" name:"RunJobDescriptions"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 func (r *RunJobsRequest) ToJsonString() string {
@@ -4285,8 +6264,8 @@ func (r *RunJobsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type RunJobsResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type RunJobsResponse struct {
@@ -4307,27 +6286,27 @@ func (r *RunJobsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type RunSqlGatewayStatementRequestParams struct {
-	// 集群ID
-	ClusterId *string `json:"ClusterId,omitnil" name:"ClusterId"`
+	// <p>集群ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 需要执行的sql，该sql会被Sql Gateway执行，当前支持的是paimon修改需求，因此主要是DDL语句
-	Sql *string `json:"Sql,omitnil" name:"Sql"`
+	// <p>需要执行的sql，需要对其进行base64编译后传入</p>
+	Sql *string `json:"Sql,omitnil,omitempty" name:"Sql"`
 
-	// Sql Gateway会话ID，可不填，如果不填则会自动创建一个会话ID，每个会话ID都有一个存活时间，测试环境为10分钟，线上默认是30分钟
-	SessionId *string `json:"SessionId,omitnil" name:"SessionId"`
+	// <p>Sql Gateway会话ID，可不填，如果不填则会自动创建一个会话ID，每个会话ID都有一个存活时间，测试环境为10分钟，线上默认是30分钟</p>
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
 }
 
 type RunSqlGatewayStatementRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群ID
-	ClusterId *string `json:"ClusterId,omitnil" name:"ClusterId"`
+	// <p>集群ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 需要执行的sql，该sql会被Sql Gateway执行，当前支持的是paimon修改需求，因此主要是DDL语句
-	Sql *string `json:"Sql,omitnil" name:"Sql"`
+	// <p>需要执行的sql，需要对其进行base64编译后传入</p>
+	Sql *string `json:"Sql,omitnil,omitempty" name:"Sql"`
 
-	// Sql Gateway会话ID，可不填，如果不填则会自动创建一个会话ID，每个会话ID都有一个存活时间，测试环境为10分钟，线上默认是30分钟
-	SessionId *string `json:"SessionId,omitnil" name:"SessionId"`
+	// <p>Sql Gateway会话ID，可不填，如果不填则会自动创建一个会话ID，每个会话ID都有一个存活时间，测试环境为10分钟，线上默认是30分钟</p>
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
 }
 
 func (r *RunSqlGatewayStatementRequest) ToJsonString() string {
@@ -4353,18 +6332,18 @@ func (r *RunSqlGatewayStatementRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type RunSqlGatewayStatementResponseParams struct {
-	// 错误信息
+	// <p>错误信息</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ErrorMessage []*string `json:"ErrorMessage,omitnil" name:"ErrorMessage"`
+	ErrorMessage []*string `json:"ErrorMessage,omitnil,omitempty" name:"ErrorMessage"`
 
-	// 会话id，若入参未传，则返回自动创建的会话id，若入参已经传递，则返回值与原传入值一致
-	SessionId *string `json:"SessionId,omitnil" name:"SessionId"`
+	// <p>会话id，若入参未传，则返回自动创建的会话id，若入参已经传递，则返回值与原传入值一致</p>
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
 
-	// 返回执行id，可以根据该执行id和会话id获取执行结果
-	OperationHandleId *string `json:"OperationHandleId,omitnil" name:"OperationHandleId"`
+	// <p>返回执行id，可以根据该执行id和会话id获取执行结果</p>
+	OperationHandleId *string `json:"OperationHandleId,omitnil,omitempty" name:"OperationHandleId"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type RunSqlGatewayStatementResponse struct {
@@ -4384,172 +6363,453 @@ func (r *RunSqlGatewayStatementResponse) FromJsonString(s string) error {
 }
 
 type Savepoint struct {
-	// 主键
+	// <p>主键</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Id *int64 `json:"Id,omitnil" name:"Id"`
+	Id *int64 `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// <p>版本号</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	VersionId *int64 `json:"VersionId,omitnil,omitempty" name:"VersionId"`
+
+	// <p>状态 1: Active; 2: Expired; 3: InProgress; 4: Failed; 5: Timeout</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>创建时间</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreateTime *int64 `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>更新时间</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpdateTime *int64 `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+
+	// <p>路径</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
+
+	// <p>大小</p><p>单位：Byte</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Size *int64 `json:"Size,omitnil,omitempty" name:"Size"`
+
+	// <p>快照类型 1: savepoint；2: checkpoint；3: cancelWithSavepoint</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RecordType *int64 `json:"RecordType,omitnil,omitempty" name:"RecordType"`
+
+	// <p>运行作业实例的顺序 ID</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	JobRuntimeId *int64 `json:"JobRuntimeId,omitnil,omitempty" name:"JobRuntimeId"`
+
+	// <p>描述</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>固定超时时间</p><p>单位：毫秒</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Timeout *int64 `json:"Timeout,omitnil,omitempty" name:"Timeout"`
+
+	// <p>快照 serialId</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SerialId *string `json:"SerialId,omitnil,omitempty" name:"SerialId"`
+
+	// <p>耗时</p><p>单位：毫秒</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TimeConsuming *int64 `json:"TimeConsuming,omitnil,omitempty" name:"TimeConsuming"`
+
+	// <p>快照路径状态 1：可用；2：不可用；</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PathStatus *int64 `json:"PathStatus,omitnil,omitempty" name:"PathStatus"`
+
+	// <p>Flink版本</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FlinkVersion *string `json:"FlinkVersion,omitnil,omitempty" name:"FlinkVersion"`
+
+	// <p>CheckPoint是否增量</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsIncremental *string `json:"IsIncremental,omitnil,omitempty" name:"IsIncremental"`
+
+	// <p>checkpoint 大小</p><p>单位：Byte</p>
+	CheckpointSize *int64 `json:"CheckpointSize,omitnil,omitempty" name:"CheckpointSize"`
+}
+
+// Predefined struct for user
+type ScaleOceanusClusterRequestParams struct {
+	// <p>集群ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>集群的目标CU，需大于12CU，并且集群CU需要满足 12 + 7*n (n&gt;=0)</p>
+	NewCU *int64 `json:"NewCU,omitnil,omitempty" name:"NewCU"`
+
+	// <p>扩容集群或者缩容集群</p><p>枚举值：</p><ul><li>ScaleDown： 缩容集群</li><li>ScaleUp： 扩容集群</li></ul><p>默认值：ScaleUp</p>
+	ScaleMode *string `json:"ScaleMode,omitnil,omitempty" name:"ScaleMode"`
+}
+
+type ScaleOceanusClusterRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>集群ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>集群的目标CU，需大于12CU，并且集群CU需要满足 12 + 7*n (n&gt;=0)</p>
+	NewCU *int64 `json:"NewCU,omitnil,omitempty" name:"NewCU"`
+
+	// <p>扩容集群或者缩容集群</p><p>枚举值：</p><ul><li>ScaleDown： 缩容集群</li><li>ScaleUp： 扩容集群</li></ul><p>默认值：ScaleUp</p>
+	ScaleMode *string `json:"ScaleMode,omitnil,omitempty" name:"ScaleMode"`
+}
+
+func (r *ScaleOceanusClusterRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ScaleOceanusClusterRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "NewCU")
+	delete(f, "ScaleMode")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ScaleOceanusClusterRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ScaleOceanusClusterResponseParams struct {
+	// <p>参数值success代表操作执行成功</p>
+	TaskExecResult *string `json:"TaskExecResult,omitnil,omitempty" name:"TaskExecResult"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ScaleOceanusClusterResponse struct {
+	*tchttp.BaseResponse
+	Response *ScaleOceanusClusterResponseParams `json:"Response"`
+}
+
+func (r *ScaleOceanusClusterResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ScaleOceanusClusterResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type SessionClusterRefItem struct {
+	// 空间唯一标识
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	WorkspaceId *string `json:"WorkspaceId,omitnil,omitempty" name:"WorkspaceId"`
+
+	// 资源唯一标识
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
 	// 版本号
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	VersionId *int64 `json:"VersionId,omitnil" name:"VersionId"`
+	Version *int64 `json:"Version,omitnil,omitempty" name:"Version"`
 
-	// 状态 1: Active; 2: Expired; 3: InProgress; 4: Failed; 5: Timeout
+	// 引用类型，0:用户资源
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Status *int64 `json:"Status,omitnil" name:"Status"`
+	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
+}
 
-	// 创建时间
+type Setats struct {
+	// <p>setats serialId</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	CreateTime *int64 `json:"CreateTime,omitnil" name:"CreateTime"`
+	SetatsSerialId *string `json:"SetatsSerialId,omitnil,omitempty" name:"SetatsSerialId"`
 
-	// 更新时间
+	// <p>1  // 停止<br>2  // 运行中<br>3  // 初始化中<br>4  // 扩容中<br>5  // Warehoouse未配置<br>6  // Warehoouse配置中<br>7  // 重启中<br>-2 // 已删除(集群被销毁时更新为此状态)</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	UpdateTime *int64 `json:"UpdateTime,omitnil" name:"UpdateTime"`
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 路径
+	// <p>setats warehouse</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Path *string `json:"Path,omitnil" name:"Path"`
+	Warehouse *Warehouse `json:"Warehouse,omitnil,omitempty" name:"Warehouse"`
 
-	// 大小
+	// <p>setats master 机器规格</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Size *int64 `json:"Size,omitnil" name:"Size"`
+	MasterInfo *SetatsCvmInfo `json:"MasterInfo,omitnil,omitempty" name:"MasterInfo"`
 
-	// 快照类型 1: savepoint；2: checkpoint；3: cancelWithSavepoint
+	// <p>setats worker规格</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	RecordType *int64 `json:"RecordType,omitnil" name:"RecordType"`
+	WorkerInfo *SetatsCvmInfo `json:"WorkerInfo,omitnil,omitempty" name:"WorkerInfo"`
 
-	// 运行作业实例的顺序 ID
+	// <p>标签</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	JobRuntimeId *int64 `json:"JobRuntimeId,omitnil" name:"JobRuntimeId"`
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 描述
+	// <p>自动续费</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Description *string `json:"Description,omitnil" name:"Description"`
+	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
-	// 固定超时时间
+	// <p>过期时间</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Timeout *int64 `json:"Timeout,omitnil" name:"Timeout"`
+	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 
-	// 快照 serialId
+	// <p>过期时间 秒</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	SerialId *string `json:"SerialId,omitnil" name:"SerialId"`
+	SecondsUntilExpiry *string `json:"SecondsUntilExpiry,omitnil,omitempty" name:"SecondsUntilExpiry"`
 
-	// 耗时
+	// <p>创建时间</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	TimeConsuming *int64 `json:"TimeConsuming,omitnil" name:"TimeConsuming"`
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 快照路径状态 1：可用；2：不可用；
+	// <p>manager url</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	PathStatus *int64 `json:"PathStatus,omitnil" name:"PathStatus"`
+	ManagerUrl *string `json:"ManagerUrl,omitnil,omitempty" name:"ManagerUrl"`
+
+	// <p>隔离时间</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsolatedTime *string `json:"IsolatedTime,omitnil,omitempty" name:"IsolatedTime"`
+
+	// <p>Setats集群自己的id</p>
+	OwnerClusterGroupSerialId *string `json:"OwnerClusterGroupSerialId,omitnil,omitempty" name:"OwnerClusterGroupSerialId"`
+
+	// <p>setats 集群类型</p>
+	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// <p>Setats UI url</p>
+	SetatsUiUrl *string `json:"SetatsUiUrl,omitnil,omitempty" name:"SetatsUiUrl"`
+
+	// <p>setats镜像版本</p>
+	ImageVersion *string `json:"ImageVersion,omitnil,omitempty" name:"ImageVersion"`
+
+	// <p>类型：0 公网，1 内网</p><p>枚举值：</p><ul><li>0： 公网</li><li>1： 内网</li></ul><p>默认值：0</p>
+	WebUIType *int64 `json:"WebUIType,omitnil,omitempty" name:"WebUIType"`
+
+	// <p>Setats集群名字</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>Setats集群描述</p>
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
+
+	// <p>集群隔离时间，0为7天，1为15天</p>
+	IsolationPolicyVersion *int64 `json:"IsolationPolicyVersion,omitnil,omitempty" name:"IsolationPolicyVersion"`
+
+	// <p>安全组信息</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
+
+	// <p>网络信息</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CCNs []*CCN `json:"CCNs,omitnil,omitempty" name:"CCNs"`
+
+	// <p>挂靠的宿主集群</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClusterGroupSerialId *string `json:"ClusterGroupSerialId,omitnil,omitempty" name:"ClusterGroupSerialId"`
+}
+
+type SetatsCvmInfo struct {
+	// setats机器cpu
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Cpu *float64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
+
+	// setats机器内存
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Mem *float64 `json:"Mem,omitnil,omitempty" name:"Mem"`
+
+	// setats worker 并行度
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DefaultParallelism *int64 `json:"DefaultParallelism,omitnil,omitempty" name:"DefaultParallelism"`
+
+	// setats 机器磁盘
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Disk *SetatsDisk `json:"Disk,omitnil,omitempty" name:"Disk"`
+}
+
+type SetatsDisk struct {
+	// <p>磁盘类型<br>CLOUD_BSSD<br>CLOUD_SSD<br>CLOUD_HSSD<br>CLOUD_PREMIUM</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
+
+	// <p>磁盘大小</p><p>单位：GB</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DiskSize *int64 `json:"DiskSize,omitnil,omitempty" name:"DiskSize"`
+}
+
+type SlaveVpcDescriptions struct {
+	// <p>私有网络ID</p>
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// <p>子网ID</p>
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
+
+	// <p>用户AppId</p>
+	AppId *int64 `json:"AppId,omitnil,omitempty" name:"AppId"`
+
+	// <p>用户UIN</p>
+	OwnerUin *string `json:"OwnerUin,omitnil,omitempty" name:"OwnerUin"`
+}
+
+type SlaveZone struct {
+	// vpc
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// 子网
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
+
+	// 区
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 }
 
 type SlotSharingGroup struct {
 	// SlotSharingGroup的名字
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// SlotSharingGroup的规格
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Spec *SlotSharingGroupSpec `json:"Spec,omitnil" name:"Spec"`
+	Spec *SlotSharingGroupSpec `json:"Spec,omitnil,omitempty" name:"Spec"`
 
 	// SlotSharingGroup的描述
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// SlotSharingGroup的配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Configuration []*Property `json:"Configuration,omitnil,omitempty" name:"Configuration"`
 }
 
 type SlotSharingGroupSpec struct {
 	// 适用的cpu
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	CPU *float64 `json:"CPU,omitnil" name:"CPU"`
+	CPU *float64 `json:"CPU,omitnil,omitempty" name:"CPU"`
 
 	// 默认为b, 支持单位有 b, kb, mb, gb
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	HeapMemory *string `json:"HeapMemory,omitnil" name:"HeapMemory"`
+	HeapMemory *string `json:"HeapMemory,omitnil,omitempty" name:"HeapMemory"`
 
 	// 默认为b, 支持单位有 b, kb, mb, gb
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	OffHeapMemory *string `json:"OffHeapMemory,omitnil" name:"OffHeapMemory"`
+	OffHeapMemory *string `json:"OffHeapMemory,omitnil,omitempty" name:"OffHeapMemory"`
 
 	// 默认为b, 支持单位有 b, kb, mb, gb
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ManagedMemory *string `json:"ManagedMemory,omitnil" name:"ManagedMemory"`
+	ManagedMemory *string `json:"ManagedMemory,omitnil,omitempty" name:"ManagedMemory"`
+}
+
+type SqlGatewayEndpoint struct {
+	// <p>类型</p><p>枚举值：</p><ul><li>rest： rest</li><li>hiveserver2： hiveserver2</li><li>pg： pg</li></ul>
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// <p>地址</p>
+	Address *string `json:"Address,omitnil,omitempty" name:"Address"`
+
+	// <p>是否开启</p>
+	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+
+	// <p>其他信息</p>
+	Extra *string `json:"Extra,omitnil,omitempty" name:"Extra"`
 }
 
 type SqlGatewayItem struct {
-	// 唯一标识
+	// <p>唯一标识</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	SerialId *string `json:"SerialId,omitnil" name:"SerialId"`
+	SerialId *string `json:"SerialId,omitnil,omitempty" name:"SerialId"`
 
-	// Flink内核版本
+	// <p>Flink内核版本</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	FlinkVersion *string `json:"FlinkVersion,omitnil" name:"FlinkVersion"`
+	FlinkVersion *string `json:"FlinkVersion,omitnil,omitempty" name:"FlinkVersion"`
 
-	// 状态，1.停止 2. 开启中 3. 开启 4. 开启失败 5. 停止中
+	// <p>状态，1.停止 2. 开启中 3. 开启 4. 开启失败 5. 停止中</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Status *int64 `json:"Status,omitnil" name:"Status"`
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 创建人
+	// <p>创建人</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	CreatorUin *string `json:"CreatorUin,omitnil" name:"CreatorUin"`
+	CreatorUin *string `json:"CreatorUin,omitnil,omitempty" name:"CreatorUin"`
 
-	// 引用资源
+	// <p>引用资源</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ResourceRefs []*GatewayRefItem `json:"ResourceRefs,omitnil" name:"ResourceRefs"`
+	ResourceRefs []*GatewayRefItem `json:"ResourceRefs,omitnil,omitempty" name:"ResourceRefs"`
 
-	// Cu规格
+	// <p>Cu规格</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	CuSpec *float64 `json:"CuSpec,omitnil" name:"CuSpec"`
+	CuSpec *float64 `json:"CuSpec,omitnil,omitempty" name:"CuSpec"`
 
-	// 创建时间
+	// <p>创建时间</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	CreateTime *string `json:"CreateTime,omitnil" name:"CreateTime"`
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 更新时间
+	// <p>更新时间</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	UpdateTime *string `json:"UpdateTime,omitnil" name:"UpdateTime"`
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
-	// 配置参数
+	// <p>配置参数</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Properties []*Property `json:"Properties,omitnil" name:"Properties"`
+	Properties []*Property `json:"Properties,omitnil,omitempty" name:"Properties"`
+
+	// <p>Cpu</p>
+	Cpu *float64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
+
+	// <p>Mem</p>
+	Mem *float64 `json:"Mem,omitnil,omitempty" name:"Mem"`
+
+	// <p>jdk版本</p>
+	JdkVersion *string `json:"JdkVersion,omitnil,omitempty" name:"JdkVersion"`
+
+	// <p>session id</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SessionClusterId *string `json:"SessionClusterId,omitnil,omitempty" name:"SessionClusterId"`
+
+	// <p>pg用户名</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PgUser *string `json:"PgUser,omitnil,omitempty" name:"PgUser"`
+
+	// <p>协议</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Endpoints []*SqlGatewayEndpoint `json:"Endpoints,omitnil,omitempty" name:"Endpoints"`
 }
 
 type StatementResult struct {
 	// 返回结果列
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Columns []*ResultColumn `json:"Columns,omitnil" name:"Columns"`
+	Columns []*ResultColumn `json:"Columns,omitnil,omitempty" name:"Columns"`
 
 	// 格式
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	RowFormat *string `json:"RowFormat,omitnil" name:"RowFormat"`
+	RowFormat *string `json:"RowFormat,omitnil,omitempty" name:"RowFormat"`
 
 	// 结果值
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Data []*ResultData `json:"Data,omitnil" name:"Data"`
+	Data []*ResultData `json:"Data,omitnil,omitempty" name:"Data"`
 }
 
 type StopJobDescription struct {
 	// 作业Id
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
 	// 停止类型，1 停止 2 暂停
-	StopType *int64 `json:"StopType,omitnil" name:"StopType"`
+	StopType *int64 `json:"StopType,omitnil,omitempty" name:"StopType"`
 }
 
 // Predefined struct for user
 type StopJobsRequestParams struct {
 	// 批量停止作业的描述信息
-	StopJobDescriptions []*StopJobDescription `json:"StopJobDescriptions,omitnil" name:"StopJobDescriptions"`
+	StopJobDescriptions []*StopJobDescription `json:"StopJobDescriptions,omitnil,omitempty" name:"StopJobDescriptions"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 type StopJobsRequest struct {
 	*tchttp.BaseRequest
 	
 	// 批量停止作业的描述信息
-	StopJobDescriptions []*StopJobDescription `json:"StopJobDescriptions,omitnil" name:"StopJobDescriptions"`
+	StopJobDescriptions []*StopJobDescription `json:"StopJobDescriptions,omitnil,omitempty" name:"StopJobDescriptions"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 func (r *StopJobsRequest) ToJsonString() string {
@@ -4574,8 +6834,8 @@ func (r *StopJobsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type StopJobsResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type StopJobsResponse struct {
@@ -4594,127 +6854,186 @@ func (r *StopJobsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type SubEks struct {
+	// 集群id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SerialId *string `json:"SerialId,omitnil,omitempty" name:"SerialId"`
+
+	// cu数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CuNum *int64 `json:"CuNum,omitnil,omitempty" name:"CuNum"`
+
+	// 状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 状态描述
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StatusDesc *string `json:"StatusDesc,omitnil,omitempty" name:"StatusDesc"`
+
+	// 运行cu
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RunningCu *float64 `json:"RunningCu,omitnil,omitempty" name:"RunningCu"`
+
+	// 总的CPU
+	TotalCpu *float64 `json:"TotalCpu,omitnil,omitempty" name:"TotalCpu"`
+
+	// 总的内存
+	TotalMem *float64 `json:"TotalMem,omitnil,omitempty" name:"TotalMem"`
+
+	// 运行的CPU
+	RunningCpu *float64 `json:"RunningCpu,omitnil,omitempty" name:"RunningCpu"`
+
+	// 运行的内存
+	RunningMem *float64 `json:"RunningMem,omitnil,omitempty" name:"RunningMem"`
+}
+
 type SubFolderInfo struct {
 	// folder id
-	FolderId *string `json:"FolderId,omitnil" name:"FolderId"`
+	FolderId *string `json:"FolderId,omitnil,omitempty" name:"FolderId"`
 
 	// folder name
-	FolderName *string `json:"FolderName,omitnil" name:"FolderName"`
+	FolderName *string `json:"FolderName,omitnil,omitempty" name:"FolderName"`
 }
 
 type SystemResourceItem struct {
 	// 资源ID
-	ResourceId *string `json:"ResourceId,omitnil" name:"ResourceId"`
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
 	// 资源名称
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 资源类型。1 表示 JAR 包，目前只支持该值。
-	ResourceType *int64 `json:"ResourceType,omitnil" name:"ResourceType"`
+	ResourceType *int64 `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
 
 	// 资源备注
-	Remark *string `json:"Remark,omitnil" name:"Remark"`
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
 	// 资源所属地域
-	Region *string `json:"Region,omitnil" name:"Region"`
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
 	// 资源的最新版本
-	LatestResourceConfigVersion *int64 `json:"LatestResourceConfigVersion,omitnil" name:"LatestResourceConfigVersion"`
+	LatestResourceConfigVersion *int64 `json:"LatestResourceConfigVersion,omitnil,omitempty" name:"LatestResourceConfigVersion"`
+
+	// 1 是系统提供资源 2 用户提供CONNECTOR
+	SystemProvide *int64 `json:"SystemProvide,omitnil,omitempty" name:"SystemProvide"`
 }
 
 type Tag struct {
 	// 标签键
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	TagKey *string `json:"TagKey,omitnil" name:"TagKey"`
+	TagKey *string `json:"TagKey,omitnil,omitempty" name:"TagKey"`
 
 	// 标签值
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	TagValue *string `json:"TagValue,omitnil" name:"TagValue"`
+	TagValue *string `json:"TagValue,omitnil,omitempty" name:"TagValue"`
 }
 
 type TraceModeConfiguration struct {
 	// 如1%转换为0.01
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Rate *string `json:"Rate,omitnil" name:"Rate"`
+	Rate *string `json:"Rate,omitnil,omitempty" name:"Rate"`
 
 	// 按照算子ID顺序配置，可以对每个算子配置IN、OUT、IN_AND_OUT三个值，分别表示采集输入数据、采集输出数据、同时采集输入和输出数据
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Operator *string `json:"Operator,omitnil" name:"Operator"`
+	Operator *string `json:"Operator,omitnil,omitempty" name:"Operator"`
 }
 
 type TreeJobSets struct {
-	// 作业Id
+	// <p>作业Id</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 作业名
+	// <p>作业名</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 作业类型
+	// <p>作业类型</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	JobType *int64 `json:"JobType,omitnil" name:"JobType"`
+	JobType *int64 `json:"JobType,omitnil,omitempty" name:"JobType"`
 
-	// 作业占用资源
+	// <p>作业占用资源</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	RunningCu *float64 `json:"RunningCu,omitnil" name:"RunningCu"`
+	RunningCu *float64 `json:"RunningCu,omitnil,omitempty" name:"RunningCu"`
 
-	// 作业状态 启动或者停止或者暂停
+	// <p>作业状态 启动或者停止或者暂停</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Status *int64 `json:"Status,omitnil" name:"Status"`
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>0:代表没开启调优任务，1:开启智能调优，2:代表定时调优</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ScalingType *int64 `json:"ScalingType,omitnil,omitempty" name:"ScalingType"`
+
+	// <p>RunningCpu</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RunningCpu *float64 `json:"RunningCpu,omitnil,omitempty" name:"RunningCpu"`
+
+	// <p>RunningMem</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RunningMem *float64 `json:"RunningMem,omitnil,omitempty" name:"RunningMem"`
+
+	// <p>sql</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DecodeSqlCode *string `json:"DecodeSqlCode,omitnil,omitempty" name:"DecodeSqlCode"`
+
+	// <p>发布版本配置id</p>
+	PublishedJobConfigId *int64 `json:"PublishedJobConfigId,omitnil,omitempty" name:"PublishedJobConfigId"`
+
+	// <p>完整的文件夹路径，仅在平铺模式下返回</p>
+	FolderPath *string `json:"FolderPath,omitnil,omitempty" name:"FolderPath"`
 }
 
 type TreeResourceItem struct {
 	// 资源ID
-	ResourceId *string `json:"ResourceId,omitnil" name:"ResourceId"`
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
 	// 资源名称
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Name *string `json:"Name,omitnil" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 资源类型
-	ResourceType *int64 `json:"ResourceType,omitnil" name:"ResourceType"`
+	ResourceType *int64 `json:"ResourceType,omitnil,omitempty" name:"ResourceType"`
 
 	// 备注
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Remark *string `json:"Remark,omitnil" name:"Remark"`
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
 	// 文件名
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	FileName *string `json:"FileName,omitnil" name:"FileName"`
+	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
 
 	// 目录ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	FolderId *string `json:"FolderId,omitnil" name:"FolderId"`
+	FolderId *string `json:"FolderId,omitnil,omitempty" name:"FolderId"`
 
 	// 分状态统计关联作业数
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	RefJobStatusCountSet []*RefJobStatusCountItem `json:"RefJobStatusCountSet,omitnil" name:"RefJobStatusCountSet"`
+	RefJobStatusCountSet []*RefJobStatusCountItem `json:"RefJobStatusCountSet,omitnil,omitempty" name:"RefJobStatusCountSet"`
 }
 
 // Predefined struct for user
 type TriggerJobSavepointRequestParams struct {
 	// 作业 SerialId
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
 	// 描述
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 type TriggerJobSavepointRequest struct {
 	*tchttp.BaseRequest
 	
 	// 作业 SerialId
-	JobId *string `json:"JobId,omitnil" name:"JobId"`
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
 	// 描述
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 }
 
 func (r *TriggerJobSavepointRequest) ToJsonString() string {
@@ -4741,22 +7060,22 @@ func (r *TriggerJobSavepointRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type TriggerJobSavepointResponseParams struct {
 	// 是否成功
-	SavepointTrigger *bool `json:"SavepointTrigger,omitnil" name:"SavepointTrigger"`
+	SavepointTrigger *bool `json:"SavepointTrigger,omitnil,omitempty" name:"SavepointTrigger"`
 
 	// 错误消息
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ErrorMsg *string `json:"ErrorMsg,omitnil" name:"ErrorMsg"`
+	ErrorMsg *string `json:"ErrorMsg,omitnil,omitempty" name:"ErrorMsg"`
 
 	// 快照路径
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	FinalSavepointPath *string `json:"FinalSavepointPath,omitnil" name:"FinalSavepointPath"`
+	FinalSavepointPath *string `json:"FinalSavepointPath,omitnil,omitempty" name:"FinalSavepointPath"`
 
 	// 快照 ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	SavepointId *string `json:"SavepointId,omitnil" name:"SavepointId"`
+	SavepointId *string `json:"SavepointId,omitnil,omitempty" name:"SavepointId"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type TriggerJobSavepointResponse struct {
@@ -4775,77 +7094,180 @@ func (r *TriggerJobSavepointResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type VPCDescription struct {
+	// 私有网络ID
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// 子网ID
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
+
+	// 用户AppId
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AppId *int64 `json:"AppId,omitnil,omitempty" name:"AppId"`
+
+	// 用户UIN
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OwnerUin *string `json:"OwnerUin,omitnil,omitempty" name:"OwnerUin"`
+}
+
+type VariableItem struct {
+	// <p>变量id</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SerialId *string `json:"SerialId,omitnil,omitempty" name:"SerialId"`
+
+	// <p>变量名</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>变量值</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+
+	// <p>变量值类型</p><p>枚举值：</p><ul><li>0： 自定义变量</li><li>1： 凭据值</li></ul>
+	ValueType *int64 `json:"ValueType,omitnil,omitempty" name:"ValueType"`
+
+	// <p>凭据所在地域</p>
+	SecretRegion *string `json:"SecretRegion,omitnil,omitempty" name:"SecretRegion"`
+
+	// <p>凭据名称</p>
+	SecretName *string `json:"SecretName,omitnil,omitempty" name:"SecretName"`
+
+	// <p>凭据版本</p>
+	SecretVersionId *string `json:"SecretVersionId,omitnil,omitempty" name:"SecretVersionId"`
+
+	// <p>变量值是否隐藏</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Type *int64 `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// <p>变量描述</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
+
+	// <p>变量创建时间</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>变量创建人</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreatorUin *string `json:"CreatorUin,omitnil,omitempty" name:"CreatorUin"`
+}
+
+type Warehouse struct {
+	// <p>状态</p><p>枚举值：</p><ul><li>0： 未开启</li><li>1： 开启中</li><li>2： 已开启</li></ul>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>location</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Location *string `json:"Location,omitnil,omitempty" name:"Location"`
+
+	// <p>catalog类型</p><p>枚举值：</p><ul><li>hadoop： hadoop catalog</li></ul>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CatalogType *string `json:"CatalogType,omitnil,omitempty" name:"CatalogType"`
+
+	// <p>uri</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Uri *string `json:"Uri,omitnil,omitempty" name:"Uri"`
+
+	// <p>warehouse url</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	WarehouseUrl *string `json:"WarehouseUrl,omitnil,omitempty" name:"WarehouseUrl"`
+
+	// <p>认证方式</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Authentication *string `json:"Authentication,omitnil,omitempty" name:"Authentication"`
+
+	// <p>资源</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResourceRefs []*ResourceRefLatest `json:"ResourceRefs,omitnil,omitempty" name:"ResourceRefs"`
+
+	// <p>hive warehouse uri</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HiveUri *string `json:"HiveUri,omitnil,omitempty" name:"HiveUri"`
+
+	// <p>高级参数</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Properties []*Property `json:"Properties,omitnil,omitempty" name:"Properties"`
+
+	// <p>hive cata 类型</p>
+	HiveCatalogType *uint64 `json:"HiveCatalogType,omitnil,omitempty" name:"HiveCatalogType"`
+
+	// <p>流湖托管通serialId</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StorageSerialId *string `json:"StorageSerialId,omitnil,omitempty" name:"StorageSerialId"`
+}
+
 type WorkSpaceClusterItem struct {
 	// 集群 ID
-	ClusterGroupId *int64 `json:"ClusterGroupId,omitnil" name:"ClusterGroupId"`
+	ClusterGroupId *int64 `json:"ClusterGroupId,omitnil,omitempty" name:"ClusterGroupId"`
 
 	// 集群 SerialId
-	ClusterGroupSerialId *string `json:"ClusterGroupSerialId,omitnil" name:"ClusterGroupSerialId"`
+	ClusterGroupSerialId *string `json:"ClusterGroupSerialId,omitnil,omitempty" name:"ClusterGroupSerialId"`
 
 	// 集群名称
-	ClusterName *string `json:"ClusterName,omitnil" name:"ClusterName"`
+	ClusterName *string `json:"ClusterName,omitnil,omitempty" name:"ClusterName"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 
 	// 工作空间名称
-	WorkSpaceName *string `json:"WorkSpaceName,omitnil" name:"WorkSpaceName"`
+	WorkSpaceName *string `json:"WorkSpaceName,omitnil,omitempty" name:"WorkSpaceName"`
 
 	// 绑定状态  2 绑定 1  解除绑定
-	Status *int64 `json:"Status,omitnil" name:"Status"`
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 项目ID
-	ProjectId *int64 `json:"ProjectId,omitnil" name:"ProjectId"`
+	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
 	// 项目ID string类型
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ProjectIdStr *string `json:"ProjectIdStr,omitnil" name:"ProjectIdStr"`
+	ProjectIdStr *string `json:"ProjectIdStr,omitnil,omitempty" name:"ProjectIdStr"`
 }
 
 type WorkSpaceSetItem struct {
 	// 工作空间 SerialId
-	SerialId *string `json:"SerialId,omitnil" name:"SerialId"`
+	SerialId *string `json:"SerialId,omitnil,omitempty" name:"SerialId"`
 
 	// 用户 APPID
-	AppId *int64 `json:"AppId,omitnil" name:"AppId"`
+	AppId *int64 `json:"AppId,omitnil,omitempty" name:"AppId"`
 
 	// 主账号 UIN
-	OwnerUin *string `json:"OwnerUin,omitnil" name:"OwnerUin"`
+	OwnerUin *string `json:"OwnerUin,omitnil,omitempty" name:"OwnerUin"`
 
 	// 创建者 UIN
-	CreatorUin *string `json:"CreatorUin,omitnil" name:"CreatorUin"`
+	CreatorUin *string `json:"CreatorUin,omitnil,omitempty" name:"CreatorUin"`
 
 	// 工作空间名称
-	WorkSpaceName *string `json:"WorkSpaceName,omitnil" name:"WorkSpaceName"`
+	WorkSpaceName *string `json:"WorkSpaceName,omitnil,omitempty" name:"WorkSpaceName"`
 
 	// 区域
-	Region *string `json:"Region,omitnil" name:"Region"`
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
 	// 创建时间
-	CreateTime *string `json:"CreateTime,omitnil" name:"CreateTime"`
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
 	// 更新时间
-	UpdateTime *string `json:"UpdateTime,omitnil" name:"UpdateTime"`
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
 	// 1 未初始化 2 可用  -1 已删除
-	Status *int64 `json:"Status,omitnil" name:"Status"`
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 工作空间描述
-	Description *string `json:"Description,omitnil" name:"Description"`
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// 工作空间包含集群信息
-	ClusterGroupSetItem []*ClusterGroupSetItem `json:"ClusterGroupSetItem,omitnil" name:"ClusterGroupSetItem"`
+	ClusterGroupSetItem []*ClusterGroupSetItem `json:"ClusterGroupSetItem,omitnil,omitempty" name:"ClusterGroupSetItem"`
 
 	// 工作空间角色的信息
-	RoleAuth []*RoleAuth `json:"RoleAuth,omitnil" name:"RoleAuth"`
+	RoleAuth []*RoleAuth `json:"RoleAuth,omitnil,omitempty" name:"RoleAuth"`
 
 	// 工作空间成员数量
-	RoleAuthCount *int64 `json:"RoleAuthCount,omitnil" name:"RoleAuthCount"`
+	RoleAuthCount *int64 `json:"RoleAuthCount,omitnil,omitempty" name:"RoleAuthCount"`
 
 	// 工作空间 SerialId
-	WorkSpaceId *string `json:"WorkSpaceId,omitnil" name:"WorkSpaceId"`
+	WorkSpaceId *string `json:"WorkSpaceId,omitnil,omitempty" name:"WorkSpaceId"`
 
 	// 1
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	JobsCount *int64 `json:"JobsCount,omitnil" name:"JobsCount"`
+	JobsCount *int64 `json:"JobsCount,omitnil,omitempty" name:"JobsCount"`
 }
