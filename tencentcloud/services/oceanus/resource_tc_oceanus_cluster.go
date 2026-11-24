@@ -554,7 +554,3 @@ func oceanusClusterSlaveItems(slaves []OceanusClusterVpcDescriptionModel) []*oce
 	}
 	return items
 }
-
-func oceanusClusterInt64Ptr(v int64) *int64 {
-	return &v
-}
