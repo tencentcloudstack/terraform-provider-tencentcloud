@@ -385,38 +385,20 @@ def check_sibling_md():
     return len(problems)
 
 
-NESTED_ATTR_RE = re.compile(r'"(\w+)":\s*schema\.(?:Single|List|Set|Map)NestedAttribute\{')
+def check_md_hcl_gate():
+    """Example Usage HCL must use the form each schema type REQUIRES (attribute
+    `= {` / `= [` vs block `name {`; conventions section 6). Runs the checker's
+    own mutation self-test, then every framework resource that has a sibling md,
+    and finally the HCL examples inside the templates / skill docs themselves."""
+    import check_md_hcl
 
-
-def nested_block_misuse(go_src, md_text):
-    """Names of nested *Attributes* (declared in go_src) that md_text writes in
-    block syntax `name {` instead of attribute syntax `name = {` / `name = [`."""
-    names = set(NESTED_ATTR_RE.findall(go_src))
-    return sorted(n for n in names
-                  if re.search(r"^\s*" + re.escape(n) + r"\s*\{", md_text, re.M))
-
-
-def check_md_nested_syntax():
-    """Example Usage must use attribute syntax for nested attributes (conventions
-    section 6). Self-tests the detector, then scans every framework resource
-    that has a sibling md."""
-    go = 'x := map[string]schema.Attribute{"enc": schema.SingleNestedAttribute{'
-    assert nested_block_misuse(go, "enc {\n  a = 1\n}") == ["enc"], "detector misses block misuse"
-    assert nested_block_misuse(go, "enc = {\n  a = 1\n}") == [], "detector flags valid syntax"
-    assert nested_block_misuse(go, "timeouts {\n}") == [], "detector flags real blocks"
+    check_md_hcl.selftest()
     problems = []
-    scanned = 0
-    for gof in sorted((REPO / "tencentcloud/services").rglob("*.go")):
-        md = gof.with_suffix(".md")
-        if gof.name.endswith("_test.go") or not md.exists():
-            continue
-        src = gof.read_text()
-        if "NestedAttribute{" not in src:
-            continue
-        scanned += 1
-        for n in nested_block_misuse(src, md.read_text()):
-            problems.append(f"{md.relative_to(REPO)}: nested attribute `{n}` written as a block; use `{n} = {{...}}`")
-    print(f"--- md nested-attribute syntax ({scanned} file(s) scanned): {len(problems)} problem(s)")
+    pairs = check_md_hcl.framework_pairs()
+    for gof, md in pairs:
+        problems += check_md_hcl.check_pair(gof, md)
+    problems += check_md_hcl.check_doc_examples()
+    print(f"--- md HCL form vs schema type ({len(pairs)} framework md + doc examples): {len(problems)} problem(s)")
     for line in problems:
         print("   ", line)
     return len(problems)
@@ -508,7 +490,7 @@ def main():
         failed += check_gofmt() != 0
         failed += check_sibling_md() != 0
         failed += check_validator() != 0
-        failed += check_md_nested_syntax() != 0
+        failed += check_md_hcl_gate() != 0
         failed += check_helper_docs() != 0
         # Runs the two TEST templates (gomonkey needs -l: no inlining) AND the
         # behavioural probes — what the compiler cannot prove: nil safety,

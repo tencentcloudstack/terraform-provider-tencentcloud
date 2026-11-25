@@ -26,13 +26,18 @@ Example Usage
          create = "15m"
        }
 
-     HCL syntax MUST follow the schema attribute type (conventions section 6):
-       SingleNestedAttribute          -> attr = { k = v }
-       List/SetNestedAttribute        -> attr = [{ k = v }]
-       MapNestedAttribute             -> attr = { key = { k = v } }
-       List/Set/MapAttribute          -> attr = [...] / { ... }
-       *Block (only `timeouts`)       -> timeouts { ... }
-     NEVER write a nested *Attribute* as `attr { ... }` block syntax. -->
+     HCL syntax is decided by the schema type of EACH field (conventions
+     section 6), at every nesting depth:
+       SingleNestedAttribute / ObjectAttribute -> attr = { k = v }
+       List/SetNestedAttribute                 -> attr = [{ k = v }]
+       MapNestedAttribute                      -> attr = { key = { k = v } }
+       MapAttribute                            -> attr = { k = "v" }
+       List/SetAttribute                       -> attr = ["a", "b"]
+       Single/List/SetNestedBlock, `Blocks:`   -> name { ... }  (incl. timeouts)
+     Rule of thumb: a type named *Attribute ALWAYS has `=`; a type named *Block
+     NEVER has `=`. Real regression: encryption_configuration is a
+     SingleNestedAttribute, so `encryption_configuration = { sse_type = "AES256" }`,
+     never `encryption_configuration { ... }`. Enforced by check_md_hcl.py. -->
 
 ```hcl
 resource "tencentcloud_demo_widget" "example" {
