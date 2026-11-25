@@ -1323,6 +1323,8 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 				return err
 			}
 		}
+
+		time.Sleep(10 * time.Second)
 	}
 
 	if d.HasChange("intelligent_tiering_archiving_rule_list") {
@@ -1501,6 +1503,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 			return err
 		}
 
+		time.Sleep(10 * time.Second)
 	}
 
 	if d.HasChange("website") {
