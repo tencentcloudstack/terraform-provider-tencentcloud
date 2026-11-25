@@ -25,7 +25,14 @@ Example Usage
        timeouts {
          create = "15m"
        }
--->
+
+     HCL syntax MUST follow the schema attribute type (conventions section 6):
+       SingleNestedAttribute          -> attr = { k = v }
+       List/SetNestedAttribute        -> attr = [{ k = v }]
+       MapNestedAttribute             -> attr = { key = { k = v } }
+       List/Set/MapAttribute          -> attr = [...] / { ... }
+       *Block (only `timeouts`)       -> timeouts { ... }
+     NEVER write a nested *Attribute* as `attr { ... }` block syntax. -->
 
 ```hcl
 resource "tencentcloud_demo_widget" "example" {

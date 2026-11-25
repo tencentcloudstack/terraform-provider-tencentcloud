@@ -451,6 +451,8 @@ tencentcloud_cos_buckets
 tencentcloud_cos_batchs
 tencentcloud_cos_bucket_inventorys
 tencentcloud_cos_bucket_multipart_uploads
+tencentcloud_cos_vector_buckets
+tencentcloud_cos_vector_indexes
 
 Resource
 tencentcloud_cos_bucket
@@ -466,6 +468,9 @@ tencentcloud_cos_object_copy_operation
 tencentcloud_cos_object_restore_operation
 tencentcloud_cos_bucket_generate_inventory_immediately_operation
 tencentcloud_cos_object_download_operation
+tencentcloud_cos_vector_bucket
+tencentcloud_cos_vector_bucket_policy
+tencentcloud_cos_vector_index
 
 Cloud Virtual Machine(CVM)
 Data Source

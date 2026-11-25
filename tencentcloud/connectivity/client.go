@@ -152,6 +152,7 @@ type TencentCloudClient struct {
 
 	cosConn               *s3.S3
 	tencentCosConn        *cos.Client
+	tencentCosVectorConn  *cos.Client
 	mysqlConn             *cdb.Client
 	redisConn             *redis.Client
 	asConn                *as.Client
@@ -467,6 +468,37 @@ func (me *TencentCloudClient) UseTencentCosCdcClient(bucket string, cdcId string
 	me.tencentCosConn.UserAgent = fmt.Sprintf("Terraform-%s", GetReqClientVersion())
 
 	return me.tencentCosConn
+}
+
+// UseTencentCosVectorClient returns the tencent cloud own cos client wired to
+// the vector bucket service endpoint (vectors.<region>.coslake.com), used by
+// the Vector API family (Create/Get/DeleteVectorBucket, ...).
+func (me *TencentCloudClient) UseTencentCosVectorClient() *cos.Client {
+	if me.tencentCosVectorConn != nil {
+		return me.tencentCosVectorConn
+	}
+
+	u, err := cos.NewVectorURL(me.Region, true)
+	if err != nil {
+		log.Printf("[CRITAL] build cos vector client url failed, region:[%s], reason:[%s]\n", me.Region, err.Error())
+	}
+
+	baseUrl := &cos.BaseURL{
+		VectorURL: u,
+	}
+
+	me.tencentCosVectorConn = cos.NewClient(baseUrl, &http.Client{
+		Timeout: 100 * time.Second,
+		Transport: &cos.AuthorizationTransport{
+			SecretID:     me.Credential.SecretId,
+			SecretKey:    me.Credential.SecretKey,
+			SessionToken: me.Credential.Token,
+		},
+	})
+	// Mark every COS request with the provider identity, e.g. "Terraform-1.83.41".
+	me.tencentCosVectorConn.UserAgent = fmt.Sprintf("Terraform-%s", GetReqClientVersion())
+
+	return me.tencentCosVectorConn
 }
 
 // UseMysqlClient returns mysql(cdb) client for service
