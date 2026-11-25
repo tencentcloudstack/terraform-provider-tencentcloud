@@ -151,7 +151,7 @@ func resourceTencentCloudMonitorGrafanaInstanceCreate(d *schema.ResourceData, me
 		request.GrafanaInitPassword = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOkExists("enable_internet"); v != nil {
+	if v, ok := d.GetOkExists("enable_internet"); ok {
 		// Internal account won't open
 		request.EnableInternet = helper.Bool(v.(bool))
 	}
