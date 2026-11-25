@@ -1223,6 +1223,9 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor/v20200721
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ags v1.3.209
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ags/v20250920
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/alb v1.3.218
+## explicit; go 1.14
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/alb/v20251030
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.3.131
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309
@@ -1302,7 +1305,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.212
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.215
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.218
 ## explicit; go 1.11
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
