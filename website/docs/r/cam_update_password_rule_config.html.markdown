@@ -21,7 +21,7 @@ This is a singleton, account-wide configuration resource built on the terraform-
 
 ```hcl
 resource "tencentcloud_cam_update_password_rule_config" "example" {
-  rules {
+  rules = {
     minimum_length                   = 8
     must_contain                     = "Aa1!"
     force_password_change            = 0

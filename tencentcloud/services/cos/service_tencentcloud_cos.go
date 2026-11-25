@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"encoding/xml"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -24,6 +25,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	fwHelper "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -2081,4 +2083,410 @@ func (me *CosService) DescribeCosBucketReplicationById(ctx context.Context, buck
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s]\n", logId, "GetCIGuetzli", bucket)
 
 	return resRaw.(*cos.BucketGetReplicationResult), nil
+}
+
+// CreateVectorBucket creates a COS vector bucket. The API is synchronous and
+// returns the QCS of the newly created vector bucket.
+func (me *CosService) CreateVectorBucket(ctx context.Context, request *cos.CreateVectorBucketOptions) (vectorBucketQcs string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%v], reason:[%s]\n", logId, "CreateVectorBucket", request, errRet.Error())
+		}
+	}()
+
+	var result *cos.CreateVectorBucketResult
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check("CreateVectorBucket")
+		ret, response, e := me.client.UseTencentCosVectorClient().Vector.CreateVectorBucket(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v], http status [%s]\n", logId, "CreateVectorBucket", request, ret, response.Status)
+		}
+
+		if ret == nil {
+			return resource.NonRetryableError(fmt.Errorf("create vector bucket failed, result is nil."))
+		}
+
+		result = ret
+		return nil
+	})
+
+	if errRet != nil {
+		return
+	}
+
+	if result.VectorBucketQcs == "" {
+		errRet = fmt.Errorf("api CreateVectorBucket returns empty vector bucket qcs")
+		return
+	}
+
+	vectorBucketQcs = result.VectorBucketQcs
+	return
+}
+
+// DescribeVectorBucket queries a single COS vector bucket by name. It is the
+// exact-lookup shape: the GetVectorBucket API documents HTTP 404 as "the
+// bucket does not exist", so a confirmed missing bucket surfaces as the
+// shared fwHelper.ErrNotFound sentinel instead of an error.
+func (me *CosService) DescribeVectorBucket(ctx context.Context, request *cos.GetVectorBucketOptions) (info *cos.VectorBucketInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil && !errors.Is(errRet, fwHelper.ErrNotFound) {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%v], reason:[%s]\n", logId, "GetVectorBucket", request, errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check("GetVectorBucket")
+		result, response, e := me.client.UseTencentCosVectorClient().Vector.GetVectorBucket(ctx, request)
+		if e != nil {
+			if vectorError, ok := e.(*cos.VectorErrorResponse); ok && vectorError.Response != nil && vectorError.Response.StatusCode == http.StatusNotFound {
+				return resource.NonRetryableError(fwHelper.ErrNotFound)
+			}
+
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v], http status [%s]\n", logId, "GetVectorBucket", request, result, response.Status)
+		}
+
+		if result == nil || result.VectorBucket == nil {
+			return resource.NonRetryableError(fwHelper.ErrNotFound)
+		}
+
+		info = result.VectorBucket
+		return nil
+	})
+
+	return
+}
+
+// DeleteVectorBucket deletes a COS vector bucket. The API is synchronous.
+func (me *CosService) DeleteVectorBucket(ctx context.Context, request *cos.DeleteVectorBucketOptions) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%v], reason:[%s]\n", logId, "DeleteVectorBucket", request, errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check("DeleteVectorBucket")
+		response, e := me.client.UseTencentCosVectorClient().Vector.DeleteVectorBucket(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%v], http status [%s]\n", logId, "DeleteVectorBucket", request, response.Status)
+		}
+
+		return nil
+	})
+
+	return
+}
+
+// PutVectorBucketPolicy configures the access control policy of a COS vector
+// bucket. The API is synchronous and the new policy fully overwrites the old
+// one.
+func (me *CosService) PutVectorBucketPolicy(ctx context.Context, request *cos.PutVectorBucketPolicyOptions) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%v], reason:[%s]\n", logId, "PutVectorBucketPolicy", request, errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check("PutVectorBucketPolicy")
+		response, e := me.client.UseTencentCosVectorClient().Vector.PutVectorBucketPolicy(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%v], http status [%s]\n", logId, "PutVectorBucketPolicy", request, response.Status)
+		}
+
+		return nil
+	})
+
+	return
+}
+
+// DescribeVectorBucketPolicy queries the access control policy of a COS
+// vector bucket. It is the exact-lookup shape: HTTP 404 (the bucket does not
+// exist) and an empty policy answer (no policy configured) both surface as
+// the shared fwHelper.ErrNotFound sentinel instead of an error.
+//
+// TODO(human): the GetVectorBucketPolicy document does not define the
+// not-found behaviour of the policy itself (a dedicated error code instead of
+// 404/empty body is possible); if the cloud reports a specific code, the
+// structural branch below needs to be extended with it.
+func (me *CosService) DescribeVectorBucketPolicy(ctx context.Context, request *cos.GetVectorBucketPolicyOptions) (policy string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil && !errors.Is(errRet, fwHelper.ErrNotFound) {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%v], reason:[%s]\n", logId, "GetVectorBucketPolicy", request, errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check("GetVectorBucketPolicy")
+		result, response, e := me.client.UseTencentCosVectorClient().Vector.GetVectorBucketPolicy(ctx, request)
+		if e != nil {
+			if vectorError, ok := e.(*cos.VectorErrorResponse); ok && vectorError.Response != nil && vectorError.Response.StatusCode == http.StatusNotFound {
+				return resource.NonRetryableError(fwHelper.ErrNotFound)
+			}
+
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v], http status [%s]\n", logId, "GetVectorBucketPolicy", request, result, response.Status)
+		}
+
+		if result == nil || result.Policy == "" {
+			return resource.NonRetryableError(fwHelper.ErrNotFound)
+		}
+
+		policy = result.Policy
+		return nil
+	})
+
+	return
+}
+
+// DeleteVectorBucketPolicy deletes the access control policy of a COS vector
+// bucket. The API is synchronous.
+func (me *CosService) DeleteVectorBucketPolicy(ctx context.Context, request *cos.DeleteVectorBucketPolicyOptions) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%v], reason:[%s]\n", logId, "DeleteVectorBucketPolicy", request, errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check("DeleteVectorBucketPolicy")
+		response, e := me.client.UseTencentCosVectorClient().Vector.DeleteVectorBucketPolicy(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%v], http status [%s]\n", logId, "DeleteVectorBucketPolicy", request, response.Status)
+		}
+
+		return nil
+	})
+
+	return
+}
+
+// CreateIndex creates a vector index under a COS vector bucket. The API is
+// synchronous.
+func (me *CosService) CreateIndex(ctx context.Context, request *cos.CreateIndexOptions) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%v], reason:[%s]\n", logId, "CreateIndex", request, errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check("CreateIndex")
+		ret, response, e := me.client.UseTencentCosVectorClient().Vector.CreateIndex(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v], http status [%s]\n", logId, "CreateIndex", request, ret, response.Status)
+		}
+
+		if ret == nil {
+			return resource.NonRetryableError(fmt.Errorf("create index failed, result is nil."))
+		}
+
+		return nil
+	})
+
+	return
+}
+
+// DescribeIndex queries a single vector index by bucket name and index name.
+// It is the exact-lookup shape: the GetIndex API documents HTTP 404 as "the
+// index does not exist", so a confirmed missing index surfaces as the shared
+// fwHelper.ErrNotFound sentinel instead of an error.
+func (me *CosService) DescribeIndex(ctx context.Context, request *cos.GetIndexOptions) (info *cos.IndexInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil && !errors.Is(errRet, fwHelper.ErrNotFound) {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%v], reason:[%s]\n", logId, "GetIndex", request, errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check("GetIndex")
+		result, response, e := me.client.UseTencentCosVectorClient().Vector.GetIndex(ctx, request)
+		if e != nil {
+			if vectorError, ok := e.(*cos.VectorErrorResponse); ok && vectorError.Response != nil && vectorError.Response.StatusCode == http.StatusNotFound {
+				return resource.NonRetryableError(fwHelper.ErrNotFound)
+			}
+
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v], http status [%s]\n", logId, "GetIndex", request, result, response.Status)
+		}
+
+		if result == nil || result.Index == nil {
+			return resource.NonRetryableError(fwHelper.ErrNotFound)
+		}
+
+		info = result.Index
+		return nil
+	})
+
+	return
+}
+
+// DeleteIndex deletes a vector index under a COS vector bucket. The API is
+// synchronous.
+func (me *CosService) DeleteIndex(ctx context.Context, request *cos.DeleteIndexOptions) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%v], reason:[%s]\n", logId, "DeleteIndex", request, errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check("DeleteIndex")
+		response, e := me.client.UseTencentCosVectorClient().Vector.DeleteIndex(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%v], http status [%s]\n", logId, "DeleteIndex", request, response.Status)
+		}
+
+		return nil
+	})
+
+	return
+}
+
+// ListVectorBuckets lists the vector buckets of the requester. The paging
+// loop (NextToken, fixed page size 100) is built in: the caller only provides
+// the filter fields and receives the full set.
+func (me *CosService) ListVectorBuckets(ctx context.Context, request *cos.ListVectorBucketsOptions) (buckets []cos.VectorBucketBrief, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		response *cos.ListVectorBucketsResult
+	)
+
+	// The named result is initialised here (NOT in the var block above): a
+	// named result and a body-level var of the same name do not compile.
+	buckets = make([]cos.VectorBucketBrief, 0)
+	request.MaxResults = 100
+
+	for {
+		request.NextToken = ""
+		if response != nil && response.NextToken != "" {
+			request.NextToken = response.NextToken
+		}
+
+		errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check("ListVectorBuckets")
+			result, resp, e := me.client.UseTencentCosVectorClient().Vector.ListVectorBuckets(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v], http status [%s]\n", logId, "ListVectorBuckets", request, result, resp.Status)
+			}
+
+			if result == nil {
+				return resource.NonRetryableError(fmt.Errorf("list vector buckets failed, result is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if errRet != nil {
+			log.Printf("[CRITAL]%s list vector buckets failed, reason:[%s]\n", logId, errRet.Error())
+			return nil, errRet
+		}
+
+		if len(response.VectorBuckets) < 1 {
+			break
+		}
+
+		buckets = append(buckets, response.VectorBuckets...)
+
+		// Terminal when the token is exhausted or the page is not full.
+		if response.NextToken == "" || len(response.VectorBuckets) < request.MaxResults {
+			break
+		}
+	}
+
+	return
+}
+
+// ListVectorIndexes lists the indexes of a vector bucket. The paging loop
+// (NextToken, fixed page size 100) is built in: the caller only provides the
+// filter fields and receives the full set.
+func (me *CosService) ListIndexes(ctx context.Context, request *cos.ListIndexesOptions) (indexes []cos.IndexBrief, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		response *cos.ListIndexesResult
+	)
+
+	// The named result is initialised here (NOT in the var block above): a
+	// named result and a body-level var of the same name do not compile.
+	indexes = make([]cos.IndexBrief, 0)
+	request.MaxResults = 100
+
+	for {
+		request.NextToken = ""
+		if response != nil && response.NextToken != "" {
+			request.NextToken = response.NextToken
+		}
+
+		errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check("ListIndexes")
+			result, resp, e := me.client.UseTencentCosVectorClient().Vector.ListIndexes(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v], http status [%s]\n", logId, "ListIndexes", request, result, resp.Status)
+			}
+
+			if result == nil {
+				return resource.NonRetryableError(fmt.Errorf("list indexes failed, result is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if errRet != nil {
+			log.Printf("[CRITAL]%s list indexes failed, reason:[%s]\n", logId, errRet.Error())
+			return nil, errRet
+		}
+
+		if len(response.Indexes) < 1 {
+			break
+		}
+
+		indexes = append(indexes, response.Indexes...)
+
+		// Terminal when the token is exhausted or the page is not full.
+		if response.NextToken == "" || len(response.Indexes) < request.MaxResults {
+			break
+		}
+	}
+
+	return
 }
