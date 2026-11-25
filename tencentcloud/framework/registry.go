@@ -60,7 +60,7 @@ var resourcesMap = map[string]func() resource.Resource{
 	"tencentcloud_makers_zone_custom_domain":        makers.NewMakersZoneCustomDomainResource,
 	"tencentcloud_makers_project":                   makers.NewMakersProjectResource,
 	"tencentcloud_makers_project_envs":              makers.NewMakersProjectEnvsResource,
-	"tencentcloud_oceanus_oceanus_cluster":          oceanus.NewOceanusClusterResource,
+	"tencentcloud_oceanus_cluster":                  oceanus.NewOceanusClusterResource,
 	"tencentcloud_ssm_secret_version_v2":            ssm.NewSsmSecretVersionV2Resource,
 }
 

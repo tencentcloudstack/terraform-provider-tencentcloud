@@ -3,17 +3,20 @@ package oceanus
 import (
 	"context"
 	"fmt"
-	"reflect"
+	"strings"
 	"testing"
 	"time"
 
 	"github.com/agiledragon/gomonkey/v2"
+	resourcetimeouts "github.com/hashicorp/terraform-plugin-framework-timeouts/resource/timeouts"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-go/tftypes"
 	oceanussdk "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus/v20190422"
+	regionv20220627 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/region/v20220627"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/sharedmeta"
@@ -77,7 +80,7 @@ func newOceanusClusterTestContext(t *testing.T, patches *gomonkey.Patches) *ocea
 
 func (c *oceanusClusterTestContext) vpcList(t *testing.T) types.List {
 	t.Helper()
-	elemType := c.schema.Attributes["vpc_descriptions"].Type.(attr.TypeWithElementType).ElementType()
+	elemType := c.schema.Attributes["vpc_descriptions"].GetType().(attr.TypeWithElementType).ElementType()
 	list, diags := types.ListValueFrom(context.Background(), elemType, []OceanusClusterVpcDescriptionModel{
 		{
 			VpcId:    types.StringValue("vpc-tf1234"),
@@ -88,6 +91,15 @@ func (c *oceanusClusterTestContext) vpcList(t *testing.T) types.List {
 		t.Fatalf("failed to build vpc list: %v", diags.Errors())
 	}
 	return list
+}
+
+// config mirrors the plan construction for the Config side of a create or
+// update request: write-only attribute values (login_password) are only
+// provided through the configuration, never through the plan.
+func (c *oceanusClusterTestContext) config(t *testing.T, model OceanusClusterResourceModel) tfsdk.Config {
+	t.Helper()
+	plan := c.plan(t, model)
+	return tfsdk.Config{Schema: c.schema, Raw: plan.Raw}
 }
 
 func (c *oceanusClusterTestContext) plan(t *testing.T, model OceanusClusterResourceModel) tfsdk.Plan {
@@ -108,6 +120,23 @@ func (c *oceanusClusterTestContext) state(t *testing.T, model OceanusClusterReso
 	return state
 }
 
+// nullTimeouts builds a null timeouts.Value matching the resource schema, so
+// model (de)serialization through tfsdk.Plan/State behaves exactly like a
+// configuration that does not set the timeouts block.
+func (c *oceanusClusterTestContext) nullTimeouts() resourcetimeouts.Value {
+	timeoutsBlock, ok := c.schema.Blocks["timeouts"]
+	if !ok {
+		panic("timeouts block not found in schema")
+	}
+	timeoutsType, ok := timeoutsBlock.Type().(resourcetimeouts.Type)
+	if !ok {
+		panic("unexpected timeouts block type")
+	}
+	return resourcetimeouts.Value{
+		Object: types.ObjectNull(timeoutsType.AttributeTypes()),
+	}
+}
+
 // oceanusClusterTestModel builds a full resource model. When withPassword is
 // true, login_password carries a plaintext value (plan side); otherwise it is
 // null (state side, write-only). When id is empty the id is unknown so the
@@ -125,8 +154,8 @@ func (c *oceanusClusterTestContext) oceanusClusterTestModel(t *testing.T, id str
 	return OceanusClusterResourceModel{
 		Id:                          idValue,
 		ClusterName:                 types.StringValue(oceanusTestClusterName),
-		RegionId:                    types.Int64Value(1),
-		ZoneId:                      types.Int64Value(100001),
+		Region:                      types.StringValue("ap-guangzhou"),
+		Zone:                        types.StringValue("ap-guangzhou-1"),
 		LoginPassword:               types.StringPointerValue(strOrNil(withPassword, "Password@123")),
 		VpcDescriptions:             c.vpcList(t),
 		DefaultCosBucket:            types.StringValue(oceanusTestCosBucket),
@@ -139,12 +168,13 @@ func (c *oceanusClusterTestContext) oceanusClusterTestModel(t *testing.T, id str
 		FlinkWebUiNetworkAccessType: types.StringNull(),
 		SlaveVpcDescriptions:        types.ListNull(c.vpcListElemType(t)),
 		CuMemory:                    types.Int64Null(),
+		Timeouts:                    c.nullTimeouts(),
 	}
 }
 
 func (c *oceanusClusterTestContext) vpcListElemType(t *testing.T) attr.Type {
 	t.Helper()
-	return c.schema.Attributes["vpc_descriptions"].Type.(attr.TypeWithElementType).ElementType()
+	return c.schema.Attributes["vpc_descriptions"].GetType().(attr.TypeWithElementType).ElementType()
 }
 
 func strOrNil(set bool, v string) *string {
@@ -180,11 +210,25 @@ func oceanusTestDescribeResponse(clusters ...*oceanussdk.Cluster) *oceanussdk.De
 	}
 }
 
-func assertNoDiagnostics(t *testing.T, diags interface{ HasError() bool }, what string) {
-	t.Helper()
-	if diags.HasError() {
-		t.Fatalf("%s reported errors", what)
-	}
+// patchOceanusRegionResolution stubs the region management Describe calls so
+// the Create flows can run without the real region service. The name -> id
+// translation logic itself keeps running: ap-guangzhou resolves to region id
+// 1 and ap-guangzhou-1 to zone id 100001. The stubs target the Describe
+// methods (large retry functions, never inlined) instead of the small
+// translation helpers, which the compiler inlines into the Create call site.
+func patchOceanusRegionResolution(patches *gomonkey.Patches) {
+	patches.ApplyMethodFunc(&OceanusService{}, "DescribeOceanusRegions",
+		func(_ context.Context) ([]*regionv20220627.RegionInfo, error) {
+			return []*regionv20220627.RegionInfo{
+				{Region: strOrNil(true, "ap-guangzhou"), RegionIdMC: strOrNil(true, "1")},
+			}, nil
+		})
+	patches.ApplyMethodFunc(&OceanusService{}, "DescribeOceanusZones",
+		func(_ context.Context) ([]*regionv20220627.ZoneInfo, error) {
+			return []*regionv20220627.ZoneInfo{
+				{Zone: strOrNil(true, "ap-guangzhou-1"), ZoneId: strOrNil(true, "100001")},
+			}, nil
+		})
 }
 
 // TestOceanusClusterCreateSuccess verifies that Create sends all configured
@@ -196,9 +240,10 @@ func TestOceanusClusterCreateSuccess(t *testing.T) {
 
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
+	patchOceanusRegionResolution(patches)
 
 	var captured *oceanussdk.CreateOceanusClusterRequest
-	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "CreateOceanusClusterWithContext",
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "CreateOceanusClusterWithContext",
 		func(_ context.Context, req *oceanussdk.CreateOceanusClusterRequest) (*oceanussdk.CreateOceanusClusterResponse, error) {
 			captured = req
 			return &oceanussdk.CreateOceanusClusterResponse{
@@ -207,7 +252,7 @@ func TestOceanusClusterCreateSuccess(t *testing.T) {
 				},
 			}, nil
 		})
-	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "DescribeClustersWithContext",
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "DescribeClustersWithContext",
 		func(_ context.Context, req *oceanussdk.DescribeClustersRequest) (*oceanussdk.DescribeClustersResponse, error) {
 			if len(req.ClusterIds) != 1 || *req.ClusterIds[0] != oceanusTestClusterId {
 				t.Errorf("DescribeClusters request ids = %v, want [%s]", req.ClusterIds, oceanusTestClusterId)
@@ -219,7 +264,7 @@ func TestOceanusClusterCreateSuccess(t *testing.T) {
 	model := ctx.oceanusClusterTestModel(t, "", true, 12, nil)
 	var createResp resource.CreateResponse
 	createResp.State = ctx.state(t, model)
-	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, model)}, &createResp)
+	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, model), Config: ctx.config(t, model)}, &createResp)
 	if createResp.Diagnostics.HasError() {
 		t.Fatalf("Create failed: %v", createResp.Diagnostics.Errors())
 	}
@@ -271,8 +316,8 @@ func TestOceanusClusterCreateSuccess(t *testing.T) {
 	if got.Cu.ValueInt64() != 12 {
 		t.Errorf("cu = %d, want 12", got.Cu.ValueInt64())
 	}
-	if got.RegionId.ValueInt64() != 1 {
-		t.Errorf("region_id = %d, want 1", got.RegionId.ValueInt64())
+	if got.Region.ValueString() != "ap-guangzhou" {
+		t.Errorf("region = %q, want ap-guangzhou", got.Region.ValueString())
 	}
 	var vpcs []OceanusClusterVpcDescriptionModel
 	if diags := got.VpcDescriptions.ElementsAs(context.Background(), &vpcs, false); diags.HasError() {
@@ -290,7 +335,8 @@ func TestOceanusClusterCreateApiError(t *testing.T) {
 
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
-	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "CreateOceanusClusterWithContext",
+	patchOceanusRegionResolution(patches)
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "CreateOceanusClusterWithContext",
 		func(_ context.Context, _ *oceanussdk.CreateOceanusClusterRequest) (*oceanussdk.CreateOceanusClusterResponse, error) {
 			return nil, fmt.Errorf("create failed")
 		})
@@ -299,7 +345,7 @@ func TestOceanusClusterCreateApiError(t *testing.T) {
 	model := ctx.oceanusClusterTestModel(t, "", true, 12, nil)
 	var createResp resource.CreateResponse
 	createResp.State = ctx.state(t, model)
-	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, model)}, &createResp)
+	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, model), Config: ctx.config(t, model)}, &createResp)
 	if !createResp.Diagnostics.HasError() {
 		t.Fatal("Create should fail when the API returns an error")
 	}
@@ -313,7 +359,8 @@ func TestOceanusClusterCreateEmptyId(t *testing.T) {
 
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
-	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "CreateOceanusClusterWithContext",
+	patchOceanusRegionResolution(patches)
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "CreateOceanusClusterWithContext",
 		func(_ context.Context, _ *oceanussdk.CreateOceanusClusterRequest) (*oceanussdk.CreateOceanusClusterResponse, error) {
 			return &oceanussdk.CreateOceanusClusterResponse{
 				Response: &oceanussdk.CreateOceanusClusterResponseParams{},
@@ -324,7 +371,7 @@ func TestOceanusClusterCreateEmptyId(t *testing.T) {
 	model := ctx.oceanusClusterTestModel(t, "", true, 12, nil)
 	var createResp resource.CreateResponse
 	createResp.State = ctx.state(t, model)
-	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, model)}, &createResp)
+	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, model), Config: ctx.config(t, model)}, &createResp)
 	if !createResp.Diagnostics.HasError() {
 		t.Fatal("Create should fail when the API returns no ClusterId")
 	}
@@ -338,7 +385,7 @@ func TestOceanusClusterReadSuccess(t *testing.T) {
 
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
-	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "DescribeClustersWithContext",
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "DescribeClustersWithContext",
 		func(_ context.Context, req *oceanussdk.DescribeClustersRequest) (*oceanussdk.DescribeClustersResponse, error) {
 			if len(req.ClusterIds) != 1 || *req.ClusterIds[0] != oceanusTestClusterId {
 				t.Errorf("DescribeClusters request ids = %v, want [%s]", req.ClusterIds, oceanusTestClusterId)
@@ -368,11 +415,11 @@ func TestOceanusClusterReadSuccess(t *testing.T) {
 	if got.Cu.ValueInt64() != 12 {
 		t.Errorf("cu = %d, want 12", got.Cu.ValueInt64())
 	}
-	if got.RegionId.ValueInt64() != 1 {
-		t.Errorf("region_id = %d, want preserved 1", got.RegionId.ValueInt64())
+	if got.Region.ValueString() != "ap-guangzhou" {
+		t.Errorf("region = %q, want preserved ap-guangzhou", got.Region.ValueString())
 	}
-	if got.ZoneId.ValueInt64() != 100001 {
-		t.Errorf("zone_id = %d, want preserved 100001", got.ZoneId.ValueInt64())
+	if got.Zone.ValueString() != "ap-guangzhou-1" {
+		t.Errorf("zone = %q, want preserved ap-guangzhou-1", got.Zone.ValueString())
 	}
 	if got.InstanceChargeType.ValueString() != "POSTPAID_BY_SECOND" {
 		t.Errorf("instance_charge_type = %q, want preserved POSTPAID_BY_SECOND", got.InstanceChargeType.ValueString())
@@ -393,20 +440,20 @@ func TestOceanusClusterReadNotFound(t *testing.T) {
 
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
-	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "DescribeClustersWithContext",
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "DescribeClustersWithContext",
 		func(_ context.Context, _ *oceanussdk.DescribeClustersRequest) (*oceanussdk.DescribeClustersResponse, error) {
 			return oceanusTestDescribeResponse(), nil
 		})
 
 	ctx := newOceanusClusterTestContext(t, patches)
 	stateModel := ctx.oceanusClusterTestModel(t, oceanusTestClusterId, false, 12, nil)
-	var readResp resource.ReadResponse
-	readResp.State = ctx.state(t, stateModel)
+	readResp := resource.ReadResponse{State: ctx.state(t, stateModel)}
 	ctx.resource.Read(context.Background(), resource.ReadRequest{State: ctx.state(t, stateModel)}, &readResp)
 	if readResp.Diagnostics.HasError() {
 		t.Fatalf("Read failed: %v", readResp.Diagnostics.Errors())
 	}
-	if readResp.State.Raw != nil {
+	// RemoveResource rewrites the state raw value to null.
+	if !readResp.State.Raw.IsNull() {
 		t.Fatalf("state should be removed for a missing cluster, got %s", readResp.State.Raw.String())
 	}
 }
@@ -423,7 +470,7 @@ func TestOceanusClusterUpdateScaleAndRenew(t *testing.T) {
 
 	var scaleReq *oceanussdk.ScaleOceanusClusterRequest
 	var renewReq *oceanussdk.RenewOceanusClusterRequest
-	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "ScaleOceanusClusterWithContext",
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "ScaleOceanusClusterWithContext",
 		func(_ context.Context, req *oceanussdk.ScaleOceanusClusterRequest) (*oceanussdk.ScaleOceanusClusterResponse, error) {
 			scaleReq = req
 			return &oceanussdk.ScaleOceanusClusterResponse{
@@ -432,7 +479,7 @@ func TestOceanusClusterUpdateScaleAndRenew(t *testing.T) {
 				},
 			}, nil
 		})
-	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "RenewOceanusClusterWithContext",
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "RenewOceanusClusterWithContext",
 		func(_ context.Context, req *oceanussdk.RenewOceanusClusterRequest) (*oceanussdk.RenewOceanusClusterResponse, error) {
 			renewReq = req
 			return &oceanussdk.RenewOceanusClusterResponse{
@@ -441,9 +488,13 @@ func TestOceanusClusterUpdateScaleAndRenew(t *testing.T) {
 				},
 			}, nil
 		})
-	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "DescribeClustersWithContext",
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "DescribeClustersWithContext",
 		func(_ context.Context, _ *oceanussdk.DescribeClustersRequest) (*oceanussdk.DescribeClustersResponse, error) {
-			return oceanusTestDescribeResponse(oceanusClusterTestItem(2)), nil
+			// The describe happens after the resize converged: report the
+			// scaled-up cluster.
+			item := oceanusClusterTestItem(2)
+			item.CuNum = uint64OrNil(19)
+			return oceanusTestDescribeResponse(item), nil
 		})
 
 	ctx := newOceanusClusterTestContext(t, patches)
@@ -501,7 +552,7 @@ func TestOceanusClusterUpdateScaleDown(t *testing.T) {
 	defer patches.Reset()
 
 	var scaleReq *oceanussdk.ScaleOceanusClusterRequest
-	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "ScaleOceanusClusterWithContext",
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "ScaleOceanusClusterWithContext",
 		func(_ context.Context, req *oceanussdk.ScaleOceanusClusterRequest) (*oceanussdk.ScaleOceanusClusterResponse, error) {
 			scaleReq = req
 			return &oceanussdk.ScaleOceanusClusterResponse{
@@ -510,7 +561,7 @@ func TestOceanusClusterUpdateScaleDown(t *testing.T) {
 				},
 			}, nil
 		})
-	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "DescribeClustersWithContext",
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "DescribeClustersWithContext",
 		func(_ context.Context, _ *oceanussdk.DescribeClustersRequest) (*oceanussdk.DescribeClustersResponse, error) {
 			return oceanusTestDescribeResponse(oceanusClusterTestItem(2)), nil
 		})
@@ -539,7 +590,7 @@ func TestOceanusClusterDeleteSuccess(t *testing.T) {
 	defer patches.Reset()
 
 	var captured *oceanussdk.DeleteOceanusClusterRequest
-	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "DeleteOceanusClusterWithContext",
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "DeleteOceanusClusterWithContext",
 		func(_ context.Context, req *oceanussdk.DeleteOceanusClusterRequest) (*oceanussdk.DeleteOceanusClusterResponse, error) {
 			captured = req
 			return &oceanussdk.DeleteOceanusClusterResponse{
@@ -548,7 +599,7 @@ func TestOceanusClusterDeleteSuccess(t *testing.T) {
 				},
 			}, nil
 		})
-	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "DescribeClustersWithContext",
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "DescribeClustersWithContext",
 		func(_ context.Context, req *oceanussdk.DescribeClustersRequest) (*oceanussdk.DescribeClustersResponse, error) {
 			if len(req.ClusterIds) != 1 || *req.ClusterIds[0] != oceanusTestClusterId {
 				t.Errorf("DescribeClusters request ids = %v, want [%s]", req.ClusterIds, oceanusTestClusterId)
@@ -572,7 +623,7 @@ func TestOceanusClusterDeleteSuccess(t *testing.T) {
 func TestOceanusClusterDeleteApiError(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
-	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "DeleteOceanusClusterWithContext",
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "DeleteOceanusClusterWithContext",
 		func(_ context.Context, _ *oceanussdk.DeleteOceanusClusterRequest) (*oceanussdk.DeleteOceanusClusterResponse, error) {
 			return nil, fmt.Errorf("delete failed")
 		})
@@ -586,6 +637,88 @@ func TestOceanusClusterDeleteApiError(t *testing.T) {
 	}
 }
 
+// TestOceanusClusterCreateTimeoutPassedToWait verifies that the
+// `timeouts.create` attribute bounds the creation wait loop: a cluster stuck
+// in the initializing state must fail after the configured short timeout
+// instead of the built-in default.
+func TestOceanusClusterCreateTimeoutPassedToWait(t *testing.T) {
+	restore := shortenPolling()
+	defer restore()
+
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+	patchOceanusRegionResolution(patches)
+
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "CreateOceanusClusterWithContext",
+		func(_ context.Context, _ *oceanussdk.CreateOceanusClusterRequest) (*oceanussdk.CreateOceanusClusterResponse, error) {
+			return &oceanussdk.CreateOceanusClusterResponse{
+				Response: &oceanussdk.CreateOceanusClusterResponseParams{
+					ClusterId: strOrNil(true, oceanusTestClusterId),
+				},
+			}, nil
+		})
+	// The cluster never leaves the initializing state.
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "DescribeClustersWithContext",
+		func(_ context.Context, _ *oceanussdk.DescribeClustersRequest) (*oceanussdk.DescribeClustersResponse, error) {
+			return oceanusTestDescribeResponse(oceanusClusterTestItem(3)), nil
+		})
+
+	ctx := newOceanusClusterTestContext(t, patches)
+	model := ctx.oceanusClusterTestModel(t, "", true, 12, nil)
+	model.Timeouts = ctx.timeoutsWith(t, "create", "1s")
+
+	createResp := resource.CreateResponse{State: ctx.state(t, model)}
+	ctx.resource.Create(context.Background(), resource.CreateRequest{
+		Plan:   ctx.plan(t, model),
+		Config: ctx.config(t, model),
+	}, &createResp)
+	if !createResp.Diagnostics.HasError() {
+		t.Fatal("Create should fail when the cluster never becomes ready")
+	}
+
+	summary := createResp.Diagnostics.Errors()[0].Summary()
+	if !strings.Contains(summary, "Wait for Oceanus cluster ready failed") {
+		t.Fatalf("unexpected error summary: %s", summary)
+	}
+}
+
+// timeoutsWith builds a timeouts.Value with the given stage set to a duration
+// string and every other stage null.
+func (c *oceanusClusterTestContext) timeoutsWith(t *testing.T, stage, value string) resourcetimeouts.Value {
+	t.Helper()
+	timeoutsBlock, ok := c.schema.Blocks["timeouts"]
+	if !ok {
+		t.Fatalf("timeouts block not found in schema")
+	}
+	timeoutsType, ok := timeoutsBlock.Type().(resourcetimeouts.Type)
+	if !ok {
+		t.Fatalf("timeouts does not have the framework timeouts type: %T", timeoutsBlock.Type())
+	}
+
+	attrTypes := timeoutsType.AttributeTypes()
+	attributes := map[string]attr.Value{}
+	for name := range attrTypes {
+		if name == stage {
+			attributes[name] = types.StringValue(value)
+		} else {
+			attributes[name] = types.StringNull()
+		}
+	}
+	object, diags := types.ObjectValue(attrTypes, attributes)
+	if diags.HasError() {
+		t.Fatalf("failed to build timeouts object: %v", diags.Errors())
+	}
+	timeoutsValue, diags := timeoutsType.ValueFromObject(context.Background(), object)
+	if diags.HasError() {
+		t.Fatalf("failed to build timeouts value: %v", diags.Errors())
+	}
+	result, ok := timeoutsValue.(resourcetimeouts.Value)
+	if !ok {
+		t.Fatalf("timeouts value has unexpected type %T", timeoutsValue)
+	}
+	return result
+}
+
 // TestOceanusClusterImportState verifies that the resource supports import via
 // the id attribute passthrough.
 func TestOceanusClusterImportState(t *testing.T) {
@@ -596,6 +729,10 @@ func TestOceanusClusterImportState(t *testing.T) {
 	}
 	var importResp resource.ImportStateResponse
 	importResp.State.Schema = ctx.schema
+	// The framework server initializes the import state raw value to a fully
+	// null object of the schema type before the provider ImportState runs;
+	// mirror that so SetAttribute can store into it.
+	importResp.State.Raw = tftypes.NewValue(ctx.schema.Type().TerraformType(context.Background()), nil)
 	importer.ImportState(context.Background(), resource.ImportStateRequest{
 		ID: oceanusTestClusterId,
 	}, &importResp)
@@ -626,7 +763,7 @@ func TestOceanusClusterReadRefreshesReadableFields(t *testing.T) {
 		Remark:           strOrNil(true, "cloud-side-remark"),
 		DefaultCOSBucket: strOrNil(true, "cloud-side-bucket-1250000000"),
 	}
-	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "DescribeClustersWithContext",
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "DescribeClustersWithContext",
 		func(_ context.Context, _ *oceanussdk.DescribeClustersRequest) (*oceanussdk.DescribeClustersResponse, error) {
 			return oceanusTestDescribeResponse(cluster), nil
 		})
@@ -663,11 +800,11 @@ func TestOceanusClusterReadRefreshesReadableFields(t *testing.T) {
 	if !got.LoginPassword.IsNull() {
 		t.Errorf("login_password = %v, want null (write-only)", got.LoginPassword)
 	}
-	if got.RegionId.ValueInt64() != 1 {
-		t.Errorf("region_id = %d, want 1 (preserved from state)", got.RegionId.ValueInt64())
+	if got.Region.ValueString() != "ap-guangzhou" {
+		t.Errorf("region = %q, want ap-guangzhou (preserved from state)", got.Region.ValueString())
 	}
-	if got.ZoneId.ValueInt64() != 100001 {
-		t.Errorf("zone_id = %d, want 100001 (preserved from state)", got.ZoneId.ValueInt64())
+	if got.Zone.ValueString() != "ap-guangzhou-1" {
+		t.Errorf("zone = %q, want ap-guangzhou-1 (preserved from state)", got.Zone.ValueString())
 	}
 	if got.Period.ValueInt64() != 12 {
 		t.Errorf("period = %d, want 12 (preserved from state)", got.Period.ValueInt64())
@@ -681,7 +818,7 @@ func TestOceanusClusterReadRefreshesReadableFields(t *testing.T) {
 func TestOceanusClusterReadApiError(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
-	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "DescribeClustersWithContext",
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "DescribeClustersWithContext",
 		func(_ context.Context, _ *oceanussdk.DescribeClustersRequest) (*oceanussdk.DescribeClustersResponse, error) {
 			return nil, fmt.Errorf("describe failed")
 		})
@@ -704,17 +841,17 @@ func TestOceanusClusterUpdateNoChanges(t *testing.T) {
 
 	scaleCalled := false
 	renewCalled := false
-	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "ScaleOceanusClusterWithContext",
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "ScaleOceanusClusterWithContext",
 		func(_ context.Context, _ *oceanussdk.ScaleOceanusClusterRequest) (*oceanussdk.ScaleOceanusClusterResponse, error) {
 			scaleCalled = true
 			return nil, fmt.Errorf("ScaleOceanusCluster must not be called")
 		})
-	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "RenewOceanusClusterWithContext",
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "RenewOceanusClusterWithContext",
 		func(_ context.Context, _ *oceanussdk.RenewOceanusClusterRequest) (*oceanussdk.RenewOceanusClusterResponse, error) {
 			renewCalled = true
 			return nil, fmt.Errorf("RenewOceanusCluster must not be called")
 		})
-	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "DescribeClustersWithContext",
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "DescribeClustersWithContext",
 		func(_ context.Context, _ *oceanussdk.DescribeClustersRequest) (*oceanussdk.DescribeClustersResponse, error) {
 			return oceanusTestDescribeResponse(oceanusClusterTestItem(2)), nil
 		})
@@ -755,7 +892,7 @@ func TestOceanusClusterUpdateNoChanges(t *testing.T) {
 func TestOceanusClusterUpdateScaleTaskFailure(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
-	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "ScaleOceanusClusterWithContext",
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "ScaleOceanusClusterWithContext",
 		func(_ context.Context, _ *oceanussdk.ScaleOceanusClusterRequest) (*oceanussdk.ScaleOceanusClusterResponse, error) {
 			return &oceanussdk.ScaleOceanusClusterResponse{
 				Response: &oceanussdk.ScaleOceanusClusterResponseParams{
@@ -783,7 +920,8 @@ func TestOceanusClusterUpdateScaleTaskFailure(t *testing.T) {
 func TestOceanusClusterCreateNilResponse(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
-	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "CreateOceanusClusterWithContext",
+	patchOceanusRegionResolution(patches)
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "CreateOceanusClusterWithContext",
 		func(_ context.Context, _ *oceanussdk.CreateOceanusClusterRequest) (*oceanussdk.CreateOceanusClusterResponse, error) {
 			return &oceanussdk.CreateOceanusClusterResponse{}, nil
 		})
@@ -792,7 +930,7 @@ func TestOceanusClusterCreateNilResponse(t *testing.T) {
 	model := ctx.oceanusClusterTestModel(t, "", true, 12, nil)
 	var createResp resource.CreateResponse
 	createResp.State = ctx.state(t, model)
-	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, model)}, &createResp)
+	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, model), Config: ctx.config(t, model)}, &createResp)
 	if !createResp.Diagnostics.HasError() {
 		t.Fatal("Create should fail when the API returns no ClusterId")
 	}
@@ -803,7 +941,7 @@ func TestOceanusClusterCreateNilResponse(t *testing.T) {
 func TestOceanusClusterDeleteTaskFailure(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
-	patches.ApplyMethodFunc(reflect.TypeOf(&oceanussdk.Client{}), "DeleteOceanusClusterWithContext",
+	patches.ApplyMethodFunc(&oceanussdk.Client{}, "DeleteOceanusClusterWithContext",
 		func(_ context.Context, _ *oceanussdk.DeleteOceanusClusterRequest) (*oceanussdk.DeleteOceanusClusterResponse, error) {
 			return &oceanussdk.DeleteOceanusClusterResponse{
 				Response: &oceanussdk.DeleteOceanusClusterResponseParams{

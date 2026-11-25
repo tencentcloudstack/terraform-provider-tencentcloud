@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	resourcetimeouts "github.com/hashicorp/terraform-plugin-framework-timeouts/resource/timeouts"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -13,10 +14,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	sdkresource "github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	oceanus "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus/v20190422"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/helper"
 )
 
 var (
@@ -32,19 +33,9 @@ var (
 	oceanusClusterPollTimeout    = 30 * time.Minute
 )
 
-// Oceanus cluster status values reported by DescribeClusters. Only 1
-// (not initialized), 3 (initializing) and 2 (running) are documented by the
-// cloud API; any other value is treated as an unknown transition state and
-// keeps the caller waiting until the poll timeout.
 const (
-	oceanusClusterStatusNotInitialized = 1
-	oceanusClusterStatusInitializing   = 3
-	oceanusClusterStatusRunning        = 2
-
 	oceanusClusterScaleModeUp   = "ScaleUp"
 	oceanusClusterScaleModeDown = "ScaleDown"
-
-	oceanusClusterTaskSuccess = "success"
 )
 
 // NewOceanusClusterResource is the factory referenced by
@@ -54,7 +45,7 @@ func NewOceanusClusterResource() resource.Resource {
 }
 
 // OceanusClusterResource implements resource.Resource for
-// tencentcloud_oceanus_oceanus_cluster.
+// tencentcloud_oceanus_cluster.
 //
 // CreateOceanusCluster is asynchronous: after the API returns the ClusterId
 // the state is persisted immediately and the creation is awaited by polling
@@ -72,46 +63,46 @@ type OceanusClusterResource struct {
 type OceanusClusterVpcDescriptionModel struct {
 	VpcId    types.String `tfsdk:"vpc_id"`
 	SubnetId types.String `tfsdk:"subnet_id"`
-	AppId    types.Int64  `tfsdk:"app_id"`
-	OwnerUin types.String `tfsdk:"owner_uin"`
 }
 
 // OceanusClusterVpcDescriptionAttrTypes returns the object attribute types of
-// a single vpc description element.
+// a single vpc description element. The vpc_descriptions and
+// slave_vpc_descriptions schema attributes use ListNestedAttribute; this map
+// mirrors their element object type for callers (tests) that need to build
+// list values by hand.
 func OceanusClusterVpcDescriptionAttrTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"vpc_id":    attr.Type(types.StringType),
 		"subnet_id": attr.Type(types.StringType),
-		"app_id":    attr.Type(types.Int64Type),
-		"owner_uin": attr.Type(types.StringType),
 	}
 }
 
 // OceanusClusterResourceModel maps the schema attributes.
 type OceanusClusterResourceModel struct {
-	Id                          types.String `tfsdk:"id"`
-	ClusterName                 types.String `tfsdk:"cluster_name"`
-	RegionId                    types.Int64  `tfsdk:"region_id"`
-	ZoneId                      types.Int64  `tfsdk:"zone_id"`
-	LoginPassword               types.String `tfsdk:"login_password"`
-	VpcDescriptions             types.List   `tfsdk:"vpc_descriptions"`
-	DefaultCosBucket            types.String `tfsdk:"default_cos_bucket"`
-	Cu                          types.Int64  `tfsdk:"cu"`
-	Remark                      types.String `tfsdk:"remark"`
-	Period                      types.Int64  `tfsdk:"period"`
-	InstanceChargeType          types.String `tfsdk:"instance_charge_type"`
-	ClusterType                 types.String `tfsdk:"cluster_type"`
-	RenewFlag                   types.String `tfsdk:"renew_flag"`
-	FlinkWebUiNetworkAccessType types.String `tfsdk:"flink_web_ui_network_access_type"`
-	SlaveVpcDescriptions        types.List   `tfsdk:"slave_vpc_descriptions"`
-	CuMemory                    types.Int64  `tfsdk:"cu_memory"`
+	Id                          types.String           `tfsdk:"id"`
+	ClusterName                 types.String           `tfsdk:"cluster_name"`
+	Region                      types.String           `tfsdk:"region"`
+	Zone                        types.String           `tfsdk:"zone"`
+	LoginPassword               types.String           `tfsdk:"login_password"`
+	VpcDescriptions             types.List             `tfsdk:"vpc_descriptions"`
+	DefaultCosBucket            types.String           `tfsdk:"default_cos_bucket"`
+	Cu                          types.Int64            `tfsdk:"cu"`
+	Remark                      types.String           `tfsdk:"remark"`
+	Period                      types.Int64            `tfsdk:"period"`
+	InstanceChargeType          types.String           `tfsdk:"instance_charge_type"`
+	ClusterType                 types.String           `tfsdk:"cluster_type"`
+	RenewFlag                   types.String           `tfsdk:"renew_flag"`
+	FlinkWebUiNetworkAccessType types.String           `tfsdk:"flink_web_ui_network_access_type"`
+	SlaveVpcDescriptions        types.List             `tfsdk:"slave_vpc_descriptions"`
+	CuMemory                    types.Int64            `tfsdk:"cu_memory"`
+	Timeouts                    resourcetimeouts.Value `tfsdk:"timeouts"`
 }
 
 func (r *OceanusClusterResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = "tencentcloud_oceanus_oceanus_cluster"
+	resp.TypeName = "tencentcloud_oceanus_cluster"
 }
 
-func (r *OceanusClusterResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *OceanusClusterResource) Schema(ctx context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Description: "Provide an Oceanus cluster resource.",
 		Attributes: map[string]schema.Attribute{
@@ -129,18 +120,18 @@ func (r *OceanusClusterResource) Schema(_ context.Context, _ resource.SchemaRequ
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"region_id": schema.Int64Attribute{
+			"region": schema.StringAttribute{
 				Required:    true,
-				Description: "Region ID, which can be queried via the DescribeRegions API with the Product parameter set to oceanus. Changing it forces recreation.",
-				PlanModifiers: []planmodifier.Int64{
-					int64planmodifier.RequiresReplace(),
+				Description: "Region name, e.g. `ap-guangzhou`. It is translated to the numeric region id expected by the cluster APIs via the region DescribeRegions API. Changing it forces recreation.",
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"zone_id": schema.Int64Attribute{
+			"zone": schema.StringAttribute{
 				Required:    true,
-				Description: "Availability zone ID, which can be queried via the DescribeZones API with the Product parameter set to oceanus. Changing it forces recreation.",
-				PlanModifiers: []planmodifier.Int64{
-					int64planmodifier.RequiresReplace(),
+				Description: "Availability zone name, e.g. `ap-guangzhou-7`. It is translated to the numeric zone id expected by the cluster APIs via the region DescribeZones API. Changing it forces recreation.",
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"login_password": schema.StringAttribute{
@@ -152,9 +143,20 @@ func (r *OceanusClusterResource) Schema(_ context.Context, _ resource.SchemaRequ
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"vpc_descriptions": schema.ListAttribute{
-				Required:    true,
-				ElementType: types.ObjectType{AttrTypes: OceanusClusterVpcDescriptionAttrTypes()},
+			"vpc_descriptions": schema.ListNestedAttribute{
+				Required: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"vpc_id": schema.StringAttribute{
+							Required:    true,
+							Description: "VPC ID.",
+						},
+						"subnet_id": schema.StringAttribute{
+							Required:    true,
+							Description: "Subnet ID.",
+						},
+					},
+				},
 				Description: "VPC used by the stream computing cluster to access other cloud resources in the same region via elastic network cards. Make sure the selected subnet has enough free IP addresses. Changing it forces recreation.",
 				PlanModifiers: []planmodifier.List{
 					listplanmodifier.RequiresReplace(),
@@ -216,9 +218,14 @@ func (r *OceanusClusterResource) Schema(_ context.Context, _ resource.SchemaRequ
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"slave_vpc_descriptions": schema.ListAttribute{
-				Optional:    true,
-				ElementType: types.ObjectType{AttrTypes: OceanusClusterVpcDescriptionAttrTypes()},
+			"slave_vpc_descriptions": schema.ListNestedAttribute{
+				Optional: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"vpc_id":    schema.StringAttribute{Required: true, Description: "VPC ID."},
+						"subnet_id": schema.StringAttribute{Required: true, Description: "Subnet ID."},
+					},
+				},
 				Description: "VPC of the slave availability zone, only effective for multi availability zone clusters. Changing it forces recreation.",
 				PlanModifiers: []planmodifier.List{
 					listplanmodifier.RequiresReplace(),
@@ -231,6 +238,18 @@ func (r *OceanusClusterResource) Schema(_ context.Context, _ resource.SchemaRequ
 					int64planmodifier.RequiresReplace(),
 				},
 			},
+		},
+		// The timeouts definition uses a block (rather than an object
+		// attribute) so the familiar `timeouts { ... }` HCL block syntax
+		// works, matching the official Terraform examples and the SDKv2
+		// providers. Every stage bounds the corresponding async wait loop.
+		Blocks: map[string]schema.Block{
+			"timeouts": resourcetimeouts.Block(ctx, resourcetimeouts.Opts{
+				Create:            true,
+				Update:            true,
+				CreateDescription: "A string that can be parsed as a duration (https://pkg.go.dev/time#ParseDuration), e.g. `30m`. It limits how long to wait for the cluster to reach the running state after creation. Default is `30m`.",
+				UpdateDescription: "A string that can be parsed as a duration (https://pkg.go.dev/time#ParseDuration), e.g. `30m`. It limits how long to wait for the cluster to converge after a CU resize or a renewal. Default is `30m`.",
+			}),
 		},
 	}
 }
@@ -245,6 +264,27 @@ func (r *OceanusClusterResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 
+	// The `timeouts.create` attribute bounds the creation wait loop; an unset
+	// block or attribute falls back to the built-in default and a malformed
+	// duration is reported as an error diagnostic (the schema validator
+	// normally rejects it at plan time; this is the runtime safety net).
+	createTimeout, timeoutDiags := plan.Timeouts.Create(ctx, oceanusClusterPollTimeout)
+	resp.Diagnostics.Append(timeoutDiags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// login_password is write-only: Terraform never carries write-only
+	// values in the plan (they would be persisted in plan files), they are
+	// only exposed through the configuration during apply. Reading the plan
+	// alone yields a null password, and CreateOceanusCluster would fail with
+	// MissingParameter.
+	var config OceanusClusterResourceModel
+	resp.Diagnostics.Append(req.Config.Get(ctx, &config)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
 	var vpcs, slaves []OceanusClusterVpcDescriptionModel
 	resp.Diagnostics.Append(plan.VpcDescriptions.ElementsAs(ctx, &vpcs, false)...)
 	resp.Diagnostics.Append(plan.SlaveVpcDescriptions.ElementsAs(ctx, &slaves, false)...)
@@ -252,21 +292,43 @@ func (r *OceanusClusterResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 
+	service := OceanusService{client: r.Client()}
+
+	// The cluster APIs address regions and zones by their numeric ids, while
+	// the practitioner configures their names. Translate both through the
+	// region management service before building the create request.
+	regionId, err := service.DescribeOceanusRegionId(ctx, plan.Region.ValueString())
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Resolve Oceanus region failed",
+			fmt.Sprintf("failed to resolve region %q to a numeric region id: %s", plan.Region.ValueString(), err.Error()),
+		)
+		return
+	}
+	zoneId, err := service.DescribeOceanusZoneId(ctx, plan.Zone.ValueString())
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Resolve Oceanus zone failed",
+			fmt.Sprintf("failed to resolve zone %q to a numeric zone id: %s", plan.Zone.ValueString(), err.Error()),
+		)
+		return
+	}
+
 	request := oceanus.NewCreateOceanusClusterRequest()
 	request.ClusterName = plan.ClusterName.ValueStringPointer()
-	request.RegionId = oceanusClusterInt64Ptr(plan.RegionId.ValueInt64())
-	request.ZoneId = oceanusClusterInt64Ptr(plan.ZoneId.ValueInt64())
-	request.LoginPassword = plan.LoginPassword.ValueStringPointer()
+	request.RegionId = helper.Int64(regionId)
+	request.ZoneId = helper.Int64(zoneId)
+	request.LoginPassword = config.LoginPassword.ValueStringPointer()
 	request.VpcDescriptions = oceanusClusterVpcItems(vpcs)
 	request.DefaultCOSBucket = plan.DefaultCosBucket.ValueStringPointer()
 	if !plan.Cu.IsNull() && !plan.Cu.IsUnknown() {
-		request.CU = oceanusClusterInt64Ptr(plan.Cu.ValueInt64())
+		request.CU = helper.Int64(plan.Cu.ValueInt64())
 	}
 	if !plan.Remark.IsNull() && !plan.Remark.IsUnknown() {
 		request.Remark = plan.Remark.ValueStringPointer()
 	}
 	if !plan.Period.IsNull() && !plan.Period.IsUnknown() {
-		request.Period = oceanusClusterInt64Ptr(plan.Period.ValueInt64())
+		request.Period = helper.Int64(plan.Period.ValueInt64())
 	}
 	if !plan.InstanceChargeType.IsNull() && !plan.InstanceChargeType.IsUnknown() {
 		request.InstanceChargeType = plan.InstanceChargeType.ValueStringPointer()
@@ -284,29 +346,23 @@ func (r *OceanusClusterResource) Create(ctx context.Context, req resource.Create
 		request.SlaveVpcDescriptions = oceanusClusterSlaveItems(slaves)
 	}
 	if !plan.CuMemory.IsNull() && !plan.CuMemory.IsUnknown() {
-		request.CUMemory = oceanusClusterInt64Ptr(plan.CuMemory.ValueInt64())
+		request.CUMemory = helper.Int64(plan.CuMemory.ValueInt64())
 	}
 
-	response, err := r.Client().UseOceanusClient().CreateOceanusClusterWithContext(ctx, request)
+	clusterId, err := service.CreateOceanusCluster(ctx, request)
 	if err != nil {
-		resp.Diagnostics.AddError("Create Oceanus cluster failed", "API CreateOceanusCluster returned error: "+err.Error())
-		return
-	}
-	if response == nil || response.Response == nil || response.Response.ClusterId == nil || *response.Response.ClusterId == "" {
-		resp.Diagnostics.AddError("Create Oceanus cluster failed", "API CreateOceanusCluster returned no ClusterId")
+		resp.Diagnostics.AddError("Create Oceanus cluster failed", err.Error())
 		return
 	}
 
-	plan.Id = types.StringValue(*response.Response.ClusterId)
-	// login_password is write-only, but it is normalised here as well so the
-	// same model can be reused for the final state write.
+	plan.Id = types.StringValue(clusterId)
 	plan.LoginPassword = types.StringNull()
 	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	if err := r.waitForClusterReady(ctx, plan.Id.ValueString()); err != nil {
+	if err := service.WaitOceanusClusterReady(ctx, clusterId, createTimeout, oceanusClusterPollDelay, oceanusClusterPollMinTimeout); err != nil {
 		resp.Diagnostics.AddError("Wait for Oceanus cluster ready failed", err.Error())
 		return
 	}
@@ -366,7 +422,8 @@ func (r *OceanusClusterResource) refreshClusterState(
 	base OceanusClusterResourceModel,
 	clusterId string,
 ) (*OceanusClusterResourceModel, error) {
-	cluster, err := r.describeCluster(ctx, clusterId)
+	service := OceanusService{client: r.Client()}
+	cluster, err := service.DescribeOceanusClusterById(ctx, clusterId)
 	if err != nil {
 		return nil, err
 	}
@@ -385,17 +442,78 @@ func (r *OceanusClusterResource) refreshClusterState(
 	if cluster.Name != nil {
 		result.ClusterName = types.StringValue(*cluster.Name)
 	}
+	if cluster.Region != nil {
+		result.Region = types.StringValue(*cluster.Region)
+	}
+	if cluster.Zone != nil {
+		result.Zone = types.StringValue(*cluster.Zone)
+	}
+	if cluster.CCNs != nil {
+		vpcs := make([]OceanusClusterVpcDescriptionModel, 0, len(cluster.CCNs))
+		for _, v := range cluster.CCNs {
+			vpcs = append(vpcs, OceanusClusterVpcDescriptionModel{
+				VpcId:    types.StringValue(*v.VpcId),
+				SubnetId: types.StringValue(*v.SubnetId),
+			})
+		}
+		result.VpcDescriptions, _ = types.ListValueFrom(ctx, types.ObjectType{AttrTypes: OceanusClusterVpcDescriptionAttrTypes()}, vpcs)
+	}
+	if cluster.DefaultCOSBucket != nil {
+		result.DefaultCosBucket = types.StringValue(*cluster.DefaultCOSBucket)
+	}
 	if cluster.CuNum != nil {
 		result.Cu = types.Int64Value(int64(*cluster.CuNum))
 	}
-	// remark and default_cos_bucket are only refreshed when the model holds a
-	// configured value, so an empty cloud echo cannot turn a null attribute
-	// into a non-null state value.
-	if cluster.Remark != nil && !result.Remark.IsNull() && !result.Remark.IsUnknown() {
+	if cluster.Remark != nil {
 		result.Remark = types.StringValue(*cluster.Remark)
 	}
-	if cluster.DefaultCOSBucket != nil && !result.DefaultCosBucket.IsNull() && !result.DefaultCosBucket.IsUnknown() {
-		result.DefaultCosBucket = types.StringValue(*cluster.DefaultCOSBucket)
+	// period has no reliable read-back: the describe result only reports the
+	// expire/create timestamps of a prepaid cluster, and renewals shift the
+	// expiry so the originally configured purchase period cannot be
+	// recovered. The value carried by base is kept.
+	if cluster.PayMode != nil {
+		if *cluster.PayMode == 1 {
+			result.InstanceChargeType = types.StringValue("PREPAID")
+		} else {
+			result.InstanceChargeType = types.StringValue("POSTPAID_BY_SECOND")
+		}
+	}
+	if cluster.DeploymentMode != nil && *cluster.DeploymentMode == 1 {
+		result.ClusterType = types.StringValue("MULTI_AZ_CLUSTER")
+	}
+	// NOTIFY_AND_MANUAL_RENEW (Notify and manual renewal) → 0 (default value)
+	// NOTIFY_AND_AUTO_RENEW (Notify and automatic renewal) → 1
+	// DISABLE_NOTIFY_AND_MANUAL_RENEW (No notification, no renewal) → 2
+	if cluster.AutoRenewFlag != nil {
+		if *cluster.AutoRenewFlag == 0 {
+			result.RenewFlag = types.StringValue("NOTIFY_AND_MANUAL_RENEW")
+		} else if *cluster.AutoRenewFlag == 1 {
+			result.RenewFlag = types.StringValue("NOTIFY_AND_AUTO_RENEW")
+		} else if *cluster.AutoRenewFlag == 2 {
+			result.RenewFlag = types.StringValue("DISABLE_NOTIFY_AND_MANUAL_RENEW")
+		}
+	}
+	// NetworkAccess_EXTERNAL (public network access, default) → WebUIType=0
+	// NetworkAccess_INTERNAL (intranet access) → WebUIType=1
+	if cluster.WebUIType != nil {
+		if *cluster.WebUIType == 0 {
+			result.FlinkWebUiNetworkAccessType = types.StringValue("NetworkAccess_EXTERNAL")
+		} else if *cluster.WebUIType == 1 {
+			result.FlinkWebUiNetworkAccessType = types.StringValue("NetworkAccess_INTERNAL")
+		}
+	}
+	if cluster.SlaveZones != nil {
+		slaves := make([]OceanusClusterVpcDescriptionModel, 0, len(cluster.SlaveZones))
+		for _, v := range cluster.SlaveZones {
+			slaves = append(slaves, OceanusClusterVpcDescriptionModel{
+				VpcId:    types.StringValue(*v.VpcId),
+				SubnetId: types.StringValue(*v.SubnetId),
+			})
+		}
+		result.SlaveVpcDescriptions, _ = types.ListValueFrom(ctx, types.ObjectType{AttrTypes: OceanusClusterVpcDescriptionAttrTypes()}, slaves)
+	}
+	if cluster.CuMem != nil {
+		result.CuMemory = types.Int64Value(int64(*cluster.CuMem))
 	}
 
 	return &result, nil
@@ -422,6 +540,16 @@ func (r *OceanusClusterResource) Update(ctx context.Context, req resource.Update
 		return
 	}
 
+	// The `timeouts.update` attribute bounds the post-resize / post-renewal
+	// wait loops; an unset block falls back to the built-in default.
+	updateTimeout, timeoutDiags := plan.Timeouts.Update(ctx, oceanusClusterPollTimeout)
+	resp.Diagnostics.Append(timeoutDiags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	service := OceanusService{client: r.Client()}
+
 	if !plan.Cu.IsNull() && !plan.Cu.IsUnknown() && (state.Cu.IsNull() || !plan.Cu.Equal(state.Cu)) {
 		newCU := plan.Cu.ValueInt64()
 		scaleMode := oceanusClusterScaleModeUp
@@ -429,23 +557,14 @@ func (r *OceanusClusterResource) Update(ctx context.Context, req resource.Update
 			scaleMode = oceanusClusterScaleModeDown
 		}
 		request := oceanus.NewScaleOceanusClusterRequest()
-		request.ClusterId = oceanusClusterStrPtr(clusterId)
-		request.NewCU = oceanusClusterInt64Ptr(newCU)
-		request.ScaleMode = oceanusClusterStrPtr(scaleMode)
-		response, err := r.Client().UseOceanusClient().ScaleOceanusClusterWithContext(ctx, request)
-		if err != nil {
-			resp.Diagnostics.AddError("Scale Oceanus cluster failed", "API ScaleOceanusCluster returned error: "+err.Error())
+		request.ClusterId = helper.String(clusterId)
+		request.NewCU = helper.Int64(newCU)
+		request.ScaleMode = helper.String(scaleMode)
+		if err := service.ScaleOceanusCluster(ctx, request); err != nil {
+			resp.Diagnostics.AddError("Scale Oceanus cluster failed", err.Error())
 			return
 		}
-		if response == nil || response.Response == nil || response.Response.TaskExecResult == nil ||
-			*response.Response.TaskExecResult != oceanusClusterTaskSuccess {
-			resp.Diagnostics.AddError(
-				"Scale Oceanus cluster failed",
-				"API ScaleOceanusCluster did not report a successful task execution result",
-			)
-			return
-		}
-		if err := r.waitForClusterReady(ctx, clusterId); err != nil {
+		if err := service.WaitOceanusClusterReady(ctx, clusterId, updateTimeout, oceanusClusterPollDelay, oceanusClusterPollMinTimeout); err != nil {
 			resp.Diagnostics.AddError("Wait for Oceanus cluster ready failed", err.Error())
 			return
 		}
@@ -453,13 +572,13 @@ func (r *OceanusClusterResource) Update(ctx context.Context, req resource.Update
 
 	if !plan.Period.IsNull() && !plan.Period.IsUnknown() && (state.Period.IsNull() || !plan.Period.Equal(state.Period)) {
 		request := oceanus.NewRenewOceanusClusterRequest()
-		request.ClusterId = oceanusClusterStrPtr(clusterId)
-		request.Period = oceanusClusterInt64Ptr(plan.Period.ValueInt64())
-		if _, err := r.Client().UseOceanusClient().RenewOceanusClusterWithContext(ctx, request); err != nil {
-			resp.Diagnostics.AddError("Renew Oceanus cluster failed", "API RenewOceanusCluster returned error: "+err.Error())
+		request.ClusterId = helper.String(clusterId)
+		request.Period = helper.Int64(plan.Period.ValueInt64())
+		if err := service.RenewOceanusCluster(ctx, request); err != nil {
+			resp.Diagnostics.AddError("Renew Oceanus cluster failed", err.Error())
 			return
 		}
-		if err := r.waitForClusterReady(ctx, clusterId); err != nil {
+		if err := service.WaitOceanusClusterReady(ctx, clusterId, updateTimeout, oceanusClusterPollDelay, oceanusClusterPollMinTimeout); err != nil {
 			resp.Diagnostics.AddError("Wait for Oceanus cluster ready failed", err.Error())
 			return
 		}
@@ -500,117 +619,12 @@ func (r *OceanusClusterResource) Delete(ctx context.Context, req resource.Delete
 	}
 
 	request := oceanus.NewDeleteOceanusClusterRequest()
-	request.ClusterId = oceanusClusterStrPtr(clusterId)
-	response, err := r.Client().UseOceanusClient().DeleteOceanusClusterWithContext(ctx, request)
-	if err != nil {
-		resp.Diagnostics.AddError("Delete Oceanus cluster failed", "API DeleteOceanusCluster returned error: "+err.Error())
+	request.ClusterId = helper.String(clusterId)
+	service := OceanusService{client: r.Client()}
+	if err := service.DeleteOceanusCluster(ctx, request); err != nil {
+		resp.Diagnostics.AddError("Delete Oceanus cluster failed", err.Error())
 		return
 	}
-	if response == nil || response.Response == nil || response.Response.TaskExecResult == nil ||
-		*response.Response.TaskExecResult != oceanusClusterTaskSuccess {
-		resp.Diagnostics.AddError(
-			"Delete Oceanus cluster failed",
-			"API DeleteOceanusCluster did not report a successful task execution result",
-		)
-		return
-	}
-
-	if err := r.waitForClusterDeleted(ctx, clusterId); err != nil {
-		resp.Diagnostics.AddError("Wait for Oceanus cluster deletion failed", err.Error())
-	}
-}
-
-// describeCluster queries the cluster by its ID. A nil result with no error
-// means the cluster no longer exists.
-func (r *OceanusClusterResource) describeCluster(ctx context.Context, clusterId string) (*oceanus.Cluster, error) {
-	request := oceanus.NewDescribeClustersRequest()
-	request.ClusterIds = []*string{oceanusClusterStrPtr(clusterId)}
-	response, err := r.Client().UseOceanusClient().DescribeClustersWithContext(ctx, request)
-	if err != nil {
-		return nil, fmt.Errorf("API DescribeClusters returned error: %w", err)
-	}
-	if response == nil || response.Response == nil {
-		return nil, fmt.Errorf("API DescribeClusters returned nil response")
-	}
-	if len(response.Response.ClusterSet) == 0 {
-		return nil, nil
-	}
-	for _, cluster := range response.Response.ClusterSet {
-		if cluster == nil {
-			continue
-		}
-		if cluster.ClusterId == nil || *cluster.ClusterId == clusterId {
-			return cluster, nil
-		}
-	}
-	return nil, nil
-}
-
-// waitForClusterReady polls DescribeClusters until the cluster reports
-// status 2 (running).
-func (r *OceanusClusterResource) waitForClusterReady(ctx context.Context, clusterId string) error {
-	stateConf := &sdkresource.StateChangeConf{
-		Pending: []string{"INITIALIZING"},
-		Target:  []string{"RUNNING"},
-		Refresh: func() (interface{}, string, error) {
-			cluster, err := r.describeCluster(ctx, clusterId)
-			if err != nil {
-				return nil, "", err
-			}
-			if cluster == nil {
-				return nil, "MISSING", fmt.Errorf("cluster %s not found", clusterId)
-			}
-			if cluster.Status == nil {
-				return cluster, "INITIALIZING", nil
-			}
-			switch *cluster.Status {
-			case oceanusClusterStatusRunning:
-				return cluster, "RUNNING", nil
-			case oceanusClusterStatusNotInitialized, oceanusClusterStatusInitializing:
-				return cluster, "INITIALIZING", nil
-			default:
-				// Undocumented transition state: keep waiting instead of
-				// guessing an extra enum value.
-				return cluster, "INITIALIZING", nil
-			}
-		},
-		Timeout:    oceanusClusterPollTimeout,
-		Delay:      oceanusClusterPollDelay,
-		MinTimeout: oceanusClusterPollMinTimeout,
-	}
-	_, err := stateConf.WaitForStateContext(ctx)
-	return err
-}
-
-// waitForClusterDeleted polls DescribeClusters until the cluster disappears.
-func (r *OceanusClusterResource) waitForClusterDeleted(ctx context.Context, clusterId string) error {
-	stateConf := &sdkresource.StateChangeConf{
-		Pending: []string{"DELETING"},
-		Target:  []string{"DELETED"},
-		Refresh: func() (interface{}, string, error) {
-			cluster, err := r.describeCluster(ctx, clusterId)
-			if err != nil {
-				return nil, "", err
-			}
-			if cluster == nil {
-				return nil, "DELETED", nil
-			}
-			return cluster, "DELETING", nil
-		},
-		Timeout:    oceanusClusterPollTimeout,
-		Delay:      oceanusClusterPollDelay,
-		MinTimeout: oceanusClusterPollMinTimeout,
-	}
-	_, err := stateConf.WaitForStateContext(ctx)
-	return err
-}
-
-func oceanusClusterInt64Ptr(v int64) *int64 {
-	return &v
-}
-
-func oceanusClusterStrPtr(v string) *string {
-	return &v
 }
 
 func oceanusClusterVpcItems(vpcs []OceanusClusterVpcDescriptionModel) []*oceanus.VPCDescription {
@@ -619,12 +633,6 @@ func oceanusClusterVpcItems(vpcs []OceanusClusterVpcDescriptionModel) []*oceanus
 		item := &oceanus.VPCDescription{
 			VpcId:    v.VpcId.ValueStringPointer(),
 			SubnetId: v.SubnetId.ValueStringPointer(),
-		}
-		if !v.AppId.IsNull() && !v.AppId.IsUnknown() {
-			item.AppId = oceanusClusterInt64Ptr(v.AppId.ValueInt64())
-		}
-		if !v.OwnerUin.IsNull() && !v.OwnerUin.IsUnknown() {
-			item.OwnerUin = v.OwnerUin.ValueStringPointer()
 		}
 		items = append(items, item)
 	}
@@ -637,12 +645,6 @@ func oceanusClusterSlaveItems(slaves []OceanusClusterVpcDescriptionModel) []*oce
 		item := &oceanus.SlaveVpcDescriptions{
 			VpcId:    v.VpcId.ValueStringPointer(),
 			SubnetId: v.SubnetId.ValueStringPointer(),
-		}
-		if !v.AppId.IsNull() && !v.AppId.IsUnknown() {
-			item.AppId = oceanusClusterInt64Ptr(v.AppId.ValueInt64())
-		}
-		if !v.OwnerUin.IsNull() && !v.OwnerUin.IsUnknown() {
-			item.OwnerUin = v.OwnerUin.ValueStringPointer()
 		}
 		items = append(items, item)
 	}
