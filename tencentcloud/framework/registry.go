@@ -42,6 +42,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/makers"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mongodb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/oceanus"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssl"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tco"
@@ -59,6 +60,7 @@ var resourcesMap = map[string]func() resource.Resource{
 	"tencentcloud_makers_zone_custom_domain":        makers.NewMakersZoneCustomDomainResource,
 	"tencentcloud_makers_project":                   makers.NewMakersProjectResource,
 	"tencentcloud_makers_project_envs":              makers.NewMakersProjectEnvsResource,
+	"tencentcloud_oceanus_cluster":                  oceanus.NewOceanusClusterResource,
 	"tencentcloud_ssm_secret_version_v2":            ssm.NewSsmSecretVersionV2Resource,
 }
 

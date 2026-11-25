@@ -1347,6 +1347,7 @@ tencentcloud_oceanus_trigger_job_savepoint
 tencentcloud_oceanus_resource
 tencentcloud_oceanus_resource_config
 tencentcloud_oceanus_work_space
+tencentcloud_oceanus_cluster
 
 Virtual Private Cloud(VPC)
 Data Source

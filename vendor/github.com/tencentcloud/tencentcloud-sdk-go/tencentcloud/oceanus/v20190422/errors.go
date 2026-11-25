@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,14 +20,32 @@ const (
 	// CAM签名/鉴权错误。
 	AUTHFAILURE = "AuthFailure"
 
+	// 权限未授权
+	AUTHFAILURE_CAMNOTAUTHORIZED = "AuthFailure.CAMNotAuthorized"
+
 	// 未授权操作。
 	AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
+	// ddl语法检查失败。
+	FAILEDOPERATION_CHECKDDLGRAMMAR = "FailedOperation.CheckDdlGrammar"
+
+	// 找不到集群。
+	FAILEDOPERATION_CLUSTERNOTFOUND = "FailedOperation.ClusterNotFound"
+
+	// DDL解析失败。
+	FAILEDOPERATION_DDLPARSEFAILURE = "FailedOperation.DDLParseFailure"
+
 	// 数据库连接失败，请检查参数是否填写正确。
 	FAILEDOPERATION_DATASOURCECONNECTIONFAILED = "FailedOperation.DataSourceConnectionFailed"
+
+	// 默认命名空间不支持操作
+	FAILEDOPERATION_DEFAULTSPACECANNOTOPERATE = "FailedOperation.DefaultSpaceCanNotOperate"
+
+	// 不能删除wedata项目关联的空间
+	FAILEDOPERATION_DELETEWEDATAITEMSPACE = "FailedOperation.DeleteWedataItemspace"
 
 	// 作业的草稿不允许删除。
 	FAILEDOPERATION_DRAFTCONFIGCANNOTDELETE = "FailedOperation.DraftConfigCanNotDelete"
@@ -44,11 +62,23 @@ const (
 	// 查询资源关联标签失败。
 	FAILEDOPERATION_GETRESOURCETAGSBYRESOURCEIDS = "FailedOperation.GetResourceTagsByResourceIds"
 
+	// Failed to obtain resource information through Tag
+	FAILEDOPERATION_GETRESOURCESBYTAGSUNION = "FailedOperation.GetResourcesByTagsUnion"
+
 	// 语法检查失败。
 	FAILEDOPERATION_GRAMMARCHECKFAILURE = "FailedOperation.GrammarCheckFailure"
 
+	// 作业绑定默认告警失败
+	FAILEDOPERATION_JOBBINDDEFAULTMONITORFAILED = "FailedOperation.JobBindDefaultMonitorFailed"
+
 	// 作业配置在使用中。
 	FAILEDOPERATION_JOBCONFIGONPUBLISH = "FailedOperation.JobConfigOnPublish"
+
+	// 修改Connector type 失败
+	FAILEDOPERATION_MODIFYCONNECTORFAILEDOPERATION = "FailedOperation.ModifyConnectorFailedOperation"
+
+	// 修改table name 失败
+	FAILEDOPERATION_MODIFYTABLEFAILEDOPERATION = "FailedOperation.ModifyTableFailedOperation"
 
 	// SQL解析失败。
 	FAILEDOPERATION_PARSESQL = "FailedOperation.ParseSql"
@@ -104,6 +134,12 @@ const (
 	// AppId资源不匹配。
 	INVALIDPARAMETER_APPIDRESOURCENOTMATCH = "InvalidParameter.AppIdResourceNotMatch"
 
+	// 该变量名称已存在。
+	INVALIDPARAMETER_CREATEVARIABLEEXISTS = "InvalidParameter.CreateVariableExists"
+
+	// 文件夹名称重复
+	INVALIDPARAMETER_DUPLICATEDFOLDERNAME = "InvalidParameter.DuplicatedFolderName"
+
 	// 空间命名重复。
 	INVALIDPARAMETER_DUPLICATEDSPACENAME = "InvalidParameter.DuplicatedSpaceName"
 
@@ -134,6 +170,9 @@ const (
 	// 创建作业配置错误。
 	INVALIDPARAMETER_JOBCONFIGLOGCOLLECTPARAMERROR = "InvalidParameter.JobConfigLogCollectParamError"
 
+	// 请求参数中UriPath 无效
+	INVALIDPARAMETER_JOBDETAILURINOTVALIDCODE = "InvalidParameter.JobDetailUriNotValidCode"
+
 	// MaxParallelism 过大。
 	INVALIDPARAMETER_MAXPARALLELISMTOOLARGE = "InvalidParameter.MaxParallelismTooLarge"
 
@@ -145,6 +184,9 @@ const (
 
 	// Flink参数非法。
 	INVALIDPARAMETER_UNSUPPORTEDFLINKCONF = "InvalidParameter.UnsupportedFlinkConf"
+
+	// Unsupported options
+	INVALIDPARAMETER_UNSUPPORTEDOPTIONS = "InvalidParameter.UnsupportedOptions"
 
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -182,6 +224,15 @@ const (
 	// SQL作业不能指定EntrypointClass，JAR作业则必须指定。
 	INVALIDPARAMETERVALUE_JOBTYPECOMBINEWITHENTRYPOINTCLASS = "InvalidParameterValue.JobTypeCombineWithEntrypointClass"
 
+	// 元数据库名已存在。
+	INVALIDPARAMETERVALUE_METADATABASEEXISTED = "InvalidParameterValue.MetaDatabaseExisted"
+
+	// 元数据库名字非法。
+	INVALIDPARAMETERVALUE_METADATABASENAME = "InvalidParameterValue.MetaDatabaseName"
+
+	// 元数据表名已存在。
+	INVALIDPARAMETERVALUE_METATABLEEXISTED = "InvalidParameterValue.MetaTableExisted"
+
 	// OrderType值错误。
 	INVALIDPARAMETERVALUE_ORDERTYPE = "InvalidParameterValue.OrderType"
 
@@ -206,6 +257,9 @@ const (
 	// 未知停止类型错误。
 	INVALIDPARAMETERVALUE_UNKNOWNSTOPTYPE = "InvalidParameterValue.UnknownStopType"
 
+	// 变量参数异常。
+	INVALIDPARAMETERVALUE_VARIABLENAME = "InvalidParameterValue.VariableName"
+
 	// 超过配额限制。
 	LIMITEXCEEDED = "LimitExceeded"
 
@@ -218,6 +272,18 @@ const (
 	// 作业配置超出限制。
 	LIMITEXCEEDED_JOBCONFIG = "LimitExceeded.JobConfig"
 
+	// 用户作业默认告警配额达到上限
+	LIMITEXCEEDED_JOBDEFAULTMONITORLIMITEXCEEDED = "LimitExceeded.JobDefaultMonitorLimitExceeded"
+
+	// 创建的数据库个数超过限额。
+	LIMITEXCEEDED_METADATABASE = "LimitExceeded.MetaDatabase"
+
+	// 创建的数据表个数超过限额。
+	LIMITEXCEEDED_METATABLE = "LimitExceeded.MetaTable"
+
+	// 变量数超过限制。
+	LIMITEXCEEDED_VARIABLES = "LimitExceeded.Variables"
+
 	// 工作空间超阈值。
 	LIMITEXCEEDED_WORKSPACELIMITEXCEEDED = "LimitExceeded.WorkSpaceLimitExceeded"
 
@@ -226,6 +292,9 @@ const (
 
 	// 集群有其他操作。
 	RESOURCEINUSE_INSTANCEINPROCESS = "ResourceInUse.InstanceInProcess"
+
+	// Connector重复
+	RESOURCEINUSE_RESOURCECONNECTORDUPLICATENAME = "ResourceInUse.ResourceConnectorDuplicateName"
 
 	// 资源名称已存在。
 	RESOURCEINUSE_RESOURCENAMEALREADYEXISTS = "ResourceInUse.ResourceNameAlreadyExists"
@@ -242,6 +311,9 @@ const (
 	// 集群不存在。
 	RESOURCENOTFOUND_CLUSTERID = "ResourceNotFound.ClusterId"
 
+	// 未找到群集。
+	RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+
 	// 作业不存在。
 	RESOURCENOTFOUND_JOB = "ResourceNotFound.Job"
 
@@ -253,6 +325,12 @@ const (
 
 	// 找不到日志。
 	RESOURCENOTFOUND_LOGTOPIC = "ResourceNotFound.LogTopic"
+
+	// 未找到元数据。
+	RESOURCENOTFOUND_METADATANOTFOUND = "ResourceNotFound.MetaDataNotFound"
+
+	// 没有集群支持解析connector
+	RESOURCENOTFOUND_PARSECONNECTORCLUSTERNOTFOUND = "ResourceNotFound.ParseConnectorClusterNotFound"
 
 	// 程序包不存在。
 	RESOURCENOTFOUND_RESOURCE = "ResourceNotFound.Resource"
@@ -308,6 +386,9 @@ const (
 	// 未授权操作。
 	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 
+	// 未知参数错误。
+	UNKNOWNPARAMETER = "UnknownParameter"
+
 	// 操作不支持。
 	UNSUPPORTEDOPERATION = "UnsupportedOperation"
 
@@ -319,6 +400,12 @@ const (
 
 	// Checkpoint 时间间隔，错误。
 	UNSUPPORTEDOPERATION_INVALIDCHECKPOINTINTERVALERROR = "UnsupportedOperation.InvalidCheckpointIntervalError"
+
+	// 引用了多个外部数据源，目前SQL作业只允许引用一个外部数据源。
+	UNSUPPORTEDOPERATION_MULTIEXTERNALCATALOGUNSUPPORTED = "UnsupportedOperation.MultiExternalCatalogUnsupported"
+
+	// 不支持多EmrOrHive Catalog
+	UNSUPPORTEDOPERATION_MULTIEXTERNALEMRORHIVECATALOGUNSUPPORTED = "UnsupportedOperation.MultiExternalEmrOrHiveCatalogUnsupported"
 
 	// 权限拦截,没有进入权限。
 	UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
