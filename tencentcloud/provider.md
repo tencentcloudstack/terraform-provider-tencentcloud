@@ -58,6 +58,10 @@ Agent Sandbox(ags)
 Resource
 tencentcloud_ags_sandbox_tool
 
+Application Load Balancer(alb)
+Resource
+tencentcloud_alb_listener
+
 Anti-DDoS(antiddos)
 Data Source
 tencentcloud_antiddos_basic_device_status
