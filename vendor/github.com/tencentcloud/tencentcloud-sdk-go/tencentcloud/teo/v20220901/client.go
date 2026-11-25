@@ -1275,6 +1275,134 @@ func (c *Client) CreateContentIdentifierWithContext(ctx context.Context, request
     return
 }
 
+func NewCreateCustomGroupRequest() (request *CreateCustomGroupRequest) {
+    request = &CreateCustomGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "CreateCustomGroup")
+    
+    
+    return
+}
+
+func NewCreateCustomGroupResponse() (response *CreateCustomGroupResponse) {
+    response = &CreateCustomGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateCustomGroup
+// 创建自定义组。自定义组用于集中管理一组可复用的匹配条目，例如可以将多个 JA3/JA4 TLS 指纹保存为一个 TLS 指纹组，并在安全规则中直接引用该组，从而避免在多条规则中重复维护相同的指纹列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CONFIGCONDITIONSYNTAXERROR = "FailedOperation.ConfigConditionSyntaxError"
+//  FAILEDOPERATION_CONFIGCONDITIONUNKNOWNTARGET = "FailedOperation.ConfigConditionUnknownTarget"
+//  FAILEDOPERATION_CONFIGCONDITIONVALUEEMPTYERROR = "FailedOperation.ConfigConditionValueEmptyError"
+//  FAILEDOPERATION_CONFIGDUPLICATEKEYERROR = "FailedOperation.ConfigDuplicateKeyError"
+//  FAILEDOPERATION_CONFIGFIELDTYPEERROR = "FailedOperation.ConfigFieldTypeError"
+//  FAILEDOPERATION_CONFIGFORMATERROR = "FailedOperation.ConfigFormatError"
+//  FAILEDOPERATION_CONFIGJSONFORMATERROR = "FailedOperation.ConfigJSONFormatError"
+//  FAILEDOPERATION_CONFIGMALFORMEDCONTENT = "FailedOperation.ConfigMalformedContent"
+//  FAILEDOPERATION_CONFIGPARAMVALIDATEERRORS = "FailedOperation.ConfigParamValidateErrors"
+//  FAILEDOPERATION_CONFIGTIMEPARSINGERROR = "FailedOperation.ConfigTimeParsingError"
+//  FAILEDOPERATION_CONFIGUNKNOWNFIELD = "FailedOperation.ConfigUnknownField"
+//  FAILEDOPERATION_CONFIGUNSUPPORTEDACTION = "FailedOperation.ConfigUnsupportedAction"
+//  FAILEDOPERATION_CONFIGUNSUPPORTEDFORMATVERSION = "FailedOperation.ConfigUnsupportedFormatVersion"
+//  FAILEDOPERATION_MISSINGCONFIGCHUNK = "FailedOperation.MissingConfigChunk"
+//  FAILEDOPERATION_UNKNOWNCONFIGGROUPTYPE = "FailedOperation.UnknownConfigGroupType"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DUPLICATERULE = "InvalidParameter.DuplicateRule"
+//  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUEBADVALUE = "InvalidParameter.ErrInvalidConditionValueBadValue"
+//  INVALIDPARAMETER_INVALIDCACHEKEYQUERYSTRINGACTION = "InvalidParameter.InvalidCacheKeyQueryStringAction"
+//  INVALIDPARAMETER_INVALIDCONDITIONS = "InvalidParameter.InvalidConditions"
+//  INVALIDPARAMETER_INVALIDDYNAMICROUTINE = "InvalidParameter.InvalidDynamicRoutine"
+//  INVALIDPARAMETER_INVALIDIPV6SWITCH = "InvalidParameter.InvalidIpv6Switch"
+//  INVALIDPARAMETER_INVALIDMAXAGEFOLLOWORIGIN = "InvalidParameter.InvalidMaxAgeFollowOrigin"
+//  INVALIDPARAMETER_INVALIDSTANDARDDEBUG = "InvalidParameter.InvalidStandardDebug"
+//  INVALIDPARAMETER_POSTMAXSIZELIMITEXCEEDED = "InvalidParameter.PostMaxSizeLimitExceeded"
+//  INVALIDPARAMETER_STATUSCODECACHEINVALIDSTATUSCODE = "InvalidParameter.StatusCodeCacheInvalidStatusCode"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_RULELIMITEXCEEDED = "LimitExceeded.RuleLimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCELERATEMAINLANDIPV6CONFLICT = "OperationDenied.AccelerateMainlandIpv6Conflict"
+//  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
+//  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
+//  OPERATIONDENIED_NOTINVERSIONCONTROLWHITELIST = "OperationDenied.NotInVersionControlWhiteList"
+//  OPERATIONDENIED_OWNERSHIPVERIFICATIONNOTPASSED = "OperationDenied.OwnershipVerificationNotPassed"
+//  OPERATIONDENIED_VERSIONCONTROLLOCKED = "OperationDenied.VersionControlLocked"
+//  OPERATIONDENIED_WORKMODENOTINVERSIONCONTROL = "OperationDenied.WorkModeNotInVersionControl"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE_FUNCTIONNOTFOUND = "ResourceUnavailable.FunctionNotFound"
+func (c *Client) CreateCustomGroup(request *CreateCustomGroupRequest) (response *CreateCustomGroupResponse, err error) {
+    return c.CreateCustomGroupWithContext(context.Background(), request)
+}
+
+// CreateCustomGroup
+// 创建自定义组。自定义组用于集中管理一组可复用的匹配条目，例如可以将多个 JA3/JA4 TLS 指纹保存为一个 TLS 指纹组，并在安全规则中直接引用该组，从而避免在多条规则中重复维护相同的指纹列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CONFIGCONDITIONSYNTAXERROR = "FailedOperation.ConfigConditionSyntaxError"
+//  FAILEDOPERATION_CONFIGCONDITIONUNKNOWNTARGET = "FailedOperation.ConfigConditionUnknownTarget"
+//  FAILEDOPERATION_CONFIGCONDITIONVALUEEMPTYERROR = "FailedOperation.ConfigConditionValueEmptyError"
+//  FAILEDOPERATION_CONFIGDUPLICATEKEYERROR = "FailedOperation.ConfigDuplicateKeyError"
+//  FAILEDOPERATION_CONFIGFIELDTYPEERROR = "FailedOperation.ConfigFieldTypeError"
+//  FAILEDOPERATION_CONFIGFORMATERROR = "FailedOperation.ConfigFormatError"
+//  FAILEDOPERATION_CONFIGJSONFORMATERROR = "FailedOperation.ConfigJSONFormatError"
+//  FAILEDOPERATION_CONFIGMALFORMEDCONTENT = "FailedOperation.ConfigMalformedContent"
+//  FAILEDOPERATION_CONFIGPARAMVALIDATEERRORS = "FailedOperation.ConfigParamValidateErrors"
+//  FAILEDOPERATION_CONFIGTIMEPARSINGERROR = "FailedOperation.ConfigTimeParsingError"
+//  FAILEDOPERATION_CONFIGUNKNOWNFIELD = "FailedOperation.ConfigUnknownField"
+//  FAILEDOPERATION_CONFIGUNSUPPORTEDACTION = "FailedOperation.ConfigUnsupportedAction"
+//  FAILEDOPERATION_CONFIGUNSUPPORTEDFORMATVERSION = "FailedOperation.ConfigUnsupportedFormatVersion"
+//  FAILEDOPERATION_MISSINGCONFIGCHUNK = "FailedOperation.MissingConfigChunk"
+//  FAILEDOPERATION_UNKNOWNCONFIGGROUPTYPE = "FailedOperation.UnknownConfigGroupType"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DUPLICATERULE = "InvalidParameter.DuplicateRule"
+//  INVALIDPARAMETER_ERRINVALIDCONDITIONVALUEBADVALUE = "InvalidParameter.ErrInvalidConditionValueBadValue"
+//  INVALIDPARAMETER_INVALIDCACHEKEYQUERYSTRINGACTION = "InvalidParameter.InvalidCacheKeyQueryStringAction"
+//  INVALIDPARAMETER_INVALIDCONDITIONS = "InvalidParameter.InvalidConditions"
+//  INVALIDPARAMETER_INVALIDDYNAMICROUTINE = "InvalidParameter.InvalidDynamicRoutine"
+//  INVALIDPARAMETER_INVALIDIPV6SWITCH = "InvalidParameter.InvalidIpv6Switch"
+//  INVALIDPARAMETER_INVALIDMAXAGEFOLLOWORIGIN = "InvalidParameter.InvalidMaxAgeFollowOrigin"
+//  INVALIDPARAMETER_INVALIDSTANDARDDEBUG = "InvalidParameter.InvalidStandardDebug"
+//  INVALIDPARAMETER_POSTMAXSIZELIMITEXCEEDED = "InvalidParameter.PostMaxSizeLimitExceeded"
+//  INVALIDPARAMETER_STATUSCODECACHEINVALIDSTATUSCODE = "InvalidParameter.StatusCodeCacheInvalidStatusCode"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_RULELIMITEXCEEDED = "LimitExceeded.RuleLimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACCELERATEMAINLANDIPV6CONFLICT = "OperationDenied.AccelerateMainlandIpv6Conflict"
+//  OPERATIONDENIED_CONFIGLOCKED = "OperationDenied.ConfigLocked"
+//  OPERATIONDENIED_ERRZONEISALREADYPAUSED = "OperationDenied.ErrZoneIsAlreadyPaused"
+//  OPERATIONDENIED_NOTINVERSIONCONTROLWHITELIST = "OperationDenied.NotInVersionControlWhiteList"
+//  OPERATIONDENIED_OWNERSHIPVERIFICATIONNOTPASSED = "OperationDenied.OwnershipVerificationNotPassed"
+//  OPERATIONDENIED_VERSIONCONTROLLOCKED = "OperationDenied.VersionControlLocked"
+//  OPERATIONDENIED_WORKMODENOTINVERSIONCONTROL = "OperationDenied.WorkModeNotInVersionControl"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE_FUNCTIONNOTFOUND = "ResourceUnavailable.FunctionNotFound"
+func (c *Client) CreateCustomGroupWithContext(ctx context.Context, request *CreateCustomGroupRequest) (response *CreateCustomGroupResponse, err error) {
+    if request == nil {
+        request = NewCreateCustomGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "CreateCustomGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCustomGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateCustomGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateCustomizeErrorPageRequest() (request *CreateCustomizeErrorPageRequest) {
     request = &CreateCustomizeErrorPageRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4779,6 +4907,58 @@ func (c *Client) DeleteCustomErrorPageWithContext(ctx context.Context, request *
     return
 }
 
+func NewDeleteCustomGroupRequest() (request *DeleteCustomGroupRequest) {
+    request = &DeleteCustomGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DeleteCustomGroup")
+    
+    
+    return
+}
+
+func NewDeleteCustomGroupResponse() (response *DeleteCustomGroupResponse) {
+    response = &DeleteCustomGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteCustomGroup
+// 删除指定自定义组。若该组已被规则引用，则不允许删除，请先解除引用关系。
+//
+// 可能返回的错误码:
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteCustomGroup(request *DeleteCustomGroupRequest) (response *DeleteCustomGroupResponse, err error) {
+    return c.DeleteCustomGroupWithContext(context.Background(), request)
+}
+
+// DeleteCustomGroup
+// 删除指定自定义组。若该组已被规则引用，则不允许删除，请先解除引用关系。
+//
+// 可能返回的错误码:
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteCustomGroupWithContext(ctx context.Context, request *DeleteCustomGroupRequest) (response *DeleteCustomGroupResponse, err error) {
+    if request == nil {
+        request = NewDeleteCustomGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "DeleteCustomGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCustomGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCustomGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteDnsRecordsRequest() (request *DeleteDnsRecordsRequest) {
     request = &DeleteDnsRecordsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -7077,6 +7257,156 @@ func (c *Client) DescribeCustomErrorPagesWithContext(ctx context.Context, reques
     request.SetContext(ctx)
     
     response = NewDescribeCustomErrorPagesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCustomGroupRequest() (request *DescribeCustomGroupRequest) {
+    request = &DescribeCustomGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeCustomGroup")
+    
+    
+    return
+}
+
+func NewDescribeCustomGroupResponse() (response *DescribeCustomGroupResponse) {
+    response = &DescribeCustomGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCustomGroup
+// 查询单个自定义组的详细信息，包含组内全量条目（通过 Limit/Offset 分页返回）。DescribeCustomGroups 列表接口每组最多返回前 500 个条目，如需获取全量条目，请使用本接口。GroupId 可通过 CreateCustomGroup 创建时返回或 DescribeCustomGroups 查询获取。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+func (c *Client) DescribeCustomGroup(request *DescribeCustomGroupRequest) (response *DescribeCustomGroupResponse, err error) {
+    return c.DescribeCustomGroupWithContext(context.Background(), request)
+}
+
+// DescribeCustomGroup
+// 查询单个自定义组的详细信息，包含组内全量条目（通过 Limit/Offset 分页返回）。DescribeCustomGroups 列表接口每组最多返回前 500 个条目，如需获取全量条目，请使用本接口。GroupId 可通过 CreateCustomGroup 创建时返回或 DescribeCustomGroups 查询获取。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+func (c *Client) DescribeCustomGroupWithContext(ctx context.Context, request *DescribeCustomGroupRequest) (response *DescribeCustomGroupResponse, err error) {
+    if request == nil {
+        request = NewDescribeCustomGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "DescribeCustomGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCustomGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCustomGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCustomGroupReferencesRequest() (request *DescribeCustomGroupReferencesRequest) {
+    request = &DescribeCustomGroupReferencesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeCustomGroupReferences")
+    
+    
+    return
+}
+
+func NewDescribeCustomGroupReferencesResponse() (response *DescribeCustomGroupReferencesResponse) {
+    response = &DescribeCustomGroupReferencesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCustomGroupReferences
+// 获取使用自定义组的安全策略配置。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+func (c *Client) DescribeCustomGroupReferences(request *DescribeCustomGroupReferencesRequest) (response *DescribeCustomGroupReferencesResponse, err error) {
+    return c.DescribeCustomGroupReferencesWithContext(context.Background(), request)
+}
+
+// DescribeCustomGroupReferences
+// 获取使用自定义组的安全策略配置。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+func (c *Client) DescribeCustomGroupReferencesWithContext(ctx context.Context, request *DescribeCustomGroupReferencesRequest) (response *DescribeCustomGroupReferencesResponse, err error) {
+    if request == nil {
+        request = NewDescribeCustomGroupReferencesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "DescribeCustomGroupReferences")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCustomGroupReferences require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCustomGroupReferencesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCustomGroupsRequest() (request *DescribeCustomGroupsRequest) {
+    request = &DescribeCustomGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeCustomGroups")
+    
+    
+    return
+}
+
+func NewDescribeCustomGroupsResponse() (response *DescribeCustomGroupsResponse) {
+    response = &DescribeCustomGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCustomGroups
+// 查询指定站点下的自定义组列表。本接口只返回每个自定义组前 500 个条目，如需查询组内完整条目请使用 DescribeSecurityCustomGroup 接口查询。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+func (c *Client) DescribeCustomGroups(request *DescribeCustomGroupsRequest) (response *DescribeCustomGroupsResponse, err error) {
+    return c.DescribeCustomGroupsWithContext(context.Background(), request)
+}
+
+// DescribeCustomGroups
+// 查询指定站点下的自定义组列表。本接口只返回每个自定义组前 500 个条目，如需查询组内完整条目请使用 DescribeSecurityCustomGroup 接口查询。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
+func (c *Client) DescribeCustomGroupsWithContext(ctx context.Context, request *DescribeCustomGroupsRequest) (response *DescribeCustomGroupsResponse, err error) {
+    if request == nil {
+        request = NewDescribeCustomGroupsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "DescribeCustomGroups")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCustomGroups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCustomGroupsResponse()
     err = c.Send(request, response)
     return
 }
@@ -10609,6 +10939,74 @@ func (c *Client) DescribeSharedCNAMEWithContext(ctx context.Context, request *De
     return
 }
 
+func NewDescribeTimingFunctionAnalysisDataRequest() (request *DescribeTimingFunctionAnalysisDataRequest) {
+    request = &DescribeTimingFunctionAnalysisDataRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeTimingFunctionAnalysisData")
+    
+    
+    return
+}
+
+func NewDescribeTimingFunctionAnalysisDataResponse() (response *DescribeTimingFunctionAnalysisDataResponse) {
+    response = &DescribeTimingFunctionAnalysisDataResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeTimingFunctionAnalysisData
+// 本接口查询边缘函数分析的时序数据。请注意本接口查询数据有 10 分钟左右延迟，建议拉取当前时间 10 分钟以前的数据。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_QUERYTIMELIMITEXCEEDED = "LimitExceeded.QueryTimeLimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeTimingFunctionAnalysisData(request *DescribeTimingFunctionAnalysisDataRequest) (response *DescribeTimingFunctionAnalysisDataResponse, err error) {
+    return c.DescribeTimingFunctionAnalysisDataWithContext(context.Background(), request)
+}
+
+// DescribeTimingFunctionAnalysisData
+// 本接口查询边缘函数分析的时序数据。请注意本接口查询数据有 10 分钟左右延迟，建议拉取当前时间 10 分钟以前的数据。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_QUERYTIMELIMITEXCEEDED = "LimitExceeded.QueryTimeLimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+func (c *Client) DescribeTimingFunctionAnalysisDataWithContext(ctx context.Context, request *DescribeTimingFunctionAnalysisDataRequest) (response *DescribeTimingFunctionAnalysisDataResponse, err error) {
+    if request == nil {
+        request = NewDescribeTimingFunctionAnalysisDataRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "DescribeTimingFunctionAnalysisData")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeTimingFunctionAnalysisData require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeTimingFunctionAnalysisDataResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeTimingL4DataRequest() (request *DescribeTimingL4DataRequest) {
     request = &DescribeTimingL4DataRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -10865,6 +11263,76 @@ func (c *Client) DescribeTimingL7OriginPullDataWithContext(ctx context.Context, 
     request.SetContext(ctx)
     
     response = NewDescribeTimingL7OriginPullDataResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeTopFunctionAnalysisDataRequest() (request *DescribeTopFunctionAnalysisDataRequest) {
+    request = &DescribeTopFunctionAnalysisDataRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "DescribeTopFunctionAnalysisData")
+    
+    
+    return
+}
+
+func NewDescribeTopFunctionAnalysisDataResponse() (response *DescribeTopFunctionAnalysisDataResponse) {
+    response = &DescribeTopFunctionAnalysisDataResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeTopFunctionAnalysisData
+// 本接口用于查询边缘函数按照指定维度的 topN 数据。请注意本接口查询数据有 10 分钟左右延迟，建议拉取当前时间 10 分钟以前的数据。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_QUERYTIMELIMITEXCEEDED = "LimitExceeded.QueryTimeLimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+func (c *Client) DescribeTopFunctionAnalysisData(request *DescribeTopFunctionAnalysisDataRequest) (response *DescribeTopFunctionAnalysisDataResponse, err error) {
+    return c.DescribeTopFunctionAnalysisDataWithContext(context.Background(), request)
+}
+
+// DescribeTopFunctionAnalysisData
+// 本接口用于查询边缘函数按照指定维度的 topN 数据。请注意本接口查询数据有 10 分钟左右延迟，建议拉取当前时间 10 分钟以前的数据。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_QUERYTIMELIMITEXCEEDED = "LimitExceeded.QueryTimeLimitExceeded"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION_CAMUNAUTHORIZED = "UnauthorizedOperation.CamUnauthorized"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+func (c *Client) DescribeTopFunctionAnalysisDataWithContext(ctx context.Context, request *DescribeTopFunctionAnalysisDataRequest) (response *DescribeTopFunctionAnalysisDataResponse, err error) {
+    if request == nil {
+        request = NewDescribeTopFunctionAnalysisDataRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "DescribeTopFunctionAnalysisData")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeTopFunctionAnalysisData require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeTopFunctionAnalysisDataResponse()
     err = c.Send(request, response)
     return
 }
@@ -11895,11 +12363,23 @@ func NewEnableOriginACLResponse() (response *EnableOriginACLResponse) {
 }
 
 // EnableOriginACL
-// 本接口用于站点首次开启源站防护，启用后 EdgeOne 将会使用特定的回源 IP 网段为七层加速域名/四层代理实例回源。单次支持提交的七层加速域名的数量最大为 200，四层代理实例的数量最大为 100，支持七层加速域名/四层代理实例混合提交，总实例个数最大为 200。如需要启用超过 200 个资源，可先通过指定资源的方式以最大数量启用，剩余资源通过 ModifyOriginACL 接口启用。后续新增七层加速域名/四层代理实例均请通过 ModifyOriginACL 接口配置。同时开启的时候对开白的账户支持选择其他回源 IP 网段版本，例如精简版，来达到使用更少的 IP 网段回源效果。
+// 本接口用于站点首次开启源站防护，启用后 EdgeOne 将会使用特定的回源 IP 网段为七层加速域名/四层代理实例回源。
+//
+// 本接口支持两种模式：**自动纳入防护模式** 和 **指定加入防护模式** 。<li>当使用 **自动纳入防护模式** 时（L7EnableMode/L4EnableMode 取值为 all），会实时的将站点下的加速域名列表和四层代理实例自动加入到源站防护列表中，无需人工干预；</li><li>当使用 **指定加入防护模式** 时（L7EnableMode/L4EnableMode 取值为 specific），需要人工指定期望加入到源站防护的资源，未指定的资源不会加入到源站防护列表中。如果有资源调整的需求，需要通过主动调用 ModifyOriginACL 接口来进行调整。</li>
+//
+// 
+//
+// 指定加入防护模式使用说明：
+//
+// <li>单次支持提交的七层加速域名的数量最大为 200，四层代理实例的数量最大为 100，支持七层加速域名/四层代理实例混合提交，总实例个数最大为 200;</li>
+//
+// <li>当需要启用超过 200 个资源时，需要先通过本接口配置第一个分片的资源，再通过 ModifyOriginACL 接口进行分片配置。例如：需要加入 500 个七层加速域名，先使用本接口设置 200 个域名，再通过 ModifyOriginACL 接口分两次配置剩余的 300 个域名，每次上限不超过 200 个。</li>
 //
 // 
 //
 // 注意：
+//
+// - 开启的时候对开白的账户支持选择其他回源 IP 网段版本，例如精简版，来达到使用更少的 IP 网段回源效果。
 //
 // - 调用本接口视为同意 [源站防护启用特别约定](https://cloud.tencent.com/document/product/1552/120141)；
 //
@@ -11921,11 +12401,23 @@ func (c *Client) EnableOriginACL(request *EnableOriginACLRequest) (response *Ena
 }
 
 // EnableOriginACL
-// 本接口用于站点首次开启源站防护，启用后 EdgeOne 将会使用特定的回源 IP 网段为七层加速域名/四层代理实例回源。单次支持提交的七层加速域名的数量最大为 200，四层代理实例的数量最大为 100，支持七层加速域名/四层代理实例混合提交，总实例个数最大为 200。如需要启用超过 200 个资源，可先通过指定资源的方式以最大数量启用，剩余资源通过 ModifyOriginACL 接口启用。后续新增七层加速域名/四层代理实例均请通过 ModifyOriginACL 接口配置。同时开启的时候对开白的账户支持选择其他回源 IP 网段版本，例如精简版，来达到使用更少的 IP 网段回源效果。
+// 本接口用于站点首次开启源站防护，启用后 EdgeOne 将会使用特定的回源 IP 网段为七层加速域名/四层代理实例回源。
+//
+// 本接口支持两种模式：**自动纳入防护模式** 和 **指定加入防护模式** 。<li>当使用 **自动纳入防护模式** 时（L7EnableMode/L4EnableMode 取值为 all），会实时的将站点下的加速域名列表和四层代理实例自动加入到源站防护列表中，无需人工干预；</li><li>当使用 **指定加入防护模式** 时（L7EnableMode/L4EnableMode 取值为 specific），需要人工指定期望加入到源站防护的资源，未指定的资源不会加入到源站防护列表中。如果有资源调整的需求，需要通过主动调用 ModifyOriginACL 接口来进行调整。</li>
+//
+// 
+//
+// 指定加入防护模式使用说明：
+//
+// <li>单次支持提交的七层加速域名的数量最大为 200，四层代理实例的数量最大为 100，支持七层加速域名/四层代理实例混合提交，总实例个数最大为 200;</li>
+//
+// <li>当需要启用超过 200 个资源时，需要先通过本接口配置第一个分片的资源，再通过 ModifyOriginACL 接口进行分片配置。例如：需要加入 500 个七层加速域名，先使用本接口设置 200 个域名，再通过 ModifyOriginACL 接口分两次配置剩余的 300 个域名，每次上限不超过 200 个。</li>
 //
 // 
 //
 // 注意：
+//
+// - 开启的时候对开白的账户支持选择其他回源 IP 网段版本，例如精简版，来达到使用更少的 IP 网段回源效果。
 //
 // - 调用本接口视为同意 [源站防护启用特别约定](https://cloud.tencent.com/document/product/1552/120141)；
 //
@@ -12927,6 +13419,56 @@ func (c *Client) ModifyCustomErrorPageWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewModifyCustomErrorPageResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyCustomGroupRequest() (request *ModifyCustomGroupRequest) {
+    request = &ModifyCustomGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("teo", APIVersion, "ModifyCustomGroup")
+    
+    
+    return
+}
+
+func NewModifyCustomGroupResponse() (response *ModifyCustomGroupResponse) {
+    response = &ModifyCustomGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyCustomGroup
+// 修改自定义组内容。GroupType 创建后不可修改，修改组内条目时，可通过 GroupItemOperation 指定替换、追加或移除操作。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyCustomGroup(request *ModifyCustomGroupRequest) (response *ModifyCustomGroupResponse, err error) {
+    return c.ModifyCustomGroupWithContext(context.Background(), request)
+}
+
+// ModifyCustomGroup
+// 修改自定义组内容。GroupType 创建后不可修改，修改组内条目时，可通过 GroupItemOperation 指定替换、追加或移除操作。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyCustomGroupWithContext(ctx context.Context, request *ModifyCustomGroupRequest) (response *ModifyCustomGroupResponse, err error) {
+    if request == nil {
+        request = NewModifyCustomGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "teo", APIVersion, "ModifyCustomGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyCustomGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyCustomGroupResponse()
     err = c.Send(request, response)
     return
 }
@@ -14787,7 +15329,15 @@ func NewModifyOriginACLResponse() (response *ModifyOriginACLResponse) {
 }
 
 // ModifyOriginACL
-// 本接口用于对七层加速域名/四层代理实例启用/关闭特定回源 IP 网段回源。单次支持提交的七层加速域名的数量最大为 200，四层代理实例的数量最大为 100，支持七层加速域名/四层代理实例混合提交，总实例个数最大为 200。如需变更超过 200 个实例，请通过本接口分批提交。同时对于开白的客户支持切换到其他可用的源站防护 IP 网段版本，例如精简版，可以减少回源 IP 网段。
+// 本接口用于修改站点的源站防护配置，支持以下操作：<li>**资源增删**：对七层加速域名/四层代理实例启用/关闭特定回源 IP 网段回源，适用于 **指定加入防护模式** 下的资源调整，未指定的资源不会发生变化；</li><li>**模式切换**：调整七层加速域名/四层代理实例的源站防护模式。切换为 all 后，会实时的将站点下的加速域名列表或四层代理实例自动加入到源站防护列表中，且后续的资源发生变化时也会自动进行调整，无需人工干预；切换为 specific 后，仅变更模式，已纳入防护的资源保持不变；</li><li>**网段版本切换**：对于开白的客户，支持切换到其他可用的源站防护 IP 网段版本，例如精简版，可以减少回源 IP 网段。</li>
+//
+// 
+//
+// 指定加入防护模式使用说明：
+//
+// <li>单次支持提交的七层加速域名的数量最大为 200，四层代理实例的数量最大为 100，支持七层加速域名/四层代理实例混合提交，总实例个数最大为 200;</li>
+//
+// <li>当需要变更超过 200 个资源时，请通过本接口分批提交。例如：需要加入 500 个七层加速域名，先通过本接口提交 200 个域名，再分两次提交剩余的 300 个域名，每次不超过 200 个。</li>
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -14803,7 +15353,15 @@ func (c *Client) ModifyOriginACL(request *ModifyOriginACLRequest) (response *Mod
 }
 
 // ModifyOriginACL
-// 本接口用于对七层加速域名/四层代理实例启用/关闭特定回源 IP 网段回源。单次支持提交的七层加速域名的数量最大为 200，四层代理实例的数量最大为 100，支持七层加速域名/四层代理实例混合提交，总实例个数最大为 200。如需变更超过 200 个实例，请通过本接口分批提交。同时对于开白的客户支持切换到其他可用的源站防护 IP 网段版本，例如精简版，可以减少回源 IP 网段。
+// 本接口用于修改站点的源站防护配置，支持以下操作：<li>**资源增删**：对七层加速域名/四层代理实例启用/关闭特定回源 IP 网段回源，适用于 **指定加入防护模式** 下的资源调整，未指定的资源不会发生变化；</li><li>**模式切换**：调整七层加速域名/四层代理实例的源站防护模式。切换为 all 后，会实时的将站点下的加速域名列表或四层代理实例自动加入到源站防护列表中，且后续的资源发生变化时也会自动进行调整，无需人工干预；切换为 specific 后，仅变更模式，已纳入防护的资源保持不变；</li><li>**网段版本切换**：对于开白的客户，支持切换到其他可用的源站防护 IP 网段版本，例如精简版，可以减少回源 IP 网段。</li>
+//
+// 
+//
+// 指定加入防护模式使用说明：
+//
+// <li>单次支持提交的七层加速域名的数量最大为 200，四层代理实例的数量最大为 100，支持七层加速域名/四层代理实例混合提交，总实例个数最大为 200;</li>
+//
+// <li>当需要变更超过 200 个资源时，请通过本接口分批提交。例如：需要加入 500 个七层加速域名，先通过本接口提交 200 个域名，再分两次提交剩余的 300 个域名，每次不超过 200 个。</li>
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"

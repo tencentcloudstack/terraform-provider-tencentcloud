@@ -3049,6 +3049,93 @@ func (r *CreateContentIdentifierResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type CreateCustomGroupRequestParams struct {
+	// <p>站点 ID。</p>
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// <p>自定义组名称。</p>
+	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
+
+	// <p>自定义组类型。创建后不可修改，不同类型的自定义组支持的条目类型不同。</p><p>枚举值：</p><ul><li>TLSFingerprint： TLS 指纹组，支持 JA3、JA4 类型的条目</li><li>UA： UA 组，支持 UA 类型的条目</li><li>Referer： Referer 组，支持 Referer 类型的条目</li></ul>
+	GroupType *string `json:"GroupType,omitnil,omitempty" name:"GroupType"`
+
+	// <p>自定义组条目列表。</p>
+	GroupItems []*CustomGroupItem `json:"GroupItems,omitnil,omitempty" name:"GroupItems"`
+}
+
+type CreateCustomGroupRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>站点 ID。</p>
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// <p>自定义组名称。</p>
+	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
+
+	// <p>自定义组类型。创建后不可修改，不同类型的自定义组支持的条目类型不同。</p><p>枚举值：</p><ul><li>TLSFingerprint： TLS 指纹组，支持 JA3、JA4 类型的条目</li><li>UA： UA 组，支持 UA 类型的条目</li><li>Referer： Referer 组，支持 Referer 类型的条目</li></ul>
+	GroupType *string `json:"GroupType,omitnil,omitempty" name:"GroupType"`
+
+	// <p>自定义组条目列表。</p>
+	GroupItems []*CustomGroupItem `json:"GroupItems,omitnil,omitempty" name:"GroupItems"`
+}
+
+func (r *CreateCustomGroupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCustomGroupRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	delete(f, "GroupName")
+	delete(f, "GroupType")
+	delete(f, "GroupItems")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCustomGroupRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateCustomGroupResponseParams struct {
+	// <p>自定义组唯一标识 ID。</p>
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
+
+	// <p>自定义组名称。</p>
+	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
+
+	// <p>自定义组类型。</p><p>枚举值：</p><ul><li>TLSFingerprint： TLS 指纹组</li><li>UA： UA 组</li><li>Referer： Referer 组</li></ul>
+	GroupType *string `json:"GroupType,omitnil,omitempty" name:"GroupType"`
+
+	// <p>自定义组条目列表。</p>
+	GroupItems []*CustomGroupItem `json:"GroupItems,omitnil,omitempty" name:"GroupItems"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateCustomGroupResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateCustomGroupResponseParams `json:"Response"`
+}
+
+func (r *CreateCustomGroupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCustomGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateCustomizeErrorPageRequestParams struct {
 	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
@@ -6163,6 +6250,57 @@ type CustomField struct {
 	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
 }
 
+type CustomGroup struct {
+	// <p>自定义组的唯一标识 ID。</p>
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
+
+	// <p>自定义组名称。</p>
+	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
+
+	// <p>自定义组类型。</p><p>枚举值：</p><ul><li>TLSFingerprint： TLS 指纹组</li><li>UA： UA 组</li><li>Referer： Referer 组</li></ul>
+	GroupType *string `json:"GroupType,omitnil,omitempty" name:"GroupType"`
+
+	// <p>自定义组条目列表。</p>
+	GroupItems []*CustomGroupItem `json:"GroupItems,omitnil,omitempty" name:"GroupItems"`
+
+	// <p>自定义组条目总数量。</p>
+	GroupItemTotalCount *int64 `json:"GroupItemTotalCount,omitnil,omitempty" name:"GroupItemTotalCount"`
+
+	// <p>自定义组被引用的次数。</p>
+	RefCount *int64 `json:"RefCount,omitnil,omitempty" name:"RefCount"`
+}
+
+type CustomGroupItem struct {
+	// <p>条目内容。</p>
+	Content *string `json:"Content,omitnil,omitempty" name:"Content"`
+
+	// <p>条目类型。</p><p>枚举值：</p><ul><li>JA3： JA3 指纹，仅当所属组 GroupType 为 TLSFingerprint 时可用</li><li>JA4： JA4 指纹，仅当所属组 GroupType 为 TLSFingerprint 时可用</li><li>UA： UA 值，仅当所属组 GroupType 为 UA 时可用</li><li>Referer： Referer 值，仅当所属组 GroupType 为 Referer 时可用</li></ul>
+	ItemType *string `json:"ItemType,omitnil,omitempty" name:"ItemType"`
+}
+
+type CustomGroupReference struct {
+	// <p>站点 ID。</p>
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// <p>实体类型。</p><p>枚举值：</p><ul><li>WebSec.ZonePolicy： 站点级防护策略</li><li>WebSec.HostPolicy： 域名级防护策略</li><li>WebSec.Template： 策略模板</li><li>WebSec.APIResource： API 资源</li><li>WebSec.JSInjectionRule： 注入规则</li><li>DDoS.L4Proxy： 四层代理 DDoS 防护</li><li>DDoS.L3Transit： 三层代播 DDoS 防护</li></ul>
+	EntityType *string `json:"EntityType,omitnil,omitempty" name:"EntityType"`
+
+	// <p>实体标识，根据 EntityType 不同代表不同的含义：</p><ul><li>WebSec.ZonePolicy：站点 ID</li><li>WebSec.HostPolicy：域名</li><li>WebSec.Template：模板 ID</li><li>WebSec.APIResource：API 资源 ID</li><li>WebSec.JSInjectionRule：JavaScript 注入规则 ID</li><li>DDoS.L4Proxy：实例 ID</li><li>DDoS.L3Transit：实例 ID</li></ul>
+	EntityId *string `json:"EntityId,omitnil,omitempty" name:"EntityId"`
+
+	// <p>实体标识，根据 EntityType 不同代表不同的含义：</p><ul><li>WebSec.ZonePolicy：空</li><li>WebSec.HostPolicy：空</li><li>WebSec.Template：模板名称</li><li>WebSec.APIResource：API 资源名称</li><li>WebSec.JSInjectionRule：JavaScript 注入规则名称</li><li>DDoS.L4Proxy：空</li><li>DDoS.L3Transit：空</li></ul>
+	EntityName *string `json:"EntityName,omitnil,omitempty" name:"EntityName"`
+
+	// <p>子实体类型。</p><p>枚举值：</p><ul><li>WebSec.ExceptionRule： 防护例外规则</li><li>WebSec.BasicAccessRule： 基础访问管控</li><li>WebSec.PreciseMatchRule： 精确匹配规则</li><li>WebSec.RateLimitRule： 精准速率限制</li><li>WebSec.BotCustomRule： 高级 Bot 管理 - 自定义规则</li><li>DDoS.L4Proxy.IpAccessControl： 四层代理 DDoS 防护 - IP 黑白名单</li><li>DDoS.L3Transit.IpAccessControl： 三层代播 DDoS 防护 - IP 黑白名单</li></ul>
+	SubEntityType *string `json:"SubEntityType,omitnil,omitempty" name:"SubEntityType"`
+
+	// <p>子实体标识，根据 SubEntityType 不同代表不同的含义：</p><ul><li>WebSec.ExceptionRule：规则 ID</li><li>WebSec.BasicAccessRule：规则 ID</li><li>WebSec.PreciseMatchRule：规则 ID</li><li>WebSec.RateLimitRule：规则 ID</li><li>WebSec.BotCustomRule：规则 ID</li><li>DDoS.L4Proxy.IpAccessControl：空</li><li>DDoS.L3Transit.IpAccessControl：空</li></ul><p>EntityType 与 SubEntityType 为对应关系，不同的 EntityType 支持不同的 SubEntityType。<br>WebSec.ZonePolicy，WebSec.HostPolicy 和 WebSec.Template 支持如下 SubEntityType：</p><ul><li>WebSec.ExceptionRule</li><li>WebSec.BasicAccessRule</li><li>WebSec.PreciseMatchRule</li><li>WebSec.RateLimitRule</li><li>WebSec.BotCustomRule</li></ul>DDoS.L4Proxy 支持如下 SubEntityType：<ul><li>DDoS.L4Proxy.IpAccessControl</li></ul>DDoS.L3Transit 支持如下 SubEntityType：<ul><li>DDoS.L3Transit.IpAccessControl</li></ul>
+	SubEntityId *string `json:"SubEntityId,omitnil,omitempty" name:"SubEntityId"`
+
+	// <p>子实体名称，根据 SubEntityType 不同代表不同的含义：</p><ul><li>WebSec.ExceptionRule：规则名称</li><li>WebSec.BasicAccessRule：规则名称</li><li>WebSec.PreciseMatchRule：规则名称</li><li>WebSec.RateLimitRule：规则名称</li><li>WebSec.BotCustomRule：规则名称</li><li>DDoS.L4Proxy.IpAccessControl：空</li><li>DDoS.L3Transit.IpAccessControl：空</li></ul>
+	SubEntityName *string `json:"SubEntityName,omitnil,omitempty" name:"SubEntityName"`
+}
+
 type CustomRule struct {
 	// <p>自定义规则的名称。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
@@ -6788,6 +6926,67 @@ func (r *DeleteCustomErrorPageResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteCustomErrorPageResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteCustomGroupRequestParams struct {
+	// <p>站点 ID。</p>
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// <p>自定义组唯一标识 ID。</p>
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
+}
+
+type DeleteCustomGroupRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>站点 ID。</p>
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// <p>自定义组唯一标识 ID。</p>
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
+}
+
+func (r *DeleteCustomGroupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCustomGroupRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	delete(f, "GroupId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteCustomGroupRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteCustomGroupResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteCustomGroupResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteCustomGroupResponseParams `json:"Response"`
+}
+
+func (r *DeleteCustomGroupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCustomGroupResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -9399,6 +9598,261 @@ func (r *DescribeCustomErrorPagesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeCustomErrorPagesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCustomGroupReferencesRequestParams struct {
+	// <p>站点 ID。</p>
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// <p>自定义组 ID。</p>
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
+
+	// <p>分页偏移量。</p><p>默认值：0</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>分页查询引用自定义组的配置条数。</p><p>取值范围：[1, 200]</p><p>默认值：20</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+}
+
+type DescribeCustomGroupReferencesRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>站点 ID。</p>
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// <p>自定义组 ID。</p>
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
+
+	// <p>分页偏移量。</p><p>默认值：0</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>分页查询引用自定义组的配置条数。</p><p>取值范围：[1, 200]</p><p>默认值：20</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+}
+
+func (r *DescribeCustomGroupReferencesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCustomGroupReferencesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	delete(f, "GroupId")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCustomGroupReferencesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCustomGroupReferencesResponseParams struct {
+	// <p>引用对应自定义组的配置信息。</p>
+	References []*CustomGroupReference `json:"References,omitnil,omitempty" name:"References"`
+
+	// <p>查询结果总数。</p>
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCustomGroupReferencesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCustomGroupReferencesResponseParams `json:"Response"`
+}
+
+func (r *DescribeCustomGroupReferencesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCustomGroupReferencesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCustomGroupRequestParams struct {
+	// <p>站点 ID。</p>
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// <p>自定义组唯一标识 ID。</p>
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
+
+	// <p>GroupItems 分页查询限制数目。</p><p>取值范围：[1, 50000]</p><p>默认值：500</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>GroupItems 分页查询偏移量。</p><p>默认值：0</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+}
+
+type DescribeCustomGroupRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>站点 ID。</p>
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// <p>自定义组唯一标识 ID。</p>
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
+
+	// <p>GroupItems 分页查询限制数目。</p><p>取值范围：[1, 50000]</p><p>默认值：500</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>GroupItems 分页查询偏移量。</p><p>默认值：0</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+}
+
+func (r *DescribeCustomGroupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCustomGroupRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	delete(f, "GroupId")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCustomGroupRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCustomGroupResponseParams struct {
+	// <p>自定义组唯一标识 ID。</p>
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
+
+	// <p>自定义组名称。</p>
+	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
+
+	// <p>自定义组类型。</p><p>枚举值：</p><ul><li>TLSFingerprint： TLS 指纹组</li><li>UA： UA 组</li><li>Referer： Referer 组</li></ul>
+	GroupType *string `json:"GroupType,omitnil,omitempty" name:"GroupType"`
+
+	// <p>自定义组条目列表。</p>
+	GroupItems []*CustomGroupItem `json:"GroupItems,omitnil,omitempty" name:"GroupItems"`
+
+	// <p>自定义组条目总数量。</p>
+	GroupItemTotalCount *int64 `json:"GroupItemTotalCount,omitnil,omitempty" name:"GroupItemTotalCount"`
+
+	// <p>自定义组被引用的次数。</p>
+	RefCount *int64 `json:"RefCount,omitnil,omitempty" name:"RefCount"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCustomGroupResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCustomGroupResponseParams `json:"Response"`
+}
+
+func (r *DescribeCustomGroupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCustomGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCustomGroupsRequestParams struct {
+	// <p>站点 ID。</p>
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// <p>自定义组类型列表。不传则查询所有类型的列表。</p>
+	GroupTypes []*string `json:"GroupTypes,omitnil,omitempty" name:"GroupTypes"`
+
+	// <p>分页查询限制数目。</p><p>取值范围：[1, 100]</p><p>默认值：10</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>分页查询偏移量。</p><p>默认值：0</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+}
+
+type DescribeCustomGroupsRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>站点 ID。</p>
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// <p>自定义组类型列表。不传则查询所有类型的列表。</p>
+	GroupTypes []*string `json:"GroupTypes,omitnil,omitempty" name:"GroupTypes"`
+
+	// <p>分页查询限制数目。</p><p>取值范围：[1, 100]</p><p>默认值：10</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>分页查询偏移量。</p><p>默认值：0</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+}
+
+func (r *DescribeCustomGroupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCustomGroupsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	delete(f, "GroupTypes")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCustomGroupsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCustomGroupsResponseParams struct {
+	// <p>满足类型列表条件的自定义组总数量。</p>
+	GroupTotalCount *int64 `json:"GroupTotalCount,omitnil,omitempty" name:"GroupTotalCount"`
+
+	// <p>满足类型列表条件的自定义组列表。</p>
+	CustomGroups []*CustomGroup `json:"CustomGroups,omitnil,omitempty" name:"CustomGroups"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCustomGroupsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCustomGroupsResponseParams `json:"Response"`
+}
+
+func (r *DescribeCustomGroupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCustomGroupsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -14671,6 +15125,108 @@ func (r *DescribeSharedCNAMEResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeTimingFunctionAnalysisDataRequestParams struct {
+	// <p>站点 ID 集合，至少填入1个站点 ID。</p>
+	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
+
+	// <p>开始时间。</p>
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// <p>结束时间。查询时间范围（<code>EndTime</code> - <code>StartTime</code>）需小于等于 7 天。</p>
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// <p>指标列表，取值有:</p><li>function_requestCount: 边缘函数请求数，为累计值；</li><li>function_cpuCostTime: 边缘函数执行的平均 CPU 耗时，单位为微秒；</li><li>function_wallClockTime: 边缘函数执行的平均墙上时钟耗时，单位为微秒。</li>
+	MetricNames []*string `json:"MetricNames,omitnil,omitempty" name:"MetricNames"`
+
+	// <p>查询时间粒度，取值有：</p><li>min: 1分钟；</li><li>5min: 5分钟；</li><li>hour: 1小时；</li><li>day: 1天。</li>不填将根据开始时间跟结束时间的间距自动推算粒度，具体为：2 小时范围内以 min 粒度查询，2 天范围内以 5min 粒度查询，7 天范围内以 hour 粒度查询，超过 7 天以 day 粒度查询。
+	Interval *string `json:"Interval,omitnil,omitempty" name:"Interval"`
+
+	// <p>过滤条件，Filters.Value 的集合数量上限为20，详细的过滤条件 Key 值如下：</p><li>domain：按照子域名进行过滤，示例值： www.example.com。</li><li>function-name：按照边缘函数名称进行过滤，示例值： test051301-zone-2r2fdoxxxx-130000000。</li><li>function-result：按照边缘函数执行结果进行过滤。对应 Value 的可选项如下：<br>   success：成功；<br>   fail：失败。</li>
+	Filters []*QueryCondition `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>数据归属地区，取值有：</p><li>overseas：全球（除中国大陆地区）数据；</li><li>mainland：中国大陆地区数据；</li><li>global：全球数据。</li>不填默认取值为 global。
+	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
+}
+
+type DescribeTimingFunctionAnalysisDataRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>站点 ID 集合，至少填入1个站点 ID。</p>
+	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
+
+	// <p>开始时间。</p>
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// <p>结束时间。查询时间范围（<code>EndTime</code> - <code>StartTime</code>）需小于等于 7 天。</p>
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// <p>指标列表，取值有:</p><li>function_requestCount: 边缘函数请求数，为累计值；</li><li>function_cpuCostTime: 边缘函数执行的平均 CPU 耗时，单位为微秒；</li><li>function_wallClockTime: 边缘函数执行的平均墙上时钟耗时，单位为微秒。</li>
+	MetricNames []*string `json:"MetricNames,omitnil,omitempty" name:"MetricNames"`
+
+	// <p>查询时间粒度，取值有：</p><li>min: 1分钟；</li><li>5min: 5分钟；</li><li>hour: 1小时；</li><li>day: 1天。</li>不填将根据开始时间跟结束时间的间距自动推算粒度，具体为：2 小时范围内以 min 粒度查询，2 天范围内以 5min 粒度查询，7 天范围内以 hour 粒度查询，超过 7 天以 day 粒度查询。
+	Interval *string `json:"Interval,omitnil,omitempty" name:"Interval"`
+
+	// <p>过滤条件，Filters.Value 的集合数量上限为20，详细的过滤条件 Key 值如下：</p><li>domain：按照子域名进行过滤，示例值： www.example.com。</li><li>function-name：按照边缘函数名称进行过滤，示例值： test051301-zone-2r2fdoxxxx-130000000。</li><li>function-result：按照边缘函数执行结果进行过滤。对应 Value 的可选项如下：<br>   success：成功；<br>   fail：失败。</li>
+	Filters []*QueryCondition `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>数据归属地区，取值有：</p><li>overseas：全球（除中国大陆地区）数据；</li><li>mainland：中国大陆地区数据；</li><li>global：全球数据。</li>不填默认取值为 global。
+	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
+}
+
+func (r *DescribeTimingFunctionAnalysisDataRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTimingFunctionAnalysisDataRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneIds")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "MetricNames")
+	delete(f, "Interval")
+	delete(f, "Filters")
+	delete(f, "Area")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTimingFunctionAnalysisDataRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeTimingFunctionAnalysisDataResponseParams struct {
+	// <p>查询结果的总条数。</p>
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// <p>时序数据列表。</p>
+	Data []*TimingDataRecord `json:"Data,omitnil,omitempty" name:"Data"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeTimingFunctionAnalysisDataResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeTimingFunctionAnalysisDataResponseParams `json:"Response"`
+}
+
+func (r *DescribeTimingFunctionAnalysisDataResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTimingFunctionAnalysisDataResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeTimingL4DataRequestParams struct {
 	// 开始时间。
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
@@ -15170,6 +15726,115 @@ func (r *DescribeTimingL7OriginPullDataResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeTimingL7OriginPullDataResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeTopFunctionAnalysisDataRequestParams struct {
+	// <p>站点 ID 集合，至少填入1个站点 ID。</p>
+	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
+
+	// <p>开始时间。</p>
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// <p>结束时间。查询时间范围（<code>EndTime</code> - <code>StartTime</code>）需小于等于 7 天。</p>
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// <p>查询的指标，取值有：</p><li>function_requestCount_functionResult: 按照执行结果的维度统计边缘函数的请求数；</li><li>function_requestCount_functionName: 按照函数名称的维度统计边缘函数的请求数；</li><li>function_requestCount_domain: 按照域名的维度统计边缘函数的请求数。</li>
+	MetricName *string `json:"MetricName,omitnil,omitempty" name:"MetricName"`
+
+	// <p>查询前多少个 top 数据，最大值为1000。不填默认为10，表示查询 top10 的数据。</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>过滤条件，Filters.Value 的集合数量上限为20，详细的过滤条件 Key 值如下：</p><li>domain：按照子域名进行过滤，示例值： www.example.com。</li><li>function-name：按照边缘函数名称进行过滤，示例值： test051301-zone-2r2fdoxxxx-130000000。</li><li>function-result：按照边缘函数执行结果进行过滤。对应 Value 的可选项如下：<br>   success：成功；<br>   fail：失败。</li>
+	Filters []*QueryCondition `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>查询时间粒度，取值有：</p><li>min: 1分钟；</li><li>5min: 5分钟；</li><li>hour: 1小时；</li><li>day: 1天。</li>不填将根据开始时间跟结束时间的间距自动推算粒度，具体为：2 小时范围内以 min 粒度查询，2 天范围内以 5min 粒度查询，7 天范围内以 hour 粒度查询，超过 7 天以 day 粒度查询。
+	Interval *string `json:"Interval,omitnil,omitempty" name:"Interval"`
+
+	// <p>数据归属地区，取值有：</p><li>overseas：全球（除中国大陆地区）数据；</li><li>mainland：中国大陆地区数据；</li><li>global：全球数据。</li>不填默认取值为global。
+	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
+}
+
+type DescribeTopFunctionAnalysisDataRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>站点 ID 集合，至少填入1个站点 ID。</p>
+	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
+
+	// <p>开始时间。</p>
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// <p>结束时间。查询时间范围（<code>EndTime</code> - <code>StartTime</code>）需小于等于 7 天。</p>
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// <p>查询的指标，取值有：</p><li>function_requestCount_functionResult: 按照执行结果的维度统计边缘函数的请求数；</li><li>function_requestCount_functionName: 按照函数名称的维度统计边缘函数的请求数；</li><li>function_requestCount_domain: 按照域名的维度统计边缘函数的请求数。</li>
+	MetricName *string `json:"MetricName,omitnil,omitempty" name:"MetricName"`
+
+	// <p>查询前多少个 top 数据，最大值为1000。不填默认为10，表示查询 top10 的数据。</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>过滤条件，Filters.Value 的集合数量上限为20，详细的过滤条件 Key 值如下：</p><li>domain：按照子域名进行过滤，示例值： www.example.com。</li><li>function-name：按照边缘函数名称进行过滤，示例值： test051301-zone-2r2fdoxxxx-130000000。</li><li>function-result：按照边缘函数执行结果进行过滤。对应 Value 的可选项如下：<br>   success：成功；<br>   fail：失败。</li>
+	Filters []*QueryCondition `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>查询时间粒度，取值有：</p><li>min: 1分钟；</li><li>5min: 5分钟；</li><li>hour: 1小时；</li><li>day: 1天。</li>不填将根据开始时间跟结束时间的间距自动推算粒度，具体为：2 小时范围内以 min 粒度查询，2 天范围内以 5min 粒度查询，7 天范围内以 hour 粒度查询，超过 7 天以 day 粒度查询。
+	Interval *string `json:"Interval,omitnil,omitempty" name:"Interval"`
+
+	// <p>数据归属地区，取值有：</p><li>overseas：全球（除中国大陆地区）数据；</li><li>mainland：中国大陆地区数据；</li><li>global：全球数据。</li>不填默认取值为global。
+	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
+}
+
+func (r *DescribeTopFunctionAnalysisDataRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTopFunctionAnalysisDataRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneIds")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "MetricName")
+	delete(f, "Limit")
+	delete(f, "Filters")
+	delete(f, "Interval")
+	delete(f, "Area")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTopFunctionAnalysisDataRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeTopFunctionAnalysisDataResponseParams struct {
+	// <p>查询结果的总条数。</p>
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// <p>按照 MetricName 指定统计维度的前 topN 数据列表。</p>
+	Data []*TopDataRecord `json:"Data,omitnil,omitempty" name:"Data"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeTopFunctionAnalysisDataResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeTopFunctionAnalysisDataResponseParams `json:"Response"`
+}
+
+func (r *DescribeTopFunctionAnalysisDataResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTopFunctionAnalysisDataResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -16828,66 +17493,44 @@ func (r *EdgeKVPutResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type EnableOriginACLRequestParams struct {
-	// 站点 ID。
+	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 站点首次开启源站防护时，为七层加速域名配置特定回源 IP 网段的模式。
-	// <li>all：针对当前站点下的所有七层加速域名开启，当域名数量超过 200 时，请先通过 specific 模式启用 200 个域名，剩余资源通过 ModifyOriginACL 接口启用。</li>
-	// <li>specific：针对站点下指定的七层加速域名开启。</li>注意：当参数为空时，默认为 specific。后续新增七层加速域名/四层代理实例均请通过 ModifyOriginACL 接口配置。
+	// <p>七层加速域名源站防护模式，默认值: specific。<li>all：<strong>自动纳入防护模式</strong>，站点内所有七层加速域名将自动加入到源站防护列表中，包含后续新增的七层加速域名；</li><li>specific：<strong>指定加入防护模式</strong>，需要人工指定期望加入到源站防护的七层加速域名（通过 L7Hosts 参数指定），未指定的资源不会加入到源站防护列表中，后续的防护资源调整可通过 ModifyOriginACL 接口进行。</li>注意：取值为 all 时，L7Hosts 请保留为空；当站点下七层加速域名数量超过 200 时，请先通过 specific 模式启用，剩余资源通过 ModifyOriginACL 接口启用后，再通过 ModifyOriginACL 接口切换为 all。</p>
 	L7EnableMode *string `json:"L7EnableMode,omitnil,omitempty" name:"L7EnableMode"`
 
-	// 开启源站防护的七层加速域名列表，仅当参数 L7EnableMode 为 specific 时生效。L7EnableMode 为 all 时，请保留此参数为空。单次最大仅支持填写 200 个七层加速域名。
+	// <p>需要开启源站防护的七层加速域名列表，仅当参数 L7EnableMode 为 specific 时生效。本字段最多支持一次开启 200 个七层加速域名；当期望开启的域名个数超过 200 时，请联合使用 ModifyOriginACL 接口进行分片配置。</p>
 	L7Hosts []*string `json:"L7Hosts,omitnil,omitempty" name:"L7Hosts"`
 
-	// 站点首次开启源站防护时，为四层代理实例配置特定回源 IP 网段的模式。
-	// <li>all：针对当前站点下的所有四层代理实例开启，当实例数量超过 100 时，请先通过 specific 模式启用 100 个域名，剩余资源通过 ModifyOriginACL 接口启用。</li>
-	// <li>specific：针对站点下指定的四层代理实例开启。</li>注意：当参数为空时，默认为 specific。后续新增七层加速域名/四层代理实例均请通过 ModifyOriginACL 接口配置。
+	// <p>四层代理实例源站防护模式，默认值: specific。<li>all：<strong>自动纳入防护模式</strong>，站点内所有四层代理实例将自动加入到源站防护列表中，包含后续新增的四层代理实例资源；</li><li>specific：<strong>指定加入防护模式</strong>，需要人工指定期望加入到源站防护的四层代理实例（通过 L4ProxyIds 参数指定），未指定的资源不会加入到源站防护列表中，后续的防护资源调整可通过 ModifyOriginACL 接口进行。</li>注意：取值为 all 时，L4ProxyIds 请保留为空；当站点下四层代理实例数量超过 100 时，请先通过 specific 模式启用，剩余资源通过 ModifyOriginACL 接口启用后，再通过 ModifyOriginACL 接口切换为 all。</p>
 	L4EnableMode *string `json:"L4EnableMode,omitnil,omitempty" name:"L4EnableMode"`
 
-	// 开启源站防护的四层代理实例列表，仅当参数 L4EnableMode 为 specific 时生效。L4EnableMode 为 all 时，请保留此参数为空。单次最大仅支持填写 100 个四层代理实例。
+	// <p>需要开启源站防护的四层代理实例列表，仅当参数 L4EnableMode 为 specific 时生效。本字段最多支持一次开启 100 个四层代理实例；当期望开启的四层代理实例个数超过 100 时，请联合使用 ModifyOriginACL 接口进行分片配置。</p>
 	L4ProxyIds []*string `json:"L4ProxyIds,omitnil,omitempty" name:"L4ProxyIds"`
 
-	// 源站防护回源ACL控制域，不填则默认用标准全球控制域；可用控制域信息可以通过DescribeAvailableOriginACLFamily接口查询获得。
-	// 具体取值说明如下：
-	// <li>gaz：标准全球可用区控制域；</li>
-	// <li>mlc：标准中国大陆可用区控制域；</li>
-	// <li>emc：标准全球(不含中国大陆)可用区控制域；</li>
-	// <li>plat-gaz：精简全球可用区控制域；</li>
-	// <li>plat-mlc：精简中国大陆可用区控制域；</li>
-	// <li>plat-emc：精简全球(不含中国大陆)可用区控制域；</li>
+	// <p>源站防护回源ACL控制域，不填则默认用标准全球控制域；可用控制域信息可以通过DescribeAvailableOriginACLFamily接口查询获得。<br>具体取值说明如下：</p><li>gaz：标准全球可用区控制域；</li><li>mlc：标准中国大陆可用区控制域；</li><li>emc：标准全球(不含中国大陆)可用区控制域；</li><li>plat-gaz：精简全球可用区控制域；</li><li>plat-mlc：精简中国大陆可用区控制域；</li><li>plat-emc：精简全球(不含中国大陆)可用区控制域；</li>
 	OriginACLFamily *string `json:"OriginACLFamily,omitnil,omitempty" name:"OriginACLFamily"`
 }
 
 type EnableOriginACLRequest struct {
 	*tchttp.BaseRequest
 	
-	// 站点 ID。
+	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 站点首次开启源站防护时，为七层加速域名配置特定回源 IP 网段的模式。
-	// <li>all：针对当前站点下的所有七层加速域名开启，当域名数量超过 200 时，请先通过 specific 模式启用 200 个域名，剩余资源通过 ModifyOriginACL 接口启用。</li>
-	// <li>specific：针对站点下指定的七层加速域名开启。</li>注意：当参数为空时，默认为 specific。后续新增七层加速域名/四层代理实例均请通过 ModifyOriginACL 接口配置。
+	// <p>七层加速域名源站防护模式，默认值: specific。<li>all：<strong>自动纳入防护模式</strong>，站点内所有七层加速域名将自动加入到源站防护列表中，包含后续新增的七层加速域名；</li><li>specific：<strong>指定加入防护模式</strong>，需要人工指定期望加入到源站防护的七层加速域名（通过 L7Hosts 参数指定），未指定的资源不会加入到源站防护列表中，后续的防护资源调整可通过 ModifyOriginACL 接口进行。</li>注意：取值为 all 时，L7Hosts 请保留为空；当站点下七层加速域名数量超过 200 时，请先通过 specific 模式启用，剩余资源通过 ModifyOriginACL 接口启用后，再通过 ModifyOriginACL 接口切换为 all。</p>
 	L7EnableMode *string `json:"L7EnableMode,omitnil,omitempty" name:"L7EnableMode"`
 
-	// 开启源站防护的七层加速域名列表，仅当参数 L7EnableMode 为 specific 时生效。L7EnableMode 为 all 时，请保留此参数为空。单次最大仅支持填写 200 个七层加速域名。
+	// <p>需要开启源站防护的七层加速域名列表，仅当参数 L7EnableMode 为 specific 时生效。本字段最多支持一次开启 200 个七层加速域名；当期望开启的域名个数超过 200 时，请联合使用 ModifyOriginACL 接口进行分片配置。</p>
 	L7Hosts []*string `json:"L7Hosts,omitnil,omitempty" name:"L7Hosts"`
 
-	// 站点首次开启源站防护时，为四层代理实例配置特定回源 IP 网段的模式。
-	// <li>all：针对当前站点下的所有四层代理实例开启，当实例数量超过 100 时，请先通过 specific 模式启用 100 个域名，剩余资源通过 ModifyOriginACL 接口启用。</li>
-	// <li>specific：针对站点下指定的四层代理实例开启。</li>注意：当参数为空时，默认为 specific。后续新增七层加速域名/四层代理实例均请通过 ModifyOriginACL 接口配置。
+	// <p>四层代理实例源站防护模式，默认值: specific。<li>all：<strong>自动纳入防护模式</strong>，站点内所有四层代理实例将自动加入到源站防护列表中，包含后续新增的四层代理实例资源；</li><li>specific：<strong>指定加入防护模式</strong>，需要人工指定期望加入到源站防护的四层代理实例（通过 L4ProxyIds 参数指定），未指定的资源不会加入到源站防护列表中，后续的防护资源调整可通过 ModifyOriginACL 接口进行。</li>注意：取值为 all 时，L4ProxyIds 请保留为空；当站点下四层代理实例数量超过 100 时，请先通过 specific 模式启用，剩余资源通过 ModifyOriginACL 接口启用后，再通过 ModifyOriginACL 接口切换为 all。</p>
 	L4EnableMode *string `json:"L4EnableMode,omitnil,omitempty" name:"L4EnableMode"`
 
-	// 开启源站防护的四层代理实例列表，仅当参数 L4EnableMode 为 specific 时生效。L4EnableMode 为 all 时，请保留此参数为空。单次最大仅支持填写 100 个四层代理实例。
+	// <p>需要开启源站防护的四层代理实例列表，仅当参数 L4EnableMode 为 specific 时生效。本字段最多支持一次开启 100 个四层代理实例；当期望开启的四层代理实例个数超过 100 时，请联合使用 ModifyOriginACL 接口进行分片配置。</p>
 	L4ProxyIds []*string `json:"L4ProxyIds,omitnil,omitempty" name:"L4ProxyIds"`
 
-	// 源站防护回源ACL控制域，不填则默认用标准全球控制域；可用控制域信息可以通过DescribeAvailableOriginACLFamily接口查询获得。
-	// 具体取值说明如下：
-	// <li>gaz：标准全球可用区控制域；</li>
-	// <li>mlc：标准中国大陆可用区控制域；</li>
-	// <li>emc：标准全球(不含中国大陆)可用区控制域；</li>
-	// <li>plat-gaz：精简全球可用区控制域；</li>
-	// <li>plat-mlc：精简中国大陆可用区控制域；</li>
-	// <li>plat-emc：精简全球(不含中国大陆)可用区控制域；</li>
+	// <p>源站防护回源ACL控制域，不填则默认用标准全球控制域；可用控制域信息可以通过DescribeAvailableOriginACLFamily接口查询获得。<br>具体取值说明如下：</p><li>gaz：标准全球可用区控制域；</li><li>mlc：标准中国大陆可用区控制域；</li><li>emc：标准全球(不含中国大陆)可用区控制域；</li><li>plat-gaz：精简全球可用区控制域；</li><li>plat-mlc：精简中国大陆可用区控制域；</li><li>plat-emc：精简全球(不含中国大陆)可用区控制域；</li>
 	OriginACLFamily *string `json:"OriginACLFamily,omitnil,omitempty" name:"OriginACLFamily"`
 }
 
@@ -20154,6 +20797,88 @@ func (r *ModifyCustomErrorPageResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyCustomGroupRequestParams struct {
+	// <p>站点 ID。</p>
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// <p>自定义组唯一标识 ID。</p>
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
+
+	// <p>自定义组名称。该字段不填时则保留原值。</p>
+	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
+
+	// <p>指定本次对 GroupItems 的更新方式。</p><p>枚举值：</p><ul><li>Replace： 使用 GroupItems 全量替换原有条目列表</li><li>Append： 追加 GroupItems 到组条目列表中</li><li>Remove： 从原有条目列表中移除与 GroupItems 中 Content 和 ItemType 均相同的条目。若指定条目不存在，则忽略该条目</li></ul><p>默认值：Replace</p>
+	GroupItemOperation *string `json:"GroupItemOperation,omitnil,omitempty" name:"GroupItemOperation"`
+
+	// <p>自定义组条目列表。该字段不填时则保留原值。</p>
+	GroupItems []*CustomGroupItem `json:"GroupItems,omitnil,omitempty" name:"GroupItems"`
+}
+
+type ModifyCustomGroupRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>站点 ID。</p>
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// <p>自定义组唯一标识 ID。</p>
+	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
+
+	// <p>自定义组名称。该字段不填时则保留原值。</p>
+	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
+
+	// <p>指定本次对 GroupItems 的更新方式。</p><p>枚举值：</p><ul><li>Replace： 使用 GroupItems 全量替换原有条目列表</li><li>Append： 追加 GroupItems 到组条目列表中</li><li>Remove： 从原有条目列表中移除与 GroupItems 中 Content 和 ItemType 均相同的条目。若指定条目不存在，则忽略该条目</li></ul><p>默认值：Replace</p>
+	GroupItemOperation *string `json:"GroupItemOperation,omitnil,omitempty" name:"GroupItemOperation"`
+
+	// <p>自定义组条目列表。该字段不填时则保留原值。</p>
+	GroupItems []*CustomGroupItem `json:"GroupItems,omitnil,omitempty" name:"GroupItems"`
+}
+
+func (r *ModifyCustomGroupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCustomGroupRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	delete(f, "GroupId")
+	delete(f, "GroupName")
+	delete(f, "GroupItemOperation")
+	delete(f, "GroupItems")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCustomGroupRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyCustomGroupResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyCustomGroupResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyCustomGroupResponseParams `json:"Response"`
+}
+
+func (r *ModifyCustomGroupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCustomGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyDDoSProtectionRequestParams struct {
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
@@ -21946,40 +22671,38 @@ func (r *ModifyMultiPathGatewayStatusResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyOriginACLRequestParams struct {
-	// 站点 ID。
+	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 需要启用/关闭特定回源 IP 网段回源的实例。
+	// <p>七层加速域名源站防护模式，默认值: specific。<li>all：<strong>自动纳入防护模式</strong>，站点内所有七层加速域名将自动加入到源站防护列表中，包含后续新增的七层加速域名；</li><li>specific：<strong>指定加入防护模式</strong>，需要人工指定期望加入到源站防护的七层加速域名（通过 L7Hosts 参数指定），未指定的资源不会加入到源站防护列表中，后续的防护资源调整可通过 ModifyOriginACL 接口进行。</li>注意：取值为 all 时，L7Hosts 请保留为空；当站点下七层加速域名数量超过 200 时，请先通过 specific 模式启用，剩余资源通过 ModifyOriginACL 接口启用后，再通过 ModifyOriginACL 接口切换为 all。</p>
+	L7EnableMode *string `json:"L7EnableMode,omitnil,omitempty" name:"L7EnableMode"`
+
+	// <p>四层代理实例源站防护模式，默认值: specific。<li>all：<strong>自动纳入防护模式</strong>，站点内所有四层代理实例将自动加入到源站防护列表中，包含后续新增的四层代理实例资源；</li><li>specific：<strong>指定加入防护模式</strong>，需要人工指定期望加入到源站防护的四层代理实例（通过 L4ProxyIds 参数指定），未指定的资源不会加入到源站防护列表中，后续的防护资源调整可通过 ModifyOriginACL 接口进行。</li>注意：取值为 all 时，L4ProxyIds 请保留为空；当站点下四层代理实例数量超过 100 时，请先通过 specific 模式启用，剩余资源通过 ModifyOriginACL 接口启用后，再通过 ModifyOriginACL 接口切换为 all。</p>
+	L4EnableMode *string `json:"L4EnableMode,omitnil,omitempty" name:"L4EnableMode"`
+
+	// <p>需要启用/关闭特定回源 IP 网段回源的实例。<br>注意：本参数仅适用于 <strong>指定加入防护模式</strong> 下的资源调整；当对应层级的源站防护模式为 all 时，该类型的资源列表由系统自动维护，本参数中请勿包含该类型的资源，如需手动调整，请先通过 L7EnableMode/L4EnableMode 将对应层级切换为 specific。</p>
 	OriginACLEntities []*OriginACLEntity `json:"OriginACLEntities,omitnil,omitempty" name:"OriginACLEntities"`
 
-	// 源站防护回源ACL控制域，不填则默认不变；控制域信息可以通过DescribeAvailableOriginACLFamily接口查询获得。
-	// 具体取值说明如下：
-	// <li>gaz：标准全球可用区控制域；</li>
-	// <li>mlc：标准中国大陆可用区控制域；</li>
-	// <li>emc：标准全球(不含中国大陆)可用区控制域；</li>
-	// <li>plat-gaz：精简全球可用区控制域；</li>
-	// <li>plat-mlc：精简中国大陆可用区控制域；</li>
-	// <li>plat-emc：精简全球(不含中国大陆)可用区控制域；</li>
+	// <p>源站防护回源ACL控制域，不填则默认不变；控制域信息可以通过DescribeAvailableOriginACLFamily接口查询获得。<br>具体取值说明如下：</p><li>gaz：标准全球可用区控制域；</li><li>mlc：标准中国大陆可用区控制域；</li><li>emc：标准全球(不含中国大陆)可用区控制域；</li><li>plat-gaz：精简全球可用区控制域；</li><li>plat-mlc：精简中国大陆可用区控制域；</li><li>plat-emc：精简全球(不含中国大陆)可用区控制域；</li>
 	OriginACLFamily *string `json:"OriginACLFamily,omitnil,omitempty" name:"OriginACLFamily"`
 }
 
 type ModifyOriginACLRequest struct {
 	*tchttp.BaseRequest
 	
-	// 站点 ID。
+	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 需要启用/关闭特定回源 IP 网段回源的实例。
+	// <p>七层加速域名源站防护模式，默认值: specific。<li>all：<strong>自动纳入防护模式</strong>，站点内所有七层加速域名将自动加入到源站防护列表中，包含后续新增的七层加速域名；</li><li>specific：<strong>指定加入防护模式</strong>，需要人工指定期望加入到源站防护的七层加速域名（通过 L7Hosts 参数指定），未指定的资源不会加入到源站防护列表中，后续的防护资源调整可通过 ModifyOriginACL 接口进行。</li>注意：取值为 all 时，L7Hosts 请保留为空；当站点下七层加速域名数量超过 200 时，请先通过 specific 模式启用，剩余资源通过 ModifyOriginACL 接口启用后，再通过 ModifyOriginACL 接口切换为 all。</p>
+	L7EnableMode *string `json:"L7EnableMode,omitnil,omitempty" name:"L7EnableMode"`
+
+	// <p>四层代理实例源站防护模式，默认值: specific。<li>all：<strong>自动纳入防护模式</strong>，站点内所有四层代理实例将自动加入到源站防护列表中，包含后续新增的四层代理实例资源；</li><li>specific：<strong>指定加入防护模式</strong>，需要人工指定期望加入到源站防护的四层代理实例（通过 L4ProxyIds 参数指定），未指定的资源不会加入到源站防护列表中，后续的防护资源调整可通过 ModifyOriginACL 接口进行。</li>注意：取值为 all 时，L4ProxyIds 请保留为空；当站点下四层代理实例数量超过 100 时，请先通过 specific 模式启用，剩余资源通过 ModifyOriginACL 接口启用后，再通过 ModifyOriginACL 接口切换为 all。</p>
+	L4EnableMode *string `json:"L4EnableMode,omitnil,omitempty" name:"L4EnableMode"`
+
+	// <p>需要启用/关闭特定回源 IP 网段回源的实例。<br>注意：本参数仅适用于 <strong>指定加入防护模式</strong> 下的资源调整；当对应层级的源站防护模式为 all 时，该类型的资源列表由系统自动维护，本参数中请勿包含该类型的资源，如需手动调整，请先通过 L7EnableMode/L4EnableMode 将对应层级切换为 specific。</p>
 	OriginACLEntities []*OriginACLEntity `json:"OriginACLEntities,omitnil,omitempty" name:"OriginACLEntities"`
 
-	// 源站防护回源ACL控制域，不填则默认不变；控制域信息可以通过DescribeAvailableOriginACLFamily接口查询获得。
-	// 具体取值说明如下：
-	// <li>gaz：标准全球可用区控制域；</li>
-	// <li>mlc：标准中国大陆可用区控制域；</li>
-	// <li>emc：标准全球(不含中国大陆)可用区控制域；</li>
-	// <li>plat-gaz：精简全球可用区控制域；</li>
-	// <li>plat-mlc：精简中国大陆可用区控制域；</li>
-	// <li>plat-emc：精简全球(不含中国大陆)可用区控制域；</li>
+	// <p>源站防护回源ACL控制域，不填则默认不变；控制域信息可以通过DescribeAvailableOriginACLFamily接口查询获得。<br>具体取值说明如下：</p><li>gaz：标准全球可用区控制域；</li><li>mlc：标准中国大陆可用区控制域；</li><li>emc：标准全球(不含中国大陆)可用区控制域；</li><li>plat-gaz：精简全球可用区控制域；</li><li>plat-mlc：精简中国大陆可用区控制域；</li><li>plat-emc：精简全球(不含中国大陆)可用区控制域；</li>
 	OriginACLFamily *string `json:"OriginACLFamily,omitnil,omitempty" name:"OriginACLFamily"`
 }
 
@@ -21996,6 +22719,8 @@ func (r *ModifyOriginACLRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "ZoneId")
+	delete(f, "L7EnableMode")
+	delete(f, "L4EnableMode")
 	delete(f, "OriginACLEntities")
 	delete(f, "OriginACLFamily")
 	if len(f) > 0 {
@@ -24085,27 +24810,30 @@ type OriginACLFamilyInfo struct {
 }
 
 type OriginACLInfo struct {
-	// 启用了特定回源 IP 网段回源的七层加速域名列表。源站防护未开启时为空。
+	// <p>七层加速域名源站防护模式，取值有：<li>all：自动纳入防护模式，站点内所有七层加速域名已纳入源站防护列表，包含后续新增的七层加速域名；</li><li>specific：指定加入防护模式，仅防护已绑定的七层加速域名。</li></p>
+	L7EnableMode *string `json:"L7EnableMode,omitnil,omitempty" name:"L7EnableMode"`
+
+	// <p>启用了特定回源 IP 网段回源的七层加速域名列表。源站防护未开启时为空。</p>
 	L7Hosts []*string `json:"L7Hosts,omitnil,omitempty" name:"L7Hosts"`
 
-	// 启用了特定回源 IP 网段回源的四层代理实例列表。源站防护未开启时为空。
+	// <p>四层代理实例源站防护模式，取值有：<li>all：自动纳入防护模式，站点内所有四层代理实例已纳入源站防护列表，包含后续新增的四层代理实例；</li><li>specific：指定加入防护模式，仅防护已绑定的四层代理实例。</li></p>
+	L4EnableMode *string `json:"L4EnableMode,omitnil,omitempty" name:"L4EnableMode"`
+
+	// <p>启用了特定回源 IP 网段回源的四层代理实例列表。源站防护未开启时为空。</p>
 	L4ProxyIds []*string `json:"L4ProxyIds,omitnil,omitempty" name:"L4ProxyIds"`
 
-	// 当前生效的回源 IP 网段。源站防护未开启时为空。
+	// <p>当前生效的回源 IP 网段。源站防护未开启时为空。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CurrentOriginACL *CurrentOriginACL `json:"CurrentOriginACL,omitnil,omitempty" name:"CurrentOriginACL"`
 
-	// 当回源 IP 网段发生更新时，该字段会返回下一个版本将要生效的回源 IP 网段，包含与当前回源 IP 网段的对比。无更新或者源站防护未开启时该字段为空。
+	// <p>当回源 IP 网段发生更新时，该字段会返回下一个版本将要生效的回源 IP 网段，包含与当前回源 IP 网段的对比。无更新或者源站防护未开启时该字段为空。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	NextOriginACL *NextOriginACL `json:"NextOriginACL,omitnil,omitempty" name:"NextOriginACL"`
 
-	// 源站防护状态，取值有：
-	// <li>online：已生效；</li>
-	// <li>offline：已停用；</li>
-	// <li>updating: 配置部署中。</li>
+	// <p>源站防护状态，取值有：</p><li>online：已生效；</li><li>offline：已停用；</li><li>updating: 配置部署中。</li>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 源站防护回源ACL控制域。
+	// <p>源站防护回源ACL控制域。</p>
 	OriginACLFamily *string `json:"OriginACLFamily,omitnil,omitempty" name:"OriginACLFamily"`
 }
 
@@ -24479,85 +25207,67 @@ type PartialModule struct {
 }
 
 type Plan struct {
-	// 套餐类型。取值有：
-	// <li>plan-trial: 试用版套餐；</li>
-	// <li>plan-personal: 个人版套餐；</li>
-	// <li>plan-basic: 基础版套餐；</li>
-	// <li>plan-standard: 标准版套餐；</li>
-	// <li>plan-enterprise-v2: 企业版套餐；</li>
-	// <li>plan-enterprise-model-a: 企业版 Model A 套餐。</li>
-	// <li>plan-enterprise: 旧企业版套餐。</li>
+	// <p>套餐类型。取值有：</p><li>plan-trial: 试用版套餐；</li><li>plan-personal: 个人版套餐；</li><li>plan-basic: 基础版套餐；</li><li>plan-standard: 标准版套餐；</li><li>plan-enterprise-v2: 企业版套餐；</li><li>plan-enterprise-model-a: 企业版 Model A 套餐；</li><li>plan-enterprise: 旧企业版套餐；</li><li>plan-makers-pro: Makers 专业版套餐；</li><li>plan-makers-business: Makers 商业版套餐；</li><p>枚举值：</p><ul><li>plan-trial： 试用版套餐</li><li>plan-personal： 个人版套餐</li><li>plan-basic： 基础版套餐</li><li>plan-standard： 标准版套餐</li><li>plan-enterprise-v2： 企业版套餐</li><li>plan-enterprise-model-a： 企业版 Model A 套餐</li><li>plan-enterprise： 旧企业版套餐</li><li>plan-makers-pro： Makers 专业版套餐</li><li>plan-makers-business： Makers 商业版套餐</li></ul>
 	PlanType *string `json:"PlanType,omitnil,omitempty" name:"PlanType"`
 
-	// 套餐 ID。形如 edgeone-2y041pblwaxe。
+	// <p>套餐 ID。形如 edgeone-2y041pblwaxe。</p>
 	PlanId *string `json:"PlanId,omitnil,omitempty" name:"PlanId"`
 
-	// 服务区域，取值有：
-	// <li>mainland: 中国大陆；</li>
-	// <li>overseas: 全球（不包括中国大陆）；</li>
-	// <li>global: 全球（包括中国大陆）。</li>
+	// <p>服务区域，取值有：</p><li>mainland: 中国大陆；</li><li>overseas: 全球（不包括中国大陆）；</li><li>global: 全球（包括中国大陆）。</li>
 	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
 
-	// 自动续费开关。取值有：
-	// <li>true: 已开启自动续费；</li>
-	// <li>false: 未开启自动续费。</li>
+	// <p>自动续费开关。取值有：</p><li>true: 已开启自动续费；</li><li>false: 未开启自动续费。</li>
 	AutoRenewal *bool `json:"AutoRenewal,omitnil,omitempty" name:"AutoRenewal"`
 
-	// 套餐状态，取值有：
-	// <li>normal：正常状态；</li>
-	// <li>expiring-soon：即将到期状态；</li>
-	// <li>expired：到期状态；</li>
-	// <li>isolated：隔离状态；</li>
-	// <li>overdue-isolated：欠费隔离状态。</li>
+	// <p>套餐状态，取值有：</p><li>normal：正常状态；</li><li>expiring-soon：即将到期状态；</li><li>expired：到期状态；</li><li>isolated：隔离状态；</li><li>overdue-isolated：欠费隔离状态。</li>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 付费类型，取值有：
-	// <li>0: 后付费；</li>
-	// <li>1: 预付费。</li>
+	// <p>付费类型，取值有：</p><li>0: 后付费；</li><li>1: 预付费。</li>
 	PayMode *int64 `json:"PayMode,omitnil,omitempty" name:"PayMode"`
 
-	// 套餐绑定的站点信息，包括站点id和站点名称，站点状态。
+	// <p>套餐绑定的站点信息，包括站点id和站点名称，站点状态。</p>
 	ZonesInfo []*ZoneInfo `json:"ZonesInfo,omitnil,omitempty" name:"ZonesInfo"`
 
-	// 套餐内智能加速请求数规格，单位：次。
+	// <p>套餐内智能加速请求数规格，单位：次。</p>
 	SmartRequestCapacity *int64 `json:"SmartRequestCapacity,omitnil,omitempty" name:"SmartRequestCapacity"`
 
-	// 套餐内VAU规格，单位：个。
+	// <p>套餐内VAU规格，单位：个。</p>
 	VAUCapacity *int64 `json:"VAUCapacity,omitnil,omitempty" name:"VAUCapacity"`
 
-	// 套餐内内容加速流量规格，单位：字节。
+	// <p>套餐内内容加速流量规格，单位：字节。</p>
 	AccTrafficCapacity *int64 `json:"AccTrafficCapacity,omitnil,omitempty" name:"AccTrafficCapacity"`
 
-	// 套餐内智能加速流量规格，单位：字节。
+	// <p>套餐内客户端认证流量规格，单位：字节。</p>
+	ClientAuthTrafficCapacity *int64 `json:"ClientAuthTrafficCapacity,omitnil,omitempty" name:"ClientAuthTrafficCapacity"`
+
+	// <p>套餐内智能加速流量规格，单位：字节。</p>
 	SmartTrafficCapacity *int64 `json:"SmartTrafficCapacity,omitnil,omitempty" name:"SmartTrafficCapacity"`
 
-	// 套餐内DDoS防护流量规格，单位：字节。
+	// <p>套餐内DDoS防护流量规格，单位：字节。</p>
 	DDoSTrafficCapacity *int64 `json:"DDoSTrafficCapacity,omitnil,omitempty" name:"DDoSTrafficCapacity"`
 
-	// 套餐内安全流量规格，单位：字节。
+	// <p>套餐内安全流量规格，单位：字节。</p>
 	SecTrafficCapacity *int64 `json:"SecTrafficCapacity,omitnil,omitempty" name:"SecTrafficCapacity"`
 
-	// 套餐内安全请求数规格，单位：次。
+	// <p>套餐内安全请求数规格，单位：次。</p>
 	SecRequestCapacity *int64 `json:"SecRequestCapacity,omitnil,omitempty" name:"SecRequestCapacity"`
 
-	// 套餐内四层加速流量规格，单位：字节。
+	// <p>套餐内四层加速流量规格，单位：字节。</p>
 	L4TrafficCapacity *int64 `json:"L4TrafficCapacity,omitnil,omitempty" name:"L4TrafficCapacity"`
 
-	// 套餐内中国大陆网络优化流量规格，单位：字节。
+	// <p>套餐内中国大陆网络优化流量规格，单位：字节。</p>
 	CrossMLCTrafficCapacity *int64 `json:"CrossMLCTrafficCapacity,omitnil,omitempty" name:"CrossMLCTrafficCapacity"`
 
-	// 套餐是否允许绑定新站点，取值有：
-	// <li>true: 允许绑定新站点；</li>
-	// <li>false: 不允许绑定新站点。</li>
+	// <p>套餐是否允许绑定新站点，取值有：</p><li>true: 允许绑定新站点；</li><li>false: 不允许绑定新站点。</li>
 	Bindable *string `json:"Bindable,omitnil,omitempty" name:"Bindable"`
 
-	// 套餐生效时间。
+	// <p>套餐生效时间。</p>
 	EnabledTime *string `json:"EnabledTime,omitnil,omitempty" name:"EnabledTime"`
 
-	// 套餐过期时间。
+	// <p>套餐过期时间。</p>
 	ExpiredTime *string `json:"ExpiredTime,omitnil,omitempty" name:"ExpiredTime"`
 
-	// 套餐所支持的功能，取值有：<li>ContentAcceleration：内容加速功能；</li><li>SmartAcceleration：智能加速功能；</li><li>L4：四层加速功能；</li><li>Waf：高级 Web 防护；</li><li>QUIC：QUIC功能；</li><li>CrossMLC：中国大陆网络优化功能；</li><li>ProcessMedia：媒体处理功能；</li><li>L4DDoS：四层DDoS防护功能；</li>L7DDoS功能只会出现以下所有规格中的一项<li>L7DDoS.CM30G；七层DDoS防护功能-中国大陆30G保底带宽规格；</li><li>L7DDoS.CM60G；七层DDoS防护功能-中国大陆60G保底带宽规格；</li><li>L7DDoS.CM100G；七层DDoS防护功能-中国大陆100G保底带宽规格；</li><li>L7DDoS.Anycast300G；七层DDoS防护功能-中国大陆以外Anycast300G保底带宽规格；</li><li>L7DDoS.AnycastUnlimited；七层DDoS防护功能-中国大陆以外Anycast无上限全力防护规格；</li><li>L7DDoS.CM30G_Anycast300G；七层DDoS防护功能-中国大陆30G保底带宽规格，中国大陆以外Anycast300G保底带宽规格；</li><li>L7DDoS.CM60G_Anycast300G；七层DDoS防护功能-中国大陆60G保底带宽规格，中国大陆以外Anycast300G保底带宽规格；</li><li>L7DDoS.CM100G_Anycast300G；七层DDoS防护功能-中国大陆100G保底带宽规格，中国大陆以外Anycast300G保底带宽规格；</li><li>L7DDoS.CM30G_AnycastUnlimited；七层DDoS防护功能-中国大陆30G保底带宽规格，中国大陆以外Anycast无上限全力防护规格；</li><li>L7DDoS.CM60G_AnycastUnlimited；七层DDoS防护功能-中国大陆60G保底带宽规格，中国大陆以外Anycast无上限全力防护规格；</li><li>L7DDoS.CM100G_AnycastUnlimited；七层DDoS防护功能-中国大陆100G保底带宽规格，中国大陆以外Anycast无上限全力防护规格；</li>
+	// <p>套餐所支持的功能，取值有：<li>ContentAcceleration：内容加速功能；</li><li>SmartAcceleration：智能加速功能；</li><li>L4：四层加速功能；</li><li>Waf：高级 Web 防护；</li><li>QUIC：QUIC功能；</li><li>CrossMLC：中国大陆网络优化功能；</li><li>ProcessMedia：媒体处理功能；</li><li>L4DDoS：四层DDoS防护功能；</li>L7DDoS功能只会出现以下所有规格中的一项<li>L7DDoS.CM30G；七层DDoS防护功能-中国大陆30G保底带宽规格；</li><li>L7DDoS.CM60G；七层DDoS防护功能-中国大陆60G保底带宽规格；</li><li>L7DDoS.CM100G；七层DDoS防护功能-中国大陆100G保底带宽规格；</li><li>L7DDoS.Anycast300G；七层DDoS防护功能-中国大陆以外Anycast300G保底带宽规格；</li><li>L7DDoS.AnycastUnlimited；七层DDoS防护功能-中国大陆以外Anycast无上限全力防护规格；</li><li>L7DDoS.CM30G_Anycast300G；七层DDoS防护功能-中国大陆30G保底带宽规格，中国大陆以外Anycast300G保底带宽规格；</li><li>L7DDoS.CM60G_Anycast300G；七层DDoS防护功能-中国大陆60G保底带宽规格，中国大陆以外Anycast300G保底带宽规格；</li><li>L7DDoS.CM100G_Anycast300G；七层DDoS防护功能-中国大陆100G保底带宽规格，中国大陆以外Anycast300G保底带宽规格；</li><li>L7DDoS.CM30G_AnycastUnlimited；七层DDoS防护功能-中国大陆30G保底带宽规格，中国大陆以外Anycast无上限全力防护规格；</li><li>L7DDoS.CM60G_AnycastUnlimited；七层DDoS防护功能-中国大陆60G保底带宽规格，中国大陆以外Anycast无上限全力防护规格；</li><li>L7DDoS.CM100G_AnycastUnlimited；七层DDoS防护功能-中国大陆100G保底带宽规格，中国大陆以外Anycast无上限全力防护规格；</li></p>
 	Features []*string `json:"Features,omitnil,omitempty" name:"Features"`
 }
 
@@ -26877,14 +27587,14 @@ type WafRule struct {
 }
 
 type WebSecurity struct {
-	// 站点级策略的配置详情。
+	// <p>站点级策略的配置详情。</p>
 	ZoneDefaultPolicy *SecurityPolicy `json:"ZoneDefaultPolicy,omitnil,omitempty" name:"ZoneDefaultPolicy"`
 
-	// 域名级策略的配置详情。
-	HostPolicy *HostPolicy `json:"HostPolicy,omitnil,omitempty" name:"HostPolicy"`
+	// <p>域名级策略的配置详情。</p>
+	HostPolicy []*HostPolicy `json:"HostPolicy,omitnil,omitempty" name:"HostPolicy"`
 
-	// 策略模板的配置详情。
-	Templates *WebSecurityTemplates `json:"Templates,omitnil,omitempty" name:"Templates"`
+	// <p>策略模板的配置详情。</p>
+	Templates []*WebSecurityTemplates `json:"Templates,omitnil,omitempty" name:"Templates"`
 }
 
 type WebSecurityTemplates struct {

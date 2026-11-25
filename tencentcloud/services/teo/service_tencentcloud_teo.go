@@ -3876,3 +3876,70 @@ func (me *TeoService) DescribeTeoAvailableOriginACLFamilyByFilter(ctx context.Co
 
 	return
 }
+
+// teoCustomGroupsPageSize is the page size used when the service loops through
+// DescribeCustomGroups pages. The cloud API documents 100 as the maximum value
+// of Limit.
+const teoCustomGroupsPageSize int64 = 100
+
+// DescribeTeoCustomGroups paginates DescribeCustomGroups and returns the full
+// custom group list plus the group total count reported by the cloud side. A
+// nil response without an error is treated as a failure.
+func (me *TeoService) DescribeTeoCustomGroups(ctx context.Context, request *teov20220901.DescribeCustomGroupsRequest) (customGroups []*teov20220901.CustomGroup, groupTotalCount *int64, errRet error) {
+	var (
+		logId = tccommon.GetLogId(ctx)
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset int64 = 0
+		limit  int64 = teoCustomGroupsPageSize
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		var response *teov20220901.DescribeCustomGroupsResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseTeoV20220901Client().DescribeCustomGroupsWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			errRet = err
+			return
+		}
+		if response == nil || response.Response == nil {
+			errRet = fmt.Errorf("DescribeCustomGroups returned an empty response")
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response.Response.GroupTotalCount != nil {
+			groupTotalCount = response.Response.GroupTotalCount
+		}
+		if len(response.Response.CustomGroups) < 1 {
+			break
+		}
+		customGroups = append(customGroups, response.Response.CustomGroups...)
+		if int64(len(response.Response.CustomGroups)) < limit {
+			break
+		}
+		offset += limit
+	}
+
+	return
+}
