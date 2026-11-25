@@ -3876,3 +3876,68 @@ func (me *TeoService) DescribeTeoAvailableOriginACLFamilyByFilter(ctx context.Co
 
 	return
 }
+
+// teoCustomGroupReferencesPageSize is the page size used when the service
+// loops through DescribeCustomGroupReferences pages. The cloud API documents
+// 200 as the maximum value of Limit.
+const teoCustomGroupReferencesPageSize int64 = 200
+
+// DescribeTeoCustomGroupReferences returns all the configurations that
+// reference the custom group identified by the ZoneId and GroupId carried in
+// the request. Pagination is handled internally: the service keeps fetching
+// pages of teoCustomGroupReferencesPageSize records until the cloud side
+// returns fewer records than the page size, so callers always get the full
+// result set. An empty references list with a nil error is a valid outcome:
+// the custom group is simply not referenced by any configuration.
+func (me *TeoService) DescribeTeoCustomGroupReferences(ctx context.Context, request *teov20220901.DescribeCustomGroupReferencesRequest) (references []*teov20220901.CustomGroupReference, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset int64 = 0
+		limit  int64 = teoCustomGroupReferencesPageSize
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		response := teo.NewDescribeCustomGroupReferencesResponse()
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseTeoClient().DescribeCustomGroupReferencesWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil {
+			errRet = fmt.Errorf("[CRITAL]%s api[%s] fail, response is nil", logId, request.GetAction())
+			return
+		}
+
+		if len(response.Response.References) < 1 {
+			break
+		}
+		references = append(references, response.Response.References...)
+		if len(response.Response.References) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
