@@ -128,6 +128,46 @@ func (me *AgsService) DescribeSandboxToolById(ctx context.Context, toolId string
 	return
 }
 
+// DescribeSandboxInstances queries sandbox instances. A nil request list
+// (or an empty one) queries every sandbox instance of the account; a non
+// empty list narrows the query to the given instance ids. It returns the
+// full list of sandbox instances returned by the cloud side — an empty list
+// is a legitimate answer, not an error.
+func (me *AgsService) DescribeSandboxInstances(ctx context.Context, request *agsv20250920.DescribeSandboxInstancesRequest) (sandboxInstances []*agsv20250920.SandboxInstance, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *agsv20250920.DescribeSandboxInstancesResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseAgsClient().DescribeSandboxInstancesWithContext(ctx, request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("DescribeSandboxInstances returned an empty response")
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	sandboxInstances = response.Response.InstanceSet
+	return
+}
+
 // UpdateSandboxTool applies an in-place update to an existing sandbox tool.
 func (me *AgsService) UpdateSandboxTool(ctx context.Context, request *agsv20250920.UpdateSandboxToolRequest) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
