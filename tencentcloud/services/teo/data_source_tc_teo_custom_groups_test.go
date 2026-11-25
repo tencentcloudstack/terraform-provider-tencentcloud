@@ -51,10 +51,10 @@ func teoCustomGroupItemType() tftypes.Object {
 		AttributeTypes: map[string]tftypes.Type{
 			"group_id":               tftypes.String,
 			"group_name":             tftypes.String,
-			"group_type":              tftypes.String,
-			"group_items":             tftypes.List{ElementType: teoCustomGroupEntryItemType()},
-			"group_item_total_count":  tftypes.Number,
-			"ref_count":               tftypes.Number,
+			"group_type":             tftypes.String,
+			"group_items":            tftypes.List{ElementType: teoCustomGroupEntryItemType()},
+			"group_item_total_count": tftypes.Number,
+			"ref_count":              tftypes.Number,
 		},
 	}
 }
@@ -200,7 +200,7 @@ func TestTeoCustomGroups_ReadBasic(t *testing.T) {
 					},
 				},
 				GroupItemTotalCount: ptrInt64TeoCustomGroups(2),
-				RefCount:           ptrInt64TeoCustomGroups(1),
+				RefCount:            ptrInt64TeoCustomGroups(1),
 			},
 			{
 				GroupId:   ptrStrTeoCustomGroups("cg-hijklmn"),
@@ -213,7 +213,7 @@ func TestTeoCustomGroups_ReadBasic(t *testing.T) {
 					},
 				},
 				GroupItemTotalCount: ptrInt64TeoCustomGroups(1),
-				RefCount:           ptrInt64TeoCustomGroups(0),
+				RefCount:            ptrInt64TeoCustomGroups(0),
 			},
 		}
 		return customGroups, ptrInt64TeoCustomGroups(2), nil
@@ -377,8 +377,8 @@ func TestTeoCustomGroupsService_ReadAllPages(t *testing.T) {
 			}
 			return &teov20220901.DescribeCustomGroupsResponse{Response: &teov20220901.DescribeCustomGroupsResponseParams{
 				GroupTotalCount: ptrInt64TeoCustomGroups(101),
-				CustomGroups:   customGroups,
-				RequestId:      ptrStrTeoCustomGroups("fake-request-id"),
+				CustomGroups:    customGroups,
+				RequestId:       ptrStrTeoCustomGroups("fake-request-id"),
 			}}, nil
 		case 2:
 			if offset != 100 {

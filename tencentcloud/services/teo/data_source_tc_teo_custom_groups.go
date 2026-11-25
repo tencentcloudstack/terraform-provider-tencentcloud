@@ -30,20 +30,20 @@ type TeoCustomGroupsDataSource struct {
 
 // TeoCustomGroupsDataSourceModel maps the schema attributes.
 type TeoCustomGroupsDataSourceModel struct {
-	ZoneId         types.String `tfsdk:"zone_id"`
-	GroupTypes     types.List   `tfsdk:"group_types"`
-	GroupTotalCount types.Int64 `tfsdk:"group_total_count"`
-	CustomGroups   types.List   `tfsdk:"custom_groups"`
+	ZoneId          types.String `tfsdk:"zone_id"`
+	GroupTypes      types.List   `tfsdk:"group_types"`
+	GroupTotalCount types.Int64  `tfsdk:"group_total_count"`
+	CustomGroups    types.List   `tfsdk:"custom_groups"`
 }
 
 // TeoCustomGroupItemModel is the element type of custom_groups.
 type TeoCustomGroupItemModel struct {
-	GroupId          types.String `tfsdk:"group_id"`
-	GroupName        types.String `tfsdk:"group_name"`
-	GroupType        types.String `tfsdk:"group_type"`
-	GroupItems       types.List   `tfsdk:"group_items"`
-	GroupItemTotalCount types.Int64 `tfsdk:"group_item_total_count"`
-	RefCount        types.Int64  `tfsdk:"ref_count"`
+	GroupId             types.String `tfsdk:"group_id"`
+	GroupName           types.String `tfsdk:"group_name"`
+	GroupType           types.String `tfsdk:"group_type"`
+	GroupItems          types.List   `tfsdk:"group_items"`
+	GroupItemTotalCount types.Int64  `tfsdk:"group_item_total_count"`
+	RefCount            types.Int64  `tfsdk:"ref_count"`
 }
 
 // TeoCustomGroupEntryModel is the element type of group_items.
@@ -60,12 +60,12 @@ var TeoCustomGroupEntryAttrTypes = map[string]attr.Type{
 
 // TeoCustomGroupItemAttrTypes is the object type of the custom_groups elements.
 var TeoCustomGroupItemAttrTypes = map[string]attr.Type{
-	"group_id":             types.StringType,
-	"group_name":           types.StringType,
-	"group_type":           types.StringType,
-	"group_items":          types.List{ElementType: types.ObjectType{AttrTypes: TeoCustomGroupEntryAttrTypes}},
+	"group_id":               types.StringType,
+	"group_name":             types.StringType,
+	"group_type":             types.StringType,
+	"group_items":            types.ListType{ElemType: types.ObjectType{AttrTypes: TeoCustomGroupEntryAttrTypes}},
 	"group_item_total_count": types.Int64Type,
-	"ref_count":            types.Int64Type,
+	"ref_count":              types.Int64Type,
 }
 
 func (d *TeoCustomGroupsDataSource) Metadata(_ context.Context, _ datasource.MetadataRequest, resp *datasource.MetadataResponse) {
