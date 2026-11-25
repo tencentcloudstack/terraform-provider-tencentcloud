@@ -19,23 +19,24 @@ resource "tencentcloud_subnet" "subnet" {
   cidr_block        = "10.0.1.0/24"
 }
 
-resource "tencentcloud_monitor_grafana_instance" "foo" {
-  instance_name         = "test-grafana"
+resource "tencentcloud_monitor_grafana_instance" "example" {
+  instance_name         = "tf-example"
   vpc_id                = tencentcloud_vpc.vpc.id
   subnet_ids            = [tencentcloud_subnet.subnet.id]
   grafana_init_password = "1234567890"
-  enable_internet 		= false
-  is_destroy 			= true
+  enable_internet       = false
+  is_destroy            = true
 
   tags = {
-    "createdBy" = "test"
+    "createdBy" = "Terraform"
   }
 }
-
 ```
+
 Import
 
 monitor grafanaInstance can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_monitor_grafana_instance.foo grafanaInstance_id
+terraform import tencentcloud_monitor_grafana_instance.example grafana-ab6g4fgh
 ```
