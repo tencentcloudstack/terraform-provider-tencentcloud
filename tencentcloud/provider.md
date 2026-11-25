@@ -1737,6 +1737,7 @@ tencentcloud_teo_edge_kv_namespace
 tencentcloud_teo_dns_records_status
 tencentcloud_teo_application_proxy
 tencentcloud_teo_plan
+tencentcloud_teo_custom_group
 
 Action
 tencentcloud_teo_apply_free_certificate
