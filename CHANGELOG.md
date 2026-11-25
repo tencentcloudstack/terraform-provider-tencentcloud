@@ -1,3 +1,122 @@
+## 1.83.45(November‌ 25, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cos_vector_buckets` ([#4697](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4697))
+* **New Data Source:** `tencentcloud_cos_vector_indexes` ([#4697](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4697))
+* **New Resource:** `tencentcloud_cos_vector_bucket` ([#4697](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4697))
+* **New Resource:** `tencentcloud_cos_vector_bucket_policy` ([#4697](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4697))
+* **New Resource:** `tencentcloud_cos_vector_index` ([#4697](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4697))
+* **New Resource:** `tencentcloud_oceanus_cluster` ([#4692](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4692))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_antiddos_packet_filter_config: update doc.
+resource/tencentcloud_bh_bind_device_account_kubeconfig: update doc.
+resource/tencentcloud_clb_replace_cert_for_lbs: update doc.
+resource/tencentcloud_config_update_config_deliver: update doc.
+resource/tencentcloud_dcdb_account_privileges: update doc.
+resource/tencentcloud_provision_role_configuration_operation: update doc.
+resource/tencentcloud_mysql_instance: update doc.
+resource/tencentcloud_scf_function_alias: update doc.
+resource/tencentcloud_scf_trigger: update doc.
+resource/tencentcloud_ses_template: update doc.
+resource/tencentcloud_sqlserver_wan_ip_config: update doc.
+resource/tencentcloud_tcmq_subscribe: update doc.
+resource/tencentcloud_cynosdb_resource_package: update doc.
+resource/tencentcloud_identity_center_role_configuration_permission_policy_attachment: update doc.
+resource/tencentcloud_ccn_route_table_associate_instance_config: update doc.
+resource/tencentcloud_ccn_route_table_broadcast_policies: update doc.
+resource/tencentcloud_ccn_route_table_input_policies: update doc.
+resource/tencentcloud_ccn_route_table_selection_policies: update doc.
+resource/tencentcloud_clb_target_group_instance_attachment: update doc.
+resource/tencentcloud_eip_association: update doc.
+resource/tencentcloud_instance_set: update doc.
+resource/tencentcloud_vpc_flow_log: update doc.
+resource/tencentcloud_vpc_flow_log_config: update doc.
+resource/tencentcloud_kubernetes_cluster: update doc.
+resource/tencentcloud_postgresql_readonly_attachment: update doc.
+resource/tencentcloud_redis_instance: update doc.
+resource/tencentcloud_redis_read_only: update doc.
+resource/tencentcloud_redis_renew_instance_operation: update doc.
+resource/tencentcloud_redis_replica_readonly: update doc.
+resource/tencentcloud_redis_replicate_attachment: update doc.
+resource/tencentcloud_redis_security_group_attachment: update doc.
+resource/tencentcloud_redis_ssl: update doc.
+resource/tencentcloud_redis_switch_master: update doc.
+resource/tencentcloud_tdmq_rabbitmq_user: update doc.
+resource/tencentcloud_tdmq_rabbitmq_vip_instance: update doc.
+resource/tencentcloud_tdmq_rabbitmq_virtual_host: update doc.
+resource/tencentcloud_tdmq_rocketmq_vip_instance: update doc.
+resource/tencentcloud_monitor_tmp_exporter_integration_v2: update doc.
+resource/tencentcloud_monitor_tmp_tke_alert_policy: update doc.
+resource/tencentcloud_monitor_tmp_tke_basic_config: update doc.
+resource/tencentcloud_monitor_tmp_tke_cluster_agent: update doc.
+resource/tencentcloud_monitor_tmp_tke_config: update doc.
+resource/tencentcloud_monitor_tmp_tke_global_notification: update doc.
+resource/tencentcloud_monitor_tmp_tke_record_rule_yaml: update doc.
+resource/tencentcloud_monitor_tmp_tke_template_attachment: update doc.
+resource/tencentcloud_subnet: update doc.
+resource/tencentcloud_dnat: update doc.
+resource/tencentcloud_eni_attachment: update doc.
+resource/tencentcloud_vpc_acl_attachment: update doc.
+resource/tencentcloud_vpc_bandwidth_package_attachment: update doc.
+resource/tencentcloud_vpc_dhcp_ip: update doc.
+resource/tencentcloud_vpc_ipv6_subnet_cidr_block: update doc.
+resource/tencentcloud_vpc_net_detect: update doc.
+resource/tencentcloud_css_record_template: update doc.
+resource/tencentcloud_cvm_renew_host: update doc.
+resource/tencentcloud_cvm_modify_instance_disk_type: update doc.
+resource/tencentcloud_dcdb_db_instance: update doc.
+resource/tencentcloud_dlc_attach_user_policy_operation: update doc.
+resource/tencentcloud_dlc_attach_work_group_policy_operation: update doc.
+resource/tencentcloud_dlc_detach_user_policy_operation: update doc.
+resource/tencentcloud_dlc_detach_work_group_policy_operation: update doc.
+resource/tencentcloud_mysql_db_import_job_operation: update doc.
+resource/tencentcloud_vpc_network_acl_quintuple: update doc.
+data-source/tencentcloud_api_gateway_api_apps: update doc.
+data-source/tencentcloud_api_gateway_upstreams: update doc.
+data-source/tencentcloud_cbs_snapshots: update doc.
+data-source/tencentcloud_cdc_dedicated_clusters: update doc.
+data-source/tencentcloud_cdwdoris_instances: update doc.
+data-source/tencentcloud_cls_logsets: update doc.
+data-source/tencentcloud_cynosdb_cluster_instance_groups: update doc.
+data-source/tencentcloud_cynosdb_proxy_node: update doc.
+data-source/tencentcloud_dc_instances: update doc.
+data-source/tencentcloud_dcdb_database_objects: update doc.
+data-source/tencentcloud_dcdb_database_tables: update doc.
+data-source/tencentcloud_dcdb_instances: update doc.
+data-source/tencentcloud_dnats: update doc.
+data-source/tencentcloud_gaap_check_proxy_create: update doc.
+data-source/tencentcloud_ha_vips: update doc.
+data-source/tencentcloud_instance_types: update doc.
+data-source/tencentcloud_kubernetes_charts: update doc.
+data-source/tencentcloud_mps_schedules: update doc.
+data-source/tencentcloud_postgresql_base_backups: update doc.
+data-source/tencentcloud_security_groups: update doc.
+data-source/tencentcloud_sqlserver_account_db_attachments: update doc.
+data-source/tencentcloud_ssl_certificates: update doc.
+data-source/tencentcloud_tcaplus_tablegroups: update doc.
+data-source/tencentcloud_tcaplus_tables: update doc.
+data-source/tencentcloud_tcmq_subscribe: update doc.
+data-source/tencentcloud_tcr_replication_instance_create_tasks: update doc.
+data-source/tencentcloud_tcr_repositories: update doc.
+data-source/tencentcloud_tsf_application_config: update doc.
+data-source/tencentcloud_tsf_public_config_summary: update doc.
+data-source/tencentcloud_vpc_subnets: update doc.
+data-source/tencentcloud_rum_taw_area: update doc.
+resource/tencentcloud_postgresql_account_privileges_operation: update doc.
+resource/tencentcloud_rum_release_file: update doc.
+resource/tencentcloud_security_group_rule: update doc.
+resource/tencentcloud_teo_application_proxy: update doc.
+resource/tencentcloud_teo_plan: update doc.
+resource/tencentcloud_tsf_repository: update doc.
+resource/tencentcloud_vpc_classic_link_attachment: update doc.
+resource/tencentcloud_vpc_dhcp_associate_address: update doc.
+data-source/tencentcloud_dnspod_domain_instances: update doc. ([#4687](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4687))
+* resource/tencentcloud_cos_bucket: optimize code logic ([#4701](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4701))
+* resource/tencentcloud_monitor_grafana_instance: optimize code logic. ([#4699](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4699))
+
 ## 1.83.44(November‌ 20, 2026)
 
 FEATURES:
