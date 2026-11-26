@@ -2081,6 +2081,7 @@ tencentcloud_tdcpg_instance
 
 TDSQL Boundless(tdmysql)
 Data Source
+tencentcloud_tdmysql_db_engines
 tencentcloud_tdmysql_specs
 
 Resource
