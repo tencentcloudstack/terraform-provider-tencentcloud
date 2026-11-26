@@ -10,6 +10,7 @@ import (
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	fwHelper "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -130,6 +131,83 @@ func (me *TdmysqlService) DescribeTdmysqlDBInstanceDataReservedSpaceById(ctx con
 	}
 
 	ret = response.Response
+	return
+}
+
+// DescribeDBSBackupPolicy reads the TDSQL Boundless (tdmysql) DBS backup
+// policy of one instance. Singleton describe shape: the response carries a
+// policy list, so an answer without any item is turned into the shared
+// fwHelper.ErrNotFound sentinel (never an error-code special case).
+func (me *TdmysqlService) DescribeDBSBackupPolicy(ctx context.Context, request *tdmysqlv20211122.DescribeDBSBackupPolicyRequest) (ret *tdmysqlv20211122.DescribeDBSBackupPolicyResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	response := tdmysqlv20211122.NewDescribeDBSBackupPolicyResponse()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTdmysqlV20211122Client().DescribeDBSBackupPolicy(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe tdmysql DBS backup policy failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.Items) < 1 {
+		errRet = fwHelper.ErrNotFound
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+// ModifyDBSBackupPolicy writes the TDSQL Boundless (tdmysql) DBS backup
+// policy of one instance. Synchronous write: no task id is returned, the
+// caller reads the configuration back through DescribeDBSBackupPolicy.
+func (me *TdmysqlService) ModifyDBSBackupPolicy(ctx context.Context, request *tdmysqlv20211122.ModifyDBSBackupPolicyRequest) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTdmysqlV20211122Client().ModifyDBSBackupPolicy(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Modify tdmysql DBS backup policy failed, Response is nil."))
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+	}
+
 	return
 }
 
