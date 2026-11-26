@@ -927,74 +927,83 @@ type ChangePwdTaskDetail struct {
 }
 
 type ChangePwdTaskInfo struct {
-	// id
+	// <p>id</p>
 	Id *uint64 `json:"Id,omitnil,omitempty" name:"Id"`
 
-	// 任务id
+	// <p>任务id</p>
 	OperationId *string `json:"OperationId,omitnil,omitempty" name:"OperationId"`
 
-	// 任务名
+	// <p>任务名</p>
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
-	// 所属部门信息
+	// <p>所属部门信息</p>
 	Department *Department `json:"Department,omitnil,omitempty" name:"Department"`
 
-	// 改密方式。1：使用执行账号。2：修改自身密码
+	// <p>改密方式。1：使用执行账号。2：修改自身密码</p>
 	ChangeMethod *uint64 `json:"ChangeMethod,omitnil,omitempty" name:"ChangeMethod"`
 
-	// 执行账号
+	// <p>执行账号</p>
 	RunAccount *string `json:"RunAccount,omitnil,omitempty" name:"RunAccount"`
 
-	// 密码生成策略
+	// <p>密码生成策略</p>
 	AuthGenerationStrategy *uint64 `json:"AuthGenerationStrategy,omitnil,omitempty" name:"AuthGenerationStrategy"`
 
-	// 密码长度
+	// <p>密码长度</p>
 	PasswordLength *uint64 `json:"PasswordLength,omitnil,omitempty" name:"PasswordLength"`
 
-	// 包含小写字母
+	// <p>包含小写字母</p>
 	SmallLetter *uint64 `json:"SmallLetter,omitnil,omitempty" name:"SmallLetter"`
 
-	// 包含大写字母
+	// <p>包含大写字母</p>
 	BigLetter *uint64 `json:"BigLetter,omitnil,omitempty" name:"BigLetter"`
 
-	// 包含数字
+	// <p>包含数字</p>
 	Digit *uint64 `json:"Digit,omitnil,omitempty" name:"Digit"`
 
-	// 包含的特殊字符，入参base64
+	// <p>包含的特殊字符，入参base64</p>
 	Symbol *string `json:"Symbol,omitnil,omitempty" name:"Symbol"`
 
-	// 改密完成通知。0-通知，1-不通知
+	// <p>改密完成通知。0-通知，1-不通知</p>
 	CompleteNotify *uint64 `json:"CompleteNotify,omitnil,omitempty" name:"CompleteNotify"`
 
-	// 通知人邮箱
+	// <p>通知人邮箱</p>
 	NotifyEmails []*string `json:"NotifyEmails,omitnil,omitempty" name:"NotifyEmails"`
 
-	// 加密附件密码
+	// <p>加密附件密码</p>
 	FilePassword *string `json:"FilePassword,omitnil,omitempty" name:"FilePassword"`
 
-	// 需要改密的账户
+	// <p>需要改密的账户</p>
 	AccountSet []*string `json:"AccountSet,omitnil,omitempty" name:"AccountSet"`
 
-	// 需要改密的主机
+	// <p>需要改密的主机</p>
 	DeviceSet []*Device `json:"DeviceSet,omitnil,omitempty" name:"DeviceSet"`
 
-	// 任务类型：4手动，5自动
+	// <p>任务类型：4手动，5自动</p>
 	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 周期
+	// <p>周期</p>
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 首次执行时间
+	// <p>首次执行时间</p>
 	FirstTime *string `json:"FirstTime,omitnil,omitempty" name:"FirstTime"`
 
-	// 下次执行时间
+	// <p>下次执行时间</p>
 	NextTime *string `json:"NextTime,omitnil,omitempty" name:"NextTime"`
 
-	// 上次执行时间
+	// <p>上次执行时间</p>
 	LastTime *string `json:"LastTime,omitnil,omitempty" name:"LastTime"`
 
-	// 改密任务状态，0-待执行，1-执行完成，2-执行失败，3-执行中，4-执行超时
+	// <p>改密任务状态，0-待执行，1-执行完成，2-执行失败，3-执行中，4-执行超时</p>
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>改密任务类别</p><p>枚举值：</p><ul><li>0： Linux 类型改密任务</li><li>1： Windows 类型改密任务</li></ul><p>默认值：0</p>
+	Category *int64 `json:"Category,omitnil,omitempty" name:"Category"`
+
+	// <p>改密任务协议类型</p><p>枚举值：</p><ul><li>0： 未定义，Linux 改密任务类型默认值</li><li>1： Windows OpenSSH 协议</li></ul><p>默认值：0</p>
+	Protocol *int64 `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// <p>改密协议端口号. Linux 改密协议类型端口号值为0</p><p>默认值：0</p>
+	Port *uint64 `json:"Port,omitnil,omitempty" name:"Port"`
 }
 
 // Predefined struct for user
@@ -1576,125 +1585,141 @@ func (r *CreateAssetSyncJobResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateChangePwdTaskRequestParams struct {
-	// 任务名
+	// <p>任务名</p>
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
-	// 资产id数组
+	// <p>资产id数组</p>
 	DeviceIdSet []*uint64 `json:"DeviceIdSet,omitnil,omitempty" name:"DeviceIdSet"`
 
-	// 修改的账户数组
+	// <p>修改的账户数组</p>
 	AccountSet []*string `json:"AccountSet,omitnil,omitempty" name:"AccountSet"`
 
-	// 改密方式。1：使用执行账号修改密码；2：修改自身密码
+	// <p>改密方式。1：使用执行账号修改密码；2：修改自身密码</p>
 	ChangeMethod *int64 `json:"ChangeMethod,omitnil,omitempty" name:"ChangeMethod"`
 
-	// 认证生成方式。 1:自动生成相同密码 2:自动生成不同密码 3:手动指定相同密码
+	// <p>认证生成方式。 1:自动生成相同密码 2:自动生成不同密码 3:手动指定相同密码</p>
 	AuthGenerationStrategy *int64 `json:"AuthGenerationStrategy,omitnil,omitempty" name:"AuthGenerationStrategy"`
 
-	// 执行账号
+	// <p>执行账号</p>
 	RunAccount *string `json:"RunAccount,omitnil,omitempty" name:"RunAccount"`
 
-	// 手动指定密码时必传
+	// <p>手动指定密码时必传</p>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// 密码限制长度，长度大于 12 位
+	// <p>密码限制长度，长度大于 12 位</p>
 	PasswordLength *int64 `json:"PasswordLength,omitnil,omitempty" name:"PasswordLength"`
 
-	// 密码包含小写字母。0：否，1：是
+	// <p>密码包含小写字母。0：否，1：是</p>
 	SmallLetter *int64 `json:"SmallLetter,omitnil,omitempty" name:"SmallLetter"`
 
-	// 密码包含大写字母。0：否，1：是
+	// <p>密码包含大写字母。0：否，1：是</p>
 	BigLetter *int64 `json:"BigLetter,omitnil,omitempty" name:"BigLetter"`
 
-	// 密码包含数字。0：否，1：是
+	// <p>密码包含数字。0：否，1：是</p>
 	Digit *int64 `json:"Digit,omitnil,omitempty" name:"Digit"`
 
-	// 密码包含的特殊字符（base64编码），包含：^[-_#();%~!+=]*$
+	// <p>密码包含的特殊字符（base64编码），包含：^[-_#();%~!+=]*$</p>
 	Symbol *string `json:"Symbol,omitnil,omitempty" name:"Symbol"`
 
-	// 改密完成通知。0：不通知 
-	//   1：通知
+	// <p>改密完成通知。0：不通知<br>  1：通知</p>
 	CompleteNotify *int64 `json:"CompleteNotify,omitnil,omitempty" name:"CompleteNotify"`
 
-	// 通知邮箱
+	// <p>通知邮箱</p>
 	NotifyEmails []*string `json:"NotifyEmails,omitnil,omitempty" name:"NotifyEmails"`
 
-	// 加密压缩文件密码
+	// <p>加密压缩文件密码</p>
 	FilePassword *string `json:"FilePassword,omitnil,omitempty" name:"FilePassword"`
 
-	// 所属部门id。“1.2.3”
+	// <p>所属部门id。“1.2.3”</p>
 	DepartmentId *string `json:"DepartmentId,omitnil,omitempty" name:"DepartmentId"`
 
-	// 任务类型  4-手工执行  5-周期自动执行
+	// <p>任务类型  4-手工执行  5-周期自动执行</p>
 	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 执行周期，单位天（大于等于 1，小于等于 365）
+	// <p>执行周期，单位天（大于等于 1，小于等于 365）</p>
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 周期任务首次执行时间
+	// <p>周期任务首次执行时间</p>
 	FirstTime *string `json:"FirstTime,omitnil,omitempty" name:"FirstTime"`
+
+	// <p>改密任务类别</p><p>枚举值：</p><ul><li>0： Linux 类型改密任务</li><li>1： Windows 类型改密任务</li></ul><p>默认值：0</p>
+	Category *int64 `json:"Category,omitnil,omitempty" name:"Category"`
+
+	// <p>改密任务协议类型</p><p>枚举值：</p><ul><li>0： 未定义，Linux改密任务类型默认值</li><li>1： Windows OpenSSH 协议</li></ul><p>默认值：0</p>
+	Protocol *int64 `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// <p>改密协议端口号. Linux 改密类型协议端口号需设置为0</p><p>取值范围：[0, 65535]</p><p>默认值：0</p>
+	Port *uint64 `json:"Port,omitnil,omitempty" name:"Port"`
 }
 
 type CreateChangePwdTaskRequest struct {
 	*tchttp.BaseRequest
 	
-	// 任务名
+	// <p>任务名</p>
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
-	// 资产id数组
+	// <p>资产id数组</p>
 	DeviceIdSet []*uint64 `json:"DeviceIdSet,omitnil,omitempty" name:"DeviceIdSet"`
 
-	// 修改的账户数组
+	// <p>修改的账户数组</p>
 	AccountSet []*string `json:"AccountSet,omitnil,omitempty" name:"AccountSet"`
 
-	// 改密方式。1：使用执行账号修改密码；2：修改自身密码
+	// <p>改密方式。1：使用执行账号修改密码；2：修改自身密码</p>
 	ChangeMethod *int64 `json:"ChangeMethod,omitnil,omitempty" name:"ChangeMethod"`
 
-	// 认证生成方式。 1:自动生成相同密码 2:自动生成不同密码 3:手动指定相同密码
+	// <p>认证生成方式。 1:自动生成相同密码 2:自动生成不同密码 3:手动指定相同密码</p>
 	AuthGenerationStrategy *int64 `json:"AuthGenerationStrategy,omitnil,omitempty" name:"AuthGenerationStrategy"`
 
-	// 执行账号
+	// <p>执行账号</p>
 	RunAccount *string `json:"RunAccount,omitnil,omitempty" name:"RunAccount"`
 
-	// 手动指定密码时必传
+	// <p>手动指定密码时必传</p>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// 密码限制长度，长度大于 12 位
+	// <p>密码限制长度，长度大于 12 位</p>
 	PasswordLength *int64 `json:"PasswordLength,omitnil,omitempty" name:"PasswordLength"`
 
-	// 密码包含小写字母。0：否，1：是
+	// <p>密码包含小写字母。0：否，1：是</p>
 	SmallLetter *int64 `json:"SmallLetter,omitnil,omitempty" name:"SmallLetter"`
 
-	// 密码包含大写字母。0：否，1：是
+	// <p>密码包含大写字母。0：否，1：是</p>
 	BigLetter *int64 `json:"BigLetter,omitnil,omitempty" name:"BigLetter"`
 
-	// 密码包含数字。0：否，1：是
+	// <p>密码包含数字。0：否，1：是</p>
 	Digit *int64 `json:"Digit,omitnil,omitempty" name:"Digit"`
 
-	// 密码包含的特殊字符（base64编码），包含：^[-_#();%~!+=]*$
+	// <p>密码包含的特殊字符（base64编码），包含：^[-_#();%~!+=]*$</p>
 	Symbol *string `json:"Symbol,omitnil,omitempty" name:"Symbol"`
 
-	// 改密完成通知。0：不通知 
-	//   1：通知
+	// <p>改密完成通知。0：不通知<br>  1：通知</p>
 	CompleteNotify *int64 `json:"CompleteNotify,omitnil,omitempty" name:"CompleteNotify"`
 
-	// 通知邮箱
+	// <p>通知邮箱</p>
 	NotifyEmails []*string `json:"NotifyEmails,omitnil,omitempty" name:"NotifyEmails"`
 
-	// 加密压缩文件密码
+	// <p>加密压缩文件密码</p>
 	FilePassword *string `json:"FilePassword,omitnil,omitempty" name:"FilePassword"`
 
-	// 所属部门id。“1.2.3”
+	// <p>所属部门id。“1.2.3”</p>
 	DepartmentId *string `json:"DepartmentId,omitnil,omitempty" name:"DepartmentId"`
 
-	// 任务类型  4-手工执行  5-周期自动执行
+	// <p>任务类型  4-手工执行  5-周期自动执行</p>
 	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 执行周期，单位天（大于等于 1，小于等于 365）
+	// <p>执行周期，单位天（大于等于 1，小于等于 365）</p>
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 周期任务首次执行时间
+	// <p>周期任务首次执行时间</p>
 	FirstTime *string `json:"FirstTime,omitnil,omitempty" name:"FirstTime"`
+
+	// <p>改密任务类别</p><p>枚举值：</p><ul><li>0： Linux 类型改密任务</li><li>1： Windows 类型改密任务</li></ul><p>默认值：0</p>
+	Category *int64 `json:"Category,omitnil,omitempty" name:"Category"`
+
+	// <p>改密任务协议类型</p><p>枚举值：</p><ul><li>0： 未定义，Linux改密任务类型默认值</li><li>1： Windows OpenSSH 协议</li></ul><p>默认值：0</p>
+	Protocol *int64 `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// <p>改密协议端口号. Linux 改密类型协议端口号需设置为0</p><p>取值范围：[0, 65535]</p><p>默认值：0</p>
+	Port *uint64 `json:"Port,omitnil,omitempty" name:"Port"`
 }
 
 func (r *CreateChangePwdTaskRequest) ToJsonString() string {
@@ -1728,6 +1753,9 @@ func (r *CreateChangePwdTaskRequest) FromJsonString(s string) error {
 	delete(f, "Type")
 	delete(f, "Period")
 	delete(f, "FirstTime")
+	delete(f, "Category")
+	delete(f, "Protocol")
+	delete(f, "Port")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateChangePwdTaskRequest has unknown keys!", "")
 	}
@@ -1736,7 +1764,7 @@ func (r *CreateChangePwdTaskRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateChangePwdTaskResponseParams struct {
-	// 任务id
+	// <p>任务id</p>
 	OperationId *string `json:"OperationId,omitnil,omitempty" name:"OperationId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -2073,80 +2101,98 @@ func (r *CreateOperationTaskResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateResourceRequestParams struct {
-	// 部署region
+	// <p>部署region</p>
 	DeployRegion *string `json:"DeployRegion,omitnil,omitempty" name:"DeployRegion"`
 
-	// 部署堡垒机的VpcId
+	// <p>部署堡垒机的VpcId</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 部署堡垒机的SubnetId
+	// <p>部署堡垒机的SubnetId</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 资源类型。取值:standard/pro
+	// <p>资源类型。取值:standard/pro</p>
 	ResourceEdition *string `json:"ResourceEdition,omitnil,omitempty" name:"ResourceEdition"`
 
-	// 资源节点数
+	// <p>资源节点数</p>
 	ResourceNode *int64 `json:"ResourceNode,omitnil,omitempty" name:"ResourceNode"`
 
-	// 计费周期
+	// <p>计费周期</p>
 	TimeUnit *string `json:"TimeUnit,omitnil,omitempty" name:"TimeUnit"`
 
-	// 计费时长
+	// <p>计费时长</p>
 	TimeSpan *int64 `json:"TimeSpan,omitnil,omitempty" name:"TimeSpan"`
 
-	// 计费模式 1预付费
+	// <p>计费模式 1预付费</p>
 	PayMode *int64 `json:"PayMode,omitnil,omitempty" name:"PayMode"`
 
-	// 自动续费
+	// <p>自动续费</p>
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
-	// 部署zone
+	// <p>零信任堡垒机功能包</p><p>枚举值：</p><ul><li>0： 不开通</li><li>1： 付费版（含 20 用户 / 10Mbps 带宽）</li></ul>
+	IOAResource *uint64 `json:"IOAResource,omitnil,omitempty" name:"IOAResource"`
+
+	// <p>零信任用户扩展包，1 个 = 20 用户</p><p>取值范围：[0, 999]</p>
+	PackageIOAUserCount *uint64 `json:"PackageIOAUserCount,omitnil,omitempty" name:"PackageIOAUserCount"`
+
+	// <p>零信任带宽扩展包，1 个 = 4Mbps</p><p>取值范围：[0, 509]</p>
+	PackageIOABandwidth *uint64 `json:"PackageIOABandwidth,omitnil,omitempty" name:"PackageIOABandwidth"`
+
+	// <p>部署zone</p>
 	DeployZone *string `json:"DeployZone,omitnil,omitempty" name:"DeployZone"`
 
-	// 0非试用版，1试用版
+	// <p>0非试用版，1试用版</p>
 	Trial *uint64 `json:"Trial,omitnil,omitempty" name:"Trial"`
 
-	// 是否共享clb，0：不共享，1：共享
+	// <p>是否共享clb</p><p>枚举值：</p><ul><li>0： 不共享</li><li>1： 共享</li></ul><p>默认值：0</p><p>公有云传0</p>
 	ShareClb *uint64 `json:"ShareClb,omitnil,omitempty" name:"ShareClb"`
 }
 
 type CreateResourceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 部署region
+	// <p>部署region</p>
 	DeployRegion *string `json:"DeployRegion,omitnil,omitempty" name:"DeployRegion"`
 
-	// 部署堡垒机的VpcId
+	// <p>部署堡垒机的VpcId</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 部署堡垒机的SubnetId
+	// <p>部署堡垒机的SubnetId</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 资源类型。取值:standard/pro
+	// <p>资源类型。取值:standard/pro</p>
 	ResourceEdition *string `json:"ResourceEdition,omitnil,omitempty" name:"ResourceEdition"`
 
-	// 资源节点数
+	// <p>资源节点数</p>
 	ResourceNode *int64 `json:"ResourceNode,omitnil,omitempty" name:"ResourceNode"`
 
-	// 计费周期
+	// <p>计费周期</p>
 	TimeUnit *string `json:"TimeUnit,omitnil,omitempty" name:"TimeUnit"`
 
-	// 计费时长
+	// <p>计费时长</p>
 	TimeSpan *int64 `json:"TimeSpan,omitnil,omitempty" name:"TimeSpan"`
 
-	// 计费模式 1预付费
+	// <p>计费模式 1预付费</p>
 	PayMode *int64 `json:"PayMode,omitnil,omitempty" name:"PayMode"`
 
-	// 自动续费
+	// <p>自动续费</p>
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
-	// 部署zone
+	// <p>零信任堡垒机功能包</p><p>枚举值：</p><ul><li>0： 不开通</li><li>1： 付费版（含 20 用户 / 10Mbps 带宽）</li></ul>
+	IOAResource *uint64 `json:"IOAResource,omitnil,omitempty" name:"IOAResource"`
+
+	// <p>零信任用户扩展包，1 个 = 20 用户</p><p>取值范围：[0, 999]</p>
+	PackageIOAUserCount *uint64 `json:"PackageIOAUserCount,omitnil,omitempty" name:"PackageIOAUserCount"`
+
+	// <p>零信任带宽扩展包，1 个 = 4Mbps</p><p>取值范围：[0, 509]</p>
+	PackageIOABandwidth *uint64 `json:"PackageIOABandwidth,omitnil,omitempty" name:"PackageIOABandwidth"`
+
+	// <p>部署zone</p>
 	DeployZone *string `json:"DeployZone,omitnil,omitempty" name:"DeployZone"`
 
-	// 0非试用版，1试用版
+	// <p>0非试用版，1试用版</p>
 	Trial *uint64 `json:"Trial,omitnil,omitempty" name:"Trial"`
 
-	// 是否共享clb，0：不共享，1：共享
+	// <p>是否共享clb</p><p>枚举值：</p><ul><li>0： 不共享</li><li>1： 共享</li></ul><p>默认值：0</p><p>公有云传0</p>
 	ShareClb *uint64 `json:"ShareClb,omitnil,omitempty" name:"ShareClb"`
 }
 
@@ -2171,6 +2217,9 @@ func (r *CreateResourceRequest) FromJsonString(s string) error {
 	delete(f, "TimeSpan")
 	delete(f, "PayMode")
 	delete(f, "AutoRenewFlag")
+	delete(f, "IOAResource")
+	delete(f, "PackageIOAUserCount")
+	delete(f, "PackageIOABandwidth")
 	delete(f, "DeployZone")
 	delete(f, "Trial")
 	delete(f, "ShareClb")
@@ -2182,7 +2231,7 @@ func (r *CreateResourceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateResourceResponseParams struct {
-	// 实例Id
+	// <p>实例Id</p>
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4694,113 +4743,117 @@ func (r *DescribeDeviceGroupsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDevicesRequestParams struct {
-	// 资产ID集合
+	// <p>资产ID集合</p>
 	IdSet []*uint64 `json:"IdSet,omitnil,omitempty" name:"IdSet"`
 
-	// 资产名或资产IP，模糊查询
+	// <p>资产名或资产IP，模糊查询</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 暂未使用
+	// <p>暂未使用</p>
 	Ip *string `json:"Ip,omitnil,omitempty" name:"Ip"`
 
-	// 地域码集合
+	// <p>地域码集合</p>
 	ApCodeSet []*string `json:"ApCodeSet,omitnil,omitempty" name:"ApCodeSet"`
 
-	// 操作系统类型, 1 - Linux, 2 - Windows, 3 - MySQL, 4 - SQLServer
+	// <p>操作系统类型, 1 - Linux, 2 - Windows, 3 - MySQL, 4 - SQLServer</p>
 	Kind *uint64 `json:"Kind,omitnil,omitempty" name:"Kind"`
 
-	// 分页偏移位置，默认值为0
+	// <p>分页偏移位置，默认值为0</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 每页条目数量，默认20
+	// <p>每页条目数量</p><p>取值范围：[0, 500]</p><p>默认值：20</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 有该资产访问权限的用户ID集合
+	// <p>有该资产访问权限的用户ID集合</p>
 	AuthorizedUserIdSet []*uint64 `json:"AuthorizedUserIdSet,omitnil,omitempty" name:"AuthorizedUserIdSet"`
 
-	// 过滤条件，资产绑定的堡垒机服务ID集合
+	// <p>过滤条件，资产绑定的堡垒机服务ID集合</p>
 	ResourceIdSet []*string `json:"ResourceIdSet,omitnil,omitempty" name:"ResourceIdSet"`
 
-	// 可提供按照多种类型过滤, 1 - Linux, 2 - Windows, 3 - MySQL, 4 - SQLServer
+	// <p>可提供按照多种类型过滤, 1 - Linux, 2 - Windows, 3 - MySQL, 4 - SQLServer</p>
 	KindSet []*uint64 `json:"KindSet,omitnil,omitempty" name:"KindSet"`
 
-	// 资产是否包含托管账号。1，包含；0，不包含
+	// <p>资产是否包含托管账号。1，包含；0，不包含</p>
 	ManagedAccount *string `json:"ManagedAccount,omitnil,omitempty" name:"ManagedAccount"`
 
-	// 过滤条件，可按照部门ID进行过滤
+	// <p>过滤条件，可按照部门ID进行过滤</p>
 	DepartmentId *string `json:"DepartmentId,omitnil,omitempty" name:"DepartmentId"`
 
-	// 资产所属云账号id
+	// <p>资产所属云账号id</p>
 	AccountIdSet []*uint64 `json:"AccountIdSet,omitnil,omitempty" name:"AccountIdSet"`
 
-	// 云厂商类型，1-腾讯云，2-阿里云
+	// <p>云厂商类型，1-腾讯云，2-阿里云</p>
 	ProviderTypeSet []*uint64 `json:"ProviderTypeSet,omitnil,omitempty" name:"ProviderTypeSet"`
 
-	// 同步的云资产状态，标记同步的资产的状态情况，0-已删除,1-正常,2-已隔离,3-已过期
+	// <p>同步的云资产状态，标记同步的资产的状态情况，0-已删除,1-正常,2-已隔离,3-已过期</p>
 	CloudDeviceStatusSet []*uint64 `json:"CloudDeviceStatusSet,omitnil,omitempty" name:"CloudDeviceStatusSet"`
 
-	// 过滤条件，可按照标签键、标签进行过滤。如果同时指定标签键和标签过滤条件，它们之间为“AND”的关系
+	// <p>过滤条件，可按照标签键、标签进行过滤。如果同时指定标签键和标签过滤条件，它们之间为“AND”的关系</p>
 	TagFilters []*TagFilter `json:"TagFilters,omitnil,omitempty" name:"TagFilters"`
 
-	// 过滤数组。支持的Name：
-	// BindingStatus 绑定状态
+	// <p>过滤数组。支持的Name：<br>BindingStatus 绑定状态</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>所属成员 AppId</p>
+	OwnerAppIds []*uint64 `json:"OwnerAppIds,omitnil,omitempty" name:"OwnerAppIds"`
 }
 
 type DescribeDevicesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 资产ID集合
+	// <p>资产ID集合</p>
 	IdSet []*uint64 `json:"IdSet,omitnil,omitempty" name:"IdSet"`
 
-	// 资产名或资产IP，模糊查询
+	// <p>资产名或资产IP，模糊查询</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 暂未使用
+	// <p>暂未使用</p>
 	Ip *string `json:"Ip,omitnil,omitempty" name:"Ip"`
 
-	// 地域码集合
+	// <p>地域码集合</p>
 	ApCodeSet []*string `json:"ApCodeSet,omitnil,omitempty" name:"ApCodeSet"`
 
-	// 操作系统类型, 1 - Linux, 2 - Windows, 3 - MySQL, 4 - SQLServer
+	// <p>操作系统类型, 1 - Linux, 2 - Windows, 3 - MySQL, 4 - SQLServer</p>
 	Kind *uint64 `json:"Kind,omitnil,omitempty" name:"Kind"`
 
-	// 分页偏移位置，默认值为0
+	// <p>分页偏移位置，默认值为0</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 每页条目数量，默认20
+	// <p>每页条目数量</p><p>取值范围：[0, 500]</p><p>默认值：20</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 有该资产访问权限的用户ID集合
+	// <p>有该资产访问权限的用户ID集合</p>
 	AuthorizedUserIdSet []*uint64 `json:"AuthorizedUserIdSet,omitnil,omitempty" name:"AuthorizedUserIdSet"`
 
-	// 过滤条件，资产绑定的堡垒机服务ID集合
+	// <p>过滤条件，资产绑定的堡垒机服务ID集合</p>
 	ResourceIdSet []*string `json:"ResourceIdSet,omitnil,omitempty" name:"ResourceIdSet"`
 
-	// 可提供按照多种类型过滤, 1 - Linux, 2 - Windows, 3 - MySQL, 4 - SQLServer
+	// <p>可提供按照多种类型过滤, 1 - Linux, 2 - Windows, 3 - MySQL, 4 - SQLServer</p>
 	KindSet []*uint64 `json:"KindSet,omitnil,omitempty" name:"KindSet"`
 
-	// 资产是否包含托管账号。1，包含；0，不包含
+	// <p>资产是否包含托管账号。1，包含；0，不包含</p>
 	ManagedAccount *string `json:"ManagedAccount,omitnil,omitempty" name:"ManagedAccount"`
 
-	// 过滤条件，可按照部门ID进行过滤
+	// <p>过滤条件，可按照部门ID进行过滤</p>
 	DepartmentId *string `json:"DepartmentId,omitnil,omitempty" name:"DepartmentId"`
 
-	// 资产所属云账号id
+	// <p>资产所属云账号id</p>
 	AccountIdSet []*uint64 `json:"AccountIdSet,omitnil,omitempty" name:"AccountIdSet"`
 
-	// 云厂商类型，1-腾讯云，2-阿里云
+	// <p>云厂商类型，1-腾讯云，2-阿里云</p>
 	ProviderTypeSet []*uint64 `json:"ProviderTypeSet,omitnil,omitempty" name:"ProviderTypeSet"`
 
-	// 同步的云资产状态，标记同步的资产的状态情况，0-已删除,1-正常,2-已隔离,3-已过期
+	// <p>同步的云资产状态，标记同步的资产的状态情况，0-已删除,1-正常,2-已隔离,3-已过期</p>
 	CloudDeviceStatusSet []*uint64 `json:"CloudDeviceStatusSet,omitnil,omitempty" name:"CloudDeviceStatusSet"`
 
-	// 过滤条件，可按照标签键、标签进行过滤。如果同时指定标签键和标签过滤条件，它们之间为“AND”的关系
+	// <p>过滤条件，可按照标签键、标签进行过滤。如果同时指定标签键和标签过滤条件，它们之间为“AND”的关系</p>
 	TagFilters []*TagFilter `json:"TagFilters,omitnil,omitempty" name:"TagFilters"`
 
-	// 过滤数组。支持的Name：
-	// BindingStatus 绑定状态
+	// <p>过滤数组。支持的Name：<br>BindingStatus 绑定状态</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>所属成员 AppId</p>
+	OwnerAppIds []*uint64 `json:"OwnerAppIds,omitnil,omitempty" name:"OwnerAppIds"`
 }
 
 func (r *DescribeDevicesRequest) ToJsonString() string {
@@ -4832,6 +4885,7 @@ func (r *DescribeDevicesRequest) FromJsonString(s string) error {
 	delete(f, "CloudDeviceStatusSet")
 	delete(f, "TagFilters")
 	delete(f, "Filters")
+	delete(f, "OwnerAppIds")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDevicesRequest has unknown keys!", "")
 	}
@@ -4840,10 +4894,10 @@ func (r *DescribeDevicesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDevicesResponseParams struct {
-	// 资产总数
+	// <p>资产总数</p>
 	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 资产信息列表
+	// <p>资产信息列表</p>
 	DeviceSet []*Device `json:"DeviceSet,omitnil,omitempty" name:"DeviceSet"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5410,38 +5464,38 @@ func (r *DescribeOperationTaskResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeResourcesRequestParams struct {
-	// 地域码, 如: ap-guangzhou
+	// <p>地域码, 如: ap-guangzhou</p>
 	ApCode *string `json:"ApCode,omitnil,omitempty" name:"ApCode"`
 
-	// 按照堡垒机开通的 VPC 实例ID查询
+	// <p>按照堡垒机开通的 VPC 实例ID查询</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 资源ID集合，当传入ID集合时忽略 ApCode 和 VpcId
+	// <p>资源ID集合，当传入ID集合时忽略 ApCode 和 VpcId</p>
 	ResourceIds []*string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
 
-	// 每页条目数量
+	// <p>每页条目数量</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 分页偏移位置
+	// <p>分页偏移位置</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 type DescribeResourcesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 地域码, 如: ap-guangzhou
+	// <p>地域码, 如: ap-guangzhou</p>
 	ApCode *string `json:"ApCode,omitnil,omitempty" name:"ApCode"`
 
-	// 按照堡垒机开通的 VPC 实例ID查询
+	// <p>按照堡垒机开通的 VPC 实例ID查询</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 资源ID集合，当传入ID集合时忽略 ApCode 和 VpcId
+	// <p>资源ID集合，当传入ID集合时忽略 ApCode 和 VpcId</p>
 	ResourceIds []*string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
 
-	// 每页条目数量
+	// <p>每页条目数量</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 分页偏移位置
+	// <p>分页偏移位置</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
@@ -5470,10 +5524,10 @@ func (r *DescribeResourcesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeResourcesResponseParams struct {
-	// 堡垒机资源列表
+	// <p>堡垒机资源列表</p>
 	ResourceSet []*Resource `json:"ResourceSet,omitnil,omitempty" name:"ResourceSet"`
 
-	// 堡垒机资源数量
+	// <p>堡垒机资源数量</p>
 	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6166,6 +6220,15 @@ type Device struct {
 
 	// <p>同步的云资产状态，标记同步的资产的状态情况，0-已删除,1-正常,2-已隔离,3-已过期</p>
 	SyncCloudDeviceStatus *uint64 `json:"SyncCloudDeviceStatus,omitnil,omitempty" name:"SyncCloudDeviceStatus"`
+
+	// <p>所属账号 AppId</p>
+	OwnerAppId *uint64 `json:"OwnerAppId,omitnil,omitempty" name:"OwnerAppId"`
+
+	// <p>所属账号 UIN</p>
+	OwnerAccountUin *string `json:"OwnerAccountUin,omitnil,omitempty" name:"OwnerAccountUin"`
+
+	// <p>所属账号展示名</p>
+	OwnerAccountName *string `json:"OwnerAccountName,omitnil,omitempty" name:"OwnerAccountName"`
 }
 
 type DeviceAccount struct {
@@ -7547,135 +7610,153 @@ func (r *ModifyAuthModeSettingResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyChangePwdTaskRequestParams struct {
-	// 改密任务id
+	// <p>改密任务id</p>
 	OperationId *string `json:"OperationId,omitnil,omitempty" name:"OperationId"`
 
-	// 改密资产id列表
+	// <p>改密资产id列表</p>
 	DeviceIdSet []*uint64 `json:"DeviceIdSet,omitnil,omitempty" name:"DeviceIdSet"`
 
-	// 改密资产的账号列表
+	// <p>改密资产的账号列表</p>
 	AccountSet []*string `json:"AccountSet,omitnil,omitempty" name:"AccountSet"`
 
-	// 修改类型：1：修改任务信息  2：关联任务资产账号
+	// <p>修改类型：1：修改任务信息  2：关联任务资产账号</p>
 	ModifyType *uint64 `json:"ModifyType,omitnil,omitempty" name:"ModifyType"`
 
-	// 改密方式。1：使用执行账号修改密码；2：修改自身密码
+	// <p>改密方式。1：使用执行账号修改密码；2：修改自身密码</p>
 	ChangeMethod *int64 `json:"ChangeMethod,omitnil,omitempty" name:"ChangeMethod"`
 
-	// 密码生成方式。 1:自动生成相同密码 2:自动生成不同密码 3:手动指定相同密码
+	// <p>密码生成方式。 1:自动生成相同密码 2:自动生成不同密码 3:手动指定相同密码</p>
 	AuthGenerationStrategy *int64 `json:"AuthGenerationStrategy,omitnil,omitempty" name:"AuthGenerationStrategy"`
 
-	// 任务名称
+	// <p>任务名称</p>
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
-	// 所属部门ID，"1,2,3"
+	// <p>所属部门ID，&quot;1,2,3&quot;</p>
 	DepartmentId *string `json:"DepartmentId,omitnil,omitempty" name:"DepartmentId"`
 
-	// 任务的执行账号	
+	// <p>任务的执行账号</p>
 	RunAccount *string `json:"RunAccount,omitnil,omitempty" name:"RunAccount"`
 
-	// 密码，手动指定密码时必传。
+	// <p>密码，手动指定密码时必传。</p>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// 密码限制长度，自动生成密码必传。	
+	// <p>密码限制长度，自动生成密码必传。</p>
 	PasswordLength *int64 `json:"PasswordLength,omitnil,omitempty" name:"PasswordLength"`
 
-	// 密码包含小写字母，0：否，1：是。
+	// <p>密码包含小写字母，0：否，1：是。</p>
 	SmallLetter *int64 `json:"SmallLetter,omitnil,omitempty" name:"SmallLetter"`
 
-	// 密码包含大写字母，0：否，1：是。
+	// <p>密码包含大写字母，0：否，1：是。</p>
 	BigLetter *int64 `json:"BigLetter,omitnil,omitempty" name:"BigLetter"`
 
-	// 密码包含数字，0：否，1：是。
+	// <p>密码包含数字，0：否，1：是。</p>
 	Digit *int64 `json:"Digit,omitnil,omitempty" name:"Digit"`
 
-	// 密码包含的特殊字符（base64编码），包含：^[-_#();%~!+=]*$
+	// <p>密码包含的特殊字符（base64编码），包含：^[-_#();%~!+=]*$</p>
 	Symbol *string `json:"Symbol,omitnil,omitempty" name:"Symbol"`
 
-	// 改密完成通知。0：不通知 1：通知
+	// <p>改密完成通知。0：不通知 1：通知</p>
 	CompleteNotify *int64 `json:"CompleteNotify,omitnil,omitempty" name:"CompleteNotify"`
 
-	// 通知邮箱
+	// <p>通知邮箱</p>
 	NotifyEmails []*string `json:"NotifyEmails,omitnil,omitempty" name:"NotifyEmails"`
 
-	// 加密压缩文件密码
+	// <p>加密压缩文件密码</p>
 	FilePassword *string `json:"FilePassword,omitnil,omitempty" name:"FilePassword"`
 
-	// 任务类型， 4：手工执行  5：周期自动执行
+	// <p>任务类型， 4：手工执行  5：周期自动执行</p>
 	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 周期任务周期，单位天（大于等于 1，小于等于 365）
+	// <p>周期任务周期，单位天（大于等于 1，小于等于 365）</p>
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 周期任务首次执行时间
+	// <p>周期任务首次执行时间</p>
 	FirstTime *string `json:"FirstTime,omitnil,omitempty" name:"FirstTime"`
+
+	// <p>改密任务类别</p><p>枚举值：</p><ul><li>0： Linux 类型改密任务</li><li>1： Windows 类型改密任务</li></ul><p>默认值：0</p>
+	Category *int64 `json:"Category,omitnil,omitempty" name:"Category"`
+
+	// <p>改密任务协议类型</p><p>枚举值：</p><ul><li>0： 未定义，Linux 改密任务类型默认值</li><li>1： Windows OpenSSH 协议</li></ul><p>默认值：0</p>
+	Protocol *int64 `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// <p>改密协议端口号，Linux 改密类型协议端口号需设置为0</p><p>取值范围：[0, 65535]</p><p>默认值：0</p>
+	Port *uint64 `json:"Port,omitnil,omitempty" name:"Port"`
 }
 
 type ModifyChangePwdTaskRequest struct {
 	*tchttp.BaseRequest
 	
-	// 改密任务id
+	// <p>改密任务id</p>
 	OperationId *string `json:"OperationId,omitnil,omitempty" name:"OperationId"`
 
-	// 改密资产id列表
+	// <p>改密资产id列表</p>
 	DeviceIdSet []*uint64 `json:"DeviceIdSet,omitnil,omitempty" name:"DeviceIdSet"`
 
-	// 改密资产的账号列表
+	// <p>改密资产的账号列表</p>
 	AccountSet []*string `json:"AccountSet,omitnil,omitempty" name:"AccountSet"`
 
-	// 修改类型：1：修改任务信息  2：关联任务资产账号
+	// <p>修改类型：1：修改任务信息  2：关联任务资产账号</p>
 	ModifyType *uint64 `json:"ModifyType,omitnil,omitempty" name:"ModifyType"`
 
-	// 改密方式。1：使用执行账号修改密码；2：修改自身密码
+	// <p>改密方式。1：使用执行账号修改密码；2：修改自身密码</p>
 	ChangeMethod *int64 `json:"ChangeMethod,omitnil,omitempty" name:"ChangeMethod"`
 
-	// 密码生成方式。 1:自动生成相同密码 2:自动生成不同密码 3:手动指定相同密码
+	// <p>密码生成方式。 1:自动生成相同密码 2:自动生成不同密码 3:手动指定相同密码</p>
 	AuthGenerationStrategy *int64 `json:"AuthGenerationStrategy,omitnil,omitempty" name:"AuthGenerationStrategy"`
 
-	// 任务名称
+	// <p>任务名称</p>
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
-	// 所属部门ID，"1,2,3"
+	// <p>所属部门ID，&quot;1,2,3&quot;</p>
 	DepartmentId *string `json:"DepartmentId,omitnil,omitempty" name:"DepartmentId"`
 
-	// 任务的执行账号	
+	// <p>任务的执行账号</p>
 	RunAccount *string `json:"RunAccount,omitnil,omitempty" name:"RunAccount"`
 
-	// 密码，手动指定密码时必传。
+	// <p>密码，手动指定密码时必传。</p>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// 密码限制长度，自动生成密码必传。	
+	// <p>密码限制长度，自动生成密码必传。</p>
 	PasswordLength *int64 `json:"PasswordLength,omitnil,omitempty" name:"PasswordLength"`
 
-	// 密码包含小写字母，0：否，1：是。
+	// <p>密码包含小写字母，0：否，1：是。</p>
 	SmallLetter *int64 `json:"SmallLetter,omitnil,omitempty" name:"SmallLetter"`
 
-	// 密码包含大写字母，0：否，1：是。
+	// <p>密码包含大写字母，0：否，1：是。</p>
 	BigLetter *int64 `json:"BigLetter,omitnil,omitempty" name:"BigLetter"`
 
-	// 密码包含数字，0：否，1：是。
+	// <p>密码包含数字，0：否，1：是。</p>
 	Digit *int64 `json:"Digit,omitnil,omitempty" name:"Digit"`
 
-	// 密码包含的特殊字符（base64编码），包含：^[-_#();%~!+=]*$
+	// <p>密码包含的特殊字符（base64编码），包含：^[-_#();%~!+=]*$</p>
 	Symbol *string `json:"Symbol,omitnil,omitempty" name:"Symbol"`
 
-	// 改密完成通知。0：不通知 1：通知
+	// <p>改密完成通知。0：不通知 1：通知</p>
 	CompleteNotify *int64 `json:"CompleteNotify,omitnil,omitempty" name:"CompleteNotify"`
 
-	// 通知邮箱
+	// <p>通知邮箱</p>
 	NotifyEmails []*string `json:"NotifyEmails,omitnil,omitempty" name:"NotifyEmails"`
 
-	// 加密压缩文件密码
+	// <p>加密压缩文件密码</p>
 	FilePassword *string `json:"FilePassword,omitnil,omitempty" name:"FilePassword"`
 
-	// 任务类型， 4：手工执行  5：周期自动执行
+	// <p>任务类型， 4：手工执行  5：周期自动执行</p>
 	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 周期任务周期，单位天（大于等于 1，小于等于 365）
+	// <p>周期任务周期，单位天（大于等于 1，小于等于 365）</p>
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 周期任务首次执行时间
+	// <p>周期任务首次执行时间</p>
 	FirstTime *string `json:"FirstTime,omitnil,omitempty" name:"FirstTime"`
+
+	// <p>改密任务类别</p><p>枚举值：</p><ul><li>0： Linux 类型改密任务</li><li>1： Windows 类型改密任务</li></ul><p>默认值：0</p>
+	Category *int64 `json:"Category,omitnil,omitempty" name:"Category"`
+
+	// <p>改密任务协议类型</p><p>枚举值：</p><ul><li>0： 未定义，Linux 改密任务类型默认值</li><li>1： Windows OpenSSH 协议</li></ul><p>默认值：0</p>
+	Protocol *int64 `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// <p>改密协议端口号，Linux 改密类型协议端口号需设置为0</p><p>取值范围：[0, 65535]</p><p>默认值：0</p>
+	Port *uint64 `json:"Port,omitnil,omitempty" name:"Port"`
 }
 
 func (r *ModifyChangePwdTaskRequest) ToJsonString() string {
@@ -7711,6 +7792,9 @@ func (r *ModifyChangePwdTaskRequest) FromJsonString(s string) error {
 	delete(f, "Type")
 	delete(f, "Period")
 	delete(f, "FirstTime")
+	delete(f, "Category")
+	delete(f, "Protocol")
+	delete(f, "Port")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyChangePwdTaskRequest has unknown keys!", "")
 	}
@@ -8443,59 +8527,77 @@ func (r *ModifyReconnectionSettingResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyResourceRequestParams struct {
-	// 需要开通服务的资源ID
+	// <p>需要开通服务的资源ID</p>
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 状态
+	// <p>状态</p>
 	//
 	// Deprecated: Status is deprecated.
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 实例版本
+	// <p>实例版本</p>
 	ResourceEdition *string `json:"ResourceEdition,omitnil,omitempty" name:"ResourceEdition"`
 
-	// 资源节点数
+	// <p>资源节点数</p>
 	ResourceNode *int64 `json:"ResourceNode,omitnil,omitempty" name:"ResourceNode"`
 
-	// 自动续费
+	// <p>自动续费</p>
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
-	// 带宽扩展包个数(4M)
+	// <p>带宽扩展包个数(4M)</p>
 	PackageBandwidth *int64 `json:"PackageBandwidth,omitnil,omitempty" name:"PackageBandwidth"`
 
-	// 授权点数扩展包个数(50点)
+	// <p>授权点数扩展包个数(50点)</p>
 	PackageNode *int64 `json:"PackageNode,omitnil,omitempty" name:"PackageNode"`
 
-	// 日志投递
+	// <p>日志投递</p>
 	LogDelivery *int64 `json:"LogDelivery,omitnil,omitempty" name:"LogDelivery"`
+
+	// <p>零信任堡垒机功能包</p><p>枚举值：</p><ul><li>0： 不开通</li><li>1： 付费版（含 20 用户 / 10Mbps 带宽）</li></ul><p>默认值：0</p>
+	IOAResource *uint64 `json:"IOAResource,omitnil,omitempty" name:"IOAResource"`
+
+	// <p>零信任用户扩展包，1 个 = 20 用户</p><p>取值范围：[0, 999]</p>
+	PackageIOAUserCount *uint64 `json:"PackageIOAUserCount,omitnil,omitempty" name:"PackageIOAUserCount"`
+
+	// <p>零信任带宽扩展包，1 个 = 4Mbps</p><p>取值范围：[0, 509]</p>
+	PackageIOABandwidth *uint64 `json:"PackageIOABandwidth,omitnil,omitempty" name:"PackageIOABandwidth"`
 }
 
 type ModifyResourceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 需要开通服务的资源ID
+	// <p>需要开通服务的资源ID</p>
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 状态
+	// <p>状态</p>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 实例版本
+	// <p>实例版本</p>
 	ResourceEdition *string `json:"ResourceEdition,omitnil,omitempty" name:"ResourceEdition"`
 
-	// 资源节点数
+	// <p>资源节点数</p>
 	ResourceNode *int64 `json:"ResourceNode,omitnil,omitempty" name:"ResourceNode"`
 
-	// 自动续费
+	// <p>自动续费</p>
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
-	// 带宽扩展包个数(4M)
+	// <p>带宽扩展包个数(4M)</p>
 	PackageBandwidth *int64 `json:"PackageBandwidth,omitnil,omitempty" name:"PackageBandwidth"`
 
-	// 授权点数扩展包个数(50点)
+	// <p>授权点数扩展包个数(50点)</p>
 	PackageNode *int64 `json:"PackageNode,omitnil,omitempty" name:"PackageNode"`
 
-	// 日志投递
+	// <p>日志投递</p>
 	LogDelivery *int64 `json:"LogDelivery,omitnil,omitempty" name:"LogDelivery"`
+
+	// <p>零信任堡垒机功能包</p><p>枚举值：</p><ul><li>0： 不开通</li><li>1： 付费版（含 20 用户 / 10Mbps 带宽）</li></ul><p>默认值：0</p>
+	IOAResource *uint64 `json:"IOAResource,omitnil,omitempty" name:"IOAResource"`
+
+	// <p>零信任用户扩展包，1 个 = 20 用户</p><p>取值范围：[0, 999]</p>
+	PackageIOAUserCount *uint64 `json:"PackageIOAUserCount,omitnil,omitempty" name:"PackageIOAUserCount"`
+
+	// <p>零信任带宽扩展包，1 个 = 4Mbps</p><p>取值范围：[0, 509]</p>
+	PackageIOABandwidth *uint64 `json:"PackageIOABandwidth,omitnil,omitempty" name:"PackageIOABandwidth"`
 }
 
 func (r *ModifyResourceRequest) ToJsonString() string {
@@ -8518,6 +8620,9 @@ func (r *ModifyResourceRequest) FromJsonString(s string) error {
 	delete(f, "PackageBandwidth")
 	delete(f, "PackageNode")
 	delete(f, "LogDelivery")
+	delete(f, "IOAResource")
+	delete(f, "PackageIOAUserCount")
+	delete(f, "PackageIOABandwidth")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyResourceRequest has unknown keys!", "")
 	}
@@ -9354,6 +9459,9 @@ type Resource struct {
 
 	// <p>堡垒机实例的可用区信息</p>
 	ResourceZoneSet []*ResourceDeployZone `json:"ResourceZoneSet,omitnil,omitempty" name:"ResourceZoneSet"`
+
+	// <p>多账号额度</p>
+	OrgAccountQuota *uint64 `json:"OrgAccountQuota,omitnil,omitempty" name:"OrgAccountQuota"`
 }
 
 type ResourceDeployZone struct {
@@ -10705,6 +10813,12 @@ type SearchTaskResultRequestParams struct {
 
 	// <p>分页的页内记录数，默认为20，最大200</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>任务类别</p><p>枚举值：</p><ul><li>0： Linux 类型任务</li><li>1： Windows 类型任务</li></ul>
+	Category []*int64 `json:"Category,omitnil,omitempty" name:"Category"`
+
+	// <p>任务状态</p><p>枚举值：</p><ul><li>1： 执行中</li><li>2： 成功</li><li>3： 失败</li><li>4： 部分成功</li></ul>
+	Status []*uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 }
 
 type SearchTaskResultRequest struct {
@@ -10736,6 +10850,12 @@ type SearchTaskResultRequest struct {
 
 	// <p>分页的页内记录数，默认为20，最大200</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>任务类别</p><p>枚举值：</p><ul><li>0： Linux 类型任务</li><li>1： Windows 类型任务</li></ul>
+	Category []*int64 `json:"Category,omitnil,omitempty" name:"Category"`
+
+	// <p>任务状态</p><p>枚举值：</p><ul><li>1： 执行中</li><li>2： 成功</li><li>3： 失败</li><li>4： 部分成功</li></ul>
+	Status []*uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 }
 
 func (r *SearchTaskResultRequest) ToJsonString() string {
@@ -10759,6 +10879,8 @@ func (r *SearchTaskResultRequest) FromJsonString(s string) error {
 	delete(f, "TaskType")
 	delete(f, "Offset")
 	delete(f, "Limit")
+	delete(f, "Category")
+	delete(f, "Status")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "SearchTaskResultRequest has unknown keys!", "")
 	}
@@ -11139,32 +11261,35 @@ type TagFilter struct {
 }
 
 type TaskResult struct {
-	// 运维任务结果日志ID
+	// <p>运维任务结果日志ID</p>
 	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
-	// 运维任务ID
+	// <p>运维任务ID</p>
 	OperationId *string `json:"OperationId,omitnil,omitempty" name:"OperationId"`
 
-	// 运维任务名称
+	// <p>运维任务名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 执行任务来源IP
+	// <p>执行任务来源IP</p>
 	FromIp *string `json:"FromIp,omitnil,omitempty" name:"FromIp"`
 
-	// 运维任务所属用户
+	// <p>运维任务所属用户</p>
 	UserName *string `json:"UserName,omitnil,omitempty" name:"UserName"`
 
-	// 运维任务所属用户的姓名
+	// <p>运维任务所属用户的姓名</p>
 	RealName *string `json:"RealName,omitnil,omitempty" name:"RealName"`
 
-	// 运维任务执行状态 1 - 执行中，2 - 成功，3 - 失败，4 - 部分失败
+	// <p>运维任务执行状态 1 - 执行中，2 - 成功，3 - 失败，4 - 部分失败</p>
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 运维任务开始时间
+	// <p>运维任务开始时间</p>
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 运维任务结束时间
+	// <p>运维任务结束时间</p>
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// <p>任务类别</p><p>枚举值：</p><ul><li>0： Linux 类型任务（默认类型）</li><li>1： Windows 类型任务</li></ul><p>默认值：0</p>
+	Category *int64 `json:"Category,omitnil,omitempty" name:"Category"`
 }
 
 // Predefined struct for user

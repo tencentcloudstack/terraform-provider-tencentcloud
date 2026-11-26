@@ -73,6 +73,9 @@ The following arguments are supported:
 * `time_unit` - (Required, String, ForceNew) Billing cycle.
 * `vpc_cidr_block` - (Required, String, ForceNew) The network segment corresponding to the VPC that needs to activate the service.
 * `vpc_id` - (Required, String, ForceNew) VPC ID for deploying the bastion host.
+* `IOAResource` - (Optional, Int) IOA resource. 0 - default value, free (trial) IOA version, 1 - paid IOA version.
+* `PackageIOABandwidth` - (Optional, Int) Number of zero trust bastion host bandwidth extension packages. One extension package represents 4M bandwidth.
+* `PackageIOAUserCount` - (Optional, Int) Number of zero trust bastion host user extension packages. One extension package corresponds to 20 users.
 * `client_access` - (Optional, Int) 0 - Disable client access to the bastion host; 1 - Enable client access to the bastion host.
 * `external_access` - (Optional, Int) 0 - Disable public network access to the bastion host; 1 - Enable public network access to the bastion host.
 * `intranet_access` - (Optional, Int) 0 - Disable internal network access bastion host; 1 - Enable internal network access bastion host.
