@@ -52,6 +52,7 @@ import (
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	audit "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319"
 	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
+	cngwv20230418 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cngw/v20230418"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	configv20220802 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config/v20220802"
@@ -233,6 +234,7 @@ type TencentCloudClient struct {
 	ebConn                *eb.Client
 	dlcConn               *dlc.Client
 	captchaConn           *captchaintl.Client
+	cngwv20230418Conn     *cngwv20230418.Client
 	wedataConn            *wedata.Client
 	wedatav20250806Conn   *wedatav20250806.Client
 	wafConn               *waf.Client
@@ -1820,6 +1822,18 @@ func (me *TencentCloudClient) UseWedataClient() *wedata.Client {
 	me.wedataConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.wedataConn
+}
+
+// UseCngwV20230418Client return CNGW client for service
+func (me *TencentCloudClient) UseCngwV20230418Client() *cngwv20230418.Client {
+	if me.cngwv20230418Conn != nil {
+		return me.cngwv20230418Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.cngwv20230418Conn, _ = cngwv20230418.NewClient(me.Credential, me.Region, cpf)
+	me.cngwv20230418Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cngwv20230418Conn
 }
 
 // UseWedataV20250806Client return WEDATA client for service

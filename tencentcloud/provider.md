@@ -309,6 +309,10 @@ tencentcloud_cam_role_permission_boundary_attachment
 tencentcloud_cam_message_receiver
 tencentcloud_cam_update_password_rule_config
 
+Cloud Native API Gateway(CNGW)
+Resource
+tencentcloud_cngw_cloud_native_api_gateway_ai_service_source
+
 Customer Identity and Access Management(CIAM)
 Resource
 tencentcloud_ciam_user_store

@@ -34,6 +34,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bdrc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cam"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cngw"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/config"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cos"
 	crs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/crs"
@@ -53,21 +54,22 @@ import (
 
 // resourcesMap maps every framework managed resource type name to its factory.
 var resourcesMap = map[string]func() resource.Resource{
-	"tencentcloud_ags_sandbox_tool":                 ags.NewAgsSandboxToolResource,
-	"tencentcloud_ags_sandbox_instance":             ags.NewAgsSandboxInstanceResource,
-	"tencentcloud_cam_update_password_rule_config":  cam.NewCamUpdatePasswordRuleConfigResource,
-	"tencentcloud_config_aggregate_compliance_pack": config.NewConfigAggregateCompliancePackResource,
-	"tencentcloud_cos_vector_bucket":                cos.NewCosVectorBucketResource,
-	"tencentcloud_cos_vector_bucket_policy":         cos.NewCosVectorBucketPolicyResource,
-	"tencentcloud_cos_vector_index":                 cos.NewCosVectorIndexResource,
-	"tencentcloud_ioa_delivery_server":              ioa.NewIoaDeliveryServerResource,
-	"tencentcloud_ioa_delivery_strategy":            ioa.NewIoaDeliveryStrategyResource,
-	"tencentcloud_monitor_dispense_external_rule":   monitor.NewMonitorDispenseExternalRuleResource,
-	"tencentcloud_makers_zone_custom_domain":        makers.NewMakersZoneCustomDomainResource,
-	"tencentcloud_makers_project":                   makers.NewMakersProjectResource,
-	"tencentcloud_makers_project_envs":              makers.NewMakersProjectEnvsResource,
-	"tencentcloud_oceanus_cluster":                  oceanus.NewOceanusClusterResource,
-	"tencentcloud_ssm_secret_version_v2":            ssm.NewSsmSecretVersionV2Resource,
+	"tencentcloud_ags_sandbox_tool":                                ags.NewAgsSandboxToolResource,
+	"tencentcloud_ags_sandbox_instance":                            ags.NewAgsSandboxInstanceResource,
+	"tencentcloud_cam_update_password_rule_config":                 cam.NewCamUpdatePasswordRuleConfigResource,
+	"tencentcloud_cngw_cloud_native_api_gateway_ai_service_source": cngw.NewCngwCloudNativeAPIGatewayAIServiceSourceResource,
+	"tencentcloud_config_aggregate_compliance_pack":                config.NewConfigAggregateCompliancePackResource,
+	"tencentcloud_cos_vector_bucket":                               cos.NewCosVectorBucketResource,
+	"tencentcloud_cos_vector_bucket_policy":                        cos.NewCosVectorBucketPolicyResource,
+	"tencentcloud_cos_vector_index":                                cos.NewCosVectorIndexResource,
+	"tencentcloud_ioa_delivery_server":                             ioa.NewIoaDeliveryServerResource,
+	"tencentcloud_ioa_delivery_strategy":                           ioa.NewIoaDeliveryStrategyResource,
+	"tencentcloud_monitor_dispense_external_rule":                  monitor.NewMonitorDispenseExternalRuleResource,
+	"tencentcloud_makers_zone_custom_domain":                       makers.NewMakersZoneCustomDomainResource,
+	"tencentcloud_makers_project":                                  makers.NewMakersProjectResource,
+	"tencentcloud_makers_project_envs":                             makers.NewMakersProjectEnvsResource,
+	"tencentcloud_oceanus_cluster":                                 oceanus.NewOceanusClusterResource,
+	"tencentcloud_ssm_secret_version_v2":                           ssm.NewSsmSecretVersionV2Resource,
 }
 
 // dataSourcesMap maps every framework data source type name to its factory.
