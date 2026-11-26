@@ -46,6 +46,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/oceanus"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssl"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssm"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdmysql"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tco"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 )
@@ -66,6 +67,7 @@ var resourcesMap = map[string]func() resource.Resource{
 	"tencentcloud_makers_project_envs":              makers.NewMakersProjectEnvsResource,
 	"tencentcloud_oceanus_cluster":                  oceanus.NewOceanusClusterResource,
 	"tencentcloud_ssm_secret_version_v2":            ssm.NewSsmSecretVersionV2Resource,
+	"tencentcloud_tdmysql_user":                     tdmysql.NewTdmysqlUserResource,
 }
 
 // dataSourcesMap maps every framework data source type name to its factory.

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	tdmysqlv20211122 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmysql/v20211122"
@@ -167,5 +168,168 @@ func (me *TdmysqlService) DescribeTdmysqlDBSecurityGroupsById(ctx context.Contex
 	}
 
 	ret = response.Response
+	return
+}
+
+// CreateTdmysqlUsers wraps CreateUsers: it performs the retried write call and
+// returns the created resource id (instance_id#user_name#host, parent-first
+// join of the request addressing fields) together with the async flow id the
+// wait helper below polls. The flow id field name and Go type come from the
+// vendored SDK response struct (FlowId *int64).
+func (me *TdmysqlService) CreateTdmysqlUsers(ctx context.Context, request *tdmysqlv20211122.CreateUsersRequest) (usersId string, flowId int64, err error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		response *tdmysqlv20211122.CreateUsersResponse
+	)
+
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTdmysqlV20211122Client().CreateUsers(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("create tdmysql users failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s create tdmysql users failed, reason:%+v", logId, err)
+		return
+	}
+
+	if request.InstanceId == nil || len(request.Users) < 1 || request.Users[0].UserName == nil || request.Users[0].Host == nil {
+		err = fmt.Errorf("api %s returns no user addressing fields", request.GetAction())
+		return
+	}
+
+	usersId = helper.IdFormat(*request.InstanceId, *request.Users[0].UserName, *request.Users[0].Host)
+	if response.Response.FlowId != nil {
+		flowId = *response.Response.FlowId
+	}
+
+	return
+}
+
+// DescribeTdmysqlUsers wraps DescribeUsers: the caller builds the filter
+// request (instance id); this method returns the FULL user list. The API has
+// no pagination fields, so a single retried call is kept.
+func (me *TdmysqlService) DescribeTdmysqlUsers(ctx context.Context, request *tdmysqlv20211122.DescribeUsersRequest) (users []*tdmysqlv20211122.UserInfo, err error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		response *tdmysqlv20211122.DescribeUsersResponse
+	)
+
+	users = make([]*tdmysqlv20211122.UserInfo, 0)
+
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTdmysqlV20211122Client().DescribeUsers(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("describe tdmysql users failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s describe tdmysql users failed, reason:%+v", logId, err)
+		return nil, err
+	}
+
+	users = append(users, response.Response.Users...)
+
+	return
+}
+
+// DeleteTdmysqlUsers wraps DeleteUsers: the caller builds the delete request;
+// this method only performs the retried call and returns the async flow id
+// (FlowId *int64 in the vendored SDK response struct) the wait helper polls.
+func (me *TdmysqlService) DeleteTdmysqlUsers(ctx context.Context, request *tdmysqlv20211122.DeleteUsersRequest) (flowId int64, err error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		response *tdmysqlv20211122.DeleteUsersResponse
+	)
+
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTdmysqlV20211122Client().DeleteUsers(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("delete tdmysql users failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s delete tdmysql users failed, reason:%+v", logId, err)
+		return
+	}
+
+	if response.Response.FlowId != nil {
+		flowId = *response.Response.FlowId
+	}
+
+	return
+}
+
+// WaitTdmysqlUsersResult is the async FLOW wait for tdmysql user tasks: it
+// polls DescribeFlow by the flow id returned by CreateUsers / DeleteUsers
+// until the flow reaches a terminal state. The terminal status values follow
+// the shipped SDKv2 reference (FLOW_STATUS_SUCCESS / FAILED / PAUSED).
+func (me *TdmysqlService) WaitTdmysqlUsersResult(ctx context.Context, flowId int64, timeout time.Duration) (err error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = tdmysqlv20211122.NewDescribeFlowRequest()
+	)
+
+	request.FlowId = helper.Int64(flowId)
+	err = resource.Retry(timeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseTdmysqlV20211122Client().DescribeFlow(request)
+		if e != nil {
+			// Error codes get ZERO second-guessing: retry classification is
+			// tccommon.RetryError's job.
+			return tccommon.RetryError(e)
+		}
+
+		if response == nil || response.Response == nil || response.Response.Status == nil {
+			return resource.NonRetryableError(fmt.Errorf("DescribeFlow task %d returns empty status", flowId))
+		}
+
+		switch *response.Response.Status {
+		case FLOW_STATUS_SUCCESS:
+			return nil
+		case FLOW_STATUS_FAILED, FLOW_STATUS_PAUSED:
+			return resource.NonRetryableError(fmt.Errorf("tdmysql user flow %d failed, status is %s", flowId, *response.Response.Status))
+		default:
+			return resource.RetryableError(fmt.Errorf("tdmysql user flow %d status is %s", flowId, *response.Response.Status))
+		}
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, flow[%d], reason[%s]\n", logId, request.GetAction(), flowId, err.Error())
+	}
+
 	return
 }
