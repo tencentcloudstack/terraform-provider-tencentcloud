@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_tdmysql_dbs_backup: new resource for managing manual backup sets of a TDSQL Boundless (tdmysql) instance
+```
