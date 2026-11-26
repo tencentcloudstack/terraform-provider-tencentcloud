@@ -33,6 +33,7 @@ from picking them up.
 | `verify_templates.py` | (tooling, not a template) | Gate: instantiates every `*.go.tmpl` in a throw-away package against a stub SDK and the REAL vendored framework — `go vet`, unused/colliding symbol check, `gofmt -s`, the sibling-md rules `make doc` enforces, the input validator self-test, then RUNS every test template and probe. Self-cleaning. |
 | `validate_input.py` | (tooling, not a template) | Reference validator of the codegen JSON input (main skill step 1, checks 1-8): blocks illegal input BEFORE any file is written. `--selftest` runs the real inputs and ~30 illegal mutations; `--repo .` adds the repository-conflict checks. |
 | `check_go_symbols.py` | (tooling, not a template) | Reports UNUSED private symbols and name COLLISIONS with sibling files of the same package. Run on every generated Go file. |
+| `check_md_hcl.py` | (tooling, not a template) | Checks that the `Example Usage` HCL of a resource's sibling md uses the form each schema type requires (`*Attribute` => `name = { }` / `name = [ ]`, `*Block` => `name { }`), at every nesting depth. Run on every generated Go file before `make doc`; `--all` scans every framework resource. |
 
 One implementation template and one test template per codegen
 `resource_type` (the file names match the six JSON `resource_type` values),
