@@ -54,7 +54,7 @@ resource "tencentcloud_cls_config_extra" "extra" {
   name        = "helloworld-test"
   topic_id    = tencentcloud_cls_topic.topic.id
   type        = "container_file"
-  log_type    = "json_log"
+  log_type    = "fullregex_log"
   config_flag = "label_k8s"
   logset_id   = tencentcloud_cls_logset.logset.id
   logset_name = tencentcloud_cls_logset.logset.logset_name
@@ -70,6 +70,10 @@ resource "tencentcloud_cls_config_extra" "extra" {
       name      = "nginx"
       namespace = "default"
     }
+  }
+  extract_rule {
+    log_regex = "^(first) (second)$"
+    keys      = ["first", "second"]
   }
   group_id = tencentcloud_cls_machine_group.group.id
 }
@@ -128,7 +132,7 @@ The `extract_rule` object supports the following:
 * `begin_regex` - (Optional, String) First-Line matching rule, which is valid only if log_type is multiline_log or fullregex_log.
 * `delimiter` - (Optional, String) Delimiter for delimited log, which is valid only if log_type is delimiter_log.
 * `filter_key_regex` - (Optional, List) Log keys to be filtered and the corresponding regex.
-* `keys` - (Optional, Set) Key name of each extracted field. An empty key indicates to discard the field. This parameter is valid only if log_type is delimiter_log. json_log logs use the key of JSON itself.
+* `keys` - (Optional, List) Ordered key names for fields extracted from delimiter or full regex logs. An empty key indicates to discard the field. JSON logs use the keys from the JSON object itself.
 * `log_regex` - (Optional, String) Full log matching rule, which is valid only if log_type is fullregex_log.
 * `time_format` - (Optional, String) Time field format. For more information, please see the output parameters of the time format description of the strftime function in C language.
 * `time_key` - (Optional, String) Time field key name. time_key and time_format must appear in pair.

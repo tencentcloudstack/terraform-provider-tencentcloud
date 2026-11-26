@@ -1,6 +1,7 @@
 package cls_test
 
 import (
+	"strings"
 	"testing"
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
@@ -19,6 +20,15 @@ func TestAccTencentCloudClsConfigExtra_basic(t *testing.T) {
 				Config: testAccClsConfigExtra,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_cls_config_extra.extra", "name", "helloworld"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_config_extra.extra", "extract_rule.0.keys.0", "first"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_config_extra.extra", "extract_rule.0.keys.1", "second"),
+				),
+			},
+			{
+				Config: strings.Replace(testAccClsConfigExtra, `keys      = ["first", "second"]`, `keys      = ["second", "first"]`, 1),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_cls_config_extra.extra", "extract_rule.0.keys.0", "second"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_config_extra.extra", "extract_rule.0.keys.1", "first"),
 				),
 			},
 			{
@@ -71,7 +81,7 @@ resource "tencentcloud_cls_config_extra" "extra" {
   name        = "helloworld"
   topic_id    = tencentcloud_cls_topic.topic.id
   type        = "container_file"
-  log_type    = "json_log"
+  log_type    = "fullregex_log"
   config_flag = "label_k8s"
   logset_id   = tencentcloud_cls_logset.logset.id
   logset_name = tencentcloud_cls_logset.logset.logset_name
@@ -87,6 +97,10 @@ resource "tencentcloud_cls_config_extra" "extra" {
       name      = "nginx"
       namespace = "default"
     }
+  }
+  extract_rule {
+    log_regex = "^(first) (second)$"
+    keys      = ["first", "second"]
   }
   group_id = tencentcloud_cls_machine_group.group.id
 }
