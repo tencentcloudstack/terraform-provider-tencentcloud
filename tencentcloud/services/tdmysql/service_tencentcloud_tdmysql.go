@@ -133,6 +133,41 @@ func (me *TdmysqlService) DescribeTdmysqlDBInstanceDataReservedSpaceById(ctx con
 	return
 }
 
+func (me *TdmysqlService) DescribeSaleInfo(ctx context.Context, request *tdmysqlv20211122.DescribeSaleInfoRequest) (regionList []*tdmysqlv20211122.DescribeSaleRegionInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	response := tdmysqlv20211122.NewDescribeSaleInfoResponse()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTdmysqlV20211122Client().DescribeSaleInfo(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe tdmysql sale info failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	regionList = response.Response.RegionList
+	return
+}
+
 func (me *TdmysqlService) DescribeTdmysqlDBSecurityGroupsById(ctx context.Context, instanceId string) (ret *tdmysqlv20211122.DescribeDBSecurityGroupsResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 

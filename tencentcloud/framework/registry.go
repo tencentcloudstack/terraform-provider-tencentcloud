@@ -80,6 +80,7 @@ var dataSourcesMap = map[string]func() datasource.DataSource{
 	"tencentcloud_monitor_dispense_region":                monitor.NewMonitorDispenseRegionDataSource,
 	"tencentcloud_makers_deployment_log":                  makers.NewMakersDeploymentLogDataSource,
 	"tencentcloud_makers_deployments":                     makers.NewMakersDeploymentsDataSource,
+	"tencentcloud_tdmysql_sale_info":                      tdmysql.NewTdmysqlSaleInfoDataSource,
 	"tencentcloud_tdmysql_db_engines":                     tdmysql.NewTdmysqlDbEnginesDataSource,
 	"tencentcloud_tdmysql_specs":                          tdmysql.NewTdmysqlSpecsDataSource,
 	"tencentcloud_ags_sandbox_instances":                  ags.NewAgsSandboxInstancesDataSource,
