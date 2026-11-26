@@ -385,6 +385,43 @@ def check_sibling_md():
     return len(problems)
 
 
+NESTED_ATTR_RE = re.compile(r'"(\w+)":\s*schema\.(?:Single|List|Set|Map)NestedAttribute\{')
+
+
+def nested_block_misuse(go_src, md_text):
+    """Names of nested *Attributes* (declared in go_src) that md_text writes in
+    block syntax `name {` instead of attribute syntax `name = {` / `name = [`."""
+    names = set(NESTED_ATTR_RE.findall(go_src))
+    return sorted(n for n in names
+                  if re.search(r"^\s*" + re.escape(n) + r"\s*\{", md_text, re.M))
+
+
+def check_md_nested_syntax():
+    """Example Usage must use attribute syntax for nested attributes (conventions
+    section 6). Self-tests the detector, then scans every framework resource
+    that has a sibling md."""
+    go = 'x := map[string]schema.Attribute{"enc": schema.SingleNestedAttribute{'
+    assert nested_block_misuse(go, "enc {\n  a = 1\n}") == ["enc"], "detector misses block misuse"
+    assert nested_block_misuse(go, "enc = {\n  a = 1\n}") == [], "detector flags valid syntax"
+    assert nested_block_misuse(go, "timeouts {\n}") == [], "detector flags real blocks"
+    problems = []
+    scanned = 0
+    for gof in sorted((REPO / "tencentcloud/services").rglob("*.go")):
+        md = gof.with_suffix(".md")
+        if gof.name.endswith("_test.go") or not md.exists():
+            continue
+        src = gof.read_text()
+        if "NestedAttribute{" not in src:
+            continue
+        scanned += 1
+        for n in nested_block_misuse(src, md.read_text()):
+            problems.append(f"{md.relative_to(REPO)}: nested attribute `{n}` written as a block; use `{n} = {{...}}`")
+    print(f"--- md nested-attribute syntax ({scanned} file(s) scanned): {len(problems)} problem(s)")
+    for line in problems:
+        print("   ", line)
+    return len(problems)
+
+
 def check_validator():
     """The codegen-input validator must accept the real inputs and reject every
     illegal mutation (its own self-test)."""
@@ -466,11 +503,12 @@ def main():
         build_units()
         pkg = "./tencentcloud/framework/zz_tmplcheck/..."
         # -gcflags=-e lifts the 10-error-per-package cap: ALL errors at once.
-        failed += run(["go", "vet", pkg], "go vet (every template package, incl. test templates)") != 0
+        failed += run(["go", "vet", "-gcflags=-e", pkg], "go vet (every template package, incl. test templates)") != 0
         failed += check_symbols() != 0
         failed += check_gofmt() != 0
         failed += check_sibling_md() != 0
         failed += check_validator() != 0
+        failed += check_md_nested_syntax() != 0
         failed += check_helper_docs() != 0
         # Runs the two TEST templates (gomonkey needs -l: no inlining) AND the
         # behavioural probes — what the compiler cannot prove: nil safety,

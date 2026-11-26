@@ -1660,8 +1660,52 @@ func (s *CIService) DetectCar(ctx context.Context, obj string) (*DetectCarResult
 }
 
 type CIServiceResult struct {
-	XMLName  xml.Name `xml:"CIStatus"`
-	CIStatus string   `xml:",chardata"`
+	XMLName  xml.Name `xml:"CIStatus" json:"-"`
+	CIStatus string   `xml:",chardata" json:"CIStatus,omitempty"`
+}
+
+// ciServiceBodyLimit 解析失败时错误信息中携带的响应体最大长度，避免异常响应导致错误信息过长
+const ciServiceBodyLimit = 256
+
+// formatCIServiceBody 截断过长的响应体，用于拼接解析失败的错误信息
+func formatCIServiceBody(body []byte) string {
+	if len(body) > ciServiceBodyLimit {
+		return string(body[:ciServiceBodyLimit]) + "...(truncated)"
+	}
+	return string(body)
+}
+
+// ciServiceDecoder 查询数据万象服务状态响应体的解码器
+type ciServiceDecoder struct {
+	name   string
+	decode func(data []byte, v interface{}) error
+}
+
+// decodeCIServiceResult 解析查询数据万象服务状态的响应体。
+// 服务端返回格式与域名相关：ci 域名返回 JSON，pic 域名返回 XML，
+// 每次解析均使用独立的临时变量，避免 Unmarshal 部分赋值污染结果。
+func decodeCIServiceResult(body []byte) (CIServiceResult, error) {
+	first := ciServiceDecoder{name: "json", decode: json.Unmarshal}
+	second := ciServiceDecoder{name: "xml", decode: xml.Unmarshal}
+	if body[0] == '<' {
+		first, second = second, first
+	}
+
+	var primary CIServiceResult
+	firstErr := first.decode(body, &primary)
+	if firstErr == nil {
+		return primary, nil
+	}
+
+	var fallback CIServiceResult
+	secondErr := second.decode(body, &fallback)
+	if secondErr == nil {
+		return fallback, nil
+	}
+
+	// 两种格式均解析失败，合并错误并附带响应体，便于定位服务端返回的真实内容
+	return CIServiceResult{}, fmt.Errorf("failed to decode response, %s error: %w, %s error: %v, body: %s",
+		first.name, firstErr, second.name, secondErr, formatCIServiceBody(body))
 }
 
 func (s *CIService) OpenCIService(ctx context.Context) (*Response, error) {
@@ -1676,13 +1720,20 @@ func (s *CIService) OpenCIService(ctx context.Context) (*Response, error) {
 
 func (s *CIService) GetCIService(ctx context.Context) (*CIServiceResult, *Response, error) {
 	var res CIServiceResult
+	var buf bytes.Buffer
 	sendOpt := &sendOptions{
 		baseURL: s.client.BaseURL.CIURL,
 		method:  http.MethodGet,
 		uri:     "/",
-		result:  &res,
+		result:  &buf,
 	}
 	resp, err := s.client.send(ctx, sendOpt)
+	if err != nil {
+		return &res, resp, err
+	}
+	if body := bytes.TrimSpace(buf.Bytes()); len(body) > 0 {
+		res, err = decodeCIServiceResult(body)
+	}
 	return &res, resp, err
 }
 
@@ -2980,7 +3031,7 @@ type AIGCResult struct {
 
 // ============================================================
 // AIImageAnalysis 大模型批量图片分析
-// 接口文档: <待补 PRD#1010099441132813899 发布后的云文档链接>
+// 接口文档: https://cloud.tencent.com/document/product/460/134575
 // ============================================================
 
 // CreateAIImageAnalysisOptions 请求选项
@@ -3077,12 +3128,133 @@ type AIImageAnalysisCustom struct {
 // POST /?ci-process=AIImageAnalysis
 //
 // 支持多图（含图文混排）的联合分析，Description / Custom 两种输出模式。
-// 接口文档: https://cloud.tencent.com/document/product/460/<待补>
+// 接口文档: https://cloud.tencent.com/document/product/460/134575
 func (s *CIService) CreateAIImageAnalysis(ctx context.Context, opt *CreateAIImageAnalysisOptions) (*CreateAIImageAnalysisResult, *Response, error) {
 	var res CreateAIImageAnalysisResult
 	sendOpt := sendOptions{
 		baseURL: s.client.BaseURL.CIURL,
 		uri:     "/?ci-process=AIImageAnalysis",
+		method:  http.MethodPost,
+		body:    opt,
+		result:  &res,
+	}
+	resp, err := s.client.send(ctx, &sendOpt)
+	return &res, resp, err
+}
+
+// ============================================================
+// AIMediaAnalysis 大模型视频分析
+// 接口文档: https://cloud.tencent.com/document/product/460/136880
+// ============================================================
+
+// CreateAIMediaAnalysisOptions 请求选项
+type CreateAIMediaAnalysisOptions struct {
+	XMLName xml.Name              `xml:"Request"`
+	Input   *AIMediaAnalysisInput `xml:"Input,omitempty"`
+	Conf    *AIMediaAnalysisConf  `xml:"Conf,omitempty"`
+}
+
+// AIMediaAnalysisInput 输入
+type AIMediaAnalysisInput struct {
+	Message *AIMediaAnalysisMessage `xml:"Message,omitempty"`
+}
+
+// AIMediaAnalysisMessage 消息
+type AIMediaAnalysisMessage struct {
+	Content *AIMediaAnalysisContent `xml:"Content,omitempty"`
+}
+
+// AIMediaAnalysisContent 内容
+type AIMediaAnalysisContent struct {
+	Part []AIMediaAnalysisPart `xml:"Part,omitempty"`
+}
+
+// AIMediaAnalysisPart 单元（视频或文本）
+// Type:      Video / Text
+// ObjectKey: Type=Video 时与 Url 二选一
+// Url:       Type=Video 时与 ObjectKey 二选一
+// Text:      Type=Text 时必填，限 2048 字符
+// Fps:       视频抽帧帧率，取值 0.1~5，默认 1（仅 Video 有效）
+type AIMediaAnalysisPart struct {
+	Type      string  `xml:"Type,omitempty"`
+	Text      string  `xml:"Text,omitempty"`
+	ObjectKey string  `xml:"ObjectKey,omitempty"`
+	Url       string  `xml:"Url,omitempty"`
+	Fps       float64 `xml:"Fps,omitempty"`
+}
+
+// AIMediaAnalysisConf 配置
+// Type:         Description（默认）/ Custom
+// TemplateName: FTM（影视传媒），仅 Description 模式有效
+type AIMediaAnalysisConf struct {
+	Type         string `xml:"Type,omitempty"`
+	TemplateName string `xml:"TemplateName,omitempty"`
+}
+
+// CreateAIMediaAnalysisResult 响应结果
+type CreateAIMediaAnalysisResult struct {
+	XMLName        xml.Name               `xml:"Response"`
+	Code           string                 `xml:"Code,omitempty"`
+	Message        string                 `xml:"Message,omitempty"`
+	State          string                 `xml:"State,omitempty"`
+	AnalysisResult *AIMediaAnalysisResult `xml:"AnalysisResult,omitempty"`
+	RequestId      string                 `xml:"RequestId,omitempty"`
+}
+
+// AIMediaAnalysisResult 分析结果
+type AIMediaAnalysisResult struct {
+	Type              string                      `xml:"Type,omitempty"`
+	DescriptionResult *AIMediaAnalysisDescription `xml:"DescriptionResult,omitempty"`
+	CustomResult      *AIMediaAnalysisCustom      `xml:"CustomResult,omitempty"`
+	MediaInfo         *AIMediaAnalysisMediaInfo    `xml:"MediaInfo,omitempty"`
+}
+
+// AIMediaAnalysisDescription Description 模式结果
+type AIMediaAnalysisDescription struct {
+	Description string                      `xml:"Description,omitempty"`
+	LabelDetail *AIMediaAnalysisLabelDetail `xml:"LabelDetail,omitempty"`
+}
+
+// AIMediaAnalysisLabelDetail 标签容器
+type AIMediaAnalysisLabelDetail struct {
+	LabelInfos []AIMediaAnalysisLabelInfos `xml:"LabelInfos,omitempty"`
+}
+
+// AIMediaAnalysisLabelInfos 一组标签
+// ConfidenceLevel: high / medium / low
+type AIMediaAnalysisLabelInfos struct {
+	ConfidenceLevel string                     `xml:"ConfidenceLevel,omitempty"`
+	LabelInfo       []AIMediaAnalysisLabelInfo `xml:"LabelInfo,omitempty"`
+}
+
+// AIMediaAnalysisLabelInfo 标签项
+type AIMediaAnalysisLabelInfo struct {
+	LabelName  string `xml:"LabelName,omitempty"`
+	LabelValue string `xml:"LabelValue,omitempty"`
+}
+
+// AIMediaAnalysisCustom Custom 模式结果
+type AIMediaAnalysisCustom struct {
+	CustomOutput string `xml:"CustomOutput,omitempty"`
+}
+
+// AIMediaAnalysisMediaInfo 媒体处理信息
+type AIMediaAnalysisMediaInfo struct {
+	Duration        float64 `xml:"Duration,omitempty"`
+	Fps             float64 `xml:"Fps,omitempty"`
+	BilledFrameCount int    `xml:"BilledFrameCount,omitempty"`
+}
+
+// CreateAIMediaAnalysis 大模型视频分析（同步）
+// POST /?ci-process=AIMediaAnalysis
+//
+// 支持视频内容理解与分析，Description / Custom 两种输出模式。
+// 接口文档: https://cloud.tencent.com/document/product/460/136880
+func (s *CIService) CreateAIMediaAnalysis(ctx context.Context, opt *CreateAIMediaAnalysisOptions) (*CreateAIMediaAnalysisResult, *Response, error) {
+	var res CreateAIMediaAnalysisResult
+	sendOpt := sendOptions{
+		baseURL: s.client.BaseURL.CIURL,
+		uri:     "/?ci-process=AIMediaAnalysis",
 		method:  http.MethodPost,
 		body:    opt,
 		result:  &res,

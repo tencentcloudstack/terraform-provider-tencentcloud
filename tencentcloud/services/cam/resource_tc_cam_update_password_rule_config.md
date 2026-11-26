@@ -10,7 +10,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cam_update_password_rule_config" "example" {
-  rules {
+  rules = {
     minimum_length                   = 8
     must_contain                     = "Aa1!"
     force_password_change            = 0

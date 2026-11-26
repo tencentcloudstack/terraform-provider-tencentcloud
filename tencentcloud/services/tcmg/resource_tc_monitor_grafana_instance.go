@@ -16,8 +16,8 @@ import (
 
 func ResourceTencentCloudMonitorGrafanaInstance() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudMonitorGrafanaInstanceRead,
 		Create: resourceTencentCloudMonitorGrafanaInstanceCreate,
+		Read:   resourceTencentCloudMonitorGrafanaInstanceRead,
 		Update: resourceTencentCloudMonitorGrafanaInstanceUpdate,
 		Delete: resourceTencentCloudMonitorGrafanaInstanceDelete,
 		Importer: &schema.ResourceImporter{
@@ -123,9 +123,10 @@ func resourceTencentCloudMonitorGrafanaInstanceCreate(d *schema.ResourceData, me
 	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_instance.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
+		ctx      = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service  = svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		request  = monitor.NewCreateGrafanaInstanceRequest()
 		response *monitor.CreateGrafanaInstanceResponse
 	)
@@ -150,7 +151,7 @@ func resourceTencentCloudMonitorGrafanaInstanceCreate(d *schema.ResourceData, me
 		request.GrafanaInitPassword = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("enable_internet"); v != nil {
+	if v, ok := d.GetOkExists("enable_internet"); ok {
 		// Internal account won't open
 		request.EnableInternet = helper.Bool(v.(bool))
 	}
@@ -167,6 +168,11 @@ func resourceTencentCloudMonitorGrafanaInstanceCreate(d *schema.ResourceData, me
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("create monitor grafanaInstance failed, response is nil"))
+		}
+
 		response = result
 		return nil
 	})
@@ -176,29 +182,34 @@ func resourceTencentCloudMonitorGrafanaInstanceCreate(d *schema.ResourceData, me
 		return err
 	}
 
-	grafanaInstanceId := *response.Response.InstanceId
+	if response.Response.InstanceId == nil {
+		return fmt.Errorf("InstanceId is nil")
+	}
 
-	service := svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	grafanaInstanceId := *response.Response.InstanceId
+	d.SetId(grafanaInstanceId)
 
 	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		instance, errRet := service.DescribeMonitorGrafanaInstance(ctx, grafanaInstanceId)
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
+
 		if *instance.InstanceStatus == 2 {
 			return nil
 		}
+
 		if *instance.InstanceStatus == 6 {
 			return resource.NonRetryableError(fmt.Errorf("grafanaInstance status is %v, operate failed.", *instance.InstanceStatus))
 		}
+
 		return resource.RetryableError(fmt.Errorf("grafanaInstance status is %v, retry...", *instance.InstanceStatus))
 	})
+
 	if err != nil {
 		return err
 	}
 
-	d.SetId(grafanaInstanceId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
@@ -207,6 +218,7 @@ func resourceTencentCloudMonitorGrafanaInstanceCreate(d *schema.ResourceData, me
 			return err
 		}
 	}
+
 	return resourceTencentCloudMonitorGrafanaInstanceRead(d, meta)
 }
 
@@ -214,22 +226,21 @@ func resourceTencentCloudMonitorGrafanaInstanceRead(d *schema.ResourceData, meta
 	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_instance.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-
-	instanceId := d.Id()
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		instanceId = d.Id()
+	)
 
 	grafanaInstance, err := service.DescribeMonitorGrafanaInstance(ctx, instanceId)
-
 	if err != nil {
 		return err
 	}
 
 	if grafanaInstance == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `grafanaInstance` %s does not exist", instanceId)
+		return fmt.Errorf("resource `tencentcloud_monitor_grafana_instance` %s does not exist", instanceId)
 	}
 
 	if grafanaInstance.InstanceName != nil {
@@ -289,10 +300,18 @@ func resourceTencentCloudMonitorGrafanaInstanceUpdate(d *schema.ResourceData, me
 	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_instance.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		instanceId = d.Id()
+	)
 
-	instanceId := d.Id()
+	immutableArgs := []string{"vpc_id", "subnet_ids", "grafana_init_password", "auto_voucher"}
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	if d.HasChange("instance_name") {
 		request := monitor.NewModifyGrafanaInstanceRequest()
@@ -309,6 +328,7 @@ func resourceTencentCloudMonitorGrafanaInstanceUpdate(d *schema.ResourceData, me
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
+
 			return nil
 		})
 
@@ -317,27 +337,10 @@ func resourceTencentCloudMonitorGrafanaInstanceUpdate(d *schema.ResourceData, me
 		}
 	}
 
-	if d.HasChange("vpc_id") {
-		return fmt.Errorf("`vpc_id` do not support change now.")
-	}
-
-	if d.HasChange("subnet_ids") {
-		return fmt.Errorf("`subnet_ids` do not support change now.")
-	}
-
-	if d.HasChange("grafana_init_password") {
-		return fmt.Errorf("`grafana_init_password` do not support change now.")
-	}
-
-	if d.HasChange("auto_voucher") {
-		return fmt.Errorf("`auto_voucher` do not support change now.")
-	}
-
 	if d.HasChange("enable_internet") {
 		request := monitor.NewEnableGrafanaInternetRequest()
 		request.InstanceID = &instanceId
-
-		if v, ok := d.GetOk("enable_internet"); ok {
+		if v, ok := d.GetOkExists("enable_internet"); ok {
 			request.EnableInternet = helper.Bool(v.(bool))
 		}
 
@@ -349,8 +352,10 @@ func resourceTencentCloudMonitorGrafanaInstanceUpdate(d *schema.ResourceData, me
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			return err
 		}
@@ -374,12 +379,12 @@ func resourceTencentCloudMonitorGrafanaInstanceDelete(d *schema.ResourceData, me
 	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_instance.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-
-	instanceId := d.Id()
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		instanceId = d.Id()
+	)
 
 	if err := service.DeleteMonitorGrafanaInstanceById(ctx, instanceId); err != nil {
 		return err
@@ -390,14 +395,18 @@ func resourceTencentCloudMonitorGrafanaInstanceDelete(d *schema.ResourceData, me
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
+
 		if *instance.InstanceStatus == 6 {
 			return nil
 		}
+
 		if *instance.InstanceStatus == 7 {
 			return resource.NonRetryableError(fmt.Errorf("grafanaInstance status is %v, operate failed.", *instance.InstanceStatus))
 		}
+
 		return resource.RetryableError(fmt.Errorf("grafanaInstance status is %v, retry...", *instance.InstanceStatus))
 	})
+
 	if err != nil {
 		return err
 	}
@@ -406,9 +415,11 @@ func resourceTencentCloudMonitorGrafanaInstanceDelete(d *schema.ResourceData, me
 	if v, ok := d.GetOk("is_distroy"); ok && v.(bool) {
 		claenFlag = true
 	}
+
 	if v, ok := d.GetOk("is_destroy"); ok && v.(bool) {
 		claenFlag = true
 	}
+
 	if claenFlag {
 		if err := service.CleanGrafanaInstanceById(ctx, instanceId); err != nil {
 			return err
@@ -419,11 +430,14 @@ func resourceTencentCloudMonitorGrafanaInstanceDelete(d *schema.ResourceData, me
 			if errRet != nil {
 				return tccommon.RetryError(errRet, tccommon.InternalError)
 			}
+
 			if instance == nil {
 				return nil
 			}
+
 			return resource.RetryableError(fmt.Errorf("grafanaInstance status is %v, retry...", *instance.InstanceStatus))
 		})
+
 		if err != nil {
 			return err
 		}

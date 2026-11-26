@@ -768,7 +768,7 @@ func (me *MonitorService) DescribeMonitorGrafanaInstance(ctx context.Context, in
 	}()
 	request.InstanceIds = []*string{&instanceId}
 	request.Offset = helper.IntInt64(0)
-	request.Limit = helper.IntInt64(10)
+	request.Limit = helper.IntInt64(100)
 
 	response, err := me.client.UseMonitorClient().DescribeGrafanaInstances(request)
 	if err != nil {
@@ -790,9 +790,7 @@ func (me *MonitorService) DescribeMonitorGrafanaInstance(ctx context.Context, in
 
 func (me *MonitorService) DeleteMonitorGrafanaInstanceById(ctx context.Context, instanceId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
-
 	request := monitor.NewDeleteGrafanaInstanceRequest()
-
 	request.InstanceIDs = []*string{&instanceId}
 
 	defer func() {
@@ -802,23 +800,25 @@ func (me *MonitorService) DeleteMonitorGrafanaInstanceById(ctx context.Context, 
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseMonitorClient().DeleteGrafanaInstance(request)
-	if err != nil {
-		errRet = err
-		return err
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseMonitorClient().DeleteGrafanaInstance(request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+
+		return nil
+	})
 
 	return
 }
 
 func (me *MonitorService) CleanGrafanaInstanceById(ctx context.Context, instanceId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
-
 	request := monitor.NewCleanGrafanaInstanceRequest()
-
 	request.InstanceId = &instanceId
 
 	defer func() {
@@ -828,14 +828,18 @@ func (me *MonitorService) CleanGrafanaInstanceById(ctx context.Context, instance
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseMonitorClient().CleanGrafanaInstance(request)
-	if err != nil {
-		errRet = err
-		return err
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseMonitorClient().CleanGrafanaInstance(request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+
+		return nil
+	})
 
 	return
 }
