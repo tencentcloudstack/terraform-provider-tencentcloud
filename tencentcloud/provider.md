@@ -2076,6 +2076,9 @@ tencentcloud_tdcpg_cluster
 tencentcloud_tdcpg_instance
 
 TDSQL Boundless(tdmysql)
+Data Source
+tencentcloud_tdmysql_sale_info
+
 Resource
 tencentcloud_tdmysql_db_instance
 
