@@ -1,0 +1,3 @@
+```release-note:note
+The `tencentcloud_tdmysql_specs` data source is now available.
+```
