@@ -47,6 +47,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssl"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tco"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdmysql"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 )
 
@@ -78,6 +79,7 @@ var dataSourcesMap = map[string]func() datasource.DataSource{
 	"tencentcloud_monitor_dispense_region":                monitor.NewMonitorDispenseRegionDataSource,
 	"tencentcloud_makers_deployment_log":                  makers.NewMakersDeploymentLogDataSource,
 	"tencentcloud_makers_deployments":                     makers.NewMakersDeploymentsDataSource,
+	"tencentcloud_tdmysql_specs":                          tdmysql.NewTdmysqlSpecsDataSource,
 }
 
 // functionsMap maps every framework function name to its factory. Function
