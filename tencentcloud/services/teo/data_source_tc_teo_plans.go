@@ -17,7 +17,7 @@ func DataSourceTencentCloudTeoPlans() *schema.Resource {
 			"filters": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "Filter conditions, the upper limit of Filters. Values is 20. The detailed filtering conditions are as follows: <li>plan-type<br>Filter according to [<strong>Package Type</strong>]. <br>Optional types are: <br>plan-trial: Trial Package; <br>plan-personal: Personal Package; <br>plan-basic: Basic Package; <br>plan-standard: Standard Package; <br>plan-enterprise: Enterprise Package. </li><li>plan-id<br>Filter according to [<strong>Package ID</strong>]. The package ID is in the form of: edgeone-268z103ob0sx.</li><li>area<br>Filter according to [<strong>Package Acceleration Region</strong>]. </li>Service area, optional types are: <br>mainland: Mainland China; <br>overseas: Global (excluding Mainland China); <br>global: Global (including Mainland China).<br><li>status<br>Filter by [<strong>Package Status</strong>].<br>The available statuses are:<br>normal: normal status;<br>expiring-soon: about to expire;<br>expired: expired;<br>isolated: isolated.</li>.",
+				Description: "Filter conditions, the upper limit of Filters. Values is 20. The detailed filtering conditions are as follows: <li>plan-type<br>Filter according to [<strong>Package Type</strong>]. <br>Optional types are: <br>plan-trial: Trial Package; <br>plan-personal: Personal Package; <br>plan-basic: Basic Package; <br>plan-standard: Standard Package; <br>plan-enterprise: Enterprise Package; <br>plan-makers-pro: Makers Pro Package; <br>plan-makers-business: Makers Business Package. </li><li>plan-id<br>Filter according to [<strong>Package ID</strong>]. The package ID is in the form of: edgeone-268z103ob0sx.</li><li>area<br>Filter according to [<strong>Package Acceleration Region</strong>]. </li>Service area, optional types are: <br>mainland: Mainland China; <br>overseas: Global (excluding Mainland China); <br>global: Global (including Mainland China).<br><li>status<br>Filter by [<strong>Package Status</strong>].<br>The available statuses are:<br>normal: normal status;<br>expiring-soon: about to expire;<br>expired: expired;<br>isolated: isolated.</li>.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
@@ -57,7 +57,7 @@ func DataSourceTencentCloudTeoPlans() *schema.Resource {
 						"plan_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Plan type. Possible values are: <li>plan-trial: Trial plan; </li><li>plan-personal: Personal plan; </li><li>plan-basic: Basic plan; </li><li>plan-standard: Standard plan; </li><li>plan-enterprise-v2: Enterprise plan; </li><li>plan-enterprise-model-a: Enterprise Model A plan. </li><li>plan-enterprise: Old Enterprise plan. </li>.",
+							Description: "Plan type. Possible values are: <li>plan-trial: Trial plan; </li><li>plan-personal: Personal plan; </li><li>plan-basic: Basic plan; </li><li>plan-standard: Standard plan; </li><li>plan-enterprise-v2: Enterprise plan; </li><li>plan-enterprise-model-a: Enterprise Model A plan; </li><li>plan-enterprise: Old Enterprise plan; </li><li>plan-makers-pro: Makers Pro plan. </li><li>plan-makers-business: Makers Business plan; </li>.",
 						},
 						"plan_id": {
 							Type:        schema.TypeString,
