@@ -54,6 +54,7 @@ import (
 // resourcesMap maps every framework managed resource type name to its factory.
 var resourcesMap = map[string]func() resource.Resource{
 	"tencentcloud_ags_sandbox_tool":                 ags.NewAgsSandboxToolResource,
+	"tencentcloud_ags_sandbox_instance":             ags.NewAgsSandboxInstanceResource,
 	"tencentcloud_cam_update_password_rule_config":  cam.NewCamUpdatePasswordRuleConfigResource,
 	"tencentcloud_config_aggregate_compliance_pack": config.NewConfigAggregateCompliancePackResource,
 	"tencentcloud_cos_vector_bucket":                cos.NewCosVectorBucketResource,
@@ -80,6 +81,7 @@ var dataSourcesMap = map[string]func() datasource.DataSource{
 	"tencentcloud_makers_deployment_log":                  makers.NewMakersDeploymentLogDataSource,
 	"tencentcloud_makers_deployments":                     makers.NewMakersDeploymentsDataSource,
 	"tencentcloud_tdmysql_db_engines":                     tdmysql.NewTdmysqlDbEnginesDataSource,
+	"tencentcloud_tdmysql_specs":                          tdmysql.NewTdmysqlSpecsDataSource,
 }
 
 // functionsMap maps every framework function name to its factory. Function

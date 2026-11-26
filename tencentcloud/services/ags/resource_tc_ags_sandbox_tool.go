@@ -144,7 +144,7 @@ type agsCustomConfigurationModel struct {
 	Image             types.String `tfsdk:"image"`
 	ImageRegistryType types.String `tfsdk:"image_registry_type"`
 	Command           types.Set    `tfsdk:"command"`
-	Args              types.Set    `tfsdk:"args"`
+	Args              types.List   `tfsdk:"args"`
 	Env               types.List   `tfsdk:"env"`
 	Ports             types.List   `tfsdk:"ports"`
 	Resources         types.Object `tfsdk:"resources"`
@@ -542,10 +542,10 @@ var agsCustomConfigurationAttributes = map[string]schema.Attribute{
 		ElementType: types.StringType,
 		Description: "Startup command.",
 	},
-	"args": schema.SetAttribute{
+	"args": schema.ListAttribute{
 		Optional:    true,
 		ElementType: types.StringType,
-		Description: "Startup arguments.",
+		Description: "Startup arguments. The order is preserved.",
 	},
 	"env": schema.ListNestedAttribute{
 		Optional:     true,
@@ -1212,19 +1212,24 @@ func (r *AgsSandboxToolResource) refreshModel(ctx context.Context, model *AgsSan
 	}
 	model.StorageMounts = storageMounts
 
+	// The cloud answers both nested blocks in a normalized form (cpu 1 -> 1000m,
+	// memory 1Gi -> 1024Mi, a default probe and the storage inherited from the
+	// tool), so the answer is adopted only when it is not equivalent to the
+	// configured one. Rewriting the state with the normalized form would make it
+	// differ from the configuration and turn every plan into an in-place update.
 	customConfiguration, customDiags := flattenCustomConfiguration(ctx, item.CustomConfiguration)
 	diags.Append(customDiags...)
 	if diags.HasError() {
 		return diags
 	}
-	model.CustomConfiguration = customConfiguration
+	model.CustomConfiguration = agsAdoptEquivalent(model.CustomConfiguration, customConfiguration)
 
 	computerConfiguration, computerDiags := flattenComputerConfiguration(ctx, item.ComputerConfiguration)
 	diags.Append(computerDiags...)
 	if diags.HasError() {
 		return diags
 	}
-	model.ComputerConfiguration = computerConfiguration
+	model.ComputerConfiguration = agsAdoptEquivalent(model.ComputerConfiguration, computerConfiguration)
 
 	logConfiguration, logDiags := flattenLogConfiguration(ctx, item.LogConfiguration)
 	diags.Append(logDiags...)
@@ -1375,6 +1380,34 @@ func flattenStringSet(ctx context.Context, values []*string) (types.Set, diag.Di
 		return types.SetNull(types.StringType), nil
 	}
 	return types.SetValueFrom(ctx, types.StringType, helperPStrings(values))
+}
+
+// expandStringList converts an ordered string list into the SDK pointer slice
+// form. A null or unknown list is transmitted as "absent".
+func expandStringList(ctx context.Context, value types.List) ([]*string, diag.Diagnostics) {
+	if value.IsNull() || value.IsUnknown() {
+		return nil, nil
+	}
+
+	var elements []string
+	diags := value.ElementsAs(ctx, &elements, false)
+	if diags.HasError() {
+		return nil, diags
+	}
+	if len(elements) == 0 {
+		return nil, diags
+	}
+
+	return helperStrings(elements), diags
+}
+
+// flattenStringList converts the SDK pointer slice into an ordered string list,
+// so an argument sequence keeps the order the API reports.
+func flattenStringList(ctx context.Context, values []*string) (types.List, diag.Diagnostics) {
+	if len(values) == 0 {
+		return types.ListNull(types.StringType), nil
+	}
+	return types.ListValueFrom(ctx, types.StringType, helperPStrings(values))
 }
 
 // helperStrings converts a string slice into the SDK pointer slice form.
@@ -1989,7 +2022,7 @@ func expandCustomConfiguration(ctx context.Context, object types.Object) (*agsv2
 	}
 	customConfiguration.Command = command
 
-	args, argsDiags := expandStringSet(ctx, model.Args)
+	args, argsDiags := expandStringList(ctx, model.Args)
 	diags.Append(argsDiags...)
 	if diags.HasError() {
 		return nil, diags
@@ -2054,7 +2087,7 @@ func flattenCustomConfiguration(ctx context.Context, item *agsv20250920.CustomCo
 		return types.ObjectNull(agsCustomConfigAttrTypes), diags
 	}
 
-	args, argsDiags := flattenStringSet(ctx, item.Args)
+	args, argsDiags := flattenStringList(ctx, item.Args)
 	diags.Append(argsDiags...)
 	if diags.HasError() {
 		return types.ObjectNull(agsCustomConfigAttrTypes), diags
