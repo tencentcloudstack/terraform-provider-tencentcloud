@@ -1,6 +1,6 @@
 module github.com/tencentcloudstack/terraform-provider-tencentcloud/tools
 
-go 1.18
+go 1.22.0
 
 require (
 	github.com/bflad/tfproviderdocs v0.9.1
@@ -47,7 +47,7 @@ require (
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/charithe/durationcheck v0.0.9 // indirect
 	github.com/chavacava/garif v0.0.0-20220630083739-93517212f375 // indirect
-	github.com/cloudflare/circl v1.3.3 // indirect
+	github.com/cloudflare/circl v1.6.1 // indirect
 	github.com/curioswitch/go-reassign v0.2.0 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.4 // indirect
 	github.com/daixiang0/gci v0.8.0 // indirect
