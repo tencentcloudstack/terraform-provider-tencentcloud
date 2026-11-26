@@ -1,0 +1,3 @@
+```release-note:feature
+"tencentcloud_cngw_cloud_native_api_gateway_ai_service_source": Add a cloud native API gateway AI service source resource
+```
