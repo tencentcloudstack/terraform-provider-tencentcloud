@@ -2751,6 +2751,9 @@ tencentcloud_cdwpg_restart_instance
 tencentcloud_cdwpg_userhba
 
 CSIP
+Data Source
+tencentcloud_csip_check_view_risks
+
 Resource
 tencentcloud_csip_risk_center
 

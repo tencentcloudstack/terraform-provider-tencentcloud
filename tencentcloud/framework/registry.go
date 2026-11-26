@@ -37,6 +37,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/config"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cos"
 	crs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/crs"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/csip"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dlc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ioa"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/kms"
@@ -70,6 +71,7 @@ var resourcesMap = map[string]func() resource.Resource{
 
 // dataSourcesMap maps every framework data source type name to its factory.
 var dataSourcesMap = map[string]func() datasource.DataSource{
+	"tencentcloud_csip_check_view_risks":                  csip.NewCsipCheckViewRisksDataSource,
 	"tencentcloud_config_list_aggregate_compliance_packs": config.NewConfigListAggregateCompliancePacksDataSource,
 	"tencentcloud_cos_vector_buckets":                     cos.NewCosVectorBucketsDataSource,
 	"tencentcloud_cos_vector_indexes":                     cos.NewCosVectorIndexesDataSource,

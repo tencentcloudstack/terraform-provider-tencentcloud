@@ -124,7 +124,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwdoris v1.3.188
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwpg v1.0.1126
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/controlcenter v1.1.51
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip v1.0.860
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip v1.3.213
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb v1.0.970
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbdc v1.3.174
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/fwm v1.3.206

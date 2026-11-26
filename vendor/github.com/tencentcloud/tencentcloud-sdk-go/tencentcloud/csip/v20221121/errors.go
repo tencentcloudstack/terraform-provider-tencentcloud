@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,23 +26,101 @@ const (
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
+	// FailedOperation.APIServerFail
+	FAILEDOPERATION_APISERVERFAIL = "FailedOperation.APIServerFail"
+
+	// FailedOperation.DasbAmountNotEnough
+	FAILEDOPERATION_DASBAMOUNTNOTENOUGH = "FailedOperation.DasbAmountNotEnough"
+
+	// FailedOperation.DasbErrorCode
+	FAILEDOPERATION_DASBERRORCODE = "FailedOperation.DasbErrorCode"
+
+	// FailedOperation.DasbInvalidSecretId
+	FAILEDOPERATION_DASBINVALIDSECRETID = "FailedOperation.DasbInvalidSecretId"
+
+	// FailedOperation.DasbInvalidSecretKey
+	FAILEDOPERATION_DASBINVALIDSECRETKEY = "FailedOperation.DasbInvalidSecretKey"
+
+	// FailedOperation.Export
+	FAILEDOPERATION_EXPORT = "FailedOperation.Export"
+
 	// 内部错误。
 	INTERNALERROR = "InternalError"
+
+	// 无效的过滤器
+	INVALIDFILTER = "InvalidFilter"
 
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
 
+	// InvalidParameter.DateRange
+	INVALIDPARAMETER_DATERANGE = "InvalidParameter.DateRange"
+
+	// Decrypt error
+	INVALIDPARAMETER_DECRYPTERROR = "InvalidParameter.DecryptError"
+
+	// InvalidParameter.DuplicateParameters
+	INVALIDPARAMETER_DUPLICATEPARAMETERS = "InvalidParameter.DuplicateParameters"
+
+	// InvalidParameter.IllegalRequest
+	INVALIDPARAMETER_ILLEGALREQUEST = "InvalidParameter.IllegalRequest"
+
+	// InvalidParameter.InstanceNotExist
+	INVALIDPARAMETER_INSTANCENOTEXIST = "InvalidParameter.InstanceNotExist"
+
+	// InvalidParameter.InvalidFormat
+	INVALIDPARAMETER_INVALIDFORMAT = "InvalidParameter.InvalidFormat"
+
+	// InvalidParameter.MissingParameter
+	INVALIDPARAMETER_MISSINGPARAMETER = "InvalidParameter.MissingParameter"
+
+	// InvalidParameter.ParsingError
+	INVALIDPARAMETER_PARSINGERROR = "InvalidParameter.ParsingError"
+
+	// InvalidParameter.RegexRuleError
+	INVALIDPARAMETER_REGEXRULEERROR = "InvalidParameter.RegexRuleError"
+
+	// InvalidParameter.ResourceId
+	INVALIDPARAMETER_RESOURCEID = "InvalidParameter.ResourceId"
+
+	// InvalidParameter.ResourceIdError
+	INVALIDPARAMETER_RESOURCEIDERROR = "InvalidParameter.ResourceIdError"
+
+	// InvalidParameter.ReverShellKeyFieldAllEmpty
+	INVALIDPARAMETER_REVERSHELLKEYFIELDALLEMPTY = "InvalidParameter.ReverShellKeyFieldAllEmpty"
+
+	// InvalidParameter.RuleHostDuplicateErr
+	INVALIDPARAMETER_RULEHOSTDUPLICATEERR = "InvalidParameter.RuleHostDuplicateErr"
+
+	// InvalidParameter.RuleHostipErr
+	INVALIDPARAMETER_RULEHOSTIPERR = "InvalidParameter.RuleHostipErr"
+
+	// InvalidParameter.TopicNotExist
+	INVALIDPARAMETER_TOPICNOTEXIST = "InvalidParameter.TopicNotExist"
+
+	// 无效参数组合
+	INVALIDPARAMETERCOMBINATION = "InvalidParameterCombination"
+
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
 
+	// SQL 查询失败
+	INVALIDPARAMETERVALUE_SQLQUERYFAILED = "InvalidParameterValue.SQLQueryFailed"
+
 	// 超过配额限制。
 	LIMITEXCEEDED = "LimitExceeded"
+
+	// LimitExceeded.AreaQuota
+	LIMITEXCEEDED_AREAQUOTA = "LimitExceeded.AreaQuota"
 
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
 
 	// 操作被拒绝。
 	OPERATIONDENIED = "OperationDenied"
+
+	// 地域错误
+	REGIONERROR = "RegionError"
 
 	// 请求的次数超过了频率限制。
 	REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
@@ -52,6 +130,9 @@ const (
 
 	// 资源不足。
 	RESOURCEINSUFFICIENT = "ResourceInsufficient"
+
+	// 日志分析量不足
+	RESOURCEINSUFFICIENT_LOGANALYSISQUANTITYINSUFFICIENT = "ResourceInsufficient.LogAnalysisQuantityInsufficient"
 
 	// 资源不存在。
 	RESOURCENOTFOUND = "ResourceNotFound"
@@ -64,6 +145,15 @@ const (
 
 	// 未授权操作。
 	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+
+	// 未授权操作“操作审计”产品
+	UNAUTHORIZEDOPERATION_CLOUDAUDIT = "UnauthorizedOperation.CloudAudit"
+
+	// 未授权操作“对象存储”产品
+	UNAUTHORIZEDOPERATION_COS = "UnauthorizedOperation.Cos"
+
+	// UnauthorizedOperation.NoPermission
+	UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 
 	// 未知参数错误。
 	UNKNOWNPARAMETER = "UnknownParameter"
