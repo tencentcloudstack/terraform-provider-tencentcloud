@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	agsv20250920 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ags/v20250920"
@@ -129,7 +130,7 @@ func (c *agsSandboxInstanceTestContext) sampleModel(t *testing.T) svcags.AgsSand
 			"image":               types.StringValue("img:1"),
 			"image_registry_type": types.StringValue("personal"),
 			"command":             mustStringSet(t, "/bin/sh"),
-			"args":                mustStringSet(t, "-c"),
+			"args":                mustStringList(t, "-c"),
 			"env": mustList(t, envTypes, map[string]attr.Value{
 				"name":  types.StringValue("K"),
 				"value": types.StringValue("V"),
@@ -152,7 +153,6 @@ func (c *agsSandboxInstanceTestContext) sampleModel(t *testing.T) svcags.AgsSand
 		NetworkMode:           types.StringNull(),
 		Persistent:            types.BoolNull(),
 		Status:                types.StringNull(),
-		TimeoutSeconds:        types.Int64Null(),
 		ExpiresAt:             types.StringNull(),
 		StopReason:            types.StringNull(),
 		CreateTime:            types.StringNull(),
@@ -214,7 +214,6 @@ func (c *agsSandboxInstanceTestContext) nullModel(t *testing.T) svcags.AgsSandbo
 		NetworkMode:           types.StringNull(),
 		Persistent:            types.BoolNull(),
 		Status:                types.StringNull(),
-		TimeoutSeconds:        types.Int64Null(),
 		ExpiresAt:             types.StringNull(),
 		StopReason:            types.StringNull(),
 		CreateTime:            types.StringNull(),
@@ -231,12 +230,12 @@ func TestAgsSandboxInstanceSchema(t *testing.T) {
 	testContext := newAgsSandboxInstanceTestContext(t, patches)
 	top := testContext.schema.Attributes
 
-	if len(top) != 20 {
-		t.Fatalf("schema has %d attributes, want 20", len(top))
+	if len(top) != 19 {
+		t.Fatalf("schema has %d attributes, want 19", len(top))
 	}
 
 	computed := []string{
-		"id", "instance_id", "network_mode", "persistent", "status", "timeout_seconds",
+		"id", "instance_id", "network_mode", "persistent", "status",
 		"expires_at", "stop_reason", "create_time", "update_time", "computer_configuration",
 	}
 	for _, name := range computed {
@@ -262,8 +261,14 @@ func TestAgsSandboxInstanceSchema(t *testing.T) {
 			t.Fatalf("attribute %q must be optional", name)
 		}
 	}
-	if modifiers := top["timeout"].(schema.StringAttribute).PlanModifiers; len(modifiers) != 0 {
-		t.Fatalf("attribute timeout must not require replacement")
+	// timeout is refreshed from the cloud side timeout in seconds: it is computed
+	// and carries the compatibility modifier, which never replaces the resource.
+	timeout := top["timeout"].(schema.StringAttribute)
+	if !timeout.Computed {
+		t.Fatalf("attribute timeout must be computed")
+	}
+	if len(timeout.PlanModifiers) == 0 {
+		t.Fatalf("attribute timeout must carry a plan modifier")
 	}
 	if modifiers := top["metadata"].(schema.ListNestedAttribute).PlanModifiers; len(modifiers) != 0 {
 		t.Fatalf("attribute metadata must not require replacement")
@@ -379,19 +384,72 @@ func TestAgsSandboxInstanceCreate(t *testing.T) {
 	if state.NetworkMode.ValueString() != "PUBLIC" {
 		t.Fatalf("state network_mode is %q, want PUBLIC", state.NetworkMode.ValueString())
 	}
-	if state.TimeoutSeconds.ValueInt64() != 3600 {
-		t.Fatalf("state timeout_seconds is %d, want 3600", state.TimeoutSeconds.ValueInt64())
+	if state.Timeout.ValueString() != "30m" {
+		t.Fatalf("state timeout is %q, want the configured 30m", state.Timeout.ValueString())
 	}
 	if !state.Persistent.ValueBool() {
 		t.Fatalf("state persistent is not true")
 	}
-	// metadata is reported back by the cloud, so the cloud value wins.
+	// metadata is reported back by the cloud, so the cloud value wins for the
+	// configured entries (the system owned ones are filtered out).
 	elements := listElements(t, map[string]attr.Value{"metadata": state.Metadata}, "metadata")
 	if len(elements) != 1 {
 		t.Fatalf("state metadata has %d elements, want 1", len(elements))
 	}
 	if value := elements[0].(types.Object).Attributes()["value"].(types.String); value.ValueString() != "cloud-value" {
 		t.Fatalf("state metadata value is %q, want cloud-value", value.ValueString())
+	}
+}
+
+// TestAgsSandboxInstanceCreateIgnoresReservedMetadata verifies that the entries
+// the cloud adds on its own (x-ags- prefix) are filtered out of the state. They
+// are not part of the configuration, so keeping them makes Terraform fail the
+// apply with "new element N has appeared".
+func TestAgsSandboxInstanceCreateIgnoresReservedMetadata(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	testContext := newAgsSandboxInstanceTestContext(t, patches)
+	patches.ApplyMethodReturn(
+		testContext.client,
+		"StartSandboxInstanceWithContext",
+		&agsv20250920.StartSandboxInstanceResponse{
+			Response: &agsv20250920.StartSandboxInstanceResponseParams{
+				Instance: &agsv20250920.SandboxInstance{InstanceId: agsString(agsSandboxInstanceTestId)},
+			},
+		},
+		nil,
+	)
+
+	instance := sampleInstance()
+	instance.Metadata = []*agsv20250920.MetadataVar{
+		{Name: agsString("run_id"), Value: agsString("tf-example")},
+		{Name: agsString("x-ags-precreate-match"), Value: agsString("skipped")},
+	}
+	patches.ApplyMethodReturn(
+		testContext.client,
+		"DescribeSandboxInstancesWithContext",
+		describeSandboxInstancesResponse(instance),
+		nil,
+	)
+
+	model := testContext.sampleModel(t)
+	createResp := &resource.CreateResponse{State: tfsdk.State{Schema: testContext.schema}}
+	testContext.resource.Create(context.Background(), resource.CreateRequest{Plan: testContext.plan(t, model)}, createResp)
+	if createResp.Diagnostics.HasError() {
+		t.Fatalf("unexpected error diagnostics: %v", createResp.Diagnostics.Errors())
+	}
+
+	var state svcags.AgsSandboxInstanceResourceModel
+	if diags := createResp.State.Get(context.Background(), &state); diags.HasError() {
+		t.Fatalf("failed to read state: %v", diags.Errors())
+	}
+	elements := listElements(t, map[string]attr.Value{"metadata": state.Metadata}, "metadata")
+	if len(elements) != 1 {
+		t.Fatalf("state metadata has %d elements, want the single planned one", len(elements))
+	}
+	if name := elements[0].(types.Object).Attributes()["name"].(types.String); name.ValueString() != "run_id" {
+		t.Fatalf("state metadata name is %q, want run_id", name.ValueString())
 	}
 }
 
@@ -477,6 +535,10 @@ func TestAgsSandboxInstanceRead(t *testing.T) {
 	}
 	if state.Status.ValueString() != "RUNNING" {
 		t.Fatalf("state status is %q, want RUNNING", state.Status.ValueString())
+	}
+	// timeout is answered in seconds only: the read renders it back.
+	if state.Timeout.ValueString() != "1h" {
+		t.Fatalf("state timeout is %q, want the rendered 1h", state.Timeout.ValueString())
 	}
 	if state.StopReason.ValueString() != "manual" {
 		t.Fatalf("state stop_reason is %q, want manual", state.StopReason.ValueString())
@@ -646,6 +708,82 @@ func TestAgsSandboxInstanceUpdate(t *testing.T) {
 	}
 }
 
+// TestAgsSandboxInstanceUpdateResendsReservedMetadata verifies that the system
+// owned metadata entries (x-ags- prefix) are sent back with an update. The
+// request replaces the whole list, so dropping them would break the bookkeeping
+// the cloud side keeps in the metadata.
+func TestAgsSandboxInstanceUpdateResendsReservedMetadata(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	testContext := newAgsSandboxInstanceTestContext(t, patches)
+
+	var capturedRequest *agsv20250920.UpdateSandboxInstanceRequest
+	patches.ApplyMethodFunc(
+		testContext.client,
+		"UpdateSandboxInstanceWithContext",
+		func(_ context.Context, request *agsv20250920.UpdateSandboxInstanceRequest) (*agsv20250920.UpdateSandboxInstanceResponse, error) {
+			capturedRequest = request
+			return &agsv20250920.UpdateSandboxInstanceResponse{
+				Response: &agsv20250920.UpdateSandboxInstanceResponseParams{},
+			}, nil
+		},
+	)
+
+	instance := sampleInstance()
+	instance.Metadata = []*agsv20250920.MetadataVar{
+		{Name: agsString("run_id"), Value: agsString("tf-example")},
+		{Name: agsString("x-ags-precreate-match"), Value: agsString("skipped")},
+	}
+	patches.ApplyMethodReturn(
+		testContext.client,
+		"DescribeSandboxInstancesWithContext",
+		describeSandboxInstancesResponse(instance),
+		nil,
+	)
+
+	stateModel := testContext.sampleModel(t)
+	stateModel.Id = types.StringValue(agsSandboxInstanceTestId)
+	stateModel.InstanceId = types.StringValue(agsSandboxInstanceTestId)
+
+	planModel := testContext.sampleModel(t)
+	planModel.Id = types.StringValue(agsSandboxInstanceTestId)
+	planModel.InstanceId = types.StringValue(agsSandboxInstanceTestId)
+	planModel.Timeout = types.StringValue("1h")
+
+	updateResp := &resource.UpdateResponse{State: tfsdk.State{Schema: testContext.schema}}
+	testContext.resource.Update(
+		context.Background(),
+		resource.UpdateRequest{Plan: testContext.plan(t, planModel), State: testContext.state(t, stateModel)},
+		updateResp,
+	)
+	if updateResp.Diagnostics.HasError() {
+		t.Fatalf("unexpected error diagnostics: %v", updateResp.Diagnostics.Errors())
+	}
+
+	if capturedRequest == nil {
+		t.Fatalf("UpdateSandboxInstance was not called")
+	}
+	if len(capturedRequest.Metadata) != 2 {
+		t.Fatalf("UpdateSandboxInstance Metadata has %d elements, want the configured one plus the system one", len(capturedRequest.Metadata))
+	}
+	if name := capturedRequest.Metadata[0].Name; name == nil || *name != "run_id" {
+		t.Fatalf("UpdateSandboxInstance Metadata[0].Name is not run_id")
+	}
+	if name := capturedRequest.Metadata[1].Name; name == nil || *name != "x-ags-precreate-match" {
+		t.Fatalf("UpdateSandboxInstance Metadata[1].Name is not x-ags-precreate-match")
+	}
+
+	var state svcags.AgsSandboxInstanceResourceModel
+	if diags := updateResp.State.Get(context.Background(), &state); diags.HasError() {
+		t.Fatalf("failed to read state: %v", diags.Errors())
+	}
+	elements := listElements(t, map[string]attr.Value{"metadata": state.Metadata}, "metadata")
+	if len(elements) != 1 {
+		t.Fatalf("state metadata has %d elements, want the single configured one", len(elements))
+	}
+}
+
 // TestAgsSandboxInstanceUpdateWithoutChange verifies that the write API is not
 // called when no update covered attribute changed.
 func TestAgsSandboxInstanceUpdateWithoutChange(t *testing.T) {
@@ -784,5 +922,323 @@ func TestAgsSandboxInstanceDeleteApiError(t *testing.T) {
 	testContext.resource.Delete(context.Background(), resource.DeleteRequest{State: testContext.state(t, model)}, deleteResp)
 	if !deleteResp.Diagnostics.HasError() {
 		t.Fatalf("expected an error diagnostic on API failure")
+	}
+}
+
+// customConfigurationValue builds a custom_configuration object, so the plan
+// modifier tests can spell out only the attributes that matter for them.
+func (c *agsSandboxInstanceTestContext) customConfigurationValue(t *testing.T, overrides map[string]attr.Value) types.Object {
+	t.Helper()
+
+	customTypes, _, _, _ := c.agsSandboxInstanceAttributeTypes(t)
+	customAttributes := c.schema.Attributes["custom_configuration"].(schema.SingleNestedAttribute).Attributes
+	envTypes := listElementAttributeTypes(t, customAttributes, "env")
+	portTypes := listElementAttributeTypes(t, customAttributes, "ports")
+
+	values := map[string]attr.Value{
+		"image":               types.StringValue("img:1"),
+		"image_registry_type": types.StringValue("personal"),
+		"command":             mustStringSet(t, "/bin/sh"),
+		"args":                mustStringList(t, "-c"),
+		"env": mustList(t, envTypes, map[string]attr.Value{
+			"name":  types.StringValue("K"),
+			"value": types.StringValue("V"),
+		}),
+		"ports": mustList(t, portTypes, map[string]attr.Value{
+			"name":     types.StringValue("http"),
+			"port":     types.Int64Value(8080),
+			"protocol": types.StringValue("TCP"),
+		}),
+		"resources":        types.ObjectNull(objectAttributeTypes(t, customAttributes, "resources")),
+		"probe":            types.ObjectNull(objectAttributeTypes(t, customAttributes, "probe")),
+		"dns_config":       types.ObjectNull(objectAttributeTypes(t, customAttributes, "dns_config")),
+		"security_context": types.ObjectNull(objectAttributeTypes(t, customAttributes, "security_context")),
+	}
+	for name, value := range overrides {
+		values[name] = value
+	}
+
+	return mustObject(t, customTypes, values)
+}
+
+// TestAgsSandboxInstanceCustomConfigurationPlanModifier verifies that the
+// normalized cloud answer (1000m instead of 1, 1024Mi instead of 1Gi, the
+// storage inherited from the tool) does not require a replacement, while a real
+// change still does. The planned value keeps the configuration spelling, so the
+// state converges back to it instead of drifting to the normalized cloud form on
+// every plan.
+func TestAgsSandboxInstanceCustomConfigurationPlanModifier(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	testContext := newAgsSandboxInstanceTestContext(t, patches)
+	customAttributes := testContext.schema.Attributes["custom_configuration"].(schema.SingleNestedAttribute).Attributes
+	modifiers := testContext.schema.Attributes["custom_configuration"].(schema.SingleNestedAttribute).PlanModifiers
+	if len(modifiers) == 0 {
+		t.Fatalf("custom_configuration has no plan modifiers")
+	}
+	resourcesTypes := objectAttributeTypes(t, customAttributes, "resources")
+	customTypes, _, _, _ := testContext.agsSandboxInstanceAttributeTypes(t)
+
+	configValue := testContext.customConfigurationValue(t, map[string]attr.Value{
+		"resources": mustObject(t, resourcesTypes, map[string]attr.Value{
+			"cpu":     types.StringValue("1"),
+			"memory":  types.StringValue("1Gi"),
+			"storage": types.StringNull(),
+		}),
+	})
+	stateValue := testContext.customConfigurationValue(t, map[string]attr.Value{
+		"resources": mustObject(t, resourcesTypes, map[string]attr.Value{
+			"cpu":     types.StringValue("1000m"),
+			"memory":  types.StringValue("1024Mi"),
+			"storage": types.StringValue("1024Mi"),
+		}),
+	})
+	changedValue := testContext.customConfigurationValue(t, map[string]attr.Value{
+		"image": types.StringValue("img:2"),
+	})
+
+	cases := []struct {
+		name    string
+		config  types.Object
+		state   types.Object
+		replace bool
+	}{
+		{name: "normalized cloud answer", config: configValue, state: stateValue, replace: false},
+		{name: "changed image", config: changedValue, state: stateValue, replace: true},
+		{name: "unset configuration", config: types.ObjectNull(customTypes), state: stateValue, replace: false},
+		{name: "no prior state", config: configValue, state: types.ObjectNull(customTypes), replace: true},
+	}
+
+	for _, testCase := range cases {
+		t.Run(testCase.name, func(t *testing.T) {
+			resp := &planmodifier.ObjectResponse{PlanValue: testCase.config}
+			modifiers[0].PlanModifyObject(
+				context.Background(),
+				planmodifier.ObjectRequest{
+					Config:      tfsdk.Config{Schema: testContext.schema},
+					Plan:        testContext.plan(t, testContext.sampleModel(t)),
+					State:       testContext.state(t, testContext.sampleModel(t)),
+					ConfigValue: testCase.config,
+					PlanValue:   testCase.config,
+					StateValue:  testCase.state,
+				},
+				resp,
+			)
+
+			if resp.RequiresReplace != testCase.replace {
+				t.Fatalf("requires replacement is %t, want %t", resp.RequiresReplace, testCase.replace)
+			}
+			if !resp.PlanValue.Equal(testCase.config) {
+				t.Fatalf("the plan modifier must keep the configured value")
+			}
+		})
+	}
+}
+
+// TestAgsSandboxInstanceMountOptionsPlanModifier verifies that the mount values
+// inherited from the tool are ignored when the configuration only spells out the
+// storage name.
+func TestAgsSandboxInstanceMountOptionsPlanModifier(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	testContext := newAgsSandboxInstanceTestContext(t, patches)
+	_, _, mountOptionTypes, _ := testContext.agsSandboxInstanceAttributeTypes(t)
+	modifiers := testContext.schema.Attributes["mount_options"].(schema.ListNestedAttribute).PlanModifiers
+	if len(modifiers) == 0 {
+		t.Fatalf("mount_options has no plan modifiers")
+	}
+
+	configValue := mustList(t, mountOptionTypes, map[string]attr.Value{
+		"name":       types.StringValue("workspace"),
+		"mount_path": types.StringNull(),
+		"sub_path":   types.StringNull(),
+		"read_only":  types.BoolNull(),
+	})
+	stateValue := mustList(t, mountOptionTypes, map[string]attr.Value{
+		"name":       types.StringValue("workspace"),
+		"mount_path": types.StringValue("/workspace"),
+		"sub_path":   types.StringValue("/sub"),
+		"read_only":  types.BoolValue(true),
+	})
+
+	resp := &planmodifier.ListResponse{PlanValue: configValue}
+	modifiers[0].PlanModifyList(
+		context.Background(),
+		planmodifier.ListRequest{
+			Config:      tfsdk.Config{Schema: testContext.schema},
+			Plan:        testContext.plan(t, testContext.sampleModel(t)),
+			State:       testContext.state(t, testContext.sampleModel(t)),
+			ConfigValue: configValue,
+			PlanValue:   configValue,
+			StateValue:  stateValue,
+		},
+		resp,
+	)
+	if resp.RequiresReplace {
+		t.Fatalf("the inherited mount values must not require a replacement")
+	}
+	if !resp.PlanValue.Equal(configValue) {
+		t.Fatalf("the plan modifier must keep the configured value")
+	}
+}
+
+// TestAgsSandboxInstanceReadFillsCreateOnlyInputs verifies that a read on a
+// state built from the id only (the import path) adopts the create-only inputs,
+// so the next plan does not propose a replacement.
+func TestAgsSandboxInstanceReadFillsCreateOnlyInputs(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	testContext := newAgsSandboxInstanceTestContext(t, patches)
+
+	instance := sampleInstance()
+	instance.CustomConfiguration = &agsv20250920.CustomConfigurationDetail{
+		Image: agsString("img:1"),
+		Resources: &agsv20250920.ResourceConfiguration{
+			CPU:     agsString("1000m"),
+			Memory:  agsString("1024Mi"),
+			Storage: agsString("1024Mi"),
+		},
+	}
+	instance.MountOptions = []*agsv20250920.MountOption{
+		{Name: agsString("workspace"), MountPath: agsString("/workspace"), ReadOnly: agsBool(false)},
+	}
+	patches.ApplyMethodReturn(
+		testContext.client,
+		"DescribeSandboxInstancesWithContext",
+		describeSandboxInstancesResponse(instance),
+		nil,
+	)
+
+	model := testContext.nullModel(t)
+	readResp := &resource.ReadResponse{State: testContext.state(t, model)}
+	testContext.resource.Read(context.Background(), resource.ReadRequest{State: testContext.state(t, model)}, readResp)
+	if readResp.Diagnostics.HasError() {
+		t.Fatalf("unexpected error diagnostics: %v", readResp.Diagnostics.Errors())
+	}
+
+	var state svcags.AgsSandboxInstanceResourceModel
+	if diags := readResp.State.Get(context.Background(), &state); diags.HasError() {
+		t.Fatalf("failed to read state: %v", diags.Errors())
+	}
+	// timeout is rendered from the cloud side seconds when the state has none.
+	if state.Timeout.ValueString() != "1h" {
+		t.Fatalf("state timeout is %q, want the rendered 1h", state.Timeout.ValueString())
+	}
+	if state.CustomConfiguration.IsNull() {
+		t.Fatalf("custom_configuration must be filled from the cloud answer")
+	}
+	if image := state.CustomConfiguration.Attributes()["image"].(types.String); image.ValueString() != "img:1" {
+		t.Fatalf("state image is %q, want img:1", image.ValueString())
+	}
+
+	elements := listElements(t, map[string]attr.Value{"mount_options": state.MountOptions}, "mount_options")
+	if len(elements) != 1 {
+		t.Fatalf("state mount_options has %d elements, want 1", len(elements))
+	}
+	if name := elements[0].(types.Object).Attributes()["name"].(types.String); name.ValueString() != "workspace" {
+		t.Fatalf("state mount option name is %q, want workspace", name.ValueString())
+	}
+}
+
+// TestAgsSandboxInstanceReadKeepsConfiguredTimeout verifies that a read does not
+// overwrite the configured timeout: the cloud answer is adopted only when the
+// state carries no value yet.
+func TestAgsSandboxInstanceReadKeepsConfiguredTimeout(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	testContext := newAgsSandboxInstanceTestContext(t, patches)
+	patches.ApplyMethodReturn(
+		testContext.client,
+		"DescribeSandboxInstancesWithContext",
+		describeSandboxInstancesResponse(sampleInstance()),
+		nil,
+	)
+
+	model := testContext.sampleModel(t)
+	model.Id = types.StringValue(agsSandboxInstanceTestId)
+	model.InstanceId = types.StringValue(agsSandboxInstanceTestId)
+	model.Timeout = types.StringValue("30m")
+
+	readResp := &resource.ReadResponse{State: testContext.state(t, model)}
+	testContext.resource.Read(context.Background(), resource.ReadRequest{State: testContext.state(t, model)}, readResp)
+	if readResp.Diagnostics.HasError() {
+		t.Fatalf("unexpected error diagnostics: %v", readResp.Diagnostics.Errors())
+	}
+
+	var state svcags.AgsSandboxInstanceResourceModel
+	if diags := readResp.State.Get(context.Background(), &state); diags.HasError() {
+		t.Fatalf("failed to read state: %v", diags.Errors())
+	}
+	if state.Timeout.ValueString() != "30m" {
+		t.Fatalf("state timeout is %q, want the configured 30m", state.Timeout.ValueString())
+	}
+}
+
+// TestAgsSandboxInstanceReadKeepsConfiguredCustomConfiguration verifies that a
+// read keeps the configuration spelling of custom_configuration while the cloud
+// answer is equivalent to it. Writing the normalized answer back would leave the
+// state different from the configuration and make every plan an in-place update.
+func TestAgsSandboxInstanceReadKeepsConfiguredCustomConfiguration(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	testContext := newAgsSandboxInstanceTestContext(t, patches)
+
+	model := testContext.sampleModel(t)
+	model.Id = types.StringValue(agsSandboxInstanceTestId)
+	model.InstanceId = types.StringValue(agsSandboxInstanceTestId)
+	customAttributes := testContext.schema.Attributes["custom_configuration"].(schema.SingleNestedAttribute).Attributes
+	resourcesTypes := objectAttributeTypes(t, customAttributes, "resources")
+	model.CustomConfiguration = testContext.customConfigurationValue(t, map[string]attr.Value{
+		"resources": mustObject(t, resourcesTypes, map[string]attr.Value{
+			"cpu":     types.StringValue("1"),
+			"memory":  types.StringValue("1Gi"),
+			"storage": types.StringNull(),
+		}),
+	})
+
+	// The cloud answers the same values in their normalized form plus the
+	// storage inherited from the tool.
+	instance := sampleInstance()
+	instance.CustomConfiguration = &agsv20250920.CustomConfigurationDetail{
+		Image:             agsString("img:1"),
+		ImageRegistryType: agsString("personal"),
+		Command:           []*string{agsString("/bin/sh")},
+		Args:              []*string{agsString("-c")},
+		Env: []*agsv20250920.EnvVar{
+			{Name: agsString("K"), Value: agsString("V")},
+		},
+		Ports: []*agsv20250920.PortConfiguration{
+			{Name: agsString("http"), Port: agsInt64(8080), Protocol: agsString("TCP")},
+		},
+		Resources: &agsv20250920.ResourceConfiguration{
+			CPU:     agsString("1000m"),
+			Memory:  agsString("1024Mi"),
+			Storage: agsString("1024Mi"),
+		},
+	}
+	patches.ApplyMethodReturn(
+		testContext.client,
+		"DescribeSandboxInstancesWithContext",
+		describeSandboxInstancesResponse(instance),
+		nil,
+	)
+
+	readResp := &resource.ReadResponse{State: testContext.state(t, model)}
+	testContext.resource.Read(context.Background(), resource.ReadRequest{State: testContext.state(t, model)}, readResp)
+	if readResp.Diagnostics.HasError() {
+		t.Fatalf("unexpected error diagnostics: %v", readResp.Diagnostics.Errors())
+	}
+
+	var state svcags.AgsSandboxInstanceResourceModel
+	if diags := readResp.State.Get(context.Background(), &state); diags.HasError() {
+		t.Fatalf("failed to read state: %v", diags.Errors())
+	}
+	if !state.CustomConfiguration.Equal(model.CustomConfiguration) {
+		t.Fatalf("state custom_configuration was rewritten from the cloud answer")
 	}
 }

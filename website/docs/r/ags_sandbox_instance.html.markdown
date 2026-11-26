@@ -11,52 +11,124 @@ description: |-
 
 Provides a resource to start an AGS sandbox instance.
 
+~> **NOTE:** The `x-ags-` name prefix of `metadata` is reserved by the system. Such entries are added by the cloud side (for example `x-ags-precreate-match`), are not tracked in the state and must not be configured, otherwise a permanent diff is reported.
+
+~> **NOTE:** The timeout of a sandbox instance that is not persistent is enforced by the cloud side: the instance is reclaimed automatically when `timeout` expires. Such an instance is removed from the state during the next refresh, so the next `terraform apply` creates a new sandbox instance instead of updating the existing one.
+
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_ags_sandbox_instance" "example" {
-  tool_name = "tf-example-tool"
-  timeout   = "30m"
-  auth_mode = "DEFAULT"
-
-  mount_options = [
-    {
-      name       = "workspace"
-      mount_path = "/workspace"
-      read_only  = false
-    },
-  ]
-
+resource "tencentcloud_ags_sandbox_tool" "custom1" {
   custom_configuration = {
-    image               = "ccr.ccs.tencentyun.com/tf-example/go-httpbin:v2.16.1"
+    args                = ["/nix/runtime/nexus/deployment/runtime/start.sh", "-H", "0.0.0.0", "-p", "8000", "-v", "3.12"]
+    command             = ["/nix/runtime/nix-env/bin/bash"]
+    dns_config          = null
+    env                 = null
+    image               = "ccr.ccs.tencentyun.com/finofliu/go-httpbin:2.19-alpine-with-envd"
     image_registry_type = "personal"
-    command             = ["/bin/go-httpbin"]
-    args                = ["-port", "8080"]
     ports = [
       {
         name     = "http"
-        port     = 8080
+        port     = 8000
         protocol = "TCP"
       },
     ]
-    resources = {
-      cpu    = "1"
-      memory = "1Gi"
+    probe = {
+      failure_threshold = 10
+      http_get = {
+        path   = "/health"
+        port   = 8000
+        scheme = "HTTP"
+      }
+      probe_period_ms   = 3000
+      probe_timeout_ms  = 1000
+      ready_timeout_ms  = 30000
+      success_threshold = 1
     }
-    env = [
-      {
-        name  = "EXAMPLE_KEY"
-        value = "example-value"
-      },
-    ]
+    resources = {
+      cpu    = "2"
+      memory = "2Gi"
+    }
   }
-
-  metadata = [
+  description = "image-volume regression baseline"
+  network_configuration = {
+    network_mode = "PUBLIC"
+  }
+  persistent = false
+  role_arn   = "qcs::cam::uin/3321337994:roleName/cos-tcr-full-ags"
+  storage_mounts = [
     {
-      name  = "run_id"
-      value = "tf-example"
+      mount_path = "/nix"
+      name       = "nix-runtime"
+      read_only  = true
+      storage_source = {
+        image = {
+          image_registry_type = "enterprise"
+          reference           = "tencentags-guangzhou-994-test.tencentcloudcr.com/ags-e2e/nexus-runtime:0.2.2"
+          sub_path            = "nix"
+        }
+      }
+    },
+    {
+      mount_path = "/mnt/same-name-runtime"
+      name       = "runtime"
+      read_only  = true
+      storage_source = {
+        image = {
+          image_registry_type = "enterprise"
+          reference           = "tencentags-guangzhou-994-test.tencentcloudcr.com/ags-e2e/nexus-runtime:0.2.2"
+          sub_path            = "nix/runtime/nix-env/bin"
+        }
+      }
     },
   ]
+  tool_name = "tf-test"
+  tool_type = "custom"
+}
+
+resource "tencentcloud_ags_sandbox_instance" "example1" {
+  auth_mode = "DEFAULT"
+  custom_configuration = {
+    args                = ["/nix/runtime/nexus/deployment/runtime/start.sh", "-H", "0.0.0.0", "-p", "8000", "-v", "3.12"]
+    command             = ["/nix/runtime/nix-env/bin/bash"]
+    image               = "ccr.ccs.tencentyun.com/finofliu/go-httpbin:2.19-alpine-with-envd"
+    image_registry_type = "personal"
+    ports = [
+      {
+        name     = "http"
+        port     = 8000
+        protocol = "TCP"
+      },
+    ]
+    probe = {
+      failure_threshold = 10
+      http_get = {
+        path   = "/health"
+        port   = 8000
+        scheme = "HTTP"
+      }
+      probe_period_ms   = 3000
+      probe_timeout_ms  = 1000
+      ready_timeout_ms  = 30000
+      success_threshold = 1
+    }
+    resources = {
+      cpu    = "2"
+      memory = "2Gi"
+    }
+  }
+  mount_options = [
+    {
+      mount_path = "/nix"
+      name       = "nix-runtime"
+    },
+    {
+      mount_path = "/mnt/same-name-runtime"
+      name       = "runtime"
+    },
+  ]
+  timeout   = "5m"
+  tool_name = tencentcloud_ags_sandbox_tool.custom1.tool_name
 }
 ```
 
@@ -66,17 +138,17 @@ The following arguments are supported:
 
 * `auth_mode` - (Optional, String) Authentication mode of the sandbox access. Valid values: `DEFAULT` (token authentication, the default value), `TOKEN` (token authentication, every port access requires a token), `NONE` (no authentication, no port access requires a token), `PUBLIC` (public mode, the ENVD management port 49983 requires a token while other ports do not).
 * `custom_configuration` - (Optional, Object) Custom configuration of the sandbox instance.
-* `metadata` - (Optional, List) Metadata of the sandbox instance.
+* `metadata` - (Optional, List) Metadata of the sandbox instance. The `x-ags-` name prefix is reserved by the system: such entries are added by the cloud side, are not tracked in the state and must not be configured, otherwise a permanent diff is reported.
 * `mount_options` - (Optional, List) Storage mount configuration of the sandbox instance.
 * `snapshot_id` - (Optional, String) Id of the sandbox snapshot to start from.
 * `source_instance_id` - (Optional, String) Id of the source sandbox instance to clone.
-* `timeout` - (Optional, String) How long the sandbox instance keeps running before it is reclaimed automatically, for example `5m`, `300s` or `1h`. Default value: `5m`. Minimum `30s`, maximum `24h`.
+* `timeout` - (Optional, String) How long the sandbox instance keeps running before it is reclaimed automatically, for example `5m`, `300s` or `1h`. Default value: `5m`. Minimum `30s`, maximum `24h`. It is refreshed from the cloud side timeout in seconds on read.
 * `tool_id` - (Optional, String) Id of the sandbox tool. At least one of `tool_id` and `tool_name` must be specified.
 * `tool_name` - (Optional, String) Name of the sandbox tool. At least one of `tool_id` and `tool_name` must be specified.
 
 The `custom_configuration` object supports the following:
 
-* `args` - (Optional, Set) Startup arguments.
+* `args` - (Optional, List) Startup arguments. The order is preserved.
 * `command` - (Optional, Set) Startup command.
 * `dns_config` - (Optional, Object) Sandbox DNS configuration.
 * `env` - (Optional, List) Environment variables.
@@ -137,7 +209,7 @@ The `capabilities` object of `security_context` supports the following:
 
 The `metadata` object supports the following:
 
-* `name` - (Optional, String) Metadata name.
+* `name` - (Optional, String) Metadata name. The `x-ags-` prefix is reserved by the system and must not be used here, otherwise a permanent diff is reported.
 * `value` - (Optional, String) Metadata value.
 
 The `mount_options` object supports the following:
@@ -164,7 +236,6 @@ In addition to all arguments above, the following attributes are exported:
 * `persistent` - Whether the sandbox instance is a persistent instance.
 * `status` - Status of the instance. Valid values: `STARTING` (starting), `RUNNING` (running), `STOPPING` (stopping), `STOPPED` (stopped), `STOP_FAILED` (stop failed), `FAILED` (failed), `RESIZING` (the specification is being updated).
 * `stop_reason` - Stop reason: `manual` (manual), `timeout` (timeout), `error` (error) or `system` (system). It only has a value when the status is `STOPPED`, `STOP_FAILED` or `FAILED`. When the provider fails to stop the instance, the status is `STOP_FAILED` and the reason is `error`.
-* `timeout_seconds` - Timeout in seconds. `null` means no timeout is configured.
 * `update_time` - Last update time in ISO 8601 format.
 
 ## API Reference
