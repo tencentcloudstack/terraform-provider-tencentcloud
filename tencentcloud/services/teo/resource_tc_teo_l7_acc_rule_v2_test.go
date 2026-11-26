@@ -1,10 +1,19 @@
 package teo_test
 
 import (
+	"context"
 	"testing"
 
+	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/stretchr/testify/assert"
+	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
+
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	svcteo "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 )
 
 func TestAccTencentCloudTeoL7AccRuleV2Resource_basic(t *testing.T) {
@@ -187,3 +196,360 @@ resource "tencentcloud_teo_l7_acc_rule_v2" "teo_l7_acc_rule_v2" {
 `
 
 // go test ./tencentcloud/services/teo/ -run "TestL7AccRuleV2" -v -count=1 -gcflags="all=-l"
+
+// ---- Unit Tests (gomonkey mock) ----
+
+// go test ./tencentcloud/services/teo/ -run "TestTeoL7AccRuleV2_" -v -count=1 -gcflags="all=-l"
+
+type mockMetaL7AccRuleV2 struct {
+	client *connectivity.TencentCloudClient
+}
+
+func (m *mockMetaL7AccRuleV2) GetAPIV3Conn() *connectivity.TencentCloudClient {
+	return m.client
+}
+
+var _ tccommon.ProviderMeta = &mockMetaL7AccRuleV2{}
+
+func newMockMetaL7AccRuleV2() *mockMetaL7AccRuleV2 {
+	return &mockMetaL7AccRuleV2{client: &connectivity.TencentCloudClient{}}
+}
+
+func ptrStringL7AccRuleV2(s string) *string {
+	return &s
+}
+
+// TestTeoL7AccRuleV2_CustomVariables tests custom_variables parameter in Create/Read flow
+func TestTeoL7AccRuleV2_CustomVariables(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaL7AccRuleV2().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "CreateL7AccRulesWithContext", func(_ context.Context, _ *teov20220901.CreateL7AccRulesRequest) (*teov20220901.CreateL7AccRulesResponse, error) {
+		resp := teov20220901.NewCreateL7AccRulesResponse()
+		resp.Response = &teov20220901.CreateL7AccRulesResponseParams{
+			RuleIds:   []*string{ptrStringL7AccRuleV2("rule-12345678")},
+			RequestId: ptrStringL7AccRuleV2("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(&svcteo.TeoService{}, "DescribeTeoL7AccRuleById", func(_ context.Context, zoneId string, ruleId string) (*teov20220901.DescribeL7AccRulesResponseParams, error) {
+		return &teov20220901.DescribeL7AccRulesResponseParams{
+			Rules: []*teov20220901.RuleEngineItem{
+				{
+					RuleId:   ptrStringL7AccRuleV2("rule-12345678"),
+					RuleName: ptrStringL7AccRuleV2("test-rule"),
+					Status:   ptrStringL7AccRuleV2("enable"),
+					CustomVariables: []*teov20220901.CustomVariable{
+						{
+							Name:         ptrStringL7AccRuleV2("user.rule.var1"),
+							InitialValue: ptrStringL7AccRuleV2("init-val"),
+							Description:  ptrStringL7AccRuleV2("test variable"),
+						},
+					},
+				},
+			},
+		}, nil
+	})
+
+	meta := newMockMetaL7AccRuleV2()
+	res := svcteo.ResourceTencentCloudTeoL7AccRuleV2()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":   "zone-test1234",
+		"rule_name": "test-rule",
+		"status":    "enable",
+		"custom_variables": []interface{}{
+			map[string]interface{}{
+				"name":          "user.rule.var1",
+				"initial_value": "init-val",
+				"description":   "test variable",
+			},
+		},
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+
+	customVariables := d.Get("custom_variables").([]interface{})
+	assert.Equal(t, 1, len(customVariables))
+	cvMap := customVariables[0].(map[string]interface{})
+	assert.Equal(t, "user.rule.var1", cvMap["name"])
+	assert.Equal(t, "init-val", cvMap["initial_value"])
+	assert.Equal(t, "test variable", cvMap["description"])
+}
+
+// TestTeoL7AccRuleV2_CustomVariableOperations tests custom_variable_operations parameter in Create/Read flow
+func TestTeoL7AccRuleV2_CustomVariableOperations(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaL7AccRuleV2().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "CreateL7AccRulesWithContext", func(_ context.Context, _ *teov20220901.CreateL7AccRulesRequest) (*teov20220901.CreateL7AccRulesResponse, error) {
+		resp := teov20220901.NewCreateL7AccRulesResponse()
+		resp.Response = &teov20220901.CreateL7AccRulesResponseParams{
+			RuleIds:   []*string{ptrStringL7AccRuleV2("rule-87654321")},
+			RequestId: ptrStringL7AccRuleV2("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(&svcteo.TeoService{}, "DescribeTeoL7AccRuleById", func(_ context.Context, zoneId string, ruleId string) (*teov20220901.DescribeL7AccRulesResponseParams, error) {
+		return &teov20220901.DescribeL7AccRulesResponseParams{
+			Rules: []*teov20220901.RuleEngineItem{
+				{
+					RuleId:   ptrStringL7AccRuleV2("rule-87654321"),
+					RuleName: ptrStringL7AccRuleV2("test-rule"),
+					Status:   ptrStringL7AccRuleV2("enable"),
+					CustomVariableOperations: []*teov20220901.CustomVariableOperation{
+						{
+							Branches: []*teov20220901.CustomVariableOperationRuleBranch{
+								{
+									Condition: ptrStringL7AccRuleV2("${http.request.host} in ['aaa.com']"),
+									Actions: []*teov20220901.CustomVariableOperationRuleAction{
+										{
+											Name: ptrStringL7AccRuleV2("Set"),
+											SetParameters: &teov20220901.SetParameters{
+												Name:  ptrStringL7AccRuleV2("user.rule.var1"),
+												Value: ptrStringL7AccRuleV2("new-val"),
+											},
+										},
+									},
+									SubRules: []*teov20220901.CustomVariableOperationSubRule{
+										{
+											Description: []*string{ptrStringL7AccRuleV2("sub-desc")},
+											Branches: []*teov20220901.CustomVariableOperationRuleBranch{
+												{
+													Condition: ptrStringL7AccRuleV2("${http.request.uri} in ['/path']"),
+													Actions: []*teov20220901.CustomVariableOperationRuleAction{
+														{
+															Name: ptrStringL7AccRuleV2("Set"),
+															SetParameters: &teov20220901.SetParameters{
+																Name:  ptrStringL7AccRuleV2("user.rule.var2"),
+																Value: ptrStringL7AccRuleV2("sub-val"),
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+							Description: []*string{ptrStringL7AccRuleV2("op-desc")},
+						},
+					},
+				},
+			},
+		}, nil
+	})
+
+	meta := newMockMetaL7AccRuleV2()
+	res := svcteo.ResourceTencentCloudTeoL7AccRuleV2()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":   "zone-test1234",
+		"rule_name": "test-rule",
+		"status":    "enable",
+		"custom_variable_operations": []interface{}{
+			map[string]interface{}{
+				"branches": []interface{}{
+					map[string]interface{}{
+						"condition": "${http.request.host} in ['aaa.com']",
+						"actions": []interface{}{
+							map[string]interface{}{
+								"name": "Set",
+								"set_parameters": []interface{}{
+									map[string]interface{}{
+										"name":  "user.rule.var1",
+										"value": "new-val",
+									},
+								},
+							},
+						},
+						"sub_rules": []interface{}{
+							map[string]interface{}{
+								"branches": []interface{}{
+									map[string]interface{}{
+										"condition": "${http.request.uri} in ['/path']",
+										"actions": []interface{}{
+											map[string]interface{}{
+												"name": "Set",
+												"set_parameters": []interface{}{
+													map[string]interface{}{
+														"name":  "user.rule.var2",
+														"value": "sub-val",
+													},
+												},
+											},
+										},
+									},
+								},
+								"description": []interface{}{"sub-desc"},
+							},
+						},
+					},
+				},
+				"description": []interface{}{"op-desc"},
+			},
+		},
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+
+	operations := d.Get("custom_variable_operations").([]interface{})
+	assert.Equal(t, 1, len(operations))
+	opMap := operations[0].(map[string]interface{})
+	branches := opMap["branches"].([]interface{})
+	assert.Equal(t, 1, len(branches))
+	branchMap := branches[0].(map[string]interface{})
+	assert.Equal(t, "${http.request.host} in ['aaa.com']", branchMap["condition"])
+	actions := branchMap["actions"].([]interface{})
+	assert.Equal(t, 1, len(actions))
+	actionMap := actions[0].(map[string]interface{})
+	assert.Equal(t, "Set", actionMap["name"])
+	setParams := actionMap["set_parameters"].([]interface{})
+	assert.Equal(t, 1, len(setParams))
+	setParamMap := setParams[0].(map[string]interface{})
+	assert.Equal(t, "user.rule.var1", setParamMap["name"])
+	assert.Equal(t, "new-val", setParamMap["value"])
+	subRules := branchMap["sub_rules"].([]interface{})
+	assert.Equal(t, 1, len(subRules))
+	subRuleMap := subRules[0].(map[string]interface{})
+	subBranches := subRuleMap["branches"].([]interface{})
+	assert.Equal(t, 1, len(subBranches))
+	subBranchMap := subBranches[0].(map[string]interface{})
+	assert.Equal(t, "${http.request.uri} in ['/path']", subBranchMap["condition"])
+}
+
+// TestTeoL7AccRuleV2_CustomActionParameters tests custom_action_parameters in branches.actions Create/Read flow
+func TestTeoL7AccRuleV2_CustomActionParameters(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaL7AccRuleV2().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "CreateL7AccRulesWithContext", func(_ context.Context, _ *teov20220901.CreateL7AccRulesRequest) (*teov20220901.CreateL7AccRulesResponse, error) {
+		resp := teov20220901.NewCreateL7AccRulesResponse()
+		resp.Response = &teov20220901.CreateL7AccRulesResponseParams{
+			RuleIds:   []*string{ptrStringL7AccRuleV2("rule-aabbccdd")},
+			RequestId: ptrStringL7AccRuleV2("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(&svcteo.TeoService{}, "DescribeTeoL7AccRuleById", func(_ context.Context, zoneId string, ruleId string) (*teov20220901.DescribeL7AccRulesResponseParams, error) {
+		return &teov20220901.DescribeL7AccRulesResponseParams{
+			Rules: []*teov20220901.RuleEngineItem{
+				{
+					RuleId:   ptrStringL7AccRuleV2("rule-aabbccdd"),
+					RuleName: ptrStringL7AccRuleV2("test-rule"),
+					Status:   ptrStringL7AccRuleV2("enable"),
+					Branches: []*teov20220901.RuleBranch{
+						{
+							Condition: ptrStringL7AccRuleV2("${http.request.host} in ['bbb.com']"),
+							Actions: []*teov20220901.RuleEngineAction{
+								{
+									Name: ptrStringL7AccRuleV2("CustomAction"),
+									CustomActionParameters: &teov20220901.CustomActionParameters{
+										CustomActions: []*teov20220901.CustomAction{
+											{
+												ActionId: ptrStringL7AccRuleV2("action-111"),
+												Parameters: []*teov20220901.CustomActionParameter{
+													{
+														Name:        ptrStringL7AccRuleV2("Seconds"),
+														ValueType:   ptrStringL7AccRuleV2("String"),
+														StringValue: ptrStringL7AccRuleV2("300"),
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		}, nil
+	})
+
+	meta := newMockMetaL7AccRuleV2()
+	res := svcteo.ResourceTencentCloudTeoL7AccRuleV2()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":   "zone-test1234",
+		"rule_name": "test-rule",
+		"status":    "enable",
+		"branches": []interface{}{
+			map[string]interface{}{
+				"condition": "${http.request.host} in ['bbb.com']",
+				"actions": []interface{}{
+					map[string]interface{}{
+						"name": "CustomAction",
+						"custom_action_parameters": []interface{}{
+							map[string]interface{}{
+								"custom_actions": []interface{}{
+									map[string]interface{}{
+										"action_id": "action-111",
+										"parameters": []interface{}{
+											map[string]interface{}{
+												"name":  "Seconds",
+												"value": "300",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+
+	branches := d.Get("branches").([]interface{})
+	assert.Equal(t, 1, len(branches))
+	branchMap := branches[0].(map[string]interface{})
+	actions := branchMap["actions"].([]interface{})
+	assert.Equal(t, 1, len(actions))
+	actionMap := actions[0].(map[string]interface{})
+	assert.Equal(t, "CustomAction", actionMap["name"])
+	customActionParams := actionMap["custom_action_parameters"].([]interface{})
+	assert.Equal(t, 1, len(customActionParams))
+	capMap := customActionParams[0].(map[string]interface{})
+	customActions := capMap["custom_actions"].([]interface{})
+	assert.Equal(t, 1, len(customActions))
+	customActionMap := customActions[0].(map[string]interface{})
+	assert.Equal(t, "action-111", customActionMap["action_id"])
+	params := customActionMap["parameters"].([]interface{})
+	assert.Equal(t, 1, len(params))
+	paramMap := params[0].(map[string]interface{})
+	assert.Equal(t, "Seconds", paramMap["name"])
+	assert.Equal(t, "300", paramMap["value"])
+}
+
+// TestTeoL7AccRuleV2_Schema tests that new parameters are defined in schema
+func TestTeoL7AccRuleV2_Schema(t *testing.T) {
+	res := svcteo.ResourceTencentCloudTeoL7AccRuleV2()
+
+	assert.NotNil(t, res)
+
+	assert.Contains(t, res.Schema, "custom_variables")
+	customVariablesSchema := res.Schema["custom_variables"]
+	assert.Equal(t, schema.TypeList, customVariablesSchema.Type)
+	assert.True(t, customVariablesSchema.Optional)
+
+	assert.Contains(t, res.Schema, "custom_variable_operations")
+	cvoSchema := res.Schema["custom_variable_operations"]
+	assert.Equal(t, schema.TypeList, cvoSchema.Type)
+	assert.True(t, cvoSchema.Optional)
+	assert.Equal(t, 1, cvoSchema.MaxItems)
+}
