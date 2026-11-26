@@ -16,4 +16,17 @@ data "tencentcloud_ssl_certificates" "example" {
   type = "CA"
   id   = "LCYouprI"
 }
+
+data "tencentcloud_ssl_certificates" "example" {
+  domain = "example.com"
+}
+```
+
+Query the latest SSL certificate of a domain
+
+```hcl
+data "tencentcloud_ssl_certificates" "example" {
+  domain  = "example.com"
+  sort_by = "end_time"
+}
 ```

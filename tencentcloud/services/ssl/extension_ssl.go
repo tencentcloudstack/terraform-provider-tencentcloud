@@ -65,6 +65,18 @@ var SSL_CERT_TYPE = []string{
 	SSL_CERT_TYPE_CA,
 }
 
+const (
+	SSL_CERTIFICATE_SORT_BY_END_TIME = "end_time"
+)
+
+const (
+	SSL_CERTIFICATE_EXPIRATION_SORT_DESC = "DESC"
+)
+
+var SslCertificatesSortBy = []string{
+	SSL_CERTIFICATE_SORT_BY_END_TIME,
+}
+
 var SslCanCancelStatus = map[uint64]struct{}{
 	SSL_STATUS_PENDING:      {},
 	SSL_STATUS_DNS_ADDED:    {},

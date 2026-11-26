@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"strconv"
+	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -32,6 +33,17 @@ func DataSourceTencentCloudSslCertificates() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "ID of the SSL certificate to be queried.",
+			},
+			"domain": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Domain of the SSL certificate to be queried. Matches the primary domain or any domain in the subject alternative names exactly.",
+			},
+			"sort_by": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: tccommon.ValidateAllowedStringValue(SslCertificatesSortBy),
+				Description:  "Field used to sort the returned certificates. Currently only `end_time` is supported. If omitted, the API default order (creation time descending) is used.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -167,6 +179,8 @@ func dataSourceTencentCloudSslCertificatesRead(d *schema.ResourceData, m interfa
 		name     *string
 		certType *string
 		id       *string
+		domain   *string
+		sortBy   *string
 	)
 
 	if raw, ok := d.GetOk("name"); ok {
@@ -181,8 +195,16 @@ func dataSourceTencentCloudSslCertificatesRead(d *schema.ResourceData, m interfa
 		id = helper.String(raw.(string))
 	}
 
+	if raw, ok := d.GetOk("domain"); ok {
+		domain = helper.String(raw.(string))
+	}
+
+	if raw, ok := d.GetOk("sort_by"); ok {
+		sortBy = helper.String(raw.(string))
+	}
+
 	sslService := SSLService{client: m.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	certificateList, err := GetCertificateList(ctx, sslService, id, name, certType)
+	certificateList, err := GetCertificateList(ctx, sslService, id, name, domain, certType, sortBy)
 	if err != nil {
 		return err
 	}
@@ -294,19 +316,31 @@ func dataSourceTencentCloudSslCertificatesRead(d *schema.ResourceData, m interfa
 	return nil
 }
 
-func GetCertificateList(ctx context.Context, sslService SSLService, id, name, certType *string) (certificateList []*ssl.Certificates, errRet error) {
-	logId := tccommon.GetLogId(tccommon.ContextNil)
+func GetCertificateList(ctx context.Context, sslService SSLService, id, name, domain, certType, sortBy *string) (certificateList []*ssl.Certificates, errRet error) {
+	logId := tccommon.GetLogId(ctx)
 
-	var (
-		outErr, inErr                        error
-		certificatesById, certificatesByName []*ssl.Certificates
-	)
+	// The API only accepts a single fuzzy SearchKey, so every exact filter is
+	// resolved with its own request and the results are intersected below.
+	searchKeys := make([]*string, 0, 3)
+	for _, key := range []*string{id, name, domain} {
+		if key != nil {
+			searchKeys = append(searchKeys, key)
+		}
+	}
+	if len(searchKeys) == 0 {
+		searchKeys = append(searchKeys, nil)
+	}
 
-	if id == nil && name == nil {
-		describeRequest := ssl.NewDescribeCertificatesRequest()
-		describeRequest.CertificateType = certType
+	lists := make([][]*ssl.Certificates, 0, len(searchKeys))
+	for _, searchKey := range searchKeys {
+		describeRequest := buildDescribeCertificatesRequest(certType, searchKey, sortBy)
+
+		var (
+			outErr, inErr error
+			list          []*ssl.Certificates
+		)
 		outErr = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			certificateList, inErr = sslService.DescribeCertificates(ctx, describeRequest)
+			list, inErr = sslService.DescribeCertificates(ctx, describeRequest)
 			if inErr != nil {
 				if sdkErr := helper.UnwarpSDKError(inErr); sdkErr != nil && tccommon.IsContains("LimitExceeded", sdkErr.Code) {
 					return resource.RetryableError(inErr)
@@ -320,72 +354,98 @@ func GetCertificateList(ctx context.Context, sslService SSLService, id, name, ce
 			errRet = outErr
 			return
 		}
-		return
+
+		if domain != nil {
+			filtered := make([]*ssl.Certificates, 0, len(list))
+			for _, certificate := range list {
+				if certificateMatchesDomain(certificate, *domain) {
+					filtered = append(filtered, certificate)
+				}
+			}
+			list = filtered
+		}
+
+		lists = append(lists, list)
 	}
 
-	if id != nil {
-		describeRequest := ssl.NewDescribeCertificatesRequest()
-		describeRequest.CertificateType = certType
-		describeRequest.SearchKey = id
-		outErr = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			certificatesById, inErr = sslService.DescribeCertificates(ctx, describeRequest)
-			if inErr != nil {
-				if sdkErr := helper.UnwarpSDKError(inErr); sdkErr != nil && tccommon.IsContains("LimitExceeded", sdkErr.Code) {
-					return resource.RetryableError(inErr)
-				}
-				return tccommon.RetryError(inErr)
-			}
-			return nil
-		})
-		if outErr != nil {
-			log.Printf("[CRITAL]%s read certificates failed, reason: %v", logId, outErr)
-			errRet = outErr
-			return
-		}
-	}
-	if name != nil {
-		describeRequest := ssl.NewDescribeCertificatesRequest()
-		describeRequest.CertificateType = certType
-		describeRequest.SearchKey = name
-		outErr = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			certificatesByName, inErr = sslService.DescribeCertificates(ctx, describeRequest)
-			if inErr != nil {
-				if sdkErr := helper.UnwarpSDKError(inErr); sdkErr != nil && tccommon.IsContains("LimitExceeded", sdkErr.Code) {
-					return resource.RetryableError(inErr)
-				}
-				return tccommon.RetryError(inErr)
-			}
-			return nil
-		})
-		if outErr != nil {
-			log.Printf("[CRITAL]%s read certificates failed, reason: %v", logId, outErr)
-			errRet = outErr
-			return
-		}
-	}
-
-	certificateList = GetCommonCertificates(certificatesById, certificatesByName)
+	certificateList = GetCommonCertificates(lists...)
 	return
 }
 
-func GetCommonCertificates(certificatesById, certificatesByName []*ssl.Certificates) (result []*ssl.Certificates) {
-	if len(certificatesById) == 0 {
-		return certificatesByName
-	} else if len(certificatesByName) == 0 {
-		return certificatesById
+// buildDescribeCertificatesRequest builds one page request for
+// DescribeCertificates. sort_by = "end_time" maps to the API's ExpirationSort;
+// DESC returns the certificate expiring last (the newest one after a renewal)
+// first.
+func buildDescribeCertificatesRequest(certType, searchKey, sortBy *string) *ssl.DescribeCertificatesRequest {
+	request := ssl.NewDescribeCertificatesRequest()
+	request.CertificateType = certType
+	request.SearchKey = searchKey
+	if sortBy != nil {
+		request.ExpirationSort = helper.String(SSL_CERTIFICATE_EXPIRATION_SORT_DESC)
 	}
-	certificateMap := make(map[string]bool)
-	for _, certificate := range certificatesById {
-		if _, ok := certificateMap[*certificate.CertificateId]; ok {
-			continue
+	return request
+}
+
+// certificateMatchesDomain reports whether the certificate covers the given
+// domain as its primary domain or as one of its subject alternative names.
+func certificateMatchesDomain(certificate *ssl.Certificates, domain string) bool {
+	if certificate == nil {
+		return false
+	}
+	if certificate.Domain != nil && strings.EqualFold(*certificate.Domain, domain) {
+		return true
+	}
+	for _, subjectName := range certificate.SubjectAltName {
+		if subjectName != nil && strings.EqualFold(*subjectName, domain) {
+			return true
 		}
-		certificateMap[*certificate.CertificateId] = true
+	}
+	return false
+}
+
+// GetCommonCertificates intersects the given certificate lists by certificate
+// ID, preserving the order of the first list.
+func GetCommonCertificates(lists ...[]*ssl.Certificates) (result []*ssl.Certificates) {
+	if len(lists) == 0 {
+		return
+	}
+	if len(lists) == 1 {
+		return lists[0]
 	}
 
-	for _, certificate := range certificatesByName {
-		if _, ok := certificateMap[*certificate.CertificateId]; ok {
-			result = append(result, certificate)
+	others := make([]map[string]struct{}, 0, len(lists)-1)
+	for _, list := range lists[1:] {
+		ids := make(map[string]struct{}, len(list))
+		for _, certificate := range list {
+			if certificate != nil && certificate.CertificateId != nil {
+				ids[*certificate.CertificateId] = struct{}{}
+			}
 		}
+		others = append(others, ids)
+	}
+
+	seen := make(map[string]struct{}, len(lists[0]))
+	for _, certificate := range lists[0] {
+		if certificate == nil || certificate.CertificateId == nil {
+			continue
+		}
+		if _, ok := seen[*certificate.CertificateId]; ok {
+			continue
+		}
+
+		matched := true
+		for _, ids := range others {
+			if _, ok := ids[*certificate.CertificateId]; !ok {
+				matched = false
+				break
+			}
+		}
+		if !matched {
+			continue
+		}
+
+		seen[*certificate.CertificateId] = struct{}{}
+		result = append(result, certificate)
 	}
 	return
 }
