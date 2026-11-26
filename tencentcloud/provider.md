@@ -55,8 +55,12 @@ Resource
 tencentcloud_project
 
 Agent Sandbox(ags)
+Data Source
+tencentcloud_ags_sandbox_instances
+
 Resource
 tencentcloud_ags_sandbox_tool
+tencentcloud_ags_sandbox_instance
 
 Anti-DDoS(antiddos)
 Data Source
@@ -2078,6 +2082,8 @@ tencentcloud_tdcpg_instance
 TDSQL Boundless(tdmysql)
 Data Source
 tencentcloud_tdmysql_sale_info
+tencentcloud_tdmysql_db_engines
+tencentcloud_tdmysql_specs
 
 Resource
 tencentcloud_tdmysql_db_instance
