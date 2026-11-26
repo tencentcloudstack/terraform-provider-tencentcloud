@@ -244,9 +244,11 @@ func (me *AgsService) StartSandboxInstance(ctx context.Context, request *agsv202
 	return
 }
 
-// DescribeSandboxInstances returns the sandbox instances matching the filter
-// carried by request. The caller picks its own item from the returned list; an
-// empty list means "queried successfully, no such instance".
+// DescribeSandboxInstances queries sandbox instances. A nil request list (or an
+// empty one) queries every sandbox instance of the account; a non empty list
+// narrows the query to the given instance ids. It returns the full list of
+// sandbox instances returned by the cloud side — an empty list is a legitimate
+// answer, not an error, and the caller picks its own item from the result.
 func (me *AgsService) DescribeSandboxInstances(ctx context.Context, request *agsv20250920.DescribeSandboxInstancesRequest) (instances []*agsv20250920.SandboxInstance, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	defer func() {

@@ -55,6 +55,9 @@ Resource
 tencentcloud_project
 
 Agent Sandbox(ags)
+Data Source
+tencentcloud_ags_sandbox_instances
+
 Resource
 tencentcloud_ags_sandbox_tool
 tencentcloud_ags_sandbox_instance
