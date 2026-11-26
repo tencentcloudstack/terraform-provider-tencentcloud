@@ -8,24 +8,18 @@ import (
 	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	"github.com/hashicorp/terraform-plugin-go/tftypes"
 	"github.com/stretchr/testify/assert"
 
 	agsv20250920 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ags/v20250920"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/sharedmeta"
 	svags "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ags"
 )
-
-func agsSandboxInstancesStr(value string) *string { return &value }
-func agsSandboxInstancesInt64(value int64) *int64 { return &value }
-func agsSandboxInstancesUint64(value uint64) *uint64 {
-	u := uint64(value)
-	return &u
-}
-func agsSandboxInstancesBool(value bool) *bool { return &value }
 
 // agsSandboxInstancesSchema returns the framework data source schema used to
 // build the raw config/state value.
@@ -42,270 +36,92 @@ func agsSandboxInstancesSchema(t *testing.T) schema.Schema {
 	return resp.Schema
 }
 
-// agsSandboxInstancesRootType builds the tftypes.Object type for the data
-// source root, mirroring every schema attribute.
-func agsSandboxInstancesRootType() tftypes.Object {
-	return tftypes.Object{
-		AttributeTypes: map[string]tftypes.Type{
-			"id":           tftypes.String,
-			"instance_ids": tftypes.List{ElementType: tftypes.String},
-			"instance_set": tftypes.List{ElementType: agsSandboxInstancesItemType()},
-		},
-	}
-}
-
-func agsSandboxInstancesItemType() tftypes.Object {
-	return tftypes.Object{
-		AttributeTypes: map[string]tftypes.Type{
-			"instance_id":            tftypes.String,
-			"tool_id":                tftypes.String,
-			"tool_name":              tftypes.String,
-			"status":                 tftypes.String,
-			"persistent":             tftypes.Bool,
-			"timeout_seconds":        tftypes.Number,
-			"expires_at":             tftypes.String,
-			"stop_reason":            tftypes.String,
-			"create_time":            tftypes.String,
-			"update_time":            tftypes.String,
-			"mount_options":          tftypes.List{ElementType: agsSandboxInstancesMountOptionType()},
-			"custom_configuration":   agsSandboxInstancesCustomConfigurationType(),
-			"computer_configuration": agsSandboxInstancesComputerConfigurationType(),
-			"network_mode":           tftypes.String,
-			"metadata":               tftypes.List{ElementType: agsSandboxInstancesMetadataVarType()},
-			"auth_mode":              tftypes.String,
-		},
-	}
-}
-
-func agsSandboxInstancesMountOptionType() tftypes.Object {
-	return tftypes.Object{
-		AttributeTypes: map[string]tftypes.Type{
-			"name":       tftypes.String,
-			"mount_path": tftypes.String,
-			"sub_path":   tftypes.String,
-			"read_only":  tftypes.Bool,
-		},
-	}
-}
-
-func agsSandboxInstancesMetadataVarType() tftypes.Object {
-	return tftypes.Object{
-		AttributeTypes: map[string]tftypes.Type{
-			"name":  tftypes.String,
-			"value": tftypes.String,
-		},
-	}
-}
-
-func agsSandboxInstancesEnvVarType() tftypes.Object {
-	return tftypes.Object{
-		AttributeTypes: map[string]tftypes.Type{
-			"name":  tftypes.String,
-			"value": tftypes.String,
-		},
-	}
-}
-
-func agsSandboxInstancesPortType() tftypes.Object {
-	return tftypes.Object{
-		AttributeTypes: map[string]tftypes.Type{
-			"name":     tftypes.String,
-			"port":     tftypes.Number,
-			"protocol": tftypes.String,
-		},
-	}
-}
-
-func agsSandboxInstancesResourceType() tftypes.Object {
-	return tftypes.Object{
-		AttributeTypes: map[string]tftypes.Type{
-			"cpu":     tftypes.String,
-			"memory":  tftypes.String,
-			"storage": tftypes.String,
-		},
-	}
-}
-
-func agsSandboxInstancesHttpGetType() tftypes.Object {
-	return tftypes.Object{
-		AttributeTypes: map[string]tftypes.Type{
-			"path":   tftypes.String,
-			"port":   tftypes.Number,
-			"scheme": tftypes.String,
-		},
-	}
-}
-
-func agsSandboxInstancesProbeType() tftypes.Object {
-	return tftypes.Object{
-		AttributeTypes: map[string]tftypes.Type{
-			"http_get":          agsSandboxInstancesHttpGetType(),
-			"ready_timeout_ms":  tftypes.Number,
-			"probe_timeout_ms":  tftypes.Number,
-			"probe_period_ms":   tftypes.Number,
-			"success_threshold": tftypes.Number,
-			"failure_threshold": tftypes.Number,
-		},
-	}
-}
-
-func agsSandboxInstancesDnsConfigType() tftypes.Object {
-	return tftypes.Object{
-		AttributeTypes: map[string]tftypes.Type{
-			"servers":  tftypes.List{ElementType: tftypes.String},
-			"searches": tftypes.List{ElementType: tftypes.String},
-			"options":  tftypes.List{ElementType: tftypes.String},
-		},
-	}
-}
-
-func agsSandboxInstancesCapabilitiesType() tftypes.Object {
-	return tftypes.Object{
-		AttributeTypes: map[string]tftypes.Type{
-			"add":  tftypes.List{ElementType: tftypes.String},
-			"drop": tftypes.List{ElementType: tftypes.String},
-		},
-	}
-}
-
-func agsSandboxInstancesSecurityContextType() tftypes.Object {
-	return tftypes.Object{
-		AttributeTypes: map[string]tftypes.Type{
-			"privileged":   tftypes.Bool,
-			"capabilities": agsSandboxInstancesCapabilitiesType(),
-		},
-	}
-}
-
-func agsSandboxInstancesCustomConfigurationType() tftypes.Object {
-	return tftypes.Object{
-		AttributeTypes: map[string]tftypes.Type{
-			"image":               tftypes.String,
-			"image_registry_type": tftypes.String,
-			"image_digest":        tftypes.String,
-			"command":             tftypes.List{ElementType: tftypes.String},
-			"args":                tftypes.List{ElementType: tftypes.String},
-			"env":                 tftypes.List{ElementType: agsSandboxInstancesEnvVarType()},
-			"ports":               tftypes.List{ElementType: agsSandboxInstancesPortType()},
-			"resources":           agsSandboxInstancesResourceType(),
-			"probe":               agsSandboxInstancesProbeType(),
-			"dns_config":          agsSandboxInstancesDnsConfigType(),
-			"security_context":    agsSandboxInstancesSecurityContextType(),
-		},
-	}
-}
-
-func agsSandboxInstancesWaaConfigurationType() tftypes.Object {
-	return tftypes.Object{
-		AttributeTypes: map[string]tftypes.Type{
-			"image_id": tftypes.String,
-		},
-	}
-}
-
-func agsSandboxInstancesOsWorldConfigurationType() tftypes.Object {
-	return tftypes.Object{
-		AttributeTypes: map[string]tftypes.Type{
-			"version": tftypes.String,
-		},
-	}
-}
-
-func agsSandboxInstancesComputerConfigurationType() tftypes.Object {
-	return tftypes.Object{
-		AttributeTypes: map[string]tftypes.Type{
-			"waa_configuration":      agsSandboxInstancesWaaConfigurationType(),
-			"os_world_configuration": agsSandboxInstancesOsWorldConfigurationType(),
-		},
-	}
-}
-
 // agsSandboxInstancesSampleItem builds the fake cloud-side sandbox instance.
 func agsSandboxInstancesSampleItem() *agsv20250920.SandboxInstance {
 	return &agsv20250920.SandboxInstance{
-		InstanceId:     agsSandboxInstancesStr("sbx-12345678"),
-		ToolId:         agsSandboxInstancesStr("tool-12345678"),
-		ToolName:       agsSandboxInstancesStr("tf-example-tool"),
-		Status:         agsSandboxInstancesStr("RUNNING"),
-		Persistent:     agsSandboxInstancesBool(true),
-		TimeoutSeconds: agsSandboxInstancesUint64(600),
-		ExpiresAt:      agsSandboxInstancesStr("2024-01-01T00:00:00Z"),
+		InstanceId:     common.StringPtr("sbx-12345678"),
+		ToolId:         common.StringPtr("tool-12345678"),
+		ToolName:       common.StringPtr("tf-example-tool"),
+		Status:         common.StringPtr("RUNNING"),
+		Persistent:     common.BoolPtr(true),
+		TimeoutSeconds: common.Uint64Ptr(600),
+		ExpiresAt:      common.StringPtr("2024-01-01T00:00:00Z"),
 		StopReason:     nil,
-		CreateTime:     agsSandboxInstancesStr("2024-01-01T00:00:00Z"),
-		UpdateTime:     agsSandboxInstancesStr("2024-01-01T01:00:00Z"),
+		CreateTime:     common.StringPtr("2024-01-01T00:00:00Z"),
+		UpdateTime:     common.StringPtr("2024-01-01T01:00:00Z"),
 		MountOptions: []*agsv20250920.MountOption{
 			{
-				Name:      agsSandboxInstancesStr("storage-1"),
-				MountPath: agsSandboxInstancesStr("/mnt/storage-1"),
-				SubPath:   agsSandboxInstancesStr("sub"),
-				ReadOnly:  agsSandboxInstancesBool(false),
+				Name:      common.StringPtr("storage-1"),
+				MountPath: common.StringPtr("/mnt/storage-1"),
+				SubPath:   common.StringPtr("sub"),
+				ReadOnly:  common.BoolPtr(false),
 			},
 		},
 		CustomConfiguration: &agsv20250920.CustomConfigurationDetail{
-			Image:             agsSandboxInstancesStr("example-image:v1"),
-			ImageRegistryType: agsSandboxInstancesStr("personal"),
-			ImageDigest:       agsSandboxInstancesStr("sha256:abcd"),
-			Command:           []*string{agsSandboxInstancesStr("/bin/sh")},
-			Args:              []*string{agsSandboxInstancesStr("-c")},
+			Image:             common.StringPtr("example-image:v1"),
+			ImageRegistryType: common.StringPtr("personal"),
+			ImageDigest:       common.StringPtr("sha256:abcd"),
+			Command:           []*string{common.StringPtr("/bin/sh")},
+			Args:              []*string{common.StringPtr("-c")},
 			Env: []*agsv20250920.EnvVar{
 				{
-					Name:  agsSandboxInstancesStr("KEY"),
-					Value: agsSandboxInstancesStr("VALUE"),
+					Name:  common.StringPtr("KEY"),
+					Value: common.StringPtr("VALUE"),
 				},
 			},
 			Ports: []*agsv20250920.PortConfiguration{
 				{
-					Name:     agsSandboxInstancesStr("http"),
-					Port:     agsSandboxInstancesInt64(8080),
-					Protocol: agsSandboxInstancesStr("HTTP"),
+					Name:     common.StringPtr("http"),
+					Port:     common.Int64Ptr(8080),
+					Protocol: common.StringPtr("HTTP"),
 				},
 			},
 			Resources: &agsv20250920.ResourceConfiguration{
-				CPU:     agsSandboxInstancesStr("2"),
-				Memory:  agsSandboxInstancesStr("4Gi"),
-				Storage: agsSandboxInstancesStr("10Gi"),
+				CPU:     common.StringPtr("2"),
+				Memory:  common.StringPtr("4Gi"),
+				Storage: common.StringPtr("10Gi"),
 			},
 			Probe: &agsv20250920.ProbeConfiguration{
 				HttpGet: &agsv20250920.HttpGetAction{
-					Path:   agsSandboxInstancesStr("/healthz"),
-					Port:   agsSandboxInstancesInt64(8080),
-					Scheme: agsSandboxInstancesStr("HTTP"),
+					Path:   common.StringPtr("/healthz"),
+					Port:   common.Int64Ptr(8080),
+					Scheme: common.StringPtr("HTTP"),
 				},
-				ReadyTimeoutMs:   agsSandboxInstancesInt64(10000),
-				ProbeTimeoutMs:   agsSandboxInstancesInt64(1000),
-				ProbePeriodMs:    agsSandboxInstancesInt64(5000),
-				SuccessThreshold: agsSandboxInstancesInt64(1),
-				FailureThreshold: agsSandboxInstancesInt64(3),
+				ReadyTimeoutMs:   common.Int64Ptr(10000),
+				ProbeTimeoutMs:   common.Int64Ptr(1000),
+				ProbePeriodMs:    common.Int64Ptr(5000),
+				SuccessThreshold: common.Int64Ptr(1),
+				FailureThreshold: common.Int64Ptr(3),
 			},
 			DNSConfig: &agsv20250920.DNSConfig{
-				Servers:  []*string{agsSandboxInstancesStr("10.0.0.1")},
-				Searches: []*string{agsSandboxInstancesStr("example.internal")},
-				Options:  []*string{agsSandboxInstancesStr("ndots:2")},
+				Servers:  []*string{common.StringPtr("10.0.0.1")},
+				Searches: []*string{common.StringPtr("example.internal")},
+				Options:  []*string{common.StringPtr("ndots:2")},
 			},
 			SecurityContext: &agsv20250920.SecurityContext{
-				Privileged: agsSandboxInstancesBool(true),
+				Privileged: common.BoolPtr(true),
 				Capabilities: &agsv20250920.Capabilities{
-					Add:  []*string{agsSandboxInstancesStr("SYS_ADMIN")},
-					Drop: []*string{agsSandboxInstancesStr("ALL")},
+					Add:  []*string{common.StringPtr("SYS_ADMIN")},
+					Drop: []*string{common.StringPtr("ALL")},
 				},
 			},
 		},
 		ComputerConfiguration: &agsv20250920.ComputerConfiguration{
 			WAAConfiguration: &agsv20250920.WAAConfiguration{
-				ImageId: agsSandboxInstancesStr("img-12345678"),
+				ImageId: common.StringPtr("img-12345678"),
 			},
 			OSWorldConfiguration: &agsv20250920.OSWorldConfiguration{
-				Version: agsSandboxInstancesStr("osworld1"),
+				Version: common.StringPtr("osworld1"),
 			},
 		},
-		NetworkMode: agsSandboxInstancesStr("PUBLIC"),
+		NetworkMode: common.StringPtr("PUBLIC"),
 		Metadata: []*agsv20250920.MetadataVar{
 			{
-				Name:  agsSandboxInstancesStr("env"),
-				Value: agsSandboxInstancesStr("test"),
+				Name:  common.StringPtr("env"),
+				Value: common.StringPtr("test"),
 			},
 		},
-		AuthMode: agsSandboxInstancesStr("DEFAULT"),
+		AuthMode: common.StringPtr("DEFAULT"),
 	}
 }
 
@@ -313,7 +129,7 @@ func agsSandboxInstancesDescribeResponse(items ...*agsv20250920.SandboxInstance)
 	return &agsv20250920.DescribeSandboxInstancesResponse{
 		Response: &agsv20250920.DescribeSandboxInstancesResponseParams{
 			InstanceSet: items,
-			RequestId:   agsSandboxInstancesStr("fake-request-id"),
+			RequestId:   common.StringPtr("fake-request-id"),
 		},
 	}
 }
@@ -327,12 +143,34 @@ func setAgsSandboxInstancesClient(d *svags.AgsSandboxInstancesDataSource, client
 	d.Configure(context.Background(), configureReq, configureResp)
 }
 
-func newAgsSandboxInstancesReadRequest(sch schema.Schema, raw tftypes.Value) datasource.ReadRequest {
-	req := datasource.ReadRequest{}
-	req.Config.Raw = raw
-	req.Config.Schema = sch
+// newAgsSandboxInstancesReadRequest builds the read request from the exported
+// data source model instead of a hand written tftypes tree, so the raw config
+// always follows the schema definition.
+func newAgsSandboxInstancesReadRequest(t *testing.T, sch schema.Schema, instanceIds []string) datasource.ReadRequest {
+	t.Helper()
 
-	return req
+	instanceIdsValue := types.ListNull(types.StringType)
+	if instanceIds != nil {
+		value, diags := types.ListValueFrom(context.Background(), types.StringType, instanceIds)
+		if diags.HasError() {
+			t.Fatalf("failed to build instance_ids: %v", diags.Errors())
+		}
+		instanceIdsValue = value
+	}
+
+	instanceSetType := sch.Attributes["instance_set"].GetType().(basetypes.ListType)
+	model := svags.AgsSandboxInstancesDataSourceModel{
+		Id:          types.StringNull(),
+		InstanceIds: instanceIdsValue,
+		InstanceSet: types.ListNull(instanceSetType.ElementType()),
+	}
+
+	state := tfsdk.State{Schema: sch}
+	if diags := state.Set(context.Background(), &model); diags.HasError() {
+		t.Fatalf("failed to build the raw config: %v", diags.Errors())
+	}
+
+	return datasource.ReadRequest{Config: tfsdk.Config{Schema: sch, Raw: state.Raw}}
 }
 
 func newAgsSandboxInstancesReadResponse(sch schema.Schema) *datasource.ReadResponse {
@@ -340,26 +178,6 @@ func newAgsSandboxInstancesReadResponse(sch schema.Schema) *datasource.ReadRespo
 	resp.State.Schema = sch
 
 	return resp
-}
-
-// buildAgsSandboxInstancesRawValue builds the raw config value with the given
-// query inputs; every other attribute is unset (nil).
-func buildAgsSandboxInstancesRawValue(instanceIds []string) tftypes.Value {
-	attrs := map[string]tftypes.Value{
-		"id": tftypes.NewValue(tftypes.String, nil),
-	}
-	if instanceIds == nil {
-		attrs["instance_ids"] = tftypes.NewValue(tftypes.List{ElementType: tftypes.String}, nil)
-	} else {
-		elems := make([]tftypes.Value, 0, len(instanceIds))
-		for _, id := range instanceIds {
-			elems = append(elems, tftypes.NewValue(tftypes.String, id))
-		}
-		attrs["instance_ids"] = tftypes.NewValue(tftypes.List{ElementType: tftypes.String}, elems)
-	}
-	attrs["instance_set"] = tftypes.NewValue(tftypes.List{ElementType: agsSandboxInstancesItemType()}, nil)
-
-	return tftypes.NewValue(agsSandboxInstancesRootType(), attrs)
 }
 
 // TestAgsSandboxInstances_MetadataAndSchema validates metadata and schema
@@ -404,8 +222,7 @@ func TestAgsSandboxInstances_ReadBasic(t *testing.T) {
 	setAgsSandboxInstancesClient(ds, client)
 
 	sch := agsSandboxInstancesSchema(t)
-	raw := buildAgsSandboxInstancesRawValue([]string{"sbx-12345678"})
-	req := newAgsSandboxInstancesReadRequest(sch, raw)
+	req := newAgsSandboxInstancesReadRequest(t, sch, []string{"sbx-12345678"})
 	resp := newAgsSandboxInstancesReadResponse(sch)
 
 	ds.Read(context.Background(), req, resp)
@@ -578,8 +395,7 @@ func TestAgsSandboxInstances_ReadEmpty(t *testing.T) {
 	setAgsSandboxInstancesClient(ds, client)
 
 	sch := agsSandboxInstancesSchema(t)
-	raw := buildAgsSandboxInstancesRawValue(nil)
-	req := newAgsSandboxInstancesReadRequest(sch, raw)
+	req := newAgsSandboxInstancesReadRequest(t, sch, nil)
 	resp := newAgsSandboxInstancesReadResponse(sch)
 
 	ds.Read(context.Background(), req, resp)
@@ -615,8 +431,7 @@ func TestAgsSandboxInstances_ReadApiError(t *testing.T) {
 	setAgsSandboxInstancesClient(ds, client)
 
 	sch := agsSandboxInstancesSchema(t)
-	raw := buildAgsSandboxInstancesRawValue(nil)
-	req := newAgsSandboxInstancesReadRequest(sch, raw)
+	req := newAgsSandboxInstancesReadRequest(t, sch, nil)
 	resp := newAgsSandboxInstancesReadResponse(sch)
 
 	ds.Read(context.Background(), req, resp)
