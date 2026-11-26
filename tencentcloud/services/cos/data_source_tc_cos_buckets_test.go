@@ -74,9 +74,13 @@ func TestAccTencentCloudCosBucketDataSource_full(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.cors_rules.0.expose_headers.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.cors_rules.0.expose_headers.0", "x-cos-test"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.cors_rules.0.max_age_seconds", "300"),
-					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.lifecycle_rules.#", "1"),
+					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.lifecycle_rules.#", "2"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list",
 						"bucket_list.0.lifecycle_rules.0.filter_prefix", "test/"),
+					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list",
+						"bucket_list.0.lifecycle_rules.0.status", "Disabled"),
+					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list",
+						"bucket_list.0.lifecycle_rules.0.filter_tags.env", "prod"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list",
 						"bucket_list.0.lifecycle_rules.0.expiration.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list",
@@ -86,9 +90,9 @@ func TestAccTencentCloudCosBucketDataSource_full(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list",
 						"bucket_list.0.lifecycle_rules.0.non_current_transition.#", "2"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list",
-						"bucket_list.0.lifecycle_rules.0.abort_incomplete_multipart_upload.#", "1"),
+						"bucket_list.0.lifecycle_rules.1.abort_incomplete_multipart_upload.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list",
-						"bucket_list.0.lifecycle_rules.0.abort_incomplete_multipart_upload.0.days_after_initiation", "1"),
+						"bucket_list.0.lifecycle_rules.1.abort_incomplete_multipart_upload.0.days_after_initiation", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.website.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.website.0.index_document", "index.html"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.website.0.error_document", "error.html"),
@@ -133,7 +137,11 @@ resource "tencentcloud_cos_bucket" "bucket_full" {
   }
 
   lifecycle_rules {
+    status        = "Disabled"
     filter_prefix = "test/"
+    filter_tags = {
+      env = "prod"
+    }
 
     expiration {
       days = 365
@@ -149,20 +157,22 @@ resource "tencentcloud_cos_bucket" "bucket_full" {
       storage_class = "ARCHIVE"
     }
 
-	non_current_expiration {
+    non_current_expiration {
       non_current_days = 600
     }
 
-	non_current_transition {
+    non_current_transition {
       non_current_days = 90
       storage_class = "STANDARD_IA"
     }
-
     non_current_transition {
       non_current_days = 180
       storage_class = "ARCHIVE"
     }
 
+  }
+
+  lifecycle_rules {
     abort_incomplete_multipart_upload {
       days_after_initiation = 1
     }
