@@ -109,9 +109,13 @@ func ResourceTencentCloudTeoL7AccRuleV2Create(d *schema.ResourceData, meta inter
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		if result.Response != nil && len(result.Response.RuleIds) > 0 && result.Response.RuleIds[0] != nil {
-			ruleId = *result.Response.RuleIds[0]
+		if result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("teo_l7_acc_rule_v2 create failed, Response is nil, logId=%s, d.Id()=%s", logId, d.Id()))
 		}
+		if len(result.Response.RuleIds) == 0 || result.Response.RuleIds[0] == nil || *result.Response.RuleIds[0] == "" {
+			return resource.NonRetryableError(fmt.Errorf("teo_l7_acc_rule_v2 create failed, RuleIds is empty, logId=%s, d.Id()=%s", logId, d.Id()))
+		}
+		ruleId = *result.Response.RuleIds[0]
 		return nil
 	})
 	if err != nil {
@@ -149,17 +153,27 @@ func ResourceTencentCloudTeoL7AccRuleV2Read(d *schema.ResourceData, meta interfa
 	}
 
 	if respData == nil || len(respData.Rules) == 0 {
+		log.Printf("[CRUD] teo_l7_acc_rule_v2 id=%s", d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `teo_l7_acc_rule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 	if len(respData.Rules) > 0 {
 		rule := respData.Rules[0]
-		_ = d.Set("status", rule.Status)
-		_ = d.Set("rule_name", rule.RuleName)
-		_ = d.Set("description", rule.Description)
-		_ = d.Set("rule_priority", rule.RulePriority)
-		_ = d.Set("branches", resourceTencentCloudTeoL7AccRuleSetBranchs(rule.Branches))
+		if rule.Status != nil {
+			_ = d.Set("status", rule.Status)
+		}
+		if rule.RuleName != nil {
+			_ = d.Set("rule_name", rule.RuleName)
+		}
+		if rule.Description != nil {
+			_ = d.Set("description", rule.Description)
+		}
+		if rule.RulePriority != nil {
+			_ = d.Set("rule_priority", rule.RulePriority)
+		}
+		if rule.Branches != nil {
+			_ = d.Set("branches", resourceTencentCloudTeoL7AccRuleSetBranchs(rule.Branches))
+		}
 	}
 
 	return nil
