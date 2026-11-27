@@ -1,3 +1,17 @@
+## 1.83.46(November‌ 27, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_ags_sandbox_instances` ([#4703](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4703))
+* **New Data Source:** `tencentcloud_tdmysql_db_engines` ([#4706](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4706))
+* **New Data Source:** `tencentcloud_tdmysql_sale_info` ([#4707](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4707))
+* **New Data Source:** `tencentcloud_tdmysql_specs` ([#4708](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4708))
+* **New Resource:** `tencentcloud_ags_sandbox_instance` ([#4700](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4700))
+* **New Resource:** `tencentcloud_tdmysql_dbs_backup` ([#4710](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4710))
+* **New Resource:** `tencentcloud_tdmysql_dbs_backup_policy_config` ([#4711](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4711))
+* **New Resource:** `tencentcloud_tdmysql_user` ([#4709](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4709))
+* **New Resource:** `tencentcloud_tdmysql_user_privilege_config` ([#4712](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4712))
+
 ## 1.83.45(November‌ 25, 2026)
 
 FEATURES:
