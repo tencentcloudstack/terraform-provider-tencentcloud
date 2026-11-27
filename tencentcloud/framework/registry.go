@@ -68,6 +68,7 @@ var resourcesMap = map[string]func() resource.Resource{
 	"tencentcloud_makers_project_envs":              makers.NewMakersProjectEnvsResource,
 	"tencentcloud_oceanus_cluster":                  oceanus.NewOceanusClusterResource,
 	"tencentcloud_ssm_secret_version_v2":            ssm.NewSsmSecretVersionV2Resource,
+	"tencentcloud_tdmysql_user":                     tdmysql.NewTdmysqlUserResource,
 }
 
 // dataSourcesMap maps every framework data source type name to its factory.
