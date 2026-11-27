@@ -42,15 +42,15 @@ resource "tencentcloud_tdmysql_user_privilege_config" "example" {
 
 The following arguments are supported:
 
-* `database_privileges` - (Optional, List) Database level privileges.
+* `database_privileges` - (Optional, Set) Database level privileges.
   * `database` - (Required, String) Database name.
-  * `privileges` - (Required, List) Privilege list.
-* `global_privileges` - (Optional, List) Global privileges.
+  * `privileges` - (Required, Set) Privilege list.
+* `global_privileges` - (Optional, Set) Global privileges.
 * `host` - (Required, String) The access host allowed for the user. The username and host uniquely identify an account.
 * `instance_id` - (Required, String) Instance ID, such as tdsql3-5baee8df.
-* `table_privileges` - (Optional, List) Table level privileges.
+* `table_privileges` - (Optional, Set) Table level privileges.
   * `database` - (Required, String) Database name.
-  * `privileges` - (Required, List) Privilege list.
+  * `privileges` - (Required, Set) Privilege list.
   * `table` - (Required, String) Table name.
 * `user_name` - (Required, String) Login username.
 

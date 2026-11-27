@@ -40,8 +40,8 @@ func tdmysqlUserPrivilegeConfigTestPrivileges() []*string {
 
 // tdmysqlUserPrivilegeConfigTestGlobalPrivileges builds the global_privileges
 // list value used by the default model.
-func tdmysqlUserPrivilegeConfigTestGlobalPrivileges() types.List {
-	return types.ListValueMust(types.StringType, []attr.Value{
+func tdmysqlUserPrivilegeConfigTestGlobalPrivileges() types.Set {
+	return types.SetValueMust(types.StringType, []attr.Value{
 		types.StringValue("SELECT"),
 		types.StringValue("INSERT"),
 	})
@@ -49,7 +49,7 @@ func tdmysqlUserPrivilegeConfigTestGlobalPrivileges() types.List {
 
 // tdmysqlUserPrivilegeConfigTestDatabasePrivileges builds a one-entry
 // database_privileges list value.
-func tdmysqlUserPrivilegeConfigTestDatabasePrivileges() types.List {
+func tdmysqlUserPrivilegeConfigTestDatabasePrivileges() types.Set {
 	entry, diags := types.ObjectValue(svctdmysql.TdmysqlUserPrivilegeConfigDatabasePrivilegesAttrTypes(), map[string]attr.Value{
 		"database":   types.StringValue(tdmysqlUserPrivilegeConfigTestDatabase),
 		"privileges": tdmysqlUserPrivilegeConfigTestGlobalPrivileges(),
@@ -58,15 +58,15 @@ func tdmysqlUserPrivilegeConfigTestDatabasePrivileges() types.List {
 		panic(fmt.Sprintf("failed to build the database_privileges entry: %v", diags.Errors()))
 	}
 
-	return types.ListValueMust(
-		types.ListType{ElemType: types.ObjectType{AttrTypes: svctdmysql.TdmysqlUserPrivilegeConfigDatabasePrivilegesAttrTypes()}},
+	return types.SetValueMust(
+		types.SetType{ElemType: types.ObjectType{AttrTypes: svctdmysql.TdmysqlUserPrivilegeConfigDatabasePrivilegesAttrTypes()}},
 		[]attr.Value{entry},
 	)
 }
 
 // tdmysqlUserPrivilegeConfigTestTablePrivileges builds a one-entry
 // table_privileges list value.
-func tdmysqlUserPrivilegeConfigTestTablePrivileges() types.List {
+func tdmysqlUserPrivilegeConfigTestTablePrivileges() types.Set {
 	entry, diags := types.ObjectValue(svctdmysql.TdmysqlUserPrivilegeConfigTablePrivilegesAttrTypes(), map[string]attr.Value{
 		"database":   types.StringValue(tdmysqlUserPrivilegeConfigTestDatabase),
 		"table":      types.StringValue(tdmysqlUserPrivilegeConfigTestTable),
@@ -76,18 +76,18 @@ func tdmysqlUserPrivilegeConfigTestTablePrivileges() types.List {
 		panic(fmt.Sprintf("failed to build the table_privileges entry: %v", diags.Errors()))
 	}
 
-	return types.ListValueMust(
-		types.ListType{ElemType: types.ObjectType{AttrTypes: svctdmysql.TdmysqlUserPrivilegeConfigTablePrivilegesAttrTypes()}},
+	return types.SetValueMust(
+		types.SetType{ElemType: types.ObjectType{AttrTypes: svctdmysql.TdmysqlUserPrivilegeConfigTablePrivilegesAttrTypes()}},
 		[]attr.Value{entry},
 	)
 }
 
-func tdmysqlUserPrivilegeConfigTestDatabasePrivilegesNull() types.List {
-	return types.ListNull(types.ObjectType{AttrTypes: svctdmysql.TdmysqlUserPrivilegeConfigDatabasePrivilegesAttrTypes()})
+func tdmysqlUserPrivilegeConfigTestDatabasePrivilegesNull() types.Set {
+	return types.SetNull(types.ObjectType{AttrTypes: svctdmysql.TdmysqlUserPrivilegeConfigDatabasePrivilegesAttrTypes()})
 }
 
-func tdmysqlUserPrivilegeConfigTestTablePrivilegesNull() types.List {
-	return types.ListNull(types.ObjectType{AttrTypes: svctdmysql.TdmysqlUserPrivilegeConfigTablePrivilegesAttrTypes()})
+func tdmysqlUserPrivilegeConfigTestTablePrivilegesNull() types.Set {
+	return types.SetNull(types.ObjectType{AttrTypes: svctdmysql.TdmysqlUserPrivilegeConfigTablePrivilegesAttrTypes()})
 }
 
 // tdmysqlUserPrivilegeConfigTestModel builds the terraform model used for plan/state.
@@ -292,7 +292,7 @@ func TestTdmysqlUserPrivilegeConfigCreateDatabaseScope(t *testing.T) {
 	stubTdmysqlUserPrivilegeConfigDescribe(patches, tdmysqlClient, tdmysqlUserPrivilegeConfigTestPrivileges())
 
 	model := tdmysqlUserPrivilegeConfigTestModel()
-	model.GlobalPrivileges = types.ListNull(types.StringType)
+	model.GlobalPrivileges = types.SetNull(types.StringType)
 	model.DatabasePrivileges = tdmysqlUserPrivilegeConfigTestDatabasePrivileges()
 
 	var createResp resource.CreateResponse
@@ -343,7 +343,7 @@ func TestTdmysqlUserPrivilegeConfigCreateTableScope(t *testing.T) {
 	stubTdmysqlUserPrivilegeConfigDescribe(patches, tdmysqlClient, tdmysqlUserPrivilegeConfigTestPrivileges())
 
 	model := tdmysqlUserPrivilegeConfigTestModel()
-	model.GlobalPrivileges = types.ListNull(types.StringType)
+	model.GlobalPrivileges = types.SetNull(types.StringType)
 	model.TablePrivileges = tdmysqlUserPrivilegeConfigTestTablePrivileges()
 
 	var createResp resource.CreateResponse
@@ -469,7 +469,7 @@ func TestTdmysqlUserPrivilegeConfigUpdateSuccess(t *testing.T) {
 	stubTdmysqlUserPrivilegeConfigDescribe(patches, tdmysqlClient, tdmysqlUserPrivilegeConfigTestPrivileges())
 
 	model := tdmysqlUserPrivilegeConfigTestModel()
-	model.GlobalPrivileges = types.ListValueMust(types.StringType, []attr.Value{
+	model.GlobalPrivileges = types.SetValueMust(types.StringType, []attr.Value{
 		types.StringValue("SELECT"),
 		types.StringValue("UPDATE"),
 		types.StringValue("DELETE"),
@@ -528,8 +528,8 @@ func TestTdmysqlUserPrivilegeConfigCreateOmittedGroups(t *testing.T) {
 	stubTdmysqlUserPrivilegeConfigDescribe(patches, tdmysqlClient, tdmysqlUserPrivilegeConfigTestPrivileges())
 
 	model := tdmysqlUserPrivilegeConfigTestModel()
-	model.DatabasePrivileges = types.ListUnknown(types.ObjectType{AttrTypes: svctdmysql.TdmysqlUserPrivilegeConfigDatabasePrivilegesAttrTypes()})
-	model.TablePrivileges = types.ListUnknown(types.ObjectType{AttrTypes: svctdmysql.TdmysqlUserPrivilegeConfigTablePrivilegesAttrTypes()})
+	model.DatabasePrivileges = types.SetUnknown(types.ObjectType{AttrTypes: svctdmysql.TdmysqlUserPrivilegeConfigDatabasePrivilegesAttrTypes()})
+	model.TablePrivileges = types.SetUnknown(types.ObjectType{AttrTypes: svctdmysql.TdmysqlUserPrivilegeConfigTablePrivilegesAttrTypes()})
 
 	var createResp resource.CreateResponse
 	createResp.State = ctx.state(t, model)

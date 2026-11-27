@@ -10,8 +10,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
@@ -44,7 +44,7 @@ type TdmysqlUserPrivilegeConfigResource struct {
 // database_privileges list attribute.
 type TdmysqlUserPrivilegeConfigDatabasePrivilegesModel struct {
 	Database   types.String `tfsdk:"database"`
-	Privileges types.List   `tfsdk:"privileges"`
+	Privileges types.Set    `tfsdk:"privileges"`
 }
 
 // TdmysqlUserPrivilegeConfigTablePrivilegesModel maps one entry of the
@@ -52,7 +52,7 @@ type TdmysqlUserPrivilegeConfigDatabasePrivilegesModel struct {
 type TdmysqlUserPrivilegeConfigTablePrivilegesModel struct {
 	Database   types.String `tfsdk:"database"`
 	Table      types.String `tfsdk:"table"`
-	Privileges types.List   `tfsdk:"privileges"`
+	Privileges types.Set    `tfsdk:"privileges"`
 }
 
 // TdmysqlUserPrivilegeConfigResourceModel maps every top-level schema
@@ -66,9 +66,9 @@ type TdmysqlUserPrivilegeConfigResourceModel struct {
 	InstanceId         types.String `tfsdk:"instance_id"`
 	UserName           types.String `tfsdk:"user_name"`
 	Host               types.String `tfsdk:"host"`
-	GlobalPrivileges   types.List   `tfsdk:"global_privileges"`
-	DatabasePrivileges types.List   `tfsdk:"database_privileges"`
-	TablePrivileges    types.List   `tfsdk:"table_privileges"`
+	GlobalPrivileges   types.Set    `tfsdk:"global_privileges"`
+	DatabasePrivileges types.Set    `tfsdk:"database_privileges"`
+	TablePrivileges    types.Set    `tfsdk:"table_privileges"`
 }
 
 // TdmysqlUserPrivilegeConfigDatabasePrivilegesAttrTypes returns the attribute
@@ -78,7 +78,7 @@ type TdmysqlUserPrivilegeConfigResourceModel struct {
 func TdmysqlUserPrivilegeConfigDatabasePrivilegesAttrTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"database":   types.StringType,
-		"privileges": types.ListType{ElemType: types.StringType},
+		"privileges": types.SetType{ElemType: types.StringType},
 	}
 }
 
@@ -88,7 +88,7 @@ func TdmysqlUserPrivilegeConfigTablePrivilegesAttrTypes() map[string]attr.Type {
 	return map[string]attr.Type{
 		"database":   types.StringType,
 		"table":      types.StringType,
-		"privileges": types.ListType{ElemType: types.StringType},
+		"privileges": types.SetType{ElemType: types.StringType},
 	}
 }
 
@@ -143,21 +143,21 @@ func (r *TdmysqlUserPrivilegeConfigResource) Schema(_ context.Context, _ resourc
 			// keeps a user-omitted group diff-free on update; on create the
 			// apply path normalizes the core-planned unknown back to null
 			// before persisting (see applyTdmysqlUserPrivilegeConfig).
-			"global_privileges": schema.ListAttribute{
+			"global_privileges": schema.SetAttribute{
 				Optional:    true,
 				Computed:    true,
 				ElementType: types.StringType,
 				Description: "Global privileges.",
-				PlanModifiers: []planmodifier.List{
-					listplanmodifier.UseStateForUnknown(),
+				PlanModifiers: []planmodifier.Set{
+					setplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"database_privileges": schema.ListNestedAttribute{
+			"database_privileges": schema.SetNestedAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "Database level privileges.",
-				PlanModifiers: []planmodifier.List{
-					listplanmodifier.UseStateForUnknown(),
+				PlanModifiers: []planmodifier.Set{
+					setplanmodifier.UseStateForUnknown(),
 				},
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -165,7 +165,7 @@ func (r *TdmysqlUserPrivilegeConfigResource) Schema(_ context.Context, _ resourc
 							Required:    true,
 							Description: "Database name.",
 						},
-						"privileges": schema.ListAttribute{
+						"privileges": schema.SetAttribute{
 							Required:    true,
 							ElementType: types.StringType,
 							Description: "Privilege list.",
@@ -173,12 +173,12 @@ func (r *TdmysqlUserPrivilegeConfigResource) Schema(_ context.Context, _ resourc
 					},
 				},
 			},
-			"table_privileges": schema.ListNestedAttribute{
+			"table_privileges": schema.SetNestedAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "Table level privileges.",
-				PlanModifiers: []planmodifier.List{
-					listplanmodifier.UseStateForUnknown(),
+				PlanModifiers: []planmodifier.Set{
+					setplanmodifier.UseStateForUnknown(),
 				},
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -190,7 +190,7 @@ func (r *TdmysqlUserPrivilegeConfigResource) Schema(_ context.Context, _ resourc
 							Required:    true,
 							Description: "Table name.",
 						},
-						"privileges": schema.ListAttribute{
+						"privileges": schema.SetAttribute{
 							Required:    true,
 							ElementType: types.StringType,
 							Description: "Privilege list.",
@@ -335,15 +335,15 @@ func (r *TdmysqlUserPrivilegeConfigResource) applyTdmysqlUserPrivilegeConfig(ctx
 	// omitted. On update the modifier already substituted the prior state
 	// value, so an unknown here cannot occur.
 	if plan.GlobalPrivileges.IsUnknown() {
-		plan.GlobalPrivileges = types.ListNull(types.StringType)
+		plan.GlobalPrivileges = types.SetNull(types.StringType)
 	}
 
 	if plan.DatabasePrivileges.IsUnknown() {
-		plan.DatabasePrivileges = types.ListNull(types.ObjectType{AttrTypes: TdmysqlUserPrivilegeConfigDatabasePrivilegesAttrTypes()})
+		plan.DatabasePrivileges = types.SetNull(types.ObjectType{AttrTypes: TdmysqlUserPrivilegeConfigDatabasePrivilegesAttrTypes()})
 	}
 
 	if plan.TablePrivileges.IsUnknown() {
-		plan.TablePrivileges = types.ListNull(types.ObjectType{AttrTypes: TdmysqlUserPrivilegeConfigTablePrivilegesAttrTypes()})
+		plan.TablePrivileges = types.SetNull(types.ObjectType{AttrTypes: TdmysqlUserPrivilegeConfigTablePrivilegesAttrTypes()})
 	}
 
 	modifyUserPrivilegesRequest := tdmysqlv20211122.NewModifyUserPrivilegesRequest()
@@ -356,7 +356,7 @@ func (r *TdmysqlUserPrivilegeConfigResource) applyTdmysqlUserPrivilegeConfig(ctx
 	}
 
 	if !plan.GlobalPrivileges.IsNull() && !plan.GlobalPrivileges.IsUnknown() {
-		modifyUserPrivilegesRequest.GlobalPrivileges = fwHelper.PointersFromList[string](ctx, plan.GlobalPrivileges, diags)
+		modifyUserPrivilegesRequest.GlobalPrivileges = fwHelper.PointersFromSet[string](ctx, plan.GlobalPrivileges, diags)
 		if diags.HasError() {
 			return
 		}
@@ -415,7 +415,7 @@ func (r *TdmysqlUserPrivilegeConfigResource) refreshTdmysqlUserPrivilegeConfig(c
 			return
 		}
 
-		model.GlobalPrivileges = fwHelper.ListFromPointersOrPrev(ctx, types.StringType, privileges, model.GlobalPrivileges, diags)
+		model.GlobalPrivileges = fwHelper.SetFromPointersOrPrev(ctx, types.StringType, privileges, model.GlobalPrivileges, diags)
 		if diags.HasError() {
 			return
 		}
@@ -442,14 +442,14 @@ func (r *TdmysqlUserPrivilegeConfigResource) refreshTdmysqlUserPrivilegeConfig(c
 
 			refreshed = append(refreshed, TdmysqlUserPrivilegeConfigDatabasePrivilegesModel{
 				Database:   prev.Database,
-				Privileges: fwHelper.ListFromPointersOrPrev(ctx, types.StringType, privileges, prev.Privileges, diags),
+				Privileges: fwHelper.SetFromPointersOrPrev(ctx, types.StringType, privileges, prev.Privileges, diags),
 			})
 			if diags.HasError() {
 				return
 			}
 		}
 
-		list, listDiags := types.ListValueFrom(ctx, types.ListType{ElemType: types.ObjectType{AttrTypes: TdmysqlUserPrivilegeConfigDatabasePrivilegesAttrTypes()}}, refreshed)
+		list, listDiags := types.SetValueFrom(ctx, types.SetType{ElemType: types.ObjectType{AttrTypes: TdmysqlUserPrivilegeConfigDatabasePrivilegesAttrTypes()}}, refreshed)
 		diags.Append(listDiags...)
 		if diags.HasError() {
 			return
@@ -480,14 +480,14 @@ func (r *TdmysqlUserPrivilegeConfigResource) refreshTdmysqlUserPrivilegeConfig(c
 			refreshed = append(refreshed, TdmysqlUserPrivilegeConfigTablePrivilegesModel{
 				Database:   prev.Database,
 				Table:      prev.Table,
-				Privileges: fwHelper.ListFromPointersOrPrev(ctx, types.StringType, privileges, prev.Privileges, diags),
+				Privileges: fwHelper.SetFromPointersOrPrev(ctx, types.StringType, privileges, prev.Privileges, diags),
 			})
 			if diags.HasError() {
 				return
 			}
 		}
 
-		list, listDiags := types.ListValueFrom(ctx, types.ListType{ElemType: types.ObjectType{AttrTypes: TdmysqlUserPrivilegeConfigTablePrivilegesAttrTypes()}}, refreshed)
+		list, listDiags := types.SetValueFrom(ctx, types.SetType{ElemType: types.ObjectType{AttrTypes: TdmysqlUserPrivilegeConfigTablePrivilegesAttrTypes()}}, refreshed)
 		diags.Append(listDiags...)
 		if diags.HasError() {
 			return
@@ -537,7 +537,7 @@ func (r *TdmysqlUserPrivilegeConfigResource) describeTdmysqlUserPrivilegeConfigS
 
 // expandTdmysqlUserPrivilegeConfigDatabasePrivileges converts the planned
 // database_privileges list into the SDK request entries.
-func expandTdmysqlUserPrivilegeConfigDatabasePrivileges(ctx context.Context, value types.List, diags *diag.Diagnostics) []*tdmysqlv20211122.DatabasePrivileges {
+func expandTdmysqlUserPrivilegeConfigDatabasePrivileges(ctx context.Context, value types.Set, diags *diag.Diagnostics) []*tdmysqlv20211122.DatabasePrivileges {
 	var entries []TdmysqlUserPrivilegeConfigDatabasePrivilegesModel
 	diags.Append(value.ElementsAs(ctx, &entries, false)...)
 	if diags.HasError() {
@@ -548,7 +548,7 @@ func expandTdmysqlUserPrivilegeConfigDatabasePrivileges(ctx context.Context, val
 	for _, entry := range entries {
 		result = append(result, &tdmysqlv20211122.DatabasePrivileges{
 			Database:   fwHelper.StringPointerFromValue(entry.Database),
-			Privileges: fwHelper.PointersFromList[string](ctx, entry.Privileges, diags),
+			Privileges: fwHelper.PointersFromSet[string](ctx, entry.Privileges, diags),
 		})
 		if diags.HasError() {
 			return nil
@@ -560,7 +560,7 @@ func expandTdmysqlUserPrivilegeConfigDatabasePrivileges(ctx context.Context, val
 
 // expandTdmysqlUserPrivilegeConfigTablePrivileges converts the planned
 // table_privileges list into the SDK request entries.
-func expandTdmysqlUserPrivilegeConfigTablePrivileges(ctx context.Context, value types.List, diags *diag.Diagnostics) []*tdmysqlv20211122.TablePrivileges {
+func expandTdmysqlUserPrivilegeConfigTablePrivileges(ctx context.Context, value types.Set, diags *diag.Diagnostics) []*tdmysqlv20211122.TablePrivileges {
 	var entries []TdmysqlUserPrivilegeConfigTablePrivilegesModel
 	diags.Append(value.ElementsAs(ctx, &entries, false)...)
 	if diags.HasError() {
@@ -572,7 +572,7 @@ func expandTdmysqlUserPrivilegeConfigTablePrivileges(ctx context.Context, value 
 		result = append(result, &tdmysqlv20211122.TablePrivileges{
 			Database:   fwHelper.StringPointerFromValue(entry.Database),
 			Table:      fwHelper.StringPointerFromValue(entry.Table),
-			Privileges: fwHelper.PointersFromList[string](ctx, entry.Privileges, diags),
+			Privileges: fwHelper.PointersFromSet[string](ctx, entry.Privileges, diags),
 		})
 		if diags.HasError() {
 			return nil
