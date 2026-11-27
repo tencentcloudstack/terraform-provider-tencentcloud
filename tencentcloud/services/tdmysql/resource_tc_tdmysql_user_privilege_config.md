@@ -3,19 +3,34 @@ Provides a resource to manage user privileges of a TDSQL Boundless instance.
 Example Usage
 
 ```hcl
-resource "tencentcloud_tdmysql_user_privilege_config_config" "example" {
+resource "tencentcloud_tdmysql_user_privilege_config" "example" {
   instance_id = "tdsql3-5baee8df"
-  host        = "localhost"
   user_name   = "tf-example-user"
-  db_name     = "*"
-  privileges  = ["SELECT", "INSERT"]
+  host        = "localhost"
+
+  global_privileges = ["SELECT", "INSERT"]
+
+  database_privileges = [
+    {
+      database   = "tf-example-db"
+      privileges = ["SELECT"]
+    },
+  ]
+
+  table_privileges = [
+    {
+      database   = "tf-example-db"
+      table      = "tf-example-table"
+      privileges = ["SELECT", "UPDATE"]
+    },
+  ]
 }
 ```
 
 Import
 
-TDSQL Boundless user privilege can be imported using the composite id instance_id#host#user_name#db_name, e.g.
+TDSQL Boundless user privilege config can be imported using the composite id instance_id#user_name#host, e.g.
 
 ```
-terraform import tencentcloud_tdmysql_user_privilege_config_config.example tdsql3-5baee8df#localhost#tf-example-user#*
+terraform import tencentcloud_tdmysql_user_privilege_config.example tdsql3-5baee8df#tf-example-user#localhost
 ```

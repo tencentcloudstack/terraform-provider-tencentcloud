@@ -21,10 +21,11 @@ import (
 
 const (
 	tdmysqlUserPrivilegeConfigTestInstanceId = "tdsql3-5baee8df"
-	tdmysqlUserPrivilegeConfigTestHost       = "localhost"
 	tdmysqlUserPrivilegeConfigTestUserName   = "tf-example-user"
-	tdmysqlUserPrivilegeConfigTestDbName     = "*"
-	tdmysqlUserPrivilegeConfigTestComposite  = tdmysqlUserPrivilegeConfigTestInstanceId + "#" + tdmysqlUserPrivilegeConfigTestHost + "#" + tdmysqlUserPrivilegeConfigTestUserName + "#" + tdmysqlUserPrivilegeConfigTestDbName
+	tdmysqlUserPrivilegeConfigTestHost       = "localhost"
+	tdmysqlUserPrivilegeConfigTestComposite  = tdmysqlUserPrivilegeConfigTestInstanceId + "#" + tdmysqlUserPrivilegeConfigTestUserName + "#" + tdmysqlUserPrivilegeConfigTestHost
+	tdmysqlUserPrivilegeConfigTestDatabase   = "tf-example-db"
+	tdmysqlUserPrivilegeConfigTestTable      = "tf-example-table"
 )
 
 func tdmysqlUserPrivilegeConfigStr(v string) *string { return &v }
@@ -37,23 +38,71 @@ func tdmysqlUserPrivilegeConfigTestPrivileges() []*string {
 	}
 }
 
+// tdmysqlUserPrivilegeConfigTestGlobalPrivileges builds the global_privileges
+// list value used by the default model.
+func tdmysqlUserPrivilegeConfigTestGlobalPrivileges() types.List {
+	return types.ListValueMust(types.StringType, []attr.Value{
+		types.StringValue("SELECT"),
+		types.StringValue("INSERT"),
+	})
+}
+
+// tdmysqlUserPrivilegeConfigTestDatabasePrivileges builds a one-entry
+// database_privileges list value.
+func tdmysqlUserPrivilegeConfigTestDatabasePrivileges() types.List {
+	entry, diags := types.ObjectValue(svctdmysql.TdmysqlUserPrivilegeConfigDatabasePrivilegesAttrTypes(), map[string]attr.Value{
+		"database":   types.StringValue(tdmysqlUserPrivilegeConfigTestDatabase),
+		"privileges": tdmysqlUserPrivilegeConfigTestGlobalPrivileges(),
+	})
+	if diags.HasError() {
+		panic(fmt.Sprintf("failed to build the database_privileges entry: %v", diags.Errors()))
+	}
+
+	return types.ListValueMust(
+		types.ListType{ElemType: types.ObjectType{AttrTypes: svctdmysql.TdmysqlUserPrivilegeConfigDatabasePrivilegesAttrTypes()}},
+		[]attr.Value{entry},
+	)
+}
+
+// tdmysqlUserPrivilegeConfigTestTablePrivileges builds a one-entry
+// table_privileges list value.
+func tdmysqlUserPrivilegeConfigTestTablePrivileges() types.List {
+	entry, diags := types.ObjectValue(svctdmysql.TdmysqlUserPrivilegeConfigTablePrivilegesAttrTypes(), map[string]attr.Value{
+		"database":   types.StringValue(tdmysqlUserPrivilegeConfigTestDatabase),
+		"table":      types.StringValue(tdmysqlUserPrivilegeConfigTestTable),
+		"privileges": tdmysqlUserPrivilegeConfigTestGlobalPrivileges(),
+	})
+	if diags.HasError() {
+		panic(fmt.Sprintf("failed to build the table_privileges entry: %v", diags.Errors()))
+	}
+
+	return types.ListValueMust(
+		types.ListType{ElemType: types.ObjectType{AttrTypes: svctdmysql.TdmysqlUserPrivilegeConfigTablePrivilegesAttrTypes()}},
+		[]attr.Value{entry},
+	)
+}
+
+func tdmysqlUserPrivilegeConfigTestDatabasePrivilegesNull() types.List {
+	return types.ListNull(types.ObjectType{AttrTypes: svctdmysql.TdmysqlUserPrivilegeConfigDatabasePrivilegesAttrTypes()})
+}
+
+func tdmysqlUserPrivilegeConfigTestTablePrivilegesNull() types.List {
+	return types.ListNull(types.ObjectType{AttrTypes: svctdmysql.TdmysqlUserPrivilegeConfigTablePrivilegesAttrTypes()})
+}
+
 // tdmysqlUserPrivilegeConfigTestModel builds the terraform model used for plan/state.
 // Every attribute carries an explicit typed value: the raw zero value breaks
-// tfsdk Plan/State reflection with "Value Conversion Error".
+// tfsdk Plan/State reflection with "Value Conversion Error". The default model
+// manages the GLOBAL privilege group only.
 func tdmysqlUserPrivilegeConfigTestModel() svctdmysql.TdmysqlUserPrivilegeConfigResourceModel {
 	return svctdmysql.TdmysqlUserPrivilegeConfigResourceModel{
-		Id:         types.StringValue(tdmysqlUserPrivilegeConfigTestComposite),
-		InstanceId: types.StringValue(tdmysqlUserPrivilegeConfigTestInstanceId),
-		Host:       types.StringValue(tdmysqlUserPrivilegeConfigTestHost),
-		UserName:   types.StringValue(tdmysqlUserPrivilegeConfigTestUserName),
-		DbName:     types.StringValue(tdmysqlUserPrivilegeConfigTestDbName),
-		Object:     types.StringNull(),
-		ObjectType: types.StringNull(),
-		ColName:    types.StringNull(),
-		Privileges: types.ListValueMust(types.StringType, []attr.Value{
-			types.StringValue("SELECT"),
-			types.StringValue("INSERT"),
-		}),
+		Id:                 types.StringValue(tdmysqlUserPrivilegeConfigTestComposite),
+		InstanceId:         types.StringValue(tdmysqlUserPrivilegeConfigTestInstanceId),
+		UserName:           types.StringValue(tdmysqlUserPrivilegeConfigTestUserName),
+		Host:               types.StringValue(tdmysqlUserPrivilegeConfigTestHost),
+		GlobalPrivileges:   tdmysqlUserPrivilegeConfigTestGlobalPrivileges(),
+		DatabasePrivileges: tdmysqlUserPrivilegeConfigTestDatabasePrivilegesNull(),
+		TablePrivileges:    tdmysqlUserPrivilegeConfigTestTablePrivilegesNull(),
 	}
 }
 
@@ -68,14 +117,20 @@ func patchTdmysqlUserPrivilegeConfigSdkClient(patches *gomonkey.Patches, client 
 
 // stubTdmysqlUserPrivilegeConfigDescribe stubs the describe API with the given
 // privileges (nil = the cloud answers without any privilege item, which the
-// service layer turns into fwHelper.ErrNotFound).
-func stubTdmysqlUserPrivilegeConfigDescribe(patches *gomonkey.Patches, tdmysqlClient *tdmysqlv20211122.Client, privileges []*string) {
+// service layer turns into fwHelper.ErrNotFound). The addressed request is
+// captured for scope assertions.
+func stubTdmysqlUserPrivilegeConfigDescribe(patches *gomonkey.Patches, tdmysqlClient *tdmysqlv20211122.Client, privileges []*string) **tdmysqlv20211122.DescribeUserPrivilegesRequest {
+	captured := new(*tdmysqlv20211122.DescribeUserPrivilegesRequest)
 	patches.ApplyMethodFunc(tdmysqlClient, "DescribeUserPrivileges", func(request *tdmysqlv20211122.DescribeUserPrivilegesRequest) (*tdmysqlv20211122.DescribeUserPrivilegesResponse, error) {
+		*captured = request
+
 		return &tdmysqlv20211122.DescribeUserPrivilegesResponse{Response: &tdmysqlv20211122.DescribeUserPrivilegesResponseParams{
 			Privileges: privileges,
 			RequestId:  tdmysqlUserPrivilegeConfigStr("fake-request-id"),
 		}}, nil
 	})
+
+	return captured
 }
 
 // tdmysqlUserPrivilegeConfigTestContext wires the resource to a configured client.
@@ -137,9 +192,9 @@ func (c *tdmysqlUserPrivilegeConfigTestContext) state(t *testing.T, m svctdmysql
 	return state
 }
 
-// TestTdmysqlUserPrivilegeConfigCreateSuccess verifies Create sends the locator and
-// the privilege list to the write API (global scope, db_name = "*"), and
-// records the cloud-reported values.
+// TestTdmysqlUserPrivilegeConfigCreateSuccess verifies Create sends the locator
+// and the planned global privilege group to the write API, and records the
+// cloud-reported values in the state.
 func TestTdmysqlUserPrivilegeConfigCreateSuccess(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
@@ -176,7 +231,10 @@ func TestTdmysqlUserPrivilegeConfigCreateSuccess(t *testing.T) {
 		t.Errorf("request users = %+v, want user_name %q with host %q", captured.Users, tdmysqlUserPrivilegeConfigTestUserName, tdmysqlUserPrivilegeConfigTestHost)
 	}
 	if len(captured.GlobalPrivileges) != 2 {
-		t.Errorf("request global_privileges = %+v, want 2 items (db_name is %q)", captured.GlobalPrivileges, tdmysqlUserPrivilegeConfigTestDbName)
+		t.Errorf("request global_privileges = %+v, want the 2 planned items", captured.GlobalPrivileges)
+	}
+	if captured.DatabasePrivileges != nil || captured.TablePrivileges != nil {
+		t.Errorf("request groups = %+v, want the unmanaged groups omitted", captured)
 	}
 
 	var got svctdmysql.TdmysqlUserPrivilegeConfigResourceModel
@@ -186,8 +244,8 @@ func TestTdmysqlUserPrivilegeConfigCreateSuccess(t *testing.T) {
 	if got.Id.ValueString() != tdmysqlUserPrivilegeConfigTestComposite {
 		t.Errorf("id = %q, want the composite locator %q", got.Id.ValueString(), tdmysqlUserPrivilegeConfigTestComposite)
 	}
-	if len(got.Privileges.Elements()) != 2 {
-		t.Errorf("privileges = %v, want 2 cloud-reported items", got.Privileges)
+	if len(got.GlobalPrivileges.Elements()) != 2 {
+		t.Errorf("global_privileges = %v, want 2 cloud-reported items", got.GlobalPrivileges)
 	}
 }
 
@@ -214,7 +272,8 @@ func TestTdmysqlUserPrivilegeConfigCreateApiError(t *testing.T) {
 }
 
 // TestTdmysqlUserPrivilegeConfigCreateDatabaseScope verifies the database-level
-// write group is used when object_type is "*" on a concrete database.
+// write group carries the planned entries and the unmanaged global group is
+// omitted from the request.
 func TestTdmysqlUserPrivilegeConfigCreateDatabaseScope(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
@@ -233,9 +292,8 @@ func TestTdmysqlUserPrivilegeConfigCreateDatabaseScope(t *testing.T) {
 	stubTdmysqlUserPrivilegeConfigDescribe(patches, tdmysqlClient, tdmysqlUserPrivilegeConfigTestPrivileges())
 
 	model := tdmysqlUserPrivilegeConfigTestModel()
-	model.DbName = types.StringValue("tf-example-db")
-	model.ObjectType = types.StringValue("*")
-	model.Id = types.StringValue(tdmysqlUserPrivilegeConfigTestInstanceId + "#" + tdmysqlUserPrivilegeConfigTestHost + "#" + tdmysqlUserPrivilegeConfigTestUserName + "#tf-example-db")
+	model.GlobalPrivileges = types.ListNull(types.StringType)
+	model.DatabasePrivileges = tdmysqlUserPrivilegeConfigTestDatabasePrivileges()
 
 	var createResp resource.CreateResponse
 	createResp.State = ctx.state(t, model)
@@ -247,13 +305,26 @@ func TestTdmysqlUserPrivilegeConfigCreateDatabaseScope(t *testing.T) {
 	if captured == nil {
 		t.Fatal("ModifyUserPrivileges request is nil")
 	}
-	if len(captured.DatabasePrivileges) != 1 || captured.DatabasePrivileges[0].Database == nil || *captured.DatabasePrivileges[0].Database != "tf-example-db" {
-		t.Errorf("request database_privileges = %+v, want one entry for db %q", captured.DatabasePrivileges, "tf-example-db")
+	if captured.GlobalPrivileges != nil {
+		t.Errorf("request global_privileges = %+v, want nil for the unmanaged group", captured.GlobalPrivileges)
+	}
+	if len(captured.DatabasePrivileges) != 1 ||
+		captured.DatabasePrivileges[0].Database == nil || *captured.DatabasePrivileges[0].Database != tdmysqlUserPrivilegeConfigTestDatabase ||
+		len(captured.DatabasePrivileges[0].Privileges) != 2 {
+		t.Errorf("request database_privileges = %+v, want one planned entry for db %q", captured.DatabasePrivileges, tdmysqlUserPrivilegeConfigTestDatabase)
+	}
+
+	var got svctdmysql.TdmysqlUserPrivilegeConfigResourceModel
+	if diags := createResp.State.Get(context.Background(), &got); diags.HasError() {
+		t.Fatalf("failed to read back state: %v", diags.Errors())
+	}
+	if got.DatabasePrivileges.IsNull() || len(got.DatabasePrivileges.Elements()) != 1 {
+		t.Errorf("database_privileges = %v, want the refreshed one-entry list", got.DatabasePrivileges)
 	}
 }
 
 // TestTdmysqlUserPrivilegeConfigCreateTableScope verifies the table-level write
-// group is used for a concrete table object.
+// group carries the planned entries.
 func TestTdmysqlUserPrivilegeConfigCreateTableScope(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
@@ -272,10 +343,8 @@ func TestTdmysqlUserPrivilegeConfigCreateTableScope(t *testing.T) {
 	stubTdmysqlUserPrivilegeConfigDescribe(patches, tdmysqlClient, tdmysqlUserPrivilegeConfigTestPrivileges())
 
 	model := tdmysqlUserPrivilegeConfigTestModel()
-	model.DbName = types.StringValue("tf-example-db")
-	model.Object = types.StringValue("tf-example-table")
-	model.ObjectType = types.StringValue("table")
-	model.Id = types.StringValue(tdmysqlUserPrivilegeConfigTestInstanceId + "#" + tdmysqlUserPrivilegeConfigTestHost + "#" + tdmysqlUserPrivilegeConfigTestUserName + "#tf-example-db")
+	model.GlobalPrivileges = types.ListNull(types.StringType)
+	model.TablePrivileges = tdmysqlUserPrivilegeConfigTestTablePrivileges()
 
 	var createResp resource.CreateResponse
 	createResp.State = ctx.state(t, model)
@@ -287,13 +356,16 @@ func TestTdmysqlUserPrivilegeConfigCreateTableScope(t *testing.T) {
 	if captured == nil {
 		t.Fatal("ModifyUserPrivileges request is nil")
 	}
-	if len(captured.TablePrivileges) != 1 || captured.TablePrivileges[0].Table == nil || *captured.TablePrivileges[0].Table != "tf-example-table" {
-		t.Errorf("request table_privileges = %+v, want one entry for table %q", captured.TablePrivileges, "tf-example-table")
+	if len(captured.TablePrivileges) != 1 ||
+		captured.TablePrivileges[0].Database == nil || *captured.TablePrivileges[0].Database != tdmysqlUserPrivilegeConfigTestDatabase ||
+		captured.TablePrivileges[0].Table == nil || *captured.TablePrivileges[0].Table != tdmysqlUserPrivilegeConfigTestTable ||
+		len(captured.TablePrivileges[0].Privileges) != 2 {
+		t.Errorf("request table_privileges = %+v, want one planned entry for %q.%q", captured.TablePrivileges, tdmysqlUserPrivilegeConfigTestDatabase, tdmysqlUserPrivilegeConfigTestTable)
 	}
 }
 
-// TestTdmysqlUserPrivilegeConfigReadSuccess verifies Read addresses the privileges
-// by the composite id and refreshes the privilege list.
+// TestTdmysqlUserPrivilegeConfigReadSuccess verifies Read refreshes the managed
+// global group through the read API's global addressing (db_name `*`).
 func TestTdmysqlUserPrivilegeConfigReadSuccess(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
@@ -301,17 +373,7 @@ func TestTdmysqlUserPrivilegeConfigReadSuccess(t *testing.T) {
 	ctx := newTdmysqlUserPrivilegeConfigTestContext(t)
 	tdmysqlClient := patchTdmysqlUserPrivilegeConfigSdkClient(patches, ctx.client)
 
-	var gotInstanceId string
-	patches.ApplyMethodFunc(tdmysqlClient, "DescribeUserPrivileges", func(request *tdmysqlv20211122.DescribeUserPrivilegesRequest) (*tdmysqlv20211122.DescribeUserPrivilegesResponse, error) {
-		if request.InstanceId != nil {
-			gotInstanceId = *request.InstanceId
-		}
-
-		return &tdmysqlv20211122.DescribeUserPrivilegesResponse{Response: &tdmysqlv20211122.DescribeUserPrivilegesResponseParams{
-			Privileges: tdmysqlUserPrivilegeConfigTestPrivileges(),
-			RequestId:  tdmysqlUserPrivilegeConfigStr("fake-request-id"),
-		}}, nil
-	})
+	captured := stubTdmysqlUserPrivilegeConfigDescribe(patches, tdmysqlClient, tdmysqlUserPrivilegeConfigTestPrivileges())
 
 	var readResp resource.ReadResponse
 	readResp.State = ctx.state(t, tdmysqlUserPrivilegeConfigTestModel())
@@ -320,8 +382,11 @@ func TestTdmysqlUserPrivilegeConfigReadSuccess(t *testing.T) {
 		t.Fatalf("Read failed: %v", readResp.Diagnostics.Errors())
 	}
 
-	if gotInstanceId != tdmysqlUserPrivilegeConfigTestInstanceId {
-		t.Errorf("DescribeUserPrivileges called with %q, want %q", gotInstanceId, tdmysqlUserPrivilegeConfigTestInstanceId)
+	if *captured == nil {
+		t.Fatal("DescribeUserPrivileges was not called")
+	}
+	if (*captured).DbName == nil || *(*captured).DbName != "*" {
+		t.Errorf("read addressing db_name = %v, want %q for the global group", (*captured).DbName, "*")
 	}
 
 	var got svctdmysql.TdmysqlUserPrivilegeConfigResourceModel
@@ -331,22 +396,20 @@ func TestTdmysqlUserPrivilegeConfigReadSuccess(t *testing.T) {
 	if got.InstanceId.ValueString() != tdmysqlUserPrivilegeConfigTestInstanceId {
 		t.Errorf("instance_id = %q, want %q", got.InstanceId.ValueString(), tdmysqlUserPrivilegeConfigTestInstanceId)
 	}
-	if got.Host.ValueString() != tdmysqlUserPrivilegeConfigTestHost {
-		t.Errorf("host = %q, want %q", got.Host.ValueString(), tdmysqlUserPrivilegeConfigTestHost)
-	}
 	if got.UserName.ValueString() != tdmysqlUserPrivilegeConfigTestUserName {
 		t.Errorf("user_name = %q, want %q", got.UserName.ValueString(), tdmysqlUserPrivilegeConfigTestUserName)
 	}
-	if got.DbName.ValueString() != tdmysqlUserPrivilegeConfigTestDbName {
-		t.Errorf("db_name = %q, want %q", got.DbName.ValueString(), tdmysqlUserPrivilegeConfigTestDbName)
+	if got.Host.ValueString() != tdmysqlUserPrivilegeConfigTestHost {
+		t.Errorf("host = %q, want %q", got.Host.ValueString(), tdmysqlUserPrivilegeConfigTestHost)
 	}
-	if len(got.Privileges.Elements()) != 2 {
-		t.Errorf("privileges = %v, want 2 items", got.Privileges)
+	if len(got.GlobalPrivileges.Elements()) != 2 {
+		t.Errorf("global_privileges = %v, want 2 cloud-reported items", got.GlobalPrivileges)
 	}
 }
 
-// TestTdmysqlUserPrivilegeConfigReadNotFound verifies that a describe answer without
-// any privilege item (fwHelper.ErrNotFound) drops the resource from state.
+// TestTdmysqlUserPrivilegeConfigReadNotFound verifies that a describe answer
+// without any privilege item (fwHelper.ErrNotFound) on EVERY managed scope
+// drops the resource from state.
 func TestTdmysqlUserPrivilegeConfigReadNotFound(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
@@ -406,7 +469,7 @@ func TestTdmysqlUserPrivilegeConfigUpdateSuccess(t *testing.T) {
 	stubTdmysqlUserPrivilegeConfigDescribe(patches, tdmysqlClient, tdmysqlUserPrivilegeConfigTestPrivileges())
 
 	model := tdmysqlUserPrivilegeConfigTestModel()
-	model.Privileges = types.ListValueMust(types.StringType, []attr.Value{
+	model.GlobalPrivileges = types.ListValueMust(types.StringType, []attr.Value{
 		types.StringValue("SELECT"),
 		types.StringValue("UPDATE"),
 		types.StringValue("DELETE"),
@@ -426,6 +489,9 @@ func TestTdmysqlUserPrivilegeConfigUpdateSuccess(t *testing.T) {
 	if captured == nil {
 		t.Fatal("ModifyUserPrivileges request is nil")
 	}
+	if len(captured.GlobalPrivileges) != 3 {
+		t.Errorf("request global_privileges = %+v, want the 3 planned items", captured.GlobalPrivileges)
+	}
 
 	var got svctdmysql.TdmysqlUserPrivilegeConfigResourceModel
 	if diags := updateResp.State.Get(context.Background(), &got); diags.HasError() {
@@ -434,8 +500,8 @@ func TestTdmysqlUserPrivilegeConfigUpdateSuccess(t *testing.T) {
 	if got.Id.ValueString() != tdmysqlUserPrivilegeConfigTestComposite {
 		t.Errorf("id = %q, want %q", got.Id.ValueString(), tdmysqlUserPrivilegeConfigTestComposite)
 	}
-	if len(got.Privileges.Elements()) != 2 {
-		t.Errorf("privileges = %v, want the 2 cloud-reported items", got.Privileges)
+	if len(got.GlobalPrivileges.Elements()) != 2 {
+		t.Errorf("global_privileges = %v, want the 2 cloud-reported items", got.GlobalPrivileges)
 	}
 }
 

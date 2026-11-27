@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -38,18 +39,56 @@ type TdmysqlUserPrivilegeConfigResource struct {
 	fw.ResourceWithConfigure
 }
 
-// TdmysqlUserPrivilegeConfigResourceModel maps every top-level schema attribute; each
-// one appears here exactly once.
-type TdmysqlUserPrivilegeConfigResourceModel struct {
-	Id         types.String `tfsdk:"id"`
-	InstanceId types.String `tfsdk:"instance_id"`
-	Host       types.String `tfsdk:"host"`
-	UserName   types.String `tfsdk:"user_name"`
-	DbName     types.String `tfsdk:"db_name"`
-	Object     types.String `tfsdk:"object"`
-	ObjectType types.String `tfsdk:"object_type"`
-	ColName    types.String `tfsdk:"col_name"`
+// TdmysqlUserPrivilegeConfigDatabasePrivilegesModel maps one entry of the
+// database_privileges list attribute.
+type TdmysqlUserPrivilegeConfigDatabasePrivilegesModel struct {
+	Database   types.String `tfsdk:"database"`
 	Privileges types.List   `tfsdk:"privileges"`
+}
+
+// TdmysqlUserPrivilegeConfigTablePrivilegesModel maps one entry of the
+// table_privileges list attribute.
+type TdmysqlUserPrivilegeConfigTablePrivilegesModel struct {
+	Database   types.String `tfsdk:"database"`
+	Table      types.String `tfsdk:"table"`
+	Privileges types.List   `tfsdk:"privileges"`
+}
+
+// TdmysqlUserPrivilegeConfigResourceModel maps every top-level schema
+// attribute; each one appears here exactly once. The schema mirrors the
+// ModifyUserPrivileges WRITE API input parameters (InstanceId, Users,
+// GlobalPrivileges, DatabasePrivileges, TablePrivileges) — the read API's
+// addressing parameters (db_name/object/object_type/col_name) are NOT schema
+// attributes; the read-back derives them from the managed groups.
+type TdmysqlUserPrivilegeConfigResourceModel struct {
+	Id                 types.String `tfsdk:"id"`
+	InstanceId         types.String `tfsdk:"instance_id"`
+	UserName           types.String `tfsdk:"user_name"`
+	Host               types.String `tfsdk:"host"`
+	GlobalPrivileges   types.List   `tfsdk:"global_privileges"`
+	DatabasePrivileges types.List   `tfsdk:"database_privileges"`
+	TablePrivileges    types.List   `tfsdk:"table_privileges"`
+}
+
+// TdmysqlUserPrivilegeConfigDatabasePrivilegesAttrTypes returns the attribute
+// types of one database_privileges entry. It is shared by every conversion so
+// the schema-facing shape never drifts, and it is exported so the external
+// test package can build the same object value.
+func TdmysqlUserPrivilegeConfigDatabasePrivilegesAttrTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"database":   types.StringType,
+		"privileges": types.ListType{ElemType: types.StringType},
+	}
+}
+
+// TdmysqlUserPrivilegeConfigTablePrivilegesAttrTypes is
+// TdmysqlUserPrivilegeConfigDatabasePrivilegesAttrTypes for table_privileges.
+func TdmysqlUserPrivilegeConfigTablePrivilegesAttrTypes() map[string]attr.Type {
+	return map[string]attr.Type{
+		"database":   types.StringType,
+		"table":      types.StringType,
+		"privileges": types.ListType{ElemType: types.StringType},
+	}
 }
 
 // Metadata reports the Terraform type name.
@@ -57,7 +96,9 @@ func (r *TdmysqlUserPrivilegeConfigResource) Metadata(_ context.Context, _ resou
 	resp.TypeName = "tencentcloud_tdmysql_user_privilege_config"
 }
 
-// Schema declares the user privileges of a TDSQL Boundless instance.
+// Schema declares the user privileges of a TDSQL Boundless instance. Every
+// attribute name is a mechanical snake_case conversion of a
+// ModifyUserPrivileges request field key.
 func (r *TdmysqlUserPrivilegeConfigResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Description: "Provides a resource to manage user privileges of a TDSQL Boundless instance. " +
@@ -66,21 +107,16 @@ func (r *TdmysqlUserPrivilegeConfigResource) Schema(_ context.Context, _ resourc
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:    true,
-				Description: "ID of the user privilege, in the format `instance_id#host#user_name#db_name`.",
+				Description: "ID of the user privilege config, in the format `instance_id#user_name#host`.",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
+			// Locator attributes — Required + RequiresReplace (InstanceId and
+			// the Users entry of the write API request).
 			"instance_id": schema.StringAttribute{
 				Required:    true,
 				Description: "Instance ID, such as tdsql3-5baee8df.",
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-			},
-			"host": schema.StringAttribute{
-				Required:    true,
-				Description: "The access host allowed for the user. The username and host uniquely identify an account.",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
@@ -92,42 +128,62 @@ func (r *TdmysqlUserPrivilegeConfigResource) Schema(_ context.Context, _ resourc
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"db_name": schema.StringAttribute{
+			"host": schema.StringAttribute{
 				Required:    true,
-				Description: "Database name. If it is `*`, it represents global privileges (that is, `*.*`), in which case the object_type and object parameters are ignored.",
+				Description: "The access host allowed for the user. The username and host uniquely identify an account.",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"object": schema.StringAttribute{
+			// Configuration body — the write API's three privilege groups.
+			// Every group is Optional+Computed: a group left unset in the
+			// plan is not sent to the cloud, and the read-back records the
+			// cloud-reported values for the managed groups.
+			"global_privileges": schema.ListAttribute{
 				Optional:    true,
-				Computed:    true,
-				Description: "The name of the specific type, for example the specific table name when object_type is table. When db_name and object_type are both concrete names, object represents the specific object name, which cannot be `*` or empty.",
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-			},
-			"object_type": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Type, which can be table, view, proc, func and `*`. When db_name is a concrete database name and object_type is `*`, it represents the privileges of that database (that is, db.*), in which case the object parameter is ignored.",
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-			},
-			"col_name": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "When object_type is table, col_name as `*` means querying the privileges of the table, and a specific column name means querying the privileges of the corresponding column.",
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-			},
-			"privileges": schema.ListAttribute{
-				Required:    true,
 				Computed:    true,
 				ElementType: types.StringType,
-				Description: "Privilege list.",
+				Description: "Global privileges.",
+			},
+			"database_privileges": schema.ListNestedAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Database level privileges.",
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"database": schema.StringAttribute{
+							Required:    true,
+							Description: "Database name.",
+						},
+						"privileges": schema.ListAttribute{
+							Required:    true,
+							ElementType: types.StringType,
+							Description: "Privilege list.",
+						},
+					},
+				},
+			},
+			"table_privileges": schema.ListNestedAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Table level privileges.",
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"database": schema.StringAttribute{
+							Required:    true,
+							Description: "Database name.",
+						},
+						"table": schema.StringAttribute{
+							Required:    true,
+							Description: "Table name.",
+						},
+						"privileges": schema.ListAttribute{
+							Required:    true,
+							ElementType: types.StringType,
+							Description: "Privilege list.",
+						},
+					},
+				},
 			},
 		},
 	}
@@ -143,17 +199,13 @@ func (r *TdmysqlUserPrivilegeConfigResource) Create(ctx context.Context, req res
 	}
 
 	// The state id is the composite locator input — never a fixed constant.
-	id := fwHelper.IdFormat(plan.InstanceId.ValueString(), plan.Host.ValueString(), plan.UserName.ValueString(), plan.DbName.ValueString())
+	// The segments are parent-first: instance_id#user_name#host.
+	id := fwHelper.IdFormat(plan.InstanceId.ValueString(), plan.UserName.ValueString(), plan.Host.ValueString())
 	plan.Id = types.StringValue(id)
 
 	service := NewTdmysqlService(r.Client())
 
-	r.modifyTdmysqlUserPrivileges(ctx, service, &plan, &resp.Diagnostics)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	r.refreshTdmysqlUserPrivilege(ctx, service, &plan, &resp.Diagnostics)
+	r.applyTdmysqlUserPrivilegeConfig(ctx, service, &plan, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -161,7 +213,7 @@ func (r *TdmysqlUserPrivilegeConfigResource) Create(ctx context.Context, req res
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
-// Read refreshes the privileges from the cloud.
+// Read refreshes the managed privilege groups from the cloud.
 func (r *TdmysqlUserPrivilegeConfigResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var state TdmysqlUserPrivilegeConfigResourceModel
 	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
@@ -170,50 +222,36 @@ func (r *TdmysqlUserPrivilegeConfigResource) Read(ctx context.Context, req resou
 	}
 
 	// Split the composite locator back out of the state id.
-	parts, err := fwHelper.IdParseErr(state.Id.ValueString(), 4)
+	parts, err := fwHelper.IdParseErr(state.Id.ValueString(), 3)
 	if err != nil {
-		resp.Diagnostics.AddError("Invalid TDSQL Boundless user privilege id", fmt.Sprintf("expected instance_id#host#user_name#db_name: %v", err))
-
-		return
-	}
-
-	service := NewTdmysqlService(r.Client())
-
-	describeUserPrivilegesRequest := tdmysqlv20211122.NewDescribeUserPrivilegesRequest()
-	describeUserPrivilegesRequest.InstanceId = fwHelper.String(parts[0])
-	describeUserPrivilegesRequest.Host = fwHelper.String(parts[1])
-	describeUserPrivilegesRequest.UserName = fwHelper.String(parts[2])
-	describeUserPrivilegesRequest.DbName = fwHelper.String(parts[3])
-	describeUserPrivilegesRequest.Object = fwHelper.StringPointerFromValue(state.Object)
-	describeUserPrivilegesRequest.ObjectType = fwHelper.StringPointerFromValue(state.ObjectType)
-	describeUserPrivilegesRequest.ColName = fwHelper.StringPointerFromValue(state.ColName)
-
-	params, err := service.DescribeTdmysqlUserPrivileges(ctx, describeUserPrivilegesRequest)
-	if err != nil {
-		// "Privileges gone" => drop from state so Terraform plans a
-		// recreation; transport errors still surface as errors.
-		if errors.Is(err, fwHelper.ErrNotFound) {
-			resp.Diagnostics.AddWarning(
-				"Resource not found",
-				fmt.Sprintf("TDSQL Boundless user privileges %s not found, removing from state.", state.Id.ValueString()),
-			)
-
-			resp.State.RemoveResource(ctx)
-
-			return
-		}
-
-		resp.Diagnostics.AddError("Error reading TDSQL Boundless user privileges", err.Error())
+		resp.Diagnostics.AddError("Invalid TDSQL Boundless user privilege config id", fmt.Sprintf("expected instance_id#user_name#host: %v", err))
 
 		return
 	}
 
 	state.InstanceId = types.StringValue(parts[0])
-	state.Host = types.StringValue(parts[1])
-	state.UserName = types.StringValue(parts[2])
-	state.DbName = types.StringValue(parts[3])
-	state.Privileges = fwHelper.ListFromPointers(ctx, types.StringType, params.Privileges, &resp.Diagnostics)
+	state.UserName = types.StringValue(parts[1])
+	state.Host = types.StringValue(parts[2])
+
+	service := NewTdmysqlService(r.Client())
+
+	queried, notFound := r.refreshTdmysqlUserPrivilegeConfig(ctx, service, &state, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// Every managed scope confirmed absent on the cloud side => the parent
+	// user (or the whole privilege set) is gone => drop the resource from
+	// state so Terraform plans a recreation. Transport errors already
+	// surfaced as errors above.
+	if queried > 0 && queried == notFound {
+		resp.Diagnostics.AddWarning(
+			"Resource not found",
+			fmt.Sprintf("TDSQL Boundless user privileges %s not found, removing from state.", state.Id.ValueString()),
+		)
+
+		resp.State.RemoveResource(ctx)
+
 		return
 	}
 
@@ -239,15 +277,7 @@ func (r *TdmysqlUserPrivilegeConfigResource) Update(ctx context.Context, req res
 
 	service := NewTdmysqlService(r.Client())
 
-	// The write API only covers the privilege list; the read-back always runs.
-	if !plan.Privileges.Equal(state.Privileges) {
-		r.modifyTdmysqlUserPrivileges(ctx, service, &plan, &resp.Diagnostics)
-		if resp.Diagnostics.HasError() {
-			return
-		}
-	}
-
-	r.refreshTdmysqlUserPrivilege(ctx, service, &plan, &resp.Diagnostics)
+	r.applyTdmysqlUserPrivilegeConfig(ctx, service, &plan, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -261,12 +291,28 @@ func (r *TdmysqlUserPrivilegeConfigResource) Update(ctx context.Context, req res
 func (r *TdmysqlUserPrivilegeConfigResource) Delete(_ context.Context, _ resource.DeleteRequest, _ *resource.DeleteResponse) {
 }
 
-// modifyTdmysqlUserPrivileges writes the planned privileges through the write
-// API. The privilege group follows the scope carried by the locator: a
-// wildcard db_name targets global privileges (*.*), a wildcard object_type on
-// a concrete database targets database-level privileges (db.*), and a
-// concrete table object targets table-level privileges.
-func (r *TdmysqlUserPrivilegeConfigResource) modifyTdmysqlUserPrivileges(ctx context.Context, service TdmysqlService, plan *TdmysqlUserPrivilegeConfigResourceModel, diags *diag.Diagnostics) {
+// ImportState splits the composite id into the three locator attributes. The
+// id segments are parent-first: instance_id#user_name#host.
+func (r *TdmysqlUserPrivilegeConfigResource) ImportState(ctx context.Context, request resource.ImportStateRequest, response *resource.ImportStateResponse) {
+	parts, err := fwHelper.IdParseErr(request.ID, 3)
+	if err != nil {
+		response.Diagnostics.AddError("Invalid TDSQL Boundless user privilege config id", fmt.Sprintf("expected instance_id#user_name#host: %v", err))
+
+		return
+	}
+
+	response.State.SetAttribute(ctx, path.Root("id"), request.ID)
+	response.State.SetAttribute(ctx, path.Root("instance_id"), parts[0])
+	response.State.SetAttribute(ctx, path.Root("user_name"), parts[1])
+	response.State.SetAttribute(ctx, path.Root("host"), parts[2])
+}
+
+// applyTdmysqlUserPrivilegeConfig writes the planned privilege groups through
+// the ModifyUserPrivileges WRITE API and reads every managed group back. The
+// request fields mirror the write API input one to one: a group left null or
+// unknown in the plan is not sent, so the cloud keeps its current value for
+// it.
+func (r *TdmysqlUserPrivilegeConfigResource) applyTdmysqlUserPrivilegeConfig(ctx context.Context, service TdmysqlService, plan *TdmysqlUserPrivilegeConfigResourceModel, diags *diag.Diagnostics) {
 	modifyUserPrivilegesRequest := tdmysqlv20211122.NewModifyUserPrivilegesRequest()
 	modifyUserPrivilegesRequest.InstanceId = fwHelper.String(plan.InstanceId.ValueString())
 	modifyUserPrivilegesRequest.Users = []*tdmysqlv20211122.User{
@@ -276,92 +322,229 @@ func (r *TdmysqlUserPrivilegeConfigResource) modifyTdmysqlUserPrivileges(ctx con
 		},
 	}
 
-	privileges := fwHelper.PointersFromList[string](ctx, plan.Privileges, diags)
-	if diags.HasError() {
-		return
-	}
-
-	// sent tracks whether the plan's scope matched a dedicated write group:
-	// only a matched group is sent to the cloud.
-	sent := false
-
-	switch {
-	case plan.DbName.ValueString() == "*":
-		// Global privileges (*.*).
-		modifyUserPrivilegesRequest.GlobalPrivileges = privileges
-		sent = true
-	case plan.ObjectType.ValueString() == "*":
-		// Database level privileges (db.*).
-		modifyUserPrivilegesRequest.DatabasePrivileges = []*tdmysqlv20211122.DatabasePrivileges{
-			{
-				Database:   fwHelper.String(plan.DbName.ValueString()),
-				Privileges: privileges,
-			},
+	if !plan.GlobalPrivileges.IsNull() && !plan.GlobalPrivileges.IsUnknown() {
+		modifyUserPrivilegesRequest.GlobalPrivileges = fwHelper.PointersFromList[string](ctx, plan.GlobalPrivileges, diags)
+		if diags.HasError() {
+			return
 		}
-		sent = true
-	case plan.ObjectType.ValueString() == "table" && plan.Object.ValueString() != "":
-		// Table level privileges.
-		modifyUserPrivilegesRequest.TablePrivileges = []*tdmysqlv20211122.TablePrivileges{
-			{
-				Database:   fwHelper.String(plan.DbName.ValueString()),
-				Table:      fwHelper.String(plan.Object.ValueString()),
-				Privileges: privileges,
-			},
+	}
+
+	if !plan.DatabasePrivileges.IsNull() && !plan.DatabasePrivileges.IsUnknown() {
+		modifyUserPrivilegesRequest.DatabasePrivileges = expandTdmysqlUserPrivilegeConfigDatabasePrivileges(ctx, plan.DatabasePrivileges, diags)
+		if diags.HasError() {
+			return
 		}
-		sent = true
-	default:
-		// TODO(human): scopes without a dedicated write group in
-		// ModifyUserPrivileges (object_type view/proc/func, or a table scope
-		// without an object name) are skipped conservatively — only the
-		// read-back runs. Decide the intended semantics for these scopes.
 	}
 
-	if !sent {
-		return
+	if !plan.TablePrivileges.IsNull() && !plan.TablePrivileges.IsUnknown() {
+		modifyUserPrivilegesRequest.TablePrivileges = expandTdmysqlUserPrivilegeConfigTablePrivileges(ctx, plan.TablePrivileges, diags)
+		if diags.HasError() {
+			return
+		}
 	}
 
-	if err := service.ModifyTdmysqlUserPrivileges(ctx, modifyUserPrivilegesRequest); err != nil {
-		diags.AddError("Error updating TDSQL Boundless user privileges", err.Error())
+	// A plan without any managed group carries no write intent; only the
+	// read-back runs.
+	if modifyUserPrivilegesRequest.GlobalPrivileges != nil || modifyUserPrivilegesRequest.DatabasePrivileges != nil || modifyUserPrivilegesRequest.TablePrivileges != nil {
+		if err := service.ModifyTdmysqlUserPrivileges(ctx, modifyUserPrivilegesRequest); err != nil {
+			diags.AddError("Error updating TDSQL Boundless user privileges", err.Error())
+
+			return
+		}
 	}
+
+	r.refreshTdmysqlUserPrivilegeConfig(ctx, service, plan, diags)
 }
 
-// refreshTdmysqlUserPrivilege reads the privileges back from the cloud, so
-// the Required+Computed privilege list always records the cloud-reported
-// values: when the cloud normalizes a write, the difference surfaces in the
-// next plan instead of being second-guessed here.
-func (r *TdmysqlUserPrivilegeConfigResource) refreshTdmysqlUserPrivilege(ctx context.Context, service TdmysqlService, plan *TdmysqlUserPrivilegeConfigResourceModel, diags *diag.Diagnostics) {
+// refreshTdmysqlUserPrivilegeConfig reads back every privilege group carried
+// by the model (the plan during apply, the state during Read), so the
+// Required-for-the-group + Computed privilege values always record the
+// cloud-reported values. The read API addresses ONE scope per call; the
+// addressing is derived from the managed groups themselves:
+//   - global_privileges      -> db_name `*` (global, i.e. *.*)
+//   - database_privileges[i] -> db_name <database>, object_type `*` (db.*)
+//   - table_privileges[i]    -> db_name <database>, object_type `table`,
+//     object <table>, col_name `*` (the table's own privileges)
+//
+// A group confirmed absent on the cloud side keeps the previously configured
+// value (the OrPrev anti-diff contract for Optional+Computed attributes).
+// The write direction is ModifyUserPrivileges; no async flow id exists to
+// expose.
+func (r *TdmysqlUserPrivilegeConfigResource) refreshTdmysqlUserPrivilegeConfig(ctx context.Context, service TdmysqlService, model *TdmysqlUserPrivilegeConfigResourceModel, diags *diag.Diagnostics) (queried int, notFound int) {
+	if !model.GlobalPrivileges.IsNull() && !model.GlobalPrivileges.IsUnknown() {
+		privileges, empty := r.describeTdmysqlUserPrivilegeConfigScope(ctx, service, model, "*", "", "", "", diags)
+		queried++
+		if empty {
+			notFound++
+		}
+
+		if diags.HasError() {
+			return
+		}
+
+		model.GlobalPrivileges = fwHelper.ListFromPointersOrPrev(ctx, types.StringType, privileges, model.GlobalPrivileges, diags)
+		if diags.HasError() {
+			return
+		}
+	}
+
+	if !model.DatabasePrivileges.IsNull() && !model.DatabasePrivileges.IsUnknown() {
+		var prevEntries []TdmysqlUserPrivilegeConfigDatabasePrivilegesModel
+		diags.Append(model.DatabasePrivileges.ElementsAs(ctx, &prevEntries, false)...)
+		if diags.HasError() {
+			return
+		}
+
+		refreshed := make([]TdmysqlUserPrivilegeConfigDatabasePrivilegesModel, 0, len(prevEntries))
+		for _, prev := range prevEntries {
+			privileges, empty := r.describeTdmysqlUserPrivilegeConfigScope(ctx, service, model, prev.Database.ValueString(), "*", "", "", diags)
+			queried++
+			if empty {
+				notFound++
+			}
+
+			if diags.HasError() {
+				return
+			}
+
+			refreshed = append(refreshed, TdmysqlUserPrivilegeConfigDatabasePrivilegesModel{
+				Database:   prev.Database,
+				Privileges: fwHelper.ListFromPointersOrPrev(ctx, types.StringType, privileges, prev.Privileges, diags),
+			})
+			if diags.HasError() {
+				return
+			}
+		}
+
+		list, listDiags := types.ListValueFrom(ctx, types.ListType{ElemType: types.ObjectType{AttrTypes: TdmysqlUserPrivilegeConfigDatabasePrivilegesAttrTypes()}}, refreshed)
+		diags.Append(listDiags...)
+		if diags.HasError() {
+			return
+		}
+
+		model.DatabasePrivileges = list
+	}
+
+	if !model.TablePrivileges.IsNull() && !model.TablePrivileges.IsUnknown() {
+		var prevEntries []TdmysqlUserPrivilegeConfigTablePrivilegesModel
+		diags.Append(model.TablePrivileges.ElementsAs(ctx, &prevEntries, false)...)
+		if diags.HasError() {
+			return
+		}
+
+		refreshed := make([]TdmysqlUserPrivilegeConfigTablePrivilegesModel, 0, len(prevEntries))
+		for _, prev := range prevEntries {
+			privileges, empty := r.describeTdmysqlUserPrivilegeConfigScope(ctx, service, model, prev.Database.ValueString(), "table", prev.Table.ValueString(), "*", diags)
+			queried++
+			if empty {
+				notFound++
+			}
+
+			if diags.HasError() {
+				return
+			}
+
+			refreshed = append(refreshed, TdmysqlUserPrivilegeConfigTablePrivilegesModel{
+				Database:   prev.Database,
+				Table:      prev.Table,
+				Privileges: fwHelper.ListFromPointersOrPrev(ctx, types.StringType, privileges, prev.Privileges, diags),
+			})
+			if diags.HasError() {
+				return
+			}
+		}
+
+		list, listDiags := types.ListValueFrom(ctx, types.ListType{ElemType: types.ObjectType{AttrTypes: TdmysqlUserPrivilegeConfigTablePrivilegesAttrTypes()}}, refreshed)
+		diags.Append(listDiags...)
+		if diags.HasError() {
+			return
+		}
+
+		model.TablePrivileges = list
+	}
+
+	return
+}
+
+// describeTdmysqlUserPrivilegeConfigScope queries ONE privilege scope through
+// the read API. The notFound result reports the shared ErrNotFound sentinel
+// ("confirmed absent" — the describe answer carries no privilege item);
+// transport errors surface as diagnostics and a nil list.
+func (r *TdmysqlUserPrivilegeConfigResource) describeTdmysqlUserPrivilegeConfigScope(ctx context.Context, service TdmysqlService, model *TdmysqlUserPrivilegeConfigResourceModel, dbName, objectType, object, colName string, diags *diag.Diagnostics) (privileges []*string, notFound bool) {
 	describeUserPrivilegesRequest := tdmysqlv20211122.NewDescribeUserPrivilegesRequest()
-	describeUserPrivilegesRequest.InstanceId = fwHelper.String(plan.InstanceId.ValueString())
-	describeUserPrivilegesRequest.Host = fwHelper.String(plan.Host.ValueString())
-	describeUserPrivilegesRequest.UserName = fwHelper.String(plan.UserName.ValueString())
-	describeUserPrivilegesRequest.DbName = fwHelper.String(plan.DbName.ValueString())
-	describeUserPrivilegesRequest.Object = fwHelper.StringPointerFromValue(plan.Object)
-	describeUserPrivilegesRequest.ObjectType = fwHelper.StringPointerFromValue(plan.ObjectType)
-	describeUserPrivilegesRequest.ColName = fwHelper.StringPointerFromValue(plan.ColName)
+	describeUserPrivilegesRequest.InstanceId = fwHelper.String(model.InstanceId.ValueString())
+	describeUserPrivilegesRequest.Host = fwHelper.String(model.Host.ValueString())
+	describeUserPrivilegesRequest.UserName = fwHelper.String(model.UserName.ValueString())
+	describeUserPrivilegesRequest.DbName = fwHelper.String(dbName)
+	if objectType != "" {
+		describeUserPrivilegesRequest.ObjectType = fwHelper.String(objectType)
+	}
+
+	if object != "" {
+		describeUserPrivilegesRequest.Object = fwHelper.String(object)
+	}
+
+	if colName != "" {
+		describeUserPrivilegesRequest.ColName = fwHelper.String(colName)
+	}
 
 	params, err := service.DescribeTdmysqlUserPrivileges(ctx, describeUserPrivilegesRequest)
 	if err != nil {
-		diags.AddError("Error reading TDSQL Boundless user privileges after update", err.Error())
+		if errors.Is(err, fwHelper.ErrNotFound) {
+			return nil, true
+		}
 
-		return
+		diags.AddError("Error reading TDSQL Boundless user privileges", err.Error())
+
+		return nil, false
 	}
 
-	plan.Privileges = fwHelper.ListFromPointers(ctx, types.StringType, params.Privileges, diags)
+	return params.Privileges, false
 }
 
-// ImportState splits the composite id into the four locator attributes. The
-// id segments are parent-first: instance_id#host#user_name#db_name.
-func (r *TdmysqlUserPrivilegeConfigResource) ImportState(ctx context.Context, request resource.ImportStateRequest, response *resource.ImportStateResponse) {
-	parts, err := fwHelper.IdParseErr(request.ID, 4)
-	if err != nil {
-		response.Diagnostics.AddError("Invalid TDSQL Boundless user privilege id", fmt.Sprintf("expected instance_id#host#user_name#db_name: %v", err))
-
-		return
+// expandTdmysqlUserPrivilegeConfigDatabasePrivileges converts the planned
+// database_privileges list into the SDK request entries.
+func expandTdmysqlUserPrivilegeConfigDatabasePrivileges(ctx context.Context, value types.List, diags *diag.Diagnostics) []*tdmysqlv20211122.DatabasePrivileges {
+	var entries []TdmysqlUserPrivilegeConfigDatabasePrivilegesModel
+	diags.Append(value.ElementsAs(ctx, &entries, false)...)
+	if diags.HasError() {
+		return nil
 	}
 
-	response.State.SetAttribute(ctx, path.Root("id"), request.ID)
-	response.State.SetAttribute(ctx, path.Root("instance_id"), parts[0])
-	response.State.SetAttribute(ctx, path.Root("host"), parts[1])
-	response.State.SetAttribute(ctx, path.Root("user_name"), parts[2])
-	response.State.SetAttribute(ctx, path.Root("db_name"), parts[3])
+	result := make([]*tdmysqlv20211122.DatabasePrivileges, 0, len(entries))
+	for _, entry := range entries {
+		result = append(result, &tdmysqlv20211122.DatabasePrivileges{
+			Database:   fwHelper.StringPointerFromValue(entry.Database),
+			Privileges: fwHelper.PointersFromList[string](ctx, entry.Privileges, diags),
+		})
+		if diags.HasError() {
+			return nil
+		}
+	}
+
+	return result
+}
+
+// expandTdmysqlUserPrivilegeConfigTablePrivileges converts the planned
+// table_privileges list into the SDK request entries.
+func expandTdmysqlUserPrivilegeConfigTablePrivileges(ctx context.Context, value types.List, diags *diag.Diagnostics) []*tdmysqlv20211122.TablePrivileges {
+	var entries []TdmysqlUserPrivilegeConfigTablePrivilegesModel
+	diags.Append(value.ElementsAs(ctx, &entries, false)...)
+	if diags.HasError() {
+		return nil
+	}
+
+	result := make([]*tdmysqlv20211122.TablePrivileges, 0, len(entries))
+	for _, entry := range entries {
+		result = append(result, &tdmysqlv20211122.TablePrivileges{
+			Database:   fwHelper.StringPointerFromValue(entry.Database),
+			Table:      fwHelper.StringPointerFromValue(entry.Table),
+			Privileges: fwHelper.PointersFromList[string](ctx, entry.Privileges, diags),
+		})
+		if diags.HasError() {
+			return nil
+		}
+	}
+
+	return result
 }
