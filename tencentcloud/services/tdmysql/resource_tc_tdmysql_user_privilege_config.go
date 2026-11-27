@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -138,17 +139,27 @@ func (r *TdmysqlUserPrivilegeConfigResource) Schema(_ context.Context, _ resourc
 			// Configuration body — the write API's three privilege groups.
 			// Every group is Optional+Computed: a group left unset in the
 			// plan is not sent to the cloud, and the read-back records the
-			// cloud-reported values for the managed groups.
+			// cloud-reported values for the managed groups. UseStateForUnknown
+			// keeps a user-omitted group diff-free: core plans it as unknown,
+			// the modifier substitutes the prior state value, and since the
+			// apply path never writes into unmanaged groups the applied value
+			// always matches the plan.
 			"global_privileges": schema.ListAttribute{
 				Optional:    true,
 				Computed:    true,
 				ElementType: types.StringType,
 				Description: "Global privileges.",
+				PlanModifiers: []planmodifier.List{
+					listplanmodifier.UseStateForUnknown(),
+				},
 			},
 			"database_privileges": schema.ListNestedAttribute{
 				Optional:    true,
 				Computed:    true,
 				Description: "Database level privileges.",
+				PlanModifiers: []planmodifier.List{
+					listplanmodifier.UseStateForUnknown(),
+				},
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"database": schema.StringAttribute{
@@ -167,6 +178,9 @@ func (r *TdmysqlUserPrivilegeConfigResource) Schema(_ context.Context, _ resourc
 				Optional:    true,
 				Computed:    true,
 				Description: "Table level privileges.",
+				PlanModifiers: []planmodifier.List{
+					listplanmodifier.UseStateForUnknown(),
+				},
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"database": schema.StringAttribute{

@@ -18,6 +18,13 @@
 //     Required+Computed and Optional+Required are FORBIDDEN, an attribute
 //     with no flag at all is invalid, Default only pairs with Optional,
 //     and each plan modifier package must match the attribute type.
+//   - Optional+Computed configuration-body attributes carry the type-matched
+//     UseStateForUnknown() plan modifier: core plans a user-omitted
+//     Optional+Computed attribute as unknown, the modifier substitutes the
+//     prior state value, and the apply path must guarantee it never writes a
+//     new value into a user-omitted attribute (otherwise
+//     "inconsistent result after apply"). Metadata fields that change on
+//     every write (update_time/modifier) must NOT carry it.
 //   - Every schema attribute (locator + configuration body) is a mechanical
 //     snake_case conversion of an api.update WRITE-request field key. Read
 //     API request parameters (addressing/filter inputs) NEVER enter the
