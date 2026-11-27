@@ -1,26 +1,26 @@
-Provides a resource to manage a TDSQL-C for MySQL user.
+Provides a resource to manage a TDSQL Boundless(tdmysql) user.
 
 Example Usage
 
 ```hcl
 resource "tencentcloud_tdmysql_user" "example" {
-  instance_id = "tdsqlc-c1q7xi8l"
-  user_name   = "tf-example-user"
+  instance_id = "tdsql3-ibpyogg7tg"
+  user_name   = "tf-example"
   host        = "10.0.0.1"
-  password    = "TF@example-12345"
+  password    = "Password@2026"
   description = "created by terraform"
 
   timeouts {
-    create = "15m"
-    delete = "15m"
+    create = "3m"
+    delete = "3m"
   }
 }
 ```
 
 Import
 
-TDSQL-C for MySQL user can be imported using the composite id `instance_id#user_name#host`, e.g.
+TDSQL Boundless(tdmysql) user can be imported using the composite id `instance_id#user_name#host`, e.g.
 
 ```
-terraform import tencentcloud_tdmysql_user.example tdsqlc-c1q7xi8l#tf-example-user#10.0.0.1
+terraform import tencentcloud_tdmysql_user.example tdsql3-ibpyogg7tg#tf-example#10.0.0.1
 ```
