@@ -10,6 +10,32 @@
 // structure, retry shape, diagnostics, formatting) — every concrete field
 // below is a PLACEHOLDER to be replaced by the real resource's analysis.
 //
+// TEMPLATE: HARD RULES for the CONFIG schema (violations are generation
+// defects, checked mechanically before delivery):
+//   - Schema attribute declarations follow the terraform-plugin-framework
+//     OFFICIAL standard 100% (conventions.md section 2): legal flag combos
+//     are ONLY Required / Optional / Optional+Computed / Computed.
+//     Required+Computed and Optional+Required are FORBIDDEN, an attribute
+//     with no flag at all is invalid, Default only pairs with Optional,
+//     and each plan modifier package must match the attribute type.
+//   - Optional+Computed configuration-body attributes carry the type-matched
+//     UseStateForUnknown() plan modifier: core plans a user-omitted
+//     Optional+Computed attribute as unknown, the modifier substitutes the
+//     prior state value, and the apply path must guarantee it never writes a
+//     new value into a user-omitted attribute (otherwise
+//     "inconsistent result after apply"). Metadata fields that change on
+//     every write (update_time/modifier) must NOT carry it. An IMMUTABLE
+//     Optional+Computed field (no update coverage) carries BOTH modifiers:
+//     <type>planmodifier.RequiresReplace() (value change => recreate) and
+//     <type>planmodifier.UseStateForUnknown() (user-omitted => no diff);
+//     they never misfire together (RequiresReplace skips unknown plan
+//     values, UseStateForUnknown substitutes the state value).
+//   - Every schema attribute (locator + configuration body) is a mechanical
+//     snake_case conversion of an api.update WRITE-request field key. Read
+//     API request parameters (addressing/filter inputs) NEVER enter the
+//     schema — the read-back addressing is derived in code from the locator
+//     and the managed configuration body.
+//
 // Use this template when the codegen JSON has resource_type = "config".
 // The essence of config: the API REQUEST parameters carry BOTH the locator
 // of the parent resource (whatever its real name is — InstanceId,
@@ -37,6 +63,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -144,7 +172,15 @@ func (r *DemoWidgetConfigResource) Schema(_ context.Context, _ resource.SchemaRe
 				},
 			},
 			// TEMPLATE: model the configuration body as a SingleNestedAttribute;
-			// every leaf Optional+Computed so unset leaves keep cloud values.
+			// every leaf Optional+Computed. HARD RULE: every Optional+Computed
+			// leaf carries the TYPE-MATCHED UseStateForUnknown() plan modifier
+			// — core plans a user-omitted leaf as unknown, the modifier
+			// substitutes the prior state value, and the leaf never diffs
+			// while unset. THE SAFETY PRECONDITION is the flatten semantics:
+			// a user-omitted leaf (previous value null) stays null in state —
+			// the apply path must NEVER adopt a cloud value into a
+			// user-omitted leaf, or apply trips "inconsistent result after
+			// apply" (see flattenWidgetSettings).
 			"settings": schema.SingleNestedAttribute{
 				Required:    true,
 				Description: "Widget configuration settings.",
@@ -153,16 +189,25 @@ func (r *DemoWidgetConfigResource) Schema(_ context.Context, _ resource.SchemaRe
 						Optional:    true,
 						Computed:    true,
 						Description: "Log retention days.",
+						PlanModifiers: []planmodifier.Int64{
+							int64planmodifier.UseStateForUnknown(),
+						},
 					},
 					"enabled": schema.BoolAttribute{
 						Optional:    true,
 						Computed:    true,
 						Description: "Whether the widget feature is enabled.",
+						PlanModifiers: []planmodifier.Bool{
+							boolplanmodifier.UseStateForUnknown(),
+						},
 					},
 					"notify_email": schema.StringAttribute{
 						Optional:    true,
 						Computed:    true,
 						Description: "Notification email.",
+						PlanModifiers: []planmodifier.String{
+							stringplanmodifier.UseStateForUnknown(),
+						},
 					},
 				},
 			},
@@ -415,9 +460,13 @@ func expandWidgetSettings(ctx context.Context, value types.Object, diags *diag.D
 }
 
 // flattenWidgetSettings converts the cloud-side settings into the settings
-// object. The cloud may omit a field; the previously configured value is
-// then kept so an Optional+Computed attribute never flips to null after
-// apply.
+// object. The leaves are Optional+Computed with UseStateForUnknown, so the
+// applied value MUST equal the planned value (= the prior state value):
+//   - a user-omitted leaf (previous value null) STAYS null — a cloud value
+//     is never adopted into a leaf the user did not set (adopting it would
+//     trip "provider produced inconsistent result after apply");
+//   - a user-set leaf records the cloud-reported value, keeping the
+//     previously configured value only when the cloud omits the field.
 func flattenWidgetSettings(ctx context.Context, settings *demov20230101.WidgetSettings, prev types.Object, diags *diag.Diagnostics) types.Object {
 	var previous DemoWidgetConfigSettingsModel
 	if !prev.IsNull() && !prev.IsUnknown() {
@@ -440,13 +489,32 @@ func flattenWidgetSettings(ctx context.Context, settings *demov20230101.WidgetSe
 		settings = &demov20230101.WidgetSettings{}
 	}
 
-	// TEMPLATE: the settings leaves are user-configurable (Optional+Computed),
-	// so the read-direction anti-diff conversions use the OrPrev family from
-	// fwHelper — a cloud-omitted field keeps the previously configured value.
-	merged := DemoWidgetConfigSettingsModel{
-		RetentionDays: fwHelper.Int64ValueOrPrev(settings.RetentionDays, previous.RetentionDays),
-		Enabled:       fwHelper.BoolValueOrPrev(settings.Enabled, previous.Enabled),
-		NotifyEmail:   fwHelper.StringValueOrPrev(settings.NotifyEmail, previous.NotifyEmail),
+	// TEMPLATE: two-step merge per leaf, in this exact order:
+	//  1. user-omitted (previous null OR unknown — on create core plans a
+	//     user-omitted Optional+Computed leaf as unknown and, with no prior
+	//     state, UseStateForUnknown leaves it unknown) -> keep null
+	//     (types.XxxNull). Persisting an unknown leaf would trip
+	//     "Provider returned invalid result object after apply", and
+	//     adopting a cloud value would contradict the modifier's planned
+	//     prior-state value on later plans — see the UseStateForUnknown
+	//     safety precondition on the schema;
+	//  2. user-set -> cloud value, falling back to the previous value when
+	//     the cloud omits the field (the OrPrev family from fwHelper).
+	merged := DemoWidgetConfigSettingsModel{}
+	if previous.RetentionDays.IsNull() || previous.RetentionDays.IsUnknown() {
+		merged.RetentionDays = types.Int64Null()
+	} else {
+		merged.RetentionDays = fwHelper.Int64ValueOrPrev(settings.RetentionDays, previous.RetentionDays)
+	}
+	if previous.Enabled.IsNull() || previous.Enabled.IsUnknown() {
+		merged.Enabled = types.BoolNull()
+	} else {
+		merged.Enabled = fwHelper.BoolValueOrPrev(settings.Enabled, previous.Enabled)
+	}
+	if previous.NotifyEmail.IsNull() || previous.NotifyEmail.IsUnknown() {
+		merged.NotifyEmail = types.StringNull()
+	} else {
+		merged.NotifyEmail = fwHelper.StringValueOrPrev(settings.NotifyEmail, previous.NotifyEmail)
 	}
 
 	result, objectDiags := types.ObjectValueFrom(ctx, DemoWidgetConfigSettingsAttrTypes(), merged)

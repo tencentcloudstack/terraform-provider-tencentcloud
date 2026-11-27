@@ -47,13 +47,14 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssl"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tco"
-	tdmysql "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdmysql"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdmysql"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 )
 
 // resourcesMap maps every framework managed resource type name to its factory.
 var resourcesMap = map[string]func() resource.Resource{
 	"tencentcloud_ags_sandbox_tool":                 ags.NewAgsSandboxToolResource,
+	"tencentcloud_ags_sandbox_instance":             ags.NewAgsSandboxInstanceResource,
 	"tencentcloud_cam_update_password_rule_config":  cam.NewCamUpdatePasswordRuleConfigResource,
 	"tencentcloud_config_aggregate_compliance_pack": config.NewConfigAggregateCompliancePackResource,
 	"tencentcloud_cos_vector_bucket":                cos.NewCosVectorBucketResource,
@@ -68,6 +69,8 @@ var resourcesMap = map[string]func() resource.Resource{
 	"tencentcloud_oceanus_cluster":                  oceanus.NewOceanusClusterResource,
 	"tencentcloud_ssm_secret_version_v2":            ssm.NewSsmSecretVersionV2Resource,
 	"tencentcloud_tdmysql_dbs_backup":               tdmysql.NewTdmysqlDbsBackupResource,
+	"tencentcloud_tdmysql_user":                     tdmysql.NewTdmysqlUserResource,
+	"tencentcloud_tdmysql_user_privilege_config":    tdmysql.NewTdmysqlUserPrivilegeConfigResource,
 }
 
 // dataSourcesMap maps every framework data source type name to its factory.
@@ -80,6 +83,10 @@ var dataSourcesMap = map[string]func() datasource.DataSource{
 	"tencentcloud_monitor_dispense_region":                monitor.NewMonitorDispenseRegionDataSource,
 	"tencentcloud_makers_deployment_log":                  makers.NewMakersDeploymentLogDataSource,
 	"tencentcloud_makers_deployments":                     makers.NewMakersDeploymentsDataSource,
+	"tencentcloud_tdmysql_sale_info":                      tdmysql.NewTdmysqlSaleInfoDataSource,
+	"tencentcloud_tdmysql_db_engines":                     tdmysql.NewTdmysqlDbEnginesDataSource,
+	"tencentcloud_tdmysql_specs":                          tdmysql.NewTdmysqlSpecsDataSource,
+	"tencentcloud_ags_sandbox_instances":                  ags.NewAgsSandboxInstancesDataSource,
 }
 
 // functionsMap maps every framework function name to its factory. Function
