@@ -42,8 +42,6 @@ func tdmysqlUserTestItem() *tdmysqlv20211122.UserInfo {
 		UserName:    tdmysqlUserStr(tdmysqlUserTestUserName),
 		Host:        tdmysqlUserStr(tdmysqlUserTestHost),
 		Description: tdmysqlUserStr(tdmysqlUserTestDescription),
-		CreateTime:  tdmysqlUserStr("2024-01-01 00:00:00"),
-		UpdateTime:  tdmysqlUserStr("2024-01-02 00:00:00"),
 	}
 }
 
@@ -60,8 +58,6 @@ func tdmysqlUserTestModel() svtdmysql.TdmysqlUserResourceModel {
 		Host:        types.StringValue(tdmysqlUserTestHost),
 		Password:    types.StringValue(tdmysqlUserTestPassword),
 		Description: types.StringNull(),
-		CreateTime:  types.StringNull(),
-		UpdateTime:  types.StringNull(),
 		Timeouts: resourcetimeouts.Value{Object: types.ObjectValueMust(
 			tdmysqlUserTimeoutsAttrTypes(),
 			map[string]attr.Value{
@@ -101,9 +97,6 @@ func assertTdmysqlUserModel(t *testing.T, m svtdmysql.TdmysqlUserResourceModel) 
 	}
 	if m.Description.ValueString() != tdmysqlUserTestDescription {
 		t.Errorf("description = %q, want %q", m.Description.ValueString(), tdmysqlUserTestDescription)
-	}
-	if m.CreateTime.ValueString() != "2024-01-01 00:00:00" {
-		t.Errorf("create_time = %q, want %q", m.CreateTime.ValueString(), "2024-01-01 00:00:00")
 	}
 }
 

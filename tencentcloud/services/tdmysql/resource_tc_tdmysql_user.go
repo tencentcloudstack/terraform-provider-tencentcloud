@@ -54,8 +54,6 @@ type TdmysqlUserResourceModel struct {
 	Host        types.String           `tfsdk:"host"`
 	Password    types.String           `tfsdk:"password"`
 	Description types.String           `tfsdk:"description"`
-	CreateTime  types.String           `tfsdk:"create_time"`
-	UpdateTime  types.String           `tfsdk:"update_time"`
 }
 
 func (r *TdmysqlUserResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -108,17 +106,6 @@ func (r *TdmysqlUserResource) Schema(ctx context.Context, _ resource.SchemaReque
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
-			},
-			"create_time": schema.StringAttribute{
-				Computed:    true,
-				Description: "Creation time.",
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
-			},
-			"update_time": schema.StringAttribute{
-				Computed:    true,
-				Description: "Update time.",
 			},
 		},
 		Blocks: map[string]schema.Block{
@@ -211,10 +198,6 @@ func (r *TdmysqlUserResource) Create(ctx context.Context, req resource.CreateReq
 	}
 
 	plan.Id = types.StringValue(usersId)
-
-	// Computed attributes are unknown at this point and a state cannot hold
-	// unknown values — normalize them to null before the defensive persist.
-	normalizeTdmysqlUserComputedUnknowns(&plan)
 
 	// Persist the identity before reading back so a partial failure still
 	// leaves a destroyable resource in state.
@@ -439,25 +422,7 @@ func refreshTdmysqlUserModel(ctx context.Context, m *TdmysqlUserResourceModel, i
 	m.Host = fwHelper.StringValueOrPrev(item.Host, m.Host)
 	m.Description = fwHelper.StringValueOrPrev(item.Description, m.Description)
 
-	// Computed-only attributes record the truthful refreshed value —
-	// including null — as-is.
-	m.CreateTime = fwHelper.StringPointerValueOrNull(item.CreateTime)
-	m.UpdateTime = fwHelper.StringPointerValueOrNull(item.UpdateTime)
-
 	return diags
-}
-
-// normalizeTdmysqlUserComputedUnknowns rewrites unknown computed attributes to
-// null so the model can be persisted into state before the read-back fills
-// them with the cloud-side values.
-func normalizeTdmysqlUserComputedUnknowns(m *TdmysqlUserResourceModel) {
-	if m.CreateTime.IsUnknown() {
-		m.CreateTime = types.StringNull()
-	}
-
-	if m.UpdateTime.IsUnknown() {
-		m.UpdateTime = types.StringNull()
-	}
 }
 
 // findTdmysqlUser picks this resource's own item from the describe list by

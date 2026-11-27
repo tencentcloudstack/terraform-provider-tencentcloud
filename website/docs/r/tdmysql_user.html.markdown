@@ -43,9 +43,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `create_time` - Creation time.
 * `id` - ID of the resource.
-* `update_time` - Update time.
 
 ## API Reference
 
