@@ -512,3 +512,76 @@ func TestTdmysqlUserDeleteSuccess(t *testing.T) {
 		t.Errorf("delete request host = %v, want %q", captured.Users, tdmysqlUserTestHost)
 	}
 }
+
+// TestTdmysqlUserUpdatePasswordReset verifies that an in-place password
+// change calls ResetUsersPassword with the tracked user and the planned
+// plain-text password (EncryptedPassword stays unset), then waits until the
+// flow succeeds.
+func TestTdmysqlUserUpdatePasswordReset(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newTdmysqlUserTestContext(t)
+	tdmysqlClient := patchTdmysqlUserSdkClient(patches, ctx.client)
+
+	newPassword := "TF@example-67890"
+
+	var captured *tdmysqlv20211122.ResetUsersPasswordRequest
+	patches.ApplyMethodFunc(tdmysqlClient, "ResetUsersPassword", func(req *tdmysqlv20211122.ResetUsersPasswordRequest) (*tdmysqlv20211122.ResetUsersPasswordResponse, error) {
+		captured = req
+
+		return &tdmysqlv20211122.ResetUsersPasswordResponse{Response: &tdmysqlv20211122.ResetUsersPasswordResponseParams{
+			FlowId:    tdmysqlUserFlowId(),
+			RequestId: tdmysqlUserStr("fake-request-id"),
+		}}, nil
+	})
+	// The flow wait polls DescribeFlow; the terminal success status is
+	// reported on the first call.
+	stubTdmysqlUserFlowStatus(patches, tdmysqlClient, svtdmysql.FLOW_STATUS_SUCCESS)
+	patches.ApplyMethodFunc(tdmysqlClient, "DescribeUsers", func(req *tdmysqlv20211122.DescribeUsersRequest) (*tdmysqlv20211122.DescribeUsersResponse, error) {
+		return &tdmysqlv20211122.DescribeUsersResponse{Response: &tdmysqlv20211122.DescribeUsersResponseParams{
+			Users:     []*tdmysqlv20211122.UserInfo{tdmysqlUserTestItem()},
+			RequestId: tdmysqlUserStr("fake-request-id"),
+		}}, nil
+	})
+
+	plannedModel := tdmysqlUserTestModel()
+	plannedModel.Password = types.StringValue(newPassword)
+
+	var updateResp resource.UpdateResponse
+	ctx.resource.Update(context.Background(),
+		resource.UpdateRequest{
+			Plan:  ctx.plan(t, plannedModel),
+			State: ctx.state(t, tdmysqlUserTestModel()),
+		}, &updateResp)
+	if updateResp.Diagnostics.HasError() {
+		t.Fatalf("Update failed: %v", updateResp.Diagnostics.Errors())
+	}
+
+	if captured == nil {
+		t.Fatal("ResetUsersPassword request is nil")
+	}
+	if captured.InstanceId == nil || *captured.InstanceId != tdmysqlUserTestInstanceId {
+		t.Errorf("reset request instance_id = %v, want %q", captured.InstanceId, tdmysqlUserTestInstanceId)
+	}
+	if len(captured.Users) != 1 || captured.Users[0].UserName == nil || *captured.Users[0].UserName != tdmysqlUserTestUserName {
+		t.Errorf("reset request user_name = %v, want %q", captured.Users, tdmysqlUserTestUserName)
+	}
+	if len(captured.Users) != 1 || captured.Users[0].Host == nil || *captured.Users[0].Host != tdmysqlUserTestHost {
+		t.Errorf("reset request host = %v, want %q", captured.Users, tdmysqlUserTestHost)
+	}
+	if len(captured.Users) != 1 || captured.Users[0].Password == nil || *captured.Users[0].Password != newPassword {
+		t.Errorf("reset request password = %v, want the planned value", captured.Users)
+	}
+	if len(captured.Users) == 1 && captured.Users[0].EncryptedPassword != nil {
+		t.Errorf("reset request encrypted_password = %v, want unset", *captured.Users[0].EncryptedPassword)
+	}
+
+	var got svtdmysql.TdmysqlUserResourceModel
+	if diags := updateResp.State.Get(context.Background(), &got); diags.HasError() {
+		t.Fatalf("failed to read back state: %v", diags.Errors())
+	}
+	if got.Password.ValueString() != newPassword {
+		t.Errorf("state password = %q, want %q", got.Password.ValueString(), newPassword)
+	}
+}

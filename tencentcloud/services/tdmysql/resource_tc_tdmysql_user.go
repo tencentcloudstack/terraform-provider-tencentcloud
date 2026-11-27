@@ -95,10 +95,7 @@ func (r *TdmysqlUserResource) Schema(ctx context.Context, _ resource.SchemaReque
 			"password": schema.StringAttribute{
 				Optional:    true,
 				Sensitive:   true,
-				Description: "Unencrypted password.",
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
+				Description: "Unencrypted password. It can be updated in-place; the change is applied through the ResetUsersPassword API.",
 			},
 			"description": schema.StringAttribute{
 				Optional:    true,
@@ -117,7 +114,7 @@ func (r *TdmysqlUserResource) Schema(ctx context.Context, _ resource.SchemaReque
 // defaultTdmysqlUserAsyncTimeout is the built-in maximum duration to wait for
 // an async user task when the user does not override it through the
 // `timeouts` block, e.g. `timeouts { create = "30m" }`.
-const defaultTdmysqlUserAsyncTimeout = 15 * time.Minute
+const defaultTdmysqlUserAsyncTimeout = 3 * time.Minute
 
 // tdmysqlUserTimeoutsBlock builds the `timeouts` block from the official
 // terraform-plugin-framework-timeouts module. That module leaves the block
@@ -128,9 +125,9 @@ func tdmysqlUserTimeoutsBlock(ctx context.Context) schema.Block {
 		Create:            true,
 		Update:            true,
 		Delete:            true,
-		CreateDescription: "A string that can be parsed as a duration (https://pkg.go.dev/time#ParseDuration), e.g. `30m`. It limits how long to wait for the asynchronous creation task. Default is `15m`.",
-		UpdateDescription: "A string that can be parsed as a duration (https://pkg.go.dev/time#ParseDuration), e.g. `30m`. It limits how long to wait for the asynchronous update task. Default is `15m`.",
-		DeleteDescription: "A string that can be parsed as a duration (https://pkg.go.dev/time#ParseDuration), e.g. `30m`. It limits how long to wait for the asynchronous deletion task. Default is `15m`.",
+		CreateDescription: "A string that can be parsed as a duration (https://pkg.go.dev/time#ParseDuration), e.g. `3m`. It limits how long to wait for the asynchronous creation task. Default is `3m`.",
+		UpdateDescription: "A string that can be parsed as a duration (https://pkg.go.dev/time#ParseDuration), e.g. `3m`. It limits how long to wait for the asynchronous update task. Default is `3m`.",
+		DeleteDescription: "A string that can be parsed as a duration (https://pkg.go.dev/time#ParseDuration), e.g. `3m`. It limits how long to wait for the asynchronous deletion task. Default is `3m`.",
 	})
 
 	if nested, ok := block.(schema.SingleNestedBlock); ok {
@@ -289,10 +286,12 @@ func (r *TdmysqlUserResource) Read(ctx context.Context, req resource.ReadRequest
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
 
-// Update handles in-place modifications. The cloud has no user-update API:
-// all mutable attributes carry RequiresReplace, so Update is only reached
-// when the timeouts block alone changed and no write API is called. The
-// read-back still runs so Computed values are always known.
+// Update handles in-place modifications. Only the password attribute is
+// updatable in-place: a changed plan password is applied through the async
+// ResetUsersPassword API and waited on via the flow helper. All other
+// mutable attributes carry RequiresReplace, so Update is otherwise reached
+// when only the timeouts block changed and no write API is called. The
+// read-back still runs so the refreshed state is consistent.
 func (r *TdmysqlUserResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan TdmysqlUserResourceModel
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
@@ -312,10 +311,51 @@ func (r *TdmysqlUserResource) Update(ctx context.Context, req resource.UpdateReq
 		return
 	}
 
+	service := NewTdmysqlService(r.Client())
+
+	// In-place password change: the plan value differs from the prior state
+	// AND is a usable value (known and non-null — the API cannot clear a
+	// password, so removing the attribute from config is a silent no-op).
+	if !plan.Password.Equal(state.Password) && !plan.Password.IsNull() && !plan.Password.IsUnknown() {
+		// The timeout is resolved BEFORE the write API (see Create).
+		timeout, timeoutDiags := plan.Timeouts.Update(ctx, defaultTdmysqlUserAsyncTimeout)
+		resp.Diagnostics.Append(timeoutDiags...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+
+		resetUsersPasswordRequest := tdmysqlv20211122.NewResetUsersPasswordRequest()
+		resetUsersPasswordRequest.InstanceId = fwHelper.String(parts[0])
+		resetUsersPasswordRequest.Users = []*tdmysqlv20211122.ResetUserPasswordInfo{
+			{
+				UserName: fwHelper.String(parts[1]),
+				Host:     fwHelper.String(parts[2]),
+				Password: plan.Password.ValueStringPointer(),
+			},
+		}
+
+		flowId, err := service.ResetTdmysqlUsersPassword(ctx, resetUsersPasswordRequest)
+		if err != nil {
+			resp.Diagnostics.AddError(
+				"Error resetting TDSQL-C for MySQL user password",
+				fmt.Sprintf("ResetUsersPassword failed: %v", err),
+			)
+
+			return
+		}
+
+		if err := service.WaitTdmysqlUsersResult(ctx, flowId, timeout); err != nil {
+			resp.Diagnostics.AddError(
+				"Error waiting for TDSQL-C for MySQL user password reset",
+				fmt.Sprintf("user password reset wait failed: %v", err),
+			)
+
+			return
+		}
+	}
+
 	describeUsersRequest := tdmysqlv20211122.NewDescribeUsersRequest()
 	describeUsersRequest.InstanceId = fwHelper.String(parts[0])
-
-	service := NewTdmysqlService(r.Client())
 
 	users, err := service.DescribeTdmysqlUsers(ctx, describeUsersRequest)
 	if err != nil {

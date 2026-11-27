@@ -54,7 +54,10 @@ This resource interacts with the following TencentCloud APIs:
   - [DescribeFlow](https://www.tencentcloud.com/document/api/1292/78260)
   - [DescribeUsers](https://www.tencentcloud.com/document/api/1292/80119)
 * Read: [DescribeUsers](https://www.tencentcloud.com/document/api/1292/80119)
-* Update: [DescribeUsers](https://www.tencentcloud.com/document/api/1292/80119)
+* Update:
+  - [ResetUsersPassword](https://cloud.tencent.com/document/api/1376/133194)
+  - [DescribeUsers](https://www.tencentcloud.com/document/api/1292/80119)
+  - [DescribeFlow](https://www.tencentcloud.com/document/api/1292/78260)
 * Delete:
   - [DeleteUsers](https://www.tencentcloud.com/document/api/1292/80900)
   - [DescribeFlow](https://www.tencentcloud.com/document/api/1292/78260)

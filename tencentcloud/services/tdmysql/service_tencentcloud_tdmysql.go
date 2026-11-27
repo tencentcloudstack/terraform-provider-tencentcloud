@@ -328,6 +328,46 @@ func (me *TdmysqlService) DeleteTdmysqlUsers(ctx context.Context, request *tdmys
 	return
 }
 
+// ResetTdmysqlUsersPassword wraps ResetUsersPassword: the caller builds the
+// reset request; this method only performs the retried call and returns the
+// async flow id (FlowId *int64 in the vendored SDK response struct) the wait
+// helper polls. EncryptedPassword is intentionally not handled — the provider
+// always sends the plain-text Password.
+func (me *TdmysqlService) ResetTdmysqlUsersPassword(ctx context.Context, request *tdmysqlv20211122.ResetUsersPasswordRequest) (flowId int64, err error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		response *tdmysqlv20211122.ResetUsersPasswordResponse
+	)
+
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTdmysqlV20211122Client().ResetUsersPassword(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("reset tdmysql users password failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s reset tdmysql users password failed, reason:%+v", logId, err)
+		return
+	}
+
+	if response.Response.FlowId != nil {
+		flowId = *response.Response.FlowId
+	}
+
+	return
+}
+
 // WaitTdmysqlUsersResult is the async FLOW wait for tdmysql user tasks: it
 // polls DescribeFlow by the flow id returned by CreateUsers / DeleteUsers
 // until the flow reaches a terminal state. The terminal status values follow
