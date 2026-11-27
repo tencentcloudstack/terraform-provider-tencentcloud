@@ -171,6 +171,19 @@ func (r *TdmysqlDbsBackupResource) Create(ctx context.Context, req resource.Crea
 	}
 
 	resp.Diagnostics.Append(refreshTdmysqlDbsBackupModel(&plan, item)...)
+
+	// backup_name plan-equality handling on CREATE:
+	//   - omitted (plan unknown): the plan accepts any known value — record
+	//     the cloud-generated comment (null when the cloud did not return
+	//     one). Persisting the unknown itself would trip "invalid result
+	//     object after apply".
+	//   - user-set (plan known): keep the planned value VERBATIM — writing
+	//     a diverging cloud value trips "inconsistent result after apply";
+	//     cloud drift surfaces through Read instead.
+	if plan.BackupName.IsUnknown() {
+		plan.BackupName = fwHelper.StringPointerValueOrNull(item.BackupName)
+	}
+
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -220,6 +233,12 @@ func (r *TdmysqlDbsBackupResource) Read(ctx context.Context, req resource.ReadRe
 	}
 
 	resp.Diagnostics.Append(refreshTdmysqlDbsBackupModel(&state, item)...)
+
+	// No plan-consistency constraint in Read: record the cloud truth (the
+	// cloud-generated or modified comment), keeping the prior state value
+	// when the cloud omits the field.
+	state.BackupName = fwHelper.StringValueOrPrev(item.BackupName, state.BackupName)
+
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
 
@@ -301,6 +320,14 @@ func (r *TdmysqlDbsBackupResource) Update(ctx context.Context, req resource.Upda
 
 	plan.Id = state.Id
 	resp.Diagnostics.Append(refreshTdmysqlDbsBackupModel(&plan, item)...)
+
+	// backup_name plan-equality handling on UPDATE: the plan value is
+	// always KNOWN here (user-omitted plans as the prior state value
+	// through UseStateForUnknown; user-changed plans as the new value), so
+	// the planned value is kept VERBATIM — writing a diverging cloud value
+	// trips "inconsistent result after apply"; cloud drift surfaces through
+	// Read instead. plan.BackupName is simply not touched.
+
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -338,9 +365,15 @@ func (r *TdmysqlDbsBackupResource) Delete(ctx context.Context, req resource.Dele
 	}
 }
 
-// refreshTdmysqlDbsBackupModel copies cloud-owned fields into the model.
-// All attributes are user-configurable, so the *OrPrev family keeps the
-// previous value when the cloud omits a field.
+// refreshTdmysqlDbsBackupModel copies the cloud-reported RequiresReplace
+// fields into the model. The write API echoes them exactly, so adopting the
+// cloud value cannot diverge from the plan.
+//
+// backup_name is handled SEPARATELY by each caller: the apply paths
+// (Create/Update) must keep every KNOWN planned value verbatim — adopting a
+// diverging cloud value there trips "inconsistent result after apply" —
+// while Read records the cloud truth freely (no plan-consistency constraint;
+// drift surfaces in the next plan).
 func refreshTdmysqlDbsBackupModel(m *TdmysqlDbsBackupResourceModel, item *tdmysqlv20211122.BackupSetModel) diag.Diagnostics {
 	if item == nil {
 		return nil
@@ -351,7 +384,6 @@ func refreshTdmysqlDbsBackupModel(m *TdmysqlDbsBackupResourceModel, item *tdmysq
 	m.InstanceId = fwHelper.StringValueOrPrev(item.InstanceId, m.InstanceId)
 	m.BackupMethod = fwHelper.StringValueOrPrev(item.BackupMethod, m.BackupMethod)
 	m.BackupType = fwHelper.StringValueOrPrev(item.BackupType, m.BackupType)
-	m.BackupName = fwHelper.StringValueOrPrev(item.BackupName, m.BackupName)
 
 	return diags
 }

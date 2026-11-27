@@ -368,9 +368,10 @@ func (r *DemoWidgetConfigResource) Delete(_ context.Context, _ resource.DeleteRe
 
 // applyWidgetConfig writes the planned settings through the write API and
 // then reads the configuration back, so every Optional+Computed value is
-// known when the state is saved. The state always records the
-// cloud-reported values: when the cloud normalizes a write, the difference
-// surfaces in the next plan instead of being second-guessed here.
+// known when the state is saved. The final state MUST satisfy the
+// plan-equality invariant: every KNOWN planned value is kept verbatim (see
+// flattenWidgetSettings); only the unknown planned leaves of a create
+// (user-omitted) adopt the cloud-reported values.
 //
 // TEMPLATE: async write API — when the update entry carries a non-empty
 // async_info, the write returns a task id and the wait goes HERE, between
@@ -461,12 +462,10 @@ func expandWidgetSettings(ctx context.Context, value types.Object, diags *diag.D
 
 // flattenWidgetSettings converts the cloud-side settings into the settings
 // object. The leaves are Optional+Computed with UseStateForUnknown, so the
-// applied value MUST equal the planned value (= the prior state value):
-//   - a user-omitted leaf (previous value null) STAYS null — a cloud value
-//     is never adopted into a leaf the user did not set (adopting it would
-//     trip "provider produced inconsistent result after apply");
-//   - a user-set leaf records the cloud-reported value, keeping the
-//     previously configured value only when the cloud omits the field.
+// applied value MUST equal the planned value wherever the plan was known —
+// the three-step merge below encodes the full invariant (unknown -> adopt
+// the cloud value; null -> keep null; known -> keep the planned value
+// verbatim).
 func flattenWidgetSettings(ctx context.Context, settings *demov20230101.WidgetSettings, prev types.Object, diags *diag.Diagnostics) types.Object {
 	var previous DemoWidgetConfigSettingsModel
 	if !prev.IsNull() && !prev.IsUnknown() {
@@ -489,32 +488,46 @@ func flattenWidgetSettings(ctx context.Context, settings *demov20230101.WidgetSe
 		settings = &demov20230101.WidgetSettings{}
 	}
 
-	// TEMPLATE: two-step merge per leaf, in this exact order:
-	//  1. user-omitted (previous null OR unknown — on create core plans a
-	//     user-omitted Optional+Computed leaf as unknown and, with no prior
-	//     state, UseStateForUnknown leaves it unknown) -> keep null
-	//     (types.XxxNull). Persisting an unknown leaf would trip
-	//     "Provider returned invalid result object after apply", and
-	//     adopting a cloud value would contradict the modifier's planned
-	//     prior-state value on later plans — see the UseStateForUnknown
-	//     safety precondition on the schema;
-	//  2. user-set -> cloud value, falling back to the previous value when
-	//     the cloud omits the field (the OrPrev family from fwHelper).
+	// TEMPLATE: three-step merge per leaf, in this exact order — it encodes
+	// the plan-equality invariant (after apply the final state MUST equal
+	// the plan wherever the plan was known):
+	//  1. previous UNKNOWN (create-time omission: core plans a user-omitted
+	//     Optional+Computed leaf as unknown and, with no prior state,
+	//     UseStateForUnknown leaves it unknown) -> ADOPT the cloud value
+	//     (the unknown plan accepts any known result; persisting the
+	//     unknown itself trips "invalid result object after apply");
+	//  2. previous NULL (user omitted on update and the cloud never
+	//     returned a value) -> keep NULL — the plan equals the prior null
+	//     state, so adopting a cloud value now would trip "inconsistent
+	//     result after apply";
+	//  3. previous KNOWN (user-set, or substituted by UseStateForUnknown)
+	//     -> keep the PLANNED value VERBATIM. NEVER adopt a diverging cloud
+	//     value into a known-planned leaf: "the difference surfaces in the
+	//     next plan" is a myth — adopting trips "inconsistent result after
+	//     apply" immediately. Cloud drift surfaces through Read instead
+	//     (Read has no plan-consistency constraint and records the cloud
+	//     truth freely).
 	merged := DemoWidgetConfigSettingsModel{}
-	if previous.RetentionDays.IsNull() || previous.RetentionDays.IsUnknown() {
+	if previous.RetentionDays.IsUnknown() {
+		merged.RetentionDays = fwHelper.Int64ValueOrNull(settings.RetentionDays)
+	} else if previous.RetentionDays.IsNull() {
 		merged.RetentionDays = types.Int64Null()
 	} else {
-		merged.RetentionDays = fwHelper.Int64ValueOrPrev(settings.RetentionDays, previous.RetentionDays)
+		merged.RetentionDays = previous.RetentionDays
 	}
-	if previous.Enabled.IsNull() || previous.Enabled.IsUnknown() {
+	if previous.Enabled.IsUnknown() {
+		merged.Enabled = fwHelper.BoolValueOrNull(settings.Enabled)
+	} else if previous.Enabled.IsNull() {
 		merged.Enabled = types.BoolNull()
 	} else {
-		merged.Enabled = fwHelper.BoolValueOrPrev(settings.Enabled, previous.Enabled)
+		merged.Enabled = previous.Enabled
 	}
-	if previous.NotifyEmail.IsNull() || previous.NotifyEmail.IsUnknown() {
+	if previous.NotifyEmail.IsUnknown() {
+		merged.NotifyEmail = fwHelper.StringPointerValueOrNull(settings.NotifyEmail)
+	} else if previous.NotifyEmail.IsNull() {
 		merged.NotifyEmail = types.StringNull()
 	} else {
-		merged.NotifyEmail = fwHelper.StringValueOrPrev(settings.NotifyEmail, previous.NotifyEmail)
+		merged.NotifyEmail = previous.NotifyEmail
 	}
 
 	result, objectDiags := types.ObjectValueFrom(ctx, DemoWidgetConfigSettingsAttrTypes(), merged)
