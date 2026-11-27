@@ -10,21 +10,29 @@
 // structure, retry shape, diagnostics, formatting) — every concrete field
 // below is a PLACEHOLDER to be replaced by the real resource's analysis.
 //
+// TEMPLATE: HARD RULES for the CONFIG schema (full text: conventions.md
+// section 2 — violations are generation defects, checked mechanically):
+//   - Attribute flags: ONLY Required / Optional / Optional+Computed /
+//     Computed; Required+Computed and Optional+Required are FORBIDDEN.
+//   - Optional+Computed configuration-body leaves carry the type-matched
+//     UseStateForUnknown(); immutable fields add RequiresReplace() too.
+//   - Every attribute is a snake_case conversion of an api.update
+//     WRITE-request field key — read-API inputs NEVER enter the schema.
+//   - Apply flatten must satisfy plan-equality: unknown plan (create
+//     omission) adopts the cloud value, known plans are kept VERBATIM;
+//     never persist an unknown value (conventions section 2).
+//
 // Use this template when the codegen JSON has resource_type = "config".
 // The essence of config: the API REQUEST parameters carry BOTH the locator
 // of the parent resource (whatever its real name is — InstanceId,
 // ResourceId, DiskId, ... — the JSON resource_id names it) AND the
 // configuration values; the write APIs update the configuration of exactly
-// that locator, and the state id IS the locator input value:
-//   - Create sets the id straight from the locator input — NEVER from a
-//     fixed constant. Golden source (SDKv2, same logic):
-//     tencentcloud/services/sqlserver/resource_tc_sqlserver_wan_ip_config.go
-//     (instance_id + optional ro_group_id; composite locators join with
-//     fwHelper.IdFormat);
-//   - Create and Update share ONE apply path (write via the api.update
-//     write API, then read the configuration back);
-//   - Delete only removes the resource from state; the cloud-side config
-//     lives and dies with its parent resource.
+// that locator, and the state id IS the locator input value — Create sets
+// the id straight from the locator (never a fixed constant; composite
+// locators join with fwHelper.IdFormat), Create and Update share ONE apply
+// path (write via the api.update API, then read back), and Delete only
+// removes the resource from state: the cloud-side config lives and dies
+// with its parent resource.
 
 package demo
 
@@ -37,6 +45,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -144,7 +154,9 @@ func (r *DemoWidgetConfigResource) Schema(_ context.Context, _ resource.SchemaRe
 				},
 			},
 			// TEMPLATE: model the configuration body as a SingleNestedAttribute;
-			// every leaf Optional+Computed so unset leaves keep cloud values.
+			// every leaf Optional+Computed with the TYPE-MATCHED
+			// UseStateForUnknown() — the flatten semantics below are the
+			// safety precondition for that modifier (see flattenWidgetSettings).
 			"settings": schema.SingleNestedAttribute{
 				Required:    true,
 				Description: "Widget configuration settings.",
@@ -153,26 +165,33 @@ func (r *DemoWidgetConfigResource) Schema(_ context.Context, _ resource.SchemaRe
 						Optional:    true,
 						Computed:    true,
 						Description: "Log retention days.",
+						PlanModifiers: []planmodifier.Int64{
+							int64planmodifier.UseStateForUnknown(),
+						},
 					},
 					"enabled": schema.BoolAttribute{
 						Optional:    true,
 						Computed:    true,
 						Description: "Whether the widget feature is enabled.",
+						PlanModifiers: []planmodifier.Bool{
+							boolplanmodifier.UseStateForUnknown(),
+						},
 					},
 					"notify_email": schema.StringAttribute{
 						Optional:    true,
 						Computed:    true,
 						Description: "Notification email.",
+						PlanModifiers: []planmodifier.String{
+							stringplanmodifier.UseStateForUnknown(),
+						},
 					},
 				},
 			},
 			// TEMPLATE: HARD RULE — Computed MINIMALISM. Extra read-back
 			// metadata (update_time/modifier below) is added ONLY on explicit
 			// user request; async task ids are NEVER exposed as Computed
-			// attributes.
-			// TEMPLATE: cloud-refreshed Computed values change on EVERY write,
-			// so they deliberately carry NO UseStateForUnknown — the plan must
-			// show them as "known after apply" on updates.
+			// attributes, and cloud-refreshed metadata deliberately carries NO
+			// UseStateForUnknown (it changes on EVERY write).
 			"update_time": schema.StringAttribute{
 				Computed:    true,
 				Description: "Last modification time of the configuration.",
@@ -323,9 +342,10 @@ func (r *DemoWidgetConfigResource) Delete(_ context.Context, _ resource.DeleteRe
 
 // applyWidgetConfig writes the planned settings through the write API and
 // then reads the configuration back, so every Optional+Computed value is
-// known when the state is saved. The state always records the
-// cloud-reported values: when the cloud normalizes a write, the difference
-// surfaces in the next plan instead of being second-guessed here.
+// known when the state is saved. The final state MUST satisfy the
+// plan-equality invariant: every KNOWN planned value is kept verbatim (see
+// flattenWidgetSettings); only the unknown planned leaves of a create
+// (user-omitted) adopt the cloud-reported values.
 //
 // TEMPLATE: async write API — when the update entry carries a non-empty
 // async_info, the write returns a task id and the wait goes HERE, between
@@ -415,9 +435,11 @@ func expandWidgetSettings(ctx context.Context, value types.Object, diags *diag.D
 }
 
 // flattenWidgetSettings converts the cloud-side settings into the settings
-// object. The cloud may omit a field; the previously configured value is
-// then kept so an Optional+Computed attribute never flips to null after
-// apply.
+// object. The leaves are Optional+Computed with UseStateForUnknown, so the
+// applied value MUST equal the planned value wherever the plan was known —
+// the three-step merge below encodes the full invariant (unknown -> adopt
+// the cloud value; null -> keep null; known -> keep the planned value
+// verbatim).
 func flattenWidgetSettings(ctx context.Context, settings *demov20230101.WidgetSettings, prev types.Object, diags *diag.Diagnostics) types.Object {
 	var previous DemoWidgetConfigSettingsModel
 	if !prev.IsNull() && !prev.IsUnknown() {
@@ -440,13 +462,46 @@ func flattenWidgetSettings(ctx context.Context, settings *demov20230101.WidgetSe
 		settings = &demov20230101.WidgetSettings{}
 	}
 
-	// TEMPLATE: the settings leaves are user-configurable (Optional+Computed),
-	// so the read-direction anti-diff conversions use the OrPrev family from
-	// fwHelper — a cloud-omitted field keeps the previously configured value.
-	merged := DemoWidgetConfigSettingsModel{
-		RetentionDays: fwHelper.Int64ValueOrPrev(settings.RetentionDays, previous.RetentionDays),
-		Enabled:       fwHelper.BoolValueOrPrev(settings.Enabled, previous.Enabled),
-		NotifyEmail:   fwHelper.StringValueOrPrev(settings.NotifyEmail, previous.NotifyEmail),
+	// TEMPLATE: three-step merge per leaf, in this exact order — it encodes
+	// the plan-equality invariant (after apply the final state MUST equal
+	// the plan wherever the plan was known):
+	//  1. previous UNKNOWN (create-time omission: core plans a user-omitted
+	//     Optional+Computed leaf as unknown and, with no prior state,
+	//     UseStateForUnknown leaves it unknown) -> ADOPT the cloud value
+	//     (the unknown plan accepts any known result; persisting the
+	//     unknown itself trips "invalid result object after apply");
+	//  2. previous NULL (user omitted on update and the cloud never
+	//     returned a value) -> keep NULL — the plan equals the prior null
+	//     state, so adopting a cloud value now would trip "inconsistent
+	//     result after apply";
+	//  3. previous KNOWN (user-set, or substituted by UseStateForUnknown)
+	//     -> keep the PLANNED value VERBATIM. NEVER adopt a diverging cloud
+	//     value into a known-planned leaf: "the difference surfaces in the
+	//     next plan" is a myth — adopting trips "inconsistent result after
+	//     apply" immediately. Cloud drift surfaces through Read instead
+	//     (Read has no plan-consistency constraint and records the cloud
+	//     truth freely).
+	merged := DemoWidgetConfigSettingsModel{}
+	if previous.RetentionDays.IsUnknown() {
+		merged.RetentionDays = fwHelper.Int64ValueOrNull(settings.RetentionDays)
+	} else if previous.RetentionDays.IsNull() {
+		merged.RetentionDays = types.Int64Null()
+	} else {
+		merged.RetentionDays = previous.RetentionDays
+	}
+	if previous.Enabled.IsUnknown() {
+		merged.Enabled = fwHelper.BoolValueOrNull(settings.Enabled)
+	} else if previous.Enabled.IsNull() {
+		merged.Enabled = types.BoolNull()
+	} else {
+		merged.Enabled = previous.Enabled
+	}
+	if previous.NotifyEmail.IsUnknown() {
+		merged.NotifyEmail = fwHelper.StringPointerValueOrNull(settings.NotifyEmail)
+	} else if previous.NotifyEmail.IsNull() {
+		merged.NotifyEmail = types.StringNull()
+	} else {
+		merged.NotifyEmail = previous.NotifyEmail
 	}
 
 	result, objectDiags := types.ObjectValueFrom(ctx, DemoWidgetConfigSettingsAttrTypes(), merged)

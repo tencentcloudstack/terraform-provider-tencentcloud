@@ -163,6 +163,16 @@ func mustStringSet(t *testing.T, values ...string) types.Set {
 	return set
 }
 
+func mustStringList(t *testing.T, values ...string) types.List {
+	t.Helper()
+
+	list, diags := types.ListValueFrom(context.Background(), types.StringType, values)
+	if diags.HasError() {
+		t.Fatalf("failed to build string list: %v", diags.Errors())
+	}
+	return list
+}
+
 // sampleModel returns a plan model with every configurable leaf populated.
 func (c *agsSandboxToolTestContext) sampleModel(t *testing.T) svcags.AgsSandboxToolResourceModel {
 	t.Helper()
@@ -266,7 +276,7 @@ func (c *agsSandboxToolTestContext) sampleModel(t *testing.T) svcags.AgsSandboxT
 			"image":               types.StringValue("img:1"),
 			"image_registry_type": types.StringValue("personal"),
 			"command":             mustStringSet(t, "/bin/sh"),
-			"args":                mustStringSet(t, "-c"),
+			"args":                mustStringList(t, "-c"),
 			"env": mustList(t, envTypes, map[string]attr.Value{
 				"name":  types.StringValue("K"),
 				"value": types.StringValue("V"),
@@ -511,6 +521,43 @@ func setStrings(t *testing.T, value attr.Value) []string {
 	}
 	sort.Strings(result)
 	return result
+}
+
+func listStrings(t *testing.T, value attr.Value) []string {
+	t.Helper()
+
+	list, ok := value.(types.List)
+	if !ok {
+		t.Fatalf("value is not a list: %T", value)
+	}
+	if list.IsNull() || list.IsUnknown() {
+		t.Fatalf("list has no value")
+	}
+
+	var result []string
+	if diags := list.ElementsAs(context.Background(), &result, false); diags.HasError() {
+		t.Fatalf("failed to read list elements: %v", diags.Errors())
+	}
+	return result
+}
+
+func assertStringList(t *testing.T, attributes map[string]attr.Value, name string, expected ...string) {
+	t.Helper()
+
+	value, ok := attributes[name]
+	if !ok {
+		t.Fatalf("attribute %q is missing", name)
+	}
+	actual := listStrings(t, value)
+
+	if len(actual) != len(expected) {
+		t.Fatalf("attribute %q has %d elements, want %d", name, len(actual), len(expected))
+	}
+	for i := range expected {
+		if actual[i] != expected[i] {
+			t.Fatalf("attribute %q element %d is %q, want %q", name, i, actual[i], expected[i])
+		}
+	}
 }
 
 func assertString(t *testing.T, attributes map[string]attr.Value, name, expected string) {
@@ -933,7 +980,7 @@ func TestAgsSandboxToolCreate(t *testing.T) {
 	customConfigurationAttributes := attributesOf(t, top["custom_configuration"])
 	assertString(t, customConfigurationAttributes, "image", "img:1")
 	assertStringSet(t, customConfigurationAttributes, "command", "/bin/sh")
-	assertStringSet(t, customConfigurationAttributes, "args", "-c")
+	assertStringList(t, customConfigurationAttributes, "args", "-c")
 
 	env := listElements(t, customConfigurationAttributes, "env")
 	if len(env) != 1 {
@@ -1528,6 +1575,51 @@ func TestAgsSandboxToolImportStateEmptyId(t *testing.T) {
 	)
 	if !importResp.Diagnostics.HasError() {
 		t.Fatalf("expected an error diagnostic for an empty import id")
+	}
+}
+
+// TestAgsSandboxToolReadKeepsConfiguredResources verifies that a read keeps the
+// configured spelling of the resource quantities while the cloud answers them
+// normalized (cpu 1 -> 1000m, memory 2Gi -> 2048Mi), so the next plan stays
+// empty instead of reporting an in-place update.
+func TestAgsSandboxToolReadKeepsConfiguredResources(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	testContext := newAgsSandboxToolTestContext(t, patches)
+
+	item := sampleItem()
+	item.CustomConfiguration.Resources = &agsv20250920.ResourceConfiguration{
+		CPU:     agsString("1000m"),
+		Memory:  agsString("2048Mi"),
+		Storage: agsString("5Gi"),
+	}
+	patches.ApplyMethodFunc(
+		testContext.client,
+		"DescribeSandboxToolListWithContext",
+		func(_ context.Context, _ *agsv20250920.DescribeSandboxToolListRequest) (*agsv20250920.DescribeSandboxToolListResponse, error) {
+			return describeSandboxToolResponse(item), nil
+		},
+	)
+
+	model := testContext.sampleModel(t)
+	model.Id = types.StringValue(agsTestToolId)
+	model.ToolId = types.StringValue(agsTestToolId)
+
+	readResp := &resource.ReadResponse{State: tfsdk.State{Schema: testContext.schema}}
+	testContext.resource.Read(
+		context.Background(),
+		resource.ReadRequest{State: testContext.state(t, model)},
+		readResp,
+	)
+	assertNoErrorDiagnostics(t, readResp.Diagnostics)
+
+	var state svcags.AgsSandboxToolResourceModel
+	if diags := readResp.State.Get(context.Background(), &state); diags.HasError() {
+		t.Fatalf("failed to read state: %v", diags.Errors())
+	}
+	if !state.CustomConfiguration.Equal(model.CustomConfiguration) {
+		t.Fatalf("state custom_configuration was rewritten from the cloud answer")
 	}
 }
 
