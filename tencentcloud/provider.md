@@ -2088,6 +2088,7 @@ tencentcloud_tdmysql_specs
 Resource
 tencentcloud_tdmysql_db_instance
 tencentcloud_tdmysql_user
+tencentcloud_tdmysql_user_privilege_config
 
 TencentDB for DBbrain(dbbrain)
 Data Source

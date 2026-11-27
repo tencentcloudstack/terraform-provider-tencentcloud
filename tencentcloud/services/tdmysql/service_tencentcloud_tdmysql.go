@@ -11,6 +11,7 @@ import (
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	fwHelper "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -203,6 +204,73 @@ func (me *TdmysqlService) DescribeTdmysqlDBSecurityGroupsById(ctx context.Contex
 	}
 
 	ret = response.Response
+	return
+}
+
+func (me *TdmysqlService) ModifyTdmysqlUserPrivileges(ctx context.Context, request *tdmysqlv20211122.ModifyUserPrivilegesRequest) (err error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), err.Error())
+		}
+	}()
+
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTdmysqlV20211122Client().ModifyUserPrivileges(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Modify tdmysql user privileges failed, Response is nil."))
+		}
+
+		return nil
+	})
+
+	return
+}
+
+func (me *TdmysqlService) DescribeTdmysqlUserPrivileges(ctx context.Context, request *tdmysqlv20211122.DescribeUserPrivilegesRequest) (ret *tdmysqlv20211122.DescribeUserPrivilegesResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTdmysqlV20211122Client().DescribeUserPrivileges(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe tdmysql user privileges failed, Response is nil."))
+		}
+
+		ret = result.Response
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	// Singleton describe shape: an answer without any privilege item means
+	// "confirmed absent" — report the shared sentinel so the caller can
+	// remove the resource from state (never a per-resource errors.New).
+	if len(ret.Privileges) < 1 {
+		errRet = fmt.Errorf("describe tdmysql user privileges: %w", fwHelper.ErrNotFound)
+
+		return
+	}
+
 	return
 }
 
