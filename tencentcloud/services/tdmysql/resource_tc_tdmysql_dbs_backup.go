@@ -46,7 +46,9 @@ type TdmysqlDbsBackupResourceModel struct {
 	InstanceId   types.String `tfsdk:"instance_id"`   // Required, RequiresReplace
 	BackupMethod types.String `tfsdk:"backup_method"` // Required, RequiresReplace
 	BackupType   types.String `tfsdk:"backup_type"`   // Required, RequiresReplace
-	BackupName   types.String `tfsdk:"backup_name"`   // Optional, covered by ModifyDBSBackupSetComment
+	// BackupName is Optional+Computed: when the user omits it the cloud
+	// generates and returns a comment automatically.
+	BackupName types.String `tfsdk:"backup_name"` // Optional+Computed, covered by ModifyDBSBackupSetComment
 }
 
 func (r *TdmysqlDbsBackupResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -85,9 +87,19 @@ func (r *TdmysqlDbsBackupResource) Schema(_ context.Context, _ resource.SchemaRe
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
+			// Optional+Computed: when omitted, the cloud generates and
+			// returns a comment automatically. UseStateForUnknown keeps a
+			// user-omitted value diff-free — on update core plans the
+			// attribute as unknown and the modifier substitutes the prior
+			// state value; on create the plan stays unknown, which accepts
+			// the cloud-generated value the read-back records.
 			"backup_name": schema.StringAttribute{
 				Optional:    true,
-				Description: "Backup comment. Modifiable through the ModifyDBSBackupSetComment API.",
+				Computed:    true,
+				Description: "Backup comment. Modifiable through the ModifyDBSBackupSetComment API. If omitted, the cloud side generates one automatically.",
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
 			},
 		},
 	}
@@ -241,15 +253,19 @@ func (r *TdmysqlDbsBackupResource) Update(ctx context.Context, req resource.Upda
 	// Call the write API ONLY when the attribute it covers changed. A plan
 	// differing from the state in no covered attribute reaches Update too;
 	// sending the write API then would be a pointless no-change request.
-	// The read-back below runs either way.
+	// The read-back below runs either way. With UseStateForUnknown on
+	// backup_name, a user-omitted value plans as the prior state value and
+	// is equal to the state here — removing the attribute from the config
+	// therefore never calls the write API (the cloud-side comment is kept
+	// as-is; the API has no clearing semantics).
 	if !plan.BackupName.Equal(state.BackupName) {
 		modifyDBSBackupSetCommentRequest := tdmysqlv20211122.NewModifyDBSBackupSetCommentRequest()
 		modifyDBSBackupSetCommentRequest.InstanceId = state.InstanceId.ValueStringPointer()
 		modifyDBSBackupSetCommentRequest.BackupSetId = fwHelper.Int64(backupSetId)
-		// TODO(human): when the user removes `backup_name` from the
-		// configuration, no NewBackupName is sent and the API rejects the
-		// request because NewBackupName is Required. How a comment should be
-		// cleared (if the API supports clearing at all) needs a human decision.
+		// A change reaching this point always carries a known, non-null
+		// plan value (an unknown/null plan equals the state through
+		// UseStateForUnknown and never enters this branch); the guard
+		// below stays as defense in depth.
 		if !plan.BackupName.IsNull() && !plan.BackupName.IsUnknown() {
 			modifyDBSBackupSetCommentRequest.NewBackupName = plan.BackupName.ValueStringPointer()
 		}

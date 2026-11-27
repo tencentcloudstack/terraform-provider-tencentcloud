@@ -29,7 +29,7 @@ The following arguments are supported:
 * `backup_method` - (Required, String) Backup method. Valid values: `physical` (physical backup), `snapshot` (snapshot backup). This value should stay consistent with the `backupMethod` returned by the DescribeDBSBackupPolicy API.
 * `backup_type` - (Required, String) Backup type. Only `full` is supported for now.
 * `instance_id` - (Required, String) Instance ID.
-* `backup_name` - (Optional, String) Backup comment. Modifiable through the ModifyDBSBackupSetComment API.
+* `backup_name` - (Optional, Computed, String) Backup comment. Modifiable through the ModifyDBSBackupSetComment API. If omitted, the cloud side generates one automatically.
 
 ## Attributes Reference
 
