@@ -12,14 +12,17 @@
 //
 // TEMPLATE: HARD RULES for the CONFIG schema (violations are generation
 // defects, checked mechanically before delivery):
+//   - Schema attribute declarations follow the terraform-plugin-framework
+//     OFFICIAL standard 100% (conventions.md section 2): legal flag combos
+//     are ONLY Required / Optional / Optional+Computed / Computed.
+//     Required+Computed and Optional+Required are FORBIDDEN, an attribute
+//     with no flag at all is invalid, Default only pairs with Optional,
+//     and each plan modifier package must match the attribute type.
 //   - Every schema attribute (locator + configuration body) is a mechanical
 //     snake_case conversion of an api.update WRITE-request field key. Read
 //     API request parameters (addressing/filter inputs) NEVER enter the
 //     schema — the read-back addressing is derived in code from the locator
 //     and the managed configuration body.
-//   - Required+Computed is FORBIDDEN on any attribute. Legal flag combos:
-//     Required / Optional / Optional+Computed / Computed. "user-settable +
-//     cloud-refreshed" is ALWAYS Optional+Computed.
 //
 // Use this template when the codegen JSON has resource_type = "config".
 // The essence of config: the API REQUEST parameters carry BOTH the locator
