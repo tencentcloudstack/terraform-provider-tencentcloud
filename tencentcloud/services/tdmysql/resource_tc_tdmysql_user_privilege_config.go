@@ -22,25 +22,25 @@ import (
 // Compile-time interface assertions. The base resource.Resource interface is
 // checked implicitly by the factory return value.
 var (
-	_ resource.ResourceWithConfigure   = &TdmysqlUserPrivilegeResource{}
-	_ resource.ResourceWithImportState = &TdmysqlUserPrivilegeResource{}
+	_ resource.ResourceWithConfigure   = &TdmysqlUserPrivilegeConfigResource{}
+	_ resource.ResourceWithImportState = &TdmysqlUserPrivilegeConfigResource{}
 )
 
-// NewTdmysqlUserPrivilegeResource is the factory referenced by
+// NewTdmysqlUserPrivilegeConfigResource is the factory referenced by
 // tencentcloud/framework/registry.go to register this resource.
-func NewTdmysqlUserPrivilegeResource() resource.Resource {
-	return &TdmysqlUserPrivilegeResource{}
+func NewTdmysqlUserPrivilegeConfigResource() resource.Resource {
+	return &TdmysqlUserPrivilegeConfigResource{}
 }
 
-// TdmysqlUserPrivilegeResource implements resource.Resource for
-// tencentcloud_tdmysql_user_privilege.
-type TdmysqlUserPrivilegeResource struct {
+// TdmysqlUserPrivilegeConfigResource implements resource.Resource for
+// tencentcloud_tdmysql_user_privilege_config.
+type TdmysqlUserPrivilegeConfigResource struct {
 	fw.ResourceWithConfigure
 }
 
-// TdmysqlUserPrivilegeResourceModel maps every top-level schema attribute; each
+// TdmysqlUserPrivilegeConfigResourceModel maps every top-level schema attribute; each
 // one appears here exactly once.
-type TdmysqlUserPrivilegeResourceModel struct {
+type TdmysqlUserPrivilegeConfigResourceModel struct {
 	Id         types.String `tfsdk:"id"`
 	InstanceId types.String `tfsdk:"instance_id"`
 	Host       types.String `tfsdk:"host"`
@@ -53,12 +53,12 @@ type TdmysqlUserPrivilegeResourceModel struct {
 }
 
 // Metadata reports the Terraform type name.
-func (r *TdmysqlUserPrivilegeResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = "tencentcloud_tdmysql_user_privilege"
+func (r *TdmysqlUserPrivilegeConfigResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = "tencentcloud_tdmysql_user_privilege_config"
 }
 
 // Schema declares the user privileges of a TDSQL Boundless instance.
-func (r *TdmysqlUserPrivilegeResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *TdmysqlUserPrivilegeConfigResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Description: "Provides a resource to manage user privileges of a TDSQL Boundless instance. " +
 			"Create and update both call the ModifyUserPrivileges API, read calls DescribeUserPrivileges. " +
@@ -135,8 +135,8 @@ func (r *TdmysqlUserPrivilegeResource) Schema(_ context.Context, _ resource.Sche
 
 // Create writes the privileges for the first time. It shares the write
 // path with Update because the cloud API exposes a single write operation.
-func (r *TdmysqlUserPrivilegeResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan TdmysqlUserPrivilegeResourceModel
+func (r *TdmysqlUserPrivilegeConfigResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan TdmysqlUserPrivilegeConfigResourceModel
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
 		return
@@ -162,8 +162,8 @@ func (r *TdmysqlUserPrivilegeResource) Create(ctx context.Context, req resource.
 }
 
 // Read refreshes the privileges from the cloud.
-func (r *TdmysqlUserPrivilegeResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state TdmysqlUserPrivilegeResourceModel
+func (r *TdmysqlUserPrivilegeConfigResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state TdmysqlUserPrivilegeConfigResourceModel
 	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
 	if resp.Diagnostics.HasError() {
 		return
@@ -221,14 +221,14 @@ func (r *TdmysqlUserPrivilegeResource) Read(ctx context.Context, req resource.Re
 }
 
 // Update applies the planned privileges. Shares the write path with Create.
-func (r *TdmysqlUserPrivilegeResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan TdmysqlUserPrivilegeResourceModel
+func (r *TdmysqlUserPrivilegeConfigResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan TdmysqlUserPrivilegeConfigResourceModel
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	var state TdmysqlUserPrivilegeResourceModel
+	var state TdmysqlUserPrivilegeConfigResourceModel
 	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
 	if resp.Diagnostics.HasError() {
 		return
@@ -258,7 +258,7 @@ func (r *TdmysqlUserPrivilegeResource) Update(ctx context.Context, req resource.
 // Delete is required by the resource.Resource interface. The privileges live
 // on the parent instance and user, so destroying this resource only removes
 // it from state — the cloud-side privileges die with their parent.
-func (r *TdmysqlUserPrivilegeResource) Delete(_ context.Context, _ resource.DeleteRequest, _ *resource.DeleteResponse) {
+func (r *TdmysqlUserPrivilegeConfigResource) Delete(_ context.Context, _ resource.DeleteRequest, _ *resource.DeleteResponse) {
 }
 
 // modifyTdmysqlUserPrivileges writes the planned privileges through the write
@@ -266,7 +266,7 @@ func (r *TdmysqlUserPrivilegeResource) Delete(_ context.Context, _ resource.Dele
 // wildcard db_name targets global privileges (*.*), a wildcard object_type on
 // a concrete database targets database-level privileges (db.*), and a
 // concrete table object targets table-level privileges.
-func (r *TdmysqlUserPrivilegeResource) modifyTdmysqlUserPrivileges(ctx context.Context, service TdmysqlService, plan *TdmysqlUserPrivilegeResourceModel, diags *diag.Diagnostics) {
+func (r *TdmysqlUserPrivilegeConfigResource) modifyTdmysqlUserPrivileges(ctx context.Context, service TdmysqlService, plan *TdmysqlUserPrivilegeConfigResourceModel, diags *diag.Diagnostics) {
 	modifyUserPrivilegesRequest := tdmysqlv20211122.NewModifyUserPrivilegesRequest()
 	modifyUserPrivilegesRequest.InstanceId = fwHelper.String(plan.InstanceId.ValueString())
 	modifyUserPrivilegesRequest.Users = []*tdmysqlv20211122.User{
@@ -329,7 +329,7 @@ func (r *TdmysqlUserPrivilegeResource) modifyTdmysqlUserPrivileges(ctx context.C
 // the Required+Computed privilege list always records the cloud-reported
 // values: when the cloud normalizes a write, the difference surfaces in the
 // next plan instead of being second-guessed here.
-func (r *TdmysqlUserPrivilegeResource) refreshTdmysqlUserPrivilege(ctx context.Context, service TdmysqlService, plan *TdmysqlUserPrivilegeResourceModel, diags *diag.Diagnostics) {
+func (r *TdmysqlUserPrivilegeConfigResource) refreshTdmysqlUserPrivilege(ctx context.Context, service TdmysqlService, plan *TdmysqlUserPrivilegeConfigResourceModel, diags *diag.Diagnostics) {
 	describeUserPrivilegesRequest := tdmysqlv20211122.NewDescribeUserPrivilegesRequest()
 	describeUserPrivilegesRequest.InstanceId = fwHelper.String(plan.InstanceId.ValueString())
 	describeUserPrivilegesRequest.Host = fwHelper.String(plan.Host.ValueString())
@@ -351,7 +351,7 @@ func (r *TdmysqlUserPrivilegeResource) refreshTdmysqlUserPrivilege(ctx context.C
 
 // ImportState splits the composite id into the four locator attributes. The
 // id segments are parent-first: instance_id#host#user_name#db_name.
-func (r *TdmysqlUserPrivilegeResource) ImportState(ctx context.Context, request resource.ImportStateRequest, response *resource.ImportStateResponse) {
+func (r *TdmysqlUserPrivilegeConfigResource) ImportState(ctx context.Context, request resource.ImportStateRequest, response *resource.ImportStateResponse) {
 	parts, err := fwHelper.IdParseErr(request.ID, 4)
 	if err != nil {
 		response.Diagnostics.AddError("Invalid TDSQL Boundless user privilege id", fmt.Sprintf("expected instance_id#host#user_name#db_name: %v", err))
