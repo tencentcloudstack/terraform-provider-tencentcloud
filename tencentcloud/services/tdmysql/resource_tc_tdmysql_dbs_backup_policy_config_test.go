@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 
 	tdmysqlv20211122 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmysql/v20211122"
 
@@ -24,7 +25,7 @@ const (
 	tdmysqlDbsBackupPolicyTestMethod     = "physical"
 	tdmysqlDbsBackupPolicyTestStartTime  = "02:00"
 	tdmysqlDbsBackupPolicyTestEndTime    = "04:00"
-	tdmysqlDbsBackupPolicyTestPeriodTime = "Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday"
+	tdmysqlDbsBackupPolicyTestPeriodTime = "0,1,2,3,4,5,6"
 	tdmysqlDbsBackupPolicyTestStorage    = "COS"
 )
 
@@ -203,6 +204,71 @@ func TestTdmysqlDbsBackupPolicyConfigCreateSuccess(t *testing.T) {
 	}
 	if !got.BackupPolicy.Equal(tdmysqlDbsBackupPolicyTestObject()) {
 		t.Errorf("backup_policy = %s, want the cloud-reported values %s", got.BackupPolicy, tdmysqlDbsBackupPolicyTestObject())
+	}
+}
+
+// TestTdmysqlDbsBackupPolicyConfigCreateOmittedLeaves verifies that with
+// `backup_policy = {}` (every leaf omitted: core plans each Optional+Computed
+// leaf as UNKNOWN and, with no prior state, UseStateForUnknown leaves it
+// unknown) the apply read-back records only KNOWN values — the cloud-reported
+// ones, and null for the write-only storage_type. Persisting an unknown leaf
+// trips "Provider returned invalid result object after apply".
+func TestTdmysqlDbsBackupPolicyConfigCreateOmittedLeaves(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newTdmysqlDbsBackupPolicyTestContext(t)
+	tdmysqlClient := patchTdmysqlDbsBackupPolicySdkClient(patches, ctx.client)
+
+	patches.ApplyMethodFunc(tdmysqlClient, "ModifyDBSBackupPolicyWithContext", func(_ context.Context, request *tdmysqlv20211122.ModifyDBSBackupPolicyRequest) (*tdmysqlv20211122.ModifyDBSBackupPolicyResponse, error) {
+		return &tdmysqlv20211122.ModifyDBSBackupPolicyResponse{Response: &tdmysqlv20211122.ModifyDBSBackupPolicyResponseParams{
+			IsSuccess: func() *bool { b := true; return &b }(),
+			RequestId: tdmysqlDbsBackupPolicyStr("fake-request-id"),
+		}}, nil
+	})
+	stubTdmysqlDbsBackupPolicyDescribe(patches, tdmysqlClient, tdmysqlDbsBackupPolicyTestPolicy())
+
+	// Every leaf unknown — exactly what core plans for `backup_policy = {}`.
+	emptyPolicy := types.ObjectValueMust(svtdmysql.TdmysqlDbsBackupPolicyConfigBackupPolicyAttrTypes(), map[string]attr.Value{
+		"backup_end_time":       types.StringUnknown(),
+		"backup_method":         types.StringUnknown(),
+		"backup_start_time":     types.StringUnknown(),
+		"enable_full":           types.Int64Unknown(),
+		"enable_log":            types.Int64Unknown(),
+		"full_retention_period": types.Int64Unknown(),
+		"log_retention_period":  types.Int64Unknown(),
+		"period_time":           types.StringUnknown(),
+		"storage_type":          types.StringUnknown(),
+	})
+
+	model := svtdmysql.TdmysqlDbsBackupPolicyConfigResourceModel{
+		Id:           types.StringValue(tdmysqlDbsBackupPolicyTestInstanceId),
+		InstanceId:   types.StringValue(tdmysqlDbsBackupPolicyTestInstanceId),
+		BackupPolicy: emptyPolicy,
+	}
+	var createResp resource.CreateResponse
+	createResp.State = ctx.state(t, model)
+	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, model)}, &createResp)
+	if createResp.Diagnostics.HasError() {
+		t.Fatalf("Create failed: %v", createResp.Diagnostics.Errors())
+	}
+
+	var got svtdmysql.TdmysqlDbsBackupPolicyConfigResourceModel
+	if diags := createResp.State.Get(context.Background(), &got); diags.HasError() {
+		t.Fatalf("failed to read back state: %v", diags.Errors())
+	}
+	if got.BackupPolicy.IsUnknown() {
+		t.Fatal("backup_policy must not stay unknown in state")
+	}
+	var leaves svtdmysql.TdmysqlDbsBackupPolicyConfigBackupPolicyModel
+	if diags := got.BackupPolicy.As(context.Background(), &leaves, basetypes.ObjectAsOptions{}); diags.HasError() {
+		t.Fatalf("failed to decode backup_policy: %v", diags.Errors())
+	}
+	if leaves.BackupMethod.IsNull() || leaves.BackupMethod.ValueString() != tdmysqlDbsBackupPolicyTestMethod {
+		t.Errorf("backup_method = %v, want the cloud-reported %q", leaves.BackupMethod, tdmysqlDbsBackupPolicyTestMethod)
+	}
+	if !leaves.StorageType.IsNull() {
+		t.Errorf("storage_type = %v, want null (write-only, cloud never returns it; never unknown)", leaves.StorageType)
 	}
 }
 

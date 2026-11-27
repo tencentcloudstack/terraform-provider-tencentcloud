@@ -257,7 +257,7 @@ func (r *TdmysqlDbsBackupPolicyConfigResource) Read(ctx context.Context, req res
 	}
 
 	state.InstanceId = types.StringValue(instanceId)
-	state.BackupPolicy = flattenDbsBackupPolicyConfig(ctx, policy, state.BackupPolicy, &resp.Diagnostics)
+	state.BackupPolicy = flattenDbsBackupPolicyConfigFromCloud(ctx, policy, state.BackupPolicy, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -333,7 +333,7 @@ func (r *TdmysqlDbsBackupPolicyConfigResource) applyDbsBackupPolicy(ctx context.
 		return
 	}
 
-	observed := flattenDbsBackupPolicyConfig(ctx, policy, plan.BackupPolicy, diags)
+	observed := flattenDbsBackupPolicyConfigForApply(ctx, policy, plan.BackupPolicy, diags)
 	if diags.HasError() {
 		return
 	}
@@ -373,11 +373,11 @@ func expandDbsBackupPolicyConfig(ctx context.Context, value types.Object, diags 
 	return backupPolicy
 }
 
-// flattenDbsBackupPolicyConfig converts the cloud-side policy into the
-// backup_policy object. The cloud may omit a field; the previously configured
-// value is then kept so an Optional+Computed attribute never flips to null
-// after apply.
-func flattenDbsBackupPolicyConfig(ctx context.Context, policy *tdmysqlv20211122.DescribeDBSBackupPolicyResponseParams, prev types.Object, diags *diag.Diagnostics) types.Object {
+// flattenDbsBackupPolicyConfigFromCloud converts the cloud-side policy into
+// the backup_policy object for READ (refresh). There is no plan-consistency
+// constraint here: the cloud truth is recorded, keeping the previously
+// configured value when the cloud omits a field.
+func flattenDbsBackupPolicyConfigFromCloud(ctx context.Context, policy *tdmysqlv20211122.DescribeDBSBackupPolicyResponseParams, prev types.Object, diags *diag.Diagnostics) types.Object {
 	var previous TdmysqlDbsBackupPolicyConfigBackupPolicyModel
 	if !prev.IsNull() && !prev.IsUnknown() {
 		diags.Append(prev.As(ctx, &previous, basetypes.ObjectAsOptions{})...)
@@ -422,12 +422,126 @@ func flattenDbsBackupPolicyConfig(ctx context.Context, policy *tdmysqlv20211122.
 		FullRetentionPeriod: fwHelper.Int64ValueOrPrev(item.FullRetentionPeriod, previous.FullRetentionPeriod),
 		LogRetentionPeriod:  fwHelper.Int64ValueOrPrev(item.LogRetentionPeriod, previous.LogRetentionPeriod),
 		PeriodTime:          fwHelper.StringValueOrPrev(item.PeriodTime, previous.PeriodTime),
-		// TODO(human): DescribeDBSBackupPolicy never returns StorageType (the
-		// read response struct has no such field), so the value cannot be
-		// refreshed from the cloud; decide whether to keep storage_type as a
-		// write-only attribute (current behavior: the configured value is
-		// preserved in state) or to drop it from the schema.
-		StorageType: previous.StorageType,
+		StorageType:         previous.StorageType,
+	}
+
+	result, objectDiags := types.ObjectValueFrom(ctx, TdmysqlDbsBackupPolicyConfigBackupPolicyAttrTypes(), merged)
+	diags.Append(objectDiags...)
+
+	return result
+}
+
+// flattenDbsBackupPolicyConfigForApply converts the cloud-side policy into
+// the backup_policy object for the APPLY read-back (Create/Update). After
+// apply the final state MUST equal the plan wherever the plan was known, so
+// every leaf follows the three-step merge, in this exact order:
+//  1. previous UNKNOWN (create-time omission: core plans a user-omitted
+//     Optional+Computed leaf as unknown and, with no prior state,
+//     UseStateForUnknown leaves it unknown) -> ADOPT the cloud value (the
+//     unknown plan accepts any known result). storage_type has no cloud
+//     source, so it normalizes to null here;
+//  2. previous NULL -> keep NULL (the plan equals the prior null state;
+//     adopting a cloud value now would trip "inconsistent result after
+//     apply");
+//  3. previous KNOWN (user-set, or substituted by UseStateForUnknown) ->
+//     keep the PLANNED value VERBATIM. NEVER adopt a diverging cloud value
+//     into a known-planned leaf: adopting trips "inconsistent result after
+//     apply" immediately. Cloud drift surfaces through Read instead.
+func flattenDbsBackupPolicyConfigForApply(ctx context.Context, policy *tdmysqlv20211122.DescribeDBSBackupPolicyResponseParams, prev types.Object, diags *diag.Diagnostics) types.Object {
+	var previous TdmysqlDbsBackupPolicyConfigBackupPolicyModel
+	if !prev.IsNull() && !prev.IsUnknown() {
+		diags.Append(prev.As(ctx, &previous, basetypes.ObjectAsOptions{})...)
+		if diags.HasError() {
+			return types.ObjectNull(TdmysqlDbsBackupPolicyConfigBackupPolicyAttrTypes())
+		}
+	} else {
+		previous = TdmysqlDbsBackupPolicyConfigBackupPolicyModel{
+			BackupEndTime:       types.StringNull(),
+			BackupMethod:        types.StringNull(),
+			BackupStartTime:     types.StringNull(),
+			EnableFull:          types.Int64Null(),
+			EnableLog:           types.Int64Null(),
+			FullRetentionPeriod: types.Int64Null(),
+			LogRetentionPeriod:  types.Int64Null(),
+			PeriodTime:          types.StringNull(),
+			StorageType:         types.StringNull(),
+		}
+	}
+
+	// The cloud may answer without a policy item at all (Items is nullable
+	// and may also come back empty): every field is then "omitted". The nil
+	// guard MUST precede every item dereference below.
+	var item *tdmysqlv20211122.BackupPolicyModelOutPut
+	if policy != nil && len(policy.Items) > 0 {
+		item = policy.Items[0]
+	}
+	if item == nil {
+		item = &tdmysqlv20211122.BackupPolicyModelOutPut{}
+	}
+
+	merged := TdmysqlDbsBackupPolicyConfigBackupPolicyModel{}
+	if previous.BackupEndTime.IsUnknown() {
+		merged.BackupEndTime = fwHelper.StringPointerValueOrNull(item.BackupEndTime)
+	} else if previous.BackupEndTime.IsNull() {
+		merged.BackupEndTime = types.StringNull()
+	} else {
+		merged.BackupEndTime = previous.BackupEndTime
+	}
+	if previous.BackupMethod.IsUnknown() {
+		merged.BackupMethod = fwHelper.StringPointerValueOrNull(item.BackupMethod)
+	} else if previous.BackupMethod.IsNull() {
+		merged.BackupMethod = types.StringNull()
+	} else {
+		merged.BackupMethod = previous.BackupMethod
+	}
+	if previous.BackupStartTime.IsUnknown() {
+		merged.BackupStartTime = fwHelper.StringPointerValueOrNull(item.BackupStartTime)
+	} else if previous.BackupStartTime.IsNull() {
+		merged.BackupStartTime = types.StringNull()
+	} else {
+		merged.BackupStartTime = previous.BackupStartTime
+	}
+	if previous.EnableFull.IsUnknown() {
+		merged.EnableFull = fwHelper.Int64ValueOrNull(item.EnableFull)
+	} else if previous.EnableFull.IsNull() {
+		merged.EnableFull = types.Int64Null()
+	} else {
+		merged.EnableFull = previous.EnableFull
+	}
+	if previous.EnableLog.IsUnknown() {
+		merged.EnableLog = fwHelper.Int64ValueOrNull(item.EnableLog)
+	} else if previous.EnableLog.IsNull() {
+		merged.EnableLog = types.Int64Null()
+	} else {
+		merged.EnableLog = previous.EnableLog
+	}
+	if previous.FullRetentionPeriod.IsUnknown() {
+		merged.FullRetentionPeriod = fwHelper.Int64ValueOrNull(item.FullRetentionPeriod)
+	} else if previous.FullRetentionPeriod.IsNull() {
+		merged.FullRetentionPeriod = types.Int64Null()
+	} else {
+		merged.FullRetentionPeriod = previous.FullRetentionPeriod
+	}
+	if previous.LogRetentionPeriod.IsUnknown() {
+		merged.LogRetentionPeriod = fwHelper.Int64ValueOrNull(item.LogRetentionPeriod)
+	} else if previous.LogRetentionPeriod.IsNull() {
+		merged.LogRetentionPeriod = types.Int64Null()
+	} else {
+		merged.LogRetentionPeriod = previous.LogRetentionPeriod
+	}
+	if previous.PeriodTime.IsUnknown() {
+		merged.PeriodTime = fwHelper.StringPointerValueOrNull(item.PeriodTime)
+	} else if previous.PeriodTime.IsNull() {
+		merged.PeriodTime = types.StringNull()
+	} else {
+		merged.PeriodTime = previous.PeriodTime
+	}
+	// storage_type: an unknown plan (create-time omission) normalizes to
+	// null; known plans are kept verbatim.
+	if previous.StorageType.IsUnknown() {
+		merged.StorageType = types.StringNull()
+	} else {
+		merged.StorageType = previous.StorageType
 	}
 
 	result, objectDiags := types.ObjectValueFrom(ctx, TdmysqlDbsBackupPolicyConfigBackupPolicyAttrTypes(), merged)

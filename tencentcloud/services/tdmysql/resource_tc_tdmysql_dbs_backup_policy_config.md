@@ -4,16 +4,16 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tdmysql_dbs_backup_policy_config" "example" {
-  instance_id = "tdsql-12345"
+  instance_id = "tdsql3-ibpyogg7tg"
   backup_policy = {
+    backup_start_time     = "16:00"
+    backup_end_time       = "24:00"
     backup_method         = "physical"
-    backup_start_time     = "02:00"
-    backup_end_time       = "04:00"
     enable_full           = 1
     enable_log            = 1
     full_retention_period = 7
     log_retention_period  = 7
-    period_time           = "Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday"
+    period_time           = "0,1,2,4,5,6"
     storage_type          = "COS"
   }
 }
@@ -24,5 +24,5 @@ Import
 TDSQL Boundless DBS backup policy config can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tdmysql_dbs_backup_policy_config.example tdsql-12345
+terraform import tencentcloud_tdmysql_dbs_backup_policy_config.example tdsql3-ibpyogg7tg
 ```
