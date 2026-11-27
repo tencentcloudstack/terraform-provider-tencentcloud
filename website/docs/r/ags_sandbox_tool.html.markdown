@@ -103,7 +103,7 @@ The `waa_configuration` object of `computer_configuration` supports the followin
 
 The `custom_configuration` object supports the following:
 
-* `args` - (Optional, Set) Startup arguments.
+* `args` - (Optional, List) Startup arguments. The order is preserved.
 * `command` - (Optional, Set) Startup command.
 * `dns_config` - (Optional, Object) Sandbox DNS configuration.
 * `env` - (Optional, List) Environment variables.
