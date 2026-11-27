@@ -5,6 +5,12 @@
 * **New Data Source:** `{{.Body}}` ([#{{- .Issue -}}](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/{{- .Issue -}}))
 {{- else if eq "new-guide" .Type -}}
 * **New Guide:** `{{.Body}}` ([#{{- .Issue -}}](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/{{- .Issue -}}))
+{{- else if eq "new-action" .Type -}}
+* **New Action:** `{{.Body}}` ([#{{- .Issue -}}](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/{{- .Issue -}}))
+{{- else if eq "new-ephemeral-resource" .Type -}}
+* **New Ephemeral Resource:** `{{.Body}}` ([#{{- .Issue -}}](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/{{- .Issue -}}))
+{{- else if eq "new-ephemeral" .Type -}}
+* **New Ephemeral:** `{{.Body}}` ([#{{- .Issue -}}](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/{{- .Issue -}}))
 {{- else -}}
 * {{.Body}} ([#{{- .Issue -}}](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/{{- .Issue -}}))
 {{- end -}}
