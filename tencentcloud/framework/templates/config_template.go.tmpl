@@ -24,7 +24,12 @@
 //     prior state value, and the apply path must guarantee it never writes a
 //     new value into a user-omitted attribute (otherwise
 //     "inconsistent result after apply"). Metadata fields that change on
-//     every write (update_time/modifier) must NOT carry it.
+//     every write (update_time/modifier) must NOT carry it. An IMMUTABLE
+//     Optional+Computed field (no update coverage) carries BOTH modifiers:
+//     <type>planmodifier.RequiresReplace() (value change => recreate) and
+//     <type>planmodifier.UseStateForUnknown() (user-omitted => no diff);
+//     they never misfire together (RequiresReplace skips unknown plan
+//     values, UseStateForUnknown substitutes the state value).
 //   - Every schema attribute (locator + configuration body) is a mechanical
 //     snake_case conversion of an api.update WRITE-request field key. Read
 //     API request parameters (addressing/filter inputs) NEVER enter the
