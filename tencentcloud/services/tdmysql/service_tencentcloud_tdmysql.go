@@ -164,6 +164,51 @@ func (me *TdmysqlService) DeleteDBSBackupSets(ctx context.Context, request *tdmy
 	return
 }
 
+// WaitTdmysqlDbsBackupResult polls DescribeDBSBackupSets with the caller
+// built request (InstanceId + BackupSetId) until the backup set reports
+// BackupStatus "success". Any other status (or a describe answer without the
+// set yet) keeps polling until the caller timeout expires — the API exposes
+// no failure terminal state, so a backup that never succeeds fails the wait
+// by timeout.
+func (me *TdmysqlService) WaitTdmysqlDbsBackupResult(ctx context.Context, request *tdmysqlv20211122.DescribeDBSBackupSetsRequest, timeout time.Duration) (err error) {
+	logId := tccommon.GetLogId(ctx)
+
+	err = resource.Retry(timeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTdmysqlV20211122Client().DescribeDBSBackupSets(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("describe tdmysql dbs backup sets failed, Response is nil."))
+		}
+
+		for _, item := range result.Response.Items {
+			if item.BackupSetId == nil || request.BackupSetId == nil || *item.BackupSetId != *request.BackupSetId {
+				continue
+			}
+
+			if item.BackupStatus != nil && *item.BackupStatus == "success" {
+				return nil
+			}
+
+			return resource.RetryableError(fmt.Errorf("tdmysql dbs backup %d status is %s", *request.BackupSetId, fwHelper.StringOrEmpty(item.BackupStatus)))
+		}
+
+		// The set is not listed (yet) — keep polling until the timeout.
+		return resource.RetryableError(fmt.Errorf("tdmysql dbs backup %d not listed yet", *request.BackupSetId))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s wait tdmysql dbs backup success failed, reason:%+v", logId, err)
+	}
+
+	return
+}
+
 func (me *TdmysqlService) DescribeTdmysqlDbInstanceById(ctx context.Context, instanceId string) (ret *tdmysqlv20211122.DescribeDBInstanceDetailResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -11,6 +12,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	resourcetimeouts "github.com/hashicorp/terraform-plugin-framework-timeouts/resource/timeouts"
 
 	tdmysqlv20211122 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmysql/v20211122"
 
@@ -42,10 +45,11 @@ type TdmysqlDbsBackupResource struct {
 // TdmysqlDbsBackupResourceModel maps the schema attributes; each attribute
 // appears exactly once. Keep the struct fields in the same order as the schema.
 type TdmysqlDbsBackupResourceModel struct {
-	Id           types.String `tfsdk:"id"`
-	InstanceId   types.String `tfsdk:"instance_id"`   // Required, RequiresReplace
-	BackupMethod types.String `tfsdk:"backup_method"` // Required, RequiresReplace
-	BackupType   types.String `tfsdk:"backup_type"`   // Required, RequiresReplace
+	Id           types.String           `tfsdk:"id"`
+	Timeouts     resourcetimeouts.Value `tfsdk:"timeouts"`
+	InstanceId   types.String           `tfsdk:"instance_id"`   // Required, RequiresReplace
+	BackupMethod types.String           `tfsdk:"backup_method"` // Required, RequiresReplace
+	BackupType   types.String           `tfsdk:"backup_type"`   // Required, RequiresReplace
 	// BackupName is Optional+Computed: when the user omits it the cloud
 	// generates and returns a comment automatically.
 	BackupName types.String `tfsdk:"backup_name"` // Optional+Computed, covered by ModifyDBSBackupSetComment
@@ -55,7 +59,7 @@ func (r *TdmysqlDbsBackupResource) Metadata(_ context.Context, _ resource.Metada
 	resp.TypeName = "tencentcloud_tdmysql_dbs_backup"
 }
 
-func (r *TdmysqlDbsBackupResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *TdmysqlDbsBackupResource) Schema(ctx context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Description: "Provides a resource to create a manual backup set of a TDSQL Boundless (tdmysql) instance.",
 		Attributes: map[string]schema.Attribute{
@@ -102,7 +106,33 @@ func (r *TdmysqlDbsBackupResource) Schema(_ context.Context, _ resource.SchemaRe
 				},
 			},
 		},
+		Blocks: map[string]schema.Block{
+			"timeouts": tdmysqlDbsBackupTimeoutsBlock(ctx),
+		},
 	}
+}
+
+// defaultTdmysqlDbsBackupCreateTimeout is the built-in maximum duration to
+// wait for the asynchronous backup to reach `success` when the user does not
+// override it through the `timeouts` block.
+const defaultTdmysqlDbsBackupCreateTimeout = 60 * time.Minute
+
+// tdmysqlDbsBackupTimeoutsBlock builds the `timeouts` block from the official
+// terraform-plugin-framework-timeouts module. That module leaves the block
+// itself undescribed (only the attributes carry descriptions), so the block
+// description is restored here to keep the schema self-explanatory.
+func tdmysqlDbsBackupTimeoutsBlock(ctx context.Context) schema.Block {
+	block := resourcetimeouts.Block(ctx, resourcetimeouts.Opts{
+		Create:            true,
+		CreateDescription: "A string that can be parsed as a duration (https://pkg.go.dev/time#ParseDuration), e.g. `60m`. It limits how long to wait for the asynchronous backup task. Default is `60m`.",
+	})
+
+	if nested, ok := block.(schema.SingleNestedBlock); ok {
+		nested.Description = "The timeouts block allows you to specify the timeout for the create operation."
+		return nested
+	}
+
+	return block
 }
 
 // Create handles `terraform apply` for new resources.
@@ -122,6 +152,14 @@ func (r *TdmysqlDbsBackupResource) Create(ctx context.Context, req resource.Crea
 	}
 
 	service := NewTdmysqlService(r.Client())
+
+	// The timeout is resolved BEFORE the write API, so a malformed duration
+	// fails the apply without any cloud-side effect.
+	timeout, timeoutDiags := plan.Timeouts.Create(ctx, defaultTdmysqlDbsBackupCreateTimeout)
+	resp.Diagnostics.Append(timeoutDiags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	backupSetId, err := service.CreateDBSBackup(ctx, createDBSBackupRequest)
 	if err != nil {
@@ -148,6 +186,22 @@ func (r *TdmysqlDbsBackupResource) Create(ctx context.Context, req resource.Crea
 	// leaves a destroyable resource in state.
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// Async create — the backup runs in the cloud after CreateDBSBackup
+	// returns. The wait MUST happen BEFORE reading back, and AFTER the
+	// identity was persisted above, polling DescribeDBSBackupSets until
+	// BackupStatus reaches `success` or the timeout expires.
+	waitRequest := tdmysqlv20211122.NewDescribeDBSBackupSetsRequest()
+	waitRequest.InstanceId = plan.InstanceId.ValueStringPointer()
+	waitRequest.BackupSetId = fwHelper.Int64(backupSetId)
+	if err := service.WaitTdmysqlDbsBackupResult(ctx, waitRequest, timeout); err != nil {
+		resp.Diagnostics.AddError(
+			"Error waiting for tdmysql dbs backup",
+			fmt.Sprintf("backup set %s wait failed: %v", plan.Id.ValueString(), err),
+		)
+
 		return
 	}
 

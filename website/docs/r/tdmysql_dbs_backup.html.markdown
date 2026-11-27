@@ -4,21 +4,25 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tdmysql_dbs_backup"
 sidebar_current: "docs-tencentcloud-resource-tdmysql_dbs_backup"
 description: |-
-  Provides a manual backup set resource of a TDSQL Boundless instance, with create, comment update and delete support.
+  Provides a resource to create a TDSQL Boundless(tdmysql) manual backup set.
 ---
 
 # tencentcloud_tdmysql_dbs_backup
 
-Provides a manual backup set resource of a TDSQL Boundless instance, with create, comment update and delete support.
+Provides a resource to create a TDSQL Boundless(tdmysql) manual backup set.
 
 ## Example Usage
 
 ```hcl
 resource "tencentcloud_tdmysql_dbs_backup" "example" {
-  instance_id   = "tdsqlc-mysql-abc12345"
+  instance_id   = "tdsql3-ibpyogg7tg"
   backup_method = "physical"
   backup_type   = "full"
-  backup_name   = "tf-example-backup"
+  backup_name   = "tf-example"
+
+  timeouts {
+    create = "60m"
+  }
 }
 ```
 
@@ -29,7 +33,8 @@ The following arguments are supported:
 * `backup_method` - (Required, String) Backup method. Valid values: `physical` (physical backup), `snapshot` (snapshot backup). This value should stay consistent with the `backupMethod` returned by the DescribeDBSBackupPolicy API.
 * `backup_type` - (Required, String) Backup type. Only `full` is supported for now.
 * `instance_id` - (Required, String) Instance ID.
-* `backup_name` - (Optional, Computed, String) Backup comment. Modifiable through the ModifyDBSBackupSetComment API. If omitted, the cloud side generates one automatically.
+* `backup_name` - (Optional, String) Backup comment. Modifiable through the ModifyDBSBackupSetComment API. If omitted, the cloud side generates one automatically.
+* `timeouts` - (Optional, Object) The timeouts block allows you to specify the timeout for the create operation.
 
 ## Attributes Reference
 
@@ -52,8 +57,9 @@ This resource interacts with the following TencentCloud APIs:
 
 ## Import
 
-tdmysql dbs backup can be imported using the id, e.g.
-```hcl
-terraform import tencentcloud_tdmysql_dbs_backup.example 12345
+TDSQL Boundless(tdmysql) manual backup set can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_tdmysql_dbs_backup.example 94403665169021
 ```
 

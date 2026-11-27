@@ -6,10 +6,13 @@ import (
 	"testing"
 
 	"github.com/agiledragon/gomonkey/v2"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+
+	resourcetimeouts "github.com/hashicorp/terraform-plugin-framework-timeouts/resource/timeouts"
 
 	tdmysqlv20211122 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmysql/v20211122"
 
@@ -48,13 +51,24 @@ func tdmysqlDbsBackupTestItem() *tdmysqlv20211122.BackupSetModel {
 	}
 }
 
+// tdmysqlDbsBackupTestTimeouts builds the timeouts value with a SECOND-SCALE
+// short user value: the create tests exercise the wait path, and the wait
+// must be reached without hard-waiting the minute-scale default.
+func tdmysqlDbsBackupTestTimeouts() resourcetimeouts.Value {
+	return resourcetimeouts.Value{Object: types.ObjectValueMust(
+		map[string]attr.Type{"create": types.StringType},
+		map[string]attr.Value{"create": types.StringValue("5s")},
+	)}
+}
+
 // tdmysqlDbsBackupTestModel builds the terraform model used for plan/state.
 // Every unset attribute carries an EXPLICIT typed null value — the raw zero
-// value breaks tfsdk Plan/State reflection. The resource is purely
-// synchronous, so no Timeouts field exists.
+// value breaks tfsdk Plan/State reflection. The create tests exercise the
+// async wait path, so the model carries a short 5s user timeout.
 func tdmysqlDbsBackupTestModel() svtdmysql.TdmysqlDbsBackupResourceModel {
 	return svtdmysql.TdmysqlDbsBackupResourceModel{
 		Id:           types.StringValue(tdmysqlDbsBackupTestIdStr),
+		Timeouts:     tdmysqlDbsBackupTestTimeouts(),
 		InstanceId:   types.StringValue(tdmysqlDbsBackupTestInstanceId),
 		BackupMethod: types.StringValue(tdmysqlDbsBackupTestMethod),
 		BackupType:   types.StringValue(tdmysqlDbsBackupTestType),
@@ -207,6 +221,42 @@ func TestTdmysqlDbsBackupCreateSuccess(t *testing.T) {
 		t.Fatalf("failed to read back state: %v", diags.Errors())
 	}
 	assertTdmysqlDbsBackupModel(t, got)
+}
+
+// TestTdmysqlDbsBackupCreateWaitTimeout verifies that a backup whose
+// BackupStatus never reaches `success` fails the create at the short user
+// timeout instead of hanging (the API exposes no failure terminal state).
+func TestTdmysqlDbsBackupCreateWaitTimeout(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newTdmysqlDbsBackupTestContext(t)
+	tdmysqlClient := patchTdmysqlDbsBackupSdkClient(patches, ctx.client)
+
+	patches.ApplyMethodFunc(tdmysqlClient, "CreateDBSBackup", func(req *tdmysqlv20211122.CreateDBSBackupRequest) (*tdmysqlv20211122.CreateDBSBackupResponse, error) {
+		return &tdmysqlv20211122.CreateDBSBackupResponse{Response: &tdmysqlv20211122.CreateDBSBackupResponseParams{
+			BackupSetId: tdmysqlDbsBackupInt64(tdmysqlDbsBackupTestId),
+			IsSuccess:   &[]bool{true}[0],
+			RequestId:   tdmysqlDbsBackupStr("fake-request-id"),
+		}}, nil
+	})
+	// The backup set is listed but stuck in a non-terminal status forever —
+	// the ONLY stub allowed to never reach a terminal state.
+	pending := tdmysqlDbsBackupTestItem()
+	pending.BackupStatus = tdmysqlDbsBackupStr("running")
+	patches.ApplyMethodFunc(tdmysqlClient, "DescribeDBSBackupSets", func(req *tdmysqlv20211122.DescribeDBSBackupSetsRequest) (*tdmysqlv20211122.DescribeDBSBackupSetsResponse, error) {
+		return &tdmysqlv20211122.DescribeDBSBackupSetsResponse{Response: &tdmysqlv20211122.DescribeDBSBackupSetsResponseParams{
+			Items: []*tdmysqlv20211122.BackupSetModel{pending},
+		}}, nil
+	})
+
+	model := tdmysqlDbsBackupTestModel()
+	var createResp resource.CreateResponse
+	createResp.State = ctx.state(t, model)
+	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, model)}, &createResp)
+	if !createResp.Diagnostics.HasError() {
+		t.Fatal("Create should fail when the backup never reaches `success` within the timeout")
+	}
 }
 
 // TestTdmysqlDbsBackupCreateEmptyId verifies that Create fails loudly when

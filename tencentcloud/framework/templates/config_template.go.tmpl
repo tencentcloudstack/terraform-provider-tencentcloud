@@ -10,47 +10,29 @@
 // structure, retry shape, diagnostics, formatting) — every concrete field
 // below is a PLACEHOLDER to be replaced by the real resource's analysis.
 //
-// TEMPLATE: HARD RULES for the CONFIG schema (violations are generation
-// defects, checked mechanically before delivery):
-//   - Schema attribute declarations follow the terraform-plugin-framework
-//     OFFICIAL standard 100% (conventions.md section 2): legal flag combos
-//     are ONLY Required / Optional / Optional+Computed / Computed.
-//     Required+Computed and Optional+Required are FORBIDDEN, an attribute
-//     with no flag at all is invalid, Default only pairs with Optional,
-//     and each plan modifier package must match the attribute type.
-//   - Optional+Computed configuration-body attributes carry the type-matched
-//     UseStateForUnknown() plan modifier: core plans a user-omitted
-//     Optional+Computed attribute as unknown, the modifier substitutes the
-//     prior state value, and the apply path must guarantee it never writes a
-//     new value into a user-omitted attribute (otherwise
-//     "inconsistent result after apply"). Metadata fields that change on
-//     every write (update_time/modifier) must NOT carry it. An IMMUTABLE
-//     Optional+Computed field (no update coverage) carries BOTH modifiers:
-//     <type>planmodifier.RequiresReplace() (value change => recreate) and
-//     <type>planmodifier.UseStateForUnknown() (user-omitted => no diff);
-//     they never misfire together (RequiresReplace skips unknown plan
-//     values, UseStateForUnknown substitutes the state value).
-//   - Every schema attribute (locator + configuration body) is a mechanical
-//     snake_case conversion of an api.update WRITE-request field key. Read
-//     API request parameters (addressing/filter inputs) NEVER enter the
-//     schema — the read-back addressing is derived in code from the locator
-//     and the managed configuration body.
+// TEMPLATE: HARD RULES for the CONFIG schema (full text: conventions.md
+// section 2 — violations are generation defects, checked mechanically):
+//   - Attribute flags: ONLY Required / Optional / Optional+Computed /
+//     Computed; Required+Computed and Optional+Required are FORBIDDEN.
+//   - Optional+Computed configuration-body leaves carry the type-matched
+//     UseStateForUnknown(); immutable fields add RequiresReplace() too.
+//   - Every attribute is a snake_case conversion of an api.update
+//     WRITE-request field key — read-API inputs NEVER enter the schema.
+//   - Apply flatten must satisfy plan-equality: unknown plan (create
+//     omission) adopts the cloud value, known plans are kept VERBATIM;
+//     never persist an unknown value (conventions section 2).
 //
 // Use this template when the codegen JSON has resource_type = "config".
 // The essence of config: the API REQUEST parameters carry BOTH the locator
 // of the parent resource (whatever its real name is — InstanceId,
 // ResourceId, DiskId, ... — the JSON resource_id names it) AND the
 // configuration values; the write APIs update the configuration of exactly
-// that locator, and the state id IS the locator input value:
-//   - Create sets the id straight from the locator input — NEVER from a
-//     fixed constant. Golden source (SDKv2, same logic):
-//     tencentcloud/services/sqlserver/resource_tc_sqlserver_wan_ip_config.go
-//     (instance_id + optional ro_group_id; composite locators join with
-//     fwHelper.IdFormat);
-//   - Create and Update share ONE apply path (write via the api.update
-//     write API, then read the configuration back);
-//   - Delete only removes the resource from state; the cloud-side config
-//     lives and dies with its parent resource.
+// that locator, and the state id IS the locator input value — Create sets
+// the id straight from the locator (never a fixed constant; composite
+// locators join with fwHelper.IdFormat), Create and Update share ONE apply
+// path (write via the api.update API, then read back), and Delete only
+// removes the resource from state: the cloud-side config lives and dies
+// with its parent resource.
 
 package demo
 
@@ -172,15 +154,9 @@ func (r *DemoWidgetConfigResource) Schema(_ context.Context, _ resource.SchemaRe
 				},
 			},
 			// TEMPLATE: model the configuration body as a SingleNestedAttribute;
-			// every leaf Optional+Computed. HARD RULE: every Optional+Computed
-			// leaf carries the TYPE-MATCHED UseStateForUnknown() plan modifier
-			// — core plans a user-omitted leaf as unknown, the modifier
-			// substitutes the prior state value, and the leaf never diffs
-			// while unset. THE SAFETY PRECONDITION is the flatten semantics:
-			// a user-omitted leaf (previous value null) stays null in state —
-			// the apply path must NEVER adopt a cloud value into a
-			// user-omitted leaf, or apply trips "inconsistent result after
-			// apply" (see flattenWidgetSettings).
+			// every leaf Optional+Computed with the TYPE-MATCHED
+			// UseStateForUnknown() — the flatten semantics below are the
+			// safety precondition for that modifier (see flattenWidgetSettings).
 			"settings": schema.SingleNestedAttribute{
 				Required:    true,
 				Description: "Widget configuration settings.",
@@ -214,10 +190,8 @@ func (r *DemoWidgetConfigResource) Schema(_ context.Context, _ resource.SchemaRe
 			// TEMPLATE: HARD RULE — Computed MINIMALISM. Extra read-back
 			// metadata (update_time/modifier below) is added ONLY on explicit
 			// user request; async task ids are NEVER exposed as Computed
-			// attributes.
-			// TEMPLATE: cloud-refreshed Computed values change on EVERY write,
-			// so they deliberately carry NO UseStateForUnknown — the plan must
-			// show them as "known after apply" on updates.
+			// attributes, and cloud-refreshed metadata deliberately carries NO
+			// UseStateForUnknown (it changes on EVERY write).
 			"update_time": schema.StringAttribute{
 				Computed:    true,
 				Description: "Last modification time of the configuration.",
