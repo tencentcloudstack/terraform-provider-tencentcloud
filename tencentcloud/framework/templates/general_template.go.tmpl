@@ -144,11 +144,13 @@ func (r *DemoWidgetResource) Schema(ctx context.Context, _ resource.SchemaReques
 			// ONLY the resource id; extra read-back fields (status/create_on
 			// below) only on explicit user request; async task ids NEVER
 			// (conventions.md section 2).
-			// TEMPLATE: UseStateForUnknown ONLY on Computed values that never
-			// change after creation (id, create_on). A value the cloud
-			// changes on its own or after an update (status) must NOT carry
-			// it: the plan would promise the old value and Terraform would
-			// fail the apply with "inconsistent result after apply".
+			// TEMPLATE: UseStateForUnknown per the conventions.md section 2
+			// decision matrix: REQUIRED on Computed values that never change
+			// after creation (id, create_on) and on user-omittable
+			// Optional+Computed fields; FORBIDDEN on values the cloud changes
+			// on its own or after an update (status) — the plan would promise
+			// the old value and Terraform would fail the apply with
+			// "inconsistent result after apply".
 			"status": schema.StringAttribute{
 				Computed:    true,
 				Description: "Status of the widget.",

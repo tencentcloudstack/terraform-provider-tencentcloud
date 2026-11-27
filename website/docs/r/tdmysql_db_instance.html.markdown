@@ -172,7 +172,7 @@ This resource interacts with the following TencentCloud APIs:
 
 ## Import
 
-TDSQL-C for MySQL database instance can be imported using the id, e.g.
+TDSQL Boundless(tdmysql) database instance can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_tdmysql_db_instance.example tdsql3-gpyfw59om6

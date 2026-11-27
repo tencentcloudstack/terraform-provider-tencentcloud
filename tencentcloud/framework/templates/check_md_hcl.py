@@ -177,6 +177,35 @@ def check_hcl(hcl, kinds, free):
 
 
 HCL_FENCE_RE = re.compile(r"```hcl\n(.*?)```", re.S)
+IMPORT_CMD_RE = re.compile(r"^\s*terraform\s+import\b")
+SECTION_HEADINGS = {"Example Usage", "Import"}
+
+
+def check_structure(lines, md_path):
+    """Markdown structure per conventions section 6 / sibling_md_template:
+    a blank line after every section heading ("Example Usage", "Import"),
+    HCL examples fenced with ```hcl, and the terraform import command fenced
+    with a BARE ``` (it is a CLI command, not HCL)."""
+    problems = []
+    for no, line in enumerate(lines):
+        if line.strip() in SECTION_HEADINGS and no + 1 < len(lines) and lines[no + 1].strip():
+            problems.append(f"line {no + 1}: `{line.strip()}` must be followed by a blank line")
+
+    open_tag, open_no, body_first = None, 0, None
+    for no, line in enumerate(lines, 1):
+        s = line.strip()
+        if open_tag is None:
+            if s.startswith("```"):
+                open_tag, open_no, body_first = s, no, None
+        elif s == "```":
+            if open_tag == "```hcl" and body_first is not None and IMPORT_CMD_RE.match(body_first):
+                problems.append(f"line {open_no}: the terraform import fence must be a bare ``` (it is a CLI command, not HCL)")
+            open_tag = None
+        elif body_first is None and s:
+            body_first = s
+    if open_tag is not None:
+        problems.append(f"line {open_no}: unclosed code fence")
+    return problems
 
 
 def check_pair(go_path, md_path=None):
@@ -186,6 +215,9 @@ def check_pair(go_path, md_path=None):
         return [f"{md_path}: sibling md missing"]
     kinds, free = schema_kinds(go_path.read_text())
     out = []
+    md_lines = md_path.read_text().splitlines()
+    for p in check_structure(md_lines, md_path):
+        out.append(f"{md_path}: {p}")
     for block in HCL_FENCE_RE.findall(md_path.read_text()):
         for p in check_hcl(block, kinds, free):
             out.append(f"{md_path}: {p}")
@@ -314,6 +346,18 @@ EOT
         got = check_hcl(hcl, kinds, free)
         assert got and f"`{name}`" in got[0], f"selftest: detector missed `{label}`: {got}"
     assert check_hcl('resource "x" "y" {\n  enc = {\n', kinds, free), "selftest: unbalanced not caught"
+
+    # structure detector: heading blank lines and fence language tags
+    ok_md = ["Provides a demo.", "", "Example Usage", "", "```hcl", "resource \"x\" \"y\" {}", "```", "", "Import", "", "Demo can be imported using the id, e.g.", "", "```", "terraform import x.y 1", "```"]
+    assert check_structure(ok_md, "x.md") == [], check_structure(ok_md, "x.md")
+    bad_md = {
+        "no blank after Example Usage": (["Example Usage", "```hcl", "```"], "Example Usage"),
+        "no blank after Import": (["Import", "Demo can be imported, e.g."], "Import"),
+        "hcl-tagged import fence": (["Import", "", "e.g.", "", "```hcl", "terraform import x.y 1", "```"], "terraform import"),
+    }
+    for label, (lines, needle) in bad_md.items():
+        got = check_structure(lines, "x.md")
+        assert got and needle in got[0], f"selftest: structure detector missed `{label}`: {got}"
 
 
 def main(argv):

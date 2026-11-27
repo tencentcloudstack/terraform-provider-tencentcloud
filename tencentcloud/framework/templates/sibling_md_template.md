@@ -37,7 +37,13 @@ Example Usage
      Rule of thumb: a type named *Attribute ALWAYS has `=`; a type named *Block
      NEVER has `=`. Real regression: encryption_configuration is a
      SingleNestedAttribute, so `encryption_configuration = { sse_type = "AES256" }`,
-     never `encryption_configuration { ... }`. Enforced by check_md_hcl.py. -->
+     never `encryption_configuration { ... }`. Enforced by check_md_hcl.py.
+
+     TEMPLATE: HARD RULE — align the generated file line-by-line with THIS
+     template (conventions section 6): a blank line after EVERY heading
+     ("Example Usage", "Import") and before each code fence; the Example
+     Usage fence is ```hcl, the terraform import fence is a BARE ``` (CLI
+     command, not HCL). -->
 
 ```hcl
 resource "tencentcloud_demo_widget" "example" {

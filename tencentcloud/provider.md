@@ -2087,6 +2087,7 @@ tencentcloud_tdmysql_specs
 
 Resource
 tencentcloud_tdmysql_db_instance
+tencentcloud_tdmysql_dbs_backup
 tencentcloud_tdmysql_user
 tencentcloud_tdmysql_user_privilege_config
 
