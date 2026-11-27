@@ -490,22 +490,28 @@ func flattenWidgetSettings(ctx context.Context, settings *demov20230101.WidgetSe
 	}
 
 	// TEMPLATE: two-step merge per leaf, in this exact order:
-	//  1. user-omitted (previous null) -> keep null (types.XxxNull) — see
-	//     the UseStateForUnknown safety precondition on the schema;
+	//  1. user-omitted (previous null OR unknown — on create core plans a
+	//     user-omitted Optional+Computed leaf as unknown and, with no prior
+	//     state, UseStateForUnknown leaves it unknown) -> keep null
+	//     (types.XxxNull). Persisting an unknown leaf would trip
+	//     "Provider returned invalid result object after apply", and
+	//     adopting a cloud value would contradict the modifier's planned
+	//     prior-state value on later plans — see the UseStateForUnknown
+	//     safety precondition on the schema;
 	//  2. user-set -> cloud value, falling back to the previous value when
 	//     the cloud omits the field (the OrPrev family from fwHelper).
 	merged := DemoWidgetConfigSettingsModel{}
-	if previous.RetentionDays.IsNull() {
+	if previous.RetentionDays.IsNull() || previous.RetentionDays.IsUnknown() {
 		merged.RetentionDays = types.Int64Null()
 	} else {
 		merged.RetentionDays = fwHelper.Int64ValueOrPrev(settings.RetentionDays, previous.RetentionDays)
 	}
-	if previous.Enabled.IsNull() {
+	if previous.Enabled.IsNull() || previous.Enabled.IsUnknown() {
 		merged.Enabled = types.BoolNull()
 	} else {
 		merged.Enabled = fwHelper.BoolValueOrPrev(settings.Enabled, previous.Enabled)
 	}
-	if previous.NotifyEmail.IsNull() {
+	if previous.NotifyEmail.IsNull() || previous.NotifyEmail.IsUnknown() {
 		merged.NotifyEmail = types.StringNull()
 	} else {
 		merged.NotifyEmail = fwHelper.StringValueOrPrev(settings.NotifyEmail, previous.NotifyEmail)

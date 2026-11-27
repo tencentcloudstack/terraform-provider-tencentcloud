@@ -140,10 +140,9 @@ func (r *TdmysqlUserPrivilegeConfigResource) Schema(_ context.Context, _ resourc
 			// Every group is Optional+Computed: a group left unset in the
 			// plan is not sent to the cloud, and the read-back records the
 			// cloud-reported values for the managed groups. UseStateForUnknown
-			// keeps a user-omitted group diff-free: core plans it as unknown,
-			// the modifier substitutes the prior state value, and since the
-			// apply path never writes into unmanaged groups the applied value
-			// always matches the plan.
+			// keeps a user-omitted group diff-free on update; on create the
+			// apply path normalizes the core-planned unknown back to null
+			// before persisting (see applyTdmysqlUserPrivilegeConfig).
 			"global_privileges": schema.ListAttribute{
 				Optional:    true,
 				Computed:    true,
@@ -327,6 +326,26 @@ func (r *TdmysqlUserPrivilegeConfigResource) ImportState(ctx context.Context, re
 // unknown in the plan is not sent, so the cloud keeps its current value for
 // it.
 func (r *TdmysqlUserPrivilegeConfigResource) applyTdmysqlUserPrivilegeConfig(ctx context.Context, service TdmysqlService, plan *TdmysqlUserPrivilegeConfigResourceModel, diags *diag.Diagnostics) {
+	// Terraform core plans a user-omitted Optional+Computed group as
+	// UNKNOWN. On create there is no prior state, so UseStateForUnknown has
+	// nothing to substitute and the plan value stays unknown; normalize it
+	// to the "user omitted" null form here, otherwise the unknown would
+	// leak into state ("Provider returned invalid result object after
+	// apply") and the managed-group guards below would never see it as
+	// omitted. On update the modifier already substituted the prior state
+	// value, so an unknown here cannot occur.
+	if plan.GlobalPrivileges.IsUnknown() {
+		plan.GlobalPrivileges = types.ListNull(types.StringType)
+	}
+
+	if plan.DatabasePrivileges.IsUnknown() {
+		plan.DatabasePrivileges = types.ListNull(types.ObjectType{AttrTypes: TdmysqlUserPrivilegeConfigDatabasePrivilegesAttrTypes()})
+	}
+
+	if plan.TablePrivileges.IsUnknown() {
+		plan.TablePrivileges = types.ListNull(types.ObjectType{AttrTypes: TdmysqlUserPrivilegeConfigTablePrivilegesAttrTypes()})
+	}
+
 	modifyUserPrivilegesRequest := tdmysqlv20211122.NewModifyUserPrivilegesRequest()
 	modifyUserPrivilegesRequest.InstanceId = fwHelper.String(plan.InstanceId.ValueString())
 	modifyUserPrivilegesRequest.Users = []*tdmysqlv20211122.User{

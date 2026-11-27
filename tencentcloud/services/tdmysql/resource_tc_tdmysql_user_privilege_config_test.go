@@ -505,6 +505,52 @@ func TestTdmysqlUserPrivilegeConfigUpdateSuccess(t *testing.T) {
 	}
 }
 
+// TestTdmysqlUserPrivilegeConfigCreateOmittedGroups verifies that the groups
+// a user omits on create (core plans an Optional+Computed attribute as
+// UNKNOWN and, with no prior state, UseStateForUnknown leaves it unknown)
+// are normalized to null in the state — persisting an unknown value trips
+// "Provider returned invalid result object after apply".
+func TestTdmysqlUserPrivilegeConfigCreateOmittedGroups(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ctx := newTdmysqlUserPrivilegeConfigTestContext(t)
+	tdmysqlClient := patchTdmysqlUserPrivilegeConfigSdkClient(patches, ctx.client)
+
+	var captured *tdmysqlv20211122.ModifyUserPrivilegesRequest
+	patches.ApplyMethodFunc(tdmysqlClient, "ModifyUserPrivileges", func(request *tdmysqlv20211122.ModifyUserPrivilegesRequest) (*tdmysqlv20211122.ModifyUserPrivilegesResponse, error) {
+		captured = request
+
+		return &tdmysqlv20211122.ModifyUserPrivilegesResponse{Response: &tdmysqlv20211122.ModifyUserPrivilegesResponseParams{
+			RequestId: tdmysqlUserPrivilegeConfigStr("fake-request-id"),
+		}}, nil
+	})
+	stubTdmysqlUserPrivilegeConfigDescribe(patches, tdmysqlClient, tdmysqlUserPrivilegeConfigTestPrivileges())
+
+	model := tdmysqlUserPrivilegeConfigTestModel()
+	model.DatabasePrivileges = types.ListUnknown(types.ObjectType{AttrTypes: svctdmysql.TdmysqlUserPrivilegeConfigDatabasePrivilegesAttrTypes()})
+	model.TablePrivileges = types.ListUnknown(types.ObjectType{AttrTypes: svctdmysql.TdmysqlUserPrivilegeConfigTablePrivilegesAttrTypes()})
+
+	var createResp resource.CreateResponse
+	createResp.State = ctx.state(t, model)
+	ctx.resource.Create(context.Background(), resource.CreateRequest{Plan: ctx.plan(t, model)}, &createResp)
+	if createResp.Diagnostics.HasError() {
+		t.Fatalf("Create failed: %v", createResp.Diagnostics.Errors())
+	}
+
+	if captured == nil || captured.DatabasePrivileges != nil || captured.TablePrivileges != nil {
+		t.Errorf("request = %+v, want the omitted groups omitted from the write API", captured)
+	}
+
+	var got svctdmysql.TdmysqlUserPrivilegeConfigResourceModel
+	if diags := createResp.State.Get(context.Background(), &got); diags.HasError() {
+		t.Fatalf("failed to read back state: %v", diags.Errors())
+	}
+	if !got.DatabasePrivileges.IsNull() || !got.TablePrivileges.IsNull() {
+		t.Errorf("state database_privileges = %v, table_privileges = %v, want both null (never unknown)", got.DatabasePrivileges, got.TablePrivileges)
+	}
+}
+
 // TestTdmysqlUserPrivilegeConfigDeleteIsNoop verifies Delete calls no API: the
 // privileges live and die with the parent instance and user.
 func TestTdmysqlUserPrivilegeConfigDeleteIsNoop(t *testing.T) {
