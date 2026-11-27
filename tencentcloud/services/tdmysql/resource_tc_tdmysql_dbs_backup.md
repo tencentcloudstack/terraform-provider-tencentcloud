@@ -1,6 +1,7 @@
-Provides a manual backup set resource of a TDSQL Boundless instance, with create, comment update and delete support.
+Provides a resource to create a TDSQL Boundless(tdmysql) manual backup set.
 
 Example Usage
+
 ```hcl
 resource "tencentcloud_tdmysql_dbs_backup" "example" {
   instance_id   = "tdsqlc-mysql-abc12345"
@@ -11,7 +12,9 @@ resource "tencentcloud_tdmysql_dbs_backup" "example" {
 ```
 
 Import
-tdmysql dbs backup can be imported using the id, e.g.
-```hcl
+
+TDSQL Boundless(tdmysql) manual backup set can be imported using the id, e.g.
+
+```
 terraform import tencentcloud_tdmysql_dbs_backup.example 12345
 ```
