@@ -15,25 +15,16 @@ Provides a resource to manage user privileges of a TDSQL Boundless instance.
 
 ```hcl
 resource "tencentcloud_tdmysql_user_privilege_config" "example" {
-  instance_id = "tdsql3-5baee8df"
-  user_name   = "tf-example-user"
-  host        = "localhost"
+  instance_id = "tdsql3-ibpyogg7tg"
+  user_name   = "tf-example"
+  host        = "10.0.0.1"
 
-  global_privileges = ["SELECT", "INSERT"]
-
-  database_privileges = [
-    {
-      database   = "tf-example-db"
-      privileges = ["SELECT"]
-    },
-  ]
-
-  table_privileges = [
-    {
-      database   = "tf-example-db"
-      table      = "tf-example-table"
-      privileges = ["SELECT", "UPDATE"]
-    },
+  global_privileges = [
+    "INSERT",
+    "SELECT",
+    "ALTER",
+    "CREATE",
+    "DELETE"
   ]
 }
 ```
@@ -42,17 +33,23 @@ resource "tencentcloud_tdmysql_user_privilege_config" "example" {
 
 The following arguments are supported:
 
-* `database_privileges` - (Optional, Set) Database level privileges.
-  * `database` - (Required, String) Database name.
-  * `privileges` - (Required, Set) Privilege list.
-* `global_privileges` - (Optional, Set) Global privileges.
 * `host` - (Required, String) The access host allowed for the user. The username and host uniquely identify an account.
 * `instance_id` - (Required, String) Instance ID, such as tdsql3-5baee8df.
-* `table_privileges` - (Optional, Set) Table level privileges.
-  * `database` - (Required, String) Database name.
-  * `privileges` - (Required, Set) Privilege list.
-  * `table` - (Required, String) Table name.
 * `user_name` - (Required, String) Login username.
+* `database_privileges` - (Optional, Set) Database level privileges.
+* `global_privileges` - (Optional, Set) Global privileges.
+* `table_privileges` - (Optional, Set) Table level privileges.
+
+The `database_privileges` object supports the following:
+
+* `database` - (Required, String) Database name.
+* `privileges` - (Required, Set) Privilege list.
+
+The `table_privileges` object supports the following:
+
+* `database` - (Required, String) Database name.
+* `privileges` - (Required, Set) Privilege list.
+* `table` - (Required, String) Table name.
 
 ## Attributes Reference
 
@@ -64,14 +61,19 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyUserPrivileges](https://www.tencentcloud.com/document/api/1292/80104)
+* Create:
+  - [DescribeUserPrivileges](https://www.tencentcloud.com/document/api/1292/80120)
+  - [ModifyUserPrivileges](https://www.tencentcloud.com/document/api/1292/80104)
 * Read: [DescribeUserPrivileges](https://www.tencentcloud.com/document/api/1292/80120)
-* Update: [ModifyUserPrivileges](https://www.tencentcloud.com/document/api/1292/80104)
+* Update:
+  - [DescribeUserPrivileges](https://www.tencentcloud.com/document/api/1292/80120)
+  - [ModifyUserPrivileges](https://www.tencentcloud.com/document/api/1292/80104)
 
 ## Import
 
 TDSQL Boundless user privilege config can be imported using the composite id instance_id#user_name#host, e.g.
 
 ```
-terraform import tencentcloud_tdmysql_user_privilege_config.example tdsql3-5baee8df#tf-example-user#localhost
+terraform import tencentcloud_tdmysql_user_privilege_config.example tdsql3-ibpyogg7tg#tf-example#10.0.0.1
 ```
+
